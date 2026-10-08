@@ -1,1 +1,47 @@
-{}
+{
+  "memberSince": "Member since {{date}}",
+  "facts": {
+    "perWeek_one": "Trains {{count}}× per week",
+    "perWeek_other": "Trains {{count}}× per week",
+    "workouts_one": "{{count}} workout finished",
+    "workouts_other": "{{count}} workouts finished"
+  },
+  "activity": "Activity",
+  "lastMonths": "Last 3 months",
+  "history": "History",
+  "historyEntry": "<b>{{name}}</b> finished <b>{{workout}}</b> in {{duration}}",
+  "historyEmpty": "Your finished workouts will show up here.",
+  "showMore": "Show more",
+  "when": {
+    "today": "Today, {{time}}",
+    "yesterday": "Yesterday, {{time}}"
+  },
+  "settings": {
+    "language": "Language",
+    "accent": "Accent color",
+    "units": "Units",
+    "metric": "Metric (kg, cm)",
+    "imperial": "Imperial (lb, ft)",
+    "bodyData": "Body data",
+    "fields": {
+      "firstName": "Name",
+      "sex": "Sex",
+      "age": "Age",
+      "weight": "Weight",
+      "height": "Height"
+    },
+    "sexes": {
+      "female": "Female",
+      "male": "Male",
+      "unspecified": "Not specified"
+    },
+    "years": "Years",
+    "notSet": "Not set",
+    "feetInches": "ft / in",
+    "signOut": "Sign out",
+    "signOutConfirm": {
+      "title": "Sign out?",
+      "body": "Your training data stays saved in your account. You can sign in again anytime."
+    }
+  }
+}

@@ -1,1 +1,26 @@
-{}
+{
+  "title": "Body composition",
+  "subtitle": "Your body score from your photos",
+  "sinceStart": "{{delta}} since start",
+  "checkLabel": "Check {{n}} · {{date}}",
+  "check": "Check {{n}}",
+  "today": "today",
+  "due": "Due",
+  "history": "History",
+  "poses": {
+    "front": "Front",
+    "left": "Left",
+    "right": "Right",
+    "back": "Back"
+  },
+  "start": "Start body check",
+  "empty": {
+    "title": "No body check yet",
+    "body": "Take four photos and get a score for your body composition. Repeat it every few weeks to see your progress."
+  },
+  "comingSoon": {
+    "title": "Coming soon",
+    "body": "The camera body check arrives with the next update. Your score and history will show up here.",
+    "ok": "Got it"
+  }
+}

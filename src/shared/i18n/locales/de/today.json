@@ -1,1 +1,37 @@
-{}
+{
+  "startEmpty": "Leeres Training starten",
+  "emptyWorkoutName": "Training",
+  "resumeActive": "{{name}} fortsetzen",
+  "status": {
+    "doneToday": "Heute erledigt",
+    "done": "Erledigt · {{date}}",
+    "plannedToday": "Geplant · heute",
+    "planned": "Geplant · {{date}}"
+  },
+  "stats": {
+    "minutes": "{{count}} Min",
+    "approxMinutes": "~{{count}} Min",
+    "prs_one": "{{count}} PR",
+    "prs_other": "{{count}} PRs",
+    "exercises_one": "{{count}} Übung",
+    "exercises_other": "{{count}} Übungen",
+    "sets_one": "{{count}} Satz",
+    "sets_other": "{{count}} Sätze"
+  },
+  "overview": "Übersicht",
+  "start": "Starten",
+  "resume": "Fortsetzen",
+  "reschedule": "Umplanen",
+  "markDone": "Als erledigt markieren",
+  "rest": {
+    "titleToday": "Ruhetag",
+    "title": "Nichts geplant",
+    "body": "Für {{day}} ist kein Training geplant. Erhol dich – oder starte jederzeit ein leeres Training.",
+    "openTraining": "Training öffnen"
+  },
+  "rescheduleSheet": {
+    "title": "Umplanen",
+    "subtitle": "Wähle einen neuen Tag für {{name}}.",
+    "taken": "{{name}} geplant"
+  }
+}

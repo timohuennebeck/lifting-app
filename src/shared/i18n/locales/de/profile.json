@@ -1,1 +1,47 @@
-{}
+{
+  "memberSince": "Mitglied seit {{date}}",
+  "facts": {
+    "perWeek_one": "Trainiert {{count}}× pro Woche",
+    "perWeek_other": "Trainiert {{count}}× pro Woche",
+    "workouts_one": "{{count}} Training abgeschlossen",
+    "workouts_other": "{{count}} Trainings abgeschlossen"
+  },
+  "activity": "Aktivität",
+  "lastMonths": "Letzte 3 Monate",
+  "history": "Historie",
+  "historyEntry": "<b>{{name}}</b> hat <b>{{workout}}</b> in {{duration}} abgeschlossen",
+  "historyEmpty": "Deine abgeschlossenen Trainings erscheinen hier.",
+  "showMore": "Mehr anzeigen",
+  "when": {
+    "today": "Heute, {{time}}",
+    "yesterday": "Gestern, {{time}}"
+  },
+  "settings": {
+    "language": "Sprache",
+    "accent": "Akzentfarbe",
+    "units": "Einheiten",
+    "metric": "Metrisch (kg, cm)",
+    "imperial": "Imperial (lb, ft)",
+    "bodyData": "Körperdaten",
+    "fields": {
+      "firstName": "Name",
+      "sex": "Geschlecht",
+      "age": "Alter",
+      "weight": "Gewicht",
+      "height": "Größe"
+    },
+    "sexes": {
+      "female": "Weiblich",
+      "male": "Männlich",
+      "unspecified": "Keine Angabe"
+    },
+    "years": "Jahre",
+    "notSet": "Nicht angegeben",
+    "feetInches": "ft / in",
+    "signOut": "Abmelden",
+    "signOutConfirm": {
+      "title": "Abmelden?",
+      "body": "Deine Trainingsdaten bleiben in deinem Konto gespeichert. Du kannst dich jederzeit wieder anmelden."
+    }
+  }
+}

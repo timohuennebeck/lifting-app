@@ -1,6 +1,1 @@
-import { TabHeader } from '@/shared/components/tab-header';
-import { Screen } from '@/shared/ui/screen';
-
-export default function Placeholder() {
-  return <Screen header={<TabHeader />}>{null}</Screen>;
-}
+export { MusclesScreen as default } from '@/features/muscles/screens/muscles-screen';

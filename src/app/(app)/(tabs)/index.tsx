@@ -1,6 +1,1 @@
-import { TabHeader } from '@/shared/components/tab-header';
-import { Screen } from '@/shared/ui/screen';
-
-export default function Placeholder() {
-  return <Screen header={<TabHeader />}>{null}</Screen>;
-}
+export { TodayScreen as default } from '@/features/today/screens/today-screen';

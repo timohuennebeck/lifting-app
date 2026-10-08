@@ -1,1 +1,26 @@
-{}
+{
+  "title": "Composição corporal",
+  "subtitle": "A tua pontuação corporal a partir das fotos",
+  "sinceStart": "{{delta}} desde o início",
+  "checkLabel": "Check {{n}} · {{date}}",
+  "check": "Check {{n}}",
+  "today": "hoje",
+  "due": "Pendente",
+  "history": "Histórico",
+  "poses": {
+    "front": "Frente",
+    "left": "Esquerda",
+    "right": "Direita",
+    "back": "Costas"
+  },
+  "start": "Iniciar check corporal",
+  "empty": {
+    "title": "Ainda sem check corporal",
+    "body": "Tira quatro fotos e recebe uma pontuação da tua composição corporal. Repete a cada poucas semanas para veres o teu progresso."
+  },
+  "comingSoon": {
+    "title": "Em breve",
+    "body": "O check corporal com câmara chega na próxima atualização. A tua pontuação e o histórico vão aparecer aqui.",
+    "ok": "Entendido"
+  }
+}

@@ -1,1 +1,37 @@
-{}
+{
+  "startEmpty": "Start empty workout",
+  "emptyWorkoutName": "Workout",
+  "resumeActive": "Resume {{name}}",
+  "status": {
+    "doneToday": "Done today",
+    "done": "Done · {{date}}",
+    "plannedToday": "Planned · today",
+    "planned": "Planned · {{date}}"
+  },
+  "stats": {
+    "minutes": "{{count}} min",
+    "approxMinutes": "~{{count}} min",
+    "prs_one": "{{count}} PR",
+    "prs_other": "{{count}} PRs",
+    "exercises_one": "{{count}} exercise",
+    "exercises_other": "{{count}} exercises",
+    "sets_one": "{{count}} set",
+    "sets_other": "{{count}} sets"
+  },
+  "overview": "Overview",
+  "start": "Start",
+  "resume": "Resume",
+  "reschedule": "Reschedule",
+  "markDone": "Mark as done",
+  "rest": {
+    "titleToday": "Rest day",
+    "title": "Nothing planned",
+    "body": "No workout is planned for {{day}}. Recover, or start an empty workout anytime.",
+    "openTraining": "Open training"
+  },
+  "rescheduleSheet": {
+    "title": "Reschedule",
+    "subtitle": "Pick a new day for {{name}}.",
+    "taken": "{{name}} planned"
+  }
+}

@@ -1,1 +1,26 @@
-{}
+{
+  "title": "Körperkomposition",
+  "subtitle": "Dein Körperwert aus den Fotos",
+  "sinceStart": "{{delta}} seit Start",
+  "checkLabel": "Check {{n}} · {{date}}",
+  "check": "Check {{n}}",
+  "today": "heute",
+  "due": "Fällig",
+  "history": "Historie",
+  "poses": {
+    "front": "Frontal",
+    "left": "Links",
+    "right": "Rechts",
+    "back": "Hinten"
+  },
+  "start": "Körpercheck starten",
+  "empty": {
+    "title": "Noch kein Körpercheck",
+    "body": "Mach vier Fotos und erhalte einen Wert für deine Körperkomposition. Wiederhole den Check alle paar Wochen, um deinen Fortschritt zu sehen."
+  },
+  "comingSoon": {
+    "title": "Bald verfügbar",
+    "body": "Der Körpercheck mit Kamera kommt mit dem nächsten Update. Dein Wert und dein Verlauf erscheinen dann hier.",
+    "ok": "Verstanden"
+  }
+}

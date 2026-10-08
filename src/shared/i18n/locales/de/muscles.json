@@ -24,5 +24,10 @@
   "regions": {
     "upper": "Oberkörper",
     "lower": "Unterkörper"
-  }
+  },
+  "title": "Trainierte Muskeln",
+  "subtitle": "Letzte {{days}} Tage · {{count}} Sätze gesamt",
+  "range_one": "{{count}} Tag",
+  "range_other": "{{count}} Tage",
+  "notTrained": "Nicht trainiert"
 }

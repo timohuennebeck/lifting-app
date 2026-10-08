@@ -1,1 +1,37 @@
-{}
+{
+  "startEmpty": "Iniciar treino vazio",
+  "emptyWorkoutName": "Treino",
+  "resumeActive": "Retomar {{name}}",
+  "status": {
+    "doneToday": "Feito hoje",
+    "done": "Feito · {{date}}",
+    "plannedToday": "Planejado · hoje",
+    "planned": "Planejado · {{date}}"
+  },
+  "stats": {
+    "minutes": "{{count}} min",
+    "approxMinutes": "~{{count}} min",
+    "prs_one": "{{count}} recorde",
+    "prs_other": "{{count}} recordes",
+    "exercises_one": "{{count}} exercício",
+    "exercises_other": "{{count}} exercícios",
+    "sets_one": "{{count}} série",
+    "sets_other": "{{count}} séries"
+  },
+  "overview": "Resumo",
+  "start": "Iniciar",
+  "resume": "Retomar",
+  "reschedule": "Reagendar",
+  "markDone": "Marcar como feito",
+  "rest": {
+    "titleToday": "Dia de descanso",
+    "title": "Nada planejado",
+    "body": "Não há treino planejado para {{day}}. Descanse ou inicie um treino vazio quando quiser.",
+    "openTraining": "Abrir treinos"
+  },
+  "rescheduleSheet": {
+    "title": "Reagendar",
+    "subtitle": "Escolha um novo dia para {{name}}.",
+    "taken": "{{name}} planejado"
+  }
+}

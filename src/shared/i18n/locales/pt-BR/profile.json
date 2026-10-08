@@ -1,1 +1,47 @@
-{}
+{
+  "memberSince": "Membro desde {{date}}",
+  "facts": {
+    "perWeek_one": "Treina {{count}}× por semana",
+    "perWeek_other": "Treina {{count}}× por semana",
+    "workouts_one": "{{count}} treino concluído",
+    "workouts_other": "{{count}} treinos concluídos"
+  },
+  "activity": "Atividade",
+  "lastMonths": "Últimos 3 meses",
+  "history": "Histórico",
+  "historyEntry": "<b>{{name}}</b> concluiu <b>{{workout}}</b> em {{duration}}",
+  "historyEmpty": "Seus treinos concluídos vão aparecer aqui.",
+  "showMore": "Mostrar mais",
+  "when": {
+    "today": "Hoje, {{time}}",
+    "yesterday": "Ontem, {{time}}"
+  },
+  "settings": {
+    "language": "Idioma",
+    "accent": "Cor de destaque",
+    "units": "Unidades",
+    "metric": "Métrico (kg, cm)",
+    "imperial": "Imperial (lb, ft)",
+    "bodyData": "Dados corporais",
+    "fields": {
+      "firstName": "Nome",
+      "sex": "Sexo",
+      "age": "Idade",
+      "weight": "Peso",
+      "height": "Altura"
+    },
+    "sexes": {
+      "female": "Feminino",
+      "male": "Masculino",
+      "unspecified": "Não informado"
+    },
+    "years": "Anos",
+    "notSet": "Não definido",
+    "feetInches": "ft / in",
+    "signOut": "Sair",
+    "signOutConfirm": {
+      "title": "Sair da conta?",
+      "body": "Seus dados de treino ficam salvos na sua conta. Você pode entrar novamente a qualquer momento."
+    }
+  }
+}
