@@ -1,1 +1,105 @@
-{}
+{
+  "index": {
+    "title": "PLAN IMPORTIEREN",
+    "subtitle": "Handschrift funktioniert auch. Falls wir etwas nicht sicher lesen können, markieren wir es zur Prüfung.",
+    "photo": {
+      "title": "Foto aufnehmen",
+      "description": "Papier, Whiteboard oder Bildschirm"
+    },
+    "file": {
+      "title": "Datei hochladen",
+      "description": "PDF, Excel, CSV oder Screenshot"
+    },
+    "noPlan": "Kein Plan zur Hand?",
+    "createOwn": "Selbst erstellen"
+  },
+  "options": {
+    "title": "PASST SO?",
+    "swap": "Tauschen",
+    "cta": "Plan einlesen",
+    "preview": "Dateivorschau"
+  },
+  "camera": {
+    "page": "Seite {{count}}",
+    "hint": "Seite für Seite fotografieren, dann auf Fertig",
+    "done": "Fertig",
+    "torch": "Blitz",
+    "shutter": "Foto aufnehmen",
+    "library": "Aus Mediathek wählen",
+    "retake": "Seite {{count}} neu aufnehmen",
+    "permission": {
+      "title": "KAMERAZUGRIFF",
+      "body": "Um deinen Plan zu fotografieren, braucht Forge Zugriff auf deine Kamera. Die Fotos bleiben auf deinem Gerät, bis du sie importierst.",
+      "allow": "Kamera erlauben",
+      "settings": "Einstellungen öffnen"
+    }
+  },
+  "review": {
+    "title": "PASST SO?",
+    "retake": "Foto neu aufnehmen",
+    "counter": "{{current}} / {{total}}",
+    "cta": "Plan erkennen",
+    "addPage": "Seite hinzufügen",
+    "remove": "Foto entfernen"
+  },
+  "analysis": {
+    "stages": [
+      "Lese Handschrift …",
+      "Erkenne Übungen …",
+      "Ordne Wochentage zu …",
+      "Übernehme Gewichte …"
+    ],
+    "error": "Wir konnten den Plan nicht lesen. Bitte versuch es noch einmal."
+  },
+  "voice": {
+    "title": "Spracheingabe",
+    "format": "TAG · ÜBUNGEN · SÄTZE × WIEDERHOLUNGEN",
+    "example": "„Freitag Schultern, Seitheben drei mal fünfzehn“",
+    "tap": "Tippen zum Sprechen",
+    "listening": "Ich höre zu …",
+    "understood": "Verstanden",
+    "stop": "Zuhören beenden",
+    "scripts": [
+      "d:Freitag d:Schultern: e:Schulterdrücken n:vier n:mal n:acht, e:Seitheben n:drei n:mal n:fünfzehn, e:Reverse e:Flys n:drei n:mal n:zwölf",
+      "d:Samstag d:Arme: e:Kurzhantel-Curls n:drei n:mal n:zwölf, e:Trizepsdrücken n:drei n:mal n:fünfzehn",
+      "d:Montag: e:Hack e:Squat x:raus, 0:dafür e:Bankdrücken n:drei n:mal n:zwölf 0:und e:French e:Press n:drei n:mal n:zehn"
+    ],
+    "days": {
+      "shoulders": "Schultern",
+      "arms": "Arme",
+      "push": "Push"
+    }
+  },
+  "recognizing": {
+    "stages": [
+      "Erkenne Trainingstag …",
+      "Ordne Übungen zu …",
+      "Übernehme Sätze und Wiederholungen …"
+    ]
+  },
+  "confirm": {
+    "title": "PASST SO?",
+    "planName": "Planname",
+    "muscles": "Beanspruchte Muskeln",
+    "exercises_one": "{{count}} Übung",
+    "exercises_other": "{{count}} Übungen",
+    "noDay": "Kein fester Tag",
+    "dayUnknown": "Den Tag „{{raw}}“ konnten wir nicht lesen. Wähle einen Wochentag oder lass ihn offen.",
+    "readAs": "Gelesen als „{{raw}}“",
+    "correct": "Stimmt",
+    "add": "Übung hinzufügen",
+    "voice": "Sprache",
+    "swap": "Übung tauschen",
+    "remove": "Übung entfernen",
+    "cta": "Plan übernehmen",
+    "check_one": "Noch {{count}} Punkt prüfen",
+    "check_other": "Noch {{count}} Punkte prüfen",
+    "empty": "Noch keine Übungen. Füg eine hinzu oder nutze deine Stimme.",
+    "dayName": "Name des Tages",
+    "details": "Details anzeigen"
+  },
+  "errors": {
+    "file": "Die Datei konnte nicht geöffnet werden.",
+    "camera": "Das Foto konnte nicht aufgenommen werden."
+  }
+}

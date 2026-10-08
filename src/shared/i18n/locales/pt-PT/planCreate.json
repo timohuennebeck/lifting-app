@@ -1,1 +1,111 @@
-{}
+{
+  "goal": {
+    "title": "QUAL É O\nTEU OBJETIVO?",
+    "repsA11y": "{{min}} a {{max}} repetições",
+    "options": {
+      "hypertrophy": {
+        "title": "Hipertrofia",
+        "description": "Ganhar massa muscular, normalmente 8–12 rep."
+      },
+      "strength": {
+        "title": "Força máxima",
+        "description": "Levantar mais peso, normalmente 3–6 rep."
+      },
+      "strength_hypertrophy": {
+        "title": "Força e hipertrofia",
+        "description": "Os dois combinados, 4–10 rep."
+      }
+    }
+  },
+  "focus": {
+    "title": "ONDE ESTÁ O\nTEU FOCO?",
+    "subtitle": "Escolhe uma ou mais zonas, ou nenhuma.",
+    "none": "Sem foco",
+    "cta_one": "Continuar · {{count}} zona",
+    "cta_other": "Continuar · {{count}} zonas",
+    "mapA11y": "Mapa do corpo. Toca num músculo para escolher a sua zona."
+  },
+  "equipment": {
+    "title": "COM QUE\nTREINAS?",
+    "options": {
+      "gym": {
+        "title": "Ginásio completo",
+        "description": "Máquinas, cabos, pesos livres"
+      },
+      "home": {
+        "title": "Equipamento próprio",
+        "description": "Em casa, p. ex. halteres ou banco"
+      },
+      "bodyweight": {
+        "title": "Sem equipamento",
+        "description": "Só com o peso corporal"
+      }
+    }
+  },
+  "days": {
+    "title": "QUANTAS VEZES\nQUERES TREINAR?",
+    "perWeek": "POR SEMANA",
+    "times": "{{count}}×",
+    "none": "Ainda sem dias escolhidos",
+    "hintDays": "Toca nos dias em que queres treinar.",
+    "hintDial": "Arrasta o anel",
+    "modes": {
+      "days": "Dias",
+      "dial": "Anel"
+    }
+  },
+  "duration": {
+    "title": "QUANTO TEMPO DEVE\nDURAR UM TREINO?",
+    "minutes": "MINUTOS",
+    "hint": "Arrasta o anel ou toca num valor",
+    "estimate": "≈ {{exercises}} exercícios · {{sets}} séries",
+    "presetA11y": "{{count}} minutos"
+  },
+  "building": {
+    "stages": [
+      "A analisar objetivo e experiência …",
+      "A escolher exercícios para o teu equipamento …",
+      "A distribuir pelos teus dias de treino …",
+      "A definir séries e repetições …"
+    ],
+    "frequency": "{{count}} × {{minutes}} min",
+    "focus": "Foco: {{areas}}",
+    "balanced": "Todos os grupos musculares",
+    "complaints": "Poupa as articulações",
+    "dayTag": "D{{n}}",
+    "skip": "Toca para saltar"
+  },
+  "planName": {
+    "title": "COMO SE VAI\nCHAMAR O PLANO?",
+    "label": "Nome do plano",
+    "placeholder": "p. ex. O meu plano de corpo inteiro",
+    "suggestions": "Sugestões",
+    "counter": "{{count}} / {{max}}",
+    "myPlan": "O meu plano",
+    "goalSplit": "{{goal}} {{count}}×"
+  },
+  "goalShort": {
+    "hypertrophy": "Ganho muscular",
+    "strength": "Força",
+    "strength_hypertrophy": "Força & massa"
+  },
+  "equipmentShort": {
+    "gym": "Ginásio",
+    "home": "Em casa",
+    "bodyweight": "Peso corporal"
+  },
+  "splits": {
+    "full": "Corpo inteiro",
+    "upperLower": "Superior / Inferior",
+    "ppl": "Push · Pull · Pernas",
+    "pplUpperLower": "PPL + Superior / Inferior"
+  },
+  "dayNames": {
+    "full": "Corpo inteiro",
+    "upper": "Parte superior",
+    "lower": "Parte inferior",
+    "push": "Push",
+    "pull": "Pull",
+    "legs": "Pernas"
+  }
+}

@@ -1,1 +1,111 @@
-{}
+{
+  "goal": {
+    "title": "WAS IST\nDEIN ZIEL?",
+    "repsA11y": "{{min}} bis {{max}} Wiederholungen",
+    "options": {
+      "hypertrophy": {
+        "title": "Hypertrophie",
+        "description": "Muskelmasse aufbauen, meist 8–12 Wdh."
+      },
+      "strength": {
+        "title": "Maximalkraft",
+        "description": "Schwerer heben, meist 3–6 Wdh."
+      },
+      "strength_hypertrophy": {
+        "title": "Kraft und Hypertrophie",
+        "description": "Beides kombiniert, 4–10 Wdh."
+      }
+    }
+  },
+  "focus": {
+    "title": "WORAUF LIEGT\nDEIN FOKUS?",
+    "subtitle": "Wähle einen oder mehrere Bereiche – oder keinen.",
+    "none": "Kein Fokus",
+    "cta_one": "Weiter · {{count}} Bereich",
+    "cta_other": "Weiter · {{count}} Bereiche",
+    "mapA11y": "Körperkarte. Tippe auf einen Muskel, um seinen Bereich zu wählen."
+  },
+  "equipment": {
+    "title": "WOMIT\nTRAINIERST DU?",
+    "options": {
+      "gym": {
+        "title": "Komplettes Studio",
+        "description": "Maschinen, Kabelzug, freie Gewichte"
+      },
+      "home": {
+        "title": "Eigene Geräte",
+        "description": "Zuhause, z. B. Hanteln oder Bank"
+      },
+      "bodyweight": {
+        "title": "Keine Geräte",
+        "description": "Nur mit Körpergewicht"
+      }
+    }
+  },
+  "days": {
+    "title": "WIE OFT PRO WOCHE\nWILLST DU TRAINIEREN?",
+    "perWeek": "PRO WOCHE",
+    "times": "{{count}}×",
+    "none": "Noch keine Tage gewählt",
+    "hintDays": "Tippe die Tage an, an denen du trainieren willst.",
+    "hintDial": "Ring ziehen",
+    "modes": {
+      "days": "Tage",
+      "dial": "Ring"
+    }
+  },
+  "duration": {
+    "title": "WIE LANG SOLL EIN\nTRAINING DAUERN?",
+    "minutes": "MINUTEN",
+    "hint": "Ring ziehen oder Wert antippen",
+    "estimate": "≈ {{exercises}} Übungen · {{sets}} Sätze",
+    "presetA11y": "{{count}} Minuten"
+  },
+  "building": {
+    "stages": [
+      "Werte Ziel & Erfahrung aus …",
+      "Wähle Übungen für deine Geräte …",
+      "Verteile auf deine Trainingstage …",
+      "Lege Sätze und Wiederholungen fest …"
+    ],
+    "frequency": "{{count}} × {{minutes}} Min.",
+    "focus": "Fokus: {{areas}}",
+    "balanced": "Alle Muskelgruppen",
+    "complaints": "Gelenkschonend",
+    "dayTag": "T{{n}}",
+    "skip": "Tippen zum Überspringen"
+  },
+  "planName": {
+    "title": "WIE SOLL DEIN\nPLAN HEISSEN?",
+    "label": "Planname",
+    "placeholder": "z. B. Mein Ganzkörperplan",
+    "suggestions": "Vorschläge",
+    "counter": "{{count}} / {{max}}",
+    "myPlan": "Mein Plan",
+    "goalSplit": "{{goal}} {{count}}×"
+  },
+  "goalShort": {
+    "hypertrophy": "Muskelaufbau",
+    "strength": "Maximalkraft",
+    "strength_hypertrophy": "Kraft & Masse"
+  },
+  "equipmentShort": {
+    "gym": "Studio",
+    "home": "Eigene Geräte",
+    "bodyweight": "Körpergewicht"
+  },
+  "splits": {
+    "full": "Ganzkörper",
+    "upperLower": "Ober- / Unterkörper",
+    "ppl": "Push · Pull · Beine",
+    "pplUpperLower": "PPL + Ober- / Unterkörper"
+  },
+  "dayNames": {
+    "full": "Ganzkörper",
+    "upper": "Oberkörper",
+    "lower": "Unterkörper",
+    "push": "Push",
+    "pull": "Pull",
+    "legs": "Beine"
+  }
+}

@@ -97,6 +97,340 @@
   },
   "picker": {
     "title": "Choose exercise",
-    "search": "Search exercises"
+    "search": "Search exercises",
+    "done": "Done",
+    "empty": "No exercises found",
+    "index": "Alphabet index",
+    "muscles": "Muscles worked",
+    "selected": "Selected"
+  },
+  "groups": {
+    "all": "All",
+    "chest": "Chest",
+    "back": "Back",
+    "shoulders": "Shoulders",
+    "arms": "Arms",
+    "core": "Core",
+    "glutes": "Glutes",
+    "legs": "Legs"
+  },
+  "equipment": {
+    "barbell": "Barbell",
+    "dumbbell": "Dumbbells",
+    "machine": "Machine",
+    "cable": "Cable",
+    "bodyweight": "Bodyweight"
+  },
+  "detail": {
+    "tabs": {
+      "exercise": "Exercise",
+      "history": "History"
+    },
+    "technique": "Technique",
+    "noHistory": "No history yet",
+    "noHistoryHint": "Log this exercise in a workout and your sets show up here.",
+    "minutes": "MIN",
+    "volume": "VOL",
+    "pr": "PR"
+  },
+  "technique": {
+    "flatPress": [
+      {
+        "title": "Set up",
+        "text": "Lie on the bench with your eyes under the bar. Squeeze your shoulder blades together and plant your feet."
+      },
+      {
+        "title": "Lower",
+        "text": "Unrack and lower the bar under control to your lower chest, elbows about 45° from your torso."
+      },
+      {
+        "title": "Press",
+        "text": "Drive the bar up and slightly back until your arms are almost straight. Keep your glutes on the bench."
+      }
+    ],
+    "inclinePress": [
+      {
+        "title": "Set the bench",
+        "text": "Set the backrest to 30–45°. Sit down with the dumbbells resting on your thighs."
+      },
+      {
+        "title": "Start position",
+        "text": "Lie back and press the dumbbells over your chest. Shoulder blades back and down, feet firmly on the floor."
+      },
+      {
+        "title": "Lower",
+        "text": "Lower the dumbbells slowly to chest height. Your elbows point about 45° away from your torso."
+      },
+      {
+        "title": "Press",
+        "text": "Press the dumbbells up powerfully until your arms are almost straight. Pause briefly at the top."
+      }
+    ],
+    "overheadPress": [
+      {
+        "title": "Brace",
+        "text": "Hold the weights at shoulder height, wrists stacked over your elbows. Tighten your core and glutes."
+      },
+      {
+        "title": "Press",
+        "text": "Press straight up until your arms are locked out overhead, moving your head slightly back."
+      },
+      {
+        "title": "Lower",
+        "text": "Bring the weights back to shoulder height under control without arching your lower back."
+      }
+    ],
+    "raise": [
+      {
+        "title": "Start",
+        "text": "Stand tall with the dumbbells at your sides and a slight bend in your elbows."
+      },
+      {
+        "title": "Raise",
+        "text": "Lift the weights to shoulder height, leading with your elbows. Don't swing or shrug."
+      },
+      {
+        "title": "Lower",
+        "text": "Lower slowly over two to three seconds and keep the tension at the bottom."
+      }
+    ],
+    "rearDelt": [
+      {
+        "title": "Set up",
+        "text": "Hinge forward or face the cable with a neutral spine and a slight bend in your elbows."
+      },
+      {
+        "title": "Pull apart",
+        "text": "Pull your hands out and back until they line up with your shoulders. Squeeze your upper back."
+      },
+      {
+        "title": "Return",
+        "text": "Let the weight return slowly without losing your posture."
+      }
+    ],
+    "uprightRow": [
+      {
+        "title": "Grip",
+        "text": "Hold the bar with your hands about shoulder-width apart, arms hanging long."
+      },
+      {
+        "title": "Pull",
+        "text": "Lead with your elbows and pull the bar up to lower-chest height. Your elbows stay above your hands."
+      },
+      {
+        "title": "Lower",
+        "text": "Lower the bar under control. Stop earlier if your shoulders feel pinched."
+      }
+    ],
+    "fly": [
+      {
+        "title": "Set up",
+        "text": "Set the pulleys high, take a handle in each hand and step forward into a split stance."
+      },
+      {
+        "title": "Bring together",
+        "text": "With softly bent elbows, sweep your hands down and together in front of your chest."
+      },
+      {
+        "title": "Open",
+        "text": "Let your arms open slowly until you feel a stretch across your chest."
+      }
+    ],
+    "dip": [
+      {
+        "title": "Support",
+        "text": "Press yourself up on the bars with straight arms, shoulders down and away from your ears."
+      },
+      {
+        "title": "Lower",
+        "text": "Lean slightly forward and lower until your upper arms are about parallel to the floor."
+      },
+      {
+        "title": "Push",
+        "text": "Push back up to full extension without swinging your legs."
+      }
+    ],
+    "pushUp": [
+      {
+        "title": "Plank",
+        "text": "Hands slightly wider than your shoulders, body in one straight line from head to heels."
+      },
+      {
+        "title": "Lower",
+        "text": "Lower your chest towards the floor, elbows about 45° from your torso."
+      },
+      {
+        "title": "Push",
+        "text": "Push the floor away until your arms are straight. Don't let your hips sag."
+      }
+    ],
+    "tricepsExtension": [
+      {
+        "title": "Lock your elbows",
+        "text": "Keep your elbows tucked and your upper arms still for the whole set."
+      },
+      {
+        "title": "Extend",
+        "text": "Straighten your arms fully and squeeze your triceps at the end."
+      },
+      {
+        "title": "Return",
+        "text": "Bend your elbows slowly back to the start, keeping the tension."
+      }
+    ],
+    "verticalPull": [
+      {
+        "title": "Grip",
+        "text": "Take the bar slightly wider than shoulder width and hang with straight arms."
+      },
+      {
+        "title": "Pull",
+        "text": "Drive your elbows down towards your hips until your chin clears the bar or the bar reaches your upper chest."
+      },
+      {
+        "title": "Lower",
+        "text": "Return slowly to straight arms without dropping into the bottom."
+      }
+    ],
+    "row": [
+      {
+        "title": "Set up",
+        "text": "Sit or hinge with a long, neutral spine. Arms reach forward, shoulders relaxed."
+      },
+      {
+        "title": "Pull",
+        "text": "Row the handle towards your lower ribs and squeeze your shoulder blades together."
+      },
+      {
+        "title": "Release",
+        "text": "Let your arms stretch forward under control without rounding your back."
+      }
+    ],
+    "deadlift": [
+      {
+        "title": "Set up",
+        "text": "Feet hip-width under the bar, shins close. Grip just outside your legs."
+      },
+      {
+        "title": "Brace",
+        "text": "Hips down, chest up, back flat. Take a deep breath and pull the slack out of the bar."
+      },
+      {
+        "title": "Lift",
+        "text": "Push the floor away and stand up tall, keeping the bar close. Lower it the same way."
+      }
+    ],
+    "curl": [
+      {
+        "title": "Start",
+        "text": "Stand tall with the dumbbells at your sides, elbows close to your body."
+      },
+      {
+        "title": "Curl",
+        "text": "Bend your elbows and lift the weights towards your shoulders without swinging."
+      },
+      {
+        "title": "Lower",
+        "text": "Lower slowly until your arms are straight again."
+      }
+    ],
+    "squat": [
+      {
+        "title": "Stance",
+        "text": "Feet about shoulder-width apart, toes slightly out. Brace your core."
+      },
+      {
+        "title": "Descend",
+        "text": "Sit down between your hips, knees tracking over your toes, chest up."
+      },
+      {
+        "title": "Drive",
+        "text": "Push through your whole foot back to standing once your thighs reach parallel or lower."
+      }
+    ],
+    "legPress": [
+      {
+        "title": "Feet",
+        "text": "Place your feet shoulder-width apart in the middle of the platform, lower back against the pad."
+      },
+      {
+        "title": "Lower",
+        "text": "Release the safety and bend your knees to about 90°."
+      },
+      {
+        "title": "Press",
+        "text": "Push the platform away through your whole foot without locking your knees."
+      }
+    ],
+    "hinge": [
+      {
+        "title": "Start",
+        "text": "Stand tall with the bar at your hips and your knees slightly bent."
+      },
+      {
+        "title": "Hinge",
+        "text": "Push your hips back and slide the bar down your thighs until you feel a stretch in your hamstrings."
+      },
+      {
+        "title": "Return",
+        "text": "Drive your hips forward to stand up. Your back stays flat throughout."
+      }
+    ],
+    "lunge": [
+      {
+        "title": "Stand",
+        "text": "Stand tall with the dumbbells at your sides."
+      },
+      {
+        "title": "Step",
+        "text": "Take a long step forward and lower your back knee towards the floor."
+      },
+      {
+        "title": "Return",
+        "text": "Push off your front foot back to the start and switch legs."
+      }
+    ],
+    "legExtension": [
+      {
+        "title": "Set up",
+        "text": "Line your knees up with the machine's pivot and place the pad just above your ankles."
+      },
+      {
+        "title": "Extend",
+        "text": "Straighten your legs fully and squeeze your quads at the top."
+      },
+      {
+        "title": "Lower",
+        "text": "Lower the weight slowly without letting it rest."
+      }
+    ],
+    "calfRaise": [
+      {
+        "title": "Position",
+        "text": "Balls of your feet on the edge, heels free, legs straight."
+      },
+      {
+        "title": "Rise",
+        "text": "Push up onto your toes as high as you can and pause briefly."
+      },
+      {
+        "title": "Lower",
+        "text": "Lower your heels slowly below the platform for a full stretch."
+      }
+    ],
+    "plank": [
+      {
+        "title": "Forearms",
+        "text": "Elbows under your shoulders, forearms on the floor."
+      },
+      {
+        "title": "Brace",
+        "text": "Lift your body into one straight line. Squeeze your glutes and abs."
+      },
+      {
+        "title": "Hold",
+        "text": "Keep breathing steadily and hold the position without letting your hips sag."
+      }
+    ]
   }
 }

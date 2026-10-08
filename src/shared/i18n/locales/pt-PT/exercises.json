@@ -97,6 +97,340 @@
   },
   "picker": {
     "title": "Escolher exercício",
-    "search": "Pesquisar exercícios"
+    "search": "Pesquisar exercícios",
+    "done": "Concluído",
+    "empty": "Nenhum exercício encontrado",
+    "index": "Índice alfabético",
+    "muscles": "Músculos trabalhados",
+    "selected": "Selecionados"
+  },
+  "groups": {
+    "all": "Todos",
+    "chest": "Peito",
+    "back": "Costas",
+    "shoulders": "Ombros",
+    "arms": "Braços",
+    "core": "Abdómen",
+    "glutes": "Glúteos",
+    "legs": "Pernas"
+  },
+  "equipment": {
+    "barbell": "Barra",
+    "dumbbell": "Halteres",
+    "machine": "Máquina",
+    "cable": "Cabo",
+    "bodyweight": "Peso corporal"
+  },
+  "detail": {
+    "tabs": {
+      "exercise": "Exercício",
+      "history": "Histórico"
+    },
+    "technique": "Técnica",
+    "noHistory": "Ainda sem histórico",
+    "noHistoryHint": "Regista este exercício num treino e as tuas séries aparecem aqui.",
+    "minutes": "MIN",
+    "volume": "VOL",
+    "pr": "PR"
+  },
+  "technique": {
+    "flatPress": [
+      {
+        "title": "Preparação",
+        "text": "Deita-te no banco com os olhos por baixo da barra. Junta as omoplatas e apoia bem os pés."
+      },
+      {
+        "title": "Descida",
+        "text": "Tira a barra do suporte e desce-a de forma controlada até à parte inferior do peito, cotovelos a cerca de 45° do tronco."
+      },
+      {
+        "title": "Empurrar",
+        "text": "Empurra a barra para cima e ligeiramente para trás até os braços ficarem quase esticados. Mantém os glúteos no banco."
+      }
+    ],
+    "inclinePress": [
+      {
+        "title": "Ajustar o banco",
+        "text": "Coloca o encosto a 30–45°. Senta-te com os halteres apoiados nas coxas."
+      },
+      {
+        "title": "Posição inicial",
+        "text": "Deita-te e empurra os halteres por cima do peito. Omoplatas juntas e para baixo, pés bem assentes no chão."
+      },
+      {
+        "title": "Descida",
+        "text": "Desce os halteres devagar até à altura do peito. Os cotovelos ficam a cerca de 45° do tronco."
+      },
+      {
+        "title": "Empurrar",
+        "text": "Empurra os halteres com força até os braços ficarem quase esticados. Faz uma breve pausa em cima."
+      }
+    ],
+    "overheadPress": [
+      {
+        "title": "Contrair",
+        "text": "Segura os pesos à altura dos ombros, pulsos alinhados sobre os cotovelos. Contrai o abdómen e os glúteos."
+      },
+      {
+        "title": "Empurrar",
+        "text": "Empurra a direito para cima até os braços ficarem esticados acima da cabeça, recuando ligeiramente a cabeça."
+      },
+      {
+        "title": "Descida",
+        "text": "Traz os pesos de volta à altura dos ombros de forma controlada, sem arquear a lombar."
+      }
+    ],
+    "raise": [
+      {
+        "title": "Início",
+        "text": "Fica de pé com os halteres ao lado do corpo e os cotovelos ligeiramente fletidos."
+      },
+      {
+        "title": "Elevar",
+        "text": "Eleva os pesos até à altura dos ombros, conduzindo com os cotovelos. Sem balançar nem encolher os ombros."
+      },
+      {
+        "title": "Descida",
+        "text": "Desce devagar, em dois a três segundos, e mantém a tensão em baixo."
+      }
+    ],
+    "rearDelt": [
+      {
+        "title": "Posição",
+        "text": "Inclina o tronco para a frente ou fica de frente para o cabo, com a coluna neutra e os cotovelos ligeiramente fletidos."
+      },
+      {
+        "title": "Abrir",
+        "text": "Puxa as mãos para fora e para trás até ficarem alinhadas com os ombros. Aperta a parte superior das costas."
+      },
+      {
+        "title": "Voltar",
+        "text": "Deixa o peso voltar devagar sem perder a postura."
+      }
+    ],
+    "uprightRow": [
+      {
+        "title": "Pega",
+        "text": "Segura a barra com as mãos à largura dos ombros e os braços estendidos."
+      },
+      {
+        "title": "Puxar",
+        "text": "Conduz com os cotovelos e puxa a barra até à parte inferior do peito. Os cotovelos ficam acima das mãos."
+      },
+      {
+        "title": "Descida",
+        "text": "Desce a barra de forma controlada. Para mais cedo se sentires desconforto nos ombros."
+      }
+    ],
+    "fly": [
+      {
+        "title": "Preparação",
+        "text": "Coloca as polias em cima, segura uma pega em cada mão e dá um passo em frente."
+      },
+      {
+        "title": "Juntar",
+        "text": "Com os cotovelos ligeiramente fletidos, leva as mãos para baixo até se juntarem à frente do peito."
+      },
+      {
+        "title": "Abrir",
+        "text": "Abre os braços devagar até sentires o peito alongar."
+      }
+    ],
+    "dip": [
+      {
+        "title": "Apoio",
+        "text": "Sobe nas paralelas com os braços esticados e os ombros afastados das orelhas."
+      },
+      {
+        "title": "Descida",
+        "text": "Inclina-te ligeiramente para a frente e desce até os braços ficarem mais ou menos paralelos ao chão."
+      },
+      {
+        "title": "Empurrar",
+        "text": "Empurra até esticar os braços por completo, sem balançar as pernas."
+      }
+    ],
+    "pushUp": [
+      {
+        "title": "Prancha",
+        "text": "Mãos um pouco mais afastadas do que os ombros, corpo em linha reta da cabeça aos calcanhares."
+      },
+      {
+        "title": "Descida",
+        "text": "Desce o peito em direção ao chão, cotovelos a cerca de 45° do tronco."
+      },
+      {
+        "title": "Empurrar",
+        "text": "Empurra o chão até os braços ficarem esticados. Não deixes a anca descair."
+      }
+    ],
+    "tricepsExtension": [
+      {
+        "title": "Fixar os cotovelos",
+        "text": "Mantém os cotovelos junto ao corpo e os braços imóveis durante toda a série."
+      },
+      {
+        "title": "Estender",
+        "text": "Estica os braços por completo e contrai os tríceps no fim."
+      },
+      {
+        "title": "Voltar",
+        "text": "Flete os cotovelos devagar até ao início, mantendo a tensão."
+      }
+    ],
+    "verticalPull": [
+      {
+        "title": "Pega",
+        "text": "Agarra a barra um pouco mais afastada do que os ombros e fica suspenso com os braços esticados."
+      },
+      {
+        "title": "Puxar",
+        "text": "Leva os cotovelos em direção à anca até o queixo passar a barra ou a barra chegar ao peito."
+      },
+      {
+        "title": "Descida",
+        "text": "Volta devagar até os braços ficarem esticados, sem te deixares cair."
+      }
+    ],
+    "row": [
+      {
+        "title": "Posição",
+        "text": "Senta-te ou inclina-te com a coluna longa e neutra. Braços esticados à frente, ombros relaxados."
+      },
+      {
+        "title": "Puxar",
+        "text": "Puxa a pega em direção às costelas inferiores e junta as omoplatas."
+      },
+      {
+        "title": "Soltar",
+        "text": "Deixa os braços irem para a frente de forma controlada, sem arredondar as costas."
+      }
+    ],
+    "deadlift": [
+      {
+        "title": "Preparação",
+        "text": "Pés à largura da anca por baixo da barra, canelas próximas. Agarra a barra logo por fora das pernas."
+      },
+      {
+        "title": "Contrair",
+        "text": "Anca em baixo, peito para cima, costas direitas. Inspira fundo e tira a folga da barra."
+      },
+      {
+        "title": "Levantar",
+        "text": "Empurra o chão e endireita-te, com a barra junto ao corpo. Desce-a da mesma forma."
+      }
+    ],
+    "curl": [
+      {
+        "title": "Início",
+        "text": "Fica de pé com os halteres ao lado do corpo e os cotovelos junto ao tronco."
+      },
+      {
+        "title": "Fletir",
+        "text": "Flete os cotovelos e leva os pesos em direção aos ombros, sem balançar."
+      },
+      {
+        "title": "Descida",
+        "text": "Desce devagar até os braços ficarem esticados outra vez."
+      }
+    ],
+    "squat": [
+      {
+        "title": "Posição",
+        "text": "Pés mais ou menos à largura dos ombros, pontas ligeiramente para fora. Contrai o core."
+      },
+      {
+        "title": "Descer",
+        "text": "Senta-te entre as ancas, joelhos alinhados com os pés, peito para cima."
+      },
+      {
+        "title": "Subir",
+        "text": "Empurra com o pé todo até ficares de pé, quando as coxas chegarem à paralela ou abaixo."
+      }
+    ],
+    "legPress": [
+      {
+        "title": "Pés",
+        "text": "Coloca os pés à largura dos ombros no meio da plataforma, com a lombar encostada."
+      },
+      {
+        "title": "Descida",
+        "text": "Solta o travão e flete os joelhos até cerca de 90°."
+      },
+      {
+        "title": "Empurrar",
+        "text": "Empurra a plataforma com o pé todo, sem bloquear os joelhos."
+      }
+    ],
+    "hinge": [
+      {
+        "title": "Início",
+        "text": "Fica de pé com a barra à altura da anca e os joelhos ligeiramente fletidos."
+      },
+      {
+        "title": "Inclinar",
+        "text": "Leva a anca para trás e desliza a barra pelas coxas até sentires os isquiotibiais alongar."
+      },
+      {
+        "title": "Voltar",
+        "text": "Empurra a anca para a frente para te endireitares. As costas ficam sempre direitas."
+      }
+    ],
+    "lunge": [
+      {
+        "title": "Posição",
+        "text": "Fica de pé com os halteres ao lado do corpo."
+      },
+      {
+        "title": "Passo",
+        "text": "Dá um passo largo em frente e baixa o joelho de trás em direção ao chão."
+      },
+      {
+        "title": "Voltar",
+        "text": "Empurra com o pé da frente para voltar ao início e troca de perna."
+      }
+    ],
+    "legExtension": [
+      {
+        "title": "Ajustar",
+        "text": "Alinha os joelhos com o eixo da máquina e coloca o rolo logo acima dos tornozelos."
+      },
+      {
+        "title": "Estender",
+        "text": "Estica as pernas por completo e contrai os quadríceps em cima."
+      },
+      {
+        "title": "Descida",
+        "text": "Desce o peso devagar, sem o pousar."
+      }
+    ],
+    "calfRaise": [
+      {
+        "title": "Posição",
+        "text": "Pontas dos pés na borda, calcanhares livres, pernas esticadas."
+      },
+      {
+        "title": "Subir",
+        "text": "Sobe na ponta dos pés o mais alto possível e faz uma breve pausa."
+      },
+      {
+        "title": "Descida",
+        "text": "Desce os calcanhares devagar abaixo da plataforma para alongar bem."
+      }
+    ],
+    "plank": [
+      {
+        "title": "Antebraços",
+        "text": "Cotovelos por baixo dos ombros, antebraços no chão."
+      },
+      {
+        "title": "Contrair",
+        "text": "Levanta o corpo numa linha reta. Contrai os glúteos e o abdómen."
+      },
+      {
+        "title": "Manter",
+        "text": "Respira com calma e mantém a posição sem deixar a anca descair."
+      }
+    ]
   }
 }

@@ -1,1 +1,105 @@
-{}
+{
+  "index": {
+    "title": "IMPORTAR PLANO",
+    "subtitle": "Letra à mão também funciona. Se não conseguirmos ler algo com certeza, marcamos para você revisar.",
+    "photo": {
+      "title": "Tirar uma foto",
+      "description": "Papel, quadro ou tela"
+    },
+    "file": {
+      "title": "Enviar um arquivo",
+      "description": "PDF, Excel, CSV ou print"
+    },
+    "noPlan": "Está sem o plano em mãos?",
+    "createOwn": "Criar eu mesmo"
+  },
+  "options": {
+    "title": "ESTÁ CERTO ASSIM?",
+    "swap": "Trocar",
+    "cta": "Ler plano",
+    "preview": "Prévia do arquivo"
+  },
+  "camera": {
+    "page": "Página {{count}}",
+    "hint": "Fotografe página por página e toque em Concluído",
+    "done": "Concluído",
+    "torch": "Flash",
+    "shutter": "Tirar foto",
+    "library": "Escolher da galeria",
+    "retake": "Refazer página {{count}}",
+    "permission": {
+      "title": "ACESSO À CÂMERA",
+      "body": "Para fotografar seu plano, o Forge precisa de acesso à câmera. As fotos ficam no seu aparelho até você importá-las.",
+      "allow": "Permitir câmera",
+      "settings": "Abrir configurações"
+    }
+  },
+  "review": {
+    "title": "ESTÁ CERTO ASSIM?",
+    "retake": "Refazer foto",
+    "counter": "{{current}} / {{total}}",
+    "cta": "Reconhecer plano",
+    "addPage": "Adicionar página",
+    "remove": "Remover foto"
+  },
+  "analysis": {
+    "stages": [
+      "Lendo a letra …",
+      "Detectando exercícios …",
+      "Associando dias da semana …",
+      "Aplicando as cargas …"
+    ],
+    "error": "Não conseguimos ler este plano. Tente novamente."
+  },
+  "voice": {
+    "title": "Entrada por voz",
+    "format": "DIA · EXERCÍCIOS · SÉRIES × REPETIÇÕES",
+    "example": "“Sexta ombros, elevação lateral três vezes quinze”",
+    "tap": "Toque para falar",
+    "listening": "Ouvindo …",
+    "understood": "Entendido",
+    "stop": "Parar de ouvir",
+    "scripts": [
+      "d:Sexta d:ombros: e:desenvolvimento n:quatro n:vezes n:oito, e:elevação e:lateral n:três n:vezes n:quinze, e:crucifixo e:invertido n:três n:vezes n:doze",
+      "d:Sábado d:braços: e:rosca e:com e:halteres n:três n:vezes n:doze, e:tríceps e:na e:polia n:três n:vezes n:quinze",
+      "d:Segunda: e:agachamento e:hack x:fora, 0:no 0:lugar e:supino n:três n:vezes n:doze 0:e e:tríceps e:francês n:três n:vezes n:dez"
+    ],
+    "days": {
+      "shoulders": "Ombros",
+      "arms": "Braços",
+      "push": "Push"
+    }
+  },
+  "recognizing": {
+    "stages": [
+      "Detectando o dia de treino …",
+      "Associando exercícios …",
+      "Aplicando séries e repetições …"
+    ]
+  },
+  "confirm": {
+    "title": "ESTÁ CERTO?",
+    "planName": "Nome do plano",
+    "muscles": "Músculos trabalhados",
+    "exercises_one": "{{count}} exercício",
+    "exercises_other": "{{count}} exercícios",
+    "noDay": "Sem dia fixo",
+    "dayUnknown": "Não conseguimos ler o dia “{{raw}}”. Escolha um dia da semana ou deixe-o flexível.",
+    "readAs": "Lido como “{{raw}}”",
+    "correct": "Está certo",
+    "add": "Adicionar exercício",
+    "voice": "Voz",
+    "swap": "Trocar exercício",
+    "remove": "Remover exercício",
+    "cta": "Usar este plano",
+    "check_one": "Revisar {{count}} item",
+    "check_other": "Revisar {{count}} itens",
+    "empty": "Ainda sem exercícios. Adicione um ou use a voz.",
+    "dayName": "Nome do dia",
+    "details": "Ver detalhes"
+  },
+  "errors": {
+    "file": "Não foi possível abrir o arquivo.",
+    "camera": "Não foi possível tirar a foto."
+  }
+}

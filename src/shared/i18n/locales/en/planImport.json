@@ -1,1 +1,101 @@
-{}
+{
+  "index": {
+    "title": "IMPORT PLAN",
+    "subtitle": "Handwriting works too. If we can't read something for sure, we'll flag it for you to check.",
+    "photo": {
+      "title": "Take a photo",
+      "description": "Paper, whiteboard or screen"
+    },
+    "file": {
+      "title": "Upload a file",
+      "description": "PDF, Excel, CSV or screenshot"
+    },
+    "noPlan": "No plan at hand?",
+    "createOwn": "Create it myself"
+  },
+  "options": {
+    "title": "LOOKS GOOD?",
+    "swap": "Swap",
+    "cta": "Read plan",
+    "preview": "File preview"
+  },
+  "camera": {
+    "page": "Page {{count}}",
+    "hint": "Photograph page by page, then tap Done",
+    "done": "Done",
+    "torch": "Flash",
+    "shutter": "Take photo",
+    "library": "Choose from library",
+    "retake": "Retake page {{count}}",
+    "permission": {
+      "title": "CAMERA ACCESS",
+      "body": "To photograph your plan, Forge needs access to your camera. Photos stay on your device until you import them.",
+      "allow": "Allow camera",
+      "settings": "Open settings"
+    }
+  },
+  "review": {
+    "title": "LOOKS GOOD?",
+    "retake": "Retake photo",
+    "counter": "{{current}} / {{total}}",
+    "cta": "Recognize plan",
+    "addPage": "Add page",
+    "remove": "Remove photo"
+  },
+  "analysis": {
+    "stages": [
+      "Reading handwriting …",
+      "Detecting exercises …",
+      "Matching weekdays …",
+      "Applying weights …"
+    ],
+    "error": "We couldn't read this plan. Please try again."
+  },
+  "voice": {
+    "title": "Voice input",
+    "format": "DAY · EXERCISES · SETS × REPS",
+    "example": "“Friday shoulders, lateral raises three times fifteen”",
+    "tap": "Tap to speak",
+    "listening": "Listening …",
+    "understood": "Got it",
+    "stop": "Stop listening",
+    "scripts": [
+      "d:Friday d:shoulders: e:shoulder e:press n:four n:times n:eight, e:lateral e:raises n:three n:times n:fifteen, e:reverse e:flys n:three n:times n:twelve",
+      "d:Saturday d:arms: e:dumbbell e:curls n:three n:times n:twelve, e:triceps e:pushdowns n:three n:times n:fifteen",
+      "d:Monday: e:hack e:squat x:out, 0:instead e:bench e:press n:three n:times n:twelve 0:and e:French e:press n:three n:times n:ten"
+    ],
+    "days": {
+      "shoulders": "Shoulders",
+      "arms": "Arms",
+      "push": "Push"
+    }
+  },
+  "recognizing": {
+    "stages": ["Detecting training day …", "Matching exercises …", "Applying sets and reps …"]
+  },
+  "confirm": {
+    "title": "LOOKS RIGHT?",
+    "planName": "Plan name",
+    "muscles": "Muscles worked",
+    "exercises_one": "{{count}} exercise",
+    "exercises_other": "{{count}} exercises",
+    "noDay": "No fixed day",
+    "dayUnknown": "We couldn't read the day “{{raw}}”. Pick a weekday or keep it flexible.",
+    "readAs": "Read as “{{raw}}”",
+    "correct": "Correct",
+    "add": "Add exercise",
+    "voice": "Voice",
+    "swap": "Swap exercise",
+    "remove": "Remove exercise",
+    "cta": "Use this plan",
+    "check_one": "Check {{count}} item",
+    "check_other": "Check {{count}} items",
+    "empty": "No exercises yet. Add one or use your voice.",
+    "dayName": "Day name",
+    "details": "Show details"
+  },
+  "errors": {
+    "file": "Couldn't open that file.",
+    "camera": "Couldn't take the photo."
+  }
+}

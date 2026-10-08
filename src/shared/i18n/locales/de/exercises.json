@@ -97,6 +97,340 @@
   },
   "picker": {
     "title": "Übung wählen",
-    "search": "Übungen suchen"
+    "search": "Übungen suchen",
+    "done": "Fertig",
+    "empty": "Keine Übungen gefunden",
+    "index": "Alphabetischer Index",
+    "muscles": "Beanspruchte Muskeln",
+    "selected": "Ausgewählt"
+  },
+  "groups": {
+    "all": "Alle",
+    "chest": "Brust",
+    "back": "Rücken",
+    "shoulders": "Schultern",
+    "arms": "Arme",
+    "core": "Bauch",
+    "glutes": "Po",
+    "legs": "Beine"
+  },
+  "equipment": {
+    "barbell": "Langhantel",
+    "dumbbell": "Kurzhanteln",
+    "machine": "Maschine",
+    "cable": "Kabelzug",
+    "bodyweight": "Körpergewicht"
+  },
+  "detail": {
+    "tabs": {
+      "exercise": "Übung",
+      "history": "Historie"
+    },
+    "technique": "Technik",
+    "noHistory": "Noch keine Historie",
+    "noHistoryHint": "Trag die Übung in einem Training ein, dann erscheinen deine Sätze hier.",
+    "minutes": "MIN",
+    "volume": "VOL",
+    "pr": "PR"
+  },
+  "technique": {
+    "flatPress": [
+      {
+        "title": "Aufbauen",
+        "text": "Leg dich so auf die Bank, dass deine Augen unter der Stange sind. Schulterblätter zusammen, Füße fest am Boden."
+      },
+      {
+        "title": "Absenken",
+        "text": "Heb die Stange aus und senk sie kontrolliert zur unteren Brust. Die Ellbogen zeigen etwa 45° vom Oberkörper weg."
+      },
+      {
+        "title": "Drücken",
+        "text": "Drück die Stange nach oben und leicht zurück, bis die Arme fast gestreckt sind. Das Gesäß bleibt auf der Bank."
+      }
+    ],
+    "inclinePress": [
+      {
+        "title": "Bank einstellen",
+        "text": "Stell die Lehne auf 30–45° ein. Setz dich hin, die Kurzhanteln auf den Oberschenkeln."
+      },
+      {
+        "title": "Startposition",
+        "text": "Leg dich zurück und drück die Hanteln über die Brust. Schulterblätter zusammen und nach unten, Füße fest am Boden."
+      },
+      {
+        "title": "Absenken",
+        "text": "Senk die Hanteln langsam bis auf Brusthöhe. Die Ellbogen zeigen etwa 45° vom Oberkörper weg."
+      },
+      {
+        "title": "Drücken",
+        "text": "Drück die Hanteln kraftvoll nach oben, bis die Arme fast gestreckt sind. Oben kurz halten."
+      }
+    ],
+    "overheadPress": [
+      {
+        "title": "Anspannen",
+        "text": "Halte die Gewichte auf Schulterhöhe, Handgelenke über den Ellbogen. Bauch und Gesäß anspannen."
+      },
+      {
+        "title": "Drücken",
+        "text": "Drück gerade nach oben, bis die Arme über dem Kopf gestreckt sind. Nimm den Kopf dabei leicht zurück."
+      },
+      {
+        "title": "Absenken",
+        "text": "Führ die Gewichte kontrolliert zurück auf Schulterhöhe, ohne ins Hohlkreuz zu gehen."
+      }
+    ],
+    "raise": [
+      {
+        "title": "Start",
+        "text": "Steh aufrecht, die Kurzhanteln seitlich am Körper, die Ellbogen leicht gebeugt."
+      },
+      {
+        "title": "Heben",
+        "text": "Heb die Gewichte bis auf Schulterhöhe, die Ellbogen führen. Nicht schwingen, Schultern nicht hochziehen."
+      },
+      {
+        "title": "Absenken",
+        "text": "Senk die Gewichte über zwei bis drei Sekunden ab und halte unten die Spannung."
+      }
+    ],
+    "rearDelt": [
+      {
+        "title": "Position",
+        "text": "Beug dich nach vorne oder stell dich vor den Kabelzug. Rücken gerade, Ellbogen leicht gebeugt."
+      },
+      {
+        "title": "Auseinanderziehen",
+        "text": "Zieh die Hände nach außen und hinten, bis sie auf Schulterhöhe sind. Den oberen Rücken zusammendrücken."
+      },
+      {
+        "title": "Zurück",
+        "text": "Lass das Gewicht langsam zurück, ohne die Haltung zu verlieren."
+      }
+    ],
+    "uprightRow": [
+      {
+        "title": "Griff",
+        "text": "Greif die Stange etwa schulterbreit, die Arme hängen lang."
+      },
+      {
+        "title": "Ziehen",
+        "text": "Die Ellbogen führen: Zieh die Stange bis auf Höhe der unteren Brust. Die Ellbogen bleiben über den Händen."
+      },
+      {
+        "title": "Absenken",
+        "text": "Senk die Stange kontrolliert ab. Hör früher auf, wenn es in der Schulter zwickt."
+      }
+    ],
+    "fly": [
+      {
+        "title": "Aufbauen",
+        "text": "Stell die Seilzüge hoch ein, nimm je einen Griff und geh in eine leichte Schrittstellung."
+      },
+      {
+        "title": "Zusammenführen",
+        "text": "Führ die Hände mit leicht gebeugten Ellbogen im Bogen vor der Brust zusammen."
+      },
+      {
+        "title": "Öffnen",
+        "text": "Öffne die Arme langsam, bis du eine Dehnung in der Brust spürst."
+      }
+    ],
+    "dip": [
+      {
+        "title": "Stütz",
+        "text": "Drück dich mit gestreckten Armen am Barren hoch, die Schultern weg von den Ohren."
+      },
+      {
+        "title": "Absenken",
+        "text": "Lehn dich leicht nach vorne und senk dich ab, bis die Oberarme etwa parallel zum Boden sind."
+      },
+      {
+        "title": "Drücken",
+        "text": "Drück dich wieder ganz nach oben, ohne mit den Beinen zu schwingen."
+      }
+    ],
+    "pushUp": [
+      {
+        "title": "Stütz",
+        "text": "Hände etwas breiter als schulterbreit, der Körper bildet eine Linie von Kopf bis Ferse."
+      },
+      {
+        "title": "Absenken",
+        "text": "Senk die Brust Richtung Boden, die Ellbogen etwa 45° vom Oberkörper weg."
+      },
+      {
+        "title": "Drücken",
+        "text": "Drück dich vom Boden weg, bis die Arme gestreckt sind. Die Hüfte sackt nicht durch."
+      }
+    ],
+    "tricepsExtension": [
+      {
+        "title": "Ellbogen fixieren",
+        "text": "Halte die Ellbogen nah am Körper und die Oberarme den ganzen Satz über ruhig."
+      },
+      {
+        "title": "Strecken",
+        "text": "Streck die Arme vollständig und spann den Trizeps am Ende an."
+      },
+      {
+        "title": "Zurück",
+        "text": "Beug die Ellbogen langsam zurück in die Startposition und halte die Spannung."
+      }
+    ],
+    "verticalPull": [
+      {
+        "title": "Griff",
+        "text": "Greif die Stange etwas breiter als schulterbreit und häng dich mit gestreckten Armen hin."
+      },
+      {
+        "title": "Ziehen",
+        "text": "Zieh die Ellbogen Richtung Hüfte, bis das Kinn über der Stange ist oder die Stange die obere Brust erreicht."
+      },
+      {
+        "title": "Absenken",
+        "text": "Lass dich langsam bis zu gestreckten Armen ab, ohne unten reinzufallen."
+      }
+    ],
+    "row": [
+      {
+        "title": "Position",
+        "text": "Sitz aufrecht oder beug dich mit geradem Rücken vor. Die Arme sind gestreckt, die Schultern locker."
+      },
+      {
+        "title": "Ziehen",
+        "text": "Zieh den Griff zu den unteren Rippen und drück die Schulterblätter zusammen."
+      },
+      {
+        "title": "Lösen",
+        "text": "Lass die Arme kontrolliert nach vorne, ohne den Rücken rund zu machen."
+      }
+    ],
+    "deadlift": [
+      {
+        "title": "Aufbauen",
+        "text": "Füße hüftbreit unter der Stange, Schienbeine nah dran. Greif direkt außerhalb der Beine."
+      },
+      {
+        "title": "Anspannen",
+        "text": "Hüfte runter, Brust raus, Rücken gerade. Tief einatmen und die Stange auf Spannung bringen."
+      },
+      {
+        "title": "Heben",
+        "text": "Drück dich vom Boden weg und richte dich auf, die Stange bleibt nah am Körper. Genauso wieder ablassen."
+      }
+    ],
+    "curl": [
+      {
+        "title": "Start",
+        "text": "Steh aufrecht, die Kurzhanteln seitlich, die Ellbogen nah am Körper."
+      },
+      {
+        "title": "Beugen",
+        "text": "Beug die Ellbogen und heb die Gewichte Richtung Schultern, ohne zu schwingen."
+      },
+      {
+        "title": "Absenken",
+        "text": "Senk die Gewichte langsam ab, bis die Arme wieder gestreckt sind."
+      }
+    ],
+    "squat": [
+      {
+        "title": "Stand",
+        "text": "Füße etwa schulterbreit, Zehen leicht nach außen. Rumpf anspannen."
+      },
+      {
+        "title": "Runter",
+        "text": "Setz dich zwischen die Hüften, die Knie über den Zehen, die Brust oben."
+      },
+      {
+        "title": "Hoch",
+        "text": "Drück dich über den ganzen Fuß wieder hoch, sobald die Oberschenkel mindestens parallel sind."
+      }
+    ],
+    "legPress": [
+      {
+        "title": "Füße",
+        "text": "Stell die Füße schulterbreit in die Mitte der Plattform, der untere Rücken liegt am Polster."
+      },
+      {
+        "title": "Absenken",
+        "text": "Löse die Sicherung und beug die Knie bis etwa 90°."
+      },
+      {
+        "title": "Drücken",
+        "text": "Drück die Plattform über den ganzen Fuß weg, ohne die Knie durchzustrecken."
+      }
+    ],
+    "hinge": [
+      {
+        "title": "Start",
+        "text": "Steh aufrecht, die Stange auf Hüfthöhe, die Knie leicht gebeugt."
+      },
+      {
+        "title": "Hüfte zurück",
+        "text": "Schieb die Hüfte nach hinten und führ die Stange an den Oberschenkeln entlang, bis du die Beinbeuger spürst."
+      },
+      {
+        "title": "Aufrichten",
+        "text": "Schieb die Hüfte nach vorne und richte dich auf. Der Rücken bleibt die ganze Zeit gerade."
+      }
+    ],
+    "lunge": [
+      {
+        "title": "Stand",
+        "text": "Steh aufrecht, die Kurzhanteln seitlich am Körper."
+      },
+      {
+        "title": "Schritt",
+        "text": "Mach einen großen Schritt nach vorne und senk das hintere Knie Richtung Boden."
+      },
+      {
+        "title": "Zurück",
+        "text": "Drück dich vom vorderen Fuß zurück in den Stand und wechsle das Bein."
+      }
+    ],
+    "legExtension": [
+      {
+        "title": "Einstellen",
+        "text": "Richte die Knie an der Drehachse der Maschine aus, das Polster liegt knapp über den Knöcheln."
+      },
+      {
+        "title": "Strecken",
+        "text": "Streck die Beine vollständig und spann oben die Oberschenkel an."
+      },
+      {
+        "title": "Absenken",
+        "text": "Senk das Gewicht langsam ab, ohne es abzulegen."
+      }
+    ],
+    "calfRaise": [
+      {
+        "title": "Position",
+        "text": "Fußballen auf der Kante, Fersen frei, Beine gestreckt."
+      },
+      {
+        "title": "Hoch",
+        "text": "Drück dich so weit wie möglich auf die Zehenspitzen und halte kurz."
+      },
+      {
+        "title": "Absenken",
+        "text": "Senk die Fersen langsam unter die Plattform, bis die Waden gedehnt sind."
+      }
+    ],
+    "plank": [
+      {
+        "title": "Unterarme",
+        "text": "Ellbogen unter den Schultern, Unterarme auf dem Boden."
+      },
+      {
+        "title": "Anspannen",
+        "text": "Heb den Körper in eine gerade Linie. Gesäß und Bauch anspannen."
+      },
+      {
+        "title": "Halten",
+        "text": "Atme ruhig weiter und halte die Position, ohne dass die Hüfte durchhängt."
+      }
+    ]
   }
 }

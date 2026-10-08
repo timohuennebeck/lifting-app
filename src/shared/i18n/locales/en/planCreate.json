@@ -1,1 +1,111 @@
-{}
+{
+  "goal": {
+    "title": "WHAT'S YOUR\nGOAL?",
+    "repsA11y": "{{min}} to {{max}} reps",
+    "options": {
+      "hypertrophy": {
+        "title": "Hypertrophy",
+        "description": "Build muscle mass, usually 8–12 reps"
+      },
+      "strength": {
+        "title": "Max strength",
+        "description": "Lift heavier, usually 3–6 reps"
+      },
+      "strength_hypertrophy": {
+        "title": "Strength & hypertrophy",
+        "description": "Both combined, 4–10 reps"
+      }
+    }
+  },
+  "focus": {
+    "title": "WHAT'S YOUR\nFOCUS?",
+    "subtitle": "Pick one or more areas, or none at all.",
+    "none": "No focus",
+    "cta_one": "Continue · {{count}} area",
+    "cta_other": "Continue · {{count}} areas",
+    "mapA11y": "Body map. Tap a muscle to toggle its area."
+  },
+  "equipment": {
+    "title": "WHAT DO YOU\nTRAIN WITH?",
+    "options": {
+      "gym": {
+        "title": "Full gym",
+        "description": "Machines, cables, free weights"
+      },
+      "home": {
+        "title": "Own equipment",
+        "description": "At home, e.g. dumbbells or a bench"
+      },
+      "bodyweight": {
+        "title": "No equipment",
+        "description": "Bodyweight only"
+      }
+    }
+  },
+  "days": {
+    "title": "HOW OFTEN DO YOU\nWANT TO TRAIN?",
+    "perWeek": "PER WEEK",
+    "times": "{{count}}×",
+    "none": "No days picked yet",
+    "hintDays": "Tap the days you want to train.",
+    "hintDial": "Drag the ring",
+    "modes": {
+      "days": "Days",
+      "dial": "Ring"
+    }
+  },
+  "duration": {
+    "title": "HOW LONG SHOULD A\nWORKOUT TAKE?",
+    "minutes": "MINUTES",
+    "hint": "Drag the ring or tap a value",
+    "estimate": "≈ {{exercises}} exercises · {{sets}} sets",
+    "presetA11y": "{{count}} minutes"
+  },
+  "building": {
+    "stages": [
+      "Weighing your goal & experience …",
+      "Picking exercises for your equipment …",
+      "Spreading across your training days …",
+      "Setting sets and reps …"
+    ],
+    "frequency": "{{count}} × {{minutes}} min",
+    "focus": "Focus: {{areas}}",
+    "balanced": "All muscle groups",
+    "complaints": "Joint-friendly",
+    "dayTag": "D{{n}}",
+    "skip": "Tap to skip"
+  },
+  "planName": {
+    "title": "WHAT SHOULD YOUR\nPLAN BE CALLED?",
+    "label": "Plan name",
+    "placeholder": "e.g. My full-body plan",
+    "suggestions": "Suggestions",
+    "counter": "{{count}} / {{max}}",
+    "myPlan": "My plan",
+    "goalSplit": "{{goal}} {{count}}×"
+  },
+  "goalShort": {
+    "hypertrophy": "Muscle growth",
+    "strength": "Strength",
+    "strength_hypertrophy": "Power building"
+  },
+  "equipmentShort": {
+    "gym": "Full gym",
+    "home": "Home gym",
+    "bodyweight": "Bodyweight"
+  },
+  "splits": {
+    "full": "Full body",
+    "upperLower": "Upper / Lower",
+    "ppl": "Push · Pull · Legs",
+    "pplUpperLower": "PPL + Upper / Lower"
+  },
+  "dayNames": {
+    "full": "Full body",
+    "upper": "Upper body",
+    "lower": "Lower body",
+    "push": "Push",
+    "pull": "Pull",
+    "legs": "Legs"
+  }
+}
