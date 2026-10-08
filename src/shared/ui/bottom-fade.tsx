@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
+import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { colors } from '@/shared/lib/theme';
 
 export interface BottomFadeProps {
@@ -11,14 +11,16 @@ export interface BottomFadeProps {
 
 /** Sticky bottom CTA area that fades the scrolling content out underneath it. */
 export function BottomFade({ children }: BottomFadeProps) {
-  const insets = useSafeAreaInsets();
+  const footerInset = useFooterInset();
   return (
     <View
       pointerEvents="box-none"
       className="absolute inset-x-0 bottom-0 px-4 pt-10"
-      style={{ paddingBottom: insets.bottom + 16 }}
+      style={{ paddingBottom: footerInset }}
     >
       <Svg
+        width="100%"
+        height="100%"
         pointerEvents="none"
         style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
       >

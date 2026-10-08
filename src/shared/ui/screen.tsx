@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { cn } from '@/shared/lib/cn';
 
 export interface ScreenProps {
@@ -30,8 +31,7 @@ export function Screen({
   contentClassName,
 }: ScreenProps) {
   const insets = useSafeAreaInsets();
-  // Design keeps the CTA 30pt above the bottom edge (home indicator included).
-  const footerBottom = Math.max(insets.bottom - 4, 16);
+  const footerBottom = useFooterInset();
 
   return (
     <View className={cn('flex-1 bg-bg', className)} style={{ paddingTop: insets.top }}>

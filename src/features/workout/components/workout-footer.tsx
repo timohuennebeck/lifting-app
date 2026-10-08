@@ -1,7 +1,7 @@
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
+import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -27,11 +27,11 @@ export function WorkoutFooter({
   loading,
 }: WorkoutFooterProps) {
   const { t } = useTranslation('workout');
-  const insets = useSafeAreaInsets();
+  const footerInset = useFooterInset();
   return (
     <View
       className="flex-row items-center gap-2.5 bg-bg px-4 pt-3"
-      style={{ paddingBottom: insets.bottom + 12 }}
+      style={{ paddingBottom: footerInset }}
     >
       <IconButton
         icon="chevron-left"
