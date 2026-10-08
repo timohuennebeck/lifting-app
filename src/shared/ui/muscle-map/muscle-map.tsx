@@ -13,6 +13,8 @@ export interface MuscleMapProps {
   selected?: readonly MuscleId[];
   /** Makes muscles tappable; called with the tapped muscle. */
   onToggle?: (muscle: MuscleId) => void;
+  /** Highlight color; defaults to the user's accent (e.g. pass red for pain). */
+  accent?: string;
   /** Crops to a region, e.g. MUSCLE_CARDS[id].viewBox. */
   viewBox?: string;
   /** 'cover' fills the box and crops, like CSS object-fit. */
@@ -27,11 +29,13 @@ export const MuscleMap = memo(function MuscleMap({
   selected = [],
   onToggle,
   viewBox,
+  accent: accentOverride,
   fit = 'contain',
   width = '100%',
   height = '100%',
 }: MuscleMapProps) {
-  const accent = useAccentColor();
+  const userAccent = useAccentColor();
+  const accent = accentOverride ?? userAccent;
   const art = BODY[view];
   const active = new Set(selected);
 
