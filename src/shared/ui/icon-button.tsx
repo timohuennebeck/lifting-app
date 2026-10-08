@@ -19,14 +19,15 @@ export function IconButton({
   iconSize = 12,
   color = colors.fg,
   className,
+  style,
   ...props
 }: IconButtonProps) {
   return (
     <PressableScale
       hitSlop={8}
       className={cn('items-center justify-center rounded-full bg-elevated', className)}
-      style={{ width: size, height: size }}
       {...props}
+      style={[{ width: size, height: size }, style as object]}
     >
       <Icon name={icon} size={iconSize} color={color} />
     </PressableScale>
