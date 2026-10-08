@@ -1,0 +1,242 @@
+[
+  {
+    "id": "neck",
+    "name": "Neck",
+    "name_de": "Nacken",
+    "latin": "sternocleidomastoid",
+    "group": "Neck",
+    "card": {
+      "view": "front",
+      "viewBox": "239 155 250 250",
+      "file": "cards/neck.svg"
+    }
+  },
+  {
+    "id": "traps",
+    "name": "Traps",
+    "name_de": "Trapez",
+    "latin": "trapezius",
+    "group": "Back",
+    "card": {
+      "view": "back",
+      "viewBox": "958 260 250 250",
+      "file": "cards/traps.svg"
+    }
+  },
+  {
+    "id": "lats",
+    "name": "Lats",
+    "name_de": "Latissimus",
+    "latin": "latissimus dorsi",
+    "group": "Back",
+    "card": {
+      "view": "back",
+      "viewBox": "925 334 318 318",
+      "file": "cards/lats.svg"
+    }
+  },
+  {
+    "id": "upper_back",
+    "name": "Upper back",
+    "name_de": "Oberer Rücken",
+    "latin": "infraspinatus, teres major & minor",
+    "group": "Back",
+    "card": {
+      "view": "back",
+      "viewBox": "911 195 344 344",
+      "file": "cards/upper_back.svg"
+    }
+  },
+  {
+    "id": "lower_back",
+    "name": "Lower back",
+    "name_de": "Unterer Rücken",
+    "latin": "erector spinae",
+    "group": "Back",
+    "card": {
+      "view": "back",
+      "viewBox": "949 428 269 269",
+      "file": "cards/lower_back.svg"
+    }
+  },
+  {
+    "id": "front_delts",
+    "name": "Front delts",
+    "name_de": "Vordere Schulter",
+    "latin": "deltoideus, anterior head",
+    "group": "Shoulders",
+    "card": {
+      "view": "front",
+      "viewBox": "146 132 436 436",
+      "file": "cards/front_delts.svg"
+    }
+  },
+  {
+    "id": "side_delts",
+    "name": "Side delts",
+    "name_de": "Seitliche Schulter",
+    "latin": "deltoideus, lateral head",
+    "group": "Shoulders",
+    "card": {
+      "view": "front",
+      "viewBox": "135 110 457 457",
+      "file": "cards/side_delts.svg"
+    }
+  },
+  {
+    "id": "rear_delts",
+    "name": "Rear delts",
+    "name_de": "Hintere Schulter",
+    "latin": "deltoideus, posterior head",
+    "group": "Shoulders",
+    "card": {
+      "view": "back",
+      "viewBox": "855 125 457 457",
+      "file": "cards/rear_delts.svg"
+    }
+  },
+  {
+    "id": "chest",
+    "name": "Chest",
+    "name_de": "Brust",
+    "latin": "pectoralis major",
+    "group": "Chest",
+    "card": {
+      "view": "front",
+      "viewBox": "217 229 294 294",
+      "file": "cards/chest.svg"
+    }
+  },
+  {
+    "id": "biceps",
+    "name": "Biceps",
+    "name_de": "Bizeps",
+    "latin": "biceps brachii",
+    "group": "Arms",
+    "card": {
+      "view": "front",
+      "viewBox": "356 325 250 250",
+      "file": "cards/biceps.svg"
+    }
+  },
+  {
+    "id": "triceps",
+    "name": "Triceps",
+    "name_de": "Trizeps",
+    "latin": "triceps brachii",
+    "group": "Arms",
+    "card": {
+      "view": "back",
+      "viewBox": "1068 333 250 250",
+      "file": "cards/triceps.svg"
+    }
+  },
+  {
+    "id": "forearms",
+    "name": "Forearms",
+    "name_de": "Unterarme",
+    "latin": "brachioradialis & flexors",
+    "group": "Arms",
+    "card": {
+      "view": "front",
+      "viewBox": "386 466 254 254",
+      "file": "cards/forearms.svg"
+    }
+  },
+  {
+    "id": "abs",
+    "name": "Abs",
+    "name_de": "Bauch",
+    "latin": "rectus abdominis",
+    "group": "Core",
+    "card": {
+      "view": "front",
+      "viewBox": "170 378 388 388",
+      "file": "cards/abs.svg"
+    }
+  },
+  {
+    "id": "obliques",
+    "name": "Obliques",
+    "name_de": "Seitliche Bauchmuskeln",
+    "latin": "obliquus externus, serratus",
+    "group": "Core",
+    "card": {
+      "view": "front",
+      "viewBox": "202 375 325 325",
+      "file": "cards/obliques.svg"
+    }
+  },
+  {
+    "id": "glutes",
+    "name": "Glutes",
+    "name_de": "Gesäß",
+    "latin": "gluteus maximus & medius",
+    "group": "Legs",
+    "card": {
+      "view": "back",
+      "viewBox": "939 554 289 289",
+      "file": "cards/glutes.svg"
+    }
+  },
+  {
+    "id": "quads",
+    "name": "Quads",
+    "name_de": "Oberschenkel vorne",
+    "latin": "quadriceps femoris",
+    "group": "Legs",
+    "card": {
+      "view": "front",
+      "viewBox": "174 618 379 379",
+      "file": "cards/quads.svg"
+    }
+  },
+  {
+    "id": "hamstrings",
+    "name": "Hamstrings",
+    "name_de": "Oberschenkel hinten",
+    "latin": "biceps femoris, semitendinosus",
+    "group": "Legs",
+    "card": {
+      "view": "back",
+      "viewBox": "904 694 358 358",
+      "file": "cards/hamstrings.svg"
+    }
+  },
+  {
+    "id": "adductors",
+    "name": "Adductors",
+    "name_de": "Adduktoren",
+    "latin": "adductor longus & magnus",
+    "group": "Legs",
+    "card": {
+      "view": "front",
+      "viewBox": "195 603 339 339",
+      "file": "cards/adductors.svg"
+    }
+  },
+  {
+    "id": "calves",
+    "name": "Calves",
+    "name_de": "Waden",
+    "latin": "gastrocnemius & soleus",
+    "group": "Legs",
+    "card": {
+      "view": "back",
+      "viewBox": "869 916 430 430",
+      "file": "cards/calves.svg"
+    }
+  },
+  {
+    "id": "tibialis",
+    "name": "Shins",
+    "name_de": "Schienbein",
+    "latin": "tibialis anterior",
+    "group": "Legs",
+    "card": {
+      "view": "front",
+      "viewBox": "210 933 309 309",
+      "file": "cards/tibialis.svg"
+    }
+  }
+]
