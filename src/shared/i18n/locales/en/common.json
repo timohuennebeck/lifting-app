@@ -1,0 +1,53 @@
+{
+  "actions": {
+    "continue": "Continue",
+    "back": "Back",
+    "done": "Done",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "rename": "Rename",
+    "create": "Create",
+    "skip": "Later",
+    "clear": "Clear",
+    "start": "Start",
+    "edit": "Edit",
+    "decrease": "Decrease",
+    "increase": "Increase",
+    "togglePassword": "Show or hide password",
+    "close": "Close"
+  },
+  "progress": {
+    "stepOf": "{{current}} of {{total}}"
+  },
+  "units": {
+    "kg": "kg",
+    "lb": "lb",
+    "cm": "cm",
+    "min": "min",
+    "minShort": "Min"
+  },
+  "weekdays": {
+    "short": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    "narrow": ["M", "T", "W", "T", "F", "S", "S"],
+    "long": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+  },
+  "greeting": "Hi {{name}}",
+  "languages": {
+    "en": "English",
+    "de": "Deutsch",
+    "pt-PT": "Português",
+    "pt-BR": "Português (Brasil)"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again."
+  },
+  "tabs": {
+    "today": "Today",
+    "training": "Training",
+    "muscles": "Muscles",
+    "body": "Body",
+    "profile": "Profile"
+  },
+  "settings": "Settings"
+}

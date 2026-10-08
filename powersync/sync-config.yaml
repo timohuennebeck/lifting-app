@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://unpkg.com/@powersync/service-sync-rules@latest/schema/sync_rules.json
+# Restart the PowerSync service after editing this file.
+config:
+  edition: 3
+
+streams:
+  user_data:
+    auto_subscribe: true
+    queries:
+      - SELECT * FROM profiles WHERE user_id = auth.user_id()
+      - SELECT * FROM collections WHERE user_id = auth.user_id()
+      - SELECT * FROM templates WHERE user_id = auth.user_id()
+      - SELECT * FROM template_exercises WHERE user_id = auth.user_id()
+      - SELECT * FROM template_sets WHERE user_id = auth.user_id()
+      - SELECT * FROM workouts WHERE user_id = auth.user_id()
+      - SELECT * FROM workout_exercises WHERE user_id = auth.user_id()
+      - SELECT * FROM workout_sets WHERE user_id = auth.user_id()
+      - SELECT * FROM body_checks WHERE user_id = auth.user_id()

@@ -1,0 +1,27 @@
+import { useEffect } from 'react';
+
+import { connector, db } from '@/shared/data/powersync/database';
+import { queryClient } from '@/shared/data/query-client';
+import { supabase } from '@/shared/data/supabase';
+
+import { useSessionStore } from '@/shared/stores/session-store';
+
+/** Mirrors Supabase auth into the session store and (dis)connects PowerSync. */
+export function useAuthListener() {
+  const setSession = useSessionStore((s) => s.setSession);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+      if (session) {
+        db.connect(connector);
+      } else if (event === 'SIGNED_OUT') {
+        db.disconnectAndClear();
+        queryClient.clear();
+      }
+    });
+    return () => data.subscription.unsubscribe();
+  }, [setSession]);
+}

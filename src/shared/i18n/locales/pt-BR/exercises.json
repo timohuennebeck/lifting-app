@@ -1,0 +1,98 @@
+{
+  "bench-press": {
+    "name": "Supino reto"
+  },
+  "close-grip-bench-press": {
+    "name": "Supino pegada fechada no Smith"
+  },
+  "incline-dumbbell-press": {
+    "name": "Supino inclinado com halteres"
+  },
+  "dumbbell-shoulder-press": {
+    "name": "Desenvolvimento com halteres em pé, pegada neutra"
+  },
+  "seated-shoulder-press": {
+    "name": "Desenvolvimento sentado"
+  },
+  "arnold-press": {
+    "name": "Desenvolvimento Arnold"
+  },
+  "lateral-raise": {
+    "name": "Elevação lateral"
+  },
+  "front-raise": {
+    "name": "Elevação frontal"
+  },
+  "reverse-fly": {
+    "name": "Crucifixo invertido"
+  },
+  "upright-row": {
+    "name": "Remada alta"
+  },
+  "face-pull": {
+    "name": "Face pull"
+  },
+  "cable-crossover": {
+    "name": "Crossover no cabo"
+  },
+  "dip": {
+    "name": "Mergulho nas paralelas"
+  },
+  "push-up": {
+    "name": "Flexão de braço"
+  },
+  "triceps-pushdown": {
+    "name": "Tríceps na polia"
+  },
+  "french-press": {
+    "name": "Tríceps francês"
+  },
+  "pull-up": {
+    "name": "Barra fixa"
+  },
+  "chin-up": {
+    "name": "Barra fixa supinada"
+  },
+  "lat-pulldown": {
+    "name": "Puxada frontal"
+  },
+  "seated-cable-row": {
+    "name": "Remada baixa no cabo"
+  },
+  "t-bar-row": {
+    "name": "Remada cavalinho"
+  },
+  "deadlift": {
+    "name": "Levantamento terra"
+  },
+  "hammer-curl": {
+    "name": "Rosca martelo"
+  },
+  "dumbbell-curl": {
+    "name": "Rosca com halteres"
+  },
+  "squat": {
+    "name": "Agachamento livre"
+  },
+  "hack-squat": {
+    "name": "Agachamento hack"
+  },
+  "leg-press": {
+    "name": "Leg press"
+  },
+  "romanian-deadlift": {
+    "name": "Stiff"
+  },
+  "lunge": {
+    "name": "Avanço"
+  },
+  "leg-extension": {
+    "name": "Cadeira extensora"
+  },
+  "calf-raise": {
+    "name": "Elevação de panturrilha"
+  },
+  "plank": {
+    "name": "Prancha"
+  }
+}

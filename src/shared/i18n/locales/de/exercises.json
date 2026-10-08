@@ -1,0 +1,98 @@
+{
+  "bench-press": {
+    "name": "Bankdrücken"
+  },
+  "close-grip-bench-press": {
+    "name": "Enges Bankdrücken an der Multipresse"
+  },
+  "incline-dumbbell-press": {
+    "name": "Flaches Schrägbankdrücken mit Kurzhanteln"
+  },
+  "dumbbell-shoulder-press": {
+    "name": "Kurzhantel-Schulterdrücken stehend, neutraler Griff"
+  },
+  "seated-shoulder-press": {
+    "name": "Schulterdrücken sitzend"
+  },
+  "arnold-press": {
+    "name": "Arnold Press"
+  },
+  "lateral-raise": {
+    "name": "Seitheben"
+  },
+  "front-raise": {
+    "name": "Frontheben"
+  },
+  "reverse-fly": {
+    "name": "Reverse Flys"
+  },
+  "upright-row": {
+    "name": "Aufrechtes Rudern"
+  },
+  "face-pull": {
+    "name": "Face Pulls"
+  },
+  "cable-crossover": {
+    "name": "Butterfly am Kabel"
+  },
+  "dip": {
+    "name": "Dips"
+  },
+  "push-up": {
+    "name": "Liegestütz"
+  },
+  "triceps-pushdown": {
+    "name": "Trizepsdrücken am Kabel"
+  },
+  "french-press": {
+    "name": "French Press"
+  },
+  "pull-up": {
+    "name": "Klimmzüge"
+  },
+  "chin-up": {
+    "name": "Klimmzüge im Untergriff"
+  },
+  "lat-pulldown": {
+    "name": "Latziehen"
+  },
+  "seated-cable-row": {
+    "name": "Kabelrudern eng"
+  },
+  "t-bar-row": {
+    "name": "T-Bar-Rudern"
+  },
+  "deadlift": {
+    "name": "Kreuzheben"
+  },
+  "hammer-curl": {
+    "name": "Hammercurls"
+  },
+  "dumbbell-curl": {
+    "name": "Kurzhantel-Curls"
+  },
+  "squat": {
+    "name": "Kniebeugen"
+  },
+  "hack-squat": {
+    "name": "Hack Squat"
+  },
+  "leg-press": {
+    "name": "Beinpresse"
+  },
+  "romanian-deadlift": {
+    "name": "Rumänisches Kreuzheben"
+  },
+  "lunge": {
+    "name": "Ausfallschritte"
+  },
+  "leg-extension": {
+    "name": "Beinstrecker"
+  },
+  "calf-raise": {
+    "name": "Wadenheben"
+  },
+  "plank": {
+    "name": "Unterarmstütz"
+  }
+}

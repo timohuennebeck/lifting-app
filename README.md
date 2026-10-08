@@ -1,25 +1,45 @@
-# CODING AGENTS: READ THIS FIRST
+# Forge
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+Workout logger built with Expo Router, Supabase, PowerSync and Uniwind. The original
+Claude Design handoff (prototype, chat transcript, assets) lives in [`design/`](design/README.md).
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+## Stack
 
-## What you should do — IMPORTANT
+- **Expo SDK 57** with Expo Router, protected routes and native tabs
+- **Supabase** (local development) for auth and Postgres
+- **PowerSync** for local-first SQLite sync, read through **TanStack Query** (`@powersync/tanstack-react-query`)
+- **Uniwind** (Tailwind v4) with `tailwind-merge` via `cn()`
+- **Zustand** + **MMKV** for global and persisted client state
+- **i18next** with `en` (source), `de`, `pt-PT`, `pt-BR`
 
-**Read the chat transcripts first.** There are 1 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+## Getting started
 
-**Read `project/Workout Logger.dc.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+```bash
+npm install
+cp .env.example .env
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+# Supabase (Docker required); generate the ES256 signing key once
+npx supabase gen signing-key --algorithm ES256 --append
+npm run supabase:start          # copy the publishable key into .env
 
-## About the design files
+# PowerSync service, joined to the Supabase docker network
+npm run powersync:up
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+# Native modules (MMKV, op-sqlite) need a development build, not Expo Go
+npm run ios   # or npm run android
+```
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
+## Project structure
 
-## Bundle contents
+```
+src/
+  app/                 Expo Router routes only (thin files re-exporting feature screens)
+  features/<feature>/  components, screens, data, hooks, lib, stores per feature
+  shared/              ui primitives, components, data layer, i18n, lib, stores
+supabase/              config + migrations (RLS, PowerSync publication)
+powersync/             self-hosted service config, sync streams, docker compose
+```
 
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `Workout Logger Mobile App` project files (HTML prototypes, assets, components)
+## Scripts
+
+`npm run typecheck`, `npm run lint`, `npm run format`, `npm run supabase:reset`.

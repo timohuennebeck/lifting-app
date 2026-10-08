@@ -1,0 +1,28 @@
+{
+  "names": {
+    "abs": "Abdominais",
+    "adductors": "Adutores",
+    "biceps": "Bíceps",
+    "calves": "Gémeos",
+    "chest": "Peito",
+    "forearms": "Antebraços",
+    "front_delts": "Deltoide anterior",
+    "glutes": "Glúteos",
+    "hamstrings": "Isquiotibiais",
+    "lats": "Grande dorsal",
+    "lower_back": "Lombar",
+    "neck": "Pescoço",
+    "obliques": "Oblíquos",
+    "quads": "Quadríceps",
+    "rear_delts": "Deltoide posterior",
+    "side_delts": "Deltoide lateral",
+    "tibialis": "Tibial anterior",
+    "traps": "Trapézio",
+    "triceps": "Tríceps",
+    "upper_back": "Parte superior das costas"
+  },
+  "regions": {
+    "upper": "Parte superior",
+    "lower": "Parte inferior"
+  }
+}

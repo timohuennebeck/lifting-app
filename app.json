@@ -1,0 +1,62 @@
+{
+  "expo": {
+    "name": "Forge",
+    "slug": "forge",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "forge",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.horizonalpha.forge",
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Forge uses the camera to photograph your training plan.",
+        "NSPhotoLibraryUsageDescription": "Forge lets you import a training plan from your photos.",
+        "NSMicrophoneUsageDescription": "Forge uses the microphone for voice input of your plan."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0A0A0A",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.horizonalpha.forge"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0A0A0A",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 76
+        }
+      ],
+      "expo-localization",
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Forge uses the camera to photograph your training plan."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Forge lets you import a training plan from your photos."
+        }
+      ],
+      "expo-document-picker"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "backgroundColor": "#0A0A0A"
+  }
+}

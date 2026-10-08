@@ -1,0 +1,61 @@
+{
+  "actions": {
+    "continue": "Continuar",
+    "back": "Voltar",
+    "done": "Concluído",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "rename": "Renomear",
+    "create": "Criar",
+    "skip": "Mais tarde",
+    "clear": "Limpar",
+    "start": "Começar",
+    "edit": "Editar",
+    "decrease": "Diminuir",
+    "increase": "Aumentar",
+    "togglePassword": "Mostrar ou ocultar senha",
+    "close": "Fechar"
+  },
+  "progress": {
+    "stepOf": "{{current}} de {{total}}"
+  },
+  "units": {
+    "kg": "kg",
+    "lb": "lb",
+    "cm": "cm",
+    "min": "min",
+    "minShort": "min"
+  },
+  "weekdays": {
+    "short": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+    "narrow": ["S", "T", "Q", "Q", "S", "S", "D"],
+    "long": [
+      "Segunda-feira",
+      "Terça-feira",
+      "Quarta-feira",
+      "Quinta-feira",
+      "Sexta-feira",
+      "Sábado",
+      "Domingo"
+    ]
+  },
+  "greeting": "Oi {{name}}",
+  "languages": {
+    "en": "English",
+    "de": "Deutsch",
+    "pt-PT": "Português",
+    "pt-BR": "Português (Brasil)"
+  },
+  "errors": {
+    "generic": "Algo deu errado. Tente novamente."
+  },
+  "tabs": {
+    "today": "Hoje",
+    "training": "Treino",
+    "muscles": "Músculos",
+    "body": "Corpo",
+    "profile": "Perfil"
+  },
+  "settings": "Configurações"
+}

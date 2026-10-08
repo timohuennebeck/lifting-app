@@ -1,0 +1,98 @@
+{
+  "bench-press": {
+    "name": "Supino plano"
+  },
+  "close-grip-bench-press": {
+    "name": "Supino pega fechada na máquina Smith"
+  },
+  "incline-dumbbell-press": {
+    "name": "Supino inclinado com halteres"
+  },
+  "dumbbell-shoulder-press": {
+    "name": "Desenvolvimento com halteres em pé, pega neutra"
+  },
+  "seated-shoulder-press": {
+    "name": "Desenvolvimento sentado"
+  },
+  "arnold-press": {
+    "name": "Press Arnold"
+  },
+  "lateral-raise": {
+    "name": "Elevação lateral"
+  },
+  "front-raise": {
+    "name": "Elevação frontal"
+  },
+  "reverse-fly": {
+    "name": "Aberturas invertidas"
+  },
+  "upright-row": {
+    "name": "Remada alta"
+  },
+  "face-pull": {
+    "name": "Face pull"
+  },
+  "cable-crossover": {
+    "name": "Cruzamento de cabos"
+  },
+  "dip": {
+    "name": "Fundos"
+  },
+  "push-up": {
+    "name": "Flexão"
+  },
+  "triceps-pushdown": {
+    "name": "Extensão de tríceps no cabo"
+  },
+  "french-press": {
+    "name": "Extensão francesa"
+  },
+  "pull-up": {
+    "name": "Elevações"
+  },
+  "chin-up": {
+    "name": "Elevações em supinação"
+  },
+  "lat-pulldown": {
+    "name": "Puxada à frente"
+  },
+  "seated-cable-row": {
+    "name": "Remada sentada no cabo"
+  },
+  "t-bar-row": {
+    "name": "Remada T"
+  },
+  "deadlift": {
+    "name": "Peso morto"
+  },
+  "hammer-curl": {
+    "name": "Curl martelo"
+  },
+  "dumbbell-curl": {
+    "name": "Curl com halteres"
+  },
+  "squat": {
+    "name": "Agachamento"
+  },
+  "hack-squat": {
+    "name": "Agachamento hack"
+  },
+  "leg-press": {
+    "name": "Prensa de pernas"
+  },
+  "romanian-deadlift": {
+    "name": "Peso morto romeno"
+  },
+  "lunge": {
+    "name": "Afundos"
+  },
+  "leg-extension": {
+    "name": "Extensão de pernas"
+  },
+  "calf-raise": {
+    "name": "Elevação de gémeos"
+  },
+  "plank": {
+    "name": "Prancha"
+  }
+}

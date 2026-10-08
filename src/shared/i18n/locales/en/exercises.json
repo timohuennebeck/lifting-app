@@ -1,0 +1,98 @@
+{
+  "bench-press": {
+    "name": "Bench Press"
+  },
+  "close-grip-bench-press": {
+    "name": "Close-Grip Smith Machine Bench Press"
+  },
+  "incline-dumbbell-press": {
+    "name": "Low-Incline Dumbbell Press"
+  },
+  "dumbbell-shoulder-press": {
+    "name": "Standing Dumbbell Shoulder Press, Neutral Grip"
+  },
+  "seated-shoulder-press": {
+    "name": "Seated Shoulder Press"
+  },
+  "arnold-press": {
+    "name": "Arnold Press"
+  },
+  "lateral-raise": {
+    "name": "Lateral Raise"
+  },
+  "front-raise": {
+    "name": "Front Raise"
+  },
+  "reverse-fly": {
+    "name": "Reverse Fly"
+  },
+  "upright-row": {
+    "name": "Upright Row"
+  },
+  "face-pull": {
+    "name": "Face Pull"
+  },
+  "cable-crossover": {
+    "name": "Cable Crossover"
+  },
+  "dip": {
+    "name": "Dips"
+  },
+  "push-up": {
+    "name": "Push-Up"
+  },
+  "triceps-pushdown": {
+    "name": "Cable Triceps Pushdown"
+  },
+  "french-press": {
+    "name": "French Press"
+  },
+  "pull-up": {
+    "name": "Pull-Up"
+  },
+  "chin-up": {
+    "name": "Chin-Up"
+  },
+  "lat-pulldown": {
+    "name": "Lat Pulldown"
+  },
+  "seated-cable-row": {
+    "name": "Close-Grip Cable Row"
+  },
+  "t-bar-row": {
+    "name": "T-Bar Row"
+  },
+  "deadlift": {
+    "name": "Deadlift"
+  },
+  "hammer-curl": {
+    "name": "Hammer Curl"
+  },
+  "dumbbell-curl": {
+    "name": "Dumbbell Curl"
+  },
+  "squat": {
+    "name": "Back Squat"
+  },
+  "hack-squat": {
+    "name": "Hack Squat"
+  },
+  "leg-press": {
+    "name": "Leg Press"
+  },
+  "romanian-deadlift": {
+    "name": "Romanian Deadlift"
+  },
+  "lunge": {
+    "name": "Lunges"
+  },
+  "leg-extension": {
+    "name": "Leg Extension"
+  },
+  "calf-raise": {
+    "name": "Calf Raise"
+  },
+  "plank": {
+    "name": "Plank"
+  }
+}

@@ -1,0 +1,54 @@
+@import 'tailwindcss';
+@import 'uniwind';
+
+/* Design tokens from the Forge design (dark only). */
+@theme {
+  --font-inter: 'Inter_400Regular';
+  --font-inter-medium: 'Inter_500Medium';
+  --font-inter-semibold: 'Inter_600SemiBold';
+  --font-inter-bold: 'Inter_700Bold';
+
+  --text-display: 88px;
+  --text-display--line-height: 88px;
+  --text-hero: 44px;
+  --text-hero--line-height: 44px;
+  --text-title: 30px;
+  --text-title--line-height: 30px;
+  --text-headline: 22px;
+  --text-headline--line-height: 26px;
+  --text-body: 17px;
+  --text-body--line-height: 22px;
+  --text-label: 15px;
+  --text-label--line-height: 22px;
+  --text-caption: 13px;
+  --text-caption--line-height: 17px;
+
+  --color-bg: #0a0a0a;
+  --color-surface: #141414;
+  --color-elevated: #1f1f1f;
+  --color-control: #262626;
+  --color-pill: #1c1c1c;
+  --color-line: #2a2a28;
+  --color-track: #3a3a38;
+  --color-fg: #f4f4f0;
+  --color-fg-2: #c9c9c4;
+  --color-muted: #a3a39e;
+  --color-subtle: #8c8c87;
+  --color-dim: #6e6e6a;
+  --color-on-accent: #0a0a0a;
+  --color-danger: #e08a7a;
+  --color-danger-bg: #3a2020;
+  --color-accent: #dfff1f;
+}
+
+/* Accent is user-selectable at runtime via Uniwind.updateCSSVariables. */
+@layer theme {
+  :root {
+    @variant dark {
+      --color-accent: #dfff1f;
+    }
+    @variant light {
+      --color-accent: #dfff1f;
+    }
+  }
+}

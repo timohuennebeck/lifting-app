@@ -1,0 +1,28 @@
+{
+  "names": {
+    "abs": "Bauch",
+    "adductors": "Adduktoren",
+    "biceps": "Bizeps",
+    "calves": "Waden",
+    "chest": "Brust",
+    "forearms": "Unterarme",
+    "front_delts": "Vordere Schulter",
+    "glutes": "Gesäß",
+    "hamstrings": "Beinbeuger",
+    "lats": "Latissimus",
+    "lower_back": "Unterer Rücken",
+    "neck": "Nacken",
+    "obliques": "Seitliche Bauchmuskeln",
+    "quads": "Oberschenkel vorne",
+    "rear_delts": "Hintere Schulter",
+    "side_delts": "Seitliche Schulter",
+    "tibialis": "Schienbein",
+    "traps": "Trapez",
+    "triceps": "Trizeps",
+    "upper_back": "Oberer Rücken"
+  },
+  "regions": {
+    "upper": "Oberkörper",
+    "lower": "Unterkörper"
+  }
+}

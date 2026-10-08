@@ -1,0 +1,28 @@
+{
+  "names": {
+    "abs": "Abs",
+    "adductors": "Adductors",
+    "biceps": "Biceps",
+    "calves": "Calves",
+    "chest": "Chest",
+    "forearms": "Forearms",
+    "front_delts": "Front delts",
+    "glutes": "Glutes",
+    "hamstrings": "Hamstrings",
+    "lats": "Lats",
+    "lower_back": "Lower back",
+    "neck": "Neck",
+    "obliques": "Obliques",
+    "quads": "Quads",
+    "rear_delts": "Rear delts",
+    "side_delts": "Side delts",
+    "tibialis": "Shins",
+    "traps": "Traps",
+    "triceps": "Triceps",
+    "upper_back": "Upper back"
+  },
+  "regions": {
+    "upper": "Upper body",
+    "lower": "Lower body"
+  }
+}
