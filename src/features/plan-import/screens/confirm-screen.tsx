@@ -6,7 +6,6 @@ import { TextInput, View } from 'react-native';
 import { ExerciseDetailModal } from '@/features/exercises/components/exercise-detail-modal';
 import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
-import { StepTitle } from '@/features/plan-create/components/step-title';
 import { muscleShares } from '@/shared/data/muscles';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
@@ -16,8 +15,7 @@ import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
 import { MuscleTileRow } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-import { Screen } from '@/shared/ui/screen';
-import { StepHeader } from '@/shared/ui/step-header';
+import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
@@ -96,9 +94,11 @@ export function ConfirmScreen() {
   }
 
   return (
-    <Screen
+    <StepScreen
+      step={IMPORT_STEPS}
+      total={IMPORT_STEPS}
+      title={t('planImport:confirm.title')}
       scroll
-      header={<StepHeader step={IMPORT_STEPS} total={IMPORT_STEPS} />}
       footer={
         <Button
           label={
@@ -112,7 +112,6 @@ export function ConfirmScreen() {
         />
       }
     >
-      <StepTitle title={t('planImport:confirm.title')} />
       <View className="px-4 pt-6">
         <TextField
           label={t('planImport:confirm.planName')}
@@ -244,6 +243,6 @@ export function ConfirmScreen() {
         muscleItems={day?.exercises.map((e) => ({ exerciseId: e.exerciseId, sets: e.sets.length }))}
       />
       <ExerciseDetailModal exerciseId={detailId} onClose={() => setDetailId(null)} />
-    </Screen>
+    </StepScreen>
   );
 }

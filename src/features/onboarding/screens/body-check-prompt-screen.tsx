@@ -8,9 +8,9 @@ import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { MuscleMap } from '@/shared/ui/muscle-map/muscle-map';
 import { Text } from '@/shared/ui/text';
+import { StepScreen } from '@/shared/ui/step-screen';
+import { TextButton } from '@/shared/ui/text-button';
 
-import { OnboardingStep } from '../components/onboarding-step';
-import { TextButton } from '../components/text-button';
 import { START_STEPS } from '../lib/flow';
 import { useOnboardingStore } from '../stores/onboarding-store';
 
@@ -28,7 +28,7 @@ export function BodyCheckPromptScreen() {
   const { t } = useTranslation('onboarding');
 
   return (
-    <OnboardingStep
+    <StepScreen
       step={3}
       total={START_STEPS}
       title={t('bodyCheck.title')}
@@ -79,6 +79,6 @@ export function BodyCheckPromptScreen() {
           </View>
         ))}
       </View>
-    </OnboardingStep>
+    </StepScreen>
   );
 }

@@ -294,11 +294,21 @@ export function useWorkoutHistory() {
   });
 }
 
+export interface ExerciseHistorySet {
+  position: number;
+  weightKg: number;
+  reps: number;
+  rir: number | null;
+  isPr: boolean;
+}
+
 export interface ExerciseHistoryEntry {
   workoutId: string;
+  /** Workout name. */
+  name: string;
   startedAt: string;
   finishedAt: string | null;
-  sets: { position: number; weightKg: number; reps: number; rir: number | null; isPr: boolean }[];
+  sets: ExerciseHistorySet[];
 }
 
 /** Completed sets of one exercise from finished workouts, newest first. */
@@ -306,18 +316,19 @@ export function useExerciseHistory(exerciseId: string | undefined) {
   return useSqlQuery({
     queryKey: queryKeys.workouts.exerciseHistory(exerciseId ?? '').queryKey,
     enabled: !!exerciseId,
-    sql: `SELECT w.id AS workout_id, w.started_at, w.finished_at, s.position, s.weight_kg, s.reps,
-              s.target_rir, s.is_pr
+    sql: `SELECT w.id AS workout_id, w.name, w.started_at, w.finished_at, s.position, s.weight_kg,
+              s.reps, s.target_rir, s.is_pr
             FROM workout_sets s
             JOIN workout_exercises we ON we.id = s.workout_exercise_id
             JOIN workouts w ON w.id = we.workout_id
             WHERE we.exercise_id = ? AND s.completed_at IS NOT NULL AND w.finished_at IS NOT NULL
-            ORDER BY w.started_at DESC, s.position`,
+            ORDER BY w.started_at DESC, we.position, s.position`,
     parameters: [exerciseId],
     map: (data) => {
       const map = new Map<string, ExerciseHistoryEntry>();
       for (const r of data as {
         workout_id: string;
+        name: string;
         started_at: string;
         finished_at: string | null;
         position: number;
@@ -331,6 +342,7 @@ export function useExerciseHistory(exerciseId: string | undefined) {
           map
             .set(r.workout_id, {
               workoutId: r.workout_id,
+              name: r.name,
               startedAt: r.started_at,
               finishedAt: r.finished_at,
               sets: [],

@@ -4,13 +4,12 @@ import { View } from 'react-native';
 
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { haptics } from '@/shared/lib/haptics';
+import { clamp } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { DialRing } from '@/shared/ui/dial-ring';
-import { Screen } from '@/shared/ui/screen';
-import { StepHeader } from '@/shared/ui/step-header';
+import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
-import { StepTitle } from '../components/step-title';
 import { CREATE_STEPS, DURATION } from '../lib/flow';
 
 export function DurationScreen() {
@@ -29,12 +28,14 @@ export function DurationScreen() {
     // Don't jump across the 12 o'clock seam while dragging.
     if (sessionMinutes >= 100 && next < 30) next = DURATION.max;
     if (sessionMinutes <= 30 && next > 100) next = DURATION.min;
-    set(Math.min(DURATION.max, Math.max(DURATION.min, next)));
+    set(clamp(next, DURATION.min, DURATION.max));
   }
 
   return (
-    <Screen
-      header={<StepHeader step={5} total={CREATE_STEPS} />}
+    <StepScreen
+      step={5}
+      total={CREATE_STEPS}
+      title={t('planCreate:duration.title')}
       footer={
         <Button
           label={t('common:actions.continue')}
@@ -42,7 +43,6 @@ export function DurationScreen() {
         />
       }
     >
-      <StepTitle title={t('planCreate:duration.title')} />
       <View className="mt-10 items-center">
         <DialRing fraction={sessionMinutes / DURATION.max} onChange={onDial}>
           <Text className="font-inter-semibold text-[72px] leading-[72px] text-fg">
@@ -56,6 +56,6 @@ export function DurationScreen() {
           {t('planCreate:duration.hint')}
         </Text>
       </View>
-    </Screen>
+    </StepScreen>
   );
 }

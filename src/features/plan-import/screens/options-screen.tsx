@@ -3,11 +3,9 @@ import { Redirect, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
-import { StepTitle } from '@/features/plan-create/components/step-title';
 import { Button } from '@/shared/ui/button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-import { Screen } from '@/shared/ui/screen';
-import { StepHeader } from '@/shared/ui/step-header';
+import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
 import { fileExtension, formatFileSize, IMPORT_STEPS } from '../lib/format';
@@ -46,11 +44,12 @@ export function OptionsScreen() {
   }
 
   return (
-    <Screen
-      header={<StepHeader step={2} total={IMPORT_STEPS} />}
+    <StepScreen
+      step={2}
+      total={IMPORT_STEPS}
+      title={t('options.title')}
       footer={<Button label={t('options.cta')} onPress={() => router.push('/import/analysis')} />}
     >
-      <StepTitle title={t('options.title')} />
       <View className="flex-1 items-center justify-center gap-[22px] px-5">
         <View
           accessibilityLabel={t('options.preview')}
@@ -104,6 +103,6 @@ export function OptionsScreen() {
           </Text>
         </PressableScale>
       </View>
-    </Screen>
+    </StepScreen>
   );
 }

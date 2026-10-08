@@ -30,7 +30,7 @@ export interface OnboardingDraft {
 
 const IMPERIAL_REGIONS = ['US', 'LR', 'MM'];
 
-export const initialDraft = (): OnboardingDraft => ({
+const initialDraft = (): OnboardingDraft => ({
   firstName: '',
   sex: null,
   age: 28,

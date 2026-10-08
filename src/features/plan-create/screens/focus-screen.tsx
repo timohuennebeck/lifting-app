@@ -12,10 +12,8 @@ import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboardin
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import { MuscleMap } from '@/shared/ui/muscle-map';
-import { Screen } from '@/shared/ui/screen';
-import { StepHeader } from '@/shared/ui/step-header';
+import { StepScreen } from '@/shared/ui/step-screen';
 
-import { StepTitle } from '../components/step-title';
 import { CREATE_STEPS } from '../lib/flow';
 
 export function FocusScreen() {
@@ -34,9 +32,13 @@ export function FocusScreen() {
   }
 
   return (
-    <Screen
+    <StepScreen
+      step={2}
+      total={CREATE_STEPS}
+      title={t('planCreate:focus.title')}
+      subtitle={t('planCreate:focus.subtitle')}
+      subtitleTone="subtle"
       scroll
-      header={<StepHeader step={2} total={CREATE_STEPS} />}
       footer={
         <Button
           label={
@@ -48,7 +50,6 @@ export function FocusScreen() {
         />
       }
     >
-      <StepTitle title={t('planCreate:focus.title')} subtitle={t('planCreate:focus.subtitle')} />
       <View className="flex-row flex-wrap gap-2 px-4 pt-[22px]">
         <Chip
           label={t('planCreate:focus.none')}
@@ -80,6 +81,6 @@ export function FocusScreen() {
           </View>
         ))}
       </View>
-    </Screen>
+    </StepScreen>
   );
 }

@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { type ExerciseId, getExercise } from '@/shared/data/exercises';
-import { useProfile } from '@/shared/data/profile';
+import { useUnits } from '@/shared/data/profile';
 import { useExerciseHistory } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
@@ -35,7 +35,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
   const insets = useSafeAreaInsets();
   const [tab, setTab] = useState<Tab>('exercise');
   const exercise = getExercise(exerciseId);
-  const { profile } = useProfile();
+  const units = useUnits();
   const history = useExerciseHistory(exerciseId).data ?? [];
   if (!exercise) return null;
 
@@ -161,7 +161,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
             </View>
           </>
         ) : history.length ? (
-          <ExerciseHistoryList entries={history} units={profile?.unitSystem ?? 'metric'} />
+          <ExerciseHistoryList entries={history} units={units} />
         ) : (
           <View className="items-center gap-2 py-10">
             <Text variant="bodyStrong">{t('exercises:detail.noHistory')}</Text>

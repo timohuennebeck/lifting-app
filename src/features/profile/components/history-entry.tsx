@@ -2,10 +2,9 @@ import { router } from 'expo-router';
 import { Trans, useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { isSameDay } from '@/features/today/lib/week';
-import { minutesBetween } from '@/features/workout/lib/time';
 import type { WorkoutSummary } from '@/shared/data/workouts';
-import { formatDate } from '@/shared/lib/format';
+import { addDays, isSameDay, minutesBetween, startOfDay } from '@/shared/lib/date';
+import { formatDate, formatWeekdayDate } from '@/shared/lib/format';
 import { Avatar } from '@/shared/ui/avatar';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
@@ -21,13 +20,13 @@ export function HistoryEntry({ workout, userName }: HistoryEntryProps) {
   const { t: tc } = useTranslation();
   const started = new Date(workout.startedAt);
   const now = new Date();
-  const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  const yesterday = addDays(startOfDay(now), -1);
   const time = formatDate(started, { hour: '2-digit', minute: '2-digit' });
   const when = isSameDay(started, now)
     ? t('when.today', { time })
     : isSameDay(started, yesterday)
       ? t('when.yesterday', { time })
-      : formatDate(started, { weekday: 'short', day: 'numeric', month: 'short' });
+      : formatWeekdayDate(started);
   const duration = `${minutesBetween(workout.startedAt, workout.finishedAt)} ${tc('units.minShort')}`;
 
   return (

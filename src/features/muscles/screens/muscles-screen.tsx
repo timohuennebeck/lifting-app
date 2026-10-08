@@ -2,11 +2,11 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { addDays, startOfDay } from '@/features/today/lib/week';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { MUSCLE_REGION, muscleShares } from '@/shared/data/muscles';
 import { useMuscleVolume } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
+import { addDays, startOfDay } from '@/shared/lib/date';
 import { MUSCLE_IDS, MuscleMap, type MuscleId } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';

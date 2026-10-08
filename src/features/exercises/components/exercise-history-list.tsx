@@ -4,7 +4,8 @@ import { View } from 'react-native';
 
 import type { ExerciseHistoryEntry } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
-import { formatDate, formatNumber, formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { minutesBetween } from '@/shared/lib/date';
+import { formatDate, formatNumber, formatSet, type UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -34,9 +35,7 @@ export function ExerciseHistoryList({ entries, units }: ExerciseHistoryListProps
           entry.sets[0],
         );
         const volume = entry.sets.reduce((sum, s) => sum + s.weightKg * s.reps, 0);
-        const minutes = entry.finishedAt
-          ? Math.max(1, Math.round((Date.parse(entry.finishedAt) - date.getTime()) / 60000))
-          : null;
+        const minutes = minutesBetween(entry.startedAt, entry.finishedAt);
         const prs = entry.sets.filter((s) => s.isPr).length;
         const expanded = open === entry.workoutId;
         return (
@@ -65,7 +64,7 @@ export function ExerciseHistoryList({ entries, units }: ExerciseHistoryListProps
                 </View>
                 <View className="min-w-0 flex-1 gap-1.5">
                   <Text variant="label" className="text-lg leading-[22px]">
-                    {top ? `${formatWeight(top.weightKg, units)} × ${top.reps}` : '–'}
+                    {top ? formatSet(top.weightKg, top.reps, units) : '–'}
                   </Text>
                   <View className="flex-row items-center gap-3.5">
                     {minutes ? (
@@ -90,7 +89,7 @@ export function ExerciseHistoryList({ entries, units }: ExerciseHistoryListProps
                         <Text variant="caption">{k + 1}</Text>
                       </View>
                       <Text variant="label" className="flex-1 text-lg text-[#E6E6E1]">
-                        {`${formatWeight(s.weightKg, units)} × ${s.reps}`}
+                        {formatSet(s.weightKg, s.reps, units)}
                       </Text>
                       {s.rir !== null ? (
                         <View

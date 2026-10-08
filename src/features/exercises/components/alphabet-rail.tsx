@@ -5,6 +5,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { scheduleOnRN } from 'react-native-worklets';
 
 import { haptics } from '@/shared/lib/haptics';
+import { clamp } from '@/shared/lib/math';
 import { useAccentColor } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
@@ -28,7 +29,7 @@ export function AlphabetRail({ available, active, onJump }: AlphabetRailProps) {
   const [row, setRow] = useState(MAX_ROW);
 
   function jumpTo(y: number) {
-    const letter = LETTERS[Math.max(0, Math.min(LETTERS.length - 1, Math.floor(y / row)))];
+    const letter = LETTERS[clamp(Math.floor(y / row), 0, LETTERS.length - 1)];
     if (letter === touched) return;
     setTouched(letter);
     haptics.select();

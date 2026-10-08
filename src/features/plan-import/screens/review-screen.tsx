@@ -4,14 +4,13 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, View } from 'react-native';
 
-import { StepTitle } from '@/features/plan-create/components/step-title';
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
+import { Card } from '@/shared/ui/card';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-import { Screen } from '@/shared/ui/screen';
-import { StepHeader } from '@/shared/ui/step-header';
+import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
 import { IMPORT_STEPS } from '../lib/format';
@@ -39,9 +38,12 @@ export function ReviewScreen() {
   }
 
   return (
-    <Screen
+    <StepScreen
+      step={2}
+      total={IMPORT_STEPS}
+      title={t('review.title')}
+      titleClassName="pt-3.5"
       scroll
-      header={<StepHeader step={2} total={IMPORT_STEPS} />}
       footer={
         <View className="gap-1.5">
           <Button label={t('review.cta')} onPress={() => router.push('/import/analysis')} />
@@ -55,9 +57,8 @@ export function ReviewScreen() {
         </View>
       }
     >
-      <StepTitle title={t('review.title')} className="pt-3.5" />
-      <View
-        className="mx-4 mt-[22px] h-80 overflow-hidden rounded-[28px] border border-white/8 bg-surface"
+      <Card
+        className="mx-4 mt-[22px] h-80 overflow-hidden p-0"
         onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
       >
         {width ? (
@@ -103,7 +104,7 @@ export function ReviewScreen() {
           <Icon name="refresh" size={14} />
           <Text variant="caption">{t('review.retake')}</Text>
         </PressableScale>
-      </View>
+      </Card>
       <View className="flex-row flex-wrap gap-2.5 px-4 pt-4">
         {photos.map((p, i) => (
           <PressableScale
@@ -133,6 +134,6 @@ export function ReviewScreen() {
           <Icon name="plus" size={16} />
         </PressableScale>
       </View>
-    </Screen>
+    </StepScreen>
   );
 }

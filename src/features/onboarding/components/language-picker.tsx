@@ -6,11 +6,11 @@ import { detectLanguage } from '@/shared/i18n';
 import { APP_LANGUAGES } from '@/shared/i18n/resources';
 import { cn } from '@/shared/lib/cn';
 import { useSettingsStore } from '@/shared/stores/settings-store';
+import { LanguageFlag } from '@/shared/ui/language-flag';
 import { PressableScale } from '@/shared/ui/pressable-scale';
+import { RadioDot } from '@/shared/ui/radio-dot';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
-
-import { LanguageFlag } from './language-flag';
 
 /** Flag pill that opens a sheet to switch the app language. */
 export function LanguagePicker() {
@@ -53,12 +53,7 @@ export function LanguagePicker() {
                 <Text variant="bodyStrong" className="flex-1">
                   {t(`languages.${code}`)}
                 </Text>
-                <View
-                  className={cn(
-                    'size-6 rounded-full',
-                    selected ? 'border-[7px] border-accent' : 'border-[1.5px] border-track',
-                  )}
-                />
+                <RadioDot selected={selected} />
               </PressableScale>
             );
           })}

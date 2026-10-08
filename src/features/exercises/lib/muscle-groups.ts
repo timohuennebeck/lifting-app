@@ -27,12 +27,15 @@ export function groupOfMuscle(muscle: MuscleId): MuscleGroupId {
   return MUSCLE_GROUP_IDS.find((g) => MUSCLE_GROUPS[g].includes(muscle)) ?? 'core';
 }
 
+/** Muscles of an exercise with their weights, highest share first. */
+export function muscleWeights(exerciseId: string) {
+  const muscles = getExercise(exerciseId)?.muscles ?? {};
+  return (Object.entries(muscles) as [MuscleId, number][]).sort((a, b) => b[1] - a[1]);
+}
+
 /** Muscles of an exercise, highest share first. */
 export function exerciseMuscles(exerciseId: string): MuscleId[] {
-  const muscles = getExercise(exerciseId)?.muscles ?? {};
-  return (Object.entries(muscles) as [MuscleId, number][])
-    .sort((a, b) => b[1] - a[1])
-    .map(([m]) => m);
+  return muscleWeights(exerciseId).map(([m]) => m);
 }
 
 export function primaryMuscle(exerciseId: string): MuscleId | undefined {

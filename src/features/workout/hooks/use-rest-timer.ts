@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useSharedValue, withDelay, withSequence, withTiming } from 'react-native-reanimated';
 
+import { useNow } from '@/shared/hooks/use-now';
 import { haptics } from '@/shared/lib/haptics';
 
 import { useWorkoutSessionStore } from '../stores/workout-session-store';
-import { useNow } from './use-now';
 
 // A timer that ran out this long ago (e.g. app was closed) ends silently.
 const STALE_MS = 5000;

@@ -5,9 +5,12 @@ import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
 
 import { muscleShares } from '@/shared/data/muscles';
+import { useUnits } from '@/shared/data/profile';
 import { useWorkout } from '@/shared/data/workouts';
+import { minutesBetween } from '@/shared/lib/date';
 import { formatNumber, kgToLb } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
+import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 import { MuscleMap } from '@/shared/ui/muscle-map';
@@ -16,25 +19,18 @@ import { Text } from '@/shared/ui/text';
 import { RecordCard } from '../components/record-card';
 import { VolumeComparison } from '../components/volume-comparison';
 import { useWorkoutRecords } from '../data/workout-records';
-import { useUnits } from '../hooks/use-units';
-import { minutesBetween } from '../lib/time';
 
-interface FadeProps {
-  up?: boolean;
-}
-
-/** Fades its container into the background (CSS mask in the design). */
-function Fade({ up }: FadeProps) {
-  const id = up ? 'fade-up' : 'fade-down';
+/** Fades the muscle maps into the background (CSS mask in the design). */
+function Fade() {
   return (
     <Svg width="100%" height="100%" style={StyleSheet.absoluteFill} pointerEvents="none">
       <Defs>
-        <LinearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-          <Stop offset={up ? '0' : '0.6'} stopColor={colors.bg} stopOpacity={0} />
-          <Stop offset={up ? '0.45' : '1'} stopColor={colors.bg} stopOpacity={1} />
+        <LinearGradient id="fade-down" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset="0.6" stopColor={colors.bg} stopOpacity={0} />
+          <Stop offset="1" stopColor={colors.bg} stopOpacity={1} />
         </LinearGradient>
       </Defs>
-      <Rect width="100%" height="100%" fill={`url(#${id})`} />
+      <Rect width="100%" height="100%" fill="url(#fade-down)" />
     </Svg>
   );
 }
@@ -149,14 +145,9 @@ export function WorkoutSummaryScreen() {
           </View>
         ) : null}
       </ScrollView>
-      <View
-        className="absolute inset-x-0 bottom-0 px-4 pt-10"
-        style={{ paddingBottom: insets.bottom + 16 }}
-        pointerEvents="box-none"
-      >
-        <Fade up />
+      <BottomFade>
         <Button label={t('common:actions.done')} onPress={close} />
-      </View>
+      </BottomFade>
     </View>
   );
 }

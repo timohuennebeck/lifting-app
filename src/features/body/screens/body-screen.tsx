@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { TabScreen } from '@/shared/components/tab-screen';
-import { formatDate } from '@/shared/lib/format';
+import { DAY_MS } from '@/shared/lib/date';
+import { formatShortDate } from '@/shared/lib/format';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Card } from '@/shared/ui/card';
@@ -19,9 +20,6 @@ import { useBodyChecks } from '../data/body-checks';
 const POSES: BodyPose[] = ['front', 'left', 'right', 'back'];
 /** A new check is due this many days after the last one. */
 const CHECK_INTERVAL_DAYS = 21;
-const DAY_MS = 86_400_000;
-
-const shortDate = (iso: string) => formatDate(new Date(iso), { day: 'numeric', month: 'short' });
 
 export function BodyScreen() {
   const { t } = useTranslation('body');
@@ -85,13 +83,13 @@ export function BodyScreen() {
           <View className="flex-row gap-2.5 px-4 pt-6">
             {checks.length > 1 ? (
               <BodyPhotoCard
-                label={t('checkLabel', { n: 1, date: shortDate(first.createdAt) })}
+                label={t('checkLabel', { n: 1, date: formatShortDate(first.createdAt) })}
                 score={first.score}
                 pose={pose}
               />
             ) : null}
             <BodyPhotoCard
-              label={t('checkLabel', { n: checks.length, date: shortDate(latest.createdAt) })}
+              label={t('checkLabel', { n: checks.length, date: formatShortDate(latest.createdAt) })}
               score={latest.score}
               pose={pose}
               latest
@@ -140,7 +138,7 @@ export function BodyScreen() {
                 <CheckHistoryRow
                   key={check.id}
                   title={t('check', { n: i + 1 })}
-                  date={shortDate(check.createdAt)}
+                  date={formatShortDate(check.createdAt)}
                   score={check.score}
                   latest={check === latest}
                 />

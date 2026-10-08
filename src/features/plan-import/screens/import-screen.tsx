@@ -3,13 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
-import { StepTitle } from '@/features/plan-create/components/step-title';
+import { FormatCards } from '@/shared/ui/format-cards';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-import { Screen } from '@/shared/ui/screen';
-import { StepHeader } from '@/shared/ui/step-header';
+import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
-import { FileTypesArt, SourceCard, ViewfinderArt } from '../components/source-card';
+import { SourceCard, ViewfinderArt } from '../components/source-card';
 import { IMPORT_STEPS } from '../lib/format';
 import { pickPlanFile } from '../lib/pick-source';
 import { useImportStore } from '../stores/import-store';
@@ -32,8 +31,15 @@ export function ImportScreen() {
   }
 
   return (
-    <Screen scroll header={<StepHeader step={1} total={IMPORT_STEPS} />}>
-      <StepTitle title={t('index.title')} subtitle={t('index.subtitle')} className="pt-3.5" />
+    <StepScreen
+      step={1}
+      total={IMPORT_STEPS}
+      title={t('index.title')}
+      subtitle={t('index.subtitle')}
+      subtitleTone="subtle"
+      titleClassName="pt-3.5"
+      scroll
+    >
       <View className="gap-3 px-4 pt-[22px]">
         <SourceCard
           title={t('index.photo.title')}
@@ -50,7 +56,7 @@ export function ImportScreen() {
           icon="arrow-right"
           onPress={uploadFile}
         >
-          <FileTypesArt />
+          <FormatCards shadow={false} className="mt-1" />
         </SourceCard>
       </View>
       <PressableScale
@@ -68,6 +74,6 @@ export function ImportScreen() {
           </Text>
         </Text>
       </PressableScale>
-    </Screen>
+    </StepScreen>
   );
 }

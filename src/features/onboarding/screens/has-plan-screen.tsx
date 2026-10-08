@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { Button } from '@/shared/ui/button';
+import { FormatCards } from '@/shared/ui/format-cards';
 import { Text } from '@/shared/ui/text';
+import { StepScreen } from '@/shared/ui/step-screen';
+import { TextButton } from '@/shared/ui/text-button';
 
-import { FormatCards } from '../components/format-cards';
-import { OnboardingStep } from '../components/onboarding-step';
-import { TextButton } from '../components/text-button';
 import { ABOUT_STEPS } from '../lib/flow';
 import { useUpdateDraft } from '../stores/onboarding-store';
 
@@ -21,7 +21,7 @@ export function HasPlanScreen() {
   };
 
   return (
-    <OnboardingStep
+    <StepScreen
       step={9}
       total={ABOUT_STEPS}
       title={t('hasPlan.title')}
@@ -39,6 +39,6 @@ export function HasPlanScreen() {
           {t('hasPlan.formats')}
         </Text>
       </View>
-    </OnboardingStep>
+    </StepScreen>
   );
 }

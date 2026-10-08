@@ -1,7 +1,8 @@
 import { View } from 'react-native';
 import Animated, { FadeIn, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
-import { formatDate, formatNumber, formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { minutesBetween } from '@/shared/lib/date';
+import { formatDate, formatSet, formatWeight, type UnitSystem } from '@/shared/lib/format';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 import { Icon, type IconName } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -10,7 +11,6 @@ import { Text } from '@/shared/ui/text';
 import { cn } from '@/shared/lib/cn';
 
 import type { ExerciseSession } from '../data/exercise-sessions';
-import { minutesBetween } from '../lib/time';
 import { formatWeightValue } from '../lib/weight';
 
 interface StatProps {
@@ -105,7 +105,7 @@ export function HistorySessionRow({
                 <Text variant="caption">{i + 1}</Text>
               </View>
               <Text variant="bodyStrong" className="flex-1 text-lg leading-[22px]">
-                {`${formatWeight(set.weightKg, units)} × ${formatNumber(set.reps, 0)}`}
+                {formatSet(set.weightKg, set.reps, units)}
               </Text>
               {set.rir != null ? <RirBadge rir={set.rir} size={24} /> : null}
             </View>

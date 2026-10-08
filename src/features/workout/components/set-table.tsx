@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useUserId } from '@/shared/stores/session-store';
 import type { ExerciseHistoryEntry, WorkoutExercise } from '@/shared/data/workouts';
-import { formatNumber, formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { formatNumber, formatSet, type UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -82,7 +82,7 @@ export function SetTable({
             column === 'targets'
               ? targetLabel(set)
               : previous
-                ? `${formatWeight(previous.weightKg, units)} × ${previous.reps}`
+                ? formatSet(previous.weightKg, previous.reps, units)
                 : null;
           const suggested = done ? null : suggestSet(exercise, i, last);
           const kg = selected

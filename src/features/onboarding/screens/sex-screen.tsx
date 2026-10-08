@@ -5,9 +5,9 @@ import { View } from 'react-native';
 import type { Sex } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
 import { OptionCard } from '@/shared/ui/option-card';
+import { StepScreen } from '@/shared/ui/step-screen';
+import { TextButton } from '@/shared/ui/text-button';
 
-import { OnboardingStep } from '../components/onboarding-step';
-import { TextButton } from '../components/text-button';
 import { ABOUT_STEPS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 
@@ -20,7 +20,7 @@ export function SexScreen() {
   const update = useUpdateDraft();
 
   return (
-    <OnboardingStep
+    <StepScreen
       step={2}
       total={ABOUT_STEPS}
       title={t('sex.title')}
@@ -55,6 +55,6 @@ export function SexScreen() {
           className="mt-1.5 min-h-11 self-center"
         />
       </View>
-    </OnboardingStep>
+    </StepScreen>
   );
 }

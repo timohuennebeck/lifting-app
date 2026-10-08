@@ -1,17 +1,17 @@
 import { createQueryKeys, mergeQueryKeys } from '@lukemorales/query-key-factory';
 
 // Core entity keys shared across features; features may add their own factories.
-export const profileKeys = createQueryKeys('profile', {
+const profileKeys = createQueryKeys('profile', {
   current: (userId: string) => [userId],
 });
 
-export const templateKeys = createQueryKeys('templates', {
+const templateKeys = createQueryKeys('templates', {
   list: null,
   collections: null,
   detail: (templateId: string) => [templateId],
 });
 
-export const workoutKeys = createQueryKeys('workouts', {
+const workoutKeys = createQueryKeys('workouts', {
   active: null,
   detail: (workoutId: string) => [workoutId],
   history: null,
@@ -20,7 +20,7 @@ export const workoutKeys = createQueryKeys('workouts', {
   muscleVolume: (sinceIso: string) => [sinceIso],
 });
 
-export const bodyCheckKeys = createQueryKeys('bodyChecks', {
+const bodyCheckKeys = createQueryKeys('bodyChecks', {
   list: null,
 });
 

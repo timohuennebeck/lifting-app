@@ -4,13 +4,14 @@ import { View } from 'react-native';
 
 import { type ExerciseId, getExercise } from '@/shared/data/exercises';
 import type { TemplateExerciseDetail } from '@/shared/data/templates';
+import { formatRepRange } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
 
-import { exerciseMuscles, formatReps } from '../lib/training-ui';
+import { splitMuscles } from '../lib/training-ui';
 
 export interface TemplateExerciseCardProps {
   exercise: TemplateExerciseDetail;
@@ -23,7 +24,7 @@ export function TemplateExerciseCard({ exercise, onMenu, onPress }: TemplateExer
   const { t } = useTranslation(['exercises', 'muscles', 'training']);
   const image = getExercise(exercise.exerciseId)?.image;
   const name = t(`exercises:${exercise.exerciseId as ExerciseId}.name`);
-  const { primary, secondary } = exerciseMuscles(exercise.exerciseId);
+  const { primary, secondary } = splitMuscles(exercise.exerciseId);
 
   return (
     <PressableScale
@@ -64,7 +65,7 @@ export function TemplateExerciseCard({ exercise, onMenu, onPress }: TemplateExer
                 </Text>
               </View>
               <Text variant="body" className="flex-1 text-sm text-[#E6E6E1]">
-                {formatReps(set.reps_min ?? 0, set.reps_max ?? set.reps_min ?? 0)}
+                {formatRepRange(set.reps_min ?? 0, set.reps_max ?? set.reps_min ?? 0)}
               </Text>
               {set.rir != null ? <RirBadge rir={set.rir} /> : null}
             </View>

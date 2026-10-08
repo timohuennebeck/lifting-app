@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { cn } from '@/shared/lib/cn';
 
 import { PressableScale } from './pressable-scale';
+import { RadioDot } from './radio-dot';
 import { Text } from './text';
 
 export interface OptionCardProps {
@@ -62,12 +63,7 @@ export function OptionCard({
           </Text>
         ) : null}
       </View>
-      <View
-        className={cn(
-          'size-6 rounded-full',
-          selected ? 'border-[7px] border-accent' : 'border-[1.5px] border-track',
-        )}
-      />
+      <RadioDot selected={selected} />
     </PressableScale>
   );
 }

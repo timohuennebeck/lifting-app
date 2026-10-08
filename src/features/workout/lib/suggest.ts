@@ -1,5 +1,6 @@
 import { getExercise } from '@/shared/data/exercises';
 import type { ExerciseHistoryEntry, WorkoutExercise, WorkoutSet } from '@/shared/data/workouts';
+import { formatRepRange } from '@/shared/lib/format';
 
 export interface SetValues {
   kg: number | null;
@@ -9,8 +10,7 @@ export interface SetValues {
 /** "7–9" style target label, or null without targets. */
 export function targetLabel(set: WorkoutSet) {
   if (set.targetMin == null) return null;
-  const max = set.targetMax ?? set.targetMin;
-  return max === set.targetMin ? String(max) : `${set.targetMin}–${max}`;
+  return formatRepRange(set.targetMin, set.targetMax ?? set.targetMin);
 }
 
 /**

@@ -1,9 +1,9 @@
 import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
-import { Text } from './text';
-
 import { formatRir, rirColor } from '@/shared/lib/rir';
+
+import { Text } from './text';
 
 export interface RirBadgeProps {
   rir: number;

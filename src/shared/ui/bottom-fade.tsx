@@ -5,8 +5,12 @@ import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { colors } from '@/shared/lib/theme';
 
+export interface BottomFadeProps {
+  children: ReactNode;
+}
+
 /** Sticky bottom CTA area that fades the scrolling content out underneath it. */
-export function BottomFade({ children }: { children: ReactNode }) {
+export function BottomFade({ children }: BottomFadeProps) {
   const insets = useSafeAreaInsets();
   return (
     <View

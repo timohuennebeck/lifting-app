@@ -1,10 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
 
-import { colors, useAccentColor } from '@/shared/lib/theme';
 import { cn } from '@/shared/lib/cn';
 import { Icon } from '@/shared/ui/icon';
+import { PlanSlot } from '@/shared/ui/plan-slot';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
@@ -19,33 +18,9 @@ export interface PlanBarProps {
   onAdd: () => void;
 }
 
-/** Dashed ring around the slot number for trainings still to do. */
-function DashedRing({ color }: { color: string }) {
-  return (
-    <Svg
-      width={38}
-      height={38}
-      viewBox="0 0 38 38"
-      style={{ position: 'absolute', left: -3, top: -3, transform: [{ rotate: '-90deg' }] }}
-    >
-      <Circle
-        cx={19}
-        cy={19}
-        r={17.5}
-        fill="none"
-        stroke={color}
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeDasharray="13.3 5"
-      />
-    </Svg>
-  );
-}
-
 /** Plan strip of the collection's trainings: done, next (preselected) and upcoming (03·0b). */
 export function PlanBar({ items, currentId, onSelect, onAdd }: PlanBarProps) {
   const { t } = useTranslation('training');
-  const accent = useAccentColor();
   return (
     <ScrollView
       horizontal
@@ -73,21 +48,11 @@ export function PlanBar({ items, currentId, onSelect, onAdd }: PlanBarProps) {
             >
               {item.name}
             </Text>
-            {item.state === 'done' ? (
-              <View
-                className="size-8 items-center justify-center rounded-full bg-accent"
-                style={{ boxShadow: `0 0 0 3px ${colors.bg}, 0 0 0 4.5px ${accent}80` }}
-              >
-                <Icon name="check" size={14} color={colors.onAccent} />
-              </View>
-            ) : (
-              <View className="size-8 items-center justify-center">
-                <DashedRing color={item.state === 'next' ? accent : '#4A4A48'} />
-                <Text variant="label" className="text-sm">
-                  {item.number}
-                </Text>
-              </View>
-            )}
+            <PlanSlot
+              number={item.number}
+              done={item.state === 'done'}
+              next={item.state === 'next'}
+            />
           </PressableScale>
         );
       })}

@@ -28,6 +28,4 @@ export const COMPLAINT_AREAS = [
   { id: 'ankles', muscles: ['tibialis', 'calves'] },
 ] as const satisfies readonly ComplaintArea[];
 
-export type ComplaintId = (typeof COMPLAINT_AREAS)[number]['id'];
-
 export const EXPERIENCE_LEVELS = ['none', 'beginner', 'intermediate', 'advanced'] as const;

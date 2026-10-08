@@ -4,8 +4,8 @@ import { View } from 'react-native';
 
 import { Button } from '@/shared/ui/button';
 import { TextField } from '@/shared/ui/text-field';
+import { StepScreen } from '@/shared/ui/step-screen';
 
-import { OnboardingStep } from '../components/onboarding-step';
 import { ABOUT_STEPS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 
@@ -18,7 +18,7 @@ export function NameScreen() {
   const next = () => valid && router.push('/sex');
 
   return (
-    <OnboardingStep
+    <StepScreen
       step={1}
       total={ABOUT_STEPS}
       title={t('name.title')}
@@ -42,6 +42,6 @@ export function NameScreen() {
           clearable
         />
       </View>
-    </OnboardingStep>
+    </StepScreen>
   );
 }

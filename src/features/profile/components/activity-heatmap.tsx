@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
 
-import { addDays, startOfWeek } from '@/features/today/lib/week';
 import type { WorkoutSummary } from '@/shared/data/workouts';
+import { addDays, startOfWeek } from '@/shared/lib/date';
 import { useAccentColor } from '@/shared/lib/theme';
 
 const WEEKS = 13;

@@ -1,30 +1,31 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View } from 'react-native';
 
+import { TabScreen } from '@/shared/components/tab-screen';
 import { useProfile } from '@/shared/data/profile';
 import { useCollections, useTemplates } from '@/shared/data/templates';
 import { requireUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
+import { IconButton } from '@/shared/ui/icon-button';
+import { PressableScale } from '@/shared/ui/pressable-scale';
+import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
 import { type CollectionTab, CollectionTabs } from '../components/collection-tabs';
 import { CreateSheet } from '../components/create-sheet';
+import { CollectionsGlyph } from '../components/glyphs';
 import { TemplateRow } from '../components/template-row';
-import { TrainingHeader } from '../components/training-header';
 import { createCollection } from '../data/template-mutations';
 import { useStartTemplate } from '../hooks/use-start-template';
-import { afterSheetClose } from '../lib/training-ui';
 
 const NONE = 'none';
 
 /** Training tab: templates grouped by collection (01·V·A) with create flows (01·V·A·6/7). */
 export function TrainingScreen() {
   const { t } = useTranslation(['training', 'common']);
-  const insets = useSafeAreaInsets();
   const { profile } = useProfile();
   const { data: templates = [], isLoading } = useTemplates();
   const { data: collections = [] } = useCollections();
@@ -51,54 +52,68 @@ export function TrainingScreen() {
     });
 
   return (
-    <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-      <TrainingHeader onCreate={() => setCreateOpen(true)} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        showsVerticalScrollIndicator={false}
-        contentContainerClassName="grow pt-3"
-        contentContainerStyle={{ paddingBottom: insets.bottom + 40 }}
-      >
-        <Text variant="title" className="px-5 pt-5 normal-case">
-          {t('list.title')}
-        </Text>
-        {tabs.length ? (
-          <CollectionTabs tabs={tabs} selected={selected} onSelect={setSelectedKey} />
-        ) : null}
-        <View className="px-2 pt-3">
-          {rows.map((tpl, i) => (
-            <TemplateRow
-              key={tpl.id}
-              index={i + 1}
-              name={tpl.name}
-              minutes={tpl.estimatedMinutes}
-              exerciseCount={tpl.exerciseCount}
-              starting={startingId === tpl.id}
-              onPress={() => router.push(`/template/${tpl.id}`)}
-              onStart={() => start(tpl)}
-            />
-          ))}
-        </View>
-        {!isLoading && !rows.length ? (
-          <View className="items-center gap-4 px-8 pt-12">
-            <View className="items-center gap-2">
-              <Text variant="headline" className="text-center">
-                {tabs.length ? t('list.emptyCollection') : t('list.empty')}
-              </Text>
-              <Text variant="paragraph" tone="subtle" className="text-center">
-                {t('list.emptyHint')}
-              </Text>
-            </View>
-            <Button
-              label={t('create.createTemplate')}
-              icon="plus"
-              size="md"
-              variant="secondary"
-              onPress={openNewTemplate}
-            />
+    <TabScreen
+      contentClassName="pt-3"
+      headerActions={
+        <>
+          <PressableScale
+            hitSlop={4}
+            accessibilityLabel={t('header.collections')}
+            onPress={() => router.push('/template/collections')}
+            className="size-[42px] items-center justify-center rounded-full bg-elevated"
+          >
+            <CollectionsGlyph />
+          </PressableScale>
+          <IconButton
+            icon="plus"
+            iconSize={14}
+            accessibilityLabel={t('header.create')}
+            onPress={() => setCreateOpen(true)}
+          />
+        </>
+      }
+    >
+      <Text variant="title" className="px-5 pt-5 normal-case">
+        {t('list.title')}
+      </Text>
+      {tabs.length ? (
+        <CollectionTabs tabs={tabs} selected={selected} onSelect={setSelectedKey} />
+      ) : null}
+      <View className="px-2 pt-3">
+        {rows.map((tpl, i) => (
+          <TemplateRow
+            key={tpl.id}
+            index={i + 1}
+            name={tpl.name}
+            minutes={tpl.estimatedMinutes}
+            exerciseCount={tpl.exerciseCount}
+            starting={startingId === tpl.id}
+            onPress={() => router.push(`/template/${tpl.id}`)}
+            onStart={() => start(tpl)}
+          />
+        ))}
+      </View>
+      {!isLoading && !rows.length ? (
+        <View className="items-center gap-4 px-8 pt-12">
+          <View className="items-center gap-2">
+            <Text variant="headline" className="text-center">
+              {tabs.length ? t('list.emptyCollection') : t('list.empty')}
+            </Text>
+            <Text variant="paragraph" tone="subtle" className="text-center">
+              {t('list.emptyHint')}
+            </Text>
           </View>
-        ) : null}
-      </ScrollView>
+          <Button
+            label={t('create.createTemplate')}
+            icon="plus"
+            size="md"
+            variant="secondary"
+            onPress={openNewTemplate}
+          />
+        </View>
+      ) : null}
+      {/* The list ends 40pt above the tab bar inset; TabScreen adds 24. */}
+      <View className="h-4" />
 
       <CreateSheet
         visible={createOpen}
@@ -124,6 +139,6 @@ export function TrainingScreen() {
           setNewCollectionOpen(false);
         }}
       />
-    </View>
+    </TabScreen>
   );
 }

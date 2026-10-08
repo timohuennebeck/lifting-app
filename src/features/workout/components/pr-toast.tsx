@@ -4,7 +4,7 @@ import Animated, { FadeInUp, FadeOutUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
-import { formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { formatSet, type UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
@@ -51,7 +51,7 @@ export function PrToast({ record, units, onHide }: PrToastProps) {
         <View>
           <Text variant="label">{t('record.title')}</Text>
           <Text variant="caption" tone="subtle" className="font-inter">
-            {`${formatWeight(record.kg, units)} × ${record.reps}`}
+            {formatSet(record.kg, record.reps, units)}
           </Text>
         </View>
       </View>

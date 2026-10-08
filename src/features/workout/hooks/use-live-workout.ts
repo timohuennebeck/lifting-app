@@ -1,4 +1,5 @@
 import { getExercise } from '@/shared/data/exercises';
+import { useUnits } from '@/shared/data/profile';
 import { restSecondsFor } from '@/shared/data/templates';
 import { logSet, useExerciseHistory, type WorkoutDetail } from '@/shared/data/workouts';
 import { haptics } from '@/shared/lib/haptics';
@@ -8,7 +9,6 @@ import { parseInput, toInput } from '../lib/keypad';
 import { firstOpenSet, suggestSet } from '../lib/suggest';
 import { fromDisplayWeight, toDisplayWeight } from '../lib/weight';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
-import { useUnits } from './use-units';
 
 export interface RecordHit {
   kg: number;

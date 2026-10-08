@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import { formatRir } from '@/shared/lib/rir';
 import { useTranslation } from 'react-i18next';
 import { TextInput, View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
+import { clamp } from '@/shared/lib/math';
+import { formatRir } from '@/shared/lib/rir';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-import { clamp, editorRirStyle } from '../lib/training-ui';
+import { editorRirStyle } from '../lib/training-ui';
 
 export interface SetDraft {
   key: string;

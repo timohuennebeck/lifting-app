@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
 import { TabScreen } from '@/shared/components/tab-screen';
-import { useProfile } from '@/shared/data/profile';
+import { useUnits } from '@/shared/data/profile';
 import { startWorkout, useActiveWorkout } from '@/shared/data/workouts';
-import { mondayIndex } from '@/shared/lib/format';
+import { isSameDay, mondayIndex } from '@/shared/lib/date';
 import { colors } from '@/shared/lib/theme';
 import { requireUserId } from '@/shared/stores/session-store';
 import { Icon } from '@/shared/ui/icon';
@@ -19,7 +19,6 @@ import { RescheduleSheet } from '../components/reschedule-sheet';
 import { RestDayCard } from '../components/rest-day-card';
 import { WeekStrip } from '../components/week-strip';
 import { useWeekPlan } from '../hooks/use-week-plan';
-import { isSameDay } from '../lib/week';
 
 export function TodayScreen() {
   const { t } = useTranslation('today');
@@ -27,7 +26,7 @@ export function TodayScreen() {
   const today = new Date();
   const [selected, setSelected] = useState(mondayIndex(today));
   const [rescheduling, setRescheduling] = useState(false);
-  const { profile } = useProfile();
+  const units = useUnits();
   const { data: active } = useActiveWorkout();
   const { days, planTemplates } = useWeekPlan(today);
   const day = days[selected];
@@ -80,12 +79,7 @@ export function TodayScreen() {
       }
     >
       {day.workout ? (
-        <DoneCard
-          workout={day.workout}
-          date={day.date}
-          today={today}
-          units={profile?.unitSystem ?? 'metric'}
-        />
+        <DoneCard workout={day.workout} date={day.date} today={today} units={units} />
       ) : day.planned ? (
         <PlannedCard
           template={day.planned}

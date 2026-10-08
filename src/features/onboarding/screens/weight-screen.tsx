@@ -3,15 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { formatNumber, kgToLb, lbToKg } from '@/shared/lib/format';
+import { clamp } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { RulerPicker } from '@/shared/ui/ruler-picker';
+import { StepScreen } from '@/shared/ui/step-screen';
 
 import { MeasureValue, StepButtons } from '../components/measure-value';
-import { OnboardingStep } from '../components/onboarding-step';
 import { ABOUT_STEPS, WEIGHT_KG, WEIGHT_LB } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 
-const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 const roundTenth = (v: number) => Math.round(v * 10) / 10;
 
 export function WeightScreen() {
@@ -30,7 +30,7 @@ export function WeightScreen() {
   };
 
   return (
-    <OnboardingStep
+    <StepScreen
       step={5}
       total={ABOUT_STEPS}
       title={t('weight.title')}
@@ -57,6 +57,6 @@ export function WeightScreen() {
           onIncrease={() => setValue(value + range.step)}
         />
       </View>
-    </OnboardingStep>
+    </StepScreen>
   );
 }

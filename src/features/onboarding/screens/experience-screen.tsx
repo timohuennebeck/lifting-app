@@ -4,8 +4,8 @@ import { View } from 'react-native';
 
 import { Button } from '@/shared/ui/button';
 import { OptionCard } from '@/shared/ui/option-card';
+import { StepScreen } from '@/shared/ui/step-screen';
 
-import { OnboardingStep } from '../components/onboarding-step';
 import { ABOUT_STEPS, EXPERIENCE_LEVELS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 
@@ -16,7 +16,7 @@ export function ExperienceScreen() {
   const update = useUpdateDraft();
 
   return (
-    <OnboardingStep
+    <StepScreen
       step={7}
       total={ABOUT_STEPS}
       title={t('experience.title')}
@@ -41,6 +41,6 @@ export function ExperienceScreen() {
           />
         ))}
       </View>
-    </OnboardingStep>
+    </StepScreen>
   );
 }

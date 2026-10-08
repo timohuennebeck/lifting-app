@@ -58,7 +58,7 @@ export async function analyzePlan({ source }: AnalyzePlanInput): Promise<Importe
 }
 
 /** "Trainingsplan_Herbst.pdf" → "Trainingsplan Herbst" (max 30 chars). */
-export function titleFromFileName(name: string) {
+function titleFromFileName(name: string) {
   const base = name
     .replace(/\.[^.]+$/, '')
     .replace(/[_-]+/g, ' ')

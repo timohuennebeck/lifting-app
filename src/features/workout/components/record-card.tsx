@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import type { ExerciseId } from '@/shared/data/exercises';
-import { formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { formatSet, type UnitSystem } from '@/shared/lib/format';
 import { Text } from '@/shared/ui/text';
 
 import type { WorkoutRecord } from '../data/workout-records';
@@ -17,7 +17,6 @@ export interface RecordCardProps {
 export function RecordCard({ record, units }: RecordCardProps) {
   const { t } = useTranslation(['workout', 'exercises']);
   const name = t(`exercises:${record.exerciseId as ExerciseId}.name`);
-  const value = (kg: number, reps: number) => `${formatWeight(kg, units)} × ${reps}`;
   return (
     <View className="flex-row items-center gap-3.5 py-1.5">
       <ExerciseThumb
@@ -33,10 +32,10 @@ export function RecordCard({ record, units }: RecordCardProps) {
           {name}
         </Text>
         <View className="flex-row flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
-          <Text variant="headline">{value(record.weightKg, record.reps)}</Text>
+          <Text variant="headline">{formatSet(record.weightKg, record.reps, units)}</Text>
           <Text tone="subtle" className="text-sm leading-[18px]">
             {t('summary.previously', {
-              value: value(record.previous.weightKg, record.previous.reps),
+              value: formatSet(record.previous.weightKg, record.previous.reps, units),
             })}
           </Text>
         </View>

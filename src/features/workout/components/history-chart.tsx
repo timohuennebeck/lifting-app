@@ -4,8 +4,9 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Svg, { Circle, Defs, LinearGradient, Path, Stop } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
 
-import { formatDate, formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { formatShortDate, formatWeight, type UnitSystem } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
+import { clamp } from '@/shared/lib/math';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
@@ -20,8 +21,6 @@ export interface HistoryChartProps {
   data: ChartInput[];
   units: UnitSystem;
 }
-
-const shortDate = (time: number) => formatDate(new Date(time), { day: 'numeric', month: 'short' });
 
 /** Top weight per session; press and drag to read a session (design 03·C·2H·V5H). */
 export function HistoryChart({ data, units }: HistoryChartProps) {
@@ -67,7 +66,7 @@ export function HistoryChart({ data, units }: HistoryChartProps) {
         <Text variant="caption" tone="subtle" className="font-inter">
           {active ? (
             <>
-              <Text variant="caption">{shortDate(active.time)}</Text>
+              <Text variant="caption">{formatShortDate(active.time)}</Text>
               {` · ${t('history.topWeightShort')}`}
             </>
           ) : (
@@ -127,20 +126,20 @@ export function HistoryChart({ data, units }: HistoryChartProps) {
             className="absolute h-5 items-center justify-center rounded-full bg-elevated"
             style={{
               width: CHIP_WIDTH,
-              left: Math.min(Math.max(0, active.x - CHIP_WIDTH / 2), width - CHIP_WIDTH),
+              left: clamp(active.x - CHIP_WIDTH / 2, 0, width - CHIP_WIDTH),
             }}
           >
             <Text className="font-inter-semibold text-[11px] leading-[14px]">
-              {shortDate(active.time)}
+              {formatShortDate(active.time)}
             </Text>
           </View>
         ) : (
           <>
             <Text className="font-inter-semibold text-[11px] leading-[14px] text-dim">
-              {points[0] ? shortDate(points[0].time) : ''}
+              {points[0] ? formatShortDate(points[0].time) : ''}
             </Text>
             <Text className="font-inter-semibold text-[11px] leading-[14px] text-dim">
-              {lastPoint ? shortDate(lastPoint.time) : ''}
+              {lastPoint ? formatShortDate(lastPoint.time) : ''}
             </Text>
           </>
         )}

@@ -123,11 +123,5 @@ export const AppSchema = new Schema({
 
 export type Database = (typeof AppSchema)['types'];
 export type ProfileRecord = Database['profiles'];
-export type CollectionRecord = Database['collections'];
-export type TemplateRecord = Database['templates'];
-export type TemplateExerciseRecord = Database['template_exercises'];
 export type TemplateSetRecord = Database['template_sets'];
-export type WorkoutRecord = Database['workouts'];
-export type WorkoutExerciseRecord = Database['workout_exercises'];
-export type WorkoutSetRecord = Database['workout_sets'];
 export type BodyCheckRecord = Database['body_checks'];

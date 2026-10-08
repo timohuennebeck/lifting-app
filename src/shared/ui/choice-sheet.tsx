@@ -6,10 +6,9 @@ import { colors, useAccentColor } from '@/shared/lib/theme';
 
 import { Button } from './button';
 import { PressableScale } from './pressable-scale';
+import { RadioDot } from './radio-dot';
 import { Sheet } from './sheet';
 import { Text } from './text';
-
-/** Solid destructive red used by delete choices and CTAs (oklch 0.63 0.21 25). */
 
 export interface ChoiceSheetOption<T extends string> {
   value: T;
@@ -84,14 +83,7 @@ export function ChoiceSheet<T extends string>({
                   </Text>
                 ) : null}
               </View>
-              <View
-                className="size-6 rounded-full"
-                style={
-                  active
-                    ? { borderWidth: 7, borderColor: tint }
-                    : { borderWidth: 1.5, borderColor: colors.track }
-                }
-              />
+              <RadioDot selected={active} color={tint} />
             </PressableScale>
           );
         })}

@@ -1,29 +1,27 @@
 import type { ExerciseId } from '@/shared/data/exercises';
 
-export const TECHNIQUE_PATTERNS = [
-  'flatPress',
-  'inclinePress',
-  'overheadPress',
-  'raise',
-  'rearDelt',
-  'uprightRow',
-  'fly',
-  'dip',
-  'pushUp',
-  'tricepsExtension',
-  'verticalPull',
-  'row',
-  'deadlift',
-  'curl',
-  'squat',
-  'legPress',
-  'hinge',
-  'lunge',
-  'legExtension',
-  'calfRaise',
-  'plank',
-] as const;
-export type TechniquePattern = (typeof TECHNIQUE_PATTERNS)[number];
+type TechniquePattern =
+  | 'flatPress'
+  | 'inclinePress'
+  | 'overheadPress'
+  | 'raise'
+  | 'rearDelt'
+  | 'uprightRow'
+  | 'fly'
+  | 'dip'
+  | 'pushUp'
+  | 'tricepsExtension'
+  | 'verticalPull'
+  | 'row'
+  | 'deadlift'
+  | 'curl'
+  | 'squat'
+  | 'legPress'
+  | 'hinge'
+  | 'lunge'
+  | 'legExtension'
+  | 'calfRaise'
+  | 'plank';
 
 /** Exercises sharing a movement share their technique cues (`exercises:technique.<pattern>`). */
 export const TECHNIQUE_OF: Record<ExerciseId, TechniquePattern> = {

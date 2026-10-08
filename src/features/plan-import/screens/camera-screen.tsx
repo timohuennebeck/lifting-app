@@ -12,7 +12,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { StepTitle } from '@/features/plan-create/components/step-title';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
@@ -20,6 +19,7 @@ import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
+import { StepTitle } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
 import { pickPlanPhotos } from '../lib/pick-source';
@@ -94,6 +94,7 @@ export function CameraScreen() {
         <StepTitle
           title={t('planImport:camera.permission.title')}
           subtitle={t('planImport:camera.permission.body')}
+          subtitleTone="subtle"
         />
         <View className="flex-1" />
         <View className="gap-2 px-4">

@@ -12,6 +12,9 @@ import { Text } from './text';
 
 const EXIT_MS = 200;
 
+/** Runs `fn` once a closing sheet's exit animation is done, so modals never overlap. */
+export const afterSheetClose = (fn: () => void) => setTimeout(fn, EXIT_MS + 60);
+
 export interface SheetProps {
   visible: boolean;
   onClose: () => void;

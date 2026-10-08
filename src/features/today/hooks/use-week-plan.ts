@@ -3,9 +3,7 @@ import { useMemo } from 'react';
 import { useProfile } from '@/shared/data/profile';
 import { type TemplateSummary, useTemplates } from '@/shared/data/templates';
 import { type WorkoutSummary, useWorkoutsInRange } from '@/shared/data/workouts';
-import { mondayIndex } from '@/shared/lib/format';
-
-import { addDays, startOfWeek } from '../lib/week';
+import { addDays, mondayIndex, startOfWeek } from '@/shared/lib/date';
 
 export interface WeekDay {
   date: Date;
@@ -36,8 +34,7 @@ export function useWeekPlan(today: Date) {
   const days = useMemo<WeekDay[]>(
     () =>
       Array.from({ length: 7 }, (_, i) => {
-        const date = new Date(Date.parse(fromIso));
-        date.setDate(date.getDate() + i);
+        const date = addDays(new Date(fromIso), i);
         const workout =
           (workouts ?? []).find((w) => mondayIndex(new Date(w.startedAt)) === i) ?? null;
         const planned = planTemplates.find((t) => t.weekday === i) ?? null;

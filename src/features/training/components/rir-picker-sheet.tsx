@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { formatRir, RIR_VALUES } from '@/shared/lib/rir';
 import { View } from 'react-native';
 
+import { formatRir, RIR_VALUES } from '@/shared/lib/rir';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';

@@ -72,6 +72,11 @@ export function useProfile() {
   return { ...query, profile: query.data ?? null };
 }
 
+/** The signed-in user's unit system (metric until the profile loaded). */
+export function useUnits(): UnitSystem {
+  return useProfile().profile?.unitSystem ?? 'metric';
+}
+
 const COLUMNS: Record<keyof Omit<Profile, 'id' | 'createdAt'>, string> = {
   firstName: 'first_name',
   sex: 'sex',

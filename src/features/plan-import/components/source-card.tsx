@@ -92,31 +92,3 @@ export function ViewfinderArt() {
     </View>
   );
 }
-
-const FILES = [
-  { label: 'XLS', left: 8, top: 16, rotate: '-10deg', accent: false },
-  { label: 'PDF', left: 73, top: 4, rotate: '0deg', accent: true },
-  { label: 'CSV', left: 138, top: 16, rotate: '9deg', accent: false },
-] as const;
-
-/** Fanned XLS / PDF / CSV tiles. */
-export function FileTypesArt() {
-  return (
-    <View className="mt-1 h-[120px] w-[220px]">
-      {FILES.map((f) => (
-        <View
-          key={f.label}
-          className={cn(
-            'absolute h-[92px] w-[74px] justify-end rounded-[14px] p-2.5',
-            f.accent ? 'bg-accent' : 'bg-[#1E1E1E]',
-          )}
-          style={{ left: f.left, top: f.top, transform: [{ rotate: f.rotate }] }}
-        >
-          <Text variant="label" tone={f.accent ? 'onAccent' : 'default'}>
-            {f.label}
-          </Text>
-        </View>
-      ))}
-    </View>
-  );
-}

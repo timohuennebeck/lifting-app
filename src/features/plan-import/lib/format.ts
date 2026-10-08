@@ -1,5 +1,5 @@
 import type { PlanSetDraft } from '@/shared/data/templates';
-import { formatNumber } from '@/shared/lib/format';
+import { formatNumber, formatRepRange } from '@/shared/lib/format';
 
 /** Steps in the "Import plan" branch. */
 export const IMPORT_STEPS = 3;
@@ -8,9 +8,7 @@ export const IMPORT_STEPS = 3;
 export function formatScheme(sets: PlanSetDraft[]) {
   const first = sets[0];
   if (!first) return '0';
-  const reps =
-    first.repsMin === first.repsMax ? `${first.repsMin}` : `${first.repsMin}–${first.repsMax}`;
-  return `${sets.length} × ${reps}`;
+  return `${sets.length} × ${formatRepRange(first.repsMin, first.repsMax)}`;
 }
 
 export function formatFileSize(bytes: number) {

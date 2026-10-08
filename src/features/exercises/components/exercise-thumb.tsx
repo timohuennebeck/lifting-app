@@ -14,7 +14,7 @@ export interface ExerciseThumbProps {
   initialsClassName?: string;
 }
 
-export const initialsOf = (name: string) =>
+const initialsOf = (name: string) =>
   name
     .split(/[\s-]+/)
     .filter(Boolean)

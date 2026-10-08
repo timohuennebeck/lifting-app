@@ -6,10 +6,8 @@ import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboardin
 import type { EquipmentAccess } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
 import { OptionCard } from '@/shared/ui/option-card';
-import { Screen } from '@/shared/ui/screen';
-import { StepHeader } from '@/shared/ui/step-header';
+import { StepScreen } from '@/shared/ui/step-screen';
 
-import { StepTitle } from '../components/step-title';
 import { CREATE_STEPS } from '../lib/flow';
 
 const OPTIONS: EquipmentAccess[] = ['gym', 'home', 'bodyweight'];
@@ -21,9 +19,11 @@ export function EquipmentScreen() {
   const equipment = draft.equipment ?? 'gym';
 
   return (
-    <Screen
+    <StepScreen
+      step={3}
+      total={CREATE_STEPS}
+      title={t('planCreate:equipment.title')}
       scroll
-      header={<StepHeader step={3} total={CREATE_STEPS} />}
       footer={
         <Button
           label={t('common:actions.continue')}
@@ -34,7 +34,6 @@ export function EquipmentScreen() {
         />
       }
     >
-      <StepTitle title={t('planCreate:equipment.title')} />
       <View className="gap-2.5 px-4 pt-7">
         {OPTIONS.map((option, i) => (
           <OptionCard
@@ -47,6 +46,6 @@ export function EquipmentScreen() {
           />
         ))}
       </View>
-    </Screen>
+    </StepScreen>
   );
 }

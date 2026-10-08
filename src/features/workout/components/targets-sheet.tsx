@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import type { WorkoutExercise, WorkoutSet } from '@/shared/data/workouts';
+import { clamp } from '@/shared/lib/math';
 import { colors } from '@/shared/lib/theme';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
@@ -17,8 +18,6 @@ import {
   type SetTargets,
   updateSetTargets,
 } from '../data/workout-mutations';
-
-const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
 interface MiniStepperProps {
   value: number | null;

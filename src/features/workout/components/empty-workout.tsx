@@ -1,43 +1,9 @@
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { colors } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
+import { GhostExercise } from '@/shared/ui/ghost-exercise';
 import { IconButton } from '@/shared/ui/icon-button';
-import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
-
-interface GhostExerciseProps {
-  faded?: boolean;
-  widths: [`${number}%`, `${number}%`];
-}
-
-function GhostExercise({ faded, widths }: GhostExerciseProps) {
-  return (
-    <View className="flex-row gap-3.5 py-[18px]" style={{ opacity: faded ? 0.45 : 1 }}>
-      <View className="h-[86px] w-16 rounded-[5px] bg-[#161616]" />
-      <View className="flex-1 gap-2.5">
-        <View className="gap-[7px] pt-[7px]">
-          <View className="h-2.5 rounded-[5px] bg-[#1E1E1C]" style={{ width: widths[0] }} />
-          <View className="h-2.5 rounded-[5px] bg-[#1E1E1C]" style={{ width: widths[1] }} />
-        </View>
-        {[0, 1].map((k) => (
-          <View key={k} className="flex-row items-center gap-2.5">
-            <View className="size-6 rounded-full bg-[#1A1A1A]" />
-            <View className="flex-1">
-              <View className="h-2 w-[34px] rounded bg-[#1A1A1A]" />
-            </View>
-            <View className="size-[22px] rounded-full bg-[#161616]" />
-          </View>
-        ))}
-        <View className="flex-row gap-1.5">
-          <View className="h-7 w-14 rounded-full bg-[#161616]" />
-          <View className="h-7 w-[68px] rounded-full bg-[#161616]" />
-        </View>
-      </View>
-    </View>
-  );
-}
 
 export interface EmptyWorkoutProps {
   name: string;
@@ -77,15 +43,16 @@ export function EmptyWorkout({ name, onBack, onMenu, onAdd }: EmptyWorkoutProps)
             {t('empty.duration', { minutes: 0 })}
           </Text>
         </View>
-        <PressableScale
+        <IconButton
+          icon="plus"
+          size={56}
+          iconSize={18}
           haptic="press"
           activeScale={0.95}
           accessibilityLabel={t('addExercise')}
           onPress={onAdd}
-          className="size-14 items-center justify-center rounded-full bg-[#1E1E1E]"
-        >
-          <Icon name="plus" size={18} color={colors.fg} />
-        </PressableScale>
+          className="bg-[#1E1E1E]"
+        />
       </View>
       <View className="px-5 pt-2">
         <GhostExercise widths={['88%', '58%']} />

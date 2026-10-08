@@ -7,8 +7,8 @@ import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 import { MuscleMap } from '@/shared/ui/muscle-map/muscle-map';
+import { StepScreen } from '@/shared/ui/step-screen';
 
-import { OnboardingStep } from '../components/onboarding-step';
 import { ABOUT_STEPS, COMPLAINT_AREAS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 
@@ -47,7 +47,7 @@ export function ComplaintsScreen() {
   const count = complaints.length;
 
   return (
-    <OnboardingStep
+    <StepScreen
       step={8}
       total={ABOUT_STEPS}
       title={t('complaints.title')}
@@ -90,6 +90,6 @@ export function ComplaintsScreen() {
           </View>
         ))}
       </View>
-    </OnboardingStep>
+    </StepScreen>
   );
 }

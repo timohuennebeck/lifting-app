@@ -2,7 +2,7 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 import { useSqlQuery } from '@/shared/data/use-sql-query';
 
-export const trainingKeys = createQueryKeys('training', {
+const trainingKeys = createQueryKeys('training', {
   planProgress: (collectionId: string | null) => [collectionId ?? 'none'],
 });
 

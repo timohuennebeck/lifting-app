@@ -1,5 +1,5 @@
 // Fun volume comparison from the design (Component.CMP.Tiere), weights in kg.
-export const ANIMALS = [
+const ANIMALS = [
   { id: 'polarBear', kg: 450 },
   { id: 'giraffe', kg: 1200 },
   { id: 'hippo', kg: 1500 },
@@ -8,8 +8,6 @@ export const ANIMALS = [
   { id: 'spermWhale', kg: 41000 },
   { id: 'blueWhale', kg: 150000 },
 ] as const;
-
-export type AnimalId = (typeof ANIMALS)[number]['id'];
 
 /** Heaviest animal the volume beats, and how many of it were lifted. */
 export function compareVolume(volumeKg: number) {

@@ -1,8 +1,12 @@
+import { createQueryKeys } from '@lukemorales/query-key-factory';
+
 import { parseJson } from '@/shared/data/json';
 import { useSqlQuery } from '@/shared/data/use-sql-query';
 import { estimateOneRepMax } from '@/shared/data/workouts';
 
-import { workoutFeatureKeys } from './workout-keys';
+const recordKeys = createQueryKeys('workoutRecords', {
+  detail: (workoutId: string) => [workoutId],
+});
 
 export interface WorkoutRecord {
   exerciseId: string;
@@ -44,7 +48,7 @@ function toRecords(rows: RecordRow[]): WorkoutRecord[] {
 /** New personal records of a workout with the best set from before it. */
 export function useWorkoutRecords(workoutId: string | undefined) {
   return useSqlQuery({
-    queryKey: workoutFeatureKeys.records(workoutId ?? '').queryKey,
+    queryKey: recordKeys.detail(workoutId ?? '').queryKey,
     enabled: !!workoutId,
     sql: `SELECT we.exercise_id, s.weight_kg, s.reps,
             (SELECT json_object('weightKg', p.weight_kg, 'reps', p.reps)

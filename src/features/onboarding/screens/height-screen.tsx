@@ -2,12 +2,13 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { CM_PER_INCH, feetInches } from '@/features/settings/lib/body-units';
+import { CM_PER_INCH, feetInches } from '@/shared/lib/format';
+import { clamp } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { RulerPicker } from '@/shared/ui/ruler-picker';
+import { StepScreen } from '@/shared/ui/step-screen';
 
 import { MeasureValue, StepButtons } from '../components/measure-value';
-import { OnboardingStep } from '../components/onboarding-step';
 import { ABOUT_STEPS, HEIGHT_CM, HEIGHT_IN } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 
@@ -22,12 +23,12 @@ export function HeightScreen() {
   const range = imperial ? HEIGHT_IN : HEIGHT_CM;
   const value = imperial ? Math.round(heightCm / CM_PER_INCH) : heightCm;
   const setValue = (next: number) => {
-    const v = Math.min(range.max, Math.max(range.min, next));
+    const v = clamp(next, range.min, range.max);
     update({ heightCm: imperial ? Math.round(v * CM_PER_INCH) : v });
   };
 
   return (
-    <OnboardingStep
+    <StepScreen
       step={6}
       total={ABOUT_STEPS}
       title={t('height.title')}
@@ -56,6 +57,6 @@ export function HeightScreen() {
           className="h-[330px]"
         />
       </View>
-    </OnboardingStep>
+    </StepScreen>
   );
 }

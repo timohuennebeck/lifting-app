@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { type Profile, type ProfilePatch, type Sex } from '@/shared/data/profile';
-import { formatNumber, kgToLb, lbToKg } from '@/shared/lib/format';
+import { CM_PER_INCH, feetInches, formatNumber, kgToLb, lbToKg } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import { NumberStepper } from '@/shared/ui/number-stepper';
@@ -12,11 +12,9 @@ import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
-import { CM_PER_INCH, feetInches } from '../lib/body-units';
-
 export type BodyField = 'firstName' | 'sex' | 'age' | 'weight' | 'height';
 
-export const SEXES: Sex[] = ['female', 'male', 'unspecified'];
+const SEXES: Sex[] = ['female', 'male', 'unspecified'];
 
 export interface BodyFieldSheetProps {
   field: BodyField | null;

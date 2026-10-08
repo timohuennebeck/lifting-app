@@ -5,6 +5,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import type { ExerciseId } from '@/shared/data/exercises';
+import { useUnits } from '@/shared/data/profile';
+import { useNow } from '@/shared/hooks/use-now';
+import { DAY_MS } from '@/shared/lib/date';
 import { formatDate } from '@/shared/lib/format';
 import { IconButton } from '@/shared/ui/icon-button';
 import { SegmentedControl } from '@/shared/ui/segmented-control';
@@ -13,13 +16,10 @@ import { Text } from '@/shared/ui/text';
 import { HistoryChart } from '../components/history-chart';
 import { HistorySessionRow } from '../components/history-session-row';
 import { type ExerciseSession, useExerciseSessions } from '../data/exercise-sessions';
-import { useNow } from '../hooks/use-now';
-import { useUnits } from '../hooks/use-units';
 import { toDisplayWeight } from '../lib/weight';
 
 const RANGES = ['7', '14', '30', '90'] as const;
 type Range = (typeof RANGES)[number];
-const DAY_MS = 86_400_000;
 
 function monthSections(sessions: ExerciseSession[], currentYear: number) {
   const sections: { title: string; data: ExerciseSession[] }[] = [];

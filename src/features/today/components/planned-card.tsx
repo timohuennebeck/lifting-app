@@ -6,7 +6,8 @@ import { View } from 'react-native';
 import { muscleShares } from '@/shared/data/muscles';
 import type { TemplateSummary } from '@/shared/data/templates';
 import { startWorkout } from '@/shared/data/workouts';
-import { formatDate } from '@/shared/lib/format';
+import { isSameDay, startOfDay } from '@/shared/lib/date';
+import { formatWeekdayDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { cn } from '@/shared/lib/cn';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -14,7 +15,6 @@ import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 
 import { markTemplateDone } from '../data/today-mutations';
-import { isSameDay, startOfDay } from '../lib/week';
 import { DayStatus } from './day-status';
 import { WorkoutDayCard } from './workout-day-card';
 
@@ -40,9 +40,7 @@ export function PlannedCard({
   const isFuture = startOfDay(date) > startOfDay(today);
   const label = isSameDay(date, today)
     ? t('status.plannedToday')
-    : t('status.planned', {
-        date: formatDate(date, { weekday: 'short', day: 'numeric', month: 'short' }),
-      });
+    : t('status.planned', { date: formatWeekdayDate(date) });
 
   const start = async () => {
     if (activeWorkoutId) {

@@ -7,8 +7,8 @@ import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 import { OptionCard } from '@/shared/ui/option-card';
 import { Text } from '@/shared/ui/text';
+import { StepScreen } from '@/shared/ui/step-screen';
 
-import { OnboardingStep } from '../components/onboarding-step';
 import { ABOUT_STEPS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 
@@ -24,7 +24,7 @@ export function UnitsScreen() {
   const update = useUpdateDraft();
 
   return (
-    <OnboardingStep
+    <StepScreen
       step={4}
       total={ABOUT_STEPS}
       title={t('units.title')}
@@ -61,6 +61,6 @@ export function UnitsScreen() {
           );
         })}
       </View>
-    </OnboardingStep>
+    </StepScreen>
   );
 }

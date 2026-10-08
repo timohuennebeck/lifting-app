@@ -10,6 +10,7 @@ import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
+import { clamp } from '@/shared/lib/math';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 
 import { DotPattern } from './dot-pattern';
@@ -68,7 +69,7 @@ export function RulerPicker({
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (!dragging.current) return;
     const offset = vertical ? e.nativeEvent.contentOffset.y : e.nativeEvent.contentOffset.x;
-    const index = Math.min(count - 1, Math.max(0, Math.round(offset / PITCH)));
+    const index = clamp(Math.round(offset / PITCH), 0, count - 1);
     if (index === lastIndex.current) return;
     lastIndex.current = index;
     haptics.select();

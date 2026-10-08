@@ -6,7 +6,7 @@ import { type DayKind, type GeneratePlanInput, generatePlan, splitFor } from '..
 
 const DAY_KINDS: DayKind[] = ['full', 'upper', 'lower', 'push', 'pull', 'legs'];
 
-export function inputFromDraft(draft: OnboardingDraft): GeneratePlanInput {
+function inputFromDraft(draft: OnboardingDraft): GeneratePlanInput {
   return {
     goal: draft.goal ?? 'hypertrophy',
     focus: draft.focus,

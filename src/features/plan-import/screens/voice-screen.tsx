@@ -4,8 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
+import { useNow } from '@/shared/hooks/use-now';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
+import { clamp } from '@/shared/lib/math';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -31,22 +33,14 @@ export function VoiceScreen() {
   const scripts = t('planImport:voice.scripts', { returnObjects: true });
   const words = parseTranscript(scripts[take % VOICE_SCRIPTS.length] ?? '');
   const [startedAt, setStartedAt] = useState<number | null>(null);
-  const [now, setNow] = useState(0);
+  const now = useNow(80, startedAt !== null);
   const handedOff = useRef(false);
 
   const elapsed = startedAt === null ? 0 : now - startedAt;
   const shown =
-    startedAt === null
-      ? 0
-      : Math.max(0, Math.min(words.length, Math.floor((elapsed - LEAD_MS) / WORD_MS) + 1));
+    startedAt === null ? 0 : clamp(Math.floor((elapsed - LEAD_MS) / WORD_MS) + 1, 0, words.length);
   const recognized = startedAt !== null && elapsed >= LEAD_MS + words.length * WORD_MS + SETTLE_MS;
   const tick = Math.floor(now / 250);
-
-  useEffect(() => {
-    if (startedAt === null) return;
-    const id = setInterval(() => setNow(Date.now()), 80);
-    return () => clearInterval(id);
-  }, [startedAt]);
 
   useEffect(() => {
     if (!recognized || handedOff.current) return;
@@ -60,7 +54,6 @@ export function VoiceScreen() {
     if (startedAt === null) {
       haptics.press();
       handedOff.current = false;
-      setNow(Date.now());
       setStartedAt(Date.now());
     } else if (!recognized) {
       haptics.tap();

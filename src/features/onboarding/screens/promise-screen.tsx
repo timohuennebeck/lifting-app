@@ -15,6 +15,7 @@ import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
 import { StepHeader } from '@/shared/ui/step-header';
+import { StepTitle } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
 import {
@@ -22,7 +23,6 @@ import {
   CELEBRATION_MS,
   FingerprintHold,
 } from '../components/fingerprint-hold';
-import { StepTitle } from '../components/onboarding-step';
 import { START_STEPS } from '../lib/flow';
 import { useDraft } from '../stores/onboarding-store';
 

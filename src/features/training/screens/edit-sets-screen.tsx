@@ -13,6 +13,7 @@ import {
 import { cn } from '@/shared/lib/cn';
 import { formatDuration } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
+import { clamp } from '@/shared/lib/math';
 import { requireUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -23,7 +24,6 @@ import { ToggleSwitch } from '@/shared/ui/toggle-switch';
 import { RirPickerSheet } from '../components/rir-picker-sheet';
 import { type SetDraft, SetEditorRow } from '../components/set-editor-row';
 import { saveTemplateSets } from '../data/template-mutations';
-import { clamp } from '../lib/training-ui';
 
 const REST_STEP = 15;
 const REST_MIN = 15;

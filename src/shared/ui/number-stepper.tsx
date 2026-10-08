@@ -2,6 +2,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { cn } from '@/shared/lib/cn';
+import { clamp } from '@/shared/lib/math';
 
 import { IconButton } from './icon-button';
 import { Text } from './text';
@@ -30,7 +31,7 @@ export function NumberStepper({
   className,
 }: NumberStepperProps) {
   const { t } = useTranslation();
-  const set = (next: number) => onChange(Math.min(max, Math.max(min, next)));
+  const set = (next: number) => onChange(clamp(next, min, max));
   return (
     <View className={cn('flex-row items-center justify-between gap-3', className)}>
       <IconButton

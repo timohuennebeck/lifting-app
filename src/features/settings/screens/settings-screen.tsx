@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { router, Stack } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +9,7 @@ import { type ProfilePatch, saveProfile, useProfile } from '@/shared/data/profil
 import { supabase } from '@/shared/data/supabase';
 import { APP_LANGUAGES, type AppLanguage } from '@/shared/i18n/resources';
 import { cn } from '@/shared/lib/cn';
-import { formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { formatHeight, formatWeight, type UnitSystem } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -18,6 +17,7 @@ import { ACCENT_OPTIONS, useSettingsStore } from '@/shared/stores/settings-store
 import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
+import { LanguageFlag } from '@/shared/ui/language-flag';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
 import { SegmentedControl } from '@/shared/ui/segmented-control';
@@ -25,14 +25,6 @@ import { Text } from '@/shared/ui/text';
 
 import { type BodyField, BodyFieldSheet } from '../components/body-field-sheet';
 import { SettingsRow, SettingsSection } from '../components/settings-section';
-import { formatHeight } from '../lib/body-units';
-
-const FLAGS: Record<AppLanguage, number> = {
-  en: require('@/assets/images/flags/en.svg'),
-  de: require('@/assets/images/flags/de.svg'),
-  'pt-PT': require('@/assets/images/flags/pt-PT.svg'),
-  'pt-BR': require('@/assets/images/flags/pt-BR.svg'),
-};
 
 interface BodyRow {
   field: BodyField;
@@ -111,7 +103,7 @@ export function SettingsScreen() {
             label={tc(`languages.${lang}`)}
             accessibilityRole="radio"
             selected={lang === language}
-            leading={<Image source={FLAGS[lang]} style={{ width: 28, height: 28 }} />}
+            leading={<LanguageFlag language={lang} size={28} />}
             trailing={
               lang === language ? (
                 <View className="size-6 items-center justify-center rounded-full bg-accent">

@@ -7,9 +7,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useProfile } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
 import { Text } from '@/shared/ui/text';
+import { TextButton } from '@/shared/ui/text-button';
 
 import { LanguagePicker } from '../components/language-picker';
-import { TextButton } from '../components/text-button';
 import { WelcomePreview } from '../components/welcome-preview';
 import { useOnboardingStore } from '../stores/onboarding-store';
 

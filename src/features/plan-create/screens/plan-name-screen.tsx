@@ -6,12 +6,10 @@ import { View } from 'react-native';
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
-import { Screen } from '@/shared/ui/screen';
-import { StepHeader } from '@/shared/ui/step-header';
+import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
-import { StepTitle } from '../components/step-title';
 import { usePlanGenerator } from '../hooks/use-plan-generator';
 import { CREATE_STEPS, PLAN_NAME_MAX } from '../lib/flow';
 
@@ -30,12 +28,13 @@ export function PlanNameScreen() {
   }
 
   return (
-    <Screen
+    <StepScreen
+      step={6}
+      total={CREATE_STEPS}
+      title={t('planCreate:planName.title')}
       scroll
-      header={<StepHeader step={6} total={CREATE_STEPS} />}
       footer={<Button label={t('common:actions.continue')} disabled={!trimmed} onPress={submit} />}
     >
-      <StepTitle title={t('planCreate:planName.title')} />
       <View className="gap-2.5 px-4 pt-7">
         <TextField
           value={name}
@@ -68,6 +67,6 @@ export function PlanNameScreen() {
           ))}
         </View>
       </View>
-    </Screen>
+    </StepScreen>
   );
 }

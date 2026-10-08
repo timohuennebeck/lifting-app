@@ -1,15 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
+import { isSameDay } from '@/shared/lib/date';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
+import { DashedRing } from '@/shared/ui/plan-slot';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import type { WeekDay } from '../hooks/use-week-plan';
-import { isSameDay } from '../lib/week';
 
 export interface WeekStripProps {
   days: WeekDay[];
@@ -62,19 +62,7 @@ export function WeekStrip({ days, today, selected, onSelect }: WeekStripProps) {
             ) : (
               <View className="size-[41px] items-center justify-center">
                 {day.planned ? (
-                  <Svg width={38} height={38} viewBox="0 0 38 38" style={{ position: 'absolute' }}>
-                    <Circle
-                      cx={19}
-                      cy={19}
-                      r={17.5}
-                      fill="none"
-                      stroke={isSelected ? accent : '#4A4A47'}
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                      strokeDasharray="13.3 5"
-                      transform="rotate(-90 19 19)"
-                    />
-                  </Svg>
+                  <DashedRing color={isSelected ? accent : '#4A4A47'} />
                 ) : isSelected ? (
                   <View className="absolute size-[34px] rounded-full bg-elevated" />
                 ) : null}

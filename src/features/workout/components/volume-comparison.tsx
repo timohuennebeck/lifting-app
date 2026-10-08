@@ -1,7 +1,7 @@
-import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { formatNumber, formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { Card } from '@/shared/ui/card';
 import { Text } from '@/shared/ui/text';
 
 import { compareVolume } from '../lib/compare';
@@ -22,7 +22,7 @@ export function VolumeComparison({ volumeKg, units }: VolumeComparisonProps) {
   const key = `compare.animals.${animal.id}` as const;
 
   return (
-    <View className="gap-2 rounded-[28px] border border-white/8 bg-surface p-5">
+    <Card className="gap-2">
       <Text variant="overline" tone="subtle">
         {t('compare.title')}
       </Text>
@@ -36,6 +36,6 @@ export function VolumeComparison({ volumeKg, units }: VolumeComparisonProps) {
           weight: tonnage(animal.kg, units),
         })}
       </Text>
-    </View>
+    </Card>
   );
 }

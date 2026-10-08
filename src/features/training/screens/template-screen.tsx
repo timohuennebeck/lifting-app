@@ -16,13 +16,14 @@ import {
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
+import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 import { MuscleTileRow } from '@/shared/ui/muscle-map';
+import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
-import { BottomFade } from '../components/bottom-fade';
 import { EmptyExercises } from '../components/empty-exercises';
 import { type ExerciseMenuAction, ExerciseMenuSheet } from '../components/exercise-menu-sheet';
 import { PlanBar } from '../components/plan-bar';
@@ -39,7 +40,6 @@ import {
 import { usePlanProgress } from '../data/use-plan-progress';
 import { useLastDefined } from '../hooks/use-last-defined';
 import { useStartTemplate } from '../hooks/use-start-template';
-import { afterSheetClose } from '../lib/training-ui';
 
 type PickerState = { mode: 'add' } | { mode: 'swap'; templateExerciseId: string };
 

@@ -4,11 +4,9 @@ import { View } from 'react-native';
 
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { Button } from '@/shared/ui/button';
-import { Screen } from '@/shared/ui/screen';
 import { OptionCard } from '@/shared/ui/option-card';
-import { StepHeader } from '@/shared/ui/step-header';
+import { StepScreen } from '@/shared/ui/step-screen';
 
-import { StepTitle } from '../components/step-title';
 import { CREATE_STEPS } from '../lib/flow';
 import { GOALS } from '../lib/goal-ranges';
 
@@ -19,9 +17,11 @@ export function GoalScreen() {
   const goal = draft.goal ?? 'hypertrophy';
 
   return (
-    <Screen
+    <StepScreen
+      step={1}
+      total={CREATE_STEPS}
+      title={t('planCreate:goal.title')}
       scroll
-      header={<StepHeader step={1} total={CREATE_STEPS} />}
       footer={
         <Button
           label={t('common:actions.continue')}
@@ -32,7 +32,6 @@ export function GoalScreen() {
         />
       }
     >
-      <StepTitle title={t('planCreate:goal.title')} />
       <View className="gap-2.5 px-4 pt-7">
         {GOALS.map((g, i) => (
           <OptionCard
@@ -45,6 +44,6 @@ export function GoalScreen() {
           />
         ))}
       </View>
-    </Screen>
+    </StepScreen>
   );
 }

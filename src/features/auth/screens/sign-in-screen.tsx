@@ -3,8 +3,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { StepTitle } from '@/features/onboarding/components/onboarding-step';
-import { TextButton } from '@/features/onboarding/components/text-button';
 import { isOnboardedAfterSync } from '@/features/onboarding/lib/persist-onboarding';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { supabase } from '@/shared/data/supabase';
@@ -12,7 +10,9 @@ import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
+import { StepTitle } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
+import { TextButton } from '@/shared/ui/text-button';
 
 import { CredentialFields } from '../components/credential-fields';
 import { type AuthErrorKey, authErrorKey, isValidEmail } from '../lib/credentials';

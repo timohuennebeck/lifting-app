@@ -3,8 +3,6 @@ import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { StepTitle } from '@/features/onboarding/components/onboarding-step';
-import { TextButton } from '@/features/onboarding/components/text-button';
 import { START_STEPS } from '@/features/onboarding/lib/flow';
 import { persistOnboarding } from '@/features/onboarding/lib/persist-onboarding';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
@@ -12,9 +10,9 @@ import { supabase } from '@/shared/data/supabase';
 import { haptics } from '@/shared/lib/haptics';
 import { useSessionStore } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
-import { Screen } from '@/shared/ui/screen';
-import { StepHeader } from '@/shared/ui/step-header';
+import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
+import { TextButton } from '@/shared/ui/text-button';
 
 import { CredentialFields } from '../components/credential-fields';
 import { SocialSignIn } from '../components/social-sign-in';
@@ -73,9 +71,13 @@ export function CreateAccountScreen() {
   };
 
   return (
-    <Screen
+    <StepScreen
+      step={2}
+      total={START_STEPS}
+      title={t('createAccount.title')}
+      subtitle={t('createAccount.subtitle')}
+      titleClassName="pt-[22px]"
       scroll
-      header={<StepHeader step={2} total={START_STEPS} />}
       footer={
         <View className="gap-3">
           <Button
@@ -98,9 +100,6 @@ export function CreateAccountScreen() {
         </View>
       }
     >
-      <View className="pt-1">
-        <StepTitle title={t('createAccount.title')} subtitle={t('createAccount.subtitle')} />
-      </View>
       <View className="px-4 pt-5">
         <SocialSignIn />
       </View>
@@ -130,6 +129,6 @@ export function CreateAccountScreen() {
           </View>
         ) : null}
       </View>
-    </Screen>
+    </StepScreen>
   );
 }

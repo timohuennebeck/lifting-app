@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
 
 import { cn } from '@/shared/lib/cn';
-import { PressableScale, type PressableScaleProps } from '@/shared/ui/pressable-scale';
-import { Text, type TextTone } from '@/shared/ui/text';
+
+import { PressableScale, type PressableScaleProps } from './pressable-scale';
+import { Text, type TextTone } from './text';
 
 export interface TextButtonProps extends Omit<PressableScaleProps, 'children'> {
   label: ReactNode;

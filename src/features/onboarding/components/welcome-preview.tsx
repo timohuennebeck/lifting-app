@@ -11,15 +11,15 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import Svg, { Circle } from 'react-native-svg';
 
 import { getExercise } from '@/shared/data/exercises';
 import { muscleShares } from '@/shared/data/muscles';
 import { cn } from '@/shared/lib/cn';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 import { MuscleTile } from '@/shared/ui/muscle-map/muscle-tile';
+import { PlanSlot } from '@/shared/ui/plan-slot';
 import { Text } from '@/shared/ui/text';
 
 /** The mockup renders a full 390×844 screen and scales it into a 180×390 phone. */
@@ -31,9 +31,9 @@ const DAYS = [
   { key: 'push', state: 'done' },
   { key: 'pull', state: 'done' },
   { key: 'legs', state: 'done' },
-  { key: 'push', state: 'today', n: 4 },
-  { key: 'pull', state: 'next', n: 5 },
-  { key: 'legs', state: 'next', n: 6 },
+  { key: 'push', state: 'today' },
+  { key: 'pull', state: 'next' },
+  { key: 'legs', state: 'next' },
 ] as const;
 
 const EXERCISES = [
@@ -43,37 +43,6 @@ const EXERCISES = [
 ] as const;
 
 const SHARES = muscleShares(EXERCISES.map((e) => ({ exerciseId: e.id, sets: e.rir.length })));
-
-interface DayRingProps {
-  n: number;
-  color: string;
-}
-
-function DayRing({ n, color }: DayRingProps) {
-  return (
-    <View className="size-8 items-center justify-center">
-      <Svg
-        width={38}
-        height={38}
-        style={{ position: 'absolute', left: -3, top: -3, transform: [{ rotate: '-90deg' }] }}
-      >
-        <Circle
-          cx={19}
-          cy={19}
-          r={17.5}
-          fill="none"
-          stroke={color}
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeDasharray="13.3 5"
-        />
-      </Svg>
-      <Text variant="caption" className="text-sm">
-        {n}
-      </Text>
-    </View>
-  );
-}
 
 interface PreviewExerciseProps {
   id: (typeof EXERCISES)[number]['id'];
@@ -152,7 +121,6 @@ function PreviewExercise({ id, reps, rir, last }: PreviewExerciseProps) {
 /** Auto-scrolling miniature of the training overview shown on the welcome screen. */
 export function WelcomePreview() {
   const { t } = useTranslation('onboarding');
-  const accent = useAccentColor();
   const offset = useSharedValue(0);
 
   // Hold, scroll down, hold, scroll back – a 14 s loop like the prototype.
@@ -214,16 +182,11 @@ export function WelcomePreview() {
                     >
                       {t(`welcome.preview.${day.key}`)}
                     </Text>
-                    {day.state === 'done' ? (
-                      <View
-                        className="size-8 items-center justify-center rounded-full bg-accent"
-                        style={{ boxShadow: `0 0 0 3px ${colors.bg}, 0 0 0 4.5px ${accent}80` }}
-                      >
-                        <Icon name="check" size={14} color={colors.onAccent} />
-                      </View>
-                    ) : (
-                      <DayRing n={day.n} color={day.state === 'today' ? accent : '#4A4A48'} />
-                    )}
+                    <PlanSlot
+                      number={i + 1}
+                      done={day.state === 'done'}
+                      next={day.state === 'today'}
+                    />
                   </View>
                 ))}
                 <View className="flex-1 items-center justify-end">

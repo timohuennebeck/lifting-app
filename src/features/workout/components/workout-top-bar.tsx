@@ -1,12 +1,12 @@
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { useNow } from '@/shared/hooks/use-now';
+import { formatClock } from '@/shared/lib/format';
 import { IconButton } from '@/shared/ui/icon-button';
 import { ProgressBar } from '@/shared/ui/progress-bar';
 import { Text } from '@/shared/ui/text';
 
-import { useNow } from '../hooks/use-now';
-import { formatClock } from '../lib/time';
 import { RestTimer } from './rest-timer';
 
 interface ElapsedClockProps {
