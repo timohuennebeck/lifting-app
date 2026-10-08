@@ -24,6 +24,7 @@ export function StepHeader({ step, total, onBack, hideBack }: StepHeaderProps) {
       ) : (
         <IconButton
           icon="chevron-left"
+          iconSize={7}
           accessibilityLabel={t('actions.back')}
           onPress={onBack ?? (() => router.back())}
         />

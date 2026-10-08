@@ -5,7 +5,6 @@ import { View } from 'react-native';
 import { Button } from '@/shared/ui/button';
 import { OptionCard } from '@/shared/ui/option-card';
 
-import { LevelBars } from '../components/level-bars';
 import { OnboardingStep } from '../components/onboarding-step';
 import { ABOUT_STEPS, EXPERIENCE_LEVELS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
@@ -38,7 +37,7 @@ export function ExperienceScreen() {
             description={t(`experience.${level}Hint`)}
             selected={experience === level}
             onPress={() => update({ experience: level })}
-            leading={<LevelBars level={i} selected={experience === level} />}
+            index={i + 1}
           />
         ))}
       </View>

@@ -3,7 +3,6 @@ import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
-import { DANGER_SOLID } from '@/shared/ui/choice-sheet';
 import { Icon, type IconName } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';
@@ -42,7 +41,7 @@ export function ExerciseMenuSheet({
     ({ action }) => (action !== 'moveUp' || canMoveUp) && (action !== 'moveDown' || canMoveDown),
   );
   return (
-    <Sheet visible={visible} onClose={onClose} title={title} className="bg-[#0F0F0F]">
+    <Sheet visible={visible} onClose={onClose} title={title}>
       <View className="gap-1">
         {available.map(({ action, icon }) => {
           const danger = action === 'remove';
@@ -59,9 +58,9 @@ export function ExerciseMenuSheet({
                   danger ? 'bg-danger-bg' : 'bg-control',
                 )}
               >
-                <Icon name={icon} size={14} color={danger ? DANGER_SOLID : colors.fg} />
+                <Icon name={icon} size={14} color={danger ? colors.red : colors.fg} />
               </View>
-              <Text variant="label" className={cn('text-base', danger && 'text-[#ED4042]')}>
+              <Text variant="label" className={cn('text-base', danger && 'text-red')}>
                 {t(`exerciseMenu.${action}`)}
               </Text>
             </PressableScale>

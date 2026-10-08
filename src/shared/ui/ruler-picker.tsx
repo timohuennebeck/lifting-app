@@ -12,9 +12,14 @@ import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 
+import { DotPattern } from './dot-pattern';
+
 const TICK = 5;
 const GAP = 5;
 const PITCH = TICK + GAP;
+// Dot colors of the design's tick columns.
+const TICK_MAJOR = '#B5B5AF';
+const TICK_MINOR = '#4A4A46';
 
 export interface RulerPickerProps {
   value: number;
@@ -46,6 +51,8 @@ export function RulerPicker({
   const scrollRef = useRef<ScrollView>(null);
   const [extent, setExtent] = useState(0);
   const lastIndex = useRef(Math.round((value - min) / step));
+  // Only user drags change the value; programmatic scrolls must not.
+  const dragging = useRef(false);
   const count = Math.round((max - min) / step) + 1;
   const pad = extent / 2 - TICK / 2;
 
@@ -59,6 +66,7 @@ export function RulerPicker({
   }, [value, min, step, extent, vertical]);
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (!dragging.current) return;
     const offset = vertical ? e.nativeEvent.contentOffset.y : e.nativeEvent.contentOffset.x;
     const index = Math.min(count - 1, Math.max(0, Math.round(offset / PITCH)));
     if (index === lastIndex.current) return;
@@ -93,27 +101,31 @@ export function RulerPicker({
         decelerationRate="fast"
         scrollEventThrottle={16}
         onScroll={onScroll}
+        onScrollBeginDrag={() => (dragging.current = true)}
+        onMomentumScrollEnd={() => (dragging.current = false)}
         contentContainerStyle={
           vertical ? { paddingVertical: pad } : { paddingHorizontal: pad, alignItems: 'flex-end' }
         }
       >
         {Array.from({ length: count }, (_, i) => (
-          <View
+          <DotPattern
             key={i}
+            color={i % majorEvery === 0 ? TICK_MAJOR : TICK_MINOR}
             style={
               vertical
                 ? { height: TICK, marginBottom: GAP, width: length(i) }
                 : { width: TICK, marginRight: GAP, height: length(i) }
             }
-            className={cn('self-end', i % majorEvery === 0 ? 'bg-muted' : 'bg-track')}
+            className="self-end"
           />
         ))}
       </ScrollView>
-      <View
+      <DotPattern
         pointerEvents="none"
+        color={accent}
+        radius={1.5}
         className="absolute"
         style={[
-          { backgroundColor: accent },
           vertical
             ? { right: 0, top: extent / 2 - TICK / 2, height: TICK, width: 96 }
             : { bottom: 0, left: extent / 2 - TICK / 2, width: TICK, height: 96 },

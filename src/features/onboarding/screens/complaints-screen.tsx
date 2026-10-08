@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
@@ -71,6 +72,7 @@ export function ComplaintsScreen() {
             key={area.id}
             label={t(`complaints.areas.${area.id}`)}
             selected={complaints.includes(area.id)}
+            tone="red"
             onPress={() => toggle(area.id)}
             className={CHIP}
           />
@@ -79,7 +81,12 @@ export function ComplaintsScreen() {
       <View className="mx-4 mt-5 h-[320px] flex-row gap-1 rounded-[28px] bg-surface px-2 pt-4 pb-3">
         {(['front', 'back'] as const).map((view) => (
           <View key={view} className="min-w-0 flex-1">
-            <MuscleMap view={view} selected={selectedMuscles} onToggle={onMuscle} />
+            <MuscleMap
+              view={view}
+              selected={selectedMuscles}
+              onToggle={onMuscle}
+              accent={colors.red}
+            />
           </View>
         ))}
       </View>

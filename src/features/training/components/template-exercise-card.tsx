@@ -7,9 +7,10 @@ import type { TemplateExerciseDetail } from '@/shared/data/templates';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
+import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
 
-import { exerciseMuscles, formatReps, formatRir, overviewRirColor } from '../lib/training-ui';
+import { exerciseMuscles, formatReps } from '../lib/training-ui';
 
 export interface TemplateExerciseCardProps {
   exercise: TemplateExerciseDetail;
@@ -65,16 +66,7 @@ export function TemplateExerciseCard({ exercise, onMenu, onPress }: TemplateExer
               <Text variant="body" className="flex-1 text-sm text-[#E6E6E1]">
                 {formatReps(set.reps_min ?? 0, set.reps_max ?? set.reps_min ?? 0)}
               </Text>
-              {set.rir != null ? (
-                <View
-                  className="size-[22px] items-center justify-center rounded-full"
-                  style={{ backgroundColor: overviewRirColor(set.rir) }}
-                >
-                  <Text variant="caption" tone="onAccent" className="font-inter-bold text-xs">
-                    {formatRir(set.rir)}
-                  </Text>
-                </View>
-              ) : null}
+              {set.rir != null ? <RirBadge rir={set.rir} /> : null}
             </View>
           ))}
         </View>

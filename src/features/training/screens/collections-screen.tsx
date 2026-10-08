@@ -75,7 +75,7 @@ export function CollectionsScreen() {
                 haptic="warning"
                 accessibilityLabel={t('collections.deleteA11y', { name: c.name })}
                 onPress={() => setDeleting(c)}
-                className="size-10 items-center justify-center rounded-full bg-[#ED4042]"
+                className="size-10 items-center justify-center rounded-full bg-red"
               >
                 <MinusGlyph width={14} />
               </PressableScale>

@@ -1,15 +1,5 @@
 import { getExercise } from '@/shared/data/exercises';
-import { DANGER_SOLID } from '@/shared/ui/choice-sheet';
 import type { MuscleId } from '@/shared/ui/muscle-map';
-
-/** Amber used for comfortable RIR targets on the overview (oklch 0.8 0.16 75). */
-const AMBER = '#F9AC26';
-
-export const RIR_VALUES = [0, 1, 2, 3, 4, 5] as const;
-export const formatRir = (rir: number) => (rir >= 5 ? '5+' : String(rir));
-
-/** Overview badge: close to failure is red, everything else amber. */
-export const overviewRirColor = (rir: number) => (rir <= 1 ? DANGER_SOLID : AMBER);
 
 /** Set editor and picker: hard sets accent, RIR 2 light, easy sets dark. */
 export function editorRirStyle(rir: number | null, accent: string) {

@@ -16,6 +16,8 @@ export const colors = {
   dim: '#6E6E6A',
   onAccent: '#0A0A0A',
   danger: '#E08A7A',
+  red: '#ED4042',
+  sheet: '#0F0F0F',
 } as const;
 
 export function useAccentColor() {

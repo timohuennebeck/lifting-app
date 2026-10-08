@@ -30,7 +30,8 @@ export function Screen({
   contentClassName,
 }: ScreenProps) {
   const insets = useSafeAreaInsets();
-  const footerGap = 16;
+  // Design keeps the CTA 30pt above the bottom edge (home indicator included).
+  const footerBottom = Math.max(insets.bottom - 4, 16);
 
   return (
     <View className={cn('flex-1 bg-bg', className)} style={{ paddingTop: insets.top }}>
@@ -48,8 +49,8 @@ export function Screen({
         <View className={cn('flex-1', contentClassName)}>{children}</View>
       )}
       {footer ? (
-        <KeyboardStickyView offset={{ closed: 0, opened: insets.bottom - footerGap / 2 }}>
-          <View className="px-4 pt-1.5" style={{ paddingBottom: insets.bottom + footerGap }}>
+        <KeyboardStickyView offset={{ closed: 0, opened: footerBottom - 8 }}>
+          <View className="px-4 pt-1.5" style={{ paddingBottom: footerBottom }}>
             {footer}
           </View>
         </KeyboardStickyView>

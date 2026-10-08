@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { formatRir, RIR_VALUES } from '@/shared/lib/rir';
 import { View } from 'react-native';
 
 import { colors, useAccentColor } from '@/shared/lib/theme';
@@ -6,7 +7,7 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
-import { editorRirStyle, formatRir, RIR_VALUES } from '../lib/training-ui';
+import { editorRirStyle } from '../lib/training-ui';
 
 export interface RirPickerSheetProps {
   visible: boolean;
@@ -20,7 +21,7 @@ export function RirPickerSheet({ visible, value, onClose, onSelect }: RirPickerS
   const { t } = useTranslation('training');
   const accent = useAccentColor();
   return (
-    <Sheet visible={visible} onClose={onClose} className="bg-[#0F0F0F] px-5 pb-6">
+    <Sheet visible={visible} onClose={onClose} className="px-5 pb-6">
       <View className="flex-row justify-between gap-3 pt-1 pb-4">
         {RIR_VALUES.map((rir) => {
           const style = editorRirStyle(rir, accent);
@@ -37,7 +38,9 @@ export function RirPickerSheet({ visible, value, onClose, onSelect }: RirPickerS
               className="aspect-square max-w-14 min-w-0 flex-1 items-center justify-center rounded-full"
               style={{
                 backgroundColor: style.bg,
-                boxShadow: selected ? `0 0 0 3px #0F0F0F, 0 0 0 5px ${style.bg}` : undefined,
+                boxShadow: selected
+                  ? `0 0 0 3px ${colors.sheet}, 0 0 0 5px ${style.bg}`
+                  : undefined,
               }}
             >
               <Text

@@ -56,7 +56,7 @@ export function Sheet({ visible, onClose, title, subtitle, children, className }
               'worklet';
               if (finished) scheduleOnRN(setMounted, false);
             })}
-            className={cn('rounded-t-[32px] bg-surface px-4 pt-2.5', className)}
+            className={cn('rounded-t-[32px] bg-sheet px-4 pt-2.5', className)}
             style={{ paddingBottom: insets.bottom + 16 }}
           >
             <View className="mb-4 h-[5px] w-10 self-center rounded-full bg-track" />

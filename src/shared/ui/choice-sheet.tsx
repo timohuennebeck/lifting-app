@@ -10,7 +10,6 @@ import { Sheet } from './sheet';
 import { Text } from './text';
 
 /** Solid destructive red used by delete choices and CTAs (oklch 0.63 0.21 25). */
-export const DANGER_SOLID = '#ED4042';
 
 export interface ChoiceSheetOption<T extends string> {
   value: T;
@@ -56,17 +55,11 @@ export function ChoiceSheet<T extends string>({
   const danger = selected?.tone === 'danger';
 
   return (
-    <Sheet
-      visible={visible}
-      onClose={onClose}
-      title={title}
-      subtitle={subtitle}
-      className="bg-[#0F0F0F]"
-    >
+    <Sheet visible={visible} onClose={onClose} title={title} subtitle={subtitle}>
       <View className="gap-2.5">
         {options.map((option) => {
           const active = option.value === value;
-          const tint = option.tone === 'danger' ? DANGER_SOLID : accent;
+          const tint = option.tone === 'danger' ? colors.red : accent;
           return (
             <PressableScale
               key={option.value}
@@ -114,7 +107,7 @@ export function ChoiceSheet<T extends string>({
         disabled={selected?.ctaDisabled}
         loading={loading}
         onPress={() => selected && onConfirm(selected.value)}
-        className={cn('mt-[22px]', danger && 'bg-[#ED4042]')}
+        className={cn('mt-[22px]', danger && 'bg-red')}
       />
     </Sheet>
   );

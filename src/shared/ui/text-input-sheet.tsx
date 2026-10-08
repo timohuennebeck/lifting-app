@@ -51,13 +51,7 @@ export function TextInputSheet({
   };
 
   return (
-    <Sheet
-      visible={visible}
-      onClose={onClose}
-      title={title}
-      subtitle={subtitle}
-      className="bg-[#0F0F0F]"
-    >
+    <Sheet visible={visible} onClose={onClose} title={title} subtitle={subtitle}>
       <View className="gap-[22px]">
         <TextField
           value={value}

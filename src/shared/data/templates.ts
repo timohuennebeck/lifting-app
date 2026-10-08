@@ -6,7 +6,9 @@ import { queryKeys } from './query-keys';
 import { useSqlQuery } from './use-sql-query';
 
 /** Seconds a single working set takes, excluding rest. */
-const SET_SECONDS = 40;
+const SET_SECONDS = 45;
+/** Setup, warm-up and transition time per exercise. */
+const EXERCISE_SECONDS = 150;
 const DEFAULT_REST = 90;
 
 export interface PlanSetDraft {
@@ -91,7 +93,8 @@ export function estimateMinutes(
   items: { exerciseId: string; sets: number; restSeconds?: number | null }[],
 ) {
   const seconds = items.reduce(
-    (sum, i) => sum + i.sets * (SET_SECONDS + restSecondsFor(i.exerciseId, i.restSeconds)),
+    (sum, i) =>
+      sum + EXERCISE_SECONDS + i.sets * (SET_SECONDS + restSecondsFor(i.exerciseId, i.restSeconds)),
     0,
   );
   return Math.round(seconds / 60);

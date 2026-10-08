@@ -1,15 +1,15 @@
 import { useState } from 'react';
+import { formatRir } from '@/shared/lib/rir';
 import { useTranslation } from 'react-i18next';
 import { TextInput, View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 import { colors, useAccentColor } from '@/shared/lib/theme';
-import { DANGER_SOLID } from '@/shared/ui/choice-sheet';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-import { clamp, editorRirStyle, formatRir } from '../lib/training-ui';
+import { clamp, editorRirStyle } from '../lib/training-ui';
 
 export interface SetDraft {
   key: string;
@@ -82,7 +82,7 @@ export function SetEditorRow({ index, set, onChange, onRirPress, onRemove }: Set
           accessibilityLabel={t('sets.removeSet')}
           onPress={onRemove}
           className="ml-2.5 w-16 items-center justify-center rounded-xl"
-          style={{ backgroundColor: DANGER_SOLID }}
+          style={{ backgroundColor: colors.red }}
         >
           <Icon name="trash" size={16} color={colors.bg} />
         </PressableScale>
