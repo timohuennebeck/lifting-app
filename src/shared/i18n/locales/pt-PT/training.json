@@ -1,1 +1,100 @@
-{}
+{
+  "header": {
+    "collections": "Coleções",
+    "create": "Criar novo"
+  },
+  "list": {
+    "title": "Modelos",
+    "noCollection": "Sem coleção",
+    "meta_one": "{{minutes}} min · {{count}} exercício",
+    "meta_other": "{{minutes}} min · {{count}} exercícios",
+    "start": "Iniciar {{name}}",
+    "empty": "Ainda não tens modelos",
+    "emptyCollection": "Ainda não há modelos aqui",
+    "emptyHint": "Cria um modelo para planear os teus exercícios e séries."
+  },
+  "create": {
+    "collection": "Coleção",
+    "collectionHint": "Agrupar modelos",
+    "template": "Modelo",
+    "templateHint": "Definir exercícios e séries",
+    "program": "Programa",
+    "programHint": "Criar um plano gerado por IA",
+    "createCollection": "Criar coleção",
+    "createTemplate": "Criar modelo",
+    "comingSoon": "Em breve",
+    "programNote": "Os programas gerados por IA chegam em breve. Até lá, monta o teu plano a partir de modelos."
+  },
+  "collections": {
+    "title": "Coleções",
+    "templateCount_one": "{{count}} modelo",
+    "templateCount_other": "{{count}} modelos",
+    "empty": "Ainda não tens coleções",
+    "emptyHint": "Agrupa os teus modelos, por exemplo por bloco de treino.",
+    "renameTitle": "Mudar o nome da coleção",
+    "newTitle": "Nova coleção",
+    "namePlaceholder": "Nome da coleção",
+    "deleteTitle": "Eliminar {{name}}?",
+    "deleteSubtitle_one": "{{count}} modelo nesta coleção",
+    "deleteSubtitle_other": "{{count}} modelos nesta coleção",
+    "deleteKeep": "Eliminar coleção",
+    "deleteKeepHint": "Os modelos passam para “Sem coleção”",
+    "deleteAll": "Eliminar coleção e modelos",
+    "deleteAllHint": "Os treinos registados mantêm-se",
+    "renameA11y": "Mudar o nome de {{name}}",
+    "deleteA11y": "Eliminar {{name}}"
+  },
+  "newTemplate": {
+    "title": "Novo modelo",
+    "name": "Nome",
+    "namePlaceholder": "p. ex. Push",
+    "collection": "Coleção"
+  },
+  "overview": {
+    "noFixedDay": "Sem dia fixo – treina quando te der jeito.",
+    "fixedDay": "Planeado para {{day}}.",
+    "musclesWorked": "Músculos trabalhados",
+    "exercises_one": "{{count}} exercício",
+    "exercises_other": "{{count}} exercícios",
+    "noExercises": "Sem exercícios",
+    "duration": "Duração estimada: {{minutes}} min.",
+    "emptyHint": "Toca em + para adicionar o teu primeiro exercício.",
+    "start": "Iniciar treino",
+    "addExercise": "Adicionar exercício",
+    "addTraining": "Adicionar treino",
+    "more": "Mais opções",
+    "exerciseMenu": "Opções de {{name}}",
+    "notFound": "Este treino já não existe.",
+    "swapTitle": "Trocar exercício"
+  },
+  "exerciseMenu": {
+    "editSets": "Editar séries",
+    "swap": "Trocar exercício",
+    "moveUp": "Mover para cima",
+    "moveDown": "Mover para baixo",
+    "remove": "Remover exercício"
+  },
+  "options": {
+    "meta_one": "{{count}} exercício · {{minutes}} min.",
+    "meta_other": "{{count}} exercícios · {{minutes}} min.",
+    "rename": "Mudar o nome",
+    "renameHint": "Dá um novo nome a {{name}}",
+    "delete": "Eliminar treino",
+    "deleteHint": "Remove {{name}} do teu plano",
+    "renameTitle": "Mudar o nome do treino",
+    "namePlaceholder": "Nome do treino"
+  },
+  "sets": {
+    "title": "Editar séries",
+    "set": "Série",
+    "min": "Mín",
+    "max": "Máx",
+    "rir": "RIR",
+    "addSet": "Adicionar série",
+    "removeSet": "Remover série",
+    "customRest": "Descanso personalizado",
+    "customRestHint": "Substitui o descanso padrão deste exercício",
+    "minutes": "min",
+    "rirOption": "{{value}} repetições em reserva"
+  }
+}

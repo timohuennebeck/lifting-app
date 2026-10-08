@@ -1,1 +1,100 @@
-{}
+{
+  "header": {
+    "collections": "Sammlungen",
+    "create": "Neu erstellen"
+  },
+  "list": {
+    "title": "Templates",
+    "noCollection": "Ohne Sammlung",
+    "meta_one": "{{minutes}} Min · {{count}} Übung",
+    "meta_other": "{{minutes}} Min · {{count}} Übungen",
+    "start": "{{name}} starten",
+    "empty": "Noch keine Templates",
+    "emptyCollection": "Hier gibt es noch keine Templates",
+    "emptyHint": "Erstelle ein Template, um Übungen und Sätze zu planen."
+  },
+  "create": {
+    "collection": "Sammlung",
+    "collectionHint": "Templates gruppieren",
+    "template": "Template",
+    "templateHint": "Übungen und Sätze festlegen",
+    "program": "Programm",
+    "programHint": "KI-generierten Plan erstellen",
+    "createCollection": "Sammlung erstellen",
+    "createTemplate": "Template erstellen",
+    "comingSoon": "Demnächst",
+    "programNote": "KI-generierte Programme kommen bald. Bis dahin stellst du deinen Plan aus Templates zusammen."
+  },
+  "collections": {
+    "title": "Sammlungen",
+    "templateCount_one": "{{count}} Template",
+    "templateCount_other": "{{count}} Templates",
+    "empty": "Noch keine Sammlungen",
+    "emptyHint": "Gruppiere deine Templates, zum Beispiel nach Trainingsblock.",
+    "renameTitle": "Sammlung umbenennen",
+    "newTitle": "Neue Sammlung",
+    "namePlaceholder": "Name der Sammlung",
+    "deleteTitle": "{{name}} löschen?",
+    "deleteSubtitle_one": "{{count}} Template in dieser Sammlung",
+    "deleteSubtitle_other": "{{count}} Templates in dieser Sammlung",
+    "deleteKeep": "Sammlung löschen",
+    "deleteKeepHint": "Templates landen in „Ohne Sammlung“",
+    "deleteAll": "Sammlung und Templates löschen",
+    "deleteAllHint": "Geloggte Trainings bleiben erhalten",
+    "renameA11y": "{{name}} umbenennen",
+    "deleteA11y": "{{name}} löschen"
+  },
+  "newTemplate": {
+    "title": "Neues Template",
+    "name": "Name",
+    "namePlaceholder": "z. B. Push",
+    "collection": "Sammlung"
+  },
+  "overview": {
+    "noFixedDay": "Kein fester Tag – trainiere, wann es dir passt.",
+    "fixedDay": "Geplant für {{day}}.",
+    "musclesWorked": "Beanspruchte Muskeln",
+    "exercises_one": "{{count}} Übung",
+    "exercises_other": "{{count}} Übungen",
+    "noExercises": "Keine Übungen",
+    "duration": "Geschätzte Dauer: {{minutes}} Min.",
+    "emptyHint": "Tippe auf +, um deine erste Übung hinzuzufügen.",
+    "start": "Training starten",
+    "addExercise": "Übung hinzufügen",
+    "addTraining": "Training hinzufügen",
+    "more": "Mehr",
+    "exerciseMenu": "Optionen für {{name}}",
+    "notFound": "Dieses Training gibt es nicht mehr.",
+    "swapTitle": "Übung tauschen"
+  },
+  "exerciseMenu": {
+    "editSets": "Sätze bearbeiten",
+    "swap": "Übung tauschen",
+    "moveUp": "Nach oben",
+    "moveDown": "Nach unten",
+    "remove": "Übung entfernen"
+  },
+  "options": {
+    "meta_one": "{{count}} Übung · {{minutes}} Min.",
+    "meta_other": "{{count}} Übungen · {{minutes}} Min.",
+    "rename": "Umbenennen",
+    "renameHint": "Neuen Namen für {{name}} vergeben",
+    "delete": "Training löschen",
+    "deleteHint": "Entfernt {{name}} aus deinem Plan",
+    "renameTitle": "Training umbenennen",
+    "namePlaceholder": "Name des Trainings"
+  },
+  "sets": {
+    "title": "Überarbeiten",
+    "set": "Satz",
+    "min": "Min",
+    "max": "Max",
+    "rir": "RIR",
+    "addSet": "Satz hinzufügen",
+    "removeSet": "Satz entfernen",
+    "customRest": "Eigene Pausenzeit",
+    "customRestHint": "Überschreibt die Standard-Pause dieser Übung",
+    "minutes": "Min.",
+    "rirOption": "{{value}} Wiederholungen in Reserve"
+  }
+}

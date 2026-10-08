@@ -1,1 +1,100 @@
-{}
+{
+  "header": {
+    "collections": "Collections",
+    "create": "Create new"
+  },
+  "list": {
+    "title": "Templates",
+    "noCollection": "No collection",
+    "meta_one": "{{minutes}} min · {{count}} exercise",
+    "meta_other": "{{minutes}} min · {{count}} exercises",
+    "start": "Start {{name}}",
+    "empty": "No templates yet",
+    "emptyCollection": "No templates here yet",
+    "emptyHint": "Create a template to plan your exercises and sets."
+  },
+  "create": {
+    "collection": "Collection",
+    "collectionHint": "Group templates",
+    "template": "Template",
+    "templateHint": "Set exercises and sets",
+    "program": "Program",
+    "programHint": "Create an AI-generated plan",
+    "createCollection": "Create collection",
+    "createTemplate": "Create template",
+    "comingSoon": "Coming soon",
+    "programNote": "AI-generated programs are coming soon. Until then, build your plan from templates."
+  },
+  "collections": {
+    "title": "Collections",
+    "templateCount_one": "{{count}} template",
+    "templateCount_other": "{{count}} templates",
+    "empty": "No collections yet",
+    "emptyHint": "Group your templates, for example by training block.",
+    "renameTitle": "Rename collection",
+    "newTitle": "New collection",
+    "namePlaceholder": "Collection name",
+    "deleteTitle": "Delete {{name}}?",
+    "deleteSubtitle_one": "{{count}} template in this collection",
+    "deleteSubtitle_other": "{{count}} templates in this collection",
+    "deleteKeep": "Delete collection",
+    "deleteKeepHint": "Templates move to “No collection”",
+    "deleteAll": "Delete collection and templates",
+    "deleteAllHint": "Logged workouts are kept",
+    "renameA11y": "Rename {{name}}",
+    "deleteA11y": "Delete {{name}}"
+  },
+  "newTemplate": {
+    "title": "New template",
+    "name": "Name",
+    "namePlaceholder": "e.g. Push",
+    "collection": "Collection"
+  },
+  "overview": {
+    "noFixedDay": "No fixed day – train whenever it suits you.",
+    "fixedDay": "Planned for {{day}}.",
+    "musclesWorked": "Muscles worked",
+    "exercises_one": "{{count}} exercise",
+    "exercises_other": "{{count}} exercises",
+    "noExercises": "No exercises",
+    "duration": "Estimated duration: {{minutes}} min.",
+    "emptyHint": "Tap + to add your first exercise.",
+    "start": "Start workout",
+    "addExercise": "Add exercise",
+    "addTraining": "Add training",
+    "more": "More options",
+    "exerciseMenu": "Options for {{name}}",
+    "notFound": "This training no longer exists.",
+    "swapTitle": "Swap exercise"
+  },
+  "exerciseMenu": {
+    "editSets": "Edit sets",
+    "swap": "Swap exercise",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "remove": "Remove exercise"
+  },
+  "options": {
+    "meta_one": "{{count}} exercise · {{minutes}} min.",
+    "meta_other": "{{count}} exercises · {{minutes}} min.",
+    "rename": "Rename",
+    "renameHint": "Give {{name}} a new name",
+    "delete": "Delete training",
+    "deleteHint": "Removes {{name}} from your plan",
+    "renameTitle": "Rename training",
+    "namePlaceholder": "Training name"
+  },
+  "sets": {
+    "title": "Edit sets",
+    "set": "Set",
+    "min": "Min",
+    "max": "Max",
+    "rir": "RIR",
+    "addSet": "Add set",
+    "removeSet": "Remove set",
+    "customRest": "Custom rest time",
+    "customRestHint": "Overrides this exercise's default rest",
+    "minutes": "min",
+    "rirOption": "{{value}} reps in reserve"
+  }
+}
