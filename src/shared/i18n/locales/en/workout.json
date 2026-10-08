@@ -1,1 +1,124 @@
-{}
+{
+  "addExercise": "Add exercise",
+  "setOf": "Set {{current}} of {{total}}",
+  "noSets": "No sets yet",
+  "missing": "This workout is no longer available.",
+  "actions": {
+    "history": "History",
+    "targets": "Targets",
+    "swap": "Swap"
+  },
+  "table": {
+    "set": "SET",
+    "targets": "TARGETS",
+    "last": "LAST",
+    "reps": "REPS",
+    "toggleColumn": "Switch between targets and last time",
+    "setLabel": "Set {{n}}",
+    "weightCell": "Weight",
+    "repsCell": "Reps",
+    "done": "Set done",
+    "addSet": "Add set"
+  },
+  "keypad": {
+    "close": "Close keypad",
+    "weight": "Weight",
+    "reps": "Reps",
+    "decimal": "Decimal separator",
+    "backspace": "Delete",
+    "confirm": "Log set"
+  },
+  "rest": {
+    "title": "Rest",
+    "running": "Next set when the timer runs out.",
+    "idle": "Start a rest timer manually.",
+    "minus": "−{{seconds}} s",
+    "plus": "+{{seconds}} s",
+    "skip": "Skip rest",
+    "start": "Start rest"
+  },
+  "record": {
+    "title": "New record"
+  },
+  "menu": {
+    "open": "Workout options",
+    "progress": "{{done}} of {{total}} sets logged",
+    "finish": "Finish workout",
+    "finishHint": "Log at least one set to finish.",
+    "later": "Continue later",
+    "discard": "Discard workout"
+  },
+  "discard": {
+    "title": "Discard workout?",
+    "message": "All logged sets of this workout will be deleted.",
+    "keep": "Keep training",
+    "confirm": "Discard"
+  },
+  "swap": {
+    "title": "Swap exercise",
+    "confirmTitle": "Swap exercise?",
+    "confirmMessage": "The sets you already logged for this exercise will be cleared.",
+    "confirm": "Swap"
+  },
+  "targets": {
+    "title": "Targets",
+    "min": "Min reps",
+    "max": "Max reps",
+    "rir": "RIR",
+    "remove": "Remove set {{n}}"
+  },
+  "nav": {
+    "previous": "Previous exercise",
+    "next": "Next exercise"
+  },
+  "footer": {
+    "logSet": "Log set {{n}}",
+    "nextExercise": "Next exercise",
+    "finish": "Finish workout"
+  },
+  "empty": {
+    "title": "No exercises",
+    "duration": "Estimated duration: {{minutes}} min",
+    "hint": "Tap + to add your first exercise."
+  },
+  "history": {
+    "title": "History",
+    "topWeight": "Top weight per session",
+    "topWeightShort": "Top weight",
+    "chartLabel": "Top weight chart, press and drag to read a session",
+    "emptyRange": "No sessions in this period.",
+    "days_one": "{{count}} D",
+    "days_other": "{{count}} D",
+    "empty": "No sessions yet. Finish a workout with this exercise to see your progress."
+  },
+  "summary": {
+    "title": "Done.",
+    "records_one": "{{count}} new record",
+    "records_other": "{{count}} new records",
+    "noRecords": "Well done",
+    "sets_one": "Set",
+    "sets_other": "Sets",
+    "newRecord": "NEW RECORD",
+    "previously": "previously {{value}}"
+  },
+  "compare": {
+    "title": "That's like lifting",
+    "caption": "{{volume}} in total · {{one}} ≈ {{weight}}",
+    "animals": {
+      "polarBear_one": "{{value}} polar bear",
+      "polarBear_other": "{{value}} polar bears",
+      "giraffe_one": "{{value}} giraffe",
+      "giraffe_other": "{{value}} giraffes",
+      "hippo_one": "{{value}} hippo",
+      "hippo_other": "{{value}} hippos",
+      "rhino_one": "{{value}} rhino",
+      "rhino_other": "{{value}} rhinos",
+      "elephant_one": "{{value}} elephant",
+      "elephant_other": "{{value}} elephants",
+      "spermWhale_one": "{{value}} sperm whale",
+      "spermWhale_other": "{{value}} sperm whales",
+      "blueWhale_one": "{{value}} blue whale",
+      "blueWhale_other": "{{value}} blue whales"
+    }
+  }
+}

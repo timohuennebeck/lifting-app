@@ -1,1 +1,124 @@
-{}
+{
+  "addExercise": "Adicionar exercício",
+  "setOf": "Série {{current}} de {{total}}",
+  "noSets": "Ainda sem séries",
+  "missing": "Este treino já não está disponível.",
+  "actions": {
+    "history": "Histórico",
+    "targets": "Metas",
+    "swap": "Trocar"
+  },
+  "table": {
+    "set": "SÉRIE",
+    "targets": "METAS",
+    "last": "ÚLTIMA",
+    "reps": "REPS",
+    "toggleColumn": "Alternar entre metas e última vez",
+    "setLabel": "Série {{n}}",
+    "weightCell": "Peso",
+    "repsCell": "Repetições",
+    "done": "Série concluída",
+    "addSet": "Adicionar série"
+  },
+  "keypad": {
+    "close": "Fechar teclado",
+    "weight": "Peso",
+    "reps": "Reps",
+    "decimal": "Separador decimal",
+    "backspace": "Apagar",
+    "confirm": "Registar série"
+  },
+  "rest": {
+    "title": "Descanso",
+    "running": "Próxima série quando o tempo acabar.",
+    "idle": "Inicia o descanso manualmente.",
+    "minus": "−{{seconds}} s",
+    "plus": "+{{seconds}} s",
+    "skip": "Saltar descanso",
+    "start": "Iniciar descanso"
+  },
+  "record": {
+    "title": "Novo recorde"
+  },
+  "menu": {
+    "open": "Opções do treino",
+    "progress": "{{done}} de {{total}} séries registadas",
+    "finish": "Terminar treino",
+    "finishHint": "Regista pelo menos uma série para terminar.",
+    "later": "Continuar mais tarde",
+    "discard": "Descartar treino"
+  },
+  "discard": {
+    "title": "Descartar treino?",
+    "message": "Todas as séries registadas deste treino serão apagadas.",
+    "keep": "Continuar a treinar",
+    "confirm": "Descartar"
+  },
+  "swap": {
+    "title": "Trocar exercício",
+    "confirmTitle": "Trocar exercício?",
+    "confirmMessage": "As séries já registadas deste exercício serão apagadas.",
+    "confirm": "Trocar"
+  },
+  "targets": {
+    "title": "Metas",
+    "min": "Reps mín.",
+    "max": "Reps máx.",
+    "rir": "RIR",
+    "remove": "Remover série {{n}}"
+  },
+  "nav": {
+    "previous": "Exercício anterior",
+    "next": "Próximo exercício"
+  },
+  "footer": {
+    "logSet": "Registar série {{n}}",
+    "nextExercise": "Próximo exercício",
+    "finish": "Terminar treino"
+  },
+  "empty": {
+    "title": "Sem exercícios",
+    "duration": "Duração estimada: {{minutes}} min",
+    "hint": "Toca em + para adicionar o teu primeiro exercício."
+  },
+  "history": {
+    "title": "Histórico",
+    "topWeight": "Peso máximo por treino",
+    "topWeightShort": "Peso máximo",
+    "chartLabel": "Gráfico do peso máximo, mantém premido e arrasta",
+    "emptyRange": "Sem treinos neste período.",
+    "days_one": "{{count}} D",
+    "days_other": "{{count}} D",
+    "empty": "Ainda sem treinos. Termina um treino com este exercício para veres o teu progresso."
+  },
+  "summary": {
+    "title": "Feito.",
+    "records_one": "{{count}} novo recorde",
+    "records_other": "{{count}} novos recordes",
+    "noRecords": "Muito bem",
+    "sets_one": "Série",
+    "sets_other": "Séries",
+    "newRecord": "NOVO RECORDE",
+    "previously": "antes {{value}}"
+  },
+  "compare": {
+    "title": "É como levantar",
+    "caption": "{{volume}} no total · {{one}} ≈ {{weight}}",
+    "animals": {
+      "polarBear_one": "{{value}} urso-polar",
+      "polarBear_other": "{{value}} ursos-polares",
+      "giraffe_one": "{{value}} girafa",
+      "giraffe_other": "{{value}} girafas",
+      "hippo_one": "{{value}} hipopótamo",
+      "hippo_other": "{{value}} hipopótamos",
+      "rhino_one": "{{value}} rinoceronte",
+      "rhino_other": "{{value}} rinocerontes",
+      "elephant_one": "{{value}} elefante",
+      "elephant_other": "{{value}} elefantes",
+      "spermWhale_one": "{{value}} cachalote",
+      "spermWhale_other": "{{value}} cachalotes",
+      "blueWhale_one": "{{value}} baleia-azul",
+      "blueWhale_other": "{{value}} baleias-azuis"
+    }
+  }
+}

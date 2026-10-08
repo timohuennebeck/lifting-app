@@ -1,1 +1,124 @@
-{}
+{
+  "addExercise": "Übung hinzufügen",
+  "setOf": "Satz {{current}} von {{total}}",
+  "noSets": "Noch keine Sätze",
+  "missing": "Dieses Training ist nicht mehr verfügbar.",
+  "actions": {
+    "history": "Historie",
+    "targets": "Targets",
+    "swap": "Tauschen"
+  },
+  "table": {
+    "set": "SATZ",
+    "targets": "TARGETS",
+    "last": "ZULETZT",
+    "reps": "WDH.",
+    "toggleColumn": "Zwischen Targets und letztem Mal wechseln",
+    "setLabel": "Satz {{n}}",
+    "weightCell": "Gewicht",
+    "repsCell": "Wiederholungen",
+    "done": "Satz erledigt",
+    "addSet": "Satz hinzufügen"
+  },
+  "keypad": {
+    "close": "Tastatur schließen",
+    "weight": "Gewicht",
+    "reps": "Wdh.",
+    "decimal": "Dezimaltrennzeichen",
+    "backspace": "Löschen",
+    "confirm": "Satz eintragen"
+  },
+  "rest": {
+    "title": "Pause",
+    "running": "Nächster Satz, wenn die Zeit um ist.",
+    "idle": "Starte die Pause manuell.",
+    "minus": "−{{seconds}} s",
+    "plus": "+{{seconds}} s",
+    "skip": "Pause überspringen",
+    "start": "Pause starten"
+  },
+  "record": {
+    "title": "Neuer Rekord"
+  },
+  "menu": {
+    "open": "Trainingsoptionen",
+    "progress": "{{done}} von {{total}} Sätzen eingetragen",
+    "finish": "Training beenden",
+    "finishHint": "Trage mindestens einen Satz ein, um zu beenden.",
+    "later": "Später weitermachen",
+    "discard": "Training verwerfen"
+  },
+  "discard": {
+    "title": "Training verwerfen?",
+    "message": "Alle eingetragenen Sätze dieses Trainings werden gelöscht.",
+    "keep": "Weiter trainieren",
+    "confirm": "Verwerfen"
+  },
+  "swap": {
+    "title": "Übung tauschen",
+    "confirmTitle": "Übung tauschen?",
+    "confirmMessage": "Die bereits eingetragenen Sätze dieser Übung werden gelöscht.",
+    "confirm": "Tauschen"
+  },
+  "targets": {
+    "title": "Targets",
+    "min": "Min. Wdh.",
+    "max": "Max. Wdh.",
+    "rir": "RIR",
+    "remove": "Satz {{n}} entfernen"
+  },
+  "nav": {
+    "previous": "Vorherige Übung",
+    "next": "Nächste Übung"
+  },
+  "footer": {
+    "logSet": "Satz {{n}} eintragen",
+    "nextExercise": "Nächste Übung",
+    "finish": "Training beenden"
+  },
+  "empty": {
+    "title": "Keine Übungen",
+    "duration": "Geschätzte Dauer: {{minutes}} Min.",
+    "hint": "Tippe auf +, um deine erste Übung hinzuzufügen."
+  },
+  "history": {
+    "title": "Historie",
+    "topWeight": "Höchstes Gewicht pro Training",
+    "topWeightShort": "Höchstes Gewicht",
+    "chartLabel": "Diagramm des höchsten Gewichts, gedrückt halten und ziehen",
+    "emptyRange": "Keine Trainings in diesem Zeitraum.",
+    "days_one": "{{count}} T",
+    "days_other": "{{count}} T",
+    "empty": "Noch keine Trainings. Beende ein Training mit dieser Übung, um deinen Fortschritt zu sehen."
+  },
+  "summary": {
+    "title": "Geschafft.",
+    "records_one": "{{count}} neuer Rekord",
+    "records_other": "{{count}} neue Rekorde",
+    "noRecords": "Stark gemacht",
+    "sets_one": "Satz",
+    "sets_other": "Sätze",
+    "newRecord": "NEUER REKORD",
+    "previously": "vorher {{value}}"
+  },
+  "compare": {
+    "title": "Das ist, als hättest du gehoben",
+    "caption": "{{volume}} insgesamt · {{one}} ≈ {{weight}}",
+    "animals": {
+      "polarBear_one": "{{value}} Eisbär",
+      "polarBear_other": "{{value}} Eisbären",
+      "giraffe_one": "{{value}} Giraffe",
+      "giraffe_other": "{{value}} Giraffen",
+      "hippo_one": "{{value}} Nilpferd",
+      "hippo_other": "{{value}} Nilpferde",
+      "rhino_one": "{{value}} Nashorn",
+      "rhino_other": "{{value}} Nashörner",
+      "elephant_one": "{{value}} Elefant",
+      "elephant_other": "{{value}} Elefanten",
+      "spermWhale_one": "{{value}} Pottwal",
+      "spermWhale_other": "{{value}} Pottwale",
+      "blueWhale_one": "{{value}} Blauwal",
+      "blueWhale_other": "{{value}} Blauwale"
+    }
+  }
+}
