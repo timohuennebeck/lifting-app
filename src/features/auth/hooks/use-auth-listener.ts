@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { connector, db } from '@/shared/data/powersync/database';
 import { queryClient } from '@/shared/data/query-client';
 import { supabase } from '@/shared/data/supabase';
@@ -20,6 +21,8 @@ export function useAuthListener() {
       } else if (event === 'SIGNED_OUT') {
         db.disconnectAndClear();
         queryClient.clear();
+        // A later sign-in must check the new account's onboarding state again.
+        useOnboardingStore.getState().reset();
       }
     });
     return () => data.subscription.unsubscribe();

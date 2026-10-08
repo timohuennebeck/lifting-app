@@ -1,1 +1,116 @@
-{}
+{
+  "welcome": {
+    "headline": "O TEU PLANO.",
+    "headlineAccent": "O TEU PROGRESSO.",
+    "subtitle": "Importa o teu plano ou cria um novo. Sem escrever.",
+    "start": "Vamos lá",
+    "haveAccount": "Já tenho uma conta · ",
+    "signIn": "Iniciar sessão",
+    "language": "Idioma",
+    "preview": {
+      "plan": "Push Pull Legs",
+      "push": "Push",
+      "pull": "Pull",
+      "legs": "Legs",
+      "noFixedDay": "Sem dia fixo – treina quando te der jeito.",
+      "musclesWorked": "Músculos trabalhados",
+      "exercises_one": "{{count}} exercício",
+      "exercises_many": "{{count}} exercícios",
+      "exercises_other": "{{count}} exercícios",
+      "duration": "Duração estimada: {{minutes}} min",
+      "startWorkout": "Começar treino"
+    }
+  },
+  "name": {
+    "title": "COMO TE CHAMAS?",
+    "placeholder": "Nome próprio"
+  },
+  "sex": {
+    "title": "QUAL É O TEU\nSEXO\nBIOLÓGICO?",
+    "subtitle": "Ajuda-nos a estimar pesos iniciais e recuperação de forma realista.",
+    "male": "Masculino",
+    "female": "Feminino",
+    "unspecified": "Prefiro não dizer"
+  },
+  "age": {
+    "title": "QUE IDADE TENS?",
+    "unit": "Anos"
+  },
+  "units": {
+    "title": "QUE UNIDADES\nUSAS?",
+    "metric": "Quilogramas",
+    "metricHint": "Métrico · km, cm",
+    "imperial": "Libras",
+    "imperialHint": "Imperial · mi, in"
+  },
+  "weight": {
+    "title": "QUANTO\nPESAS?"
+  },
+  "height": {
+    "title": "QUAL É A\nTUA ALTURA?"
+  },
+  "experience": {
+    "title": "QUE EXPERIÊNCIA\nTENS?",
+    "none": "Nenhuma",
+    "noneHint": "Nunca treinei",
+    "beginner": "Iniciante",
+    "beginnerHint": "Menos de 6 meses de treino",
+    "intermediate": "Intermédio",
+    "intermediateHint": "6 meses a 2 anos",
+    "advanced": "Avançado",
+    "advancedHint": "Mais de 2 anos, técnica segura"
+  },
+  "complaints": {
+    "title": "TENS DORES OU\nLESÕES?",
+    "subtitle": "Evitamos exercícios que sobrecarreguem essas zonas.",
+    "none": "Sem queixas",
+    "areas": {
+      "neck": "Pescoço",
+      "shoulders": "Ombros",
+      "elbows": "Cotovelos",
+      "wrists": "Pulsos",
+      "upper_back": "Parte superior das costas",
+      "lower_back": "Lombar",
+      "hips": "Anca",
+      "knees": "Joelhos",
+      "ankles": "Tornozelos"
+    },
+    "continueMarked_one": "Continuar · {{count}} zona marcada",
+    "continueMarked_many": "Continuar · {{count}} zonas marcadas",
+    "continueMarked_other": "Continuar · {{count}} zonas marcadas"
+  },
+  "hasPlan": {
+    "title": "ESTÁS A SEGUIR\nUM PLANO?",
+    "formats": "Foto, PDF ou folha de cálculo",
+    "yes": "Tenho um",
+    "no": "Cria-me um plano"
+  },
+  "promise": {
+    "title": "PROMETE\nA TI MESMO.",
+    "titleNamed": "{{name}}, PROMETE\nA TI MESMO.",
+    "stick": "Não desisto, mesmo quando custar.",
+    "track": "Registo cada série.",
+    "hold": "Mantém o polegar pressionado",
+    "holding": "Continua a pressionar …",
+    "sealed": "Selado.",
+    "holdLabel": "Mantém pressionado para prometer"
+  },
+  "bodyCheck": {
+    "title": "FAZER UM CHECK CORPORAL?",
+    "subtitle": "Com base nas tuas fotos, adaptamos o plano aos teus pontos fracos.",
+    "front": "Frente",
+    "left": "Esquerda",
+    "right": "Direita",
+    "back": "Costas",
+    "lightStrong": "Luz forte",
+    "lightRest": " de frente",
+    "clothesStrong": "Roupa interior",
+    "clothesRest": " ou roupa desportiva",
+    "framingStrong": "Corpo inteiro na imagem",
+    "framingRest": " da cabeça aos pés",
+    "privacyStrong": "As fotos ficam privadas",
+    "privacyRest": " só para ti",
+    "now": "Tirar fotos agora",
+    "later": "Mais tarde"
+  }
+}

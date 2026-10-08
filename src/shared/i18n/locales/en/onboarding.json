@@ -1,1 +1,114 @@
-{}
+{
+  "welcome": {
+    "headline": "YOUR PLAN.",
+    "headlineAccent": "YOUR PROGRESS.",
+    "subtitle": "Import your plan or create a new one. No typing.",
+    "start": "Let's go",
+    "haveAccount": "I already have an account · ",
+    "signIn": "Sign in",
+    "language": "Language",
+    "preview": {
+      "plan": "Push Pull Legs",
+      "push": "Push",
+      "pull": "Pull",
+      "legs": "Legs",
+      "noFixedDay": "No fixed day – train whenever it suits you.",
+      "musclesWorked": "Muscles worked",
+      "exercises_one": "{{count}} exercise",
+      "exercises_other": "{{count}} exercises",
+      "duration": "Estimated duration: {{minutes}} min",
+      "startWorkout": "Start workout"
+    }
+  },
+  "name": {
+    "title": "WHAT'S YOUR NAME?",
+    "placeholder": "First name"
+  },
+  "sex": {
+    "title": "WHAT IS YOUR\nBIOLOGICAL\nSEX?",
+    "subtitle": "Helps us estimate realistic starting weights and recovery.",
+    "male": "Male",
+    "female": "Female",
+    "unspecified": "Prefer not to say"
+  },
+  "age": {
+    "title": "HOW OLD ARE YOU?",
+    "unit": "Years"
+  },
+  "units": {
+    "title": "WHICH UNITS\nDO YOU USE?",
+    "metric": "Kilograms",
+    "metricHint": "Metric · km, cm",
+    "imperial": "Pounds",
+    "imperialHint": "Imperial · mi, in"
+  },
+  "weight": {
+    "title": "HOW MUCH\nDO YOU WEIGH?"
+  },
+  "height": {
+    "title": "HOW TALL\nARE YOU?"
+  },
+  "experience": {
+    "title": "HOW EXPERIENCED\nARE YOU?",
+    "none": "None",
+    "noneHint": "Never trained before",
+    "beginner": "Beginner",
+    "beginnerHint": "Less than 6 months of training",
+    "intermediate": "Intermediate",
+    "intermediateHint": "6 months to 2 years",
+    "advanced": "Advanced",
+    "advancedHint": "Over 2 years, solid technique"
+  },
+  "complaints": {
+    "title": "ANY PAIN OR\nINJURIES?",
+    "subtitle": "We'll avoid exercises that load those areas.",
+    "none": "No complaints",
+    "areas": {
+      "neck": "Neck",
+      "shoulders": "Shoulders",
+      "elbows": "Elbows",
+      "wrists": "Wrists",
+      "upper_back": "Upper back",
+      "lower_back": "Lower back",
+      "hips": "Hips",
+      "knees": "Knees",
+      "ankles": "Ankles"
+    },
+    "continueMarked_one": "Continue · {{count}} area marked",
+    "continueMarked_other": "Continue · {{count}} areas marked"
+  },
+  "hasPlan": {
+    "title": "ARE YOU FOLLOWING\nA PLAN RIGHT NOW?",
+    "formats": "Photo, PDF or spreadsheet",
+    "yes": "I have one",
+    "no": "Create a plan for me"
+  },
+  "promise": {
+    "title": "PROMISE\nYOURSELF.",
+    "titleNamed": "{{name}}, PROMISE\nYOURSELF.",
+    "stick": "I'll stick with it, even when it gets tough.",
+    "track": "I'll track every set.",
+    "hold": "Hold your thumb down",
+    "holding": "Keep holding …",
+    "sealed": "Sealed.",
+    "holdLabel": "Hold to commit"
+  },
+  "bodyCheck": {
+    "title": "DO A BODY CHECK?",
+    "subtitle": "Based on your photos we adapt the plan to your weak spots.",
+    "front": "Front",
+    "left": "Left",
+    "right": "Right",
+    "back": "Back",
+    "lightStrong": "Bright light",
+    "lightRest": " from the front",
+    "clothesStrong": "Underwear",
+    "clothesRest": " or sportswear",
+    "framingStrong": "Whole body in frame",
+    "framingRest": " head to toe",
+    "privacyStrong": "Photos stay private",
+    "privacyRest": " just for you",
+    "now": "Take photos now",
+    "later": "Later"
+  }
+}

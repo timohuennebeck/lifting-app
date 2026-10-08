@@ -1,5 +1,1 @@
-import { Screen } from '@/shared/ui/screen';
-
-export default function Placeholder() {
-  return <Screen>{null}</Screen>;
-}
+export { WelcomeScreen as default } from '@/features/onboarding/screens/welcome-screen';
