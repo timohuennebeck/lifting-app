@@ -7,13 +7,6 @@ export interface RepRange {
   max: number;
 }
 
-/** Typical rep range per goal, as promised on the goal cards. */
-export const GOAL_REPS: Record<Goal, RepRange> = {
-  hypertrophy: { min: 8, max: 12 },
-  strength: { min: 3, max: 6 },
-  strength_hypertrophy: { min: 4, max: 10 },
-};
-
 /** Prescribed ranges: heavy compound lifts sit low, isolation work high in the goal range. */
 export const PRESCRIBED_REPS: Record<Goal, { compound: RepRange; isolation: RepRange }> = {
   hypertrophy: { compound: { min: 8, max: 10 }, isolation: { min: 10, max: 12 } },

@@ -246,14 +246,3 @@ function setsFor(count: number, compound: boolean, { goal, experience }: Generat
     rir: i === count - 1 ? Math.max(0, rir - 1) : rir,
   }));
 }
-
-/** Average exercises and sets per training day, for the duration preview. */
-export function planSize(plan: PlanDraft) {
-  const days = Math.max(1, plan.days.length);
-  const exercises = plan.days.reduce((sum, d) => sum + d.exercises.length, 0);
-  const sets = plan.days.reduce(
-    (sum, d) => sum + d.exercises.reduce((s, e) => s + e.sets.length, 0),
-    0,
-  );
-  return { exercises: Math.round(exercises / days), sets: Math.round(sets / days) };
-}

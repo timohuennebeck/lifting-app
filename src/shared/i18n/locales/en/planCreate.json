@@ -1,7 +1,6 @@
 {
   "goal": {
     "title": "WHAT'S YOUR\nGOAL?",
-    "repsA11y": "{{min}} to {{max}} reps",
     "options": {
       "hypertrophy": {
         "title": "Hypertrophy",
@@ -45,21 +44,12 @@
   "days": {
     "title": "HOW OFTEN DO YOU\nWANT TO TRAIN?",
     "perWeek": "PER WEEK",
-    "times": "{{count}}×",
-    "none": "No days picked yet",
-    "hintDays": "Tap the days you want to train.",
-    "hintDial": "Drag the ring",
-    "modes": {
-      "days": "Days",
-      "dial": "Ring"
-    }
+    "times": "{{count}}×"
   },
   "duration": {
     "title": "HOW LONG SHOULD A\nWORKOUT TAKE?",
     "minutes": "MINUTES",
-    "hint": "Drag the ring or tap a value",
-    "estimate": "≈ {{exercises}} exercises · {{sets}} sets",
-    "presetA11y": "{{count}} minutes"
+    "hint": "Drag the ring or tap a value"
   },
   "building": {
     "stages": [

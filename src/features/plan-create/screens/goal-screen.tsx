@@ -5,12 +5,12 @@ import { View } from 'react-native';
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
+import { OptionCard } from '@/shared/ui/option-card';
 import { StepHeader } from '@/shared/ui/step-header';
 
-import { GoalCard } from '../components/goal-card';
 import { StepTitle } from '../components/step-title';
 import { CREATE_STEPS } from '../lib/flow';
-import { GOAL_REPS, GOALS } from '../lib/goal-ranges';
+import { GOALS } from '../lib/goal-ranges';
 
 export function GoalScreen() {
   const { t } = useTranslation(['planCreate', 'common']);
@@ -35,12 +35,11 @@ export function GoalScreen() {
       <StepTitle title={t('planCreate:goal.title')} />
       <View className="gap-2.5 px-4 pt-7">
         {GOALS.map((g, i) => (
-          <GoalCard
+          <OptionCard
             key={g}
             index={i + 1}
             title={t(`planCreate:goal.options.${g}.title`)}
             description={t(`planCreate:goal.options.${g}.description`)}
-            reps={GOAL_REPS[g]}
             selected={goal === g}
             onPress={() => update({ goal: g })}
           />

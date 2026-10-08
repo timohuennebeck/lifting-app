@@ -1,7 +1,6 @@
 {
   "goal": {
     "title": "QUAL É O\nSEU OBJETIVO?",
-    "repsA11y": "{{min}} a {{max}} repetições",
     "options": {
       "hypertrophy": {
         "title": "Hipertrofia",
@@ -45,21 +44,12 @@
   "days": {
     "title": "QUANTAS VEZES\nVOCÊ QUER TREINAR?",
     "perWeek": "POR SEMANA",
-    "times": "{{count}}×",
-    "none": "Nenhum dia escolhido ainda",
-    "hintDays": "Toque nos dias em que você quer treinar.",
-    "hintDial": "Arraste o anel",
-    "modes": {
-      "days": "Dias",
-      "dial": "Anel"
-    }
+    "times": "{{count}}×"
   },
   "duration": {
     "title": "QUANTO TEMPO DEVE\nDURAR UM TREINO?",
     "minutes": "MINUTOS",
-    "hint": "Arraste o anel ou toque em um valor",
-    "estimate": "≈ {{exercises}} exercícios · {{sets}} séries",
-    "presetA11y": "{{count}} minutos"
+    "hint": "Arraste o anel ou toque em um valor"
   },
   "building": {
     "stages": [
