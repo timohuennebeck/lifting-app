@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useIsFocused } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -23,10 +23,13 @@ export function WelcomeScreen() {
   const scale = heroHeight ? Math.min(1, (heroHeight - PHONE_TOP - 16) / PHONE_HEIGHT) : 1;
 
   // A signed-in user who already finished onboarding (e.g. app killed on the last step).
+  // Only while focused: this screen stays mounted under the flow, and Create Account
+  // sets onboarded_at before the body-check prompt, which must still be shown.
   const { profile } = useProfile();
+  const focused = useIsFocused();
   useEffect(() => {
-    if (profile?.onboardedAt) useOnboardingStore.getState().complete();
-  }, [profile?.onboardedAt]);
+    if (focused && profile?.onboardedAt) useOnboardingStore.getState().complete();
+  }, [focused, profile?.onboardedAt]);
 
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>

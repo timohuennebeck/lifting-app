@@ -1,11 +1,11 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 
-import { startWorkout } from '@/shared/data/workouts';
+import { getActiveWorkoutId, startWorkout } from '@/shared/data/workouts';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 
-/** Starts a workout from a template and opens live logging. */
+/** Starts a workout from a template and opens live logging; resumes a running one instead. */
 export function useStartTemplate() {
   const [startingId, setStartingId] = useState<string | null>(null);
 
@@ -13,7 +13,10 @@ export function useStartTemplate() {
     if (startingId) return;
     setStartingId(template.id);
     try {
-      const workoutId = await startWorkout(requireUserId(), template.name, template.id);
+      // Only one workout runs at a time; a second one would be orphaned unfinished.
+      const activeId = await getActiveWorkoutId();
+      const workoutId =
+        activeId ?? (await startWorkout(requireUserId(), template.name, template.id));
       haptics.success();
       router.push(`/workout/${workoutId}`);
     } catch (error) {

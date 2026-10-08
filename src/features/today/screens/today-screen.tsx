@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
@@ -31,9 +31,17 @@ export function TodayScreen() {
   const { days, planTemplates } = useWeekPlan(today);
   const day = days[selected];
 
+  // A double tap would otherwise start two workouts and orphan the first.
+  const starting = useRef(false);
   const startEmpty = async () => {
-    const id = await startWorkout(requireUserId(), t('emptyWorkoutName'), null);
-    router.push(`/workout/${id}`);
+    if (starting.current) return;
+    starting.current = true;
+    try {
+      const id = await startWorkout(requireUserId(), t('emptyWorkoutName'), null);
+      router.push(`/workout/${id}`);
+    } finally {
+      starting.current = false;
+    }
   };
 
   const pills = (

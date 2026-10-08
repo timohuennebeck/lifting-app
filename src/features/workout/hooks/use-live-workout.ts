@@ -69,7 +69,17 @@ export function useLiveWorkout(workout: WorkoutDetail, onRecord: (hit: RecordHit
       store.startRest(restSecondsFor(exercise.exerciseId, exercise.restSeconds));
     }
     const kg = fromDisplayWeight(kgDisplay, units);
-    const isPr = await logSet(set.id, exercise.exerciseId, kg, reps);
+    let isPr: boolean;
+    try {
+      isPr = await logSet(set.id, exercise.exerciseId, kg, reps);
+    } catch (error) {
+      // The keypad already moved on; reopen this set so the failed log isn't mistaken for saved.
+      console.error(error);
+      haptics.error();
+      store.skipRest();
+      store.select(set.id, { kg: toInput(kgDisplay), reps: toInput(reps) });
+      return;
+    }
     if (isPr && !set.isPr) {
       haptics.success();
       onRecord({ kg, reps, at: Date.now() });

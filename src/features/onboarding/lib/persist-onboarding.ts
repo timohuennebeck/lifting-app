@@ -10,30 +10,37 @@ import type { OnboardingDraft } from '../stores/onboarding-store';
  * as their active collection. Safe to call again: the plan is only inserted once.
  */
 export async function persistOnboarding(userId: string, draft: OnboardingDraft) {
-  const existing = await db.getOptional<{ active_collection_id: string | null }>(
-    'SELECT active_collection_id FROM profiles WHERE id = ?',
-    [userId],
-  );
-  let activeCollectionId = existing?.active_collection_id ?? null;
-  if (!activeCollectionId && draft.plan?.days.length) {
-    activeCollectionId = await insertPlan(userId, draft.plan);
-  }
-  await saveProfile(userId, {
-    firstName: draft.firstName.trim(),
-    sex: draft.sex,
-    age: draft.age,
-    unitSystem: draft.unitSystem,
-    weightKg: draft.weightKg,
-    heightCm: draft.heightCm,
-    experience: draft.experience,
-    complaints: draft.complaints,
-    goal: draft.goal,
-    focus: draft.focus,
-    equipment: draft.equipment,
-    trainingDays: draft.trainingDays,
-    sessionMinutes: draft.sessionMinutes,
-    activeCollectionId,
-    onboardedAt: nowIso(),
+  // One transaction: a failed profile write must not leave a plan behind that a retry duplicates.
+  await db.writeTransaction(async (tx) => {
+    const existing = await tx.getOptional<{ active_collection_id: string | null }>(
+      'SELECT active_collection_id FROM profiles WHERE id = ?',
+      [userId],
+    );
+    let activeCollectionId = existing?.active_collection_id ?? null;
+    if (!activeCollectionId && draft.plan?.days.length) {
+      activeCollectionId = await insertPlan(tx, userId, draft.plan);
+    }
+    await saveProfile(
+      userId,
+      {
+        firstName: draft.firstName.trim(),
+        sex: draft.sex,
+        age: draft.age,
+        unitSystem: draft.unitSystem,
+        weightKg: draft.weightKg,
+        heightCm: draft.heightCm,
+        experience: draft.experience,
+        complaints: draft.complaints,
+        goal: draft.goal,
+        focus: draft.focus,
+        equipment: draft.equipment,
+        trainingDays: draft.trainingDays,
+        sessionMinutes: draft.sessionMinutes,
+        activeCollectionId,
+        onboardedAt: nowIso(),
+      },
+      tx,
+    );
   });
 }
 

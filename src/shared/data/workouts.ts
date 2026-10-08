@@ -1,5 +1,5 @@
 import { newId, nowIso } from './json';
-import { db } from './powersync/database';
+import { db, type Tx } from './powersync/database';
 import { queryKeys } from './query-keys';
 import { useSqlQuery } from './use-sql-query';
 
@@ -8,38 +8,47 @@ export const estimateOneRepMax = (kg: number, reps: number) => kg * (1 + reps / 
 
 /** Copies a template (or nothing, for an empty workout) into a new running workout. */
 export async function startWorkout(userId: string, name: string, templateId: string | null) {
+  return db.writeTransaction((tx) => insertWorkout(tx, userId, name, templateId));
+}
+
+/** `startWorkout` inside an existing transaction. Returns the new workout id. */
+export async function insertWorkout(
+  tx: Tx,
+  userId: string,
+  name: string,
+  templateId: string | null,
+) {
   const workoutId = newId();
-  await db.writeTransaction(async (tx) => {
+  const now = nowIso();
+  await tx.execute(
+    `INSERT INTO workouts (id, user_id, template_id, name, started_at, created_at)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [workoutId, userId, templateId, name, now, now],
+  );
+  if (!templateId) return workoutId;
+  const exercises = await tx.getAll<{
+    id: string;
+    exercise_id: string;
+    position: number;
+    rest_seconds: number | null;
+  }>(
+    'SELECT id, exercise_id, position, rest_seconds FROM template_exercises WHERE template_id = ? ORDER BY position',
+    [templateId],
+  );
+  for (const te of exercises) {
+    const workoutExerciseId = newId();
     await tx.execute(
-      `INSERT INTO workouts (id, user_id, template_id, name, started_at, created_at)
+      `INSERT INTO workout_exercises (id, user_id, workout_id, exercise_id, position, rest_seconds)
        VALUES (?, ?, ?, ?, ?, ?)`,
-      [workoutId, userId, templateId, name, nowIso(), nowIso()],
+      [workoutExerciseId, userId, workoutId, te.exercise_id, te.position, te.rest_seconds],
     );
-    if (!templateId) return;
-    const exercises = await tx.getAll<{
-      id: string;
-      exercise_id: string;
-      position: number;
-      rest_seconds: number | null;
-    }>(
-      'SELECT id, exercise_id, position, rest_seconds FROM template_exercises WHERE template_id = ? ORDER BY position',
-      [templateId],
+    await tx.execute(
+      `INSERT INTO workout_sets (id, user_id, workout_exercise_id, position, target_min, target_max, target_rir, is_pr)
+       SELECT uuid(), ?, ?, position, reps_min, reps_max, rir, 0
+       FROM template_sets WHERE template_exercise_id = ? ORDER BY position`,
+      [userId, workoutExerciseId, te.id],
     );
-    for (const te of exercises) {
-      const workoutExerciseId = newId();
-      await tx.execute(
-        `INSERT INTO workout_exercises (id, user_id, workout_id, exercise_id, position, rest_seconds)
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [workoutExerciseId, userId, workoutId, te.exercise_id, te.position, te.rest_seconds],
-      );
-      await tx.execute(
-        `INSERT INTO workout_sets (id, user_id, workout_exercise_id, position, target_min, target_max, target_rir, is_pr)
-         SELECT uuid(), ?, ?, position, reps_min, reps_max, rir, 0
-         FROM template_sets WHERE template_exercise_id = ? ORDER BY position`,
-        [userId, workoutExerciseId, te.id],
-      );
-    }
-  });
+  }
   return workoutId;
 }
 
@@ -204,15 +213,25 @@ export function useWorkout(workoutId: string | undefined) {
   });
 }
 
+const ACTIVE_WORKOUT_SQL = `SELECT id, name, started_at FROM workouts WHERE finished_at IS NULL
+  ORDER BY started_at DESC LIMIT 1`;
+
+const firstActive = (rows: unknown[]) =>
+  (rows[0] as { id: string; name: string; started_at: string } | undefined) ?? null;
+
 /** The running (unfinished) workout, if any. */
 export function useActiveWorkout() {
   return useSqlQuery({
     queryKey: queryKeys.workouts.active.queryKey,
-    sql: `SELECT id, name, started_at FROM workouts WHERE finished_at IS NULL
-            ORDER BY started_at DESC LIMIT 1`,
-    map: (rows) =>
-      (rows[0] as { id: string; name: string; started_at: string } | undefined) ?? null,
+    sql: ACTIVE_WORKOUT_SQL,
+    map: firstActive,
   });
+}
+
+/** Id of the running workout, read once (for event handlers). */
+export async function getActiveWorkoutId() {
+  const row = await db.getOptional<{ id: string }>(ACTIVE_WORKOUT_SQL);
+  return row?.id ?? null;
 }
 
 export interface WorkoutSummary {
@@ -311,6 +330,41 @@ export interface ExerciseHistoryEntry {
   sets: ExerciseHistorySet[];
 }
 
+function toExerciseHistory(data: unknown[]): ExerciseHistoryEntry[] {
+  const map = new Map<string, ExerciseHistoryEntry>();
+  for (const r of data as {
+    workout_id: string;
+    name: string;
+    started_at: string;
+    finished_at: string | null;
+    position: number;
+    weight_kg: number;
+    reps: number;
+    target_rir: number | null;
+    is_pr: number;
+  }[]) {
+    const e =
+      map.get(r.workout_id) ??
+      map
+        .set(r.workout_id, {
+          workoutId: r.workout_id,
+          name: r.name,
+          startedAt: r.started_at,
+          finishedAt: r.finished_at,
+          sets: [],
+        })
+        .get(r.workout_id)!;
+    e.sets.push({
+      position: r.position,
+      weightKg: r.weight_kg,
+      reps: r.reps,
+      rir: r.target_rir,
+      isPr: !!r.is_pr,
+    });
+  }
+  return [...map.values()];
+}
+
 /** Completed sets of one exercise from finished workouts, newest first. */
 export function useExerciseHistory(exerciseId: string | undefined) {
   return useSqlQuery({
@@ -322,44 +376,18 @@ export function useExerciseHistory(exerciseId: string | undefined) {
             JOIN workout_exercises we ON we.id = s.workout_exercise_id
             JOIN workouts w ON w.id = we.workout_id
             WHERE we.exercise_id = ? AND s.completed_at IS NOT NULL AND w.finished_at IS NOT NULL
+              AND s.weight_kg IS NOT NULL
             ORDER BY w.started_at DESC, we.position, s.position`,
     parameters: [exerciseId],
-    map: (data) => {
-      const map = new Map<string, ExerciseHistoryEntry>();
-      for (const r of data as {
-        workout_id: string;
-        name: string;
-        started_at: string;
-        finished_at: string | null;
-        position: number;
-        weight_kg: number;
-        reps: number;
-        target_rir: number | null;
-        is_pr: number;
-      }[]) {
-        const e =
-          map.get(r.workout_id) ??
-          map
-            .set(r.workout_id, {
-              workoutId: r.workout_id,
-              name: r.name,
-              startedAt: r.started_at,
-              finishedAt: r.finished_at,
-              sets: [],
-            })
-            .get(r.workout_id)!;
-        e.sets.push({
-          position: r.position,
-          weightKg: r.weight_kg,
-          reps: r.reps,
-          rir: r.target_rir,
-          isPr: !!r.is_pr,
-        });
-      }
-      return [...map.values()];
-    },
+    map: toExerciseHistory,
   });
 }
+
+const toMuscleVolume = (data: unknown[]) =>
+  (data as { exercise_id: string; sets: number }[]).map((r) => ({
+    exerciseId: r.exercise_id,
+    sets: r.sets,
+  }));
 
 /** Completed set counts per exercise since a date (Muscles tab). */
 export function useMuscleVolume(sinceIso: string) {
@@ -372,10 +400,6 @@ export function useMuscleVolume(sinceIso: string) {
             WHERE s.completed_at IS NOT NULL AND w.started_at >= ?
             GROUP BY we.exercise_id`,
     parameters: [sinceIso],
-    map: (data) =>
-      (data as { exercise_id: string; sets: number }[]).map((r) => ({
-        exerciseId: r.exercise_id,
-        sets: r.sets,
-      })),
+    map: toMuscleVolume,
   });
 }

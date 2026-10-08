@@ -20,6 +20,10 @@ export function useWorkoutActions(workoutId: string) {
       haptics.success();
       useWorkoutSessionStore.getState().reset();
       router.replace(`/workout/summary/${workoutId}`);
+    } catch (error) {
+      // The workout stays open; the user can try again.
+      console.error(error);
+      haptics.error();
     } finally {
       setFinishing(false);
     }

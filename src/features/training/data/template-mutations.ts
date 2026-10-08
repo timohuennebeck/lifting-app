@@ -1,8 +1,6 @@
 import { newId, nowIso } from '@/shared/data/json';
-import { db } from '@/shared/data/powersync/database';
+import { db, type Tx } from '@/shared/data/powersync/database';
 import { insertTemplateExercise, type PlanSetDraft } from '@/shared/data/templates';
-
-type Tx = Parameters<Parameters<typeof db.writeTransaction>[0]>[0];
 
 /** Default prescription for a freshly added exercise. */
 const NEW_EXERCISE_SETS: PlanSetDraft[] = Array.from({ length: 3 }, () => ({
@@ -48,8 +46,8 @@ export async function createCollection(userId: string, name: string) {
   const id = newId();
   await db.execute(
     `INSERT INTO collections (id, user_id, name, position, created_at)
-     VALUES (?, ?, ?, (SELECT COALESCE(MAX(position), -1) + 1 FROM collections), ?)`,
-    [id, userId, name.trim(), nowIso()],
+     VALUES (?, ?, ?, (SELECT COALESCE(MAX(position), -1) + 1 FROM collections WHERE user_id = ?), ?)`,
+    [id, userId, name.trim(), userId, nowIso()],
   );
   return id;
 }
@@ -88,8 +86,9 @@ export async function createTemplate(userId: string, name: string, collectionId:
   await db.execute(
     `INSERT INTO templates (id, user_id, collection_id, name, weekday, position, created_at, updated_at)
      VALUES (?, ?, ?, ?, NULL,
-       (SELECT COALESCE(MAX(position), -1) + 1 FROM templates WHERE collection_id IS ?), ?, ?)`,
-    [id, userId, collectionId, name.trim(), collectionId, nowIso(), nowIso()],
+       (SELECT COALESCE(MAX(position), -1) + 1 FROM templates
+         WHERE user_id = ? AND collection_id IS ?), ?, ?)`,
+    [id, userId, collectionId, name.trim(), userId, collectionId, nowIso(), nowIso()],
   );
   return id;
 }

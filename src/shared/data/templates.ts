@@ -1,6 +1,6 @@
 import { getExercise } from './exercises';
 import { newId, nowIso } from './json';
-import { db } from './powersync/database';
+import type { Tx } from './powersync/database';
 import type { TemplateSetRecord } from './powersync/schema';
 import { queryKeys } from './query-keys';
 import { useSqlQuery } from './use-sql-query';
@@ -35,31 +35,30 @@ export interface PlanDraft {
   days: PlanDayDraft[];
 }
 
-/** Writes a plan as one collection with one template per day. Returns the collection id. */
-export async function insertPlan(userId: string, plan: PlanDraft): Promise<string> {
-  return db.writeTransaction(async (tx) => {
-    const collectionId = newId();
+/**
+ * Writes a plan as one collection with one template per day inside `tx`.
+ * Returns the collection id.
+ */
+export async function insertPlan(tx: Tx, userId: string, plan: PlanDraft): Promise<string> {
+  const collectionId = newId();
+  await tx.execute(
+    `INSERT INTO collections (id, user_id, name, position, created_at)
+     VALUES (?, ?, ?, (SELECT COALESCE(MAX(position), -1) + 1 FROM collections WHERE user_id = ?), ?)`,
+    [collectionId, userId, plan.name, userId, nowIso()],
+  );
+  for (const [dayIndex, day] of plan.days.entries()) {
+    const templateId = newId();
     await tx.execute(
-      `INSERT INTO collections (id, user_id, name, position, created_at)
-       VALUES (?, ?, ?, (SELECT COALESCE(MAX(position), -1) + 1 FROM collections WHERE user_id = ?), ?)`,
-      [collectionId, userId, plan.name, userId, nowIso()],
+      `INSERT INTO templates (id, user_id, collection_id, name, weekday, position, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [templateId, userId, collectionId, day.name, day.weekday, dayIndex, nowIso(), nowIso()],
     );
-    for (const [dayIndex, day] of plan.days.entries()) {
-      const templateId = newId();
-      await tx.execute(
-        `INSERT INTO templates (id, user_id, collection_id, name, weekday, position, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [templateId, userId, collectionId, day.name, day.weekday, dayIndex, nowIso(), nowIso()],
-      );
-      for (const [position, exercise] of day.exercises.entries()) {
-        await insertTemplateExercise(tx, userId, templateId, position, exercise);
-      }
+    for (const [position, exercise] of day.exercises.entries()) {
+      await insertTemplateExercise(tx, userId, templateId, position, exercise);
     }
-    return collectionId;
-  });
+  }
+  return collectionId;
 }
-
-type Tx = Parameters<Parameters<typeof db.writeTransaction>[0]>[0];
 
 export async function insertTemplateExercise(
   tx: Tx,
@@ -170,7 +169,7 @@ export function useTemplates() {
             LEFT JOIN template_sets ts ON ts.template_exercise_id = te.id
             GROUP BY t.id, te.id
             ORDER BY c.position, t.position, te.position`,
-    map: (rows) => summarize(rows as TemplateRow[]),
+    map: summarize,
   });
 }
 
@@ -181,21 +180,23 @@ export interface CollectionSummary {
   templateCount: number;
 }
 
+const toCollections = (rows: unknown[]) =>
+  (rows as { id: string; name: string; position: number; template_count: number }[]).map(
+    (r): CollectionSummary => ({
+      id: r.id,
+      name: r.name,
+      position: r.position,
+      templateCount: r.template_count,
+    }),
+  );
+
 export function useCollections() {
   return useSqlQuery({
     queryKey: queryKeys.templates.collections.queryKey,
     sql: `SELECT c.id, c.name, c.position, COUNT(t.id) AS template_count
             FROM collections c LEFT JOIN templates t ON t.collection_id = c.id
             GROUP BY c.id ORDER BY c.position`,
-    map: (rows) =>
-      (rows as { id: string; name: string; position: number; template_count: number }[]).map(
-        (r): CollectionSummary => ({
-          id: r.id,
-          name: r.name,
-          position: r.position,
-          templateCount: r.template_count,
-        }),
-      ),
+    map: toCollections,
   });
 }
 
@@ -227,6 +228,27 @@ interface DetailRow {
   set_json: string | null;
 }
 
+function toTemplateDetail(data: unknown[]): TemplateDetail | null {
+  const rows = data as DetailRow[];
+  if (!rows.length) return null;
+  const [first] = rows;
+  return {
+    id: first.t_id,
+    name: first.t_name,
+    collectionId: first.collection_id,
+    weekday: first.weekday,
+    exercises: rows
+      .filter((r) => r.te_id && r.exercise_id)
+      .map((r) => ({
+        id: r.te_id!,
+        exerciseId: r.exercise_id!,
+        position: r.te_position ?? 0,
+        restSeconds: r.rest_seconds,
+        sets: JSON.parse(r.set_json ?? '[]'),
+      })),
+  };
+}
+
 export function useTemplateDetail(templateId: string | undefined) {
   return useSqlQuery({
     queryKey: queryKeys.templates.detail(templateId ?? '').queryKey,
@@ -240,25 +262,6 @@ export function useTemplateDetail(templateId: string | undefined) {
             FROM templates t LEFT JOIN template_exercises te ON te.template_id = t.id
             WHERE t.id = ? ORDER BY te.position`,
     parameters: [templateId],
-    map: (data): TemplateDetail | null => {
-      const rows = data as DetailRow[];
-      if (!rows.length) return null;
-      const [first] = rows;
-      return {
-        id: first.t_id,
-        name: first.t_name,
-        collectionId: first.collection_id,
-        weekday: first.weekday,
-        exercises: rows
-          .filter((r) => r.te_id && r.exercise_id)
-          .map((r) => ({
-            id: r.te_id!,
-            exerciseId: r.exercise_id!,
-            position: r.te_position ?? 0,
-            restSeconds: r.rest_seconds,
-            sets: JSON.parse(r.set_json ?? '[]'),
-          })),
-      };
-    },
+    map: toTemplateDetail,
   });
 }

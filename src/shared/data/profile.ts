@@ -3,7 +3,7 @@ import type { UnitSystem } from '@/shared/lib/format';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 import { parseJson, nowIso } from './json';
-import { db } from './powersync/database';
+import { db, type Tx } from './powersync/database';
 import type { ProfileRecord } from './powersync/schema';
 import { queryKeys } from './query-keys';
 import { useSqlQuery } from './use-sql-query';
@@ -97,16 +97,23 @@ const COLUMNS: Record<keyof Omit<Profile, 'id' | 'createdAt'>, string> = {
 
 export type ProfilePatch = Partial<Omit<Profile, 'id' | 'createdAt'>>;
 
-/** Inserts or updates the signed-in user's profile row (PowerSync views have no UPSERT). */
-export async function saveProfile(userId: string, patch: ProfilePatch) {
+/**
+ * Inserts or updates the signed-in user's profile row (PowerSync views have no UPSERT).
+ * Pass a transaction to make it part of a larger write.
+ */
+export async function saveProfile(
+  userId: string,
+  patch: ProfilePatch,
+  executor: Tx | typeof db = db,
+) {
   const entries = Object.entries(patch).map(([key, value]) => [
     COLUMNS[key as keyof ProfilePatch],
     Array.isArray(value) ? JSON.stringify(value) : value,
   ]);
-  const existing = await db.getOptional('SELECT id FROM profiles WHERE id = ?', [userId]);
+  const existing = await executor.getOptional('SELECT id FROM profiles WHERE id = ?', [userId]);
   if (existing) {
     const sets = [...entries.map(([c]) => `${c} = ?`), 'updated_at = ?'].join(', ');
-    await db.execute(`UPDATE profiles SET ${sets} WHERE id = ?`, [
+    await executor.execute(`UPDATE profiles SET ${sets} WHERE id = ?`, [
       ...entries.map(([, v]) => v),
       nowIso(),
       userId,
@@ -114,7 +121,7 @@ export async function saveProfile(userId: string, patch: ProfilePatch) {
     return;
   }
   const cols = ['id', 'user_id', 'created_at', 'updated_at', ...entries.map(([c]) => c)];
-  await db.execute(
+  await executor.execute(
     `INSERT INTO profiles (${cols.join(', ')}) VALUES (${cols.map(() => '?').join(', ')})`,
     [userId, userId, nowIso(), nowIso(), ...entries.map(([, v]) => v)],
   );

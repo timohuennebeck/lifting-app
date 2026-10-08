@@ -11,3 +11,6 @@ export const db = new PowerSyncDatabase({
 });
 
 export const connector = new SupabaseConnector();
+
+/** The transaction handed to `db.writeTransaction` callbacks. */
+export type Tx = Parameters<Parameters<typeof db.writeTransaction>[0]>[0];

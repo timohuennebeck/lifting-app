@@ -40,6 +40,8 @@ export interface MuscleShare {
 export function muscleShares(items: { exerciseId: string; sets: number }[]): MuscleShare[] {
   const load = new Map<MuscleId, number>();
   for (const { exerciseId, sets } of items) {
+    // Exercises without sets (e.g. skipped in a finished workout) trained nothing.
+    if (sets <= 0) continue;
     const muscles = getExercise(exerciseId)?.muscles ?? {};
     for (const [muscle, weight] of Object.entries(muscles) as [MuscleId, number][]) {
       load.set(muscle, (load.get(muscle) ?? 0) + weight * sets);
