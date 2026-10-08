@@ -8,12 +8,13 @@ import { muscleShares } from '@/shared/data/muscles';
 import { useUnits } from '@/shared/data/profile';
 import { useWorkout } from '@/shared/data/workouts';
 import { minutesBetween } from '@/shared/lib/date';
-import { formatNumber, kgToLb } from '@/shared/lib/format';
+import { formatNumber, kgToLb, weightUnit } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
-import { IconButton } from '@/shared/ui/icon-button';
 import { MuscleMap } from '@/shared/ui/muscle-map';
+import { Screen } from '@/shared/ui/screen';
+import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 import { RecordCard } from '../components/record-card';
@@ -78,14 +79,7 @@ export function WorkoutSummaryScreen() {
   const volume = units === 'imperial' ? kgToLb(volumeKg) : volumeKg;
 
   return (
-    <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-      <View className="flex-row items-center justify-between px-4 py-1.5">
-        <IconButton icon="close" accessibilityLabel={t('common:actions.close')} onPress={close} />
-        <Text variant="bodyStrong" numberOfLines={1} className="flex-1 px-3 text-center">
-          {workout?.name ?? ''}
-        </Text>
-        <View className="size-[42px]" />
-      </View>
+    <Screen header={<ScreenHeader icon="close" onBack={close} title={workout?.name ?? ''} />}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 130 + insets.bottom }}
@@ -115,7 +109,7 @@ export function WorkoutSummaryScreen() {
               {chips.map((c) => (
                 <View
                   key={c.muscle}
-                  className="h-[30px] flex-row items-center gap-[7px] rounded-full bg-[#1A1A1A] px-3"
+                  className="h-[30px] flex-row items-center gap-[7px] rounded-full bg-chip px-3"
                 >
                   <View className="size-[7px] rounded-full bg-accent" />
                   <Text variant="caption">{t(`muscles:names.${c.muscle}`)}</Text>
@@ -127,7 +121,7 @@ export function WorkoutSummaryScreen() {
         <View className="flex-row px-5 pt-[26px]">
           <Stat
             value={formatNumber(Math.round(volume), 0)}
-            unit={t(`common:units.${units === 'imperial' ? 'lb' : 'kg'}`)}
+            unit={t(`common:units.${weightUnit(units)}`)}
           />
           <Stat value={formatNumber(minutes, 0)} unit={t('common:units.minShort')} />
           <Stat value={formatNumber(setCount, 0)} unit={t('summary.sets', { count: setCount })} />
@@ -148,6 +142,6 @@ export function WorkoutSummaryScreen() {
       <BottomFade>
         <Button label={t('common:actions.done')} onPress={close} />
       </BottomFade>
-    </View>
+    </Screen>
   );
 }

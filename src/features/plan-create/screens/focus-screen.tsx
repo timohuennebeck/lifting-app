@@ -11,7 +11,7 @@ import {
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
-import { MuscleMap } from '@/shared/ui/muscle-map';
+import { BodyMaps } from '@/shared/ui/muscle-map';
 import { StepScreen } from '@/shared/ui/step-screen';
 
 import { CREATE_STEPS } from '../lib/flow';
@@ -67,20 +67,12 @@ export function FocusScreen() {
           />
         ))}
       </View>
-      <View
+      <BodyMaps
         accessibilityLabel={t('planCreate:focus.mapA11y')}
-        className="mx-4 mt-5 h-80 flex-row gap-1 rounded-[28px] bg-surface px-2 pt-4 pb-3"
-      >
-        {(['front', 'back'] as const).map((view) => (
-          <View key={view} className="min-w-0 flex-1">
-            <MuscleMap
-              view={view}
-              selected={focus}
-              onToggle={(muscle) => toggle(groupOfMuscle(muscle))}
-            />
-          </View>
-        ))}
-      </View>
+        className="rounded-[28px] bg-surface"
+        selected={focus}
+        onToggle={(muscle) => toggle(groupOfMuscle(muscle))}
+      />
     </StepScreen>
   );
 }

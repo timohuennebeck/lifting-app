@@ -8,8 +8,8 @@ import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
-import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
+import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
@@ -18,7 +18,7 @@ import { createTemplate } from '../data/template-mutations';
 /** Creates an empty template (name + optional collection), then opens its overview. */
 export function NewTemplateScreen() {
   const params = useLocalSearchParams<{ collectionId?: string }>();
-  const { t } = useTranslation(['training', 'common']);
+  const { t } = useTranslation('training');
   const { data: collections = [] } = useCollections();
   const [name, setName] = useState('');
   const [collectionId, setCollectionId] = useState<string | null>(params.collectionId ?? null);
@@ -40,15 +40,7 @@ export function NewTemplateScreen() {
   return (
     <Screen
       scroll
-      header={
-        <View className="flex-row items-center gap-3 px-4 py-1.5">
-          <IconButton
-            icon="chevron-left"
-            accessibilityLabel={t('common:actions.back')}
-            onPress={() => router.back()}
-          />
-        </View>
-      }
+      header={<ScreenHeader />}
       footer={
         <Button
           label={t('create.createTemplate')}

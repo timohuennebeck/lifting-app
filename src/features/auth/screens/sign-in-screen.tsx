@@ -8,8 +8,8 @@ import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-stor
 import { supabase } from '@/shared/data/supabase';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
-import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
+import { ScreenHeader } from '@/shared/ui/screen-header';
 import { StepTitle } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
@@ -21,7 +21,6 @@ type Phase = 'idle' | 'signingIn' | 'syncing';
 
 export function SignInScreen() {
   const { t } = useTranslation('auth');
-  const { t: tc } = useTranslation();
   const params = useLocalSearchParams<{ email?: string }>();
   const [email, setEmail] = useState(params.email ?? '');
   const [password, setPassword] = useState('');
@@ -69,15 +68,7 @@ export function SignInScreen() {
   return (
     <Screen
       scroll
-      header={
-        <View className="flex-row py-1.5 pl-4">
-          <IconButton
-            icon="chevron-left"
-            accessibilityLabel={tc('actions.back')}
-            onPress={() => router.back()}
-          />
-        </View>
-      }
+      header={<ScreenHeader />}
       footer={
         <View className="gap-1">
           <Button label={t('signIn.submit')} disabled={!valid} loading={busy} onPress={submit} />

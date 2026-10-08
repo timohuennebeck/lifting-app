@@ -20,6 +20,8 @@ import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 import { MuscleTileRow } from '@/shared/ui/muscle-map';
+import { Screen } from '@/shared/ui/screen';
+import { ScreenHeader } from '@/shared/ui/screen-header';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
@@ -106,35 +108,29 @@ export function TemplateScreen() {
   };
 
   const header = (
-    <View className="flex-row items-center justify-between gap-3 px-4 py-1.5">
-      <IconButton
-        icon="chevron-left"
-        accessibilityLabel={t('common:actions.back')}
-        onPress={() => router.back()}
-      />
-      <Text variant="bodyStrong" numberOfLines={1} className="flex-1 text-center">
-        {template ? collectionName : ''}
-      </Text>
-      <IconButton
-        icon="more"
-        iconSize={18}
-        accessibilityLabel={t('overview.more')}
-        disabled={!template}
-        onPress={() => setOptionsOpen(true)}
-      />
-    </View>
+    <ScreenHeader
+      title={template ? collectionName : ''}
+      action={
+        <IconButton
+          icon="more"
+          iconSize={18}
+          accessibilityLabel={t('overview.more')}
+          disabled={!template}
+          onPress={() => setOptionsOpen(true)}
+        />
+      }
+    />
   );
 
   if (!template) {
     return (
-      <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-        {header}
+      <Screen header={header}>
         {!isLoading ? (
           <Text variant="paragraph" tone="subtle" className="px-5 pt-10 text-center">
             {t('overview.notFound')}
           </Text>
         ) : null}
-      </View>
+      </Screen>
     );
   }
 
@@ -142,8 +138,7 @@ export function TemplateScreen() {
   const weekdays = t('common:weekdays.long', { returnObjects: true }) as string[];
 
   return (
-    <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-      {header}
+    <Screen header={header}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + (empty ? 40 : 130) }}
@@ -195,7 +190,7 @@ export function TemplateScreen() {
             size={empty ? 56 : 44}
             iconSize={empty ? 18 : 14}
             accessibilityLabel={t('overview.addExercise')}
-            className="bg-[#1E1E1E]"
+            className="bg-raised"
             onPress={() => setPicker({ mode: 'add' })}
           />
         </View>
@@ -265,6 +260,6 @@ export function TemplateScreen() {
           setRenameOpen(false);
         }}
       />
-    </View>
+    </Screen>
   );
 }

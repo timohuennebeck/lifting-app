@@ -20,7 +20,7 @@ const GAP = 5;
 const PITCH = TICK + GAP;
 // Dot colors of the design's tick columns.
 const TICK_MAJOR = '#B5B5AF';
-const TICK_MINOR = '#4A4A46';
+const TICK_MINOR = colors.outline;
 
 export interface RulerPickerProps {
   value: number;

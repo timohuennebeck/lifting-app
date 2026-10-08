@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import type { WorkoutExercise, WorkoutSet } from '@/shared/data/workouts';
+import type { SetTargets, WorkoutExercise, WorkoutSet } from '@/shared/data/workouts';
 import { clamp } from '@/shared/lib/math';
 import { colors } from '@/shared/lib/theme';
 import { useUserId } from '@/shared/stores/session-store';
@@ -12,12 +12,7 @@ import { Sheet } from '@/shared/ui/sheet';
 import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
 
-import {
-  addWorkoutSet,
-  removeWorkoutSet,
-  type SetTargets,
-  updateSetTargets,
-} from '../data/workout-mutations';
+import { addWorkoutSet, removeWorkoutSet, updateSetTargets } from '../data/workout-mutations';
 
 interface MiniStepperProps {
   value: number | null;

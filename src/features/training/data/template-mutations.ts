@@ -1,6 +1,11 @@
 import { newId, nowIso } from '@/shared/data/json';
 import { db, type Tx } from '@/shared/data/powersync/database';
-import { insertTemplateExercise, type PlanSetDraft } from '@/shared/data/templates';
+import {
+  insertCollection,
+  insertTemplateExercise,
+  insertTemplateSets,
+  type PlanSetDraft,
+} from '@/shared/data/templates';
 
 /** Default prescription for a freshly added exercise. */
 const NEW_EXERCISE_SETS: PlanSetDraft[] = Array.from({ length: 3 }, () => ({
@@ -32,6 +37,7 @@ async function deleteTemplateTx(tx: Tx, templateId: string) {
   await tx.execute('DELETE FROM templates WHERE id = ?', [templateId]);
 }
 
+/** Closes gaps in the exercise positions. Returns the ids in order (index = position). */
 async function renumberExercises(tx: Tx, templateId: string) {
   const rows = await tx.getAll<{ id: string }>(
     'SELECT id FROM template_exercises WHERE template_id = ? ORDER BY position',
@@ -40,16 +46,11 @@ async function renumberExercises(tx: Tx, templateId: string) {
   for (const [position, row] of rows.entries()) {
     await tx.execute('UPDATE template_exercises SET position = ? WHERE id = ?', [position, row.id]);
   }
+  return rows.map((r) => r.id);
 }
 
-export async function createCollection(userId: string, name: string) {
-  const id = newId();
-  await db.execute(
-    `INSERT INTO collections (id, user_id, name, position, created_at)
-     VALUES (?, ?, ?, (SELECT COALESCE(MAX(position), -1) + 1 FROM collections WHERE user_id = ?), ?)`,
-    [id, userId, name.trim(), userId, nowIso()],
-  );
-  return id;
+export function createCollection(userId: string, name: string) {
+  return insertCollection(db, userId, name.trim());
 }
 
 export async function renameCollection(collectionId: string, name: string) {
@@ -146,22 +147,12 @@ export async function removeTemplateExercise(templateExerciseId: string) {
 export async function moveTemplateExercise(templateExerciseId: string, direction: -1 | 1) {
   await db.writeTransaction(async (tx) => {
     const templateId = await templateOf(tx, templateExerciseId);
-    await renumberExercises(tx, templateId);
-    const rows = await tx.getAll<{ id: string }>(
-      'SELECT id FROM template_exercises WHERE template_id = ? ORDER BY position',
-      [templateId],
-    );
-    const from = rows.findIndex((r) => r.id === templateExerciseId);
+    const ids = await renumberExercises(tx, templateId);
+    const from = ids.indexOf(templateExerciseId);
     const to = from + direction;
-    if (from < 0 || to < 0 || to >= rows.length) return;
-    await tx.execute('UPDATE template_exercises SET position = ? WHERE id = ?', [
-      to,
-      rows[from].id,
-    ]);
-    await tx.execute('UPDATE template_exercises SET position = ? WHERE id = ?', [
-      from,
-      rows[to].id,
-    ]);
+    if (from < 0 || to < 0 || to >= ids.length) return;
+    await tx.execute('UPDATE template_exercises SET position = ? WHERE id = ?', [to, ids[from]]);
+    await tx.execute('UPDATE template_exercises SET position = ? WHERE id = ?', [from, ids[to]]);
     await touchTemplate(tx, templateId);
   });
 }
@@ -177,13 +168,7 @@ export async function saveTemplateSets(
     await tx.execute('DELETE FROM template_sets WHERE template_exercise_id = ?', [
       templateExerciseId,
     ]);
-    for (const [position, set] of sets.entries()) {
-      await tx.execute(
-        `INSERT INTO template_sets (id, user_id, template_exercise_id, position, reps_min, reps_max, rir)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [newId(), userId, templateExerciseId, position, set.repsMin, set.repsMax, set.rir],
-      );
-    }
+    await insertTemplateSets(tx, userId, templateExerciseId, sets);
     await tx.execute('UPDATE template_exercises SET rest_seconds = ? WHERE id = ?', [
       restSeconds,
       templateExerciseId,

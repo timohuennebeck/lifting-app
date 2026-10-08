@@ -5,6 +5,9 @@ export type UnitSystem = 'metric' | 'imperial';
 const KG_PER_LB = 0.45359237;
 export const CM_PER_INCH = 2.54;
 
+/** Unit key for weights: `units.kg` or `units.lb` in the common namespace. */
+export const weightUnit = (units: UnitSystem) => (units === 'imperial' ? 'lb' : 'kg');
+
 export const kgToLb = (kg: number) => kg / KG_PER_LB;
 export const lbToKg = (lb: number) => lb * KG_PER_LB;
 

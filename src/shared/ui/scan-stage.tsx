@@ -39,11 +39,10 @@ export interface ScanChip {
 }
 
 export interface ScanStageProps {
-  /** 0–100 */
-  percent: number;
-  stage: string;
-  segments: number;
-  activeSegment: number;
+  /** 0–1; drives the percentage and which stage label is active. */
+  progress: number;
+  /** Stage labels, shown one after another as a segmented progress. */
+  stages: readonly string[];
   chips?: ScanChip[];
   /** Artwork in the middle of the ripples (paper stack, mic, …). */
   children?: ReactNode;
@@ -59,10 +58,8 @@ export interface ScanStageProps {
 
 /** Animated "working on it" stage: glow, ripples, floating chips and a segmented progress. */
 export function ScanStage({
-  percent,
-  stage,
-  segments,
-  activeSegment,
+  progress,
+  stages,
   chips = [],
   children,
   header,
@@ -75,6 +72,7 @@ export function ScanStage({
   const { width, height } = useWindowDimensions();
   const cy = height * centerRatio;
   const scaleX = width / FRAME_WIDTH;
+  const stage = Math.min(stages.length - 1, Math.floor(progress * stages.length));
   const around = (size: number) => ({
     position: 'absolute' as const,
     width: size,
@@ -194,19 +192,16 @@ export function ScanStage({
         style={{ bottom: insets.bottom + 34 }}
       >
         <Text className="font-inter-semibold text-[64px] leading-[64px] text-fg tabular-nums">
-          {`${Math.round(percent)}%`}
+          {`${Math.round(progress * 100)}%`}
         </Text>
         <Text variant="bodyStrong" className="text-center text-base">
-          {stage}
+          {stages[stage]}
         </Text>
         <View className="mt-2.5 w-full flex-row gap-1">
-          {Array.from({ length: segments }, (_, i) => (
+          {stages.map((_, i) => (
             <View
               key={i}
-              className={cn(
-                'h-1 flex-1 rounded-sm',
-                i <= activeSegment ? 'bg-accent' : 'bg-control',
-              )}
+              className={cn('h-1 flex-1 rounded-sm', i <= stage ? 'bg-accent' : 'bg-control')}
             />
           ))}
         </View>

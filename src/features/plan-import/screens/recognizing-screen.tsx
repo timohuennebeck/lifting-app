@@ -59,7 +59,6 @@ export function RecognizingScreen() {
 
   const stages = t('planImport:recognizing.stages', { returnObjects: true });
   const long = t('common:weekdays.long', { returnObjects: true });
-  const stage = Math.min(stages.length - 1, Math.floor(progress * stages.length));
   const labels = [
     `${long[script.weekday]} · ${dayName}`,
     ...script.remove
@@ -80,10 +79,8 @@ export function RecognizingScreen() {
     <>
       <Stack.Screen options={{ gestureEnabled: false, animation: 'fade' }} />
       <ScanStage
-        percent={progress * 100}
-        stage={stages[stage]}
-        segments={stages.length}
-        activeSegment={stage}
+        progress={progress}
+        stages={stages}
         chips={chips}
         header={<StepHeader step={IMPORT_STEPS} total={IMPORT_STEPS} hideBack />}
       >

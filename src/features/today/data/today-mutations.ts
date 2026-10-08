@@ -1,6 +1,7 @@
 import { nowIso } from '@/shared/data/json';
 import { db } from '@/shared/data/powersync/database';
 import { insertWorkout } from '@/shared/data/workouts';
+import { MINUTE_MS } from '@/shared/lib/date';
 
 /** Moves a template to another Monday-based weekday. */
 export async function rescheduleTemplate(templateId: string, weekday: number) {
@@ -26,7 +27,7 @@ export async function markTemplateDone(
   const now = new Date();
   const start = new Date(day);
   start.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
-  const end = new Date(start.getTime() + minutes * 60000);
+  const end = new Date(start.getTime() + minutes * MINUTE_MS);
   // One transaction, so the workout never shows up as running or half-written.
   return db.writeTransaction(async (tx) => {
     const workoutId = await insertWorkout(tx, userId, name, templateId);

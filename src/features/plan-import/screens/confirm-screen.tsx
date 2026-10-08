@@ -1,31 +1,28 @@
 import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextInput, View } from 'react-native';
+import { View } from 'react-native';
 
 import { ExerciseDetailModal } from '@/features/exercises/components/exercise-detail-modal';
 import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { muscleShares } from '@/shared/data/muscles';
-import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
-import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
-import { Chip } from '@/shared/ui/chip';
-import { Icon } from '@/shared/ui/icon';
 import { MuscleTileRow } from '@/shared/ui/muscle-map';
-import { PressableScale } from '@/shared/ui/pressable-scale';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
+import { DayEditor } from '../components/day-editor';
 import { DayTabs } from '../components/day-tabs';
-import { ImportedExerciseRow, REVIEW_COLOR } from '../components/imported-exercise-row';
+import { ImportedExerciseRow } from '../components/imported-exercise-row';
 import { IMPORT_STEPS } from '../lib/format';
 import { readSets } from '../lib/mock-import-data';
 import {
   type ImportedDay,
   type ImportedExercise,
+  needsReview,
   pendingReviews,
   toPlanDraft,
 } from '../lib/plan-import-service';
@@ -47,8 +44,6 @@ export function ConfirmScreen() {
 
   const index = Math.min(dayIndex, plan.days.length - 1);
   const day = plan.days[index];
-  const narrow = t('common:weekdays.narrow', { returnObjects: true });
-  const long = t('common:weekdays.long', { returnObjects: true });
   const pending = pendingReviews(plan);
   const shares = day
     ? muscleShares(day.exercises.map((e) => ({ exerciseId: e.exerciseId, sets: e.sets.length })))
@@ -77,15 +72,11 @@ export function ConfirmScreen() {
     setPicker(null);
   }
 
-  function setWeekday(weekday: number | null) {
-    editDay(({ rawDay: _raw, ...d }) => ({ ...d, weekday }));
-  }
-
   function submit() {
     if (!plan) return;
     if (pending) {
       haptics.warning();
-      const next = plan.days.findIndex((d) => d.rawDay || d.exercises.some((e) => e.raw));
+      const next = plan.days.findIndex(needsReview);
       if (next >= 0) selectDay(next);
       return;
     }
@@ -127,62 +118,7 @@ export function ConfirmScreen() {
       </View>
       {day ? (
         <>
-          <View className="px-4 pt-5">
-            <View className="flex-row items-center gap-2.5">
-              <TextInput
-                value={day.name}
-                onChangeText={(name) => editDay((d) => ({ ...d, name }))}
-                onEndEditing={() => {
-                  if (!day.name.trim()) editDay((d) => ({ ...d, name: `${index + 1}` }));
-                }}
-                accessibilityLabel={t('planImport:confirm.dayName')}
-                maxLength={24}
-                selectionColor={colors.fg}
-                keyboardAppearance="dark"
-                returnKeyType="done"
-                className="min-w-0 flex-1 font-inter-semibold text-headline text-fg"
-              />
-              <Icon name="pencil" size={14} color={colors.subtle} />
-            </View>
-            <Text variant="caption" tone="subtle" className="mt-1 font-inter">
-              {`${day.weekday !== null ? long[day.weekday] : t('planImport:confirm.noDay')} · ${t('planImport:confirm.exercises', { count: day.exercises.length })}`}
-            </Text>
-            {day.rawDay ? (
-              <Text variant="caption" className="mt-3" style={{ color: REVIEW_COLOR }}>
-                {t('planImport:confirm.dayUnknown', { raw: day.rawDay })}
-              </Text>
-            ) : null}
-            <View className="mt-3 flex-row gap-1.5">
-              {narrow.map((label, wd) => {
-                const on = day.weekday === wd;
-                return (
-                  <PressableScale
-                    key={wd}
-                    haptic="select"
-                    accessibilityRole="radio"
-                    accessibilityLabel={long[wd]}
-                    accessibilityState={{ selected: on }}
-                    onPress={() => setWeekday(on ? null : wd)}
-                    className={cn(
-                      'h-10 flex-1 items-center justify-center rounded-full',
-                      on ? 'bg-accent' : 'bg-pill',
-                    )}
-                  >
-                    <Text variant="caption" tone={on ? 'onAccent' : 'secondary'}>
-                      {label}
-                    </Text>
-                  </PressableScale>
-                );
-              })}
-            </View>
-            <Chip
-              label={t('planImport:confirm.noDay')}
-              selected={day.weekday === null && !day.rawDay}
-              showCheck
-              onPress={() => setWeekday(null)}
-              className="mt-2 h-9 self-start"
-            />
-          </View>
+          <DayEditor day={day} fallbackName={`${index + 1}`} onEdit={editDay} />
           {shares.length ? (
             <View className="gap-2.5 pt-6">
               <Text variant="overline" tone="subtle" className="px-4 tracking-[1.5px]">

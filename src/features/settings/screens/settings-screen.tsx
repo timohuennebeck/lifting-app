@@ -1,4 +1,4 @@
-import { router, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
@@ -16,10 +16,10 @@ import { requireUserId } from '@/shared/stores/session-store';
 import { ACCENT_OPTIONS, useSettingsStore } from '@/shared/stores/settings-store';
 import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
-import { IconButton } from '@/shared/ui/icon-button';
 import { LanguageFlag } from '@/shared/ui/language-flag';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
+import { ScreenHeader } from '@/shared/ui/screen-header';
 import { SegmentedControl } from '@/shared/ui/segmented-control';
 import { Text } from '@/shared/ui/text';
 
@@ -82,15 +82,11 @@ export function SettingsScreen() {
     <Screen
       scroll
       header={
-        <View className="flex-row items-center gap-3 px-4 pt-2.5 pb-1.5">
-          <IconButton
-            icon="chevron-left"
-            iconSize={9}
-            accessibilityLabel={tc('actions.back')}
-            onPress={() => router.back()}
-          />
-          <Text variant="headline">{tc('settings')}</Text>
-        </View>
+        <ScreenHeader
+          className="pt-2.5"
+          iconSize={9}
+          title={<Text variant="headline">{tc('settings')}</Text>}
+        />
       }
     >
       <Stack.Screen options={{ animation: 'slide_from_right', gestureEnabled: true }} />
@@ -110,7 +106,7 @@ export function SettingsScreen() {
                   <Icon name="check" size={12} color={colors.onAccent} />
                 </View>
               ) : (
-                <View className="size-6 rounded-full border-[1.5px] border-[#4A4A46]" />
+                <View className="size-6 rounded-full border-[1.5px] border-outline" />
               )
             }
             onPress={() => setLanguage(lang)}

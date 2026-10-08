@@ -1,3 +1,4 @@
+export const MINUTE_MS = 60_000;
 export const DAY_MS = 86_400_000;
 
 /** Monday-based weekday index (0 = Monday … 6 = Sunday). */
@@ -20,5 +21,5 @@ export const isSameDay = (a: Date, b: Date) =>
 /** Whole minutes between two ISO timestamps (at least 1), or 0 while unfinished. */
 export function minutesBetween(fromIso: string, toIso: string | null) {
   if (!toIso) return 0;
-  return Math.max(1, Math.round((Date.parse(toIso) - Date.parse(fromIso)) / 60000));
+  return Math.max(1, Math.round((Date.parse(toIso) - Date.parse(fromIso)) / MINUTE_MS));
 }

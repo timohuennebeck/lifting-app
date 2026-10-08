@@ -74,7 +74,7 @@ export function ExerciseStrip({ exercises, currentIndex, onSelect, onAdd }: Exer
         onPress={onAdd}
         className="w-16 gap-1.5"
       >
-        <View className="h-[86px] w-16 items-center justify-center rounded-[5px] bg-[#1E1E1E]">
+        <View className="h-[86px] w-16 items-center justify-center rounded-[5px] bg-raised">
           <Icon name="plus" size={18} color={colors.fg} />
         </View>
         <View className="h-[3px]" />

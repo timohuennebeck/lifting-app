@@ -3,16 +3,14 @@ import { View } from 'react-native';
 import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
 
 import { cn } from '@/shared/lib/cn';
-import { useAccentColor } from '@/shared/lib/theme';
+import { colors, useAccentColor } from '@/shared/lib/theme';
 
 import { Text } from './text';
 
 const LINE_WIDTHS = ['84%', '66%', '76%', '58%', '70%', '62%'] as const;
-const PAPER = '#EDEAE2';
-const INK = '#1C1A16';
 const PENCIL = '#BDB7A9';
 
-export interface PaperSheetProps {
+interface PaperSheetProps {
   /** Day badge in the header, e.g. "Mo" or "D1". */
   tag?: string;
   /** Lines light up one after another, like being read. */
@@ -21,39 +19,31 @@ export interface PaperSheetProps {
 }
 
 /** Stylised training-plan page used in import and plan-building illustrations. */
-export function PaperSheet({ tag, scanning, className }: PaperSheetProps) {
+function PaperSheet({ tag, scanning, className }: PaperSheetProps) {
   const accent = useAccentColor();
   const scan = useMemo<CSSAnimationKeyframes>(
     () => ({
       '0%': { backgroundColor: PENCIL },
       '8%': { backgroundColor: PENCIL },
       '18%': { backgroundColor: accent },
-      '32%': { backgroundColor: INK },
-      '88%': { backgroundColor: INK },
+      '32%': { backgroundColor: colors.ink },
+      '88%': { backgroundColor: colors.ink },
       '100%': { backgroundColor: PENCIL },
     }),
     [accent],
   );
   return (
     <View
-      className={cn('gap-3.5 rounded-xl px-[18px] py-5', className)}
-      style={{
-        backgroundColor: PAPER,
-        boxShadow: '0 26px 50px rgba(0,0,0,0.6)',
-      }}
+      className={cn('gap-3.5 rounded-xl bg-paper px-[18px] py-5', className)}
+      style={{ boxShadow: '0 26px 50px rgba(0,0,0,0.6)' }}
     >
       <View className="flex-row items-center gap-[7px]">
         {tag ? (
-          <View className="rounded-full px-2 py-[3px]" style={{ backgroundColor: INK }}>
-            <Text
-              className="font-inter-semibold text-[11px] leading-[13px]"
-              style={{ color: PAPER }}
-            >
-              {tag}
-            </Text>
+          <View className="rounded-full bg-ink px-2 py-[3px]">
+            <Text className="font-inter-semibold text-[11px] leading-[13px] text-paper">{tag}</Text>
           </View>
         ) : null}
-        <View className="h-2 w-[40%] rounded" style={{ backgroundColor: INK }} />
+        <View className="h-2 w-[40%] rounded bg-ink" />
       </View>
       {LINE_WIDTHS.map((width, i) => (
         <Animated.View

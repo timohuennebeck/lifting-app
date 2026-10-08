@@ -1,9 +1,10 @@
 import { muscleWeights } from '@/features/exercises/lib/muscle-groups';
+import { colors } from '@/shared/lib/theme';
 
 /** Set editor and picker: hard sets accent, RIR 2 light, easy sets dark. */
 export function editorRirStyle(rir: number | null, accent: string) {
   if (rir === null || rir >= 3) return { bg: '#2E2E2C', dark: false };
-  if (rir === 2) return { bg: '#D6D6D1', dark: true };
+  if (rir === 2) return { bg: colors.fgMid, dark: true };
   return { bg: accent, dark: true };
 }
 

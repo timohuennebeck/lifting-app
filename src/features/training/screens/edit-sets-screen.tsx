@@ -18,6 +18,7 @@ import { requireUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
+import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 import { ToggleSwitch } from '@/shared/ui/toggle-switch';
 
@@ -31,24 +32,20 @@ const REST_MAX = 600;
 const MAX_SETS = 10;
 
 function EditHeader({ title, subtitle }: { title: string; subtitle?: string }) {
-  const { t } = useTranslation();
   return (
-    <View className="flex-row items-center justify-between gap-3 px-4 py-1.5">
-      <IconButton
-        icon="close"
-        accessibilityLabel={t('actions.close')}
-        onPress={() => router.back()}
-      />
-      <View className="min-w-0 flex-1 items-center gap-0.5">
-        <Text variant="label">{title}</Text>
-        {subtitle ? (
-          <Text variant="caption" tone="subtle" numberOfLines={1} className="font-inter">
-            {subtitle}
-          </Text>
-        ) : null}
-      </View>
-      <View className="size-[42px]" />
-    </View>
+    <ScreenHeader
+      icon="close"
+      title={
+        <View className="items-center gap-0.5">
+          <Text variant="label">{title}</Text>
+          {subtitle ? (
+            <Text variant="caption" tone="subtle" numberOfLines={1} className="font-inter">
+              {subtitle}
+            </Text>
+          ) : null}
+        </View>
+      }
+    />
   );
 }
 
@@ -156,7 +153,7 @@ function EditSetsForm({ exercise }: { exercise: TemplateExerciseDetail }) {
           size={40}
           iconSize={14}
           haptic="tap"
-          className="bg-[#1E1E1E]"
+          className="bg-raised"
           disabled={sets.length >= MAX_SETS}
           accessibilityLabel={t('sets.addSet')}
           onPress={addSet}
@@ -190,7 +187,7 @@ function EditSetsForm({ exercise }: { exercise: TemplateExerciseDetail }) {
             icon="minus"
             size={48}
             haptic="select"
-            className="bg-[#1E1E1E]"
+            className="bg-raised"
             accessibilityLabel={t('common:actions.decrease')}
             disabled={shownRest <= REST_MIN}
             onPress={() => stepRest(-REST_STEP)}
@@ -207,7 +204,7 @@ function EditSetsForm({ exercise }: { exercise: TemplateExerciseDetail }) {
             icon="plus"
             size={48}
             haptic="select"
-            className="bg-[#1E1E1E]"
+            className="bg-raised"
             accessibilityLabel={t('common:actions.increase')}
             disabled={shownRest >= REST_MAX}
             onPress={() => stepRest(REST_STEP)}

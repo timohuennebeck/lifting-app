@@ -1,5 +1,5 @@
-import { newId } from '@/shared/data/json';
 import { db } from '@/shared/data/powersync/database';
+import { insertWorkoutSet, type SetTargets } from '@/shared/data/workouts';
 
 /** Replaces the exercise of a running workout entry and clears its logged sets. */
 export async function swapWorkoutExercise(workoutExerciseId: string, exerciseId: string) {
@@ -28,19 +28,11 @@ export async function addWorkoutSet(userId: string, workoutExerciseId: string) {
      WHERE workout_exercise_id = ? ORDER BY position DESC LIMIT 1`,
     [workoutExerciseId],
   );
-  await db.execute(
-    `INSERT INTO workout_sets (id, user_id, workout_exercise_id, position, target_min, target_max, target_rir, is_pr)
-     VALUES (?, ?, ?, ?, ?, ?, ?, 0)`,
-    [
-      newId(),
-      userId,
-      workoutExerciseId,
-      (last?.position ?? -1) + 1,
-      last?.target_min ?? 8,
-      last?.target_max ?? 12,
-      last?.target_rir ?? 2,
-    ],
-  );
+  await insertWorkoutSet(db, userId, workoutExerciseId, (last?.position ?? -1) + 1, {
+    min: last?.target_min ?? 8,
+    max: last?.target_max ?? 12,
+    rir: last?.target_rir ?? 2,
+  });
 }
 
 export async function removeWorkoutSet(setId: string) {
@@ -50,12 +42,6 @@ export async function removeWorkoutSet(setId: string) {
 /** Marks a logged set as open again; its values stay as the prefill. */
 export async function unlogSet(setId: string) {
   await db.execute('UPDATE workout_sets SET completed_at = NULL, is_pr = 0 WHERE id = ?', [setId]);
-}
-
-export interface SetTargets {
-  min: number;
-  max: number;
-  rir: number | null;
 }
 
 export async function updateSetTargets(setId: string, { min, max, rir }: SetTargets) {

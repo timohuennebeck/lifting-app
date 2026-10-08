@@ -46,7 +46,7 @@ export function ProfileScreen() {
         ) : null}
         <View className="mt-[18px] gap-2">
           {facts.map((fact) => (
-            <Text key={fact} variant="paragraph" className="text-[#D6D6D1]">
+            <Text key={fact} variant="paragraph" className="text-fg-mid">
               {`• ${fact}`}
             </Text>
           ))}

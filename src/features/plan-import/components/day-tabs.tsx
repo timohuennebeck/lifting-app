@@ -5,7 +5,7 @@ import { cn } from '@/shared/lib/cn';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-import type { ImportedDay } from '../lib/plan-import-service';
+import { type ImportedDay, needsReview } from '../lib/plan-import-service';
 import { REVIEW_COLOR } from './imported-exercise-row';
 
 export interface DayTabsProps {
@@ -26,7 +26,7 @@ export function DayTabs({ days, selected, onSelect }: DayTabsProps) {
     >
       {days.map((day, i) => {
         const on = i === selected;
-        const pending = !!day.rawDay || day.exercises.some((e) => e.raw);
+        const pending = needsReview(day);
         const weekday = day.rawDay ? '?' : day.weekday !== null ? short[day.weekday] : '–';
         return (
           <PressableScale

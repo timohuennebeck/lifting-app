@@ -1,3 +1,5 @@
+import { getOrInsert } from '@/shared/lib/map';
+
 import { getExercise } from './exercises';
 import { newId, nowIso } from './json';
 import type { Tx } from './powersync/database';
@@ -40,12 +42,7 @@ export interface PlanDraft {
  * Returns the collection id.
  */
 export async function insertPlan(tx: Tx, userId: string, plan: PlanDraft): Promise<string> {
-  const collectionId = newId();
-  await tx.execute(
-    `INSERT INTO collections (id, user_id, name, position, created_at)
-     VALUES (?, ?, ?, (SELECT COALESCE(MAX(position), -1) + 1 FROM collections WHERE user_id = ?), ?)`,
-    [collectionId, userId, plan.name, userId, nowIso()],
-  );
+  const collectionId = await insertCollection(tx, userId, plan.name);
   for (const [dayIndex, day] of plan.days.entries()) {
     const templateId = newId();
     await tx.execute(
@@ -58,6 +55,36 @@ export async function insertPlan(tx: Tx, userId: string, plan: PlanDraft): Promi
     }
   }
   return collectionId;
+}
+
+/** Appends a collection after the user's last one (`db` or a transaction). Returns its id. */
+export async function insertCollection(
+  executor: Pick<Tx, 'execute'>,
+  userId: string,
+  name: string,
+) {
+  const id = newId();
+  await executor.execute(
+    `INSERT INTO collections (id, user_id, name, position, created_at)
+     VALUES (?, ?, ?, (SELECT COALESCE(MAX(position), -1) + 1 FROM collections WHERE user_id = ?), ?)`,
+    [id, userId, name, userId, nowIso()],
+  );
+  return id;
+}
+
+export async function insertTemplateSets(
+  tx: Tx,
+  userId: string,
+  templateExerciseId: string,
+  sets: PlanSetDraft[],
+) {
+  for (const [position, set] of sets.entries()) {
+    await tx.execute(
+      `INSERT INTO template_sets (id, user_id, template_exercise_id, position, reps_min, reps_max, rir)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [newId(), userId, templateExerciseId, position, set.repsMin, set.repsMax, set.rir],
+    );
+  }
 }
 
 export async function insertTemplateExercise(
@@ -73,13 +100,7 @@ export async function insertTemplateExercise(
      VALUES (?, ?, ?, ?, ?, ?)`,
     [id, userId, templateId, exercise.exerciseId, position, exercise.restSeconds ?? null],
   );
-  for (const [setPos, set] of exercise.sets.entries()) {
-    await tx.execute(
-      `INSERT INTO template_sets (id, user_id, template_exercise_id, position, reps_min, reps_max, rir)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [newId(), userId, id, setPos, set.repsMin, set.repsMax, set.rir],
-    );
-  }
+  await insertTemplateSets(tx, userId, id, exercise.sets);
   return id;
 }
 
@@ -128,23 +149,19 @@ export interface TemplateSummary {
 function summarize(rows: TemplateRow[]): TemplateSummary[] {
   const byId = new Map<string, TemplateSummary & { rest: (number | null)[] }>();
   for (const r of rows) {
-    const t =
-      byId.get(r.id) ??
-      byId
-        .set(r.id, {
-          id: r.id,
-          name: r.name,
-          collectionId: r.collection_id,
-          collectionName: r.collection_name,
-          weekday: r.weekday,
-          position: r.position,
-          exerciseCount: 0,
-          setCount: 0,
-          estimatedMinutes: 0,
-          items: [],
-          rest: [],
-        })
-        .get(r.id)!;
+    const t = getOrInsert(byId, r.id, () => ({
+      id: r.id,
+      name: r.name,
+      collectionId: r.collection_id,
+      collectionName: r.collection_name,
+      weekday: r.weekday,
+      position: r.position,
+      exerciseCount: 0,
+      setCount: 0,
+      estimatedMinutes: 0,
+      items: [],
+      rest: [],
+    }));
     if (!r.exercise_id) continue;
     t.items.push({ exerciseId: r.exercise_id, sets: r.set_count });
     t.rest.push(r.rest_seconds);

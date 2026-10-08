@@ -57,8 +57,8 @@ function PreviewExercise({ id, reps, rir, last }: PreviewExerciseProps) {
   const exercise = getExercise(id);
   const muscles = Object.entries(exercise?.muscles ?? {}) as [MuscleId, number][];
   return (
-    <View className={cn('flex-row gap-3.5 py-[18px]', !last && 'border-b border-[#1E1E1E]')}>
-      <View className="h-[86px] w-16 overflow-hidden rounded-[5px] bg-[#1E1E1E]">
+    <View className={cn('flex-row gap-3.5 py-[18px]', !last && 'border-b border-raised')}>
+      <View className="h-[86px] w-16 overflow-hidden rounded-[5px] bg-raised">
         {exercise?.image ? (
           <Image source={exercise.image} contentFit="cover" style={{ flex: 1 }} />
         ) : null}
@@ -69,18 +69,18 @@ function PreviewExercise({ id, reps, rir, last }: PreviewExerciseProps) {
             {t(`${id}.name`)}
           </Text>
           <View className="size-8 items-center justify-center">
-            <Icon name="more" size={16} color="#E6E6E1" />
+            <Icon name="more" size={16} color={colors.fgSoft} />
           </View>
         </View>
         <View className="gap-1.5">
           {rir.map((value, i) => (
             <View key={i} className="flex-row items-center gap-2.5">
-              <View className="size-6 items-center justify-center rounded-full bg-[#1E1E1E]">
+              <View className="size-6 items-center justify-center rounded-full bg-raised">
                 <Text variant="caption" className="text-xs">
                   {i + 1}
                 </Text>
               </View>
-              <Text variant="paragraph" className="flex-1 text-sm text-[#E6E6E1]">
+              <Text variant="paragraph" className="flex-1 text-sm text-fg-soft">
                 {reps}
               </Text>
               <View
@@ -100,7 +100,7 @@ function PreviewExercise({ id, reps, rir, last }: PreviewExerciseProps) {
               key={muscle}
               className={cn(
                 'h-7 justify-center rounded-full px-2.5',
-                share >= 0.25 ? 'bg-[#1E1E1E]' : 'border border-[#333]',
+                share >= 0.25 ? 'bg-raised' : 'border border-[#333]',
               )}
             >
               <Text
@@ -218,7 +218,7 @@ export function WelcomePreview() {
                     {t('welcome.preview.duration', { minutes: 55 })}
                   </Text>
                 </View>
-                <View className="size-11 items-center justify-center rounded-full bg-[#1E1E1E]">
+                <View className="size-11 items-center justify-center rounded-full bg-raised">
                   <Icon name="plus" size={14} />
                 </View>
               </View>

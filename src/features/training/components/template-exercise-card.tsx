@@ -52,7 +52,7 @@ export function TemplateExerciseCard({ exercise, onMenu, onPress }: TemplateExer
             className="size-8 items-center justify-center gap-[3px]"
           >
             {[0, 1, 2].map((i) => (
-              <View key={i} className="size-[3.5px] rounded-full bg-[#E6E6E1]" />
+              <View key={i} className="size-[3.5px] rounded-full bg-fg-soft" />
             ))}
           </PressableScale>
         </View>
@@ -64,7 +64,7 @@ export function TemplateExerciseCard({ exercise, onMenu, onPress }: TemplateExer
                   {i + 1}
                 </Text>
               </View>
-              <Text variant="body" className="flex-1 text-sm text-[#E6E6E1]">
+              <Text variant="body" className="flex-1 text-sm text-fg-soft">
                 {formatRepRange(set.reps_min ?? 0, set.reps_max ?? set.reps_min ?? 0)}
               </Text>
               {set.rir != null ? <RirBadge rir={set.rir} /> : null}

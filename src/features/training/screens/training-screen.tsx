@@ -6,19 +6,17 @@ import { View } from 'react-native';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useProfile } from '@/shared/data/profile';
 import { useCollections, useTemplates } from '@/shared/data/templates';
-import { requireUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
-import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
 import { type CollectionTab, CollectionTabs } from '../components/collection-tabs';
 import { CreateSheet } from '../components/create-sheet';
 import { CollectionsGlyph } from '../components/glyphs';
+import { NewCollectionSheet } from '../components/new-collection-sheet';
 import { TemplateRow } from '../components/template-row';
-import { createCollection } from '../data/template-mutations';
 import { useStartTemplate } from '../hooks/use-start-template';
 
 const NONE = 'none';
@@ -127,14 +125,10 @@ export function TrainingScreen() {
           afterSheetClose(openNewTemplate);
         }}
       />
-      <TextInputSheet
+      <NewCollectionSheet
         visible={newCollectionOpen}
         onClose={() => setNewCollectionOpen(false)}
-        title={t('collections.newTitle')}
-        placeholder={t('collections.namePlaceholder')}
-        ctaLabel={t('common:actions.create')}
-        onSubmit={async (name) => {
-          const id = await createCollection(requireUserId(), name);
+        onCreated={(id) => {
           setSelectedKey(id);
           setNewCollectionOpen(false);
         }}

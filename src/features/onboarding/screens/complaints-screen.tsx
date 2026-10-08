@@ -6,7 +6,7 @@ import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
-import { MuscleMap } from '@/shared/ui/muscle-map/muscle-map';
+import { BodyMaps } from '@/shared/ui/muscle-map';
 import { StepScreen } from '@/shared/ui/step-screen';
 
 import { ABOUT_STEPS, COMPLAINT_AREAS } from '../lib/flow';
@@ -78,18 +78,12 @@ export function ComplaintsScreen() {
           />
         ))}
       </View>
-      <View className="mx-4 mt-5 h-[320px] flex-row gap-1 rounded-[28px] bg-surface px-2 pt-4 pb-3">
-        {(['front', 'back'] as const).map((view) => (
-          <View key={view} className="min-w-0 flex-1">
-            <MuscleMap
-              view={view}
-              selected={selectedMuscles}
-              onToggle={onMuscle}
-              accent={colors.red}
-            />
-          </View>
-        ))}
-      </View>
+      <BodyMaps
+        className="rounded-[28px] bg-surface"
+        selected={selectedMuscles}
+        onToggle={onMuscle}
+        accent={colors.red}
+      />
     </StepScreen>
   );
 }

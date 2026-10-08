@@ -88,7 +88,7 @@ export function PromiseScreen() {
                 <View
                   className={cn(
                     'size-6 items-center justify-center rounded-full',
-                    on ? 'bg-accent' : 'border-[1.5px] border-[#4A4A46]',
+                    on ? 'bg-accent' : 'border-[1.5px] border-outline',
                   )}
                 >
                   {on ? <Icon name="check" size={14} color={colors.onAccent} /> : null}

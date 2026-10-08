@@ -53,8 +53,7 @@ export function AnalysisScreen() {
   const stages = t('planImport:analysis.stages', { returnObjects: true });
   const short = t('common:weekdays.short', { returnObjects: true });
   // Waits at 99 % if the analysis takes longer than the animation.
-  const percent = Math.min(result ? 100 : 99, progress * 100);
-  const stage = Math.min(stages.length - 1, Math.floor(progress * stages.length));
+  const shown = Math.min(result ? 1 : 0.99, progress);
   const chips: ScanChip[] = [
     { label: t('exercises:bench-press.name'), x: 14, y: 176, duration: 3 },
     { label: '4 × 8', x: 278, y: 150, accent: true, duration: 3.6, delay: 0.6 },
@@ -66,13 +65,7 @@ export function AnalysisScreen() {
   return (
     <>
       <Stack.Screen options={{ gestureEnabled: false, animation: 'fade' }} />
-      <ScanStage
-        percent={percent}
-        stage={stages[stage]}
-        segments={stages.length}
-        activeSegment={stage}
-        chips={chips}
-      >
+      <ScanStage progress={shown} stages={stages} chips={chips}>
         <PaperStack tags={[short[4], short[2], short[0]]} />
       </ScanStage>
     </>

@@ -6,7 +6,7 @@ import { scheduleOnRN } from 'react-native-worklets';
 
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
-import { useAccentColor } from '@/shared/lib/theme';
+import { colors, useAccentColor } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -54,7 +54,7 @@ export function AlphabetRail({ available, active, onJump }: AlphabetRailProps) {
               <Text
                 className="font-inter-semibold text-[10px] leading-3"
                 style={{
-                  color: c === active ? accent : available.has(c) ? '#C8C8C3' : '#4A4A46',
+                  color: c === active ? accent : available.has(c) ? '#C8C8C3' : colors.outline,
                 }}
               >
                 {c}

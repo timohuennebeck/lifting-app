@@ -77,10 +77,10 @@ export function ViewfinderArt() {
         <View key={c} className={cn('absolute size-[26px] border-accent', c)} />
       ))}
       <View
-        className="absolute top-4 left-[30px] h-24 w-28 gap-2 rounded-lg bg-[#EDEAE2] p-3"
+        className="absolute top-4 left-[30px] h-24 w-28 gap-2 rounded-lg bg-paper p-3"
         style={{ transform: [{ rotate: '-5deg' }], boxShadow: '0 10px 24px rgba(0,0,0,0.4)' }}
       >
-        <View className="h-1.5 w-[55%] rounded-[3px] bg-[#1C1A16]" />
+        <View className="h-1.5 w-[55%] rounded-[3px] bg-ink" />
         {['90%', '75%', '85%', '60%'].map((w) => (
           <View
             key={w}

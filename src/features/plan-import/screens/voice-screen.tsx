@@ -10,9 +10,9 @@ import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
-import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
+import { ScreenHeader } from '@/shared/ui/screen-header';
 import { StepHeader } from '@/shared/ui/step-header';
 import { Text } from '@/shared/ui/text';
 
@@ -62,7 +62,7 @@ export function VoiceScreen() {
   }
 
   const color = (kind: TokenKind) => {
-    if (!recognized) return '#D6D6D1';
+    if (!recognized) return colors.fgMid;
     return {
       day: accent,
       number: accent,
@@ -88,16 +88,15 @@ export function VoiceScreen() {
   return (
     <Screen header={<StepHeader step={IMPORT_STEPS} total={IMPORT_STEPS} hideBack />}>
       <Stack.Screen options={{ animation: 'fade_from_bottom' }} />
-      <View className="flex-row items-center justify-between px-4 py-1.5">
-        <IconButton
-          icon="close"
-          iconSize={11}
-          accessibilityLabel={t('common:actions.close')}
-          onPress={() => router.back()}
-        />
-        <Text variant="label">{t('planImport:voice.title')}</Text>
-        <View className="w-[42px]" />
-      </View>
+      <ScreenHeader
+        icon="close"
+        iconSize={11}
+        title={
+          <Text variant="label" className="text-center">
+            {t('planImport:voice.title')}
+          </Text>
+        }
+      />
       <View className="px-6 pt-[22px]">
         <Text variant="overline" tone="subtle" className="text-xs tracking-[1px]">
           {t('planImport:voice.format')}

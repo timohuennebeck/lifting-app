@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { GhostExercise } from '@/shared/ui/ghost-exercise';
 import { IconButton } from '@/shared/ui/icon-button';
+import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 export interface EmptyWorkoutProps {
@@ -14,26 +15,27 @@ export interface EmptyWorkoutProps {
 
 /** Workout without exercises yet (design 03·0 Leeres Training). */
 export function EmptyWorkout({ name, onBack, onMenu, onAdd }: EmptyWorkoutProps) {
-  const { t } = useTranslation(['workout', 'common']);
+  const { t } = useTranslation('workout');
   return (
     <View className="flex-1">
-      <View className="flex-row items-center gap-3.5 py-1.5 pr-5 pl-4">
-        <IconButton
-          icon="chevron-left"
-          iconSize={10}
-          accessibilityLabel={t('common:actions.back')}
-          onPress={onBack}
-        />
-        <Text variant="bodyStrong" numberOfLines={1} className="flex-1 text-center text-lg">
-          {name}
-        </Text>
-        <IconButton
-          icon="more"
-          iconSize={14}
-          accessibilityLabel={t('menu.open')}
-          onPress={onMenu}
-        />
-      </View>
+      <ScreenHeader
+        className="gap-3.5 pr-5"
+        iconSize={10}
+        onBack={onBack}
+        title={
+          <Text variant="bodyStrong" numberOfLines={1} className="text-center text-lg">
+            {name}
+          </Text>
+        }
+        action={
+          <IconButton
+            icon="more"
+            iconSize={14}
+            accessibilityLabel={t('menu.open')}
+            onPress={onMenu}
+          />
+        }
+      />
       <View className="flex-row items-center gap-4 px-5 pt-9">
         <View className="flex-1">
           <Text variant="headline" className="leading-[22px]">
@@ -51,7 +53,7 @@ export function EmptyWorkout({ name, onBack, onMenu, onAdd }: EmptyWorkoutProps)
           activeScale={0.95}
           accessibilityLabel={t('addExercise')}
           onPress={onAdd}
-          className="bg-[#1E1E1E]"
+          className="bg-raised"
         />
       </View>
       <View className="px-5 pt-2">

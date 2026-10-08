@@ -3,7 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { type Profile, type ProfilePatch, type Sex } from '@/shared/data/profile';
-import { CM_PER_INCH, feetInches, formatNumber, kgToLb, lbToKg } from '@/shared/lib/format';
+import {
+  CM_PER_INCH,
+  feetInches,
+  formatNumber,
+  kgToLb,
+  lbToKg,
+  weightUnit,
+} from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import { NumberStepper } from '@/shared/ui/number-stepper';
@@ -119,7 +126,7 @@ function FieldEditor({ field, profile, onSave }: FieldEditorProps) {
       <View className="items-center gap-2">
         <Text variant="display">{formatNumber(weight)}</Text>
         <Text variant="overline" tone="subtle">
-          {imperial ? tc('units.lb') : tc('units.kg')}
+          {tc(`units.${weightUnit(profile.unitSystem)}`)}
         </Text>
         <RulerPicker
           value={weight}

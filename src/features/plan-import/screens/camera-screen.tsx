@@ -19,6 +19,7 @@ import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
+import { ScreenHeader } from '@/shared/ui/screen-header';
 import { StepTitle } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
@@ -84,13 +85,7 @@ export function CameraScreen() {
         style={{ paddingTop: insets.top, paddingBottom: insets.bottom + 16 }}
       >
         {options}
-        <View className="px-4 py-1.5">
-          <IconButton
-            icon="close"
-            accessibilityLabel={t('common:actions.close')}
-            onPress={() => router.back()}
-          />
-        </View>
+        <ScreenHeader icon="close" />
         <StepTitle
           title={t('planImport:camera.permission.title')}
           subtitle={t('planImport:camera.permission.body')}

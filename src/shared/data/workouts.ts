@@ -1,3 +1,5 @@
+import { getOrInsert } from '@/shared/lib/map';
+
 import { newId, nowIso } from './json';
 import { db, type Tx } from './powersync/database';
 import { queryKeys } from './query-keys';
@@ -52,13 +54,34 @@ export async function insertWorkout(
   return workoutId;
 }
 
+export interface SetTargets {
+  min: number;
+  max: number;
+  rir: number | null;
+}
+
+/** Inserts one empty set with the given targets (`db` or a transaction). */
+export function insertWorkoutSet(
+  executor: Pick<Tx, 'execute'>,
+  userId: string,
+  workoutExerciseId: string,
+  position: number,
+  target: SetTargets,
+) {
+  return executor.execute(
+    `INSERT INTO workout_sets (id, user_id, workout_exercise_id, position, target_min, target_max, target_rir, is_pr)
+     VALUES (?, ?, ?, ?, ?, ?, ?, 0)`,
+    [newId(), userId, workoutExerciseId, position, target.min, target.max, target.rir],
+  );
+}
+
 /** Adds an exercise with `setCount` empty sets to a running workout. */
 export async function addWorkoutExercise(
   userId: string,
   workoutId: string,
   exerciseId: string,
   setCount = 3,
-  target: { min: number; max: number; rir: number | null } = { min: 8, max: 12, rir: 2 },
+  target: SetTargets = { min: 8, max: 12, rir: 2 },
 ) {
   await db.writeTransaction(async (tx) => {
     const id = newId();
@@ -67,13 +90,7 @@ export async function addWorkoutExercise(
        VALUES (?, ?, ?, ?, (SELECT COALESCE(MAX(position), -1) + 1 FROM workout_exercises WHERE workout_id = ?), NULL)`,
       [id, userId, workoutId, exerciseId, workoutId],
     );
-    for (let i = 0; i < setCount; i++) {
-      await tx.execute(
-        `INSERT INTO workout_sets (id, user_id, workout_exercise_id, position, target_min, target_max, target_rir, is_pr)
-         VALUES (?, ?, ?, ?, ?, ?, ?, 0)`,
-        [newId(), userId, id, i, target.min, target.max, target.rir],
-      );
-    }
+    for (let i = 0; i < setCount; i++) await insertWorkoutSet(tx, userId, id, i, target);
   });
 }
 
@@ -262,21 +279,17 @@ interface SummaryRow {
 function toSummaries(data: unknown[]): WorkoutSummary[] {
   const map = new Map<string, WorkoutSummary>();
   for (const r of data as SummaryRow[]) {
-    const w =
-      map.get(r.id) ??
-      map
-        .set(r.id, {
-          id: r.id,
-          name: r.name,
-          templateId: r.template_id,
-          startedAt: r.started_at,
-          finishedAt: r.finished_at,
-          volumeKg: 0,
-          setCount: 0,
-          prCount: 0,
-          items: [],
-        })
-        .get(r.id)!;
+    const w = getOrInsert(map, r.id, () => ({
+      id: r.id,
+      name: r.name,
+      templateId: r.template_id,
+      startedAt: r.started_at,
+      finishedAt: r.finished_at,
+      volumeKg: 0,
+      setCount: 0,
+      prCount: 0,
+      items: [],
+    }));
     if (!r.exercise_id) continue;
     w.items.push({ exerciseId: r.exercise_id, sets: r.sets });
     w.volumeKg += r.volume;
@@ -328,33 +341,34 @@ export interface ExerciseHistoryEntry {
   startedAt: string;
   finishedAt: string | null;
   sets: ExerciseHistorySet[];
+  /** Heaviest set (most reps on ties). */
+  topSet: ExerciseHistorySet;
+  volumeKg: number;
+  hasPr: boolean;
+}
+
+interface ExerciseHistoryRow {
+  workout_id: string;
+  name: string;
+  started_at: string;
+  finished_at: string | null;
+  position: number;
+  weight_kg: number;
+  reps: number;
+  target_rir: number | null;
+  is_pr: number;
 }
 
 function toExerciseHistory(data: unknown[]): ExerciseHistoryEntry[] {
-  const map = new Map<string, ExerciseHistoryEntry>();
-  for (const r of data as {
-    workout_id: string;
-    name: string;
-    started_at: string;
-    finished_at: string | null;
-    position: number;
-    weight_kg: number;
-    reps: number;
-    target_rir: number | null;
-    is_pr: number;
-  }[]) {
-    const e =
-      map.get(r.workout_id) ??
-      map
-        .set(r.workout_id, {
-          workoutId: r.workout_id,
-          name: r.name,
-          startedAt: r.started_at,
-          finishedAt: r.finished_at,
-          sets: [],
-        })
-        .get(r.workout_id)!;
-    e.sets.push({
+  const map = new Map<string, Omit<ExerciseHistoryEntry, 'topSet' | 'volumeKg' | 'hasPr'>>();
+  for (const r of data as ExerciseHistoryRow[]) {
+    getOrInsert(map, r.workout_id, () => ({
+      workoutId: r.workout_id,
+      name: r.name,
+      startedAt: r.started_at,
+      finishedAt: r.finished_at,
+      sets: [],
+    })).sets.push({
       position: r.position,
       weightKg: r.weight_kg,
       reps: r.reps,
@@ -362,7 +376,16 @@ function toExerciseHistory(data: unknown[]): ExerciseHistoryEntry[] {
       isPr: !!r.is_pr,
     });
   }
-  return [...map.values()];
+  return [...map.values()].map((entry) => ({
+    ...entry,
+    topSet: entry.sets.reduce((top, set) =>
+      set.weightKg > top.weightKg || (set.weightKg === top.weightKg && set.reps > top.reps)
+        ? set
+        : top,
+    ),
+    volumeKg: entry.sets.reduce((sum, s) => sum + s.weightKg * s.reps, 0),
+    hasPr: entry.sets.some((s) => s.isPr),
+  }));
 }
 
 /** Completed sets of one exercise from finished workouts, newest first. */

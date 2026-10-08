@@ -46,7 +46,7 @@ export function TemplateOptionsSheet({
           title: t('options.rename'),
           description: t('options.renameHint', { name }),
           cta: t('common:actions.rename'),
-          renderIcon: (active) => <RenameGlyph color={active ? colors.onAccent : '#D6D6D1'} />,
+          renderIcon: (active) => <RenameGlyph color={active ? colors.onAccent : colors.fgMid} />,
         },
         {
           value: 'delete',

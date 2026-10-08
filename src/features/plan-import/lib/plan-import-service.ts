@@ -84,6 +84,9 @@ export function toPlanDraft(plan: ImportedPlan): PlanDraft {
   };
 }
 
+/** True while the day has an unknown weekday or an uncertain exercise. */
+export const needsReview = (day: ImportedDay) => !!day.rawDay || day.exercises.some((e) => e.raw);
+
 /** Number of uncertain exercises and unknown weekdays still to review. */
 export function pendingReviews(plan: ImportedPlan) {
   return plan.days.reduce(

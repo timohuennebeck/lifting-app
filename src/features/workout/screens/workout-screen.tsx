@@ -2,7 +2,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, BackHandler, ScrollView, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
@@ -12,6 +11,7 @@ import { addWorkoutExercise, useWorkout, type WorkoutDetail } from '@/shared/dat
 import { haptics } from '@/shared/lib/haptics';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
+import { Screen } from '@/shared/ui/screen';
 import { Text } from '@/shared/ui/text';
 
 import { EmptyWorkout } from '../components/empty-workout';
@@ -271,7 +271,6 @@ function MissingWorkout() {
 /** Live workout logging (designs 03·C, 03·C·2B and the empty state 03·0). */
 export function WorkoutScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const insets = useSafeAreaInsets();
   const { data: workout } = useWorkout(id);
   const attach = useWorkoutSessionStore((s) => s.attach);
   // Reset to null on finish/discard, so the closing screen stays blank.
@@ -282,13 +281,13 @@ export function WorkoutScreen() {
   }, [id, attach]);
 
   return (
-    <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
+    <Screen>
       {/* A finished workout renders nothing while finish() moves on to the summary. */}
       {workout === undefined || workout?.finishedAt ? null : workout ? (
         <LiveWorkout workout={workout} />
       ) : attachedId === id ? (
         <MissingWorkout />
       ) : null}
-    </View>
+    </Screen>
   );
 }

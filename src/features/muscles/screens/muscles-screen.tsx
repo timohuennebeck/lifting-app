@@ -7,7 +7,7 @@ import { MUSCLE_REGION, muscleShares } from '@/shared/data/muscles';
 import { useMuscleVolume } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
 import { addDays, startOfDay } from '@/shared/lib/date';
-import { MUSCLE_IDS, MuscleMap, type MuscleId } from '@/shared/ui/muscle-map';
+import { BodyMaps, MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
@@ -108,14 +108,7 @@ export function MusclesScreen() {
           </PressableScale>
         ))}
       </View>
-      <View className="mx-4 mt-5 h-80 flex-row gap-1 px-2 pt-4 pb-3">
-        <View className="flex-1">
-          <MuscleMap view="front" selected={trainedIds} />
-        </View>
-        <View className="flex-1">
-          <MuscleMap view="back" selected={trainedIds} />
-        </View>
-      </View>
+      <BodyMaps selected={trainedIds} />
       {upper.length ? (
         <>
           <SectionLabel label={t('regions.upper')} first />

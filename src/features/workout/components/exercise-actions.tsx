@@ -36,7 +36,7 @@ export function ExerciseActions({ onHistory, onTargets, onSwap }: ExerciseAction
         <PressableScale
           key={a.icon}
           onPress={a.onPress}
-          className="h-11 flex-row items-center gap-2 rounded-full bg-[#1E1E1E] px-4"
+          className="h-11 flex-row items-center gap-2 rounded-full bg-raised px-4"
         >
           <Icon name={a.icon} size={14} color={colors.fg} />
           <Text variant="label">{a.label}</Text>

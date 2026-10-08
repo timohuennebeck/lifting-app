@@ -15,7 +15,7 @@ export interface CreateSheetProps {
   onCreateTemplate: () => void;
 }
 
-const glyphColor = (active: boolean) => (active ? colors.onAccent : '#D6D6D1');
+const glyphColor = (active: boolean) => (active ? colors.onAccent : colors.fgMid);
 
 /** "+" sheet: new collection, template or (coming soon) AI program (01·V·A·6). */
 export function CreateSheet({

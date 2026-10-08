@@ -53,15 +53,15 @@ export function OptionsScreen() {
       <View className="flex-1 items-center justify-center gap-[22px] px-5">
         <View
           accessibilityLabel={t('options.preview')}
-          className="h-[244px] w-[188px] overflow-hidden rounded-2xl bg-[#EDEAE2]"
+          className="h-[244px] w-[188px] overflow-hidden rounded-2xl bg-paper"
           style={{ boxShadow: '0 24px 50px rgba(0,0,0,0.5)' }}
         >
           {isImage ? (
             <Image source={{ uri: file.uri }} contentFit="cover" style={{ flex: 1 }} />
           ) : (
             <View className="flex-1 gap-[9px] px-[18px] py-5">
-              <View className="mb-2 self-start rounded-md bg-[#1C1A16] px-2 py-[5px]">
-                <Text className="font-inter-semibold text-xs leading-3 tracking-[0.5px] text-[#EDEAE2]">
+              <View className="mb-2 self-start rounded-md bg-ink px-2 py-[5px]">
+                <Text className="font-inter-semibold text-xs leading-3 tracking-[0.5px] text-paper">
                   {fileExtension(file.name, file.mimeType)}
                 </Text>
               </View>
@@ -73,7 +73,7 @@ export function OptionsScreen() {
                     key={i}
                     className={
                       'ink' in line
-                        ? 'h-[7px] rounded-[3px] bg-[#1C1A16]'
+                        ? 'h-[7px] rounded-[3px] bg-ink'
                         : 'h-[5px] rounded-[3px] bg-[#C9C3B6]'
                     }
                     style={{ width: line.w }}

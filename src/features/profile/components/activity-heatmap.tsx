@@ -36,7 +36,7 @@ export function ActivityHeatmap({ workouts }: ActivityHeatmapProps) {
       {weeks.map((days, w) => (
         <View key={w} className="flex-1 gap-1">
           {days.map((level, d) => (
-            <View key={d} className="aspect-square overflow-hidden rounded bg-[#1E1E1E]">
+            <View key={d} className="aspect-square overflow-hidden rounded bg-raised">
               {level ? (
                 <View className="flex-1" style={{ backgroundColor: accent, opacity: level }} />
               ) : null}

@@ -27,19 +27,27 @@
   --color-surface: #141414;
   --color-elevated: #1f1f1f;
   --color-control: #262626;
+  --color-raised: #1e1e1e;
+  --color-chip: #1a1a1a;
+  --color-tile: #161616;
   --color-pill: #1c1c1c;
   --color-line: #2a2a28;
   --color-track: #3a3a38;
   --color-fg: #f4f4f0;
+  --color-fg-soft: #e6e6e1;
+  --color-fg-mid: #d6d6d1;
   --color-fg-2: #c9c9c4;
   --color-muted: #a3a39e;
   --color-subtle: #8c8c87;
   --color-dim: #6e6e6a;
+  --color-outline: #4a4a46;
   --color-on-accent: #0a0a0a;
   --color-danger: #e08a7a;
   --color-danger-bg: #3a2020;
   --color-red: #ed4042;
   --color-sheet: #0f0f0f;
+  --color-paper: #edeae2;
+  --color-ink: #1c1a16;
   --color-accent: #dfff1f;
 }
 

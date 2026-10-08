@@ -21,17 +21,17 @@ export function GhostExercise({ widths, faded, menu }: GhostExerciseProps) {
   );
   const sets = [0, 1].map((k) => (
     <View key={k} className="flex-row items-center gap-2.5">
-      <View className="size-6 rounded-full bg-[#1A1A1A]" />
+      <View className="size-6 rounded-full bg-chip" />
       <View className="flex-1">
-        <View className="h-2 w-[34px] rounded bg-[#1A1A1A]" />
+        <View className="h-2 w-[34px] rounded bg-chip" />
       </View>
-      <View className="size-[22px] rounded-full bg-[#161616]" />
+      <View className="size-[22px] rounded-full bg-tile" />
     </View>
   ));
 
   return (
     <View className="flex-row gap-3.5 py-[18px]" style={{ opacity: faded ? 0.45 : 1 }}>
-      <View className="h-[86px] w-16 rounded-[5px] bg-[#161616]" />
+      <View className="h-[86px] w-16 rounded-[5px] bg-tile" />
       <View className="flex-1 gap-2.5">
         {menu ? (
           <View className="flex-row items-start gap-2.5">
@@ -47,8 +47,8 @@ export function GhostExercise({ widths, faded, menu }: GhostExerciseProps) {
         )}
         {menu ? <View className="gap-1.5">{sets}</View> : sets}
         <View className="flex-row gap-1.5">
-          <View className="h-7 w-14 rounded-full bg-[#161616]" />
-          <View className="h-7 w-[68px] rounded-full bg-[#161616]" />
+          <View className="h-7 w-14 rounded-full bg-tile" />
+          <View className="h-7 w-[68px] rounded-full bg-tile" />
         </View>
       </View>
     </View>

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useUserId } from '@/shared/stores/session-store';
 import type { ExerciseHistoryEntry, WorkoutExercise } from '@/shared/data/workouts';
-import { formatNumber, formatSet, type UnitSystem } from '@/shared/lib/format';
+import { formatNumber, formatSet, type UnitSystem, weightUnit } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -66,7 +66,7 @@ export function SetTable({
           </PressableScale>
         </View>
         <Text className={`${HEADER} w-[78px] text-center`}>
-          {(units === 'imperial' ? t('common:units.lb') : t('common:units.kg')).toUpperCase()}
+          {t(`common:units.${weightUnit(units)}`).toUpperCase()}
         </Text>
         <Text className={`${HEADER} w-[78px] text-center`}>{t('table.reps')}</Text>
         <View className="w-7 items-end">

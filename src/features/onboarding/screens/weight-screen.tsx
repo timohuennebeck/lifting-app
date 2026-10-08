@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { formatNumber, kgToLb, lbToKg } from '@/shared/lib/format';
+import { formatNumber, kgToLb, lbToKg, weightUnit } from '@/shared/lib/format';
 import { clamp } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { RulerPicker } from '@/shared/ui/ruler-picker';
@@ -39,7 +39,7 @@ export function WeightScreen() {
       <View className="mx-4 mt-6 items-center py-5">
         <MeasureValue
           value={imperial ? String(value) : formatNumber(value, 1)}
-          unit={tc(imperial ? 'units.lb' : 'units.kg')}
+          unit={tc(`units.${weightUnit(unitSystem)}`)}
         />
         <RulerPicker
           value={value}

@@ -29,7 +29,6 @@ export function BuildingScreen() {
 
   const progress = useTimedProgress(DURATION_MS, finish);
   const stages = t('planCreate:building.stages', { returnObjects: true });
-  const stage = Math.min(stages.length - 1, Math.floor(progress * stages.length));
   const areas = [...new Set(input.focus.map(groupOfMuscle))].map((g) => t(`exercises:groups.${g}`));
   const days = new Set(input.trainingDays).size;
 
@@ -68,10 +67,8 @@ export function BuildingScreen() {
     <>
       <Stack.Screen options={{ gestureEnabled: false, animation: 'fade' }} />
       <ScanStage
-        percent={progress * 100}
-        stage={stages[stage]}
-        segments={stages.length}
-        activeSegment={stage}
+        progress={progress}
+        stages={stages}
         chips={chips}
         onPress={finish}
         pressLabel={t('planCreate:building.skip')}

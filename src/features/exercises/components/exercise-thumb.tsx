@@ -4,6 +4,7 @@ import Svg, { Defs, Pattern, Rect } from 'react-native-svg';
 
 import { getExercise } from '@/shared/data/exercises';
 import { cn } from '@/shared/lib/cn';
+import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 export interface ExerciseThumbProps {
@@ -32,7 +33,7 @@ export function ExerciseThumb({
 }: ExerciseThumbProps) {
   const image = getExercise(exerciseId)?.image;
   return (
-    <View className={cn('h-[58px] w-11 overflow-hidden rounded-[5px] bg-[#1E1E1E]', className)}>
+    <View className={cn('h-[58px] w-11 overflow-hidden rounded-[5px] bg-raised', className)}>
       {image ? (
         <Image source={image} contentFit="cover" style={StyleSheet.absoluteFill} />
       ) : (
@@ -46,7 +47,7 @@ export function ExerciseThumb({
                 patternUnits="userSpaceOnUse"
                 patternTransform="rotate(45)"
               >
-                <Rect width={6} height={12} fill="#1E1E1E" />
+                <Rect width={6} height={12} fill={colors.raised} />
                 <Rect x={6} width={6} height={12} fill="#232323" />
               </Pattern>
             </Defs>

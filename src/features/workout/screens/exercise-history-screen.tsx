@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { SectionList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -6,23 +6,24 @@ import { useTranslation } from 'react-i18next';
 
 import type { ExerciseId } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
+import { type ExerciseHistoryEntry, useExerciseHistory } from '@/shared/data/workouts';
 import { useNow } from '@/shared/hooks/use-now';
-import { DAY_MS } from '@/shared/lib/date';
+import { DAY_MS, MINUTE_MS } from '@/shared/lib/date';
 import { formatDate } from '@/shared/lib/format';
-import { IconButton } from '@/shared/ui/icon-button';
+import { Screen } from '@/shared/ui/screen';
+import { ScreenHeader } from '@/shared/ui/screen-header';
 import { SegmentedControl } from '@/shared/ui/segmented-control';
 import { Text } from '@/shared/ui/text';
 
 import { HistoryChart } from '../components/history-chart';
 import { HistorySessionRow } from '../components/history-session-row';
-import { type ExerciseSession, useExerciseSessions } from '../data/exercise-sessions';
 import { toDisplayWeight } from '../lib/weight';
 
 const RANGES = ['7', '14', '30', '90'] as const;
 type Range = (typeof RANGES)[number];
 
-function monthSections(sessions: ExerciseSession[], currentYear: number) {
-  const sections: { title: string; data: ExerciseSession[] }[] = [];
+function monthSections(sessions: ExerciseHistoryEntry[], currentYear: number) {
+  const sections: { title: string; data: ExerciseHistoryEntry[] }[] = [];
   for (const session of sessions) {
     const date = new Date(session.startedAt);
     const title = formatDate(date, {
@@ -42,8 +43,8 @@ export function ExerciseHistoryScreen() {
   const { t } = useTranslation(['workout', 'exercises', 'common']);
   const insets = useSafeAreaInsets();
   const units = useUnits();
-  const now = useNow(60_000);
-  const { data: sessions = [] } = useExerciseSessions(exerciseId);
+  const now = useNow(MINUTE_MS);
+  const { data: sessions = [] } = useExerciseHistory(exerciseId);
   const [range, setRange] = useState<Range>('30');
   // undefined = default (latest session open), null = all collapsed.
   const [openId, setOpenId] = useState<string | null>();
@@ -59,18 +60,9 @@ export function ExerciseHistoryScreen() {
     }));
 
   return (
-    <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-      <View className="flex-row items-center gap-3.5 px-5 py-1.5">
-        <IconButton
-          icon="close"
-          accessibilityLabel={t('common:actions.close')}
-          onPress={() => router.back()}
-        />
-        <Text variant="bodyStrong" className="flex-1 text-center">
-          {t('history.title')}
-        </Text>
-        <View className="size-[42px]" />
-      </View>
+    <Screen
+      header={<ScreenHeader icon="close" className="gap-3.5 px-5" title={t('history.title')} />}
+    >
       <View className="px-5 pt-4">
         <Text className="font-inter-semibold text-[30px] leading-[30px]">
           {t(`exercises:${exerciseId as ExerciseId}.name`)}
@@ -119,6 +111,6 @@ export function ExerciseHistoryScreen() {
           </Text>
         }
       />
-    </View>
+    </Screen>
   );
 }

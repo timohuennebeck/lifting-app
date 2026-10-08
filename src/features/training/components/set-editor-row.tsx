@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { TextInput, View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
+import type { PlanSetDraft } from '@/shared/data/templates';
 import { clamp } from '@/shared/lib/math';
 import { formatRir } from '@/shared/lib/rir';
 import { colors, useAccentColor } from '@/shared/lib/theme';
@@ -12,11 +13,8 @@ import { Text } from '@/shared/ui/text';
 
 import { editorRirStyle } from '../lib/training-ui';
 
-export interface SetDraft {
+export interface SetDraft extends PlanSetDraft {
   key: string;
-  repsMin: number;
-  repsMax: number;
-  rir: number | null;
 }
 
 export interface SetEditorRowProps {
