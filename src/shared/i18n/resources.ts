@@ -1,3 +1,11 @@
+import enPlanCreate from './locales/en/planCreate.json';
+import enPlanImport from './locales/en/planImport.json';
+import dePlanCreate from './locales/de/planCreate.json';
+import dePlanImport from './locales/de/planImport.json';
+import ptPTPlanCreate from './locales/pt-PT/planCreate.json';
+import ptPTPlanImport from './locales/pt-PT/planImport.json';
+import ptBRPlanCreate from './locales/pt-BR/planCreate.json';
+import ptBRPlanImport from './locales/pt-BR/planImport.json';
 import deAuth from './locales/de/auth.json';
 import deBody from './locales/de/body.json';
 import deCommon from './locales/de/common.json';
@@ -43,6 +51,8 @@ import ptPTWorkout from './locales/pt-PT/workout.json';
 export const resources = {
   en: {
     common: enCommon,
+    planCreate: enPlanCreate,
+    planImport: enPlanImport,
     auth: enAuth,
     onboarding: enOnboarding,
     today: enToday,
@@ -55,6 +65,8 @@ export const resources = {
   },
   de: {
     common: deCommon,
+    planCreate: dePlanCreate,
+    planImport: dePlanImport,
     auth: deAuth,
     onboarding: deOnboarding,
     today: deToday,
@@ -67,6 +79,8 @@ export const resources = {
   },
   'pt-PT': {
     common: ptPTCommon,
+    planCreate: ptPTPlanCreate,
+    planImport: ptPTPlanImport,
     auth: ptPTAuth,
     onboarding: ptPTOnboarding,
     today: ptPTToday,
@@ -79,6 +93,8 @@ export const resources = {
   },
   'pt-BR': {
     common: ptBRCommon,
+    planCreate: ptBRPlanCreate,
+    planImport: ptBRPlanImport,
     auth: ptBRAuth,
     onboarding: ptBROnboarding,
     today: ptBRToday,

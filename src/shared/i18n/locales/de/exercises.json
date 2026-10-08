@@ -94,5 +94,9 @@
   },
   "plank": {
     "name": "Unterarmstütz"
+  },
+  "picker": {
+    "title": "Übung wählen",
+    "search": "Übungen suchen"
   }
 }

@@ -94,5 +94,9 @@
   },
   "plank": {
     "name": "Plank"
+  },
+  "picker": {
+    "title": "Choose exercise",
+    "search": "Search exercises"
   }
 }

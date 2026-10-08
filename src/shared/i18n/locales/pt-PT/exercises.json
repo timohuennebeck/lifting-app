@@ -94,5 +94,9 @@
   },
   "plank": {
     "name": "Prancha"
+  },
+  "picker": {
+    "title": "Escolher exercício",
+    "search": "Pesquisar exercícios"
   }
 }
