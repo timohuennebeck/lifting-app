@@ -19,7 +19,9 @@ create table public.profiles (
   active_collection_id uuid,
   onboarded_at timestamptz,
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+  updated_at timestamptz not null default now(),
+  -- RLS only checks user_id; tie the row id to it so nobody can claim another user's id.
+  check (id = user_id)
 );
 
 create table public.collections (

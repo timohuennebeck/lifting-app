@@ -130,7 +130,11 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
         }
       : live.nextOpenExercise != null
         ? { label: t('footer.nextExercise'), onPress: () => go(live.nextOpenExercise ?? 0) }
-        : { label: t('footer.finish'), onPress: finish };
+        : // Like the menu, never finish a workout without a logged set.
+          {
+            label: t('footer.finish'),
+            onPress: live.doneSets > 0 ? finish : () => setSheet('menu'),
+          };
 
   const shownSet =
     selectedIndex >= 0

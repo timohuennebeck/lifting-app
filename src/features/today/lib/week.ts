@@ -13,7 +13,3 @@ export const isSameDay = (a: Date, b: Date) =>
   a.getFullYear() === b.getFullYear() &&
   a.getMonth() === b.getMonth() &&
   a.getDate() === b.getDate();
-
-/** Whole minutes between two ISO timestamps. */
-export const minutesBetween = (fromIso: string, toIso: string) =>
-  Math.max(1, Math.round((Date.parse(toIso) - Date.parse(fromIso)) / 60000));

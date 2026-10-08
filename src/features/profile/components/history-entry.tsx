@@ -2,7 +2,8 @@ import { router } from 'expo-router';
 import { Trans, useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { isSameDay, minutesBetween } from '@/features/today/lib/week';
+import { isSameDay } from '@/features/today/lib/week';
+import { minutesBetween } from '@/features/workout/lib/time';
 import type { WorkoutSummary } from '@/shared/data/workouts';
 import { formatDate } from '@/shared/lib/format';
 import { Avatar } from '@/shared/ui/avatar';

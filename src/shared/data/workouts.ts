@@ -103,8 +103,17 @@ export async function finishWorkout(workoutId: string) {
   });
 }
 
+/** Local SQLite views have no FK cascades, so children are removed explicitly. */
 export async function discardWorkout(workoutId: string) {
-  await db.execute('DELETE FROM workouts WHERE id = ?', [workoutId]);
+  await db.writeTransaction(async (tx) => {
+    await tx.execute(
+      `DELETE FROM workout_sets WHERE workout_exercise_id IN
+         (SELECT id FROM workout_exercises WHERE workout_id = ?)`,
+      [workoutId],
+    );
+    await tx.execute('DELETE FROM workout_exercises WHERE workout_id = ?', [workoutId]);
+    await tx.execute('DELETE FROM workouts WHERE id = ?', [workoutId]);
+  });
 }
 
 export interface WorkoutSet {

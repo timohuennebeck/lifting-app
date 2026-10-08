@@ -27,7 +27,9 @@ export function useWeekPlan(today: Date) {
   const planTemplates = useMemo(() => {
     const all = templates ?? [];
     // Fall back to the first collection when no plan is marked active.
-    const collectionId = profile?.activeCollectionId ?? all[0]?.collectionId ?? null;
+    // Templates without a collection sort first (NULL position), so skip them here.
+    const collectionId =
+      profile?.activeCollectionId ?? all.find((t) => t.collectionId)?.collectionId ?? null;
     return all.filter((t) => t.collectionId === collectionId && t.weekday !== null);
   }, [templates, profile?.activeCollectionId]);
 

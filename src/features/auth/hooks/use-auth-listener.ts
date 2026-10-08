@@ -16,7 +16,9 @@ export function useAuthListener() {
 
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
-      if (session) {
+      // connect() tears down and reopens the stream, so skip token refreshes and
+      // profile updates; the connector fetches fresh tokens on its own.
+      if (session && (event === 'INITIAL_SESSION' || event === 'SIGNED_IN')) {
         db.connect(connector);
       } else if (event === 'SIGNED_OUT') {
         db.disconnectAndClear();

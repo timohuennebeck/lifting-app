@@ -2,12 +2,13 @@ import { router } from 'expo-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { minutesBetween } from '@/features/workout/lib/time';
 import { muscleShares } from '@/shared/data/muscles';
 import type { WorkoutSummary } from '@/shared/data/workouts';
 import { formatDate, formatWeight, type UnitSystem } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 
-import { isSameDay, minutesBetween } from '../lib/week';
+import { isSameDay } from '../lib/week';
 import { DayStatus } from './day-status';
 import { type DayStat, WorkoutDayCard } from './workout-day-card';
 

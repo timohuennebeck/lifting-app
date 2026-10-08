@@ -59,14 +59,20 @@ export function PlannedCard({
   };
 
   const markDone = async () => {
-    await markTemplateDone(
-      requireUserId(),
-      template.id,
-      template.name,
-      date,
-      template.estimatedMinutes,
-    );
-    haptics.success();
+    if (busy) return;
+    setBusy(true);
+    try {
+      await markTemplateDone(
+        requireUserId(),
+        template.id,
+        template.name,
+        date,
+        template.estimatedMinutes,
+      );
+      haptics.success();
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -102,7 +108,7 @@ export function PlannedCard({
             size={48}
             iconSize={16}
             haptic="none"
-            disabled={isFuture}
+            disabled={isFuture || busy}
             accessibilityLabel={t('markDone')}
             className={cn('bg-control', isFuture && 'opacity-35')}
             onPress={markDone}
