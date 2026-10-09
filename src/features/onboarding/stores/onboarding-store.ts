@@ -5,7 +5,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import type { EquipmentAccess, Experience, Goal, Sex } from '@/shared/data/profile';
 import type { PlanDraft } from '@/shared/data/templates';
 import type { UnitSystem } from '@/shared/lib/format';
-import { zustandStorage } from '@/shared/lib/storage';
+import { mmkvStorage } from '@/shared/lib/storage';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 export interface OnboardingDraft {
@@ -74,7 +74,7 @@ export const useOnboardingStore = create<OnboardingState>()(
     }),
     {
       name: 'onboarding',
-      storage: createJSONStorage(() => zustandStorage),
+      storage: createJSONStorage(() => mmkvStorage),
       version: 1,
       migrate: (persisted, version) => {
         const state = persisted as OnboardingState;

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import type { AppLanguage } from '@/shared/i18n/resources';
-import { zustandStorage } from '@/shared/lib/storage';
+import { mmkvStorage } from '@/shared/lib/storage';
 
 export const ACCENT_OPTIONS = [
   '#DFFF1F',
@@ -29,6 +29,6 @@ export const useSettingsStore = create<SettingsState>()(
       setLanguage: (language) => set({ language }),
       setAccent: (accent) => set({ accent }),
     }),
-    { name: 'settings', storage: createJSONStorage(() => zustandStorage) },
+    { name: 'settings', storage: createJSONStorage(() => mmkvStorage) },
   ),
 );

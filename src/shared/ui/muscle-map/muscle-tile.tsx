@@ -34,20 +34,14 @@ export interface MuscleTileProps {
   muscle: MuscleId;
   /** Share 0–100; hidden when undefined. */
   percent?: number;
-  className?: string;
 }
 
 /** Muscle card from design 03·0b: cropped muscle art, big accent %, name. */
-export function MuscleTile({ muscle, percent, className }: MuscleTileProps) {
+export function MuscleTile({ muscle, percent }: MuscleTileProps) {
   const { t } = useTranslation('muscles');
   const card = MUSCLE_CARDS[muscle];
   return (
-    <View
-      className={cn(
-        'w-60 flex-row items-center gap-3 rounded-[22px] bg-tile py-2 pr-4 pl-2',
-        className,
-      )}
-    >
+    <View className="w-60 flex-row items-center gap-3 rounded-[22px] bg-tile py-2 pr-4 pl-2">
       <View className="size-21 overflow-hidden rounded-2xl bg-elevated">
         <MuscleMap view={card.view} viewBox={card.viewBox} selected={[muscle]} fit="cover" />
       </View>

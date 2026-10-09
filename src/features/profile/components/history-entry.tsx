@@ -4,7 +4,7 @@ import { View } from 'react-native';
 
 import type { WorkoutSummary } from '@/shared/data/workouts';
 import { addDays, isSameDay, minutesBetween, startOfDay } from '@/shared/lib/date';
-import { formatDate, formatWeekdayDate } from '@/shared/lib/format';
+import { formatTime, formatWeekdayDate } from '@/shared/lib/format';
 import { Avatar } from '@/shared/ui/avatar';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
@@ -21,7 +21,7 @@ export function HistoryEntry({ workout, userName }: HistoryEntryProps) {
   const started = new Date(workout.startedAt);
   const now = new Date();
   const yesterday = addDays(startOfDay(now), -1);
-  const time = formatDate(started, { hour: '2-digit', minute: '2-digit' });
+  const time = formatTime(started);
   const when = isSameDay(started, now)
     ? t('when.today', { time })
     : isSameDay(started, yesterday)

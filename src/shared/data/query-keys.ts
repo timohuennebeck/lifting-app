@@ -14,7 +14,8 @@ const templateKeys = createQueryKeys('templates', {
 const workoutKeys = createQueryKeys('workouts', {
   active: null,
   detail: (workoutId: string) => [workoutId],
-  history: null,
+  history: (limit: number) => [limit],
+  count: null,
   range: (fromIso: string, toIso: string) => [fromIso, toIso],
   exerciseHistory: (exerciseId: string) => [exerciseId],
   muscleVolume: (sinceIso: string) => [sinceIso],

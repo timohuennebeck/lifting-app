@@ -4,12 +4,18 @@ import { SectionList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
-import { exerciseName, hasMeasure, isTimed } from '@/shared/data/exercises';
+import { exerciseName, hasMeasure, isBodyweight, isTimed } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { type ExerciseHistoryEntry, useExerciseHistory } from '@/shared/data/workouts';
 import { useNow } from '@/shared/hooks/use-now';
-import { DAY_MS, MINUTE_MS } from '@/shared/lib/date';
-import { formatDate, formatSeconds, formatWeight } from '@/shared/lib/format';
+import { DAY_MS, DAY_RANGES, type DayRange, MINUTE_MS } from '@/shared/lib/date';
+import {
+  formatDate,
+  formatSeconds,
+  formatWeight,
+  fromDisplayWeight,
+  toDisplayWeight,
+} from '@/shared/lib/format';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { SegmentedControl } from '@/shared/ui/segmented-control';
@@ -17,10 +23,6 @@ import { Text } from '@/shared/ui/text';
 
 import { HistoryChart, type HistoryMetric } from '../components/history-chart';
 import { HistorySessionRow } from '../components/history-session-row';
-import { fromDisplayWeight, toDisplayWeight } from '../lib/weight';
-
-const RANGES = ['7', '14', '30', '90'] as const;
-type Range = (typeof RANGES)[number];
 
 function monthSections(sessions: ExerciseHistoryEntry[], currentYear: number) {
   const sections: { title: string; data: ExerciseHistoryEntry[] }[] = [];
@@ -45,18 +47,22 @@ export function ExerciseHistoryScreen() {
   const units = useUnits();
   const now = useNow(MINUTE_MS);
   const { data: sessions = [] } = useExerciseHistory(exerciseId);
-  const [range, setRange] = useState<Range>('30');
+  const [range, setRange] = useState<`${DayRange}`>('30');
   // undefined = default (latest session open), null = all collapsed.
   const [openId, setOpenId] = useState<string | null>();
   const expanded = openId === undefined ? sessions[0]?.workoutId : openId;
 
   const since = now - Number(range) * DAY_MS;
+  // Bodyweight exercises never done with added weight would chart a flat 0 kg.
+  const unweighted =
+    isBodyweight(exerciseId) && sessions.every((s) => s.sets.every((set) => !set.weightKg));
   // Weighted exercises chart the top weight, the others most reps or the longest hold.
-  const metric: HistoryMetric = hasMeasure(exerciseId, 'weight')
-    ? 'topWeight'
-    : isTimed(exerciseId)
-      ? 'topSeconds'
-      : 'topReps';
+  const metric: HistoryMetric =
+    hasMeasure(exerciseId, 'weight') && !unweighted
+      ? 'topWeight'
+      : isTimed(exerciseId)
+        ? 'topSeconds'
+        : 'topReps';
   // The top set is the best by score; the weight chart wants the heaviest set instead.
   const chartValue = ({ sets, topSet }: ExerciseHistoryEntry) =>
     metric === 'topWeight'
@@ -88,9 +94,9 @@ export function ExerciseHistoryScreen() {
           className="bg-surface"
           value={range}
           onChange={setRange}
-          options={RANGES.map((r) => ({
-            value: r,
-            label: t('history.days', { count: Number(r) }),
+          options={DAY_RANGES.map((r) => ({
+            value: `${r}` as const,
+            label: t('history.days', { count: r }),
           }))}
         />
       </View>

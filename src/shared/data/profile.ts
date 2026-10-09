@@ -16,6 +16,13 @@ export type Experience = 'none' | 'beginner' | 'intermediate' | 'advanced';
 export type Goal = 'hypertrophy' | 'strength' | 'strength_hypertrophy';
 export type EquipmentAccess = 'gym' | 'home' | 'bodyweight';
 
+/** Limits of the body measurements, in onboarding and in Settings. */
+export const AGE_RANGE = { min: 14, max: 99 } as const;
+export const WEIGHT_KG = { min: 35, max: 200, step: 0.5 } as const;
+export const WEIGHT_LB = { min: 80, max: 440, step: 1 } as const;
+export const HEIGHT_CM = { min: 130, max: 220 } as const;
+export const HEIGHT_IN = { min: 48, max: 90 } as const;
+
 export interface Profile {
   id: string;
   firstName: string;
@@ -66,7 +73,7 @@ const firstProfile = (rows: ProfileRecord[]) => (rows[0] ? toProfile(rows[0]) : 
 
 export function useProfile() {
   const userId = useUserId();
-  const query = useDrizzleQuery({
+  const { data, isLoading } = useDrizzleQuery({
     queryKey: queryKeys.profile.current(userId ?? '').queryKey,
     query: drizzle
       .select()
@@ -75,7 +82,7 @@ export function useProfile() {
     enabled: !!userId,
     map: firstProfile,
   });
-  return { ...query, profile: query.data ?? null };
+  return { profile: data ?? null, isLoading };
 }
 
 /** The signed-in user's unit system (metric until the profile loaded). */

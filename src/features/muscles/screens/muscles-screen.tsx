@@ -6,15 +6,12 @@ import { TabScreen } from '@/shared/components/tab-screen';
 import { MUSCLE_REGION, muscleShares } from '@/shared/data/muscles';
 import { useMuscleVolume } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
-import { addDays, startOfDay } from '@/shared/lib/date';
+import { addDays, DAY_RANGES, type DayRange, startOfDay } from '@/shared/lib/date';
 import { BodyMaps, MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { MuscleShareTile } from '../components/muscle-share-tile';
-
-const RANGES = [7, 14, 30, 90] as const;
-type Range = (typeof RANGES)[number];
 
 interface TileData {
   muscle: MuscleId;
@@ -60,12 +57,17 @@ function SectionLabel({ label, first }: SectionLabelProps) {
 
 export function MusclesScreen() {
   const { t } = useTranslation('muscles');
-  const [range, setRange] = useState<Range>(30);
-  const sinceIso = addDays(startOfDay(new Date()), -range).toISOString();
-  const { data: items } = useMuscleVolume(sinceIso);
+  const [range, setRange] = useState<DayRange>(30);
+  // "Last 7 days" is today and the 6 days before. One query covers the longest range, so
+  // switching ranges filters in memory instead of waiting for a new query.
+  const today = startOfDay(new Date());
+  const sinceIso = (days: number) => addDays(today, -(days - 1)).toISOString();
+  const { data: volume } = useMuscleVolume(sinceIso(Math.max(...DAY_RANGES)));
+  const rangeStart = sinceIso(range);
 
   const { upper, lower, untrained, totalSets, trainedIds } = useMemo(() => {
-    const shares = muscleShares(items ?? []);
+    const items = (volume ?? []).filter((v) => v.startedAt >= rangeStart);
+    const shares = muscleShares(items);
     const trainedSet = new Set(shares.map((s) => s.muscle));
     return {
       upper: shares.filter((s) => MUSCLE_REGION[s.muscle] === 'upper'),
@@ -74,10 +76,10 @@ export function MusclesScreen() {
         muscle,
         percent: 0,
       })),
-      totalSets: (items ?? []).reduce((sum, i) => sum + i.sets, 0),
+      totalSets: items.reduce((sum, i) => sum + i.sets, 0),
       trainedIds: shares.map((s) => s.muscle),
     };
-  }, [items]);
+  }, [volume, rangeStart]);
 
   return (
     <TabScreen>
@@ -90,7 +92,7 @@ export function MusclesScreen() {
         </Text>
       </View>
       <View className="flex-row gap-1.5 px-5 pt-4" accessibilityRole="tablist">
-        {RANGES.map((r) => (
+        {DAY_RANGES.map((r) => (
           <PressableScale
             key={r}
             haptic="select"

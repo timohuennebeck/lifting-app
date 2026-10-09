@@ -24,12 +24,22 @@ export function formatNumber(value: number, maximumFractionDigits = 1) {
   return format.format(value);
 }
 
-/** Formats a kg value in the user's unit system, e.g. "82,5 kg" or "182 lb". */
-export function formatWeight(kg: number, units: UnitSystem = 'metric') {
-  return units === 'imperial'
-    ? `${formatNumber(Math.round(kgToLb(kg)), 0)} lb`
-    : `${formatNumber(kg, 2)} kg`;
-}
+const roundTo = (value: number, step: number) => Math.round(value / step) * step;
+
+/** kg → value shown in the user's unit (lb rounded to 0.5). */
+export const toDisplayWeight = (kg: number, units: UnitSystem) =>
+  units === 'imperial' ? roundTo(kgToLb(kg), 0.5) : roundTo(kg, 0.01);
+
+export const fromDisplayWeight = (value: number, units: UnitSystem) =>
+  units === 'imperial' ? lbToKg(value) : value;
+
+/** "60" / "57,5" in display units, without the unit label. */
+export const formatWeightValue = (kg: number, units: UnitSystem) =>
+  formatNumber(toDisplayWeight(kg, units), 2);
+
+/** Formats a kg value in the user's unit system, e.g. "82,5 kg" or "182,5 lb". */
+export const formatWeight = (kg: number, units: UnitSystem = 'metric') =>
+  `${formatWeightValue(kg, units)} ${weightUnit(units)}`;
 
 /** What a set holds; measures the exercise doesn't use are null. */
 export interface SetValues {
@@ -54,8 +64,7 @@ export function formatSet({ weightKg, reps, seconds }: SetValues, units: UnitSys
 }
 
 /** "8" or "8–10". */
-export const formatRepRange = (min: number, max: number) =>
-  min === max ? `${min}` : `${min}–${max}`;
+const formatRepRange = (min: number, max: number) => (min === max ? `${min}` : `${min}–${max}`);
 
 /** A target: "8–10" reps, or "30–45 s" for timed exercises. */
 export const formatTarget = (min: number, max: number, timed: boolean) =>
@@ -72,25 +81,29 @@ export function formatHeight(cm: number, units: UnitSystem) {
   return units === 'imperial' ? feetInches(cm / CM_PER_INCH) : `${Math.round(cm)} cm`;
 }
 
-export function formatDuration(totalSeconds: number) {
-  const s = Math.max(0, Math.round(totalSeconds));
+/** "1:30" or "1:02:05"; `alwaysHours` makes an elapsed clock like "0:07:20". */
+export function formatDuration(totalSeconds: number, { alwaysHours = false } = {}) {
+  const s = Math.max(0, Math.floor(totalSeconds));
   const h = Math.floor(s / 3600);
   const m = Math.floor((s % 3600) / 60);
   const sec = String(s % 60).padStart(2, '0');
-  return h ? `${h}:${String(m).padStart(2, '0')}:${sec}` : `${m}:${sec}`;
+  return h || alwaysHours ? `${h}:${String(m).padStart(2, '0')}:${sec}` : `${m}:${sec}`;
 }
 
-/** Elapsed clock that always shows hours, e.g. "0:07:20". */
-export function formatClock(totalSeconds: number) {
-  const s = Math.max(0, Math.floor(totalSeconds));
-  const h = Math.floor(s / 3600);
-  const m = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
-  return `${h}:${m}:${String(s % 60).padStart(2, '0')}`;
-}
+const dateFormats = new Map<string, Intl.DateTimeFormat>();
 
 export function formatDate(date: Date, options: Intl.DateTimeFormatOptions) {
-  return new Intl.DateTimeFormat(i18n.language, options).format(date);
+  const key = `${i18n.language}|${JSON.stringify(options)}`;
+  let format = dateFormats.get(key);
+  if (!format) {
+    format = new Intl.DateTimeFormat(i18n.language, options);
+    dateFormats.set(key, format);
+  }
+  return format.format(date);
 }
+
+/** "14:02" or "02:02 PM" */
+export const formatTime = (date: Date) => formatDate(date, { hour: '2-digit', minute: '2-digit' });
 
 /** "8 Oct" */
 export const formatShortDate = (date: Date | number | string) =>

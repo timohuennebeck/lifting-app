@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { zustandStorage } from '@/shared/lib/storage';
+import { mmkvStorage } from '@/shared/lib/storage';
 
 import { toMs } from '../lib/ticket-format';
 
@@ -22,7 +22,7 @@ export const useSeenStore = create<SeenState>()(
           return { seen: { ...state.seen, [ticketId]: at } };
         }),
     }),
-    { name: 'support-seen', storage: createJSONStorage(() => zustandStorage) },
+    { name: 'support-seen', storage: createJSONStorage(() => mmkvStorage) },
   ),
 );
 

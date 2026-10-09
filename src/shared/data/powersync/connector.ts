@@ -20,6 +20,10 @@ const JSON_COLUMNS: Record<string, readonly string[]> = {
   ticket_messages: ['attachments'],
 };
 
+// Users may only insert into these tables. A retried insert that already went through must not
+// become an update, which RLS rejects and would get the rest of the transaction discarded.
+const APPEND_ONLY_TABLES = new Set(['ticket_messages', 'ticket_events', 'legal_acceptances']);
+
 function toRemote(table: string, data: Record<string, unknown> | undefined) {
   const columns = JSON_COLUMNS[table];
   if (!data || !columns) return data ?? {};
@@ -52,7 +56,10 @@ export class SupabaseConnector implements PowerSyncBackendConnector {
         const table = supabase.from(op.table);
         const result =
           op.op === UpdateType.PUT
-            ? await table.upsert({ ...toRemote(op.table, op.opData), id: op.id })
+            ? await table.upsert(
+                { ...toRemote(op.table, op.opData), id: op.id },
+                { onConflict: 'id', ignoreDuplicates: APPEND_ONLY_TABLES.has(op.table) },
+              )
             : op.op === UpdateType.PATCH
               ? await table.update(toRemote(op.table, op.opData)).eq('id', op.id)
               : await table.delete().eq('id', op.id);

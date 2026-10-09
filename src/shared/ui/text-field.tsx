@@ -1,4 +1,4 @@
-import { createContext, forwardRef, useContext, useState } from 'react';
+import { createContext, type Ref, useContext, useState } from 'react';
 import { TextInput, type TextInputProps, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -25,26 +25,25 @@ export interface TextFieldProps extends TextInputProps {
   /** Leading icon, e.g. `search`. */
   icon?: IconName;
   className?: string;
+  ref?: Ref<TextInput>;
 }
 
-export const TextField = forwardRef<TextInput, TextFieldProps>(function TextField(
-  {
-    label,
-    clearable,
-    revealable,
-    error,
-    icon,
-    className,
-    value,
-    onChangeText,
-    onFocus,
-    onBlur,
-    secureTextEntry,
-    multiline,
-    ...props
-  },
+export function TextField({
+  label,
+  clearable,
+  revealable,
+  error,
+  icon,
+  className,
+  value,
+  onChangeText,
+  onFocus,
+  onBlur,
+  secureTextEntry,
+  multiline,
   ref,
-) {
+  ...props
+}: TextFieldProps) {
   const { t } = useTranslation();
   const shape = useContext(ShapeContext);
   const [focused, setFocused] = useState(false);
@@ -71,7 +70,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
       >
         {icon ? <Icon name={icon} size={16} color={colors.dim} /> : null}
         <TextInput
-          ref={ref as never}
+          ref={ref}
           value={value}
           onChangeText={onChangeText}
           placeholderTextColor={colors.dim}
@@ -124,4 +123,4 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
       ) : null}
     </View>
   );
-});
+}

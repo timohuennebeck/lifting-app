@@ -17,14 +17,13 @@ export interface MeasureValueProps {
   /** The raw number, so the change can slide in from the side it came from. */
   amount: number;
   unit?: string;
-  className?: string;
 }
 
 /**
  * Big tabular number with a muted unit, as on the Weight and Height steps. Each change slides
  * in softly (up when it grows, down when it shrinks) instead of jumping.
  */
-export function MeasureValue({ value, amount, unit, className }: MeasureValueProps) {
+export function MeasureValue({ value, amount, unit }: MeasureValueProps) {
   const previous = useRef(amount);
   const offset = useSharedValue(0);
   const opacity = useSharedValue(1);
@@ -45,7 +44,7 @@ export function MeasureValue({ value, amount, unit, className }: MeasureValuePro
   }));
 
   return (
-    <View className={cn('flex-row items-baseline gap-2', className)}>
+    <View className="flex-row items-baseline gap-2">
       <Animated.View style={style}>
         <Text variant="display" accessibilityLiveRegion="polite">
           {value}

@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 
+import { clearLocalPhotos } from '@/features/body-check/lib/photo-files';
+import { useBodyCheckStore } from '@/features/body-check/stores/body-check-store';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import {
   refreshSubscription,
@@ -18,8 +20,6 @@ export function useAuthListener() {
   const setSession = useSessionStore((s) => s.setSession);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSession(data.session));
-
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       // connect() tears down and reopens the stream, so skip token refreshes and
@@ -39,6 +39,9 @@ export function useAuthListener() {
         // Screenshot copies are private to the account (and would sit in device backups).
         useUploadQueueStore.getState().reset();
         clearLocalAttachments();
+        // Body-check photos are just as private.
+        useBodyCheckStore.getState().discard();
+        clearLocalPhotos();
       }
     });
     return () => data.subscription.unsubscribe();

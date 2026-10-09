@@ -1,11 +1,12 @@
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
+import { AGE_RANGE } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
 import { NumberStepper } from '@/shared/ui/number-stepper';
 import { StepScreen } from '@/shared/ui/step-screen';
 
-import { ABOUT_STEPS, AGE_RANGE } from '../lib/flow';
+import { ABOUT_STEPS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 
 export function AgeScreen() {

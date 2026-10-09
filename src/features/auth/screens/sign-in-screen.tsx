@@ -58,7 +58,10 @@ export function SignInScreen() {
         store.update({ firstName: metaName });
       }
       setPhase('idle');
-      router.replace('/name');
+      // A finished draft (e.g. "already registered" on Create Account) goes back there:
+      // it now shows "Continue" and saves the draft instead of restarting the flow.
+      if (store.draft.plan) router.dismissTo('/create-account');
+      else router.replace('/name');
     } catch {
       haptics.error();
       setError('generic');

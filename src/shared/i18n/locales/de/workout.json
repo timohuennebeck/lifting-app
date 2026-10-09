@@ -69,10 +69,6 @@
     "rir": "RIR",
     "remove": "Satz {{n}} entfernen"
   },
-  "nav": {
-    "previous": "Vorherige Übung",
-    "next": "Nächste Übung"
-  },
   "empty": {
     "title": "Keine Übungen",
     "duration": "Geschätzte Dauer: {{minutes}} Min.",

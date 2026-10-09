@@ -4,7 +4,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { env } from '@/shared/config/env';
 import { i18n } from '@/shared/i18n';
-import { zustandStorage } from '@/shared/lib/storage';
+import { mmkvStorage } from '@/shared/lib/storage';
 import { MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 import snapshot from './exercise-catalog.json';
@@ -111,7 +111,7 @@ const bundled = mergeRows({}, snapshot as unknown as ExerciseRow[]);
 export const useCatalogStore = create<CatalogState>()(
   persist(() => ({ rows: bundled }), {
     name: 'exercise-catalog',
-    storage: createJSONStorage(() => zustandStorage),
+    storage: createJSONStorage(() => mmkvStorage),
     // An app update may bundle newer rows than the cache holds.
     merge: (persisted, current) => ({
       ...current,
@@ -180,6 +180,15 @@ export const exerciseIdsWithout = (measure: Measure) =>
   Object.values(useCatalogStore.getState().rows)
     .filter((r) => !r.measures.includes(measure))
     .map((r) => r.id);
+
+/** Catalog exercises done with the body as the load (pull-ups, dips, …). */
+export const bodyweightExerciseIds = () =>
+  Object.values(useCatalogStore.getState().rows)
+    .filter((r) => r.equipment === 'bodyweight')
+    .map((r) => r.id);
+
+export const isBodyweight = (exerciseId: string) =>
+  getExercise(exerciseId)?.equipment === 'bodyweight';
 
 /** Whether sets of the exercise are counted in seconds instead of reps. */
 export const isTimed = (exerciseId: string) => hasMeasure(exerciseId, 'seconds');

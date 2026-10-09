@@ -69,10 +69,6 @@
     "rir": "RIR",
     "remove": "Remover série {{n}}"
   },
-  "nav": {
-    "previous": "Exercício anterior",
-    "next": "Próximo exercício"
-  },
   "empty": {
     "title": "Sem exercícios",
     "duration": "Duração estimada: {{minutes}} min",

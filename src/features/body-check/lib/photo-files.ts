@@ -85,6 +85,16 @@ export function deleteDrafts(checkId: string) {
   }
 }
 
+/** Removes every local check photo, e.g. when the account signs out. */
+export function clearLocalPhotos() {
+  try {
+    const root = rootDirectory();
+    if (root.exists) root.delete();
+  } catch (error) {
+    console.warn('Could not delete local photos', error);
+  }
+}
+
 /** Clears drafts left behind by unfinished checks, e.g. after the app was killed mid-check. */
 export function deleteAbandonedDrafts(currentCheckId: string) {
   try {

@@ -1,7 +1,6 @@
 {
   "ios": {
     "NSCameraUsageDescription": "Forge nutzt die Kamera, um deinen Trainingsplan zu fotografieren und deine Körpercheck-Fotos aufzunehmen.",
-    "NSPhotoLibraryUsageDescription": "Forge lässt dich einen Trainingsplan aus deinen Fotos importieren und Screenshots an Support-Tickets anhängen.",
-    "NSMicrophoneUsageDescription": "Forge nutzt das Mikrofon für die Spracheingabe deines Plans."
+    "NSPhotoLibraryUsageDescription": "Forge lässt dich einen Trainingsplan aus deinen Fotos importieren und Screenshots an Support-Tickets anhängen."
   }
 }

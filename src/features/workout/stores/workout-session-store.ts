@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import type { Measure } from '@/shared/data/exercises';
-import { zustandStorage } from '@/shared/lib/storage';
+import { mmkvStorage } from '@/shared/lib/storage';
 
 import { appendKey, backspace, type KeypadKey } from '../lib/keypad';
 
@@ -91,7 +91,7 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
     }),
     {
       name: 'workout-session',
-      storage: createJSONStorage(() => zustandStorage),
+      storage: createJSONStorage(() => mmkvStorage),
       // Relaunch resumes the current exercise and a running rest timer.
       partialize: (s) => ({
         workoutId: s.workoutId,

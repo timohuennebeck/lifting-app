@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { HEIGHT_CM, HEIGHT_IN } from '@/shared/data/profile';
 import { CM_PER_INCH, feetInches } from '@/shared/lib/format';
 import { clamp } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
@@ -9,7 +10,7 @@ import { RulerPicker } from '@/shared/ui/ruler-picker';
 import { StepScreen } from '@/shared/ui/step-screen';
 
 import { MeasureValue, StepButtons } from '../components/measure-value';
-import { ABOUT_STEPS, HEIGHT_CM, HEIGHT_IN } from '../lib/flow';
+import { ABOUT_STEPS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 
 export function HeightScreen() {

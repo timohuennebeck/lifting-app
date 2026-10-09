@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useProfile } from '@/shared/data/profile';
+import { useNow } from '@/shared/hooks/use-now';
+import { MINUTE_MS } from '@/shared/lib/date';
 import { formatDate } from '@/shared/lib/format';
 import { Avatar } from '@/shared/ui/avatar';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -21,6 +23,8 @@ export interface TabHeaderProps {
 export function TabHeader({ actions, greeting = true }: TabHeaderProps) {
   const { t } = useTranslation();
   const { profile } = useProfile();
+  // Ticks every minute so the date turns over at midnight.
+  const now = useNow(MINUTE_MS, greeting);
   const name = profile?.firstName ?? '';
   return (
     <View className="flex-row items-center justify-between gap-3 px-5 pt-2.5 pb-1.5">
@@ -33,7 +37,7 @@ export function TabHeader({ actions, greeting = true }: TabHeaderProps) {
           <Avatar name={name} />
           <View className="min-w-0 flex-1 gap-0.5">
             <Text variant="caption" tone="subtle" numberOfLines={1}>
-              {formatDate(new Date(), { weekday: 'long', day: 'numeric', month: 'short' })}
+              {formatDate(new Date(now), { weekday: 'long', day: 'numeric', month: 'short' })}
             </Text>
             <Text variant="bodyStrong" numberOfLines={1}>
               {t('greeting', { name })}

@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useEffectEvent, useState } from 'react';
 import { Pressable, useWindowDimensions, View } from 'react-native';
 import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,8 +9,9 @@ import { useAccentColor } from '@/shared/lib/theme';
 
 import { Text } from './text';
 
-/** Design frame the chip coordinates refer to (390 wide, scan centre at y = 360). */
+/** Design frame the chip coordinates refer to (390 × 844, scan centre at y = 360). */
 const FRAME_WIDTH = 390;
+const FRAME_HEIGHT = 844;
 const FRAME_CENTER = 360;
 
 const SPIN: CSSAnimationKeyframes = {
@@ -52,8 +53,6 @@ export interface ScanStageProps {
   onPress?: () => void;
   /** Screen-reader label for `onPress`. */
   pressLabel?: string;
-  /** Vertical centre of the artwork as a share of the screen height. */
-  centerRatio?: number;
 }
 
 /** Animated "working on it" stage: glow, ripples, floating chips and a segmented progress. */
@@ -65,12 +64,12 @@ export function ScanStage({
   header,
   onPress,
   pressLabel,
-  centerRatio = FRAME_CENTER / 844,
 }: ScanStageProps) {
   const accent = useAccentColor();
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
-  const cy = height * centerRatio;
+  // Vertical centre of the artwork, at the same share of the screen height as in the design.
+  const cy = (height * FRAME_CENTER) / FRAME_HEIGHT;
   const scaleX = width / FRAME_WIDTH;
   const stage = Math.min(stages.length - 1, Math.floor(progress * stages.length));
   const around = (size: number) => ({
@@ -216,10 +215,7 @@ export function ScanStage({
  */
 export function useTimedProgress(durationMs: number, onDone?: () => void) {
   const [progress, setProgress] = useState(0);
-  const done = useRef(onDone);
-  useEffect(() => {
-    done.current = onDone;
-  });
+  const done = useEffectEvent(() => onDone?.());
   useEffect(() => {
     const start = Date.now();
     let finished = false;
@@ -229,7 +225,7 @@ export function useTimedProgress(durationMs: number, onDone?: () => void) {
       if (next >= 1 && !finished) {
         finished = true;
         clearInterval(id);
-        done.current?.();
+        done();
       }
     }, 60);
     return () => clearInterval(id);

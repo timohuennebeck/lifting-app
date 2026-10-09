@@ -14,7 +14,7 @@ export const COACH_POSTER = require('@/assets/images/demo-person.jpg');
 export const COACH_FALLBACK_SECONDS = 24;
 
 /** Caption cues (seconds from the start) → `welcome.captions.*` keys. */
-export const COACH_CAPTIONS = [
+const COACH_CAPTIONS = [
   { at: 0, key: 'hello' },
   { at: 6, key: 'thanks' },
   { at: 13, key: 'plan' },

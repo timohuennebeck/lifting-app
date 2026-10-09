@@ -1,12 +1,11 @@
 import { useTranslation } from 'react-i18next';
 
 import { addDays, isSameDay, MINUTE_MS, startOfDay } from '@/shared/lib/date';
-import { formatDate, formatShortDate } from '@/shared/lib/format';
+import { formatDate, formatShortDate, formatTime, formatWeekdayDate } from '@/shared/lib/format';
 
 import type { TicketKind, TicketStatus } from '../data/tickets';
 import { toMs } from '../lib/ticket-format';
 
-const clock = (date: Date) => formatDate(date, { hour: '2-digit', minute: '2-digit' });
 const isYesterday = (date: Date, now: Date) => isSameDay(date, addDays(startOfDay(now), -1));
 const isJustNow = (date: Date, now: Date) => now.getTime() - date.getTime() < 2 * MINUTE_MS;
 
@@ -18,7 +17,7 @@ export function useTicketFormat() {
     rowWhen(iso: string, now = new Date()) {
       const date = new Date(toMs(iso));
       if (isJustNow(date, now)) return t('when.justNow');
-      if (isSameDay(date, now)) return clock(date);
+      if (isSameDay(date, now)) return formatTime(date);
       if (isYesterday(date, now)) return t('when.yesterday');
       return formatShortDate(date);
     },
@@ -26,8 +25,8 @@ export function useTicketFormat() {
     eventWhen(iso: string, now = new Date()) {
       const date = new Date(toMs(iso));
       if (isJustNow(date, now)) return t('chat.justNow');
-      if (isSameDay(date, now)) return t('chat.todayAt', { time: clock(date) });
-      if (isYesterday(date, now)) return t('chat.yesterdayAt', { time: clock(date) });
+      if (isSameDay(date, now)) return t('chat.todayAt', { time: formatTime(date) });
+      if (isYesterday(date, now)) return t('chat.yesterdayAt', { time: formatTime(date) });
       return formatDate(date, {
         day: 'numeric',
         month: 'short',
@@ -40,7 +39,7 @@ export function useTicketFormat() {
       const date = new Date(ms);
       if (isSameDay(date, now)) return t('chat.today');
       if (isYesterday(date, now)) return t('chat.yesterday');
-      return formatDate(date, { weekday: 'short', day: 'numeric', month: 'short' });
+      return formatWeekdayDate(date);
     },
     /** Status pill copy; a resolved idea reads "Shipped" instead of "Fixed". */
     status: (kind: TicketKind, status: TicketStatus) =>

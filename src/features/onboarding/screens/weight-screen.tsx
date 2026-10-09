@@ -2,17 +2,16 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { WEIGHT_KG, WEIGHT_LB } from '@/shared/data/profile';
 import { formatNumber, kgToLb, lbToKg, weightUnit } from '@/shared/lib/format';
-import { clamp } from '@/shared/lib/math';
+import { clamp, roundTenth } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { RulerPicker } from '@/shared/ui/ruler-picker';
 import { StepScreen } from '@/shared/ui/step-screen';
 
 import { MeasureValue, StepButtons } from '../components/measure-value';
-import { ABOUT_STEPS, WEIGHT_KG, WEIGHT_LB } from '../lib/flow';
+import { ABOUT_STEPS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
-
-const roundTenth = (v: number) => Math.round(v * 10) / 10;
 
 export function WeightScreen() {
   const { t } = useTranslation('onboarding');

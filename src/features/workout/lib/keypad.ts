@@ -1,3 +1,5 @@
+import { formatNumber } from '@/shared/lib/format';
+
 // Keypad buffers hold plain numeric strings with "." as decimal mark.
 export type KeypadKey = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '.';
 
@@ -34,6 +36,9 @@ export function parseInput(value: string): number | null {
 export function toInput(value: number | null | undefined) {
   return value == null ? '' : String(Math.round(value * 100) / 100);
 }
+
+/** The locale's decimal separator ("," or "."). */
+export const decimalSeparator = () => formatNumber(1.5).replace(/\d/g, '') || '.';
 
 /** Shows the buffer with the locale's decimal separator. */
 export const displayInput = (value: string, separator: string) => value.replace('.', separator);

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { zustandStorage } from '@/shared/lib/storage';
+import { mmkvStorage } from '@/shared/lib/storage';
 
 interface UploadQueueState {
   /** Bucket paths whose local copy still has to be uploaded. */
@@ -21,6 +21,6 @@ export const useUploadQueueStore = create<UploadQueueState>()(
       done: (path) => set((s) => ({ pending: s.pending.filter((p) => p !== path) })),
       reset: () => set({ pending: [] }),
     }),
-    { name: 'support-uploads', storage: createJSONStorage(() => zustandStorage) },
+    { name: 'support-uploads', storage: createJSONStorage(() => mmkvStorage) },
   ),
 );

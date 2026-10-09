@@ -2,6 +2,10 @@ export const MINUTE_MS = 60_000;
 export const HOUR_MS = 60 * MINUTE_MS;
 export const DAY_MS = 86_400_000;
 
+/** "Last N days" choices of the Muscles tab and the exercise history. */
+export const DAY_RANGES = [7, 14, 30, 90] as const;
+export type DayRange = (typeof DAY_RANGES)[number];
+
 /** Monday-based weekday index (0 = Monday … 6 = Sunday). */
 export const mondayIndex = (date: Date) => (date.getDay() + 6) % 7;
 

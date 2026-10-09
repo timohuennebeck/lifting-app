@@ -1,6 +1,6 @@
 import { and, desc, eq, isNotNull, ne, sql } from 'drizzle-orm';
 
-import { getExercise, measuresOf } from '@/shared/data/exercises';
+import { isBodyweight, measuresOf } from '@/shared/data/exercises';
 import { nowIso } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import { templates, workoutExercises, workouts, workoutSets } from '@/shared/data/powersync/schema';
@@ -68,7 +68,7 @@ export async function markTemplateDone(
     // 0 kg extra; other weighted ones stay without weight and are left out of records.
     for (const exercise of exercises) {
       const measures = measuresOf(exercise.exercise_id);
-      const fallback = getExercise(exercise.exercise_id)?.equipment === 'bodyweight' ? 0 : null;
+      const fallback = isBodyweight(exercise.exercise_id) ? 0 : null;
       await tx
         .update(workoutSets)
         .set({

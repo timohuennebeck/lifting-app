@@ -1,8 +1,15 @@
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
-import { MUSCLE_CARDS, MuscleMap, type MuscleId, MusclePercent } from '@/shared/ui/muscle-map';
+import {
+  MUSCLE_CARDS,
+  MUSCLE_IDS,
+  MuscleMap,
+  type MuscleId,
+  MusclePercent,
+} from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
 
 export interface MuscleShareTileProps {
@@ -12,8 +19,16 @@ export interface MuscleShareTileProps {
   trained: boolean;
 }
 
+// Stable `selected` arrays, so the memoized map skips re-rendering with its tile.
+const ONLY = Object.fromEntries(MUSCLE_IDS.map((m) => [m, [m]])) as Record<MuscleId, MuscleId[]>;
+const NONE: MuscleId[] = [];
+
 /** Square muscle tile of the Muscles tab grid (design 01·M·D). */
-export function MuscleShareTile({ muscle, percent, trained }: MuscleShareTileProps) {
+export const MuscleShareTile = memo(function MuscleShareTile({
+  muscle,
+  percent,
+  trained,
+}: MuscleShareTileProps) {
   const { t } = useTranslation('muscles');
   const card = MUSCLE_CARDS[muscle];
   return (
@@ -32,7 +47,7 @@ export function MuscleShareTile({ muscle, percent, trained }: MuscleShareTilePro
         <MuscleMap
           view={card.view}
           viewBox={card.viewBox}
-          selected={trained ? [muscle] : []}
+          selected={trained ? ONLY[muscle] : NONE}
           fit="cover"
         />
       </View>
@@ -44,4 +59,4 @@ export function MuscleShareTile({ muscle, percent, trained }: MuscleShareTilePro
       </View>
     </View>
   );
-}
+});

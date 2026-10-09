@@ -1,4 +1,4 @@
-import { getExercise, isTimed, measuresOf } from '@/shared/data/exercises';
+import { isBodyweight, isTimed, measuresOf } from '@/shared/data/exercises';
 import type { ExerciseHistoryEntry, WorkoutExercise, WorkoutSet } from '@/shared/data/workouts';
 import { formatTarget, type SetValues } from '@/shared/lib/format';
 
@@ -24,7 +24,7 @@ export function suggestSet(
   const previous = last?.sets[index] ?? last?.sets.at(-1);
   const logged = exercise.sets.filter((s) => s.completedAt && s.weightKg != null);
   const loggedBefore = logged.filter((s) => s.position < set.position).at(-1) ?? logged.at(-1);
-  const bodyweight = getExercise(exercise.exerciseId)?.equipment === 'bodyweight';
+  const bodyweight = isBodyweight(exercise.exerciseId);
   const target =
     set.targetMin != null
       ? Math.round((set.targetMin + (set.targetMax ?? set.targetMin)) / 2)

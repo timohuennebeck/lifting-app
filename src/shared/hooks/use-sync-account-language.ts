@@ -4,7 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { saveProfile, useProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
 import type { AppLanguage } from '@/shared/i18n';
+import { storage } from '@/shared/lib/storage';
 import { useSessionStore } from '@/shared/stores/session-store';
+
+// The language this device last mirrored onto the account. Only a change of it is written, so
+// two devices in different languages don't overwrite each other back and forth.
+const syncedLanguageKey = (userId: string) => `account.language.${userId}`;
 
 /**
  * Mirrors the app language onto the account: the profile row (synced, for the team's
@@ -19,7 +24,11 @@ export function useSyncAccountLanguage() {
   const metadataLanguage = session?.user.user_metadata?.language as string | undefined;
 
   useEffect(() => {
-    if (profile && profile.language !== language) saveProfile(profile.id, { language });
+    if (!profile) return;
+    const key = syncedLanguageKey(profile.id);
+    if (profile.language !== null && storage.getString(key) === language) return;
+    storage.set(key, language);
+    if (profile.language !== language) saveProfile(profile.id, { language });
   }, [profile, language]);
 
   useEffect(() => {

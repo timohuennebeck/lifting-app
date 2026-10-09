@@ -3,13 +3,17 @@ import { View } from 'react-native';
 import { HistoryRow } from '@/features/exercises/components/history-row';
 import type { ExerciseHistoryEntry } from '@/shared/data/workouts';
 import { minutesBetween } from '@/shared/lib/date';
-import { formatDate, formatSet, formatWeight, type UnitSystem } from '@/shared/lib/format';
+import {
+  formatDate,
+  formatSet,
+  formatWeight,
+  formatWeightValue,
+  type UnitSystem,
+} from '@/shared/lib/format';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 import { Icon, type IconName } from '@/shared/ui/icon';
 import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
-
-import { formatWeightValue } from '../lib/weight';
 
 interface StatProps {
   icon: IconName;

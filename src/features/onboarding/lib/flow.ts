@@ -4,12 +4,6 @@ import type { BodyPartId } from '@/shared/ui/muscle-map/body-paths';
 export const ABOUT_STEPS = 9;
 export const START_STEPS = 3;
 
-export const AGE_RANGE = { min: 14, max: 99 } as const;
-export const WEIGHT_KG = { min: 35, max: 200, step: 0.5 } as const;
-export const WEIGHT_LB = { min: 80, max: 440, step: 1 } as const;
-export const HEIGHT_CM = { min: 130, max: 220 } as const;
-export const HEIGHT_IN = { min: 48, max: 90 } as const;
-
 interface ComplaintArea {
   id: string;
   /** Body parts highlighted on the map for this area (prototype's MMP). */

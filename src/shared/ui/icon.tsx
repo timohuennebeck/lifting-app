@@ -219,16 +219,6 @@ const ICONS = {
     render: stroke('M1.5 4h13M6 4V2h4v2M3 4l1 12h8l1-12M6.5 7.5v5M9.5 7.5v5', 1.6),
   },
   pencil: { viewBox: '0 0 16 16', render: stroke('M11 2l3 3-8.5 8.5L2 14l.5-3.5z', 1.6) },
-  grip: {
-    viewBox: '0 0 10 16',
-    render: (c) => (
-      <>
-        {[2, 8, 14].flatMap((y) =>
-          [2, 8].map((x) => <Circle key={`${x}-${y}`} cx={x} cy={y} r={1.5} fill={c} />),
-        )}
-      </>
-    ),
-  },
   bolt: {
     viewBox: '0 0 256 256',
     render: (c) => (
@@ -236,13 +226,6 @@ const ICONS = {
         fill={c}
         d="M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,13l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17Z"
       />
-    ),
-  },
-  document: {
-    viewBox: '0 0 16 20',
-    render: stroke(
-      'M10 1H3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6zM10 1v5h5M5 11h6M5 15h6',
-      1.6,
     ),
   },
 } satisfies Record<string, IconDef>;

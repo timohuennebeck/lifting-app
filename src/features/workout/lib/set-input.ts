@@ -1,9 +1,13 @@
 import type { Measure } from '@/shared/data/exercises';
-import type { SetValues, UnitSystem } from '@/shared/lib/format';
+import {
+  fromDisplayWeight,
+  type SetValues,
+  toDisplayWeight,
+  type UnitSystem,
+} from '@/shared/lib/format';
 
 import type { SetField } from '../stores/workout-session-store';
 import { parseInput, toInput } from './keypad';
-import { fromDisplayWeight, toDisplayWeight } from './weight';
 
 export const valueOf = (values: SetValues, measure: Measure) =>
   measure === 'weight' ? values.weightKg : values[measure];

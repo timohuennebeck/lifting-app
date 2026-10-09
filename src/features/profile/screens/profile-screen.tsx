@@ -7,7 +7,7 @@ import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { OpenTicketsSection } from '@/features/support/components/open-tickets-section';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useProfile } from '@/shared/data/profile';
-import { useWorkoutHistory } from '@/shared/data/workouts';
+import { useWorkoutCount, useWorkoutHistory } from '@/shared/data/workouts';
 import { formatDate } from '@/shared/lib/format';
 import { Avatar } from '@/shared/ui/avatar';
 import { Button } from '@/shared/ui/button';
@@ -21,15 +21,16 @@ const PAGE = 10;
 export function ProfileScreen() {
   const { t } = useTranslation('profile');
   const { profile } = useProfile();
-  const { data: history = [] } = useWorkoutHistory();
   const isPro = useIsPro();
   const [visible, setVisible] = useState(PAGE);
+  const { data: history = [] } = useWorkoutHistory(visible);
+  const { data: workoutCount = 0 } = useWorkoutCount();
   const name = profile?.firstName ?? '';
   const facts = [
     profile?.trainingDays.length
       ? t('facts.perWeek', { count: profile.trainingDays.length })
       : null,
-    t('facts.workouts', { count: history.length }),
+    t('facts.workouts', { count: workoutCount }),
   ].filter(Boolean);
 
   return (
@@ -71,7 +72,7 @@ export function ProfileScreen() {
             {t('lastMonths')}
           </Text>
         </View>
-        <ActivityHeatmap workouts={history} />
+        <ActivityHeatmap />
       </View>
 
       <Text variant="overline" tone="subtle" className="mx-5 mt-7 mb-3 text-[11px]">
@@ -79,16 +80,14 @@ export function ProfileScreen() {
       </Text>
       <View className="mx-5">
         {history.length ? (
-          history
-            .slice(0, visible)
-            .map((w) => <HistoryEntry key={w.id} workout={w} userName={name} />)
+          history.map((w) => <HistoryEntry key={w.id} workout={w} userName={name} />)
         ) : (
           <Text variant="paragraph" tone="subtle">
             {t('historyEmpty')}
           </Text>
         )}
       </View>
-      {history.length > visible ? (
+      {workoutCount > visible ? (
         <Button
           label={t('showMore')}
           variant="secondary"

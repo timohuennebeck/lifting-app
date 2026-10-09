@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useNow } from '@/shared/hooks/use-now';
-import { formatClock } from '@/shared/lib/format';
+import { formatDuration } from '@/shared/lib/format';
 import { IconButton } from '@/shared/ui/icon-button';
 import { ProgressBar } from '@/shared/ui/progress-bar';
 import { Text } from '@/shared/ui/text';
@@ -17,7 +17,7 @@ function ElapsedClock({ startedAt }: ElapsedClockProps) {
   const now = useNow(1000);
   return (
     <Text variant="bodyStrong" className="text-xl leading-6">
-      {formatClock((now - Date.parse(startedAt)) / 1000)}
+      {formatDuration((now - Date.parse(startedAt)) / 1000, { alwaysHours: true })}
     </Text>
   );
 }

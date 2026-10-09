@@ -43,7 +43,7 @@ const previousBest = drizzle
       lt(previousWorkout.started_at, workouts.started_at),
     ),
   )
-  .orderBy(desc(setScoreSql(previousSet)))
+  .orderBy(desc(setScoreSql(previousSet, previousExercise)))
   .limit(1);
 
 /** PR sets of one workout, each with the previous best as JSON. */
@@ -76,7 +76,7 @@ function toRecords(rows: RowOf<typeof recordsQuery>[]): WorkoutRecord[] {
     if (!previous) continue;
     const set = { weightKg: r.weight_kg, reps: r.reps, seconds: r.seconds };
     const current = best.get(r.exercise_id);
-    if (current && setScore(current.set) >= setScore(set)) continue;
+    if (current && setScore(current.set, r.exercise_id) >= setScore(set, r.exercise_id)) continue;
     best.set(r.exercise_id, { exerciseId: r.exercise_id, set, previous });
   }
   return [...best.values()];

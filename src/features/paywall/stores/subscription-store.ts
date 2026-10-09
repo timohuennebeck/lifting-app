@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { zustandStorage } from '@/shared/lib/storage';
+import { mmkvStorage } from '@/shared/lib/storage';
 
 import {
   type CustomerInfo,
@@ -31,7 +31,7 @@ export const useSubscriptionStore = create<SubscriptionState>()(
         set({ isPro, plan, trialEndsAt, purchasedAt }),
       reset: () => set(empty),
     }),
-    { name: 'subscription', storage: createJSONStorage(() => zustandStorage) },
+    { name: 'subscription', storage: createJSONStorage(() => mmkvStorage) },
   ),
 );
 

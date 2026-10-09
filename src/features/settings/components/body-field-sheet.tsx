@@ -2,7 +2,16 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { type Profile, type ProfilePatch, type Sex } from '@/shared/data/profile';
+import {
+  AGE_RANGE,
+  HEIGHT_CM,
+  HEIGHT_IN,
+  type Profile,
+  type ProfilePatch,
+  type Sex,
+  WEIGHT_KG,
+  WEIGHT_LB,
+} from '@/shared/data/profile';
 import {
   CM_PER_INCH,
   feetInches,
@@ -11,6 +20,7 @@ import {
   lbToKg,
   weightUnit,
 } from '@/shared/lib/format';
+import { roundTenth } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import { NumberStepper } from '@/shared/ui/number-stepper';
@@ -117,10 +127,17 @@ function FieldEditor({ field, profile, onSave }: FieldEditorProps) {
     patch = { firstName: name.trim() };
   } else if (field === 'age') {
     editor = (
-      <NumberStepper value={age} onChange={setAge} min={14} max={99} unit={t('settings.years')} />
+      <NumberStepper
+        value={age}
+        onChange={setAge}
+        min={AGE_RANGE.min}
+        max={AGE_RANGE.max}
+        unit={t('settings.years')}
+      />
     );
     patch = { age };
   } else if (field === 'weight') {
+    const range = imperial ? WEIGHT_LB : WEIGHT_KG;
     editor = (
       <View className="items-center gap-2">
         <Text variant="display">{formatNumber(weight)}</Text>
@@ -130,14 +147,15 @@ function FieldEditor({ field, profile, onSave }: FieldEditorProps) {
         <RulerPicker
           value={weight}
           onChange={setWeight}
-          min={imperial ? 66 : 30}
-          max={imperial ? 550 : 250}
-          step={imperial ? 1 : 0.5}
+          min={range.min}
+          max={range.max}
+          step={range.step}
         />
       </View>
     );
-    patch = { weightKg: imperial ? Math.round(lbToKg(weight) * 10) / 10 : weight };
+    patch = { weightKg: imperial ? roundTenth(lbToKg(weight)) : weight };
   } else {
+    const range = imperial ? HEIGHT_IN : HEIGHT_CM;
     editor = (
       <View className="items-center gap-2">
         <Text variant="display">{imperial ? feetInches(height) : height}</Text>
@@ -147,8 +165,8 @@ function FieldEditor({ field, profile, onSave }: FieldEditorProps) {
         <RulerPicker
           value={height}
           onChange={setHeight}
-          min={imperial ? 48 : 120}
-          max={imperial ? 90 : 230}
+          min={range.min}
+          max={range.max}
           step={1}
           majorEvery={imperial ? 12 : 10}
         />

@@ -4,17 +4,11 @@ import { createClient } from '@supabase/supabase-js';
 import { AppState } from 'react-native';
 
 import { env } from '@/shared/config/env';
-import { storage } from '@/shared/lib/storage';
+import { mmkvStorage } from '@/shared/lib/storage';
 
 export const supabase = createClient(env.supabaseUrl, env.supabasePublishableKey, {
   auth: {
-    storage: {
-      getItem: (key) => storage.getString(key) ?? null,
-      setItem: (key, value) => storage.set(key, value),
-      removeItem: (key) => {
-        storage.remove(key);
-      },
-    },
+    storage: mmkvStorage,
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,

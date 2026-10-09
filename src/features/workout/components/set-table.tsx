@@ -4,7 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { useUserId } from '@/shared/stores/session-store';
 import type { Measure } from '@/shared/data/exercises';
 import type { ExerciseHistoryEntry, WorkoutExercise, WorkoutSet } from '@/shared/data/workouts';
-import { formatNumber, formatSet, type UnitSystem, weightUnit } from '@/shared/lib/format';
+import {
+  formatNumber,
+  formatSet,
+  formatWeightValue,
+  type UnitSystem,
+  weightUnit,
+} from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -12,10 +18,9 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { addWorkoutSet } from '../data/workout-mutations';
-import { displayInput } from '../lib/keypad';
+import { decimalSeparator, displayInput } from '../lib/keypad';
 import { valueOf } from '../lib/set-input';
 import { suggestSet, targetLabel } from '../lib/suggest';
-import { decimalSeparator, formatWeightValue } from '../lib/weight';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 import { cellWidth, SetRow } from './set-row';
 

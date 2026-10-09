@@ -11,8 +11,7 @@ import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-import { KEYPAD_ROWS, type KeypadKey } from '../lib/keypad';
-import { decimalSeparator } from '../lib/weight';
+import { decimalSeparator, KEYPAD_ROWS, type KeypadKey } from '../lib/keypad';
 import { useWorkoutSessionStore } from '../stores/workout-session-store';
 
 interface KeyProps {

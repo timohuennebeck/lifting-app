@@ -1,4 +1,4 @@
-import { getExercise, measuresOf } from '@/shared/data/exercises';
+import { isBodyweight, measuresOf } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { restSecondsFor } from '@/shared/data/templates';
 import { logSet, useExerciseHistory, type WorkoutDetail } from '@/shared/data/workouts';
@@ -27,7 +27,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   const openIndex = firstOpenSet(exercise);
   const exerciseId = exercise?.exerciseId ?? '';
   const measures = measuresOf(exerciseId);
-  const bodyweight = getExercise(exerciseId)?.equipment === 'bodyweight';
+  const bodyweight = isBodyweight(exerciseId);
   const nextOpenExercise = [...exercises.keys()]
     .map((k) => (exerciseIndex + 1 + k) % exercises.length)
     .find((k) => k !== exerciseIndex && firstOpenSet(exercises[k]) >= 0);

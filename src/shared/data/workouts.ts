@@ -19,7 +19,13 @@ import { alias, type AnySQLiteColumn } from 'drizzle-orm/sqlite-core';
 import type { SetValues } from '@/shared/lib/format';
 import { getOrInsert } from '@/shared/lib/map';
 
-import { defaultTargets, exerciseIdsWithout, type SetTargets } from './exercises';
+import {
+  bodyweightExerciseIds,
+  defaultTargets,
+  exerciseIdsWithout,
+  isBodyweight,
+  type SetTargets,
+} from './exercises';
 import { newId, nowIso } from './json';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
@@ -39,14 +45,21 @@ export type { SetTargets };
 const estimateOneRepMax = (kg: number, reps: number) => kg * (1 + reps / 30);
 
 /**
+ * Body weight assumed for bodyweight exercises logged with weight, where the logged weight is
+ * only the added load: without it a pull-up at 0 kg would score 0 whatever the reps.
+ */
+const BODYWEIGHT_KG = 75;
+
+/**
  * How good a set is, for PRs and top sets: estimated 1RM for weight × reps, most reps without
  * weight, longest hold for seconds (times the weight for weighted holds). An exercise logs the
  * same measures in every set, so scores of one exercise compare like with like.
  */
-export function setScore({ weightKg, reps, seconds }: SetValues) {
+export function setScore({ weightKg, reps, seconds }: SetValues, exerciseId: string) {
   if (seconds != null) return weightKg != null ? weightKg * seconds : seconds;
   if (reps == null) return 0;
-  return weightKg != null ? estimateOneRepMax(weightKg, reps) : reps;
+  if (weightKg == null) return reps;
+  return estimateOneRepMax(weightKg + (isBodyweight(exerciseId) ? BODYWEIGHT_KG : 0), reps);
 }
 
 /**
@@ -58,20 +71,24 @@ export const hasKnownWeight = (
   exercise: { exercise_id: AnySQLiteColumn },
 ) => or(isNotNull(set.weight_kg), inArray(exercise.exercise_id, exerciseIdsWithout('weight')));
 
-/** `setScore` as SQL over `workout_sets` or one of its aliases. */
-export const setScoreSql = (t: Record<'weight_kg' | 'reps' | 'seconds', AnySQLiteColumn>) =>
+/** `setScore` as SQL over `workout_sets` and `workout_exercises`, or aliases of them. */
+export const setScoreSql = (
+  set: Record<'weight_kg' | 'reps' | 'seconds', AnySQLiteColumn>,
+  exercise: { exercise_id: AnySQLiteColumn },
+) =>
   sql<number>`case
-  when ${t.seconds} is not null then coalesce(${t.weight_kg}, 1) * ${t.seconds}
-  when ${t.reps} is null then 0
-  when ${t.weight_kg} is not null then ${t.weight_kg} * (1 + ${t.reps} / 30.0)
-  else ${t.reps} end`;
+  when ${set.seconds} is not null then coalesce(${set.weight_kg}, 1) * ${set.seconds}
+  when ${set.reps} is null then 0
+  when ${set.weight_kg} is null then ${set.reps}
+  else (${set.weight_kg} + case when ${inArray(exercise.exercise_id, bodyweightExerciseIds())}
+    then ${BODYWEIGHT_KG} else 0 end) * (1 + ${set.reps} / 30.0) end`;
 
 /** Aliases for correlated subqueries over the sets of other workouts. */
 export const previousSet = alias(workoutSets, 'previous_set');
 export const previousExercise = alias(workoutExercises, 'previous_exercise');
 
 /** Subquery with the ids of a workout's exercises, for `inArray(…)`. */
-export const workoutExerciseIds = (workoutId: string) =>
+const workoutExerciseIds = (workoutId: string) =>
   drizzle
     .select({ id: workoutExercises.id })
     .from(workoutExercises)
@@ -178,7 +195,7 @@ export async function addWorkoutExercise(
 /** Best set score for an exercise across all completed sets, excluding one set. */
 async function bestScore(exerciseId: string, excludeSetId: string) {
   const [row] = await drizzle
-    .select({ best: sql<number | null>`max(${setScoreSql(workoutSets)})` })
+    .select({ best: sql<number | null>`max(${setScoreSql(workoutSets, workoutExercises)})` })
     .from(workoutSets)
     .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
     .where(
@@ -195,7 +212,7 @@ async function bestScore(exerciseId: string, excludeSetId: string) {
 /** Completes (or re-edits) a set. Returns true when it is a new personal record. */
 export async function logSet(setId: string, exerciseId: string, values: SetValues) {
   const best = await bestScore(exerciseId, setId);
-  const isPr = best > 0 && setScore(values) > best + 0.01;
+  const isPr = best > 0 && setScore(values, exerciseId) > best + 0.01;
   await drizzle
     .update(workoutSets)
     .set({
@@ -425,11 +442,33 @@ export function useWorkoutsInRange(fromIso: string, toIso: string) {
   });
 }
 
-export function useWorkoutHistory() {
+/** The latest `limit` finished workouts, newest first; a larger limit keeps the list shown. */
+export function useWorkoutHistory(limit: number) {
+  const latest = drizzle
+    .select({ id: workouts.id })
+    .from(workouts)
+    .where(isNotNull(workouts.finished_at))
+    .orderBy(desc(workouts.started_at))
+    .limit(limit);
   return useDrizzleQuery({
-    queryKey: queryKeys.workouts.history.queryKey,
-    query: workoutSummaryQuery(),
+    queryKey: queryKeys.workouts.history(limit).queryKey,
+    query: workoutSummaryQuery(inArray(workouts.id, latest)),
     map: toSummaries,
+    keepPrevious: true,
+  });
+}
+
+const workoutCountQuery = () =>
+  drizzle.select({ count: count() }).from(workouts).where(isNotNull(workouts.finished_at));
+
+const firstCount = (rows: RowOf<typeof workoutCountQuery>[]) => rows[0]?.count ?? 0;
+
+/** Number of finished workouts. */
+export function useWorkoutCount() {
+  return useDrizzleQuery({
+    queryKey: queryKeys.workouts.count.queryKey,
+    query: workoutCountQuery(),
+    map: firstCount,
   });
 }
 
@@ -459,6 +498,7 @@ const exerciseHistoryQuery = (exerciseId: string) =>
       name: workouts.name,
       started_at: workouts.started_at,
       finished_at: workouts.finished_at,
+      exercise_id: workoutExercises.exercise_id,
       position: workoutSets.position,
       weight_kg: workoutSets.weight_kg,
       reps: workoutSets.reps,
@@ -497,9 +537,13 @@ function toExerciseHistory(rows: RowOf<typeof exerciseHistoryQuery>[]): Exercise
       isPr: r.is_pr,
     });
   }
+  // All rows are sets of the same exercise.
+  const exerciseId = rows[0]?.exercise_id ?? '';
   return [...map.values()].map((entry) => ({
     ...entry,
-    topSet: entry.sets.reduce((top, set) => (setScore(set) > setScore(top) ? set : top)),
+    topSet: entry.sets.reduce((top, set) =>
+      setScore(set, exerciseId) > setScore(top, exerciseId) ? set : top,
+    ),
     volumeKg: entry.sets.reduce((sum, s) => sum + (s.weightKg ?? 0) * (s.reps ?? 0), 0),
     hasPr: entry.sets.some((s) => s.isPr),
   }));
@@ -517,17 +561,21 @@ export function useExerciseHistory(exerciseId: string | undefined) {
 
 const muscleVolumeQuery = (sinceIso: string) =>
   drizzle
-    .select({ exercise_id: workoutExercises.exercise_id, sets: count(workoutSets.id) })
+    .select({
+      exercise_id: workoutExercises.exercise_id,
+      started_at: workouts.started_at,
+      sets: count(workoutSets.id),
+    })
     .from(workoutSets)
     .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
     .innerJoin(workouts, eq(workouts.id, workoutExercises.workout_id))
     .where(and(isNotNull(workoutSets.completed_at), gte(workouts.started_at, sinceIso)))
-    .groupBy(workoutExercises.exercise_id);
+    .groupBy(workouts.id, workoutExercises.exercise_id);
 
 const toMuscleVolume = (rows: RowOf<typeof muscleVolumeQuery>[]) =>
-  rows.map((r) => ({ exerciseId: r.exercise_id, sets: r.sets }));
+  rows.map((r) => ({ exerciseId: r.exercise_id, startedAt: r.started_at, sets: r.sets }));
 
-/** Completed set counts per exercise since a date (Muscles tab). */
+/** Completed set counts per exercise and workout since a date (Muscles tab). */
 export function useMuscleVolume(sinceIso: string) {
   return useDrizzleQuery({
     queryKey: queryKeys.workouts.muscleVolume(sinceIso).queryKey,

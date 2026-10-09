@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { newId } from '@/shared/data/json';
-import { zustandStorage } from '@/shared/lib/storage';
+import { mmkvStorage } from '@/shared/lib/storage';
 
 import type { BodyCheckResult, PhotoIssue } from '../lib/body-check-service';
 import {
@@ -101,7 +101,7 @@ export const useBodyCheckStore = create<BodyCheckState>()(
     }),
     {
       name: 'body-check-camera',
-      storage: createJSONStorage(() => zustandStorage),
+      storage: createJSONStorage(() => mmkvStorage),
       partialize: (s) => ({ timer: s.timer, facing: s.facing }),
     },
   ),
