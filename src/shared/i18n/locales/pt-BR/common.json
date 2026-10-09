@@ -29,24 +29,8 @@
     "minShort": "min"
   },
   "weekdays": {
-    "short": [
-      "Seg",
-      "Ter",
-      "Qua",
-      "Qui",
-      "Sex",
-      "Sáb",
-      "Dom"
-    ],
-    "narrow": [
-      "S",
-      "T",
-      "Q",
-      "Q",
-      "S",
-      "S",
-      "D"
-    ],
+    "short": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+    "narrow": ["S", "T", "Q", "Q", "S", "S", "D"],
     "long": [
       "Segunda-feira",
       "Terça-feira",

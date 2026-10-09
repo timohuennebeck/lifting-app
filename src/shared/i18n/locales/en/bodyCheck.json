@@ -71,11 +71,7 @@
   },
   "analysis": {
     "title": "Body check",
-    "stages": [
-      "Aligning photos",
-      "Capturing body shape",
-      "Calculating values"
-    ],
+    "stages": ["Aligning photos", "Capturing body shape", "Calculating values"],
     "finalStage": {
       "first": "Creating your baseline",
       "next": "Creating your result"

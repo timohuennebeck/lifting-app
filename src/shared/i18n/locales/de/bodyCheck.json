@@ -71,11 +71,7 @@
   },
   "analysis": {
     "title": "Körpercheck",
-    "stages": [
-      "Fotos ausrichten",
-      "Körperform erfassen",
-      "Werte berechnen"
-    ],
+    "stages": ["Fotos ausrichten", "Körperform erfassen", "Werte berechnen"],
     "finalStage": {
       "first": "Startwert erstellen",
       "next": "Ergebnis erstellen"

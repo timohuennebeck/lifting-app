@@ -71,11 +71,7 @@
     }
   },
   "recognizing": {
-    "stages": [
-      "Detecting training day …",
-      "Matching exercises …",
-      "Applying sets and reps …"
-    ]
+    "stages": ["Detecting training day …", "Matching exercises …", "Applying sets and reps …"]
   },
   "confirm": {
     "planName": "Plan name",

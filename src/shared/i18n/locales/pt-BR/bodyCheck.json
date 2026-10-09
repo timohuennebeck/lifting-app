@@ -71,11 +71,7 @@
   },
   "analysis": {
     "title": "Check corporal",
-    "stages": [
-      "Alinhando as fotos",
-      "Capturando a forma do corpo",
-      "Calculando valores"
-    ],
+    "stages": ["Alinhando as fotos", "Capturando a forma do corpo", "Calculando valores"],
     "finalStage": {
       "first": "Criando seu valor inicial",
       "next": "Criando seu resultado"
