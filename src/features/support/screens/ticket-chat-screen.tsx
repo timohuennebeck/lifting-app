@@ -99,22 +99,28 @@ export function TicketChatScreen() {
             }
           />
         );
-      case 'status':
-        return item.status === 'resolved' || item.status === 'closed' ? (
+      case 'status': {
+        const closed = item.status === 'resolved' || item.status === 'closed';
+        // A version becomes a sentence in the user's language; notes are shown as written.
+        const detail = item.version
+          ? t(closed ? 'chat.liveIn' : 'chat.comingIn', { version: item.version })
+          : item.note;
+        return closed ? (
           <DoneLine
             key={item.key}
             resolved={item.status === 'resolved'}
             label={t(item.status === 'resolved' ? 'chat.resolved' : 'chat.closed')}
-            note={item.note}
+            note={detail}
           />
         ) : (
           <SystemLine
             key={item.key}
             highlight
             title={t('chat.statusLine', { status: t(`status.${item.status}`) })}
-            meta={item.note ?? (item.status === 'planned' ? t('chat.plannedHint') : null)}
+            meta={detail ?? (item.status === 'planned' ? t('chat.plannedHint') : null)}
           />
         );
+      }
       case 'reopened':
         return (
           <SystemLine

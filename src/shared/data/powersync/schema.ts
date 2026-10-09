@@ -193,6 +193,8 @@ export const ticketEvents = sqliteTable(
     kind: text().notNull(),
     // Set for 'status' events; null for 'reopened'.
     status: text(),
+    // App version the change ships in; rendered as a localized line.
+    version: text(),
     note: text(),
     created_at: text().notNull(),
   },

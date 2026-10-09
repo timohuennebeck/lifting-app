@@ -51,6 +51,9 @@ export interface TicketEvent {
   kind: 'status' | 'reopened';
   /** New status; 'open' for reopen events. */
   status: TicketStatus;
+  /** App version the change ships in, e.g. "1.4.3"; shown as a localized line. */
+  version: string | null;
+  /** Custom team text, shown as written (not translated). */
   note: string | null;
   createdAt: string;
 }
@@ -150,6 +153,7 @@ const toEvents = (rows: TicketEventRecord[]): TicketEvent[] =>
     id: r.id,
     kind: r.kind === 'reopened' ? 'reopened' : 'status',
     status: r.kind === 'reopened' ? 'open' : ((r.status as TicketStatus | null) ?? 'open'),
+    version: r.version,
     note: r.note,
     createdAt: r.created_at,
   }));

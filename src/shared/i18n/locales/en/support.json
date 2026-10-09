@@ -73,6 +73,8 @@
     "priority": "Priority",
     "statusLine": "Status: {{status}}",
     "plannedHint": "Coming in an upcoming update",
+    "comingIn": "Coming in update {{version}}",
+    "liveIn": "Live in update {{version}}",
     "resolved": "Resolved · Ticket closed",
     "closed": "Ticket closed",
     "reopened": "Ticket reopened",

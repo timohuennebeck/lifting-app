@@ -73,6 +73,8 @@
     "priority": "Prioridade",
     "statusLine": "Estado: {{status}}",
     "plannedHint": "Chega numa das próximas atualizações",
+    "comingIn": "Chega na atualização {{version}}",
+    "liveIn": "Disponível na atualização {{version}}",
     "resolved": "Resolvido · Pedido fechado",
     "closed": "Pedido fechado",
     "reopened": "Pedido reaberto",

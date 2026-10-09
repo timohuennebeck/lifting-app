@@ -6,7 +6,13 @@ export type TimelineItem =
   | { type: 'message'; key: string; message: TicketMessage; priority: number | null }
   | { type: 'created'; key: string; at: string }
   | { type: 'autoReply'; key: string }
-  | { type: 'status'; key: string; status: TicketStatus; note: string | null }
+  | {
+      type: 'status';
+      key: string;
+      status: TicketStatus;
+      version: string | null;
+      note: string | null;
+    }
   | { type: 'reopened'; key: string; at: string };
 
 interface TimedItem {
@@ -56,7 +62,13 @@ export function buildTimeline(
     const item: TimelineItem =
       event.kind === 'reopened'
         ? { type: 'reopened', key: event.id, at: event.createdAt }
-        : { type: 'status', key: event.id, status: event.status, note: event.note };
+        : {
+            type: 'status',
+            key: event.id,
+            status: event.status,
+            version: event.version,
+            note: event.note,
+          };
     timed.push({ at, order: last + i, item });
   });
   if (ticket.status !== 'open' && !events.some((e) => e.kind === 'status')) {
@@ -65,7 +77,13 @@ export function buildTimeline(
       ms(closed ? (ticket.closedAt ?? ticket.updatedAt) : ticket.updatedAt),
       start,
     );
-    const item: TimelineItem = { type: 'status', key: 'status', status: ticket.status, note: null };
+    const item: TimelineItem = {
+      type: 'status',
+      key: 'status',
+      status: ticket.status,
+      version: null,
+      note: null,
+    };
     timed.push({ at, order: last + events.length, item });
   }
 
