@@ -6,7 +6,6 @@ import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 
 import { cn } from '@/shared/lib/cn';
-import { formatNumber } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -45,23 +44,19 @@ function Key({ label, onPress, disabled, className, children, accessibilityLabel
 }
 
 export interface WeightKeypadProps {
-  /** ± chip step for the weight field, in display units. */
-  weightStep: number;
   onConfirm: () => void;
   onLayout?: (e: LayoutChangeEvent) => void;
 }
 
-/** Custom numeric keypad (design 03·C·2B): ± chips, digits, backspace and a tall check. */
-export function WeightKeypad({ weightStep, onConfirm, onLayout }: WeightKeypadProps) {
+/** Custom numeric keypad (design 03·C·2B, without the ± chips): digits, backspace and a tall check. */
+export function WeightKeypad({ onConfirm, onLayout }: WeightKeypadProps) {
   const { t } = useTranslation('workout');
   const insets = useSafeAreaInsets();
   const field = useWorkoutSessionStore((s) => s.field);
   const pressKey = useWorkoutSessionStore((s) => s.pressKey);
   const pressBackspace = useWorkoutSessionStore((s) => s.pressBackspace);
-  const nudge = useWorkoutSessionStore((s) => s.nudge);
   const closeKeypad = useWorkoutSessionStore((s) => s.closeKeypad);
   const isWeight = field === 'kg';
-  const step = isWeight ? weightStep : 1;
   const separator = decimalSeparator();
 
   // Swipe the panel down to close it.
@@ -94,23 +89,9 @@ export function WeightKeypad({ weightStep, onConfirm, onLayout }: WeightKeypadPr
         >
           <View className="h-1.25 w-9 rounded-full bg-track" />
         </PressableScale>
-        <View className="flex-row items-center gap-2">
-          {[-step, step].map((delta) => (
-            <PressableScale
-              key={delta}
-              haptic="select"
-              onPress={() => nudge(delta)}
-              className="h-10 justify-center rounded-full bg-control px-3.5"
-            >
-              <Text variant="label">
-                {`${delta < 0 ? '−' : '+'}${formatNumber(Math.abs(delta), 2)}`}
-              </Text>
-            </PressableScale>
-          ))}
-          <Text variant="overline" tone="subtle" className="ml-auto pr-2">
-            {isWeight ? t('keypad.weight') : t('keypad.reps')}
-          </Text>
-        </View>
+        <Text variant="overline" tone="subtle" className="px-1">
+          {isWeight ? t('keypad.weight') : t('keypad.reps')}
+        </Text>
         <View className="flex-row gap-1.5">
           <View className="flex-1 gap-1.5">
             {KEYPAD_ROWS.map((row) => (

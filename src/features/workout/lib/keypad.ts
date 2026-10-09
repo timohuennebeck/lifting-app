@@ -35,10 +35,5 @@ export function toInput(value: number | null | undefined) {
   return value == null ? '' : String(Math.round(value * 100) / 100);
 }
 
-/** Adds a delta (e.g. ±2.5) and never goes below zero. */
-export function nudgeInput(value: string, delta: number) {
-  return toInput(Math.max(0, (parseInput(value) ?? 0) + delta));
-}
-
 /** Shows the buffer with the locale's decimal separator. */
 export const displayInput = (value: string, separator: string) => value.replace('.', separator);

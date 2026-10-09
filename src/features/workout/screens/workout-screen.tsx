@@ -28,7 +28,6 @@ import { WorkoutTopBar } from '../components/workout-top-bar';
 import { swapWorkoutExercise } from '../data/workout-mutations';
 import { type RecordHit, useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
-import { weightStepFor } from '../lib/weight';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
 type SheetKind = 'menu' | 'targets' | 'swap' | 'add';
@@ -193,7 +192,6 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
           </ScrollView>
           {keypadOpen ? (
             <WeightKeypad
-              weightStep={weightStepFor(exercise.exerciseId, live.units)}
               onConfirm={live.confirmInput}
               onLayout={(e) => setKeypadHeight(e.nativeEvent.layout.height)}
             />

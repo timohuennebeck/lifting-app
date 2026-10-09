@@ -3,7 +3,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { zustandStorage } from '@/shared/lib/storage';
 
-import { appendKey, backspace, type KeypadKey, nudgeInput } from '../lib/keypad';
+import { appendKey, backspace, type KeypadKey } from '../lib/keypad';
 
 export type SetField = 'kg' | 'reps';
 export type MiddleColumn = 'targets' | 'last';
@@ -27,7 +27,6 @@ interface WorkoutSessionState {
   closeKeypad: () => void;
   pressKey: (key: KeypadKey) => void;
   pressBackspace: () => void;
-  nudge: (delta: number) => void;
   startRest: (seconds: number) => void;
   addRest: (seconds: number) => void;
   skipRest: () => void;
@@ -75,11 +74,6 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
       pressBackspace: () =>
         set((s) => ({
           input: { ...s.input, [s.field]: s.pristine ? '' : backspace(s.input[s.field]) },
-          pristine: false,
-        })),
-      nudge: (delta) =>
-        set((s) => ({
-          input: { ...s.input, [s.field]: nudgeInput(s.input[s.field], delta) },
           pristine: false,
         })),
       startRest: (seconds) =>

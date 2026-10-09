@@ -1,4 +1,3 @@
-import { getExercise } from '@/shared/data/exercises';
 import { formatNumber, kgToLb, lbToKg, type UnitSystem } from '@/shared/lib/format';
 
 const round = (value: number, step: number) => Math.round(value / step) * step;
@@ -9,13 +8,6 @@ export const toDisplayWeight = (kg: number, units: UnitSystem) =>
 
 export const fromDisplayWeight = (value: number, units: UnitSystem) =>
   units === 'imperial' ? lbToKg(value) : value;
-
-/** Plate increment for the ± chips, in display units. */
-export function weightStepFor(exerciseId: string, units: UnitSystem) {
-  const step = getExercise(exerciseId)?.weightStep || 2.5;
-  if (units === 'imperial') return step >= 2 ? 5 : 2.5;
-  return step;
-}
 
 /** "60" / "57,5" in display units, without the unit label. */
 export const formatWeightValue = (kg: number, units: UnitSystem) =>

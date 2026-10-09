@@ -10,8 +10,6 @@ export interface Exercise {
   image: ImageSourcePropType | null;
   /** Default rest between sets, in seconds. */
   restSeconds: number;
-  /** Smallest weight increment in kg (0 for bodyweight). */
-  weightStep: number;
   /** Share of the training stimulus per muscle; values sum to 1. */
   muscles: Partial<Record<MuscleId, number>>;
 }
@@ -60,7 +58,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'barbell',
     image: require('@/assets/images/exercises/close-grip-bench-press.png'),
     restSeconds: 120,
-    weightStep: 2.5,
     muscles: { chest: 0.6, triceps: 0.25, front_delts: 0.15 },
   },
   'close-grip-bench-press': {
@@ -68,7 +65,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'machine',
     image: require('@/assets/images/exercises/close-grip-bench-press.png'),
     restSeconds: 120,
-    weightStep: 2.5,
     muscles: { chest: 0.45, triceps: 0.35, front_delts: 0.2 },
   },
   'incline-dumbbell-press': {
@@ -76,7 +72,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'dumbbell',
     image: require('@/assets/images/exercises/incline-dumbbell-press.png'),
     restSeconds: 90,
-    weightStep: 2,
     muscles: { chest: 0.55, front_delts: 0.3, triceps: 0.15 },
   },
   'dumbbell-shoulder-press': {
@@ -84,7 +79,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'dumbbell',
     image: require('@/assets/images/exercises/overhead-press.png'),
     restSeconds: 120,
-    weightStep: 2,
     muscles: { front_delts: 0.55, side_delts: 0.2, triceps: 0.25 },
   },
   'seated-shoulder-press': {
@@ -92,7 +86,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'machine',
     image: require('@/assets/images/exercises/overhead-press.png'),
     restSeconds: 120,
-    weightStep: 2.5,
     muscles: { front_delts: 0.55, side_delts: 0.2, triceps: 0.25 },
   },
   'arnold-press': {
@@ -100,7 +93,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'dumbbell',
     image: require('@/assets/images/exercises/arnold-press.png'),
     restSeconds: 90,
-    weightStep: 2,
     muscles: { front_delts: 0.5, side_delts: 0.3, triceps: 0.2 },
   },
   'lateral-raise': {
@@ -108,7 +100,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'dumbbell',
     image: require('@/assets/images/exercises/lateral-raise.png'),
     restSeconds: 60,
-    weightStep: 1,
     muscles: { side_delts: 0.85, traps: 0.15 },
   },
   'front-raise': {
@@ -116,7 +107,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'dumbbell',
     image: null,
     restSeconds: 60,
-    weightStep: 1,
     muscles: { front_delts: 0.85, side_delts: 0.15 },
   },
   'reverse-fly': {
@@ -124,7 +114,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'dumbbell',
     image: null,
     restSeconds: 60,
-    weightStep: 1,
     muscles: { rear_delts: 0.7, upper_back: 0.3 },
   },
   'upright-row': {
@@ -132,7 +121,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'barbell',
     image: null,
     restSeconds: 90,
-    weightStep: 2.5,
     muscles: { side_delts: 0.5, traps: 0.5 },
   },
   'face-pull': {
@@ -140,7 +128,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'cable',
     image: null,
     restSeconds: 60,
-    weightStep: 2.5,
     muscles: { rear_delts: 0.5, upper_back: 0.3, traps: 0.2 },
   },
   'cable-crossover': {
@@ -148,7 +135,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'cable',
     image: require('@/assets/images/exercises/cable-crossover.png'),
     restSeconds: 60,
-    weightStep: 2.5,
     muscles: { chest: 0.85, front_delts: 0.15 },
   },
   dip: {
@@ -156,7 +142,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'bodyweight',
     image: require('@/assets/images/exercises/dip.png'),
     restSeconds: 90,
-    weightStep: 2.5,
     muscles: { chest: 0.45, triceps: 0.4, front_delts: 0.15 },
   },
   'push-up': {
@@ -164,7 +149,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'bodyweight',
     image: require('@/assets/images/exercises/push-up.png'),
     restSeconds: 60,
-    weightStep: 0,
     muscles: { chest: 0.55, triceps: 0.25, front_delts: 0.2 },
   },
   'triceps-pushdown': {
@@ -172,7 +156,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'cable',
     image: null,
     restSeconds: 60,
-    weightStep: 2.5,
     muscles: { triceps: 1.0 },
   },
   'french-press': {
@@ -180,7 +163,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'barbell',
     image: null,
     restSeconds: 60,
-    weightStep: 2.5,
     muscles: { triceps: 1.0 },
   },
   'pull-up': {
@@ -188,7 +170,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'bodyweight',
     image: require('@/assets/images/exercises/pull-up.png'),
     restSeconds: 120,
-    weightStep: 2.5,
     muscles: { lats: 0.55, biceps: 0.2, upper_back: 0.25 },
   },
   'chin-up': {
@@ -196,7 +177,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'bodyweight',
     image: require('@/assets/images/exercises/chin-up.png'),
     restSeconds: 120,
-    weightStep: 2.5,
     muscles: { lats: 0.5, biceps: 0.35, upper_back: 0.15 },
   },
   'lat-pulldown': {
@@ -204,7 +184,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'cable',
     image: require('@/assets/images/exercises/chin-up.png'),
     restSeconds: 90,
-    weightStep: 2.5,
     muscles: { lats: 0.6, biceps: 0.2, upper_back: 0.2 },
   },
   'seated-cable-row': {
@@ -212,7 +191,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'cable',
     image: null,
     restSeconds: 90,
-    weightStep: 2.5,
     muscles: { upper_back: 0.45, lats: 0.35, biceps: 0.2 },
   },
   't-bar-row': {
@@ -220,7 +198,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'barbell',
     image: null,
     restSeconds: 90,
-    weightStep: 2.5,
     muscles: { upper_back: 0.5, lats: 0.3, biceps: 0.2 },
   },
   deadlift: {
@@ -228,7 +205,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'barbell',
     image: null,
     restSeconds: 180,
-    weightStep: 5,
     muscles: { hamstrings: 0.3, glutes: 0.3, lower_back: 0.25, traps: 0.15 },
   },
   'hammer-curl': {
@@ -236,7 +212,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'dumbbell',
     image: null,
     restSeconds: 60,
-    weightStep: 1,
     muscles: { biceps: 0.6, forearms: 0.4 },
   },
   'dumbbell-curl': {
@@ -244,7 +219,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'dumbbell',
     image: null,
     restSeconds: 60,
-    weightStep: 1,
     muscles: { biceps: 0.85, forearms: 0.15 },
   },
   squat: {
@@ -252,7 +226,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'barbell',
     image: null,
     restSeconds: 180,
-    weightStep: 5,
     muscles: { quads: 0.55, glutes: 0.3, adductors: 0.15 },
   },
   'hack-squat': {
@@ -260,7 +233,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'machine',
     image: null,
     restSeconds: 90,
-    weightStep: 5,
     muscles: { quads: 0.7, glutes: 0.3 },
   },
   'leg-press': {
@@ -268,7 +240,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'machine',
     image: null,
     restSeconds: 120,
-    weightStep: 5,
     muscles: { quads: 0.6, glutes: 0.3, adductors: 0.1 },
   },
   'romanian-deadlift': {
@@ -276,7 +247,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'barbell',
     image: null,
     restSeconds: 120,
-    weightStep: 5,
     muscles: { hamstrings: 0.55, glutes: 0.35, lower_back: 0.1 },
   },
   lunge: {
@@ -284,7 +254,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'dumbbell',
     image: null,
     restSeconds: 90,
-    weightStep: 2,
     muscles: { quads: 0.5, glutes: 0.4, adductors: 0.1 },
   },
   'leg-extension': {
@@ -292,7 +261,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'machine',
     image: null,
     restSeconds: 60,
-    weightStep: 2.5,
     muscles: { quads: 1.0 },
   },
   'calf-raise': {
@@ -300,7 +268,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'machine',
     image: null,
     restSeconds: 60,
-    weightStep: 5,
     muscles: { calves: 1.0 },
   },
   plank: {
@@ -308,7 +275,6 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
     equipment: 'bodyweight',
     image: require('@/assets/images/exercises/plank.png'),
     restSeconds: 60,
-    weightStep: 0,
     muscles: { abs: 0.7, obliques: 0.3 },
   },
 };
