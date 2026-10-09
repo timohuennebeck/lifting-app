@@ -5,7 +5,6 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ExerciseDetailModal } from '@/features/exercises/components/exercise-detail-modal';
-import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import {
   type ExerciseMenuAction,
@@ -13,7 +12,6 @@ import {
 } from '@/features/training/components/exercise-menu-sheet';
 import { PlanBar } from '@/features/training/components/plan-bar';
 import { TemplateExerciseCard } from '@/features/training/components/template-exercise-card';
-import { defaultSetDrafts, swapTargets } from '@/shared/data/exercises';
 import { muscleShares } from '@/shared/data/muscles';
 import { estimateMinutes } from '@/shared/data/templates';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
@@ -31,6 +29,7 @@ import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
 import { ReviewPrompt } from '../components/review-prompt';
+import { editDayAt, editExerciseAt, settle } from '../lib/edit-plan';
 import {
   type ImportedDay,
   type ImportedExercise,
@@ -39,11 +38,6 @@ import {
   toPlanDraft,
 } from '../lib/plan-import-service';
 import { useImportStore } from '../stores/import-store';
-
-type Picker = { mode: 'add' } | { mode: 'swap'; index: number };
-
-/** Drops the import's doubts about an exercise once the user has settled it. */
-const settle = ({ raw: _raw, alternatives: _alts, ...e }: ImportedExercise): ImportedExercise => e;
 
 /**
  * 06c: the detected plan in the training overview layout (03·0b). Days sit in the plan strip;
@@ -57,9 +51,7 @@ export function ConfirmScreen() {
   const editPlan = useImportStore((s) => s.editPlan);
   const selectDay = useImportStore((s) => s.selectDay);
   const updateDraft = useUpdateDraft();
-  const [picker, setPicker] = useState<Picker | null>(null);
-  // The sheets keep their content while they animate out.
-  const pickerShown = useLastDefined(picker);
+  // The menu keeps its content while it animates out.
   const [menuFor, setMenuFor] = useState<number | null>(null);
   const menuShown = useLastDefined(menuFor);
   const [renameOpen, setRenameOpen] = useState(false);
@@ -80,12 +72,16 @@ export function ConfirmScreen() {
   const empty = exercises.length === 0;
 
   function editDay(edit: (day: ImportedDay) => ImportedDay) {
-    editPlan((p) => ({ ...p, days: p.days.map((d, i) => (i === index ? edit(d) : d)) }));
+    editPlan((p) => editDayAt(p, index, edit));
   }
 
   function editExercise(at: number, edit: (e: ImportedExercise) => ImportedExercise) {
-    editDay((d) => ({ ...d, exercises: d.exercises.map((e, i) => (i === at ? edit(e) : e)) }));
+    editDay((d) => editExerciseAt(d, at, edit));
   }
+
+  // Adding and swapping happen on the library page; picks apply when it closes with "Done".
+  const openPicker = (params: { mode: 'add' } | { mode: 'swap'; index: string }) =>
+    router.push({ pathname: '/import/picker', params });
 
   function addDay() {
     if (!plan) return;
@@ -100,34 +96,11 @@ export function ConfirmScreen() {
     selectDay(plan.days.length);
   }
 
-  function pick(exerciseId: string) {
-    if (picker?.mode === 'swap') {
-      editExercise(picker.index, (e) =>
-        settle({
-          ...e,
-          exerciseId,
-          sets: swapTargets(e.exerciseId, exerciseId)
-            ? defaultSetDrafts(exerciseId, e.sets.length)
-            : e.sets,
-        }),
-      );
-    } else {
-      editDay((d) => ({
-        ...d,
-        exercises: [
-          ...d.exercises,
-          { exerciseId, sets: defaultSetDrafts(exerciseId, 3), restSeconds: null },
-        ],
-      }));
-    }
-    setPicker(null);
-  }
-
   function onMenuAction(action: ExerciseMenuAction) {
     const at = menuFor;
     setMenuFor(null);
     if (at === null) return;
-    if (action === 'swap') afterSheetClose(() => setPicker({ mode: 'swap', index: at }));
+    if (action === 'swap') afterSheetClose(() => openPicker({ mode: 'swap', index: String(at) }));
     else if (action === 'remove')
       editDay((d) => ({ ...d, exercises: d.exercises.filter((_, k) => k !== at) }));
     else if (action === 'moveUp' || action === 'moveDown') {
@@ -232,7 +205,7 @@ export function ConfirmScreen() {
                 iconSize={empty ? 18 : 14}
                 accessibilityLabel={t('planImport:confirm.add')}
                 className="bg-raised"
-                onPress={() => setPicker({ mode: 'add' })}
+                onPress={() => openPicker({ mode: 'add' })}
               />
             </View>
 
@@ -284,17 +257,6 @@ export function ConfirmScreen() {
         />
       </BottomFade>
 
-      <ExercisePickerSheet
-        visible={!!picker}
-        onClose={() => setPicker(null)}
-        onSelect={pick}
-        mode={pickerShown?.mode ?? 'add'}
-        title={
-          pickerShown?.mode === 'swap' ? t('planImport:confirm.swap') : t('planImport:confirm.add')
-        }
-        excludeIds={exercises.map((e) => e.exerciseId)}
-        muscleItems={items}
-      />
       <ExerciseMenuSheet
         visible={menuFor !== null}
         onClose={() => setMenuFor(null)}

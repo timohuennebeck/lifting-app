@@ -6,7 +6,6 @@ import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Sortable from 'react-native-sortables';
 
-import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
 import { muscleShares } from '@/shared/data/muscles';
 import {
   estimateMinutes,
@@ -35,19 +34,15 @@ import { PlanBar } from '../components/plan-bar';
 import { TemplateExerciseCard } from '../components/template-exercise-card';
 import { TemplateOptionsSheet } from '../components/template-options-sheet';
 import {
-  addTemplateExercise,
   createTemplate,
   deleteTemplate,
   moveTemplateExercise,
   removeTemplateExercise,
   renameTemplate,
   reorderTemplateExercise,
-  swapTemplateExercise,
 } from '../data/template-mutations';
 import { usePlanProgress } from '../data/use-plan-progress';
 import { useStartTemplate } from '../hooks/use-start-template';
-
-type PickerState = { mode: 'add' } | { mode: 'swap'; templateExerciseId: string };
 
 /** Training overview with plan bar, muscles, editable exercise list and start CTA (03·0b). */
 export function TemplateScreen() {
@@ -63,12 +58,10 @@ export function TemplateScreen() {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   // Letting go of a dragged exercise also ends a press on it; that one isn't a tap.
   const dragging = useRef(false);
-  const [picker, setPicker] = useState<PickerState | null>(null);
   const [menuFor, setMenuFor] = useState<TemplateExerciseDetail | null>(null);
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [renameOpen, setRenameOpen] = useState(false);
   const menuShown = useLastDefined(menuFor);
-  const pickerShown = useLastDefined(picker);
 
   const exercises = template?.exercises ?? [];
   const items = exercises.map((e) => ({
@@ -83,14 +76,9 @@ export function TemplateScreen() {
     : t('list.noCollection');
   const menuIndex = menuShown ? exercises.findIndex((e) => e.id === menuShown.id) : -1;
 
-  const onPick = async (exerciseId: string) => {
-    if (!template || !picker) return;
-    const current = picker;
-    setPicker(null);
-    if (current.mode === 'add') await addTemplateExercise(requireUserId(), template.id, exerciseId);
-    else await swapTemplateExercise(current.templateExerciseId, exerciseId);
-    haptics.success();
-  };
+  // Adding and swapping happen on the library page; picks apply when it closes with "Done".
+  const openPicker = (params: { mode: 'add' } | { mode: 'swap'; templateExerciseId: string }) =>
+    router.push({ pathname: '/template/[id]/picker', params: { id, ...params } });
 
   const onMenuAction = async (action: ExerciseMenuAction) => {
     const target = menuFor;
@@ -99,7 +87,7 @@ export function TemplateScreen() {
     if (action === 'editSets')
       afterSheetClose(() => router.push(`/template/${template.id}/sets/${target.id}`));
     else if (action === 'swap')
-      afterSheetClose(() => setPicker({ mode: 'swap', templateExerciseId: target.id }));
+      afterSheetClose(() => openPicker({ mode: 'swap', templateExerciseId: target.id }));
     else if (action === 'remove') await removeTemplateExercise(target.id);
     else await moveTemplateExercise(target.id, action === 'moveUp' ? -1 : 1);
   };
@@ -203,7 +191,7 @@ export function TemplateScreen() {
             iconSize={empty ? 18 : 14}
             accessibilityLabel={t('overview.addExercise')}
             className="bg-raised"
-            onPress={() => setPicker({ mode: 'add' })}
+            onPress={() => openPicker({ mode: 'add' })}
           />
         </View>
 
@@ -260,14 +248,6 @@ export function TemplateScreen() {
         </BottomFade>
       ) : null}
 
-      <ExercisePickerSheet
-        visible={!!picker}
-        onClose={() => setPicker(null)}
-        onSelect={onPick}
-        title={pickerShown?.mode === 'swap' ? t('overview.swapTitle') : undefined}
-        mode={pickerShown?.mode}
-        excludeIds={exercises.map((e) => e.exerciseId)}
-      />
       <ExerciseMenuSheet
         visible={!!menuFor}
         onClose={() => setMenuFor(null)}
