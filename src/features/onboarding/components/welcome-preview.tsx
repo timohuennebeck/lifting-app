@@ -240,7 +240,7 @@ export function WelcomePreview({ active }: WelcomePreviewProps) {
               <Text variant="paragraph" tone="subtle" className="px-5 pt-2">
                 {t('welcome.preview.noFixedDay')}
               </Text>
-              <Text variant="headline" className="px-5 pt-6 leading-5.5">
+              <Text variant="headline" className="px-5 pt-6">
                 {t('welcome.preview.musclesWorked')}
               </Text>
               <View className="flex-row gap-2.5 px-5 pt-3.5">
@@ -250,9 +250,7 @@ export function WelcomePreview({ active }: WelcomePreviewProps) {
               </View>
               <View className="flex-row items-center gap-3 px-5 pt-7.5">
                 <View className="min-w-0 flex-1">
-                  <Text variant="headline" className="leading-5.5">
-                    {t('welcome.preview.exercises', { count: 6 })}
-                  </Text>
+                  <Text variant="headline">{t('welcome.preview.exercises', { count: 6 })}</Text>
                   <Text variant="caption" tone="subtle" className="mt-1.5 font-inter text-sm">
                     {t('welcome.preview.duration', { minutes: 55 })}
                   </Text>

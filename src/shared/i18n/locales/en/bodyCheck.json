@@ -2,23 +2,19 @@
   "poses": {
     "front": {
       "short": "Front",
-      "name": "Front",
-      "tip": "Face the camera · arms slightly away from your body"
+      "name": "Front"
     },
     "left": {
       "short": "Left",
-      "name": "Left side",
-      "tip": "Left side to the camera · arms relaxed"
+      "name": "Left side"
     },
     "right": {
       "short": "Right",
-      "name": "Right side",
-      "tip": "Right side to the camera · arms relaxed"
+      "name": "Right side"
     },
     "back": {
       "short": "Back",
-      "name": "Back",
-      "tip": "Back to the camera · shoulders relaxed"
+      "name": "Back"
     }
   },
   "groups": {
@@ -75,7 +71,11 @@
   },
   "analysis": {
     "title": "Body check",
-    "stages": ["Aligning photos", "Capturing body shape", "Calculating values"],
+    "stages": [
+      "Aligning photos",
+      "Capturing body shape",
+      "Calculating values"
+    ],
     "finalStage": {
       "first": "Creating your baseline",
       "next": "Creating your result"

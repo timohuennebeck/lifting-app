@@ -195,6 +195,7 @@ export function CameraScreen() {
         <View className="flex-row items-center justify-between">
           <IconButton
             icon="chevron-left"
+            iconSize={7}
             accessibilityLabel={t('common:actions.close')}
             onPress={close}
           />
@@ -218,9 +219,6 @@ export function CameraScreen() {
             </Text>
           </PressableScale>
         </View>
-        <Text variant="caption" tone="secondary" className="mt-3 text-center font-inter">
-          {t(`poses.${pose}.tip`)}
-        </Text>
       </View>
 
       <View className="absolute inset-x-0 items-center gap-5.5" style={{ bottom: footerInset }}>

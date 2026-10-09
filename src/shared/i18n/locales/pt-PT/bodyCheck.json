@@ -2,23 +2,19 @@
   "poses": {
     "front": {
       "short": "Frente",
-      "name": "Frente",
-      "tip": "De frente para a câmara · braços ligeiramente afastados do corpo"
+      "name": "Frente"
     },
     "left": {
       "short": "Esquerda",
-      "name": "Lado esquerdo",
-      "tip": "Lado esquerdo para a câmara · braços soltos"
+      "name": "Lado esquerdo"
     },
     "right": {
       "short": "Direita",
-      "name": "Lado direito",
-      "tip": "Lado direito para a câmara · braços soltos"
+      "name": "Lado direito"
     },
     "back": {
       "short": "Costas",
-      "name": "Costas",
-      "tip": "Costas para a câmara · ombros soltos"
+      "name": "Costas"
     }
   },
   "groups": {
@@ -75,7 +71,11 @@
   },
   "analysis": {
     "title": "Check corporal",
-    "stages": ["A alinhar as fotos", "A captar a forma do corpo", "A calcular valores"],
+    "stages": [
+      "A alinhar as fotos",
+      "A captar a forma do corpo",
+      "A calcular valores"
+    ],
     "finalStage": {
       "first": "A criar o teu valor inicial",
       "next": "A criar o teu resultado"

@@ -177,7 +177,7 @@ export function TemplateScreen() {
 
         {shares.length ? (
           <>
-            <Text variant="headline" className="px-5 pt-6 leading-5.5">
+            <Text variant="headline" className="px-5 pt-6">
               {t('overview.musclesWorked')}
             </Text>
             <View className="pt-3.5">
@@ -188,7 +188,7 @@ export function TemplateScreen() {
 
         <View className={cn('flex-row items-center gap-3 px-5', empty ? 'pt-9' : 'pt-7.5')}>
           <View className="min-w-0 flex-1">
-            <Text variant="headline" className="leading-5.5">
+            <Text variant="headline">
               {empty
                 ? t('overview.noExercises')
                 : t('overview.exercises', { count: exercises.length })}

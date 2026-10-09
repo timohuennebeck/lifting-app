@@ -68,6 +68,7 @@ export function ResultScreen() {
         <View className="px-4 py-1.5">
           <IconButton
             icon="chevron-left"
+            iconSize={7}
             accessibilityLabel={t('common:actions.close')}
             onPress={exitBodyCheck}
           />
@@ -115,6 +116,7 @@ export function ResultScreen() {
       <View className="flex-row items-center justify-between px-4 py-1.5">
         <IconButton
           icon="chevron-left"
+          iconSize={7}
           accessibilityLabel={t('common:actions.close')}
           onPress={justSaved ? leaveSaved : draft ? closeDraft : exitBodyCheck}
         />
@@ -140,7 +142,9 @@ export function ResultScreen() {
           </Text>
           <View className="mt-5.5 flex-row items-end gap-3.5">
             <View className="flex-row items-baseline gap-1">
-              <Text className="font-inter-semibold text-[112px] leading-25 tracking-[-5px] text-fg">
+              {/* A line height under the font size clips the digits on iOS; the negative
+                  margins keep the number where the tighter line put it. */}
+              <Text className="-my-3.5 pr-1 font-inter-semibold text-[112px] leading-[128px] tracking-[-4px] text-fg">
                 {check.score}
               </Text>
               <Text variant="label" className="text-xl text-dim">

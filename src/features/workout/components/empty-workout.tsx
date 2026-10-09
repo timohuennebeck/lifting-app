@@ -38,9 +38,7 @@ export function EmptyWorkout({ name, onBack, onMenu, onAdd }: EmptyWorkoutProps)
       />
       <View className="flex-row items-center gap-4 px-5 pt-9">
         <View className="flex-1">
-          <Text variant="headline" className="leading-5.5">
-            {t('empty.title')}
-          </Text>
+          <Text variant="headline">{t('empty.title')}</Text>
           <Text variant="label" tone="subtle" className="mt-2 font-inter">
             {t('empty.duration', { minutes: 0 })}
           </Text>

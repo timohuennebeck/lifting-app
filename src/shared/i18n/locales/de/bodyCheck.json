@@ -2,23 +2,19 @@
   "poses": {
     "front": {
       "short": "Frontal",
-      "name": "Frontal",
-      "tip": "Frontal · Arme leicht vom Körper"
+      "name": "Frontal"
     },
     "left": {
       "short": "Links",
-      "name": "Seite links",
-      "tip": "Linke Seite zur Kamera · Arme locker"
+      "name": "Seite links"
     },
     "right": {
       "short": "Rechts",
-      "name": "Seite rechts",
-      "tip": "Rechte Seite zur Kamera · Arme locker"
+      "name": "Seite rechts"
     },
     "back": {
       "short": "Hinten",
-      "name": "Hinten",
-      "tip": "Rücken zur Kamera · Schultern locker"
+      "name": "Hinten"
     }
   },
   "groups": {
@@ -75,7 +71,11 @@
   },
   "analysis": {
     "title": "Körpercheck",
-    "stages": ["Fotos ausrichten", "Körperform erfassen", "Werte berechnen"],
+    "stages": [
+      "Fotos ausrichten",
+      "Körperform erfassen",
+      "Werte berechnen"
+    ],
     "finalStage": {
       "first": "Startwert erstellen",
       "next": "Ergebnis erstellen"
