@@ -58,5 +58,12 @@
     "body": "Corpo",
     "profile": "Perfil"
   },
-  "settings": "Definições"
+  "settings": "Definições",
+  "legal": {
+    "terms": "Termos de Utilização",
+    "privacy": "Política de Privacidade",
+    "meta": "Versão {{version}} · em vigor desde {{date}}",
+    "unavailable": "Este documento ainda não está disponível.",
+    "loadFailed": "Não foi possível carregar o documento. Verifica a ligação e tenta novamente."
+  }
 }

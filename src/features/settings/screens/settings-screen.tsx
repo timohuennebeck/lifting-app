@@ -1,9 +1,10 @@
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { LEGAL_KINDS } from '@/features/legal/data/legal-documents';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { type ProfilePatch, saveProfile, useProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
@@ -163,6 +164,17 @@ export function SettingsScreen() {
             label={t(`settings.fields.${row.field}`)}
             value={row.value}
             onPress={() => edit(row.field)}
+          />
+        ))}
+      </SettingsSection>
+
+      <SettingsSection title={t('settings.legal')}>
+        {LEGAL_KINDS.map((kind, i) => (
+          <SettingsRow
+            key={kind}
+            first={i === 0}
+            label={tc(`legal.${kind}`)}
+            onPress={() => router.push(`/legal/${kind}`)}
           />
         ))}
       </SettingsSection>

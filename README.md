@@ -84,6 +84,10 @@ Both are readable without an account (onboarding runs logged out) and written wi
   can't be edited or deleted; publish a new `version` instead. Set `requires_reacceptance` when users who
   accepted an older version have to accept again.
 - **`legal_acceptances`:** written by the app for the signed-in user; the server sets `accepted_at`.
+- **In the app:** `/legal/terms` and `/legal/privacy` show the version in effect, in the app language
+  (else English, else `pt-BR`), linked from the sign-up screen and Settings. Write the text as Markdown:
+  headings, paragraphs, `>` quotes, lists, `**bold**` and `[links](https://…)`. Locally,
+  `supabase/seed.sql` adds placeholder documents on `npm run supabase:reset`.
 
 ## Languages
 

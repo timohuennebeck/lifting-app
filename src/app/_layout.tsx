@@ -83,6 +83,8 @@ export default function RootLayout() {
                   <Stack.Protected guard={!inApp}>
                     <Stack.Screen name="(onboarding)" />
                   </Stack.Protected>
+                  {/* Open from sign-up and from settings alike. */}
+                  <Stack.Screen name="legal/[kind]" options={{ presentation: 'modal' }} />
                 </Stack>
               </BottomSheetModalProvider>
             </ThemeProvider>

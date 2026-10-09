@@ -50,5 +50,12 @@
     "body": "Body",
     "profile": "Profile"
   },
-  "settings": "Settings"
+  "settings": "Settings",
+  "legal": {
+    "terms": "Terms of Use",
+    "privacy": "Privacy Policy",
+    "meta": "Version {{version}} · effective {{date}}",
+    "unavailable": "This document isn't available yet.",
+    "loadFailed": "Couldn't load the document. Check your connection and try again."
+  }
 }

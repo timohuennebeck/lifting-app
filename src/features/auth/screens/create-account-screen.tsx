@@ -1,8 +1,9 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import type { LegalKind } from '@/features/legal/data/legal-documents';
 import { START_STEPS } from '@/features/onboarding/lib/flow';
 import { persistOnboarding } from '@/features/onboarding/lib/persist-onboarding';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
@@ -25,6 +26,20 @@ import {
 } from '../lib/credentials';
 
 type ErrorKey = AuthErrorKey | 'confirmEmail';
+
+/** A highlighted word in the terms line that opens the document. */
+function LegalLink({ kind, children }: { kind: LegalKind; children?: ReactNode }) {
+  return (
+    <Text
+      variant="caption"
+      accessibilityRole="link"
+      onPress={() => router.push(`/legal/${kind}`)}
+      className="text-xs leading-4.25"
+    >
+      {children}
+    </Text>
+  );
+}
 
 export function CreateAccountScreen() {
   const { t } = useTranslation('auth');
@@ -96,7 +111,10 @@ export function CreateAccountScreen() {
             <Trans
               t={t}
               i18nKey="createAccount.terms"
-              components={{ bold: <Text variant="caption" className="text-xs leading-4.25" /> }}
+              components={{
+                terms: <LegalLink kind="terms" />,
+                privacy: <LegalLink kind="privacy" />,
+              }}
             />
           </Text>
         </View>
