@@ -1,12 +1,10 @@
-import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { type ExerciseId, getExercise } from '@/shared/data/exercises';
+import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
+import type { ExerciseId } from '@/shared/data/exercises';
 import type { TemplateExerciseDetail } from '@/shared/data/templates';
 import { formatRepRange } from '@/shared/lib/format';
-import { colors } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
@@ -22,7 +20,6 @@ export interface TemplateExerciseCardProps {
 /** Exercise row of the training overview: photo, name, target sets with RIR, muscles (03·0b). */
 export function TemplateExerciseCard({ exercise, onMenu, onPress }: TemplateExerciseCardProps) {
   const { t } = useTranslation(['exercises', 'muscles', 'training']);
-  const image = getExercise(exercise.exerciseId)?.image;
   const name = t(`exercises:${exercise.exerciseId as ExerciseId}.name`);
   const { primary, secondary } = splitMuscles(exercise.exerciseId);
 
@@ -31,25 +28,23 @@ export function TemplateExerciseCard({ exercise, onMenu, onPress }: TemplateExer
       haptic="none"
       activeScale={0.99}
       onPress={onPress}
-      className="flex-row gap-3.5 py-[18px]"
+      className="flex-row gap-3.5 py-4.5"
     >
-      <View className="h-[86px] w-16 items-center justify-center overflow-hidden rounded-[5px] bg-elevated">
-        {image ? (
-          <Image source={image} contentFit="cover" style={{ width: '100%', height: '100%' }} />
-        ) : (
-          <Icon name="dumbbell" size={22} color={colors.dim} />
-        )}
-      </View>
+      <ExerciseThumb
+        exerciseId={exercise.exerciseId}
+        name={name}
+        className="h-21.5 w-16 bg-elevated"
+      />
       <View className="min-w-0 flex-1 gap-2.5">
         <View className="flex-row items-start gap-2.5">
-          <Text variant="label" className="flex-1 pt-[5px] text-base leading-5">
+          <Text variant="label" className="flex-1 pt-1.25 text-base leading-5">
             {name}
           </Text>
           <PressableScale
             hitSlop={8}
             accessibilityLabel={t('training:overview.exerciseMenu', { name })}
             onPress={onMenu}
-            className="size-8 items-center justify-center gap-[3px]"
+            className="size-8 items-center justify-center gap-0.75"
           >
             {[0, 1, 2].map((i) => (
               <View key={i} className="size-[3.5px] rounded-full bg-fg-soft" />

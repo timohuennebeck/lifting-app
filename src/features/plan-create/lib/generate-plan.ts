@@ -42,11 +42,12 @@ const SLOTS = {
   quad: { candidates: ['leg-press', 'hack-squat', 'lunge', 'leg-extension'], compound: true },
   quadIso: { candidates: ['leg-extension', 'lunge'], compound: false },
   calves: { candidates: ['calf-raise'], compound: false },
+  // Photographed exercises lead, so a fresh plan looks like the design's (03·0b).
   hPush: {
     candidates: [
+      'close-grip-bench-press',
       'bench-press',
       'incline-dumbbell-press',
-      'close-grip-bench-press',
       'push-up',
       'dip',
     ],
@@ -57,7 +58,7 @@ const SLOTS = {
     compound: true,
   },
   vPush: {
-    candidates: ['seated-shoulder-press', 'dumbbell-shoulder-press', 'arnold-press'],
+    candidates: ['dumbbell-shoulder-press', 'seated-shoulder-press', 'arnold-press'],
     compound: true,
   },
   vPull: { candidates: ['pull-up', 'lat-pulldown', 'chin-up'], compound: true },
@@ -65,7 +66,7 @@ const SLOTS = {
   chestIso: { candidates: ['cable-crossover', 'dip', 'push-up'], compound: false },
   sideDelt: { candidates: ['lateral-raise', 'upright-row'], compound: false },
   rearDelt: { candidates: ['face-pull', 'reverse-fly'], compound: false },
-  triceps: { candidates: ['triceps-pushdown', 'french-press', 'dip'], compound: false },
+  triceps: { candidates: ['dip', 'triceps-pushdown', 'french-press'], compound: false },
   biceps: { candidates: ['dumbbell-curl', 'hammer-curl', 'chin-up'], compound: false },
   core: { candidates: ['plank'], compound: false },
 } as const satisfies Record<string, Slot>;
@@ -240,9 +241,11 @@ function setCount(
 function setsFor(count: number, compound: boolean, { goal, experience }: GeneratePlanInput) {
   const reps = PRESCRIBED_REPS[goal][compound ? 'compound' : 'isolation'];
   const rir = BASE_RIR[experience ?? 'beginner'];
+  // Each set one step closer to failure, ending one below the base RIR (e.g. 3 · 2 · 1).
+  const last = Math.max(0, rir - 1);
   return Array.from({ length: count }, (_, i) => ({
     repsMin: reps.min,
     repsMax: reps.max,
-    rir: i === count - 1 ? Math.max(0, rir - 1) : rir,
+    rir: Math.min(rir + 1, last + count - 1 - i),
   }));
 }

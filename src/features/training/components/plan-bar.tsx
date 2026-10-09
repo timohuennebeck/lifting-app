@@ -21,6 +21,7 @@ export interface PlanBarProps {
 /** Plan strip of the collection's trainings: done, next (preselected) and upcoming (03·0b). */
 export function PlanBar({ items, currentId, onSelect, onAdd }: PlanBarProps) {
   const { t } = useTranslation('training');
+  const currentIndex = items.findLastIndex((item) => item.id === currentId);
   return (
     <ScrollView
       horizontal
@@ -28,11 +29,12 @@ export function PlanBar({ items, currentId, onSelect, onAdd }: PlanBarProps) {
       className="grow-0"
       contentContainerClassName="px-3.5 pt-3.5 pb-4"
     >
-      {items.map((item) => {
-        const current = item.id === currentId;
+      {items.map((item, index) => {
+        // A template can show twice (last cycle + this one); highlight the later slot.
+        const current = index === currentIndex;
         return (
           <PressableScale
-            key={item.id}
+            key={item.key}
             haptic="select"
             accessibilityRole="tab"
             accessibilityState={{ selected: current }}

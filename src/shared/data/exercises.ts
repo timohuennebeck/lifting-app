@@ -53,11 +53,12 @@ export const EXERCISE_IDS = [
 export type ExerciseId = (typeof EXERCISE_IDS)[number];
 
 // Local catalog; names live in the `exercises` i18n namespace under `<id>.name`.
+// Photos follow the prototype: close variants share one (e.g. all bench presses).
 export const EXERCISES: Record<ExerciseId, Exercise> = {
   'bench-press': {
     id: 'bench-press',
     equipment: 'barbell',
-    image: null,
+    image: require('@/assets/images/exercises/close-grip-bench-press.png'),
     restSeconds: 120,
     weightStep: 2.5,
     muscles: { chest: 0.6, triceps: 0.25, front_delts: 0.15 },
@@ -89,7 +90,7 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
   'seated-shoulder-press': {
     id: 'seated-shoulder-press',
     equipment: 'machine',
-    image: null,
+    image: require('@/assets/images/exercises/overhead-press.png'),
     restSeconds: 120,
     weightStep: 2.5,
     muscles: { front_delts: 0.55, side_delts: 0.2, triceps: 0.25 },
@@ -105,7 +106,7 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
   'lateral-raise': {
     id: 'lateral-raise',
     equipment: 'dumbbell',
-    image: null,
+    image: require('@/assets/images/exercises/lateral-raise.png'),
     restSeconds: 60,
     weightStep: 1,
     muscles: { side_delts: 0.85, traps: 0.15 },
@@ -201,7 +202,7 @@ export const EXERCISES: Record<ExerciseId, Exercise> = {
   'lat-pulldown': {
     id: 'lat-pulldown',
     equipment: 'cable',
-    image: require('@/assets/images/exercises/lat-pulldown.png'),
+    image: require('@/assets/images/exercises/chin-up.png'),
     restSeconds: 90,
     weightStep: 2.5,
     muscles: { lats: 0.6, biceps: 0.2, upper_back: 0.2 },
