@@ -67,7 +67,7 @@ export function ResultScreen() {
       <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
         <View className="px-4 py-1.5">
           <IconButton
-            icon="close"
+            icon="chevron-left"
             accessibilityLabel={t('common:actions.close')}
             onPress={exitBodyCheck}
           />
@@ -114,7 +114,7 @@ export function ResultScreen() {
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
       <View className="flex-row items-center justify-between px-4 py-1.5">
         <IconButton
-          icon="close"
+          icon="chevron-left"
           accessibilityLabel={t('common:actions.close')}
           onPress={justSaved ? leaveSaved : draft ? closeDraft : exitBodyCheck}
         />

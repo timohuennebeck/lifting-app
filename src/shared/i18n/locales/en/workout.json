@@ -40,9 +40,6 @@
     "skip": "Skip rest",
     "start": "Start rest"
   },
-  "record": {
-    "title": "New record"
-  },
   "menu": {
     "open": "Workout options",
     "progress": "{{done}} of {{total}} sets logged",
@@ -75,11 +72,6 @@
   "nav": {
     "previous": "Previous exercise",
     "next": "Next exercise"
-  },
-  "footer": {
-    "logSet": "Log set {{n}}",
-    "nextExercise": "Next exercise",
-    "finish": "Finish workout"
   },
   "empty": {
     "title": "No exercises",

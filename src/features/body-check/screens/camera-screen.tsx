@@ -193,7 +193,11 @@ export function CameraScreen() {
 
       <View className="absolute inset-x-4" style={{ top: insets.top + 6 }}>
         <View className="flex-row items-center justify-between">
-          <IconButton icon="close" accessibilityLabel={t('common:actions.close')} onPress={close} />
+          <IconButton
+            icon="chevron-left"
+            accessibilityLabel={t('common:actions.close')}
+            onPress={close}
+          />
           <Text
             variant="bodyStrong"
             numberOfLines={1}

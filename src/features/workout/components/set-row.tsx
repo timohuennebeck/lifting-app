@@ -114,7 +114,8 @@ export function SetRow({
     <Pressable
       accessibilityLabel={t('table.setLabel', { n: number })}
       onPress={() => onSelect(cells[0].field)}
-      className="h-14 flex-row items-center gap-2.5"
+      // Logged sets step back; the row being edited stays at full strength.
+      className={cn('h-14 flex-row items-center gap-2.5', done && !selected && 'opacity-45')}
     >
       <View
         className={cn(

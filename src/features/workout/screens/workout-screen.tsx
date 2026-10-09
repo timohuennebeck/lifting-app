@@ -1,7 +1,15 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, ScrollView, View } from 'react-native';
+import { Alert, ScrollView, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { scheduleOnRN } from 'react-native-worklets';
 import { useTranslation } from 'react-i18next';
 
 import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
@@ -18,19 +26,21 @@ import { Text } from '@/shared/ui/text';
 import { EmptyWorkout } from '../components/empty-workout';
 import { ExerciseActions } from '../components/exercise-actions';
 import { ExerciseStrip } from '../components/exercise-strip';
-import { PrToast } from '../components/pr-toast';
 import { SetTable } from '../components/set-table';
 import { TargetsSheet } from '../components/targets-sheet';
 import { WeightKeypad } from '../components/weight-keypad';
-import { WorkoutFooter } from '../components/workout-footer';
 import { WorkoutMenuSheet } from '../components/workout-menu-sheet';
 import { WorkoutTopBar } from '../components/workout-top-bar';
 import { swapWorkoutExercise } from '../data/workout-mutations';
-import { type RecordHit, useLiveWorkout } from '../hooks/use-live-workout';
+import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
 type SheetKind = 'menu' | 'targets' | 'swap' | 'add';
+
+const SWIPE_DISTANCE = 70;
+const SWIPE_VELOCITY = 600;
+const SLIDE = { duration: 200, easing: Easing.out(Easing.cubic) };
 
 interface LiveWorkoutProps {
   workout: WorkoutDetail;
@@ -39,10 +49,11 @@ interface LiveWorkoutProps {
 function LiveWorkout({ workout }: LiveWorkoutProps) {
   const { t, i18n } = useTranslation(['workout', 'common']);
   const userId = useUserId();
-  const [record, setRecord] = useState<RecordHit | null>(null);
+  const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
   const [sheet, setSheet] = useState<SheetKind | null>(null);
-  const live = useLiveWorkout(workout, setRecord);
-  const { finish, abandon, finishing } = useWorkoutActions(workout.id);
+  const live = useLiveWorkout(workout);
+  const { abandon } = useWorkoutActions(workout.id);
   const goTo = useWorkoutSessionStore((s) => s.goTo);
   const field = useWorkoutSessionStore((s) => s.field);
   const closeKeypad = useWorkoutSessionStore((s) => s.closeKeypad);
@@ -76,14 +87,48 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     goTo(index);
   };
 
+  // Swiping the exercise drags it along; past the threshold it slides out and the next slides in.
+  const offset = useSharedValue(0);
+  // Direction of a swipe in progress: the next exercise slides in from that side once shown.
+  const slideIn = useSharedValue(0);
+  useEffect(() => {
+    const direction = slideIn.get();
+    if (!direction) return;
+    slideIn.set(0);
+    offset.set(direction * width);
+    offset.set(withTiming(0, SLIDE));
+  }, [exerciseIndex, offset, slideIn, width]);
+
   const swipe = Gesture.Pan()
-    .runOnJS(true)
-    .activeOffsetX([-24, 24])
+    .activeOffsetX([-16, 16])
     .failOffsetY([-12, 12])
+    .onUpdate((e) => {
+      const atEdge =
+        (e.translationX > 0 && exerciseIndex === 0) ||
+        (e.translationX < 0 && exerciseIndex === count - 1);
+      offset.set(atEdge ? e.translationX * 0.25 : e.translationX);
+    })
     .onEnd((e) => {
-      if (e.translationX < -60) go(exerciseIndex + 1);
-      else if (e.translationX > 60) go(exerciseIndex - 1);
+      const direction =
+        e.translationX < -SWIPE_DISTANCE || e.velocityX < -SWIPE_VELOCITY
+          ? 1
+          : e.translationX > SWIPE_DISTANCE || e.velocityX > SWIPE_VELOCITY
+            ? -1
+            : 0;
+      const target = exerciseIndex + direction;
+      if (!direction || target < 0 || target >= count) {
+        offset.set(withTiming(0, SLIDE));
+        return;
+      }
+      offset.set(
+        withTiming(-direction * width, SLIDE, (done) => {
+          if (!done) return;
+          slideIn.set(direction);
+          scheduleOnRN(go, target);
+        }),
+      );
     });
+  const contentStyle = useAnimatedStyle(() => ({ transform: [{ translateX: offset.get() }] }));
 
   const onSelect = (index: number, f: SetField) => {
     if (index !== selectedIndex) return live.selectSet(index, f);
@@ -115,20 +160,6 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   const exerciseName = exercise ? nameOf(exercise.exerciseId, i18n.language) : '';
   const usedIds = workout.exercises.map((e) => e.exerciseId);
 
-  const primary =
-    openIndex >= 0
-      ? {
-          label: t('footer.logSet', { n: openIndex + 1 }),
-          onPress: () => live.selectSet(openIndex),
-        }
-      : live.nextOpenExercise != null
-        ? { label: t('footer.nextExercise'), onPress: () => go(live.nextOpenExercise ?? 0) }
-        : // Like the menu, never finish a workout without a logged set.
-          {
-            label: t('footer.finish'),
-            onPress: live.doneSets > 0 ? finish : () => setSheet('menu'),
-          };
-
   const shownSet =
     selectedIndex >= 0
       ? selectedIndex
@@ -146,22 +177,28 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
             restSeconds={restSecondsFor(exercise.exerciseId, exercise.restSeconds)}
             onClose={() => setSheet('menu')}
           />
+          {/* Pinned: the strip stays put while the sets scroll. */}
+          <ExerciseStrip
+            exercises={workout.exercises}
+            currentIndex={exerciseIndex}
+            onSelect={go}
+            onAdd={() => setSheet('add')}
+          />
           <ScrollView
             ref={scrollRef}
             showsVerticalScrollIndicator={false}
             scrollEventThrottle={32}
             onScroll={(e) => (layout.current.scrollY = e.nativeEvent.contentOffset.y)}
             onLayout={(e) => (layout.current.viewport = e.nativeEvent.layout.height)}
-            contentContainerStyle={{ paddingBottom: keypadOpen ? keypadHeight + 24 : 24 }}
+            contentContainerStyle={{
+              paddingBottom: keypadOpen ? keypadHeight + 24 : insets.bottom + 24,
+            }}
           >
-            <ExerciseStrip
-              exercises={workout.exercises}
-              currentIndex={exerciseIndex}
-              onSelect={go}
-              onAdd={() => setSheet('add')}
-            />
             <GestureDetector gesture={swipe}>
-              <View onLayout={(e) => (layout.current.block = e.nativeEvent.layout.y)}>
+              <Animated.View
+                style={contentStyle}
+                onLayout={(e) => (layout.current.block = e.nativeEvent.layout.y)}
+              >
                 <View className="px-5 pt-5">
                   <Text className="font-inter-semibold text-[30px] leading-7.5">
                     {exerciseName}
@@ -188,7 +225,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                     onRowLayout={(i, y) => (layout.current.rows[i] = y + 48)}
                   />
                 </View>
-              </View>
+              </Animated.View>
             </GestureDetector>
           </ScrollView>
           {keypadOpen ? (
@@ -196,17 +233,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
               onConfirm={live.confirmInput}
               onLayout={(e) => setKeypadHeight(e.nativeEvent.layout.height)}
             />
-          ) : (
-            <WorkoutFooter
-              label={primary.label}
-              onPress={primary.onPress}
-              loading={finishing}
-              onPrevious={() => go(exerciseIndex - 1)}
-              onNext={() => go(exerciseIndex + 1)}
-              hasPrevious={exerciseIndex > 0}
-              hasNext={exerciseIndex < count - 1}
-            />
-          )}
+          ) : null}
         </>
       ) : (
         <EmptyWorkout
@@ -216,7 +243,6 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
           onAdd={() => setSheet('add')}
         />
       )}
-      <PrToast record={record} units={live.units} onHide={() => setRecord(null)} />
       <WorkoutMenuSheet
         visible={sheet === 'menu'}
         onClose={() => setSheet(null)}

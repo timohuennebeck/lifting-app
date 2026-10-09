@@ -40,9 +40,6 @@
     "skip": "Pause überspringen",
     "start": "Pause starten"
   },
-  "record": {
-    "title": "Neuer Rekord"
-  },
   "menu": {
     "open": "Trainingsoptionen",
     "progress": "{{done}} von {{total}} Sätzen eingetragen",
@@ -75,11 +72,6 @@
   "nav": {
     "previous": "Vorherige Übung",
     "next": "Nächste Übung"
-  },
-  "footer": {
-    "logSet": "Satz {{n}} eintragen",
-    "nextExercise": "Nächste Übung",
-    "finish": "Training beenden"
   },
   "empty": {
     "title": "Keine Übungen",

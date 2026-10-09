@@ -70,7 +70,9 @@ export function WorkoutSummaryScreen() {
   const volume = units === 'imperial' ? kgToLb(volumeKg) : volumeKg;
 
   return (
-    <Screen header={<ScreenHeader icon="close" onBack={close} title={workout?.name ?? ''} />}>
+    <Screen
+      header={<ScreenHeader icon="chevron-left" onBack={close} title={workout?.name ?? ''} />}
+    >
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 130 + insets.bottom }}

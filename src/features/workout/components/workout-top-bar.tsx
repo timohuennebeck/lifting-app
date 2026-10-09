@@ -35,7 +35,7 @@ export function WorkoutTopBar({ startedAt, progress, restSeconds, onClose }: Wor
   const { t } = useTranslation('workout');
   return (
     <View className="flex-row items-center gap-3.5 px-5 py-1.5">
-      <IconButton icon="close" accessibilityLabel={t('menu.open')} onPress={onClose} />
+      <IconButton icon="chevron-left" accessibilityLabel={t('menu.open')} onPress={onClose} />
       <ElapsedClock startedAt={startedAt} />
       <RestTimer defaultSeconds={restSeconds} />
       <ProgressBar value={progress} className="h-1.5 w-24 flex-none" />

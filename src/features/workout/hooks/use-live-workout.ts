@@ -10,12 +10,8 @@ import { parseSetInput, toSetInput } from '../lib/set-input';
 import { firstOpenSet, suggestSet } from '../lib/suggest';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
-export interface RecordHit extends SetValues {
-  at: number;
-}
-
 /** Current exercise, progress and set logging for the live workout screen. */
-export function useLiveWorkout(workout: WorkoutDetail, onRecord: (hit: RecordHit) => void) {
+export function useLiveWorkout(workout: WorkoutDetail) {
   const units = useUnits();
   const storedIndex = useWorkoutSessionStore((s) => s.exerciseIndex);
   const selectedSetId = useWorkoutSessionStore((s) => s.selectedSetId);
@@ -73,16 +69,22 @@ export function useLiveWorkout(workout: WorkoutDetail, onRecord: (hit: RecordHit
       store.select(set.id, toSetInput(values, units), measures[0]);
       return;
     }
-    if (isPr && !set.isPr) {
-      haptics.success();
-      onRecord({ ...values, at: Date.now() });
-    }
+    // A new record gets a success tick; the set's number turns accent in the table.
+    if (isPr && !set.isPr) haptics.success();
   }
 
-  /** Logs the open set from the keypad buffer, or focuses the missing field. */
+  /**
+   * The keypad's check: moves on to the next box of the row (its value selected, ready to be
+   * typed over); on the last box it logs the set, or focuses a box that is still empty.
+   */
   function confirmInput() {
-    const { input, focusField } = useWorkoutSessionStore.getState();
+    const { input, field, focusField } = useWorkoutSessionStore.getState();
     if (selectedIndex < 0) return;
+    const nextField = measures[measures.indexOf(field) + 1];
+    if (nextField) {
+      focusField(nextField);
+      return;
+    }
     const { values, missing } = parseSetInput(input, measures, bodyweight, units);
     if (missing) {
       haptics.error();

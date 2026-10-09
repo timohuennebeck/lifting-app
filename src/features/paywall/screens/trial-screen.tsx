@@ -54,7 +54,7 @@ export function TrialScreen() {
       }
     >
       {/* Header scrolls with the content so the number's glow isn't clipped at the top. */}
-      <ScreenHeader icon="close" onBack={flow.exit} />
+      <ScreenHeader icon="chevron-left" onBack={flow.exit} />
       <View className="items-center pt-2.5">
         <View
           className="size-42.5 items-center justify-center rounded-full bg-accent"

@@ -38,7 +38,9 @@ export function EditSetsScreen() {
   const { data: template } = useTemplateDetail(id);
   const exercise = template?.exercises.find((e) => e.id === exerciseId);
   if (!exercise)
-    return <Screen header={<ScreenHeader icon="close" title={t('sets.title')} />}>{null}</Screen>;
+    return (
+      <Screen header={<ScreenHeader icon="chevron-left" title={t('sets.title')} />}>{null}</Screen>
+    );
   return <EditSetsForm key={exercise.id} exercise={exercise} />;
 }
 
@@ -102,7 +104,7 @@ function EditSetsForm({ exercise }: EditSetsFormProps) {
     <Screen
       scroll
       // Title only, as in 00·P2 C·S; the exercise is known from the previous screen.
-      header={<ScreenHeader icon="close" title={t('sets.title')} />}
+      header={<ScreenHeader icon="chevron-left" title={t('sets.title')} />}
       footer={<Button label={t('common:actions.done')} loading={saving} onPress={save} />}
     >
       <View className="flex-row items-center gap-2.5 px-5 pt-6 pb-2">

@@ -75,11 +75,10 @@ changes hourly, so new exercises ship without a release. Edit them with the serv
 - **Before a release:** `npm run catalog:pull` refreshes the snapshot the app ships for its first
   launch (`src/shared/data/exercise-catalog.json`).
 
-## App config and legal documents (team side)
+## Legal documents (team side)
 
-Both are readable without an account (onboarding runs logged out) and written with the service role.
+Documents are readable without an account (onboarding runs logged out) and written with the service role.
 
-- **`app_config`:** one jsonb `value` per `key`. Every install can read it, so never store secrets there.
 - **`legal_documents`:** one row per `kind` (`terms`, `privacy`), `locale` and `version`, as Markdown. Rows
   can't be edited or deleted; publish a new `version` instead. Set `requires_reacceptance` when users who
   accepted an older version have to accept again.

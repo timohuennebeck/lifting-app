@@ -40,9 +40,6 @@
     "skip": "Pular descanso",
     "start": "Iniciar descanso"
   },
-  "record": {
-    "title": "Novo recorde"
-  },
   "menu": {
     "open": "Opções do treino",
     "progress": "{{done}} de {{total}} séries registradas",
@@ -75,11 +72,6 @@
   "nav": {
     "previous": "Exercício anterior",
     "next": "Próximo exercício"
-  },
-  "footer": {
-    "logSet": "Registrar série {{n}}",
-    "nextExercise": "Próximo exercício",
-    "finish": "Terminar treino"
   },
   "empty": {
     "title": "Sem exercícios",
