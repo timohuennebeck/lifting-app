@@ -34,12 +34,14 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
 
   async function send() {
     if (!canSend || !userId) return;
+    const body = text;
     setSending(true);
     try {
       const attachments = draft.shots.length ? await draft.upload(userId, ticketId) : [];
       if (!attachments) return;
-      await sendTicketMessage({ userId, ticketId, body: text, attachments });
-      setText('');
+      await sendTicketMessage({ userId, ticketId, body, attachments });
+      // Keep whatever was typed while the screenshots uploaded.
+      setText((current) => (current === body ? '' : current));
       draft.reset();
     } catch (e) {
       console.error('Sending message failed', e);

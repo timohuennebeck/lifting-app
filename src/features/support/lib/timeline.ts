@@ -20,10 +20,10 @@ const ms = (iso: string | null) => (iso ? toMs(iso) || 0 : 0);
 const dayKey = (at: number) => new Date(at).toDateString();
 
 /**
- * Chat timeline: messages, the "Ticket created" line and, until the team answers, the
- * local auto reply after the first user message, the current status (planned at its update time, resolved/closed at
- * the closing time) and day dividers. Status history is not stored, so only the current
- * status appears.
+ * Chat timeline: messages, the "Ticket created" line, the local auto reply after the
+ * first user message (until the team answers), the current status (planned at its update
+ * time, resolved/closed at the closing time) and day dividers. Status history is not
+ * stored, so only the current status appears.
  */
 export function buildTimeline(ticket: Ticket, messages: TicketMessage[]): TimelineItem[] {
   const timed: TimedItem[] = [];
