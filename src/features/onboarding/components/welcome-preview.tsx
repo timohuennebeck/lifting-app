@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -13,6 +12,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { exerciseName, getExercise } from '@/shared/data/exercises';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
@@ -87,11 +87,11 @@ function PreviewExercise({ id, reps, rir, last }: PreviewExerciseProps) {
   const muscles = Object.entries(exercise?.muscles ?? {}) as [MuscleId, number][];
   return (
     <View className={cn('flex-row gap-3.5 py-4.5', !last && 'border-b border-raised')}>
-      <View className="h-21.5 w-16 overflow-hidden rounded-[5px] bg-raised">
-        {exercise?.image ? (
-          <Image source={exercise.image} contentFit="cover" style={{ flex: 1 }} />
-        ) : null}
-      </View>
+      <ExerciseThumb
+        exerciseId={id}
+        name={exerciseName(id, i18n.language)}
+        className="h-21.5 w-16"
+      />
       <View className="min-w-0 flex-1 gap-2.5">
         <View className="flex-row items-start gap-2.5">
           <Text variant="label" className="flex-1 pt-1.25 text-base leading-5">

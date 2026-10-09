@@ -73,7 +73,7 @@
       "front_delts": 0.15
     },
     "rest_seconds": 120,
-    "image_path": "close-grip-bench-press.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"
@@ -152,7 +152,7 @@
       "front_delts": 0.2
     },
     "rest_seconds": 120,
-    "image_path": "close-grip-bench-press.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"
@@ -247,7 +247,7 @@
       "triceps": 0.15
     },
     "rest_seconds": 90,
-    "image_path": "incline-dumbbell-press.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"
@@ -326,7 +326,7 @@
       "triceps": 0.25
     },
     "rest_seconds": 120,
-    "image_path": "overhead-press.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"
@@ -405,7 +405,7 @@
       "triceps": 0.25
     },
     "rest_seconds": 120,
-    "image_path": "overhead-press.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"
@@ -484,7 +484,7 @@
       "triceps": 0.2
     },
     "rest_seconds": 90,
-    "image_path": "arnold-press.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"
@@ -562,7 +562,7 @@
       "traps": 0.15
     },
     "rest_seconds": 60,
-    "image_path": "lateral-raise.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"
@@ -953,7 +953,7 @@
       "front_delts": 0.15
     },
     "rest_seconds": 60,
-    "image_path": "cable-crossover.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"
@@ -1032,7 +1032,7 @@
       "front_delts": 0.15
     },
     "rest_seconds": 90,
-    "image_path": "dip.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"
@@ -1111,7 +1111,7 @@
       "front_delts": 0.2
     },
     "rest_seconds": 60,
-    "image_path": "push-up.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"
@@ -1344,7 +1344,7 @@
       "upper_back": 0.25
     },
     "rest_seconds": 120,
-    "image_path": "pull-up.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"
@@ -1423,7 +1423,7 @@
       "upper_back": 0.15
     },
     "rest_seconds": 120,
-    "image_path": "chin-up.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"
@@ -1502,7 +1502,7 @@
       "upper_back": 0.2
     },
     "rest_seconds": 90,
-    "image_path": "chin-up.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"
@@ -2522,7 +2522,7 @@
       "obliques": 0.3
     },
     "rest_seconds": 60,
-    "image_path": "plank.png",
+    "image_path": null,
     "video_path": null,
     "is_active": true,
     "updated_at": "2026-10-09T00:00:00+00:00"

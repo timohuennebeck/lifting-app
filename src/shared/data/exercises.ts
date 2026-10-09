@@ -52,25 +52,10 @@ export interface Exercise {
   isActive: boolean;
 }
 
-// Photos bundled with the app; other paths load from the public bucket.
-const BUNDLED_MEDIA: Record<string, ImageSourcePropType> = {
-  'arnold-press.png': require('@/assets/images/exercises/arnold-press.png'),
-  'cable-crossover.png': require('@/assets/images/exercises/cable-crossover.png'),
-  'chin-up.png': require('@/assets/images/exercises/chin-up.png'),
-  'close-grip-bench-press.png': require('@/assets/images/exercises/close-grip-bench-press.png'),
-  'dip.png': require('@/assets/images/exercises/dip.png'),
-  'incline-dumbbell-press.png': require('@/assets/images/exercises/incline-dumbbell-press.png'),
-  'lateral-raise.png': require('@/assets/images/exercises/lateral-raise.png'),
-  'overhead-press.png': require('@/assets/images/exercises/overhead-press.png'),
-  'plank.png': require('@/assets/images/exercises/plank.png'),
-  'pull-up.png': require('@/assets/images/exercises/pull-up.png'),
-  'push-up.png': require('@/assets/images/exercises/push-up.png'),
-};
-
-const mediaSource = (path: string): ImageSourcePropType =>
-  BUNDLED_MEDIA[path] ?? {
-    uri: `${env.supabaseUrl}/storage/v1/object/public/exercise-media/${encodeURI(path)}`,
-  };
+/** Exercise media live in the public `exercise-media` bucket. */
+const mediaSource = (path: string): ImageSourcePropType => ({
+  uri: `${env.supabaseUrl}/storage/v1/object/public/exercise-media/${encodeURI(path)}`,
+});
 
 /** Every measure this app version knows, in display order. */
 const MEASURES: Measure[] = ['weight', 'reps', 'seconds'];
