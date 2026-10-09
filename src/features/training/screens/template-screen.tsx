@@ -5,7 +5,6 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
-import { exerciseName } from '@/shared/data/exercises';
 import { muscleShares } from '@/shared/data/muscles';
 import {
   estimateMinutes,
@@ -48,7 +47,7 @@ type PickerState = { mode: 'add' } | { mode: 'swap'; templateExerciseId: string 
 /** Training overview with plan bar, muscles, editable exercise list and start CTA (03·0b). */
 export function TemplateScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { t, i18n } = useTranslation(['training', 'common']);
+  const { t } = useTranslation(['training', 'common']);
   const insets = useSafeAreaInsets();
   const { data: template, isLoading } = useTemplateDetail(id);
   const { data: collections = [] } = useCollections();
@@ -200,7 +199,13 @@ export function TemplateScreen() {
             exercises.map((exercise) => (
               <TemplateExerciseCard
                 key={exercise.id}
-                exercise={exercise}
+                exerciseId={exercise.exerciseId}
+                sets={exercise.sets.map((set) => ({
+                  key: set.id,
+                  min: set.target_min,
+                  max: set.target_max,
+                  rir: set.rir,
+                }))}
                 onMenu={() => setMenuFor(exercise)}
                 onPress={() => router.push(`/template/${template.id}/sets/${exercise.id}`)}
               />
@@ -230,7 +235,6 @@ export function TemplateScreen() {
       <ExerciseMenuSheet
         visible={!!menuFor}
         onClose={() => setMenuFor(null)}
-        title={menuShown ? exerciseName(menuShown.exerciseId, i18n.language) : ''}
         canMoveUp={menuIndex > 0}
         canMoveDown={menuIndex >= 0 && menuIndex < exercises.length - 1}
         onAction={onMenuAction}

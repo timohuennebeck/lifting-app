@@ -19,7 +19,7 @@ import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { MUSCLE_CARDS, type MuscleId } from '@/shared/ui/muscle-map/body-paths';
 import { MuscleMap } from '@/shared/ui/muscle-map/muscle-map';
-import { PlanSlot } from '@/shared/ui/plan-slot';
+import { PLAN_ADD_SIZE, PlanSlot } from '@/shared/ui/plan-slot';
 import { Text } from '@/shared/ui/text';
 
 /** The mockup renders a full 390×844 screen and scales it into a 180×390 phone. */
@@ -221,13 +221,16 @@ export function WelcomePreview({ active }: WelcomePreviewProps) {
                     <PlanSlot
                       number={i + 1}
                       done={day.state === 'done'}
-                      next={day.state === 'today'}
+                      selected={day.state === 'today'}
                     />
                   </View>
                 ))}
                 <View className="flex-1 items-center justify-end">
-                  <View className="size-8 items-center justify-center rounded-full bg-elevated">
-                    <Icon name="plus" size={12} />
+                  <View
+                    className="items-center justify-center rounded-full bg-elevated"
+                    style={{ width: PLAN_ADD_SIZE, height: PLAN_ADD_SIZE }}
+                  >
+                    <Icon name="plus" size={13} />
                   </View>
                 </View>
               </View>

@@ -71,28 +71,25 @@
     }
   },
   "recognizing": {
-    "stages": ["Detecting training day …", "Matching exercises …", "Applying sets and reps …"]
+    "stages": [
+      "Detecting training day …",
+      "Matching exercises …",
+      "Applying sets and reps …"
+    ]
   },
   "confirm": {
-    "title": "LOOKS RIGHT?",
     "planName": "Plan name",
-    "muscles": "Muscles worked",
-    "exercises_one": "{{count}} exercise",
-    "exercises_other": "{{count}} exercises",
-    "noDay": "No fixed day",
-    "dayUnknown": "We couldn't read the day “{{raw}}”. Pick a weekday or keep it flexible.",
+    "dayUnknown": "We couldn’t read the day “{{raw}}” – this training stays without a fixed day.",
     "readAs": "Read as “{{raw}}”",
     "correct": "Correct",
     "add": "Add exercise",
-    "voice": "Voice",
     "swap": "Swap exercise",
-    "remove": "Remove exercise",
     "cta": "Use this plan",
     "check_one": "Check {{count}} item",
     "check_other": "Check {{count}} items",
-    "empty": "No exercises yet. Add one or use your voice.",
-    "dayName": "Day name",
-    "details": "Show details"
+    "empty": "No exercises yet. Add one with +.",
+    "newDay": "Workout {{number}}",
+    "renamePlan": "Rename plan"
   },
   "errors": {
     "file": "Couldn't open that file.",

@@ -8,40 +8,47 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
+import { MinusGlyph } from './glyphs';
+
 export type ExerciseMenuAction = 'editSets' | 'swap' | 'moveUp' | 'moveDown' | 'remove';
 
 export interface ExerciseMenuSheetProps {
   visible: boolean;
   onClose: () => void;
-  title: string;
   canMoveUp: boolean;
   canMoveDown: boolean;
   onAction: (action: ExerciseMenuAction) => void;
+  /** Actions to leave out, e.g. "editSets" where sets can't be edited. */
+  hidden?: ExerciseMenuAction[];
 }
 
-const ACTIONS: { action: ExerciseMenuAction; icon: IconName }[] = [
+const ACTIONS: { action: ExerciseMenuAction; icon?: IconName }[] = [
   { action: 'editSets', icon: 'pencil' },
   { action: 'swap', icon: 'swap' },
   { action: 'moveUp', icon: 'arrow-up' },
   { action: 'moveDown', icon: 'chevron-down' },
-  { action: 'remove', icon: 'trash' },
+  // The app's usual remove mark: a minus.
+  { action: 'remove' },
 ];
 
 /** Per-exercise "⋯" menu: edit sets, swap, reorder, remove. */
 export function ExerciseMenuSheet({
   visible,
   onClose,
-  title,
   canMoveUp,
   canMoveDown,
   onAction,
+  hidden = [],
 }: ExerciseMenuSheetProps) {
   const { t } = useTranslation('training');
   const available = ACTIONS.filter(
-    ({ action }) => (action !== 'moveUp' || canMoveUp) && (action !== 'moveDown' || canMoveDown),
+    ({ action }) =>
+      !hidden.includes(action) &&
+      (action !== 'moveUp' || canMoveUp) &&
+      (action !== 'moveDown' || canMoveDown),
   );
   return (
-    <Sheet visible={visible} onClose={onClose} title={title}>
+    <Sheet visible={visible} onClose={onClose}>
       <View className="gap-1">
         {available.map(({ action, icon }) => {
           const danger = action === 'remove';
@@ -58,7 +65,11 @@ export function ExerciseMenuSheet({
                   danger ? 'bg-danger-bg' : 'bg-control',
                 )}
               >
-                <Icon name={icon} size={14} color={danger ? colors.red : colors.fg} />
+                {icon ? (
+                  <Icon name={icon} size={14} color={colors.fg} />
+                ) : (
+                  <MinusGlyph color={colors.red} width={14} />
+                )}
               </View>
               <Text variant="label" className={cn('text-base', danger && 'text-red')}>
                 {t(`exerciseMenu.${action}`)}

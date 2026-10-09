@@ -78,6 +78,12 @@ const formatRepRange = (min: number, max: number) => (min === max ? `${min}` : `
 export const formatTarget = (min: number, max: number, timed: boolean) =>
   timed ? `${formatRepRange(min, max)} ${i18n.t('common:units.sec')}` : formatRepRange(min, max);
 
+/** A target with its unit, for overviews: "8–10 Wdh." / "8–10 reps", or "30–45 s". */
+export const formatTargetLabel = (min: number, max: number, timed: boolean) =>
+  timed
+    ? formatTarget(min, max, true)
+    : i18n.t('common:units.repRange', { range: formatRepRange(min, max) });
+
 /** 70 → 5′10″ */
 export function feetInches(totalInches: number) {
   const inches = Math.round(totalInches);

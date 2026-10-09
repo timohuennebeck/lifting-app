@@ -1,25 +1,36 @@
 import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ExerciseDetailModal } from '@/features/exercises/components/exercise-detail-modal';
 import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
+import {
+  type ExerciseMenuAction,
+  ExerciseMenuSheet,
+} from '@/features/training/components/exercise-menu-sheet';
+import { PlanBar } from '@/features/training/components/plan-bar';
+import { TemplateExerciseCard } from '@/features/training/components/template-exercise-card';
 import { defaultSetDrafts, swapTargets } from '@/shared/data/exercises';
 import { muscleShares } from '@/shared/data/muscles';
+import { estimateMinutes } from '@/shared/data/templates';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
+import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
+import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
+import { EmptyExercises } from '@/shared/ui/empty-exercises';
+import { IconButton } from '@/shared/ui/icon-button';
 import { MuscleTileRow } from '@/shared/ui/muscle-map';
-import { StepScreen } from '@/shared/ui/step-screen';
+import { Screen } from '@/shared/ui/screen';
+import { ScreenHeader } from '@/shared/ui/screen-header';
+import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
-import { TextField } from '@/shared/ui/text-field';
+import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
-import { DayEditor } from '../components/day-editor';
-import { DayTabs } from '../components/day-tabs';
-import { ImportedExerciseRow } from '../components/imported-exercise-row';
-import { IMPORT_STEPS } from '../lib/format';
+import { ReviewPrompt } from '../components/review-prompt';
 import {
   type ImportedDay,
   type ImportedExercise,
@@ -31,26 +42,42 @@ import { useImportStore } from '../stores/import-store';
 
 type Picker = { mode: 'add' } | { mode: 'swap'; index: number };
 
-/** 06c: review the detected plan per day (name, weekday, exercises) and confirm it. */
+/** Drops the import's doubts about an exercise once the user has settled it. */
+const settle = ({ raw: _raw, alternatives: _alts, ...e }: ImportedExercise): ImportedExercise => e;
+
+/**
+ * 06c: the detected plan in the training overview layout (03·0b). Days sit in the plan strip;
+ * amber dots mark what the import wasn't sure about until the user checks it.
+ */
 export function ConfirmScreen() {
-  const { t } = useTranslation(['planImport', 'common']);
+  const { t } = useTranslation(['planImport', 'training', 'common']);
+  const insets = useSafeAreaInsets();
   const plan = useImportStore((s) => s.plan);
   const dayIndex = useImportStore((s) => s.dayIndex);
   const editPlan = useImportStore((s) => s.editPlan);
   const selectDay = useImportStore((s) => s.selectDay);
   const updateDraft = useUpdateDraft();
   const [picker, setPicker] = useState<Picker | null>(null);
-  // The sheet keeps its title and icons while it animates out.
+  // The sheets keep their content while they animate out.
   const pickerShown = useLastDefined(picker);
+  const [menuFor, setMenuFor] = useState<number | null>(null);
+  const menuShown = useLastDefined(menuFor);
+  const [renameOpen, setRenameOpen] = useState(false);
   const [detailId, setDetailId] = useState<string | null>(null);
   if (!plan) return <Redirect href="/import" />;
 
   const index = Math.min(dayIndex, plan.days.length - 1);
   const day = plan.days[index];
+  const exercises = day?.exercises ?? [];
   const pending = pendingReviews(plan);
-  const shares = day
-    ? muscleShares(day.exercises.map((e) => ({ exerciseId: e.exerciseId, sets: e.sets.length })))
-    : [];
+  const items = exercises.map((e) => ({
+    exerciseId: e.exerciseId,
+    sets: e.sets.length,
+    restSeconds: e.restSeconds ?? null,
+  }));
+  const shares = muscleShares(items);
+  const weekdays = t('common:weekdays.long', { returnObjects: true }) as string[];
+  const empty = exercises.length === 0;
 
   function editDay(edit: (day: ImportedDay) => ImportedDay) {
     editPlan((p) => ({ ...p, days: p.days.map((d, i) => (i === index ? edit(d) : d)) }));
@@ -60,8 +87,18 @@ export function ConfirmScreen() {
     editDay((d) => ({ ...d, exercises: d.exercises.map((e, i) => (i === at ? edit(e) : e)) }));
   }
 
-  const settle = ({ raw: _raw, alternatives: _alts, ...e }: ImportedExercise): ImportedExercise =>
-    e;
+  function addDay() {
+    if (!plan) return;
+    const number = plan.days.length + 1;
+    editPlan((p) => ({
+      ...p,
+      days: [
+        ...p.days,
+        { name: t('planImport:confirm.newDay', { number }), weekday: null, exercises: [] },
+      ],
+    }));
+    selectDay(plan.days.length);
+  }
 
   function pick(exerciseId: string) {
     if (picker?.mode === 'swap') {
@@ -86,6 +123,23 @@ export function ConfirmScreen() {
     setPicker(null);
   }
 
+  function onMenuAction(action: ExerciseMenuAction) {
+    const at = menuFor;
+    setMenuFor(null);
+    if (at === null) return;
+    if (action === 'swap') afterSheetClose(() => setPicker({ mode: 'swap', index: at }));
+    else if (action === 'remove')
+      editDay((d) => ({ ...d, exercises: d.exercises.filter((_, k) => k !== at) }));
+    else if (action === 'moveUp' || action === 'moveDown') {
+      const to = at + (action === 'moveUp' ? -1 : 1);
+      editDay((d) => {
+        const next = [...d.exercises];
+        [next[at], next[to]] = [next[to], next[at]];
+        return { ...d, exercises: next };
+      });
+    }
+  }
+
   function submit() {
     if (!plan) return;
     if (pending) {
@@ -99,12 +153,126 @@ export function ConfirmScreen() {
   }
 
   return (
-    <StepScreen
-      step={IMPORT_STEPS}
-      total={IMPORT_STEPS}
-      title={t('planImport:confirm.title')}
-      scroll
-      footer={
+    <Screen
+      header={
+        <ScreenHeader
+          icon="chevron-left-thin"
+          title={plan.name}
+          action={
+            <IconButton
+              icon="more"
+              iconSize={18}
+              accessibilityLabel={t('planImport:confirm.renamePlan')}
+              onPress={() => setRenameOpen(true)}
+            />
+          }
+        />
+      }
+    >
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 130 }}
+      >
+        <PlanBar
+          items={plan.days.map((d, i) => ({
+            key: String(i),
+            id: String(i),
+            name: d.name,
+            number: i + 1,
+            review: needsReview(d),
+          }))}
+          currentId={String(index)}
+          onSelect={(id) => selectDay(Number(id))}
+          onAdd={addDay}
+        />
+        {day ? (
+          <>
+            <Text variant="title" className="px-5 pt-7.5 normal-case">
+              {day.name}
+            </Text>
+            <Text variant="paragraph" tone="subtle" className="px-5 pt-2">
+              {day.weekday !== null && weekdays[day.weekday]
+                ? t('training:overview.fixedDay', { day: weekdays[day.weekday] })
+                : t('training:overview.noFixedDay')}
+            </Text>
+            {day.rawDay ? (
+              <View className="px-5 pt-3">
+                <ReviewPrompt
+                  message={t('planImport:confirm.dayUnknown', { raw: day.rawDay })}
+                  onConfirm={() => editDay(({ rawDay: _raw, ...d }) => d)}
+                />
+              </View>
+            ) : null}
+
+            {shares.length ? (
+              <>
+                <Text variant="headline" className="px-5 pt-6 leading-5.5">
+                  {t('training:overview.musclesWorked')}
+                </Text>
+                <View className="pt-3.5">
+                  <MuscleTileRow shares={shares} />
+                </View>
+              </>
+            ) : null}
+
+            <View className={cn('flex-row items-center gap-3 px-5', empty ? 'pt-9' : 'pt-7.5')}>
+              <View className="min-w-0 flex-1">
+                <Text variant="headline" className="leading-5.5">
+                  {empty
+                    ? t('training:overview.noExercises')
+                    : t('training:overview.exercises', { count: exercises.length })}
+                </Text>
+                <Text variant="paragraph" tone="subtle" className="mt-1.5 text-sm leading-4.5">
+                  {t('training:overview.duration', { minutes: estimateMinutes(items) })}
+                </Text>
+              </View>
+              <IconButton
+                icon="plus"
+                size={empty ? 56 : 44}
+                iconSize={empty ? 18 : 14}
+                accessibilityLabel={t('planImport:confirm.add')}
+                className="bg-raised"
+                onPress={() => setPicker({ mode: 'add' })}
+              />
+            </View>
+
+            <View className="px-5 pt-2">
+              {empty ? (
+                <EmptyExercises hint={t('planImport:confirm.empty')} />
+              ) : (
+                exercises.map((e, i) => (
+                  <TemplateExerciseCard
+                    key={`${e.exerciseId}-${i}`}
+                    exerciseId={e.exerciseId}
+                    sets={e.sets.map((set, k) => ({
+                      key: String(k),
+                      min: set.targetMin,
+                      max: set.targetMax,
+                      rir: set.rir,
+                    }))}
+                    review={!!e.raw}
+                    onMenu={() => setMenuFor(i)}
+                    onPress={() => setDetailId(e.exerciseId)}
+                  >
+                    {e.raw ? (
+                      <ReviewPrompt
+                        message={t('planImport:confirm.readAs', { raw: e.raw })}
+                        alternatives={e.alternatives}
+                        onConfirm={() => editExercise(i, settle)}
+                        onPickAlternative={(exerciseId) =>
+                          editExercise(i, (x) => settle({ ...x, exerciseId }))
+                        }
+                      />
+                    ) : null}
+                  </TemplateExerciseCard>
+                ))
+              )}
+            </View>
+          </>
+        ) : null}
+      </ScrollView>
+
+      <BottomFade>
         <Button
           label={
             pending
@@ -112,77 +280,10 @@ export function ConfirmScreen() {
               : t('planImport:confirm.cta')
           }
           variant={pending ? 'secondary' : 'primary'}
-          disabled={!plan.name.trim()}
           onPress={submit}
         />
-      }
-    >
-      <View className="px-4 pt-6">
-        <TextField
-          label={t('planImport:confirm.planName')}
-          value={plan.name}
-          onChangeText={(name) => editPlan((p) => ({ ...p, name }))}
-          maxLength={30}
-          clearable
-          returnKeyType="done"
-        />
-      </View>
-      <View className="pt-6">
-        <DayTabs days={plan.days} selected={index} onSelect={selectDay} />
-      </View>
-      {day ? (
-        <>
-          <DayEditor day={day} fallbackName={`${index + 1}`} onEdit={editDay} />
-          {shares.length ? (
-            <View className="gap-2.5 pt-6">
-              <Text variant="overline" tone="subtle" className="px-4 tracking-[1.5px]">
-                {t('planImport:confirm.muscles')}
-              </Text>
-              <MuscleTileRow shares={shares} />
-            </View>
-          ) : null}
-          <View className="gap-2 px-4 pt-6">
-            {day.exercises.length ? (
-              day.exercises.map((e, i) => (
-                <ImportedExerciseRow
-                  key={`${e.exerciseId}-${i}`}
-                  exercise={e}
-                  onOpen={() => setDetailId(e.exerciseId)}
-                  onSwap={() => setPicker({ mode: 'swap', index: i })}
-                  onRemove={() =>
-                    editDay((d) => ({ ...d, exercises: d.exercises.filter((_, k) => k !== i) }))
-                  }
-                  onConfirm={() => editExercise(i, settle)}
-                  onPickAlternative={(exerciseId) =>
-                    editExercise(i, (x) => settle({ ...x, exerciseId }))
-                  }
-                />
-              ))
-            ) : (
-              <Text variant="paragraph" tone="subtle" className="py-4 text-center">
-                {t('planImport:confirm.empty')}
-              </Text>
-            )}
-            <View className="flex-row gap-2 pt-1">
-              <Button
-                label={t('planImport:confirm.add')}
-                variant="secondary"
-                size="md"
-                icon="plus"
-                className="flex-1"
-                onPress={() => setPicker({ mode: 'add' })}
-              />
-              <Button
-                label={t('planImport:confirm.voice')}
-                variant="outline"
-                size="md"
-                icon="mic"
-                onPress={() => router.push('/import/voice')}
-              />
-            </View>
-          </View>
-        </>
-      ) : null}
+      </BottomFade>
+
       <ExercisePickerSheet
         visible={!!picker}
         onClose={() => setPicker(null)}
@@ -191,10 +292,30 @@ export function ConfirmScreen() {
         title={
           pickerShown?.mode === 'swap' ? t('planImport:confirm.swap') : t('planImport:confirm.add')
         }
-        excludeIds={day?.exercises.map((e) => e.exerciseId) ?? []}
-        muscleItems={day?.exercises.map((e) => ({ exerciseId: e.exerciseId, sets: e.sets.length }))}
+        excludeIds={exercises.map((e) => e.exerciseId)}
+        muscleItems={items}
+      />
+      <ExerciseMenuSheet
+        visible={menuFor !== null}
+        onClose={() => setMenuFor(null)}
+        hidden={['editSets']}
+        canMoveUp={(menuShown ?? 0) > 0}
+        canMoveDown={menuShown !== null && menuShown < exercises.length - 1}
+        onAction={onMenuAction}
+      />
+      <TextInputSheet
+        visible={renameOpen}
+        onClose={() => setRenameOpen(false)}
+        title={t('planImport:confirm.renamePlan')}
+        initialValue={plan.name}
+        placeholder={t('planImport:confirm.planName')}
+        ctaLabel={t('common:actions.save')}
+        onSubmit={(name) => {
+          editPlan((p) => ({ ...p, name }));
+          setRenameOpen(false);
+        }}
       />
       <ExerciseDetailModal exerciseId={detailId} onClose={() => setDetailId(null)} />
-    </StepScreen>
+    </Screen>
   );
 }

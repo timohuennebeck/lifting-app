@@ -37,28 +37,42 @@ export function DashedRing({ color, style }: DashedRingProps) {
 export interface PlanSlotProps {
   number: number;
   done: boolean;
-  /** Accent ring for the next training to do. */
-  next?: boolean;
+  /** The slot being shown: only it gets the accent ring. */
+  selected?: boolean;
+  /** Amber dot: something in this slot still needs a check (plan import). */
+  review?: boolean;
 }
 
 /** Plan strip slot: accent check when done, otherwise the slot number in a dashed ring. */
-export function PlanSlot({ number, done, next }: PlanSlotProps) {
+export function PlanSlot({ number, done, selected, review }: PlanSlotProps) {
   const accent = useAccentColor();
-  if (done) {
-    return (
-      <CheckBadge
-        size={32}
-        glyph={14}
-        style={{ boxShadow: `0 0 0 3px ${colors.bg}, 0 0 0 4.5px ${accent}80` }}
-      />
-    );
-  }
   return (
     <View className="size-8 items-center justify-center">
-      <DashedRing color={next ? accent : '#4A4A48'} style={{ left: -3, top: -3 }} />
-      <Text variant="label" className="text-sm">
-        {number}
-      </Text>
+      {done ? (
+        <CheckBadge
+          size={32}
+          glyph={14}
+          style={
+            selected ? { boxShadow: `0 0 0 3px ${colors.bg}, 0 0 0 4.5px ${accent}` } : undefined
+          }
+        />
+      ) : (
+        <>
+          <DashedRing color={selected ? accent : '#4A4A48'} style={{ left: -3, top: -3 }} />
+          <Text variant="label" className="text-sm">
+            {number}
+          </Text>
+        </>
+      )}
+      {review ? (
+        <View
+          className="absolute -top-1 -right-1 size-2.5 rounded-full border-2 border-bg"
+          style={{ backgroundColor: colors.review }}
+        />
+      ) : null}
     </View>
   );
 }
+
+/** Size of the "+" at the end of a plan strip: the slots' outer ring. */
+export const PLAN_ADD_SIZE = 38;

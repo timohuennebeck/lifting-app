@@ -25,6 +25,7 @@
     "sec": "s",
     "reps_one": "{{count}} Wdh.",
     "reps_other": "{{count}} Wdh.",
+    "repRange": "{{range}} Wdh.",
     "minShort": "Min"
   },
   "weekdays": {

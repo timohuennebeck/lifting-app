@@ -78,25 +78,18 @@
     ]
   },
   "confirm": {
-    "title": "ESTÁ CERTO?",
     "planName": "Nome do plano",
-    "muscles": "Músculos trabalhados",
-    "exercises_one": "{{count}} exercício",
-    "exercises_other": "{{count}} exercícios",
-    "noDay": "Sem dia fixo",
-    "dayUnknown": "Não conseguimos ler o dia “{{raw}}”. Escolhe um dia da semana ou deixa-o flexível.",
+    "dayUnknown": "Não conseguimos ler o dia “{{raw}}” – este treino fica sem dia fixo.",
     "readAs": "Lido como “{{raw}}”",
     "correct": "Está certo",
     "add": "Adicionar exercício",
-    "voice": "Voz",
     "swap": "Trocar exercício",
-    "remove": "Remover exercício",
     "cta": "Usar este plano",
     "check_one": "Rever {{count}} ponto",
     "check_other": "Rever {{count}} pontos",
-    "empty": "Ainda sem exercícios. Adiciona um ou usa a voz.",
-    "dayName": "Nome do dia",
-    "details": "Ver detalhes"
+    "empty": "Ainda sem exercícios. Adiciona um com +.",
+    "newDay": "Treino {{number}}",
+    "renamePlan": "Mudar o nome do plano"
   },
   "errors": {
     "file": "Não foi possível abrir o ficheiro.",

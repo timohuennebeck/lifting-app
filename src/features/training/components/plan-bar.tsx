@@ -4,16 +4,22 @@ import { ScrollView, useWindowDimensions, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { Icon } from '@/shared/ui/icon';
-import { PlanSlot } from '@/shared/ui/plan-slot';
+import { PLAN_ADD_SIZE, PlanSlot } from '@/shared/ui/plan-slot';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import type { PlanItem } from '../data/use-plan-progress';
 
+/** A strip entry; `review` adds the plan import's amber dot. */
+export type PlanBarItem = Pick<PlanItem, 'key' | 'id' | 'name' | 'number'> & {
+  state?: PlanItem['state'];
+  review?: boolean;
+};
+
 const SLOT = 52;
 
 export interface PlanBarProps {
-  items: PlanItem[];
+  items: PlanBarItem[];
   currentId: string;
   onSelect: (templateId: string) => void;
   onAdd: () => void;
@@ -64,7 +70,8 @@ export function PlanBar({ items, currentId, onSelect, onAdd }: PlanBarProps) {
             <PlanSlot
               number={item.number}
               done={item.state === 'done'}
-              next={item.state === 'next'}
+              selected={current}
+              review={item.review}
             />
           </PressableScale>
         );
@@ -74,9 +81,10 @@ export function PlanBar({ items, currentId, onSelect, onAdd }: PlanBarProps) {
           haptic="tap"
           accessibilityLabel={t('overview.addTraining')}
           onPress={onAdd}
-          className="size-8 items-center justify-center self-center rounded-full bg-elevated"
+          className="items-center justify-center self-center rounded-full bg-elevated"
+          style={{ width: PLAN_ADD_SIZE, height: PLAN_ADD_SIZE }}
         >
-          <Icon name="plus" size={12} />
+          <Icon name="plus" size={13} />
         </PressableScale>
       </View>
     </ScrollView>

@@ -1,15 +1,7 @@
-import type { PlanSetDraft } from '@/shared/data/templates';
-import { formatNumber, formatTarget } from '@/shared/lib/format';
+import { formatNumber } from '@/shared/lib/format';
 
 /** Steps in the "Import plan" branch. */
 export const IMPORT_STEPS = 3;
-
-/** "4 × 6–8" or "3 × 30–45 s": set count × target range of the first set. */
-export function formatScheme(sets: PlanSetDraft[], timed: boolean) {
-  const first = sets[0];
-  if (!first) return '0';
-  return `${sets.length} × ${formatTarget(first.targetMin, first.targetMax, timed)}`;
-}
 
 export function formatFileSize(bytes: number) {
   return bytes >= 1048576

@@ -78,25 +78,18 @@
     ]
   },
   "confirm": {
-    "title": "PASST SO?",
     "planName": "Planname",
-    "muscles": "Beanspruchte Muskeln",
-    "exercises_one": "{{count}} Übung",
-    "exercises_other": "{{count}} Übungen",
-    "noDay": "Kein fester Tag",
-    "dayUnknown": "Den Tag „{{raw}}“ konnten wir nicht lesen. Wähle einen Wochentag oder lass ihn offen.",
+    "dayUnknown": "Den Tag „{{raw}}“ konnten wir nicht lesen – das Training bleibt ohne festen Tag.",
     "readAs": "Gelesen als „{{raw}}“",
     "correct": "Stimmt",
     "add": "Übung hinzufügen",
-    "voice": "Sprache",
     "swap": "Übung tauschen",
-    "remove": "Übung entfernen",
     "cta": "Plan übernehmen",
     "check_one": "Noch {{count}} Punkt prüfen",
     "check_other": "Noch {{count}} Punkte prüfen",
-    "empty": "Noch keine Übungen. Füg eine hinzu oder nutze deine Stimme.",
-    "dayName": "Name des Tages",
-    "details": "Details anzeigen"
+    "empty": "Noch keine Übungen. Füg eine mit + hinzu.",
+    "newDay": "Training {{number}}",
+    "renamePlan": "Plan umbenennen"
   },
   "errors": {
     "file": "Die Datei konnte nicht geöffnet werden.",
