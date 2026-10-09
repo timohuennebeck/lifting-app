@@ -74,6 +74,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "uniwind generate-artifacts --css ./src/global.css --dts ./src/uniwind-types.d.ts && tsc --noEmit",
+    "supabase:keys": "echo '[]' > supabase/signing_key.json && supabase gen signing-key --algorithm ES256 --append",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:reset": "supabase db reset",

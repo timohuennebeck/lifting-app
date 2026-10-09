@@ -19,7 +19,7 @@ npm install
 cp .env.example .env
 
 # Supabase (Docker required); generate the ES256 signing key once
-npx supabase gen signing-key --algorithm ES256 --append
+npm run supabase:keys           # writes supabase/signing_key.json (gitignored)
 npm run supabase:start          # copy the publishable key into .env
 
 # PowerSync service, joined to the Supabase docker network
