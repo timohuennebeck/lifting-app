@@ -24,12 +24,12 @@
   },
   "rest": {
     "title": "Pause",
-    "running": "Nächster Satz, wenn die Zeit um ist.",
-    "idle": "Starte die Pause manuell.",
     "minus": "−{{seconds}} s",
     "plus": "+{{seconds}} s",
-    "skip": "Pause überspringen",
-    "start": "Pause starten"
+    "restart": "Mit neuem Timer neu starten",
+    "stop": "Timer stoppen",
+    "restartDefault": "Mit der Standardpause neu starten",
+    "restartWith": "Mit {{time}} neu starten"
   },
   "menu": {
     "open": "Trainingsoptionen",

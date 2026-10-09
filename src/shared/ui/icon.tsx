@@ -41,6 +41,10 @@ const ICONS = {
     render: stroke('M1.5 4.5h10M9 2l2.5 2.5L9 7M12.5 9.5h-10M5 7l-2.5 2.5L5 12', 1.6),
   },
   refresh: { viewBox: '0 0 14 14', render: stroke('M12 7a5 5 0 1 1-1.5-3.6M12 1.5v3h-3', 1.6) },
+  stop: {
+    viewBox: '0 0 14 14',
+    render: (c) => <Rect x={2} y={2} width={10} height={10} rx={1.5} fill={c} />,
+  },
   search: {
     viewBox: '0 0 16 16',
     render: (c) => (

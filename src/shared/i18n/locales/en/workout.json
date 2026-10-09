@@ -24,12 +24,12 @@
   },
   "rest": {
     "title": "Rest",
-    "running": "Next set when the timer runs out.",
-    "idle": "Start a rest timer manually.",
     "minus": "−{{seconds}} s",
     "plus": "+{{seconds}} s",
-    "skip": "Skip rest",
-    "start": "Start rest"
+    "restart": "Restart with new timer",
+    "stop": "Stop timer",
+    "restartDefault": "Restart with the default rest",
+    "restartWith": "Restart with {{time}}"
   },
   "menu": {
     "open": "Workout options",

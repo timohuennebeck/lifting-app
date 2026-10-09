@@ -24,12 +24,12 @@
   },
   "rest": {
     "title": "Descanso",
-    "running": "Próxima série quando o tempo acabar.",
-    "idle": "Inicia o descanso manualmente.",
     "minus": "−{{seconds}} s",
     "plus": "+{{seconds}} s",
-    "skip": "Saltar descanso",
-    "start": "Iniciar descanso"
+    "restart": "Reiniciar com novo temporizador",
+    "stop": "Parar temporizador",
+    "restartDefault": "Reiniciar com o descanso padrão",
+    "restartWith": "Reiniciar com {{time}}"
   },
   "menu": {
     "open": "Opções do treino",
