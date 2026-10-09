@@ -5,6 +5,7 @@ import { db, drizzle } from '@/shared/data/powersync/database';
 import { profiles } from '@/shared/data/powersync/schema';
 import { saveProfile } from '@/shared/data/profile';
 import { insertPlan } from '@/shared/data/templates';
+import { type AppLanguage, i18n } from '@/shared/i18n';
 
 import type { OnboardingDraft } from '../stores/onboarding-store';
 
@@ -41,6 +42,7 @@ export async function persistOnboarding(userId: string, draft: OnboardingDraft) 
         trainingDays: draft.trainingDays,
         sessionMinutes: draft.sessionMinutes,
         activeCollectionId,
+        language: i18n.language as AppLanguage,
         onboardedAt: nowIso(),
       },
       tx,

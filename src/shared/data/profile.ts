@@ -1,7 +1,8 @@
 import { eq } from 'drizzle-orm';
 
-import { useUserId } from '@/shared/stores/session-store';
+import type { AppLanguage } from '@/shared/i18n/resources';
 import type { UnitSystem } from '@/shared/lib/format';
+import { useUserId } from '@/shared/stores/session-store';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 import { parseJson, nowIso } from './json';
@@ -32,6 +33,8 @@ export interface Profile {
   trainingDays: number[];
   sessionMinutes: number | null;
   activeCollectionId: string | null;
+  /** App language, mirrored for the team and server-side messages. */
+  language: AppLanguage | null;
   onboardedAt: string | null;
   createdAt: string;
 }
@@ -53,6 +56,7 @@ function toProfile(r: ProfileRecord): Profile {
     trainingDays: parseJson(r.training_days, []),
     sessionMinutes: r.session_minutes,
     activeCollectionId: r.active_collection_id,
+    language: r.language as AppLanguage | null,
     onboardedAt: r.onboarded_at,
     createdAt: r.created_at,
   };
@@ -99,6 +103,7 @@ const toColumns = (p: ProfilePatch) => ({
   training_days: toJson(p.trainingDays),
   session_minutes: p.sessionMinutes,
   active_collection_id: p.activeCollectionId,
+  language: p.language,
   onboarded_at: p.onboardedAt,
 });
 

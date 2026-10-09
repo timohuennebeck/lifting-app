@@ -54,3 +54,10 @@ Users write `tickets` and `ticket_messages` from the app. The team works with th
   onto `tickets.status`. Optional: `version` (e.g. `'1.4.3'`), which the app shows translated ("Erscheint mit
   Update 1.4.3" / "Coming in update 1.4.3"), or `note` for custom text, shown as written (not translated).
 - Users can only reopen (logged as `kind = 'reopened'`); messages are append-only.
+
+## Languages
+
+The app language is mirrored to `profiles.language` (for the team) and to the auth user metadata
+(`user_metadata.language`). The account emails in `supabase/templates/` (confirmation, password
+reset, email change) pick their text from it. `config.toml` applies them locally; for the hosted
+project run `supabase config push` or paste them under Auth → Email Templates.

@@ -1,0 +1,10 @@
+<!-- Sent by Supabase Auth; .Data is the user metadata, .Data.language the app language. -->
+{{ $l := or .Data.language "en" }}
+<div style="background:#0a0a0a;padding:32px 20px;font-family:Inter,Helvetica,Arial,sans-serif;color:#f4f4f0">
+  <div style="max-width:420px;margin:0 auto">
+    <div style="font-size:15px;font-weight:600;letter-spacing:2px;color:#dfff1f">FORGE</div>
+    <h1 style="font-size:26px;line-height:1.2;margin:24px 0 12px">{{ if eq $l "de" }}Neue E-Mail bestätigen{{ else if eq $l "pt-PT" }}Confirma o teu novo email{{ else if eq $l "pt-BR" }}Confirme seu novo e-mail{{ else }}Confirm your new email{{ end }}</h1>
+    <p style="font-size:16px;line-height:1.5;color:#a3a39e;margin:0 0 28px">{{ if eq $l "de" }}Tippe auf den Button, um {{ .NewEmail }} für dein Forge-Konto zu verwenden.{{ else if eq $l "pt-PT" }}Toca no botão para usar {{ .NewEmail }} na tua conta Forge.{{ else if eq $l "pt-BR" }}Toque no botão para usar {{ .NewEmail }} na sua conta Forge.{{ else }}Tap the button to use {{ .NewEmail }} for your Forge account.{{ end }}</p>
+    <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#dfff1f;color:#0a0a0a;font-size:16px;font-weight:600;text-decoration:none;padding:16px 28px;border-radius:999px">{{ if eq $l "de" }}Neue E-Mail bestätigen{{ else if eq $l "pt-PT" }}Confirmar novo email{{ else if eq $l "pt-BR" }}Confirmar novo e-mail{{ else }}Confirm new email{{ end }}</a>
+  </div>
+</div>

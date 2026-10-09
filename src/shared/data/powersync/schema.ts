@@ -25,6 +25,7 @@ export const profiles = sqliteTable('profiles', {
   training_days: text(),
   session_minutes: integer(),
   active_collection_id: text(),
+  language: text(),
   onboarded_at: text(),
   created_at: text().notNull(),
   updated_at: text().notNull(),

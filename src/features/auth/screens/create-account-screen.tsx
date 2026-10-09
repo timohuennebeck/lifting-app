@@ -7,6 +7,7 @@ import { START_STEPS } from '@/features/onboarding/lib/flow';
 import { persistOnboarding } from '@/features/onboarding/lib/persist-onboarding';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { supabase } from '@/shared/data/supabase';
+import { i18n } from '@/shared/i18n';
 import { haptics } from '@/shared/lib/haptics';
 import { useSessionStore } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
@@ -54,7 +55,8 @@ export function CreateAccountScreen() {
         const { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { first_name: draft.firstName.trim() } },
+          // The language lets Supabase send its account emails in the app language.
+          options: { data: { first_name: draft.firstName.trim(), language: i18n.language } },
         });
         if (signUpError) return fail(authErrorKey(signUpError));
         if (!data.session) return fail('confirmEmail');
