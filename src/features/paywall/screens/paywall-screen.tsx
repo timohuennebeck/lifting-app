@@ -29,7 +29,9 @@ export function PaywallScreen() {
   const footerInset = useFooterInset();
   const flow = usePaywallFlow();
   const isPro = useIsPro();
-  const { offering, plan, isError, refetch } = useOffering();
+  const { offering, plan, isError, isFetching, refetch } = useOffering();
+  // Only a missing offering blocks buying; a failed background refresh keeps the cache.
+  const failed = !offering && isError;
   const { buy, busy } = usePurchase();
   const { restore, restoring } = useRestorePurchases();
   const [selected, setSelected] = useState<PlanId>('daily');
@@ -122,10 +124,10 @@ export function PaywallScreen() {
         <FadeEdge />
         {/* Without an offering there is nothing to buy; let the user load it again. */}
         <Button
-          label={isError ? t('common:actions.retry') : t('paywall.continue')}
-          loading={busy || (!offering && !isError)}
+          label={failed ? t('common:actions.retry') : t('paywall.continue')}
+          loading={busy || (!offering && (!isError || isFetching))}
           disabled={restoring}
-          onPress={isError ? () => refetch() : onContinue}
+          onPress={failed ? () => refetch() : onContinue}
         />
         <Text variant="caption" tone="subtle" className="text-center font-inter text-xs">
           {current && price

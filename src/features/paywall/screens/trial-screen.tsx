@@ -23,7 +23,9 @@ export function TrialScreen() {
   const accent = useAccentColor();
   const flow = usePaywallFlow();
   const planId = parsePlanId(useLocalSearchParams<{ plan?: string }>().plan);
-  const { offering, plan, isError, refetch } = useOffering();
+  const { offering, plan, isError, isFetching, refetch } = useOffering();
+  // Only a missing offering blocks buying; a failed background refresh keeps the cache.
+  const failed = !offering && isError;
   const { buy, busy } = usePurchase();
 
   const selected = plan(planId);
@@ -41,9 +43,9 @@ export function TrialScreen() {
       footer={
         <View className="gap-2.5">
           <Button
-            label={isError ? t('common:actions.retry') : t('trial.cta')}
-            loading={busy || (!offering && !isError)}
-            onPress={isError ? () => refetch() : start}
+            label={failed ? t('common:actions.retry') : t('trial.cta')}
+            loading={busy || (!offering && (!isError || isFetching))}
+            onPress={failed ? () => refetch() : start}
           />
           <Text variant="caption" tone="subtle" className="text-center font-inter text-xs">
             {price ? t(`trial.fine.${period}`, { price }) : ' '}

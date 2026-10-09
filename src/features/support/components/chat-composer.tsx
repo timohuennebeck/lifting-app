@@ -19,8 +19,8 @@ export interface ChatComposerProps {
 }
 
 /**
- * "Chat with us" box with screenshot button and send arrow (01f-3e). Text-only messages are
- * written locally at once; screenshots upload first, with progress and retry.
+ * "Chat with us" box with screenshot button and send arrow (01f-3e). Messages are written
+ * locally at once (also offline); screenshots upload in the background.
  */
 export function ChatComposer({ ticketId }: ChatComposerProps) {
   const { t } = useTranslation('support');
@@ -41,7 +41,9 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
       await sendTicketMessage({ userId, ticketId, body, attachments });
       queueUploads(attachments);
       // Keep anything typed while the message was being saved.
-      setText((current) => (current === body ? '' : current));
+      setText((current) =>
+        current.startsWith(body) ? current.slice(body.length).trimStart() : current,
+      );
       draft.reset();
     } catch (e) {
       console.error('Sending message failed', e);

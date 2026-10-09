@@ -28,6 +28,12 @@ export function keepLocalCopy(path: string, sourceUri: string) {
   new File(sourceUri).copySync(localAttachment(path), { overwrite: true });
 }
 
+/** Removes every local screenshot copy, e.g. when the account signs out. */
+export function clearLocalAttachments() {
+  const root = new Directory(Paths.document, BUCKET);
+  if (root.exists) root.delete();
+}
+
 /** Uploads the local copy; retrying the same path overwrites a partial upload. */
 export async function uploadAttachment(path: string) {
   const bytes = await localAttachment(path).arrayBuffer();

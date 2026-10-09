@@ -33,7 +33,7 @@ const previousBest = drizzle
     and(
       eq(previousExercise.exercise_id, workoutExercises.exercise_id),
       isNotNull(previousSet.completed_at),
-      // Sets ticked off via "mark as done" on Today have no weight; they are no best.
+      // "Mark as done" copies the last weight; exercises never logged have none to compare.
       isNotNull(previousSet.weight_kg),
       isNotNull(previousSet.reps),
       lt(previousWorkout.started_at, workouts.started_at),

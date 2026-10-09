@@ -8,6 +8,7 @@ interface UploadQueueState {
   pending: string[];
   enqueue: (paths: string[]) => void;
   done: (path: string) => void;
+  reset: () => void;
 }
 
 /** Screenshots saved with a message but not uploaded yet; survives app restarts. */
@@ -18,6 +19,7 @@ export const useUploadQueueStore = create<UploadQueueState>()(
       enqueue: (paths) =>
         set((s) => ({ pending: [...s.pending, ...paths.filter((p) => !s.pending.includes(p))] })),
       done: (path) => set((s) => ({ pending: s.pending.filter((p) => p !== path) })),
+      reset: () => set({ pending: [] }),
     }),
     { name: 'support-uploads', storage: createJSONStorage(() => zustandStorage) },
   ),

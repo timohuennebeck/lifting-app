@@ -2,15 +2,22 @@ import { useStatus } from '@powersync/react-native';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 
+import { singleFlight } from '@/shared/lib/async';
+
 /** Waits before the next attempt after consecutive failures. */
 const RETRY_DELAYS_MS = [15_000, 60_000, 5 * 60_000, 15 * 60_000];
 
 /**
  * Background work queue (e.g. file uploads): runs `drain` while `pending` > 0, again when
  * the sync connection returns or the app comes to the foreground, and backs off after
- * failures. `drain` resolves false when something is left to retry.
+ * failures. One run per `queue` key at a time (include the user id); null pauses it.
+ * `drain` resolves false when something is left to retry.
  */
-export function useBackgroundDrain(pending: number, drain: () => Promise<boolean>, label: string) {
+export function useBackgroundDrain(
+  queue: string | null,
+  pending: number,
+  drain: () => Promise<boolean>,
+) {
   const { connected } = useStatus();
   const [attempt, setAttempt] = useState(0);
   const failures = useRef(0);
@@ -24,10 +31,10 @@ export function useBackgroundDrain(pending: number, drain: () => Promise<boolean
   }, []);
 
   useEffect(() => {
-    if (!pending) return;
+    if (!queue || !pending) return;
     let active = true;
     let retry: ReturnType<typeof setTimeout> | undefined;
-    run()
+    singleFlight(queue, run)
       .then((ok) => {
         if (!active) return;
         if (ok) {
@@ -38,10 +45,10 @@ export function useBackgroundDrain(pending: number, drain: () => Promise<boolean
         failures.current += 1;
         retry = setTimeout(() => setAttempt((n) => n + 1), delay);
       })
-      .catch((error) => console.warn(`${label} queue failed`, error));
+      .catch((error) => console.warn(`Queue ${queue} failed`, error));
     return () => {
       active = false;
       clearTimeout(retry);
     };
-  }, [pending, connected, attempt, label]);
+  }, [queue, pending, connected, attempt]);
 }

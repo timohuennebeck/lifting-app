@@ -3,7 +3,12 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { zustandStorage } from '@/shared/lib/storage';
 
-import type { CustomerInfo, PlanId } from '../lib/purchases-service';
+import {
+  type CustomerInfo,
+  NothingToRestoreError,
+  type PlanId,
+  purchases,
+} from '../lib/purchases-service';
 
 interface SubscriptionState {
   isPro: boolean;
@@ -38,4 +43,16 @@ export function trialEnd(trialEndsAt: string | null, now = Date.now()) {
   if (!trialEndsAt) return null;
   const end = new Date(trialEndsAt);
   return end.getTime() > now ? end : null;
+}
+
+/**
+ * Re-reads Pro from the store account after sign-in and on launch, so a renewal or an
+ * expired subscription shows up without tapping Restore. Offline keeps the cached state.
+ */
+export async function refreshSubscription() {
+  try {
+    useSubscriptionStore.getState().apply(await purchases.restore());
+  } catch (error) {
+    if (error instanceof NothingToRestoreError) useSubscriptionStore.getState().reset();
+  }
 }

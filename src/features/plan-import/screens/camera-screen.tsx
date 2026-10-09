@@ -45,6 +45,8 @@ export function CameraScreen() {
   const truncatePhotos = useImportStore((s) => s.truncatePhotos);
   // Pages that existed before this camera session survive a close; new ones are discarded.
   const keptOnClose = useRef(photos.length);
+  // A capture still running when the camera closes must not add photos or navigate.
+  const closed = useRef(false);
   const flash = useShutterFlash();
 
   function store(picked: ImportPhoto[]) {
@@ -64,15 +66,16 @@ export function CameraScreen() {
     flash.fire();
     try {
       const pic = await camera.current.takePictureAsync({ quality: 0.7 });
-      store([{ uri: pic.uri, width: pic.width, height: pic.height }]);
+      if (!closed.current) store([{ uri: pic.uri, width: pic.width, height: pic.height }]);
     } catch {
-      Alert.alert(t('planImport:errors.camera'));
+      if (!closed.current) Alert.alert(t('planImport:errors.camera'));
     } finally {
       setBusy(false);
     }
   }
 
   function close() {
+    closed.current = true;
     if (retakeIndex === null) truncatePhotos(keptOnClose.current);
     router.back();
   }

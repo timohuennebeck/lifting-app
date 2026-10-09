@@ -1,7 +1,12 @@
 import { useEffect } from 'react';
 
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
-import { useSubscriptionStore } from '@/features/paywall/stores/subscription-store';
+import {
+  refreshSubscription,
+  useSubscriptionStore,
+} from '@/features/paywall/stores/subscription-store';
+import { clearLocalAttachments } from '@/features/support/data/attachments';
+import { useUploadQueueStore } from '@/features/support/stores/upload-queue-store';
 import { useWorkoutSessionStore } from '@/features/workout/stores/workout-session-store';
 import { connector, db } from '@/shared/data/powersync/database';
 import { queryClient } from '@/shared/data/query-client';
@@ -21,6 +26,7 @@ export function useAuthListener() {
       // profile updates; the connector fetches fresh tokens on its own.
       if (session && (event === 'INITIAL_SESSION' || event === 'SIGNED_IN')) {
         db.connect(connector);
+        refreshSubscription();
       } else if (event === 'SIGNED_OUT') {
         db.disconnectAndClear();
         queryClient.clear();
@@ -30,6 +36,9 @@ export function useAuthListener() {
         useWorkoutSessionStore.getState().reset();
         // Pro belongs to the account; the next one restores its own purchases.
         useSubscriptionStore.getState().reset();
+        // Screenshot copies are private to the account (and would sit in device backups).
+        useUploadQueueStore.getState().reset();
+        clearLocalAttachments();
       }
     });
     return () => data.subscription.unsubscribe();
