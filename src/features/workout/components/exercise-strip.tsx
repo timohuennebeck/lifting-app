@@ -1,11 +1,15 @@
 import { useEffect, useRef } from 'react';
-import { ScrollView, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import Animated, { scrollTo, useAnimatedRef } from 'react-native-reanimated';
+import Sortable from 'react-native-sortables';
+import { scheduleOnUI } from 'react-native-worklets';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { exerciseName } from '@/shared/data/exercises';
 import type { WorkoutExercise } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
+import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { CheckBadge } from '@/shared/ui/check-item';
 import { Icon } from '@/shared/ui/icon';
@@ -13,26 +17,42 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 
 const TILE = 64;
 const GAP = 6;
+/** Tile, gap and progress bar. */
+const ROW_HEIGHT = 86 + 6 + 3;
 
 export interface ExerciseStripProps {
   exercises: WorkoutExercise[];
   currentIndex: number;
   onSelect: (index: number) => void;
   onAdd: () => void;
+  /** An exercise was held and dragged to another place. */
+  onReorder: (workoutExerciseId: string, toIndex: number) => void;
 }
 
-/** Thumbnail rail of the workout's exercises with progress bars and a "+" tile. */
-export function ExerciseStrip({ exercises, currentIndex, onSelect, onAdd }: ExerciseStripProps) {
+/** Thumbnail rail of the workout's exercises with progress bars and a "+" tile; hold to reorder. */
+export function ExerciseStrip({
+  exercises,
+  currentIndex,
+  onSelect,
+  onAdd,
+  onReorder,
+}: ExerciseStripProps) {
   const { t, i18n } = useTranslation('workout');
-  const scroll = useRef<ScrollView>(null);
+  const scroll = useAnimatedRef<Animated.ScrollView>();
+  // Letting go of a dragged tile also ends a press on it; that one isn't a tap.
+  const dragging = useRef(false);
 
   // Keep the current exercise in view when it changes.
   useEffect(() => {
-    scroll.current?.scrollTo({ x: Math.max(0, (currentIndex - 1) * (TILE + GAP)), animated: true });
-  }, [currentIndex]);
+    const x = Math.max(0, (currentIndex - 1) * (TILE + GAP));
+    scheduleOnUI(() => {
+      'worklet';
+      scrollTo(scroll, x, 0, true);
+    });
+  }, [currentIndex, scroll]);
 
   return (
-    <ScrollView
+    <Animated.ScrollView
       ref={scroll}
       horizontal
       showsHorizontalScrollIndicator={false}
@@ -41,35 +61,57 @@ export function ExerciseStrip({ exercises, currentIndex, onSelect, onAdd }: Exer
       style={{ flexGrow: 0, flexShrink: 0 }}
       contentContainerClassName="gap-1.5 px-5 pt-3.5"
     >
-      {exercises.map((exercise, i) => {
-        const current = i === currentIndex;
-        const done = exercise.sets.length > 0 && exercise.sets.every((s) => s.completedAt);
-        const name = exerciseName(exercise.exerciseId, i18n.language);
-        return (
-          <PressableScale
-            key={exercise.id}
-            haptic="select"
-            accessibilityLabel={name}
-            accessibilityState={{ selected: current }}
-            onPress={() => onSelect(i)}
-            className="w-16 gap-1.5"
-          >
-            <View>
-              <ExerciseThumb
-                exerciseId={exercise.exerciseId}
-                name={name}
-                className={cn('h-21.5 w-16', !current && (done ? 'opacity-35' : 'opacity-40'))}
+      <Sortable.Grid
+        data={exercises}
+        keyExtractor={(exercise) => exercise.id}
+        rows={1}
+        rowHeight={ROW_HEIGHT}
+        columnGap={GAP}
+        scrollableRef={scroll}
+        autoScrollDirection="horizontal"
+        dragActivationDelay={250}
+        activeItemScale={1.06}
+        inactiveItemOpacity={0.7}
+        hapticsEnabled={false}
+        onDragStart={() => {
+          dragging.current = true;
+          haptics.press();
+        }}
+        onDragEnd={({ key, fromIndex, toIndex }) => {
+          setTimeout(() => (dragging.current = false), 150);
+          if (toIndex !== fromIndex) onReorder(key, toIndex);
+        }}
+        renderItem={({ item: exercise, index: i }) => {
+          const current = i === currentIndex;
+          const done = exercise.sets.length > 0 && exercise.sets.every((s) => s.completedAt);
+          const name = exerciseName(exercise.exerciseId, i18n.language);
+          return (
+            <PressableScale
+              haptic="select"
+              accessibilityLabel={name}
+              accessibilityState={{ selected: current }}
+              onPress={() => {
+                if (!dragging.current) onSelect(i);
+              }}
+              className="w-16 gap-1.5"
+            >
+              <View>
+                <ExerciseThumb
+                  exerciseId={exercise.exerciseId}
+                  name={name}
+                  className={cn('h-21.5 w-16', !current && (done ? 'opacity-35' : 'opacity-40'))}
+                />
+                {done ? (
+                  <CheckBadge size={22} glyph={11} className="absolute top-8 left-5.25" />
+                ) : null}
+              </View>
+              <View
+                className={cn('h-0.75 rounded-sm', current || done ? 'bg-accent' : 'bg-control')}
               />
-              {done ? (
-                <CheckBadge size={22} glyph={11} className="absolute top-8 left-5.25" />
-              ) : null}
-            </View>
-            <View
-              className={cn('h-0.75 rounded-sm', current || done ? 'bg-accent' : 'bg-control')}
-            />
-          </PressableScale>
-        );
-      })}
+            </PressableScale>
+          );
+        }}
+      />
       <PressableScale
         haptic="press"
         accessibilityLabel={t('addExercise')}
@@ -81,6 +123,6 @@ export function ExerciseStrip({ exercises, currentIndex, onSelect, onAdd }: Exer
         </View>
         <View className="h-0.75" />
       </PressableScale>
-    </ScrollView>
+    </Animated.ScrollView>
   );
 }

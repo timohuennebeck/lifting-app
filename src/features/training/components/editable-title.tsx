@@ -1,0 +1,48 @@
+import { useState } from 'react';
+import { TextInput } from 'react-native';
+
+import { colors } from '@/shared/lib/theme';
+
+export interface EditableTitleProps {
+  value: string;
+  /** Called with the trimmed new name when editing ends with a change. */
+  onSubmit: (name: string) => void;
+  accessibilityLabel: string;
+  maxLength?: number;
+}
+
+/** A page title that turns into a text field when tapped (rename in place). */
+export function EditableTitle({
+  value,
+  onSubmit,
+  accessibilityLabel,
+  maxLength = 40,
+}: EditableTitleProps) {
+  // The text being typed; null while not editing, so outside renames show up.
+  const [draft, setDraft] = useState<string | null>(null);
+
+  const finish = () => {
+    const name = draft?.trim();
+    setDraft(null);
+    if (name && name !== value) onSubmit(name);
+  };
+
+  return (
+    <TextInput
+      value={draft ?? value}
+      // Multi-line only so long names wrap; a return never ends up in the name.
+      onChangeText={(text) => setDraft(text.replace(/\n/g, ''))}
+      onFocus={() => setDraft(value)}
+      onBlur={finish}
+      accessibilityLabel={accessibilityLabel}
+      maxLength={maxLength}
+      multiline
+      scrollEnabled={false}
+      submitBehavior="blurAndSubmit"
+      returnKeyType="done"
+      keyboardAppearance="dark"
+      cursorColor={colors.fg}
+      className="px-5 pt-7.5 pb-0 font-inter-semibold text-title text-fg"
+    />
+  );
+}

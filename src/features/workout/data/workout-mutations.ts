@@ -1,4 +1,4 @@
-import { desc, eq, inArray } from 'drizzle-orm';
+import { asc, desc, eq, inArray } from 'drizzle-orm';
 
 import { defaultTargets, swapTargets } from '@/shared/data/exercises';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
@@ -116,5 +116,27 @@ export async function saveWorkoutTargets(
       .update(workoutExercises)
       .set({ rest_seconds: restSeconds })
       .where(eq(workoutExercises.id, workoutExerciseId));
+  });
+}
+
+/** Drops a workout exercise at `toIndex` (drag and drop in the exercise strip). */
+export async function reorderWorkoutExercise(
+  workoutId: string,
+  workoutExerciseId: string,
+  toIndex: number,
+) {
+  await drizzle.transaction(async (tx) => {
+    const rows = await tx
+      .select({ id: workoutExercises.id })
+      .from(workoutExercises)
+      .where(eq(workoutExercises.workout_id, workoutId))
+      .orderBy(asc(workoutExercises.position));
+    const ids = rows.map((r) => r.id);
+    if (!ids.includes(workoutExerciseId)) return;
+    const order = ids.filter((id) => id !== workoutExerciseId);
+    order.splice(Math.min(Math.max(toIndex, 0), order.length), 0, workoutExerciseId);
+    for (const [position, id] of order.entries()) {
+      await tx.update(workoutExercises).set({ position }).where(eq(workoutExercises.id, id));
+    }
   });
 }

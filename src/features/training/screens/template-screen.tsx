@@ -1,8 +1,10 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
+import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Sortable from 'react-native-sortables';
 
 import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
 import { muscleShares } from '@/shared/data/muscles';
@@ -27,16 +29,19 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
+import { EditableTitle } from '../components/editable-title';
 import { type ExerciseMenuAction, ExerciseMenuSheet } from '../components/exercise-menu-sheet';
 import { PlanBar } from '../components/plan-bar';
 import { TemplateExerciseCard } from '../components/template-exercise-card';
 import { TemplateOptionsSheet } from '../components/template-options-sheet';
 import {
   addTemplateExercise,
+  createTemplate,
   deleteTemplate,
   moveTemplateExercise,
   removeTemplateExercise,
   renameTemplate,
+  reorderTemplateExercise,
   swapTemplateExercise,
 } from '../data/template-mutations';
 import { usePlanProgress } from '../data/use-plan-progress';
@@ -55,6 +60,9 @@ export function TemplateScreen() {
   const { data: plan = [] } = usePlanProgress(collectionId, !!template);
   const { start, startingId } = useStartTemplate();
 
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  // Letting go of a dragged exercise also ends a press on it; that one isn't a tap.
+  const dragging = useRef(false);
   const [picker, setPicker] = useState<PickerState | null>(null);
   const [menuFor, setMenuFor] = useState<TemplateExerciseDetail | null>(null);
   const [optionsOpen, setOptionsOpen] = useState(false);
@@ -94,6 +102,15 @@ export function TemplateScreen() {
       afterSheetClose(() => setPicker({ mode: 'swap', templateExerciseId: target.id }));
     else if (action === 'remove') await removeTemplateExercise(target.id);
     else await moveTemplateExercise(target.id, action === 'moveUp' ? -1 : 1);
+  };
+
+  // "+" in the plan strip adds a training at once; it is renamed by tapping its title.
+  const addTraining = async () => {
+    const count = new Set(plan.map((p) => p.id)).size;
+    const name = t('overview.newTraining', { number: count + 1 });
+    const newId = await createTemplate(requireUserId(), name, collectionId);
+    haptics.success();
+    router.setParams({ id: newId });
   };
 
   const onDelete = async () => {
@@ -136,7 +153,8 @@ export function TemplateScreen() {
 
   return (
     <Screen header={header}>
-      <ScrollView
+      <Animated.ScrollView
+        ref={scrollRef}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + (empty ? 40 : 130) }}
       >
@@ -144,16 +162,13 @@ export function TemplateScreen() {
           items={plan}
           currentId={template.id}
           onSelect={(templateId) => router.setParams({ id: templateId })}
-          onAdd={() =>
-            router.push({
-              pathname: '/template/new',
-              params: collectionId ? { collectionId } : {},
-            })
-          }
+          onAdd={addTraining}
         />
-        <Text variant="title" className="px-5 pt-7.5 normal-case">
-          {template.name}
-        </Text>
+        <EditableTitle
+          value={template.name}
+          accessibilityLabel={t('options.rename')}
+          onSubmit={(name) => renameTemplate(template.id, name)}
+        />
         <Text variant="paragraph" tone="subtle" className="px-5 pt-2">
           {template.weekday !== null && weekdays[template.weekday]
             ? t('overview.fixedDay', { day: weekdays[template.weekday] })
@@ -196,23 +211,44 @@ export function TemplateScreen() {
           {empty ? (
             <EmptyExercises hint={t('overview.emptyHint')} />
           ) : (
-            exercises.map((exercise) => (
-              <TemplateExerciseCard
-                key={exercise.id}
-                exerciseId={exercise.exerciseId}
-                sets={exercise.sets.map((set) => ({
-                  key: set.id,
-                  min: set.target_min,
-                  max: set.target_max,
-                  rir: set.rir,
-                }))}
-                onMenu={() => setMenuFor(exercise)}
-                onPress={() => router.push(`/template/${template.id}/sets/${exercise.id}`)}
-              />
-            ))
+            // Hold an exercise to drag it to another place.
+            <Sortable.Grid
+              data={exercises}
+              keyExtractor={(exercise) => exercise.id}
+              columns={1}
+              scrollableRef={scrollRef}
+              dragActivationDelay={250}
+              activeItemScale={1.03}
+              inactiveItemOpacity={0.6}
+              hapticsEnabled={false}
+              onDragStart={() => {
+                dragging.current = true;
+                haptics.press();
+              }}
+              onDragEnd={({ key, fromIndex, toIndex }) => {
+                setTimeout(() => (dragging.current = false), 150);
+                if (toIndex !== fromIndex) void reorderTemplateExercise(key, toIndex);
+              }}
+              renderItem={({ item: exercise }) => (
+                <TemplateExerciseCard
+                  exerciseId={exercise.exerciseId}
+                  sets={exercise.sets.map((set) => ({
+                    key: set.id,
+                    min: set.target_min,
+                    max: set.target_max,
+                    rir: set.rir,
+                  }))}
+                  onMenu={() => setMenuFor(exercise)}
+                  onPress={() => {
+                    if (!dragging.current)
+                      router.push(`/template/${template.id}/sets/${exercise.id}`);
+                  }}
+                />
+              )}
+            />
           )}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
 
       {!empty ? (
         <BottomFade>

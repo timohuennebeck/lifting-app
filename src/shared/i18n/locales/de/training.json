@@ -65,7 +65,8 @@
     "more": "Mehr",
     "exerciseMenu": "Optionen für {{name}}",
     "notFound": "Dieses Training gibt es nicht mehr.",
-    "swapTitle": "Übung tauschen"
+    "swapTitle": "Übung tauschen",
+    "newTraining": "Training {{number}}"
   },
   "exerciseMenu": {
     "editSets": "Sätze bearbeiten",

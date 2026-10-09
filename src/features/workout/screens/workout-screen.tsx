@@ -30,7 +30,7 @@ import { SetTable } from '../components/set-table';
 import { WeightKeypad } from '../components/weight-keypad';
 import { WorkoutMenuSheet } from '../components/workout-menu-sheet';
 import { WorkoutTopBar } from '../components/workout-top-bar';
-import { swapWorkoutExercise } from '../data/workout-mutations';
+import { reorderWorkoutExercise, swapWorkoutExercise } from '../data/workout-mutations';
 import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
@@ -131,6 +131,15 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     });
   const contentStyle = useAnimatedStyle(() => ({ transform: [{ translateX: offset.get() }] }));
 
+  // Dragged in the strip: the exercise on screen stays on screen at its new place.
+  const reorder = async (workoutExerciseId: string, toIndex: number) => {
+    const currentId = exercise?.id;
+    const order = workout.exercises.map((e) => e.id).filter((id) => id !== workoutExerciseId);
+    order.splice(toIndex, 0, workoutExerciseId);
+    await reorderWorkoutExercise(workout.id, workoutExerciseId, toIndex);
+    if (currentId) goTo(order.indexOf(currentId));
+  };
+
   const openPicker = (mode: 'add' | 'swap') => {
     setPickerMode(mode);
     setSheet('picker');
@@ -189,6 +198,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
             currentIndex={exerciseIndex}
             onSelect={go}
             onAdd={() => openPicker('add')}
+            onReorder={reorder}
           />
           <ScrollView
             ref={scrollRef}
