@@ -4,7 +4,7 @@ import { FlatList, ScrollView, View, type ViewToken } from 'react-native';
 
 import { muscleShares } from '@/shared/data/muscles';
 import { cn } from '@/shared/lib/cn';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
@@ -55,7 +55,6 @@ export function ExerciseLibrary({
   inset = 16,
 }: ExerciseLibraryProps) {
   const { t } = useTranslation('exercises');
-  const accent = useAccentColor();
   const [group, setGroup] = useState<MuscleGroupId | null>(null);
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
   const listRef = useRef<FlatList<Row>>(null);
@@ -188,12 +187,16 @@ export function ExerciseLibrary({
                     className="size-8 items-center justify-center rounded-full bg-elevated"
                     style={
                       item.selected
-                        ? { backgroundColor: removable ? accent : `${accent}29` }
+                        ? { backgroundColor: removable ? colors.accent : `${colors.accent}29` }
                         : undefined
                     }
                   >
                     {item.selected ? (
-                      <Icon name="check" size={13} color={removable ? colors.onAccent : accent} />
+                      <Icon
+                        name="check"
+                        size={13}
+                        color={removable ? colors.onAccent : colors.accent}
+                      />
                     ) : (
                       <Icon name={mode === 'swap' ? 'swap' : 'plus'} size={12} />
                     )}

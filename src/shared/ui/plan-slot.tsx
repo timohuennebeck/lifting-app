@@ -1,7 +1,7 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 
 import { CheckBadge } from './check-item';
 import { Text } from './text';
@@ -45,7 +45,6 @@ export interface PlanSlotProps {
 
 /** Plan strip slot: accent check when done, otherwise the slot number in a dashed ring. */
 export function PlanSlot({ number, done, selected, review }: PlanSlotProps) {
-  const accent = useAccentColor();
   return (
     <View className="size-8 items-center justify-center">
       {done ? (
@@ -53,12 +52,14 @@ export function PlanSlot({ number, done, selected, review }: PlanSlotProps) {
           size={32}
           glyph={14}
           style={
-            selected ? { boxShadow: `0 0 0 3px ${colors.bg}, 0 0 0 4.5px ${accent}` } : undefined
+            selected
+              ? { boxShadow: `0 0 0 3px ${colors.bg}, 0 0 0 4.5px ${colors.accent}` }
+              : undefined
           }
         />
       ) : (
         <>
-          <DashedRing color={selected ? accent : '#4A4A48'} style={{ left: -3, top: -3 }} />
+          <DashedRing color={selected ? colors.accent : '#4A4A48'} style={{ left: -3, top: -3 }} />
           <Text variant="label" className="text-sm">
             {number}
           </Text>

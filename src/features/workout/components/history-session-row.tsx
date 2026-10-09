@@ -10,7 +10,7 @@ import {
   formatWeightValue,
   type UnitSystem,
 } from '@/shared/lib/format';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Icon, type IconName } from '@/shared/ui/icon';
 import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
@@ -50,7 +50,6 @@ export function HistorySessionRow({
   minLabel,
   onToggle,
 }: HistorySessionRowProps) {
-  const accent = useAccentColor();
   const top = session.topSet;
 
   return (
@@ -74,7 +73,7 @@ export function HistorySessionRow({
           ) : null}
           <Stat
             icon="star"
-            color={session.hasPr ? accent : colors.dim}
+            color={session.hasPr ? colors.accent : colors.dim}
             value={
               top.weightKg != null && top.reps != null
                 ? `${formatWeightValue(top.weightKg, units)} × ${top.reps}`

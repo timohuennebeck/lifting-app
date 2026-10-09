@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Defs, Ellipse, RadialGradient, Stop } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
-import { useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 
 import { Text } from './text';
 
@@ -65,7 +65,6 @@ export function ScanStage({
   onPress,
   pressLabel,
 }: ScanStageProps) {
-  const accent = useAccentColor();
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
   // Vertical centre of the artwork, at the same share of the screen height as in the design.
@@ -103,12 +102,12 @@ export function ScanStage({
         <Svg width={560} height={560}>
           <Defs>
             <RadialGradient id="scan-glow-a" cx="50%" cy="50%" r="50%">
-              <Stop offset="0" stopColor={accent} stopOpacity={0.55} />
-              <Stop offset="1" stopColor={accent} stopOpacity={0} />
+              <Stop offset="0" stopColor={colors.accent} stopOpacity={0.55} />
+              <Stop offset="1" stopColor={colors.accent} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient id="scan-glow-b" cx="50%" cy="50%" r="50%">
-              <Stop offset="0" stopColor={accent} stopOpacity={0.25} />
-              <Stop offset="1" stopColor={accent} stopOpacity={0} />
+              <Stop offset="0" stopColor={colors.accent} stopOpacity={0.25} />
+              <Stop offset="1" stopColor={colors.accent} stopOpacity={0} />
             </RadialGradient>
           </Defs>
           <Ellipse cx={380} cy={190} rx={170} ry={150} fill="url(#scan-glow-a)" />
@@ -123,7 +122,7 @@ export function ScanStage({
             {
               borderRadius: 170,
               borderWidth: 1.5,
-              borderColor: `${accent}B3`,
+              borderColor: `${colors.accent}B3`,
               animationName: RIPPLE,
               animationDuration: '3s',
               animationDelay: `${i}s`,

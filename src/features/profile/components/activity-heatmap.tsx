@@ -3,14 +3,13 @@ import { View } from 'react-native';
 
 import { useWorkoutsInRange } from '@/shared/data/workouts';
 import { addDays, startOfWeek } from '@/shared/lib/date';
-import { useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 
 const WEEKS = 13;
 const dayKey = (d: Date) => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 
 /** 13-week grid (columns = weeks, rows = Mon–Sun) shaded by completed sets per day. */
 export function ActivityHeatmap() {
-  const accent = useAccentColor();
   const thisWeek = startOfWeek(new Date());
   const fromIso = addDays(thisWeek, -(WEEKS - 1) * 7).toISOString();
   const { data: workouts } = useWorkoutsInRange(fromIso, addDays(thisWeek, 7).toISOString());
@@ -37,7 +36,10 @@ export function ActivityHeatmap() {
           {days.map((level, d) => (
             <View key={d} className="aspect-square overflow-hidden rounded bg-raised">
               {level ? (
-                <View className="flex-1" style={{ backgroundColor: accent, opacity: level }} />
+                <View
+                  className="flex-1"
+                  style={{ backgroundColor: colors.accent, opacity: level }}
+                />
               ) : null}
             </View>
           ))}

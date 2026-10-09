@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { mainShares, type MuscleShare } from '@/shared/data/muscles';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Card } from '@/shared/ui/card';
 import { Icon, type IconName } from '@/shared/ui/icon';
 import { MuscleMap } from '@/shared/ui/muscle-map';
@@ -27,7 +27,6 @@ export interface WorkoutDayCardProps {
 /** Card layout shared by the done and planned states of the Today tab. */
 export function WorkoutDayCard({ status, name, shares, stats, actions }: WorkoutDayCardProps) {
   const { t } = useTranslation('muscles');
-  const accent = useAccentColor();
   // Map and summary name the same main muscles.
   const muscles = mainShares(shares).map((s) => s.muscle);
   const summary = muscles
@@ -62,7 +61,7 @@ export function WorkoutDayCard({ status, name, shares, stats, actions }: Workout
             <Icon
               name={stat.icon}
               size={stat.icon === 'dumbbell' ? 18 : 13}
-              color={stat.accent ? accent : colors.subtle}
+              color={stat.accent ? colors.accent : colors.subtle}
             />
             <Text variant="caption" tone={stat.accent ? 'accent' : 'secondary'} className="text-sm">
               {stat.label}

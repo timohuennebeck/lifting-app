@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { isSameDay } from '@/shared/lib/date';
-import { useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { CheckBadge } from '@/shared/ui/check-item';
 import { DashedRing } from '@/shared/ui/plan-slot';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -21,7 +21,6 @@ export interface WeekStripProps {
 /** Mon–Sun strip: accent check for done days, dashed ring for planned days. */
 export function WeekStrip({ days, today, selected, onSelect }: WeekStripProps) {
   const { t } = useTranslation();
-  const accent = useAccentColor();
   const narrow = t('weekdays.narrow', { returnObjects: true });
   const long = t('weekdays.long', { returnObjects: true });
 
@@ -53,14 +52,14 @@ export function WeekStrip({ days, today, selected, onSelect }: WeekStripProps) {
                   'size-10.25 items-center justify-center rounded-full',
                   isSelected && 'border-[1.5px]',
                 )}
-                style={{ borderColor: isSelected ? `${accent}80` : undefined }}
+                style={{ borderColor: isSelected ? `${colors.accent}80` : undefined }}
               >
                 <CheckBadge size={32} glyph={14} />
               </View>
             ) : (
               <View className="size-10.25 items-center justify-center">
                 {day.planned ? (
-                  <DashedRing color={isSelected ? accent : '#4A4A47'} />
+                  <DashedRing color={isSelected ? colors.accent : '#4A4A47'} />
                 ) : isSelected ? (
                   <View className="absolute size-8.5 rounded-full bg-elevated" />
                 ) : null}

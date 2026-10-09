@@ -10,7 +10,7 @@ import {
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 
 import { DotPattern } from './dot-pattern';
 import { Gradient, type GradientStop } from './gradient';
@@ -56,7 +56,6 @@ export function RulerPicker({
   vertical,
   className,
 }: RulerPickerProps) {
-  const accent = useAccentColor();
   const scrollRef = useRef<ScrollView>(null);
   const [extent, setExtent] = useState(0);
   const lastIndex = useRef(Math.round((value - min) / step));
@@ -127,7 +126,7 @@ export function RulerPicker({
       </ScrollView>
       <DotPattern
         pointerEvents="none"
-        color={accent}
+        color={colors.accent}
         radius={1.5}
         className="absolute"
         style={[

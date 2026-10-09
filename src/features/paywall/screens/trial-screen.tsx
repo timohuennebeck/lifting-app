@@ -2,7 +2,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
@@ -20,7 +20,6 @@ const REMINDER_DAYS_BEFORE = 2;
 /** Free-trial explainer: what happens today, at the reminder and when billing starts. */
 export function TrialScreen() {
   const { t } = useTranslation(['paywall', 'common']);
-  const accent = useAccentColor();
   const flow = usePaywallFlow();
   const planId = parsePlanId(useLocalSearchParams<{ plan?: string }>().plan);
   const { offering, plan, isError, isFetching, refetch } = useOffering();
@@ -58,7 +57,7 @@ export function TrialScreen() {
       <View className="items-center pt-2.5">
         <View
           className="size-42.5 items-center justify-center rounded-full bg-accent"
-          style={{ boxShadow: `0 0 60px ${accent}73` }}
+          style={{ boxShadow: `0 0 60px ${colors.accent}73` }}
         >
           <Text tone="onAccent" className="font-inter-semibold text-[96px] leading-26">
             {days}

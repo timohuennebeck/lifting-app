@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 
 import { Button } from './button';
 import { OptionCard } from './option-card';
@@ -48,7 +48,6 @@ export function ChoiceSheet<T extends string>({
   note,
   loading,
 }: ChoiceSheetProps<T>) {
-  const accent = useAccentColor();
   const selected = options.find((o) => o.value === value) ?? options[0];
   const danger = selected?.tone === 'danger';
 
@@ -64,7 +63,7 @@ export function ChoiceSheet<T extends string>({
               title={option.title}
               description={option.description}
               icon={option.renderIcon(active)}
-              tint={option.tone === 'danger' ? colors.red : accent}
+              tint={option.tone === 'danger' ? colors.red : colors.accent}
               selected={active}
               onPress={() => onChange(option.value)}
             />

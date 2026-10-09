@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 import type { GroupScores } from '../lib/body-check-service';
@@ -17,9 +17,8 @@ export interface GroupBandsProps {
 /** Muscle groups sorted into strengths, average and focus pills (design 08d-A). */
 export function GroupBands({ scores }: GroupBandsProps) {
   const { t } = useTranslation('bodyCheck');
-  const accent = useAccentColor();
   const bands = groupBands(scores);
-  const tint = { top: accent, focus: WARN_COLOR, mid: null } as const;
+  const tint = { top: colors.accent, focus: WARN_COLOR, mid: null } as const;
 
   return (
     <View className="px-5">

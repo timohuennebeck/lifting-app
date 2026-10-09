@@ -4,7 +4,7 @@ import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 import type { PlanSetDraft } from '@/shared/data/templates';
 import { formatRir } from '@/shared/lib/rir';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { InputCell } from '@/shared/ui/input-cell';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -48,8 +48,7 @@ export function SetEditorRow({
   onRemove,
 }: SetEditorRowProps) {
   const { t } = useTranslation('training');
-  const accent = useAccentColor();
-  const rir = editorRirStyle(set.rir, accent);
+  const rir = editorRirStyle(set.rir, colors.accent);
   const cell = (field: TargetField) => (
     <InputCell
       value={

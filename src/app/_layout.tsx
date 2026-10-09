@@ -25,7 +25,6 @@ import { queryClient } from '@/shared/data/query-client';
 import { useCatalogRefresh } from '@/shared/hooks/use-catalog-refresh';
 import { colors } from '@/shared/lib/theme';
 import { useSessionStore } from '@/shared/stores/session-store';
-import { useSettingsStore } from '@/shared/stores/settings-store';
 
 SplashScreen.preventAutoHideAsync();
 Uniwind.setTheme('dark');
@@ -48,12 +47,6 @@ export default function RootLayout() {
   const ready = useSessionStore((s) => s.ready);
   const signedIn = useSessionStore((s) => !!s.session);
   const onboarded = useOnboardingStore((s) => s.completed);
-  const accent = useSettingsStore((s) => s.accent);
-
-  useEffect(() => {
-    Uniwind.updateCSSVariables('dark', { '--color-accent': accent });
-  }, [accent]);
-
   useEffect(() => {
     if (fontsLoaded && ready) SplashScreen.hideAsync();
   }, [fontsLoaded, ready]);

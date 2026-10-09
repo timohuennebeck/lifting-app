@@ -6,7 +6,7 @@ import { scheduleOnRN } from 'react-native-worklets';
 
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -22,7 +22,6 @@ export interface AlphabetRailProps {
 /** A–Z index on the right edge; tap or drag to jump through the list. */
 export function AlphabetRail({ available, active, onJump }: AlphabetRailProps) {
   const { t } = useTranslation('exercises');
-  const accent = useAccentColor();
   // Letter under the finger during a drag, so each letter fires only once.
   const [touched, setTouched] = useState<string | null>(null);
   // Rows shrink when the list is shorter than 26 full-size letters.
@@ -54,7 +53,8 @@ export function AlphabetRail({ available, active, onJump }: AlphabetRailProps) {
               <Text
                 className="font-inter-semibold text-[10px] leading-3"
                 style={{
-                  color: c === active ? accent : available.has(c) ? '#C8C8C3' : colors.outline,
+                  color:
+                    c === active ? colors.accent : available.has(c) ? '#C8C8C3' : colors.outline,
                 }}
               >
                 {c}

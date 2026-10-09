@@ -11,17 +11,13 @@ import { db } from '@/shared/data/powersync/database';
 import { type ProfilePatch, saveProfile, useProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
 import { APP_LANGUAGES, type AppLanguage } from '@/shared/i18n/resources';
-import { cn } from '@/shared/lib/cn';
 import { formatHeight, formatWeight, type UnitSystem } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
-import { colors } from '@/shared/lib/theme';
 import { requireUserId } from '@/shared/stores/session-store';
-import { ACCENT_OPTIONS, useSettingsStore } from '@/shared/stores/settings-store';
+import { useSettingsStore } from '@/shared/stores/settings-store';
 import { Button } from '@/shared/ui/button';
 import { CheckBadge } from '@/shared/ui/check-item';
-import { Icon } from '@/shared/ui/icon';
 import { LanguageFlag } from '@/shared/ui/language-flag';
-import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { SegmentedControl } from '@/shared/ui/segmented-control';
@@ -43,8 +39,6 @@ export function SettingsScreen() {
   const { profile } = useProfile();
   const language = useSettingsStore((s) => s.language) ?? (i18n.language as AppLanguage);
   const setLanguage = useSettingsStore((s) => s.setLanguage);
-  const accent = useSettingsStore((s) => s.accent);
-  const setAccent = useSettingsStore((s) => s.setAccent);
   const [editing, setEditing] = useState<BodyField | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [session, setSession] = useState(0);
@@ -130,32 +124,6 @@ export function SettingsScreen() {
             onPress={() => setLanguage(lang)}
           />
         ))}
-      </SettingsSection>
-
-      <SettingsSection title={t('settings.accent')}>
-        <View className="flex-row flex-wrap justify-between gap-2 p-4">
-          {ACCENT_OPTIONS.map((color) => (
-            <PressableScale
-              key={color}
-              haptic="select"
-              accessibilityRole="radio"
-              accessibilityLabel={color}
-              accessibilityState={{ checked: color === accent }}
-              onPress={() => setAccent(color)}
-              className={cn(
-                'size-11 items-center justify-center rounded-full border-2',
-                color === accent ? 'border-fg' : 'border-transparent',
-              )}
-            >
-              <View
-                className="size-8.5 items-center justify-center rounded-full"
-                style={{ backgroundColor: color }}
-              >
-                {color === accent ? <Icon name="check" size={13} color={colors.onAccent} /> : null}
-              </View>
-            </PressableScale>
-          ))}
-        </View>
       </SettingsSection>
 
       <SettingsSection title={t('settings.units')}>

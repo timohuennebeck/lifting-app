@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { useAccentColor, colors } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 import { MIN_PASSWORD_LENGTH, passwordScore } from '../lib/credentials';
@@ -16,9 +16,8 @@ export interface PasswordStrengthProps {
 /** Four-segment meter with a coloured verdict under the password field. */
 export function PasswordStrength({ password }: PasswordStrengthProps) {
   const { t } = useTranslation('auth');
-  const accent = useAccentColor();
   const score = passwordScore(password);
-  const color = score > 0 ? (score === 4 ? accent : LEVEL_COLORS[score - 1]) : colors.muted;
+  const color = score > 0 ? (score === 4 ? colors.accent : LEVEL_COLORS[score - 1]) : colors.muted;
   const verdict = !password
     ? ''
     : password.length < MIN_PASSWORD_LENGTH

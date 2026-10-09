@@ -1,9 +1,8 @@
-import { useMemo } from 'react';
 import { View } from 'react-native';
 import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
 
 import { cn } from '@/shared/lib/cn';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 
 import { Text } from './text';
 
@@ -18,20 +17,18 @@ interface PaperSheetProps {
   className?: string;
 }
 
+/** A line lights up in the accent as the scan passes, then reads as written. */
+const SCAN: CSSAnimationKeyframes = {
+  '0%': { backgroundColor: PENCIL },
+  '8%': { backgroundColor: PENCIL },
+  '18%': { backgroundColor: colors.accent },
+  '32%': { backgroundColor: colors.ink },
+  '88%': { backgroundColor: colors.ink },
+  '100%': { backgroundColor: PENCIL },
+};
+
 /** Stylised training-plan page used in import and plan-building illustrations. */
 function PaperSheet({ tag, scanning, className }: PaperSheetProps) {
-  const accent = useAccentColor();
-  const scan = useMemo<CSSAnimationKeyframes>(
-    () => ({
-      '0%': { backgroundColor: PENCIL },
-      '8%': { backgroundColor: PENCIL },
-      '18%': { backgroundColor: accent },
-      '32%': { backgroundColor: colors.ink },
-      '88%': { backgroundColor: colors.ink },
-      '100%': { backgroundColor: PENCIL },
-    }),
-    [accent],
-  );
   return (
     <View
       className={cn('gap-3.5 rounded-xl bg-paper px-4.5 py-5', className)}
@@ -53,7 +50,7 @@ function PaperSheet({ tag, scanning, className }: PaperSheetProps) {
             { width, backgroundColor: PENCIL },
             scanning
               ? {
-                  animationName: scan,
+                  animationName: SCAN,
                   animationDuration: '5s',
                   animationDelay: `${i * 0.5}s`,
                   animationIterationCount: 'infinite',

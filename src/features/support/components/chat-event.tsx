@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { CheckBadge } from '@/shared/ui/check-item';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
@@ -55,11 +55,10 @@ export interface DoneLineProps {
 
 /** "✓ Resolved · Ticket closed" under the last message (01f·B-2). */
 export function DoneLine({ label, resolved, note }: DoneLineProps) {
-  const accent = useAccentColor();
   return (
     <View className="mt-3.5 items-center gap-0.5">
       <View className="flex-row items-center gap-1.5">
-        <Icon name="check" size={12} color={resolved ? accent : colors.muted} />
+        <Icon name="check" size={12} color={resolved ? colors.accent : colors.muted} />
         <Text variant="caption" className={cn('text-xs', resolved ? 'text-accent' : 'text-muted')}>
           {label}
         </Text>

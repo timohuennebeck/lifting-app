@@ -18,7 +18,6 @@
   },
   "settings": {
     "language": "Idioma",
-    "accent": "Cor de destaque",
     "units": "Unidades",
     "metric": "Métrico (kg, cm)",
     "imperial": "Imperial (lb, ft)",

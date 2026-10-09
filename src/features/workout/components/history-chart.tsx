@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { formatShortDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 import { buildLineChart, type ChartInput, nearestPoint } from '../lib/chart';
@@ -28,7 +28,6 @@ export interface HistoryChartProps {
 /** Best set per session; press and drag to read a session (design 03·C·2H·V5H). */
 export function HistoryChart({ data, metric, format }: HistoryChartProps) {
   const { t } = useTranslation('workout');
-  const accent = useAccentColor();
   const [width, setWidth] = useState(0);
   const [hover, setHover] = useState<number | null>(null);
   const { points, line, area } = buildLineChart(data, width, HEIGHT);
@@ -92,15 +91,15 @@ export function HistoryChart({ data, metric, format }: HistoryChartProps) {
             <Svg width={width} height={HEIGHT} style={{ overflow: 'visible' }}>
               <Defs>
                 <LinearGradient id="history-fill" x1="0" y1="0" x2="0" y2="1">
-                  <Stop offset="0" stopColor={accent} stopOpacity={0.22} />
-                  <Stop offset="1" stopColor={accent} stopOpacity={0} />
+                  <Stop offset="0" stopColor={colors.accent} stopOpacity={0.22} />
+                  <Stop offset="1" stopColor={colors.accent} stopOpacity={0} />
                 </LinearGradient>
               </Defs>
               <Path d={area} fill="url(#history-fill)" />
               <Path
                 d={line}
                 fill="none"
-                stroke={accent}
+                stroke={colors.accent}
                 strokeWidth={2.5}
                 strokeLinejoin="round"
                 strokeLinecap="round"
@@ -114,7 +113,7 @@ export function HistoryChart({ data, metric, format }: HistoryChartProps) {
                   cy={shown.y}
                   r={5}
                   fill={colors.bg}
-                  stroke={accent}
+                  stroke={colors.accent}
                   strokeWidth={2.5}
                 />
               ) : null}

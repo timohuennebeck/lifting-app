@@ -2,7 +2,7 @@ import { memo } from 'react';
 import Svg, { G, Path } from 'react-native-svg';
 
 import { haptics } from '@/shared/lib/haptics';
-import { useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 
 import { BODY, type BodyPartId, type BodyView } from './body-paths';
 
@@ -15,7 +15,7 @@ export interface MuscleMapProps {
   onToggle?: (part: BodyPartId) => void;
   /** Limits which parts react to taps (default: all); keep it a stable function. */
   isSelectable?: (part: BodyPartId) => boolean;
-  /** Highlight color; defaults to the user's accent (e.g. pass red for pain). */
+  /** Highlight color; defaults to the accent (e.g. pass red for pain). */
   accent?: string;
   /** Crops to a region, e.g. MUSCLE_CARDS[id].viewBox. */
   viewBox?: string;
@@ -37,8 +37,7 @@ export const MuscleMap = memo(function MuscleMap({
   width = '100%',
   height = '100%',
 }: MuscleMapProps) {
-  const userAccent = useAccentColor();
-  const accent = accentOverride ?? userAccent;
+  const accent = accentOverride ?? colors.accent;
   const art = BODY[view];
   const active = new Set(selected);
 

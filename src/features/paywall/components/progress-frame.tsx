@@ -7,7 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
 
-import { useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const STROKE = 3;
@@ -38,7 +38,6 @@ export interface ProgressFrameProps {
 
 /** Accent progress line that runs once around the video frame per playback loop. */
 export function ProgressFrame({ width, height, radius, progress, tickMs }: ProgressFrameProps) {
-  const accent = useAccentColor();
   const value = useSharedValue(progress);
   const w = width - STROKE;
   const h = height - STROKE;
@@ -62,7 +61,7 @@ export function ProgressFrame({ width, height, radius, progress, tickMs }: Progr
       <AnimatedPath
         d={d}
         fill="none"
-        stroke={accent}
+        stroke={colors.accent}
         strokeWidth={STROKE}
         strokeLinecap="round"
         strokeDasharray={[length, length]}

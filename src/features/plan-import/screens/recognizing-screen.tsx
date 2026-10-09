@@ -6,7 +6,7 @@ import Svg, { Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
 
 import { exerciseName } from '@/shared/data/exercises';
 import { haptics } from '@/shared/lib/haptics';
-import { useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { type ScanChip, ScanStage, useTimedProgress } from '@/shared/ui/scan-stage';
 import { StepHeader } from '@/shared/ui/step-header';
@@ -31,7 +31,6 @@ const FRAME_OFFSET = 130;
 /** 06b-4: "recognizing" animation, then the spoken changes land in the plan. */
 export function RecognizingScreen() {
   const { t } = useTranslation(['planImport', 'common']);
-  const accent = useAccentColor();
   const plan = useImportStore((s) => s.plan);
   const take = useImportStore((s) => s.voiceTake);
   const done = useRef(false);
@@ -89,13 +88,13 @@ export function RecognizingScreen() {
           <Svg width={160} height={160} style={{ position: 'absolute', left: -20, top: -20 }}>
             <Defs>
               <RadialGradient id="mic-glow" cx="50%" cy="50%" r="50%">
-                <Stop offset="0" stopColor={accent} stopOpacity={0.45} />
-                <Stop offset="1" stopColor={accent} stopOpacity={0} />
+                <Stop offset="0" stopColor={colors.accent} stopOpacity={0.45} />
+                <Stop offset="1" stopColor={colors.accent} stopOpacity={0} />
               </RadialGradient>
             </Defs>
             <Circle cx={80} cy={80} r={80} fill="url(#mic-glow)" />
           </Svg>
-          <Icon name="mic" size={54} color={accent} />
+          <Icon name="mic" size={54} color={colors.accent} />
         </View>
       </ScanStage>
     </>

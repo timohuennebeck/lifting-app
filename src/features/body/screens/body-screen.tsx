@@ -9,7 +9,7 @@ import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { DAY_MS } from '@/shared/lib/date';
 import { formatShortDate } from '@/shared/lib/format';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Card } from '@/shared/ui/card';
 import { Chip } from '@/shared/ui/chip';
@@ -31,7 +31,6 @@ const openCheck = (id: string) => router.push(`/body-check/result/${id}`);
 
 export function BodyScreen() {
   const { t } = useTranslation(['body', 'bodyCheck']);
-  const accent = useAccentColor();
   const { data: checks = [] } = useBodyChecks();
   const { data: photos = {} } = useBodyCheckPhotos();
   const [pose, setPose] = useState<BodyPose>('front');
@@ -56,7 +55,7 @@ export function BodyScreen() {
       {!latest ? (
         <Card className="mx-4 mt-6 items-center gap-4 py-8">
           <View className="size-16 items-center justify-center rounded-full bg-elevated">
-            <Icon name="camera" size={26} color={accent} />
+            <Icon name="camera" size={26} color={colors.accent} />
           </View>
           <Text variant="headline" className="text-center">
             {t('empty.title')}

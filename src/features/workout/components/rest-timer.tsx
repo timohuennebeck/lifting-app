@@ -5,7 +5,7 @@ import Animated, { interpolateColor, useAnimatedStyle } from 'react-native-reani
 
 import { cn } from '@/shared/lib/cn';
 import { formatDuration } from '@/shared/lib/format';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Icon, type IconName } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { ProgressBar } from '@/shared/ui/progress-bar';
@@ -51,16 +51,15 @@ export interface RestTimerProps {
 /** Header rest countdown; flashes when done and opens a sheet to adjust, stop or restart it. */
 export function RestTimer({ defaultSeconds }: RestTimerProps) {
   const { t } = useTranslation('workout');
-  const accent = useAccentColor();
   const { resting, remainingSeconds, fraction, flash } = useRestTimer();
   const [open, setOpen] = useState(false);
   const startRest = useWorkoutSessionStore((s) => s.startRest);
   const addRest = useWorkoutSessionStore((s) => s.addRest);
   const skipRest = useWorkoutSessionStore((s) => s.skipRest);
-  const base = resting ? accent : colors.fg;
+  const base = resting ? colors.accent : colors.fg;
 
   const pulse = useAnimatedStyle(() => ({
-    color: interpolateColor(flash.get(), [0, 1], [base, accent]),
+    color: interpolateColor(flash.get(), [0, 1], [base, colors.accent]),
     transform: [{ scale: 1 + flash.get() * 0.15 }],
   }));
   const label = formatDuration(remainingSeconds);
@@ -80,7 +79,7 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
         onPress={() => setOpen(true)}
         className="ml-auto flex-row items-center gap-1.5"
       >
-        <Icon name="timer" size={16} color={resting ? accent : colors.fg} />
+        <Icon name="timer" size={16} color={resting ? colors.accent : colors.fg} />
         <Animated.Text className="font-inter-semibold text-xl tabular-nums" style={pulse}>
           {label}
         </Animated.Text>
@@ -101,7 +100,7 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
             <Text variant="label">{t('rest.minus', { seconds: NUDGE })}</Text>
           </PressableScale>
           <View className="flex-row items-center gap-2">
-            <Icon name="timer" size={22} color={resting ? accent : colors.fg} />
+            <Icon name="timer" size={22} color={resting ? colors.accent : colors.fg} />
             <Text
               variant="headline"
               tone={resting ? 'accent' : 'default'}

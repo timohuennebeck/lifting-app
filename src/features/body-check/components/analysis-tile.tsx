@@ -5,7 +5,7 @@ import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
-import { useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { CheckBadge } from '@/shared/ui/check-item';
 import { Gradient } from '@/shared/ui/gradient';
 import { Text } from '@/shared/ui/text';
@@ -42,7 +42,6 @@ export interface AnalysisTileProps {
 
 /** Photo tile of the analysis grid with a clockwise reveal (design 08c-H). */
 export function AnalysisTile({ uri, label, progress, active, height }: AnalysisTileProps) {
-  const accent = useAccentColor();
   const [width, setWidth] = useState(0);
   const done = progress >= 1;
   return (
@@ -53,7 +52,7 @@ export function AnalysisTile({ uri, label, progress, active, height }: AnalysisT
         { height, zIndex: active ? 2 : 1 },
         active
           ? {
-              boxShadow: `0 0 0 2px ${accent}, 0 0 28px ${accent}59`,
+              boxShadow: `0 0 0 2px ${colors.accent}, 0 0 28px ${colors.accent}59`,
               animationName: PULSE,
               animationDuration: '0.47s',
               animationDirection: 'alternate',

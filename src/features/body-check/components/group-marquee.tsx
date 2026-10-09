@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
 
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Gradient } from '@/shared/ui/gradient';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
@@ -22,7 +22,6 @@ export interface GroupMarqueeProps {
 
 /** Endless row of muscle-group chips that light up as the analysis advances. */
 export function GroupMarquee({ chips }: GroupMarqueeProps) {
-  const accent = useAccentColor();
   const [rowWidth, setRowWidth] = useState(0);
   // The row holds the chips twice; shifting by one copy loops seamlessly.
   const loop = useMemo<CSSAnimationKeyframes>(
@@ -56,7 +55,7 @@ export function GroupMarquee({ chips }: GroupMarqueeProps) {
               key={i}
               className="h-8 flex-row items-center gap-1.5 rounded-full px-3"
               style={{
-                backgroundColor: chip.on ? accent : 'rgba(255,255,255,0.08)',
+                backgroundColor: chip.on ? colors.accent : 'rgba(255,255,255,0.08)',
                 transitionProperty: 'backgroundColor',
                 transitionDuration: '0.4s',
               }}

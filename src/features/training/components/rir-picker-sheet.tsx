@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { formatRir, RIR_VALUES } from '@/shared/lib/rir';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
@@ -19,12 +19,11 @@ export interface RirPickerSheetProps {
 /** Bottom sheet with RIR targets 0–5+ (00·P2 C·S·R). */
 export function RirPickerSheet({ visible, value, onClose, onSelect }: RirPickerSheetProps) {
   const { t } = useTranslation('training');
-  const accent = useAccentColor();
   return (
     <Sheet visible={visible} onClose={onClose} className="px-5">
       <View className="flex-row justify-between gap-3 pb-2.5">
         {RIR_VALUES.map((rir) => {
-          const style = editorRirStyle(rir, accent);
+          const style = editorRirStyle(rir, colors.accent);
           const selected = rir === value;
           return (
             <PressableScale

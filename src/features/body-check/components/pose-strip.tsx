@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
@@ -39,7 +39,6 @@ function ShotBadge({ warn }: ShotBadgeProps) {
 /** Row of the four pose thumbnails with labels (camera 08a and review 08b). */
 export function PoseStrip({ shots, active, onSelect }: PoseStripProps) {
   const { t } = useTranslation('bodyCheck');
-  const accent = useAccentColor();
   return (
     <View className="flex-row items-start justify-center gap-4.5">
       {POSES.map((pose) => {
@@ -47,7 +46,7 @@ export function PoseStrip({ shots, active, onSelect }: PoseStripProps) {
         const selected = pose === active;
         const warn = !!shot?.issue;
         const ring = selected
-          ? `inset 0 0 0 2px ${accent}`
+          ? `inset 0 0 0 2px ${colors.accent}`
           : warn
             ? `inset 0 0 0 1.5px ${WARN_COLOR}`
             : 'inset 0 0 0 1px rgba(255,255,255,0.18)';

@@ -17,7 +17,7 @@ import Svg, { Path } from 'react-native-svg';
 import { scheduleOnRN } from 'react-native-worklets';
 
 import { haptics } from '@/shared/lib/haptics';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 import { FINGERPRINT_VIEWBOX, RIDGE_PATHS } from '../lib/fingerprint-ridges';
@@ -56,7 +56,6 @@ export interface FingerprintHoldProps {
 /** Hold-to-commit fingerprint: ridges light up one by one while pressed, then zoom into the screen. */
 export function FingerprintHold({ onSealed }: FingerprintHoldProps) {
   const { t } = useTranslation('onboarding');
-  const accent = useAccentColor();
   const [phase, setPhase] = useState<Phase>('idle');
   const progress = useSharedValue(0);
   const zoom = useSharedValue(0);
@@ -163,7 +162,7 @@ export function FingerprintHold({ onSealed }: FingerprintHoldProps) {
             className="absolute -inset-7.5 rounded-full"
             style={[
               {
-                experimental_backgroundImage: `radial-gradient(circle, ${accent}38 0%, transparent 65%)`,
+                experimental_backgroundImage: `radial-gradient(circle, ${colors.accent}38 0%, transparent 65%)`,
               },
               glowStyle,
             ]}
@@ -175,7 +174,7 @@ export function FingerprintHold({ onSealed }: FingerprintHoldProps) {
               {
                 left: 100 - 260,
                 top: 100 - 260,
-                experimental_backgroundImage: `radial-gradient(circle closest-side, ${accent}73, transparent)`,
+                experimental_backgroundImage: `radial-gradient(circle closest-side, ${colors.accent}73, transparent)`,
               },
               burstStyle,
             ]}
@@ -186,7 +185,7 @@ export function FingerprintHold({ onSealed }: FingerprintHoldProps) {
                 <Path key={`base-${i}`} d={d} fill={colors.track} />
               ))}
               {RIDGE_PATHS.map((d, i) => (
-                <Ridge key={i} d={d} index={i} progress={progress} color={accent} />
+                <Ridge key={i} d={d} index={i} progress={progress} color={colors.accent} />
               ))}
             </Svg>
           </Animated.View>

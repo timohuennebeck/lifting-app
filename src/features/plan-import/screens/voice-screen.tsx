@@ -8,7 +8,7 @@ import { useNow } from '@/shared/hooks/use-now';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
@@ -28,7 +28,6 @@ const HANDOFF_MS = 700;
 /** 06b-3: voice input. MOCK: the mic plays a scripted utterance instead of real recognition. */
 export function VoiceScreen() {
   const { t } = useTranslation(['planImport', 'common']);
-  const accent = useAccentColor();
   const take = useImportStore((s) => s.voiceTake);
   const scripts = t('planImport:voice.scripts', { returnObjects: true });
   const words = parseTranscript(scripts[take % VOICE_SCRIPTS.length] ?? '');
@@ -64,8 +63,8 @@ export function VoiceScreen() {
   const color = (kind: TokenKind) => {
     if (!recognized) return colors.fgMid;
     return {
-      day: accent,
-      number: accent,
+      day: colors.accent,
+      number: colors.accent,
       exercise: colors.fg,
       remove: colors.danger,
       filler: colors.dim,

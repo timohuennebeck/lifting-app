@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
-import { colors, useAccentColor } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
@@ -17,7 +17,6 @@ export interface PlanCardProps {
 
 /** Selectable 4:3 plan tile with a square check in the corner. */
 export function PlanCard({ label, price, note, selected, onPress }: PlanCardProps) {
-  const accent = useAccentColor();
   return (
     <PressableScale
       haptic="select"
@@ -28,7 +27,7 @@ export function PlanCard({ label, price, note, selected, onPress }: PlanCardProp
       className="flex-1 overflow-hidden rounded-[22px] bg-surface p-4"
       style={{
         aspectRatio: 4 / 3,
-        boxShadow: selected ? `inset 0 0 0 2px ${accent}` : `inset 0 0 0 1px ${colors.line}`,
+        boxShadow: selected ? `inset 0 0 0 2px ${colors.accent}` : `inset 0 0 0 1px ${colors.line}`,
       }}
     >
       {selected ? <View className="absolute inset-0 bg-accent/8" /> : null}
