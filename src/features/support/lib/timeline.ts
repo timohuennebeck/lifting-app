@@ -1,4 +1,4 @@
-import type { Ticket, TicketMessage } from '../data/tickets';
+import type { Ticket, TicketEvent, TicketMessage, TicketStatus } from '../data/tickets';
 import { toMs } from './ticket-format';
 
 export type TimelineItem =
@@ -6,8 +6,8 @@ export type TimelineItem =
   | { type: 'message'; key: string; message: TicketMessage; priority: number | null }
   | { type: 'created'; key: string; at: string }
   | { type: 'autoReply'; key: string }
-  | { type: 'planned'; key: string }
-  | { type: 'done'; key: string; status: 'resolved' | 'closed' };
+  | { type: 'status'; key: string; status: TicketStatus; note: string | null }
+  | { type: 'reopened'; key: string; at: string };
 
 interface TimedItem {
   at: number;
@@ -21,11 +21,15 @@ const dayKey = (at: number) => new Date(at).toDateString();
 
 /**
  * Chat timeline: messages, the "Ticket created" line, the local auto reply after the
- * first user message (until the team answers), the current status (planned at its update
- * time, resolved/closed at the closing time) and day dividers. Status history is not
- * stored, so only the current status appears.
+ * first user message (until the team answers), status changes and reopens from the
+ * ticket's history, and day dividers. Tickets without a status event yet (changed before
+ * the history existed) show their current status instead.
  */
-export function buildTimeline(ticket: Ticket, messages: TicketMessage[]): TimelineItem[] {
+export function buildTimeline(
+  ticket: Ticket,
+  messages: TicketMessage[],
+  events: TicketEvent[],
+): TimelineItem[] {
   const timed: TimedItem[] = [];
   const first = messages.find((m) => m.author === 'user');
   const answered = messages.some((m) => m.author === 'team');
@@ -44,14 +48,25 @@ export function buildTimeline(ticket: Ticket, messages: TicketMessage[]): Timeli
       timed.push({ at, order: i * 3 + 2, item: { type: 'autoReply', key: 'auto-reply' } });
   });
 
-  const start = ms(first?.createdAt ?? ticket.createdAt);
+  // Events sort after messages sharing their timestamp.
   const last = messages.length * 3;
-  if (ticket.status === 'planned') {
-    const at = Math.max(ms(ticket.updatedAt), start);
-    timed.push({ at, order: last, item: { type: 'planned', key: 'status' } });
-  } else if (ticket.status === 'resolved' || ticket.status === 'closed') {
-    const at = Math.max(ms(ticket.closedAt ?? ticket.updatedAt), start);
-    timed.push({ at, order: last, item: { type: 'done', key: 'status', status: ticket.status } });
+  const start = ms(first?.createdAt ?? ticket.createdAt);
+  events.forEach((event, i) => {
+    const at = Math.max(ms(event.createdAt), start);
+    const item: TimelineItem =
+      event.kind === 'reopened'
+        ? { type: 'reopened', key: event.id, at: event.createdAt }
+        : { type: 'status', key: event.id, status: event.status, note: event.note };
+    timed.push({ at, order: last + i, item });
+  });
+  if (ticket.status !== 'open' && !events.some((e) => e.kind === 'status')) {
+    const closed = ticket.status === 'resolved' || ticket.status === 'closed';
+    const at = Math.max(
+      ms(closed ? (ticket.closedAt ?? ticket.updatedAt) : ticket.updatedAt),
+      start,
+    );
+    const item: TimelineItem = { type: 'status', key: 'status', status: ticket.status, note: null };
+    timed.push({ at, order: last + events.length, item });
   }
 
   timed.sort((a, b) => a.at - b.at || a.order - b.order);

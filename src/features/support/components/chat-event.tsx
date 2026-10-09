@@ -24,7 +24,7 @@ export function DayDivider({ label, first }: DayDividerProps) {
 
 export interface SystemLineProps {
   title: string;
-  meta: string;
+  meta?: string | null;
   /** Accent check for status changes, grey for "Ticket created". */
   highlight?: boolean;
 }
@@ -45,7 +45,7 @@ export function SystemLine({ title, meta, highlight }: SystemLineProps) {
         <Text variant="caption" className="text-xs leading-4">
           {title}
         </Text>
-        <Text className="font-inter text-xs leading-4 text-subtle">{meta}</Text>
+        {meta ? <Text className="font-inter text-xs leading-4 text-subtle">{meta}</Text> : null}
       </View>
     </View>
   );
@@ -55,17 +55,22 @@ export interface DoneLineProps {
   label: string;
   /** Accent for resolved tickets, muted for ones closed without a fix. */
   resolved: boolean;
+  /** Team note of the status change, e.g. "Fix ist in 1.4.3 live". */
+  note?: string | null;
 }
 
 /** "✓ Resolved · Ticket closed" under the last message (01f·B-2). */
-export function DoneLine({ label, resolved }: DoneLineProps) {
+export function DoneLine({ label, resolved, note }: DoneLineProps) {
   const accent = useAccentColor();
   return (
-    <View className="mt-3.5 flex-row items-center justify-center gap-1.5">
-      <Icon name="check" size={12} color={resolved ? accent : colors.muted} />
-      <Text variant="caption" className={cn('text-xs', resolved ? 'text-accent' : 'text-muted')}>
-        {label}
-      </Text>
+    <View className="mt-3.5 items-center gap-0.5">
+      <View className="flex-row items-center gap-1.5">
+        <Icon name="check" size={12} color={resolved ? accent : colors.muted} />
+        <Text variant="caption" className={cn('text-xs', resolved ? 'text-accent' : 'text-muted')}>
+          {label}
+        </Text>
+      </View>
+      {note ? <Text className="font-inter text-xs leading-4 text-subtle">{note}</Text> : null}
     </View>
   );
 }

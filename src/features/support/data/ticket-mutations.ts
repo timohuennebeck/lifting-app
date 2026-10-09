@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 
 import { newId, nowIso } from '@/shared/data/json';
 import { drizzle, type Executor } from '@/shared/data/powersync/database';
-import { ticketMessages, tickets } from '@/shared/data/powersync/schema';
+import { ticketEvents, ticketMessages, tickets } from '@/shared/data/powersync/schema';
 
 import { firstLine } from '../lib/ticket-format';
 import type { TicketKind } from './tickets';
@@ -11,7 +11,7 @@ export interface NewMessage {
   userId: string;
   ticketId: string;
   body: string;
-  /** Storage paths of screenshots that are already uploaded. */
+  /** Storage paths of the screenshots (uploaded in the background). */
   attachments: string[];
 }
 
@@ -59,10 +59,23 @@ export function sendTicketMessage(message: NewMessage) {
   return insertMessage(drizzle, message, nowIso());
 }
 
-/** Puts a resolved or closed ticket back into the team's queue. */
-export async function reopenTicket(ticketId: string) {
-  await drizzle
-    .update(tickets)
-    .set({ status: 'open', closed_at: null, updated_at: nowIso() })
-    .where(eq(tickets.id, ticketId));
+/**
+ * Puts a resolved or closed ticket back into the team's queue and logs it in the history.
+ * The server applies the event too, so both writes agree.
+ */
+export async function reopenTicket(userId: string, ticketId: string) {
+  const now = nowIso();
+  await drizzle.transaction(async (tx) => {
+    await tx.insert(ticketEvents).values({
+      id: newId(),
+      user_id: userId,
+      ticket_id: ticketId,
+      kind: 'reopened',
+      created_at: now,
+    });
+    await tx
+      .update(tickets)
+      .set({ status: 'open', closed_at: null, updated_at: now })
+      .where(eq(tickets.id, ticketId));
+  });
 }

@@ -19,3 +19,4 @@ streams:
       - SELECT * FROM body_check_photos WHERE user_id = auth.user_id()
       - SELECT * FROM tickets WHERE user_id = auth.user_id()
       - SELECT * FROM ticket_messages WHERE user_id = auth.user_id()
+      - SELECT * FROM ticket_events WHERE user_id = auth.user_id()

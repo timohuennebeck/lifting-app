@@ -4,6 +4,8 @@ import { alias } from 'drizzle-orm/sqlite-core';
 import { parseJson } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import {
+  ticketEvents,
+  type TicketEventRecord,
   ticketMessages,
   tickets,
   type TicketMessageRecord,
@@ -40,6 +42,16 @@ export interface TicketMessage {
   body: string;
   /** Storage paths in the ticket-attachments bucket. */
   attachments: string[];
+  createdAt: string;
+}
+
+/** History entry: the team changed the status (optionally with a note) or the user reopened. */
+export interface TicketEvent {
+  id: string;
+  kind: 'status' | 'reopened';
+  /** New status; 'open' for reopen events. */
+  status: TicketStatus;
+  note: string | null;
   createdAt: string;
 }
 
@@ -133,6 +145,15 @@ const toMessages = (rows: TicketMessageRecord[]): TicketMessage[] =>
     createdAt: r.created_at ?? '',
   }));
 
+const toEvents = (rows: TicketEventRecord[]): TicketEvent[] =>
+  rows.map((r) => ({
+    id: r.id,
+    kind: r.kind === 'reopened' ? 'reopened' : 'status',
+    status: r.kind === 'reopened' ? 'open' : ((r.status as TicketStatus | null) ?? 'open'),
+    note: r.note,
+    createdAt: r.created_at,
+  }));
+
 /** All of the user's tickets with their latest message, most recent activity first. */
 export function useTickets() {
   return useDrizzleQuery({
@@ -160,5 +181,18 @@ export function useTicketMessages(ticketId: string) {
       .where(eq(ticketMessages.ticket_id, ticketId))
       .orderBy(ticketMessages.created_at, ticketMessages.id),
     map: toMessages,
+  });
+}
+
+/** Status history of one ticket, oldest first. Team events arrive through sync. */
+export function useTicketEvents(ticketId: string) {
+  return useDrizzleQuery({
+    queryKey: supportKeys.events(ticketId).queryKey,
+    query: drizzle
+      .select()
+      .from(ticketEvents)
+      .where(eq(ticketEvents.ticket_id, ticketId))
+      .orderBy(ticketEvents.created_at, ticketEvents.id),
+    map: toEvents,
   });
 }

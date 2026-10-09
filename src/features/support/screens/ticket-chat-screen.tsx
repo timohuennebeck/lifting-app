@@ -19,7 +19,7 @@ import { ClosedBanner } from '../components/closed-banner';
 import { FeedbackSheet } from '../components/feedback-sheet';
 import { ScreenshotViewerSheet } from '../components/screenshot-viewer-sheet';
 import { TeamAvatar } from '../components/team-avatar';
-import { type Ticket, useTicket, useTicketMessages } from '../data/tickets';
+import { type Ticket, useTicket, useTicketEvents, useTicketMessages } from '../data/tickets';
 import { useTicketFormat } from '../hooks/use-ticket-format';
 import { buildTimeline, type TimelineItem } from '../lib/timeline';
 import { useSeenStore } from '../stores/seen-store';
@@ -36,6 +36,7 @@ export function TicketChatScreen() {
   const { profile } = useProfile();
   const { data: ticket, isLoading } = useTicket(ticketId);
   const { data: messages = [] } = useTicketMessages(ticketId);
+  const { data: events = [] } = useTicketEvents(ticketId);
   const markSeen = useSeenStore((s) => s.markSeen);
   const [viewerPath, setViewerPath] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -51,7 +52,7 @@ export function TicketChatScreen() {
     if (focused && lastAt) markSeen(ticketId, lastAt);
   }, [focused, lastAt, ticketId, markSeen]);
 
-  const items = ticket ? buildTimeline(ticket, messages) : [];
+  const items = ticket ? buildTimeline(ticket, messages, events) : [];
   const done = ticket?.status === 'resolved' || ticket?.status === 'closed';
   // The composer keeps 8pt above the keyboard instead of its safe-area padding.
   const keyboardOffset = footerInset - 8;
@@ -98,21 +99,28 @@ export function TicketChatScreen() {
             }
           />
         );
-      case 'planned':
-        return (
-          <SystemLine
-            key={item.key}
-            highlight
-            title={t('chat.statusLine', { status: t('status.planned') })}
-            meta={t('chat.plannedHint')}
-          />
-        );
-      case 'done':
-        return (
+      case 'status':
+        return item.status === 'resolved' || item.status === 'closed' ? (
           <DoneLine
             key={item.key}
             resolved={item.status === 'resolved'}
             label={t(item.status === 'resolved' ? 'chat.resolved' : 'chat.closed')}
+            note={item.note}
+          />
+        ) : (
+          <SystemLine
+            key={item.key}
+            highlight
+            title={t('chat.statusLine', { status: t(`status.${item.status}`) })}
+            meta={item.note ?? (item.status === 'planned' ? t('chat.plannedHint') : null)}
+          />
+        );
+      case 'reopened':
+        return (
+          <SystemLine
+            key={item.key}
+            title={t('chat.reopened')}
+            meta={format.eventWhen(item.at, now)}
           />
         );
     }

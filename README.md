@@ -44,3 +44,12 @@ powersync/             self-hosted service config, sync streams, docker compose
 ## Scripts
 
 `npm run typecheck`, `npm run lint`, `npm run format`, `npm run supabase:reset`.
+
+## Support tickets (team side)
+
+Users write `tickets` and `ticket_messages` from the app. The team works with the service role:
+
+- **Reply:** insert into `ticket_messages` with `author = 'team'` and the ticket owner's `user_id`.
+- **Change status:** insert into `ticket_events` with `kind = 'status'`, the new `status` and an optional `note`
+  (shown in the chat, e.g. "Erscheint mit Update 1.4.3"). A trigger mirrors it onto `tickets.status`.
+- Users can only reopen (logged as `kind = 'reopened'`); messages are append-only.

@@ -184,6 +184,21 @@ export const ticketMessages = sqliteTable(
   (t) => [index('ticket').on(t.ticket_id, t.created_at)],
 );
 
+export const ticketEvents = sqliteTable(
+  'ticket_events',
+  {
+    id: text().primaryKey(),
+    user_id: text().notNull(),
+    ticket_id: text().notNull(),
+    kind: text().notNull(),
+    // Set for 'status' events; null for 'reopened'.
+    status: text(),
+    note: text(),
+    created_at: text().notNull(),
+  },
+  (t) => [index('ticket').on(t.ticket_id, t.created_at)],
+);
+
 // Relations power nested reads such as `drizzle.query.templates.findMany({ with: … })`.
 export const templatesRelations = relations(templates, ({ many }) => ({
   exercises: many(templateExercises),
@@ -230,6 +245,7 @@ export const drizzleSchema = {
   bodyCheckPhotos,
   tickets,
   ticketMessages,
+  ticketEvents,
   templatesRelations,
   templateExercisesRelations,
   templateSetsRelations,
@@ -245,3 +261,4 @@ export type TemplateSetRecord = typeof templateSets.$inferSelect;
 export type BodyCheckRecord = typeof bodyChecks.$inferSelect;
 export type TicketRecord = typeof tickets.$inferSelect;
 export type TicketMessageRecord = typeof ticketMessages.$inferSelect;
+export type TicketEventRecord = typeof ticketEvents.$inferSelect;

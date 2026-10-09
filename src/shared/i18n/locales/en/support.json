@@ -75,6 +75,7 @@
     "plannedHint": "Coming in an upcoming update",
     "resolved": "Resolved · Ticket closed",
     "closed": "Ticket closed",
+    "reopened": "Ticket reopened",
     "placeholder": "Chat with us",
     "send": "Send",
     "addScreenshot": "Add screenshot",
