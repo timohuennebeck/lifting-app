@@ -1,1 +1,93 @@
-{}
+{
+  "team": "Equipa Forge",
+  "teamReplyTime": "Costuma responder em 24–48 h.",
+  "kind": {
+    "bug": "Erro",
+    "idea": "Ideia"
+  },
+  "status": {
+    "open": "Aberto",
+    "planned": "Planeado",
+    "resolved": "Corrigido",
+    "closed": "Fechado",
+    "shipped": "Implementado"
+  },
+  "ticketNumber": "Pedido #{{number}}",
+  "ticketPending": "Novo pedido",
+  "preview": {
+    "team": "Equipa Forge: {{text}}",
+    "user": "Tu: {{text}}",
+    "screenshots_one": "Captura de ecrã",
+    "screenshots_other": "{{count}} capturas de ecrã"
+  },
+  "when": {
+    "justNow": "Agora mesmo",
+    "yesterday": "Ontem"
+  },
+  "profile": {
+    "openTickets": "Pedidos abertos",
+    "allTickets": "Todos os pedidos",
+    "create": "Criar pedido",
+    "empty": "Não tens pedidos abertos. Encontraste um erro ou tens uma ideia? Diz-nos."
+  },
+  "sheet": {
+    "bug": "Reportar erro",
+    "bugHint": "Algo não está a funcionar",
+    "idea": "Sugerir funcionalidade",
+    "ideaHint": "Falta-te algo na app",
+    "cta": "Continuar"
+  },
+  "form": {
+    "bugTitle": "Reportar erro",
+    "ideaTitle": "Sugerir funcionalidade",
+    "bugPlaceholder": "Descreve o erro …",
+    "ideaPlaceholder": "Descreve a tua ideia …",
+    "screenshots": "Capturas de ecrã",
+    "addScreenshot": "Adicionar captura de ecrã",
+    "removeScreenshot": "Remover captura de ecrã",
+    "importance": "Quão importante é para ti?",
+    "importanceLow": "Pouco importante",
+    "importanceHigh": "Indispensável",
+    "importanceValue": "Importância {{value}} de 5",
+    "send": "Enviar"
+  },
+  "upload": {
+    "progress": "A carregar capturas · {{done}}/{{total}}",
+    "failed": "Falha no envio. Verifica a ligação e tenta novamente.",
+    "retry": "Tentar novamente"
+  },
+  "list": {
+    "title": "Pedidos",
+    "search": "Pesquisar",
+    "create": "Criar pedido",
+    "empty": "Ainda sem pedidos",
+    "emptyHint": "Reporta um erro ou sugere uma funcionalidade. Respondemos aqui mesmo no chat.",
+    "noResults": "Nenhum pedido corresponde a “{{query}}”."
+  },
+  "chat": {
+    "today": "Hoje",
+    "yesterday": "Ontem",
+    "created": "Pedido #{{number}} criado",
+    "createdPending": "Pedido criado",
+    "meta": "{{kind}} · {{when}}",
+    "justNow": "agora mesmo",
+    "todayAt": "hoje {{time}}",
+    "yesterdayAt": "ontem {{time}}",
+    "autoReply": "Obrigado, {{name}}! A nossa equipa responde-te em 24–48 horas neste chat.",
+    "autoReplyNoName": "Obrigado! A nossa equipa responde-te em 24–48 horas neste chat.",
+    "priority": "Prioridade",
+    "statusLine": "Estado: {{status}}",
+    "plannedHint": "Chega numa das próximas atualizações",
+    "resolved": "Resolvido · Pedido fechado",
+    "closed": "Pedido fechado",
+    "placeholder": "Fala connosco",
+    "send": "Enviar",
+    "addScreenshot": "Adicionar captura de ecrã",
+    "doneTitle": "Este pedido está resolvido",
+    "doneBody": "Se o problema voltar, podes reabri-lo.",
+    "reopen": "Reabrir",
+    "newTicket": "Novo pedido",
+    "screenshot": "Captura de ecrã",
+    "notFound": "Este pedido já não existe."
+  }
+}

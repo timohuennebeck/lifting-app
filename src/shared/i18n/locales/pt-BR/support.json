@@ -1,1 +1,93 @@
-{}
+{
+  "team": "Equipe Forge",
+  "teamReplyTime": "Costuma responder em 24–48 h.",
+  "kind": {
+    "bug": "Erro",
+    "idea": "Ideia"
+  },
+  "status": {
+    "open": "Aberto",
+    "planned": "Planejado",
+    "resolved": "Corrigido",
+    "closed": "Fechado",
+    "shipped": "Implementado"
+  },
+  "ticketNumber": "Chamado #{{number}}",
+  "ticketPending": "Novo chamado",
+  "preview": {
+    "team": "Equipe Forge: {{text}}",
+    "user": "Você: {{text}}",
+    "screenshots_one": "Captura de tela",
+    "screenshots_other": "{{count}} capturas de tela"
+  },
+  "when": {
+    "justNow": "Agora mesmo",
+    "yesterday": "Ontem"
+  },
+  "profile": {
+    "openTickets": "Chamados abertos",
+    "allTickets": "Todos os chamados",
+    "create": "Abrir chamado",
+    "empty": "Nenhum chamado aberto. Encontrou um erro ou tem uma ideia? Fale com a gente."
+  },
+  "sheet": {
+    "bug": "Relatar erro",
+    "bugHint": "Algo não está funcionando",
+    "idea": "Sugerir recurso",
+    "ideaHint": "Está faltando algo no app",
+    "cta": "Continuar"
+  },
+  "form": {
+    "bugTitle": "Relatar erro",
+    "ideaTitle": "Sugerir recurso",
+    "bugPlaceholder": "Descreva o erro …",
+    "ideaPlaceholder": "Descreva sua ideia …",
+    "screenshots": "Capturas de tela",
+    "addScreenshot": "Adicionar captura de tela",
+    "removeScreenshot": "Remover captura de tela",
+    "importance": "Quão importante é para você?",
+    "importanceLow": "Pouco importante",
+    "importanceHigh": "Indispensável",
+    "importanceValue": "Importância {{value}} de 5",
+    "send": "Enviar"
+  },
+  "upload": {
+    "progress": "Enviando capturas · {{done}}/{{total}}",
+    "failed": "Falha no envio. Verifique sua conexão e tente novamente.",
+    "retry": "Tentar novamente"
+  },
+  "list": {
+    "title": "Chamados",
+    "search": "Buscar",
+    "create": "Abrir chamado",
+    "empty": "Nenhum chamado ainda",
+    "emptyHint": "Relate um erro ou sugira um recurso. Respondemos aqui mesmo no chat.",
+    "noResults": "Nenhum chamado corresponde a “{{query}}”."
+  },
+  "chat": {
+    "today": "Hoje",
+    "yesterday": "Ontem",
+    "created": "Chamado #{{number}} aberto",
+    "createdPending": "Chamado aberto",
+    "meta": "{{kind}} · {{when}}",
+    "justNow": "agora mesmo",
+    "todayAt": "hoje {{time}}",
+    "yesterdayAt": "ontem {{time}}",
+    "autoReply": "Valeu, {{name}}! Nossa equipe responde em 24–48 horas neste chat.",
+    "autoReplyNoName": "Valeu! Nossa equipe responde em 24–48 horas neste chat.",
+    "priority": "Prioridade",
+    "statusLine": "Status: {{status}}",
+    "plannedHint": "Chega em uma das próximas atualizações",
+    "resolved": "Resolvido · Chamado fechado",
+    "closed": "Chamado fechado",
+    "placeholder": "Fale com a gente",
+    "send": "Enviar",
+    "addScreenshot": "Adicionar captura de tela",
+    "doneTitle": "Este chamado foi resolvido",
+    "doneBody": "Se o problema voltar, você pode reabri-lo.",
+    "reopen": "Reabrir",
+    "newTicket": "Novo chamado",
+    "screenshot": "Captura de tela",
+    "notFound": "Este chamado não existe mais."
+  }
+}

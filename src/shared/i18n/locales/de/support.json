@@ -1,1 +1,93 @@
-{}
+{
+  "team": "Forge-Team",
+  "teamReplyTime": "Antwortet meist innerhalb von 24–48 Std.",
+  "kind": {
+    "bug": "Fehler",
+    "idea": "Idee"
+  },
+  "status": {
+    "open": "Offen",
+    "planned": "Geplant",
+    "resolved": "Behoben",
+    "closed": "Geschlossen",
+    "shipped": "Umgesetzt"
+  },
+  "ticketNumber": "Ticket #{{number}}",
+  "ticketPending": "Neues Ticket",
+  "preview": {
+    "team": "Forge-Team: {{text}}",
+    "user": "Du: {{text}}",
+    "screenshots_one": "Screenshot",
+    "screenshots_other": "{{count}} Screenshots"
+  },
+  "when": {
+    "justNow": "Gerade eben",
+    "yesterday": "Gestern"
+  },
+  "profile": {
+    "openTickets": "Offene Tickets",
+    "allTickets": "Alle Tickets",
+    "create": "Ticket erstellen",
+    "empty": "Keine offenen Tickets. Fehler entdeckt oder eine Idee? Schreib uns."
+  },
+  "sheet": {
+    "bug": "Fehler melden",
+    "bugHint": "Etwas funktioniert nicht",
+    "idea": "Funktion wünschen",
+    "ideaHint": "Dir fehlt etwas in der App",
+    "cta": "Weiter"
+  },
+  "form": {
+    "bugTitle": "Fehler melden",
+    "ideaTitle": "Funktion wünschen",
+    "bugPlaceholder": "Beschreib den Fehler …",
+    "ideaPlaceholder": "Beschreib deine Idee …",
+    "screenshots": "Screenshots",
+    "addScreenshot": "Screenshot hinzufügen",
+    "removeScreenshot": "Screenshot entfernen",
+    "importance": "Wie wichtig ist es dir?",
+    "importanceLow": "Eher unwichtig",
+    "importanceHigh": "Unverzichtbar",
+    "importanceValue": "Wichtigkeit {{value}} von 5",
+    "send": "Senden"
+  },
+  "upload": {
+    "progress": "Screenshots werden hochgeladen · {{done}}/{{total}}",
+    "failed": "Hochladen fehlgeschlagen. Prüf deine Verbindung und versuch es erneut.",
+    "retry": "Erneut versuchen"
+  },
+  "list": {
+    "title": "Tickets",
+    "search": "Suchen",
+    "create": "Ticket erstellen",
+    "empty": "Noch keine Tickets",
+    "emptyHint": "Melde einen Fehler oder wünsch dir eine Funktion. Wir antworten dir direkt hier im Chat.",
+    "noResults": "Keine Tickets zu „{{query}}“."
+  },
+  "chat": {
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "created": "Ticket #{{number}} erstellt",
+    "createdPending": "Ticket erstellt",
+    "meta": "{{kind}} · {{when}}",
+    "justNow": "gerade eben",
+    "todayAt": "heute {{time}}",
+    "yesterdayAt": "gestern {{time}}",
+    "autoReply": "Danke, {{name}}! Unser Team antwortet dir innerhalb von 24–48 Stunden in diesem Chat.",
+    "autoReplyNoName": "Danke! Unser Team antwortet dir innerhalb von 24–48 Stunden in diesem Chat.",
+    "priority": "Priorität",
+    "statusLine": "Status: {{status}}",
+    "plannedHint": "Erscheint mit einem der nächsten Updates",
+    "resolved": "Gelöst · Ticket geschlossen",
+    "closed": "Ticket geschlossen",
+    "placeholder": "Chatte mit uns",
+    "send": "Senden",
+    "addScreenshot": "Screenshot hinzufügen",
+    "doneTitle": "Dieses Ticket ist erledigt",
+    "doneBody": "Tritt das Problem wieder auf, kannst du es erneut öffnen.",
+    "reopen": "Wieder öffnen",
+    "newTicket": "Neues Ticket",
+    "screenshot": "Screenshot",
+    "notFound": "Dieses Ticket gibt es nicht mehr."
+  }
+}

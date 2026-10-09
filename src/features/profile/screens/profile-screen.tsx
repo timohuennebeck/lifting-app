@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { ProBadge } from '@/features/paywall/components/pro-badge';
+import { useIsPro } from '@/features/paywall/stores/subscription-store';
+import { OpenTicketsSection } from '@/features/support/components/open-tickets-section';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useProfile } from '@/shared/data/profile';
 import { useWorkoutHistory } from '@/shared/data/workouts';
@@ -19,6 +22,7 @@ export function ProfileScreen() {
   const { t } = useTranslation('profile');
   const { profile } = useProfile();
   const { data: history = [] } = useWorkoutHistory();
+  const isPro = useIsPro();
   const [visible, setVisible] = useState(PAGE);
   const name = profile?.firstName ?? '';
   const facts = [
@@ -34,17 +38,20 @@ export function ProfileScreen() {
         <View className="rounded-full border-[3px] border-accent p-1">
           <Avatar name={name} size={106} className="border-0" />
         </View>
-        <Text className="mt-[18px] font-inter-semibold text-[34px] leading-[38px] tracking-[-0.7px]">
+        <Text className="mt-4.5 font-inter-semibold text-[34px] leading-9.5 tracking-[-0.7px]">
           {name}
         </Text>
-        {profile?.createdAt ? (
-          <Text tone="muted" className="mt-3 text-sm">
-            {t('memberSince', {
-              date: formatDate(new Date(profile.createdAt), { month: 'long', year: 'numeric' }),
-            })}
-          </Text>
-        ) : null}
-        <View className="mt-[18px] gap-2">
+        <View className="mt-3 flex-row items-center gap-2.5">
+          {isPro ? <ProBadge className="self-center" /> : null}
+          {profile?.createdAt ? (
+            <Text tone="muted" className="text-sm">
+              {t('memberSince', {
+                date: formatDate(new Date(profile.createdAt), { month: 'long', year: 'numeric' }),
+              })}
+            </Text>
+          ) : null}
+        </View>
+        <View className="mt-4.5 gap-2">
           {facts.map((fact) => (
             <Text key={fact} variant="paragraph" className="text-fg-mid">
               {`• ${fact}`}
@@ -53,7 +60,9 @@ export function ProfileScreen() {
         </View>
       </View>
 
-      <View className="mx-5 mt-[30px]">
+      <OpenTicketsSection />
+
+      <View className="mx-5 mt-7.5">
         <View className="flex-row items-baseline justify-between">
           <Text variant="overline" tone="subtle" className="text-[11px]">
             {t('activity')}

@@ -1,1 +1,93 @@
-{}
+{
+  "team": "Forge Team",
+  "teamReplyTime": "Usually replies within 24–48 hrs.",
+  "kind": {
+    "bug": "Bug",
+    "idea": "Idea"
+  },
+  "status": {
+    "open": "Open",
+    "planned": "Planned",
+    "resolved": "Fixed",
+    "closed": "Closed",
+    "shipped": "Shipped"
+  },
+  "ticketNumber": "Ticket #{{number}}",
+  "ticketPending": "New ticket",
+  "preview": {
+    "team": "Forge Team: {{text}}",
+    "user": "You: {{text}}",
+    "screenshots_one": "Screenshot",
+    "screenshots_other": "{{count}} screenshots"
+  },
+  "when": {
+    "justNow": "Just now",
+    "yesterday": "Yesterday"
+  },
+  "profile": {
+    "openTickets": "Open tickets",
+    "allTickets": "All tickets",
+    "create": "Create ticket",
+    "empty": "No open tickets. Found a bug or have an idea? Let us know."
+  },
+  "sheet": {
+    "bug": "Report a bug",
+    "bugHint": "Something isn't working",
+    "idea": "Request a feature",
+    "ideaHint": "Something's missing in the app",
+    "cta": "Continue"
+  },
+  "form": {
+    "bugTitle": "Report a bug",
+    "ideaTitle": "Request a feature",
+    "bugPlaceholder": "Describe the bug …",
+    "ideaPlaceholder": "Describe your idea …",
+    "screenshots": "Screenshots",
+    "addScreenshot": "Add screenshot",
+    "removeScreenshot": "Remove screenshot",
+    "importance": "How important is it to you?",
+    "importanceLow": "Nice to have",
+    "importanceHigh": "Essential",
+    "importanceValue": "Importance {{value}} of 5",
+    "send": "Send"
+  },
+  "upload": {
+    "progress": "Uploading screenshots · {{done}}/{{total}}",
+    "failed": "Upload failed. Check your connection and try again.",
+    "retry": "Try again"
+  },
+  "list": {
+    "title": "Tickets",
+    "search": "Search",
+    "create": "Create ticket",
+    "empty": "No tickets yet",
+    "emptyHint": "Report a bug or suggest a feature. We reply right here in the chat.",
+    "noResults": "No tickets match “{{query}}”."
+  },
+  "chat": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "created": "Ticket #{{number}} created",
+    "createdPending": "Ticket created",
+    "meta": "{{kind}} · {{when}}",
+    "justNow": "just now",
+    "todayAt": "today {{time}}",
+    "yesterdayAt": "yesterday {{time}}",
+    "autoReply": "Thanks, {{name}}! Our team will reply within 24–48 hours in this chat.",
+    "autoReplyNoName": "Thanks! Our team will reply within 24–48 hours in this chat.",
+    "priority": "Priority",
+    "statusLine": "Status: {{status}}",
+    "plannedHint": "Coming in an upcoming update",
+    "resolved": "Resolved · Ticket closed",
+    "closed": "Ticket closed",
+    "placeholder": "Chat with us",
+    "send": "Send",
+    "addScreenshot": "Add screenshot",
+    "doneTitle": "This ticket is done",
+    "doneBody": "If the problem comes back, you can reopen it.",
+    "reopen": "Reopen",
+    "newTicket": "New ticket",
+    "screenshot": "Screenshot",
+    "notFound": "This ticket doesn't exist anymore."
+  }
+}
