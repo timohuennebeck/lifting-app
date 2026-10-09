@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, ScrollView, useWindowDimensions, View } from 'react-native';
+import { ScrollView, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Easing,
@@ -12,13 +12,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { scheduleOnRN } from 'react-native-worklets';
 import { useTranslation } from 'react-i18next';
 
-import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
 import { exerciseName as nameOf } from '@/shared/data/exercises';
 import { restSecondsFor } from '@/shared/data/templates';
-import { addWorkoutExercise, useWorkout, type WorkoutDetail } from '@/shared/data/workouts';
+import { useWorkout, type WorkoutDetail } from '@/shared/data/workouts';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { haptics } from '@/shared/lib/haptics';
-import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
 import { Text } from '@/shared/ui/text';
@@ -30,12 +28,12 @@ import { SetTable } from '../components/set-table';
 import { WeightKeypad } from '../components/weight-keypad';
 import { WorkoutMenuSheet } from '../components/workout-menu-sheet';
 import { WorkoutTopBar } from '../components/workout-top-bar';
-import { reorderWorkoutExercise, swapWorkoutExercise } from '../data/workout-mutations';
+import { reorderWorkoutExercise } from '../data/workout-mutations';
 import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
-type SheetKind = 'menu' | 'picker';
+type SheetKind = 'menu';
 
 const SWIPE_DISTANCE = 70;
 const SWIPE_VELOCITY = 600;
@@ -47,12 +45,9 @@ interface LiveWorkoutProps {
 
 function LiveWorkout({ workout }: LiveWorkoutProps) {
   const { t, i18n } = useTranslation(['workout', 'common']);
-  const userId = useUserId();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const [sheet, setSheet] = useState<SheetKind | null>(null);
-  // Kept after closing so the picker doesn't switch modes while it animates out.
-  const [pickerMode, setPickerMode] = useState<'add' | 'swap'>('add');
   const live = useLiveWorkout(workout);
   const { abandon } = useWorkoutActions(workout.id);
   const goTo = useWorkoutSessionStore((s) => s.goTo);
@@ -140,10 +135,12 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     if (currentId) goTo(order.indexOf(currentId));
   };
 
-  const openPicker = (mode: 'add' | 'swap') => {
-    setPickerMode(mode);
-    setSheet('picker');
-  };
+  // Adding and swapping happen on their own page; picks apply when it closes with "Done".
+  const openPicker = (mode: 'add' | 'swap') =>
+    router.push({
+      pathname: '/workout/picker',
+      params: { workoutId: workout.id, mode, workoutExerciseId: exercise?.id ?? '' },
+    });
 
   const onSelect = (index: number, f: SetField) => {
     if (index !== selectedIndex) return live.selectSet(index, f);
@@ -151,29 +148,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     useWorkoutSessionStore.getState().focusField(f);
   };
 
-  const addExercise = async (exerciseId: string) => {
-    if (!userId) return;
-    setSheet(null);
-    await addWorkoutExercise(userId, workout.id, exerciseId);
-    goTo(count);
-  };
-
-  const swapExercise = (exerciseId: string) => {
-    if (!exercise) return;
-    const apply = () => {
-      setSheet(null);
-      closeKeypad();
-      void swapWorkoutExercise(exercise.id, exerciseId);
-    };
-    if (!exercise.sets.some((s) => s.completedAt)) return apply();
-    Alert.alert(t('swap.confirmTitle'), t('swap.confirmMessage'), [
-      { text: t('common:actions.cancel'), style: 'cancel' },
-      { text: t('swap.confirm'), style: 'destructive', onPress: apply },
-    ]);
-  };
-
   const exerciseName = exercise ? nameOf(exercise.exerciseId, i18n.language) : '';
-  const usedIds = workout.exercises.map((e) => e.exerciseId);
 
   const shownSet =
     selectedIndex >= 0
@@ -271,14 +246,6 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
         name={workout.name}
         doneSets={live.doneSets}
         totalSets={live.totalSets}
-      />
-      <ExercisePickerSheet
-        visible={sheet === 'picker'}
-        onClose={() => setSheet(null)}
-        onSelect={pickerMode === 'swap' ? swapExercise : addExercise}
-        excludeIds={usedIds}
-        mode={pickerMode}
-        title={pickerMode === 'swap' ? t('swap.title') : t('addExercise')}
       />
     </View>
   );
