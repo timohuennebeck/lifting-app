@@ -27,6 +27,7 @@ import { pickPlanPhotos } from '../lib/pick-source';
 import type { ImportPhoto } from '../lib/plan-import-service';
 import { useImportStore, usePhotos } from '../stores/import-store';
 
+/** Bottom panel height from the design, home indicator area included. */
 const PANEL_HEIGHT = 194;
 
 /** 05a: photograph the plan page by page. `?retake=<index>` replaces one page. */
@@ -42,6 +43,9 @@ export function CameraScreen() {
   const photos = usePhotos();
   const addPhotos = useImportStore((s) => s.addPhotos);
   const replacePhoto = useImportStore((s) => s.replacePhoto);
+  const truncatePhotos = useImportStore((s) => s.truncatePhotos);
+  // Pages that existed before this camera session survive a close; new ones are discarded.
+  const keptOnClose = useRef(photos.length);
   const flash = useSharedValue(0);
   const flashStyle = useAnimatedStyle(() => ({ opacity: flash.get() }));
 
@@ -70,6 +74,11 @@ export function CameraScreen() {
     }
   }
 
+  function close() {
+    if (retakeIndex === null) truncatePhotos(keptOnClose.current);
+    router.back();
+  }
+
   async function fromLibrary() {
     const picked = await pickPlanPhotos();
     if (picked.length && !store(picked)) router.dismissTo('/import/review');
@@ -85,7 +94,7 @@ export function CameraScreen() {
         style={{ paddingTop: insets.top, paddingBottom: insets.bottom + 16 }}
       >
         {options}
-        <ScreenHeader icon="close" />
+        <ScreenHeader icon="close" onBack={close} />
         <StepTitle
           title={t('planImport:camera.permission.title')}
           subtitle={t('planImport:camera.permission.body')}
@@ -139,12 +148,8 @@ export function CameraScreen() {
           className="absolute inset-x-0 flex-row items-center justify-between px-4"
           style={{ top: insets.top + 6 }}
         >
-          <IconButton
-            icon="close"
-            accessibilityLabel={t('common:actions.close')}
-            onPress={() => router.back()}
-          />
-          <View className="h-[34px] justify-center rounded-full bg-elevated px-3.5">
+          <IconButton icon="close" accessibilityLabel={t('common:actions.close')} onPress={close} />
+          <View className="h-8.5 justify-center rounded-full bg-elevated px-3.5">
             <Text variant="caption">
               {retakeIndex !== null
                 ? t('planImport:camera.retake', { count: retakeIndex + 1 })
@@ -164,8 +169,11 @@ export function CameraScreen() {
         </View>
       </View>
       <View
-        className="items-center gap-[18px] bg-black pt-1"
-        style={{ height: PANEL_HEIGHT + insets.bottom, paddingBottom: insets.bottom }}
+        className="items-center gap-4.5 bg-black pt-1"
+        style={{
+          height: Math.max(PANEL_HEIGHT, 160 + insets.bottom),
+          paddingBottom: insets.bottom,
+        }}
       >
         <View className="h-11 flex-row items-center justify-center gap-1.5">
           {photos.length && retakeIndex === null ? (
@@ -190,7 +198,7 @@ export function CameraScreen() {
             <PressableScale
               accessibilityLabel={t('planImport:camera.library')}
               onPress={fromLibrary}
-              className="size-[52px] items-center justify-center rounded-full bg-elevated"
+              className="size-13 items-center justify-center rounded-full bg-elevated"
             >
               <Icon name="image" size={20} />
             </PressableScale>
@@ -201,9 +209,9 @@ export function CameraScreen() {
             disabled={busy}
             accessibilityLabel={t('planImport:camera.shutter')}
             onPress={shoot}
-            className="size-[78px] items-center justify-center rounded-full bg-elevated"
+            className="size-19.5 items-center justify-center rounded-full bg-elevated"
           >
-            <View className={cn('size-[62px] rounded-full bg-accent', busy && 'opacity-60')} />
+            <View className={cn('size-15.5 rounded-full bg-accent', busy && 'opacity-60')} />
           </PressableScale>
           <View className="flex-1 items-end">
             {photos.length && retakeIndex === null ? (
@@ -213,7 +221,7 @@ export function CameraScreen() {
                 className="h-11 flex-row items-center gap-2 rounded-full bg-elevated pr-2 pl-4"
               >
                 <Text variant="label">{t('planImport:camera.done')}</Text>
-                <View className="h-[26px] min-w-[26px] items-center justify-center rounded-full bg-accent px-1.5">
+                <View className="h-6.5 min-w-6.5 items-center justify-center rounded-full bg-accent px-1.5">
                   <Text variant="caption" tone="onAccent">
                     {photos.length}
                   </Text>

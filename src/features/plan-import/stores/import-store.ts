@@ -19,6 +19,8 @@ interface ImportState {
   addPhotos: (photos: ImportPhoto[]) => void;
   replacePhoto: (index: number, photo: ImportPhoto) => void;
   removePhoto: (index: number) => void;
+  /** Drops photos beyond `count`, e.g. when the camera is closed without finishing. */
+  truncatePhotos: (count: number) => void;
   setPlan: (plan: ImportedPlan) => void;
   editPlan: (edit: (plan: ImportedPlan) => ImportedPlan) => void;
   selectDay: (index: number) => void;
@@ -46,6 +48,11 @@ export const useImportStore = create<ImportState>()((set) => ({
         photos: photosOf(s.source).map((p, i) => (i === index ? photo : p)),
       },
     })),
+  truncatePhotos: (count) =>
+    set((s) => {
+      const kept = photosOf(s.source).slice(0, count);
+      return { source: kept.length ? { kind: 'photos', photos: kept } : null };
+    }),
   removePhoto: (index) =>
     set((s) => ({
       source: { kind: 'photos', photos: photosOf(s.source).filter((_, i) => i !== index) },
