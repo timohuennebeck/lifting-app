@@ -1,3 +1,15 @@
+import enPaywall from './locales/en/paywall.json';
+import enSupport from './locales/en/support.json';
+import enBodyCheck from './locales/en/bodyCheck.json';
+import dePaywall from './locales/de/paywall.json';
+import deSupport from './locales/de/support.json';
+import deBodyCheck from './locales/de/bodyCheck.json';
+import ptPTPaywall from './locales/pt-PT/paywall.json';
+import ptPTSupport from './locales/pt-PT/support.json';
+import ptPTBodyCheck from './locales/pt-PT/bodyCheck.json';
+import ptBRPaywall from './locales/pt-BR/paywall.json';
+import ptBRSupport from './locales/pt-BR/support.json';
+import ptBRBodyCheck from './locales/pt-BR/bodyCheck.json';
 import enPlanCreate from './locales/en/planCreate.json';
 import enPlanImport from './locales/en/planImport.json';
 import dePlanCreate from './locales/de/planCreate.json';
@@ -51,6 +63,9 @@ import ptPTWorkout from './locales/pt-PT/workout.json';
 export const resources = {
   en: {
     common: enCommon,
+    paywall: enPaywall,
+    support: enSupport,
+    bodyCheck: enBodyCheck,
     planCreate: enPlanCreate,
     planImport: enPlanImport,
     auth: enAuth,
@@ -65,6 +80,9 @@ export const resources = {
   },
   de: {
     common: deCommon,
+    paywall: dePaywall,
+    support: deSupport,
+    bodyCheck: deBodyCheck,
     planCreate: dePlanCreate,
     planImport: dePlanImport,
     auth: deAuth,
@@ -79,6 +97,9 @@ export const resources = {
   },
   'pt-PT': {
     common: ptPTCommon,
+    paywall: ptPTPaywall,
+    support: ptPTSupport,
+    bodyCheck: ptPTBodyCheck,
     planCreate: ptPTPlanCreate,
     planImport: ptPTPlanImport,
     auth: ptPTAuth,
@@ -93,6 +114,9 @@ export const resources = {
   },
   'pt-BR': {
     common: ptBRCommon,
+    paywall: ptBRPaywall,
+    support: ptBRSupport,
+    bodyCheck: ptBRBodyCheck,
     planCreate: ptBRPlanCreate,
     planImport: ptBRPlanImport,
     auth: ptBRAuth,
