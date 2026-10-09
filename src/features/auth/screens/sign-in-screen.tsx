@@ -78,14 +78,8 @@ export function SignInScreen() {
             </Text>
           ) : (
             <TextButton
-              label={
-                <>
-                  <Text variant="label" tone="muted" className="font-inter">
-                    {t('signIn.noAccount')}
-                  </Text>
-                  {t('signIn.getStarted')}
-                </>
-              }
+              prefix={t('signIn.noAccount')}
+              label={t('signIn.getStarted')}
               onPress={() => router.replace('/name')}
             />
           )}

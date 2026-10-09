@@ -72,14 +72,8 @@ export function WelcomeScreen() {
         <TextButton
           className="mt-1"
           onPress={() => router.push('/sign-in')}
-          label={
-            <>
-              <Text variant="label" tone="muted" className="font-inter">
-                {t('welcome.haveAccount')}
-              </Text>
-              {t('welcome.signIn')}
-            </>
-          }
+          prefix={t('welcome.haveAccount')}
+          label={t('welcome.signIn')}
         />
       </View>
     </View>
