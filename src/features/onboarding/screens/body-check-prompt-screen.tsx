@@ -1,13 +1,13 @@
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
-import { MuscleMap } from '@/shared/ui/muscle-map/muscle-map';
 import { Text } from '@/shared/ui/text';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { TextButton } from '@/shared/ui/text-button';
@@ -17,6 +17,8 @@ import { useOnboardingStore } from '../stores/onboarding-store';
 
 const POSES = ['front', 'left', 'right', 'back'] as const;
 const TIPS = ['light', 'clothes', 'framing', 'privacy'] as const;
+/** Example full-body shot from the design (image slot "Ganzkörperfoto"). */
+const EXAMPLE_PHOTO = require('@/assets/images/demo-person.jpg');
 
 /** Ends onboarding; the root guard then swaps to the app. */
 function finish(openBodyCheck: boolean) {
@@ -47,9 +49,7 @@ export function BodyCheckPromptScreen() {
         className="mx-4 mt-5 h-82.5 overflow-hidden rounded-[28px] bg-surface"
         style={{ boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.08)' }}
       >
-        <View className="absolute inset-0 pt-14 pb-4 opacity-80">
-          <MuscleMap view="front" />
-        </View>
+        <Image source={EXAMPLE_PHOTO} contentFit="cover" style={StyleSheet.absoluteFill} />
         <View className="absolute inset-x-3.5 top-3.5 flex-row gap-1.5">
           {POSES.map((pose, i) => (
             <View

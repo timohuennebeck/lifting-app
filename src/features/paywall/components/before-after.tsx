@@ -10,7 +10,7 @@ import { Text } from '@/shared/ui/text';
 
 // Pre-graded copies of the design photo (grayscale + 70% brightness for "before").
 const BEFORE = require('@/assets/images/paywall/before.jpg');
-const AFTER = require('@/assets/images/paywall/coach.jpg');
+const AFTER = require('@/assets/images/demo-person.jpg');
 const BEFORE_DATE = new Date(2026, 1, 3);
 const AFTER_DATE = new Date(2026, 8, 28);
 
