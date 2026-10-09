@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
-import { Avatar } from '@/shared/ui/avatar';
+import { UserAvatar } from '@/shared/components/user-avatar';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
@@ -27,7 +27,7 @@ export function TicketListRow({ ticket, userName }: TicketListRowProps) {
             unread ? 'border-accent' : 'border-transparent',
           )}
         >
-          <Avatar name={userName} size={48} className="border-0" />
+          <UserAvatar size={48} className="border-0" />
         </View>
         <View className="absolute right-0 bottom-0 rounded-full bg-bg p-[2.5px]">
           <TeamAvatar size={22} />

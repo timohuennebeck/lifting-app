@@ -45,5 +45,12 @@
       "unsynced_one": "{{count}} Änderung ist noch nicht synchronisiert. Trotzdem abmelden? Sie geht dabei verloren.",
       "unsynced_other": "{{count}} Änderungen sind noch nicht synchronisiert. Trotzdem abmelden? Sie gehen dabei verloren."
     }
+  },
+  "avatar": {
+    "change": "Profilfoto ändern",
+    "camera": "Foto aufnehmen",
+    "library": "Foto auswählen",
+    "remove": "Foto entfernen",
+    "failed": "Das Profilfoto konnte nicht gespeichert werden. Prüf deine Verbindung und versuch es noch mal."
   }
 }

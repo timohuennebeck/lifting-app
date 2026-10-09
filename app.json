@@ -52,7 +52,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Forge uses the camera to photograph your training plan and to take your body check photos.",
+          "cameraPermission": "Forge uses the camera to photograph your training plan, to take your body check photos and your profile photo.",
           "microphonePermission": false,
           "recordAudioAndroid": false
         }
@@ -60,7 +60,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Forge lets you import a training plan from your photos and attach screenshots to support tickets.",
+          "photosPermission": "Forge lets you import a training plan from your photos, attach screenshots to support tickets and pick a profile photo.",
           "microphonePermission": false
         }
       ],

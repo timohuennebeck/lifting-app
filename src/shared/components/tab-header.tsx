@@ -7,10 +7,11 @@ import { useProfile } from '@/shared/data/profile';
 import { useNow } from '@/shared/hooks/use-now';
 import { MINUTE_MS } from '@/shared/lib/date';
 import { formatDate } from '@/shared/lib/format';
-import { Avatar } from '@/shared/ui/avatar';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
+
+import { UserAvatar } from './user-avatar';
 
 export interface TabHeaderProps {
   /** Extra round buttons placed before the settings button. */
@@ -34,7 +35,7 @@ export function TabHeader({ actions, greeting = true }: TabHeaderProps) {
           accessibilityLabel={t('tabs.profile')}
           onPress={() => router.navigate('/profile')}
         >
-          <Avatar name={name} />
+          <UserAvatar />
           <View className="min-w-0 flex-1 gap-0.5">
             <Text variant="caption" tone="subtle" numberOfLines={1}>
               {formatDate(new Date(now), { weekday: 'long', day: 'numeric', month: 'short' })}

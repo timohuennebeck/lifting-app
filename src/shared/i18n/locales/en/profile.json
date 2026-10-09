@@ -45,5 +45,12 @@
       "unsynced_one": "{{count}} change hasn't synced yet. Sign out anyway? It will be lost.",
       "unsynced_other": "{{count}} changes haven't synced yet. Sign out anyway? They'll be lost."
     }
+  },
+  "avatar": {
+    "change": "Change profile photo",
+    "camera": "Take photo",
+    "library": "Choose photo",
+    "remove": "Remove photo",
+    "failed": "Couldn’t save your profile photo. Check your connection and try again."
   }
 }

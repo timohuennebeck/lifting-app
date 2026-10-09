@@ -45,5 +45,12 @@
       "unsynced_one": "{{count}} alteração ainda não foi sincronizada. Terminar sessão mesmo assim? Vai perder-se.",
       "unsynced_other": "{{count}} alterações ainda não foram sincronizadas. Terminar sessão mesmo assim? Vão perder-se."
     }
+  },
+  "avatar": {
+    "change": "Alterar foto de perfil",
+    "camera": "Tirar foto",
+    "library": "Escolher foto",
+    "remove": "Remover foto",
+    "failed": "Não foi possível guardar a foto de perfil. Verifica a ligação e tenta novamente."
   }
 }

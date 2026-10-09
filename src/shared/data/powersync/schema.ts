@@ -26,6 +26,8 @@ export const profiles = sqliteTable('profiles', {
   session_minutes: integer(),
   active_collection_id: text(),
   language: text(),
+  // Path in the private "avatars" bucket; null shows the initials.
+  avatar_path: text(),
   onboarded_at: text(),
   created_at: text().notNull(),
   updated_at: text().notNull(),

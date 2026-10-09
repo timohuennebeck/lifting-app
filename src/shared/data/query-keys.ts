@@ -3,6 +3,7 @@ import { createQueryKeys, mergeQueryKeys } from '@lukemorales/query-key-factory'
 // Core entity keys shared across features; features may add their own factories.
 const profileKeys = createQueryKeys('profile', {
   current: (userId: string) => [userId],
+  avatarUrl: (path: string) => [path],
 });
 
 const templateKeys = createQueryKeys('templates', {

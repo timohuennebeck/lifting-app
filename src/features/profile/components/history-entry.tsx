@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import type { WorkoutSummary } from '@/shared/data/workouts';
 import { addDays, isSameDay, minutesBetween, startOfDay } from '@/shared/lib/date';
 import { formatTime, formatWeekdayDate } from '@/shared/lib/format';
-import { Avatar } from '@/shared/ui/avatar';
+import { UserAvatar } from '@/shared/components/user-avatar';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
@@ -35,7 +35,7 @@ export function HistoryEntry({ workout, userName }: HistoryEntryProps) {
       onPress={() => router.push(`/workout/summary/${workout.id}`)}
     >
       <View className="rounded-full border-[1.5px] border-accent p-0.5">
-        <Avatar name={userName} size={36} className="border-0" />
+        <UserAvatar size={36} className="border-0" />
       </View>
       <View className="min-w-0 flex-1">
         <Text tone="muted" className="text-sm leading-5">
