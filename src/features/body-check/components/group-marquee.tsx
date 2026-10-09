@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { colors, useAccentColor } from '@/shared/lib/theme';
+import { Gradient } from '@/shared/ui/gradient';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
@@ -16,34 +16,12 @@ export interface MarqueeChip {
   on: boolean;
 }
 
-function EdgeFade({ side }: { side: 'left' | 'right' }) {
-  const id = `marquee-fade-${side}`;
-  return (
-    <Svg
-      pointerEvents="none"
-      width="15%"
-      height="100%"
-      style={{ position: 'absolute', top: 0, [side]: 0 }}
-    >
-      <Defs>
-        <LinearGradient
-          id={id}
-          x1={side === 'left' ? 0 : 1}
-          y1="0"
-          x2={side === 'left' ? 1 : 0}
-          y2="0"
-        >
-          <Stop offset={0} stopColor={colors.bg} stopOpacity={1} />
-          <Stop offset={1} stopColor={colors.bg} stopOpacity={0} />
-        </LinearGradient>
-      </Defs>
-      <Rect width="100%" height="100%" fill={`url(#${id})`} />
-    </Svg>
-  );
+export interface GroupMarqueeProps {
+  chips: MarqueeChip[];
 }
 
 /** Endless row of muscle-group chips that light up as the analysis advances. */
-export function GroupMarquee({ chips }: { chips: MarqueeChip[] }) {
+export function GroupMarquee({ chips }: GroupMarqueeProps) {
   const accent = useAccentColor();
   const [rowWidth, setRowWidth] = useState(0);
   // The row holds the chips twice; shifting by one copy loops seamlessly.
@@ -91,8 +69,9 @@ export function GroupMarquee({ chips }: { chips: MarqueeChip[] }) {
           ))}
         </Animated.View>
       </ScrollView>
-      <EdgeFade side="left" />
-      <EdgeFade side="right" />
+      {/* Chips fade in and out over the outer 15 % on each side. */}
+      <Gradient from="left" size="15%" />
+      <Gradient from="right" size="15%" />
     </View>
   );
 }

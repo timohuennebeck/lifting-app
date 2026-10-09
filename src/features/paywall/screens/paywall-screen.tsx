@@ -4,9 +4,8 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
-import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
-import { Icon } from '@/shared/ui/icon';
+import { CheckItem } from '@/shared/ui/check-item';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
@@ -93,17 +92,12 @@ export function PaywallScreen() {
 
         <View className="gap-3.5 px-7 pt-6">
           {BENEFITS.map((key) => (
-            <View key={key} className="flex-row items-center gap-3">
-              <View className="size-6.5 items-center justify-center rounded-full bg-accent">
-                <Icon name="check" size={12} color={colors.onAccent} />
-              </View>
-              <Text variant="label" className="flex-1">
-                {t(`paywall.benefits.${key}.title`)}{' '}
-                <Text tone="subtle" className="text-[15px]">
-                  {t(`paywall.benefits.${key}.detail`)}
-                </Text>
+            <CheckItem key={key}>
+              {t(`paywall.benefits.${key}.title`)}{' '}
+              <Text tone="subtle" className="text-[15px]">
+                {t(`paywall.benefits.${key}.detail`)}
               </Text>
-            </View>
+            </CheckItem>
           ))}
         </View>
 

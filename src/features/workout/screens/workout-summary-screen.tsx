@@ -1,7 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
 
 import { mainShares, muscleShares } from '@/shared/data/muscles';
@@ -9,9 +8,9 @@ import { useUnits } from '@/shared/data/profile';
 import { useWorkout } from '@/shared/data/workouts';
 import { minutesBetween } from '@/shared/lib/date';
 import { formatNumber, kgToLb, weightUnit } from '@/shared/lib/format';
-import { colors } from '@/shared/lib/theme';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
+import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { MuscleMap } from '@/shared/ui/muscle-map';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
@@ -22,19 +21,10 @@ import { VolumeComparison } from '../components/volume-comparison';
 import { useWorkoutRecords } from '../data/workout-records';
 
 /** Fades the muscle maps into the background (CSS mask in the design). */
-function Fade() {
-  return (
-    <Svg width="100%" height="100%" style={StyleSheet.absoluteFill} pointerEvents="none">
-      <Defs>
-        <LinearGradient id="fade-down" x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0.6" stopColor={colors.bg} stopOpacity={0} />
-          <Stop offset="1" stopColor={colors.bg} stopOpacity={1} />
-        </LinearGradient>
-      </Defs>
-      <Rect width="100%" height="100%" fill="url(#fade-down)" />
-    </Svg>
-  );
-}
+const MAPS_FADE: GradientStop[] = [
+  [0.6, 0],
+  [1, 1],
+];
 
 interface StatProps {
   value: string;
@@ -93,7 +83,7 @@ export function WorkoutSummaryScreen() {
             <View className="h-full w-40">
               <MuscleMap view="back" selected={trained} />
             </View>
-            <Fade />
+            <Gradient from="top" stops={MAPS_FADE} />
           </View>
           <View className="mx-5 gap-2">
             <Text className="font-inter-semibold text-[34px] leading-8.5">

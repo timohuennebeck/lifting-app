@@ -6,7 +6,7 @@ import { parseJson } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import { workoutExercises, workouts, workoutSets } from '@/shared/data/powersync/schema';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
-import { estimateOneRepMax } from '@/shared/data/workouts';
+import { estimateOneRepMax, previousExercise, previousSet } from '@/shared/data/workouts';
 
 const recordKeys = createQueryKeys('workoutRecords', {
   detail: (workoutId: string) => [workoutId],
@@ -19,8 +19,6 @@ export interface WorkoutRecord {
   previous: { weightKg: number; reps: number };
 }
 
-const previousSet = alias(workoutSets, 'previous_set');
-const previousExercise = alias(workoutExercises, 'previous_exercise');
 const previousWorkout = alias(workouts, 'previous_workout');
 
 /** Best completed set (by estimated 1RM) of the same exercise from an earlier workout. */

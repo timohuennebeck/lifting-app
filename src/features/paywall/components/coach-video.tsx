@@ -3,11 +3,12 @@ import { VideoView } from 'expo-video';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
-import Svg, { Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
+import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
@@ -36,21 +37,13 @@ function SpeakerIcon({ muted }: SpeakerIconProps) {
   );
 }
 
-function ShadeOverlay() {
-  return (
-    <Svg width="100%" height="100%" pointerEvents="none" style={StyleSheet.absoluteFill}>
-      <Defs>
-        <LinearGradient id="coach-shade" x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor={colors.bg} stopOpacity={0.4} />
-          <Stop offset="0.22" stopColor={colors.bg} stopOpacity={0} />
-          <Stop offset="0.62" stopColor={colors.bg} stopOpacity={0} />
-          <Stop offset="1" stopColor={colors.bg} stopOpacity={0.7} />
-        </LinearGradient>
-      </Defs>
-      <Rect width="100%" height="100%" fill="url(#coach-shade)" />
-    </Svg>
-  );
-}
+/** Darkens the top (controls) and bottom (captions) of the video. */
+const SHADE: GradientStop[] = [
+  [0, 0.4],
+  [0.22, 0],
+  [0.62, 0],
+  [1, 0.7],
+];
 
 export interface CoachVideoProps {
   /** False while the screen is in the background: playback pauses. */
@@ -105,7 +98,7 @@ export function CoachVideo({ active, name }: CoachVideoProps) {
             style={StyleSheet.absoluteFill}
           />
         )}
-        <ShadeOverlay />
+        <Gradient from="top" stops={SHADE} />
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={playLabel}

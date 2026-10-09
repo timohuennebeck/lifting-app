@@ -12,9 +12,8 @@ import { TrialTimeline } from '../components/trial-timeline';
 import { useOffering } from '../hooks/use-offering';
 import { parsePlanId, usePaywallFlow } from '../hooks/use-paywall-flow';
 import { usePurchase } from '../hooks/use-purchases';
-import { formatPrice } from '../lib/purchases-service';
+import { formatPrice, TRIAL_DAYS } from '../lib/purchases-service';
 
-const DEFAULT_TRIAL_DAYS = 7;
 /** The reminder goes out this many days before billing starts. */
 const REMINDER_DAYS_BEFORE = 2;
 
@@ -30,7 +29,7 @@ export function TrialScreen() {
   const selected = plan(planId);
   const period = selected?.period ?? (planId === 'monthly' ? 'month' : 'day');
   const price = selected && offering ? formatPrice(selected.price, offering.currency) : null;
-  const days = offering?.trialDays ?? DEFAULT_TRIAL_DAYS;
+  const days = offering?.trialDays ?? TRIAL_DAYS;
 
   const start = async () => {
     if (await buy(planId)) flow.toWelcome();

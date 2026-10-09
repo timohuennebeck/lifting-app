@@ -1,10 +1,14 @@
 import { and, desc, eq, inArray, isNotNull, ne, sql } from 'drizzle-orm';
-import { alias } from 'drizzle-orm/sqlite-core';
 
 import { nowIso } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import { templates, workoutExercises, workouts, workoutSets } from '@/shared/data/powersync/schema';
-import { insertWorkout, workoutExerciseIds } from '@/shared/data/workouts';
+import {
+  insertWorkout,
+  previousExercise,
+  previousSet,
+  workoutExerciseIds,
+} from '@/shared/data/workouts';
 import { MINUTE_MS } from '@/shared/lib/date';
 
 /** Moves a template to another Monday-based weekday. */
@@ -20,8 +24,6 @@ export async function rescheduleTemplate(templateId: string, weekday: number) {
  * Correlated subquery for an UPDATE of `workout_sets`.
  */
 function lastWeightOutside(workoutId: string) {
-  const previousSet = alias(workoutSets, 'previous_set');
-  const previousExercise = alias(workoutExercises, 'previous_exercise');
   const exerciseOfUpdatedSet = drizzle
     .select({ exercise_id: workoutExercises.exercise_id })
     .from(workoutExercises)

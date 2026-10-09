@@ -3,25 +3,23 @@ import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Linking, StyleSheet, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
+import { Alert, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
-import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
+import { CameraPermission } from '@/shared/ui/camera/camera-permission';
+import {
+  CameraSideButton,
+  CaptureRow,
+  DonePill,
+  ShutterButton,
+} from '@/shared/ui/camera/capture-controls';
+import { ShutterFlash, useShutterFlash } from '@/shared/ui/camera/shutter-flash';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
-import { PressableScale } from '@/shared/ui/pressable-scale';
-import { ScreenHeader } from '@/shared/ui/screen-header';
-import { StepTitle } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
 import { pickPlanPhotos } from '../lib/pick-source';
@@ -47,8 +45,7 @@ export function CameraScreen() {
   const truncatePhotos = useImportStore((s) => s.truncatePhotos);
   // Pages that existed before this camera session survive a close; new ones are discarded.
   const keptOnClose = useRef(photos.length);
-  const flash = useSharedValue(0);
-  const flashStyle = useAnimatedStyle(() => ({ opacity: flash.get() }));
+  const flash = useShutterFlash();
 
   function store(picked: ImportPhoto[]) {
     if (retakeIndex !== null) {
@@ -64,7 +61,7 @@ export function CameraScreen() {
     if (busy || !camera.current) return;
     setBusy(true);
     haptics.heavy();
-    flash.set(withSequence(withTiming(0.85, { duration: 40 }), withTiming(0, { duration: 250 })));
+    flash.fire();
     try {
       const pic = await camera.current.takePictureAsync({ quality: 0.7 });
       store([{ uri: pic.uri, width: pic.width, height: pic.height }]);
@@ -92,36 +89,23 @@ export function CameraScreen() {
 
   if (!permission.granted) {
     return (
-      <View
-        className="flex-1 bg-bg"
-        style={{ paddingTop: insets.top, paddingBottom: insets.bottom + 16 }}
-      >
+      <>
         {options}
-        <ScreenHeader icon="close" onBack={close} />
-        <StepTitle
-          title={t('planImport:camera.permission.title')}
-          subtitle={t('planImport:camera.permission.body')}
-          subtitleTone="subtle"
-        />
-        <View className="flex-1" />
-        <View className="gap-2 px-4">
-          <Button
-            label={
-              permission.canAskAgain
-                ? t('planImport:camera.permission.allow')
-                : t('planImport:camera.permission.settings')
-            }
-            icon="camera"
-            onPress={() => (permission.canAskAgain ? requestPermission() : Linking.openSettings())}
-          />
+        <CameraPermission
+          permission={permission}
+          onRequest={requestPermission}
+          onClose={close}
+          copy={t('planImport:camera.permission', { returnObjects: true })}
+          bottomInset={insets.bottom + 16}
+        >
           <Button
             label={t('planImport:camera.library')}
             variant="ghost"
             icon="image"
             onPress={fromLibrary}
           />
-        </View>
-      </View>
+        </CameraPermission>
+      </>
     );
   }
 
@@ -196,49 +180,33 @@ export function CameraScreen() {
             </Text>
           )}
         </View>
-        <View className="w-full flex-row items-center px-7">
-          <View className="flex-1 items-start">
-            <PressableScale
+        <CaptureRow
+          start={
+            <CameraSideButton
               accessibilityLabel={t('planImport:camera.library')}
               onPress={fromLibrary}
-              className="size-13 items-center justify-center rounded-full bg-elevated"
             >
               <Icon name="image" size={20} />
-            </PressableScale>
-          </View>
-          <PressableScale
-            haptic="none"
-            activeScale={0.94}
-            disabled={busy}
+            </CameraSideButton>
+          }
+          end={
+            photos.length && retakeIndex === null ? (
+              <DonePill
+                label={t('planImport:camera.done')}
+                count={photos.length}
+                onPress={() => router.dismissTo('/import/review')}
+              />
+            ) : null
+          }
+        >
+          <ShutterButton
+            busy={busy}
             accessibilityLabel={t('planImport:camera.shutter')}
             onPress={shoot}
-            className="size-19.5 items-center justify-center rounded-full bg-elevated"
-          >
-            <View className={cn('size-15.5 rounded-full bg-accent', busy && 'opacity-60')} />
-          </PressableScale>
-          <View className="flex-1 items-end">
-            {photos.length && retakeIndex === null ? (
-              <PressableScale
-                haptic="press"
-                onPress={() => router.dismissTo('/import/review')}
-                className="h-11 flex-row items-center gap-2 rounded-full bg-elevated pr-2 pl-4"
-              >
-                <Text variant="label">{t('planImport:camera.done')}</Text>
-                <View className="h-6.5 min-w-6.5 items-center justify-center rounded-full bg-accent px-1.5">
-                  <Text variant="caption" tone="onAccent">
-                    {photos.length}
-                  </Text>
-                </View>
-              </PressableScale>
-            ) : null}
-          </View>
-        </View>
+          />
+        </CaptureRow>
       </View>
-      <Animated.View
-        pointerEvents="none"
-        className="absolute inset-0 bg-fg"
-        style={[{ opacity: 0 }, flashStyle]}
-      />
+      <ShutterFlash opacity={flash.opacity} />
     </View>
   );
 }

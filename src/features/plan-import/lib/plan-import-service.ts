@@ -1,4 +1,5 @@
 import type { PlanDayDraft, PlanDraft, PlanExerciseDraft } from '@/shared/data/templates';
+import { wait } from '@/shared/lib/async';
 
 import { MOCK_IMPORT_DAYS } from './mock-import-data';
 
@@ -50,7 +51,7 @@ const MOCK_LATENCY_MS = 2400;
  * `supabase.functions.invoke('analyze-plan', …)` once the Edge Function exists.
  */
 export async function analyzePlan({ source }: AnalyzePlanInput): Promise<ImportedPlan> {
-  await new Promise((resolve) => setTimeout(resolve, MOCK_LATENCY_MS));
+  await wait(MOCK_LATENCY_MS);
   return {
     name: source.kind === 'file' ? titleFromFileName(source.file.name) : 'Push Pull Legs',
     days: JSON.parse(JSON.stringify(MOCK_IMPORT_DAYS)) as ImportedDay[],

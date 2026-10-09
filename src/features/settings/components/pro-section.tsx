@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Alert, type AlertButton, Linking } from 'react-native';
 
-import { paywallKeys } from '@/features/paywall/hooks/use-offering';
+import { paywallKeys } from '@/features/paywall/data/paywall-keys';
 import { useRestorePurchases } from '@/features/paywall/hooks/use-purchases';
 import {
   MANAGE_SUBSCRIPTIONS_URL,

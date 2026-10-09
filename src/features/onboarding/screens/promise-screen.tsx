@@ -9,12 +9,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { colors } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
+import { CheckItem } from '@/shared/ui/check-item';
 import { Screen } from '@/shared/ui/screen';
 import { StepHeader } from '@/shared/ui/step-header';
 import { StepTitle } from '@/shared/ui/step-screen';
-import { Text } from '@/shared/ui/text';
 
 import {
   CELEBRATION_DELAY_MS,
@@ -73,14 +71,16 @@ export function PromiseScreen() {
         <View className="gap-0.5 px-6 pt-4.5">
           {/* Fixed commitments: always checked, not toggleable. */}
           {PROMISES.map((key) => (
-            <View key={key} className="min-h-11 flex-row items-center gap-3.5">
-              <View className="size-6 items-center justify-center rounded-full bg-accent">
-                <Icon name="check" size={14} color={colors.onAccent} />
-              </View>
-              <Text variant="body" tone="secondary" className="flex-1 text-base">
-                {t(`promise.${key}`)}
-              </Text>
-            </View>
+            <CheckItem
+              key={key}
+              size="sm"
+              variant="body"
+              tone="secondary"
+              className="min-h-11 gap-3.5"
+              textClassName="text-base"
+            >
+              {t(`promise.${key}`)}
+            </CheckItem>
           ))}
         </View>
       </Animated.View>

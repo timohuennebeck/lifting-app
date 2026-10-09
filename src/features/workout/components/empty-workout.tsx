@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { EmptyExercises } from '@/features/training/components/empty-exercises';
+import { EmptyExercises } from '@/shared/ui/empty-exercises';
 import { IconButton } from '@/shared/ui/icon-button';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';

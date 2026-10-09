@@ -13,6 +13,7 @@ import {
   sql,
   type SQL,
 } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/sqlite-core';
 
 import { getOrInsert } from '@/shared/lib/map';
 
@@ -31,6 +32,10 @@ import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /** Epley estimated one-rep max, used for PR detection. */
 export const estimateOneRepMax = (kg: number, reps: number) => kg * (1 + reps / 30);
+
+/** Aliases for correlated subqueries over the sets of other workouts. */
+export const previousSet = alias(workoutSets, 'previous_set');
+export const previousExercise = alias(workoutExercises, 'previous_exercise');
 
 /** Subquery with the ids of a workout's exercises, for `inArray(…)`. */
 export const workoutExerciseIds = (workoutId: string) =>
@@ -62,11 +67,11 @@ export async function insertWorkout(
     created_at: now,
   });
   if (!templateId) return workoutId;
-  const exercises = await tx
-    .select()
-    .from(templateExercises)
-    .where(eq(templateExercises.template_id, templateId))
-    .orderBy(templateExercises.position);
+  const exercises = await tx.query.templateExercises.findMany({
+    where: eq(templateExercises.template_id, templateId),
+    orderBy: asc(templateExercises.position),
+    with: { sets: { orderBy: asc(templateSets.position) } },
+  });
   for (const te of exercises) {
     const workoutExerciseId = newId();
     await tx.insert(workoutExercises).values({
@@ -77,15 +82,10 @@ export async function insertWorkout(
       position: te.position,
       rest_seconds: te.rest_seconds,
     });
-    const sets = await tx
-      .select()
-      .from(templateSets)
-      .where(eq(templateSets.template_exercise_id, te.id))
-      .orderBy(templateSets.position);
-    if (!sets.length) continue;
+    if (!te.sets.length) continue;
     // Template targets become the workout's empty sets.
     await tx.insert(workoutSets).values(
-      sets.map((set) => ({
+      te.sets.map((set) => ({
         id: newId(),
         user_id: userId,
         workout_exercise_id: workoutExerciseId,

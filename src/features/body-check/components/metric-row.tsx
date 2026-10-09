@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 
-import { cn } from '@/shared/lib/cn';
-import { clamp } from '@/shared/lib/math';
+import { ScaleBar } from '@/shared/ui/scale-bar';
 import { Text } from '@/shared/ui/text';
 
 export interface MetricRowProps {
@@ -36,18 +35,7 @@ export function MetricRow({ label, note, value, unit, position, min, max }: Metr
           </Text>
         </View>
       </View>
-      <View className="h-2 flex-row gap-0.75">
-        {[0, 1, 2, 3].map((i) => (
-          <View
-            key={i}
-            className={cn('flex-1 bg-control', i === 0 && 'rounded-l', i === 3 && 'rounded-r')}
-          />
-        ))}
-        <View
-          className="absolute -top-1.75 -ml-2.75 size-5.5 rounded-full border-[3px] border-bg bg-accent"
-          style={{ left: `${clamp(position, 0, 1) * 100}%` }}
-        />
-      </View>
+      <ScaleBar position={position} />
       <View className="flex-row justify-between">
         <Text variant="caption" className="font-inter text-[11px] leading-3.5 text-dim">
           {min}

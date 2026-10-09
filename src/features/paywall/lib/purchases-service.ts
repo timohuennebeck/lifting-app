@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 
 import { i18n } from '@/shared/i18n';
+import { wait } from '@/shared/lib/async';
 import { DAY_MS } from '@/shared/lib/date';
 import { storage } from '@/shared/lib/storage';
 
@@ -49,11 +50,11 @@ const PLANS: Plan[] = [
   { id: 'daily', price: 0.99, period: 'day' },
   { id: 'monthly', price: 9.99, period: 'month' },
 ];
-const TRIAL_DAYS = 7;
+/** Free-trial length of the offering; also shown while the offering loads. */
+export const TRIAL_DAYS = 7;
 
 // The mock "store account" lives in MMKV so restore works across sessions and sign-outs.
 const RECEIPT_KEY = 'purchases.mock.receipt';
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function readReceipt(): CustomerInfo | null {
   const raw = storage.getString(RECEIPT_KEY);

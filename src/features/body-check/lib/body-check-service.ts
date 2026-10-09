@@ -1,6 +1,7 @@
 import { File } from 'expo-file-system';
 
 import type { Profile } from '@/shared/data/profile';
+import { wait } from '@/shared/lib/async';
 import { clamp } from '@/shared/lib/math';
 
 import type { StoredPhoto } from './photo-files';
@@ -50,8 +51,6 @@ const BASE_METRICS: BodyCheckMetrics = { bodyFat: 15, proportions: 88, definitio
 const EXPERIENCE_OFFSET = { none: -6, beginner: -3, intermediate: 0, advanced: 4 } as const;
 const MAX_SCORE = 98;
 const MOCK_LATENCY_MS = 1500;
-
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** Overall score: muscle groups weigh 60 %, proportions and definition 20 % each. */
 function overallScore(groups: GroupScores, metrics: BodyCheckMetrics) {

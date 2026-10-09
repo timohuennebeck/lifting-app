@@ -1,11 +1,10 @@
 import { View } from 'react-native';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { CheckPhoto } from '@/features/body-check/components/check-photo';
 import type { BodyPose } from '@/features/body-check/lib/poses';
 import { cn } from '@/shared/lib/cn';
-import { colors } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
+import { CheckBadge } from '@/shared/ui/check-item';
+import { Gradient } from '@/shared/ui/gradient';
 import { MuscleMap } from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
 
@@ -50,15 +49,7 @@ export function BodyPhotoCard({
       />
       {/* Older photo is toned down like the design's desaturated "before" shot. */}
       {!latest ? <View pointerEvents="none" className="absolute inset-0 bg-black/25" /> : null}
-      <Svg style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 80 }}>
-        <Defs>
-          <LinearGradient id="photo-fade" x1="0" y1="1" x2="0" y2="0">
-            <Stop offset="0" stopColor="#000" stopOpacity={0.8} />
-            <Stop offset="1" stopColor="#000" stopOpacity={0} />
-          </LinearGradient>
-        </Defs>
-        <Rect width="100%" height="100%" fill="url(#photo-fade)" />
-      </Svg>
+      <Gradient from="bottom" size={80} color="black" opacity={0.8} />
       <View className="absolute right-3 bottom-3 left-3 flex-row items-end justify-between">
         <View className="gap-0.5">
           <Text variant="caption" tone="secondary" className="text-xs">
@@ -72,11 +63,7 @@ export function BodyPhotoCard({
             {score}
           </Text>
         </View>
-        {latest ? (
-          <View className="size-5.5 items-center justify-center rounded-full bg-accent">
-            <Icon name="check" size={11} color={colors.onAccent} />
-          </View>
-        ) : null}
+        {latest ? <CheckBadge size={22} glyph={11} /> : null}
       </View>
     </View>
   );

@@ -5,8 +5,7 @@ import { cn } from '@/shared/lib/cn';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 
 import { Button } from './button';
-import { PressableScale } from './pressable-scale';
-import { RadioDot } from './radio-dot';
+import { OptionCard } from './option-card';
 import { Sheet } from './sheet';
 import { Text } from './text';
 
@@ -58,34 +57,17 @@ export function ChoiceSheet<T extends string>({
       <View className="gap-2.5">
         {options.map((option) => {
           const active = option.value === value;
-          const tint = option.tone === 'danger' ? colors.red : accent;
           return (
-            <PressableScale
+            <OptionCard
               key={option.value}
-              haptic="select"
-              accessibilityRole="radio"
-              accessibilityState={{ selected: active }}
+              look="sheet"
+              title={option.title}
+              description={option.description}
+              icon={option.renderIcon(active)}
+              tint={option.tone === 'danger' ? colors.red : accent}
+              selected={active}
               onPress={() => onChange(option.value)}
-              // 1.5pt ring drawn inside the design's 16/18/16pt padding.
-              className="flex-row items-center gap-3.5 rounded-[22px] bg-surface py-[14.5px] pr-[16.5px] pl-[14.5px]"
-              style={{ borderWidth: 1.5, borderColor: active ? tint : colors.line }}
-            >
-              <View
-                className="size-12 items-center justify-center rounded-full"
-                style={{ backgroundColor: active ? tint : colors.control }}
-              >
-                {option.renderIcon(active)}
-              </View>
-              <View className="flex-1 gap-0.75">
-                <Text variant="bodyStrong">{option.title}</Text>
-                {option.description ? (
-                  <Text variant="label" tone="subtle" className="font-inter text-sm leading-4.25">
-                    {option.description}
-                  </Text>
-                ) : null}
-              </View>
-              <RadioDot selected={active} color={tint} />
-            </PressableScale>
+            />
           );
         })}
       </View>

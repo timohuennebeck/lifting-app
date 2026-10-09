@@ -2,8 +2,8 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-import { colors, useAccentColor } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
+import { useAccentColor } from '@/shared/lib/theme';
+import { CheckBadge } from '@/shared/ui/check-item';
 import { Text } from '@/shared/ui/text';
 
 export interface DayStatusProps {
@@ -19,9 +19,7 @@ export function DayStatus({ kind, label, trailing }: DayStatusProps) {
     <View className="flex-row items-center justify-between gap-2">
       <View className="flex-row items-center gap-2">
         {kind === 'done' ? (
-          <View className="size-5.5 items-center justify-center rounded-full bg-accent">
-            <Icon name="check" size={11} color={colors.onAccent} />
-          </View>
+          <CheckBadge size={22} glyph={11} />
         ) : (
           <View
             className="size-5.5 items-center justify-center rounded-full border-[1.8px]"

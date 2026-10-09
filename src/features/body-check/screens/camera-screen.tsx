@@ -2,29 +2,27 @@ import { CameraView, PermissionStatus, useCameraPermissions } from 'expo-camera'
 import { router, useIsFocused } from 'expo-router';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, AppState, Linking, StyleSheet, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
+import { Alert, AppState, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
-import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
-import { Button } from '@/shared/ui/button';
+import { CameraPermission } from '@/shared/ui/camera/camera-permission';
+import {
+  CameraSideButton,
+  CaptureRow,
+  DonePill,
+  ShutterButton,
+} from '@/shared/ui/camera/capture-controls';
+import { ShutterFlash, useShutterFlash } from '@/shared/ui/camera/shutter-flash';
+import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-import { ScreenHeader } from '@/shared/ui/screen-header';
-import { StepTitle } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
 import { FlipCameraIcon, FramingCorners } from '../components/camera-chrome';
 import { PoseStrip } from '../components/pose-strip';
-import { Scrim } from '../components/scrim';
 import { useCloseCheck } from '../hooks/use-close-check';
 import { assessPhoto } from '../lib/body-check-service';
 import { deleteFile, storeShot } from '../lib/photo-files';
@@ -34,6 +32,12 @@ import { startBodyCheck, useBodyCheckStore } from '../stores/body-check-store';
 /** Design offsets (390×844 frame) of the framing corners above the controls. */
 const FRAME_TOP = 74;
 const FRAME_BOTTOM = 228;
+/** Bottom scrim behind the controls: solid for its first 30 %, then fading out. */
+const BOTTOM_SCRIM: GradientStop[] = [
+  [0, 0.85],
+  [0.3, 0.85],
+  [1, 0],
+];
 
 /** 08a: full-screen camera that walks through the four poses, with self-timer. */
 export function CameraScreen() {
@@ -59,8 +63,7 @@ export function CameraScreen() {
   const pose = useBodyCheckStore((s) => s.pose);
   const timer = useBodyCheckStore((s) => s.timer);
   const facing = useBodyCheckStore((s) => s.facing);
-  const flash = useSharedValue(0);
-  const flashStyle = useAnimatedStyle(() => ({ opacity: flash.get() }));
+  const flash = useShutterFlash();
   const taken = POSES.filter((p) => shots[p]).length;
 
   // Opened without a running check (e.g. deep link): start one.
@@ -90,7 +93,7 @@ export function CameraScreen() {
     const wasComplete = POSES.every((p) => store.shots[p]);
     setBusy(true);
     haptics.heavy();
-    flash.set(withSequence(withTiming(0.85, { duration: 40 }), withTiming(0, { duration: 250 })));
+    flash.fire();
     try {
       const pic = await camera.current.takePictureAsync({ quality: 0.9 });
       const stored = await storeShot(pic, id, target);
@@ -145,23 +148,13 @@ export function CameraScreen() {
 
   if (!permission.granted) {
     return (
-      <View className="flex-1 bg-bg" style={{ paddingTop: insets.top, paddingBottom: footerInset }}>
-        <ScreenHeader icon="close" onBack={close} />
-        <StepTitle
-          title={t('camera.permission.title')}
-          subtitle={t('camera.permission.body')}
-          subtitleTone="subtle"
-        />
-        <View className="flex-1" />
-        <Button
-          label={t(
-            permission.canAskAgain ? 'camera.permission.allow' : 'camera.permission.settings',
-          )}
-          icon="camera"
-          className="mx-4"
-          onPress={() => (permission.canAskAgain ? requestPermission() : Linking.openSettings())}
-        />
-      </View>
+      <CameraPermission
+        permission={permission}
+        onRequest={requestPermission}
+        onClose={close}
+        copy={t('camera.permission', { returnObjects: true })}
+        bottomInset={footerInset}
+      />
     );
   }
 
@@ -183,8 +176,8 @@ export function CameraScreen() {
         onCameraReady={() => setReady(true)}
         onMountError={() => Alert.alert(t('camera.error'))}
       />
-      <Scrim edge="top" height={200} opacity={0.6} />
-      <Scrim edge="bottom" height={300} opacity={0.85} solid={0.3} />
+      <Gradient from="top" size={200} color="black" opacity={0.6} />
+      <Gradient from="bottom" size={300} color="black" stops={BOTTOM_SCRIM} />
       <FramingCorners style={frame} />
 
       {count > 0 ? (
@@ -216,7 +209,7 @@ export function CameraScreen() {
           >
             <Text variant="caption">
               {t('camera.timer', {
-                value: timer ? t('camera.seconds', { count: timer }) : t('camera.timerOff'),
+                value: timer ? t('camera.seconds', { value: timer }) : t('camera.timerOff'),
               })}
             </Text>
           </PressableScale>
@@ -232,58 +225,38 @@ export function CameraScreen() {
           active={pose}
           onSelect={(p) => useBodyCheckStore.getState().setPose(p)}
         />
-        <View className="w-full flex-row items-center px-7">
-          <View className="flex-1 items-start">
-            <PressableScale
+        <CaptureRow
+          start={
+            <CameraSideButton
               haptic="select"
               accessibilityLabel={t('camera.flip')}
               onPress={() => useBodyCheckStore.getState().toggleFacing()}
-              className="size-13 items-center justify-center rounded-full bg-elevated"
             >
               <FlipCameraIcon />
-            </PressableScale>
-          </View>
-          <PressableScale
-            haptic="none"
-            activeScale={0.94}
-            disabled={busy || !ready || !checkId}
-            accessibilityLabel={t(count > 0 ? 'camera.cancelTimer' : 'camera.shutter')}
-            onPress={shutter}
-            className="size-19.5 items-center justify-center rounded-full bg-elevated"
-          >
-            <View
-              className={cn(
-                'size-15.5 rounded-full',
-                count > 0 ? 'bg-fg' : 'bg-accent',
-                (busy || !ready) && 'opacity-60',
-              )}
-            />
-          </PressableScale>
-          <View className="flex-1 items-end">
-            {taken ? (
-              <PressableScale
-                haptic="press"
+            </CameraSideButton>
+          }
+          end={
+            taken ? (
+              <DonePill
+                label={t('common:actions.done')}
+                count={taken}
                 disabled={busy}
                 onPress={() => router.push('/body-check/review')}
-                className="h-11 flex-row items-center gap-2 rounded-full bg-elevated pr-2 pl-4"
-              >
-                <Text variant="label">{t('common:actions.done')}</Text>
-                <View className="h-6.5 min-w-6.5 items-center justify-center rounded-full bg-accent px-1.5">
-                  <Text variant="caption" tone="onAccent">
-                    {taken}
-                  </Text>
-                </View>
-              </PressableScale>
-            ) : null}
-          </View>
-        </View>
+              />
+            ) : null
+          }
+        >
+          <ShutterButton
+            busy={busy || !ready}
+            disabled={!checkId}
+            counting={count > 0}
+            accessibilityLabel={t(count > 0 ? 'camera.cancelTimer' : 'camera.shutter')}
+            onPress={shutter}
+          />
+        </CaptureRow>
       </View>
 
-      <Animated.View
-        pointerEvents="none"
-        className="absolute inset-0 bg-fg"
-        style={[{ opacity: 0 }, flashStyle]}
-      />
+      <ShutterFlash opacity={flash.opacity} />
     </View>
   );
 }

@@ -3,13 +3,12 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { type ExerciseId, getExercise } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { useExerciseHistory } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
-import { colors } from '@/shared/lib/theme';
+import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { IconButton } from '@/shared/ui/icon-button';
 import { MUSCLE_CARDS, MuscleMap } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -28,6 +27,14 @@ export interface ExerciseDetailProps {
 }
 
 type Tab = 'exercise' | 'history';
+
+/** Shades the photo under the close button and blends its foot into the page. */
+const HERO_FADE: GradientStop[] = [
+  [0, 0.55],
+  [0.25, 0],
+  [0.45, 0],
+  [0.92, 1],
+];
 
 /** Exercise detail (design 06e): photo, worked muscles, technique steps and history. */
 export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDetailProps) {
@@ -63,17 +70,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
             initialsClassName="text-[64px] leading-16"
           />
         )}
-        <Svg pointerEvents="none" width="100%" height="100%" style={StyleSheet.absoluteFill}>
-          <Defs>
-            <LinearGradient id="hero-fade" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor={colors.bg} stopOpacity={0.55} />
-              <Stop offset="0.25" stopColor={colors.bg} stopOpacity={0} />
-              <Stop offset="0.45" stopColor={colors.bg} stopOpacity={0} />
-              <Stop offset="0.92" stopColor={colors.bg} stopOpacity={1} />
-            </LinearGradient>
-          </Defs>
-          <Rect width="100%" height="100%" fill="url(#hero-fade)" />
-        </Svg>
+        <Gradient from="top" stops={HERO_FADE} />
         <View className="absolute left-4" style={{ top: topInset + 16 }}>
           <IconButton
             icon="close"

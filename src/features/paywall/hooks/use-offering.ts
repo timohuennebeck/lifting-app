@@ -1,11 +1,7 @@
-import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
 
+import { paywallKeys } from '../data/paywall-keys';
 import { type PlanId, purchases } from '../lib/purchases-service';
-
-export const paywallKeys = createQueryKeys('paywall', {
-  offering: null,
-});
 
 /** Current offering (plans, prices, trial); cached for the session. */
 export function useOffering() {

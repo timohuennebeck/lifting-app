@@ -15,6 +15,7 @@ import { colors } from '@/shared/lib/theme';
 import { requireUserId } from '@/shared/stores/session-store';
 import { ACCENT_OPTIONS, useSettingsStore } from '@/shared/stores/settings-store';
 import { Button } from '@/shared/ui/button';
+import { CheckBadge } from '@/shared/ui/check-item';
 import { Icon } from '@/shared/ui/icon';
 import { LanguageFlag } from '@/shared/ui/language-flag';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -105,9 +106,7 @@ export function SettingsScreen() {
             leading={<LanguageFlag language={lang} size={28} />}
             trailing={
               lang === language ? (
-                <View className="size-6 items-center justify-center rounded-full bg-accent">
-                  <Icon name="check" size={12} color={colors.onAccent} />
-                </View>
+                <CheckBadge size={24} glyph={12} />
               ) : (
                 <View className="size-6 rounded-full border-[1.5px] border-outline" />
               )

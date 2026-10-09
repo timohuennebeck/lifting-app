@@ -3,7 +3,7 @@ import Svg, { Circle } from 'react-native-svg';
 
 import { colors, useAccentColor } from '@/shared/lib/theme';
 
-import { Icon } from './icon';
+import { CheckBadge } from './check-item';
 import { Text } from './text';
 
 export interface DashedRingProps {
@@ -46,12 +46,11 @@ export function PlanSlot({ number, done, next }: PlanSlotProps) {
   const accent = useAccentColor();
   if (done) {
     return (
-      <View
-        className="size-8 items-center justify-center rounded-full bg-accent"
+      <CheckBadge
+        size={32}
+        glyph={14}
         style={{ boxShadow: `0 0 0 3px ${colors.bg}, 0 0 0 4.5px ${accent}80` }}
-      >
-        <Icon name="check" size={14} color={colors.onAccent} />
-      </View>
+      />
     );
   }
   return (

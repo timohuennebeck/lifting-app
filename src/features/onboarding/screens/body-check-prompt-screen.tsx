@@ -3,19 +3,18 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { POSES } from '@/features/body-check/lib/poses';
 import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
 import { cn } from '@/shared/lib/cn';
-import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
-import { Icon } from '@/shared/ui/icon';
-import { Text } from '@/shared/ui/text';
+import { CheckItem } from '@/shared/ui/check-item';
 import { StepScreen } from '@/shared/ui/step-screen';
+import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
 import { START_STEPS } from '../lib/flow';
 import { useOnboardingStore } from '../stores/onboarding-store';
 
-const POSES = ['front', 'left', 'right', 'back'] as const;
 const TIPS = ['light', 'clothes', 'framing', 'privacy'] as const;
 /** Example full-body shot from the design (image slot "Ganzkörperfoto"). */
 const EXAMPLE_PHOTO = require('@/assets/images/demo-person.jpg');
@@ -68,17 +67,12 @@ export function BodyCheckPromptScreen() {
       </View>
       <View className="gap-2 px-6 pt-4 pb-3">
         {TIPS.map((tip) => (
-          <View key={tip} className="flex-row items-center gap-3">
-            <View className="size-6.5 items-center justify-center rounded-full bg-accent">
-              <Icon name="check" size={12} color={colors.onAccent} />
-            </View>
-            <Text variant="label" className="flex-1">
-              {t(`bodyCheck.${tip}Strong`)}
-              <Text variant="paragraph" tone="subtle">
-                {t(`bodyCheck.${tip}Rest`)}
-              </Text>
+          <CheckItem key={tip}>
+            {t(`bodyCheck.${tip}Strong`)}
+            <Text variant="paragraph" tone="subtle">
+              {t(`bodyCheck.${tip}Rest`)}
             </Text>
-          </View>
+          </CheckItem>
         ))}
       </View>
     </StepScreen>

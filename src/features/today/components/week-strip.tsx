@@ -3,8 +3,8 @@ import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { isSameDay } from '@/shared/lib/date';
-import { colors, useAccentColor } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
+import { useAccentColor } from '@/shared/lib/theme';
+import { CheckBadge } from '@/shared/ui/check-item';
 import { DashedRing } from '@/shared/ui/plan-slot';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
@@ -55,9 +55,7 @@ export function WeekStrip({ days, today, selected, onSelect }: WeekStripProps) {
                 )}
                 style={{ borderColor: isSelected ? `${accent}80` : undefined }}
               >
-                <View className="size-8 items-center justify-center rounded-full bg-accent">
-                  <Icon name="check" size={14} color={colors.onAccent} />
-                </View>
+                <CheckBadge size={32} glyph={14} />
               </View>
             ) : (
               <View className="size-10.25 items-center justify-center">

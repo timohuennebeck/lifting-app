@@ -5,9 +5,9 @@ import { Alert } from 'react-native';
 
 import { haptics } from '@/shared/lib/haptics';
 
+import { paywallKeys } from '../data/paywall-keys';
 import { NothingToRestoreError, type PlanId, purchases } from '../lib/purchases-service';
 import { useSubscriptionStore } from '../stores/subscription-store';
-import { paywallKeys } from './use-offering';
 
 /** Buys a plan through the purchases service and mirrors the result into the store. */
 export function usePurchase() {

@@ -18,6 +18,7 @@ import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
+import { EmptyExercises } from '@/shared/ui/empty-exercises';
 import { IconButton } from '@/shared/ui/icon-button';
 import { MuscleTileRow } from '@/shared/ui/muscle-map';
 import { Screen } from '@/shared/ui/screen';
@@ -26,7 +27,6 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
-import { EmptyExercises } from '../components/empty-exercises';
 import { type ExerciseMenuAction, ExerciseMenuSheet } from '../components/exercise-menu-sheet';
 import { PlanBar } from '../components/plan-bar';
 import { TemplateExerciseCard } from '../components/template-exercise-card';

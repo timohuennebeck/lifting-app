@@ -10,8 +10,12 @@ import { WARN_COLOR } from '../lib/poses';
 
 const BANDS: GroupBand[] = ['top', 'mid', 'focus'];
 
+export interface GroupBandsProps {
+  scores: Partial<GroupScores>;
+}
+
 /** Muscle groups sorted into strengths, average and focus pills (design 08d-A). */
-export function GroupBands({ scores }: { scores: Partial<GroupScores> }) {
+export function GroupBands({ scores }: GroupBandsProps) {
   const { t } = useTranslation('bodyCheck');
   const accent = useAccentColor();
   const bands = groupBands(scores);

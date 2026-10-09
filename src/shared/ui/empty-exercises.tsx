@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 
-import { GhostExercise } from '@/shared/ui/ghost-exercise';
-import { Text } from '@/shared/ui/text';
+import { GhostExercise } from './ghost-exercise';
+import { Text } from './text';
 
 export interface EmptyExercisesProps {
   hint: string;
@@ -11,8 +11,8 @@ export interface EmptyExercisesProps {
 export function EmptyExercises({ hint }: EmptyExercisesProps) {
   return (
     <View>
-      <GhostExercise menu widths={['88%', '58%']} />
-      <GhostExercise menu faded widths={['74%', '44%']} />
+      <GhostExercise widths={['88%', '58%']} />
+      <GhostExercise faded widths={['74%', '44%']} />
       <Text variant="paragraph" tone="subtle" className="px-7.5 pt-2 text-center text-sm leading-5">
         {hint}
       </Text>

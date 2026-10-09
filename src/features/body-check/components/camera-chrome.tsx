@@ -11,8 +11,12 @@ const CORNERS = [
   'right-0 bottom-0 rounded-br-xl border-r-[3px] border-b-[3px]',
 ];
 
+export interface FramingCornersProps {
+  style?: StyleProp<ViewStyle>;
+}
+
 /** Accent corner brackets that frame the body in the camera (design 08a). */
-export function FramingCorners({ style }: { style?: StyleProp<ViewStyle> }) {
+export function FramingCorners({ style }: FramingCornersProps) {
   return (
     <View pointerEvents="none" className="absolute" style={style}>
       {CORNERS.map((corner) => (
@@ -23,19 +27,19 @@ export function FramingCorners({ style }: { style?: StyleProp<ViewStyle> }) {
 }
 
 /** Two circling arrows: switch between front and back camera. */
-export function FlipCameraIcon({ color = colors.fg }: { color?: string }) {
+export function FlipCameraIcon() {
   return (
     <Svg width={20} height={18} viewBox="0 0 20 18">
       <Path
         d="M3 9a7 7 0 0 1 12.5-4.3M17 9a7 7 0 0 1-12.5 4.3"
-        stroke={color}
+        stroke={colors.fg}
         strokeWidth={1.8}
         fill="none"
         strokeLinecap="round"
       />
       <Path
         d="M16 1.5v3.5h-3.5M4 16.5V13h3.5"
-        stroke={color}
+        stroke={colors.fg}
         strokeWidth={1.8}
         fill="none"
         strokeLinecap="round"

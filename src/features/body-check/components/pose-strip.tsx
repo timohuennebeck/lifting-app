@@ -16,17 +16,21 @@ export interface PoseStripProps {
   onSelect: (pose: BodyPose) => void;
 }
 
-/** Badge in the thumbnail corner: accent check, or orange "!" for a weak photo. */
-export function ShotBadge({ warn, size = 16 }: { warn?: boolean; size?: number }) {
+interface ShotBadgeProps {
+  warn: boolean;
+}
+
+/** 16pt badge in the thumbnail corner: accent check, or orange "!" for a weak photo. */
+function ShotBadge({ warn }: ShotBadgeProps) {
   return (
     <View
-      className="items-center justify-center rounded-full bg-accent"
-      style={[{ width: size, height: size }, warn && { backgroundColor: WARN_COLOR }]}
+      className="size-4 items-center justify-center rounded-full bg-accent"
+      style={warn ? { backgroundColor: WARN_COLOR } : undefined}
     >
       {warn ? (
         <Text className="font-inter-bold text-[11px] leading-3.25 text-on-accent">!</Text>
       ) : (
-        <Icon name="check" size={size * 0.56} color={colors.onAccent} />
+        <Icon name="check" size={8.96} color={colors.onAccent} />
       )}
     </View>
   );

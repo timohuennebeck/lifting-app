@@ -6,7 +6,6 @@ import {
   ScrollView,
   View,
 } from 'react-native';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
@@ -14,6 +13,7 @@ import { clamp } from '@/shared/lib/math';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 
 import { DotPattern } from './dot-pattern';
+import { Gradient, type GradientStop } from './gradient';
 
 const TICK = 5;
 const GAP = 5;
@@ -21,6 +21,13 @@ const PITCH = TICK + GAP;
 // Dot colors of the design's tick columns.
 const TICK_MAJOR = '#B5B5AF';
 const TICK_MINOR = colors.outline;
+/** Ticks fade out towards both ends. */
+const EDGE_FADE: GradientStop[] = [
+  [0, 1],
+  [0.3, 0],
+  [0.7, 0],
+  [1, 1],
+];
 
 export interface RulerPickerProps {
   value: number;
@@ -86,7 +93,6 @@ export function RulerPicker({
   };
 
   const length = (i: number) => (i % majorEvery === 0 ? 64 : i % midEvery === 0 ? 44 : 24);
-  const fadeId = vertical ? 'fade-v' : 'fade-h';
 
   return (
     <View className={cn(vertical ? 'w-27.5' : 'h-25 w-full', className)} onLayout={onLayout}>
@@ -129,23 +135,7 @@ export function RulerPicker({
             : { bottom: 0, left: extent / 2 - TICK / 2, width: TICK, height: 96 },
         ]}
       />
-      <Svg pointerEvents="none" style={{ position: 'absolute', inset: 0 }}>
-        <Defs>
-          <LinearGradient
-            id={fadeId}
-            x1="0"
-            y1="0"
-            x2={vertical ? '0' : '1'}
-            y2={vertical ? '1' : '0'}
-          >
-            <Stop offset="0" stopColor={colors.bg} stopOpacity={1} />
-            <Stop offset="0.3" stopColor={colors.bg} stopOpacity={0} />
-            <Stop offset="0.7" stopColor={colors.bg} stopOpacity={0} />
-            <Stop offset="1" stopColor={colors.bg} stopOpacity={1} />
-          </LinearGradient>
-        </Defs>
-        <Rect width="100%" height="100%" fill={`url(#${fadeId})`} />
-      </Svg>
+      <Gradient from={vertical ? 'top' : 'left'} stops={EDGE_FADE} />
     </View>
   );
 }

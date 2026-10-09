@@ -5,11 +5,10 @@ import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
-import { colors, useAccentColor } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
+import { useAccentColor } from '@/shared/lib/theme';
+import { CheckBadge } from '@/shared/ui/check-item';
+import { Gradient } from '@/shared/ui/gradient';
 import { Text } from '@/shared/ui/text';
-
-import { Scrim } from './scrim';
 
 const PULSE: CSSAnimationKeyframes = {
   from: { transform: [{ scale: 1.005 }] },
@@ -71,7 +70,7 @@ export function AnalysisTile({ uri, label, progress, active, height }: AnalysisT
             <Path d={remainingSlice(width, height, progress)} fill="rgba(10,10,10,0.72)" />
           </Svg>
         ) : null}
-        <Scrim edge="bottom" height={70} opacity={0.75} />
+        <Gradient from="bottom" size={70} color="black" opacity={0.75} />
         {!active ? (
           <View
             pointerEvents="none"
@@ -83,9 +82,7 @@ export function AnalysisTile({ uri, label, progress, active, height }: AnalysisT
             {label}
           </Text>
           {done ? (
-            <View className="size-5.5 items-center justify-center rounded-full bg-accent">
-              <Icon name="check" size={11} color={colors.onAccent} />
-            </View>
+            <CheckBadge size={22} glyph={11} />
           ) : (
             <Text variant="caption" tone="secondary" className="text-xs">
               {`${Math.round(progress * 100)}%`}
