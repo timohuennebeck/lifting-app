@@ -6,7 +6,7 @@ import { minutesBetween } from '@/shared/lib/date';
 import {
   formatDate,
   formatSet,
-  formatWeight,
+  formatVolume,
   formatWeightValue,
   type UnitSystem,
 } from '@/shared/lib/format';
@@ -70,7 +70,7 @@ export function HistorySessionRow({
           />
           {/* Volume only exists for weighted sets. */}
           {session.volumeKg > 0 ? (
-            <Stat icon="dumbbell" value={formatWeight(session.volumeKg, units)} />
+            <Stat icon="dumbbell" value={formatVolume(session.volumeKg, units)} />
           ) : null}
           <Stat
             icon="star"

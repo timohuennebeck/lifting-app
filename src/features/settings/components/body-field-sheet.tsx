@@ -4,23 +4,18 @@ import { View } from 'react-native';
 
 import {
   AGE_RANGE,
-  HEIGHT_CM,
-  HEIGHT_IN,
+  bodyWeightFromDisplay,
+  bodyWeightRange,
+  bodyWeightToDisplay,
+  FIRST_NAME_MAX,
+  heightFromDisplay,
+  heightRange,
+  heightToDisplay,
   type Profile,
   type ProfilePatch,
   type Sex,
-  WEIGHT_KG,
-  WEIGHT_LB,
 } from '@/shared/data/profile';
-import {
-  CM_PER_INCH,
-  feetInches,
-  formatNumber,
-  kgToLb,
-  lbToKg,
-  weightUnit,
-} from '@/shared/lib/format';
-import { roundTenth } from '@/shared/lib/math';
+import { feetInches, formatNumber, weightUnit } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import { NumberStepper } from '@/shared/ui/number-stepper';
@@ -83,18 +78,13 @@ interface FieldEditorProps {
 function FieldEditor({ field, profile, onSave }: FieldEditorProps) {
   const { t } = useTranslation('profile');
   const { t: tc } = useTranslation();
-  const imperial = profile.unitSystem === 'imperial';
+  const units = profile.unitSystem;
+  const imperial = units === 'imperial';
   const [name, setName] = useState(profile.firstName);
   const [age, setAge] = useState(profile.age ?? 28);
   // Weight/height are edited in the display unit and converted on save.
-  const [weight, setWeight] = useState(() => {
-    const kg = profile.weightKg ?? 75;
-    return imperial ? Math.round(kgToLb(kg)) : Math.round(kg * 2) / 2;
-  });
-  const [height, setHeight] = useState(() => {
-    const cm = profile.heightCm ?? 175;
-    return imperial ? Math.round(cm / CM_PER_INCH) : cm;
-  });
+  const [weight, setWeight] = useState(() => bodyWeightToDisplay(profile.weightKg ?? 75, units));
+  const [height, setHeight] = useState(() => heightToDisplay(profile.heightCm ?? 175, units));
 
   if (field === 'sex') {
     return (
@@ -120,6 +110,7 @@ function FieldEditor({ field, profile, onSave }: FieldEditorProps) {
         onChangeText={setName}
         clearable
         autoCapitalize="words"
+        maxLength={FIRST_NAME_MAX}
         returnKeyType="done"
         onSubmitEditing={() => name.trim() && onSave({ firstName: name.trim() })}
       />
@@ -137,12 +128,12 @@ function FieldEditor({ field, profile, onSave }: FieldEditorProps) {
     );
     patch = { age };
   } else if (field === 'weight') {
-    const range = imperial ? WEIGHT_LB : WEIGHT_KG;
+    const range = bodyWeightRange(units);
     editor = (
       <View className="items-center gap-2">
         <Text variant="display">{formatNumber(weight)}</Text>
         <Text variant="overline" tone="subtle">
-          {tc(`units.${weightUnit(profile.unitSystem)}`)}
+          {tc(`units.${weightUnit(units)}`)}
         </Text>
         <RulerPicker
           value={weight}
@@ -153,9 +144,9 @@ function FieldEditor({ field, profile, onSave }: FieldEditorProps) {
         />
       </View>
     );
-    patch = { weightKg: imperial ? roundTenth(lbToKg(weight)) : weight };
+    patch = { weightKg: bodyWeightFromDisplay(weight, units) };
   } else {
-    const range = imperial ? HEIGHT_IN : HEIGHT_CM;
+    const range = heightRange(units);
     editor = (
       <View className="items-center gap-2">
         <Text variant="display">{imperial ? feetInches(height) : height}</Text>
@@ -172,7 +163,7 @@ function FieldEditor({ field, profile, onSave }: FieldEditorProps) {
         />
       </View>
     );
-    patch = { heightCm: imperial ? Math.round(height * CM_PER_INCH) : height };
+    patch = { heightCm: heightFromDisplay(height, units) };
   }
 
   return (

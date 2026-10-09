@@ -92,7 +92,7 @@ export function AnalysisScreen() {
 
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-      <ScreenHeader icon="chevron-left" title={t('analysis.title')} onBack={close} />
+      <ScreenHeader title={t('analysis.title')} onBack={close} />
       <View className="gap-2.5 px-4 pt-3.5">
         {[0, 2].map((row) => (
           <View key={row} className="flex-row gap-2.5">

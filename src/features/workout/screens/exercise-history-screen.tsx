@@ -47,12 +47,12 @@ export function ExerciseHistoryScreen() {
   const units = useUnits();
   const now = useNow(MINUTE_MS);
   const { data: sessions = [] } = useExerciseHistory(exerciseId);
-  const [range, setRange] = useState<`${DayRange}`>('30');
+  const [range, setRange] = useState<DayRange>(30);
   // undefined = default (latest session open), null = all collapsed.
   const [openId, setOpenId] = useState<string | null>();
   const expanded = openId === undefined ? sessions[0]?.workoutId : openId;
 
-  const since = now - Number(range) * DAY_MS;
+  const since = now - range * DAY_MS;
   // Bodyweight exercises never done with added weight would chart a flat 0 kg.
   const unweighted =
     isBodyweight(exerciseId) && sessions.every((s) => s.sets.every((set) => !set.weightKg));
@@ -95,7 +95,7 @@ export function ExerciseHistoryScreen() {
           value={range}
           onChange={setRange}
           options={DAY_RANGES.map((r) => ({
-            value: `${r}` as const,
+            value: r,
             label: t('history.days', { count: r }),
           }))}
         />

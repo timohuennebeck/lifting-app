@@ -53,6 +53,8 @@ export function CreateAccountScreen() {
   // Already signed in (e.g. came back from the next step): just save and continue.
   const signedIn = !!session;
   const valid = signedIn || (isValidEmail(email) && password.length >= MIN_PASSWORD_LENGTH);
+  // Account errors from before the user signed in (e.g. "already registered") no longer apply.
+  const shownError = signedIn && error !== 'generic' ? null : error;
 
   const fail = (key: ErrorKey) => {
     haptics.error();
@@ -134,12 +136,12 @@ export function CreateAccountScreen() {
           editable={!signedIn && !busy}
           autoFocus={!signedIn}
         />
-        {error ? (
+        {shownError ? (
           <View className="items-start gap-1 px-1 pt-3">
             <Text variant="caption" tone="danger" accessibilityLiveRegion="assertive">
-              {t(`errors.${error}`)}
+              {t(`errors.${shownError}`)}
             </Text>
-            {error === 'alreadyRegistered' || error === 'confirmEmail' ? (
+            {shownError === 'alreadyRegistered' || shownError === 'confirmEmail' ? (
               <TextButton
                 label={t('signIn.submit')}
                 tone="accent"

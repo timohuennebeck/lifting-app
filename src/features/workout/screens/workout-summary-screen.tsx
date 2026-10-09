@@ -7,7 +7,7 @@ import { mainShares, muscleShares } from '@/shared/data/muscles';
 import { useUnits } from '@/shared/data/profile';
 import { useWorkout } from '@/shared/data/workouts';
 import { minutesBetween } from '@/shared/lib/date';
-import { formatNumber, kgToLb, weightUnit } from '@/shared/lib/format';
+import { formatNumber, formatVolumeValue, weightUnit } from '@/shared/lib/format';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { Gradient, type GradientStop } from '@/shared/ui/gradient';
@@ -67,12 +67,9 @@ export function WorkoutSummaryScreen() {
   const trained = main.map((s) => s.muscle);
   const chips = main.slice(0, 6);
   const minutes = workout ? minutesBetween(workout.startedAt, workout.finishedAt) : 0;
-  const volume = units === 'imperial' ? kgToLb(volumeKg) : volumeKg;
 
   return (
-    <Screen
-      header={<ScreenHeader icon="chevron-left" onBack={close} title={workout?.name ?? ''} />}
-    >
+    <Screen header={<ScreenHeader onBack={close} title={workout?.name ?? ''} />}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 130 + insets.bottom }}
@@ -114,7 +111,7 @@ export function WorkoutSummaryScreen() {
         <View className="flex-row px-5 pt-6.5">
           {volumeKg > 0 ? (
             <Stat
-              value={formatNumber(Math.round(volume), 0)}
+              value={formatVolumeValue(volumeKg, units)}
               unit={t(`common:units.${weightUnit(units)}`)}
             />
           ) : null}

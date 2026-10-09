@@ -39,7 +39,7 @@ export function CameraPermission({
   const insets = useSafeAreaInsets();
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top, paddingBottom: bottomInset }}>
-      <ScreenHeader icon="chevron-left" onBack={onClose} />
+      <ScreenHeader onBack={onClose} />
       <StepTitle title={copy.title} subtitle={copy.body} subtitleTone="subtle" />
       <View className="flex-1" />
       <View className="gap-2 px-4">

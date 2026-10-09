@@ -1,4 +1,5 @@
 import { i18n } from '@/shared/i18n';
+import { getOrInsert } from '@/shared/lib/map';
 
 export type UnitSystem = 'metric' | 'imperial';
 
@@ -15,12 +16,11 @@ export const lbToKg = (lb: number) => lb * KG_PER_LB;
 const numberFormats = new Map<string, Intl.NumberFormat>();
 
 export function formatNumber(value: number, maximumFractionDigits = 1) {
-  const key = `${i18n.language}|${maximumFractionDigits}`;
-  let format = numberFormats.get(key);
-  if (!format) {
-    format = new Intl.NumberFormat(i18n.language, { maximumFractionDigits });
-    numberFormats.set(key, format);
-  }
+  const format = getOrInsert(
+    numberFormats,
+    `${i18n.language}|${maximumFractionDigits}`,
+    () => new Intl.NumberFormat(i18n.language, { maximumFractionDigits }),
+  );
   return format.format(value);
 }
 
@@ -38,8 +38,16 @@ export const formatWeightValue = (kg: number, units: UnitSystem) =>
   formatNumber(toDisplayWeight(kg, units), 2);
 
 /** Formats a kg value in the user's unit system, e.g. "82,5 kg" or "182,5 lb". */
-export const formatWeight = (kg: number, units: UnitSystem = 'metric') =>
+export const formatWeight = (kg: number, units: UnitSystem) =>
   `${formatWeightValue(kg, units)} ${weightUnit(units)}`;
+
+/** A volume total (weight × reps) as a whole number in the user's unit, without the label. */
+export const formatVolumeValue = (kg: number, units: UnitSystem) =>
+  formatNumber(units === 'imperial' ? kgToLb(kg) : kg, 0);
+
+/** A volume total in the user's unit, e.g. "4,250 kg" or "9,370 lb". */
+export const formatVolume = (kg: number, units: UnitSystem) =>
+  `${formatVolumeValue(kg, units)} ${weightUnit(units)}`;
 
 /** What a set holds; measures the exercise doesn't use are null. */
 export interface SetValues {
@@ -93,12 +101,11 @@ export function formatDuration(totalSeconds: number, { alwaysHours = false } = {
 const dateFormats = new Map<string, Intl.DateTimeFormat>();
 
 export function formatDate(date: Date, options: Intl.DateTimeFormatOptions) {
-  const key = `${i18n.language}|${JSON.stringify(options)}`;
-  let format = dateFormats.get(key);
-  if (!format) {
-    format = new Intl.DateTimeFormat(i18n.language, options);
-    dateFormats.set(key, format);
-  }
+  const format = getOrInsert(
+    dateFormats,
+    `${i18n.language}|${JSON.stringify(options)}`,
+    () => new Intl.DateTimeFormat(i18n.language, options),
+  );
   return format.format(date);
 }
 

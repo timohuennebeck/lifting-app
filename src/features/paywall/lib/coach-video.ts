@@ -21,7 +21,7 @@ const COACH_CAPTIONS = [
   { at: 19, key: 'seeYou' },
 ] as const;
 
-export type CaptionKey = (typeof COACH_CAPTIONS)[number]['key'];
+type CaptionKey = (typeof COACH_CAPTIONS)[number]['key'];
 
 export function captionAt(seconds: number): CaptionKey {
   let key: CaptionKey = COACH_CAPTIONS[0].key;

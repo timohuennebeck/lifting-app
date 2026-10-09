@@ -1,5 +1,4 @@
 import { useLocalSearchParams } from 'expo-router';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -34,7 +33,7 @@ function LegalDocumentBody({ kind }: { kind: LegalKind }) {
     isRefetching,
     refetch,
   } = useLegalDocument(kind, i18n.language);
-  const blocks = useMemo(() => (doc ? parseMarkdown(doc.contentMd) : []), [doc]);
+  const blocks = doc ? parseMarkdown(doc.contentMd) : [];
 
   if (isPending) {
     return (

@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { countLocalPendingPhotos } from '@/features/body-check/data/body-checks';
 import { LEGAL_KINDS } from '@/features/legal/data/legal-documents';
+import { useUploadQueueStore } from '@/features/support/stores/upload-queue-store';
 import { db } from '@/shared/data/powersync/database';
 import { type ProfilePatch, saveProfile, useProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
@@ -56,8 +58,13 @@ export function SettingsScreen() {
   };
 
   const signOut = async () => {
-    // Signing out clears the local database, including changes not uploaded yet.
-    const { count } = await db.getUploadQueueStats();
+    // Signing out clears the local database and photo files, including anything not
+    // uploaded yet: queued changes, body-check photos and support screenshots.
+    const [{ count: changes }, photos] = await Promise.all([
+      db.getUploadQueueStats(),
+      countLocalPendingPhotos(requireUserId()),
+    ]);
+    const count = changes + photos + useUploadQueueStore.getState().pending.length;
     Alert.alert(
       t('settings.signOutConfirm.title'),
       count > 0

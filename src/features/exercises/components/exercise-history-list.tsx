@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import type { ExerciseHistoryEntry } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
 import { minutesBetween } from '@/shared/lib/date';
-import { formatDate, formatSet, formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { formatDate, formatSet, formatVolume, type UnitSystem } from '@/shared/lib/format';
 import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
 
@@ -50,7 +50,7 @@ export function ExerciseHistoryList({ entries, units }: ExerciseHistoryListProps
                   {entry.volumeKg > 0 ? (
                     <Metric
                       label={t('detail.volume')}
-                      value={formatWeight(entry.volumeKg, units)}
+                      value={formatVolume(entry.volumeKg, units)}
                     />
                   ) : null}
                   <Metric label={t('detail.pr')} value={String(prs)} highlight={prs > 0} />

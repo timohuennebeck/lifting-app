@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next';
 
-import { formatNumber, formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { formatNumber, formatVolume, type UnitSystem } from '@/shared/lib/format';
 import { Card } from '@/shared/ui/card';
 import { Text } from '@/shared/ui/text';
 
 import { compareVolume } from '../lib/compare';
 
 const tonnage = (kg: number, units: UnitSystem) =>
-  units === 'metric' && kg >= 1000 ? `${formatNumber(kg / 1000, 1)} t` : formatWeight(kg, units);
+  units === 'metric' && kg >= 1000 ? `${formatNumber(kg / 1000, 1)} t` : formatVolume(kg, units);
 
 export interface VolumeComparisonProps {
   volumeKg: number;

@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 import { i18n } from '@/shared/i18n';
 import { wait } from '@/shared/lib/async';
 import { DAY_MS } from '@/shared/lib/date';
+import { getOrInsert } from '@/shared/lib/map';
 import { storage } from '@/shared/lib/storage';
 
 export type PlanId = 'daily' | 'monthly';
@@ -112,11 +113,10 @@ const priceFormats = new Map<string, Intl.NumberFormat>();
 
 /** Localized price in the offering's currency, e.g. "0,99 €" (de) or "€0.99" (en). */
 export function formatPrice(amount: number, currency: string) {
-  const key = `${i18n.language}|${currency}`;
-  let format = priceFormats.get(key);
-  if (!format) {
-    format = new Intl.NumberFormat(i18n.language, { style: 'currency', currency });
-    priceFormats.set(key, format);
-  }
+  const format = getOrInsert(
+    priceFormats,
+    `${i18n.language}|${currency}`,
+    () => new Intl.NumberFormat(i18n.language, { style: 'currency', currency }),
+  );
   return format.format(amount);
 }

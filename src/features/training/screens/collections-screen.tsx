@@ -4,6 +4,7 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { type CollectionSummary, useCollections } from '@/shared/data/templates';
+import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 import { ListRow } from '@/shared/ui/list-row';
@@ -17,7 +18,6 @@ import { DeleteCollectionSheet } from '../components/delete-collection-sheet';
 import { MinusGlyph, RenameGlyph } from '../components/glyphs';
 import { NewCollectionSheet } from '../components/new-collection-sheet';
 import { renameCollection } from '../data/template-mutations';
-import { useLastDefined } from '../hooks/use-last-defined';
 
 /** Manage collections: rename (Aa) and delete (01·V·S, 01·V·A·4, 01·V·A·5). */
 export function CollectionsScreen() {

@@ -15,7 +15,6 @@ export function usePaywallFlow() {
   const inApp = segments[0] === '(app)';
 
   return {
-    inApp,
     toTrial: (plan: PlanId) =>
       router.push({ pathname: inApp ? '/pro/trial' : '/paywall/trial', params: { plan } }),
     /** After a purchase: the thank-you screen replaces the paywall step. */

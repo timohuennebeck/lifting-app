@@ -15,7 +15,6 @@ export interface TextInputSheetProps {
   placeholder?: string;
   ctaLabel: string;
   onSubmit: (value: string) => void | Promise<void>;
-  maxLength?: number;
 }
 
 /** Sheet with one clearable text field and a CTA (rename, new collection). Rides above the keyboard. */
@@ -28,7 +27,6 @@ export function TextInputSheet({
   placeholder,
   ctaLabel,
   onSubmit,
-  maxLength = 40,
 }: TextInputSheetProps) {
   const [value, setValue] = useState(initialValue);
   const [busy, setBusy] = useState(false);
@@ -58,7 +56,7 @@ export function TextInputSheet({
           onChangeText={setValue}
           placeholder={placeholder}
           clearable
-          maxLength={maxLength}
+          maxLength={40}
           returnKeyType="done"
           onSubmitEditing={submit}
         />

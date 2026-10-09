@@ -46,11 +46,7 @@ export function exerciseMuscles(exerciseId: string): MuscleId[] {
   return muscleWeights(exerciseId).map(([m]) => m);
 }
 
-function primaryMuscle(exerciseId: string): MuscleId | undefined {
-  return exerciseMuscles(exerciseId)[0];
-}
-
 export function primaryGroup(exerciseId: string): MuscleGroupId {
-  const muscle = primaryMuscle(exerciseId);
+  const muscle = exerciseMuscles(exerciseId)[0];
   return muscle ? groupOfMuscle(muscle) : 'core';
 }

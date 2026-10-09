@@ -2,9 +2,8 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { WEIGHT_KG, WEIGHT_LB } from '@/shared/data/profile';
-import { formatNumber, kgToLb, lbToKg, weightUnit } from '@/shared/lib/format';
-import { clamp, roundTenth } from '@/shared/lib/math';
+import { bodyWeightFromDisplay, bodyWeightRange, bodyWeightToDisplay } from '@/shared/data/profile';
+import { formatNumber, weightUnit } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 import { RulerPicker } from '@/shared/ui/ruler-picker';
 import { StepScreen } from '@/shared/ui/step-screen';
@@ -21,12 +20,9 @@ export function WeightScreen() {
   const imperial = unitSystem === 'imperial';
 
   // The ruler works in the display unit; the draft always stores kg.
-  const range = imperial ? WEIGHT_LB : WEIGHT_KG;
-  const value = imperial ? Math.round(kgToLb(weightKg)) : weightKg;
-  const setValue = (next: number) => {
-    const v = clamp(next, range.min, range.max);
-    update({ weightKg: roundTenth(imperial ? lbToKg(v) : v) });
-  };
+  const range = bodyWeightRange(unitSystem);
+  const value = bodyWeightToDisplay(weightKg, unitSystem);
+  const setValue = (next: number) => update({ weightKg: bodyWeightFromDisplay(next, unitSystem) });
 
   return (
     <StepScreen

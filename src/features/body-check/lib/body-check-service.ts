@@ -2,7 +2,7 @@ import { File } from 'expo-file-system';
 
 import type { Profile } from '@/shared/data/profile';
 import { wait } from '@/shared/lib/async';
-import { clamp } from '@/shared/lib/math';
+import { clamp, roundTenth } from '@/shared/lib/math';
 
 import type { StoredPhoto } from './photo-files';
 import { GROUPS, POSES, type BodyGroup, type BodyPose } from './poses';
@@ -73,7 +73,7 @@ function firstCheck(profile: AnalysisProfile | null): Omit<BodyCheckResult, 'sco
   return {
     groupScores,
     metrics: {
-      bodyFat: Math.round(bodyFat * 10) / 10,
+      bodyFat: roundTenth(bodyFat),
       proportions: BASE_METRICS.proportions,
       definition: clamp(BASE_METRICS.definition + offset, 20, MAX_SCORE),
     },
@@ -91,7 +91,7 @@ function nextCheck(previous: PreviousCheck): Omit<BodyCheckResult, 'score'> {
   return {
     groupScores,
     metrics: {
-      bodyFat: Math.max(6, Math.round((m.bodyFat - 0.5) * 10) / 10),
+      bodyFat: Math.max(6, roundTenth(m.bodyFat - 0.5)),
       proportions: Math.min(MAX_SCORE, m.proportions + 1),
       definition: Math.min(MAX_SCORE, m.definition + 2),
     },

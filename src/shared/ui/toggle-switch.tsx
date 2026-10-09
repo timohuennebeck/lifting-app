@@ -8,16 +8,10 @@ export interface ToggleSwitchProps {
   value: boolean;
   onChange: (value: boolean) => void;
   accessibilityLabel: string;
-  className?: string;
 }
 
 /** 50×30 pill switch with an accent track when on (design 00·P2 C·S). */
-export function ToggleSwitch({
-  value,
-  onChange,
-  accessibilityLabel,
-  className,
-}: ToggleSwitchProps) {
+export function ToggleSwitch({ value, onChange, accessibilityLabel }: ToggleSwitchProps) {
   const knob = useAnimatedStyle(() => ({
     transform: [
       { translateX: withSpring(value ? 20 : 0, { mass: 1, damping: 26, stiffness: 260 }) },
@@ -30,11 +24,7 @@ export function ToggleSwitch({
       accessibilityState={{ checked: value }}
       accessibilityLabel={accessibilityLabel}
       onPress={() => onChange(!value)}
-      className={cn(
-        'h-7.5 w-12.5 rounded-full p-0.5',
-        value ? 'bg-accent' : 'bg-[#333333]',
-        className,
-      )}
+      className={cn('h-7.5 w-12.5 rounded-full p-0.5', value ? 'bg-accent' : 'bg-[#333333]')}
     >
       <Animated.View
         className="size-6.5 rounded-full bg-fg"

@@ -43,39 +43,50 @@ export interface SheetProps {
  * Bottom sheet on a native modal, so it shows above every screen, modal screens included.
  * Drag the handle down or tap the backdrop to close; follows the keyboard.
  */
-export function Sheet({
+export function Sheet(props: SheetProps) {
+  const [mounted, setMounted] = useState(props.visible);
+  // Mount when opening; unmount once the closing animation has run.
+  if (props.visible && !mounted) setMounted(true);
+  if (!mounted) return null;
+  return <MountedSheet {...props} onClosed={() => setMounted(false)} />;
+}
+
+interface MountedSheetProps extends SheetProps {
+  /** Called once the closing animation has finished. */
+  onClosed: () => void;
+}
+
+/** The sheet while it is shown or animating out; closed sheets run none of these hooks. */
+function MountedSheet({
   visible,
   onClose,
+  onClosed,
   title,
   subtitle,
   children,
   className,
   snapPoints,
   footer,
-}: SheetProps) {
+}: MountedSheetProps) {
   const footerInset = useFooterInset();
   const { height: windowHeight } = useWindowDimensions();
-  const [mounted, setMounted] = useState(visible);
   const progress = useSharedValue(0);
   const drag = useSharedValue(0);
   const sheetHeight = useSharedValue(windowHeight);
   const { height: keyboard } = useReanimatedKeyboardAnimation();
 
-  // Mount when opening; unmount once the closing animation has run.
-  if (visible && !mounted) setMounted(true);
   useEffect(() => {
-    if (!mounted) return;
     if (visible) {
       drag.set(0);
       progress.set(withTiming(1, { duration: OPEN_MS, easing: Easing.out(Easing.cubic) }));
     } else {
       progress.set(
         withTiming(0, { duration: CLOSE_MS, easing: Easing.in(Easing.cubic) }, (done) => {
-          if (done) scheduleOnRN(setMounted, false);
+          if (done) scheduleOnRN(onClosed);
         }),
       );
     }
-  }, [visible, mounted, progress, drag]);
+  }, [visible, progress, drag, onClosed]);
 
   const pan = Gesture.Pan()
     .onUpdate((e) => {
@@ -98,7 +109,6 @@ export function Sheet({
 
   const fixed = snapPoints?.[0] ? (parseFloat(snapPoints[0]) / 100) * windowHeight : undefined;
 
-  if (!mounted) return null;
   return (
     <Modal
       transparent

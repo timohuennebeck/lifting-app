@@ -82,7 +82,8 @@ Documents are readable without an account (onboarding runs logged out) and writt
 - **`legal_documents`:** one row per `kind` (`terms`, `privacy`), `locale` and `version`, as Markdown. Rows
   can't be edited or deleted; publish a new `version` instead. Set `requires_reacceptance` when users who
   accepted an older version have to accept again.
-- **`legal_acceptances`:** written by the app for the signed-in user; the server sets `accepted_at`.
+- **`legal_acceptances`:** one row per accepted document version; the server sets `accepted_at`. The
+  app doesn't write them yet: recording the acceptance at sign-up is on the to-do list.
 - **In the app:** `/legal/terms` and `/legal/privacy` show the version in effect, in the app language
   (else English, else `pt-BR`), linked from the sign-up screen and Settings. Write the text as Markdown:
   headings, paragraphs, `>` quotes, lists, `**bold**` and `[links](https://…)`. Locally,

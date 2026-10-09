@@ -154,9 +154,7 @@ const templateListQuery = () =>
       id: templates.id,
       name: templates.name,
       collection_id: templates.collection_id,
-      collection_name: collections.name,
       weekday: templates.weekday,
-      position: templates.position,
       exercise_id: templateExercises.exercise_id,
       rest_seconds: templateExercises.rest_seconds,
       set_count: count(templateSets.id),
@@ -172,9 +170,7 @@ export interface TemplateSummary {
   id: string;
   name: string;
   collectionId: string | null;
-  collectionName: string | null;
   weekday: number | null;
-  position: number;
   exerciseCount: number;
   setCount: number;
   estimatedMinutes: number;
@@ -189,9 +185,7 @@ function summarize(rows: RowOf<typeof templateListQuery>[]): TemplateSummary[] {
       id: r.id,
       name: r.name,
       collectionId: r.collection_id,
-      collectionName: r.collection_name,
       weekday: r.weekday,
-      position: r.position,
       exerciseCount: 0,
       setCount: 0,
       estimatedMinutes: 0,
@@ -222,7 +216,6 @@ export function useTemplates() {
 export interface CollectionSummary {
   id: string;
   name: string;
-  position: number;
   templateCount: number;
 }
 
@@ -231,7 +224,6 @@ const collectionListQuery = () =>
     .select({
       id: collections.id,
       name: collections.name,
-      position: collections.position,
       template_count: count(templates.id),
     })
     .from(collections)
@@ -243,7 +235,6 @@ const toCollections = (rows: RowOf<typeof collectionListQuery>[]) =>
   rows.map((r): CollectionSummary => ({
     id: r.id,
     name: r.name,
-    position: r.position,
     templateCount: r.template_count,
   }));
 
@@ -255,15 +246,11 @@ export function useCollections() {
   });
 }
 
-export type TemplateSetDetail = Pick<
-  TemplateSetRecord,
-  'id' | 'position' | 'target_min' | 'target_max' | 'rir'
->;
+export type TemplateSetDetail = Pick<TemplateSetRecord, 'id' | 'target_min' | 'target_max' | 'rir'>;
 
 export interface TemplateExerciseDetail {
   id: string;
   exerciseId: string;
-  position: number;
   restSeconds: number | null;
   sets: TemplateSetDetail[];
 }
@@ -283,11 +270,11 @@ const templateDetailQuery = (templateId: string) =>
     where: eq(templates.id, templateId),
     with: {
       exercises: {
-        columns: { id: true, exercise_id: true, position: true, rest_seconds: true },
+        columns: { id: true, exercise_id: true, rest_seconds: true },
         orderBy: asc(templateExercises.position),
         with: {
           sets: {
-            columns: { id: true, position: true, target_min: true, target_max: true, rir: true },
+            columns: { id: true, target_min: true, target_max: true, rir: true },
             orderBy: asc(templateSets.position),
           },
         },
@@ -305,18 +292,19 @@ function toTemplateDetail([t]: RowOf<typeof templateDetailQuery>[]): TemplateDet
     exercises: t.exercises.map((e) => ({
       id: e.id,
       exerciseId: e.exercise_id,
-      position: e.position,
       restSeconds: e.rest_seconds,
       sets: e.sets,
     })),
   };
 }
 
+/** Keeps the previous template while another one loads, e.g. when the plan bar switches. */
 export function useTemplateDetail(templateId: string | undefined) {
   return useDrizzleQuery({
     queryKey: queryKeys.templates.detail(templateId ?? '').queryKey,
     enabled: !!templateId,
     query: templateDetailQuery(templateId ?? ''),
     map: toTemplateDetail,
+    keepPrevious: true,
   });
 }

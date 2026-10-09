@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { muscleShares } from '@/shared/data/muscles';
 import type { WorkoutSummary } from '@/shared/data/workouts';
 import { isSameDay, minutesBetween } from '@/shared/lib/date';
-import { formatWeekdayDate, formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { formatVolume, formatWeekdayDate, type UnitSystem } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 
 import { DayStatus } from './day-status';
@@ -29,7 +29,7 @@ export function DoneCard({ workout, date, today, units }: DoneCardProps) {
   ];
   // Reps-only and timed workouts have no volume.
   if (workout.volumeKg > 0) {
-    stats.push({ icon: 'dumbbell', label: formatWeight(Math.round(workout.volumeKg), units) });
+    stats.push({ icon: 'dumbbell', label: formatVolume(workout.volumeKg, units) });
   }
   if (workout.prCount > 0) {
     stats.push({ icon: 'star', label: t('stats.prs', { count: workout.prCount }), accent: true });

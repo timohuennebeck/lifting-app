@@ -7,6 +7,7 @@ import { queryKeys } from '@/shared/data/query-keys';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 
 import type { BodyCheckMetrics, GroupScores } from '../lib/body-check-service';
+import { photoFile } from '../lib/photo-files';
 import type { BodyPose } from '../lib/poses';
 import { bodyCheckPhotoKeys } from './body-check-keys';
 
@@ -94,3 +95,29 @@ export function usePendingPhotoCount(userId: string | null) {
     map: firstCount,
   });
 }
+
+interface PendingPhotoRow {
+  id: string;
+  body_check_id: string;
+  pose: BodyPose;
+}
+
+/** The user's photos that wait for their upload and whose file is on this device. */
+export async function localPendingPhotos(userId: string) {
+  const rows = (await drizzle
+    .select({
+      id: bodyCheckPhotos.id,
+      body_check_id: bodyCheckPhotos.body_check_id,
+      pose: bodyCheckPhotos.pose,
+    })
+    .from(bodyCheckPhotos)
+    .where(
+      and(isNull(bodyCheckPhotos.storage_path), eq(bodyCheckPhotos.user_id, userId)),
+    )) as PendingPhotoRow[];
+  // Photos taken on another device that has not uploaded them yet are skipped.
+  return rows.filter((row) => photoFile(row.body_check_id, row.pose).exists);
+}
+
+/** Number of photos only this device can still upload (lost on sign-out). */
+export const countLocalPendingPhotos = async (userId: string) =>
+  (await localPendingPhotos(userId)).length;

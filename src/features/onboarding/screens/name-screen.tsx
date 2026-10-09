@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { FIRST_NAME_MAX } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
 import { TextField } from '@/shared/ui/text-field';
 import { StepScreen } from '@/shared/ui/step-screen';
@@ -31,7 +32,7 @@ export function NameScreen() {
           onChangeText={(firstName) => update({ firstName })}
           placeholder={t('name.placeholder')}
           accessibilityLabel={t('name.placeholder')}
-          maxLength={24}
+          maxLength={FIRST_NAME_MAX}
           autoFocus
           autoCapitalize="words"
           autoComplete="given-name"

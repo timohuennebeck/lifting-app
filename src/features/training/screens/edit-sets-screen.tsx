@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { defaultTargets, isTimed } from '@/shared/data/exercises';
+import { defaultSetDrafts, isTimed } from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
 import {
   restSecondsFor,
@@ -37,10 +37,7 @@ export function EditSetsScreen() {
   const { t } = useTranslation('training');
   const { data: template } = useTemplateDetail(id);
   const exercise = template?.exercises.find((e) => e.id === exerciseId);
-  if (!exercise)
-    return (
-      <Screen header={<ScreenHeader icon="chevron-left" title={t('sets.title')} />}>{null}</Screen>
-    );
+  if (!exercise) return <Screen header={<ScreenHeader title={t('sets.title')} />}>{null}</Screen>;
   return <EditSetsForm key={exercise.id} exercise={exercise} />;
 }
 
@@ -69,12 +66,7 @@ function EditSetsForm({ exercise }: EditSetsFormProps) {
     setSets((all) => all.map((s, i) => (i === index ? { ...s, ...patch } : s)));
   const addSet = () =>
     setSets((all) => {
-      const fallback = defaultTargets(exercise.exerciseId);
-      const last = all[all.length - 1] ?? {
-        targetMin: fallback.min,
-        targetMax: fallback.max,
-        rir: fallback.rir,
-      };
+      const last = all[all.length - 1] ?? defaultSetDrafts(exercise.exerciseId, 1)[0];
       return [...all, { ...last, key: newId() }];
     });
   const stepRest = (delta: number) =>
@@ -104,7 +96,7 @@ function EditSetsForm({ exercise }: EditSetsFormProps) {
     <Screen
       scroll
       // Title only, as in 00·P2 C·S; the exercise is known from the previous screen.
-      header={<ScreenHeader icon="chevron-left" title={t('sets.title')} />}
+      header={<ScreenHeader title={t('sets.title')} />}
       footer={<Button label={t('common:actions.done')} loading={saving} onPress={save} />}
     >
       <View className="flex-row items-center gap-2.5 px-5 pt-6 pb-2">

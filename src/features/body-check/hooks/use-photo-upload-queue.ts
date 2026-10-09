@@ -1,41 +1,17 @@
-import { and, eq, isNull } from 'drizzle-orm';
-
-import { drizzle } from '@/shared/data/powersync/database';
-import { bodyCheckPhotos } from '@/shared/data/powersync/schema';
 import { uploadJpeg } from '@/shared/data/supabase-storage';
 import { useBackgroundDrain } from '@/shared/hooks/use-background-drain';
 import { useUserId } from '@/shared/stores/session-store';
 
 import { setPhotoStoragePath } from '../data/body-check-mutations';
-import { usePendingPhotoCount } from '../data/body-checks';
+import { localPendingPhotos, usePendingPhotoCount } from '../data/body-checks';
 import { PHOTO_BUCKET, photoFile, storagePathOf } from '../lib/photo-files';
-import type { BodyPose } from '../lib/poses';
-
-interface PendingRow {
-  id: string;
-  body_check_id: string;
-  pose: BodyPose;
-}
 
 /** Uploads every pending photo that exists on this device; false if one failed. */
 async function uploadPendingPhotos(userId: string) {
-  const rows = (await drizzle
-    .select({
-      id: bodyCheckPhotos.id,
-      body_check_id: bodyCheckPhotos.body_check_id,
-      pose: bodyCheckPhotos.pose,
-    })
-    .from(bodyCheckPhotos)
-    .where(
-      and(isNull(bodyCheckPhotos.storage_path), eq(bodyCheckPhotos.user_id, userId)),
-    )) as PendingRow[];
-  for (const row of rows) {
-    const file = photoFile(row.body_check_id, row.pose);
-    // Taken on another device that has not uploaded it yet.
-    if (!file.exists) continue;
+  for (const row of await localPendingPhotos(userId)) {
     const path = storagePathOf(userId, row.body_check_id, row.pose);
     try {
-      await uploadJpeg(PHOTO_BUCKET, path, file);
+      await uploadJpeg(PHOTO_BUCKET, path, photoFile(row.body_check_id, row.pose));
       await setPhotoStoragePath(row.id, path);
     } catch (error) {
       console.warn('Body-check photo upload failed; retrying later', error);

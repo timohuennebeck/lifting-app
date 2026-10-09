@@ -42,7 +42,10 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
   const [tab, setTab] = useState<Tab>('exercise');
   const exercise = getExercise(exerciseId);
   const units = useUnits();
-  const history = useExerciseHistory(exerciseId).data ?? [];
+  // Only watched while the History tab is shown.
+  const { data: history = [], isLoading: historyLoading } = useExerciseHistory(
+    tab === 'history' ? exerciseId : undefined,
+  );
   if (!exercise) return null;
 
   const name = exerciseName(exerciseId, i18n.language);
@@ -157,7 +160,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
           </>
         ) : history.length ? (
           <ExerciseHistoryList entries={history} units={units} />
-        ) : (
+        ) : historyLoading ? null : (
           <View className="items-center gap-2 py-10">
             <Text variant="bodyStrong">{t('exercises:detail.noHistory')}</Text>
             <Text variant="paragraph" tone="subtle" className="text-center">

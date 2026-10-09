@@ -39,8 +39,8 @@ export function useAuthListener() {
         // Screenshot copies are private to the account (and would sit in device backups).
         useUploadQueueStore.getState().reset();
         clearLocalAttachments();
-        // Body-check photos are just as private.
-        useBodyCheckStore.getState().discard();
+        // Body-check photos are just as private; clearLocalPhotos also removes the drafts.
+        useBodyCheckStore.getState().clear();
         clearLocalPhotos();
       }
     });

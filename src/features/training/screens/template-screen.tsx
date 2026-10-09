@@ -13,6 +13,7 @@ import {
   useCollections,
   useTemplateDetail,
 } from '@/shared/data/templates';
+import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -40,7 +41,6 @@ import {
   swapTemplateExercise,
 } from '../data/template-mutations';
 import { usePlanProgress } from '../data/use-plan-progress';
-import { useLastDefined } from '../hooks/use-last-defined';
 import { useStartTemplate } from '../hooks/use-start-template';
 
 type PickerState = { mode: 'add' } | { mode: 'swap'; templateExerciseId: string };
@@ -50,10 +50,7 @@ export function TemplateScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t, i18n } = useTranslation(['training', 'common']);
   const insets = useSafeAreaInsets();
-  const { data, isLoading } = useTemplateDetail(id);
-  // Keep showing the previous training while a plan-bar switch loads the next one.
-  const previous = useLastDefined(data);
-  const template = isLoading ? previous : data;
+  const { data: template, isLoading } = useTemplateDetail(id);
   const { data: collections = [] } = useCollections();
   const collectionId = template?.collectionId ?? null;
   const { data: plan = [] } = usePlanProgress(collectionId, !!template);

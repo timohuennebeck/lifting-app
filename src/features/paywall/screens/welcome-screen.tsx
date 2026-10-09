@@ -26,7 +26,6 @@ export function WelcomeScreen() {
     <Screen
       header={
         <ScreenHeader
-          icon="chevron-left"
           onBack={flow.exit}
           title={
             <Text

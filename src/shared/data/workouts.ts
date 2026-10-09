@@ -267,7 +267,6 @@ export interface WorkoutSet extends SetValues {
 export interface WorkoutExercise {
   id: string;
   exerciseId: string;
-  position: number;
   restSeconds: number | null;
   sets: WorkoutSet[];
 }
@@ -275,7 +274,6 @@ export interface WorkoutExercise {
 export interface WorkoutDetail {
   id: string;
   name: string;
-  templateId: string | null;
   startedAt: string;
   finishedAt: string | null;
   exercises: WorkoutExercise[];
@@ -284,11 +282,11 @@ export interface WorkoutDetail {
 /** One workout with its exercises and their sets, each ordered by position. */
 const workoutDetailQuery = (workoutId: string) =>
   drizzle.query.workouts.findMany({
-    columns: { id: true, name: true, template_id: true, started_at: true, finished_at: true },
+    columns: { id: true, name: true, started_at: true, finished_at: true },
     where: eq(workouts.id, workoutId),
     with: {
       exercises: {
-        columns: { id: true, exercise_id: true, position: true, rest_seconds: true },
+        columns: { id: true, exercise_id: true, rest_seconds: true },
         orderBy: asc(workoutExercises.position),
         with: {
           sets: {
@@ -320,13 +318,11 @@ function toDetail([w]: WorkoutDetailRow[]): WorkoutDetail | null {
   return {
     id: w.id,
     name: w.name,
-    templateId: w.template_id,
     startedAt: w.started_at,
     finishedAt: w.finished_at,
     exercises: w.exercises.map((e) => ({
       id: e.id,
       exerciseId: e.exercise_id,
-      position: e.position,
       restSeconds: e.rest_seconds,
       sets: e.sets.map(toWorkoutSet),
     })),
@@ -370,7 +366,6 @@ export async function getActiveWorkoutId() {
 export interface WorkoutSummary {
   id: string;
   name: string;
-  templateId: string | null;
   startedAt: string;
   finishedAt: string;
   volumeKg: number;
@@ -386,7 +381,6 @@ const workoutSummaryQuery = (where?: SQL) =>
     .select({
       id: workouts.id,
       name: workouts.name,
-      template_id: workouts.template_id,
       started_at: workouts.started_at,
       finished_at: workouts.finished_at,
       exercise_id: workoutExercises.exercise_id,
@@ -413,7 +407,6 @@ function toSummaries(rows: RowOf<typeof workoutSummaryQuery>[]): WorkoutSummary[
     const w = getOrInsert(map, r.id, () => ({
       id: r.id,
       name: r.name,
-      templateId: r.template_id,
       startedAt: r.started_at,
       // The query only returns finished workouts.
       finishedAt: r.finished_at!,
@@ -473,7 +466,6 @@ export function useWorkoutCount() {
 }
 
 export interface ExerciseHistorySet extends SetValues {
-  position: number;
   rir: number | null;
   isPr: boolean;
 }
@@ -499,7 +491,6 @@ const exerciseHistoryQuery = (exerciseId: string) =>
       started_at: workouts.started_at,
       finished_at: workouts.finished_at,
       exercise_id: workoutExercises.exercise_id,
-      position: workoutSets.position,
       weight_kg: workoutSets.weight_kg,
       reps: workoutSets.reps,
       seconds: workoutSets.seconds,
@@ -529,7 +520,6 @@ function toExerciseHistory(rows: RowOf<typeof exerciseHistoryQuery>[]): Exercise
       finishedAt: r.finished_at,
       sets: [],
     })).sets.push({
-      position: r.position,
       weightKg: r.weight_kg,
       reps: r.reps,
       seconds: r.seconds,

@@ -27,24 +27,28 @@ export interface WorkoutRecord {
 
 const previousWorkout = alias(workouts, 'previous_workout');
 
-/** Best completed set (by `setScore`) of the same exercise from an earlier workout. */
-const previousBest = drizzle
-  .select({
-    best: sql`json_object('weightKg', ${previousSet.weight_kg}, 'reps', ${previousSet.reps}, 'seconds', ${previousSet.seconds})`,
-  })
-  .from(previousSet)
-  .innerJoin(previousExercise, eq(previousExercise.id, previousSet.workout_exercise_id))
-  .innerJoin(previousWorkout, eq(previousWorkout.id, previousExercise.workout_id))
-  .where(
-    and(
-      eq(previousExercise.exercise_id, workoutExercises.exercise_id),
-      isNotNull(previousSet.completed_at),
-      hasKnownWeight(previousSet, previousExercise),
-      lt(previousWorkout.started_at, workouts.started_at),
-    ),
-  )
-  .orderBy(desc(setScoreSql(previousSet, previousExercise)))
-  .limit(1);
+/**
+ * Best completed set (by `setScore`) of the same exercise from an earlier workout. Built per
+ * query because hasKnownWeight/setScoreSql read the current exercise catalog.
+ */
+const previousBest = () =>
+  drizzle
+    .select({
+      best: sql`json_object('weightKg', ${previousSet.weight_kg}, 'reps', ${previousSet.reps}, 'seconds', ${previousSet.seconds})`,
+    })
+    .from(previousSet)
+    .innerJoin(previousExercise, eq(previousExercise.id, previousSet.workout_exercise_id))
+    .innerJoin(previousWorkout, eq(previousWorkout.id, previousExercise.workout_id))
+    .where(
+      and(
+        eq(previousExercise.exercise_id, workoutExercises.exercise_id),
+        isNotNull(previousSet.completed_at),
+        hasKnownWeight(previousSet, previousExercise),
+        lt(previousWorkout.started_at, workouts.started_at),
+      ),
+    )
+    .orderBy(desc(setScoreSql(previousSet, previousExercise)))
+    .limit(1);
 
 /** PR sets of one workout, each with the previous best as JSON. */
 const recordsQuery = (workoutId: string) =>
@@ -54,7 +58,7 @@ const recordsQuery = (workoutId: string) =>
       weight_kg: workoutSets.weight_kg,
       reps: workoutSets.reps,
       seconds: workoutSets.seconds,
-      previous: sql<string | null>`${previousBest}`,
+      previous: sql<string | null>`${previousBest()}`,
     })
     .from(workoutSets)
     .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))

@@ -1,7 +1,8 @@
 import { eq } from 'drizzle-orm';
 
 import type { AppLanguage } from '@/shared/i18n/resources';
-import type { UnitSystem } from '@/shared/lib/format';
+import { CM_PER_INCH, kgToLb, lbToKg, type UnitSystem } from '@/shared/lib/format';
+import { clamp, roundTenth } from '@/shared/lib/math';
 import { useUserId } from '@/shared/stores/session-store';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
@@ -18,10 +19,44 @@ export type EquipmentAccess = 'gym' | 'home' | 'bodyweight';
 
 /** Limits of the body measurements, in onboarding and in Settings. */
 export const AGE_RANGE = { min: 14, max: 99 } as const;
-export const WEIGHT_KG = { min: 35, max: 200, step: 0.5 } as const;
-export const WEIGHT_LB = { min: 80, max: 440, step: 1 } as const;
-export const HEIGHT_CM = { min: 130, max: 220 } as const;
-export const HEIGHT_IN = { min: 48, max: 90 } as const;
+const WEIGHT_KG = { min: 30, max: 250, step: 0.5 } as const;
+const WEIGHT_LB = { min: 66, max: 550, step: 1 } as const;
+const HEIGHT_CM = { min: 120, max: 230 } as const;
+const HEIGHT_IN = { min: 47, max: 91 } as const;
+export const FIRST_NAME_MAX = 24;
+
+/** Body-weight range in the user's unit (kg or lb). */
+export const bodyWeightRange = (units: UnitSystem) =>
+  units === 'imperial' ? WEIGHT_LB : WEIGHT_KG;
+
+/** Height range in the user's unit (cm or inches). */
+export const heightRange = (units: UnitSystem) => (units === 'imperial' ? HEIGHT_IN : HEIGHT_CM);
+
+/** Stored kg → value edited in the user's unit (whole lb), clamped to the range. */
+export function bodyWeightToDisplay(kg: number, units: UnitSystem) {
+  const { min, max } = bodyWeightRange(units);
+  return clamp(units === 'imperial' ? Math.round(kgToLb(kg)) : kg, min, max);
+}
+
+/** Edited value → kg as the profile stores it (one decimal). */
+export function bodyWeightFromDisplay(value: number, units: UnitSystem) {
+  const { min, max } = bodyWeightRange(units);
+  const v = clamp(value, min, max);
+  return roundTenth(units === 'imperial' ? lbToKg(v) : v);
+}
+
+/** Stored cm → value edited in the user's unit (whole inches), clamped to the range. */
+export function heightToDisplay(cm: number, units: UnitSystem) {
+  const { min, max } = heightRange(units);
+  return clamp(units === 'imperial' ? Math.round(cm / CM_PER_INCH) : cm, min, max);
+}
+
+/** Edited value → whole centimetres as the profile stores them. */
+export function heightFromDisplay(value: number, units: UnitSystem) {
+  const { min, max } = heightRange(units);
+  const v = clamp(value, min, max);
+  return units === 'imperial' ? Math.round(v * CM_PER_INCH) : v;
+}
 
 export interface Profile {
   id: string;

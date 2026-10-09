@@ -1,4 +1,4 @@
-import { defaultTargets, getExercise, isTimed } from '@/shared/data/exercises';
+import { defaultSetDrafts, getExercise, isTimed } from '@/shared/data/exercises';
 import type { EquipmentAccess, Experience, Goal } from '@/shared/data/profile';
 import { estimateMinutes, type PlanDayDraft, type PlanDraft } from '@/shared/data/templates';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
@@ -245,10 +245,7 @@ function setsFor(
   { goal, experience }: GeneratePlanInput,
 ) {
   // Holds get a time range; reps in reserve don't apply to them.
-  if (isTimed(exerciseId)) {
-    const { min, max } = defaultTargets(exerciseId);
-    return Array.from({ length: count }, () => ({ targetMin: min, targetMax: max, rir: null }));
-  }
+  if (isTimed(exerciseId)) return defaultSetDrafts(exerciseId, count);
   const reps = PRESCRIBED_REPS[goal][compound ? 'compound' : 'isolation'];
   const rir = BASE_RIR[experience ?? 'beginner'];
   // Counts down to one below the base RIR, capped one above it (3 · 2 · 1, or 3 · 3 · 2 · 1).

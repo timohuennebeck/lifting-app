@@ -2,9 +2,8 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { HEIGHT_CM, HEIGHT_IN } from '@/shared/data/profile';
-import { CM_PER_INCH, feetInches } from '@/shared/lib/format';
-import { clamp } from '@/shared/lib/math';
+import { heightFromDisplay, heightRange, heightToDisplay } from '@/shared/data/profile';
+import { feetInches } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 import { RulerPicker } from '@/shared/ui/ruler-picker';
 import { StepScreen } from '@/shared/ui/step-screen';
@@ -21,12 +20,9 @@ export function HeightScreen() {
   const imperial = unitSystem === 'imperial';
 
   // Imperial users scroll in inches; the draft always stores whole centimetres.
-  const range = imperial ? HEIGHT_IN : HEIGHT_CM;
-  const value = imperial ? Math.round(heightCm / CM_PER_INCH) : heightCm;
-  const setValue = (next: number) => {
-    const v = clamp(next, range.min, range.max);
-    update({ heightCm: imperial ? Math.round(v * CM_PER_INCH) : v });
-  };
+  const range = heightRange(unitSystem);
+  const value = heightToDisplay(heightCm, unitSystem);
+  const setValue = (next: number) => update({ heightCm: heightFromDisplay(next, unitSystem) });
 
   return (
     <StepScreen

@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -22,6 +22,7 @@ type Phase = 'idle' | 'signingIn' | 'syncing';
 
 export function SignInScreen() {
   const { t } = useTranslation('auth');
+  const navigation = useNavigation();
   const params = useLocalSearchParams<{ email?: string }>();
   const [email, setEmail] = useState(params.email ?? '');
   const [password, setPassword] = useState('');
@@ -58,6 +59,8 @@ export function SignInScreen() {
         store.update({ firstName: metaName });
       }
       setPhase('idle');
+      // The user went back while syncing; replacing now would replace the screen they're on.
+      if (!navigation.isFocused()) return;
       // A finished draft (e.g. "already registered" on Create Account) goes back there:
       // it now shows "Continue" and saves the draft instead of restarting the flow.
       if (store.draft.plan) router.dismissTo('/create-account');

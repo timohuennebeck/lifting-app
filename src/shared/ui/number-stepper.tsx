@@ -12,7 +12,6 @@ export interface NumberStepperProps {
   onChange: (value: number) => void;
   min: number;
   max: number;
-  step?: number;
   /** Caption under the number, e.g. "YEARS". */
   unit?: string;
   format?: (value: number) => string;
@@ -25,7 +24,6 @@ export function NumberStepper({
   onChange,
   min,
   max,
-  step = 1,
   unit,
   format = String,
   className,
@@ -42,7 +40,7 @@ export function NumberStepper({
         accessibilityLabel={t('actions.decrease')}
         disabled={value <= min}
         className={cn('bg-white/10', value <= min && 'opacity-30')}
-        onPress={() => set(value - step)}
+        onPress={() => set(value - 1)}
       />
       <View className="items-center gap-1.5">
         <Text variant="display">{format(value)}</Text>
@@ -60,7 +58,7 @@ export function NumberStepper({
         accessibilityLabel={t('actions.increase')}
         disabled={value >= max}
         className={cn('bg-white/10', value >= max && 'opacity-30')}
-        onPress={() => set(value + step)}
+        onPress={() => set(value + 1)}
       />
     </View>
   );

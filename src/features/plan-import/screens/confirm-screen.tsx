@@ -8,6 +8,7 @@ import { ExercisePickerSheet } from '@/features/exercises/components/exercise-pi
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { defaultSetDrafts, swapTargets } from '@/shared/data/exercises';
 import { muscleShares } from '@/shared/data/muscles';
+import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
 import { MuscleTileRow } from '@/shared/ui/muscle-map';
@@ -39,6 +40,8 @@ export function ConfirmScreen() {
   const selectDay = useImportStore((s) => s.selectDay);
   const updateDraft = useUpdateDraft();
   const [picker, setPicker] = useState<Picker | null>(null);
+  // The sheet keeps its title and icons while it animates out.
+  const pickerShown = useLastDefined(picker);
   const [detailId, setDetailId] = useState<string | null>(null);
   if (!plan) return <Redirect href="/import" />;
 
@@ -184,8 +187,10 @@ export function ConfirmScreen() {
         visible={!!picker}
         onClose={() => setPicker(null)}
         onSelect={pick}
-        mode={picker?.mode ?? 'add'}
-        title={picker?.mode === 'swap' ? t('planImport:confirm.swap') : t('planImport:confirm.add')}
+        mode={pickerShown?.mode ?? 'add'}
+        title={
+          pickerShown?.mode === 'swap' ? t('planImport:confirm.swap') : t('planImport:confirm.add')
+        }
         excludeIds={day?.exercises.map((e) => e.exerciseId) ?? []}
         muscleItems={day?.exercises.map((e) => ({ exerciseId: e.exerciseId, sets: e.sets.length }))}
       />
