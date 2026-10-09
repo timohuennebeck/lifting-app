@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import type { UnitSystem } from '@/shared/lib/format';
-import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 import { OptionCard } from '@/shared/ui/option-card';
 import { Text } from '@/shared/ui/text';
@@ -41,21 +40,14 @@ export function UnitsScreen() {
               description={t(`units.${value}Hint`)}
               selected={selected}
               onPress={() => update({ unitSystem: value })}
-              leading={
-                <View
-                  className={cn(
-                    'size-12 items-center justify-center rounded-full',
-                    selected ? 'bg-accent' : 'bg-pill',
-                  )}
+              icon={
+                <Text
+                  variant="label"
+                  tone={selected ? 'onAccent' : 'default'}
+                  className="text-base"
                 >
-                  <Text
-                    variant="label"
-                    tone={selected ? 'onAccent' : 'default'}
-                    className="text-base"
-                  >
-                    {badge}
-                  </Text>
-                </View>
+                  {badge}
+                </Text>
               }
             />
           );

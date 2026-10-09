@@ -12,14 +12,15 @@ export interface CheckBadgeProps {
   size: number;
   /** Size of the check glyph in pt. */
   glyph: number;
+  className?: string;
   style?: StyleProp<ViewStyle>;
 }
 
 /** Accent circle with a check: done, selected or included. */
-export function CheckBadge({ size, glyph, style }: CheckBadgeProps) {
+export function CheckBadge({ size, glyph, className, style }: CheckBadgeProps) {
   return (
     <View
-      className="items-center justify-center rounded-full bg-accent"
+      className={cn('items-center justify-center rounded-full bg-accent', className)}
       style={[{ width: size, height: size }, style]}
     >
       <Icon name="check" size={glyph} color={colors.onAccent} />

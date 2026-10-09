@@ -28,27 +28,25 @@ export function ScreenshotTiles({
   const { t } = useTranslation('support');
   return (
     <View className={cn('flex-row flex-wrap gap-2.5', className)}>
-      {draft.shots.map((shot) => {
-        return (
-          <View key={shot.id} className={cn('overflow-hidden rounded-xl bg-chip', tileClassName)}>
-            <Image source={{ uri: shot.uri }} contentFit="cover" style={{ flex: 1 }} />
-            {!shot.ready ? (
-              <View className="absolute inset-0 items-center justify-center bg-black/45">
-                <ActivityIndicator color={colors.fg} />
-              </View>
-            ) : null}
-            <PressableScale
-              haptic="select"
-              hitSlop={8}
-              accessibilityLabel={t('form.removeScreenshot')}
-              onPress={() => draft.remove(shot.id)}
-              className="absolute top-1 right-1 size-5.5 items-center justify-center rounded-full bg-elevated"
-            >
-              <Icon name="close" size={8} />
-            </PressableScale>
-          </View>
-        );
-      })}
+      {draft.shots.map((shot) => (
+        <View key={shot.id} className={cn('overflow-hidden rounded-xl bg-chip', tileClassName)}>
+          <Image source={{ uri: shot.uri }} contentFit="cover" style={{ flex: 1 }} />
+          {!shot.ready ? (
+            <View className="absolute inset-0 items-center justify-center bg-black/45">
+              <ActivityIndicator color={colors.fg} />
+            </View>
+          ) : null}
+          <PressableScale
+            haptic="select"
+            hitSlop={8}
+            accessibilityLabel={t('form.removeScreenshot')}
+            onPress={() => draft.remove(shot.id)}
+            className="absolute top-1 right-1 size-5.5 items-center justify-center rounded-full bg-elevated"
+          >
+            <Icon name="close" size={8} />
+          </PressableScale>
+        </View>
+      ))}
       {showAdd && draft.canAdd ? (
         <PressableScale
           haptic="select"

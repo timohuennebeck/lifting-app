@@ -26,18 +26,15 @@ export interface SetEditorRowProps {
   onRemove?: () => void;
 }
 
-/** Reps field: digits update the draft live; the row normalizes min ≤ max on blur. */
-function RepsInput({
-  value,
-  onChangeValue,
-  onBlur,
-  label,
-}: {
+interface RepsInputProps {
   value: number;
   onChangeValue: (value: number) => void;
   onBlur: () => void;
   label: string;
-}) {
+}
+
+/** Reps field: digits update the draft live; the row normalizes min ≤ max on blur. */
+function RepsInput({ value, onChangeValue, onBlur, label }: RepsInputProps) {
   const [text, setText] = useState<string | null>(null);
   return (
     <TextInput

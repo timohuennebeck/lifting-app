@@ -52,15 +52,22 @@ export function useScreenshotDraft() {
   const reset = () => setShots(() => []);
 
   /**
-   * Keeps device copies under their bucket paths and returns those paths for the message.
-   * Call `queueUploads` once the message is saved; the background queue uploads them.
+   * Copies the screenshots to their bucket paths on the device, runs `write` with those
+   * paths (the message's attachments), and queues them for the background upload once
+   * the write succeeded.
    */
-  function stage(userId: string, ticketId: string) {
-    return latest.current.map((shot) => {
+  async function save(
+    userId: string,
+    ticketId: string,
+    write: (attachments: string[]) => Promise<unknown>,
+  ) {
+    const attachments = latest.current.map((shot) => {
       const path = attachmentPath(userId, ticketId, shot.id);
       keepLocalCopy(path, shot.uri);
       return path;
     });
+    await write(attachments);
+    useUploadQueueStore.getState().enqueue(attachments);
   }
 
   return {
@@ -68,7 +75,7 @@ export function useScreenshotDraft() {
     add,
     remove,
     reset,
-    stage,
+    save,
     canAdd: shots.length < MAX_SCREENSHOTS,
     /** Still compressing a picked image. */
     preparing: shots.some((s) => !s.ready),
@@ -76,6 +83,3 @@ export function useScreenshotDraft() {
 }
 
 export type ScreenshotDraft = ReturnType<typeof useScreenshotDraft>;
-
-/** Hands saved screenshots to the background upload queue. */
-export const queueUploads = (paths: string[]) => useUploadQueueStore.getState().enqueue(paths);

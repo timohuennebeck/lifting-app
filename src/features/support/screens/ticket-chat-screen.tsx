@@ -19,7 +19,13 @@ import { ClosedBanner } from '../components/closed-banner';
 import { FeedbackSheet } from '../components/feedback-sheet';
 import { ScreenshotViewerSheet } from '../components/screenshot-viewer-sheet';
 import { TeamAvatar } from '../components/team-avatar';
-import { type Ticket, useTicket, useTicketEvents, useTicketMessages } from '../data/tickets';
+import {
+  isTicketActive,
+  type Ticket,
+  useTicket,
+  useTicketEvents,
+  useTicketMessages,
+} from '../data/tickets';
 import { useTicketFormat } from '../hooks/use-ticket-format';
 import { buildTimeline, type TimelineItem } from '../lib/timeline';
 import { useSeenStore } from '../stores/seen-store';
@@ -53,7 +59,7 @@ export function TicketChatScreen() {
   }, [focused, lastAt, ticketId, markSeen]);
 
   const items = ticket ? buildTimeline(ticket, messages, events) : [];
-  const done = ticket?.status === 'resolved' || ticket?.status === 'closed';
+  const done = !!ticket && !isTicketActive(ticket.status);
   // The composer keeps 8pt above the keyboard instead of its safe-area padding.
   const keyboardOffset = footerInset - 8;
 
@@ -100,7 +106,7 @@ export function TicketChatScreen() {
           />
         );
       case 'status': {
-        const closed = item.status === 'resolved' || item.status === 'closed';
+        const closed = !isTicketActive(item.status);
         // A version becomes a sentence in the user's language; notes are shown as written.
         const detail = item.version
           ? t(closed ? 'chat.liveIn' : 'chat.comingIn', { version: item.version })

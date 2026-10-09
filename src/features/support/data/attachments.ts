@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Directory, File, Paths } from 'expo-file-system';
 
-import { supabase } from '@/shared/data/supabase';
+import { signedUrl, uploadJpeg } from '@/shared/data/supabase-storage';
 
 import { supportKeys } from './support-keys';
 
@@ -35,13 +35,7 @@ export function clearLocalAttachments() {
 }
 
 /** Uploads the local copy; retrying the same path overwrites a partial upload. */
-export async function uploadAttachment(path: string) {
-  const bytes = await localAttachment(path).arrayBuffer();
-  const { error } = await supabase.storage
-    .from(BUCKET)
-    .upload(path, bytes, { contentType: 'image/jpeg', upsert: true });
-  if (error) throw error;
-}
+export const uploadAttachment = (path: string) => uploadJpeg(BUCKET, path, localAttachment(path));
 
 /** Local copy when this device sent it, otherwise a cached signed URL. */
 export function useAttachmentUrl(path: string) {
@@ -49,12 +43,7 @@ export function useAttachmentUrl(path: string) {
     queryKey: supportKeys.attachmentUrl(path).queryKey,
     queryFn: async () => {
       const local = localAttachment(path);
-      if (local.exists) return local.uri;
-      const { data, error } = await supabase.storage
-        .from(BUCKET)
-        .createSignedUrl(path, URL_TTL_SECONDS);
-      if (error) throw error;
-      return data.signedUrl;
+      return local.exists ? local.uri : signedUrl(BUCKET, path, URL_TTL_SECONDS);
     },
     staleTime: URL_FRESH_MS,
     gcTime: URL_FRESH_MS,

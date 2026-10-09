@@ -65,11 +65,11 @@ export function ShutterButton({
 }
 
 /** 52pt round button beside the shutter (flip camera, photo library). */
-export function CameraSideButton(props: PressableScaleProps) {
+export function CameraSideButton({ className, ...props }: PressableScaleProps) {
   return (
     <PressableScale
       {...props}
-      className="size-13 items-center justify-center rounded-full bg-elevated"
+      className={cn('size-13 items-center justify-center rounded-full bg-elevated', className)}
     />
   );
 }

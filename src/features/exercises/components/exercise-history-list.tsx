@@ -76,15 +76,13 @@ export function ExerciseHistoryList({ entries, units }: ExerciseHistoryListProps
   );
 }
 
-function Metric({
-  label,
-  value,
-  highlight,
-}: {
+interface MetricProps {
   label: string;
   value: string;
   highlight?: boolean;
-}) {
+}
+
+function Metric({ label, value, highlight }: MetricProps) {
   return (
     <View className="flex-row items-center gap-1.5">
       <Text

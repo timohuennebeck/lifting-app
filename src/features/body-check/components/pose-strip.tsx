@@ -30,7 +30,7 @@ function ShotBadge({ warn }: ShotBadgeProps) {
       {warn ? (
         <Text className="font-inter-bold text-[11px] leading-3.25 text-on-accent">!</Text>
       ) : (
-        <Icon name="check" size={8.96} color={colors.onAccent} />
+        <Icon name="check" size={9} color={colors.onAccent} />
       )}
     </View>
   );

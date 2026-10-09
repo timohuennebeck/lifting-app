@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -31,7 +31,7 @@ export function AttachmentThumb({ path, onOpen }: AttachmentThumbProps) {
           contentFit="cover"
           contentPosition="top"
           transition={150}
-          style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }}
+          style={StyleSheet.absoluteFill}
         />
       ) : isError ? (
         <Icon name="refresh" size={16} color={colors.subtle} />

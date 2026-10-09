@@ -7,6 +7,7 @@ import type { ExerciseId } from '@/shared/data/exercises';
 import type { WorkoutExercise } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
+import { CheckBadge } from '@/shared/ui/check-item';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 
@@ -57,9 +58,7 @@ export function ExerciseStrip({ exercises, currentIndex, onSelect, onAdd }: Exer
                 className={cn('h-21.5 w-16', !current && (done ? 'opacity-35' : 'opacity-40'))}
               />
               {done ? (
-                <View className="absolute top-8 left-5.25 size-5.5 items-center justify-center rounded-full bg-accent">
-                  <Icon name="check" size={11} color={colors.onAccent} />
-                </View>
+                <CheckBadge size={22} glyph={11} className="absolute top-8 left-5.25" />
               ) : null}
             </View>
             <View

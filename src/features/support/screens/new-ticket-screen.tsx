@@ -16,7 +16,7 @@ import { ImportanceScale } from '../components/importance-scale';
 import { ScreenshotTiles } from '../components/screenshot-tiles';
 import { createTicket } from '../data/ticket-mutations';
 import type { TicketKind } from '../data/tickets';
-import { queueUploads, useScreenshotDraft } from '../hooks/use-screenshot-draft';
+import { useScreenshotDraft } from '../hooks/use-screenshot-draft';
 
 /** Bug report (01f·I: text + screenshots) or feature request (01f·J: text + importance). */
 export function NewTicketScreen() {
@@ -39,16 +39,16 @@ export function NewTicketScreen() {
     setError(false);
     try {
       // Saved locally first (works offline); screenshots upload in the background.
-      const attachments = draft.stage(userId, ticketId);
-      await createTicket({
-        ticketId,
-        userId,
-        kind,
-        priority: kind === 'idea' ? importance : null,
-        body: text,
-        attachments,
-      });
-      queueUploads(attachments);
+      await draft.save(userId, ticketId, (attachments) =>
+        createTicket({
+          ticketId,
+          userId,
+          kind,
+          priority: kind === 'idea' ? importance : null,
+          body: text,
+          attachments,
+        }),
+      );
       haptics.success();
       router.replace({ pathname: '/support/[ticketId]', params: { ticketId } });
     } catch (e) {

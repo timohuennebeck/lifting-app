@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
@@ -18,14 +17,9 @@ export interface TicketListRowProps {
 
 /** Row of "My tickets": the user's avatar with the team badge, subject and latest reply (01f-2). */
 export function TicketListRow({ ticket, userName }: TicketListRowProps) {
-  const { unread, when, preview } = useTicketRow(ticket);
+  const { unread, when, preview, open } = useTicketRow(ticket);
   return (
-    <PressableScale
-      className="flex-row items-center gap-3 py-3"
-      onPress={() =>
-        router.push({ pathname: '/support/[ticketId]', params: { ticketId: ticket.id } })
-      }
-    >
+    <PressableScale className="flex-row items-center gap-3 py-3" onPress={open}>
       <View>
         <View
           className={cn(

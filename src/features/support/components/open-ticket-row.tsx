@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
@@ -18,14 +17,9 @@ export interface OpenTicketRowProps {
 /** Compact ticket row of the profile's open-tickets section (design 01b-2). */
 export function OpenTicketRow({ ticket }: OpenTicketRowProps) {
   const format = useTicketFormat();
-  const { unread, when, preview } = useTicketRow(ticket);
+  const { unread, when, preview, open } = useTicketRow(ticket);
   return (
-    <PressableScale
-      className="flex-row items-center gap-3 py-3"
-      onPress={() =>
-        router.push({ pathname: '/support/[ticketId]', params: { ticketId: ticket.id } })
-      }
-    >
+    <PressableScale className="flex-row items-center gap-3 py-3" onPress={open}>
       <TeamAvatar size={40} highlight={unread} />
       <View className="min-w-0 flex-1 gap-0.75">
         <View className="flex-row items-baseline justify-between gap-2">

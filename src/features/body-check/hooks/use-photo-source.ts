@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { ImageSource } from 'expo-image';
 import { useMemo } from 'react';
 
-import { supabase } from '@/shared/data/supabase';
+import { signedUrl } from '@/shared/data/supabase-storage';
 
 import { bodyCheckPhotoKeys } from '../data/body-check-keys';
 import { PHOTO_BUCKET, photoFile } from '../lib/photo-files';
@@ -11,14 +11,6 @@ import type { BodyPose } from '../lib/poses';
 const SIGNED_URL_SECONDS = 60 * 60;
 // Refresh well before the signed URL expires.
 const SIGNED_URL_STALE_MS = 50 * 60 * 1000;
-
-async function signedUrl(storagePath: string) {
-  const { data, error } = await supabase.storage
-    .from(PHOTO_BUCKET)
-    .createSignedUrl(storagePath, SIGNED_URL_SECONDS);
-  if (error) throw error;
-  return data.signedUrl;
-}
 
 /**
  * Image source of a saved check photo: the local file when this device took it,
@@ -36,7 +28,7 @@ export function usePhotoSource(
   const remote = !localUri && !!storagePath;
   const { data: url } = useQuery({
     queryKey: bodyCheckPhotoKeys.signedUrl(storagePath ?? '').queryKey,
-    queryFn: () => signedUrl(storagePath ?? ''),
+    queryFn: () => signedUrl(PHOTO_BUCKET, storagePath ?? '', SIGNED_URL_SECONDS),
     enabled: remote,
     staleTime: SIGNED_URL_STALE_MS,
     gcTime: SIGNED_URL_STALE_MS,

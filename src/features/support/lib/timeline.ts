@@ -1,4 +1,10 @@
-import type { Ticket, TicketEvent, TicketMessage, TicketStatus } from '../data/tickets';
+import {
+  isTicketActive,
+  type Ticket,
+  type TicketEvent,
+  type TicketMessage,
+  type TicketStatus,
+} from '../data/tickets';
 import { toMs } from './ticket-format';
 
 export type TimelineItem =
@@ -72,7 +78,7 @@ export function buildTimeline(
     timed.push({ at, order: last + i, item });
   });
   if (ticket.status !== 'open' && !events.some((e) => e.kind === 'status')) {
-    const closed = ticket.status === 'resolved' || ticket.status === 'closed';
+    const closed = !isTicketActive(ticket.status);
     const at = Math.max(
       ms(closed ? (ticket.closedAt ?? ticket.updatedAt) : ticket.updatedAt),
       start,

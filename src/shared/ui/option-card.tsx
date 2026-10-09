@@ -8,6 +8,7 @@ import { RadioDot } from './radio-dot';
 import { Text } from './text';
 
 // Both designs draw the ring inside 16/18pt padding, so the border eats into it.
+const SHEET_RING = 'border-[1.5px] py-[14.5px] pr-[16.5px] pl-[14.5px]';
 const LOOKS = {
   // 1pt line at rest, 2pt accent ring when selected.
   card: {
@@ -15,10 +16,10 @@ const LOOKS = {
     selected: 'border-2 border-accent py-3.5 pr-4 pl-3.5',
     badge: 'bg-pill',
   },
-  // Even 1.5pt ring (sheet rows).
+  // Even 1.5pt ring (sheet rows): only its colour changes.
   sheet: {
-    rest: 'border-[1.5px] border-line py-[14.5px] pr-[16.5px] pl-[14.5px]',
-    selected: 'border-[1.5px] border-accent py-[14.5px] pr-[16.5px] pl-[14.5px]',
+    rest: `${SHEET_RING} border-line`,
+    selected: `${SHEET_RING} border-accent`,
     badge: 'bg-control',
   },
 } as const;
@@ -32,8 +33,6 @@ export interface OptionCardProps {
   index?: number;
   /** Glyph in the badge instead of a number. */
   icon?: ReactNode;
-  /** Custom artwork instead of the badge. */
-  leading?: ReactNode;
   look?: keyof typeof LOOKS;
   /** Ring, badge and radio colour while selected; defaults to the accent. */
   tint?: string;
@@ -48,7 +47,6 @@ export function OptionCard({
   onPress,
   index,
   icon,
-  leading,
   look = 'card',
   tint,
   className,
@@ -68,22 +66,21 @@ export function OptionCard({
       )}
       style={tinted ? { borderColor: tint } : undefined}
     >
-      {leading ??
-        (icon !== undefined || index !== undefined ? (
-          <View
-            className={cn(
-              'size-12 items-center justify-center rounded-full',
-              selected ? 'bg-accent' : styles.badge,
-            )}
-            style={tinted ? { backgroundColor: tint } : undefined}
-          >
-            {icon ?? (
-              <Text variant="headline" tone={selected ? 'onAccent' : 'default'} className="text-lg">
-                {index}
-              </Text>
-            )}
-          </View>
-        ) : null)}
+      {icon !== undefined || index !== undefined ? (
+        <View
+          className={cn(
+            'size-12 items-center justify-center rounded-full',
+            selected ? 'bg-accent' : styles.badge,
+          )}
+          style={tinted ? { backgroundColor: tint } : undefined}
+        >
+          {icon ?? (
+            <Text variant="headline" tone={selected ? 'onAccent' : 'default'} className="text-lg">
+              {index}
+            </Text>
+          )}
+        </View>
+      ) : null}
       <View className="flex-1 gap-0.75">
         <Text variant="bodyStrong">{title}</Text>
         {description ? (

@@ -4,8 +4,7 @@ import { View } from 'react-native';
 import type { TemplateSummary } from '@/shared/data/templates';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
-import { colors } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
+import { CheckBadge } from '@/shared/ui/check-item';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
@@ -74,11 +73,7 @@ export function RescheduleSheet({
                   </Text>
                 ) : null}
               </View>
-              {current ? (
-                <View className="size-6 items-center justify-center rounded-full bg-accent">
-                  <Icon name="check" size={12} color={colors.onAccent} />
-                </View>
-              ) : null}
+              {current ? <CheckBadge size={24} glyph={12} /> : null}
             </PressableScale>
           );
         })}

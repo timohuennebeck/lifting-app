@@ -2,7 +2,7 @@ import { and, eq, isNull } from 'drizzle-orm';
 
 import { drizzle } from '@/shared/data/powersync/database';
 import { bodyCheckPhotos } from '@/shared/data/powersync/schema';
-import { supabase } from '@/shared/data/supabase';
+import { uploadJpeg } from '@/shared/data/supabase-storage';
 import { useBackgroundDrain } from '@/shared/hooks/use-background-drain';
 import { useUserId } from '@/shared/stores/session-store';
 
@@ -35,10 +35,7 @@ async function uploadPendingPhotos(userId: string) {
     if (!file.exists) continue;
     const path = storagePathOf(userId, row.body_check_id, row.pose);
     try {
-      const { error } = await supabase.storage
-        .from(PHOTO_BUCKET)
-        .upload(path, await file.arrayBuffer(), { contentType: 'image/jpeg', upsert: true });
-      if (error) throw error;
+      await uploadJpeg(PHOTO_BUCKET, path, file);
       await setPhotoStoragePath(row.id, path);
     } catch (error) {
       console.warn('Body-check photo upload failed; retrying later', error);

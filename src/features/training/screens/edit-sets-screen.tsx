@@ -41,7 +41,11 @@ export function EditSetsScreen() {
   return <EditSetsForm key={exercise.id} exercise={exercise} />;
 }
 
-function EditSetsForm({ exercise }: { exercise: TemplateExerciseDetail }) {
+interface EditSetsFormProps {
+  exercise: TemplateExerciseDetail;
+}
+
+function EditSetsForm({ exercise }: EditSetsFormProps) {
   const { t } = useTranslation(['training', 'common', 'exercises']);
   const [sets, setSets] = useState<SetDraft[]>(() =>
     exercise.sets.map((s) => ({

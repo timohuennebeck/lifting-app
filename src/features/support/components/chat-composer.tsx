@@ -11,7 +11,7 @@ import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 
 import { sendTicketMessage } from '../data/ticket-mutations';
-import { queueUploads, useScreenshotDraft } from '../hooks/use-screenshot-draft';
+import { useScreenshotDraft } from '../hooks/use-screenshot-draft';
 import { ScreenshotTiles } from './screenshot-tiles';
 
 export interface ChatComposerProps {
@@ -37,9 +37,9 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
     setSending(true);
     try {
       // Saved locally first (works offline); screenshots upload in the background.
-      const attachments = draft.stage(userId, ticketId);
-      await sendTicketMessage({ userId, ticketId, body, attachments });
-      queueUploads(attachments);
+      await draft.save(userId, ticketId, (attachments) =>
+        sendTicketMessage({ userId, ticketId, body, attachments }),
+      );
       // Keep anything typed while the message was being saved.
       setText((current) =>
         current.startsWith(body) ? current.slice(body.length).trimStart() : current,

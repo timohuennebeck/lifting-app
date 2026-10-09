@@ -2,6 +2,7 @@ import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { colors, useAccentColor } from '@/shared/lib/theme';
+import { CheckBadge } from '@/shared/ui/check-item';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
@@ -33,14 +34,7 @@ export interface SystemLineProps {
 export function SystemLine({ title, meta, highlight }: SystemLineProps) {
   return (
     <View className="my-4 flex-row items-center gap-2.5 self-center pr-3.5 pl-1.5">
-      <View
-        className={cn(
-          'size-5 items-center justify-center rounded-full',
-          highlight ? 'bg-accent' : 'bg-subtle',
-        )}
-      >
-        <Icon name="check" size={11} color={colors.onAccent} />
-      </View>
+      <CheckBadge size={20} glyph={11} className={cn(!highlight && 'bg-subtle')} />
       <View className="gap-0.5">
         <Text variant="caption" className="text-xs leading-4">
           {title}
