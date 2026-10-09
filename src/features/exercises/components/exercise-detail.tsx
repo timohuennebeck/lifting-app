@@ -4,9 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ExerciseHistoryPanel } from '@/features/workout/components/exercise-history-panel';
 import { exerciseInstructions, exerciseName, getExercise } from '@/shared/data/exercises';
-import { useUnits } from '@/shared/data/profile';
-import { useExerciseHistory } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
 import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -15,7 +14,6 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { exerciseMuscles, primaryGroup } from '../lib/muscle-groups';
-import { ExerciseHistoryList } from './exercise-history-list';
 import { ExerciseThumb } from './exercise-thumb';
 
 export interface ExerciseDetailProps {
@@ -41,11 +39,6 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
   const insets = useSafeAreaInsets();
   const [tab, setTab] = useState<Tab>('exercise');
   const exercise = getExercise(exerciseId);
-  const units = useUnits();
-  // Only watched while the History tab is shown.
-  const { data: history = [], isLoading: historyLoading } = useExerciseHistory(
-    tab === 'history' ? exerciseId : undefined,
-  );
   if (!exercise) return null;
 
   const name = exerciseName(exerciseId, i18n.language);
@@ -158,15 +151,8 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
               ))}
             </View>
           </>
-        ) : history.length ? (
-          <ExerciseHistoryList entries={history} units={units} />
-        ) : historyLoading ? null : (
-          <View className="items-center gap-2 py-10">
-            <Text variant="bodyStrong">{t('exercises:detail.noHistory')}</Text>
-            <Text variant="paragraph" tone="subtle" className="text-center">
-              {t('exercises:detail.noHistoryHint')}
-            </Text>
-          </View>
+        ) : (
+          <ExerciseHistoryPanel exerciseId={exerciseId} />
         )}
       </ScrollView>
     </View>

@@ -30,11 +30,6 @@
       "exercise": "Exercício",
       "history": "Histórico"
     },
-    "technique": "Técnica",
-    "noHistory": "Ainda sem histórico",
-    "noHistoryHint": "Regista este exercício num treino e as tuas séries aparecem aqui.",
-    "minutes": "MIN",
-    "volume": "VOL",
-    "pr": "PR"
+    "technique": "Técnica"
   }
 }

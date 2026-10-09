@@ -4,7 +4,7 @@
   "noSets": "Ainda sem séries",
   "missing": "Este treino já não está disponível.",
   "actions": {
-    "history": "Histórico",
+    "info": "Info",
     "targets": "Metas",
     "swap": "Trocar"
   },

@@ -4,7 +4,7 @@
   "noSets": "No sets yet",
   "missing": "This workout is no longer available.",
   "actions": {
-    "history": "History",
+    "info": "Info",
     "targets": "Targets",
     "swap": "Swap"
   },

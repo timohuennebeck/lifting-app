@@ -1,10 +1,8 @@
-import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { SectionList, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 
-import { exerciseName, hasMeasure, isBodyweight, isTimed } from '@/shared/data/exercises';
+import { hasMeasure, isBodyweight, isTimed } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { type ExerciseHistoryEntry, useExerciseHistory } from '@/shared/data/workouts';
 import { useNow } from '@/shared/hooks/use-now';
@@ -16,13 +14,11 @@ import {
   fromDisplayWeight,
   toDisplayWeight,
 } from '@/shared/lib/format';
-import { Screen } from '@/shared/ui/screen';
-import { ScreenHeader } from '@/shared/ui/screen-header';
 import { SegmentedControl } from '@/shared/ui/segmented-control';
 import { Text } from '@/shared/ui/text';
 
-import { HistoryChart, type HistoryMetric } from '../components/history-chart';
-import { HistorySessionRow } from '../components/history-session-row';
+import { HistoryChart, type HistoryMetric } from './history-chart';
+import { HistorySessionRow } from './history-session-row';
 
 function monthSections(sessions: ExerciseHistoryEntry[], currentYear: number) {
   const sections: { title: string; data: ExerciseHistoryEntry[] }[] = [];
@@ -39,18 +35,31 @@ function monthSections(sessions: ExerciseHistoryEntry[], currentYear: number) {
   return sections;
 }
 
-/** Exercise history: top-weight chart and month-grouped sessions (designs 03·C·2H·V5/V5H). */
-export function ExerciseHistoryScreen() {
-  const { exerciseId } = useLocalSearchParams<{ exerciseId: string }>();
-  const { t, i18n } = useTranslation(['workout', 'common']);
-  const insets = useSafeAreaInsets();
+export interface ExerciseHistoryPanelProps {
+  exerciseId: string;
+}
+
+/**
+ * An exercise's history: top-weight chart over 7–90 days and the sessions by month (designs
+ * 03·C·2H·V5/V5H). Shown in the "History" tab of the exercise info.
+ */
+export function ExerciseHistoryPanel({ exerciseId }: ExerciseHistoryPanelProps) {
+  const { t } = useTranslation(['workout', 'common']);
   const units = useUnits();
   const now = useNow(MINUTE_MS);
-  const { data: sessions = [] } = useExerciseHistory(exerciseId);
+  const { data: sessions = [], isLoading } = useExerciseHistory(exerciseId);
   const [range, setRange] = useState<DayRange>(30);
   // undefined = default (latest session open), null = all collapsed.
   const [openId, setOpenId] = useState<string | null>();
   const expanded = openId === undefined ? sessions[0]?.workoutId : openId;
+
+  if (!sessions.length) {
+    return isLoading ? null : (
+      <Text tone="subtle" className="px-3 pt-10 text-center text-sm leading-5">
+        {t('history.empty')}
+      </Text>
+    );
+  }
 
   const since = now - range * DAY_MS;
   // Bodyweight exercises never done with added weight would chart a flat 0 kg.
@@ -80,15 +89,8 @@ export function ExerciseHistoryScreen() {
     .map((s) => ({ time: Date.parse(s.startedAt), value: chartValue(s) }));
 
   return (
-    <Screen
-      header={<ScreenHeader icon="close" className="gap-3.5 px-5" title={t('history.title')} />}
-    >
-      <View className="px-5 pt-4">
-        <Text className="font-inter-semibold text-[30px] leading-7.5">
-          {exerciseName(exerciseId, i18n.language)}
-        </Text>
-      </View>
-      <View className="gap-3 px-5 pt-5 pb-1">
+    <View>
+      <View className="gap-3 pb-1">
         <HistoryChart data={chartData} metric={metric} format={formatValue} />
         <SegmentedControl
           className="bg-surface"
@@ -100,37 +102,26 @@ export function ExerciseHistoryScreen() {
           }))}
         />
       </View>
-      <SectionList
-        sections={monthSections(sessions, new Date(now).getFullYear())}
-        keyExtractor={(s) => s.workoutId}
-        showsVerticalScrollIndicator={false}
-        stickySectionHeadersEnabled={false}
-        contentContainerStyle={{
-          paddingHorizontal: 8,
-          paddingTop: 8,
-          paddingBottom: insets.bottom + 30,
-        }}
-        renderSectionHeader={({ section }) => (
-          <Text className="px-3 pt-4.5 pb-1.5 font-inter-semibold text-[11px] leading-3.5 tracking-[1.1px] text-dim">
-            {section.title}
-          </Text>
-        )}
-        renderItem={({ item }) => (
-          <HistorySessionRow
-            session={item}
-            latest={item.workoutId === sessions[0]?.workoutId}
-            open={item.workoutId === expanded}
-            units={units}
-            minLabel={t('common:units.minShort')}
-            onToggle={() => setOpenId(item.workoutId === expanded ? null : item.workoutId)}
-          />
-        )}
-        ListEmptyComponent={
-          <Text tone="subtle" className="px-3 pt-10 text-center text-sm leading-5">
-            {t('history.empty')}
-          </Text>
-        }
-      />
-    </Screen>
+      <View className="-mx-2 pt-2">
+        {monthSections(sessions, new Date(now).getFullYear()).map((section) => (
+          <View key={section.title}>
+            <Text className="px-3 pt-4.5 pb-1.5 font-inter-semibold text-[11px] leading-3.5 tracking-[1.1px] text-dim">
+              {section.title}
+            </Text>
+            {section.data.map((item) => (
+              <HistorySessionRow
+                key={item.workoutId}
+                session={item}
+                latest={item.workoutId === sessions[0]?.workoutId}
+                open={item.workoutId === expanded}
+                units={units}
+                minLabel={t('common:units.minShort')}
+                onToggle={() => setOpenId(item.workoutId === expanded ? null : item.workoutId)}
+              />
+            ))}
+          </View>
+        ))}
+      </View>
+    </View>
   );
 }

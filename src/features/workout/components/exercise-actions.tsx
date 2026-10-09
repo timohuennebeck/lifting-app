@@ -13,16 +13,16 @@ interface ExerciseAction {
 }
 
 export interface ExerciseActionsProps {
-  onHistory: () => void;
+  onInfo: () => void;
   onTargets: () => void;
   onSwap: () => void;
 }
 
 /** History · Targets · Swap pills under the exercise title. */
-export function ExerciseActions({ onHistory, onTargets, onSwap }: ExerciseActionsProps) {
+export function ExerciseActions({ onInfo, onTargets, onSwap }: ExerciseActionsProps) {
   const { t } = useTranslation('workout');
   const actions: ExerciseAction[] = [
-    { icon: 'chart', label: t('actions.history'), onPress: onHistory },
+    { icon: 'chart', label: t('actions.info'), onPress: onInfo },
     { icon: 'target', label: t('actions.targets'), onPress: onTargets },
     { icon: 'swap', label: t('actions.swap'), onPress: onSwap },
   ];

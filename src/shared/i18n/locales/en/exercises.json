@@ -30,11 +30,6 @@
       "exercise": "Exercise",
       "history": "History"
     },
-    "technique": "Technique",
-    "noHistory": "No history yet",
-    "noHistoryHint": "Log this exercise in a workout and your sets show up here.",
-    "minutes": "MIN",
-    "volume": "VOL",
-    "pr": "PR"
+    "technique": "Technique"
   }
 }

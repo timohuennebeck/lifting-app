@@ -4,7 +4,7 @@
   "noSets": "Noch keine Sätze",
   "missing": "Dieses Training ist nicht mehr verfügbar.",
   "actions": {
-    "history": "Historie",
+    "info": "Info",
     "targets": "Targets",
     "swap": "Tauschen"
   },

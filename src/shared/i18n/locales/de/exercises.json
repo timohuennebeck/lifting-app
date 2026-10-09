@@ -30,11 +30,6 @@
       "exercise": "Übung",
       "history": "Historie"
     },
-    "technique": "Technik",
-    "noHistory": "Noch keine Historie",
-    "noHistoryHint": "Trag die Übung in einem Training ein, dann erscheinen deine Sätze hier.",
-    "minutes": "MIN",
-    "volume": "VOL",
-    "pr": "PR"
+    "technique": "Technik"
   }
 }
