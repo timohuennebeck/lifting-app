@@ -35,7 +35,7 @@ export function PrToast({ record, units, onHide }: PrToastProps) {
   return (
     <Animated.View
       key={record.at}
-      entering={FadeInUp.springify().damping(18)}
+      entering={FadeInUp.springify().mass(1).damping(20).stiffness(240)}
       exiting={FadeOutUp.duration(200)}
       pointerEvents="none"
       className="absolute inset-x-0 z-30 items-center"

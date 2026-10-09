@@ -11,8 +11,9 @@ export interface ProgressBarProps {
 }
 
 export function ProgressBar({ value, className }: ProgressBarProps) {
+  const percent = clamp(value, 0, 1) * 100;
   const fill = useAnimatedStyle(() => ({
-    width: withTiming(`${clamp(value, 0, 1) * 100}%`, { duration: 300 }),
+    width: withTiming(`${percent}%`, { duration: 300 }),
   }));
   return (
     <View className={cn('h-1 flex-1 overflow-hidden rounded-full bg-control', className)}>

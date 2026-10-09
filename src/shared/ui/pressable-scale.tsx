@@ -33,11 +33,11 @@ export function PressableScale({
       accessibilityRole="button"
       disabled={disabled}
       onPressIn={(e) => {
-        scale.set(withSpring(activeScale, { damping: 20, stiffness: 400 }));
+        scale.set(withSpring(activeScale, { mass: 1, damping: 30, stiffness: 400 }));
         onPressIn?.(e);
       }}
       onPressOut={(e) => {
-        scale.set(withSpring(1, { damping: 15, stiffness: 300 }));
+        scale.set(withSpring(1, { mass: 1, damping: 22, stiffness: 300 }));
         onPressOut?.(e);
       }}
       onPress={(e) => {

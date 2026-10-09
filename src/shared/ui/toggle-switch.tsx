@@ -19,7 +19,9 @@ export function ToggleSwitch({
   className,
 }: ToggleSwitchProps) {
   const knob = useAnimatedStyle(() => ({
-    transform: [{ translateX: withSpring(value ? 20 : 0, { damping: 18, stiffness: 260 }) }],
+    transform: [
+      { translateX: withSpring(value ? 20 : 0, { mass: 1, damping: 26, stiffness: 260 }) },
+    ],
   }));
   return (
     <PressableScale

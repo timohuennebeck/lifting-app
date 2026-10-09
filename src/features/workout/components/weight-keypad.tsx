@@ -79,7 +79,7 @@ export function WeightKeypad({ weightStep, onConfirm, onLayout }: WeightKeypadPr
   return (
     <GestureDetector gesture={swipe}>
       <Animated.View
-        entering={SlideInDown.springify().damping(24).stiffness(260)}
+        entering={SlideInDown.springify().mass(1).damping(30).stiffness(260)}
         exiting={SlideOutDown.duration(180)}
         onLayout={onLayout}
         className="absolute inset-x-0 bottom-0 z-20 gap-2.5 rounded-t-[28px] border-t border-white/6 bg-surface px-3 pt-2"
