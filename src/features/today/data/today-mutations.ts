@@ -1,6 +1,6 @@
 import { and, desc, eq, isNotNull, ne, sql } from 'drizzle-orm';
 
-import { measuresOf } from '@/shared/data/exercises';
+import { getExercise, measuresOf } from '@/shared/data/exercises';
 import { nowIso } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import { templates, workoutExercises, workouts, workoutSets } from '@/shared/data/powersync/schema';
@@ -64,14 +64,18 @@ export async function markTemplateDone(
       .select({ id: workoutExercises.id, exercise_id: workoutExercises.exercise_id })
       .from(workoutExercises)
       .where(eq(workoutExercises.workout_id, workoutId));
-    // Each exercise fills only the boxes it has.
+    // Each exercise fills only the boxes it has. Bodyweight moves never logged before start at
+    // 0 kg extra; other weighted ones stay without weight and are left out of records.
     for (const exercise of exercises) {
       const measures = measuresOf(exercise.exercise_id);
+      const fallback = getExercise(exercise.exercise_id)?.equipment === 'bodyweight' ? 0 : null;
       await tx
         .update(workoutSets)
         .set({
           completed_at: end.toISOString(),
-          weight_kg: measures.includes('weight') ? sql`${lastWeightOutside(workoutId)}` : null,
+          weight_kg: measures.includes('weight')
+            ? sql`coalesce((${lastWeightOutside(workoutId)}), ${fallback})`
+            : null,
           reps: measures.includes('reps') ? sql`coalesce(${target}, 0)` : null,
           seconds: measures.includes('seconds') ? target : null,
         })

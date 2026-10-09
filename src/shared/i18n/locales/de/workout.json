@@ -67,6 +67,8 @@
     "title": "Targets",
     "min": "Min. Wdh.",
     "max": "Max. Wdh.",
+    "minSeconds": "Min. Sek.",
+    "maxSeconds": "Max. Sek.",
     "rir": "RIR",
     "remove": "Satz {{n}} entfernen"
   },

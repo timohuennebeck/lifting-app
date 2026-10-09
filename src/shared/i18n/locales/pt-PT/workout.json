@@ -67,6 +67,8 @@
     "title": "Metas",
     "min": "Reps mín.",
     "max": "Reps máx.",
+    "minSeconds": "Seg mín.",
+    "maxSeconds": "Seg máx.",
     "rir": "RIR",
     "remove": "Remover série {{n}}"
   },

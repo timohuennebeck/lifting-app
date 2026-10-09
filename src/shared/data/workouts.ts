@@ -10,16 +10,16 @@ import {
   isNull,
   lt,
   ne,
+  or,
   sql,
   type SQL,
 } from 'drizzle-orm';
 import { alias, type AnySQLiteColumn } from 'drizzle-orm/sqlite-core';
 
 import type { SetValues } from '@/shared/lib/format';
-
-import { defaultTargets, type SetTargets } from './exercises';
 import { getOrInsert } from '@/shared/lib/map';
 
+import { defaultTargets, exerciseIdsWithout, type SetTargets } from './exercises';
 import { newId, nowIso } from './json';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
@@ -48,6 +48,15 @@ export function setScore({ weightKg, reps, seconds }: SetValues) {
   if (reps == null) return 0;
   return weightKg != null ? estimateOneRepMax(weightKg, reps) : reps;
 }
+
+/**
+ * Whether a completed set counts for history and records. "Mark as done" completes the sets of
+ * a weighted exercise without weight when it was never logged; those only count as done sets.
+ */
+export const hasKnownWeight = (
+  set: { weight_kg: AnySQLiteColumn },
+  exercise: { exercise_id: AnySQLiteColumn },
+) => or(isNotNull(set.weight_kg), inArray(exercise.exercise_id, exerciseIdsWithout('weight')));
 
 /** `setScore` as SQL over `workout_sets` or one of its aliases. */
 export const setScoreSql = (t: Record<'weight_kg' | 'reps' | 'seconds', AnySQLiteColumn>) =>
@@ -176,6 +185,7 @@ async function bestScore(exerciseId: string, excludeSetId: string) {
       and(
         eq(workoutExercises.exercise_id, exerciseId),
         isNotNull(workoutSets.completed_at),
+        hasKnownWeight(workoutSets, workoutExercises),
         ne(workoutSets.id, excludeSetId),
       ),
     );
@@ -464,6 +474,7 @@ const exerciseHistoryQuery = (exerciseId: string) =>
         eq(workoutExercises.exercise_id, exerciseId),
         isNotNull(workoutSets.completed_at),
         isNotNull(workouts.finished_at),
+        hasKnownWeight(workoutSets, workoutExercises),
       ),
     )
     .orderBy(desc(workouts.started_at), workoutExercises.position, workoutSets.position);

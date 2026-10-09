@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { defaultTargets, isTimed } from '@/shared/data/exercises';
 import type { SetTargets, WorkoutExercise, WorkoutSet } from '@/shared/data/workouts';
 import { clamp } from '@/shared/lib/math';
 import { colors } from '@/shared/lib/theme';
@@ -17,7 +18,8 @@ import { addWorkoutSet, removeWorkoutSet, updateSetTargets } from '../data/worko
 interface MiniStepperProps {
   value: number | null;
   label: string;
-  onStep: (delta: number) => void;
+  /** Called with -1 or +1. */
+  onStep: (direction: number) => void;
   children?: ReactNode;
 }
 
@@ -33,7 +35,7 @@ function MiniStepper({ value, label, onStep, children }: MiniStepperProps) {
         accessibilityLabel={`${label} ${t('actions.decrease')}`}
         onPress={() => onStep(-1)}
       />
-      <View className="w-7 items-center">
+      <View className="min-w-7 items-center">
         {children ?? <Text variant="bodyStrong">{value ?? '–'}</Text>}
       </View>
       <IconButton
@@ -48,10 +50,16 @@ function MiniStepper({ value, label, onStep, children }: MiniStepperProps) {
   );
 }
 
-function targetsOf(set: WorkoutSet): SetTargets {
-  const min = set.targetMin ?? 8;
+function targetsOf(set: WorkoutSet, exerciseId: string): SetTargets {
+  const min = set.targetMin ?? defaultTargets(exerciseId).min;
   return { min, max: set.targetMax ?? min, rir: set.targetRir };
 }
+
+/** Rep targets step by 1 up to 50/60; holds by 5 s up to 10 minutes. */
+const LIMITS = {
+  reps: { step: 1, low: 1, min: 50, max: 60 },
+  seconds: { step: 5, low: 5, min: 600, max: 600 },
+};
 
 export interface TargetsSheetProps {
   visible: boolean;
@@ -60,33 +68,41 @@ export interface TargetsSheetProps {
   exerciseName: string;
 }
 
-/** Edit rep range and target RIR per set of the current exercise. */
+/** Edit rep range (or seconds for holds) and target RIR per set of the current exercise. */
 export function TargetsSheet({ visible, onClose, exercise, exerciseName }: TargetsSheetProps) {
   const { t } = useTranslation('workout');
   const userId = useUserId();
   const sets = exercise?.sets ?? [];
+  const exerciseId = exercise?.exerciseId ?? '';
+  // Reps in reserve don't apply to holds.
+  const timed = isTimed(exerciseId);
+  const limit = LIMITS[timed ? 'seconds' : 'reps'];
+  const minLabel = t(timed ? 'targets.minSeconds' : 'targets.min');
+  const maxLabel = t(timed ? 'targets.maxSeconds' : 'targets.max');
 
   const change = (set: WorkoutSet, patch: (v: SetTargets) => SetTargets) =>
-    updateSetTargets(set.id, patch(targetsOf(set)));
+    updateSetTargets(set.id, patch(targetsOf(set, exerciseId)));
 
   return (
     <Sheet visible={visible} onClose={onClose} title={t('targets.title')} subtitle={exerciseName}>
       <View className="flex-row items-center gap-2 pb-2">
         <View className="w-7" />
         <Text variant="overline" tone="subtle" className="flex-1 text-center text-[11px]">
-          {t('targets.min')}
+          {minLabel}
         </Text>
         <Text variant="overline" tone="subtle" className="flex-1 text-center text-[11px]">
-          {t('targets.max')}
+          {maxLabel}
         </Text>
-        <Text variant="overline" tone="subtle" className="flex-1 text-center text-[11px]">
-          {t('targets.rir')}
-        </Text>
+        {timed ? null : (
+          <Text variant="overline" tone="subtle" className="flex-1 text-center text-[11px]">
+            {t('targets.rir')}
+          </Text>
+        )}
         <View className="w-7" />
       </View>
       <View className="gap-2">
         {sets.map((set, i) => {
-          const v = targetsOf(set);
+          const v = targetsOf(set, exerciseId);
           return (
             <View key={set.id} className="h-12 flex-row items-center gap-2">
               <View className="size-7 items-center justify-center rounded-full bg-elevated">
@@ -95,10 +111,10 @@ export function TargetsSheet({ visible, onClose, exercise, exerciseName }: Targe
               <View className="flex-1 items-center">
                 <MiniStepper
                   value={v.min}
-                  label={t('targets.min')}
+                  label={minLabel}
                   onStep={(d) =>
                     change(set, (x) => {
-                      const min = clamp(x.min + d, 1, 50);
+                      const min = clamp(x.min + d * limit.step, limit.low, limit.min);
                       return { ...x, min, max: Math.max(min, x.max) };
                     })
                   }
@@ -107,21 +123,31 @@ export function TargetsSheet({ visible, onClose, exercise, exerciseName }: Targe
               <View className="flex-1 items-center">
                 <MiniStepper
                   value={v.max}
-                  label={t('targets.max')}
-                  onStep={(d) => change(set, (x) => ({ ...x, max: clamp(x.max + d, x.min, 60) }))}
+                  label={maxLabel}
+                  onStep={(d) =>
+                    change(set, (x) => ({
+                      ...x,
+                      max: clamp(x.max + d * limit.step, x.min, limit.max),
+                    }))
+                  }
                 />
               </View>
-              <View className="flex-1 items-center">
-                <MiniStepper
-                  value={v.rir}
-                  label={t('targets.rir')}
-                  onStep={(d) =>
-                    change(set, (x) => ({ ...x, rir: x.rir == null ? 2 : clamp(x.rir + d, 0, 5) }))
-                  }
-                >
-                  {v.rir != null ? <RirBadge rir={v.rir} size={24} /> : undefined}
-                </MiniStepper>
-              </View>
+              {timed ? null : (
+                <View className="flex-1 items-center">
+                  <MiniStepper
+                    value={v.rir}
+                    label={t('targets.rir')}
+                    onStep={(d) =>
+                      change(set, (x) => ({
+                        ...x,
+                        rir: x.rir == null ? 2 : clamp(x.rir + d, 0, 5),
+                      }))
+                    }
+                  >
+                    {v.rir != null ? <RirBadge rir={v.rir} size={24} /> : undefined}
+                  </MiniStepper>
+                </View>
+              )}
               <IconButton
                 icon="trash"
                 size={28}

@@ -6,7 +6,13 @@ import { parseJson } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import { workoutExercises, workouts, workoutSets } from '@/shared/data/powersync/schema';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
-import { previousExercise, previousSet, setScore, setScoreSql } from '@/shared/data/workouts';
+import {
+  hasKnownWeight,
+  previousExercise,
+  previousSet,
+  setScore,
+  setScoreSql,
+} from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 
 const recordKeys = createQueryKeys('workoutRecords', {
@@ -33,6 +39,7 @@ const previousBest = drizzle
     and(
       eq(previousExercise.exercise_id, workoutExercises.exercise_id),
       isNotNull(previousSet.completed_at),
+      hasKnownWeight(previousSet, previousExercise),
       lt(previousWorkout.started_at, workouts.started_at),
     ),
   )

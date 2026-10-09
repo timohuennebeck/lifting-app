@@ -184,7 +184,7 @@ function allowedExercises({ equipment, complaints }: GeneratePlanInput) {
   const also = ALSO_AT[equipment] ?? [];
   return (id: string) => {
     const ex = getExercise(id);
-    if (!ex || avoid.has(id)) return false;
+    if (!ex?.isActive || avoid.has(id)) return false;
     return EQUIPMENT[equipment].includes(ex.equipment) || also.includes(id);
   };
 }

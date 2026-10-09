@@ -67,6 +67,8 @@
     "title": "Targets",
     "min": "Min reps",
     "max": "Max reps",
+    "minSeconds": "Min sec",
+    "maxSeconds": "Max sec",
     "rir": "RIR",
     "remove": "Remove set {{n}}"
   },

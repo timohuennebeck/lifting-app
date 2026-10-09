@@ -28,6 +28,12 @@ export interface OnboardingDraft {
   plan: PlanDraft | null;
 }
 
+/** Set targets as drafts stored them before v1 of the persisted state. */
+interface LegacyTargets {
+  repsMin?: number;
+  repsMax?: number;
+}
+
 const IMPERIAL_REGIONS = ['US', 'LR', 'MM'];
 
 const initialDraft = (): OnboardingDraft => ({
@@ -66,7 +72,30 @@ export const useOnboardingStore = create<OnboardingState>()(
       complete: () => set({ completed: true }),
       reset: () => set({ draft: initialDraft(), completed: false }),
     }),
-    { name: 'onboarding', storage: createJSONStorage(() => zustandStorage) },
+    {
+      name: 'onboarding',
+      storage: createJSONStorage(() => zustandStorage),
+      version: 1,
+      migrate: (persisted, version) => {
+        const state = persisted as OnboardingState;
+        // v1 renamed plan set targets from repsMin/repsMax to targetMin/targetMax.
+        if (version < 1) {
+          for (const day of state.draft?.plan?.days ?? []) {
+            for (const exercise of day.exercises) {
+              exercise.sets = exercise.sets.map((set) => {
+                const { repsMin, repsMax, ...rest } = set as typeof set & LegacyTargets;
+                return {
+                  ...rest,
+                  targetMin: repsMin ?? set.targetMin,
+                  targetMax: repsMax ?? set.targetMax,
+                };
+              });
+            }
+          }
+        }
+        return state;
+      },
+    },
   ),
 );
 

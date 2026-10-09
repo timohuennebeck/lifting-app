@@ -9,7 +9,7 @@ import { useUnits } from '@/shared/data/profile';
 import { type ExerciseHistoryEntry, useExerciseHistory } from '@/shared/data/workouts';
 import { useNow } from '@/shared/hooks/use-now';
 import { DAY_MS, MINUTE_MS } from '@/shared/lib/date';
-import { formatDate, formatSeconds, formatWeight, type SetValues } from '@/shared/lib/format';
+import { formatDate, formatSeconds, formatWeight } from '@/shared/lib/format';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { SegmentedControl } from '@/shared/ui/segmented-control';
@@ -57,10 +57,11 @@ export function ExerciseHistoryScreen() {
     : isTimed(exerciseId)
       ? 'topSeconds'
       : 'topReps';
-  const chartValue = ({ weightKg, reps, seconds }: SetValues) =>
+  // The top set is the best by score; the weight chart wants the heaviest set instead.
+  const chartValue = ({ sets, topSet }: ExerciseHistoryEntry) =>
     metric === 'topWeight'
-      ? toDisplayWeight(weightKg ?? 0, units)
-      : ((metric === 'topSeconds' ? seconds : reps) ?? 0);
+      ? toDisplayWeight(Math.max(...sets.map((s) => s.weightKg ?? 0)), units)
+      : ((metric === 'topSeconds' ? topSet.seconds : topSet.reps) ?? 0);
   const formatValue = (value: number) =>
     metric === 'topWeight'
       ? formatWeight(fromDisplayWeight(value, units), units)
@@ -70,7 +71,7 @@ export function ExerciseHistoryScreen() {
   const chartData = sessions
     .filter((s) => Date.parse(s.startedAt) >= since)
     .reverse()
-    .map((s) => ({ time: Date.parse(s.startedAt), value: chartValue(s.topSet) }));
+    .map((s) => ({ time: Date.parse(s.startedAt), value: chartValue(s) }));
 
   return (
     <Screen

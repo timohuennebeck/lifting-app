@@ -6,6 +6,7 @@ import { View } from 'react-native';
 import { ExerciseDetailModal } from '@/features/exercises/components/exercise-detail-modal';
 import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
+import { defaultTargets, isTimed } from '@/shared/data/exercises';
 import { muscleShares } from '@/shared/data/muscles';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
@@ -60,13 +61,32 @@ export function ConfirmScreen() {
   const settle = ({ raw: _raw, alternatives: _alts, ...e }: ImportedExercise): ImportedExercise =>
     e;
 
+  /** Sets at the exercise's default targets (seconds for holds). */
+  const defaultSets = (exerciseId: string, count: number) => {
+    const { min, max } = defaultTargets(exerciseId);
+    return readSets(count, min, max);
+  };
+
   function pick(exerciseId: string) {
     if (picker?.mode === 'swap') {
-      editExercise(picker.index, (e) => settle({ ...e, exerciseId }));
+      // Rep targets don't carry over to a hold, nor the other way round.
+      editExercise(picker.index, (e) =>
+        settle({
+          ...e,
+          exerciseId,
+          sets:
+            isTimed(e.exerciseId) !== isTimed(exerciseId)
+              ? defaultSets(exerciseId, e.sets.length)
+              : e.sets,
+        }),
+      );
     } else {
       editDay((d) => ({
         ...d,
-        exercises: [...d.exercises, { exerciseId, sets: readSets(3, 8, 12), restSeconds: null }],
+        exercises: [
+          ...d.exercises,
+          { exerciseId, sets: defaultSets(exerciseId, 3), restSeconds: null },
+        ],
       }));
     }
     setPicker(null);

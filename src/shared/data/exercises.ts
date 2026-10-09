@@ -175,6 +175,12 @@ export const measuresOf = (exerciseId: string): Measure[] =>
 export const hasMeasure = (exerciseId: string, measure: Measure) =>
   measuresOf(exerciseId).includes(measure);
 
+/** Catalog exercises that don't log `measure`, e.g. the ones without weight. */
+export const exerciseIdsWithout = (measure: Measure) =>
+  Object.values(useCatalogStore.getState().rows)
+    .filter((r) => !r.measures.includes(measure))
+    .map((r) => r.id);
+
 /** Whether sets of the exercise are counted in seconds instead of reps. */
 export const isTimed = (exerciseId: string) => hasMeasure(exerciseId, 'seconds');
 
