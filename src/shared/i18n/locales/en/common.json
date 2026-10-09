@@ -12,7 +12,8 @@
     "decrease": "Decrease",
     "increase": "Increase",
     "togglePassword": "Show or hide password",
-    "close": "Close"
+    "close": "Close",
+    "retry": "Try again"
   },
   "progress": {
     "stepOf": "{{current}} of {{total}}"
@@ -25,9 +26,33 @@
     "minShort": "Min"
   },
   "weekdays": {
-    "short": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    "narrow": ["M", "T", "W", "T", "F", "S", "S"],
-    "long": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    "short": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ],
+    "narrow": [
+      "M",
+      "T",
+      "W",
+      "T",
+      "F",
+      "S",
+      "S"
+    ],
+    "long": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ]
   },
   "greeting": "Hi {{name}}",
   "languages": {

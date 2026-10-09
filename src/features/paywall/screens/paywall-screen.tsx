@@ -25,12 +25,12 @@ const PLAN_IDS: PlanId[] = ['daily', 'monthly'];
 
 /** Forge Pro paywall: before/after header, benefits, plan picker. */
 export function PaywallScreen() {
-  const { t } = useTranslation('paywall');
+  const { t } = useTranslation(['paywall', 'common']);
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
   const flow = usePaywallFlow();
   const isPro = useIsPro();
-  const { offering, plan } = useOffering();
+  const { offering, plan, isError, refetch } = useOffering();
   const { buy, busy } = usePurchase();
   const { restore, restoring } = useRestorePurchases();
   const [selected, setSelected] = useState<PlanId>('daily');
@@ -68,7 +68,7 @@ export function PaywallScreen() {
             <TextButton
               label={restoring ? t('restoring') : t('restore')}
               tone="muted"
-              disabled={restoring}
+              disabled={restoring || busy}
               className="px-0"
               textClassName="font-inter-medium text-sm"
               onPress={onRestore}
@@ -126,11 +126,12 @@ export function PaywallScreen() {
 
       <View className="gap-3 bg-bg px-5" style={{ paddingBottom: footerInset }}>
         <FadeEdge />
+        {/* Without an offering there is nothing to buy; let the user load it again. */}
         <Button
-          label={t('paywall.continue')}
-          loading={busy || !offering}
+          label={isError ? t('common:actions.retry') : t('paywall.continue')}
+          loading={busy || (!offering && !isError)}
           disabled={restoring}
-          onPress={onContinue}
+          onPress={isError ? () => refetch() : onContinue}
         />
         <Text variant="caption" tone="subtle" className="text-center font-inter text-xs">
           {current && price

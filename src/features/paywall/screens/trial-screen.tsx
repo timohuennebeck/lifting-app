@@ -20,11 +20,11 @@ const REMINDER_DAYS_BEFORE = 2;
 
 /** Free-trial explainer: what happens today, at the reminder and when billing starts. */
 export function TrialScreen() {
-  const { t } = useTranslation('paywall');
+  const { t } = useTranslation(['paywall', 'common']);
   const accent = useAccentColor();
   const flow = usePaywallFlow();
   const planId = parsePlanId(useLocalSearchParams<{ plan?: string }>().plan);
-  const { offering, plan } = useOffering();
+  const { offering, plan, isError, refetch } = useOffering();
   const { buy, busy } = usePurchase();
 
   const selected = plan(planId);
@@ -41,7 +41,11 @@ export function TrialScreen() {
       scroll
       footer={
         <View className="gap-2.5">
-          <Button label={t('trial.cta')} loading={busy || !offering} onPress={start} />
+          <Button
+            label={isError ? t('common:actions.retry') : t('trial.cta')}
+            loading={busy || (!offering && !isError)}
+            onPress={isError ? () => refetch() : start}
+          />
           <Text variant="caption" tone="subtle" className="text-center font-inter text-xs">
             {price ? t(`trial.fine.${period}`, { price }) : ' '}
           </Text>
