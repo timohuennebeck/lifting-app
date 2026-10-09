@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { ScrollView, useWindowDimensions, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { Icon } from '@/shared/ui/icon';
@@ -22,8 +23,18 @@ export interface PlanBarProps {
 export function PlanBar({ items, currentId, onSelect, onAdd }: PlanBarProps) {
   const { t } = useTranslation('training');
   const currentIndex = items.findLastIndex((item) => item.id === currentId);
+  const { width } = useWindowDimensions();
+  const scroller = useRef<ScrollView>(null);
+  // After a finished cycle the strip is twice as long; keep the current slot in view.
+  const offset = Math.max(0, SLOT * (currentIndex + 2) - width);
+  useEffect(() => {
+    scroller.current?.scrollTo({ x: offset, animated: true });
+  }, [offset]);
+
   return (
     <ScrollView
+      ref={scroller}
+      onContentSizeChange={() => scroller.current?.scrollTo({ x: offset, animated: false })}
       horizontal
       showsHorizontalScrollIndicator={false}
       className="grow-0"

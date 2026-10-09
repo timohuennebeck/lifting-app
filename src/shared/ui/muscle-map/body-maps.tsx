@@ -4,7 +4,10 @@ import { cn } from '@/shared/lib/cn';
 
 import { MuscleMap, type MuscleMapProps } from './muscle-map';
 
-export interface BodyMapsProps extends Pick<MuscleMapProps, 'selected' | 'onToggle' | 'accent'> {
+export interface BodyMapsProps extends Pick<
+  MuscleMapProps,
+  'selected' | 'onToggle' | 'isSelectable' | 'accent'
+> {
   accessibilityLabel?: string;
   className?: string;
 }

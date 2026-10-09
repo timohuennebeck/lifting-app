@@ -14,7 +14,7 @@ export const PRESCRIBED_REPS: Record<Goal, { compound: RepRange; isolation: RepR
   strength_hypertrophy: { compound: { min: 4, max: 6 }, isolation: { min: 8, max: 10 } },
 };
 
-/** Base reps in reserve; an exercise's sets ramp from one above it to one below it. */
+/** Base reps in reserve; the last set goes one below it, earlier sets at most one above. */
 export const BASE_RIR: Record<Experience, number> = {
   none: 3,
   beginner: 2,

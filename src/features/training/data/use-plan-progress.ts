@@ -1,5 +1,5 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { and, eq, isNotNull, max, sql } from 'drizzle-orm';
+import { eq, max, sql } from 'drizzle-orm';
 
 import { drizzle } from '@/shared/data/powersync/database';
 import { templates, workouts } from '@/shared/data/powersync/schema';
@@ -17,7 +17,7 @@ export interface PlanItem {
   key: string;
   id: string;
   name: string;
-  /** 1-based slot in the rotation. */
+  /** 1-based slot in the strip (runs to 2n while the finished cycle is shown). */
   number: number;
   state: PlanItemState;
 }
@@ -31,7 +31,7 @@ const planQuery = (collectionId: string | null) =>
       last_done: sql<string | null>`${drizzle
         .select({ at: max(workouts.finished_at) })
         .from(workouts)
-        .where(and(eq(workouts.template_id, templates.id), isNotNull(workouts.finished_at)))}`,
+        .where(eq(workouts.template_id, templates.id))}`,
     })
     .from(templates)
     .where(inCollection(collectionId))

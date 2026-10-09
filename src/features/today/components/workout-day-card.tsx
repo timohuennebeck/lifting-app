@@ -28,10 +28,11 @@ export interface WorkoutDayCardProps {
 export function WorkoutDayCard({ status, name, shares, stats, actions }: WorkoutDayCardProps) {
   const { t } = useTranslation('muscles');
   const accent = useAccentColor();
+  // Map and summary name the same main muscles.
   const muscles = mainShares(shares).map((s) => s.muscle);
-  const summary = shares
+  const summary = muscles
     .slice(0, 3)
-    .map((s) => t(`names.${s.muscle}`))
+    .map((m) => t(`names.${m}`))
     .join(' · ');
 
   return (

@@ -20,22 +20,25 @@ export async function swapWorkoutExercise(workoutExerciseId: string, exerciseId:
 
 /** Appends a set that copies the targets of the current last set. */
 export async function addWorkoutSet(userId: string, workoutExerciseId: string) {
-  const last = await drizzle
-    .select({
-      position: workoutSets.position,
-      target_min: workoutSets.target_min,
-      target_max: workoutSets.target_max,
-      target_rir: workoutSets.target_rir,
-    })
-    .from(workoutSets)
-    .where(eq(workoutSets.workout_exercise_id, workoutExerciseId))
-    .orderBy(desc(workoutSets.position))
-    .limit(1)
-    .get();
-  await insertWorkoutSet(drizzle, userId, workoutExerciseId, (last?.position ?? -1) + 1, {
-    min: last?.target_min ?? 8,
-    max: last?.target_max ?? 12,
-    rir: last?.target_rir ?? 2,
+  // One write transaction, so a quick double tap cannot reuse the same position.
+  await drizzle.transaction(async (tx) => {
+    const last = await tx
+      .select({
+        position: workoutSets.position,
+        target_min: workoutSets.target_min,
+        target_max: workoutSets.target_max,
+        target_rir: workoutSets.target_rir,
+      })
+      .from(workoutSets)
+      .where(eq(workoutSets.workout_exercise_id, workoutExerciseId))
+      .orderBy(desc(workoutSets.position))
+      .limit(1)
+      .get();
+    await insertWorkoutSet(tx, userId, workoutExerciseId, (last?.position ?? -1) + 1, {
+      min: last?.target_min ?? 8,
+      max: last?.target_max ?? 12,
+      rir: last?.target_rir ?? 2,
+    });
   });
 }
 

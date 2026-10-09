@@ -13,6 +13,8 @@ export interface MuscleMapProps {
   selected?: readonly BodyPartId[];
   /** Makes muscles tappable; called with the tapped muscle. */
   onToggle?: (part: BodyPartId) => void;
+  /** Limits which parts react to taps (default: all); keep it a stable function. */
+  isSelectable?: (part: BodyPartId) => boolean;
   /** Highlight color; defaults to the user's accent (e.g. pass red for pain). */
   accent?: string;
   /** Crops to a region, e.g. MUSCLE_CARDS[id].viewBox. */
@@ -28,6 +30,7 @@ export const MuscleMap = memo(function MuscleMap({
   view,
   selected = [],
   onToggle,
+  isSelectable,
   viewBox,
   accent: accentOverride,
   fit = 'contain',
@@ -50,6 +53,7 @@ export const MuscleMap = memo(function MuscleMap({
         {art.paths.map((p, i) => {
           const on = p.muscle !== null && active.has(p.muscle);
           const muscle = p.muscle;
+          const tappable = !!onToggle && !!muscle && (!isSelectable || isSelectable(muscle));
           return (
             <Path
               key={i}
@@ -58,7 +62,7 @@ export const MuscleMap = memo(function MuscleMap({
               stroke={p.kind === 'sil' ? '#2C2C2C' : undefined}
               strokeWidth={p.kind === 'sil' ? 2 : undefined}
               onPress={
-                onToggle && muscle
+                tappable
                   ? () => {
                       haptics.select();
                       onToggle(muscle);

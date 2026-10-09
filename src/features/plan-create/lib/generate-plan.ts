@@ -241,7 +241,7 @@ function setCount(
 function setsFor(count: number, compound: boolean, { goal, experience }: GeneratePlanInput) {
   const reps = PRESCRIBED_REPS[goal][compound ? 'compound' : 'isolation'];
   const rir = BASE_RIR[experience ?? 'beginner'];
-  // Each set one step closer to failure, ending one below the base RIR (e.g. 3 · 2 · 1).
+  // Counts down to one below the base RIR, capped one above it (3 · 2 · 1, or 3 · 3 · 2 · 1).
   const last = Math.max(0, rir - 1);
   return Array.from({ length: count }, (_, i) => ({
     repsMin: reps.min,

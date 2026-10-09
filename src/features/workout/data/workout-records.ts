@@ -1,5 +1,5 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { and, asc, desc, eq, isNotNull, lt, ne, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, isNotNull, lt, sql } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/sqlite-core';
 
 import { parseJson } from '@/shared/data/json';
@@ -35,7 +35,9 @@ const previousBest = drizzle
     and(
       eq(previousExercise.exercise_id, workoutExercises.exercise_id),
       isNotNull(previousSet.completed_at),
-      ne(previousWorkout.id, workouts.id),
+      // Sets ticked off via "mark as done" on Today have no weight; they are no best.
+      isNotNull(previousSet.weight_kg),
+      isNotNull(previousSet.reps),
       lt(previousWorkout.started_at, workouts.started_at),
     ),
   )
@@ -69,7 +71,7 @@ function toRecords(rows: RowOf<typeof recordsQuery>[]): WorkoutRecord[] {
   for (const r of rows) {
     const previous = parseJson<WorkoutRecord['previous'] | null>(r.previous, null);
     if (!previous) continue;
-    // Completed sets always carry weight and reps.
+    // PR flags are only set on logged sets, which carry weight and reps.
     const weightKg = r.weight_kg!;
     const reps = r.reps!;
     const current = best.get(r.exercise_id);

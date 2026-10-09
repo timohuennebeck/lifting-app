@@ -13,7 +13,7 @@ export interface DrizzleQuery<TRow> {
 export type RowOf<TFactory extends (...args: never[]) => DrizzleQuery<unknown>> =
   ReturnType<TFactory> extends DrizzleQuery<infer TRow> ? TRow : never;
 
-export interface DrizzleQueryOptions<TRow, TResult> {
+interface DrizzleQueryOptions<TRow, TResult> {
   queryKey: readonly unknown[];
   query: DrizzleQuery<TRow>;
   enabled?: boolean;

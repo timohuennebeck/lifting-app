@@ -89,7 +89,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
           textAlignVertical="center"
           className={cn(
             'h-full min-w-0 flex-1 py-0 font-inter text-fg',
-            compact ? 'text-base' : 'text-[18px]',
+            compact ? 'text-[16px]' : 'text-[18px]',
           )}
           {...props}
         />

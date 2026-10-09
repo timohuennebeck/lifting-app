@@ -11,10 +11,13 @@ import {
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
-import { BodyMaps } from '@/shared/ui/muscle-map';
+import { BodyMaps, type BodyPartId } from '@/shared/ui/muscle-map';
 import { StepScreen } from '@/shared/ui/step-screen';
 
 import { CREATE_STEPS } from '../lib/flow';
+
+/** Joints (knees, hands, feet) and the neck belong to no focus group. */
+const hasGroup = (part: BodyPartId) => groupOfPart(part) !== null;
 
 export function FocusScreen() {
   const { t } = useTranslation(['planCreate', 'exercises', 'common']);
@@ -71,6 +74,7 @@ export function FocusScreen() {
         accessibilityLabel={t('planCreate:focus.mapA11y')}
         className="rounded-[28px] bg-surface"
         selected={focus}
+        isSelectable={hasGroup}
         onToggle={(part) => {
           const group = groupOfPart(part);
           if (group) toggle(group);

@@ -33,7 +33,7 @@ export interface Profile {
   sessionMinutes: number | null;
   activeCollectionId: string | null;
   onboardedAt: string | null;
-  createdAt: string | null;
+  createdAt: string;
 }
 
 function toProfile(r: ProfileRecord): Profile {
