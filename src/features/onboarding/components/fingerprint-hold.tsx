@@ -1,7 +1,6 @@
-import { Image } from 'expo-image';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, View } from 'react-native';
+import { Image, Pressable, View } from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
@@ -141,7 +140,7 @@ export function FingerprintHold({ onSealed }: FingerprintHoldProps) {
         <Animated.View style={[{ width: 200, height: 200 }, pressStyle]}>
           <Animated.View
             pointerEvents="none"
-            className="absolute -inset-[30px] rounded-full"
+            className="absolute -inset-7.5 rounded-full"
             style={[
               {
                 experimental_backgroundImage: `radial-gradient(circle, ${accent}38 0%, transparent 65%)`,
@@ -151,7 +150,7 @@ export function FingerprintHold({ onSealed }: FingerprintHoldProps) {
           />
           <Animated.View
             pointerEvents="none"
-            className="absolute size-[520px] rounded-full"
+            className="absolute size-130 rounded-full"
             style={[
               {
                 left: 100 - 260,
@@ -162,10 +161,11 @@ export function FingerprintHold({ onSealed }: FingerprintHoldProps) {
             ]}
           />
           <Animated.View pointerEvents="none" className="absolute" style={[FP, printStyle]}>
+            {/* RN Image tints template bitmaps reliably on iOS and Android. */}
             <Image
               source={FINGERPRINT}
-              tintColor={colors.track}
-              style={{ width: FP.width, height: FP.height }}
+              resizeMode="contain"
+              style={{ width: FP.width, height: FP.height, tintColor: colors.track }}
             />
             <Animated.View
               className="absolute inset-x-0 bottom-0 overflow-hidden"
@@ -173,8 +173,14 @@ export function FingerprintHold({ onSealed }: FingerprintHoldProps) {
             >
               <Image
                 source={FINGERPRINT}
-                tintColor={accent}
-                style={{ position: 'absolute', bottom: 0, width: FP.width, height: FP.height }}
+                resizeMode="contain"
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  width: FP.width,
+                  height: FP.height,
+                  tintColor: accent,
+                }}
               />
             </Animated.View>
           </Animated.View>
