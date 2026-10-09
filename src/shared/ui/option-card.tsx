@@ -36,9 +36,10 @@ export function OptionCard({
       accessibilityState={{ selected }}
       className={cn(
         'flex-row items-center gap-3.5 rounded-[22px] bg-surface',
+        // The design draws the ring inside 16/18pt padding, so the border eats into it.
         selected
-          ? 'border-2 border-accent py-4 pr-4.5 pl-4'
-          : 'border border-line py-4.25 pr-4.75 pl-4.25',
+          ? 'border-2 border-accent py-3.5 pr-4 pl-3.5'
+          : 'border border-line py-3.75 pr-4.25 pl-3.75',
         className,
       )}
     >
@@ -58,7 +59,7 @@ export function OptionCard({
       <View className="flex-1 gap-0.75">
         <Text variant="bodyStrong">{title}</Text>
         {description ? (
-          <Text variant="paragraph" tone="subtle" className="text-sm leading-5">
+          <Text variant="paragraph" tone="subtle" className="text-sm leading-4.25">
             {description}
           </Text>
         ) : null}

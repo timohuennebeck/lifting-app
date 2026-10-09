@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { GhostExercise } from '@/shared/ui/ghost-exercise';
+import { EmptyExercises } from '@/features/training/components/empty-exercises';
 import { IconButton } from '@/shared/ui/icon-button';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
@@ -29,8 +29,8 @@ export function EmptyWorkout({ name, onBack, onMenu, onAdd }: EmptyWorkoutProps)
         }
         action={
           <IconButton
-            icon="more"
-            iconSize={14}
+            icon="more-vertical"
+            iconSize={4}
             accessibilityLabel={t('menu.open')}
             onPress={onMenu}
           />
@@ -57,12 +57,8 @@ export function EmptyWorkout({ name, onBack, onMenu, onAdd }: EmptyWorkoutProps)
         />
       </View>
       <View className="px-5 pt-2">
-        <GhostExercise widths={['88%', '58%']} />
-        <GhostExercise faded widths={['74%', '44%']} />
+        <EmptyExercises hint={t('empty.hint')} />
       </View>
-      <Text tone="subtle" className="px-7.5 pt-2 text-center text-sm leading-5">
-        {t('empty.hint')}
-      </Text>
     </View>
   );
 }

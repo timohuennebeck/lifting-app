@@ -18,7 +18,7 @@
   },
   "focus": {
     "title": "WORAUF LIEGT\nDEIN FOKUS?",
-    "subtitle": "Wähle einen oder mehrere Bereiche – oder keinen.",
+    "subtitle": "Wähle einen oder mehrere Bereiche.",
     "none": "Kein Fokus",
     "cta_one": "Weiter · {{count}} Bereich",
     "cta_other": "Weiter · {{count}} Bereiche",
@@ -71,8 +71,7 @@
     "placeholder": "z. B. Mein Ganzkörperplan",
     "suggestions": "Vorschläge",
     "counter": "{{count}} / {{max}}",
-    "myPlan": "Mein Plan",
-    "goalSplit": "{{goal}} {{count}}×"
+    "myPlan": "Mein Plan"
   },
   "goalShort": {
     "hypertrophy": "Muskelaufbau",

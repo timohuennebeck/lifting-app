@@ -53,3 +53,9 @@ export function muscleShares(items: { exerciseId: string; sets: number }[]): Mus
     .map((muscle) => ({ muscle, percent: Math.round(((load.get(muscle) ?? 0) / total) * 100) }))
     .sort((a, b) => b.percent - a.percent);
 }
+
+/** Muscles below this share are side work; maps and chips show only the main ones. */
+const MAIN_MUSCLE_MIN_PERCENT = 8;
+
+export const mainShares = (shares: MuscleShare[]) =>
+  shares.filter((s) => s.percent >= MAIN_MUSCLE_MIN_PERCENT);

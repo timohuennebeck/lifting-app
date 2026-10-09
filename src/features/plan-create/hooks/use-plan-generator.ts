@@ -25,11 +25,9 @@ export function usePlanGenerator() {
   const input = inputFromDraft(draft);
   const dayCount = new Set(input.trainingDays).size;
   const split = splitFor(dayCount, input.experience);
-  const suggestions = [
-    t(`splits.${split.kind}`),
-    t('planName.goalSplit', { goal: t(`goalShort.${input.goal}`), count: dayCount }),
-    t('planName.myPlan'),
-  ];
+  // As in 00·N2: the generated split, the other common split and a neutral name.
+  const alternative = split.kind === 'upperLower' ? 'ppl' : 'upperLower';
+  const suggestions = [t(`splits.${split.kind}`), t(`splits.${alternative}`), t('planName.myPlan')];
   const days = Object.fromEntries(DAY_KINDS.map((k) => [k, t(`dayNames.${k}`)])) as Record<
     DayKind,
     string

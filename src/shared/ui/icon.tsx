@@ -204,6 +204,16 @@ const ICONS = {
       </>
     ),
   },
+  'more-vertical': {
+    viewBox: '0 0 4 18',
+    render: (c) => (
+      <>
+        <Circle cx={2} cy={2} r={2} fill={c} />
+        <Circle cx={2} cy={9} r={2} fill={c} />
+        <Circle cx={2} cy={16} r={2} fill={c} />
+      </>
+    ),
+  },
   trash: {
     viewBox: '0 0 16 18',
     render: stroke('M1.5 4h13M6 4V2h4v2M3 4l1 12h8l1-12M6.5 7.5v5M9.5 7.5v5', 1.6),

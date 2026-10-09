@@ -9,12 +9,12 @@ export interface BodyMapsProps extends Pick<MuscleMapProps, 'selected' | 'onTogg
   className?: string;
 }
 
-/** Front and back muscle maps side by side in a 320pt high panel. */
+/** Front and back muscle maps side by side: 320pt of art plus padding, as in the design. */
 export function BodyMaps({ accessibilityLabel, className, ...props }: BodyMapsProps) {
   return (
     <View
       accessibilityLabel={accessibilityLabel}
-      className={cn('mx-4 mt-5 h-80 flex-row gap-1 px-2 pt-4 pb-3', className)}
+      className={cn('mx-4 mt-5 h-87 flex-row gap-1 px-2 pt-4 pb-3', className)}
     >
       {(['front', 'back'] as const).map((view) => (
         <View key={view} className="min-w-0 flex-1">

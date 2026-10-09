@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import type { ExerciseId } from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
 import {
   restSecondsFor,
@@ -31,31 +30,14 @@ const REST_MIN = 15;
 const REST_MAX = 600;
 const MAX_SETS = 10;
 
-function EditHeader({ title, subtitle }: { title: string; subtitle?: string }) {
-  return (
-    <ScreenHeader
-      icon="close"
-      title={
-        <View className="items-center gap-0.5">
-          <Text variant="label">{title}</Text>
-          {subtitle ? (
-            <Text variant="caption" tone="subtle" numberOfLines={1} className="font-inter">
-              {subtitle}
-            </Text>
-          ) : null}
-        </View>
-      }
-    />
-  );
-}
-
 /** Edit target sets of one template exercise: reps range, RIR, rest override (00·P2 C·S). */
 export function EditSetsScreen() {
   const { id, exerciseId } = useLocalSearchParams<{ id: string; exerciseId: string }>();
   const { t } = useTranslation('training');
   const { data: template } = useTemplateDetail(id);
   const exercise = template?.exercises.find((e) => e.id === exerciseId);
-  if (!exercise) return <Screen header={<EditHeader title={t('sets.title')} />}>{null}</Screen>;
+  if (!exercise)
+    return <Screen header={<ScreenHeader icon="close" title={t('sets.title')} />}>{null}</Screen>;
   return <EditSetsForm key={exercise.id} exercise={exercise} />;
 }
 
@@ -108,12 +90,8 @@ function EditSetsForm({ exercise }: { exercise: TemplateExerciseDetail }) {
   return (
     <Screen
       scroll
-      header={
-        <EditHeader
-          title={t('sets.title')}
-          subtitle={t(`exercises:${exercise.exerciseId as ExerciseId}.name`)}
-        />
-      }
+      // Title only, as in 00·P2 C·S; the exercise is known from the previous screen.
+      header={<ScreenHeader icon="close" title={t('sets.title')} />}
       footer={<Button label={t('common:actions.done')} loading={saving} onPress={save} />}
     >
       <View className="flex-row items-center gap-2.5 px-5 pt-6 pb-2">

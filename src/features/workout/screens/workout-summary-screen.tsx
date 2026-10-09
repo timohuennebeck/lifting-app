@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
 
-import { muscleShares } from '@/shared/data/muscles';
+import { mainShares, muscleShares } from '@/shared/data/muscles';
 import { useUnits } from '@/shared/data/profile';
 import { useWorkout } from '@/shared/data/workouts';
 import { minutesBetween } from '@/shared/lib/date';
@@ -73,8 +73,9 @@ export function WorkoutSummaryScreen() {
     0,
   );
   const shares = muscleShares(done.map((e) => ({ exerciseId: e.exerciseId, sets: e.sets.length })));
-  const trained = shares.map((s) => s.muscle);
-  const chips = shares.filter((s) => s.percent >= 8).slice(0, 6);
+  const main = mainShares(shares);
+  const trained = main.map((s) => s.muscle);
+  const chips = main.slice(0, 6);
   const minutes = workout ? minutesBetween(workout.startedAt, workout.finishedAt) : 0;
   const volume = units === 'imperial' ? kgToLb(volumeKg) : volumeKg;
 

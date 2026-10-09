@@ -37,6 +37,7 @@ export function CredentialFields({
   return (
     <View className="gap-2.5">
       <TextField
+        compact
         label={t('email')}
         value={email}
         onChangeText={(v) => onChangeEmail(v.trim())}
@@ -54,6 +55,7 @@ export function CredentialFields({
         onSubmitEditing={() => passwordRef.current?.focus()}
       />
       <TextField
+        compact
         ref={passwordRef}
         label={t('password')}
         value={password}

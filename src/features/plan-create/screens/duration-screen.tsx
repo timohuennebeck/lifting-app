@@ -43,7 +43,7 @@ export function DurationScreen() {
         />
       }
     >
-      <View className="mt-10 items-center">
+      <View className="mt-12.5 items-center">
         <DialRing fraction={sessionMinutes / DURATION.max} onChange={onDial}>
           <Text className="font-inter-semibold text-[72px] leading-18 text-fg">
             {sessionMinutes}

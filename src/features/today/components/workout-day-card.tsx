@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import type { MuscleShare } from '@/shared/data/muscles';
+import { mainShares, type MuscleShare } from '@/shared/data/muscles';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 import { Card } from '@/shared/ui/card';
 import { Icon, type IconName } from '@/shared/ui/icon';
@@ -28,7 +28,7 @@ export interface WorkoutDayCardProps {
 export function WorkoutDayCard({ status, name, shares, stats, actions }: WorkoutDayCardProps) {
   const { t } = useTranslation('muscles');
   const accent = useAccentColor();
-  const muscles = shares.map((s) => s.muscle);
+  const muscles = mainShares(shares).map((s) => s.muscle);
   const summary = shares
     .slice(0, 3)
     .map((s) => t(`names.${s.muscle}`))

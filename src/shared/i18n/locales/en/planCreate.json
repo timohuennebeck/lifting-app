@@ -18,7 +18,7 @@
   },
   "focus": {
     "title": "WHAT'S YOUR\nFOCUS?",
-    "subtitle": "Pick one or more areas, or none at all.",
+    "subtitle": "Pick one or more areas.",
     "none": "No focus",
     "cta_one": "Continue · {{count}} area",
     "cta_other": "Continue · {{count}} areas",
@@ -71,8 +71,7 @@
     "placeholder": "e.g. My full-body plan",
     "suggestions": "Suggestions",
     "counter": "{{count}} / {{max}}",
-    "myPlan": "My plan",
-    "goalSplit": "{{goal}} {{count}}×"
+    "myPlan": "My plan"
   },
   "goalShort": {
     "hypertrophy": "Muscle growth",

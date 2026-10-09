@@ -18,7 +18,7 @@
   },
   "focus": {
     "title": "ONDE ESTÁ O\nTEU FOCO?",
-    "subtitle": "Escolhe uma ou mais zonas, ou nenhuma.",
+    "subtitle": "Escolhe uma ou mais zonas.",
     "none": "Sem foco",
     "cta_one": "Continuar · {{count}} zona",
     "cta_other": "Continuar · {{count}} zonas",
@@ -71,8 +71,7 @@
     "placeholder": "p. ex. O meu plano de corpo inteiro",
     "suggestions": "Sugestões",
     "counter": "{{count}} / {{max}}",
-    "myPlan": "O meu plano",
-    "goalSplit": "{{goal}} {{count}}×"
+    "myPlan": "O meu plano"
   },
   "goalShort": {
     "hypertrophy": "Ganho muscular",
