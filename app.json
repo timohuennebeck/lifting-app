@@ -14,7 +14,8 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Forge uses the camera to photograph your training plan and to take your body check photos.",
         "NSPhotoLibraryUsageDescription": "Forge lets you import a training plan from your photos and attach screenshots to support tickets.",
-        "NSMicrophoneUsageDescription": "Forge uses the microphone for voice input of your plan."
+        "NSMicrophoneUsageDescription": "Forge uses the microphone for voice input of your plan.",
+        "CFBundleAllowMixedLocalizations": true
       }
     },
     "android": {
@@ -27,6 +28,11 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.horizonalpha.forge"
     },
+    "locales": {
+      "de": "./locales/de.json",
+      "pt-PT": "./locales/pt-PT.json",
+      "pt-BR": "./locales/pt-BR.json"
+    },
     "plugins": [
       "expo-router",
       [
@@ -37,7 +43,15 @@
           "imageWidth": 76
         }
       ],
-      "expo-localization",
+      [
+        "expo-localization",
+        {
+          "supportedLocales": {
+            "ios": ["en", "de", "pt-PT", "pt-BR"],
+            "android": ["en", "de", "pt-PT", "pt-BR"]
+          }
+        }
+      ],
       "expo-secure-store",
       [
         "expo-camera",
