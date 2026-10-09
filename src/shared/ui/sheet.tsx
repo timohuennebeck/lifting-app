@@ -10,9 +10,9 @@ import {
 } from '@gorhom/bottom-sheet';
 import { type ReactNode, useEffect, useRef } from 'react';
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { withUniwind } from 'uniwind';
 
+import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 
@@ -65,7 +65,7 @@ export function Sheet({
   snapPoints,
   footer,
 }: SheetProps) {
-  const insets = useSafeAreaInsets();
+  const footerInset = useFooterInset();
   const ref = useRef<BottomSheetModal>(null);
   const visibleRef = useRef(visible);
 
@@ -85,27 +85,28 @@ export function Sheet({
       // Only report user dismissals (drag, backdrop); parent-driven closes are already known.
       onDismiss={() => visibleRef.current && onClose()}
       backdropComponent={Backdrop}
-      backgroundStyle={{ backgroundColor: colors.sheet, borderRadius: 32 }}
-      handleIndicatorStyle={{ backgroundColor: colors.track, width: 40, height: 5 }}
+      backgroundStyle={{ backgroundColor: colors.sheet, borderRadius: 34 }}
+      handleIndicatorStyle={{ backgroundColor: colors.track, width: 36, height: 5 }}
       keyboardBehavior={fixed ? 'extend' : 'interactive'}
       keyboardBlurBehavior="restore"
       android_keyboardInputMode="adjustResize"
       footerComponent={
         footer
           ? (props: BottomSheetFooterProps) => (
-              <BottomSheetFooter {...props} bottomInset={insets.bottom}>
-                <View className="bg-sheet px-4 pt-2 pb-2">{footer}</View>
+              <BottomSheetFooter {...props} bottomInset={footerInset}>
+                <View className="bg-sheet px-4 pt-2">{footer}</View>
               </BottomSheetFooter>
             )
           : undefined
       }
     >
       <SheetView
-        className={cn('px-4 pt-1', fixed && 'flex-1', className)}
-        style={{ paddingBottom: footer ? 0 : insets.bottom + 16 }}
+        // 01·V·A sheets: title 22pt below the handle, content ends 30pt above the edge.
+        className={cn('px-4 pt-3', fixed && 'flex-1', className)}
+        style={{ paddingBottom: footer ? 0 : footerInset }}
       >
         {title ? (
-          <View className="mb-5 gap-1 px-1">
+          <View className="mb-5 gap-1.5 px-1">
             <Text variant="headline">{title}</Text>
             {subtitle ? (
               <Text variant="label" tone="subtle" className="font-inter">

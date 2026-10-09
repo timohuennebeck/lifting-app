@@ -21,8 +21,8 @@ export function RirPickerSheet({ visible, value, onClose, onSelect }: RirPickerS
   const { t } = useTranslation('training');
   const accent = useAccentColor();
   return (
-    <Sheet visible={visible} onClose={onClose} className="px-5 pb-6">
-      <View className="flex-row justify-between gap-3 pt-1 pb-4">
+    <Sheet visible={visible} onClose={onClose} className="px-5">
+      <View className="flex-row justify-between gap-3 pb-2.5">
         {RIR_VALUES.map((rir) => {
           const style = editorRirStyle(rir, accent);
           const selected = rir === value;

@@ -66,7 +66,8 @@ export function ChoiceSheet<T extends string>({
               accessibilityRole="radio"
               accessibilityState={{ selected: active }}
               onPress={() => onChange(option.value)}
-              className="flex-row items-center gap-3.5 rounded-[22px] bg-surface py-4 pr-4.5 pl-4"
+              // 1.5pt ring drawn inside the design's 16/18/16pt padding.
+              className="flex-row items-center gap-3.5 rounded-[22px] bg-surface py-[14.5px] pr-[16.5px] pl-[14.5px]"
               style={{ borderWidth: 1.5, borderColor: active ? tint : colors.line }}
             >
               <View
@@ -78,7 +79,7 @@ export function ChoiceSheet<T extends string>({
               <View className="flex-1 gap-0.75">
                 <Text variant="bodyStrong">{option.title}</Text>
                 {option.description ? (
-                  <Text variant="label" tone="subtle" className="font-inter text-sm leading-5">
+                  <Text variant="label" tone="subtle" className="font-inter text-sm leading-4.25">
                     {option.description}
                   </Text>
                 ) : null}
