@@ -49,7 +49,8 @@ powersync/             self-hosted service config, sync streams, docker compose
 
 Users write `tickets` and `ticket_messages` from the app. The team works with the service role:
 
-- **Reply:** insert into `ticket_messages` with `author = 'team'` and the ticket owner's `user_id`.
+- **Reply:** insert into `ticket_messages` with `author = 'team'` and the ticket owner's `user_id`, written in
+  the owner's `profiles.language`.
 - **Change status:** insert into `ticket_events` with `kind = 'status'` and the new `status`. A trigger mirrors it
   onto `tickets.status`. Optional: `version` (e.g. `'1.4.3'`), which the app shows translated ("Erscheint mit
   Update 1.4.3" / "Coming in update 1.4.3"), or `note` for custom text, shown as written (not translated).
