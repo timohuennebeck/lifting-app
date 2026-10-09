@@ -33,7 +33,10 @@ function LegalLink({ kind, children }: { kind: LegalKind; children?: ReactNode }
     <Text
       variant="caption"
       accessibilityRole="link"
-      onPress={() => router.push(`/legal/${kind}`)}
+      onPress={() => {
+        haptics.tap();
+        router.push(`/legal/${kind}`);
+      }}
       className="text-xs leading-4.25"
     >
       {children}

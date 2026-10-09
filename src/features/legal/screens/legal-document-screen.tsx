@@ -17,7 +17,7 @@ import { isLegalKind, type LegalKind, useLegalDocument } from '../data/legal-doc
 export function LegalDocumentScreen() {
   const { kind } = useLocalSearchParams<{ kind: string }>();
   return (
-    <Screen header={<ScreenHeader icon="close" />}>
+    <Screen header={<ScreenHeader />}>
       {isLegalKind(kind) ? <LegalDocumentBody kind={kind} /> : null}
     </Screen>
   );

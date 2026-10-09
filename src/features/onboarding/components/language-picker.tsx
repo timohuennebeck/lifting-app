@@ -30,13 +30,14 @@ export function LanguagePicker() {
         <LanguageFlag language={language} />
         <Text variant="label">{t(`languages.${language}`)}</Text>
       </PressableScale>
-      <Sheet visible={open} onClose={() => setOpen(false)} title={to('welcome.language')}>
+      <Sheet visible={open} onClose={() => setOpen(false)}>
         <View className="gap-2">
           {APP_LANGUAGES.map((code) => {
             const selected = code === language;
             return (
               <PressableScale
                 key={code}
+                activeScale={1}
                 haptic="select"
                 accessibilityRole="radio"
                 accessibilityState={{ selected }}

@@ -63,6 +63,7 @@ export function PaywallScreen() {
         showsVerticalScrollIndicator={false}
       >
         <ScreenHeader
+          icon="close"
           onBack={flow.exit}
           action={
             <TextButton

@@ -82,7 +82,7 @@ export default function RootLayout() {
                   <Stack.Screen name="(onboarding)" />
                 </Stack.Protected>
                 {/* Open from sign-up and from settings alike. */}
-                <Stack.Screen name="legal/[kind]" options={{ presentation: 'modal' }} />
+                <Stack.Screen name="legal/[kind]" options={{ animation: 'slide_from_right' }} />
               </Stack>
             </ThemeProvider>
           </QueryClientProvider>

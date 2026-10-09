@@ -10,6 +10,9 @@ export default function OnboardingLayout() {
         animation: 'slide_from_right',
         contentStyle: { backgroundColor: colors.bg },
       }}
-    />
+    >
+      {/* The paywall fades in instead of sliding like a regular step. */}
+      <Stack.Screen name="paywall/index" options={{ animation: 'fade' }} />
+    </Stack>
   );
 }

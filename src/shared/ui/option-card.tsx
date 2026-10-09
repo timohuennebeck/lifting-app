@@ -7,19 +7,19 @@ import { PressableScale } from './pressable-scale';
 import { RadioDot } from './radio-dot';
 import { Text } from './text';
 
-// Both designs draw the ring inside 16/18pt padding, so the border eats into it.
-const SHEET_RING = 'border-[1.5px] py-[14.5px] pr-[16.5px] pl-[14.5px]';
+// Both designs draw the ring inside 16/18pt padding. The layout never changes between
+// states: the selected ring is an overlay, so the card can't shift when it is picked.
 const LOOKS = {
   // 1pt line at rest, 2pt accent ring when selected.
   card: {
-    rest: 'border border-line py-3.75 pr-4.25 pl-3.75',
-    selected: 'border-2 border-accent py-3.5 pr-4 pl-3.5',
+    frame: 'border border-line py-3.75 pr-4.25 pl-3.75',
+    ring: 'border-2',
     badge: 'bg-pill',
   },
   // Even 1.5pt ring (sheet rows): only its colour changes.
   sheet: {
-    rest: `${SHEET_RING} border-line`,
-    selected: `${SHEET_RING} border-accent`,
+    frame: 'border-[1.5px] border-line py-[14.5px] pr-[16.5px] pl-[14.5px]',
+    ring: 'border-[1.5px]',
     badge: 'bg-control',
   },
 } as const;
@@ -55,18 +55,25 @@ export function OptionCard({
   const tinted = selected && tint;
   return (
     <PressableScale
-      activeScale={0.98}
+      // No press shrink: a choice card should stay put while it is picked.
+      activeScale={1}
       haptic="select"
       onPress={onPress}
       accessibilityRole="radio"
       accessibilityState={{ selected }}
       className={cn(
         'flex-row items-center gap-3.5 rounded-[22px] bg-surface',
-        selected ? styles.selected : styles.rest,
+        styles.frame,
         className,
       )}
-      style={tinted ? { borderColor: tint } : undefined}
     >
+      {selected ? (
+        <View
+          pointerEvents="none"
+          className={cn('absolute -inset-px rounded-[22px] border-accent', styles.ring)}
+          style={tinted ? { borderColor: tint } : undefined}
+        />
+      ) : null}
       {icon !== undefined || index !== undefined ? (
         <View
           className={cn(
