@@ -20,14 +20,15 @@ const ms = (iso: string | null) => (iso ? toMs(iso) || 0 : 0);
 const dayKey = (at: number) => new Date(at).toDateString();
 
 /**
- * Chat timeline: messages, the "Ticket created" line and the local auto reply after the
- * first user message, the current status (planned at its update time, resolved/closed at
+ * Chat timeline: messages, the "Ticket created" line and, until the team answers, the
+ * local auto reply after the first user message, the current status (planned at its update time, resolved/closed at
  * the closing time) and day dividers. Status history is not stored, so only the current
  * status appears.
  */
 export function buildTimeline(ticket: Ticket, messages: TicketMessage[]): TimelineItem[] {
   const timed: TimedItem[] = [];
   const first = messages.find((m) => m.author === 'user');
+  const answered = messages.some((m) => m.author === 'team');
   messages.forEach((message, i) => {
     const at = ms(message.createdAt);
     const isFirst = message === first;
@@ -39,7 +40,8 @@ export function buildTimeline(ticket: Ticket, messages: TicketMessage[]): Timeli
       order: i * 3 + 1,
       item: { type: 'created', key: 'created', at: message.createdAt },
     });
-    timed.push({ at, order: i * 3 + 2, item: { type: 'autoReply', key: 'auto-reply' } });
+    if (!answered)
+      timed.push({ at, order: i * 3 + 2, item: { type: 'autoReply', key: 'auto-reply' } });
   });
 
   const start = ms(first?.createdAt ?? ticket.createdAt);

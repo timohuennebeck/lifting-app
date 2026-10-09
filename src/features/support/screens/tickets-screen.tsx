@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useProfile } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
-import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
@@ -30,13 +29,8 @@ export function TicketsScreen() {
   return (
     <Screen
       header={
-        <ScreenHeader
-          icon="close"
-          title={t('list.title')}
-          action={
-            <IconButton icon="plus" accessibilityLabel={t('list.create')} onPress={openSheet} />
-          }
-        />
+        // Like 01f-2 there is no header action; new tickets start from the profile.
+        <ScreenHeader icon="close" title={t('list.title')} />
       }
     >
       <SearchField
