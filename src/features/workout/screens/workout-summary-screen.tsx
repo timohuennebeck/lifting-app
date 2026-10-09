@@ -84,8 +84,8 @@ export function WorkoutSummaryScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 130 + insets.bottom }}
       >
-        <View className="-mt-1.5 pt-[324px]">
-          <View className="absolute inset-x-0 top-0 h-[430px] flex-row justify-center gap-4 px-[18px]">
+        <View className="-mt-1.5 pt-81">
+          <View className="absolute inset-x-0 top-0 h-107.5 flex-row justify-center gap-4 px-4.5">
             <View className="h-full w-40">
               <MuscleMap view="front" selected={trained} />
             </View>
@@ -95,7 +95,7 @@ export function WorkoutSummaryScreen() {
             <Fade />
           </View>
           <View className="mx-5 gap-2">
-            <Text className="font-inter-semibold text-[34px] leading-[34px]">
+            <Text className="font-inter-semibold text-[34px] leading-8.5">
               {t('summary.title')}
             </Text>
             <Text variant="body" className="text-base text-fg">
@@ -109,16 +109,16 @@ export function WorkoutSummaryScreen() {
               {chips.map((c) => (
                 <View
                   key={c.muscle}
-                  className="h-[30px] flex-row items-center gap-[7px] rounded-full bg-chip px-3"
+                  className="h-7.5 flex-row items-center gap-1.75 rounded-full bg-chip px-3"
                 >
-                  <View className="size-[7px] rounded-full bg-accent" />
+                  <View className="size-1.75 rounded-full bg-accent" />
                   <Text variant="caption">{t(`muscles:names.${c.muscle}`)}</Text>
                 </View>
               ))}
             </View>
           </View>
         </View>
-        <View className="flex-row px-5 pt-[26px]">
+        <View className="flex-row px-5 pt-6.5">
           <Stat
             value={formatNumber(Math.round(volume), 0)}
             unit={t(`common:units.${weightUnit(units)}`)}

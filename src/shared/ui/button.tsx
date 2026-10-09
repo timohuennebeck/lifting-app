@@ -16,7 +16,7 @@ const VARIANTS = {
 } as const;
 
 const SIZES = {
-  lg: { box: 'h-[60px] px-6', text: 'label' },
+  lg: { box: 'h-15 px-6', text: 'label' },
   md: { box: 'h-12 px-5', text: 'caption' },
   sm: { box: 'h-10 px-4', text: 'caption' },
 } as const;

@@ -32,7 +32,7 @@ export function ExerciseHistoryList({ entries, units }: ExerciseHistoryListProps
         return (
           <View key={entry.workoutId}>
             {months[i] !== months[i - 1] ? (
-              <Text variant="overline" className="px-3 pt-[18px] pb-1.5 text-[11px] text-dim">
+              <Text variant="overline" className="px-3 pt-4.5 pb-1.5 text-[11px] text-dim">
                 {months[i]}
               </Text>
             ) : null}

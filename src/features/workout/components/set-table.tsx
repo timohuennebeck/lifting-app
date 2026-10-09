@@ -27,7 +27,7 @@ export interface SetTableProps {
   onRowLayout?: (index: number, y: number) => void;
 }
 
-const HEADER = 'font-inter-semibold text-[11px] leading-[14px] tracking-[0.9px] text-dim';
+const HEADER = 'font-inter-semibold text-[11px] leading-3.5 tracking-[0.9px] text-dim';
 
 /** Logging table (design 03·C) with a TARGETS ⇄ LAST toggle in the header. */
 export function SetTable({
@@ -65,10 +65,10 @@ export function SetTable({
             <Icon name="swap" size={12} color={colors.fg} />
           </PressableScale>
         </View>
-        <Text className={`${HEADER} w-[78px] text-center`}>
+        <Text className={`${HEADER} w-19.5 text-center`}>
           {t(`common:units.${weightUnit(units)}`).toUpperCase()}
         </Text>
-        <Text className={`${HEADER} w-[78px] text-center`}>{t('table.reps')}</Text>
+        <Text className={`${HEADER} w-19.5 text-center`}>{t('table.reps')}</Text>
         <View className="w-7 items-end">
           <View className="size-6 rounded-full border-2 border-track" />
         </View>

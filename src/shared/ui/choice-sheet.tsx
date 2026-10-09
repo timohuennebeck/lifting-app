@@ -66,7 +66,7 @@ export function ChoiceSheet<T extends string>({
               accessibilityRole="radio"
               accessibilityState={{ selected: active }}
               onPress={() => onChange(option.value)}
-              className="flex-row items-center gap-3.5 rounded-[22px] bg-surface py-4 pr-[18px] pl-4"
+              className="flex-row items-center gap-3.5 rounded-[22px] bg-surface py-4 pr-4.5 pl-4"
               style={{ borderWidth: 1.5, borderColor: active ? tint : colors.line }}
             >
               <View
@@ -75,7 +75,7 @@ export function ChoiceSheet<T extends string>({
               >
                 {option.renderIcon(active)}
               </View>
-              <View className="flex-1 gap-[3px]">
+              <View className="flex-1 gap-0.75">
                 <Text variant="bodyStrong">{option.title}</Text>
                 {option.description ? (
                   <Text variant="label" tone="subtle" className="font-inter text-sm leading-5">
@@ -99,7 +99,7 @@ export function ChoiceSheet<T extends string>({
         disabled={selected?.ctaDisabled}
         loading={loading}
         onPress={() => selected && onConfirm(selected.value)}
-        className={cn('mt-[22px]', danger && 'bg-red')}
+        className={cn('mt-5.5', danger && 'bg-red')}
       />
     </Sheet>
   );

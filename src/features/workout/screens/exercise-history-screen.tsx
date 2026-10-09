@@ -64,7 +64,7 @@ export function ExerciseHistoryScreen() {
       header={<ScreenHeader icon="close" className="gap-3.5 px-5" title={t('history.title')} />}
     >
       <View className="px-5 pt-4">
-        <Text className="font-inter-semibold text-[30px] leading-[30px]">
+        <Text className="font-inter-semibold text-[30px] leading-7.5">
           {t(`exercises:${exerciseId as ExerciseId}.name`)}
         </Text>
       </View>
@@ -91,7 +91,7 @@ export function ExerciseHistoryScreen() {
           paddingBottom: insets.bottom + 30,
         }}
         renderSectionHeader={({ section }) => (
-          <Text className="px-3 pt-[18px] pb-1.5 font-inter-semibold text-[11px] leading-[14px] tracking-[1.1px] text-dim">
+          <Text className="px-3 pt-4.5 pb-1.5 font-inter-semibold text-[11px] leading-3.5 tracking-[1.1px] text-dim">
             {section.title}
           </Text>
         )}

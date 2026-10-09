@@ -33,21 +33,21 @@ export function SourceCard({
       activeScale={0.985}
       onPress={onPress}
       accessibilityLabel={`${title}. ${description}`}
-      className="h-[232px] overflow-hidden rounded-[28px] bg-surface"
+      className="h-58 overflow-hidden rounded-[28px] bg-surface"
     >
-      <View className="flex-1 items-center pt-[26px]">{children}</View>
-      <View className="flex-row items-center gap-3 px-5 pb-[18px]">
+      <View className="flex-1 items-center pt-6.5">{children}</View>
+      <View className="flex-row items-center gap-3 px-5 pb-4.5">
         <View className="min-w-0 flex-1">
           <Text variant="bodyStrong" className="text-lg">
             {title}
           </Text>
-          <Text variant="caption" tone="subtle" className="mt-[3px] font-inter">
+          <Text variant="caption" tone="subtle" className="mt-0.75 font-inter">
             {description}
           </Text>
         </View>
         <View
           className={cn(
-            'size-[52px] items-center justify-center rounded-full',
+            'size-13 items-center justify-center rounded-full',
             primary ? 'bg-accent' : 'bg-elevated',
           )}
         >
@@ -72,19 +72,19 @@ const CORNERS = [
 /** Accent viewfinder corners around a tilted page. */
 export function ViewfinderArt() {
   return (
-    <View className="h-32 w-[172px]">
+    <View className="h-32 w-43">
       {CORNERS.map((c) => (
-        <View key={c} className={cn('absolute size-[26px] border-accent', c)} />
+        <View key={c} className={cn('absolute size-6.5 border-accent', c)} />
       ))}
       <View
-        className="absolute top-4 left-[30px] h-24 w-28 gap-2 rounded-lg bg-paper p-3"
+        className="absolute top-4 left-7.5 h-24 w-28 gap-2 rounded-lg bg-paper p-3"
         style={{ transform: [{ rotate: '-5deg' }], boxShadow: '0 10px 24px rgba(0,0,0,0.4)' }}
       >
         <View className="h-1.5 w-[55%] rounded-[3px] bg-ink" />
         {['90%', '75%', '85%', '60%'].map((w) => (
           <View
             key={w}
-            className="h-[5px] rounded-[3px] bg-[#C9C3B6]"
+            className="h-1.25 rounded-[3px] bg-[#C9C3B6]"
             style={{ width: w as `${number}%` }}
           />
         ))}

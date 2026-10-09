@@ -34,13 +34,13 @@ function PaperSheet({ tag, scanning, className }: PaperSheetProps) {
   );
   return (
     <View
-      className={cn('gap-3.5 rounded-xl bg-paper px-[18px] py-5', className)}
+      className={cn('gap-3.5 rounded-xl bg-paper px-4.5 py-5', className)}
       style={{ boxShadow: '0 26px 50px rgba(0,0,0,0.6)' }}
     >
-      <View className="flex-row items-center gap-[7px]">
+      <View className="flex-row items-center gap-1.75">
         {tag ? (
-          <View className="rounded-full bg-ink px-2 py-[3px]">
-            <Text className="font-inter-semibold text-[11px] leading-[13px] text-paper">{tag}</Text>
+          <View className="rounded-full bg-ink px-2 py-0.75">
+            <Text className="font-inter-semibold text-[11px] leading-3.25 text-paper">{tag}</Text>
           </View>
         ) : null}
         <View className="h-2 w-[40%] rounded bg-ink" />
@@ -85,7 +85,7 @@ export function PaperStack({ tags }: PaperStackProps) {
       {STACK.map((p, i) => (
         <View
           key={i}
-          className="absolute h-[210px] w-40"
+          className="absolute h-52.5 w-40"
           style={{ left: p.left, top: p.top, transform: [{ rotate: p.rotate }] }}
         >
           <PaperSheet tag={tags[i]} scanning={i === STACK.length - 1} className="flex-1" />

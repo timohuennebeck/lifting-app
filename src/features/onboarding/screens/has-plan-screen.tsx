@@ -35,7 +35,7 @@ export function HasPlanScreen() {
     >
       <View className="flex-1 items-center justify-center">
         <FormatCards scale={1.15} />
-        <Text variant="label" tone="muted" className="mt-[18px]">
+        <Text variant="label" tone="muted" className="mt-4.5">
           {t('hasPlan.formats')}
         </Text>
       </View>

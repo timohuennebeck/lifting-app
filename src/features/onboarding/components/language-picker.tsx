@@ -25,7 +25,7 @@ export function LanguagePicker() {
       <PressableScale
         onPress={() => setOpen(true)}
         accessibilityLabel={`${to('welcome.language')}: ${t(`languages.${language}`)}`}
-        className="h-11 flex-row items-center gap-2.5 rounded-full bg-pill pr-3.5 pl-[7px]"
+        className="h-11 flex-row items-center gap-2.5 rounded-full bg-pill pr-3.5 pl-1.75"
       >
         <LanguageFlag language={language} />
         <Text variant="label">{t(`languages.${language}`)}</Text>

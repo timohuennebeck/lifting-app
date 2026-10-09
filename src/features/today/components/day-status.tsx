@@ -19,12 +19,12 @@ export function DayStatus({ kind, label, trailing }: DayStatusProps) {
     <View className="flex-row items-center justify-between gap-2">
       <View className="flex-row items-center gap-2">
         {kind === 'done' ? (
-          <View className="size-[22px] items-center justify-center rounded-full bg-accent">
+          <View className="size-5.5 items-center justify-center rounded-full bg-accent">
             <Icon name="check" size={11} color={colors.onAccent} />
           </View>
         ) : (
           <View
-            className="size-[22px] items-center justify-center rounded-full border-[1.8px]"
+            className="size-5.5 items-center justify-center rounded-full border-[1.8px]"
             style={{ borderColor: accent }}
           >
             <Svg width={11} height={11} viewBox="0 0 14 14">

@@ -31,13 +31,13 @@ export function ToggleSwitch({
       accessibilityLabel={accessibilityLabel}
       onPress={() => onChange(!value)}
       className={cn(
-        'h-[30px] w-[50px] rounded-full p-0.5',
+        'h-7.5 w-12.5 rounded-full p-0.5',
         value ? 'bg-accent' : 'bg-[#333333]',
         className,
       )}
     >
       <Animated.View
-        className="size-[26px] rounded-full bg-fg"
+        className="size-6.5 rounded-full bg-fg"
         style={[knob, { boxShadow: '0 2px 6px rgba(0,0,0,0.35)' }]}
       />
     </PressableScale>

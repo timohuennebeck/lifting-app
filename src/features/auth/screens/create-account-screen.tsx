@@ -76,7 +76,7 @@ export function CreateAccountScreen() {
       total={START_STEPS}
       title={t('createAccount.title')}
       subtitle={t('createAccount.subtitle')}
-      titleClassName="pt-[22px]"
+      titleClassName="pt-5.5"
       scroll
       footer={
         <View className="gap-3">
@@ -89,12 +89,12 @@ export function CreateAccountScreen() {
           <Text
             variant="caption"
             tone="subtle"
-            className="px-4 text-center font-inter text-xs leading-[17px]"
+            className="px-4 text-center font-inter text-xs leading-4.25"
           >
             <Trans
               t={t}
               i18nKey="createAccount.terms"
-              components={{ bold: <Text variant="caption" className="text-xs leading-[17px]" /> }}
+              components={{ bold: <Text variant="caption" className="text-xs leading-4.25" /> }}
             />
           </Text>
         </View>

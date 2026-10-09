@@ -33,7 +33,7 @@ export function ExerciseThumb({
 }: ExerciseThumbProps) {
   const image = getExercise(exerciseId)?.image;
   return (
-    <View className={cn('h-[58px] w-11 overflow-hidden rounded-[5px] bg-raised', className)}>
+    <View className={cn('h-14.5 w-11 overflow-hidden rounded-[5px] bg-raised', className)}>
       {image ? (
         <Image source={image} contentFit="cover" style={StyleSheet.absoluteFill} />
       ) : (

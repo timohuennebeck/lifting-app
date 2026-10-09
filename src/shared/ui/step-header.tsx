@@ -20,7 +20,7 @@ export function StepHeader({ step, total, onBack, hideBack }: StepHeaderProps) {
   return (
     <View className="flex-row items-center gap-3.5 py-1.5 pr-5 pl-4">
       {hideBack ? (
-        <View className="size-[42px]" />
+        <View className="size-10.5" />
       ) : (
         <IconButton
           icon="chevron-left"

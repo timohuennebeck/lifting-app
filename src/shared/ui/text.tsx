@@ -12,7 +12,7 @@ const VARIANTS = {
   label: 'font-inter-semibold text-label',
   caption: 'font-inter-semibold text-caption',
   overline: 'font-inter-semibold text-caption uppercase tracking-[1.5px]',
-  paragraph: 'font-inter text-label leading-[22px]',
+  paragraph: 'font-inter text-label leading-5.5',
 } as const;
 
 const TONES = {

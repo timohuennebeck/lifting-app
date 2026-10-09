@@ -50,7 +50,7 @@ export function AlphabetRail({ available, active, onJump }: AlphabetRailProps) {
       <GestureDetector gesture={pan}>
         <View accessibilityRole="adjustable" accessibilityLabel={t('picker.index')} hitSlop={8}>
           {LETTERS.map((c) => (
-            <View key={c} className="w-[22px] items-center justify-center" style={{ height: row }}>
+            <View key={c} className="w-5.5 items-center justify-center" style={{ height: row }}>
               <Text
                 className="font-inter-semibold text-[10px] leading-3"
                 style={{

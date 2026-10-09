@@ -58,7 +58,7 @@ export function ReviewScreen() {
       }
     >
       <Card
-        className="mx-4 mt-[22px] h-80 overflow-hidden p-0"
+        className="mx-4 mt-5.5 h-80 overflow-hidden p-0"
         onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
       >
         {width ? (
@@ -72,7 +72,7 @@ export function ReviewScreen() {
             getItemLayout={(_, index) => ({ length: width, offset: width * index, index })}
             onMomentumScrollEnd={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / width))}
             renderItem={({ item, index }) => (
-              <View style={{ width }} className="items-center px-5 pt-[22px] pb-16">
+              <View style={{ width }} className="items-center px-5 pt-5.5 pb-16">
                 <Image
                   source={{ uri: item.uri }}
                   contentFit="contain"
@@ -91,7 +91,7 @@ export function ReviewScreen() {
           onPress={remove}
           className="absolute top-3.5 right-3.5"
         />
-        <View className="absolute bottom-3.5 left-3.5 h-[38px] justify-center rounded-full bg-elevated px-3.5">
+        <View className="absolute bottom-3.5 left-3.5 h-9.5 justify-center rounded-full bg-elevated px-3.5">
           <Text variant="caption">
             {t('review.counter', { current: current + 1, total: photos.length })}
           </Text>
@@ -99,7 +99,7 @@ export function ReviewScreen() {
         <PressableScale
           haptic="select"
           onPress={() => router.push({ pathname: '/import/camera', params: { retake: current } })}
-          className="absolute right-3.5 bottom-3.5 h-[38px] flex-row items-center gap-1.5 rounded-full bg-elevated px-3.5"
+          className="absolute right-3.5 bottom-3.5 h-9.5 flex-row items-center gap-1.5 rounded-full bg-elevated px-3.5"
         >
           <Icon name="refresh" size={14} />
           <Text variant="caption">{t('review.retake')}</Text>
@@ -114,7 +114,7 @@ export function ReviewScreen() {
             accessibilityState={{ selected: i === current }}
             onPress={() => show(i)}
             className={cn(
-              'h-[84px] w-16 rounded-xl bg-surface p-2',
+              'h-21 w-16 rounded-xl bg-surface p-2',
               i === current ? 'border-2 border-accent' : 'border border-white/8',
             )}
           >
@@ -129,7 +129,7 @@ export function ReviewScreen() {
           haptic="select"
           accessibilityLabel={t('review.addPage')}
           onPress={() => router.push('/import/camera')}
-          className="h-[84px] w-16 items-center justify-center rounded-xl bg-elevated"
+          className="h-21 w-16 items-center justify-center rounded-xl bg-elevated"
         >
           <Icon name="plus" size={16} />
         </PressableScale>

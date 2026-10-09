@@ -18,7 +18,7 @@ export function RirBadge({ rir, size = 22, className }: RirBadgeProps) {
       className={cn('items-center justify-center rounded-full', className)}
       style={{ width: size, height: size, backgroundColor: rirColor(rir) }}
     >
-      <Text variant="caption" tone="onAccent" className="font-inter-bold text-xs leading-[14px]">
+      <Text variant="caption" tone="onAccent" className="font-inter-bold text-xs leading-3.5">
         {formatRir(rir)}
       </Text>
     </View>

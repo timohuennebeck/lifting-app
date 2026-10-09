@@ -47,7 +47,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
 
   return (
     <View className="flex-1 bg-bg">
-      <View className="h-[340px] overflow-hidden">
+      <View className="h-85 overflow-hidden">
         {exercise.image ? (
           <Image
             source={exercise.image}
@@ -60,7 +60,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
             exerciseId={id}
             name={name}
             className="absolute inset-0 h-auto w-auto rounded-none"
-            initialsClassName="text-[64px] leading-[64px]"
+            initialsClassName="text-[64px] leading-16"
           />
         )}
         <Svg pointerEvents="none" width="100%" height="100%" style={StyleSheet.absoluteFill}>
@@ -82,7 +82,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
           />
         </View>
         <View className="absolute right-5 bottom-1.5 left-5">
-          <Text variant="headline" className="text-[30px] leading-[32px]">
+          <Text variant="headline" className="text-[30px] leading-8">
             {name}
           </Text>
           <Text variant="label" tone="muted" className="mt-2 font-inter">
@@ -99,7 +99,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
             accessibilityState={{ selected: tab === key }}
             onPress={() => setTab(key)}
             className={cn(
-              'h-[46px] flex-1 items-center justify-center',
+              'h-11.5 flex-1 items-center justify-center',
               tab === key && 'border-b-2 border-accent',
             )}
           >
@@ -123,7 +123,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
                   <View
                     key={m}
                     className={cn(
-                      'h-[34px] justify-center rounded-full px-3.5',
+                      'h-8.5 justify-center rounded-full px-3.5',
                       i === 0 ? 'bg-accent' : 'bg-elevated',
                     )}
                   >
@@ -133,7 +133,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
                   </View>
                 ))}
               </View>
-              <View className="h-[180px] w-[110px]">
+              <View className="h-45 w-27.5">
                 <MuscleMap view={view} selected={muscles} width={110} height={180} />
               </View>
             </View>
@@ -143,7 +143,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
               </Text>
               {steps.map((step, i) => (
                 <View key={i} className="flex-row gap-3.5 py-2.5">
-                  <View className="size-[30px] items-center justify-center rounded-full bg-elevated">
+                  <View className="size-7.5 items-center justify-center rounded-full bg-elevated">
                     <Text variant="caption" className="text-sm">
                       {i + 1}
                     </Text>

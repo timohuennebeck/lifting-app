@@ -31,7 +31,7 @@ export function FormatCards({ scale = 1, shadow = true, className }: FormatCards
           <View
             key={card.label}
             className={cn(
-              'absolute h-[92px] w-[74px] justify-end rounded-[14px] p-2.5',
+              'absolute h-23 w-18.5 justify-end rounded-[14px] p-2.5',
               card.accent ? 'bg-accent' : 'bg-raised',
             )}
             style={{

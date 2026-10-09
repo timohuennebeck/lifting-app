@@ -57,15 +57,15 @@ function PreviewExercise({ id, reps, rir, last }: PreviewExerciseProps) {
   const exercise = getExercise(id);
   const muscles = Object.entries(exercise?.muscles ?? {}) as [MuscleId, number][];
   return (
-    <View className={cn('flex-row gap-3.5 py-[18px]', !last && 'border-b border-raised')}>
-      <View className="h-[86px] w-16 overflow-hidden rounded-[5px] bg-raised">
+    <View className={cn('flex-row gap-3.5 py-4.5', !last && 'border-b border-raised')}>
+      <View className="h-21.5 w-16 overflow-hidden rounded-[5px] bg-raised">
         {exercise?.image ? (
           <Image source={exercise.image} contentFit="cover" style={{ flex: 1 }} />
         ) : null}
       </View>
       <View className="min-w-0 flex-1 gap-2.5">
         <View className="flex-row items-start gap-2.5">
-          <Text variant="label" className="flex-1 pt-[5px] text-base leading-5">
+          <Text variant="label" className="flex-1 pt-1.25 text-base leading-5">
             {t(`${id}.name`)}
           </Text>
           <View className="size-8 items-center justify-center">
@@ -84,7 +84,7 @@ function PreviewExercise({ id, reps, rir, last }: PreviewExerciseProps) {
                 {reps}
               </Text>
               <View
-                className="size-[22px] items-center justify-center rounded-full"
+                className="size-5.5 items-center justify-center rounded-full"
                 style={{ backgroundColor: RIR_COLORS[value] }}
               >
                 <Text variant="caption" tone="onAccent" className="font-inter-bold text-xs">
@@ -145,15 +145,15 @@ export function WelcomePreview() {
       accessible={false}
       importantForAccessibility="no-hide-descendants"
       pointerEvents="none"
-      className="h-[404px] w-[194px] rounded-[32px] bg-[#111] p-[7px]"
+      className="h-101 w-48.5 rounded-4xl bg-[#111] p-1.75"
       style={{ boxShadow: `inset 0 0 0 1.5px ${colors.track}, 0 30px 60px rgba(0,0,0,0.7)` }}
     >
-      <View className="h-[390px] w-[180px] overflow-hidden rounded-[25px] bg-bg">
+      <View className="h-97.5 w-45 overflow-hidden rounded-[25px] bg-bg">
         <View
-          className="h-[844px] w-[390px] pt-[54px]"
+          className="h-211 w-97.5 pt-13.5"
           style={{ transform: [{ scale: SCALE }], transformOrigin: '0 0' }}
         >
-          <View className="absolute inset-x-0 top-0 h-[54px] flex-row items-center justify-between pr-[34px] pl-10">
+          <View className="absolute inset-x-0 top-0 h-13.5 flex-row items-center justify-between pr-8.5 pl-10">
             <Text variant="label" className="text-base">
               9:41
             </Text>
@@ -162,11 +162,11 @@ export function WelcomePreview() {
             </View>
           </View>
           <View className="flex-row items-center justify-between px-4 py-1.5">
-            <View className="size-[42px] items-center justify-center rounded-full bg-elevated">
+            <View className="size-10.5 items-center justify-center rounded-full bg-elevated">
               <Icon name="close" size={14} />
             </View>
             <Text variant="bodyStrong">{t('welcome.preview.plan')}</Text>
-            <View className="size-[42px] items-center justify-center rounded-full bg-elevated">
+            <View className="size-10.5 items-center justify-center rounded-full bg-elevated">
               <Icon name="more" size={14} />
             </View>
           </View>
@@ -195,13 +195,13 @@ export function WelcomePreview() {
                   </View>
                 </View>
               </View>
-              <Text variant="title" className="px-5 pt-[30px] normal-case">
+              <Text variant="title" className="px-5 pt-7.5 normal-case">
                 {t('welcome.preview.push')}
               </Text>
               <Text variant="paragraph" tone="subtle" className="px-5 pt-2">
                 {t('welcome.preview.noFixedDay')}
               </Text>
-              <Text variant="headline" className="px-5 pt-6 leading-[22px]">
+              <Text variant="headline" className="px-5 pt-6 leading-5.5">
                 {t('welcome.preview.musclesWorked')}
               </Text>
               <View className="flex-row gap-2.5 px-5 pt-3.5">
@@ -209,9 +209,9 @@ export function WelcomePreview() {
                   <MuscleTile key={s.muscle} muscle={s.muscle} percent={s.percent} />
                 ))}
               </View>
-              <View className="flex-row items-center gap-3 px-5 pt-[30px]">
+              <View className="flex-row items-center gap-3 px-5 pt-7.5">
                 <View className="min-w-0 flex-1">
-                  <Text variant="headline" className="leading-[22px]">
+                  <Text variant="headline" className="leading-5.5">
                     {t('welcome.preview.exercises', { count: 6 })}
                   </Text>
                   <Text variant="caption" tone="subtle" className="mt-1.5 font-inter text-sm">
@@ -222,7 +222,7 @@ export function WelcomePreview() {
                   <Icon name="plus" size={14} />
                 </View>
               </View>
-              <View className="px-5 pt-2 pb-[120px]">
+              <View className="px-5 pt-2 pb-30">
                 {EXERCISES.map((e, i) => (
                   <PreviewExercise key={e.id} {...e} last={i === EXERCISES.length - 1} />
                 ))}
@@ -230,12 +230,12 @@ export function WelcomePreview() {
             </Animated.View>
           </View>
           <View
-            className="absolute inset-x-0 bottom-0 px-4 pt-10 pb-[30px]"
+            className="absolute inset-x-0 bottom-0 px-4 pt-10 pb-7.5"
             style={{
               experimental_backgroundImage: `linear-gradient(to top, ${colors.bg} 55%, rgba(10,10,10,0))`,
             }}
           >
-            <View className="h-[60px] items-center justify-center rounded-full bg-accent">
+            <View className="h-15 items-center justify-center rounded-full bg-accent">
               <Text variant="label" tone="onAccent" className="text-base">
                 {t('welcome.preview.startWorkout')}
               </Text>
@@ -243,7 +243,7 @@ export function WelcomePreview() {
           </View>
         </View>
       </View>
-      <View className="absolute top-2 left-1/2 -ml-7 h-4 w-[55px] rounded-full bg-black" />
+      <View className="absolute top-2 left-1/2 -ml-7 h-4 w-13.75 rounded-full bg-black" />
     </View>
   );
 }

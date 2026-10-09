@@ -89,10 +89,7 @@ export function RulerPicker({
   const fadeId = vertical ? 'fade-v' : 'fade-h';
 
   return (
-    <View
-      className={cn(vertical ? 'w-[110px]' : 'h-[100px] w-full', className)}
-      onLayout={onLayout}
-    >
+    <View className={cn(vertical ? 'w-27.5' : 'h-25 w-full', className)} onLayout={onLayout}>
       <ScrollView
         ref={scrollRef}
         horizontal={!vertical}

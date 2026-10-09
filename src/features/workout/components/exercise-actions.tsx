@@ -30,7 +30,7 @@ export function ExerciseActions({ onHistory, onTargets, onSwap }: ExerciseAction
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerClassName="gap-2 px-5 pt-[18px]"
+      contentContainerClassName="gap-2 px-5 pt-4.5"
     >
       {actions.map((a) => (
         <PressableScale

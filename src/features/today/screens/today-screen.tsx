@@ -55,7 +55,7 @@ export function TodayScreen() {
         <PressableScale
           haptic="press"
           onPress={() => router.push(`/workout/${active.id}`)}
-          className="h-10 flex-row items-center gap-[7px] rounded-full bg-accent px-[15px]"
+          className="h-10 flex-row items-center gap-1.75 rounded-full bg-accent px-3.75"
         >
           <Icon name="play" size={12} color={colors.onAccent} />
           <Text variant="caption" tone="onAccent" className="text-sm">
@@ -66,7 +66,7 @@ export function TodayScreen() {
         <PressableScale
           haptic="press"
           onPress={startEmpty}
-          className="h-10 flex-row items-center gap-[7px] rounded-full bg-elevated px-[15px]"
+          className="h-10 flex-row items-center gap-1.75 rounded-full bg-elevated px-3.75"
         >
           <Icon name="plus" size={12} />
           <Text variant="caption" className="text-sm">

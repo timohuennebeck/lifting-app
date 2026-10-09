@@ -34,8 +34,8 @@ export function HeightScreen() {
       title={t('height.title')}
       footer={<Button label={tc('actions.continue')} onPress={() => router.push('/experience')} />}
     >
-      <View className="flex-row items-center gap-5 pt-[30px] pr-5 pl-7">
-        <View className="flex-1 gap-[22px]">
+      <View className="flex-row items-center gap-5 pt-7.5 pr-5 pl-7">
+        <View className="flex-1 gap-5.5">
           <MeasureValue
             value={imperial ? feetInches(value) : String(value)}
             unit={imperial ? undefined : tc('units.cm')}
@@ -54,7 +54,7 @@ export function HeightScreen() {
           step={1}
           majorEvery={imperial ? 12 : 10}
           midEvery={imperial ? 6 : 5}
-          className="h-[330px]"
+          className="h-82.5"
         />
       </View>
     </StepScreen>

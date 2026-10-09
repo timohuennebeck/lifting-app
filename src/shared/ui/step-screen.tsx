@@ -17,7 +17,7 @@ export interface StepTitleProps {
 /** Big uppercase question with an optional hint below, as on every step of a flow. */
 export function StepTitle({ title, subtitle, subtitleTone = 'muted', className }: StepTitleProps) {
   return (
-    <View className={cn('px-5 pt-[18px]', className)}>
+    <View className={cn('px-5 pt-4.5', className)}>
       <Text variant="title" accessibilityRole="header">
         {title}
       </Text>

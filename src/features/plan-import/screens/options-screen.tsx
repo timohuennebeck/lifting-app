@@ -50,17 +50,17 @@ export function OptionsScreen() {
       title={t('options.title')}
       footer={<Button label={t('options.cta')} onPress={() => router.push('/import/analysis')} />}
     >
-      <View className="flex-1 items-center justify-center gap-[22px] px-5">
+      <View className="flex-1 items-center justify-center gap-5.5 px-5">
         <View
           accessibilityLabel={t('options.preview')}
-          className="h-[244px] w-[188px] overflow-hidden rounded-2xl bg-paper"
+          className="h-61 w-47 overflow-hidden rounded-2xl bg-paper"
           style={{ boxShadow: '0 24px 50px rgba(0,0,0,0.5)' }}
         >
           {isImage ? (
             <Image source={{ uri: file.uri }} contentFit="cover" style={{ flex: 1 }} />
           ) : (
-            <View className="flex-1 gap-[9px] px-[18px] py-5">
-              <View className="mb-2 self-start rounded-md bg-ink px-2 py-[5px]">
+            <View className="flex-1 gap-2.25 px-4.5 py-5">
+              <View className="mb-2 self-start rounded-md bg-ink px-2 py-1.25">
                 <Text className="font-inter-semibold text-xs leading-3 tracking-[0.5px] text-paper">
                   {fileExtension(file.name, file.mimeType)}
                 </Text>
@@ -73,8 +73,8 @@ export function OptionsScreen() {
                     key={i}
                     className={
                       'ink' in line
-                        ? 'h-[7px] rounded-[3px] bg-ink'
-                        : 'h-[5px] rounded-[3px] bg-[#C9C3B6]'
+                        ? 'h-1.75 rounded-[3px] bg-ink'
+                        : 'h-1.25 rounded-[3px] bg-[#C9C3B6]'
                     }
                     style={{ width: line.w }}
                   />
@@ -84,7 +84,7 @@ export function OptionsScreen() {
           )}
         </View>
         <View className="max-w-full items-center gap-1">
-          <Text variant="bodyStrong" numberOfLines={1} className="max-w-[300px]">
+          <Text variant="bodyStrong" numberOfLines={1} className="max-w-75">
             {file.name}
           </Text>
           {file.size ? (

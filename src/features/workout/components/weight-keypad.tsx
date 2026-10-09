@@ -34,7 +34,7 @@ function Key({ label, onPress, disabled, className, children, accessibilityLabel
       onPress={onPress}
       accessibilityLabel={accessibilityLabel ?? label}
       className={cn(
-        'h-[46px] items-center justify-center rounded-xl bg-control',
+        'h-11.5 items-center justify-center rounded-xl bg-control',
         disabled && 'opacity-30',
         className,
       )}
@@ -92,7 +92,7 @@ export function WeightKeypad({ weightStep, onConfirm, onLayout }: WeightKeypadPr
           onPress={closeKeypad}
           className="self-center py-0.5"
         >
-          <View className="h-[5px] w-9 rounded-full bg-track" />
+          <View className="h-1.25 w-9 rounded-full bg-track" />
         </PressableScale>
         <View className="flex-row items-center gap-2">
           {[-step, step].map((delta) => (
@@ -126,10 +126,10 @@ export function WeightKeypad({ weightStep, onConfirm, onLayout }: WeightKeypadPr
                 onPress={() => pressKey('.')}
                 className="flex-1"
               />
-              <Key label="0" onPress={() => pressKey('0')} className="flex-[2]" />
+              <Key label="0" onPress={() => pressKey('0')} className="flex-2" />
             </View>
           </View>
-          <View className="w-[86px] gap-1.5">
+          <View className="w-21.5 gap-1.5">
             <Key accessibilityLabel={t('keypad.backspace')} onPress={pressBackspace}>
               <Icon name="backspace" size={24} color={colors.fg} />
             </Key>

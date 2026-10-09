@@ -60,14 +60,14 @@ export function WelcomeScreen() {
         <Text
           variant="body"
           tone="muted"
-          className="mt-3.5 max-w-80 text-center text-base leading-[23px]"
+          className="mt-3.5 max-w-80 text-center text-base leading-5.75"
         >
           {t('welcome.subtitle')}
         </Text>
         <Button
           label={t('welcome.start')}
           onPress={() => router.push('/name')}
-          className="mt-[26px] self-stretch"
+          className="mt-6.5 self-stretch"
         />
         <TextButton
           className="mt-1"

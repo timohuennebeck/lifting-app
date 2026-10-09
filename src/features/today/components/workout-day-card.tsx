@@ -35,18 +35,18 @@ export function WorkoutDayCard({ status, name, shares, stats, actions }: Workout
     .join(' · ');
 
   return (
-    <Card className="mx-4 gap-[18px] bg-[#151515]">
+    <Card className="mx-4 gap-4.5 bg-[#151515]">
       {status}
-      <View className="h-[220px] flex-row justify-center gap-2">
-        <View className="h-full w-[140px]">
+      <View className="h-55 flex-row justify-center gap-2">
+        <View className="h-full w-35">
           <MuscleMap view="front" selected={muscles} />
         </View>
-        <View className="h-full w-[140px]">
+        <View className="h-full w-35">
           <MuscleMap view="back" selected={muscles} />
         </View>
       </View>
       <View className="gap-1.5">
-        <Text variant="headline" className="text-[28px] leading-[28px] tracking-[-0.3px]">
+        <Text variant="headline" className="text-[28px] leading-7 tracking-[-0.3px]">
           {name}
         </Text>
         {summary ? (

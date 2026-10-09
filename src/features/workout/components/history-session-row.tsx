@@ -21,7 +21,7 @@ function Stat({ icon, value, color = colors.subtle }: StatProps) {
   return (
     <View className="flex-row items-center gap-1.5">
       <Icon name={icon} size={icon === 'dumbbell' ? 18 : 13} color={color} />
-      <Text variant="label" tone="secondary" className="text-sm leading-[18px]">
+      <Text variant="label" tone="secondary" className="text-sm leading-4.5">
         {value}
       </Text>
     </View>
@@ -75,7 +75,7 @@ export function HistorySessionRow({
       sets={session.sets}
       renderSet={(set) => (
         <>
-          <Text variant="bodyStrong" className="flex-1 text-lg leading-[22px]">
+          <Text variant="bodyStrong" className="flex-1 text-lg leading-5.5">
             {formatSet(set.weightKg, set.reps, units)}
           </Text>
           {set.rir != null ? <RirBadge rir={set.rir} size={24} /> : null}

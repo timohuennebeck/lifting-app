@@ -52,7 +52,7 @@ export function TextInputSheet({
 
   return (
     <Sheet visible={visible} onClose={onClose} title={title} subtitle={subtitle}>
-      <View className="gap-[22px]">
+      <View className="gap-5.5">
         <TextField
           value={value}
           onChangeText={setValue}

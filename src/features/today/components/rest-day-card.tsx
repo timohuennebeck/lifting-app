@@ -17,12 +17,12 @@ export interface RestDayCardProps {
 export function RestDayCard({ dayName, isToday }: RestDayCardProps) {
   const { t } = useTranslation('today');
   return (
-    <Card className="mx-4 items-start gap-[18px] bg-[#151515]">
+    <Card className="mx-4 items-start gap-4.5 bg-[#151515]">
       <View className="size-14 items-center justify-center rounded-full bg-elevated">
         <Icon name="dumbbell" size={26} color={colors.subtle} />
       </View>
       <View className="gap-2">
-        <Text variant="headline" className="text-[28px] leading-[30px]">
+        <Text variant="headline" className="text-[28px] leading-7.5">
           {isToday ? t('rest.titleToday') : t('rest.title')}
         </Text>
         <Text variant="paragraph" tone="muted">

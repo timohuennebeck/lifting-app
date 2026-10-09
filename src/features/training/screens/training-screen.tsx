@@ -58,7 +58,7 @@ export function TrainingScreen() {
             hitSlop={4}
             accessibilityLabel={t('header.collections')}
             onPress={() => router.push('/template/collections')}
-            className="size-[42px] items-center justify-center rounded-full bg-elevated"
+            className="size-10.5 items-center justify-center rounded-full bg-elevated"
           >
             <CollectionsGlyph />
           </PressableScale>

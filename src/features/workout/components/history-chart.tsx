@@ -54,7 +54,7 @@ export function HistoryChart({ data, units }: HistoryChartProps) {
     <View className="gap-3">
       <View className="gap-1">
         <View className="flex-row items-baseline gap-2">
-          <Text className="font-inter-semibold text-[28px] leading-[30px]">
+          <Text className="font-inter-semibold text-[28px] leading-7.5">
             {shown ? weight(shown.value) : '–'}
           </Text>
           {shown && base && points.length > 1 ? (
@@ -129,16 +129,16 @@ export function HistoryChart({ data, units }: HistoryChartProps) {
               left: clamp(active.x - CHIP_WIDTH / 2, 0, width - CHIP_WIDTH),
             }}
           >
-            <Text className="font-inter-semibold text-[11px] leading-[14px]">
+            <Text className="font-inter-semibold text-[11px] leading-3.5">
               {formatShortDate(active.time)}
             </Text>
           </View>
         ) : (
           <>
-            <Text className="font-inter-semibold text-[11px] leading-[14px] text-dim">
+            <Text className="font-inter-semibold text-[11px] leading-3.5 text-dim">
               {points[0] ? formatShortDate(points[0].time) : ''}
             </Text>
-            <Text className="font-inter-semibold text-[11px] leading-[14px] text-dim">
+            <Text className="font-inter-semibold text-[11px] leading-3.5 text-dim">
               {lastPoint ? formatShortDate(lastPoint.time) : ''}
             </Text>
           </>

@@ -84,7 +84,7 @@ export function RecognizingScreen() {
         chips={chips}
         header={<StepHeader step={IMPORT_STEPS} total={IMPORT_STEPS} hideBack />}
       >
-        <View className="size-[120px] items-center justify-center">
+        <View className="size-30 items-center justify-center">
           <Svg width={160} height={160} style={{ position: 'absolute', left: -20, top: -20 }}>
             <Defs>
               <RadialGradient id="mic-glow" cx="50%" cy="50%" r="50%">

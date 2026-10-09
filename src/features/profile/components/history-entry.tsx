@@ -46,7 +46,7 @@ export function HistoryEntry({ workout, userName }: HistoryEntryProps) {
             components={{ b: <Text variant="label" className="text-sm leading-5" /> }}
           />
         </Text>
-        <Text variant="caption" className="mt-[3px] font-inter text-xs text-dim">
+        <Text variant="caption" className="mt-0.75 font-inter text-xs text-dim">
           {when}
         </Text>
       </View>

@@ -20,7 +20,7 @@ export function MusclePercent({ percent, muted }: MusclePercentProps) {
     <Text
       variant="headline"
       tone={tone}
-      className={cn('text-[28px] leading-[28px]', muted && 'text-dim')}
+      className={cn('text-[28px] leading-7', muted && 'text-dim')}
     >
       {percent}
       <Text variant="label" tone={tone} className={cn('text-base', muted && 'text-dim')}>
@@ -48,12 +48,12 @@ export function MuscleTile({ muscle, percent, className }: MuscleTileProps) {
         className,
       )}
     >
-      <View className="size-[84px] overflow-hidden rounded-2xl bg-elevated">
+      <View className="size-21 overflow-hidden rounded-2xl bg-elevated">
         <MuscleMap view={card.view} viewBox={card.viewBox} selected={[muscle]} fit="cover" />
       </View>
       <View className="min-w-0 flex-1 gap-1">
         {percent !== undefined ? <MusclePercent percent={percent} /> : null}
-        <Text variant="caption" numberOfLines={1} className="text-sm leading-[18px]">
+        <Text variant="caption" numberOfLines={1} className="text-sm leading-4.5">
           {t(`names.${muscle}`)}
         </Text>
       </View>

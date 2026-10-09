@@ -74,7 +74,7 @@ export function VoiceScreen() {
   const bar = (j: number) =>
     recognized ? 6 : 8 + Math.round(Math.abs(Math.sin(tick * 1.7 + j * 2.3)) * (shown ? 30 : 10));
   const bars = (from: number) => (
-    <View className="h-12 flex-row items-center gap-[5px]">
+    <View className="h-12 flex-row items-center gap-1.25">
       {[0, 1, 2, 3].map((j) => (
         <Animated.View
           key={j}
@@ -97,12 +97,12 @@ export function VoiceScreen() {
           </Text>
         }
       />
-      <View className="px-6 pt-[22px]">
+      <View className="px-6 pt-5.5">
         <Text variant="overline" tone="subtle" className="text-xs tracking-[1px]">
           {t('planImport:voice.format')}
         </Text>
         <View
-          className="mt-4 flex-row flex-wrap gap-x-[9px] gap-y-0.5"
+          className="mt-4 flex-row flex-wrap gap-x-2.25 gap-y-0.5"
           accessibilityLiveRegion="polite"
         >
           {shown ? (
@@ -123,8 +123,8 @@ export function VoiceScreen() {
         </View>
       </View>
       <View className="flex-1" />
-      <View className="items-center gap-[18px] px-5 pb-14">
-        <View className="flex-row items-center gap-[22px]">
+      <View className="items-center gap-4.5 px-5 pb-14">
+        <View className="flex-row items-center gap-5.5">
           {startedAt !== null ? bars(0) : null}
           <PressableScale
             haptic="none"

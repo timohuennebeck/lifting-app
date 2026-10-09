@@ -46,7 +46,7 @@ function Cell({ value, active, pristine, label, onPress, children }: CellProps) 
       accessibilityValue={{ text: value }}
       onPress={onPress}
       className={cn(
-        'relative h-11 w-[78px] flex-row items-center justify-center gap-0.5 rounded-xl bg-white/8',
+        'relative h-11 w-19.5 flex-row items-center justify-center gap-0.5 rounded-xl bg-white/8',
         active && 'border-2 border-accent',
       )}
     >
@@ -54,7 +54,7 @@ function Cell({ value, active, pristine, label, onPress, children }: CellProps) 
         <Text
           variant="bodyStrong"
           className={cn(
-            'rounded-md px-0.5 text-lg leading-[22px]',
+            'rounded-md px-0.5 text-lg leading-5.5',
             active && pristine && 'bg-accent/25',
           )}
         >
@@ -134,9 +134,7 @@ export function SetRow({
         label={t('table.repsCell')}
         onPress={() => onSelect('reps')}
       >
-        {rir != null ? (
-          <RirBadge rir={rir} className="absolute -right-[7px] -bottom-[7px]" />
-        ) : null}
+        {rir != null ? <RirBadge rir={rir} className="absolute -right-1.75 -bottom-1.75" /> : null}
       </Cell>
       <PressableScale
         haptic={done ? 'tap' : 'press'}

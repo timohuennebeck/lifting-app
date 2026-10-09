@@ -72,14 +72,14 @@ export function SocialSignIn() {
               setProvider(name);
               setOpen(true);
             }}
-            className="h-[52px] flex-1 flex-row items-center justify-center gap-2.5 rounded-full bg-pill"
+            className="h-13 flex-1 flex-row items-center justify-center gap-2.5 rounded-full bg-pill"
           >
             <Logo />
             <Text variant="label">{name}</Text>
           </PressableScale>
         ))}
       </View>
-      <View className="flex-row items-center gap-3 px-1 pt-[18px]">
+      <View className="flex-row items-center gap-3 px-1 pt-4.5">
         <View className="h-px flex-1 bg-white/10" />
         <Text variant="caption" tone="subtle" className="font-inter">
           {t('social.orEmail')}

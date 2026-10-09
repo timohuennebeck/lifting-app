@@ -179,7 +179,7 @@ export function ScanStage({
           }}
         >
           <View
-            className={cn('rounded-full px-3 py-[7px]', chip.accent ? 'bg-accent' : 'bg-elevated')}
+            className={cn('rounded-full px-3 py-1.75', chip.accent ? 'bg-accent' : 'bg-elevated')}
           >
             <Text variant="caption" tone={chip.accent ? 'onAccent' : 'default'} numberOfLines={1}>
               {chip.label}
@@ -191,7 +191,7 @@ export function ScanStage({
         className="absolute inset-x-0 items-center gap-3 px-6"
         style={{ bottom: insets.bottom + 34 }}
       >
-        <Text className="font-inter-semibold text-[64px] leading-[64px] text-fg tabular-nums">
+        <Text className="font-inter-semibold text-[64px] leading-16 text-fg tabular-nums">
           {`${Math.round(progress * 100)}%`}
         </Text>
         <Text variant="bodyStrong" className="text-center text-base">

@@ -50,7 +50,7 @@ export function WeekStrip({ days, today, selected, onSelect }: WeekStripProps) {
             {day.workout ? (
               <View
                 className={cn(
-                  'size-[41px] items-center justify-center rounded-full',
+                  'size-10.25 items-center justify-center rounded-full',
                   isSelected && 'border-[1.5px]',
                 )}
                 style={{ borderColor: isSelected ? `${accent}80` : undefined }}
@@ -60,11 +60,11 @@ export function WeekStrip({ days, today, selected, onSelect }: WeekStripProps) {
                 </View>
               </View>
             ) : (
-              <View className="size-[41px] items-center justify-center">
+              <View className="size-10.25 items-center justify-center">
                 {day.planned ? (
                   <DashedRing color={isSelected ? accent : '#4A4A47'} />
                 ) : isSelected ? (
-                  <View className="absolute size-[34px] rounded-full bg-elevated" />
+                  <View className="absolute size-8.5 rounded-full bg-elevated" />
                 ) : null}
                 <Text
                   variant="label"

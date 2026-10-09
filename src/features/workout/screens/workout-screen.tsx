@@ -170,7 +170,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
             <GestureDetector gesture={swipe}>
               <View onLayout={(e) => (layout.current.block = e.nativeEvent.layout.y)}>
                 <View className="px-5 pt-5">
-                  <Text className="font-inter-semibold text-[30px] leading-[30px]">
+                  <Text className="font-inter-semibold text-[30px] leading-7.5">
                     {exerciseName}
                   </Text>
                   <Text variant="label" tone="subtle" className="mt-2 font-inter">

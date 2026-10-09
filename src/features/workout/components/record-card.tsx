@@ -22,7 +22,7 @@ export function RecordCard({ record, units }: RecordCardProps) {
       <ExerciseThumb
         exerciseId={record.exerciseId}
         name={name}
-        className="h-[86px] w-16 rounded-lg"
+        className="h-21.5 w-16 rounded-lg"
       />
       <View className="flex-1 gap-2">
         <Text tone="accent" className="font-inter-bold text-xs leading-4 tracking-[1.4px]">
@@ -33,7 +33,7 @@ export function RecordCard({ record, units }: RecordCardProps) {
         </Text>
         <View className="flex-row flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
           <Text variant="headline">{formatSet(record.weightKg, record.reps, units)}</Text>
-          <Text tone="subtle" className="text-sm leading-[18px]">
+          <Text tone="subtle" className="text-sm leading-4.5">
             {t('summary.previously', {
               value: formatSet(record.previous.weightKg, record.previous.reps, units),
             })}

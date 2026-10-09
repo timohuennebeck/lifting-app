@@ -40,7 +40,7 @@ export function ImportScreen() {
       titleClassName="pt-3.5"
       scroll
     >
-      <View className="gap-3 px-4 pt-[22px]">
+      <View className="gap-3 px-4 pt-5.5">
         <SourceCard
           title={t('index.photo.title')}
           description={t('index.photo.description')}
@@ -65,7 +65,7 @@ export function ImportScreen() {
           updateDraft({ hasPlan: false });
           router.push('/create/goal');
         }}
-        className="items-center px-5 pt-[18px] pb-2"
+        className="items-center px-5 pt-4.5 pb-2"
       >
         <Text variant="caption" tone="subtle" className="font-inter text-sm">
           {`${t('index.noPlan')} `}

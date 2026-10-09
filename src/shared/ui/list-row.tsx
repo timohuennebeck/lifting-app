@@ -29,7 +29,7 @@ export function ListRow({
   onPress,
   ...props
 }: ListRowProps) {
-  const rowClassName = cn('h-[72px] flex-row items-center gap-3.5', className);
+  const rowClassName = cn('h-18 flex-row items-center gap-3.5', className);
   const content = (
     <>
       <View
@@ -43,7 +43,7 @@ export function ListRow({
         </Text>
       </View>
       <View className="min-w-0 flex-1 gap-1.5">
-        <Text variant="bodyStrong" numberOfLines={1} className="text-lg leading-[22px]">
+        <Text variant="bodyStrong" numberOfLines={1} className="text-lg leading-5.5">
           {title}
         </Text>
         {typeof subtitle === 'string' ? (

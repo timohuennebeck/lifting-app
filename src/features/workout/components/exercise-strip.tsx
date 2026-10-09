@@ -54,16 +54,16 @@ export function ExerciseStrip({ exercises, currentIndex, onSelect, onAdd }: Exer
               <ExerciseThumb
                 exerciseId={exercise.exerciseId}
                 name={name}
-                className={cn('h-[86px] w-16', !current && (done ? 'opacity-35' : 'opacity-40'))}
+                className={cn('h-21.5 w-16', !current && (done ? 'opacity-35' : 'opacity-40'))}
               />
               {done ? (
-                <View className="absolute top-8 left-[21px] size-[22px] items-center justify-center rounded-full bg-accent">
+                <View className="absolute top-8 left-5.25 size-5.5 items-center justify-center rounded-full bg-accent">
                   <Icon name="check" size={11} color={colors.onAccent} />
                 </View>
               ) : null}
             </View>
             <View
-              className={cn('h-[3px] rounded-sm', current || done ? 'bg-accent' : 'bg-control')}
+              className={cn('h-0.75 rounded-sm', current || done ? 'bg-accent' : 'bg-control')}
             />
           </PressableScale>
         );
@@ -74,10 +74,10 @@ export function ExerciseStrip({ exercises, currentIndex, onSelect, onAdd }: Exer
         onPress={onAdd}
         className="w-16 gap-1.5"
       >
-        <View className="h-[86px] w-16 items-center justify-center rounded-[5px] bg-raised">
+        <View className="h-21.5 w-16 items-center justify-center rounded-[5px] bg-raised">
           <Icon name="plus" size={18} color={colors.fg} />
         </View>
-        <View className="h-[3px]" />
+        <View className="h-0.75" />
       </PressableScale>
     </ScrollView>
   );

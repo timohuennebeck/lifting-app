@@ -37,8 +37,8 @@ export function OptionCard({
       className={cn(
         'flex-row items-center gap-3.5 rounded-[22px] bg-surface',
         selected
-          ? 'border-2 border-accent py-4 pr-[18px] pl-4'
-          : 'border border-line py-[17px] pr-[19px] pl-[17px]',
+          ? 'border-2 border-accent py-4 pr-4.5 pl-4'
+          : 'border border-line py-4.25 pr-4.75 pl-4.25',
         className,
       )}
     >
@@ -55,7 +55,7 @@ export function OptionCard({
             </Text>
           </View>
         ) : null)}
-      <View className="flex-1 gap-[3px]">
+      <View className="flex-1 gap-0.75">
         <Text variant="bodyStrong">{title}</Text>
         {description ? (
           <Text variant="paragraph" tone="subtle" className="text-sm leading-5">

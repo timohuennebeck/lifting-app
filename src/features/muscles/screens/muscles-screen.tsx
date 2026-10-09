@@ -52,7 +52,7 @@ interface SectionLabelProps {
 
 function SectionLabel({ label, first }: SectionLabelProps) {
   return (
-    <Text variant="overline" tone="subtle" className={cn('px-5', first ? 'pt-[22px]' : 'pt-7')}>
+    <Text variant="overline" tone="subtle" className={cn('px-5', first ? 'pt-5.5' : 'pt-7')}>
       {label}
     </Text>
   );
@@ -82,7 +82,7 @@ export function MusclesScreen() {
   return (
     <TabScreen>
       <View className="px-5 pt-4">
-        <Text variant="headline" className="text-[30px] leading-[30px]">
+        <Text variant="headline" className="text-[30px] leading-7.5">
           {t('title')}
         </Text>
         <Text variant="paragraph" tone="subtle" className="mt-2.5">

@@ -160,13 +160,13 @@ function EditSetsForm({ exercise }: { exercise: TemplateExerciseDetail }) {
         />
       </View>
 
-      <View className="mx-5 mt-[22px] gap-3.5 pt-5">
+      <View className="mx-5 mt-5.5 gap-3.5 pt-5">
         <View className="flex-row items-center justify-between gap-3">
           <View className="min-w-0 flex-1">
             <Text variant="label" className="text-base">
               {t('sets.customRest')}
             </Text>
-            <Text variant="caption" tone="subtle" className="mt-[3px] font-inter">
+            <Text variant="caption" tone="subtle" className="mt-0.75 font-inter">
               {t('sets.customRestHint')}
             </Text>
           </View>
@@ -193,7 +193,7 @@ function EditSetsForm({ exercise }: { exercise: TemplateExerciseDetail }) {
             onPress={() => stepRest(-REST_STEP)}
           />
           <View className="flex-row items-baseline gap-1.5">
-            <Text variant="headline" className="text-[26px] leading-[30px]">
+            <Text variant="headline" className="text-[26px] leading-7.5">
               {formatDuration(shownRest)}
             </Text>
             <Text variant="caption" tone="subtle" className="font-inter text-sm">
