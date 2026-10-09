@@ -202,6 +202,18 @@ export const ticketEvents = sqliteTable(
   (t) => [index('ticket').on(t.ticket_id, t.created_at)],
 );
 
+// The documents themselves are read through the Supabase API, since onboarding runs logged out.
+export const legalAcceptances = sqliteTable('legal_acceptances', {
+  id: text().primaryKey(),
+  // profiles.id, which is the auth user id.
+  profile_id: text().notNull(),
+  document_id: text().notNull(),
+  // Set by the server on insert.
+  accepted_at: text(),
+  app_version: text(),
+  platform: text(),
+});
+
 // Relations power nested reads such as `drizzle.query.templates.findMany({ with: … })`.
 export const templatesRelations = relations(templates, ({ many }) => ({
   exercises: many(templateExercises),
@@ -249,6 +261,7 @@ export const drizzleSchema = {
   tickets,
   ticketMessages,
   ticketEvents,
+  legalAcceptances,
   templatesRelations,
   templateExercisesRelations,
   templateSetsRelations,

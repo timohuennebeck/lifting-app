@@ -56,6 +56,16 @@ Users write `tickets` and `ticket_messages` from the app. The team works with th
   Update 1.4.3" / "Coming in update 1.4.3"), or `note` for custom text, shown as written (not translated).
 - Users can only reopen (logged as `kind = 'reopened'`); messages are append-only.
 
+## App config and legal documents (team side)
+
+Both are readable without an account (onboarding runs logged out) and written with the service role.
+
+- **`app_config`:** one jsonb `value` per `key`. Every install can read it, so never store secrets there.
+- **`legal_documents`:** one row per `kind` (`terms`, `privacy`), `locale` and `version`, as Markdown. Rows
+  can't be edited or deleted; publish a new `version` instead. Set `requires_reacceptance` when users who
+  accepted an older version have to accept again.
+- **`legal_acceptances`:** written by the app for the signed-in user; the server sets `accepted_at`.
+
 ## Languages
 
 The app language is mirrored to `profiles.language` (for the team) and to the auth user metadata

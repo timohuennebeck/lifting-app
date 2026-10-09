@@ -20,3 +20,4 @@ streams:
       - SELECT * FROM tickets WHERE user_id = auth.user_id()
       - SELECT * FROM ticket_messages WHERE user_id = auth.user_id()
       - SELECT * FROM ticket_events WHERE user_id = auth.user_id()
+      - SELECT * FROM legal_acceptances WHERE profile_id = auth.user_id()
