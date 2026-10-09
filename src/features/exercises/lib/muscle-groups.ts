@@ -1,5 +1,5 @@
 import { getExercise } from '@/shared/data/exercises';
-import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
+import type { BodyPartId, MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 export const MUSCLE_GROUP_IDS = [
   'chest',
@@ -15,7 +15,7 @@ export type MuscleGroupId = (typeof MUSCLE_GROUP_IDS)[number];
 /** Coarse body areas used for focus chips and the exercise library filter. */
 export const MUSCLE_GROUPS: Record<MuscleGroupId, readonly MuscleId[]> = {
   chest: ['chest'],
-  back: ['lats', 'upper_back', 'traps', 'lower_back', 'neck'],
+  back: ['lats', 'upper_back', 'traps', 'lower_back'],
   shoulders: ['front_delts', 'side_delts', 'rear_delts'],
   arms: ['biceps', 'triceps', 'forearms'],
   core: ['abs', 'obliques'],
@@ -23,8 +23,16 @@ export const MUSCLE_GROUPS: Record<MuscleGroupId, readonly MuscleId[]> = {
   legs: ['quads', 'hamstrings', 'adductors', 'calves', 'tibialis'],
 };
 
+/** Group a tapped body part belongs to; null for the neck and joints (not focus areas). */
+export function groupOfPart(part: BodyPartId): MuscleGroupId | null {
+  return (
+    MUSCLE_GROUP_IDS.find((g) => (MUSCLE_GROUPS[g] as readonly BodyPartId[]).includes(part)) ?? null
+  );
+}
+
+/** Group used to file exercises; the neck counts as back. */
 export function groupOfMuscle(muscle: MuscleId): MuscleGroupId {
-  return MUSCLE_GROUP_IDS.find((g) => MUSCLE_GROUPS[g].includes(muscle)) ?? 'core';
+  return groupOfPart(muscle) ?? 'back';
 }
 
 /** Muscles of an exercise with their weights, highest share first. */

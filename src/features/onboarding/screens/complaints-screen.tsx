@@ -5,14 +5,14 @@ import { View } from 'react-native';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
-import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
+import type { BodyPartId } from '@/shared/ui/muscle-map/body-paths';
 import { BodyMaps } from '@/shared/ui/muscle-map';
 import { StepScreen } from '@/shared/ui/step-screen';
 
 import { ABOUT_STEPS, COMPLAINT_AREAS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 
-const CHIP = 'h-11 px-[18px]';
+const CHIP = 'h-11 px-4.5';
 
 export function ComplaintsScreen() {
   const { t } = useTranslation('onboarding');
@@ -28,9 +28,9 @@ export function ComplaintsScreen() {
     });
 
   // A tapped muscle clears its marked areas, or marks the first area containing it.
-  const onMuscle = (muscle: MuscleId) => {
+  const onMuscle = (muscle: BodyPartId) => {
     const areas = COMPLAINT_AREAS.filter((a) =>
-      (a.muscles as readonly MuscleId[]).includes(muscle),
+      (a.muscles as readonly BodyPartId[]).includes(muscle),
     );
     if (!areas.length) return;
     const marked: string[] = areas.filter((a) => complaints.includes(a.id)).map((a) => a.id);
@@ -60,7 +60,7 @@ export function ComplaintsScreen() {
         />
       }
     >
-      <View className="flex-row flex-wrap gap-2 px-4 pt-[22px]">
+      <View className="flex-row flex-wrap gap-2 px-4 pt-5.5">
         <Chip
           label={t('complaints.none')}
           selected={count === 0}

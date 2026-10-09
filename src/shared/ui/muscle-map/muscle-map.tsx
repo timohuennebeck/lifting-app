@@ -4,15 +4,15 @@ import Svg, { G, Path } from 'react-native-svg';
 import { haptics } from '@/shared/lib/haptics';
 import { useAccentColor } from '@/shared/lib/theme';
 
-import { BODY, type BodyView, type MuscleId } from './body-paths';
+import { BODY, type BodyPartId, type BodyView } from './body-paths';
 
 const FILL = { sil: '#181818', hd: '#2E2E2E', m: '#3E3E3E', fx: '#3E3E3E' } as const;
 
 export interface MuscleMapProps {
   view: BodyView;
-  selected?: readonly MuscleId[];
+  selected?: readonly BodyPartId[];
   /** Makes muscles tappable; called with the tapped muscle. */
-  onToggle?: (muscle: MuscleId) => void;
+  onToggle?: (part: BodyPartId) => void;
   /** Highlight color; defaults to the user's accent (e.g. pass red for pain). */
   accent?: string;
   /** Crops to a region, e.g. MUSCLE_CARDS[id].viewBox. */

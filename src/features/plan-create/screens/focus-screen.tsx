@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import {
-  groupOfMuscle,
+  groupOfPart,
   MUSCLE_GROUP_IDS,
   MUSCLE_GROUPS,
   type MuscleGroupId,
@@ -50,12 +50,12 @@ export function FocusScreen() {
         />
       }
     >
-      <View className="flex-row flex-wrap gap-2 px-4 pt-[22px]">
+      <View className="flex-row flex-wrap gap-2 px-4 pt-5.5">
         <Chip
           label={t('planCreate:focus.none')}
           selected={!groups.length}
           onPress={() => update({ focus: [] })}
-          className="h-11 px-[18px]"
+          className="h-11 px-4.5"
         />
         {MUSCLE_GROUP_IDS.map((g) => (
           <Chip
@@ -63,7 +63,7 @@ export function FocusScreen() {
             label={t(`exercises:groups.${g}`)}
             selected={groups.includes(g)}
             onPress={() => toggle(g)}
-            className="h-11 px-[18px]"
+            className="h-11 px-4.5"
           />
         ))}
       </View>
@@ -71,7 +71,10 @@ export function FocusScreen() {
         accessibilityLabel={t('planCreate:focus.mapA11y')}
         className="rounded-[28px] bg-surface"
         selected={focus}
-        onToggle={(muscle) => toggle(groupOfMuscle(muscle))}
+        onToggle={(part) => {
+          const group = groupOfPart(part);
+          if (group) toggle(group);
+        }}
       />
     </StepScreen>
   );
