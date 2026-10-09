@@ -22,7 +22,8 @@ export function ReviewScreen() {
   const photos = usePhotos();
   const removePhoto = useImportStore((s) => s.removePhoto);
   const [page, setPage] = useState(0);
-  const [width, setWidth] = useState(0);
+  // Pages get the card's exact size; a horizontal list does not stretch them on every platform.
+  const [{ width, height }, setSize] = useState({ width: 0, height: 0 });
   const pager = useRef<FlatList>(null);
   if (!photos.length) return <Redirect href="/import/camera" />;
   const current = Math.min(page, photos.length - 1);
@@ -59,7 +60,7 @@ export function ReviewScreen() {
     >
       <Card
         className="mx-4 mt-5.5 h-80 overflow-hidden p-0"
-        onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
+        onLayout={(e) => setSize(e.nativeEvent.layout)}
       >
         {width ? (
           <FlatList
@@ -72,7 +73,7 @@ export function ReviewScreen() {
             getItemLayout={(_, index) => ({ length: width, offset: width * index, index })}
             onMomentumScrollEnd={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / width))}
             renderItem={({ item, index }) => (
-              <View style={{ width }} className="items-center px-5 pt-5.5 pb-16">
+              <View style={{ width, height }} className="items-center px-5 pt-5.5 pb-16">
                 <Image
                   source={{ uri: item.uri }}
                   contentFit="contain"

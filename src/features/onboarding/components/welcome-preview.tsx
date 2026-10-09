@@ -13,12 +13,11 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { getExercise } from '@/shared/data/exercises';
-import { muscleShares } from '@/shared/data/muscles';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
-import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
-import { MuscleTile } from '@/shared/ui/muscle-map/muscle-tile';
+import { MUSCLE_CARDS, type MuscleId } from '@/shared/ui/muscle-map/body-paths';
+import { MuscleMap } from '@/shared/ui/muscle-map/muscle-map';
 import { PlanSlot } from '@/shared/ui/plan-slot';
 import { Text } from '@/shared/ui/text';
 
@@ -42,7 +41,37 @@ const EXERCISES = [
   { id: 'incline-dumbbell-press', reps: '9–11', rir: [3, 2] },
 ] as const;
 
-const SHARES = muscleShares(EXERCISES.map((e) => ({ exerciseId: e.id, sets: e.rir.length })));
+/** The landscape tiles of the mockup (03·0d) with the design's counts for the full Push day. */
+const TILES = [
+  { muscle: 'front_delts', exercises: 4, sets: 9 },
+  { muscle: 'chest', exercises: 3, sets: 8 },
+] as const;
+
+interface PreviewTileProps {
+  muscle: MuscleId;
+  exercises: number;
+  sets: number;
+}
+
+function PreviewTile({ muscle, exercises, sets }: PreviewTileProps) {
+  const { t } = useTranslation(['onboarding', 'muscles']);
+  const card = MUSCLE_CARDS[muscle];
+  return (
+    <View className="h-26 w-62.5 flex-row overflow-hidden rounded-2xl bg-tile">
+      <View className="size-26">
+        <MuscleMap view={card.view} viewBox={card.viewBox} selected={[muscle]} fit="cover" />
+      </View>
+      <View className="justify-center gap-1 px-3.5">
+        <Text variant="label" className="text-base">
+          {t(`muscles:names.${muscle}`)}
+        </Text>
+        <Text variant="caption" tone="subtle" className="font-inter">
+          {t('onboarding:welcome.preview.tileMeta', { exercises, sets })}
+        </Text>
+      </View>
+    </View>
+  );
+}
 
 interface PreviewExerciseProps {
   id: (typeof EXERCISES)[number]['id'];
@@ -205,8 +234,8 @@ export function WelcomePreview() {
                 {t('welcome.preview.musclesWorked')}
               </Text>
               <View className="flex-row gap-2.5 px-5 pt-3.5">
-                {SHARES.slice(0, 2).map((s) => (
-                  <MuscleTile key={s.muscle} muscle={s.muscle} percent={s.percent} />
+                {TILES.map((tile) => (
+                  <PreviewTile key={tile.muscle} {...tile} />
                 ))}
               </View>
               <View className="flex-row items-center gap-3 px-5 pt-7.5">

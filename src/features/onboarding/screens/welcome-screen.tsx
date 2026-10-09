@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useProfile } from '@/shared/data/profile';
+import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { Button } from '@/shared/ui/button';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
@@ -19,6 +20,7 @@ const PHONE_TOP = 58;
 export function WelcomeScreen() {
   const { t } = useTranslation('onboarding');
   const insets = useSafeAreaInsets();
+  const footerInset = useFooterInset();
   const [heroHeight, setHeroHeight] = useState(0);
   const scale = heroHeight ? Math.min(1, (heroHeight - PHONE_TOP - 16) / PHONE_HEIGHT) : 1;
 
@@ -45,7 +47,8 @@ export function WelcomeScreen() {
       <View className="absolute right-4 z-10" style={{ top: insets.top + 6 }}>
         <LanguagePicker />
       </View>
-      <View className="items-center px-5" style={{ paddingBottom: insets.bottom + 16 }}>
+      {/* 30pt to the link text as in 00-B2; its 48pt touch area already covers 13pt. */}
+      <View className="items-center px-5" style={{ paddingBottom: footerInset - 13 }}>
         <Text
           variant="title"
           accessibilityRole="header"

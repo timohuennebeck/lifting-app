@@ -189,7 +189,7 @@ export function ScanStage({
       ))}
       <View
         className="absolute inset-x-0 items-center gap-3 px-6"
-        style={{ bottom: insets.bottom + 34 }}
+        style={{ bottom: Math.max(insets.bottom, 34) }}
       >
         <Text className="font-inter-semibold text-[64px] leading-16 text-fg tabular-nums">
           {`${Math.round(progress * 100)}%`}

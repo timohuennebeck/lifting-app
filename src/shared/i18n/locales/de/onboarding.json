@@ -17,7 +17,8 @@
       "exercises_one": "{{count}} Übung",
       "exercises_other": "{{count}} Übungen",
       "duration": "Geschätzte Dauer: {{minutes}} Min.",
-      "startWorkout": "Training starten"
+      "startWorkout": "Training starten",
+      "tileMeta": "{{exercises}} Übungen · {{sets}} Sätze"
     }
   },
   "name": {

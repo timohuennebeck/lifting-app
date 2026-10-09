@@ -17,7 +17,8 @@
       "exercises_one": "{{count}} exercise",
       "exercises_other": "{{count}} exercises",
       "duration": "Estimated duration: {{minutes}} min",
-      "startWorkout": "Start workout"
+      "startWorkout": "Start workout",
+      "tileMeta": "{{exercises}} exercises · {{sets}} sets"
     }
   },
   "name": {
