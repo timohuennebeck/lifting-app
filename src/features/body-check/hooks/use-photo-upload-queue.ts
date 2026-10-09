@@ -1,20 +1,15 @@
-import { useStatus } from '@powersync/react-native';
 import { and, eq, isNull } from 'drizzle-orm';
-import { useEffect, useRef, useState } from 'react';
-import { AppState } from 'react-native';
 
 import { drizzle } from '@/shared/data/powersync/database';
 import { bodyCheckPhotos } from '@/shared/data/powersync/schema';
 import { supabase } from '@/shared/data/supabase';
+import { useBackgroundDrain } from '@/shared/hooks/use-background-drain';
 import { useUserId } from '@/shared/stores/session-store';
 
 import { setPhotoStoragePath } from '../data/body-check-mutations';
 import { usePendingPhotoCount } from '../data/body-checks';
 import { PHOTO_BUCKET, photoFile, storagePathOf } from '../lib/photo-files';
 import type { BodyPose } from '../lib/poses';
-
-/** Waits before the next attempt after consecutive failures. */
-const RETRY_DELAYS_MS = [15_000, 60_000, 5 * 60_000, 15 * 60_000];
 
 interface PendingRow {
   id: string;
@@ -62,43 +57,11 @@ function drainQueue(userId: string) {
 }
 
 /**
- * Background upload of body-check photos to Supabase Storage. Runs while signed in
- * whenever photos are pending, the sync connection comes back or the app returns to
- * the foreground; failures back off and retry. Mount once in a long-lived screen.
+ * Background upload of body-check photos to Supabase Storage while signed in; see
+ * useBackgroundDrain for when it runs and retries. Mounted once in the (app) layout.
  */
 export function usePhotoUploadQueue() {
   const userId = useUserId();
-  const { connected } = useStatus();
   const { data: pending = 0 } = usePendingPhotoCount(userId);
-  const [attempt, setAttempt] = useState(0);
-  const failures = useRef(0);
-
-  useEffect(() => {
-    const sub = AppState.addEventListener('change', (state) => {
-      if (state === 'active') setAttempt((n) => n + 1);
-    });
-    return () => sub.remove();
-  }, []);
-
-  useEffect(() => {
-    if (!userId || !pending) return;
-    let active = true;
-    let retry: ReturnType<typeof setTimeout> | undefined;
-    drainQueue(userId)
-      .then((ok) => {
-        if (!active) return;
-        if (ok) {
-          failures.current = 0;
-          return;
-        }
-        const delay = RETRY_DELAYS_MS[Math.min(failures.current, RETRY_DELAYS_MS.length - 1)];
-        failures.current += 1;
-        retry = setTimeout(() => setAttempt((n) => n + 1), delay);
-      })
-      .catch((error) => console.warn('Body-check upload queue failed', error));
-    return () => {
-      active = false;
-      clearTimeout(retry);
-    };
-  }, [userId, pending, connected, attempt]);
+  useBackgroundDrain(userId ? pending : 0, () => drainQueue(userId!), 'Body-check upload');
 }

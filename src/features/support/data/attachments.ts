@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { File } from 'expo-file-system';
+import { Directory, File, Paths } from 'expo-file-system';
 
-import { queryClient } from '@/shared/data/query-client';
 import { supabase } from '@/shared/data/supabase';
 
 import { supportKeys } from './support-keys';
@@ -15,22 +14,36 @@ const URL_FRESH_MS = (URL_TTL_SECONDS - 5 * 60) * 1000;
 export const attachmentPath = (userId: string, ticketId: string, fileId: string) =>
   `${userId}/${ticketId}/${fileId}.jpg`;
 
-/** Uploads a compressed JPEG; retrying the same path overwrites a partial upload. */
-export async function uploadAttachment(path: string, localUri: string) {
-  const bytes = await new File(localUri).arrayBuffer();
+/** Device copy of a screenshot, kept under its bucket path for offline sending and display. */
+export const localAttachment = (path: string) =>
+  new File(Paths.document, BUCKET, ...path.split('/'));
+
+/** Copies a compressed screenshot to its permanent local place before the message is saved. */
+export function keepLocalCopy(path: string, sourceUri: string) {
+  const parts = path.split('/');
+  new Directory(Paths.document, BUCKET, ...parts.slice(0, -1)).create({
+    intermediates: true,
+    idempotent: true,
+  });
+  new File(sourceUri).copySync(localAttachment(path), { overwrite: true });
+}
+
+/** Uploads the local copy; retrying the same path overwrites a partial upload. */
+export async function uploadAttachment(path: string) {
+  const bytes = await localAttachment(path).arrayBuffer();
   const { error } = await supabase.storage
     .from(BUCKET)
     .upload(path, bytes, { contentType: 'image/jpeg', upsert: true });
   if (error) throw error;
-  // The sender sees the local copy right away instead of waiting for a signed URL.
-  queryClient.setQueryData(supportKeys.attachmentUrl(path).queryKey, localUri);
 }
 
-/** Cached signed URL for a private screenshot. */
+/** Local copy when this device sent it, otherwise a cached signed URL. */
 export function useAttachmentUrl(path: string) {
   return useQuery({
     queryKey: supportKeys.attachmentUrl(path).queryKey,
     queryFn: async () => {
+      const local = localAttachment(path);
+      if (local.exists) return local.uri;
       const { data, error } = await supabase.storage
         .from(BUCKET)
         .createSignedUrl(path, URL_TTL_SECONDS);

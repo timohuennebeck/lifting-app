@@ -3,7 +3,8 @@ import { useRef, useState } from 'react';
 import { newId } from '@/shared/data/json';
 import { haptics } from '@/shared/lib/haptics';
 
-import { attachmentPath, uploadAttachment } from '../data/attachments';
+import { attachmentPath, keepLocalCopy } from '../data/attachments';
+import { useUploadQueueStore } from '../stores/upload-queue-store';
 import { compressScreenshot, MAX_SCREENSHOTS, pickScreenshots } from '../lib/screenshots';
 
 export interface DraftShot {
@@ -11,15 +12,11 @@ export interface DraftShot {
   uri: string;
   /** False while the picked image is still being compressed. */
   ready: boolean;
-  /** Storage path once uploaded; kept so a retry skips finished files. */
-  path: string | null;
-  failed: boolean;
 }
 
-/** Screenshots attached to a ticket or message: pick, compress, upload with retry. */
+/** Screenshots attached to a ticket or message: pick, compress, then queue for upload. */
 export function useScreenshotDraft() {
   const [shots, setShotsState] = useState<DraftShot[]>([]);
-  const [uploading, setUploading] = useState(false);
   // Async work reads the latest list from here, not from a stale render.
   const latest = useRef<DraftShot[]>([]);
 
@@ -37,8 +34,6 @@ export function useScreenshotDraft() {
       id: newId(),
       uri: p.uri,
       ready: false,
-      path: null,
-      failed: false,
     }));
     setShots((prev) => [...prev, ...added].slice(0, MAX_SCREENSHOTS));
     await Promise.all(
@@ -56,26 +51,16 @@ export function useScreenshotDraft() {
   const remove = (id: string) => setShots((prev) => prev.filter((s) => s.id !== id));
   const reset = () => setShots(() => []);
 
-  /** Uploads every file not uploaded yet. Resolves with all paths, or null if any failed. */
-  async function upload(userId: string, ticketId: string) {
-    setUploading(true);
-    let ok = true;
-    for (const shot of latest.current) {
-      if (shot.path) continue;
+  /**
+   * Keeps device copies under their bucket paths and returns those paths for the message.
+   * Call `queueUploads` once the message is saved; the background queue uploads them.
+   */
+  function stage(userId: string, ticketId: string) {
+    return latest.current.map((shot) => {
       const path = attachmentPath(userId, ticketId, shot.id);
-      try {
-        patch(shot.id, { failed: false });
-        await uploadAttachment(path, shot.uri);
-        patch(shot.id, { path });
-      } catch (error) {
-        console.warn('Screenshot upload failed', error);
-        ok = false;
-        patch(shot.id, { failed: true });
-      }
-    }
-    setUploading(false);
-    if (!ok) haptics.error();
-    return ok ? latest.current.map((s) => s.path ?? '') : null;
+      keepLocalCopy(path, shot.uri);
+      return path;
+    });
   }
 
   return {
@@ -83,14 +68,14 @@ export function useScreenshotDraft() {
     add,
     remove,
     reset,
-    upload,
-    uploading,
+    stage,
     canAdd: shots.length < MAX_SCREENSHOTS,
     /** Still compressing a picked image. */
     preparing: shots.some((s) => !s.ready),
-    failed: shots.some((s) => s.failed),
-    uploaded: shots.filter((s) => s.path).length,
   };
 }
 
 export type ScreenshotDraft = ReturnType<typeof useScreenshotDraft>;
+
+/** Hands saved screenshots to the background upload queue. */
+export const queueUploads = (paths: string[]) => useUploadQueueStore.getState().enqueue(paths);

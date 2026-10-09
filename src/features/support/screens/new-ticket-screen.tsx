@@ -14,10 +14,9 @@ import { Text } from '@/shared/ui/text';
 
 import { ImportanceScale } from '../components/importance-scale';
 import { ScreenshotTiles } from '../components/screenshot-tiles';
-import { UploadStatus } from '../components/upload-status';
 import { createTicket } from '../data/ticket-mutations';
 import type { TicketKind } from '../data/tickets';
-import { useScreenshotDraft } from '../hooks/use-screenshot-draft';
+import { queueUploads, useScreenshotDraft } from '../hooks/use-screenshot-draft';
 
 /** Bug report (01f·I: text + screenshots) or feature request (01f·J: text + importance). */
 export function NewTicketScreen() {
@@ -25,7 +24,7 @@ export function NewTicketScreen() {
   const params = useLocalSearchParams<{ kind?: string }>();
   const kind: TicketKind = params.kind === 'idea' ? 'idea' : 'bug';
   const userId = useUserId();
-  // Fixed per form so screenshot paths stay the same across upload retries.
+  // Fixed per form so a failed save retries with the same ticket and screenshot paths.
   const [ticketId] = useState(newId);
   const [text, setText] = useState('');
   const [importance, setImportance] = useState(4);
@@ -39,8 +38,8 @@ export function NewTicketScreen() {
     setSending(true);
     setError(false);
     try {
-      const attachments = draft.shots.length ? await draft.upload(userId, ticketId) : [];
-      if (!attachments) return;
+      // Saved locally first (works offline); screenshots upload in the background.
+      const attachments = draft.stage(userId, ticketId);
       await createTicket({
         ticketId,
         userId,
@@ -49,6 +48,7 @@ export function NewTicketScreen() {
         body: text,
         attachments,
       });
+      queueUploads(attachments);
       haptics.success();
       router.replace({ pathname: '/support/[ticketId]', params: { ticketId } });
     } catch (e) {
@@ -66,18 +66,12 @@ export function NewTicketScreen() {
       scroll
       footer={
         <View className="gap-3">
-          <UploadStatus draft={draft} />
           {error ? (
             <Text variant="caption" tone="danger" className="px-1 font-inter">
               {t('common:errors.generic')}
             </Text>
           ) : null}
-          <Button
-            label={draft.failed ? t('upload.retry') : t('form.send')}
-            disabled={!canSend}
-            loading={sending}
-            onPress={send}
-          />
+          <Button label={t('form.send')} disabled={!canSend} loading={sending} onPress={send} />
         </View>
       }
     >

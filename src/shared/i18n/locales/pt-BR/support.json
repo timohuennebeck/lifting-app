@@ -51,11 +51,6 @@
     "importanceValue": "Importância {{value}} de 5",
     "send": "Enviar"
   },
-  "upload": {
-    "progress": "Enviando capturas · {{done}}/{{total}}",
-    "failed": "Falha no envio. Verifique sua conexão e tente novamente.",
-    "retry": "Tentar novamente"
-  },
   "list": {
     "title": "Chamados",
     "search": "Buscar",

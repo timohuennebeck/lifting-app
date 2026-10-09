@@ -51,11 +51,6 @@
     "importanceValue": "Importância {{value}} de 5",
     "send": "Enviar"
   },
-  "upload": {
-    "progress": "A carregar capturas · {{done}}/{{total}}",
-    "failed": "Falha no envio. Verifica a ligação e tenta novamente.",
-    "retry": "Tentar novamente"
-  },
   "list": {
     "title": "Pedidos",
     "search": "Pesquisar",

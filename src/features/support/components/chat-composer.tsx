@@ -11,9 +11,8 @@ import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 
 import { sendTicketMessage } from '../data/ticket-mutations';
-import { useScreenshotDraft } from '../hooks/use-screenshot-draft';
+import { queueUploads, useScreenshotDraft } from '../hooks/use-screenshot-draft';
 import { ScreenshotTiles } from './screenshot-tiles';
-import { UploadStatus } from './upload-status';
 
 export interface ChatComposerProps {
   ticketId: string;
@@ -37,10 +36,11 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
     const body = text;
     setSending(true);
     try {
-      const attachments = draft.shots.length ? await draft.upload(userId, ticketId) : [];
-      if (!attachments) return;
+      // Saved locally first (works offline); screenshots upload in the background.
+      const attachments = draft.stage(userId, ticketId);
       await sendTicketMessage({ userId, ticketId, body, attachments });
-      // Keep whatever was typed while the screenshots uploaded.
+      queueUploads(attachments);
+      // Keep anything typed while the message was being saved.
       setText((current) => (current === body ? '' : current));
       draft.reset();
     } catch (e) {
@@ -53,7 +53,6 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
 
   return (
     <View className="px-3 pt-2">
-      <UploadStatus draft={draft} onRetry={send} className="mb-2 px-3" />
       <View className="gap-3.5 rounded-[28px] border-[0.5px] border-white/12 bg-tile px-2.5 pt-4 pb-2.5">
         {draft.shots.length ? (
           <ScreenshotTiles
@@ -80,7 +79,7 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
             size={40}
             iconSize={14}
             accessibilityLabel={t('chat.addScreenshot')}
-            disabled={!draft.canAdd || draft.uploading}
+            disabled={!draft.canAdd}
             onPress={draft.add}
             className={cn(!draft.canAdd && 'opacity-35')}
           />

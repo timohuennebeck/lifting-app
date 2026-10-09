@@ -51,11 +51,6 @@
     "importanceValue": "Wichtigkeit {{value}} von 5",
     "send": "Senden"
   },
-  "upload": {
-    "progress": "Screenshots werden hochgeladen · {{done}}/{{total}}",
-    "failed": "Hochladen fehlgeschlagen. Prüf deine Verbindung und versuch es erneut.",
-    "retry": "Erneut versuchen"
-  },
   "list": {
     "title": "Tickets",
     "search": "Suchen",

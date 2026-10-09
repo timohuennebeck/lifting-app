@@ -1,11 +1,13 @@
 import { Stack } from 'expo-router';
 
 import { usePhotoUploadQueue } from '@/features/body-check/hooks/use-photo-upload-queue';
+import { useAttachmentUploadQueue } from '@/features/support/hooks/use-attachment-upload-queue';
 import { colors } from '@/shared/lib/theme';
 
 export default function AppLayout() {
-  // Resumes body check photo uploads left over from earlier sessions.
+  // Background uploads of body check photos and ticket screenshots, also after restarts.
   usePhotoUploadQueue();
+  useAttachmentUploadQueue();
 
   return (
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>

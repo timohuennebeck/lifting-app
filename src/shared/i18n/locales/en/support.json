@@ -51,11 +51,6 @@
     "importanceValue": "Importance {{value}} of 5",
     "send": "Send"
   },
-  "upload": {
-    "progress": "Uploading screenshots · {{done}}/{{total}}",
-    "failed": "Upload failed. Check your connection and try again.",
-    "retry": "Try again"
-  },
   "list": {
     "title": "Tickets",
     "search": "Search",
