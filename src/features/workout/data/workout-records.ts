@@ -1,7 +1,11 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { and, asc, desc, eq, isNotNull, lt, ne, sql } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/sqlite-core';
 
 import { parseJson } from '@/shared/data/json';
-import { useSqlQuery } from '@/shared/data/use-sql-query';
+import { drizzle } from '@/shared/data/powersync/database';
+import { workoutExercises, workouts, workoutSets } from '@/shared/data/powersync/schema';
+import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 import { estimateOneRepMax } from '@/shared/data/workouts';
 
 const recordKeys = createQueryKeys('workoutRecords', {
@@ -15,55 +19,77 @@ export interface WorkoutRecord {
   previous: { weightKg: number; reps: number };
 }
 
-interface RecordRow {
-  exercise_id: string;
-  weight_kg: number;
-  reps: number;
-  previous: string | null;
-}
+const previousSet = alias(workoutSets, 'previous_set');
+const previousExercise = alias(workoutExercises, 'previous_exercise');
+const previousWorkout = alias(workouts, 'previous_workout');
+
+/** Best completed set (by estimated 1RM) of the same exercise from an earlier workout. */
+const previousBest = drizzle
+  .select({
+    best: sql`json_object('weightKg', ${previousSet.weight_kg}, 'reps', ${previousSet.reps})`,
+  })
+  .from(previousSet)
+  .innerJoin(previousExercise, eq(previousExercise.id, previousSet.workout_exercise_id))
+  .innerJoin(previousWorkout, eq(previousWorkout.id, previousExercise.workout_id))
+  .where(
+    and(
+      eq(previousExercise.exercise_id, workoutExercises.exercise_id),
+      isNotNull(previousSet.completed_at),
+      ne(previousWorkout.id, workouts.id),
+      lt(previousWorkout.started_at, workouts.started_at),
+    ),
+  )
+  .orderBy(desc(sql`${previousSet.weight_kg} * (1 + ${previousSet.reps} / 30.0)`))
+  .limit(1);
+
+/** PR sets of one workout, each with the previous best as JSON. */
+const recordsQuery = (workoutId: string) =>
+  drizzle
+    .select({
+      exercise_id: workoutExercises.exercise_id,
+      weight_kg: workoutSets.weight_kg,
+      reps: workoutSets.reps,
+      previous: sql<string | null>`${previousBest}`,
+    })
+    .from(workoutSets)
+    .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
+    .innerJoin(workouts, eq(workouts.id, workoutExercises.workout_id))
+    .where(
+      and(
+        eq(workouts.id, workoutId),
+        eq(workoutSets.is_pr, true),
+        isNotNull(workoutSets.completed_at),
+      ),
+    )
+    .orderBy(asc(workoutExercises.position), asc(workoutSets.position));
 
 /** Best PR set per exercise; only exercises with an earlier best are kept. */
-function toRecords(rows: RecordRow[]): WorkoutRecord[] {
+function toRecords(rows: RowOf<typeof recordsQuery>[]): WorkoutRecord[] {
   const best = new Map<string, WorkoutRecord>();
   for (const r of rows) {
     const previous = parseJson<WorkoutRecord['previous'] | null>(r.previous, null);
     if (!previous) continue;
+    // Completed sets always carry weight and reps.
+    const weightKg = r.weight_kg!;
+    const reps = r.reps!;
     const current = best.get(r.exercise_id);
     if (
       current &&
-      estimateOneRepMax(current.weightKg, current.reps) >= estimateOneRepMax(r.weight_kg, r.reps)
+      estimateOneRepMax(current.weightKg, current.reps) >= estimateOneRepMax(weightKg, reps)
     ) {
       continue;
     }
-    best.set(r.exercise_id, {
-      exerciseId: r.exercise_id,
-      weightKg: r.weight_kg,
-      reps: r.reps,
-      previous,
-    });
+    best.set(r.exercise_id, { exerciseId: r.exercise_id, weightKg, reps, previous });
   }
   return [...best.values()];
 }
 
 /** New personal records of a workout with the best set from before it. */
 export function useWorkoutRecords(workoutId: string | undefined) {
-  return useSqlQuery({
+  return useDrizzleQuery({
     queryKey: recordKeys.detail(workoutId ?? '').queryKey,
     enabled: !!workoutId,
-    sql: `SELECT we.exercise_id, s.weight_kg, s.reps,
-            (SELECT json_object('weightKg', p.weight_kg, 'reps', p.reps)
-               FROM workout_sets p
-               JOIN workout_exercises pe ON pe.id = p.workout_exercise_id
-               JOIN workouts pw ON pw.id = pe.workout_id
-              WHERE pe.exercise_id = we.exercise_id AND p.completed_at IS NOT NULL
-                AND pw.id != w.id AND pw.started_at < w.started_at
-              ORDER BY p.weight_kg * (1 + p.reps / 30.0) DESC LIMIT 1) AS previous
-          FROM workout_sets s
-          JOIN workout_exercises we ON we.id = s.workout_exercise_id
-          JOIN workouts w ON w.id = we.workout_id
-          WHERE w.id = ? AND s.is_pr = 1 AND s.completed_at IS NOT NULL
-          ORDER BY we.position, s.position`,
-    parameters: [workoutId],
+    query: recordsQuery(workoutId ?? ''),
     map: toRecords,
   });
 }

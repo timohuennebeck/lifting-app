@@ -1,6 +1,15 @@
+import { and, desc, eq, getTableColumns, max, sql } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/sqlite-core';
+
 import { parseJson } from '@/shared/data/json';
-import type { Database } from '@/shared/data/powersync/schema';
-import { useSqlQuery } from '@/shared/data/use-sql-query';
+import { drizzle } from '@/shared/data/powersync/database';
+import {
+  ticketMessages,
+  tickets,
+  type TicketMessageRecord,
+  type TicketRecord,
+} from '@/shared/data/powersync/schema';
+import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 
 import { supportKeys } from './support-keys';
 
@@ -43,19 +52,45 @@ export interface TicketSummary extends Ticket {
   searchText: string;
 }
 
-type TicketRow = Database['tickets'] & { id: string };
-type MessageRow = Database['ticket_messages'] & { id: string };
+const lastMessage = alias(ticketMessages, 'last_message');
 
-interface SummaryRow extends TicketRow {
-  last_author: string | null;
-  last_body: string | null;
-  last_attachments: string | null;
-  last_at: string | null;
-  last_team_at: string | null;
-  bodies: string | null;
-}
+/** Messages of the ticket in the outer query, for correlated subqueries. */
+const messagesOfTicket = eq(ticketMessages.ticket_id, tickets.id);
 
-const toTicket = (r: TicketRow): Ticket => ({
+/** Every ticket with its latest message, latest team reply and all message bodies. */
+const ticketListQuery = () =>
+  drizzle
+    .select({
+      ...getTableColumns(tickets),
+      last_author: lastMessage.author,
+      last_body: lastMessage.body,
+      last_attachments: lastMessage.attachments,
+      last_at: lastMessage.created_at,
+      last_team_at: sql<string | null>`${drizzle
+        .select({ at: max(ticketMessages.created_at) })
+        .from(ticketMessages)
+        .where(and(messagesOfTicket, eq(ticketMessages.author, 'team')))}`,
+      bodies: sql<string | null>`${drizzle
+        .select({ bodies: sql`group_concat(${ticketMessages.body}, ' ')` })
+        .from(ticketMessages)
+        .where(messagesOfTicket)}`,
+    })
+    .from(tickets)
+    .leftJoin(
+      lastMessage,
+      eq(
+        lastMessage.id,
+        drizzle
+          .select({ id: ticketMessages.id })
+          .from(ticketMessages)
+          .where(messagesOfTicket)
+          .orderBy(desc(ticketMessages.created_at), desc(ticketMessages.id))
+          .limit(1),
+      ),
+    )
+    .orderBy(desc(sql`coalesce(${lastMessage.created_at}, ${tickets.updated_at})`));
+
+const toTicket = (r: TicketRecord): Ticket => ({
   id: r.id,
   number: r.number,
   kind: r.kind === 'idea' ? 'idea' : 'bug',
@@ -67,7 +102,7 @@ const toTicket = (r: TicketRow): Ticket => ({
   closedAt: r.closed_at,
 });
 
-const toSummaries = (rows: SummaryRow[]): TicketSummary[] =>
+const toSummaries = (rows: RowOf<typeof ticketListQuery>[]): TicketSummary[] =>
   rows.map((r) => {
     const ticket = toTicket(r);
     return {
@@ -86,9 +121,9 @@ const toSummaries = (rows: SummaryRow[]): TicketSummary[] =>
     };
   });
 
-const toTicketOrNull = (rows: TicketRow[]) => (rows[0] ? toTicket(rows[0]) : null);
+const toTicketOrNull = (rows: TicketRecord[]) => (rows[0] ? toTicket(rows[0]) : null);
 
-const toMessages = (rows: MessageRow[]): TicketMessage[] =>
+const toMessages = (rows: TicketMessageRecord[]): TicketMessage[] =>
   rows.map((r) => ({
     id: r.id,
     ticketId: r.ticket_id ?? '',
@@ -100,37 +135,30 @@ const toMessages = (rows: MessageRow[]): TicketMessage[] =>
 
 /** All of the user's tickets with their latest message, most recent activity first. */
 export function useTickets() {
-  return useSqlQuery({
+  return useDrizzleQuery({
     queryKey: supportKeys.tickets.queryKey,
-    sql: `SELECT t.*, m.author AS last_author, m.body AS last_body,
-              m.attachments AS last_attachments, m.created_at AS last_at,
-              (SELECT MAX(created_at) FROM ticket_messages
-                WHERE ticket_id = t.id AND author = 'team') AS last_team_at,
-              (SELECT group_concat(body, ' ') FROM ticket_messages WHERE ticket_id = t.id) AS bodies
-            FROM tickets t
-            LEFT JOIN ticket_messages m ON m.id = (
-              SELECT id FROM ticket_messages WHERE ticket_id = t.id
-              ORDER BY created_at DESC, id DESC LIMIT 1)
-            ORDER BY COALESCE(m.created_at, t.updated_at) DESC`,
+    query: ticketListQuery(),
     map: toSummaries,
   });
 }
 
 export function useTicket(ticketId: string) {
-  return useSqlQuery({
+  return useDrizzleQuery({
     queryKey: supportKeys.ticket(ticketId).queryKey,
-    sql: 'SELECT * FROM tickets WHERE id = ?',
-    parameters: [ticketId],
+    query: drizzle.select().from(tickets).where(eq(tickets.id, ticketId)),
     map: toTicketOrNull,
   });
 }
 
 /** The chat of one ticket, oldest first. Team replies arrive through sync. */
 export function useTicketMessages(ticketId: string) {
-  return useSqlQuery({
+  return useDrizzleQuery({
     queryKey: supportKeys.messages(ticketId).queryKey,
-    sql: 'SELECT * FROM ticket_messages WHERE ticket_id = ? ORDER BY created_at, id',
-    parameters: [ticketId],
+    query: drizzle
+      .select()
+      .from(ticketMessages)
+      .where(eq(ticketMessages.ticket_id, ticketId))
+      .orderBy(ticketMessages.created_at, ticketMessages.id),
     map: toMessages,
   });
 }

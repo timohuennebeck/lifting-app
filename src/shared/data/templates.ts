@@ -1,11 +1,20 @@
+import { asc, count, eq, isNull, type SQL } from 'drizzle-orm';
+
 import { getOrInsert } from '@/shared/lib/map';
 
 import { getExercise } from './exercises';
 import { newId, nowIso } from './json';
-import type { Tx } from './powersync/database';
-import type { TemplateSetRecord } from './powersync/schema';
+import { nextPosition } from './positions';
+import { drizzle, type Executor, type Tx } from './powersync/database';
+import {
+  collections,
+  templateExercises,
+  templates,
+  templateSets,
+  type TemplateSetRecord,
+} from './powersync/schema';
 import { queryKeys } from './query-keys';
-import { useSqlQuery } from './use-sql-query';
+import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /** Seconds a single working set takes, excluding rest. */
 const SET_SECONDS = 45;
@@ -45,11 +54,16 @@ export async function insertPlan(tx: Tx, userId: string, plan: PlanDraft): Promi
   const collectionId = await insertCollection(tx, userId, plan.name);
   for (const [dayIndex, day] of plan.days.entries()) {
     const templateId = newId();
-    await tx.execute(
-      `INSERT INTO templates (id, user_id, collection_id, name, weekday, position, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [templateId, userId, collectionId, day.name, day.weekday, dayIndex, nowIso(), nowIso()],
-    );
+    await tx.insert(templates).values({
+      id: templateId,
+      user_id: userId,
+      collection_id: collectionId,
+      name: day.name,
+      weekday: day.weekday,
+      position: dayIndex,
+      created_at: nowIso(),
+      updated_at: nowIso(),
+    });
     for (const [position, exercise] of day.exercises.entries()) {
       await insertTemplateExercise(tx, userId, templateId, position, exercise);
     }
@@ -57,18 +71,16 @@ export async function insertPlan(tx: Tx, userId: string, plan: PlanDraft): Promi
   return collectionId;
 }
 
-/** Appends a collection after the user's last one (`db` or a transaction). Returns its id. */
-export async function insertCollection(
-  executor: Pick<Tx, 'execute'>,
-  userId: string,
-  name: string,
-) {
+/** Appends a collection after the user's last one (`drizzle` or a transaction). Returns its id. */
+export async function insertCollection(executor: Executor, userId: string, name: string) {
   const id = newId();
-  await executor.execute(
-    `INSERT INTO collections (id, user_id, name, position, created_at)
-     VALUES (?, ?, ?, (SELECT COALESCE(MAX(position), -1) + 1 FROM collections WHERE user_id = ?), ?)`,
-    [id, userId, name, userId, nowIso()],
-  );
+  await executor.insert(collections).values({
+    id,
+    user_id: userId,
+    name,
+    position: nextPosition(collections.position, eq(collections.user_id, userId)),
+    created_at: nowIso(),
+  });
   return id;
 }
 
@@ -78,31 +90,46 @@ export async function insertTemplateSets(
   templateExerciseId: string,
   sets: PlanSetDraft[],
 ) {
-  for (const [position, set] of sets.entries()) {
-    await tx.execute(
-      `INSERT INTO template_sets (id, user_id, template_exercise_id, position, reps_min, reps_max, rir)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [newId(), userId, templateExerciseId, position, set.repsMin, set.repsMax, set.rir],
-    );
-  }
+  if (!sets.length) return;
+  await tx.insert(templateSets).values(
+    sets.map((set, position) => ({
+      id: newId(),
+      user_id: userId,
+      template_exercise_id: templateExerciseId,
+      position,
+      reps_min: set.repsMin,
+      reps_max: set.repsMax,
+      rir: set.rir,
+    })),
+  );
 }
 
+/** `position` may be a `nextPosition` subquery to append the exercise. */
 export async function insertTemplateExercise(
   tx: Tx,
   userId: string,
   templateId: string,
-  position: number,
+  position: number | SQL<number>,
   exercise: PlanExerciseDraft,
 ) {
   const id = newId();
-  await tx.execute(
-    `INSERT INTO template_exercises (id, user_id, template_id, exercise_id, position, rest_seconds)
-     VALUES (?, ?, ?, ?, ?, ?)`,
-    [id, userId, templateId, exercise.exerciseId, position, exercise.restSeconds ?? null],
-  );
+  await tx.insert(templateExercises).values({
+    id,
+    user_id: userId,
+    template_id: templateId,
+    exercise_id: exercise.exerciseId,
+    position,
+    rest_seconds: exercise.restSeconds ?? null,
+  });
   await insertTemplateSets(tx, userId, id, exercise.sets);
   return id;
 }
+
+/** Templates in a collection, or the ones without a collection for `null` (SQL `IS`). */
+export const inCollection = (collectionId: string | null) =>
+  collectionId === null
+    ? isNull(templates.collection_id)
+    : eq(templates.collection_id, collectionId);
 
 export function restSecondsFor(exerciseId: string, override: number | null | undefined) {
   return override ?? getExercise(exerciseId)?.restSeconds ?? DEFAULT_REST;
@@ -120,17 +147,26 @@ export function estimateMinutes(
   return Math.round(seconds / 60);
 }
 
-interface TemplateRow {
-  id: string;
-  name: string;
-  collection_id: string | null;
-  collection_name: string | null;
-  weekday: number | null;
-  position: number;
-  exercise_id: string | null;
-  rest_seconds: number | null;
-  set_count: number;
-}
+/** One row per template exercise (or per empty template) with its set count. */
+const templateListQuery = () =>
+  drizzle
+    .select({
+      id: templates.id,
+      name: templates.name,
+      collection_id: templates.collection_id,
+      collection_name: collections.name,
+      weekday: templates.weekday,
+      position: templates.position,
+      exercise_id: templateExercises.exercise_id,
+      rest_seconds: templateExercises.rest_seconds,
+      set_count: count(templateSets.id),
+    })
+    .from(templates)
+    .leftJoin(collections, eq(collections.id, templates.collection_id))
+    .leftJoin(templateExercises, eq(templateExercises.template_id, templates.id))
+    .leftJoin(templateSets, eq(templateSets.template_exercise_id, templateExercises.id))
+    .groupBy(templates.id, templateExercises.id)
+    .orderBy(collections.position, templates.position, templateExercises.position);
 
 export interface TemplateSummary {
   id: string;
@@ -146,7 +182,7 @@ export interface TemplateSummary {
   items: { exerciseId: string; sets: number }[];
 }
 
-function summarize(rows: TemplateRow[]): TemplateSummary[] {
+function summarize(rows: RowOf<typeof templateListQuery>[]): TemplateSummary[] {
   const byId = new Map<string, TemplateSummary & { rest: (number | null)[] }>();
   for (const r of rows) {
     const t = getOrInsert(byId, r.id, () => ({
@@ -176,16 +212,9 @@ function summarize(rows: TemplateRow[]): TemplateSummary[] {
 
 /** All templates with collection info and size stats, ordered for display. */
 export function useTemplates() {
-  return useSqlQuery({
+  return useDrizzleQuery({
     queryKey: queryKeys.templates.list.queryKey,
-    sql: `SELECT t.id, t.name, t.collection_id, c.name AS collection_name, t.weekday, t.position,
-              te.exercise_id, te.rest_seconds, COUNT(ts.id) AS set_count
-            FROM templates t
-            LEFT JOIN collections c ON c.id = t.collection_id
-            LEFT JOIN template_exercises te ON te.template_id = t.id
-            LEFT JOIN template_sets ts ON ts.template_exercise_id = te.id
-            GROUP BY t.id, te.id
-            ORDER BY c.position, t.position, te.position`,
+    query: templateListQuery(),
     map: summarize,
   });
 }
@@ -197,32 +226,46 @@ export interface CollectionSummary {
   templateCount: number;
 }
 
-const toCollections = (rows: unknown[]) =>
-  (rows as { id: string; name: string; position: number; template_count: number }[]).map(
-    (r): CollectionSummary => ({
-      id: r.id,
-      name: r.name,
-      position: r.position,
-      templateCount: r.template_count,
-    }),
-  );
+const collectionListQuery = () =>
+  drizzle
+    .select({
+      id: collections.id,
+      name: collections.name,
+      position: collections.position,
+      template_count: count(templates.id),
+    })
+    .from(collections)
+    .leftJoin(templates, eq(templates.collection_id, collections.id))
+    .groupBy(collections.id)
+    .orderBy(collections.position);
+
+const toCollections = (rows: RowOf<typeof collectionListQuery>[]) =>
+  rows.map((r): CollectionSummary => ({
+    id: r.id,
+    name: r.name,
+    position: r.position,
+    templateCount: r.template_count,
+  }));
 
 export function useCollections() {
-  return useSqlQuery({
+  return useDrizzleQuery({
     queryKey: queryKeys.templates.collections.queryKey,
-    sql: `SELECT c.id, c.name, c.position, COUNT(t.id) AS template_count
-            FROM collections c LEFT JOIN templates t ON t.collection_id = c.id
-            GROUP BY c.id ORDER BY c.position`,
+    query: collectionListQuery(),
     map: toCollections,
   });
 }
+
+export type TemplateSetDetail = Pick<
+  TemplateSetRecord,
+  'id' | 'position' | 'reps_min' | 'reps_max' | 'rir'
+>;
 
 export interface TemplateExerciseDetail {
   id: string;
   exerciseId: string;
   position: number;
   restSeconds: number | null;
-  sets: (TemplateSetRecord & { id: string })[];
+  sets: TemplateSetDetail[];
 }
 
 export interface TemplateDetail {
@@ -233,52 +276,47 @@ export interface TemplateDetail {
   exercises: TemplateExerciseDetail[];
 }
 
-interface DetailRow {
-  t_id: string;
-  t_name: string;
-  collection_id: string | null;
-  weekday: number | null;
-  te_id: string | null;
-  exercise_id: string | null;
-  te_position: number | null;
-  rest_seconds: number | null;
-  set_json: string | null;
-}
+/** One template with its exercises and their sets, each ordered by position. */
+const templateDetailQuery = (templateId: string) =>
+  drizzle.query.templates.findMany({
+    columns: { id: true, name: true, collection_id: true, weekday: true },
+    where: eq(templates.id, templateId),
+    with: {
+      exercises: {
+        columns: { id: true, exercise_id: true, position: true, rest_seconds: true },
+        orderBy: asc(templateExercises.position),
+        with: {
+          sets: {
+            columns: { id: true, position: true, reps_min: true, reps_max: true, rir: true },
+            orderBy: asc(templateSets.position),
+          },
+        },
+      },
+    },
+  });
 
-function toTemplateDetail(data: unknown[]): TemplateDetail | null {
-  const rows = data as DetailRow[];
-  if (!rows.length) return null;
-  const [first] = rows;
+function toTemplateDetail([t]: RowOf<typeof templateDetailQuery>[]): TemplateDetail | null {
+  if (!t) return null;
   return {
-    id: first.t_id,
-    name: first.t_name,
-    collectionId: first.collection_id,
-    weekday: first.weekday,
-    exercises: rows
-      .filter((r) => r.te_id && r.exercise_id)
-      .map((r) => ({
-        id: r.te_id!,
-        exerciseId: r.exercise_id!,
-        position: r.te_position ?? 0,
-        restSeconds: r.rest_seconds,
-        sets: JSON.parse(r.set_json ?? '[]'),
-      })),
+    id: t.id,
+    name: t.name,
+    collectionId: t.collection_id,
+    weekday: t.weekday,
+    exercises: t.exercises.map((e) => ({
+      id: e.id,
+      exerciseId: e.exercise_id,
+      position: e.position,
+      restSeconds: e.rest_seconds,
+      sets: e.sets,
+    })),
   };
 }
 
 export function useTemplateDetail(templateId: string | undefined) {
-  return useSqlQuery({
+  return useDrizzleQuery({
     queryKey: queryKeys.templates.detail(templateId ?? '').queryKey,
     enabled: !!templateId,
-    sql: `SELECT t.id AS t_id, t.name AS t_name, t.collection_id, t.weekday,
-              te.id AS te_id, te.exercise_id, te.position AS te_position, te.rest_seconds,
-              (SELECT json_group_array(json_object('id', s.id, 'position', s.position,
-                 'reps_min', s.reps_min, 'reps_max', s.reps_max, 'rir', s.rir))
-               FROM (SELECT * FROM template_sets WHERE template_exercise_id = te.id ORDER BY position) s
-              ) AS set_json
-            FROM templates t LEFT JOIN template_exercises te ON te.template_id = t.id
-            WHERE t.id = ? ORDER BY te.position`,
-    parameters: [templateId],
+    query: templateDetailQuery(templateId ?? ''),
     map: toTemplateDetail,
   });
 }

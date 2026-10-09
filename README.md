@@ -8,6 +8,7 @@ Claude Design handoff (prototype, chat transcript, assets) lives in [`design/`](
 - **Expo SDK 57** with Expo Router, protected routes and native tabs
 - **Supabase** (local development) for auth and Postgres
 - **PowerSync** for local-first SQLite sync, read through **TanStack Query** (`@powersync/tanstack-react-query`)
+- **Drizzle ORM** (`@powersync/drizzle-driver`) for typed queries; `src/shared/data/powersync/schema.ts` is the client schema
 - **Uniwind** (Tailwind v4) with `tailwind-merge` via `cn()`
 - **Zustand** + **MMKV** for global and persisted client state
 - **i18next** with `en` (source), `de`, `pt-PT`, `pt-BR`

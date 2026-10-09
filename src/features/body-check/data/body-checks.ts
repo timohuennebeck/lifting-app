@@ -1,7 +1,10 @@
+import { and, count, eq, isNull } from 'drizzle-orm';
+
 import { parseJson } from '@/shared/data/json';
-import type { BodyCheckRecord } from '@/shared/data/powersync/schema';
+import { drizzle } from '@/shared/data/powersync/database';
+import { bodyCheckPhotos, bodyChecks, type BodyCheckRecord } from '@/shared/data/powersync/schema';
 import { queryKeys } from '@/shared/data/query-keys';
-import { useSqlQuery } from '@/shared/data/use-sql-query';
+import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 
 import type { BodyCheckMetrics, GroupScores } from '../lib/body-check-service';
 import type { BodyPose } from '../lib/poses';
@@ -25,7 +28,7 @@ export interface BodyCheckPhoto {
 
 export type CheckPhotos = Partial<Record<BodyPose, BodyCheckPhoto>>;
 
-const toChecks = (rows: (BodyCheckRecord & { id: string })[]): BodyCheck[] =>
+const toChecks = (rows: BodyCheckRecord[]): BodyCheck[] =>
   rows.map((r) => ({
     id: r.id,
     score: r.score ?? 0,
@@ -36,28 +39,32 @@ const toChecks = (rows: (BodyCheckRecord & { id: string })[]): BodyCheck[] =>
 
 /** All body checks, oldest first (check numbers follow this order). */
 export function useBodyChecks() {
-  return useSqlQuery({
+  return useDrizzleQuery({
     queryKey: queryKeys.bodyChecks.list.queryKey,
-    sql: 'SELECT * FROM body_checks ORDER BY created_at',
+    query: drizzle.select().from(bodyChecks).orderBy(bodyChecks.created_at),
     map: toChecks,
   });
 }
 
-interface PhotoRow {
-  id: string;
-  body_check_id: string;
-  pose: BodyPose;
-  storage_path: string | null;
-}
+const photoListQuery = () =>
+  drizzle
+    .select({
+      id: bodyCheckPhotos.id,
+      body_check_id: bodyCheckPhotos.body_check_id,
+      pose: bodyCheckPhotos.pose,
+      storage_path: bodyCheckPhotos.storage_path,
+    })
+    .from(bodyCheckPhotos);
 
-function byCheck(rows: PhotoRow[]) {
+function byCheck(rows: RowOf<typeof photoListQuery>[]) {
   const out: Record<string, CheckPhotos> = {};
   for (const r of rows) {
+    const pose = r.pose as BodyPose;
     out[r.body_check_id] ??= {};
-    out[r.body_check_id][r.pose] = {
+    out[r.body_check_id][pose] = {
       id: r.id,
       checkId: r.body_check_id,
-      pose: r.pose,
+      pose,
       storagePath: r.storage_path,
     };
   }
@@ -66,9 +73,9 @@ function byCheck(rows: PhotoRow[]) {
 
 /** Photos of every check, grouped by check id and pose. */
 export function useBodyCheckPhotos() {
-  return useSqlQuery({
+  return useDrizzleQuery({
     queryKey: bodyCheckPhotoKeys.list.queryKey,
-    sql: 'SELECT id, body_check_id, pose, storage_path FROM body_check_photos',
+    query: photoListQuery(),
     map: byCheck,
   });
 }
@@ -77,10 +84,12 @@ const firstCount = (rows: { n: number }[]) => rows[0]?.n ?? 0;
 
 /** Number of the user's photos that still wait for their upload. */
 export function usePendingPhotoCount(userId: string | null) {
-  return useSqlQuery({
+  return useDrizzleQuery({
     queryKey: bodyCheckPhotoKeys.pendingCount(userId ?? '').queryKey,
-    sql: 'SELECT COUNT(*) AS n FROM body_check_photos WHERE storage_path IS NULL AND user_id = ?',
-    parameters: [userId],
+    query: drizzle
+      .select({ n: count() })
+      .from(bodyCheckPhotos)
+      .where(and(isNull(bodyCheckPhotos.storage_path), eq(bodyCheckPhotos.user_id, userId ?? ''))),
     enabled: !!userId,
     map: firstCount,
   });

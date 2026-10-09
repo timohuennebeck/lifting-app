@@ -1,5 +1,8 @@
+import { eq } from 'drizzle-orm';
+
 import { newId, nowIso } from '@/shared/data/json';
-import { db, type Tx } from '@/shared/data/powersync/database';
+import { drizzle, type Executor } from '@/shared/data/powersync/database';
+import { ticketMessages, tickets } from '@/shared/data/powersync/schema';
 
 import { firstLine } from '../lib/ticket-format';
 import type { TicketKind } from './tickets';
@@ -18,19 +21,16 @@ export interface NewTicket extends NewMessage {
   priority: number | null;
 }
 
-function insertMessage(executor: Pick<Tx, 'execute'>, message: NewMessage, createdAt: string) {
-  return executor.execute(
-    `INSERT INTO ticket_messages (id, user_id, ticket_id, author, body, attachments, created_at)
-     VALUES (?, ?, ?, 'user', ?, ?, ?)`,
-    [
-      newId(),
-      message.userId,
-      message.ticketId,
-      message.body.trim(),
-      JSON.stringify(message.attachments),
-      createdAt,
-    ],
-  );
+async function insertMessage(executor: Executor, message: NewMessage, createdAt: string) {
+  await executor.insert(ticketMessages).values({
+    id: newId(),
+    user_id: message.userId,
+    ticket_id: message.ticketId,
+    author: 'user',
+    body: message.body.trim(),
+    attachments: JSON.stringify(message.attachments),
+    created_at: createdAt,
+  });
 }
 
 /**
@@ -39,25 +39,30 @@ function insertMessage(executor: Pick<Tx, 'execute'>, message: NewMessage, creat
  */
 export async function createTicket(input: NewTicket) {
   const now = nowIso();
-  await db.writeTransaction(async (tx) => {
-    await tx.execute(
-      `INSERT INTO tickets (id, user_id, kind, status, priority, subject, created_at, updated_at)
-       VALUES (?, ?, ?, 'open', ?, ?, ?, ?)`,
-      [input.ticketId, input.userId, input.kind, input.priority, firstLine(input.body), now, now],
-    );
+  await drizzle.transaction(async (tx) => {
+    await tx.insert(tickets).values({
+      id: input.ticketId,
+      user_id: input.userId,
+      kind: input.kind,
+      status: 'open',
+      priority: input.priority,
+      subject: firstLine(input.body),
+      created_at: now,
+      updated_at: now,
+    });
     await insertMessage(tx, input, now);
   });
 }
 
 /** A follow-up message from the user in an existing ticket's chat. */
 export function sendTicketMessage(message: NewMessage) {
-  return insertMessage(db, message, nowIso());
+  return insertMessage(drizzle, message, nowIso());
 }
 
 /** Puts a resolved or closed ticket back into the team's queue. */
-export function reopenTicket(ticketId: string) {
-  return db.execute(
-    `UPDATE tickets SET status = 'open', closed_at = NULL, updated_at = ? WHERE id = ?`,
-    [nowIso(), ticketId],
-  );
+export async function reopenTicket(ticketId: string) {
+  await drizzle
+    .update(tickets)
+    .set({ status: 'open', closed_at: null, updated_at: nowIso() })
+    .where(eq(tickets.id, ticketId));
 }

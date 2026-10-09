@@ -1,12 +1,14 @@
+import { eq } from 'drizzle-orm';
+
 import { useUserId } from '@/shared/stores/session-store';
 import type { UnitSystem } from '@/shared/lib/format';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 import { parseJson, nowIso } from './json';
-import { db, type Tx } from './powersync/database';
-import type { ProfileRecord } from './powersync/schema';
+import { drizzle, type Executor } from './powersync/database';
+import { profiles, type ProfileRecord } from './powersync/schema';
 import { queryKeys } from './query-keys';
-import { useSqlQuery } from './use-sql-query';
+import { useDrizzleQuery } from './use-drizzle-query';
 
 export type Sex = 'male' | 'female' | 'unspecified';
 export type Experience = 'none' | 'beginner' | 'intermediate' | 'advanced';
@@ -34,9 +36,7 @@ export interface Profile {
   createdAt: string | null;
 }
 
-type ProfileRow = ProfileRecord & { id: string };
-
-function toProfile(r: ProfileRow): Profile {
+function toProfile(r: ProfileRecord): Profile {
   return {
     id: r.id,
     firstName: r.first_name ?? '',
@@ -58,14 +58,16 @@ function toProfile(r: ProfileRow): Profile {
   };
 }
 
-const firstProfile = (rows: ProfileRow[]) => (rows[0] ? toProfile(rows[0]) : null);
+const firstProfile = (rows: ProfileRecord[]) => (rows[0] ? toProfile(rows[0]) : null);
 
 export function useProfile() {
   const userId = useUserId();
-  const query = useSqlQuery({
+  const query = useDrizzleQuery({
     queryKey: queryKeys.profile.current(userId ?? '').queryKey,
-    sql: 'SELECT * FROM profiles WHERE id = ?',
-    parameters: [userId],
+    query: drizzle
+      .select()
+      .from(profiles)
+      .where(eq(profiles.id, userId ?? '')),
     enabled: !!userId,
     map: firstProfile,
   });
@@ -77,25 +79,28 @@ export function useUnits(): UnitSystem {
   return useProfile().profile?.unitSystem ?? 'metric';
 }
 
-const COLUMNS: Record<keyof Omit<Profile, 'id' | 'createdAt'>, string> = {
-  firstName: 'first_name',
-  sex: 'sex',
-  age: 'age',
-  unitSystem: 'unit_system',
-  weightKg: 'weight_kg',
-  heightCm: 'height_cm',
-  experience: 'experience',
-  complaints: 'complaints',
-  goal: 'goal',
-  focus: 'focus',
-  equipment: 'equipment',
-  trainingDays: 'training_days',
-  sessionMinutes: 'session_minutes',
-  activeCollectionId: 'active_collection_id',
-  onboardedAt: 'onboarded_at',
-};
-
 export type ProfilePatch = Partial<Omit<Profile, 'id' | 'createdAt'>>;
+
+const toJson = (value: unknown[] | undefined) => value && JSON.stringify(value);
+
+/** Profile columns for a patch; fields left out stay undefined, so Drizzle skips them. */
+const toColumns = (p: ProfilePatch) => ({
+  first_name: p.firstName,
+  sex: p.sex,
+  age: p.age,
+  unit_system: p.unitSystem,
+  weight_kg: p.weightKg,
+  height_cm: p.heightCm,
+  experience: p.experience,
+  complaints: toJson(p.complaints),
+  goal: p.goal,
+  focus: toJson(p.focus),
+  equipment: p.equipment,
+  training_days: toJson(p.trainingDays),
+  session_minutes: p.sessionMinutes,
+  active_collection_id: p.activeCollectionId,
+  onboarded_at: p.onboardedAt,
+});
 
 /**
  * Inserts or updates the signed-in user's profile row (PowerSync views have no UPSERT).
@@ -104,25 +109,26 @@ export type ProfilePatch = Partial<Omit<Profile, 'id' | 'createdAt'>>;
 export async function saveProfile(
   userId: string,
   patch: ProfilePatch,
-  executor: Tx | typeof db = db,
+  executor: Executor = drizzle,
 ) {
-  const entries = Object.entries(patch).map(([key, value]) => [
-    COLUMNS[key as keyof ProfilePatch],
-    Array.isArray(value) ? JSON.stringify(value) : value,
-  ]);
-  const existing = await executor.getOptional('SELECT id FROM profiles WHERE id = ?', [userId]);
+  const columns = toColumns(patch);
+  const existing = await executor
+    .select({ id: profiles.id })
+    .from(profiles)
+    .where(eq(profiles.id, userId))
+    .get();
   if (existing) {
-    const sets = [...entries.map(([c]) => `${c} = ?`), 'updated_at = ?'].join(', ');
-    await executor.execute(`UPDATE profiles SET ${sets} WHERE id = ?`, [
-      ...entries.map(([, v]) => v),
-      nowIso(),
-      userId,
-    ]);
+    await executor
+      .update(profiles)
+      .set({ ...columns, updated_at: nowIso() })
+      .where(eq(profiles.id, userId));
     return;
   }
-  const cols = ['id', 'user_id', 'created_at', 'updated_at', ...entries.map(([c]) => c)];
-  await executor.execute(
-    `INSERT INTO profiles (${cols.join(', ')}) VALUES (${cols.map(() => '?').join(', ')})`,
-    [userId, userId, nowIso(), nowIso(), ...entries.map(([, v]) => v)],
-  );
+  await executor.insert(profiles).values({
+    id: userId,
+    user_id: userId,
+    created_at: nowIso(),
+    updated_at: nowIso(),
+    ...columns,
+  });
 }

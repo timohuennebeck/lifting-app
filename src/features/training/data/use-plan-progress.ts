@@ -1,6 +1,10 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { and, eq, isNotNull, max, sql } from 'drizzle-orm';
 
-import { useSqlQuery } from '@/shared/data/use-sql-query';
+import { drizzle } from '@/shared/data/powersync/database';
+import { templates, workouts } from '@/shared/data/powersync/schema';
+import { inCollection } from '@/shared/data/templates';
+import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 
 const trainingKeys = createQueryKeys('training', {
   planProgress: (collectionId: string | null) => [collectionId ?? 'none'],
@@ -18,11 +22,22 @@ export interface PlanItem {
   state: PlanItemState;
 }
 
-interface Row {
-  id: string;
-  name: string;
-  last_done: string | null;
-}
+/** Templates of a collection in rotation order, each with its latest finished workout. */
+const planQuery = (collectionId: string | null) =>
+  drizzle
+    .select({
+      id: templates.id,
+      name: templates.name,
+      last_done: sql<string | null>`${drizzle
+        .select({ at: max(workouts.finished_at) })
+        .from(workouts)
+        .where(and(eq(workouts.template_id, templates.id), isNotNull(workouts.finished_at)))}`,
+    })
+    .from(templates)
+    .where(inCollection(collectionId))
+    .orderBy(templates.position, templates.created_at);
+
+type Row = RowOf<typeof planQuery>;
 
 /**
  * Templates of a collection rotate in order: the one after the most recently
@@ -53,15 +68,10 @@ function toPlan(rows: Row[]): PlanItem[] {
 
 /** Rotation status of all templates sharing a collection (or all without one). */
 export function usePlanProgress(collectionId: string | null, enabled = true) {
-  return useSqlQuery({
+  return useDrizzleQuery({
     queryKey: trainingKeys.planProgress(collectionId).queryKey,
     enabled,
-    sql: `SELECT t.id, t.name,
-              (SELECT MAX(w.finished_at) FROM workouts w
-                WHERE w.template_id = t.id AND w.finished_at IS NOT NULL) AS last_done
-            FROM templates t WHERE t.collection_id IS ?
-            ORDER BY t.position, t.created_at`,
-    parameters: [collectionId],
+    query: planQuery(collectionId),
     map: toPlan,
   });
 }

@@ -1,8 +1,10 @@
 import { useStatus } from '@powersync/react';
+import { and, eq, isNull } from 'drizzle-orm';
 import { useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 
-import { db } from '@/shared/data/powersync/database';
+import { drizzle } from '@/shared/data/powersync/database';
+import { bodyCheckPhotos } from '@/shared/data/powersync/schema';
 import { supabase } from '@/shared/data/supabase';
 import { useUserId } from '@/shared/stores/session-store';
 
@@ -26,10 +28,16 @@ let draining: Promise<boolean> | null = null;
 /** Uploads every pending photo that exists on this device; false if one failed. */
 function drainQueue(userId: string) {
   draining ??= (async () => {
-    const rows = await db.getAll<PendingRow>(
-      'SELECT id, body_check_id, pose FROM body_check_photos WHERE storage_path IS NULL AND user_id = ?',
-      [userId],
-    );
+    const rows = (await drizzle
+      .select({
+        id: bodyCheckPhotos.id,
+        body_check_id: bodyCheckPhotos.body_check_id,
+        pose: bodyCheckPhotos.pose,
+      })
+      .from(bodyCheckPhotos)
+      .where(
+        and(isNull(bodyCheckPhotos.storage_path), eq(bodyCheckPhotos.user_id, userId)),
+      )) as PendingRow[];
     for (const row of rows) {
       const file = photoFile(row.body_check_id, row.pose);
       // Taken on another device that has not uploaded it yet.

@@ -1,6 +1,18 @@
+import { and, eq, inArray } from 'drizzle-orm';
+
 import { newId, nowIso } from '@/shared/data/json';
-import { db, type Tx } from '@/shared/data/powersync/database';
+import { nextPosition } from '@/shared/data/positions';
+import { drizzle, type Tx } from '@/shared/data/powersync/database';
 import {
+  collections,
+  profiles,
+  templateExercises,
+  templates,
+  templateSets,
+  workouts,
+} from '@/shared/data/powersync/schema';
+import {
+  inCollection,
   insertCollection,
   insertTemplateExercise,
   insertTemplateSets,
@@ -14,105 +26,124 @@ const NEW_EXERCISE_SETS: PlanSetDraft[] = Array.from({ length: 3 }, () => ({
   rir: 2,
 }));
 
-const touchTemplate = (tx: Tx, templateId: string) =>
-  tx.execute('UPDATE templates SET updated_at = ? WHERE id = ?', [nowIso(), templateId]);
+async function touchTemplate(tx: Tx, templateId: string) {
+  await tx.update(templates).set({ updated_at: nowIso() }).where(eq(templates.id, templateId));
+}
 
 async function templateOf(tx: Tx, templateExerciseId: string) {
-  const row = await tx.get<{ template_id: string }>(
-    'SELECT template_id FROM template_exercises WHERE id = ?',
-    [templateExerciseId],
-  );
+  const row = await tx
+    .select({ template_id: templateExercises.template_id })
+    .from(templateExercises)
+    .where(eq(templateExercises.id, templateExerciseId))
+    .get();
+  if (!row) throw new Error(`Template exercise ${templateExerciseId} not found`);
   return row.template_id;
 }
 
 /** Local SQLite views have no FK cascades, so children are removed explicitly. */
 async function deleteTemplateTx(tx: Tx, templateId: string) {
-  await tx.execute(
-    `DELETE FROM template_sets WHERE template_exercise_id IN
-       (SELECT id FROM template_exercises WHERE template_id = ?)`,
-    [templateId],
-  );
-  await tx.execute('DELETE FROM template_exercises WHERE template_id = ?', [templateId]);
-  await tx.execute('UPDATE workouts SET template_id = NULL WHERE template_id = ?', [templateId]);
-  await tx.execute('DELETE FROM templates WHERE id = ?', [templateId]);
+  const exerciseIds = tx
+    .select({ id: templateExercises.id })
+    .from(templateExercises)
+    .where(eq(templateExercises.template_id, templateId));
+  await tx.delete(templateSets).where(inArray(templateSets.template_exercise_id, exerciseIds));
+  await tx.delete(templateExercises).where(eq(templateExercises.template_id, templateId));
+  await tx.update(workouts).set({ template_id: null }).where(eq(workouts.template_id, templateId));
+  await tx.delete(templates).where(eq(templates.id, templateId));
+}
+
+async function setExercisePosition(tx: Tx, templateExerciseId: string, position: number) {
+  await tx
+    .update(templateExercises)
+    .set({ position })
+    .where(eq(templateExercises.id, templateExerciseId));
 }
 
 /** Closes gaps in the exercise positions. Returns the ids in order (index = position). */
 async function renumberExercises(tx: Tx, templateId: string) {
-  const rows = await tx.getAll<{ id: string }>(
-    'SELECT id FROM template_exercises WHERE template_id = ? ORDER BY position',
-    [templateId],
-  );
+  const rows = await tx
+    .select({ id: templateExercises.id })
+    .from(templateExercises)
+    .where(eq(templateExercises.template_id, templateId))
+    .orderBy(templateExercises.position);
   for (const [position, row] of rows.entries()) {
-    await tx.execute('UPDATE template_exercises SET position = ? WHERE id = ?', [position, row.id]);
+    await setExercisePosition(tx, row.id, position);
   }
   return rows.map((r) => r.id);
 }
 
 export function createCollection(userId: string, name: string) {
-  return insertCollection(db, userId, name.trim());
+  return insertCollection(drizzle, userId, name.trim());
 }
 
 export async function renameCollection(collectionId: string, name: string) {
-  await db.execute('UPDATE collections SET name = ? WHERE id = ?', [name.trim(), collectionId]);
+  await drizzle
+    .update(collections)
+    .set({ name: name.trim() })
+    .where(eq(collections.id, collectionId));
 }
 
 /** `keepTemplates` moves them to "No collection"; logged workouts always remain. */
 export type DeleteCollectionMode = 'keepTemplates' | 'withTemplates';
 
 export async function deleteCollection(collectionId: string, mode: DeleteCollectionMode) {
-  await db.writeTransaction(async (tx) => {
+  await drizzle.transaction(async (tx) => {
     if (mode === 'withTemplates') {
-      const templates = await tx.getAll<{ id: string }>(
-        'SELECT id FROM templates WHERE collection_id = ?',
-        [collectionId],
-      );
-      for (const t of templates) await deleteTemplateTx(tx, t.id);
+      const inside = await tx
+        .select({ id: templates.id })
+        .from(templates)
+        .where(eq(templates.collection_id, collectionId));
+      for (const t of inside) await deleteTemplateTx(tx, t.id);
     } else {
-      await tx.execute(
-        'UPDATE templates SET collection_id = NULL, updated_at = ? WHERE collection_id = ?',
-        [nowIso(), collectionId],
-      );
+      await tx
+        .update(templates)
+        .set({ collection_id: null, updated_at: nowIso() })
+        .where(eq(templates.collection_id, collectionId));
     }
-    await tx.execute(
-      'UPDATE profiles SET active_collection_id = NULL WHERE active_collection_id = ?',
-      [collectionId],
-    );
-    await tx.execute('DELETE FROM collections WHERE id = ?', [collectionId]);
+    await tx
+      .update(profiles)
+      .set({ active_collection_id: null })
+      .where(eq(profiles.active_collection_id, collectionId));
+    await tx.delete(collections).where(eq(collections.id, collectionId));
   });
 }
 
 export async function createTemplate(userId: string, name: string, collectionId: string | null) {
   const id = newId();
-  await db.execute(
-    `INSERT INTO templates (id, user_id, collection_id, name, weekday, position, created_at, updated_at)
-     VALUES (?, ?, ?, ?, NULL,
-       (SELECT COALESCE(MAX(position), -1) + 1 FROM templates
-         WHERE user_id = ? AND collection_id IS ?), ?, ?)`,
-    [id, userId, collectionId, name.trim(), userId, collectionId, nowIso(), nowIso()],
-  );
+  await drizzle.insert(templates).values({
+    id,
+    user_id: userId,
+    collection_id: collectionId,
+    name: name.trim(),
+    weekday: null,
+    position: nextPosition(
+      templates.position,
+      and(eq(templates.user_id, userId), inCollection(collectionId)),
+    ),
+    created_at: nowIso(),
+    updated_at: nowIso(),
+  });
   return id;
 }
 
 export async function renameTemplate(templateId: string, name: string) {
-  await db.execute('UPDATE templates SET name = ?, updated_at = ? WHERE id = ?', [
-    name.trim(),
-    nowIso(),
-    templateId,
-  ]);
+  await drizzle
+    .update(templates)
+    .set({ name: name.trim(), updated_at: nowIso() })
+    .where(eq(templates.id, templateId));
 }
 
 export async function deleteTemplate(templateId: string) {
-  await db.writeTransaction((tx) => deleteTemplateTx(tx, templateId));
+  await drizzle.transaction((tx) => deleteTemplateTx(tx, templateId));
 }
 
 export async function addTemplateExercise(userId: string, templateId: string, exerciseId: string) {
-  await db.writeTransaction(async (tx) => {
-    const { next } = await tx.get<{ next: number }>(
-      'SELECT COALESCE(MAX(position), -1) + 1 AS next FROM template_exercises WHERE template_id = ?',
-      [templateId],
+  await drizzle.transaction(async (tx) => {
+    const position = nextPosition(
+      templateExercises.position,
+      eq(templateExercises.template_id, templateId),
     );
-    await insertTemplateExercise(tx, userId, templateId, next, {
+    await insertTemplateExercise(tx, userId, templateId, position, {
       exerciseId,
       sets: NEW_EXERCISE_SETS,
     });
@@ -122,22 +153,20 @@ export async function addTemplateExercise(userId: string, templateId: string, ex
 
 /** Replaces the exercise but keeps its sets and rest time. */
 export async function swapTemplateExercise(templateExerciseId: string, exerciseId: string) {
-  await db.writeTransaction(async (tx) => {
-    await tx.execute('UPDATE template_exercises SET exercise_id = ? WHERE id = ?', [
-      exerciseId,
-      templateExerciseId,
-    ]);
+  await drizzle.transaction(async (tx) => {
+    await tx
+      .update(templateExercises)
+      .set({ exercise_id: exerciseId })
+      .where(eq(templateExercises.id, templateExerciseId));
     await touchTemplate(tx, await templateOf(tx, templateExerciseId));
   });
 }
 
 export async function removeTemplateExercise(templateExerciseId: string) {
-  await db.writeTransaction(async (tx) => {
+  await drizzle.transaction(async (tx) => {
     const templateId = await templateOf(tx, templateExerciseId);
-    await tx.execute('DELETE FROM template_sets WHERE template_exercise_id = ?', [
-      templateExerciseId,
-    ]);
-    await tx.execute('DELETE FROM template_exercises WHERE id = ?', [templateExerciseId]);
+    await tx.delete(templateSets).where(eq(templateSets.template_exercise_id, templateExerciseId));
+    await tx.delete(templateExercises).where(eq(templateExercises.id, templateExerciseId));
     await renumberExercises(tx, templateId);
     await touchTemplate(tx, templateId);
   });
@@ -145,14 +174,14 @@ export async function removeTemplateExercise(templateExerciseId: string) {
 
 /** Moves an exercise one slot up (-1) or down (+1) by swapping with its neighbour. */
 export async function moveTemplateExercise(templateExerciseId: string, direction: -1 | 1) {
-  await db.writeTransaction(async (tx) => {
+  await drizzle.transaction(async (tx) => {
     const templateId = await templateOf(tx, templateExerciseId);
     const ids = await renumberExercises(tx, templateId);
     const from = ids.indexOf(templateExerciseId);
     const to = from + direction;
     if (from < 0 || to < 0 || to >= ids.length) return;
-    await tx.execute('UPDATE template_exercises SET position = ? WHERE id = ?', [to, ids[from]]);
-    await tx.execute('UPDATE template_exercises SET position = ? WHERE id = ?', [from, ids[to]]);
+    await setExercisePosition(tx, ids[from], to);
+    await setExercisePosition(tx, ids[to], from);
     await touchTemplate(tx, templateId);
   });
 }
@@ -164,15 +193,13 @@ export async function saveTemplateSets(
   sets: PlanSetDraft[],
   restSeconds: number | null,
 ) {
-  await db.writeTransaction(async (tx) => {
-    await tx.execute('DELETE FROM template_sets WHERE template_exercise_id = ?', [
-      templateExerciseId,
-    ]);
+  await drizzle.transaction(async (tx) => {
+    await tx.delete(templateSets).where(eq(templateSets.template_exercise_id, templateExerciseId));
     await insertTemplateSets(tx, userId, templateExerciseId, sets);
-    await tx.execute('UPDATE template_exercises SET rest_seconds = ? WHERE id = ?', [
-      restSeconds,
-      templateExerciseId,
-    ]);
+    await tx
+      .update(templateExercises)
+      .set({ rest_seconds: restSeconds })
+      .where(eq(templateExercises.id, templateExerciseId));
     await touchTemplate(tx, await templateOf(tx, templateExerciseId));
   });
 }
