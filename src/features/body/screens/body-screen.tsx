@@ -43,7 +43,7 @@ export function BodyScreen() {
   const delta = latest && first ? latest.score - first.score : 0;
 
   return (
-    <TabScreen>
+    <TabScreen footer={<Button label={t('start')} onPress={openCamera} />}>
       <View className="gap-2 px-5 pt-4">
         <Text variant="headline" className="text-[30px] leading-7.5">
           {t('title')}
@@ -158,7 +158,6 @@ export function BodyScreen() {
           </View>
         </>
       )}
-      <Button label={t('start')} className="mx-4 mt-8" onPress={openCamera} />
     </TabScreen>
   );
 }

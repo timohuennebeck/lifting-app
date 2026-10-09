@@ -33,7 +33,7 @@ export function ProfileScreen() {
   ].filter(Boolean);
 
   return (
-    <TabScreen>
+    <TabScreen greeting={false}>
       <View className="items-start px-5 pt-4">
         <View className="rounded-full border-[3px] border-accent p-1">
           <Avatar name={name} size={106} className="border-0" />

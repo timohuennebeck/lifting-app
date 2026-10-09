@@ -13,30 +13,36 @@ import { Text } from '@/shared/ui/text';
 export interface TabHeaderProps {
   /** Extra round buttons placed before the settings button. */
   actions?: ReactNode;
+  /** Avatar, date and greeting on the left; the profile tab hides them (01b-2). */
+  greeting?: boolean;
 }
 
 /** Header shared by all tabs: avatar, today's date, greeting, optional actions and settings. */
-export function TabHeader({ actions }: TabHeaderProps) {
+export function TabHeader({ actions, greeting = true }: TabHeaderProps) {
   const { t } = useTranslation();
   const { profile } = useProfile();
   const name = profile?.firstName ?? '';
   return (
     <View className="flex-row items-center justify-between gap-3 px-5 pt-2.5 pb-1.5">
-      <PressableScale
-        className="min-w-0 flex-1 flex-row items-center gap-3"
-        accessibilityLabel={t('tabs.profile')}
-        onPress={() => router.navigate('/profile')}
-      >
-        <Avatar name={name} />
-        <View className="min-w-0 flex-1 gap-0.5">
-          <Text variant="caption" tone="subtle" numberOfLines={1}>
-            {formatDate(new Date(), { weekday: 'long', day: 'numeric', month: 'short' })}
-          </Text>
-          <Text variant="bodyStrong" numberOfLines={1}>
-            {t('greeting', { name })}
-          </Text>
-        </View>
-      </PressableScale>
+      {greeting ? (
+        <PressableScale
+          className="min-w-0 flex-1 flex-row items-center gap-3"
+          accessibilityLabel={t('tabs.profile')}
+          onPress={() => router.navigate('/profile')}
+        >
+          <Avatar name={name} />
+          <View className="min-w-0 flex-1 gap-0.5">
+            <Text variant="caption" tone="subtle" numberOfLines={1}>
+              {formatDate(new Date(), { weekday: 'long', day: 'numeric', month: 'short' })}
+            </Text>
+            <Text variant="bodyStrong" numberOfLines={1}>
+              {t('greeting', { name })}
+            </Text>
+          </View>
+        </PressableScale>
+      ) : (
+        <View className="flex-1" />
+      )}
       <View className="flex-row gap-2">
         {actions}
         <IconButton

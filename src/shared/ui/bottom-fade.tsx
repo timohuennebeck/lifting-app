@@ -3,20 +3,24 @@ import { View } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
+import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 
 export interface BottomFadeProps {
   children: ReactNode;
+  className?: string;
+  /** Space under the CTA; defaults to the safe-area footer inset. */
+  bottomInset?: number;
 }
 
 /** Sticky bottom CTA area that fades the scrolling content out underneath it. */
-export function BottomFade({ children }: BottomFadeProps) {
+export function BottomFade({ children, className, bottomInset }: BottomFadeProps) {
   const footerInset = useFooterInset();
   return (
     <View
       pointerEvents="box-none"
-      className="absolute inset-x-0 bottom-0 px-4 pt-10"
-      style={{ paddingBottom: footerInset }}
+      className={cn('absolute inset-x-0 bottom-0 px-4 pt-10', className)}
+      style={{ paddingBottom: bottomInset ?? footerInset }}
     >
       <Svg
         width="100%"
