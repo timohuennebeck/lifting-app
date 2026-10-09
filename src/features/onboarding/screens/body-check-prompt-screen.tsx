@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -19,9 +20,10 @@ const TIPS = ['light', 'clothes', 'framing', 'privacy'] as const;
 
 /** Ends onboarding; the root guard then swaps to the app. */
 function finish(openBodyCheck: boolean) {
+  if (openBodyCheck) startBodyCheck();
   useOnboardingStore.getState().complete();
   // The (app) group only exists after the guard re-rendered, so navigate on the next tick.
-  if (openBodyCheck) setTimeout(() => router.navigate('/body'), 50);
+  if (openBodyCheck) setTimeout(() => router.push('/body-check/camera'), 50);
 }
 
 export function BodyCheckPromptScreen() {
@@ -42,7 +44,7 @@ export function BodyCheckPromptScreen() {
       }
     >
       <View
-        className="mx-4 mt-5 h-[330px] overflow-hidden rounded-[28px] bg-surface"
+        className="mx-4 mt-5 h-82.5 overflow-hidden rounded-[28px] bg-surface"
         style={{ boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.08)' }}
       >
         <View className="absolute inset-0 pt-14 pb-4 opacity-80">
@@ -53,7 +55,7 @@ export function BodyCheckPromptScreen() {
             <View
               key={pose}
               className={cn(
-                'h-[30px] justify-center rounded-full px-[11px]',
+                'h-7.5 justify-center rounded-full px-2.75',
                 i === 0 ? 'bg-accent' : 'bg-elevated',
               )}
             >
@@ -67,7 +69,7 @@ export function BodyCheckPromptScreen() {
       <View className="gap-2 px-6 pt-4 pb-3">
         {TIPS.map((tip) => (
           <View key={tip} className="flex-row items-center gap-3">
-            <View className="size-[26px] items-center justify-center rounded-full bg-accent">
+            <View className="size-6.5 items-center justify-center rounded-full bg-accent">
               <Icon name="check" size={12} color={colors.onAccent} />
             </View>
             <Text variant="label" className="flex-1">

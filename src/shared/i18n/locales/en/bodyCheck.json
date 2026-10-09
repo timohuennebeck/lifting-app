@@ -1,1 +1,132 @@
-{}
+{
+  "poses": {
+    "front": {
+      "short": "Front",
+      "name": "Front",
+      "tip": "Face the camera · arms slightly away from your body"
+    },
+    "left": {
+      "short": "Left",
+      "name": "Left side",
+      "tip": "Left side to the camera · arms relaxed"
+    },
+    "right": {
+      "short": "Right",
+      "name": "Right side",
+      "tip": "Right side to the camera · arms relaxed"
+    },
+    "back": {
+      "short": "Back",
+      "name": "Back",
+      "tip": "Back to the camera · shoulders relaxed"
+    }
+  },
+  "groups": {
+    "shoulders": "Shoulders",
+    "chest": "Chest",
+    "arms": "Arms",
+    "back": "Back",
+    "core": "Core",
+    "legs": "Legs"
+  },
+  "camera": {
+    "permission": {
+      "title": "Allow camera",
+      "body": "The body check needs your camera. Your photos stay private.",
+      "allow": "Allow camera",
+      "settings": "Open settings"
+    },
+    "timer": "Timer {{value}}",
+    "timerOff": "off",
+    "seconds": "{{value}} s",
+    "timerA11y": "Change self-timer",
+    "flip": "Switch camera",
+    "shutter": "Take photo",
+    "cancelTimer": "Cancel self-timer",
+    "error": "The photo couldn't be saved. Please try again."
+  },
+  "discard": {
+    "title": "Discard body check?",
+    "message": "Your photos will be deleted.",
+    "keep": "Keep going",
+    "confirm": "Discard"
+  },
+  "review": {
+    "title": "Looks good?",
+    "subtitle": "Check that every photo is sharp and shows your whole body.",
+    "noPhoto": "No photo yet",
+    "blurry": "Slightly blurry",
+    "retakePhoto": "Retake photo",
+    "takePhoto": "Take photo",
+    "take": {
+      "front": "Take front photo",
+      "left": "Take left side photo",
+      "right": "Take right side photo",
+      "back": "Take back photo"
+    },
+    "retake": {
+      "front": "Retake front photo",
+      "left": "Retake left side photo",
+      "right": "Retake right side photo",
+      "back": "Retake back photo"
+    },
+    "cta": "Continue to analysis",
+    "continueAnyway": "Continue anyway"
+  },
+  "analysis": {
+    "title": "Body check",
+    "stages": ["Aligning photos", "Capturing body shape", "Calculating values"],
+    "finalStage": {
+      "first": "Creating your baseline",
+      "next": "Creating your result"
+    },
+    "done": "Your results are ready",
+    "keepOpen": "Please keep the app open",
+    "cta": "View result",
+    "error": "The analysis didn't work. Please try again."
+  },
+  "result": {
+    "baselineOn": "Your baseline · {{date}}",
+    "scoreOn": "Your body score · {{date}}",
+    "check": "Check {{n}}",
+    "basis": "Basis of this score",
+    "metrics": {
+      "bodyFat": "Body fat",
+      "proportions": "Proportions",
+      "definition": "Definition"
+    },
+    "bodyFat": {
+      "athletic": "Athletic",
+      "fit": "Fit",
+      "average": "Average",
+      "high": "High"
+    },
+    "tiers": {
+      "veryGood": "Very good",
+      "good": "Good",
+      "average": "Average",
+      "low": "Room to grow"
+    },
+    "groups": "Muscle groups",
+    "bands": {
+      "top": {
+        "title": "Top",
+        "subtitle": "above your average"
+      },
+      "mid": {
+        "title": "Average"
+      },
+      "focus": {
+        "title": "Focus",
+        "subtitle": "more sets in your plan"
+      }
+    },
+    "disclaimer": "Estimate from photos, not a medical assessment.",
+    "saveBaseline": "Save baseline",
+    "saveResult": "Save result",
+    "saved": "Saved",
+    "share": "Share",
+    "shareMessage": "My body score in Forge: {{score}}/100",
+    "notFound": "This body check no longer exists."
+  }
+}

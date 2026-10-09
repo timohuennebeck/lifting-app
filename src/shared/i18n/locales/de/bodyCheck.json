@@ -1,1 +1,132 @@
-{}
+{
+  "poses": {
+    "front": {
+      "short": "Frontal",
+      "name": "Frontal",
+      "tip": "Frontal · Arme leicht vom Körper"
+    },
+    "left": {
+      "short": "Links",
+      "name": "Seite links",
+      "tip": "Linke Seite zur Kamera · Arme locker"
+    },
+    "right": {
+      "short": "Rechts",
+      "name": "Seite rechts",
+      "tip": "Rechte Seite zur Kamera · Arme locker"
+    },
+    "back": {
+      "short": "Hinten",
+      "name": "Hinten",
+      "tip": "Rücken zur Kamera · Schultern locker"
+    }
+  },
+  "groups": {
+    "shoulders": "Schultern",
+    "chest": "Brust",
+    "arms": "Arme",
+    "back": "Rücken",
+    "core": "Bauch",
+    "legs": "Beine"
+  },
+  "camera": {
+    "permission": {
+      "title": "Kamera erlauben",
+      "body": "Für den Körpercheck brauchst du die Kamera. Deine Fotos bleiben privat.",
+      "allow": "Kamera erlauben",
+      "settings": "Einstellungen öffnen"
+    },
+    "timer": "Timer {{value}}",
+    "timerOff": "Aus",
+    "seconds": "{{value}} s",
+    "timerA11y": "Selbstauslöser ändern",
+    "flip": "Kamera wechseln",
+    "shutter": "Foto aufnehmen",
+    "cancelTimer": "Selbstauslöser abbrechen",
+    "error": "Das Foto konnte nicht gespeichert werden. Bitte versuch es noch einmal."
+  },
+  "discard": {
+    "title": "Körpercheck verwerfen?",
+    "message": "Deine Fotos werden gelöscht.",
+    "keep": "Weitermachen",
+    "confirm": "Verwerfen"
+  },
+  "review": {
+    "title": "Passt so?",
+    "subtitle": "Prüfe, ob jedes Foto scharf ist und dein ganzer Körper drauf ist.",
+    "noPhoto": "Kein Foto vorhanden",
+    "blurry": "Leicht verwackelt",
+    "retakePhoto": "Foto neu aufnehmen",
+    "takePhoto": "Foto aufnehmen",
+    "take": {
+      "front": "Frontal aufnehmen",
+      "left": "Seite links aufnehmen",
+      "right": "Seite rechts aufnehmen",
+      "back": "Hinten aufnehmen"
+    },
+    "retake": {
+      "front": "Frontal neu aufnehmen",
+      "left": "Seite links neu aufnehmen",
+      "right": "Seite rechts neu aufnehmen",
+      "back": "Hinten neu aufnehmen"
+    },
+    "cta": "Weiter zur Analyse",
+    "continueAnyway": "Trotzdem weiter"
+  },
+  "analysis": {
+    "title": "Körpercheck",
+    "stages": ["Fotos ausrichten", "Körperform erfassen", "Werte berechnen"],
+    "finalStage": {
+      "first": "Startwert erstellen",
+      "next": "Ergebnis erstellen"
+    },
+    "done": "Deine Ergebnisse sind da",
+    "keepOpen": "Bitte App geöffnet lassen",
+    "cta": "Ergebnis ansehen",
+    "error": "Die Analyse hat nicht geklappt. Bitte versuch es noch einmal."
+  },
+  "result": {
+    "baselineOn": "Dein Startwert · {{date}}",
+    "scoreOn": "Dein Körperwert · {{date}}",
+    "check": "Check {{n}}",
+    "basis": "Basis dieser Bewertung",
+    "metrics": {
+      "bodyFat": "Körperfett",
+      "proportions": "Proportionen",
+      "definition": "Definition"
+    },
+    "bodyFat": {
+      "athletic": "Athletisch",
+      "fit": "Trainiert",
+      "average": "Durchschnittlich",
+      "high": "Erhöht"
+    },
+    "tiers": {
+      "veryGood": "Sehr gut",
+      "good": "Gut",
+      "average": "Mittel",
+      "low": "Ausbaufähig"
+    },
+    "groups": "Muskelgruppen",
+    "bands": {
+      "top": {
+        "title": "Top",
+        "subtitle": "über deinem Schnitt"
+      },
+      "mid": {
+        "title": "Durchschnittlich"
+      },
+      "focus": {
+        "title": "Fokus",
+        "subtitle": "mehr Sätze im Plan"
+      }
+    },
+    "disclaimer": "Schätzung aus Fotos, kein medizinischer Befund.",
+    "saveBaseline": "Startwert speichern",
+    "saveResult": "Ergebnis speichern",
+    "saved": "Gespeichert",
+    "share": "Teilen",
+    "shareMessage": "Mein Körperwert in Forge: {{score}}/100",
+    "notFound": "Dieser Körpercheck ist nicht mehr vorhanden."
+  }
+}

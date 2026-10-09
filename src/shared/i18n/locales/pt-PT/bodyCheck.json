@@ -1,1 +1,132 @@
-{}
+{
+  "poses": {
+    "front": {
+      "short": "Frente",
+      "name": "Frente",
+      "tip": "De frente para a câmara · braços ligeiramente afastados do corpo"
+    },
+    "left": {
+      "short": "Esquerda",
+      "name": "Lado esquerdo",
+      "tip": "Lado esquerdo para a câmara · braços soltos"
+    },
+    "right": {
+      "short": "Direita",
+      "name": "Lado direito",
+      "tip": "Lado direito para a câmara · braços soltos"
+    },
+    "back": {
+      "short": "Costas",
+      "name": "Costas",
+      "tip": "Costas para a câmara · ombros soltos"
+    }
+  },
+  "groups": {
+    "shoulders": "Ombros",
+    "chest": "Peito",
+    "arms": "Braços",
+    "back": "Costas",
+    "core": "Abdómen",
+    "legs": "Pernas"
+  },
+  "camera": {
+    "permission": {
+      "title": "Permitir câmara",
+      "body": "O check corporal precisa da câmara. As tuas fotos ficam privadas.",
+      "allow": "Permitir câmara",
+      "settings": "Abrir definições"
+    },
+    "timer": "Temporizador {{value}}",
+    "timerOff": "desligado",
+    "seconds": "{{value}} s",
+    "timerA11y": "Alterar temporizador",
+    "flip": "Trocar câmara",
+    "shutter": "Tirar foto",
+    "cancelTimer": "Cancelar temporizador",
+    "error": "Não foi possível guardar a foto. Tenta novamente."
+  },
+  "discard": {
+    "title": "Descartar check corporal?",
+    "message": "As tuas fotos vão ser apagadas.",
+    "keep": "Continuar",
+    "confirm": "Descartar"
+  },
+  "review": {
+    "title": "Está bem assim?",
+    "subtitle": "Verifica se cada foto está nítida e mostra o teu corpo inteiro.",
+    "noPhoto": "Ainda sem foto",
+    "blurry": "Ligeiramente tremida",
+    "retakePhoto": "Repetir foto",
+    "takePhoto": "Tirar foto",
+    "take": {
+      "front": "Tirar foto de frente",
+      "left": "Tirar foto do lado esquerdo",
+      "right": "Tirar foto do lado direito",
+      "back": "Tirar foto de costas"
+    },
+    "retake": {
+      "front": "Repetir foto de frente",
+      "left": "Repetir foto do lado esquerdo",
+      "right": "Repetir foto do lado direito",
+      "back": "Repetir foto de costas"
+    },
+    "cta": "Continuar para a análise",
+    "continueAnyway": "Continuar mesmo assim"
+  },
+  "analysis": {
+    "title": "Check corporal",
+    "stages": ["A alinhar as fotos", "A captar a forma do corpo", "A calcular valores"],
+    "finalStage": {
+      "first": "A criar o teu valor inicial",
+      "next": "A criar o teu resultado"
+    },
+    "done": "Os teus resultados estão prontos",
+    "keepOpen": "Mantém a app aberta",
+    "cta": "Ver resultado",
+    "error": "A análise falhou. Tenta novamente."
+  },
+  "result": {
+    "baselineOn": "O teu valor inicial · {{date}}",
+    "scoreOn": "A tua pontuação corporal · {{date}}",
+    "check": "Check {{n}}",
+    "basis": "Base desta avaliação",
+    "metrics": {
+      "bodyFat": "Gordura corporal",
+      "proportions": "Proporções",
+      "definition": "Definição"
+    },
+    "bodyFat": {
+      "athletic": "Atlético",
+      "fit": "Em forma",
+      "average": "Na média",
+      "high": "Acima da média"
+    },
+    "tiers": {
+      "veryGood": "Muito bom",
+      "good": "Bom",
+      "average": "Médio",
+      "low": "A melhorar"
+    },
+    "groups": "Grupos musculares",
+    "bands": {
+      "top": {
+        "title": "Top",
+        "subtitle": "acima da tua média"
+      },
+      "mid": {
+        "title": "Na média"
+      },
+      "focus": {
+        "title": "Foco",
+        "subtitle": "mais séries no plano"
+      }
+    },
+    "disclaimer": "Estimativa a partir de fotos, não é um diagnóstico médico.",
+    "saveBaseline": "Guardar valor inicial",
+    "saveResult": "Guardar resultado",
+    "saved": "Guardado",
+    "share": "Partilhar",
+    "shareMessage": "A minha pontuação corporal no Forge: {{score}}/100",
+    "notFound": "Este check corporal já não existe."
+  }
+}

@@ -17,10 +17,5 @@
   "empty": {
     "title": "Ainda sem check corporal",
     "body": "Tira quatro fotos e recebe uma pontuação da tua composição corporal. Repete a cada poucas semanas para veres o teu progresso."
-  },
-  "comingSoon": {
-    "title": "Em breve",
-    "body": "O check corporal com câmara chega na próxima atualização. A tua pontuação e o histórico vão aparecer aqui.",
-    "ok": "Entendido"
   }
 }

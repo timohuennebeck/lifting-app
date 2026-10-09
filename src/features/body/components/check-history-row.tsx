@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
+import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 export interface CheckHistoryRowProps {
@@ -11,13 +12,27 @@ export interface CheckHistoryRowProps {
   score?: number;
   latest?: boolean;
   trailing?: ReactNode;
+  onPress?: () => void;
 }
 
 /** History entry: title, score and a four-segment 0–100 scale with a marker. */
-export function CheckHistoryRow({ title, date, score, latest, trailing }: CheckHistoryRowProps) {
+export function CheckHistoryRow({
+  title,
+  date,
+  score,
+  latest,
+  trailing,
+  onPress,
+}: CheckHistoryRowProps) {
   const due = score === undefined;
   return (
-    <View className="gap-2.5 py-3.5">
+    <PressableScale
+      activeScale={0.98}
+      accessibilityLabel={`${title} · ${date}`}
+      onPress={onPress}
+      disabled={!onPress}
+      className="gap-2.5 py-3.5"
+    >
       <View className="flex-row items-center justify-between">
         <Text variant="label">
           {title}
@@ -40,7 +55,7 @@ export function CheckHistoryRow({ title, date, score, latest, trailing }: CheckH
           ))}
         </View>
       ) : (
-        <View className="h-2 flex-row gap-[3px]">
+        <View className="h-2 flex-row gap-0.75">
           {[0, 1, 2, 3].map((i) => (
             <View
               key={i}
@@ -49,13 +64,13 @@ export function CheckHistoryRow({ title, date, score, latest, trailing }: CheckH
           ))}
           <View
             className={cn(
-              'absolute -top-[7px] -ml-[11px] size-[22px] rounded-full border-[3px] border-bg',
+              'absolute -top-1.75 -ml-2.75 size-5.5 rounded-full border-[3px] border-bg',
               latest ? 'bg-accent' : 'bg-subtle',
             )}
             style={{ left: `${score}%` }}
           />
         </View>
       )}
-    </View>
+    </PressableScale>
   );
 }

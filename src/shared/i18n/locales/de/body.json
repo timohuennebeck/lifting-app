@@ -17,10 +17,5 @@
   "empty": {
     "title": "Noch kein Körpercheck",
     "body": "Mach vier Fotos und erhalte einen Wert für deine Körperkomposition. Wiederhole den Check alle paar Wochen, um deinen Fortschritt zu sehen."
-  },
-  "comingSoon": {
-    "title": "Bald verfügbar",
-    "body": "Der Körpercheck mit Kamera kommt mit dem nächsten Update. Dein Wert und dein Verlauf erscheinen dann hier.",
-    "ok": "Verstanden"
   }
 }

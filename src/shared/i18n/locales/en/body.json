@@ -17,10 +17,5 @@
   "empty": {
     "title": "No body check yet",
     "body": "Take four photos and get a score for your body composition. Repeat it every few weeks to see your progress."
-  },
-  "comingSoon": {
-    "title": "Coming soon",
-    "body": "The camera body check arrives with the next update. Your score and history will show up here.",
-    "ok": "Got it"
   }
 }
