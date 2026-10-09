@@ -108,7 +108,6 @@ function FieldEditor({ field, profile, onSave }: FieldEditorProps) {
       <TextField
         value={name}
         onChangeText={setName}
-        autoFocus
         clearable
         autoCapitalize="words"
         returnKeyType="done"

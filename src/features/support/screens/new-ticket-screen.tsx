@@ -1,16 +1,16 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextInput, View } from 'react-native';
+import { View } from 'react-native';
 
 import { newId } from '@/shared/data/json';
 import { haptics } from '@/shared/lib/haptics';
-import { colors } from '@/shared/lib/theme';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
+import { TextField } from '@/shared/ui/text-field';
 
 import { ImportanceScale } from '../components/importance-scale';
 import { ScreenshotTiles } from '../components/screenshot-tiles';
@@ -75,17 +75,12 @@ export function NewTicketScreen() {
         </View>
       }
     >
-      <TextInput
+      <TextField
         value={text}
         onChangeText={setText}
         multiline
-        textAlignVertical="top"
         placeholder={t(kind === 'bug' ? 'form.bugPlaceholder' : 'form.ideaPlaceholder')}
-        placeholderTextColor={colors.dim}
-        selectionColor={colors.fg}
-        cursorColor={colors.fg}
-        keyboardAppearance="dark"
-        className="mx-5 mt-5 h-50 rounded-[20px] bg-chip px-4 pt-3.5 pb-3.5 font-inter text-base leading-5.75 text-fg"
+        className="mx-5 mt-5"
       />
       {kind === 'bug' ? (
         <View className="mx-5 mt-4.5 gap-2.5">

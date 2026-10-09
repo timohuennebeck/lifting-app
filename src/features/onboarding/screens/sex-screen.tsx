@@ -27,11 +27,25 @@ export function SexScreen() {
       subtitle={t('sex.subtitle')}
       scroll
       footer={
-        <Button
-          label={tc('actions.continue')}
-          disabled={!sex}
-          onPress={() => router.push('/age')}
-        />
+        <View className="gap-1">
+          <Button
+            label={tc('actions.continue')}
+            disabled={!sex}
+            onPress={() => router.push('/age')}
+          />
+          {/* Skipping the question: saves "not specified" and moves on. */}
+          <TextButton
+            label={t('sex.unspecified')}
+            haptic="select"
+            tone={sex === 'unspecified' ? 'accent' : 'subtle'}
+            textClassName="text-sm"
+            onPress={() => {
+              update({ sex: 'unspecified' });
+              router.push('/age');
+            }}
+            className="min-h-11 self-center"
+          />
+        </View>
       }
     >
       <View className="gap-2.5 px-4 pt-7">
@@ -44,16 +58,6 @@ export function SexScreen() {
             onPress={() => update({ sex: value })}
           />
         ))}
-        <TextButton
-          label={t('sex.unspecified')}
-          haptic="select"
-          accessibilityRole="radio"
-          accessibilityState={{ selected: sex === 'unspecified' }}
-          tone={sex === 'unspecified' ? 'accent' : 'subtle'}
-          textClassName="text-sm"
-          onPress={() => update({ sex: 'unspecified' })}
-          className="mt-1.5 min-h-11 self-center"
-        />
       </View>
     </StepScreen>
   );

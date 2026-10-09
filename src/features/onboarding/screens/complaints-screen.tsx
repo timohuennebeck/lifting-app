@@ -78,12 +78,7 @@ export function ComplaintsScreen() {
           />
         ))}
       </View>
-      <BodyMaps
-        className="rounded-[28px] bg-surface"
-        selected={selectedMuscles}
-        onToggle={onMuscle}
-        accent={colors.red}
-      />
+      <BodyMaps selected={selectedMuscles} onToggle={onMuscle} accent={colors.red} />
     </StepScreen>
   );
 }

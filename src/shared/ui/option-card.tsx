@@ -55,6 +55,7 @@ export function OptionCard({
   const tinted = selected && tint;
   return (
     <PressableScale
+      activeScale={0.98}
       haptic="select"
       onPress={onPress}
       accessibilityRole="radio"

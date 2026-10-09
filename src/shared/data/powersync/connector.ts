@@ -7,8 +7,10 @@ import {
 import { env } from '@/shared/config/env';
 import { supabase } from '@/shared/data/supabase';
 
-// Postgres errors that will never succeed on retry; drop them so the queue keeps moving.
-const FATAL_RESPONSE_CODES = [/^22...$/, /^23...$/, /^42501$/];
+// Errors that will never succeed on retry; drop them so the queue keeps moving: Postgres data,
+// constraint and permission errors, and PostgREST's unknown column (PGRST204) or table (PGRST205),
+// e.g. a change queued by an older app version before a migration renamed the column.
+const FATAL_RESPONSE_CODES = [/^22...$/, /^23...$/, /^42501$/, /^PGRST20[45]$/];
 
 // jsonb columns are stored locally as JSON text. Upload them as JSON values, otherwise
 // Postgres stores a jsonb *string* that syncs back double-encoded.

@@ -58,7 +58,6 @@ export function TextInputSheet({
           onChangeText={setValue}
           placeholder={placeholder}
           clearable
-          autoFocus
           maxLength={maxLength}
           returnKeyType="done"
           onSubmitEditing={submit}

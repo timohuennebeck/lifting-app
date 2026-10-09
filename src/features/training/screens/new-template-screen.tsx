@@ -59,7 +59,6 @@ export function NewTemplateScreen() {
         value={name}
         onChangeText={setName}
         placeholder={t('newTemplate.namePlaceholder')}
-        autoFocus
         clearable
         maxLength={40}
         returnKeyType="done"

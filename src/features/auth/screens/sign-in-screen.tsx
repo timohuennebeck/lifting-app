@@ -15,6 +15,7 @@ import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
 import { CredentialFields } from '../components/credential-fields';
+import { SocialSignIn } from '../components/social-sign-in';
 import { type AuthErrorKey, authErrorKey, isValidEmail } from '../lib/credentials';
 
 type Phase = 'idle' | 'signingIn' | 'syncing';
@@ -87,7 +88,11 @@ export function SignInScreen() {
       }
     >
       <StepTitle title={t('signIn.title')} subtitle={t('signIn.subtitle')} />
-      <View className="px-4 pt-7">
+      {/* Same sign-in options as account creation. */}
+      <View className="px-4 pt-5">
+        <SocialSignIn />
+      </View>
+      <View className="px-4 pt-3.5">
         <CredentialFields
           mode="existing"
           email={email}
@@ -96,6 +101,7 @@ export function SignInScreen() {
           onChangePassword={setPassword}
           onSubmit={submit}
           editable={!busy}
+          autoFocus
         />
         {error ? (
           <Text

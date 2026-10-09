@@ -1,4 +1,3 @@
-import { useBottomSheetInternal } from '@gorhom/bottom-sheet';
 import { forwardRef, useState } from 'react';
 import { TextInput, type TextInputProps, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -6,9 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 
-import { Icon } from './icon';
+import { Icon, type IconName } from './icon';
 import { PressableScale } from './pressable-scale';
-import { SheetTextInput } from './sheet';
 import { Text } from './text';
 
 export interface TextFieldProps extends TextInputProps {
@@ -18,8 +16,8 @@ export interface TextFieldProps extends TextInputProps {
   /** Adds a show/hide toggle for password fields. */
   revealable?: boolean;
   error?: string;
-  /** Smaller form style of the account screens (56pt, 16pt text). */
-  compact?: boolean;
+  /** Leading icon, e.g. `search`. */
+  icon?: IconName;
   className?: string;
 }
 
@@ -29,20 +27,19 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
     clearable,
     revealable,
     error,
-    compact,
+    icon,
     className,
     value,
     onChangeText,
     onFocus,
     onBlur,
     secureTextEntry,
+    multiline,
     ...props
   },
   ref,
 ) {
   const { t } = useTranslation();
-  // Inside a bottom sheet the input must be Gorhom's so the sheet tracks the keyboard.
-  const Input = useBottomSheetInternal(true) ? SheetTextInput : TextInput;
   const [focused, setFocused] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const hasValue = !!value?.length;
@@ -55,20 +52,17 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
         </Text>
       ) : null}
       <View
-        // Design rings sit inside the padding: 1pt at rest, 2pt accent on focus.
+        // One field style app-wide: 56pt, 16pt text. Rings sit inside the padding (1pt at rest,
+        // 2pt accent on focus), so the text never shifts.
         className={cn(
-          'flex-row items-center gap-3',
-          compact ? 'h-14 rounded-[18px] bg-pill' : 'h-16 rounded-[22px] bg-surface',
-          error || focused
-            ? cn('border-2', compact ? 'pr-1.5 pl-4' : 'pr-2 pl-4.5')
-            : cn(
-                'border',
-                compact ? 'border-white/8 pr-1.75 pl-4.25' : 'border-line pr-2.25 pl-4.75',
-              ),
+          'flex-row gap-3 rounded-[18px] bg-pill',
+          multiline ? 'min-h-32 items-start' : 'h-14 items-center',
+          error || focused ? 'border-2 pr-1.5 pl-4' : 'border border-white/8 pr-1.75 pl-4.25',
           error ? 'border-danger' : focused && 'border-accent',
         )}
       >
-        <Input
+        {icon ? <Icon name={icon} size={16} color={colors.dim} /> : null}
+        <TextInput
           ref={ref as never}
           value={value}
           onChangeText={onChangeText}
@@ -85,11 +79,12 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
             setFocused(false);
             onBlur?.(e);
           }}
+          multiline={multiline}
           // Font size only: a line height on a single-line input pushes the text off-centre on iOS.
-          textAlignVertical="center"
+          textAlignVertical={multiline ? 'top' : 'center'}
           className={cn(
-            'h-full min-w-0 flex-1 py-0 font-inter text-fg',
-            compact ? 'text-[16px]' : 'text-[18px]',
+            'min-w-0 flex-1 font-inter text-[16px] text-fg',
+            multiline ? 'min-h-32 py-3.5 leading-5.5' : 'h-full py-0',
           )}
           {...props}
         />
@@ -98,10 +93,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
             haptic="select"
             accessibilityLabel={t('actions.togglePassword')}
             onPress={() => setRevealed((r) => !r)}
-            className={cn(
-              'items-center justify-center rounded-full',
-              compact ? 'size-10' : 'size-11',
-            )}
+            className="size-10 items-center justify-center rounded-full"
           >
             <Icon name="eye" size={18} color={revealed ? colors.fg : colors.muted} />
           </PressableScale>
@@ -111,7 +103,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
             haptic="select"
             accessibilityLabel={t('actions.clear')}
             onPress={() => onChangeText?.('')}
-            className="size-11 items-center justify-center rounded-full bg-control"
+            className="size-10 items-center justify-center rounded-full bg-control"
           >
             <Icon name="close" size={12} />
           </PressableScale>

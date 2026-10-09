@@ -16,7 +16,8 @@ import { DotPattern } from './dot-pattern';
 import { Gradient, type GradientStop } from './gradient';
 
 const TICK = 5;
-const GAP = 5;
+// Wide enough that a flick doesn't race through dozens of values.
+const GAP = 11;
 const PITCH = TICK + GAP;
 // Dot colors of the design's tick columns.
 const TICK_MAJOR = '#B5B5AF';

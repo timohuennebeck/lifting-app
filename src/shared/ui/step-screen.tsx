@@ -34,7 +34,7 @@ export interface StepScreenProps extends Omit<StepTitleProps, 'className'> {
   step: number;
   total: number;
   children?: ReactNode;
-  /** Pinned bottom area, usually the CTA; rides up with the keyboard. */
+  /** Pinned bottom area, usually the CTA. */
   footer?: ReactNode;
   scroll?: boolean;
   contentClassName?: string;

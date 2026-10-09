@@ -1,5 +1,10 @@
 import { Pressable, type PressableProps } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { haptics } from '@/shared/lib/haptics';
 
@@ -14,7 +19,7 @@ export interface PressableScaleProps extends PressableProps {
   haptic?: HapticKind;
 }
 
-/** Pressable with a spring scale-down and a haptic tick on press. */
+/** Pressable with a short scale-down (no spring, so it never bounces) and a haptic tick. */
 export function PressableScale({
   activeScale = 0.97,
   haptic = 'tap',
@@ -25,19 +30,22 @@ export function PressableScale({
   disabled,
   ...props
 }: PressableScaleProps) {
-  const scale = useSharedValue(1);
-  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.get() }] }));
+  // 0 at rest, 1 while pressed. Timed both ways: a spring here overshoots and looks bouncy.
+  const pressed = useSharedValue(0);
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: 1 - (1 - activeScale) * pressed.get() }],
+  }));
 
   return (
     <AnimatedPressable
       accessibilityRole="button"
       disabled={disabled}
       onPressIn={(e) => {
-        scale.set(withSpring(activeScale, { mass: 1, damping: 30, stiffness: 400 }));
+        pressed.set(withTiming(1, { duration: 90, easing: Easing.out(Easing.quad) }));
         onPressIn?.(e);
       }}
       onPressOut={(e) => {
-        scale.set(withSpring(1, { mass: 1, damping: 22, stiffness: 300 }));
+        pressed.set(withTiming(0, { duration: 140, easing: Easing.out(Easing.quad) }));
         onPressOut?.(e);
       }}
       onPress={(e) => {

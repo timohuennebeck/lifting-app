@@ -39,6 +39,7 @@ export function WeightScreen() {
       <View className="mx-4 mt-6 items-center py-5">
         <MeasureValue
           value={imperial ? String(value) : formatNumber(value, 1)}
+          amount={value}
           unit={tc(`units.${weightUnit(unitSystem)}`)}
         />
         <RulerPicker

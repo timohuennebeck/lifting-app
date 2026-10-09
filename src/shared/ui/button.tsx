@@ -45,6 +45,7 @@ export function Button({
   const inactive = disabled || loading;
   return (
     <PressableScale
+      activeScale={0.98}
       haptic={haptic}
       disabled={inactive}
       accessibilityState={{ disabled: !!inactive, busy: !!loading }}

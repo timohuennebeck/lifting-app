@@ -132,6 +132,7 @@ export function CreateAccountScreen() {
           onChangePassword={setPassword}
           onSubmit={submit}
           editable={!signedIn && !busy}
+          autoFocus={!signedIn}
         />
         {error ? (
           <View className="items-start gap-1 px-1 pt-3">

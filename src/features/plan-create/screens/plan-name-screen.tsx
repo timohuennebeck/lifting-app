@@ -43,6 +43,7 @@ export function PlanNameScreen() {
           placeholder={t('planCreate:planName.placeholder')}
           maxLength={PLAN_NAME_MAX}
           clearable
+          autoFocus
           autoCapitalize="sentences"
           returnKeyType="done"
           onSubmitEditing={submit}

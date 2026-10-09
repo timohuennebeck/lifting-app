@@ -26,6 +26,7 @@ export function Chip({
 }: ChipProps) {
   return (
     <PressableScale
+      activeScale={0.98}
       haptic="select"
       onPress={onPress}
       accessibilityRole="checkbox"

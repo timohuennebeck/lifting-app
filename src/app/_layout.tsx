@@ -8,7 +8,6 @@ import {
   Inter_700Bold,
   useFonts,
 } from '@expo-google-fonts/inter';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { PowerSyncContext } from '@powersync/react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { DarkTheme, Stack, ThemeProvider } from 'expo-router';
@@ -69,24 +68,22 @@ export default function RootLayout() {
         <PowerSyncContext.Provider value={db}>
           <QueryClientProvider client={queryClient}>
             <ThemeProvider value={navigationTheme}>
-              <BottomSheetModalProvider>
-                <StatusBar style="light" />
-                <Stack
-                  screenOptions={{
-                    headerShown: false,
-                    contentStyle: { backgroundColor: colors.bg },
-                  }}
-                >
-                  <Stack.Protected guard={inApp}>
-                    <Stack.Screen name="(app)" />
-                  </Stack.Protected>
-                  <Stack.Protected guard={!inApp}>
-                    <Stack.Screen name="(onboarding)" />
-                  </Stack.Protected>
-                  {/* Open from sign-up and from settings alike. */}
-                  <Stack.Screen name="legal/[kind]" options={{ presentation: 'modal' }} />
-                </Stack>
-              </BottomSheetModalProvider>
+              <StatusBar style="light" />
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  contentStyle: { backgroundColor: colors.bg },
+                }}
+              >
+                <Stack.Protected guard={inApp}>
+                  <Stack.Screen name="(app)" />
+                </Stack.Protected>
+                <Stack.Protected guard={!inApp}>
+                  <Stack.Screen name="(onboarding)" />
+                </Stack.Protected>
+                {/* Open from sign-up and from settings alike. */}
+                <Stack.Screen name="legal/[kind]" options={{ presentation: 'modal' }} />
+              </Stack>
             </ThemeProvider>
           </QueryClientProvider>
         </PowerSyncContext.Provider>

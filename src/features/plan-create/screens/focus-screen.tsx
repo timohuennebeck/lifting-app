@@ -72,7 +72,6 @@ export function FocusScreen() {
       </View>
       <BodyMaps
         accessibilityLabel={t('planCreate:focus.mapA11y')}
-        className="rounded-[28px] bg-surface"
         selected={focus}
         isSelectable={hasGroup}
         onToggle={(part) => {

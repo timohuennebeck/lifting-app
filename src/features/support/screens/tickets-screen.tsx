@@ -8,9 +8,9 @@ import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
+import { TextField } from '@/shared/ui/text-field';
 
 import { FeedbackSheet } from '../components/feedback-sheet';
-import { SearchField } from '../components/search-field';
 import { TicketListRow } from '../components/ticket-list-row';
 import { useTickets } from '../data/tickets';
 
@@ -33,7 +33,11 @@ export function TicketsScreen() {
         <ScreenHeader icon="close" title={t('list.title')} />
       }
     >
-      <SearchField
+      <TextField
+        icon="search"
+        clearable
+        autoCorrect={false}
+        returnKeyType="search"
         value={query}
         onChangeText={setQuery}
         placeholder={t('list.search')}

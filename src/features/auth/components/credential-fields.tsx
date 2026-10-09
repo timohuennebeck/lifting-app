@@ -16,6 +16,8 @@ export interface CredentialFieldsProps {
   mode: 'new' | 'existing';
   onSubmit: () => void;
   editable?: boolean;
+  /** Focus the email field on mount (onboarding screens). */
+  autoFocus?: boolean;
 }
 
 /** Email + password inputs shared by account creation and sign-in. */
@@ -27,6 +29,7 @@ export function CredentialFields({
   mode,
   onSubmit,
   editable = true,
+  autoFocus,
 }: CredentialFieldsProps) {
   const { t } = useTranslation('auth');
   const passwordRef = useRef<TextInput>(null);
@@ -37,7 +40,6 @@ export function CredentialFields({
   return (
     <View className="gap-2.5">
       <TextField
-        compact
         label={t('email')}
         value={email}
         onChangeText={(v) => onChangeEmail(v.trim())}
@@ -45,6 +47,7 @@ export function CredentialFields({
         placeholder={t('emailPlaceholder')}
         error={emailError}
         editable={editable}
+        autoFocus={autoFocus}
         keyboardType="email-address"
         autoCapitalize="none"
         autoCorrect={false}
@@ -55,7 +58,6 @@ export function CredentialFields({
         onSubmitEditing={() => passwordRef.current?.focus()}
       />
       <TextField
-        compact
         ref={passwordRef}
         label={t('password')}
         value={password}

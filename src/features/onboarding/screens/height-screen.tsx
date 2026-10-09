@@ -38,6 +38,7 @@ export function HeightScreen() {
         <View className="flex-1 gap-5.5">
           <MeasureValue
             value={imperial ? feetInches(value) : String(value)}
+            amount={value}
             unit={imperial ? undefined : tc('units.cm')}
           />
           <StepButtons

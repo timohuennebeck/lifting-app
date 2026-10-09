@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, Pressable, View } from 'react-native';
+import { Image, type ImageSourcePropType, Pressable, View } from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -17,7 +18,38 @@ import { haptics } from '@/shared/lib/haptics';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
-const FINGERPRINT = require('@/assets/images/onboarding/fingerprint.png');
+const FINGERPRINT_BASE = require('@/assets/images/onboarding/fingerprint-ridges/base.png');
+/** One layer per ridge, in the order the design lights them (from `fingerprint-order.png`). */
+const RIDGES: ImageSourcePropType[] = [
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-01.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-02.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-03.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-04.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-05.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-06.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-07.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-08.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-09.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-10.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-11.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-12.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-13.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-14.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-15.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-16.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-17.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-18.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-19.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-20.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-21.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-22.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-23.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-24.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-25.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-26.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-27.png'),
+  require('@/assets/images/onboarding/fingerprint-ridges/ridge-28.png'),
+];
 const HOLD_MS = 1800;
 /** Pause between sealing and the zoom celebration, then its length. */
 export const CELEBRATION_DELAY_MS = 380;
@@ -27,12 +59,36 @@ const ZOOM_EASING = Easing.bezier(0.8, 0, 0.15, 1);
 
 type Phase = 'idle' | 'holding' | 'sealed';
 
+interface RidgeProps {
+  source: ImageSourcePropType;
+  index: number;
+  progress: SharedValue<number>;
+  color: string;
+}
+
+/** A ridge fades in once the hold reaches it, so the print fills line by line. */
+function Ridge({ source, index, progress, color }: RidgeProps) {
+  const style = useAnimatedStyle(() => ({
+    opacity: Math.min(1, Math.max(0, progress.get() * RIDGES.length - index)),
+  }));
+  return (
+    <Animated.Image
+      source={source}
+      resizeMode="contain"
+      style={[
+        { position: 'absolute', width: FP.width, height: FP.height, tintColor: color },
+        style,
+      ]}
+    />
+  );
+}
+
 export interface FingerprintHoldProps {
   /** Called once the thumb was held for the full duration. */
   onSealed: () => void;
 }
 
-/** Hold-to-commit fingerprint: ridges light up while pressed, then zoom into the screen. */
+/** Hold-to-commit fingerprint: ridges light up one by one while pressed, then zoom into the screen. */
 export function FingerprintHold({ onSealed }: FingerprintHoldProps) {
   const { t } = useTranslation('onboarding');
   const accent = useAccentColor();
@@ -103,7 +159,6 @@ export function FingerprintHold({ onSealed }: FingerprintHoldProps) {
     opacity: (phase === 'sealed' ? 1 : progress.get() * 0.6) * fade.get(),
   }));
   const hintStyle = useAnimatedStyle(() => ({ opacity: fade.get() }));
-  const fillStyle = useAnimatedStyle(() => ({ height: progress.get() * FP.height }));
   const printStyle = useAnimatedStyle(() => ({
     opacity: 1 - out.get(),
     transform: [
@@ -163,26 +218,13 @@ export function FingerprintHold({ onSealed }: FingerprintHoldProps) {
           <Animated.View pointerEvents="none" className="absolute" style={[FP, printStyle]}>
             {/* RN Image tints template bitmaps reliably on iOS and Android. */}
             <Image
-              source={FINGERPRINT}
+              source={FINGERPRINT_BASE}
               resizeMode="contain"
               style={{ width: FP.width, height: FP.height, tintColor: colors.track }}
             />
-            <Animated.View
-              className="absolute inset-x-0 bottom-0 overflow-hidden"
-              style={fillStyle}
-            >
-              <Image
-                source={FINGERPRINT}
-                resizeMode="contain"
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  width: FP.width,
-                  height: FP.height,
-                  tintColor: accent,
-                }}
-              />
-            </Animated.View>
+            {RIDGES.map((source, i) => (
+              <Ridge key={i} source={source} index={i} progress={progress} color={accent} />
+            ))}
           </Animated.View>
         </Animated.View>
       </Pressable>
