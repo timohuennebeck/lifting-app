@@ -24,6 +24,7 @@ import { SegmentedControl } from '@/shared/ui/segmented-control';
 import { Text } from '@/shared/ui/text';
 
 import { type BodyField, BodyFieldSheet } from '../components/body-field-sheet';
+import { ProSection } from '../components/pro-section';
 import { SettingsRow, SettingsSection } from '../components/settings-section';
 
 interface BodyRow {
@@ -91,6 +92,8 @@ export function SettingsScreen() {
     >
       <Stack.Screen options={{ animation: 'slide_from_right', gestureEnabled: true }} />
 
+      <ProSection />
+
       <SettingsSection title={t('settings.language')}>
         {APP_LANGUAGES.map((lang, i) => (
           <SettingsRow
@@ -130,7 +133,7 @@ export function SettingsScreen() {
               )}
             >
               <View
-                className="size-[34px] items-center justify-center rounded-full"
+                className="size-8.5 items-center justify-center rounded-full"
                 style={{ backgroundColor: color }}
               >
                 {color === accent ? <Icon name="check" size={13} color={colors.onAccent} /> : null}

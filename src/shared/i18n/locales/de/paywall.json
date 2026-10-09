@@ -1,1 +1,111 @@
-{}
+{
+  "badge": "FORGE PRO",
+  "restore": "Käufe wiederherstellen",
+  "restoring": "Wird wiederhergestellt …",
+  "paywall": {
+    "before": "Vorher",
+    "after": "Nachher",
+    "brand": "FORGE",
+    "pro": "PRO",
+    "subtitle": "Dein Plan importiert, jeder Satz getrackt, jeder Fortschritt sichtbar.",
+    "benefits": {
+      "import": {
+        "title": "Pläne importieren",
+        "detail": "per Foto oder Datei"
+      },
+      "history": {
+        "title": "Historie und Bestwerte",
+        "detail": "für jede Übung"
+      },
+      "suggestions": {
+        "title": "Gewichtsvorschläge",
+        "detail": "für jeden Satz"
+      }
+    },
+    "continue": "Weiter",
+    "fine": {
+      "day": "Danach {{price}} pro Tag · jederzeit kündbar",
+      "month": "Danach {{price}} pro Monat · jederzeit kündbar"
+    },
+    "fineNoTrial": {
+      "day": "{{price}} pro Tag · jederzeit kündbar",
+      "month": "{{price}} pro Monat · jederzeit kündbar"
+    }
+  },
+  "plans": {
+    "daily": {
+      "label": "Täglich",
+      "price": "{{price}} / Tag",
+      "note": "täglich kündbar"
+    },
+    "monthly": {
+      "label": "Monatlich",
+      "price": "{{price}} / Monat",
+      "note": "monatlich kündbar"
+    }
+  },
+  "trial": {
+    "badge_one": "Tag gratis",
+    "badge_other": "Tage gratis",
+    "title": "So funktioniert dein Test",
+    "subtitle": "Keine Überraschungen. Wir erinnern dich vorher.",
+    "today": "Heute",
+    "todayBody": "Alle Pro-Funktionen sind sofort freigeschaltet.",
+    "day": "Tag {{day}}",
+    "reminderBody": "Du bekommst eine Erinnerung, dass dein Test bald endet.",
+    "startBody": {
+      "day": "Dein Tagesabo startet. Vorher jederzeit kündbar.",
+      "month": "Dein Monatsabo startet. Vorher jederzeit kündbar."
+    },
+    "cta": "Kostenlos testen",
+    "fine": {
+      "day": "Danach {{price}} pro Tag",
+      "month": "Danach {{price}} pro Monat"
+    }
+  },
+  "welcome": {
+    "header": "Nachricht von deinem Coach",
+    "role": "Head Coach bei Forge",
+    "cta": "Los geht's",
+    "captions": {
+      "hello": "Hey {{name}}, ich bin Max, Head Coach bei Forge.",
+      "helloAnon": "Hey, ich bin Max, Head Coach bei Forge.",
+      "thanks": "Danke, dass du dabei bist. Das bedeutet uns echt viel.",
+      "plan": "Dein Plan steht. Ab jetzt zählt jeder Satz.",
+      "seeYou": "Wir sehen uns beim ersten Training!"
+    },
+    "a11y": {
+      "subtitles": "Untertitel",
+      "mute": "Ton aus",
+      "unmute": "Ton an",
+      "play": "Abspielen",
+      "pause": "Pause"
+    }
+  },
+  "restoreResult": {
+    "successTitle": "Käufe wiederhergestellt",
+    "successBody": "Forge Pro ist wieder aktiv.",
+    "emptyTitle": "Nichts zum Wiederherstellen",
+    "emptyBody": "Wir haben für dieses Konto kein aktives Abo gefunden."
+  },
+  "settings": {
+    "section": "Abo",
+    "title": "Forge Pro",
+    "upgrade": "Upgraden",
+    "active": "Aktiv",
+    "trialUntil": "Test bis {{date}}",
+    "restore": "Käufe wiederherstellen",
+    "details": {
+      "trial": {
+        "day": "Dein kostenloser Test läuft bis {{date}}. Danach startet dein Tagesabo.",
+        "month": "Dein kostenloser Test läuft bis {{date}}. Danach startet dein Monatsabo."
+      },
+      "active": {
+        "day": "Dein Tagesabo ist seit {{date}} aktiv.",
+        "month": "Dein Monatsabo ist seit {{date}} aktiv."
+      }
+    },
+    "manage": "Abo verwalten",
+    "reset": "Zurücksetzen (Testmodus)"
+  }
+}

@@ -1,1 +1,111 @@
-{}
+{
+  "badge": "FORGE PRO",
+  "restore": "Restore purchases",
+  "restoring": "Restoring …",
+  "paywall": {
+    "before": "Before",
+    "after": "After",
+    "brand": "FORGE",
+    "pro": "PRO",
+    "subtitle": "Your plan imported, every set tracked, all your progress visible.",
+    "benefits": {
+      "import": {
+        "title": "Import plans",
+        "detail": "by photo or file"
+      },
+      "history": {
+        "title": "History and PRs",
+        "detail": "for every exercise"
+      },
+      "suggestions": {
+        "title": "Weight suggestions",
+        "detail": "for every set"
+      }
+    },
+    "continue": "Continue",
+    "fine": {
+      "day": "Then {{price}} per day · cancel anytime",
+      "month": "Then {{price}} per month · cancel anytime"
+    },
+    "fineNoTrial": {
+      "day": "{{price}} per day · cancel anytime",
+      "month": "{{price}} per month · cancel anytime"
+    }
+  },
+  "plans": {
+    "daily": {
+      "label": "Daily",
+      "price": "{{price}} / day",
+      "note": "cancel any day"
+    },
+    "monthly": {
+      "label": "Monthly",
+      "price": "{{price}} / month",
+      "note": "cancel any month"
+    }
+  },
+  "trial": {
+    "badge_one": "Day free",
+    "badge_other": "Days free",
+    "title": "How your trial works",
+    "subtitle": "No surprises. We'll remind you before it ends.",
+    "today": "Today",
+    "todayBody": "All Pro features are unlocked right away.",
+    "day": "Day {{day}}",
+    "reminderBody": "You'll get a reminder that your trial ends soon.",
+    "startBody": {
+      "day": "Your daily plan starts. Cancel anytime before then.",
+      "month": "Your monthly plan starts. Cancel anytime before then."
+    },
+    "cta": "Start free trial",
+    "fine": {
+      "day": "Then {{price}} per day",
+      "month": "Then {{price}} per month"
+    }
+  },
+  "welcome": {
+    "header": "A message from your coach",
+    "role": "Head Coach at Forge",
+    "cta": "Let's go",
+    "captions": {
+      "hello": "Hey {{name}}, I'm Max, Head Coach at Forge.",
+      "helloAnon": "Hey, I'm Max, Head Coach at Forge.",
+      "thanks": "Thanks for being here. It really means a lot to us.",
+      "plan": "Your plan is ready. From now on, every set counts.",
+      "seeYou": "See you at your first workout!"
+    },
+    "a11y": {
+      "subtitles": "Subtitles",
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "play": "Play",
+      "pause": "Pause"
+    }
+  },
+  "restoreResult": {
+    "successTitle": "Purchases restored",
+    "successBody": "Forge Pro is active again.",
+    "emptyTitle": "Nothing to restore",
+    "emptyBody": "We couldn't find an active subscription for this account."
+  },
+  "settings": {
+    "section": "Subscription",
+    "title": "Forge Pro",
+    "upgrade": "Upgrade",
+    "active": "Active",
+    "trialUntil": "Trial until {{date}}",
+    "restore": "Restore purchases",
+    "details": {
+      "trial": {
+        "day": "Your free trial runs until {{date}}. After that, your daily plan starts.",
+        "month": "Your free trial runs until {{date}}. After that, your monthly plan starts."
+      },
+      "active": {
+        "day": "Your daily plan has been active since {{date}}.",
+        "month": "Your monthly plan has been active since {{date}}."
+      }
+    },
+    "manage": "Manage subscription",
+    "reset": "Reset (test mode)"
+  }
+}

@@ -1,1 +1,112 @@
-{}
+{
+  "badge": "FORGE PRO",
+  "restore": "Restaurar compras",
+  "restoring": "Restaurando …",
+  "paywall": {
+    "before": "Antes",
+    "after": "Depois",
+    "brand": "FORGE",
+    "pro": "PRO",
+    "subtitle": "Seu plano importado, cada série registrada, todo o progresso visível.",
+    "benefits": {
+      "import": {
+        "title": "Importar planos",
+        "detail": "por foto ou arquivo"
+      },
+      "history": {
+        "title": "Histórico e recordes",
+        "detail": "para cada exercício"
+      },
+      "suggestions": {
+        "title": "Sugestões de carga",
+        "detail": "para cada série"
+      }
+    },
+    "continue": "Continuar",
+    "fine": {
+      "day": "Depois {{price}} por dia · cancele quando quiser",
+      "month": "Depois {{price}} por mês · cancele quando quiser"
+    },
+    "fineNoTrial": {
+      "day": "{{price}} por dia · cancele quando quiser",
+      "month": "{{price}} por mês · cancele quando quiser"
+    }
+  },
+  "plans": {
+    "daily": {
+      "label": "Diário",
+      "price": "{{price}} / dia",
+      "note": "cancelável por dia"
+    },
+    "monthly": {
+      "label": "Mensal",
+      "price": "{{price}} / mês",
+      "note": "cancelável por mês"
+    }
+  },
+  "trial": {
+    "badge_one": "Dia grátis",
+    "badge_many": "Dias grátis",
+    "badge_other": "Dias grátis",
+    "title": "Como funciona seu teste",
+    "subtitle": "Sem surpresas. A gente avisa antes.",
+    "today": "Hoje",
+    "todayBody": "Todos os recursos Pro são liberados na hora.",
+    "day": "Dia {{day}}",
+    "reminderBody": "Você recebe um lembrete de que seu teste está acabando.",
+    "startBody": {
+      "day": "Sua assinatura diária começa. Cancele quando quiser antes disso.",
+      "month": "Sua assinatura mensal começa. Cancele quando quiser antes disso."
+    },
+    "cta": "Testar grátis",
+    "fine": {
+      "day": "Depois {{price}} por dia",
+      "month": "Depois {{price}} por mês"
+    }
+  },
+  "welcome": {
+    "header": "Mensagem do seu coach",
+    "role": "Head Coach na Forge",
+    "cta": "Vamos lá",
+    "captions": {
+      "hello": "Oi {{name}}, eu sou o Max, Head Coach na Forge.",
+      "helloAnon": "Oi, eu sou o Max, Head Coach na Forge.",
+      "thanks": "Obrigado por estar com a gente. Isso significa muito pra nós.",
+      "plan": "Seu plano está pronto. A partir de agora, cada série conta.",
+      "seeYou": "Nos vemos no primeiro treino!"
+    },
+    "a11y": {
+      "subtitles": "Legendas",
+      "mute": "Desativar som",
+      "unmute": "Ativar som",
+      "play": "Reproduzir",
+      "pause": "Pausar"
+    }
+  },
+  "restoreResult": {
+    "successTitle": "Compras restauradas",
+    "successBody": "O Forge Pro está ativo de novo.",
+    "emptyTitle": "Nada para restaurar",
+    "emptyBody": "Não encontramos nenhuma assinatura ativa para esta conta."
+  },
+  "settings": {
+    "section": "Assinatura",
+    "title": "Forge Pro",
+    "upgrade": "Fazer upgrade",
+    "active": "Ativo",
+    "trialUntil": "Teste até {{date}}",
+    "restore": "Restaurar compras",
+    "details": {
+      "trial": {
+        "day": "Seu teste grátis vai até {{date}}. Depois começa sua assinatura diária.",
+        "month": "Seu teste grátis vai até {{date}}. Depois começa sua assinatura mensal."
+      },
+      "active": {
+        "day": "Sua assinatura diária está ativa desde {{date}}.",
+        "month": "Sua assinatura mensal está ativa desde {{date}}."
+      }
+    },
+    "manage": "Gerenciar assinatura",
+    "reset": "Redefinir (modo de teste)"
+  }
+}
