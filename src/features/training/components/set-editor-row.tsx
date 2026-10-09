@@ -1,13 +1,12 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextInput, View } from 'react-native';
+import { View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 import type { PlanSetDraft } from '@/shared/data/templates';
-import { clamp } from '@/shared/lib/math';
 import { formatRir } from '@/shared/lib/rir';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
+import { InputCell } from '@/shared/ui/input-cell';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
@@ -17,66 +16,52 @@ export interface SetDraft extends PlanSetDraft {
   key: string;
 }
 
+/** The two number boxes of a target row. */
+export type TargetField = 'min' | 'max';
+
 export interface SetEditorRowProps {
   index: number;
   set: SetDraft;
-  /** Targets are seconds (planks): wider range and no RIR. */
+  /** Targets are seconds (planks): no RIR. */
   timed: boolean;
-  onChange: (patch: Partial<SetDraft>) => void;
+  /** The box being typed into, if it is in this row. */
+  activeField: TargetField | null;
+  /** Text of the active box (the number pad's buffer). */
+  buffer: string;
+  pristine: boolean;
+  onFocus: (field: TargetField) => void;
   onRirPress: () => void;
   /** Undefined when the set can't be removed (last remaining set). */
   onRemove?: () => void;
 }
 
-interface TargetInputProps {
-  value: number;
-  /** Largest value: 60 reps or 600 seconds. */
-  max: number;
-  onChangeValue: (value: number) => void;
-  onBlur: () => void;
-  label: string;
-}
-
-/** Target field: digits update the draft live; the row normalizes min ≤ max on blur. */
-function TargetInput({ value, max, onChangeValue, onBlur, label }: TargetInputProps) {
-  const [text, setText] = useState<string | null>(null);
-  return (
-    <TextInput
-      value={text ?? String(value)}
-      onChangeText={(next) => {
-        const digits = next.replace(/[^0-9]/g, '').slice(0, String(max).length);
-        setText(digits);
-        if (digits) onChangeValue(clamp(Number(digits), 1, max));
-      }}
-      onFocus={() => setText(String(value))}
-      onBlur={() => {
-        setText(null);
-        onBlur();
-      }}
-      accessibilityLabel={label}
-      keyboardType="number-pad"
-      returnKeyType="done"
-      selectTextOnFocus
-      keyboardAppearance="dark"
-      selectionColor={colors.fg}
-      textAlignVertical="center"
-      className="h-11 min-w-0 flex-1 rounded-xl bg-white/8 py-0 text-center font-inter-semibold text-[18px] text-fg"
-    />
-  );
-}
-
-/** One editable target set: min/max reps (or seconds), RIR badge; swipe left to delete (00·P2 C·S). */
+/** One target set: min/max reps (or seconds) typed with the number pad, RIR badge; swipe left to delete. */
 export function SetEditorRow({
   index,
   set,
   timed,
-  onChange,
+  activeField,
+  buffer,
+  pristine,
+  onFocus,
   onRirPress,
   onRemove,
 }: SetEditorRowProps) {
   const { t } = useTranslation('training');
   const accent = useAccentColor();
   const rir = editorRirStyle(set.rir, accent);
+  const cell = (field: TargetField) => (
+    <InputCell
+      value={
+        activeField === field ? buffer : String(field === 'min' ? set.targetMin : set.targetMax)
+      }
+      active={activeField === field}
+      pristine={pristine}
+      label={t(timed ? `sets.${field}Seconds` : `sets.${field}`)}
+      onPress={() => onFocus(field)}
+      className="min-w-0 flex-1"
+    />
+  );
 
   return (
     <Swipeable
@@ -102,20 +87,8 @@ export function SetEditorRow({
             {index + 1}
           </Text>
         </View>
-        <TargetInput
-          value={set.targetMin}
-          max={timed ? 600 : 60}
-          label={t(timed ? 'sets.minSeconds' : 'sets.min')}
-          onChangeValue={(targetMin) => onChange({ targetMin })}
-          onBlur={() => onChange({ targetMax: Math.max(set.targetMin, set.targetMax) })}
-        />
-        <TargetInput
-          value={set.targetMax}
-          max={timed ? 600 : 60}
-          label={t(timed ? 'sets.maxSeconds' : 'sets.max')}
-          onChangeValue={(targetMax) => onChange({ targetMax })}
-          onBlur={() => onChange({ targetMin: Math.min(set.targetMin, set.targetMax) })}
-        />
+        {cell('min')}
+        {cell('max')}
         {timed ? (
           // Reps in reserve don't apply to holds; keep the column so rows stay aligned.
           <View className="size-7" />

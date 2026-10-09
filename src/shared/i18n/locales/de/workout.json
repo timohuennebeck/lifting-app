@@ -51,15 +51,6 @@
     "confirmMessage": "Die bereits eingetragenen Sätze dieser Übung werden gelöscht.",
     "confirm": "Tauschen"
   },
-  "targets": {
-    "title": "Targets",
-    "min": "Min. Wdh.",
-    "max": "Max. Wdh.",
-    "minSeconds": "Min. Sek.",
-    "maxSeconds": "Max. Sek.",
-    "rir": "RIR",
-    "remove": "Satz {{n}} entfernen"
-  },
   "empty": {
     "title": "Keine Übungen",
     "duration": "Geschätzte Dauer: {{minutes}} Min.",

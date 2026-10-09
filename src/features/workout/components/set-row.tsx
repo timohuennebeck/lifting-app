@@ -1,84 +1,18 @@
-import { type ReactNode, useEffect } from 'react';
-import { Pressable, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
+import { Pressable, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
+import { InputCell } from '@/shared/ui/input-cell';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
 
 import type { SetField } from '../stores/workout-session-store';
 
-function BlinkingCursor() {
-  const opacity = useSharedValue(1);
-  useEffect(() => {
-    const step = (to: number) => withDelay(500, withTiming(to, { duration: 0 }));
-    opacity.set(withRepeat(withSequence(step(0), step(1)), -1));
-  }, [opacity]);
-  const style = useAnimatedStyle(() => ({ opacity: opacity.get() }));
-  return <Animated.View className="h-5 w-0.5 rounded-full bg-accent" style={style} />;
-}
-
 /** Box width: one of two boxes, or a single box spanning both (planks, push-ups). */
 export const cellWidth = (count: number) => (count > 1 ? 'w-19.5' : 'w-41.5');
-
-interface CellProps {
-  value: string;
-  className: string;
-  active: boolean;
-  pristine: boolean;
-  label: string;
-  onPress: () => void;
-  children?: ReactNode;
-}
-
-function Cell({ value, className, active, pristine, label, onPress, children }: CellProps) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      accessibilityValue={{ text: value }}
-      onPress={onPress}
-      className={cn(
-        'relative h-11 flex-row items-center justify-center gap-0.5 rounded-xl bg-white/8',
-        className,
-        active && 'border-2 border-accent',
-      )}
-    >
-      {value ? (
-        <View>
-          <Text
-            variant="bodyStrong"
-            className="rounded-md px-0.5 text-lg leading-5.5"
-            // A value waiting to be typed over looks selected, in the system's selection colour.
-            style={active && pristine ? { backgroundColor: colors.selection } : undefined}
-          >
-            {value}
-          </Text>
-          {/* The caret floats after the text, so the number doesn't move when it goes away. */}
-          {active && !pristine ? (
-            <View className="absolute inset-y-0 -right-1 justify-center">
-              <BlinkingCursor />
-            </View>
-          ) : null}
-        </View>
-      ) : active ? (
-        <BlinkingCursor />
-      ) : null}
-      {children}
-    </Pressable>
-  );
-}
 
 export interface SetCell {
   field: SetField;
@@ -141,7 +75,7 @@ export function SetRow({
         </Text>
       </View>
       {cells.map((cell) => (
-        <Cell
+        <InputCell
           key={cell.field}
           value={cell.value}
           className={cellWidth(cells.length)}
@@ -154,7 +88,7 @@ export function SetRow({
           {cell.field === 'reps' && rir != null ? (
             <RirBadge rir={rir} className="absolute -right-1.75 -bottom-1.75" />
           ) : null}
-        </Cell>
+        </InputCell>
       ))}
       <PressableScale
         haptic={done ? 'tap' : 'press'}

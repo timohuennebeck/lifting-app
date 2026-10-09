@@ -51,15 +51,6 @@
     "confirmMessage": "As séries já registadas deste exercício serão apagadas.",
     "confirm": "Trocar"
   },
-  "targets": {
-    "title": "Metas",
-    "min": "Reps mín.",
-    "max": "Reps máx.",
-    "minSeconds": "Seg mín.",
-    "maxSeconds": "Seg máx.",
-    "rir": "RIR",
-    "remove": "Remover série {{n}}"
-  },
   "empty": {
     "title": "Sem exercícios",
     "duration": "Duração estimada: {{minutes}} min",

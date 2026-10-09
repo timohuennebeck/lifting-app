@@ -1,9 +1,10 @@
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, inArray } from 'drizzle-orm';
 
 import { defaultTargets, swapTargets } from '@/shared/data/exercises';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
 import { workoutExercises, workoutSets } from '@/shared/data/powersync/schema';
-import { insertWorkoutSet, type SetTargets } from '@/shared/data/workouts';
+import type { PlanSetDraft } from '@/shared/data/templates';
+import { insertWorkoutSet } from '@/shared/data/workouts';
 
 async function exerciseOf(tx: Tx, workoutExerciseId: string) {
   const row = await tx
@@ -76,9 +77,44 @@ export async function unlogSet(setId: string) {
     .where(eq(workoutSets.id, setId));
 }
 
-export async function updateSetTargets(setId: string, { min, max, rir }: SetTargets) {
-  await drizzle
-    .update(workoutSets)
-    .set({ target_min: min, target_max: max, target_rir: rir })
-    .where(eq(workoutSets.id, setId));
+/** A target row of the running workout; `key` is the set's id for rows that already exist. */
+export interface WorkoutTargetDraft extends PlanSetDraft {
+  key: string;
+}
+
+/**
+ * Saves the targets page of a running workout exercise: updates kept sets (logged values stay),
+ * adds new rows, deletes removed ones and stores the rest override.
+ */
+export async function saveWorkoutTargets(
+  userId: string,
+  workoutExerciseId: string,
+  drafts: WorkoutTargetDraft[],
+  restSeconds: number | null,
+) {
+  await drizzle.transaction(async (tx) => {
+    const rows = await tx
+      .select({ id: workoutSets.id })
+      .from(workoutSets)
+      .where(eq(workoutSets.workout_exercise_id, workoutExerciseId));
+    const existing = new Set(rows.map((r) => r.id));
+    const kept = new Set(drafts.map((d) => d.key));
+    const removed = [...existing].filter((id) => !kept.has(id));
+    if (removed.length) await tx.delete(workoutSets).where(inArray(workoutSets.id, removed));
+    for (const [position, d] of drafts.entries()) {
+      const target = { min: d.targetMin, max: d.targetMax, rir: d.rir };
+      if (existing.has(d.key)) {
+        await tx
+          .update(workoutSets)
+          .set({ position, target_min: target.min, target_max: target.max, target_rir: target.rir })
+          .where(eq(workoutSets.id, d.key));
+      } else {
+        await insertWorkoutSet(tx, userId, workoutExerciseId, position, target);
+      }
+    }
+    await tx
+      .update(workoutExercises)
+      .set({ rest_seconds: restSeconds })
+      .where(eq(workoutExercises.id, workoutExerciseId));
+  });
 }

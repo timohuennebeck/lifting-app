@@ -51,15 +51,6 @@
     "confirmMessage": "The sets you already logged for this exercise will be cleared.",
     "confirm": "Swap"
   },
-  "targets": {
-    "title": "Targets",
-    "min": "Min reps",
-    "max": "Max reps",
-    "minSeconds": "Min sec",
-    "maxSeconds": "Max sec",
-    "rir": "RIR",
-    "remove": "Remove set {{n}}"
-  },
   "empty": {
     "title": "No exercises",
     "duration": "Estimated duration: {{minutes}} min",

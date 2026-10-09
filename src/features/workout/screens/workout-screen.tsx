@@ -27,7 +27,6 @@ import { EmptyWorkout } from '../components/empty-workout';
 import { ExerciseActions } from '../components/exercise-actions';
 import { ExerciseStrip } from '../components/exercise-strip';
 import { SetTable } from '../components/set-table';
-import { TargetsSheet } from '../components/targets-sheet';
 import { WeightKeypad } from '../components/weight-keypad';
 import { WorkoutMenuSheet } from '../components/workout-menu-sheet';
 import { WorkoutTopBar } from '../components/workout-top-bar';
@@ -36,7 +35,7 @@ import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
-type SheetKind = 'menu' | 'targets' | 'picker';
+type SheetKind = 'menu' | 'picker';
 
 const SWIPE_DISTANCE = 70;
 const SWIPE_VELOCITY = 600;
@@ -218,7 +217,12 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                 </View>
                 <ExerciseActions
                   onHistory={() => router.push(`/workout/history/${exercise.exerciseId}`)}
-                  onTargets={() => setSheet('targets')}
+                  onTargets={() =>
+                    router.push({
+                      pathname: '/workout/targets/[exerciseId]',
+                      params: { exerciseId: exercise.id, workoutId: workout.id },
+                    })
+                  }
                   onSwap={() => openPicker('swap')}
                 />
                 <View onLayout={(e) => (layout.current.table = e.nativeEvent.layout.y)}>
@@ -257,12 +261,6 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
         name={workout.name}
         doneSets={live.doneSets}
         totalSets={live.totalSets}
-      />
-      <TargetsSheet
-        visible={sheet === 'targets'}
-        onClose={() => setSheet(null)}
-        exercise={exercise}
-        exerciseName={exerciseName}
       />
       <ExercisePickerSheet
         visible={sheet === 'picker'}
