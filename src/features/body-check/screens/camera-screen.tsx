@@ -12,6 +12,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
+import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
@@ -40,7 +41,14 @@ export function CameraScreen() {
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
   const focused = useIsFocused();
+  // Read after the async capture: the user may have left the camera meanwhile.
+  const focusedRef = useRef(focused);
+  useEffect(() => {
+    focusedRef.current = focused;
+  }, [focused]);
   const close = useCloseCheck();
+  // Android back on the flow's first screen would drop the modal without asking.
+  useHardwareBack(close);
   const [permission, requestPermission, getPermission] = useCameraPermissions();
   const camera = useRef<CameraView>(null);
   const [ready, setReady] = useState(false);
@@ -93,7 +101,8 @@ export function CameraScreen() {
       if (issue) haptics.warning();
       current.addShot(target, { ...stored, issue });
       const complete = POSES.every((p) => useBodyCheckStore.getState().shots[p]);
-      if (current.retaking || (complete && !wasComplete)) router.push('/body-check/review');
+      const openReview = current.retaking || (complete && !wasComplete);
+      if (openReview && focusedRef.current) router.push('/body-check/review');
     } catch (error) {
       console.warn('Body-check photo failed', error);
       Alert.alert(t('camera.error'));
@@ -254,6 +263,7 @@ export function CameraScreen() {
             {taken ? (
               <PressableScale
                 haptic="press"
+                disabled={busy}
                 onPress={() => router.push('/body-check/review')}
                 className="h-11 flex-row items-center gap-2 rounded-full bg-elevated pr-2 pl-4"
               >

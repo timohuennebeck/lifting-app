@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, BackHandler, ScrollView, View } from 'react-native';
+import { Alert, ScrollView, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useTranslation } from 'react-i18next';
 
@@ -8,6 +8,7 @@ import { ExercisePickerSheet } from '@/features/exercises/components/exercise-pi
 import type { ExerciseId } from '@/shared/data/exercises';
 import { restSecondsFor } from '@/shared/data/templates';
 import { addWorkoutExercise, useWorkout, type WorkoutDetail } from '@/shared/data/workouts';
+import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { haptics } from '@/shared/lib/haptics';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
@@ -68,14 +69,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   }, [selectedIndex, keypadHeight]);
 
   // Android back closes the keypad first.
-  useEffect(() => {
-    if (!keypadOpen) return;
-    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
-      closeKeypad();
-      return true;
-    });
-    return () => sub.remove();
-  }, [keypadOpen, closeKeypad]);
+  useHardwareBack(closeKeypad, keypadOpen);
 
   const go = (index: number) => {
     if (index < 0 || index >= count || index === exerciseIndex) return;

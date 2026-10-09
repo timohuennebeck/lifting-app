@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
@@ -78,13 +79,15 @@ export function CameraScreen() {
     if (retakeIndex === null) truncatePhotos(keptOnClose.current);
     router.back();
   }
+  // Every way out drops this session's photos: no swipe-back, Android back runs close().
+  useHardwareBack(close);
 
   async function fromLibrary() {
     const picked = await pickPlanPhotos();
     if (picked.length && !store(picked)) router.dismissTo('/import/review');
   }
 
-  const options = <Stack.Screen options={{ animation: 'fade' }} />;
+  const options = <Stack.Screen options={{ animation: 'fade', gestureEnabled: false }} />;
   if (!permission) return <View className="flex-1 bg-black">{options}</View>;
 
   if (!permission.granted) {

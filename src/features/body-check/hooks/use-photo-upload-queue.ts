@@ -1,4 +1,4 @@
-import { useStatus } from '@powersync/react';
+import { useStatus } from '@powersync/react-native';
 import { and, eq, isNull } from 'drizzle-orm';
 import { useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';

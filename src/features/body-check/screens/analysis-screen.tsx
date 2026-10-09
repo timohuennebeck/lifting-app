@@ -18,6 +18,7 @@ import { GroupMarquee } from '../components/group-marquee';
 import { useBodyChecks } from '../data/body-checks';
 import { analyzeBodyCheck, type BodyCheckResult } from '../lib/body-check-service';
 import { GROUPS, POSES } from '../lib/poses';
+import { useCloseCheck } from '../hooks/use-close-check';
 import { useBodyCheckStore } from '../stores/body-check-store';
 
 const DURATION_MS = 9000;
@@ -28,6 +29,7 @@ const CHROME_HEIGHT = 330;
 /** 08c-H: analyses the four photos behind a reveal animation, then offers the result. */
 export function AnalysisScreen() {
   const { t } = useTranslation(['bodyCheck', 'common']);
+  const close = useCloseCheck();
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
   const { height } = useWindowDimensions();
@@ -90,7 +92,7 @@ export function AnalysisScreen() {
 
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-      <ScreenHeader icon="close" title={t('analysis.title')} />
+      <ScreenHeader icon="close" title={t('analysis.title')} onBack={close} />
       <View className="gap-2.5 px-4 pt-3.5">
         {[0, 2].map((row) => (
           <View key={row} className="flex-row gap-2.5">

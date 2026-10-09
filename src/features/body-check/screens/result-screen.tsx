@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, ScrollView, Share, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -28,6 +28,12 @@ import { type Shot, useBodyCheckStore } from '../stores/body-check-store';
 /** How long "Saved" shows before the flow closes. */
 const SAVED_PAUSE_MS = 700;
 
+/** Leaves the flow after a save and forgets the draft (its photos are kept). */
+function leaveSaved() {
+  exitBodyCheck();
+  useBodyCheckStore.getState().clear();
+}
+
 /** 08d-A: score, photo basis, metrics and muscle groups of a check; saves a fresh one. */
 export function ResultScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -43,6 +49,13 @@ export function ResultScreen() {
   const closeDraft = useCloseCheck();
   const [saving, setSaving] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
+
+  // After saving: a short "Gespeichert" pause, then leave. Closing earlier does the same.
+  useEffect(() => {
+    if (!justSaved) return;
+    const timer = setTimeout(leaveSaved, SAVED_PAUSE_MS);
+    return () => clearTimeout(timer);
+  }, [justSaved]);
 
   const index = checks?.findIndex((c) => c.id === id) ?? -1;
   const saved = checks && index >= 0 ? checks[index] : null;
@@ -88,10 +101,6 @@ export function ResultScreen() {
       });
       haptics.success();
       setJustSaved(true);
-      setTimeout(() => {
-        exitBodyCheck();
-        useBodyCheckStore.getState().clear();
-      }, SAVED_PAUSE_MS);
     } catch (error) {
       console.warn('Saving the body check failed', error);
       haptics.error();
@@ -107,7 +116,7 @@ export function ResultScreen() {
         <IconButton
           icon="close"
           accessibilityLabel={t('common:actions.close')}
-          onPress={draft && !justSaved ? closeDraft : exitBodyCheck}
+          onPress={justSaved ? leaveSaved : draft ? closeDraft : exitBodyCheck}
         />
         <PressableScale
           haptic="tap"
