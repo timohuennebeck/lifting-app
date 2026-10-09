@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatList, ScrollView, TextInput, View, type ViewToken } from 'react-native';
+import type { BottomSheetFlatListMethods } from '@gorhom/bottom-sheet';
+import { ScrollView, View, type ViewToken } from 'react-native';
 
 import { muscleShares } from '@/shared/data/muscles';
 import { cn } from '@/shared/lib/cn';
@@ -10,7 +11,7 @@ import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
 import { MuscleTileRow } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-import { Sheet } from '@/shared/ui/sheet';
+import { Sheet, SheetFlatList, SheetTextInput } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
 import { type ExerciseOption, useExerciseSearch } from '../hooks/use-exercise-search';
@@ -55,7 +56,7 @@ export function ExercisePickerSheet({
   const [query, setQuery] = useState('');
   const [group, setGroup] = useState<MuscleGroupId | null>(null);
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
-  const listRef = useRef<FlatList<Row>>(null);
+  const listRef = useRef<BottomSheetFlatListMethods>(null);
   const options = useExerciseSearch(query, group);
 
   // Already used exercises are listed first, like the design's "Selected" section.
@@ -107,7 +108,26 @@ export function ExercisePickerSheet({
       visible={visible}
       onClose={onClose}
       title={title ?? t('picker.title')}
-      className="h-[92%]"
+      snapPoints={['92%']}
+      footer={
+        <View className="flex-row items-center gap-2">
+          <View className="h-[46px] flex-1 flex-row items-center gap-2.5 rounded-full bg-elevated pr-4 pl-4">
+            <Icon name="search" size={16} color={colors.subtle} />
+            <SheetTextInput
+              value={query}
+              onChangeText={setQuery}
+              placeholder={t('picker.search')}
+              placeholderTextColor={colors.subtle}
+              selectionColor={colors.fg}
+              keyboardAppearance="dark"
+              autoCorrect={false}
+              returnKeyType="search"
+              className="h-full min-w-0 flex-1 font-inter text-label text-fg"
+            />
+          </View>
+          <Button label={t('picker.done')} size="md" onPress={onClose} className="h-[46px]" />
+        </View>
+      }
     >
       <View className="flex-1">
         {shares.length ? (
@@ -137,10 +157,10 @@ export function ExercisePickerSheet({
           </ScrollView>
         </View>
         <View className="mt-1 flex-1 flex-row">
-          <FlatList
+          <SheetFlatList
             ref={listRef}
             className="flex-1"
-            contentContainerClassName="pr-7 pb-4"
+            contentContainerClassName="pr-7 pb-24"
             data={rows}
             keyExtractor={(r) => r.id}
             keyboardShouldPersistTaps="handled"
@@ -205,23 +225,6 @@ export function ExercisePickerSheet({
               <AlphabetRail available={letters} active={activeLetter} onJump={jump} />
             </View>
           ) : null}
-        </View>
-        <View className="flex-row items-center gap-2 pt-2">
-          <View className="h-[46px] flex-1 flex-row items-center gap-2.5 rounded-full bg-elevated pr-4 pl-4">
-            <Icon name="search" size={16} color={colors.subtle} />
-            <TextInput
-              value={query}
-              onChangeText={setQuery}
-              placeholder={t('picker.search')}
-              placeholderTextColor={colors.subtle}
-              selectionColor={colors.fg}
-              keyboardAppearance="dark"
-              autoCorrect={false}
-              returnKeyType="search"
-              className="h-full min-w-0 flex-1 font-inter text-label text-fg"
-            />
-          </View>
-          <Button label={t('picker.done')} size="md" onPress={onClose} className="h-[46px]" />
         </View>
       </View>
     </Sheet>

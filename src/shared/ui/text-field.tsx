@@ -1,3 +1,4 @@
+import { useBottomSheetInternal } from '@gorhom/bottom-sheet';
 import { forwardRef, useState } from 'react';
 import { TextInput, type TextInputProps, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +8,7 @@ import { colors } from '@/shared/lib/theme';
 
 import { Icon } from './icon';
 import { PressableScale } from './pressable-scale';
+import { SheetTextInput } from './sheet';
 import { Text } from './text';
 
 export interface TextFieldProps extends TextInputProps {
@@ -36,6 +38,8 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
   ref,
 ) {
   const { t } = useTranslation();
+  // Inside a bottom sheet the input must be Gorhom's so the sheet tracks the keyboard.
+  const Input = useBottomSheetInternal(true) ? SheetTextInput : TextInput;
   const [focused, setFocused] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const hasValue = !!value?.length;
@@ -53,8 +57,8 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
           error ? 'border-danger' : focused ? 'border-accent' : 'border-transparent',
         )}
       >
-        <TextInput
-          ref={ref}
+        <Input
+          ref={ref as never}
           value={value}
           onChangeText={onChangeText}
           placeholderTextColor={colors.dim}
