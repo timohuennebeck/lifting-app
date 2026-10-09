@@ -12,8 +12,8 @@
       "bundleIdentifier": "com.horizonalpha.forge",
       "supportsTablet": false,
       "infoPlist": {
-        "NSCameraUsageDescription": "Forge uses the camera to photograph your training plan.",
-        "NSPhotoLibraryUsageDescription": "Forge lets you import a training plan from your photos.",
+        "NSCameraUsageDescription": "Forge uses the camera to photograph your training plan and to take your body check photos.",
+        "NSPhotoLibraryUsageDescription": "Forge lets you import a training plan from your photos and attach screenshots to support tickets.",
         "NSMicrophoneUsageDescription": "Forge uses the microphone for voice input of your plan."
       }
     },
@@ -42,13 +42,13 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Forge uses the camera to photograph your training plan."
+          "cameraPermission": "Forge uses the camera to photograph your training plan and to take your body check photos."
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "Forge lets you import a training plan from your photos."
+          "photosPermission": "Forge lets you import a training plan from your photos and attach screenshots to support tickets."
         }
       ],
       "expo-document-picker",
