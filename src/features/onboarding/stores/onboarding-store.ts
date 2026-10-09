@@ -17,7 +17,6 @@ export interface OnboardingDraft {
   heightCm: number;
   experience: Experience | null;
   complaints: string[];
-  hasPlan: boolean | null;
   goal: Goal | null;
   focus: MuscleId[];
   equipment: EquipmentAccess | null;
@@ -45,7 +44,6 @@ const initialDraft = (): OnboardingDraft => ({
   heightCm: 178,
   experience: null,
   complaints: [],
-  hasPlan: null,
   goal: null,
   focus: [],
   equipment: null,

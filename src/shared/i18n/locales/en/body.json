@@ -7,12 +7,6 @@
   "today": "today",
   "due": "Due",
   "history": "History",
-  "poses": {
-    "front": "Front",
-    "left": "Left",
-    "right": "Right",
-    "back": "Back"
-  },
   "start": "Start body check",
   "empty": {
     "title": "No body check yet",

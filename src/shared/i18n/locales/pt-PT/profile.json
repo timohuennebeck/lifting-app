@@ -42,7 +42,9 @@
     "signOut": "Terminar sessão",
     "signOutConfirm": {
       "title": "Terminar sessão?",
-      "body": "Os teus dados de treino ficam guardados na tua conta. Podes voltar a entrar a qualquer momento."
+      "body": "Os teus dados de treino ficam guardados na tua conta. Podes voltar a entrar a qualquer momento.",
+      "unsynced_one": "{{count}} alteração ainda não foi sincronizada. Terminar sessão mesmo assim? Vai perder-se.",
+      "unsynced_other": "{{count}} alterações ainda não foram sincronizadas. Terminar sessão mesmo assim? Vão perder-se."
     }
   }
 }

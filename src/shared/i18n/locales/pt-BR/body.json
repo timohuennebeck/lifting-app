@@ -7,12 +7,6 @@
   "today": "hoje",
   "due": "Pendente",
   "history": "Histórico",
-  "poses": {
-    "front": "Frente",
-    "left": "Esquerda",
-    "right": "Direita",
-    "back": "Costas"
-  },
   "start": "Iniciar check corporal",
   "empty": {
     "title": "Nenhum check corporal ainda",

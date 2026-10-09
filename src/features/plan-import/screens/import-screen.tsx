@@ -2,7 +2,6 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
-import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { FormatCards } from '@/shared/ui/format-cards';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { StepScreen } from '@/shared/ui/step-screen';
@@ -17,7 +16,6 @@ import { useImportStore } from '../stores/import-store';
 export function ImportScreen() {
   const { t } = useTranslation('planImport');
   const setFile = useImportStore((s) => s.setFile);
-  const updateDraft = useUpdateDraft();
 
   async function uploadFile() {
     try {
@@ -61,10 +59,7 @@ export function ImportScreen() {
       </View>
       <PressableScale
         haptic="select"
-        onPress={() => {
-          updateDraft({ hasPlan: false });
-          router.push('/create/goal');
-        }}
+        onPress={() => router.push('/create/goal')}
         className="items-center px-5 pt-4.5 pb-2"
       >
         <Text variant="caption" tone="subtle" className="font-inter text-sm">

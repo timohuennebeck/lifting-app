@@ -6,7 +6,7 @@ import { View } from 'react-native';
 import { ExerciseDetailModal } from '@/features/exercises/components/exercise-detail-modal';
 import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
-import { defaultTargets, isTimed } from '@/shared/data/exercises';
+import { defaultSetDrafts, swapTargets } from '@/shared/data/exercises';
 import { muscleShares } from '@/shared/data/muscles';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
@@ -19,7 +19,6 @@ import { DayEditor } from '../components/day-editor';
 import { DayTabs } from '../components/day-tabs';
 import { ImportedExerciseRow } from '../components/imported-exercise-row';
 import { IMPORT_STEPS } from '../lib/format';
-import { readSets } from '../lib/mock-import-data';
 import {
   type ImportedDay,
   type ImportedExercise,
@@ -61,23 +60,15 @@ export function ConfirmScreen() {
   const settle = ({ raw: _raw, alternatives: _alts, ...e }: ImportedExercise): ImportedExercise =>
     e;
 
-  /** Sets at the exercise's default targets (seconds for holds). */
-  const defaultSets = (exerciseId: string, count: number) => {
-    const { min, max } = defaultTargets(exerciseId);
-    return readSets(count, min, max);
-  };
-
   function pick(exerciseId: string) {
     if (picker?.mode === 'swap') {
-      // Rep targets don't carry over to a hold, nor the other way round.
       editExercise(picker.index, (e) =>
         settle({
           ...e,
           exerciseId,
-          sets:
-            isTimed(e.exerciseId) !== isTimed(exerciseId)
-              ? defaultSets(exerciseId, e.sets.length)
-              : e.sets,
+          sets: swapTargets(e.exerciseId, exerciseId)
+            ? defaultSetDrafts(exerciseId, e.sets.length)
+            : e.sets,
         }),
       );
     } else {
@@ -85,7 +76,7 @@ export function ConfirmScreen() {
         ...d,
         exercises: [
           ...d.exercises,
-          { exerciseId, sets: defaultSets(exerciseId, 3), restSeconds: null },
+          { exerciseId, sets: defaultSetDrafts(exerciseId, 3), restSeconds: null },
         ],
       }));
     }
@@ -100,7 +91,7 @@ export function ConfirmScreen() {
       if (next >= 0) selectDay(next);
       return;
     }
-    updateDraft({ hasPlan: true, plan: toPlanDraft(plan) });
+    updateDraft({ plan: toPlanDraft(plan) });
     router.push('/promise');
   }
 

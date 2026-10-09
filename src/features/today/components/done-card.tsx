@@ -26,8 +26,11 @@ export function DoneCard({ workout, date, today, units }: DoneCardProps) {
       icon: 'timer',
       label: t('stats.minutes', { count: minutesBetween(workout.startedAt, workout.finishedAt) }),
     },
-    { icon: 'dumbbell', label: formatWeight(Math.round(workout.volumeKg), units) },
   ];
+  // Reps-only and timed workouts have no volume.
+  if (workout.volumeKg > 0) {
+    stats.push({ icon: 'dumbbell', label: formatWeight(Math.round(workout.volumeKg), units) });
+  }
   if (workout.prCount > 0) {
     stats.push({ icon: 'star', label: t('stats.prs', { count: workout.prCount }), accent: true });
   }

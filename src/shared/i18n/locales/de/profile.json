@@ -42,7 +42,9 @@
     "signOut": "Abmelden",
     "signOutConfirm": {
       "title": "Abmelden?",
-      "body": "Deine Trainingsdaten bleiben in deinem Konto gespeichert. Du kannst dich jederzeit wieder anmelden."
+      "body": "Deine Trainingsdaten bleiben in deinem Konto gespeichert. Du kannst dich jederzeit wieder anmelden.",
+      "unsynced_one": "{{count}} Änderung ist noch nicht synchronisiert. Trotzdem abmelden? Sie geht dabei verloren.",
+      "unsynced_other": "{{count}} Änderungen sind noch nicht synchronisiert. Trotzdem abmelden? Sie gehen dabei verloren."
     }
   }
 }

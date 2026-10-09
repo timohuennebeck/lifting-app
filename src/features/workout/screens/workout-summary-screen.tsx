@@ -112,10 +112,12 @@ export function WorkoutSummaryScreen() {
           </View>
         </View>
         <View className="flex-row px-5 pt-6.5">
-          <Stat
-            value={formatNumber(Math.round(volume), 0)}
-            unit={t(`common:units.${weightUnit(units)}`)}
-          />
+          {volumeKg > 0 ? (
+            <Stat
+              value={formatNumber(Math.round(volume), 0)}
+              unit={t(`common:units.${weightUnit(units)}`)}
+            />
+          ) : null}
           <Stat value={formatNumber(minutes, 0)} unit={t('common:units.minShort')} />
           <Stat value={formatNumber(setCount, 0)} unit={t('summary.sets', { count: setCount })} />
         </View>

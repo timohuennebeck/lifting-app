@@ -99,10 +99,6 @@
   "bodyCheck": {
     "title": "FAZER UM CHECK-UP CORPORAL?",
     "subtitle": "Com base nas suas fotos, adaptamos o plano aos seus pontos fracos.",
-    "front": "Frente",
-    "left": "Esquerda",
-    "right": "Direita",
-    "back": "Costas",
     "lightStrong": "Luz forte",
     "lightRest": " de frente",
     "clothesStrong": "Roupa íntima",

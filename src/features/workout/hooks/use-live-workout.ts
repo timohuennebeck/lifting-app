@@ -28,9 +28,6 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   const exerciseId = exercise?.exerciseId ?? '';
   const measures = measuresOf(exerciseId);
   const bodyweight = isBodyweight(exerciseId);
-  const nextOpenExercise = [...exercises.keys()]
-    .map((k) => (exerciseIndex + 1 + k) % exercises.length)
-    .find((k) => k !== exerciseIndex && firstOpenSet(exercises[k]) >= 0);
 
   const inputFor = (index: number) => toSetInput(suggestSet(exercise, index, last), units);
 
@@ -120,7 +117,6 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     totalSets: allSets.length,
     selectedIndex,
     openIndex,
-    nextOpenExercise,
     selectSet,
     confirmInput,
     toggleDone,

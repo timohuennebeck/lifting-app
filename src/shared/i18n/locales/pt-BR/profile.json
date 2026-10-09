@@ -42,7 +42,9 @@
     "signOut": "Sair",
     "signOutConfirm": {
       "title": "Sair da conta?",
-      "body": "Seus dados de treino ficam salvos na sua conta. Você pode entrar novamente a qualquer momento."
+      "body": "Seus dados de treino ficam salvos na sua conta. Você pode entrar novamente a qualquer momento.",
+      "unsynced_one": "{{count}} alteração ainda não foi sincronizada. Sair mesmo assim? Ela será perdida.",
+      "unsynced_other": "{{count}} alterações ainda não foram sincronizadas. Sair mesmo assim? Elas serão perdidas."
     }
   }
 }

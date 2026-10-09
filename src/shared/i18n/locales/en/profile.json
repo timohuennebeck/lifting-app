@@ -42,7 +42,9 @@
     "signOut": "Sign out",
     "signOutConfirm": {
       "title": "Sign out?",
-      "body": "Your training data stays saved in your account. You can sign in again anytime."
+      "body": "Your training data stays saved in your account. You can sign in again anytime.",
+      "unsynced_one": "{{count}} change hasn't synced yet. Sign out anyway? It will be lost.",
+      "unsynced_other": "{{count}} changes haven't synced yet. Sign out anyway? They'll be lost."
     }
   }
 }

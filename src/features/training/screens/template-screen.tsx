@@ -64,6 +64,7 @@ export function TemplateScreen() {
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [renameOpen, setRenameOpen] = useState(false);
   const menuShown = useLastDefined(menuFor);
+  const pickerShown = useLastDefined(picker);
 
   const exercises = template?.exercises ?? [];
   const items = exercises.map((e) => ({
@@ -225,7 +226,8 @@ export function TemplateScreen() {
         visible={!!picker}
         onClose={() => setPicker(null)}
         onSelect={onPick}
-        title={picker?.mode === 'swap' ? t('overview.swapTitle') : undefined}
+        title={pickerShown?.mode === 'swap' ? t('overview.swapTitle') : undefined}
+        mode={pickerShown?.mode}
         excludeIds={exercises.map((e) => e.exerciseId)}
       />
       <ExerciseMenuSheet

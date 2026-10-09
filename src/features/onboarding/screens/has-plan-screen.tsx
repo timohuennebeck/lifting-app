@@ -9,16 +9,9 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { TextButton } from '@/shared/ui/text-button';
 
 import { ABOUT_STEPS } from '../lib/flow';
-import { useUpdateDraft } from '../stores/onboarding-store';
 
 export function HasPlanScreen() {
   const { t } = useTranslation('onboarding');
-  const update = useUpdateDraft();
-
-  const choose = (hasPlan: boolean) => {
-    update({ hasPlan });
-    router.push(hasPlan ? '/import' : '/create/goal');
-  };
 
   return (
     <StepScreen
@@ -28,8 +21,12 @@ export function HasPlanScreen() {
       contentClassName="pb-2"
       footer={
         <View className="items-center gap-1">
-          <Button label={t('hasPlan.yes')} onPress={() => choose(true)} className="self-stretch" />
-          <TextButton label={t('hasPlan.no')} onPress={() => choose(false)} />
+          <Button
+            label={t('hasPlan.yes')}
+            onPress={() => router.push('/import')}
+            className="self-stretch"
+          />
+          <TextButton label={t('hasPlan.no')} onPress={() => router.push('/create/goal')} />
         </View>
       }
     >

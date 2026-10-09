@@ -97,10 +97,6 @@
   "bodyCheck": {
     "title": "DO A BODY CHECK?",
     "subtitle": "Based on your photos we adapt the plan to your weak spots.",
-    "front": "Front",
-    "left": "Left",
-    "right": "Right",
-    "back": "Back",
     "lightStrong": "Bright light",
     "lightRest": " from the front",
     "clothesStrong": "Underwear",

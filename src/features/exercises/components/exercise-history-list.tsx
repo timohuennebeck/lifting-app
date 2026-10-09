@@ -5,7 +5,8 @@ import { View } from 'react-native';
 import type { ExerciseHistoryEntry } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
 import { minutesBetween } from '@/shared/lib/date';
-import { formatDate, formatNumber, formatSet, type UnitSystem } from '@/shared/lib/format';
+import { formatDate, formatSet, formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
 
 import { HistoryRow } from './history-row';
@@ -47,7 +48,10 @@ export function ExerciseHistoryList({ entries, units }: ExerciseHistoryListProps
                 <>
                   {minutes ? <Metric label={t('detail.minutes')} value={String(minutes)} /> : null}
                   {entry.volumeKg > 0 ? (
-                    <Metric label={t('detail.volume')} value={formatNumber(entry.volumeKg, 0)} />
+                    <Metric
+                      label={t('detail.volume')}
+                      value={formatWeight(entry.volumeKg, units)}
+                    />
                   ) : null}
                   <Metric label={t('detail.pr')} value={String(prs)} highlight={prs > 0} />
                 </>
@@ -58,16 +62,7 @@ export function ExerciseHistoryList({ entries, units }: ExerciseHistoryListProps
                   <Text variant="label" className="flex-1 text-lg text-fg-soft">
                     {formatSet(s, units)}
                   </Text>
-                  {s.rir !== null ? (
-                    <View
-                      className={cn(
-                        'size-6 items-center justify-center rounded-full',
-                        s.rir <= 1 ? 'bg-[#E5484D]' : 'bg-[#F0B13A]',
-                      )}
-                    >
-                      <Text className="font-inter-bold text-xs text-on-accent">{s.rir}</Text>
-                    </View>
-                  ) : null}
+                  {s.rir !== null ? <RirBadge rir={s.rir} size={24} /> : null}
                 </>
               )}
             />

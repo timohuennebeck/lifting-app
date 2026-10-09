@@ -1,11 +1,10 @@
-import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { useStartTemplate } from '@/features/training/hooks/use-start-template';
 import { muscleShares } from '@/shared/data/muscles';
 import type { TemplateSummary } from '@/shared/data/templates';
-import { startWorkout } from '@/shared/data/workouts';
 import { isSameDay, startOfDay } from '@/shared/lib/date';
 import { formatWeekdayDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
@@ -36,28 +35,16 @@ export function PlannedCard({
 }: PlannedCardProps) {
   const { t } = useTranslation('today');
   const [busy, setBusy] = useState(false);
+  const { start, startingId } = useStartTemplate();
+  const starting = startingId === template.id;
   const shares = useMemo(() => muscleShares(template.items), [template.items]);
   const isFuture = startOfDay(date) > startOfDay(today);
   const label = isSameDay(date, today)
     ? t('status.plannedToday')
     : t('status.planned', { date: formatWeekdayDate(date) });
 
-  const start = async () => {
-    if (activeWorkoutId) {
-      router.push(`/workout/${activeWorkoutId}`);
-      return;
-    }
-    setBusy(true);
-    try {
-      const id = await startWorkout(requireUserId(), template.name, template.id);
-      router.push(`/workout/${id}`);
-    } finally {
-      setBusy(false);
-    }
-  };
-
   const markDone = async () => {
-    if (busy) return;
+    if (busy || starting) return;
     setBusy(true);
     try {
       await markTemplateDone(
@@ -91,8 +78,8 @@ export function PlannedCard({
             label={activeWorkoutId ? t('resume') : t('start')}
             size="md"
             className="flex-1"
-            loading={busy}
-            onPress={start}
+            loading={busy || starting}
+            onPress={() => start(template)}
           />
           <Button
             label={t('reschedule')}
@@ -106,7 +93,7 @@ export function PlannedCard({
             size={48}
             iconSize={16}
             haptic="none"
-            disabled={isFuture || busy}
+            disabled={isFuture || busy || starting}
             accessibilityLabel={t('markDone')}
             className={cn('bg-control', isFuture && 'opacity-35')}
             onPress={markDone}

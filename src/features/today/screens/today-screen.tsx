@@ -1,14 +1,14 @@
 import { router } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
+import { useStartTemplate } from '@/features/training/hooks/use-start-template';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useUnits } from '@/shared/data/profile';
-import { startWorkout, useActiveWorkout } from '@/shared/data/workouts';
+import { useActiveWorkout } from '@/shared/data/workouts';
 import { isSameDay, mondayIndex } from '@/shared/lib/date';
 import { colors } from '@/shared/lib/theme';
-import { requireUserId } from '@/shared/stores/session-store';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
@@ -30,19 +30,7 @@ export function TodayScreen() {
   const { data: active } = useActiveWorkout();
   const { days, planTemplates } = useWeekPlan(today);
   const day = days[selected];
-
-  // A double tap would otherwise start two workouts and orphan the first.
-  const starting = useRef(false);
-  const startEmpty = async () => {
-    if (starting.current) return;
-    starting.current = true;
-    try {
-      const id = await startWorkout(requireUserId(), t('emptyWorkoutName'), null);
-      router.push(`/workout/${id}`);
-    } finally {
-      starting.current = false;
-    }
-  };
+  const { start } = useStartTemplate();
 
   const pills = (
     <ScrollView
@@ -65,7 +53,7 @@ export function TodayScreen() {
       ) : (
         <PressableScale
           haptic="press"
-          onPress={startEmpty}
+          onPress={() => start({ id: null, name: t('emptyWorkoutName') })}
           className="h-10 flex-row items-center gap-1.75 rounded-full bg-elevated px-3.75"
         >
           <Icon name="plus" size={12} />

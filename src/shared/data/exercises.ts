@@ -8,6 +8,7 @@ import { mmkvStorage } from '@/shared/lib/storage';
 import { MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 import snapshot from './exercise-catalog.json';
+import type { PlanSetDraft } from './templates';
 
 // The catalog lives in Supabase (`public.exercises`). The app ships a snapshot of it for the
 // first launch and offline use, and `useCatalogRefresh` adds newer rows from the API.
@@ -203,3 +204,16 @@ export interface SetTargets {
 /** Targets of a new set: 8–12 reps at 2 RIR, or a 30–45 s hold (RIR is about reps). */
 export const defaultTargets = (exerciseId: string): SetTargets =>
   isTimed(exerciseId) ? { min: 30, max: 45, rir: null } : { min: 8, max: 12, rir: 2 };
+
+/** `count` new plan sets at the exercise's default targets. */
+export function defaultSetDrafts(exerciseId: string, count: number): PlanSetDraft[] {
+  const { min, max, rir } = defaultTargets(exerciseId);
+  return Array.from({ length: count }, () => ({ targetMin: min, targetMax: max, rir }));
+}
+
+/**
+ * Targets for the sets of a swapped exercise: reset only between reps and seconds, since
+ * "8–12" means something else for a plank. Null keeps the current targets.
+ */
+export const swapTargets = (fromId: string, toId: string): SetTargets | null =>
+  isTimed(fromId) !== isTimed(toId) ? defaultTargets(toId) : null;

@@ -3,13 +3,11 @@ import { useTranslation } from 'react-i18next';
 
 import { activeExerciseIds, exerciseName, useCatalogStore } from '@/shared/data/exercises';
 
-import { type MuscleGroupId, primaryGroup, primaryMuscle } from '../lib/muscle-groups';
+import { type MuscleGroupId, primaryGroup } from '../lib/muscle-groups';
 
 export interface ExerciseOption {
   id: string;
   name: string;
-  /** Muscle with the highest share, for grouping and subtitles. */
-  primaryMuscle: string;
   group: MuscleGroupId;
   /** Upper-case first letter without accents, for the A–Z index. */
   letter: string;
@@ -20,18 +18,16 @@ const letterOf = (name: string) => name.normalize('NFD').charAt(0).toUpperCase()
 
 /** Localized, alphabetically sorted exercise list filtered by search text and muscle group. */
 export function useExerciseSearch(query: string, group?: MuscleGroupId | null) {
-  const { t, i18n } = useTranslation('muscles');
+  const { i18n } = useTranslation();
   const rows = useCatalogStore((s) => s.rows);
   return useMemo(() => {
     const q = query.trim().toLocaleLowerCase(i18n.language);
     return activeExerciseIds(rows)
       .map((id): ExerciseOption => {
-        const muscle = primaryMuscle(id);
         const name = exerciseName(id, i18n.language);
         return {
           id,
           name,
-          primaryMuscle: muscle ? t(`names.${muscle}`) : '',
           group: primaryGroup(id),
           letter: letterOf(name),
         };
@@ -39,5 +35,5 @@ export function useExerciseSearch(query: string, group?: MuscleGroupId | null) {
       .filter((o) => !q || o.name.toLocaleLowerCase(i18n.language).includes(q))
       .filter((o) => !group || o.group === group)
       .sort((a, b) => a.name.localeCompare(b.name, i18n.language));
-  }, [query, group, t, i18n.language, rows]);
+  }, [query, group, i18n.language, rows]);
 }

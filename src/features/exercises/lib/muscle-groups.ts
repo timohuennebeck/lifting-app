@@ -46,7 +46,7 @@ export function exerciseMuscles(exerciseId: string): MuscleId[] {
   return muscleWeights(exerciseId).map(([m]) => m);
 }
 
-export function primaryMuscle(exerciseId: string): MuscleId | undefined {
+function primaryMuscle(exerciseId: string): MuscleId | undefined {
   return exerciseMuscles(exerciseId)[0];
 }
 

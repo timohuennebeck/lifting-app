@@ -37,11 +37,11 @@ export function WelcomeScreen() {
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
       <View
         className="flex-1 items-center"
-        style={{ paddingTop: PHONE_TOP * Math.min(1, scale) }}
+        style={{ paddingTop: PHONE_TOP * scale }}
         onLayout={(e) => setHeroHeight(e.nativeEvent.layout.height)}
       >
         <View style={{ transform: [{ scale: Math.max(0.5, scale) }], transformOrigin: 'top' }}>
-          <WelcomePreview />
+          <WelcomePreview active={focused} />
         </View>
       </View>
       <View className="absolute right-4 z-10" style={{ top: insets.top + 6 }}>

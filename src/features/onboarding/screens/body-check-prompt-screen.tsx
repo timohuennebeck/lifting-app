@@ -28,7 +28,7 @@ function finish(openBodyCheck: boolean) {
 }
 
 export function BodyCheckPromptScreen() {
-  const { t } = useTranslation('onboarding');
+  const { t } = useTranslation(['onboarding', 'bodyCheck']);
 
   return (
     <StepScreen
@@ -59,7 +59,7 @@ export function BodyCheckPromptScreen() {
               )}
             >
               <Text variant="caption" tone={i === 0 ? 'onAccent' : 'default'} className="text-xs">
-                {t(`bodyCheck.${pose}`)}
+                {t(`bodyCheck:poses.${pose}.short`)}
               </Text>
             </View>
           ))}

@@ -5,7 +5,7 @@ import { Alert, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { LEGAL_KINDS } from '@/features/legal/data/legal-documents';
-import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
+import { db } from '@/shared/data/powersync/database';
 import { type ProfilePatch, saveProfile, useProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
 import { APP_LANGUAGES, type AppLanguage } from '@/shared/i18n/resources';
@@ -55,19 +55,27 @@ export function SettingsScreen() {
     setSheetOpen(true);
   };
 
-  const signOut = () =>
-    Alert.alert(t('settings.signOutConfirm.title'), t('settings.signOutConfirm.body'), [
-      { text: tc('actions.cancel'), style: 'cancel' },
-      {
-        text: t('settings.signOut'),
-        style: 'destructive',
-        onPress: async () => {
-          haptics.warning();
-          await supabase.auth.signOut();
-          useOnboardingStore.getState().reset();
+  const signOut = async () => {
+    // Signing out clears the local database, including changes not uploaded yet.
+    const { count } = await db.getUploadQueueStats();
+    Alert.alert(
+      t('settings.signOutConfirm.title'),
+      count > 0
+        ? t('settings.signOutConfirm.unsynced', { count })
+        : t('settings.signOutConfirm.body'),
+      [
+        { text: tc('actions.cancel'), style: 'cancel' },
+        {
+          text: t('settings.signOut'),
+          style: 'destructive',
+          onPress: () => {
+            haptics.warning();
+            supabase.auth.signOut();
+          },
         },
-      },
-    ]);
+      ],
+    );
+  };
 
   const notSet = t('settings.notSet');
   const bodyRows: BodyRow[] = [

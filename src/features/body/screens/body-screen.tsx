@@ -30,7 +30,7 @@ function openCamera() {
 const openCheck = (id: string) => router.push(`/body-check/result/${id}`);
 
 export function BodyScreen() {
-  const { t } = useTranslation('body');
+  const { t } = useTranslation(['body', 'bodyCheck']);
   const accent = useAccentColor();
   const { data: checks = [] } = useBodyChecks();
   const { data: photos = {} } = useBodyCheckPhotos();
@@ -117,7 +117,7 @@ export function BodyScreen() {
             {POSES.map((p) => (
               <Chip
                 key={p}
-                label={t(`poses.${p}`)}
+                label={t(`bodyCheck:poses.${p}.short`)}
                 selected={p === pose}
                 onPress={() => setPose(p)}
                 className="h-7.5 px-2.75"

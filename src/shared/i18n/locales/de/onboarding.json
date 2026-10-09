@@ -97,10 +97,6 @@
   "bodyCheck": {
     "title": "KÖRPERCHECK MACHEN?",
     "subtitle": "Basierend auf deinen Fotos passen wir den Plan an deine Schwachstellen an.",
-    "front": "Frontal",
-    "left": "Links",
-    "right": "Rechts",
-    "back": "Hinten",
     "lightStrong": "Helles Licht",
     "lightRest": " von vorne",
     "clothesStrong": "Unterwäsche",

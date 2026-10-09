@@ -7,9 +7,11 @@ import type { AppLanguage } from '@/shared/i18n';
 import { storage } from '@/shared/lib/storage';
 import { useSessionStore } from '@/shared/stores/session-store';
 
-// The language this device last mirrored onto the account. Only a change of it is written, so
-// two devices in different languages don't overwrite each other back and forth.
+// The language this device last mirrored onto the account (profile row, auth metadata). Only a
+// change of it is written, so two devices in different languages don't overwrite each other
+// back and forth.
 const syncedLanguageKey = (userId: string) => `account.language.${userId}`;
+const syncedMetadataKey = (userId: string) => `account.metadataLanguage.${userId}`;
 
 /**
  * Mirrors the app language onto the account: the profile row (synced, for the team's
@@ -32,8 +34,20 @@ export function useSyncAccountLanguage() {
   }, [profile, language]);
 
   useEffect(() => {
-    if (!userId || metadataLanguage === language) return;
-    // Needs the network; if it fails, the next launch or language change tries again.
-    supabase.auth.updateUser({ data: { language } }).catch(() => {});
+    if (!userId) return;
+    const key = syncedMetadataKey(userId);
+    if (metadataLanguage && storage.getString(key) === language) return;
+    if (metadataLanguage === language) {
+      storage.set(key, language);
+      return;
+    }
+    // Needs the network; only a saved write is remembered, so a failed one is tried again on
+    // the next launch or language change.
+    supabase.auth.updateUser({ data: { language } }).then(
+      ({ error }) => {
+        if (!error) storage.set(key, language);
+      },
+      () => {},
+    );
   }, [userId, metadataLanguage, language]);
 }

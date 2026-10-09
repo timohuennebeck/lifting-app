@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated, {
+  cancelAnimation,
   Easing,
   useAnimatedStyle,
   useSharedValue,
@@ -146,13 +147,19 @@ function PreviewExercise({ id, reps, rir, last }: PreviewExerciseProps) {
   );
 }
 
+export interface WelcomePreviewProps {
+  /** Runs the scroll loop; off while the rest of the flow covers the welcome screen. */
+  active: boolean;
+}
+
 /** Auto-scrolling miniature of the training overview shown on the welcome screen. */
-export function WelcomePreview() {
+export function WelcomePreview({ active }: WelcomePreviewProps) {
   const { t } = useTranslation('onboarding');
   const offset = useSharedValue(0);
 
   // Hold, scroll down, hold, scroll back – a 14 s loop like the prototype.
   useEffect(() => {
+    if (!active) return;
     const move = (to: number) =>
       withTiming(to, { duration: 4480, easing: Easing.inOut(Easing.ease) });
     offset.set(
@@ -165,7 +172,8 @@ export function WelcomePreview() {
         -1,
       ),
     );
-  }, [offset]);
+    return () => cancelAnimation(offset);
+  }, [active, offset]);
   const scrollStyle = useAnimatedStyle(() => ({ transform: [{ translateY: offset.get() }] }));
 
   return (

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
@@ -17,11 +18,20 @@ export interface ClosedBannerProps {
 export function ClosedBanner({ ticketId, onNewTicket }: ClosedBannerProps) {
   const { t } = useTranslation('support');
   const userId = useUserId();
+  const [reopening, setReopening] = useState(false);
 
   async function reopen() {
-    if (!userId) return;
-    await reopenTicket(userId, ticketId);
-    haptics.success();
+    if (!userId || reopening) return;
+    setReopening(true);
+    try {
+      await reopenTicket(userId, ticketId);
+      haptics.success();
+    } catch (e) {
+      console.error('Reopening ticket failed', e);
+      haptics.error();
+    } finally {
+      setReopening(false);
+    }
   }
 
   return (
@@ -40,6 +50,7 @@ export function ClosedBanner({ ticketId, onNewTicket }: ClosedBannerProps) {
           variant="secondary"
           size="md"
           className="flex-1 px-2"
+          loading={reopening}
           onPress={reopen}
         />
         <Button

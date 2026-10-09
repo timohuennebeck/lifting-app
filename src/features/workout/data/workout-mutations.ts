@@ -1,6 +1,6 @@
 import { desc, eq } from 'drizzle-orm';
 
-import { defaultTargets, isTimed } from '@/shared/data/exercises';
+import { defaultTargets, swapTargets } from '@/shared/data/exercises';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
 import { workoutExercises, workoutSets } from '@/shared/data/powersync/schema';
 import { insertWorkoutSet, type SetTargets } from '@/shared/data/workouts';
@@ -14,10 +14,7 @@ async function exerciseOf(tx: Tx, workoutExerciseId: string) {
   return row?.exercise_id ?? '';
 }
 
-/**
- * Replaces the exercise of a running workout entry and clears its logged sets. Targets reset
- * when switching between reps and seconds, since "8–12" means something else for a plank.
- */
+/** Replaces the exercise of a running workout entry and clears its logged sets. */
 export async function swapWorkoutExercise(workoutExerciseId: string, exerciseId: string) {
   await drizzle.transaction(async (tx) => {
     const previous = await exerciseOf(tx, workoutExerciseId);
@@ -25,7 +22,7 @@ export async function swapWorkoutExercise(workoutExerciseId: string, exerciseId:
       .update(workoutExercises)
       .set({ exercise_id: exerciseId })
       .where(eq(workoutExercises.id, workoutExerciseId));
-    const targets = isTimed(previous) !== isTimed(exerciseId) ? defaultTargets(exerciseId) : null;
+    const targets = swapTargets(previous, exerciseId);
     await tx
       .update(workoutSets)
       .set({

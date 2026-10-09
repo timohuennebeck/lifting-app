@@ -36,7 +36,7 @@ import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
-type SheetKind = 'menu' | 'targets' | 'swap' | 'add';
+type SheetKind = 'menu' | 'targets' | 'picker';
 
 const SWIPE_DISTANCE = 70;
 const SWIPE_VELOCITY = 600;
@@ -52,6 +52,8 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const [sheet, setSheet] = useState<SheetKind | null>(null);
+  // Kept after closing so the picker doesn't switch modes while it animates out.
+  const [pickerMode, setPickerMode] = useState<'add' | 'swap'>('add');
   const live = useLiveWorkout(workout);
   const { abandon } = useWorkoutActions(workout.id);
   const goTo = useWorkoutSessionStore((s) => s.goTo);
@@ -130,6 +132,11 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     });
   const contentStyle = useAnimatedStyle(() => ({ transform: [{ translateX: offset.get() }] }));
 
+  const openPicker = (mode: 'add' | 'swap') => {
+    setPickerMode(mode);
+    setSheet('picker');
+  };
+
   const onSelect = (index: number, f: SetField) => {
     if (index !== selectedIndex) return live.selectSet(index, f);
     if (f === field) return closeKeypad();
@@ -182,7 +189,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
             exercises={workout.exercises}
             currentIndex={exerciseIndex}
             onSelect={go}
-            onAdd={() => setSheet('add')}
+            onAdd={() => openPicker('add')}
           />
           <ScrollView
             ref={scrollRef}
@@ -212,7 +219,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                 <ExerciseActions
                   onHistory={() => router.push(`/workout/history/${exercise.exerciseId}`)}
                   onTargets={() => setSheet('targets')}
-                  onSwap={() => setSheet('swap')}
+                  onSwap={() => openPicker('swap')}
                 />
                 <View onLayout={(e) => (layout.current.table = e.nativeEvent.layout.y)}>
                   <SetTable
@@ -240,7 +247,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
           name={workout.name}
           onBack={abandon}
           onMenu={() => setSheet('menu')}
-          onAdd={() => setSheet('add')}
+          onAdd={() => openPicker('add')}
         />
       )}
       <WorkoutMenuSheet
@@ -258,18 +265,12 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
         exerciseName={exerciseName}
       />
       <ExercisePickerSheet
-        visible={sheet === 'swap'}
+        visible={sheet === 'picker'}
         onClose={() => setSheet(null)}
-        onSelect={swapExercise}
+        onSelect={pickerMode === 'swap' ? swapExercise : addExercise}
         excludeIds={usedIds}
-        title={t('swap.title')}
-      />
-      <ExercisePickerSheet
-        visible={sheet === 'add'}
-        onClose={() => setSheet(null)}
-        onSelect={addExercise}
-        excludeIds={usedIds}
-        title={t('addExercise')}
+        mode={pickerMode}
+        title={pickerMode === 'swap' ? t('swap.title') : t('addExercise')}
       />
     </View>
   );
