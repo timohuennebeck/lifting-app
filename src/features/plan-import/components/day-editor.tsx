@@ -40,7 +40,8 @@ export function DayEditor({ day, fallbackName, onEdit }: DayEditorProps) {
           selectionColor={colors.fg}
           keyboardAppearance="dark"
           returnKeyType="done"
-          className="min-w-0 flex-1 font-inter-semibold text-headline text-fg"
+          textAlignVertical="center"
+          className="min-w-0 flex-1 py-0 font-inter-semibold text-[22px] text-fg"
         />
         <Icon name="pencil" size={14} color={colors.subtle} />
       </View>

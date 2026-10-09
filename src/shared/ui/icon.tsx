@@ -25,6 +25,7 @@ const stroke = (d: string, width = 2) =>
 // Icon set traced from the Forge design file.
 const ICONS = {
   'chevron-left': { viewBox: '0 0 10 16', render: stroke('M8 2L2 8l6 6', 2.8) },
+  'chevron-left-thin': { viewBox: '0 0 10 16', render: stroke('M8 2L2 8l6 6', 2.2) },
   'chevron-right': { viewBox: '0 0 10 16', render: stroke('M2 2l6 6-6 6', 2.8) },
   'chevron-down': { viewBox: '0 0 14 14', render: stroke('M3 5.5l4 4 4-4') },
   close: { viewBox: '0 0 14 14', render: stroke('M2.5 2.5l9 9M11.5 2.5l-9 9', 2.2) },

@@ -109,6 +109,7 @@ export function TemplateScreen() {
 
   const header = (
     <ScreenHeader
+      icon="chevron-left-thin"
       title={template ? collectionName : ''}
       action={
         <IconButton
@@ -154,7 +155,7 @@ export function TemplateScreen() {
             })
           }
         />
-        <Text variant="title" className="px-5 pt-[30px] normal-case">
+        <Text variant="title" className="px-5 pt-7.5 normal-case">
           {template.name}
         </Text>
         <Text variant="paragraph" tone="subtle" className="px-5 pt-2">
@@ -165,7 +166,7 @@ export function TemplateScreen() {
 
         {shares.length ? (
           <>
-            <Text variant="headline" className="px-5 pt-6 leading-[22px]">
+            <Text variant="headline" className="px-5 pt-6 leading-5.5">
               {t('overview.musclesWorked')}
             </Text>
             <View className="pt-3.5">
@@ -174,14 +175,14 @@ export function TemplateScreen() {
           </>
         ) : null}
 
-        <View className={cn('flex-row items-center gap-3 px-5', empty ? 'pt-9' : 'pt-[30px]')}>
+        <View className={cn('flex-row items-center gap-3 px-5', empty ? 'pt-9' : 'pt-7.5')}>
           <View className="min-w-0 flex-1">
-            <Text variant="headline" className="leading-[22px]">
+            <Text variant="headline" className="leading-5.5">
               {empty
                 ? t('overview.noExercises')
                 : t('overview.exercises', { count: exercises.length })}
             </Text>
-            <Text variant="paragraph" tone="subtle" className="mt-1.5 text-sm leading-[18px]">
+            <Text variant="paragraph" tone="subtle" className="mt-1.5 text-sm leading-4.5">
               {t('overview.duration', { minutes })}
             </Text>
           </View>

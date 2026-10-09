@@ -8,9 +8,18 @@ import { cn } from '@/shared/lib/cn';
 import { IconButton } from './icon-button';
 import { Text } from './text';
 
+type HeaderIcon = 'chevron-left' | 'chevron-left-thin' | 'close';
+
+/** Icon sizes from the design: 7×11 back chevron, 10×16 thin chevron, 12pt cross. */
+const ICON_SIZE: Record<HeaderIcon, number> = {
+  'chevron-left': 7,
+  'chevron-left-thin': 10,
+  close: 12,
+};
+
 export interface ScreenHeaderProps {
-  /** Leading button: back chevron or close cross. */
-  icon?: 'chevron-left' | 'close';
+  /** Leading button: back chevron (thin on the training screens) or close cross. */
+  icon?: HeaderIcon;
   iconSize?: number;
   /** Defaults to `router.back()`. */
   onBack?: () => void;
@@ -36,7 +45,7 @@ export function ScreenHeader({
     <View className={cn('flex-row items-center gap-3 px-4 py-1.5', className)}>
       <IconButton
         icon={icon}
-        iconSize={iconSize}
+        iconSize={iconSize ?? ICON_SIZE[icon]}
         accessibilityLabel={t(icon === 'close' ? 'actions.close' : 'actions.back')}
         onPress={onBack ?? (() => router.back())}
       />
@@ -49,7 +58,7 @@ export function ScreenHeader({
           title
         )}
       </View>
-      {action ?? <View className="size-[42px]" />}
+      {action ?? <View className="size-10.5" />}
     </View>
   );
 }

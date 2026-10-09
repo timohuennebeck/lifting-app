@@ -58,7 +58,8 @@ function RepsInput({
       selectTextOnFocus
       keyboardAppearance="dark"
       selectionColor={colors.fg}
-      className="h-11 min-w-0 flex-1 rounded-xl bg-white/8 text-center font-inter-semibold text-lg text-fg"
+      textAlignVertical="center"
+      className="h-11 min-w-0 flex-1 rounded-xl bg-white/8 py-0 text-center font-inter-semibold text-[18px] text-fg"
     />
   );
 }

@@ -20,7 +20,7 @@ export function EmptyWorkout({ name, onBack, onMenu, onAdd }: EmptyWorkoutProps)
     <View className="flex-1">
       <ScreenHeader
         className="gap-3.5 pr-5"
-        iconSize={10}
+        icon="chevron-left-thin"
         onBack={onBack}
         title={
           <Text variant="bodyStrong" numberOfLines={1} className="text-center text-lg">
@@ -38,7 +38,7 @@ export function EmptyWorkout({ name, onBack, onMenu, onAdd }: EmptyWorkoutProps)
       />
       <View className="flex-row items-center gap-4 px-5 pt-9">
         <View className="flex-1">
-          <Text variant="headline" className="leading-[22px]">
+          <Text variant="headline" className="leading-5.5">
             {t('empty.title')}
           </Text>
           <Text variant="label" tone="subtle" className="mt-2 font-inter">
@@ -60,7 +60,7 @@ export function EmptyWorkout({ name, onBack, onMenu, onAdd }: EmptyWorkoutProps)
         <GhostExercise widths={['88%', '58%']} />
         <GhostExercise faded widths={['74%', '44%']} />
       </View>
-      <Text tone="subtle" className="px-[30px] pt-2 text-center text-sm leading-5">
+      <Text tone="subtle" className="px-7.5 pt-2 text-center text-sm leading-5">
         {t('empty.hint')}
       </Text>
     </View>

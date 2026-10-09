@@ -74,7 +74,9 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
             setFocused(false);
             onBlur?.(e);
           }}
-          className="h-full min-w-0 flex-1 font-inter text-lg text-fg"
+          // Font size only: a line height on a single-line input pushes the text off-centre on iOS.
+          textAlignVertical="center"
+          className="h-full min-w-0 flex-1 py-0 font-inter text-[18px] text-fg"
           {...props}
         />
         {revealable ? (

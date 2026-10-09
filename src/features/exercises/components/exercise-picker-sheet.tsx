@@ -111,7 +111,7 @@ export function ExercisePickerSheet({
       snapPoints={['92%']}
       footer={
         <View className="flex-row items-center gap-2">
-          <View className="h-[46px] flex-1 flex-row items-center gap-2.5 rounded-full bg-elevated pr-4 pl-4">
+          <View className="h-11.5 flex-1 flex-row items-center gap-2.5 rounded-full bg-elevated pr-4 pl-4">
             <Icon name="search" size={16} color={colors.subtle} />
             <SheetTextInput
               value={query}
@@ -122,10 +122,11 @@ export function ExercisePickerSheet({
               keyboardAppearance="dark"
               autoCorrect={false}
               returnKeyType="search"
-              className="h-full min-w-0 flex-1 font-inter text-label text-fg"
+              textAlignVertical="center"
+              className="h-full min-w-0 flex-1 py-0 font-inter text-[15px] text-fg"
             />
           </View>
-          <Button label={t('picker.done')} size="md" onPress={onClose} className="h-[46px]" />
+          <Button label={t('picker.done')} size="md" onPress={onClose} className="h-11.5" />
         </View>
       }
     >
@@ -181,7 +182,7 @@ export function ExercisePickerSheet({
               return (
                 <View>
                   {item.heading ? (
-                    <Text variant="overline" tone="subtle" className="pt-[18px] pb-1.5">
+                    <Text variant="overline" tone="subtle" className="pt-4.5 pb-1.5">
                       {item.heading}
                     </Text>
                   ) : null}
@@ -190,7 +191,7 @@ export function ExercisePickerSheet({
                     disabled={used}
                     accessibilityState={{ disabled: used, selected: used }}
                     onPress={() => pick(item.id)}
-                    className="h-[78px] flex-row items-center gap-3.5"
+                    className="h-19.5 flex-row items-center gap-3.5"
                   >
                     <ExerciseThumb
                       exerciseId={item.id}
@@ -221,7 +222,7 @@ export function ExercisePickerSheet({
             }}
           />
           {rows.length ? (
-            <View className="absolute top-2 right-[-8px] bottom-2">
+            <View className="absolute top-2 -right-2 bottom-2">
               <AlphabetRail available={letters} active={activeLetter} onJump={jump} />
             </View>
           ) : null}
