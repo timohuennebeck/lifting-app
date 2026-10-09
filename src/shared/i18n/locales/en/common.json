@@ -13,7 +13,8 @@
     "increase": "Increase",
     "togglePassword": "Show or hide password",
     "close": "Close",
-    "retry": "Try again"
+    "retry": "Try again",
+    "notNow": "Not now"
   },
   "progress": {
     "stepOf": "{{current}} of {{total}}"
@@ -63,5 +64,8 @@
     "decimal": "Decimal separator",
     "backspace": "Delete",
     "confirm": "Confirm"
+  },
+  "cameraAccess": {
+    "title": "Allow camera"
   }
 }

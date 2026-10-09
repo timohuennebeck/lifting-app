@@ -39,7 +39,9 @@
     "flip": "Kamera wechseln",
     "shutter": "Foto aufnehmen",
     "cancelTimer": "Selbstauslöser abbrechen",
-    "error": "Das Foto konnte nicht gespeichert werden. Bitte versuch es noch einmal."
+    "error": "Das Foto konnte nicht gespeichert werden. Bitte versuch es noch einmal.",
+    "access": "Für deine Körpercheck-Fotos. Sie bleiben privat.",
+    "tapToCancel": "Tippen, um abzubrechen"
   },
   "discard": {
     "title": "Körpercheck verwerfen?",

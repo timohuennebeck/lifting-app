@@ -32,18 +32,10 @@ export interface ShutterButtonProps {
   busy?: boolean;
   /** Ignores presses without dimming. */
   disabled?: boolean;
-  /** Light core while a self-timer runs; a press then cancels it. */
-  counting?: boolean;
 }
 
 /** 78pt shutter with an accent core. */
-export function ShutterButton({
-  accessibilityLabel,
-  onPress,
-  busy,
-  disabled,
-  counting,
-}: ShutterButtonProps) {
+export function ShutterButton({ accessibilityLabel, onPress, busy, disabled }: ShutterButtonProps) {
   return (
     <PressableScale
       haptic="none"
@@ -53,13 +45,7 @@ export function ShutterButton({
       onPress={onPress}
       className="size-19.5 items-center justify-center rounded-full bg-elevated"
     >
-      <View
-        className={cn(
-          'size-15.5 rounded-full',
-          counting ? 'bg-fg' : 'bg-accent',
-          busy && 'opacity-60',
-        )}
-      />
+      <View className={cn('size-15.5 rounded-full bg-accent', busy && 'opacity-60')} />
     </PressableScale>
   );
 }

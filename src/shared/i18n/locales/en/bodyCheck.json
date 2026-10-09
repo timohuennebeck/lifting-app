@@ -39,7 +39,9 @@
     "flip": "Switch camera",
     "shutter": "Take photo",
     "cancelTimer": "Cancel self-timer",
-    "error": "The photo couldn't be saved. Please try again."
+    "error": "The photo couldn't be saved. Please try again.",
+    "access": "For your body check photos. They stay private.",
+    "tapToCancel": "Tap to cancel"
   },
   "discard": {
     "title": "Discard body check?",

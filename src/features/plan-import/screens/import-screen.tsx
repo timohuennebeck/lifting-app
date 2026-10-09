@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
 import { FormatCards } from '@/shared/ui/format-cards';
+import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
@@ -15,6 +16,7 @@ import { useImportStore } from '../stores/import-store';
 /** 05: choose how to import a plan (photo or file), or switch to building one. */
 export function ImportScreen() {
   const { t } = useTranslation('planImport');
+  const camera = useCameraAccess(() => router.push('/import/camera'));
   const setFile = useImportStore((s) => s.setFile);
 
   async function uploadFile() {
@@ -44,7 +46,7 @@ export function ImportScreen() {
           description={t('index.photo.description')}
           icon="camera"
           primary
-          onPress={() => router.push('/import/camera')}
+          onPress={camera.request}
         >
           <ViewfinderArt />
         </SourceCard>
@@ -69,6 +71,7 @@ export function ImportScreen() {
           </Text>
         </Text>
       </PressableScale>
+      <CameraAccessSheet {...camera.sheet} body={t('camera.access')} />
     </StepScreen>
   );
 }

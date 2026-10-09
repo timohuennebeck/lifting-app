@@ -11,6 +11,7 @@ import { DAY_MS } from '@/shared/lib/date';
 import { formatShortDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
+import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
 import { Card } from '@/shared/ui/card';
 import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
@@ -31,6 +32,7 @@ const openCheck = (id: string) => router.push(`/body-check/result/${id}`);
 
 export function BodyScreen() {
   const { t } = useTranslation(['body', 'bodyCheck']);
+  const camera = useCameraAccess(openCamera);
   const { data: checks = [] } = useBodyChecks();
   const { data: photos = {} } = useBodyCheckPhotos();
   const [pose, setPose] = useState<BodyPose>('front');
@@ -42,7 +44,7 @@ export function BodyScreen() {
   const delta = latest && first ? latest.score - first.score : 0;
 
   return (
-    <TabScreen footer={<Button label={t('start')} onPress={openCamera} />}>
+    <TabScreen footer={<Button label={t('start')} onPress={camera.request} />}>
       <View className="gap-2 px-5 pt-4">
         <Text variant="headline" className="text-[30px] leading-7.5">
           {t('title')}
@@ -132,7 +134,7 @@ export function BodyScreen() {
               <CheckHistoryRow
                 title={t('check', { n: checks.length + 1 })}
                 date={t('today')}
-                onPress={openCamera}
+                onPress={camera.request}
                 trailing={
                   <View className="h-6.5 justify-center rounded-full border-[1.5px] border-accent px-2.5">
                     <Text variant="caption" tone="accent" className="text-xs">
@@ -157,6 +159,7 @@ export function BodyScreen() {
           </View>
         </>
       )}
+      <CameraAccessSheet {...camera.sheet} body={t('bodyCheck:camera.access')} />
     </TabScreen>
   );
 }

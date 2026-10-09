@@ -32,7 +32,8 @@
       "body": "Para fotografar seu plano, o Forge precisa de acesso à câmera. As fotos ficam no seu aparelho até você importá-las.",
       "allow": "Permitir câmera",
       "settings": "Abrir configurações"
-    }
+    },
+    "access": "Para você fotografar seu plano. As fotos ficam no seu dispositivo até você importá-las."
   },
   "review": {
     "title": "ESTÁ CERTO ASSIM?",

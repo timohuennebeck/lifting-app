@@ -88,7 +88,7 @@ export function ProfileScreen() {
             </View>
           ) : null}
           <View className="absolute right-0 bottom-0 size-9 items-center justify-center rounded-full border-[3px] border-bg bg-elevated">
-            <Icon name="camera" size={14} color={colors.fg} />
+            <Icon name="photo-camera" size={15} color={colors.fg} />
           </View>
         </PressableScale>
         <Text className="mt-4.5 font-inter-semibold text-[34px] leading-9.5 tracking-[-0.7px]">

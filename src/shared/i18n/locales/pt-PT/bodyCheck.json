@@ -39,7 +39,9 @@
     "flip": "Trocar câmara",
     "shutter": "Tirar foto",
     "cancelTimer": "Cancelar temporizador",
-    "error": "Não foi possível guardar a foto. Tenta novamente."
+    "error": "Não foi possível guardar a foto. Tenta novamente.",
+    "access": "Para as fotos do teu check corporal. Ficam privadas.",
+    "tapToCancel": "Toca para cancelar"
   },
   "discard": {
     "title": "Descartar check corporal?",

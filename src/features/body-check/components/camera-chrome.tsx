@@ -1,5 +1,5 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Path, Text as SvgText } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
@@ -45,6 +45,39 @@ export function FlipCameraIcon() {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+    </Svg>
+  );
+}
+
+/** Digit height of Inter as a share of the font size, to centre the number on its box. */
+const DIGIT_HEIGHT = 0.727;
+
+export interface CountdownNumberProps {
+  value: number;
+}
+
+/** The self-timer's number, drawn as an accent outline (countdown design). */
+export function CountdownNumber({ value }: CountdownNumberProps) {
+  const digits = String(value).length;
+  // "10" has to fit the frame as well as a single digit.
+  const size = digits > 1 ? 200 : 290;
+  const width = size * 0.7 * digits;
+  const height = size * 0.9;
+  return (
+    <Svg width={width} height={height}>
+      <SvgText
+        x={width / 2}
+        y={(height + size * DIGIT_HEIGHT) / 2}
+        textAnchor="middle"
+        fontSize={size}
+        fontFamily="Inter_600SemiBold"
+        fill="none"
+        stroke={colors.accent}
+        strokeWidth={3}
+        strokeLinejoin="round"
+      >
+        {String(value)}
+      </SvgText>
     </Svg>
   );
 }

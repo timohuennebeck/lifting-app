@@ -7,6 +7,7 @@ import { POSES } from '@/features/body-check/lib/poses';
 import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
+import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
 import { CheckItem } from '@/shared/ui/check-item';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
@@ -29,6 +30,7 @@ function finish(openBodyCheck: boolean) {
 
 export function BodyCheckPromptScreen() {
   const { t } = useTranslation(['onboarding', 'bodyCheck']);
+  const camera = useCameraAccess(() => finish(true));
 
   return (
     <StepScreen
@@ -39,7 +41,7 @@ export function BodyCheckPromptScreen() {
       scroll
       footer={
         <View className="gap-1">
-          <Button label={t('bodyCheck.now')} onPress={() => finish(true)} />
+          <Button label={t('bodyCheck.now')} onPress={camera.request} />
           <TextButton label={t('bodyCheck.later')} tone="secondary" onPress={() => finish(false)} />
         </View>
       }
@@ -75,6 +77,7 @@ export function BodyCheckPromptScreen() {
           </CheckItem>
         ))}
       </View>
+      <CameraAccessSheet {...camera.sheet} body={t('bodyCheck:camera.access')} />
     </StepScreen>
   );
 }

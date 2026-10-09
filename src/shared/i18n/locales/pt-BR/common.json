@@ -13,7 +13,8 @@
     "increase": "Aumentar",
     "togglePassword": "Mostrar ou ocultar senha",
     "close": "Fechar",
-    "retry": "Tentar novamente"
+    "retry": "Tentar novamente",
+    "notNow": "Agora não"
   },
   "progress": {
     "stepOf": "{{current}} de {{total}}"
@@ -71,5 +72,8 @@
     "decimal": "Separador decimal",
     "backspace": "Apagar",
     "confirm": "Confirmar"
+  },
+  "cameraAccess": {
+    "title": "Permitir câmera"
   }
 }

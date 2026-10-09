@@ -32,7 +32,8 @@
       "body": "To photograph your plan, Forge needs access to your camera. Photos stay on your device until you import them.",
       "allow": "Allow camera",
       "settings": "Open settings"
-    }
+    },
+    "access": "So you can take photos of your plan. They stay on your device until you import them."
   },
   "review": {
     "title": "LOOKS GOOD?",

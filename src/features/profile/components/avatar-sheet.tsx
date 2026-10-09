@@ -22,7 +22,7 @@ export interface AvatarSheetProps {
 }
 
 const ACTIONS: { action: AvatarAction; icon?: IconName }[] = [
-  { action: 'camera', icon: 'camera' },
+  { action: 'camera', icon: 'photo-camera' },
   { action: 'library', icon: 'image' },
   { action: 'remove' },
 ];

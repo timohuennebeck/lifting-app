@@ -2,7 +2,8 @@ import { CameraView, PermissionStatus, useCameraPermissions } from 'expo-camera'
 import { router, useIsFocused } from 'expo-router';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, AppState, StyleSheet, View } from 'react-native';
+import { Alert, AppState, Pressable, StyleSheet, View } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
@@ -21,7 +22,7 @@ import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-import { FlipCameraIcon, FramingCorners } from '../components/camera-chrome';
+import { CountdownNumber, FlipCameraIcon, FramingCorners } from '../components/camera-chrome';
 import { PoseStrip } from '../components/pose-strip';
 import { useCloseCheck } from '../hooks/use-close-check';
 import { assessPhoto } from '../lib/body-check-service';
@@ -178,85 +179,117 @@ export function CameraScreen() {
       />
       <Gradient from="top" size={200} color="black" opacity={0.6} />
       <Gradient from="bottom" size={300} color="black" stops={BOTTOM_SCRIM} />
-      <FramingCorners style={frame} />
 
       {count > 0 ? (
-        <View pointerEvents="none" className="absolute items-center justify-center" style={frame}>
+        // Countdown: only the pose, the number and a stop button; a tap anywhere cancels.
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('camera.cancelTimer')}
+          onPress={shutter}
+          style={StyleSheet.absoluteFill}
+        >
+          <Text
+            variant="caption"
+            tone="accent"
+            className="absolute inset-x-0 text-center font-inter-semibold text-[13px] tracking-[1.6px] uppercase"
+            style={{ top: insets.top + 18 }}
+          >
+            {t(`poses.${pose}.name`)}
+          </Text>
           <View
-            className="size-37.5 items-center justify-center rounded-full border-2 border-accent bg-black/35"
+            pointerEvents="none"
+            className="absolute items-center justify-center"
+            style={frame}
             accessibilityLiveRegion="assertive"
           >
-            <Text className="font-inter-semibold text-[76px] leading-20 text-accent">{count}</Text>
+            <Animated.View key={count} entering={FadeIn.duration(160)}>
+              <CountdownNumber value={count} />
+            </Animated.View>
           </View>
-        </View>
-      ) : null}
-
-      <View className="absolute inset-x-4" style={{ top: insets.top + 6 }}>
-        <View className="flex-row items-center justify-between">
-          <IconButton
-            icon="chevron-left"
-            iconSize={7}
-            accessibilityLabel={t('common:actions.close')}
-            onPress={close}
-          />
-          <Text
-            variant="bodyStrong"
-            numberOfLines={1}
-            className="min-w-0 flex-1 px-2.5 text-center"
+          <View
+            pointerEvents="none"
+            className="absolute inset-x-0 items-center gap-3.5"
+            style={{ bottom: footerInset }}
           >
-            {t(`poses.${pose}.short`)}
-          </Text>
-          <PressableScale
-            haptic="select"
-            accessibilityLabel={t('camera.timerA11y')}
-            onPress={() => useBodyCheckStore.getState().cycleTimer()}
-            className="h-10.5 justify-center rounded-full bg-elevated px-3.5"
-          >
-            <Text variant="caption">
-              {t('camera.timer', {
-                value: timer ? t('camera.seconds', { value: timer }) : t('camera.timerOff'),
-              })}
+            <View className="size-19.5 items-center justify-center rounded-full bg-elevated">
+              <View className="size-6.5 rounded-md bg-fg" />
+            </View>
+            <Text variant="caption" tone="subtle" className="font-inter">
+              {t('camera.tapToCancel')}
             </Text>
-          </PressableScale>
-        </View>
-      </View>
+          </View>
+        </Pressable>
+      ) : (
+        <>
+          <FramingCorners style={frame} />
 
-      <View className="absolute inset-x-0 items-center gap-5.5" style={{ bottom: footerInset }}>
-        <PoseStrip
-          shots={shots}
-          active={pose}
-          onSelect={(p) => useBodyCheckStore.getState().setPose(p)}
-        />
-        <CaptureRow
-          start={
-            <CameraSideButton
-              haptic="select"
-              accessibilityLabel={t('camera.flip')}
-              onPress={() => useBodyCheckStore.getState().toggleFacing()}
-            >
-              <FlipCameraIcon />
-            </CameraSideButton>
-          }
-          end={
-            taken ? (
-              <DonePill
-                label={t('common:actions.done')}
-                count={taken}
-                disabled={busy}
-                onPress={() => router.push('/body-check/review')}
+          <View className="absolute inset-x-4" style={{ top: insets.top + 6 }}>
+            <View className="flex-row items-center justify-between">
+              <IconButton
+                icon="chevron-left"
+                iconSize={7}
+                accessibilityLabel={t('common:actions.close')}
+                onPress={close}
               />
-            ) : null
-          }
-        >
-          <ShutterButton
-            busy={busy || !ready}
-            disabled={!checkId}
-            counting={count > 0}
-            accessibilityLabel={t(count > 0 ? 'camera.cancelTimer' : 'camera.shutter')}
-            onPress={shutter}
-          />
-        </CaptureRow>
-      </View>
+              <Text
+                variant="bodyStrong"
+                numberOfLines={1}
+                className="min-w-0 flex-1 px-2.5 text-center"
+              >
+                {t(`poses.${pose}.short`)}
+              </Text>
+              <PressableScale
+                haptic="select"
+                accessibilityLabel={t('camera.timerA11y')}
+                onPress={() => useBodyCheckStore.getState().cycleTimer()}
+                className="h-10.5 justify-center rounded-full bg-elevated px-3.5"
+              >
+                <Text variant="caption">
+                  {t('camera.timer', {
+                    value: timer ? t('camera.seconds', { value: timer }) : t('camera.timerOff'),
+                  })}
+                </Text>
+              </PressableScale>
+            </View>
+          </View>
+
+          <View className="absolute inset-x-0 items-center gap-5.5" style={{ bottom: footerInset }}>
+            <PoseStrip
+              shots={shots}
+              active={pose}
+              onSelect={(p) => useBodyCheckStore.getState().setPose(p)}
+            />
+            <CaptureRow
+              start={
+                <CameraSideButton
+                  haptic="select"
+                  accessibilityLabel={t('camera.flip')}
+                  onPress={() => useBodyCheckStore.getState().toggleFacing()}
+                >
+                  <FlipCameraIcon />
+                </CameraSideButton>
+              }
+              end={
+                taken ? (
+                  <DonePill
+                    label={t('common:actions.done')}
+                    count={taken}
+                    disabled={busy}
+                    onPress={() => router.push('/body-check/review')}
+                  />
+                ) : null
+              }
+            >
+              <ShutterButton
+                busy={busy || !ready}
+                disabled={!checkId}
+                accessibilityLabel={t('camera.shutter')}
+                onPress={shutter}
+              />
+            </CaptureRow>
+          </View>
+        </>
+      )}
 
       <ShutterFlash opacity={flash.opacity} />
     </View>
