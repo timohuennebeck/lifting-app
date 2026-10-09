@@ -56,17 +56,25 @@ function Cell({ value, className, active, pristine, label, onPress, children }: 
       )}
     >
       {value ? (
-        <Text
-          variant="bodyStrong"
-          className={cn(
-            'rounded-md px-0.5 text-lg leading-5.5',
-            active && pristine && 'bg-accent/25',
-          )}
-        >
-          {value}
-        </Text>
+        <View>
+          <Text
+            variant="bodyStrong"
+            className="rounded-md px-0.5 text-lg leading-5.5"
+            // A value waiting to be typed over looks selected, in the system's selection colour.
+            style={active && pristine ? { backgroundColor: colors.selection } : undefined}
+          >
+            {value}
+          </Text>
+          {/* The caret floats after the text, so the number doesn't move when it goes away. */}
+          {active && !pristine ? (
+            <View className="absolute inset-y-0 -right-1 justify-center">
+              <BlinkingCursor />
+            </View>
+          ) : null}
+        </View>
+      ) : active ? (
+        <BlinkingCursor />
       ) : null}
-      {active && (!pristine || !value) ? <BlinkingCursor /> : null}
       {children}
     </Pressable>
   );

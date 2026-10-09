@@ -29,8 +29,24 @@
     "minShort": "min"
   },
   "weekdays": {
-    "short": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
-    "narrow": ["S", "T", "Q", "Q", "S", "S", "D"],
+    "short": [
+      "Seg",
+      "Ter",
+      "Qua",
+      "Qui",
+      "Sex",
+      "Sáb",
+      "Dom"
+    ],
+    "narrow": [
+      "S",
+      "T",
+      "Q",
+      "Q",
+      "S",
+      "S",
+      "D"
+    ],
     "long": [
       "Segunda-feira",
       "Terça-feira",
@@ -65,5 +81,11 @@
     "meta": "Versão {{version}} · em vigor desde {{date}}",
     "unavailable": "Este documento ainda não está disponível.",
     "loadFailed": "Não foi possível carregar o documento. Verifica a ligação e tenta novamente."
+  },
+  "keypad": {
+    "close": "Ocultar teclado",
+    "decimal": "Separador decimal",
+    "backspace": "Apagar",
+    "confirm": "Confirmar"
   }
 }

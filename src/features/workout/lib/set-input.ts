@@ -7,7 +7,7 @@ import {
 } from '@/shared/lib/format';
 
 import type { SetField } from '../stores/workout-session-store';
-import { parseInput, toInput } from './keypad';
+import { parseInput, toInput } from '@/shared/lib/keypad';
 
 export const valueOf = (values: SetValues, measure: Measure) =>
   measure === 'weight' ? values.weightKg : values[measure];

@@ -41,16 +41,9 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     const set = exercise.sets[index];
     const store = useWorkoutSessionStore.getState();
     const editing = !!set.completedAt;
-    const next = exercise.sets.findIndex((s, j) => j !== index && !s.completedAt);
-    if (!editing && next >= 0) {
-      const nextSet = exercise.sets[next];
-      const nextInput = inputFor(next);
-      // An empty next set carries over the weight just logged.
-      if (nextSet.weightKg == null) nextInput.weight = toSetInput(values, units).weight;
-      store.select(nextSet.id, nextInput, measures[0]);
-    } else {
-      store.closeKeypad();
-    }
+    // Shown at once; the rest timer starts, so the keypad closes instead of moving on.
+    store.markLogged(set.id, values);
+    store.closeKeypad();
     const workoutDone = allSets.every((s) => s.completedAt || s.id === set.id);
     if (!editing && !workoutDone) {
       store.startRest(restSecondsFor(exercise.exerciseId, exercise.restSeconds));
@@ -63,6 +56,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
       console.error(error);
       haptics.error();
       store.skipRest();
+      store.clearLogged(set.id);
       store.select(set.id, toSetInput(values, units), measures[0]);
       return;
     }
@@ -95,6 +89,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   function toggleDone(index: number) {
     const set = exercise.sets[index];
     if (set.completedAt) {
+      useWorkoutSessionStore.getState().clearLogged(set.id);
       void unlogSet(set.id);
       return;
     }

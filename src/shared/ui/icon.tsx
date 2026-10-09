@@ -30,6 +30,8 @@ const ICONS = {
   'chevron-down': { viewBox: '0 0 14 14', render: stroke('M3 5.5l4 4 4-4') },
   close: { viewBox: '0 0 14 14', render: stroke('M2.5 2.5l9 9M11.5 2.5l-9 9', 2.2) },
   check: { viewBox: '0 0 14 14', render: stroke('M3 7.5l2.5 2.5L11 4.5', 2.4) },
+  // Lighter tick for large sizes (the keypad's confirm key).
+  'check-thin': { viewBox: '0 0 14 14', render: stroke('M3 7.5l2.5 2.5L11 4.5', 1.5) },
   plus: { viewBox: '0 0 14 14', render: stroke('M7 1v12M1 7h12', 2.2) },
   minus: { viewBox: '0 0 14 14', render: stroke('M2 7h10', 2.2) },
   'arrow-right': { viewBox: '0 0 18 16', render: stroke('M1 8h15M10 2l6 6-6 6', 2.2) },
@@ -191,6 +193,38 @@ const ICONS = {
           strokeLinejoin="round"
         />
         <Path d="M11 6l6 6M17 6l-6 6" stroke={c} strokeWidth={1.8} strokeLinecap="round" />
+      </>
+    ),
+  },
+  // Keyboard with a chevron underneath: hide the keypad (like iOS' keyboard.chevron.compact.down).
+  'keyboard-hide': {
+    viewBox: '0 0 24 22',
+    render: (c) => (
+      <>
+        <Rect
+          x={1.5}
+          y={1}
+          width={21}
+          height={13}
+          rx={2.5}
+          fill="none"
+          stroke={c}
+          strokeWidth={1.6}
+        />
+        <Path
+          d="M5.5 5h1M9 5h1M12.5 5h1M16 5h1M5.5 8.5h1M9 8.5h1M12.5 8.5h1M16 8.5h1M8.5 11h7"
+          stroke={c}
+          strokeWidth={1.6}
+          strokeLinecap="round"
+        />
+        <Path
+          d="M9 17.5l3 2.5 3-2.5"
+          fill="none"
+          stroke={c}
+          strokeWidth={1.6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </>
     ),
   },

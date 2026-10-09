@@ -29,9 +29,33 @@
     "minShort": "Min"
   },
   "weekdays": {
-    "short": ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
-    "narrow": ["M", "D", "M", "D", "F", "S", "S"],
-    "long": ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
+    "short": [
+      "Mo",
+      "Di",
+      "Mi",
+      "Do",
+      "Fr",
+      "Sa",
+      "So"
+    ],
+    "narrow": [
+      "M",
+      "D",
+      "M",
+      "D",
+      "F",
+      "S",
+      "S"
+    ],
+    "long": [
+      "Montag",
+      "Dienstag",
+      "Mittwoch",
+      "Donnerstag",
+      "Freitag",
+      "Samstag",
+      "Sonntag"
+    ]
   },
   "greeting": "Hallo {{name}}",
   "languages": {
@@ -57,5 +81,11 @@
     "meta": "Version {{version}} · gültig ab {{date}}",
     "unavailable": "Dieses Dokument ist noch nicht verfügbar.",
     "loadFailed": "Das Dokument konnte nicht geladen werden. Prüf deine Verbindung und versuch es noch einmal."
+  },
+  "keypad": {
+    "close": "Tastatur ausblenden",
+    "decimal": "Dezimaltrennzeichen",
+    "backspace": "Löschen",
+    "confirm": "Übernehmen"
   }
 }

@@ -36,6 +36,9 @@ export function ExerciseStrip({ exercises, currentIndex, onSelect, onAdd }: Exer
       ref={scroll}
       horizontal
       showsHorizontalScrollIndicator={false}
+      // Exactly as tall as the tiles: a ScrollView grows and shrinks by default, which left a
+      // gap under the strip and squeezed it (sets drawn over the tiles) when the keypad opened.
+      style={{ flexGrow: 0, flexShrink: 0 }}
       contentContainerClassName="gap-1.5 px-5 pt-3.5"
     >
       {exercises.map((exercise, i) => {

@@ -11,6 +11,7 @@ import {
   type UnitSystem,
   weightUnit,
 } from '@/shared/lib/format';
+import { decimalSeparator, displayInput } from '@/shared/lib/keypad';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -18,7 +19,6 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { addWorkoutSet } from '../data/workout-mutations';
-import { decimalSeparator, displayInput } from '../lib/keypad';
 import { valueOf } from '../lib/set-input';
 import { suggestSet, targetLabel } from '../lib/suggest';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
@@ -56,6 +56,7 @@ export function SetTable({
   const pristine = useWorkoutSessionStore((s) => s.pristine);
   const column = useWorkoutSessionStore((s) => s.column);
   const toggleColumn = useWorkoutSessionStore((s) => s.toggleColumn);
+  const logged = useWorkoutSessionStore((s) => s.logged);
   const separator = decimalSeparator();
   const headers: Record<Measure, string> = {
     weight: t(`common:units.${weightUnit(units)}`).toUpperCase(),
@@ -63,15 +64,17 @@ export function SetTable({
     seconds: t('table.seconds'),
   };
 
-  /** A box's text: the keypad buffer while editing, the logged value, or the suggested count. */
+  /**
+   * A box's text: the keypad buffer while editing, the logged value (also while it is still
+   * being saved), or the suggested count.
+   */
   const cellValue = (set: WorkoutSet, field: Measure, editing: boolean, index: number) => {
     if (editing) return field === 'weight' ? displayInput(input.weight, separator) : input[field];
+    const saved = set.completedAt ? set : logged[set.id];
     if (field === 'weight') {
-      return set.completedAt && set.weightKg != null ? formatWeightValue(set.weightKg, units) : '';
+      return saved?.weightKg != null ? formatWeightValue(saved.weightKg, units) : '';
     }
-    const value = set.completedAt
-      ? valueOf(set, field)
-      : valueOf(suggestSet(exercise, index, last), field);
+    const value = valueOf(saved ?? suggestSet(exercise, index, last), field);
     return value != null ? formatNumber(value, 0) : '';
   };
 
@@ -104,7 +107,7 @@ export function SetTable({
       <View className="gap-2.5 px-5">
         {exercise.sets.map((set, i) => {
           const selected = set.id === selectedSetId;
-          const done = !!set.completedAt;
+          const done = !!set.completedAt || !!logged[set.id];
           const previous = last?.sets[i];
           const middle =
             column === 'targets'

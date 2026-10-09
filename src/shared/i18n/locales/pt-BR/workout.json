@@ -22,15 +22,6 @@
     "done": "Série concluída",
     "addSet": "Adicionar série"
   },
-  "keypad": {
-    "close": "Fechar teclado",
-    "weight": "Peso",
-    "reps": "Reps",
-    "seconds": "Segundos",
-    "decimal": "Separador decimal",
-    "backspace": "Apagar",
-    "confirm": "Registrar série"
-  },
   "rest": {
     "title": "Descanso",
     "running": "Próxima série quando o tempo acabar.",

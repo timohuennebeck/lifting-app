@@ -22,15 +22,6 @@
     "done": "Satz erledigt",
     "addSet": "Satz hinzufügen"
   },
-  "keypad": {
-    "close": "Tastatur schließen",
-    "weight": "Gewicht",
-    "reps": "Wdh.",
-    "seconds": "Sekunden",
-    "decimal": "Dezimaltrennzeichen",
-    "backspace": "Löschen",
-    "confirm": "Satz eintragen"
-  },
   "rest": {
     "title": "Pause",
     "running": "Nächster Satz, wenn die Zeit um ist.",

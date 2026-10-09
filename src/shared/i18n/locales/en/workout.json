@@ -22,15 +22,6 @@
     "done": "Set done",
     "addSet": "Add set"
   },
-  "keypad": {
-    "close": "Close keypad",
-    "weight": "Weight",
-    "reps": "Reps",
-    "seconds": "Seconds",
-    "decimal": "Decimal separator",
-    "backspace": "Delete",
-    "confirm": "Log set"
-  },
   "rest": {
     "title": "Rest",
     "running": "Next set when the timer runs out.",

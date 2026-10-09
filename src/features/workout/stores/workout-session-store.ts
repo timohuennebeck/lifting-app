@@ -2,9 +2,9 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import type { Measure } from '@/shared/data/exercises';
+import type { SetValues } from '@/shared/lib/format';
+import { appendKey, backspace, type KeypadKey } from '@/shared/lib/keypad';
 import { mmkvStorage } from '@/shared/lib/storage';
-
-import { appendKey, backspace, type KeypadKey } from '../lib/keypad';
 
 /** The box being typed into: one per measure of the exercise. */
 export type SetField = Measure;
@@ -22,6 +22,8 @@ interface WorkoutSessionState {
   restEndsAt: number | null;
   restSeconds: number;
   column: MiddleColumn;
+  /** Values of sets just logged, shown until the database has them (no flash of empty boxes). */
+  logged: Record<string, SetValues>;
   attach: (workoutId: string) => void;
   goTo: (exerciseIndex: number) => void;
   select: (setId: string, input: Record<SetField, string>, field: SetField) => void;
@@ -33,6 +35,8 @@ interface WorkoutSessionState {
   addRest: (seconds: number) => void;
   skipRest: () => void;
   toggleColumn: () => void;
+  markLogged: (setId: string, values: SetValues) => void;
+  clearLogged: (setId: string) => void;
   reset: () => void;
 }
 
@@ -44,6 +48,7 @@ const idle = {
   pristine: true,
   restEndsAt: null,
   restSeconds: 0,
+  logged: {} as Record<string, SetValues>,
 };
 
 /** UI state of the live workout that isn't stored in the database. */
@@ -87,6 +92,12 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
         ),
       skipRest: () => set({ restEndsAt: null }),
       toggleColumn: () => set((s) => ({ column: s.column === 'targets' ? 'last' : 'targets' })),
+      markLogged: (setId, values) => set((s) => ({ logged: { ...s.logged, [setId]: values } })),
+      clearLogged: (setId) =>
+        set((s) => {
+          const { [setId]: _gone, ...logged } = s.logged;
+          return { logged };
+        }),
       reset: () => set({ ...idle, workoutId: null }),
     }),
     {

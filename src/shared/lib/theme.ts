@@ -20,6 +20,8 @@ export const colors = {
   red: '#ED4042',
   /** Amber for things the plan import wasn't sure about (design 05b). */
   review: '#FFB547',
+  /** iOS' text selection highlight (system blue). */
+  selection: 'rgba(10,132,255,0.35)',
   sheet: '#0F0F0F',
   ink: '#1C1A16',
 } as const;
