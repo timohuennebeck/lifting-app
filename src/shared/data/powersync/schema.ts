@@ -106,8 +106,47 @@ const body_checks = new Table({
   user_id: column.text,
   score: column.integer,
   group_scores: column.text,
+  metrics: column.text,
   created_at: column.text,
 });
+
+const body_check_photos = new Table(
+  {
+    user_id: column.text,
+    body_check_id: column.text,
+    pose: column.text,
+    storage_path: column.text,
+    created_at: column.text,
+  },
+  { indexes: { check: ['body_check_id'] } },
+);
+
+const tickets = new Table(
+  {
+    user_id: column.text,
+    number: column.integer,
+    kind: column.text,
+    status: column.text,
+    priority: column.integer,
+    subject: column.text,
+    created_at: column.text,
+    updated_at: column.text,
+    closed_at: column.text,
+  },
+  { indexes: { updated: ['updated_at'] } },
+);
+
+const ticket_messages = new Table(
+  {
+    user_id: column.text,
+    ticket_id: column.text,
+    author: column.text,
+    body: column.text,
+    attachments: column.text,
+    created_at: column.text,
+  },
+  { indexes: { ticket: ['ticket_id', 'created_at'] } },
+);
 
 export const AppSchema = new Schema({
   profiles,
@@ -119,6 +158,9 @@ export const AppSchema = new Schema({
   workout_exercises,
   workout_sets,
   body_checks,
+  body_check_photos,
+  tickets,
+  ticket_messages,
 });
 
 export type Database = (typeof AppSchema)['types'];
