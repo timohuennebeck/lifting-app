@@ -51,6 +51,7 @@
     "camera": "Tirar foto",
     "library": "Escolher foto",
     "remove": "Remover foto",
+    "cameraDenied": "Permite o acesso à câmara nas Definições para tirares uma foto de perfil.",
     "failed": "Não foi possível guardar a foto de perfil. Verifica a ligação e tenta novamente."
   }
 }

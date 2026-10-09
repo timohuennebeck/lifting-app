@@ -8,18 +8,18 @@ import { RadioDot } from './radio-dot';
 import { Text } from './text';
 
 // Both designs draw the ring inside 16/18pt padding. The layout never changes between
-// states: the selected ring is an overlay, so the card can't shift when it is picked.
+// states: the selected ring is an overlay over the line, so the card can't shift when picked.
 const LOOKS = {
   // 1pt line at rest, 2pt accent ring when selected.
   card: {
     frame: 'border border-line py-3.75 pr-4.25 pl-3.75',
-    ring: 'border-2',
+    ring: '-inset-px border-2',
     badge: 'bg-pill',
   },
   // Even 1.5pt ring (sheet rows): only its colour changes.
   sheet: {
     frame: 'border-[1.5px] border-line py-[14.5px] pr-[16.5px] pl-[14.5px]',
-    ring: 'border-[1.5px]',
+    ring: '-inset-[1.5px] border-[1.5px]',
     badge: 'bg-control',
   },
 } as const;
@@ -70,7 +70,7 @@ export function OptionCard({
       {selected ? (
         <View
           pointerEvents="none"
-          className={cn('absolute -inset-px rounded-[22px] border-accent', styles.ring)}
+          className={cn('absolute rounded-[22px] border-accent', styles.ring)}
           style={tinted ? { borderColor: tint } : undefined}
         />
       ) : null}

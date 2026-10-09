@@ -20,16 +20,21 @@ export function EditableTitle({
 }: EditableTitleProps) {
   // The text being typed; null while not editing, so outside renames show up.
   const [draft, setDraft] = useState<string | null>(null);
+  // A submitted name shows until the saved one replaces the old value.
+  const [submitted, setSubmitted] = useState<{ name: string; over: string } | null>(null);
+  if (submitted && submitted.over !== value) setSubmitted(null);
 
   const finish = () => {
     const name = draft?.trim();
     setDraft(null);
-    if (name && name !== value) onSubmit(name);
+    if (!name || name === value) return;
+    setSubmitted({ name, over: value });
+    onSubmit(name);
   };
 
   return (
     <TextInput
-      value={draft ?? value}
+      value={draft ?? submitted?.name ?? value}
       // Multi-line only so long names wrap; a return never ends up in the name.
       onChangeText={(text) => setDraft(text.replace(/\n/g, ''))}
       onFocus={() => setDraft(value)}

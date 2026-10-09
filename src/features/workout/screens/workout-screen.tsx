@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ScrollView, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -129,13 +129,22 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     });
   const contentStyle = useAnimatedStyle(() => ({ transform: [{ translateX: offset.get() }] }));
 
-  // Dragged in the strip: the exercise on screen stays on screen at its new place.
+  // Dragged in the strip: the exercise on screen stays on screen at its new place. It moves
+  // with the new order as it loads (before that frame is drawn), and an open keypad stays.
+  const follow = useRef<{ id: string; order: string } | null>(null);
+  const order = workout.exercises.map((e) => e.id).join();
+  useLayoutEffect(() => {
+    const pending = follow.current;
+    if (pending?.order !== order) return;
+    follow.current = null;
+    useWorkoutSessionStore.setState({ exerciseIndex: order.split(',').indexOf(pending.id) });
+  }, [order]);
+
   const reorder = async (workoutExerciseId: string, toIndex: number) => {
-    const currentId = exercise?.id;
-    const order = workout.exercises.map((e) => e.id).filter((id) => id !== workoutExerciseId);
-    order.splice(toIndex, 0, workoutExerciseId);
+    const ids = workout.exercises.map((e) => e.id).filter((id) => id !== workoutExerciseId);
+    ids.splice(toIndex, 0, workoutExerciseId);
+    if (exercise) follow.current = { id: exercise.id, order: ids.join() };
     await reorderWorkoutExercise(workout.id, workoutExerciseId, toIndex);
-    if (currentId) goTo(order.indexOf(currentId));
   };
 
   // Adding and swapping happen on their own page; picks apply when it closes with "Done".

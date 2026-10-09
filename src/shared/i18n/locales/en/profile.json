@@ -51,6 +51,7 @@
     "camera": "Take photo",
     "library": "Choose photo",
     "remove": "Remove photo",
+    "cameraDenied": "Allow camera access in Settings to take a profile photo.",
     "failed": "Couldn’t save your profile photo. Check your connection and try again."
   }
 }

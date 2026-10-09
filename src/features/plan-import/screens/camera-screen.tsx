@@ -29,9 +29,12 @@ import { useImportStore, usePhotos } from '../stores/import-store';
 
 /** Bottom panel height from the design, home indicator area included. */
 const PANEL_HEIGHT = 194;
-/** iOS takes the next shot only once the previous one is captured; retry until then. */
-const SHOT_RETRIES = 30;
+/** iOS refuses a shot while the previous one is still being captured; it is retried until free. */
 const SHOT_RETRY_MS = 80;
+/** Retries when no earlier shot is running, i.e. the camera refuses for another reason. */
+const SHOT_RETRIES = 30;
+/** A refused shot fails at once; one still running after this long has been taken. */
+const SHOT_REFUSED_MS = 150;
 
 /** 05a: photograph the plan page by page. `?retake=<index>` replaces one page. */
 export function CameraScreen() {
@@ -47,7 +50,11 @@ export function CameraScreen() {
   const [pending, setPending] = useState(0);
   const [finishing, setFinishing] = useState(false);
   // Shots finish in any order; pages are added in the order they were taken.
-  const queue = useRef({ next: 0, flushed: 0, done: new Map<number, ImportPhoto | null>() });
+  const queue = useRef({ next: 0, flushed: 0, done: new Map<number, ImportPhoto[]>() });
+  // Shots start in tap order: each waits until the one before it is under way.
+  const line = useRef(Promise.resolve());
+  // Shots taken and still being saved; the camera refuses new ones while it is busy with them.
+  const running = useRef(0);
   const photos = usePhotos();
   const addPhotos = useImportStore((s) => s.addPhotos);
   const replacePhoto = useImportStore((s) => s.replacePhoto);
@@ -58,36 +65,55 @@ export function CameraScreen() {
   const closed = useRef(false);
   const flash = useShutterFlash();
 
-  function store(picked: ImportPhoto[]) {
-    if (retakeIndex !== null) {
-      replacePhoto(retakeIndex, picked[0]);
-      router.back();
-      return true;
-    }
-    addPhotos(picked);
-    return false;
+  function replace(photo: ImportPhoto) {
+    replacePhoto(retakeIndex!, photo);
+    router.back();
   }
 
   async function capture(): Promise<ImportPhoto> {
-    for (let attempt = 0; ; attempt++) {
-      try {
-        const pic = await camera.current!.takePictureAsync({ quality: 0.7 });
-        return { uri: pic.uri, width: pic.width, height: pic.height };
-      } catch (error) {
-        if (attempt >= SHOT_RETRIES || closed.current || !camera.current) throw error;
+    const before = line.current;
+    let underway = () => {};
+    line.current = new Promise((resolve) => (underway = resolve));
+    await before;
+    try {
+      for (let attempt = 0; ; attempt++) {
+        if (closed.current || !camera.current) throw new Error('Camera closed');
+        const shot = camera.current.takePictureAsync({ quality: 0.7 });
+        const refusal = await Promise.race([
+          shot.then(
+            () => null,
+            (error: unknown) => ({ error }),
+          ),
+          wait(SHOT_REFUSED_MS).then(() => null),
+        ]);
+        if (!refusal) {
+          // The next tap may start trying.
+          underway();
+          running.current++;
+          try {
+            const pic = await shot;
+            return { uri: pic.uri, width: pic.width, height: pic.height };
+          } finally {
+            running.current--;
+          }
+        }
+        // Retried for as long as earlier shots keep the camera busy.
+        if (!running.current && attempt >= SHOT_RETRIES) throw refusal.error;
         await wait(SHOT_RETRY_MS);
       }
+    } finally {
+      underway();
     }
   }
 
-  function settle(seq: number, photo: ImportPhoto | null) {
+  /** Adds the pages of shot or library pick `seq` once all earlier ones are in. */
+  function settle(seq: number, picked: ImportPhoto[]) {
     const q = queue.current;
-    q.done.set(seq, photo);
+    q.done.set(seq, picked);
     const ready: ImportPhoto[] = [];
     while (q.done.has(q.flushed)) {
-      const next = q.done.get(q.flushed);
+      ready.push(...q.done.get(q.flushed)!);
       q.done.delete(q.flushed++);
-      if (next) ready.push(next);
     }
     if (ready.length && !closed.current) addPhotos(ready);
   }
@@ -101,7 +127,7 @@ export function CameraScreen() {
       setBusy(true);
       try {
         const photo = await capture();
-        if (!closed.current) store([photo]);
+        if (!closed.current) replace(photo);
       } catch {
         if (!closed.current) Alert.alert(t('planImport:errors.camera'));
       } finally {
@@ -112,9 +138,9 @@ export function CameraScreen() {
     const seq = queue.current.next++;
     setPending((n) => n + 1);
     try {
-      settle(seq, await capture());
+      settle(seq, [await capture()]);
     } catch {
-      settle(seq, null);
+      settle(seq, []);
       if (!closed.current) Alert.alert(t('planImport:errors.camera'));
     } finally {
       setPending((n) => n - 1);
@@ -136,7 +162,11 @@ export function CameraScreen() {
 
   async function fromLibrary() {
     const picked = await pickPlanPhotos();
-    if (picked.length && !store(picked)) router.dismissTo('/import/review');
+    if (!picked.length || closed.current) return;
+    if (retakeIndex !== null) return replace(picked[0]);
+    // After the shots taken before, then on to the review once those are saved, like "Done".
+    settle(queue.current.next++, picked);
+    setFinishing(true);
   }
 
   const options = <Stack.Screen options={{ animation: 'fade', gestureEnabled: false }} />;

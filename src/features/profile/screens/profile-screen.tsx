@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Alert, View } from 'react-native';
+import { ActivityIndicator, Alert, Linking, View } from 'react-native';
 
 import { ProBadge } from '@/features/paywall/components/pro-badge';
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
@@ -25,14 +25,25 @@ import { pickAvatar, removeAvatar, saveAvatar } from '../lib/avatar';
 
 const PAGE = 10;
 
+interface LocalPhoto {
+  uri: string;
+  /** Its storage path once uploaded. */
+  path: string | null;
+  /** The photo it replaces, still in the profile until the change has loaded. */
+  replaces: string | null;
+}
+
 export function ProfileScreen() {
-  const { t } = useTranslation('profile');
+  const { t } = useTranslation(['profile', 'common']);
   const { profile } = useProfile();
   const isPro = useIsPro();
   const [avatarOpen, setAvatarOpen] = useState(false);
-  // The new photo shows while it uploads.
-  const [preview, setPreview] = useState<string | null>(null);
-  const uploading = preview !== null;
+  // A new photo shows from the device while it uploads and after (it is the same picture, so
+  // there is no wait for the download), until the profile points at another one.
+  const [local, setLocal] = useState<LocalPhoto | null>(null);
+  const avatarPath = profile?.avatarPath ?? null;
+  if (local?.path && avatarPath !== local.path && avatarPath !== local.replaces) setLocal(null);
+  const uploading = !!local && !local.path;
 
   async function onAvatarAction(action: AvatarAction) {
     setAvatarOpen(false);
@@ -40,23 +51,37 @@ export function ProfileScreen() {
     if (!userId) return;
     const previous = profile.avatarPath;
     if (action === 'remove') {
-      if (previous) await removeAvatar(userId, previous);
+      setLocal(null);
+      if (!previous) return;
+      try {
+        await removeAvatar(userId, previous);
+      } catch (error) {
+        console.warn('Removing the profile photo failed', error);
+        haptics.error();
+      }
       return;
     }
     // The system picker opens once the sheet has gone.
     afterSheetClose(async () => {
-      const uri = await pickAvatar(action);
-      if (!uri) return;
-      setPreview(uri);
       try {
-        await saveAvatar(userId, uri, previous);
+        const picked = await pickAvatar(action);
+        if (picked === 'denied') {
+          Alert.alert(t('avatar.cameraDenied'), undefined, [
+            { text: t('common:actions.cancel'), style: 'cancel' },
+            { text: t('common:settings'), onPress: () => void Linking.openSettings() },
+          ]);
+          return;
+        }
+        if (!picked) return;
+        setLocal({ uri: picked, path: null, replaces: previous });
+        const path = await saveAvatar(userId, picked, previous);
+        setLocal({ uri: picked, path, replaces: previous });
         haptics.success();
       } catch (error) {
         console.warn('Saving the profile photo failed', error);
         haptics.error();
+        setLocal(null);
         Alert.alert(t('avatar.failed'));
-      } finally {
-        setPreview(null);
       }
     });
   }
@@ -81,7 +106,7 @@ export function ProfileScreen() {
           onPress={() => setAvatarOpen(true)}
           className="rounded-full border-[3px] border-accent p-1"
         >
-          <UserAvatar size={106} className="border-0" previewUri={preview} />
+          <UserAvatar size={106} className="border-0" previewUri={local?.uri} />
           {uploading ? (
             <View className="absolute inset-1 items-center justify-center rounded-full bg-black/45">
               <ActivityIndicator color={colors.fg} />

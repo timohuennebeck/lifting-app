@@ -14,8 +14,11 @@ const JPEG_QUALITY = 0.8;
 
 export type AvatarSource = 'camera' | 'library';
 
-/** Takes or picks a photo, cropped square by the system editor. Null when cancelled. */
-export async function pickAvatar(source: AvatarSource): Promise<string | null> {
+/**
+ * Takes or picks a photo, cropped square by the system editor. Null when cancelled, "denied"
+ * when the camera may not be used.
+ */
+export async function pickAvatar(source: AvatarSource): Promise<string | 'denied' | null> {
   const options: ImagePicker.ImagePickerOptions = {
     mediaTypes: ['images'],
     allowsEditing: true,
@@ -24,7 +27,7 @@ export async function pickAvatar(source: AvatarSource): Promise<string | null> {
   };
   if (source === 'camera') {
     const { granted } = await ImagePicker.requestCameraPermissionsAsync();
-    if (!granted) return null;
+    if (!granted) return 'denied';
   }
   const result =
     source === 'camera'
@@ -48,6 +51,7 @@ export async function saveAvatar(userId: string, uri: string, previous: string |
   await uploadJpeg(AVATAR_BUCKET, path, new File(uri));
   await saveProfile(userId, { avatarPath: path });
   if (previous) void supabase.storage.from(AVATAR_BUCKET).remove([previous]);
+  return path;
 }
 
 /** Back to the initials; the photo file is removed. */

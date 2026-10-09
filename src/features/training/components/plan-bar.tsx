@@ -12,7 +12,7 @@ import type { PlanItem } from '../data/use-plan-progress';
 
 /** A strip entry; `review` adds the plan import's amber dot. */
 export type PlanBarItem = Pick<PlanItem, 'key' | 'id' | 'name' | 'number'> & {
-  state?: PlanItem['state'];
+  done?: boolean;
   review?: boolean;
 };
 
@@ -25,7 +25,7 @@ export interface PlanBarProps {
   onAdd: () => void;
 }
 
-/** Plan strip of the collection's trainings: done, next (preselected) and upcoming (03·0b). */
+/** Plan strip of the collection's trainings, done ones checked (03·0b). */
 export function PlanBar({ items, currentId, onSelect, onAdd }: PlanBarProps) {
   const { t } = useTranslation('training');
   const currentIndex = items.findLastIndex((item) => item.id === currentId);
@@ -69,7 +69,7 @@ export function PlanBar({ items, currentId, onSelect, onAdd }: PlanBarProps) {
             </Text>
             <PlanSlot
               number={item.number}
-              done={item.state === 'done'}
+              done={!!item.done}
               selected={current}
               review={item.review}
             />
@@ -82,7 +82,8 @@ export function PlanBar({ items, currentId, onSelect, onAdd }: PlanBarProps) {
           accessibilityLabel={t('overview.addTraining')}
           onPress={onAdd}
           className="items-center justify-center self-center rounded-full bg-elevated"
-          style={{ width: PLAN_ADD_SIZE, height: PLAN_ADD_SIZE }}
+          // Centred on the slots: their ring hangs 3pt below the 32pt slot.
+          style={{ width: PLAN_ADD_SIZE, height: PLAN_ADD_SIZE, marginBottom: -3 }}
         >
           <Icon name="plus" size={13} />
         </PressableScale>

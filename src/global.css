@@ -50,15 +50,3 @@
   --color-ink: #1c1a16;
   --color-accent: #dfff1f;
 }
-
-/* Accent is user-selectable at runtime via Uniwind.updateCSSVariables. */
-@layer theme {
-  :root {
-    @variant dark {
-      --color-accent: #dfff1f;
-    }
-    @variant light {
-      --color-accent: #dfff1f;
-    }
-  }
-}

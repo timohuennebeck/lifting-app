@@ -82,7 +82,9 @@ export const formatTarget = (min: number, max: number, timed: boolean) =>
 export const formatTargetLabel = (min: number, max: number, timed: boolean) =>
   timed
     ? formatTarget(min, max, true)
-    : i18n.t('common:units.repRange', { range: formatRepRange(min, max) });
+    : min === max
+      ? i18n.t('common:units.reps', { count: min })
+      : i18n.t('common:units.repRange', { range: formatRepRange(min, max) });
 
 /** 70 → 5′10″ */
 export function feetInches(totalInches: number) {

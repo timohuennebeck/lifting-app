@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ExerciseDetailModal } from '@/features/exercises/components/exercise-detail-modal';
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
+import { EditableTitle } from '@/features/training/components/editable-title';
 import {
   type ExerciseMenuAction,
   ExerciseMenuSheet,
@@ -160,9 +161,11 @@ export function ConfirmScreen() {
         />
         {day ? (
           <>
-            <Text variant="title" className="px-5 pt-7.5 normal-case">
-              {day.name}
-            </Text>
+            <EditableTitle
+              value={day.name}
+              accessibilityLabel={t('training:options.rename')}
+              onSubmit={(name) => editDay((d) => ({ ...d, name }))}
+            />
             <Text variant="paragraph" tone="subtle" className="px-5 pt-2">
               {day.weekday !== null && weekdays[day.weekday]
                 ? t('training:overview.fixedDay', { day: weekdays[day.weekday] })

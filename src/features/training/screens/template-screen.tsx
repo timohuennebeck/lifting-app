@@ -93,12 +93,19 @@ export function TemplateScreen() {
   };
 
   // "+" in the plan strip adds a training at once; it is renamed by tapping its title.
+  const adding = useRef(false);
   const addTraining = async () => {
-    const count = new Set(plan.map((p) => p.id)).size;
-    const name = t('overview.newTraining', { number: count + 1 });
-    const newId = await createTemplate(requireUserId(), name, collectionId);
-    haptics.success();
-    router.setParams({ id: newId });
+    if (adding.current) return;
+    adding.current = true;
+    try {
+      const count = new Set(plan.map((p) => p.id)).size;
+      const name = t('overview.newTraining', { number: count + 1 });
+      const newId = await createTemplate(requireUserId(), name, collectionId);
+      haptics.success();
+      router.setParams({ id: newId });
+    } finally {
+      adding.current = false;
+    }
   };
 
   const onDelete = async () => {
@@ -226,7 +233,9 @@ export function TemplateScreen() {
                     max: set.target_max,
                     rir: set.rir,
                   }))}
-                  onMenu={() => setMenuFor(exercise)}
+                  onMenu={() => {
+                    if (!dragging.current) setMenuFor(exercise);
+                  }}
                   onPress={() => {
                     if (!dragging.current)
                       router.push(`/template/${template.id}/sets/${exercise.id}`);

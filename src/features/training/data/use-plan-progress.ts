@@ -10,8 +10,6 @@ const trainingKeys = createQueryKeys('training', {
   planProgress: (collectionId: string | null) => [collectionId ?? 'none'],
 });
 
-export type PlanItemState = 'done' | 'next' | 'upcoming';
-
 export interface PlanItem {
   /** Unique per slot: a template shows twice when the last cycle is displayed too. */
   key: string;
@@ -19,7 +17,8 @@ export interface PlanItem {
   name: string;
   /** 1-based slot in the strip (runs to 2n while the finished cycle is shown). */
   number: number;
-  state: PlanItemState;
+  /** Trained in the current cycle (or in the finished one shown in front of it). */
+  done: boolean;
 }
 
 /** Templates of a collection in rotation order, each with its latest finished workout. */
@@ -40,9 +39,9 @@ const planQuery = (collectionId: string | null) =>
 type Row = RowOf<typeof planQuery>;
 
 /**
- * Templates of a collection rotate in order: the one after the most recently
- * finished template is "next", the ones before it in this cycle are "done".
- * Right after a finished cycle it stays visible in front of the new one (03·0b).
+ * Templates of a collection rotate in order: the one after the most recently finished
+ * template is next, the ones before it in this cycle are done. Right after a finished
+ * cycle it stays visible in front of the new one (03·0b).
  */
 function toPlan(rows: Row[]): PlanItem[] {
   let lastIndex = -1;
@@ -50,19 +49,15 @@ function toPlan(rows: Row[]): PlanItem[] {
     if (r.last_done && (lastIndex < 0 || r.last_done > rows[lastIndex].last_done!)) lastIndex = i;
   });
   const next = (lastIndex + 1) % Math.max(rows.length, 1);
-  const stateOf = (i: number): PlanItemState =>
-    i < next ? 'done' : i === next ? 'next' : 'upcoming';
-  const slots = rows.map((r, i) => ({ row: r, state: stateOf(i) }));
+  const slots = rows.map((row, i) => ({ row, done: i < next }));
   const finishedCycle = next === 0 && lastIndex >= 0;
-  const all = finishedCycle
-    ? [...rows.map((row) => ({ row, state: 'done' as const })), ...slots]
-    : slots;
-  return all.map(({ row, state }, i) => ({
+  const all = finishedCycle ? [...rows.map((row) => ({ row, done: true })), ...slots] : slots;
+  return all.map(({ row, done }, i) => ({
     key: `${row.id}-${i}`,
     id: row.id,
     name: row.name,
     number: i + 1,
-    state,
+    done,
   }));
 }
 

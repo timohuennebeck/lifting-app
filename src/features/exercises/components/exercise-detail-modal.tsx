@@ -1,5 +1,8 @@
-import { Modal, Platform } from 'react-native';
+import { Modal, Platform, StyleSheet } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { getExercise } from '@/shared/data/exercises';
 
 import { ExerciseDetail } from './exercise-detail';
 
@@ -13,21 +16,26 @@ export interface ExerciseDetailModalProps {
 export function ExerciseDetailModal({ exerciseId, onClose }: ExerciseDetailModalProps) {
   const insets = useSafeAreaInsets();
   const pageSheet = Platform.OS === 'ios';
+  // An exercise the catalog doesn't have would leave the page empty.
+  const shownId = exerciseId && getExercise(exerciseId) ? exerciseId : null;
   return (
     <Modal
-      visible={!!exerciseId}
+      visible={!!shownId}
       animationType="slide"
       presentationStyle={pageSheet ? 'pageSheet' : 'fullScreen'}
       onRequestClose={onClose}
       statusBarTranslucent
     >
-      {exerciseId ? (
-        <ExerciseDetail
-          exerciseId={exerciseId}
-          onClose={onClose}
-          topInset={pageSheet ? 0 : insets.top}
-        />
-      ) : null}
+      {/* A modal is outside the app's gesture root: the history chart's scrub needs its own. */}
+      <GestureHandlerRootView style={StyleSheet.absoluteFill}>
+        {shownId ? (
+          <ExerciseDetail
+            exerciseId={shownId}
+            onClose={onClose}
+            topInset={pageSheet ? 0 : insets.top}
+          />
+        ) : null}
+      </GestureHandlerRootView>
     </Modal>
   );
 }

@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { isBodyweight, measuresOf } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { restSecondsFor } from '@/shared/data/templates';
@@ -15,6 +17,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   const units = useUnits();
   const storedIndex = useWorkoutSessionStore((s) => s.exerciseIndex);
   const selectedSetId = useWorkoutSessionStore((s) => s.selectedSetId);
+  const logged = useWorkoutSessionStore((s) => s.logged);
   const { exercises } = workout;
   const exerciseIndex = Math.min(storedIndex, exercises.length - 1);
   const exercise = exercises[exerciseIndex];
@@ -28,6 +31,23 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   const exerciseId = exercise?.exerciseId ?? '';
   const measures = measuresOf(exerciseId);
   const bodyweight = isBodyweight(exerciseId);
+
+  // A logged set shows its values at once; the entry goes when the database has them.
+  useEffect(() => {
+    const { clearLogged } = useWorkoutSessionStore.getState();
+    for (const set of exercises.flatMap((e) => e.sets)) {
+      const values = logged[set.id];
+      if (
+        values &&
+        set.completedAt &&
+        set.weightKg === values.weightKg &&
+        set.reps === values.reps &&
+        set.seconds === values.seconds
+      ) {
+        clearLogged(set.id);
+      }
+    }
+  }, [exercises, logged]);
 
   const inputFor = (index: number) => toSetInput(suggestSet(exercise, index, last), units);
 
@@ -88,7 +108,8 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   /** The round check at the end of a row: logs with the prefill, or re-opens a set. */
   function toggleDone(index: number) {
     const set = exercise.sets[index];
-    if (set.completedAt) {
+    // Also while it is still being saved.
+    if (set.completedAt || logged[set.id]) {
       useWorkoutSessionStore.getState().clearLogged(set.id);
       void unlogSet(set.id);
       return;

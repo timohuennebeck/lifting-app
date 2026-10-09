@@ -51,6 +51,7 @@
     "camera": "Foto aufnehmen",
     "library": "Foto auswählen",
     "remove": "Foto entfernen",
+    "cameraDenied": "Erlaube den Kamerazugriff in den Einstellungen, um ein Profilfoto aufzunehmen.",
     "failed": "Das Profilfoto konnte nicht gespeichert werden. Prüf deine Verbindung und versuch es noch mal."
   }
 }

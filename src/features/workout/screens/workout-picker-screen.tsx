@@ -25,8 +25,11 @@ export function WorkoutPickerScreen() {
 
   async function applySwap(exerciseId: string) {
     if (!target) return;
-    useWorkoutSessionStore.getState().closeKeypad();
+    const { closeKeypad, clearLogged } = useWorkoutSessionStore.getState();
+    closeKeypad();
     await swapWorkoutExercise(target.id, exerciseId);
+    // The swap clears the logged sets.
+    for (const set of target.sets) clearLogged(set.id);
     haptics.success();
     router.back();
   }

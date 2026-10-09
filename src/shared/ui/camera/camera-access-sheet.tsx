@@ -47,12 +47,16 @@ export function CameraAccessSheet({ visible, onClose, onContinue, body }: Camera
  * decided, `request` opens it straight away.
  */
 export function useCameraAccess(open: () => void) {
-  const [permission, requestPermission] = useCameraPermissions();
+  const [permission, requestPermission, getPermission] = useCameraPermissions();
   const [visible, setVisible] = useState(false);
-  const undecided = !permission || permission.status === PermissionStatus.UNDETERMINED;
 
   return {
-    request: () => (undecided ? setVisible(true) : open()),
+    request: async () => {
+      // Right after mount the status may still be loading.
+      const { status } = permission ?? (await getPermission());
+      if (status === PermissionStatus.UNDETERMINED) setVisible(true);
+      else open();
+    },
     sheet: {
       visible,
       onClose: () => setVisible(false),

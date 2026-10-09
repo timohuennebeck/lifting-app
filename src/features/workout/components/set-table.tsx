@@ -65,12 +65,12 @@ export function SetTable({
   };
 
   /**
-   * A box's text: the keypad buffer while editing, the logged value (also while it is still
-   * being saved), or the suggested count.
+   * A box's text: the keypad buffer while editing, the logged value (the one just entered while
+   * it is still being saved), or the suggested count.
    */
   const cellValue = (set: WorkoutSet, field: Measure, editing: boolean, index: number) => {
     if (editing) return field === 'weight' ? displayInput(input.weight, separator) : input[field];
-    const saved = set.completedAt ? set : logged[set.id];
+    const saved = logged[set.id] ?? (set.completedAt ? set : undefined);
     if (field === 'weight') {
       return saved?.weightKg != null ? formatWeightValue(saved.weightKg, units) : '';
     }
