@@ -22,7 +22,7 @@ export default function AppLayout() {
         <Stack.Screen name="workout/history/[exerciseId]" options={{ presentation: 'modal' }} />
         <Stack.Screen name="body-check" options={{ gestureEnabled: false }} />
         <Stack.Screen name="pro" options={{ gestureEnabled: false, animation: 'fade' }} />
-        <Stack.Screen name="support" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="support" />
       </Stack>
     </TextFieldShapeProvider>
   );

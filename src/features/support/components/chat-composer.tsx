@@ -73,7 +73,9 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
           selectionColor={colors.fg}
           cursorColor={colors.fg}
           keyboardAppearance="dark"
-          className="max-h-30 min-h-6 px-2 py-0 font-inter text-base leading-5.5 text-fg"
+          textAlignVertical="top"
+          // Two lines tall even when empty, so there's room to start typing.
+          className="max-h-30 min-h-11 px-2 py-0 font-inter text-base leading-5.5 text-fg"
         />
         <View className="flex-row items-center justify-between">
           <IconButton

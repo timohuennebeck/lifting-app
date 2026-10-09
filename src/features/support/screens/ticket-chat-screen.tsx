@@ -17,7 +17,6 @@ import { DayDivider, DoneLine, SystemLine } from '../components/chat-event';
 import { ChatMessage } from '../components/chat-message';
 import { ClosedBanner } from '../components/closed-banner';
 import { FeedbackSheet } from '../components/feedback-sheet';
-import { ScreenshotViewerSheet } from '../components/screenshot-viewer-sheet';
 import { TeamAvatar } from '../components/team-avatar';
 import {
   isTicketActive,
@@ -30,7 +29,7 @@ import { useTicketFormat } from '../hooks/use-ticket-format';
 import { buildTimeline, type TimelineItem } from '../lib/timeline';
 import { useSeenStore } from '../stores/seen-store';
 
-const close = () => (router.canGoBack() ? router.back() : router.replace('/profile'));
+const back = () => (router.canGoBack() ? router.back() : router.replace('/profile'));
 
 /** Ticket chat: messages, system lines, local auto reply, composer or closed banner (01f-3e…B-4b). */
 export function TicketChatScreen() {
@@ -44,7 +43,6 @@ export function TicketChatScreen() {
   const { data: messages = [] } = useTicketMessages(ticketId);
   const { data: events = [] } = useTicketEvents(ticketId);
   const markSeen = useSeenStore((s) => s.markSeen);
-  const [viewerPath, setViewerPath] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const scrollRef = useRef<Animated.ScrollView>(null);
   const scrolled = useRef(false);
@@ -75,7 +73,9 @@ export function TicketChatScreen() {
             body={item.message.body}
             attachments={item.message.attachments}
             priority={item.priority}
-            onOpenAttachment={setViewerPath}
+            onOpenAttachment={(path) =>
+              router.push({ pathname: '/support/screenshot', params: { path } })
+            }
           />
         );
       case 'created':
@@ -141,8 +141,7 @@ export function TicketChatScreen() {
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
       <ScreenHeader
-        icon="close"
-        onBack={close}
+        onBack={back}
         className="pt-1.5 pr-5 pb-2.5 pl-4"
         title={
           <View className="flex-row items-center gap-3">
@@ -196,7 +195,6 @@ export function TicketChatScreen() {
           <ClosedBanner ticketId={ticketId} onNewTicket={() => setSheetOpen(true)} />
         </View>
       ) : null}
-      <ScreenshotViewerSheet path={viewerPath} onClose={() => setViewerPath(null)} />
       <FeedbackSheet visible={sheetOpen} onClose={() => setSheetOpen(false)} />
     </View>
   );

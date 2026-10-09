@@ -1,6 +1,7 @@
 import { type ReactNode, useEffect, useState } from 'react';
 import { Modal, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import Animated, {
   Easing,
@@ -57,7 +58,25 @@ interface MountedSheetProps extends SheetProps {
 }
 
 /** The sheet while it is shown or animating out; closed sheets run none of these hooks. */
-function MountedSheet({
+function MountedSheet(props: MountedSheetProps) {
+  return (
+    <Modal
+      transparent
+      visible
+      animationType="none"
+      statusBarTranslucent
+      navigationBarTranslucent
+      onRequestClose={props.onClose}
+    >
+      {/* Its own safe area: inside a tab screen the nearest one also counts the tab bar. */}
+      <SafeAreaProvider>
+        <SheetBody {...props} />
+      </SafeAreaProvider>
+    </Modal>
+  );
+}
+
+function SheetBody({
   visible,
   onClose,
   onClosed,
@@ -110,58 +129,49 @@ function MountedSheet({
   const fixed = snapPoints?.[0] ? (parseFloat(snapPoints[0]) / 100) * windowHeight : undefined;
 
   return (
-    <Modal
-      transparent
-      visible
-      animationType="none"
-      statusBarTranslucent
-      navigationBarTranslucent
-      onRequestClose={onClose}
-    >
-      <GestureHandlerRootView style={StyleSheet.absoluteFill}>
-        <Animated.View style={[StyleSheet.absoluteFill, backdropStyle]} className="bg-black">
-          <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityRole="button" />
-        </Animated.View>
-        <Animated.View
-          onLayout={(e) => sheetHeight.set(e.nativeEvent.layout.height)}
-          style={[
-            sheetStyle,
-            fixed ? { height: fixed } : { maxHeight: windowHeight * MAX_HEIGHT },
-            { backgroundColor: colors.sheet },
-          ]}
-          className="absolute inset-x-0 bottom-0 rounded-t-[34px]"
-        >
-          <GestureDetector gesture={pan}>
-            <View>
-              <View className="items-center pt-2.5 pb-1">
-                <View className="h-1.25 w-9 rounded-full bg-track" />
+    <GestureHandlerRootView style={StyleSheet.absoluteFill}>
+      <Animated.View style={[StyleSheet.absoluteFill, backdropStyle]} className="bg-black">
+        <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityRole="button" />
+      </Animated.View>
+      <Animated.View
+        onLayout={(e) => sheetHeight.set(e.nativeEvent.layout.height)}
+        style={[
+          sheetStyle,
+          fixed ? { height: fixed } : { maxHeight: windowHeight * MAX_HEIGHT },
+          { backgroundColor: colors.sheet },
+        ]}
+        className="absolute inset-x-0 bottom-0 rounded-t-[34px]"
+      >
+        <GestureDetector gesture={pan}>
+          <View>
+            <View className="items-center pt-2.5 pb-1">
+              <View className="h-1.25 w-9 rounded-full bg-track" />
+            </View>
+            {title ? (
+              // 01·V·A sheets: title 22pt below the handle.
+              <View className="gap-1.5 px-5 pt-3 pb-5">
+                <Text variant="headline">{title}</Text>
+                {subtitle ? (
+                  <Text variant="label" tone="subtle" className="font-inter">
+                    {subtitle}
+                  </Text>
+                ) : null}
               </View>
-              {title ? (
-                // 01·V·A sheets: title 22pt below the handle.
-                <View className="gap-1.5 px-5 pt-3 pb-5">
-                  <Text variant="headline">{title}</Text>
-                  {subtitle ? (
-                    <Text variant="label" tone="subtle" className="font-inter">
-                      {subtitle}
-                    </Text>
-                  ) : null}
-                </View>
-              ) : null}
-            </View>
-          </GestureDetector>
-          <View
-            className={cn('px-4', !title && 'pt-3', fixed && 'flex-1', className)}
-            style={{ paddingBottom: footer ? 0 : footerInset }}
-          >
-            {children}
+            ) : null}
           </View>
-          {footer ? (
-            <View className="px-4 pt-2" style={{ paddingBottom: footerInset }}>
-              {footer}
-            </View>
-          ) : null}
-        </Animated.View>
-      </GestureHandlerRootView>
-    </Modal>
+        </GestureDetector>
+        <View
+          className={cn('px-4', !title && 'pt-3', fixed && 'flex-1', className)}
+          style={{ paddingBottom: footer ? 0 : footerInset }}
+        >
+          {children}
+        </View>
+        {footer ? (
+          <View className="px-4 pt-2" style={{ paddingBottom: footerInset }}>
+            {footer}
+          </View>
+        ) : null}
+      </Animated.View>
+    </GestureHandlerRootView>
   );
 }

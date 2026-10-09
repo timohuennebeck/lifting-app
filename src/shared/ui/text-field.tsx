@@ -49,6 +49,8 @@ export function TextField({
   const [focused, setFocused] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const hasValue = !!value?.length;
+  // Multi-line fields only round their corners: a pill that tall looks like a capsule.
+  const radius = shape === 'pill' && !multiline ? 'rounded-full' : 'rounded-[18px]';
 
   return (
     <View className={cn('gap-2', className)}>
@@ -58,16 +60,24 @@ export function TextField({
         </Text>
       ) : null}
       <View
-        // One field style app-wide: 56pt, 16pt text. Rings sit inside the padding (1pt at rest,
-        // 2pt accent on focus), so the text never shifts.
+        // One field style app-wide: 56pt, 16pt text. The 1pt line never changes; the 2pt focus or
+        // error ring is drawn on top of it, so neither the field nor its text can shift.
         className={cn(
-          'flex-row gap-3 bg-pill',
-          shape === 'pill' ? (multiline ? 'rounded-[28px]' : 'rounded-full') : 'rounded-[18px]',
+          'flex-row gap-3 border border-white/8 bg-pill pr-1.75 pl-4.25',
+          radius,
           multiline ? 'min-h-32 items-start' : 'h-14 items-center',
-          error || focused ? 'border-2 pr-1.5 pl-4' : 'border border-white/8 pr-1.75 pl-4.25',
-          error ? 'border-danger' : focused && 'border-accent',
         )}
       >
+        {error || focused ? (
+          <View
+            pointerEvents="none"
+            className={cn(
+              'absolute -inset-px border-2',
+              radius,
+              error ? 'border-danger' : 'border-accent',
+            )}
+          />
+        ) : null}
         {icon ? <Icon name={icon} size={16} color={colors.dim} /> : null}
         <TextInput
           ref={ref}

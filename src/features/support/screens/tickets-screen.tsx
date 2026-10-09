@@ -30,7 +30,7 @@ export function TicketsScreen() {
     <Screen
       header={
         // Like 01f-2 there is no header action; new tickets start from the profile.
-        <ScreenHeader icon="close" title={t('list.title')} />
+        <ScreenHeader title={t('list.title')} />
       }
     >
       <TextField
