@@ -1,19 +1,45 @@
 import { desc, eq } from 'drizzle-orm';
 
-import { drizzle } from '@/shared/data/powersync/database';
+import { defaultTargets, isTimed } from '@/shared/data/exercises';
+import { drizzle, type Tx } from '@/shared/data/powersync/database';
 import { workoutExercises, workoutSets } from '@/shared/data/powersync/schema';
 import { insertWorkoutSet, type SetTargets } from '@/shared/data/workouts';
 
-/** Replaces the exercise of a running workout entry and clears its logged sets. */
+async function exerciseOf(tx: Tx, workoutExerciseId: string) {
+  const row = await tx
+    .select({ exercise_id: workoutExercises.exercise_id })
+    .from(workoutExercises)
+    .where(eq(workoutExercises.id, workoutExerciseId))
+    .get();
+  return row?.exercise_id ?? '';
+}
+
+/**
+ * Replaces the exercise of a running workout entry and clears its logged sets. Targets reset
+ * when switching between reps and seconds, since "8–12" means something else for a plank.
+ */
 export async function swapWorkoutExercise(workoutExerciseId: string, exerciseId: string) {
   await drizzle.transaction(async (tx) => {
+    const previous = await exerciseOf(tx, workoutExerciseId);
     await tx
       .update(workoutExercises)
       .set({ exercise_id: exerciseId })
       .where(eq(workoutExercises.id, workoutExerciseId));
+    const targets = isTimed(previous) !== isTimed(exerciseId) ? defaultTargets(exerciseId) : null;
     await tx
       .update(workoutSets)
-      .set({ weight_kg: null, reps: null, completed_at: null, is_pr: false })
+      .set({
+        weight_kg: null,
+        reps: null,
+        seconds: null,
+        completed_at: null,
+        is_pr: false,
+        ...(targets && {
+          target_min: targets.min,
+          target_max: targets.max,
+          target_rir: targets.rir,
+        }),
+      })
       .where(eq(workoutSets.workout_exercise_id, workoutExerciseId));
   });
 }
@@ -34,11 +60,10 @@ export async function addWorkoutSet(userId: string, workoutExerciseId: string) {
       .orderBy(desc(workoutSets.position))
       .limit(1)
       .get();
-    await insertWorkoutSet(tx, userId, workoutExerciseId, (last?.position ?? -1) + 1, {
-      min: last?.target_min ?? 8,
-      max: last?.target_max ?? 12,
-      rir: last?.target_rir ?? 2,
-    });
+    const targets = last
+      ? { min: last.target_min ?? 8, max: last.target_max ?? 12, rir: last.target_rir }
+      : defaultTargets(await exerciseOf(tx, workoutExerciseId));
+    await insertWorkoutSet(tx, userId, workoutExerciseId, (last?.position ?? -1) + 1, targets);
   });
 }
 

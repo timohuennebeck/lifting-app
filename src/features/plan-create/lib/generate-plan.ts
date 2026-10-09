@@ -1,4 +1,4 @@
-import { type ExerciseId, getExercise } from '@/shared/data/exercises';
+import { defaultTargets, getExercise, isTimed } from '@/shared/data/exercises';
 import type { EquipmentAccess, Experience, Goal } from '@/shared/data/profile';
 import { estimateMinutes, type PlanDayDraft, type PlanDraft } from '@/shared/data/templates';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
@@ -32,7 +32,7 @@ export interface PlanLabels {
 }
 
 interface Slot {
-  candidates: readonly ExerciseId[];
+  candidates: readonly string[];
   compound: boolean;
 }
 
@@ -107,13 +107,13 @@ const EQUIPMENT: Record<EquipmentAccess, readonly string[]> = {
   bodyweight: ['bodyweight'],
 };
 /** Catalog exercises that also work without their listed equipment. */
-const ALSO_AT: Partial<Record<EquipmentAccess, readonly ExerciseId[]>> = {
+const ALSO_AT: Partial<Record<EquipmentAccess, readonly string[]>> = {
   home: ['calf-raise'],
   bodyweight: ['lunge', 'calf-raise'],
 };
 
 /** Exercises that load a complaint area and are left out when it hurts. */
-const COMPLAINT_AVOID: Record<string, readonly ExerciseId[]> = {
+const COMPLAINT_AVOID: Record<string, readonly string[]> = {
   neck: ['upright-row', 'deadlift'],
   shoulders: ['upright-row', 'dip', 'front-raise', 'arnold-press'],
   elbows: ['french-press', 'close-grip-bench-press', 'chin-up'],
@@ -182,7 +182,7 @@ export function generatePlan(input: GeneratePlanInput, labels: PlanLabels): Plan
 function allowedExercises({ equipment, complaints }: GeneratePlanInput) {
   const avoid = new Set(complaints.flatMap((c) => COMPLAINT_AVOID[c] ?? []));
   const also = ALSO_AT[equipment] ?? [];
-  return (id: ExerciseId) => {
+  return (id: string) => {
     const ex = getExercise(id);
     if (!ex || avoid.has(id)) return false;
     return EQUIPMENT[equipment].includes(ex.equipment) || also.includes(id);
@@ -193,7 +193,7 @@ function buildDay(
   kind: DayKind,
   variant: number,
   input: GeneratePlanInput,
-  allowed: (id: ExerciseId) => boolean,
+  allowed: (id: string) => boolean,
   focusGroups: MuscleGroupId[],
 ) {
   const slots = [...DAY_SLOTS[kind]];
@@ -202,8 +202,8 @@ function buildDay(
     .map((g): SlotId => (g === 'arms' && kind === 'push' ? 'triceps' : FOCUS_SLOT[g]));
   slots.splice(2, 0, ...extra);
 
-  const used = new Set<ExerciseId>();
-  const items: { exerciseId: ExerciseId; sets: number; compound: boolean }[] = [];
+  const used = new Set<string>();
+  const items: { exerciseId: string; sets: number; compound: boolean }[] = [];
   for (const slotId of slots) {
     if (items.length >= MAX_EXERCISES) break;
     const slot: Slot = SLOTS[slotId];
@@ -220,14 +220,14 @@ function buildDay(
   return items.map(({ exerciseId, sets, compound }) => ({
     exerciseId,
     restSeconds: null,
-    sets: setsFor(sets, compound, input),
+    sets: setsFor(exerciseId, sets, compound, input),
   }));
 }
 
 function setCount(
   compound: boolean,
   position: number,
-  exerciseId: ExerciseId,
+  exerciseId: string,
   { goal, experience }: GeneratePlanInput,
   focusGroups: MuscleGroupId[],
 ) {
@@ -238,14 +238,24 @@ function setCount(
   return Math.min(MAX_SETS, sets);
 }
 
-function setsFor(count: number, compound: boolean, { goal, experience }: GeneratePlanInput) {
+function setsFor(
+  exerciseId: string,
+  count: number,
+  compound: boolean,
+  { goal, experience }: GeneratePlanInput,
+) {
+  // Holds get a time range; reps in reserve don't apply to them.
+  if (isTimed(exerciseId)) {
+    const { min, max } = defaultTargets(exerciseId);
+    return Array.from({ length: count }, () => ({ targetMin: min, targetMax: max, rir: null }));
+  }
   const reps = PRESCRIBED_REPS[goal][compound ? 'compound' : 'isolation'];
   const rir = BASE_RIR[experience ?? 'beginner'];
   // Counts down to one below the base RIR, capped one above it (3 · 2 · 1, or 3 · 3 · 2 · 1).
   const last = Math.max(0, rir - 1);
   return Array.from({ length: count }, (_, i) => ({
-    repsMin: reps.min,
-    repsMax: reps.max,
+    targetMin: reps.min,
+    targetMax: reps.max,
     rir: Math.min(rir + 1, last + count - 1 - i),
   }));
 }

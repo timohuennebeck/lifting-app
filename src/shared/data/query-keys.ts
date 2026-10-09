@@ -24,4 +24,14 @@ const bodyCheckKeys = createQueryKeys('bodyChecks', {
   list: null,
 });
 
-export const queryKeys = mergeQueryKeys(profileKeys, templateKeys, workoutKeys, bodyCheckKeys);
+const exerciseCatalogKeys = createQueryKeys('exerciseCatalog', {
+  changes: null,
+});
+
+export const queryKeys = mergeQueryKeys(
+  profileKeys,
+  templateKeys,
+  workoutKeys,
+  bodyCheckKeys,
+  exerciseCatalogKeys,
+);

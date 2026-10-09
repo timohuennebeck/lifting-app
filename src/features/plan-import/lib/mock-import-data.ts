@@ -1,19 +1,18 @@
-import type { ExerciseId } from '@/shared/data/exercises';
 import type { PlanSetDraft } from '@/shared/data/templates';
 
 import type { ImportedDay, ImportedExercise } from './plan-import-service';
 
 /** `sets` sets of `min`–`max` reps without RIR, as read from a paper plan. */
 export function readSets(sets: number, min: number, max = min): PlanSetDraft[] {
-  return Array.from({ length: sets }, () => ({ repsMin: min, repsMax: max, rir: null }));
+  return Array.from({ length: sets }, () => ({ targetMin: min, targetMax: max, rir: null }));
 }
 
 const ex = (
-  exerciseId: ExerciseId,
+  exerciseId: string,
   sets: number,
   min: number,
   max?: number,
-  review?: { raw: string; alternatives: ExerciseId[] },
+  review?: { raw: string; alternatives: string[] },
 ): ImportedExercise => ({
   exerciseId,
   sets: readSets(sets, min, max),

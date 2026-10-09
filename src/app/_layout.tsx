@@ -23,6 +23,7 @@ import { useAuthListener } from '@/features/auth/hooks/use-auth-listener';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { db } from '@/shared/data/powersync/database';
 import { queryClient } from '@/shared/data/query-client';
+import { useCatalogRefresh } from '@/shared/hooks/use-catalog-refresh';
 import { colors } from '@/shared/lib/theme';
 import { useSessionStore } from '@/shared/stores/session-store';
 import { useSettingsStore } from '@/shared/stores/settings-store';
@@ -43,6 +44,8 @@ export default function RootLayout() {
     Inter_700Bold,
   });
   useAuthListener();
+  // Also before login: onboarding builds the first plan from the catalog.
+  useCatalogRefresh();
   const ready = useSessionStore((s) => s.ready);
   const signedIn = useSessionStore((s) => !!s.session);
   const onboarded = useOnboardingStore((s) => s.completed);

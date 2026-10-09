@@ -13,8 +13,11 @@ import {
   sql,
   type SQL,
 } from 'drizzle-orm';
-import { alias } from 'drizzle-orm/sqlite-core';
+import { alias, type AnySQLiteColumn } from 'drizzle-orm/sqlite-core';
 
+import type { SetValues } from '@/shared/lib/format';
+
+import { defaultTargets, type SetTargets } from './exercises';
 import { getOrInsert } from '@/shared/lib/map';
 
 import { newId, nowIso } from './json';
@@ -30,8 +33,29 @@ import {
 import { queryKeys } from './query-keys';
 import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
-/** Epley estimated one-rep max, used for PR detection. */
-export const estimateOneRepMax = (kg: number, reps: number) => kg * (1 + reps / 30);
+export type { SetTargets };
+
+/** Epley estimated one-rep max. */
+const estimateOneRepMax = (kg: number, reps: number) => kg * (1 + reps / 30);
+
+/**
+ * How good a set is, for PRs and top sets: estimated 1RM for weight × reps, most reps without
+ * weight, longest hold for seconds (times the weight for weighted holds). An exercise logs the
+ * same measures in every set, so scores of one exercise compare like with like.
+ */
+export function setScore({ weightKg, reps, seconds }: SetValues) {
+  if (seconds != null) return weightKg != null ? weightKg * seconds : seconds;
+  if (reps == null) return 0;
+  return weightKg != null ? estimateOneRepMax(weightKg, reps) : reps;
+}
+
+/** `setScore` as SQL over `workout_sets` or one of its aliases. */
+export const setScoreSql = (t: Record<'weight_kg' | 'reps' | 'seconds', AnySQLiteColumn>) =>
+  sql<number>`case
+  when ${t.seconds} is not null then coalesce(${t.weight_kg}, 1) * ${t.seconds}
+  when ${t.reps} is null then 0
+  when ${t.weight_kg} is not null then ${t.weight_kg} * (1 + ${t.reps} / 30.0)
+  else ${t.reps} end`;
 
 /** Aliases for correlated subqueries over the sets of other workouts. */
 export const previousSet = alias(workoutSets, 'previous_set');
@@ -90,20 +114,14 @@ export async function insertWorkout(
         user_id: userId,
         workout_exercise_id: workoutExerciseId,
         position: set.position,
-        target_min: set.reps_min,
-        target_max: set.reps_max,
+        target_min: set.target_min,
+        target_max: set.target_max,
         target_rir: set.rir,
         is_pr: false,
       })),
     );
   }
   return workoutId;
-}
-
-export interface SetTargets {
-  min: number;
-  max: number;
-  rir: number | null;
 }
 
 /** Inserts one empty set with the given targets (`drizzle` or a transaction). */
@@ -132,7 +150,7 @@ export async function addWorkoutExercise(
   workoutId: string,
   exerciseId: string,
   setCount = 3,
-  target: SetTargets = { min: 8, max: 12, rir: 2 },
+  target: SetTargets = defaultTargets(exerciseId),
 ) {
   await drizzle.transaction(async (tx) => {
     const id = newId();
@@ -148,10 +166,10 @@ export async function addWorkoutExercise(
   });
 }
 
-/** Best estimated 1RM for an exercise across all completed sets, excluding one set. */
-async function bestOneRepMax(exerciseId: string, excludeSetId: string) {
-  const rows = await drizzle
-    .select({ weight_kg: workoutSets.weight_kg, reps: workoutSets.reps })
+/** Best set score for an exercise across all completed sets, excluding one set. */
+async function bestScore(exerciseId: string, excludeSetId: string) {
+  const [row] = await drizzle
+    .select({ best: sql<number | null>`max(${setScoreSql(workoutSets)})` })
     .from(workoutSets)
     .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
     .where(
@@ -161,21 +179,19 @@ async function bestOneRepMax(exerciseId: string, excludeSetId: string) {
         ne(workoutSets.id, excludeSetId),
       ),
     );
-  return rows.reduce(
-    (best, r) => Math.max(best, estimateOneRepMax(r.weight_kg ?? 0, r.reps ?? 0)),
-    0,
-  );
+  return row?.best ?? 0;
 }
 
 /** Completes (or re-edits) a set. Returns true when it is a new personal record. */
-export async function logSet(setId: string, exerciseId: string, weightKg: number, reps: number) {
-  const best = await bestOneRepMax(exerciseId, setId);
-  const isPr = best > 0 && estimateOneRepMax(weightKg, reps) > best + 0.01;
+export async function logSet(setId: string, exerciseId: string, values: SetValues) {
+  const best = await bestScore(exerciseId, setId);
+  const isPr = best > 0 && setScore(values) > best + 0.01;
   await drizzle
     .update(workoutSets)
     .set({
-      weight_kg: weightKg,
-      reps,
+      weight_kg: values.weightKg,
+      reps: values.reps,
+      seconds: values.seconds,
       is_pr: isPr,
       // A re-edit keeps the original completion time.
       completed_at: sql`coalesce(${workoutSets.completed_at}, ${nowIso()})`,
@@ -210,14 +226,13 @@ export async function discardWorkout(workoutId: string) {
   });
 }
 
-export interface WorkoutSet {
+export interface WorkoutSet extends SetValues {
   id: string;
   position: number;
+  /** Reps, or seconds for timed exercises. */
   targetMin: number | null;
   targetMax: number | null;
   targetRir: number | null;
-  weightKg: number | null;
-  reps: number | null;
   completedAt: string | null;
   isPr: boolean;
 }
@@ -268,6 +283,7 @@ const toWorkoutSet = (s: WorkoutDetailRow['exercises'][number]['sets'][number]):
   targetRir: s.target_rir,
   weightKg: s.weight_kg,
   reps: s.reps,
+  seconds: s.seconds,
   completedAt: s.completed_at,
   isPr: s.is_pr,
 });
@@ -407,10 +423,8 @@ export function useWorkoutHistory() {
   });
 }
 
-export interface ExerciseHistorySet {
+export interface ExerciseHistorySet extends SetValues {
   position: number;
-  weightKg: number;
-  reps: number;
   rir: number | null;
   isPr: boolean;
 }
@@ -422,7 +436,7 @@ export interface ExerciseHistoryEntry {
   startedAt: string;
   finishedAt: string | null;
   sets: ExerciseHistorySet[];
-  /** Heaviest set (most reps on ties). */
+  /** Best set by `setScore`. */
   topSet: ExerciseHistorySet;
   volumeKg: number;
   hasPr: boolean;
@@ -438,6 +452,7 @@ const exerciseHistoryQuery = (exerciseId: string) =>
       position: workoutSets.position,
       weight_kg: workoutSets.weight_kg,
       reps: workoutSets.reps,
+      seconds: workoutSets.seconds,
       target_rir: workoutSets.target_rir,
       is_pr: workoutSets.is_pr,
     })
@@ -449,7 +464,6 @@ const exerciseHistoryQuery = (exerciseId: string) =>
         eq(workoutExercises.exercise_id, exerciseId),
         isNotNull(workoutSets.completed_at),
         isNotNull(workouts.finished_at),
-        isNotNull(workoutSets.weight_kg),
       ),
     )
     .orderBy(desc(workouts.started_at), workoutExercises.position, workoutSets.position);
@@ -465,21 +479,17 @@ function toExerciseHistory(rows: RowOf<typeof exerciseHistoryQuery>[]): Exercise
       sets: [],
     })).sets.push({
       position: r.position,
-      // The query only returns sets with a weight; completed sets always have reps.
-      weightKg: r.weight_kg!,
-      reps: r.reps!,
+      weightKg: r.weight_kg,
+      reps: r.reps,
+      seconds: r.seconds,
       rir: r.target_rir,
       isPr: r.is_pr,
     });
   }
   return [...map.values()].map((entry) => ({
     ...entry,
-    topSet: entry.sets.reduce((top, set) =>
-      set.weightKg > top.weightKg || (set.weightKg === top.weightKg && set.reps > top.reps)
-        ? set
-        : top,
-    ),
-    volumeKg: entry.sets.reduce((sum, s) => sum + s.weightKg * s.reps, 0),
+    topSet: entry.sets.reduce((top, set) => (setScore(set) > setScore(top) ? set : top)),
+    volumeKg: entry.sets.reduce((sum, s) => sum + (s.weightKg ?? 0) * (s.reps ?? 0), 0),
     hasPr: entry.sets.some((s) => s.isPr),
   }));
 }

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { defaultTargets, isTimed } from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
 import {
   restSecondsFor,
@@ -46,12 +47,13 @@ interface EditSetsFormProps {
 }
 
 function EditSetsForm({ exercise }: EditSetsFormProps) {
-  const { t } = useTranslation(['training', 'common', 'exercises']);
+  const { t } = useTranslation(['training', 'common']);
+  const timed = isTimed(exercise.exerciseId);
   const [sets, setSets] = useState<SetDraft[]>(() =>
     exercise.sets.map((s) => ({
       key: s.id,
-      repsMin: s.reps_min ?? 8,
-      repsMax: s.reps_max ?? s.reps_min ?? 12,
+      targetMin: s.target_min,
+      targetMax: s.target_max,
       rir: s.rir ?? null,
     })),
   );
@@ -65,7 +67,12 @@ function EditSetsForm({ exercise }: EditSetsFormProps) {
     setSets((all) => all.map((s, i) => (i === index ? { ...s, ...patch } : s)));
   const addSet = () =>
     setSets((all) => {
-      const last = all[all.length - 1] ?? { repsMin: 8, repsMax: 12, rir: 2 };
+      const fallback = defaultTargets(exercise.exerciseId);
+      const last = all[all.length - 1] ?? {
+        targetMin: fallback.min,
+        targetMax: fallback.max,
+        rir: fallback.rir,
+      };
       return [...all, { ...last, key: newId() }];
     });
   const stepRest = (delta: number) =>
@@ -78,8 +85,8 @@ function EditSetsForm({ exercise }: EditSetsFormProps) {
         requireUserId(),
         exercise.id,
         sets.map((s) => ({
-          repsMin: Math.min(s.repsMin, s.repsMax),
-          repsMax: Math.max(s.repsMin, s.repsMax),
+          targetMin: Math.min(s.targetMin, s.targetMax),
+          targetMax: Math.max(s.targetMin, s.targetMax),
           rir: s.rir,
         })),
         rest,
@@ -99,20 +106,22 @@ function EditSetsForm({ exercise }: EditSetsFormProps) {
       footer={<Button label={t('common:actions.done')} loading={saving} onPress={save} />}
     >
       <View className="flex-row items-center gap-2.5 px-5 pt-6 pb-2">
-        {(['set', 'min', 'max'] as const).map((key) => (
-          <Text
-            key={key}
-            variant="overline"
-            className={cn(
-              'text-center text-[11px] tracking-[0.9px] text-dim',
-              key === 'set' ? 'w-10' : 'flex-1',
-            )}
-          >
-            {t(`sets.${key}`)}
-          </Text>
-        ))}
+        {(['set', timed ? 'minSeconds' : 'min', timed ? 'maxSeconds' : 'max'] as const).map(
+          (key) => (
+            <Text
+              key={key}
+              variant="overline"
+              className={cn(
+                'text-center text-[11px] tracking-[0.9px] text-dim',
+                key === 'set' ? 'w-10' : 'flex-1',
+              )}
+            >
+              {t(`sets.${key}`)}
+            </Text>
+          ),
+        )}
         <Text variant="overline" className="w-7 text-right text-[11px] tracking-[0.9px] text-dim">
-          {t('sets.rir')}
+          {timed ? '' : t('sets.rir')}
         </Text>
       </View>
       <View className="gap-2.5 px-5">
@@ -121,6 +130,7 @@ function EditSetsForm({ exercise }: EditSetsFormProps) {
             key={set.key}
             index={i}
             set={set}
+            timed={timed}
             onChange={(patch) => patchSet(i, patch)}
             onRirPress={() => setRirIndex(i)}
             onRemove={

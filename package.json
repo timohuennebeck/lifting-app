@@ -84,6 +84,7 @@
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:reset": "supabase db reset",
+    "catalog:pull": "node --env-file=.env scripts/pull-exercise-catalog.mjs && prettier --write src/shared/data/exercise-catalog.json",
     "powersync:up": "docker compose -f powersync/docker-compose.yml up -d",
     "powersync:down": "docker compose -f powersync/docker-compose.yml down",
     "postinstall": "uniwind generate-artifacts --css ./src/global.css --dts ./src/uniwind-types.d.ts"

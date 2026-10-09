@@ -78,8 +78,9 @@ export const templateSets = sqliteTable(
     user_id: text().notNull(),
     template_exercise_id: text().notNull(),
     position: integer().notNull(),
-    reps_min: integer().notNull(),
-    reps_max: integer().notNull(),
+    // Reps, or seconds for timed exercises.
+    target_min: integer().notNull(),
+    target_max: integer().notNull(),
     rir: integer(),
   },
   (t) => [index('exercise').on(t.template_exercise_id)],
@@ -124,6 +125,8 @@ export const workoutSets = sqliteTable(
     target_rir: integer(),
     weight_kg: real(),
     reps: integer(),
+    // Timed exercises (planks) log seconds instead of reps.
+    seconds: integer(),
     completed_at: text(),
     // Postgres boolean, synced as 0/1.
     is_pr: integer({ mode: 'boolean' }).notNull(),

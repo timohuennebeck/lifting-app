@@ -31,13 +31,35 @@ export function formatWeight(kg: number, units: UnitSystem = 'metric') {
     : `${formatNumber(kg, 2)} kg`;
 }
 
-/** A logged set, e.g. "60 kg × 8". */
-export const formatSet = (kg: number, reps: number, units: UnitSystem) =>
-  `${formatWeight(kg, units)} × ${reps}`;
+/** What a set holds; measures the exercise doesn't use are null. */
+export interface SetValues {
+  weightKg: number | null;
+  reps: number | null;
+  seconds: number | null;
+}
+
+export const formatSeconds = (seconds: number) =>
+  `${formatNumber(seconds, 0)} ${i18n.t('common:units.sec')}`;
+
+/** A logged set: "60 kg × 8", "12 reps", "45 s" or "20 kg × 45 s". */
+export function formatSet({ weightKg, reps, seconds }: SetValues, units: UnitSystem) {
+  if (seconds != null) {
+    return weightKg != null
+      ? `${formatWeight(weightKg, units)} × ${formatSeconds(seconds)}`
+      : formatSeconds(seconds);
+  }
+  return weightKg != null
+    ? `${formatWeight(weightKg, units)} × ${reps ?? 0}`
+    : i18n.t('common:units.reps', { count: reps ?? 0 });
+}
 
 /** "8" or "8–10". */
 export const formatRepRange = (min: number, max: number) =>
   min === max ? `${min}` : `${min}–${max}`;
+
+/** A target: "8–10" reps, or "30–45 s" for timed exercises. */
+export const formatTarget = (min: number, max: number, timed: boolean) =>
+  timed ? `${formatRepRange(min, max)} ${i18n.t('common:units.sec')}` : formatRepRange(min, max);
 
 /** 70 → 5′10″ */
 export function feetInches(totalInches: number) {

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
 import { useDraft } from '@/features/onboarding/stores/onboarding-store';
+import { exerciseName } from '@/shared/data/exercises';
 import { formatWeight } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { PaperStack } from '@/shared/ui/paper-sheet';
@@ -16,7 +17,7 @@ const DURATION_MS = 3600;
 
 /** 05b: runs the plan analysis behind an animation, then opens the review. */
 export function AnalysisScreen() {
-  const { t, i18n } = useTranslation(['planImport', 'exercises', 'common']);
+  const { t, i18n } = useTranslation(['planImport', 'common']);
   const source = useImportStore((s) => s.source);
   const setPlan = useImportStore((s) => s.setPlan);
   const { unitSystem } = useDraft();
@@ -55,11 +56,11 @@ export function AnalysisScreen() {
   // Waits at 99 % if the analysis takes longer than the animation.
   const shown = Math.min(result ? 1 : 0.99, progress);
   const chips: ScanChip[] = [
-    { label: t('exercises:bench-press.name'), x: 14, y: 176, duration: 3 },
+    { label: exerciseName('bench-press', i18n.language), x: 14, y: 176, duration: 3 },
     { label: '4 × 8', x: 278, y: 150, accent: true, duration: 3.6, delay: 0.6 },
     { label: formatWeight(80, unitSystem), x: 292, y: 300, duration: 4.1, delay: 1.1 },
     { label: `${short[2]} · Pull`, x: 8, y: 452, duration: 3.3, delay: 0.3 },
-    { label: t('exercises:pull-up.name'), x: 236, y: 520, duration: 3.9, delay: 0.9 },
+    { label: exerciseName('pull-up', i18n.language), x: 236, y: 520, duration: 3.9, delay: 0.9 },
   ];
 
   return (

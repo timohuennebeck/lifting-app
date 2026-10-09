@@ -5,7 +5,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useTranslation } from 'react-i18next';
 
 import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
-import type { ExerciseId } from '@/shared/data/exercises';
+import { exerciseName as nameOf } from '@/shared/data/exercises';
 import { restSecondsFor } from '@/shared/data/templates';
 import { addWorkoutExercise, useWorkout, type WorkoutDetail } from '@/shared/data/workouts';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
@@ -37,7 +37,7 @@ interface LiveWorkoutProps {
 }
 
 function LiveWorkout({ workout }: LiveWorkoutProps) {
-  const { t } = useTranslation(['workout', 'exercises', 'common']);
+  const { t, i18n } = useTranslation(['workout', 'common']);
   const userId = useUserId();
   const [record, setRecord] = useState<RecordHit | null>(null);
   const [sheet, setSheet] = useState<SheetKind | null>(null);
@@ -112,7 +112,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     ]);
   };
 
-  const exerciseName = exercise ? t(`exercises:${exercise.exerciseId as ExerciseId}.name`) : '';
+  const exerciseName = exercise ? nameOf(exercise.exerciseId, i18n.language) : '';
   const usedIds = workout.exercises.map((e) => e.exerciseId);
 
   const primary =
@@ -180,6 +180,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                 <View onLayout={(e) => (layout.current.table = e.nativeEvent.layout.y)}>
                   <SetTable
                     exercise={exercise}
+                    measures={live.measures}
                     last={live.last}
                     units={live.units}
                     onSelect={onSelect}

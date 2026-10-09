@@ -20,29 +20,33 @@ export interface SetDraft extends PlanSetDraft {
 export interface SetEditorRowProps {
   index: number;
   set: SetDraft;
+  /** Targets are seconds (planks): wider range and no RIR. */
+  timed: boolean;
   onChange: (patch: Partial<SetDraft>) => void;
   onRirPress: () => void;
   /** Undefined when the set can't be removed (last remaining set). */
   onRemove?: () => void;
 }
 
-interface RepsInputProps {
+interface TargetInputProps {
   value: number;
+  /** Largest value: 60 reps or 600 seconds. */
+  max: number;
   onChangeValue: (value: number) => void;
   onBlur: () => void;
   label: string;
 }
 
-/** Reps field: digits update the draft live; the row normalizes min ≤ max on blur. */
-function RepsInput({ value, onChangeValue, onBlur, label }: RepsInputProps) {
+/** Target field: digits update the draft live; the row normalizes min ≤ max on blur. */
+function TargetInput({ value, max, onChangeValue, onBlur, label }: TargetInputProps) {
   const [text, setText] = useState<string | null>(null);
   return (
     <TextInput
       value={text ?? String(value)}
       onChangeText={(next) => {
-        const digits = next.replace(/[^0-9]/g, '').slice(0, 2);
+        const digits = next.replace(/[^0-9]/g, '').slice(0, String(max).length);
         setText(digits);
-        if (digits) onChangeValue(clamp(Number(digits), 1, 60));
+        if (digits) onChangeValue(clamp(Number(digits), 1, max));
       }}
       onFocus={() => setText(String(value))}
       onBlur={() => {
@@ -61,8 +65,15 @@ function RepsInput({ value, onChangeValue, onBlur, label }: RepsInputProps) {
   );
 }
 
-/** One editable target set: min/max reps, RIR badge; swipe left to delete (00·P2 C·S). */
-export function SetEditorRow({ index, set, onChange, onRirPress, onRemove }: SetEditorRowProps) {
+/** One editable target set: min/max reps (or seconds), RIR badge; swipe left to delete (00·P2 C·S). */
+export function SetEditorRow({
+  index,
+  set,
+  timed,
+  onChange,
+  onRirPress,
+  onRemove,
+}: SetEditorRowProps) {
   const { t } = useTranslation('training');
   const accent = useAccentColor();
   const rir = editorRirStyle(set.rir, accent);
@@ -91,30 +102,37 @@ export function SetEditorRow({ index, set, onChange, onRirPress, onRemove }: Set
             {index + 1}
           </Text>
         </View>
-        <RepsInput
-          value={set.repsMin}
-          label={t('sets.min')}
-          onChangeValue={(repsMin) => onChange({ repsMin })}
-          onBlur={() => onChange({ repsMax: Math.max(set.repsMin, set.repsMax) })}
+        <TargetInput
+          value={set.targetMin}
+          max={timed ? 600 : 60}
+          label={t(timed ? 'sets.minSeconds' : 'sets.min')}
+          onChangeValue={(targetMin) => onChange({ targetMin })}
+          onBlur={() => onChange({ targetMax: Math.max(set.targetMin, set.targetMax) })}
         />
-        <RepsInput
-          value={set.repsMax}
-          label={t('sets.max')}
-          onChangeValue={(repsMax) => onChange({ repsMax })}
-          onBlur={() => onChange({ repsMin: Math.min(set.repsMin, set.repsMax) })}
+        <TargetInput
+          value={set.targetMax}
+          max={timed ? 600 : 60}
+          label={t(timed ? 'sets.maxSeconds' : 'sets.max')}
+          onChangeValue={(targetMax) => onChange({ targetMax })}
+          onBlur={() => onChange({ targetMin: Math.min(set.targetMin, set.targetMax) })}
         />
-        <PressableScale
-          haptic="select"
-          hitSlop={10}
-          accessibilityLabel={t('sets.rir')}
-          onPress={onRirPress}
-          className="size-7 items-center justify-center rounded-full"
-          style={{ backgroundColor: rir.bg }}
-        >
-          <Text variant="caption" style={{ color: rir.dark ? colors.onAccent : colors.fg }}>
-            {set.rir === null ? '–' : formatRir(set.rir)}
-          </Text>
-        </PressableScale>
+        {timed ? (
+          // Reps in reserve don't apply to holds; keep the column so rows stay aligned.
+          <View className="size-7" />
+        ) : (
+          <PressableScale
+            haptic="select"
+            hitSlop={10}
+            accessibilityLabel={t('sets.rir')}
+            onPress={onRirPress}
+            className="size-7 items-center justify-center rounded-full"
+            style={{ backgroundColor: rir.bg }}
+          >
+            <Text variant="caption" style={{ color: rir.dark ? colors.onAccent : colors.fg }}>
+              {set.rir === null ? '–' : formatRir(set.rir)}
+            </Text>
+          </PressableScale>
+        )}
       </View>
     </Swipeable>
   );

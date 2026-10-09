@@ -6,7 +6,8 @@ import { parseJson } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import { workoutExercises, workouts, workoutSets } from '@/shared/data/powersync/schema';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
-import { estimateOneRepMax, previousExercise, previousSet } from '@/shared/data/workouts';
+import { previousExercise, previousSet, setScore, setScoreSql } from '@/shared/data/workouts';
+import type { SetValues } from '@/shared/lib/format';
 
 const recordKeys = createQueryKeys('workoutRecords', {
   detail: (workoutId: string) => [workoutId],
@@ -14,17 +15,16 @@ const recordKeys = createQueryKeys('workoutRecords', {
 
 export interface WorkoutRecord {
   exerciseId: string;
-  weightKg: number;
-  reps: number;
-  previous: { weightKg: number; reps: number };
+  set: SetValues;
+  previous: SetValues;
 }
 
 const previousWorkout = alias(workouts, 'previous_workout');
 
-/** Best completed set (by estimated 1RM) of the same exercise from an earlier workout. */
+/** Best completed set (by `setScore`) of the same exercise from an earlier workout. */
 const previousBest = drizzle
   .select({
-    best: sql`json_object('weightKg', ${previousSet.weight_kg}, 'reps', ${previousSet.reps})`,
+    best: sql`json_object('weightKg', ${previousSet.weight_kg}, 'reps', ${previousSet.reps}, 'seconds', ${previousSet.seconds})`,
   })
   .from(previousSet)
   .innerJoin(previousExercise, eq(previousExercise.id, previousSet.workout_exercise_id))
@@ -33,13 +33,10 @@ const previousBest = drizzle
     and(
       eq(previousExercise.exercise_id, workoutExercises.exercise_id),
       isNotNull(previousSet.completed_at),
-      // "Mark as done" copies the last weight; exercises never logged have none to compare.
-      isNotNull(previousSet.weight_kg),
-      isNotNull(previousSet.reps),
       lt(previousWorkout.started_at, workouts.started_at),
     ),
   )
-  .orderBy(desc(sql`${previousSet.weight_kg} * (1 + ${previousSet.reps} / 30.0)`))
+  .orderBy(desc(setScoreSql(previousSet)))
   .limit(1);
 
 /** PR sets of one workout, each with the previous best as JSON. */
@@ -49,6 +46,7 @@ const recordsQuery = (workoutId: string) =>
       exercise_id: workoutExercises.exercise_id,
       weight_kg: workoutSets.weight_kg,
       reps: workoutSets.reps,
+      seconds: workoutSets.seconds,
       previous: sql<string | null>`${previousBest}`,
     })
     .from(workoutSets)
@@ -67,19 +65,12 @@ const recordsQuery = (workoutId: string) =>
 function toRecords(rows: RowOf<typeof recordsQuery>[]): WorkoutRecord[] {
   const best = new Map<string, WorkoutRecord>();
   for (const r of rows) {
-    const previous = parseJson<WorkoutRecord['previous'] | null>(r.previous, null);
+    const previous = parseJson<SetValues | null>(r.previous, null);
     if (!previous) continue;
-    // PR flags are only set on logged sets, which carry weight and reps.
-    const weightKg = r.weight_kg!;
-    const reps = r.reps!;
+    const set = { weightKg: r.weight_kg, reps: r.reps, seconds: r.seconds };
     const current = best.get(r.exercise_id);
-    if (
-      current &&
-      estimateOneRepMax(current.weightKg, current.reps) >= estimateOneRepMax(weightKg, reps)
-    ) {
-      continue;
-    }
-    best.set(r.exercise_id, { exerciseId: r.exercise_id, weightKg, reps, previous });
+    if (current && setScore(current.set) >= setScore(set)) continue;
+    best.set(r.exercise_id, { exerciseId: r.exercise_id, set, previous });
   }
   return [...best.values()];
 }

@@ -3,7 +3,7 @@ import { ScrollView, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
-import type { ExerciseId } from '@/shared/data/exercises';
+import { exerciseName } from '@/shared/data/exercises';
 import type { WorkoutExercise } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
@@ -23,7 +23,7 @@ export interface ExerciseStripProps {
 
 /** Thumbnail rail of the workout's exercises with progress bars and a "+" tile. */
 export function ExerciseStrip({ exercises, currentIndex, onSelect, onAdd }: ExerciseStripProps) {
-  const { t } = useTranslation(['workout', 'exercises']);
+  const { t, i18n } = useTranslation('workout');
   const scroll = useRef<ScrollView>(null);
 
   // Keep the current exercise in view when it changes.
@@ -41,7 +41,7 @@ export function ExerciseStrip({ exercises, currentIndex, onSelect, onAdd }: Exer
       {exercises.map((exercise, i) => {
         const current = i === currentIndex;
         const done = exercise.sets.length > 0 && exercise.sets.every((s) => s.completedAt);
-        const name = t(`exercises:${exercise.exerciseId as ExerciseId}.name`);
+        const name = exerciseName(exercise.exerciseId, i18n.language);
         return (
           <PressableScale
             key={exercise.id}

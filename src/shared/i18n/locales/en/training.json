@@ -89,6 +89,8 @@
     "set": "Set",
     "min": "Min",
     "max": "Max",
+    "minSeconds": "Min (s)",
+    "maxSeconds": "Max (s)",
     "rir": "RIR",
     "addSet": "Add set",
     "removeSet": "Remove set",

@@ -5,7 +5,7 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ExercisePickerSheet } from '@/features/exercises/components/exercise-picker-sheet';
-import type { ExerciseId } from '@/shared/data/exercises';
+import { exerciseName } from '@/shared/data/exercises';
 import { muscleShares } from '@/shared/data/muscles';
 import {
   estimateMinutes,
@@ -48,7 +48,7 @@ type PickerState = { mode: 'add' } | { mode: 'swap'; templateExerciseId: string 
 /** Training overview with plan bar, muscles, editable exercise list and start CTA (03·0b). */
 export function TemplateScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { t } = useTranslation(['training', 'common', 'exercises']);
+  const { t, i18n } = useTranslation(['training', 'common']);
   const insets = useSafeAreaInsets();
   const { data, isLoading } = useTemplateDetail(id);
   // Keep showing the previous training while a plan-bar switch loads the next one.
@@ -77,7 +77,6 @@ export function TemplateScreen() {
     ? (collections.find((c) => c.id === collectionId)?.name ?? '')
     : t('list.noCollection');
   const menuIndex = menuShown ? exercises.findIndex((e) => e.id === menuShown.id) : -1;
-  const exerciseName = (exerciseId: string) => t(`exercises:${exerciseId as ExerciseId}.name`);
 
   const onPick = async (exerciseId: string) => {
     if (!template || !picker) return;
@@ -232,7 +231,7 @@ export function TemplateScreen() {
       <ExerciseMenuSheet
         visible={!!menuFor}
         onClose={() => setMenuFor(null)}
-        title={menuShown ? exerciseName(menuShown.exerciseId) : ''}
+        title={menuShown ? exerciseName(menuShown.exerciseId, i18n.language) : ''}
         canMoveUp={menuIndex > 0}
         canMoveDown={menuIndex >= 0 && menuIndex < exercises.length - 1}
         onAction={onMenuAction}

@@ -56,7 +56,7 @@ export function WeightKeypad({ onConfirm, onLayout }: WeightKeypadProps) {
   const pressKey = useWorkoutSessionStore((s) => s.pressKey);
   const pressBackspace = useWorkoutSessionStore((s) => s.pressBackspace);
   const closeKeypad = useWorkoutSessionStore((s) => s.closeKeypad);
-  const isWeight = field === 'kg';
+  const isWeight = field === 'weight';
   const separator = decimalSeparator();
 
   // Swipe the panel down to close it.
@@ -90,7 +90,7 @@ export function WeightKeypad({ onConfirm, onLayout }: WeightKeypadProps) {
           <View className="h-1.25 w-9 rounded-full bg-track" />
         </PressableScale>
         <Text variant="overline" tone="subtle" className="px-1">
-          {isWeight ? t('keypad.weight') : t('keypad.reps')}
+          {t(`keypad.${field}`)}
         </Text>
         <View className="flex-row gap-1.5">
           <View className="flex-1 gap-1.5">

@@ -89,6 +89,8 @@
     "set": "Série",
     "min": "Mín",
     "max": "Máx",
+    "minSeconds": "Mín (s)",
+    "maxSeconds": "Máx (s)",
     "rir": "RIR",
     "addSet": "Adicionar série",
     "removeSet": "Remover série",

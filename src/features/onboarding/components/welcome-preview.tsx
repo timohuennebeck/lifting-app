@@ -12,7 +12,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { getExercise } from '@/shared/data/exercises';
+import { exerciseName, getExercise } from '@/shared/data/exercises';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -81,8 +81,7 @@ interface PreviewExerciseProps {
 }
 
 function PreviewExercise({ id, reps, rir, last }: PreviewExerciseProps) {
-  const { t } = useTranslation('exercises');
-  const { t: tm } = useTranslation('muscles');
+  const { t: tm, i18n } = useTranslation('muscles');
   const exercise = getExercise(id);
   const muscles = Object.entries(exercise?.muscles ?? {}) as [MuscleId, number][];
   return (
@@ -95,7 +94,7 @@ function PreviewExercise({ id, reps, rir, last }: PreviewExerciseProps) {
       <View className="min-w-0 flex-1 gap-2.5">
         <View className="flex-row items-start gap-2.5">
           <Text variant="label" className="flex-1 pt-1.25 text-base leading-5">
-            {t(`${id}.name`)}
+            {exerciseName(id, i18n.language)}
           </Text>
           <View className="size-8 items-center justify-center">
             <Icon name="more" size={16} color={colors.fgSoft} />

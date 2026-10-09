@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { type ExerciseId, getExercise } from '@/shared/data/exercises';
+import { exerciseInstructions, exerciseName, getExercise } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { useExerciseHistory } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
@@ -15,7 +15,6 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { exerciseMuscles, primaryGroup } from '../lib/muscle-groups';
-import { TECHNIQUE_OF } from '../lib/technique';
 import { ExerciseHistoryList } from './exercise-history-list';
 import { ExerciseThumb } from './exercise-thumb';
 
@@ -38,7 +37,7 @@ const HERO_FADE: GradientStop[] = [
 
 /** Exercise detail (design 06e): photo, worked muscles, technique steps and history. */
 export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDetailProps) {
-  const { t } = useTranslation(['exercises', 'muscles', 'common']);
+  const { t, i18n } = useTranslation(['exercises', 'muscles', 'common']);
   const insets = useSafeAreaInsets();
   const [tab, setTab] = useState<Tab>('exercise');
   const exercise = getExercise(exerciseId);
@@ -46,10 +45,9 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
   const history = useExerciseHistory(exerciseId).data ?? [];
   if (!exercise) return null;
 
-  const id = exerciseId as ExerciseId;
-  const name = t(`exercises:${id}.name`);
-  const muscles = exerciseMuscles(id);
-  const steps = t(`exercises:technique.${TECHNIQUE_OF[id]}`, { returnObjects: true });
+  const name = exerciseName(exerciseId, i18n.language);
+  const muscles = exerciseMuscles(exerciseId);
+  const steps = exerciseInstructions(exerciseId, i18n.language);
   const view = muscles[0] ? MUSCLE_CARDS[muscles[0]].view : 'front';
 
   return (
@@ -64,7 +62,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
           />
         ) : (
           <ExerciseThumb
-            exerciseId={id}
+            exerciseId={exerciseId}
             name={name}
             className="absolute inset-0 h-auto w-auto rounded-none"
             initialsClassName="text-[64px] leading-16"
@@ -83,7 +81,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
             {name}
           </Text>
           <Text variant="label" tone="muted" className="mt-2 font-inter">
-            {`${t(`exercises:equipment.${exercise.equipment}`)} · ${t(`exercises:groups.${primaryGroup(id)}`)}`}
+            {`${t(`exercises:equipment.${exercise.equipment}`)} · ${t(`exercises:groups.${primaryGroup(exerciseId)}`)}`}
           </Text>
         </View>
       </View>

@@ -1,4 +1,5 @@
 export const MINUTE_MS = 60_000;
+export const HOUR_MS = 60 * MINUTE_MS;
 export const DAY_MS = 86_400_000;
 
 /** Monday-based weekday index (0 = Monday … 6 = Sunday). */

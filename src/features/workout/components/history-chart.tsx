@@ -4,26 +4,29 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Svg, { Circle, Defs, LinearGradient, Path, Stop } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
 
-import { formatShortDate, formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { formatShortDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
 import { colors, useAccentColor } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 import { buildLineChart, type ChartInput, nearestPoint } from '../lib/chart';
-import { fromDisplayWeight } from '../lib/weight';
 
 const HEIGHT = 120;
 const CHIP_WIDTH = 84;
 
+export type HistoryMetric = 'topWeight' | 'topReps' | 'topSeconds';
+
 export interface HistoryChartProps {
-  /** Top weight per session in display units, oldest first. */
+  /** Best value per session (weight in display units, reps or seconds), oldest first. */
   data: ChartInput[];
-  units: UnitSystem;
+  metric: HistoryMetric;
+  /** Formats a value or a difference, e.g. "82,5 kg", "12 reps" or "45 s". */
+  format: (value: number) => string;
 }
 
-/** Top weight per session; press and drag to read a session (design 03·C·2H·V5H). */
-export function HistoryChart({ data, units }: HistoryChartProps) {
+/** Best set per session; press and drag to read a session (design 03·C·2H·V5H). */
+export function HistoryChart({ data, metric, format }: HistoryChartProps) {
   const { t } = useTranslation('workout');
   const accent = useAccentColor();
   const [width, setWidth] = useState(0);
@@ -35,7 +38,6 @@ export function HistoryChart({ data, units }: HistoryChartProps) {
   // Hovering compares with the session before, otherwise with the range start.
   const base = active ? (hover ? points[hover - 1] : undefined) : points[0];
   const delta = shown && base ? shown.value - base.value : 0;
-  const weight = (v: number) => formatWeight(fromDisplayWeight(v, units), units);
 
   const track = (x: number) => {
     if (!points.length) return;
@@ -55,11 +57,11 @@ export function HistoryChart({ data, units }: HistoryChartProps) {
       <View className="gap-1">
         <View className="flex-row items-baseline gap-2">
           <Text className="font-inter-semibold text-[28px] leading-7.5">
-            {shown ? weight(shown.value) : '–'}
+            {shown ? format(shown.value) : '–'}
           </Text>
           {shown && base && points.length > 1 ? (
             <Text variant="label" tone="accent">
-              {`${delta >= 0 ? '+' : '−'}${weight(Math.abs(delta))}`}
+              {`${delta >= 0 ? '+' : '−'}${format(Math.abs(delta))}`}
             </Text>
           ) : null}
         </View>
@@ -67,10 +69,10 @@ export function HistoryChart({ data, units }: HistoryChartProps) {
           {active ? (
             <>
               <Text variant="caption">{formatShortDate(active.time)}</Text>
-              {` · ${t('history.topWeightShort')}`}
+              {` · ${t(`history.${metric}Short`)}`}
             </>
           ) : (
-            t('history.topWeight')
+            t(`history.${metric}`)
           )}
         </Text>
       </View>

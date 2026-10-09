@@ -1,14 +1,10 @@
-import { and, desc, eq, inArray, isNotNull, ne, sql } from 'drizzle-orm';
+import { and, desc, eq, isNotNull, ne, sql } from 'drizzle-orm';
 
+import { measuresOf } from '@/shared/data/exercises';
 import { nowIso } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import { templates, workoutExercises, workouts, workoutSets } from '@/shared/data/powersync/schema';
-import {
-  insertWorkout,
-  previousExercise,
-  previousSet,
-  workoutExerciseIds,
-} from '@/shared/data/workouts';
+import { insertWorkout, previousExercise, previousSet } from '@/shared/data/workouts';
 import { MINUTE_MS } from '@/shared/lib/date';
 
 /** Moves a template to another Monday-based weekday. */
@@ -45,9 +41,9 @@ function lastWeightOutside(workoutId: string) {
 }
 
 /**
- * Logs a planned template as done without live tracking: every set is
- * completed with its target reps and the exercise's last logged weight,
- * dated to `day` at the current time.
+ * Logs a planned template as done without live tracking: every set is completed with its
+ * target reps (or seconds) and the exercise's last logged weight, dated to `day` at the
+ * current time.
  */
 export async function markTemplateDone(
   userId: string,
@@ -63,14 +59,24 @@ export async function markTemplateDone(
   // One transaction, so the workout never shows up as running or half-written.
   return drizzle.transaction(async (tx) => {
     const workoutId = await insertWorkout(tx, userId, name, templateId);
-    await tx
-      .update(workoutSets)
-      .set({
-        reps: sql`coalesce(${workoutSets.target_max}, ${workoutSets.target_min}, 0)`,
-        completed_at: end.toISOString(),
-        weight_kg: sql`${lastWeightOutside(workoutId)}`,
-      })
-      .where(inArray(workoutSets.workout_exercise_id, workoutExerciseIds(workoutId)));
+    const target = sql<number>`coalesce(${workoutSets.target_max}, ${workoutSets.target_min})`;
+    const exercises = await tx
+      .select({ id: workoutExercises.id, exercise_id: workoutExercises.exercise_id })
+      .from(workoutExercises)
+      .where(eq(workoutExercises.workout_id, workoutId));
+    // Each exercise fills only the boxes it has.
+    for (const exercise of exercises) {
+      const measures = measuresOf(exercise.exercise_id);
+      await tx
+        .update(workoutSets)
+        .set({
+          completed_at: end.toISOString(),
+          weight_kg: measures.includes('weight') ? sql`${lastWeightOutside(workoutId)}` : null,
+          reps: measures.includes('reps') ? sql`coalesce(${target}, 0)` : null,
+          seconds: measures.includes('seconds') ? target : null,
+        })
+        .where(eq(workoutSets.workout_exercise_id, exercise.id));
+    }
     await tx
       .update(workouts)
       .set({ started_at: start.toISOString(), finished_at: end.toISOString() })

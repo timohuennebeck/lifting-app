@@ -22,6 +22,9 @@
     "kg": "kg",
     "lb": "lb",
     "cm": "cm",
+    "sec": "s",
+    "reps_one": "{{count}} rep",
+    "reps_other": "{{count}} reps",
     "min": "min",
     "minShort": "Min"
   },

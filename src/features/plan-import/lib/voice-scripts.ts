@@ -1,5 +1,3 @@
-import type { ExerciseId } from '@/shared/data/exercises';
-
 import { readSets } from './mock-import-data';
 import type { ImportedPlan } from './plan-import-service';
 
@@ -11,8 +9,8 @@ export interface VoiceScript {
   weekday: number;
   /** Day name used when that weekday has no training yet (`planImport:voice.days.*`). */
   dayName: VoiceDayName;
-  remove: ExerciseId[];
-  add: { exerciseId: ExerciseId; sets: number; reps: number }[];
+  remove: string[];
+  add: { exerciseId: string; sets: number; reps: number }[];
 }
 
 /**
@@ -83,7 +81,7 @@ export function applyVoiceScript(plan: ImportedPlan, script: VoiceScript, newDay
   }
   const target = day;
   target.exercises = target.exercises.filter(
-    (e) => !script.remove.includes(e.exerciseId as ExerciseId),
+    (e) => !script.remove.includes(e.exerciseId as string),
   );
   for (const { exerciseId, sets, reps } of script.add) {
     if (target.exercises.some((e) => e.exerciseId === exerciseId)) continue;

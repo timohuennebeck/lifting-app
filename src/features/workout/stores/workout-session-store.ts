@@ -1,11 +1,13 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+import type { Measure } from '@/shared/data/exercises';
 import { zustandStorage } from '@/shared/lib/storage';
 
 import { appendKey, backspace, type KeypadKey } from '../lib/keypad';
 
-export type SetField = 'kg' | 'reps';
+/** The box being typed into: one per measure of the exercise. */
+export type SetField = Measure;
 export type MiddleColumn = 'targets' | 'last';
 
 interface WorkoutSessionState {
@@ -22,7 +24,7 @@ interface WorkoutSessionState {
   column: MiddleColumn;
   attach: (workoutId: string) => void;
   goTo: (exerciseIndex: number) => void;
-  select: (setId: string, input: Record<SetField, string>, field?: SetField) => void;
+  select: (setId: string, input: Record<SetField, string>, field: SetField) => void;
   focusField: (field: SetField) => void;
   closeKeypad: () => void;
   pressKey: (key: KeypadKey) => void;
@@ -37,8 +39,8 @@ interface WorkoutSessionState {
 const idle = {
   exerciseIndex: 0,
   selectedSetId: null,
-  field: 'kg' as SetField,
-  input: { kg: '', reps: '' },
+  field: 'weight' as SetField,
+  input: { weight: '', reps: '', seconds: '' },
   pristine: true,
   restEndsAt: null,
   restSeconds: 0,
@@ -59,15 +61,14 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
         ),
       goTo: (exerciseIndex) =>
         set({ exerciseIndex: Math.max(0, exerciseIndex), selectedSetId: null }),
-      select: (selectedSetId, input, field = 'kg') =>
-        set({ selectedSetId, input, field, pristine: true }),
+      select: (selectedSetId, input, field) => set({ selectedSetId, input, field, pristine: true }),
       focusField: (field) => set({ field, pristine: true }),
       closeKeypad: () => set({ selectedSetId: null }),
       pressKey: (key) =>
         set((s) => ({
           input: {
             ...s.input,
-            [s.field]: appendKey(s.input[s.field], key, s.field === 'kg', s.pristine),
+            [s.field]: appendKey(s.input[s.field], key, s.field === 'weight', s.pristine),
           },
           pristine: false,
         })),

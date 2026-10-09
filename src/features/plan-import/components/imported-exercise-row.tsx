@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
-import type { ExerciseId } from '@/shared/data/exercises';
+import { exerciseName, isTimed } from '@/shared/data/exercises';
 import { colors } from '@/shared/lib/theme';
 import { Chip } from '@/shared/ui/chip';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -34,8 +34,8 @@ export function ImportedExerciseRow({
   onConfirm,
   onPickAlternative,
 }: ImportedExerciseRowProps) {
-  const { t } = useTranslation(['planImport', 'exercises']);
-  const name = t(`exercises:${exercise.exerciseId as ExerciseId}.name`);
+  const { t, i18n } = useTranslation(['planImport']);
+  const name = exerciseName(exercise.exerciseId, i18n.language);
 
   return (
     <View
@@ -55,7 +55,7 @@ export function ImportedExerciseRow({
               {name}
             </Text>
             <Text variant="caption" tone="subtle" className="mt-0.5 font-inter">
-              {formatScheme(exercise.sets)}
+              {formatScheme(exercise.sets, isTimed(exercise.exerciseId))}
             </Text>
           </View>
         </PressableScale>
@@ -85,7 +85,7 @@ export function ImportedExerciseRow({
             {(exercise.alternatives ?? []).map((id) => (
               <Chip
                 key={id}
-                label={t(`exercises:${id as ExerciseId}.name`)}
+                label={exerciseName(id, i18n.language)}
                 onPress={() => onPickAlternative(id)}
               />
             ))}

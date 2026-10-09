@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
-import type { ExerciseId } from '@/shared/data/exercises';
+import { exerciseName } from '@/shared/data/exercises';
 import { formatSet, type UnitSystem } from '@/shared/lib/format';
 import { Text } from '@/shared/ui/text';
 
@@ -15,8 +15,8 @@ export interface RecordCardProps {
 
 /** New personal record with the previous best (design 03s·C). */
 export function RecordCard({ record, units }: RecordCardProps) {
-  const { t } = useTranslation(['workout', 'exercises']);
-  const name = t(`exercises:${record.exerciseId as ExerciseId}.name`);
+  const { t, i18n } = useTranslation('workout');
+  const name = exerciseName(record.exerciseId, i18n.language);
   return (
     <View className="flex-row items-center gap-3.5 py-1.5">
       <ExerciseThumb
@@ -32,10 +32,10 @@ export function RecordCard({ record, units }: RecordCardProps) {
           {name}
         </Text>
         <View className="flex-row flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
-          <Text variant="headline">{formatSet(record.weightKg, record.reps, units)}</Text>
+          <Text variant="headline">{formatSet(record.set, units)}</Text>
           <Text tone="subtle" className="text-sm leading-4.5">
             {t('summary.previously', {
-              value: formatSet(record.previous.weightKg, record.previous.reps, units),
+              value: formatSet(record.previous, units),
             })}
           </Text>
         </View>

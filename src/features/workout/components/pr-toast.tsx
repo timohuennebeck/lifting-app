@@ -19,7 +19,7 @@ export interface PrToastProps {
   onHide: () => void;
 }
 
-/** "New record" toast shown when a logged set beats the best estimated 1RM. */
+/** "New record" toast shown when a logged set beats the exercise's best set. */
 export function PrToast({ record, units, onHide }: PrToastProps) {
   const { t } = useTranslation('workout');
   const insets = useSafeAreaInsets();
@@ -51,7 +51,7 @@ export function PrToast({ record, units, onHide }: PrToastProps) {
         <View>
           <Text variant="label">{t('record.title')}</Text>
           <Text variant="caption" tone="subtle" className="font-inter">
-            {formatSet(record.kg, record.reps, units)}
+            {formatSet(record, units)}
           </Text>
         </View>
       </View>

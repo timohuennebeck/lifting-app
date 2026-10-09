@@ -1,284 +1,190 @@
 import type { ImageSourcePropType } from 'react-native';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
-import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
+import { env } from '@/shared/config/env';
+import { i18n } from '@/shared/i18n';
+import { zustandStorage } from '@/shared/lib/storage';
+import { MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map/body-paths';
+
+import snapshot from './exercise-catalog.json';
+
+// The catalog lives in Supabase (`public.exercises`). The app ships a snapshot of it for the
+// first launch and offline use, and `useCatalogRefresh` adds newer rows from the API.
 
 export type Equipment = 'barbell' | 'dumbbell' | 'machine' | 'cable' | 'bodyweight';
 
-export interface Exercise {
-  id: ExerciseId;
+/** What one set records; the workout screen shows one box per measure. */
+export type Measure = 'weight' | 'reps' | 'seconds';
+
+export interface TechniqueStep {
+  title: string;
+  text: string;
+}
+
+/** A row of `public.exercises` as the API returns it. */
+export interface ExerciseRow {
+  id: string;
+  name: Record<string, string>;
+  instructions: Record<string, TechniqueStep[]>;
   equipment: Equipment;
+  measures: Measure[];
+  muscles: Record<string, number>;
+  rest_seconds: number;
+  image_path: string | null;
+  video_path: string | null;
+  is_active: boolean;
+  updated_at: string;
+}
+
+export interface Exercise {
+  id: string;
+  equipment: Equipment;
+  /** {weight, reps}, {reps}, {seconds} or {weight, seconds}, in display order. */
+  measures: Measure[];
   image: ImageSourcePropType | null;
   /** Default rest between sets, in seconds. */
   restSeconds: number;
   /** Share of the training stimulus per muscle; values sum to 1. */
   muscles: Partial<Record<MuscleId, number>>;
+  /** Inactive exercises stay for history but aren't offered anymore. */
+  isActive: boolean;
 }
 
-export const EXERCISE_IDS = [
-  'bench-press',
-  'close-grip-bench-press',
-  'incline-dumbbell-press',
-  'dumbbell-shoulder-press',
-  'seated-shoulder-press',
-  'arnold-press',
-  'lateral-raise',
-  'front-raise',
-  'reverse-fly',
-  'upright-row',
-  'face-pull',
-  'cable-crossover',
-  'dip',
-  'push-up',
-  'triceps-pushdown',
-  'french-press',
-  'pull-up',
-  'chin-up',
-  'lat-pulldown',
-  'seated-cable-row',
-  't-bar-row',
-  'deadlift',
-  'hammer-curl',
-  'dumbbell-curl',
-  'squat',
-  'hack-squat',
-  'leg-press',
-  'romanian-deadlift',
-  'lunge',
-  'leg-extension',
-  'calf-raise',
-  'plank',
-] as const;
-export type ExerciseId = (typeof EXERCISE_IDS)[number];
-
-// Local catalog; names live in the `exercises` i18n namespace under `<id>.name`.
-// Photos follow the prototype: close variants share one (e.g. all bench presses).
-export const EXERCISES: Record<ExerciseId, Exercise> = {
-  'bench-press': {
-    id: 'bench-press',
-    equipment: 'barbell',
-    image: require('@/assets/images/exercises/close-grip-bench-press.png'),
-    restSeconds: 120,
-    muscles: { chest: 0.6, triceps: 0.25, front_delts: 0.15 },
-  },
-  'close-grip-bench-press': {
-    id: 'close-grip-bench-press',
-    equipment: 'machine',
-    image: require('@/assets/images/exercises/close-grip-bench-press.png'),
-    restSeconds: 120,
-    muscles: { chest: 0.45, triceps: 0.35, front_delts: 0.2 },
-  },
-  'incline-dumbbell-press': {
-    id: 'incline-dumbbell-press',
-    equipment: 'dumbbell',
-    image: require('@/assets/images/exercises/incline-dumbbell-press.png'),
-    restSeconds: 90,
-    muscles: { chest: 0.55, front_delts: 0.3, triceps: 0.15 },
-  },
-  'dumbbell-shoulder-press': {
-    id: 'dumbbell-shoulder-press',
-    equipment: 'dumbbell',
-    image: require('@/assets/images/exercises/overhead-press.png'),
-    restSeconds: 120,
-    muscles: { front_delts: 0.55, side_delts: 0.2, triceps: 0.25 },
-  },
-  'seated-shoulder-press': {
-    id: 'seated-shoulder-press',
-    equipment: 'machine',
-    image: require('@/assets/images/exercises/overhead-press.png'),
-    restSeconds: 120,
-    muscles: { front_delts: 0.55, side_delts: 0.2, triceps: 0.25 },
-  },
-  'arnold-press': {
-    id: 'arnold-press',
-    equipment: 'dumbbell',
-    image: require('@/assets/images/exercises/arnold-press.png'),
-    restSeconds: 90,
-    muscles: { front_delts: 0.5, side_delts: 0.3, triceps: 0.2 },
-  },
-  'lateral-raise': {
-    id: 'lateral-raise',
-    equipment: 'dumbbell',
-    image: require('@/assets/images/exercises/lateral-raise.png'),
-    restSeconds: 60,
-    muscles: { side_delts: 0.85, traps: 0.15 },
-  },
-  'front-raise': {
-    id: 'front-raise',
-    equipment: 'dumbbell',
-    image: null,
-    restSeconds: 60,
-    muscles: { front_delts: 0.85, side_delts: 0.15 },
-  },
-  'reverse-fly': {
-    id: 'reverse-fly',
-    equipment: 'dumbbell',
-    image: null,
-    restSeconds: 60,
-    muscles: { rear_delts: 0.7, upper_back: 0.3 },
-  },
-  'upright-row': {
-    id: 'upright-row',
-    equipment: 'barbell',
-    image: null,
-    restSeconds: 90,
-    muscles: { side_delts: 0.5, traps: 0.5 },
-  },
-  'face-pull': {
-    id: 'face-pull',
-    equipment: 'cable',
-    image: null,
-    restSeconds: 60,
-    muscles: { rear_delts: 0.5, upper_back: 0.3, traps: 0.2 },
-  },
-  'cable-crossover': {
-    id: 'cable-crossover',
-    equipment: 'cable',
-    image: require('@/assets/images/exercises/cable-crossover.png'),
-    restSeconds: 60,
-    muscles: { chest: 0.85, front_delts: 0.15 },
-  },
-  dip: {
-    id: 'dip',
-    equipment: 'bodyweight',
-    image: require('@/assets/images/exercises/dip.png'),
-    restSeconds: 90,
-    muscles: { chest: 0.45, triceps: 0.4, front_delts: 0.15 },
-  },
-  'push-up': {
-    id: 'push-up',
-    equipment: 'bodyweight',
-    image: require('@/assets/images/exercises/push-up.png'),
-    restSeconds: 60,
-    muscles: { chest: 0.55, triceps: 0.25, front_delts: 0.2 },
-  },
-  'triceps-pushdown': {
-    id: 'triceps-pushdown',
-    equipment: 'cable',
-    image: null,
-    restSeconds: 60,
-    muscles: { triceps: 1.0 },
-  },
-  'french-press': {
-    id: 'french-press',
-    equipment: 'barbell',
-    image: null,
-    restSeconds: 60,
-    muscles: { triceps: 1.0 },
-  },
-  'pull-up': {
-    id: 'pull-up',
-    equipment: 'bodyweight',
-    image: require('@/assets/images/exercises/pull-up.png'),
-    restSeconds: 120,
-    muscles: { lats: 0.55, biceps: 0.2, upper_back: 0.25 },
-  },
-  'chin-up': {
-    id: 'chin-up',
-    equipment: 'bodyweight',
-    image: require('@/assets/images/exercises/chin-up.png'),
-    restSeconds: 120,
-    muscles: { lats: 0.5, biceps: 0.35, upper_back: 0.15 },
-  },
-  'lat-pulldown': {
-    id: 'lat-pulldown',
-    equipment: 'cable',
-    image: require('@/assets/images/exercises/chin-up.png'),
-    restSeconds: 90,
-    muscles: { lats: 0.6, biceps: 0.2, upper_back: 0.2 },
-  },
-  'seated-cable-row': {
-    id: 'seated-cable-row',
-    equipment: 'cable',
-    image: null,
-    restSeconds: 90,
-    muscles: { upper_back: 0.45, lats: 0.35, biceps: 0.2 },
-  },
-  't-bar-row': {
-    id: 't-bar-row',
-    equipment: 'barbell',
-    image: null,
-    restSeconds: 90,
-    muscles: { upper_back: 0.5, lats: 0.3, biceps: 0.2 },
-  },
-  deadlift: {
-    id: 'deadlift',
-    equipment: 'barbell',
-    image: null,
-    restSeconds: 180,
-    muscles: { hamstrings: 0.3, glutes: 0.3, lower_back: 0.25, traps: 0.15 },
-  },
-  'hammer-curl': {
-    id: 'hammer-curl',
-    equipment: 'dumbbell',
-    image: null,
-    restSeconds: 60,
-    muscles: { biceps: 0.6, forearms: 0.4 },
-  },
-  'dumbbell-curl': {
-    id: 'dumbbell-curl',
-    equipment: 'dumbbell',
-    image: null,
-    restSeconds: 60,
-    muscles: { biceps: 0.85, forearms: 0.15 },
-  },
-  squat: {
-    id: 'squat',
-    equipment: 'barbell',
-    image: null,
-    restSeconds: 180,
-    muscles: { quads: 0.55, glutes: 0.3, adductors: 0.15 },
-  },
-  'hack-squat': {
-    id: 'hack-squat',
-    equipment: 'machine',
-    image: null,
-    restSeconds: 90,
-    muscles: { quads: 0.7, glutes: 0.3 },
-  },
-  'leg-press': {
-    id: 'leg-press',
-    equipment: 'machine',
-    image: null,
-    restSeconds: 120,
-    muscles: { quads: 0.6, glutes: 0.3, adductors: 0.1 },
-  },
-  'romanian-deadlift': {
-    id: 'romanian-deadlift',
-    equipment: 'barbell',
-    image: null,
-    restSeconds: 120,
-    muscles: { hamstrings: 0.55, glutes: 0.35, lower_back: 0.1 },
-  },
-  lunge: {
-    id: 'lunge',
-    equipment: 'dumbbell',
-    image: null,
-    restSeconds: 90,
-    muscles: { quads: 0.5, glutes: 0.4, adductors: 0.1 },
-  },
-  'leg-extension': {
-    id: 'leg-extension',
-    equipment: 'machine',
-    image: null,
-    restSeconds: 60,
-    muscles: { quads: 1.0 },
-  },
-  'calf-raise': {
-    id: 'calf-raise',
-    equipment: 'machine',
-    image: null,
-    restSeconds: 60,
-    muscles: { calves: 1.0 },
-  },
-  plank: {
-    id: 'plank',
-    equipment: 'bodyweight',
-    image: require('@/assets/images/exercises/plank.png'),
-    restSeconds: 60,
-    muscles: { abs: 0.7, obliques: 0.3 },
-  },
+// Photos bundled with the app; other paths load from the public bucket.
+const BUNDLED_MEDIA: Record<string, ImageSourcePropType> = {
+  'arnold-press.png': require('@/assets/images/exercises/arnold-press.png'),
+  'cable-crossover.png': require('@/assets/images/exercises/cable-crossover.png'),
+  'chin-up.png': require('@/assets/images/exercises/chin-up.png'),
+  'close-grip-bench-press.png': require('@/assets/images/exercises/close-grip-bench-press.png'),
+  'dip.png': require('@/assets/images/exercises/dip.png'),
+  'incline-dumbbell-press.png': require('@/assets/images/exercises/incline-dumbbell-press.png'),
+  'lateral-raise.png': require('@/assets/images/exercises/lateral-raise.png'),
+  'overhead-press.png': require('@/assets/images/exercises/overhead-press.png'),
+  'plank.png': require('@/assets/images/exercises/plank.png'),
+  'pull-up.png': require('@/assets/images/exercises/pull-up.png'),
+  'push-up.png': require('@/assets/images/exercises/push-up.png'),
 };
 
-export function getExercise(id: string): Exercise | undefined {
-  return EXERCISES[id as ExerciseId];
+const mediaSource = (path: string): ImageSourcePropType =>
+  BUNDLED_MEDIA[path] ?? {
+    uri: `${env.supabaseUrl}/storage/v1/object/public/exercise-media/${encodeURI(path)}`,
+  };
+
+/** Every measure this app version knows, in display order. */
+const MEASURES: Measure[] = ['weight', 'reps', 'seconds'];
+const MUSCLES: readonly string[] = MUSCLE_IDS;
+
+/** Rows this app version can show: known measures with exactly one of reps or seconds. */
+function isUsable(row: ExerciseRow) {
+  const { measures } = row;
+  return (
+    measures.every((m) => MEASURES.includes(m)) &&
+    measures.includes('reps') !== measures.includes('seconds')
+  );
 }
+
+const toMs = (iso: string) => Date.parse(iso) || 0;
+
+/** Merges rows into the catalog, keeping the newer version of each exercise. */
+export function mergeRows(rows: Record<string, ExerciseRow>, incoming: ExerciseRow[]) {
+  const next = { ...rows };
+  for (const row of incoming) {
+    const current = next[row.id];
+    if (isUsable(row) && (!current || toMs(row.updated_at) >= toMs(current.updated_at))) {
+      next[row.id] = row;
+    }
+  }
+  return next;
+}
+
+/** Newest `updated_at` in the catalog; the API is asked for rows changed after it. */
+export const latestUpdate = (rows: Record<string, ExerciseRow>) =>
+  Object.values(rows).reduce((max, r) => (toMs(r.updated_at) > toMs(max) ? r.updated_at : max), '');
+
+interface CatalogState {
+  rows: Record<string, ExerciseRow>;
+}
+
+const bundled = mergeRows({}, snapshot as unknown as ExerciseRow[]);
+
+export const useCatalogStore = create<CatalogState>()(
+  persist(() => ({ rows: bundled }), {
+    name: 'exercise-catalog',
+    storage: createJSONStorage(() => zustandStorage),
+    // An app update may bundle newer rows than the cache holds.
+    merge: (persisted, current) => ({
+      ...current,
+      rows: mergeRows(current.rows, Object.values((persisted as CatalogState | null)?.rows ?? {})),
+    }),
+  }),
+);
+
+const derived = new WeakMap<ExerciseRow, Exercise>();
+
+function toExercise(row: ExerciseRow): Exercise {
+  let exercise = derived.get(row);
+  if (!exercise) {
+    exercise = {
+      id: row.id,
+      equipment: row.equipment,
+      measures: MEASURES.filter((m) => row.measures.includes(m)),
+      image: row.image_path ? mediaSource(row.image_path) : null,
+      restSeconds: row.rest_seconds,
+      // Muscles a newer catalog added have no place on this app's body map yet.
+      muscles: Object.fromEntries(Object.entries(row.muscles).filter(([m]) => MUSCLES.includes(m))),
+      isActive: row.is_active,
+    };
+    derived.set(row, exercise);
+  }
+  return exercise;
+}
+
+export function getExercise(id: string): Exercise | undefined {
+  const row = useCatalogStore.getState().rows[id];
+  return row ? toExercise(row) : undefined;
+}
+
+/** Ids of the exercises users can pick (the catalog without retired ones). */
+export function activeExerciseIds(rows = useCatalogStore.getState().rows) {
+  return Object.values(rows)
+    .filter((r) => r.is_active)
+    .map((r) => r.id);
+}
+
+/** Text in the app language, falling back to English. */
+function localized<T>(texts: Record<string, T> | undefined, language: string) {
+  return texts?.[language] ?? texts?.en;
+}
+
+/** Localized exercise name; the id when the exercise isn't in the catalog. */
+export function exerciseName(id: string, language = i18n.language) {
+  return localized(useCatalogStore.getState().rows[id]?.name, language) ?? id;
+}
+
+export function exerciseInstructions(id: string, language = i18n.language): TechniqueStep[] {
+  return localized(useCatalogStore.getState().rows[id]?.instructions, language) ?? [];
+}
+
+const DEFAULT_MEASURES: Measure[] = ['weight', 'reps'];
+
+/** Boxes of a set in display order; exercises missing from the catalog log weight and reps. */
+export const measuresOf = (exerciseId: string): Measure[] =>
+  getExercise(exerciseId)?.measures ?? DEFAULT_MEASURES;
+
+export const hasMeasure = (exerciseId: string, measure: Measure) =>
+  measuresOf(exerciseId).includes(measure);
+
+/** Whether sets of the exercise are counted in seconds instead of reps. */
+export const isTimed = (exerciseId: string) => hasMeasure(exerciseId, 'seconds');
+
+export interface SetTargets {
+  /** Reps, or seconds for timed exercises. */
+  min: number;
+  max: number;
+  rir: number | null;
+}
+
+/** Targets of a new set: 8–12 reps at 2 RIR, or a 30–45 s hold (RIR is about reps). */
+export const defaultTargets = (exerciseId: string): SetTargets =>
+  isTimed(exerciseId) ? { min: 30, max: 45, rir: null } : { min: 8, max: 12, rir: 2 };

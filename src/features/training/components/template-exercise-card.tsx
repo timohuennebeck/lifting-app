@@ -2,9 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
-import type { ExerciseId } from '@/shared/data/exercises';
+import { exerciseName, isTimed } from '@/shared/data/exercises';
 import type { TemplateExerciseDetail } from '@/shared/data/templates';
-import { formatRepRange } from '@/shared/lib/format';
+import { formatTarget } from '@/shared/lib/format';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
@@ -19,8 +19,9 @@ export interface TemplateExerciseCardProps {
 
 /** Exercise row of the training overview: photo, name, target sets with RIR, muscles (03·0b). */
 export function TemplateExerciseCard({ exercise, onMenu, onPress }: TemplateExerciseCardProps) {
-  const { t } = useTranslation(['exercises', 'muscles', 'training']);
-  const name = t(`exercises:${exercise.exerciseId as ExerciseId}.name`);
+  const { t, i18n } = useTranslation(['muscles', 'training']);
+  const name = exerciseName(exercise.exerciseId, i18n.language);
+  const timed = isTimed(exercise.exerciseId);
   const { primary, secondary } = splitMuscles(exercise.exerciseId);
 
   return (
@@ -60,7 +61,7 @@ export function TemplateExerciseCard({ exercise, onMenu, onPress }: TemplateExer
                 </Text>
               </View>
               <Text variant="body" className="flex-1 text-sm text-fg-soft">
-                {formatRepRange(set.reps_min ?? 0, set.reps_max ?? set.reps_min ?? 0)}
+                {formatTarget(set.target_min, set.target_max, timed)}
               </Text>
               {set.rir != null ? <RirBadge rir={set.rir} /> : null}
             </View>

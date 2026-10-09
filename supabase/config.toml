@@ -118,12 +118,13 @@ enabled = true
 # The maximum file size allowed (e.g. "5MB", "500KB").
 file_size_limit = "50MiB"
 
-# Uncomment to configure local storage buckets
-# [storage.buckets.images]
-# public = false
-# file_size_limit = "50MiB"
-# allowed_mime_types = ["image/png", "image/jpeg"]
-# objects_path = "./images"
+# Exercise photos for the catalog (`exercises.image_path`), uploaded from the app's bundled copies.
+# `supabase seed buckets` uploads them locally; add `--linked` for the hosted project.
+[storage.buckets.exercise-media]
+public = true
+file_size_limit = "50MiB"
+allowed_mime_types = ["image/png", "image/jpeg", "image/webp", "video/mp4"]
+objects_path = "../assets/images/exercises"
 
 # Allow connections via S3 compatible clients
 [storage.s3_protocol]

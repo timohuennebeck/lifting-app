@@ -23,8 +23,8 @@ const EXERCISE_SECONDS = 150;
 const DEFAULT_REST = 90;
 
 export interface PlanSetDraft {
-  repsMin: number;
-  repsMax: number;
+  targetMin: number;
+  targetMax: number;
   rir: number | null;
 }
 
@@ -97,8 +97,8 @@ export async function insertTemplateSets(
       user_id: userId,
       template_exercise_id: templateExerciseId,
       position,
-      reps_min: set.repsMin,
-      reps_max: set.repsMax,
+      target_min: set.targetMin,
+      target_max: set.targetMax,
       rir: set.rir,
     })),
   );
@@ -257,7 +257,7 @@ export function useCollections() {
 
 export type TemplateSetDetail = Pick<
   TemplateSetRecord,
-  'id' | 'position' | 'reps_min' | 'reps_max' | 'rir'
+  'id' | 'position' | 'target_min' | 'target_max' | 'rir'
 >;
 
 export interface TemplateExerciseDetail {
@@ -287,7 +287,7 @@ const templateDetailQuery = (templateId: string) =>
         orderBy: asc(templateExercises.position),
         with: {
           sets: {
-            columns: { id: true, position: true, reps_min: true, reps_max: true, rir: true },
+            columns: { id: true, position: true, target_min: true, target_max: true, rir: true },
             orderBy: asc(templateSets.position),
           },
         },

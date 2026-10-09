@@ -2,7 +2,8 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useUserId } from '@/shared/stores/session-store';
-import type { ExerciseHistoryEntry, WorkoutExercise } from '@/shared/data/workouts';
+import type { Measure } from '@/shared/data/exercises';
+import type { ExerciseHistoryEntry, WorkoutExercise, WorkoutSet } from '@/shared/data/workouts';
 import { formatNumber, formatSet, type UnitSystem, weightUnit } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -12,13 +13,16 @@ import { Text } from '@/shared/ui/text';
 
 import { addWorkoutSet } from '../data/workout-mutations';
 import { displayInput } from '../lib/keypad';
+import { valueOf } from '../lib/set-input';
 import { suggestSet, targetLabel } from '../lib/suggest';
 import { decimalSeparator, formatWeightValue } from '../lib/weight';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
-import { SetRow } from './set-row';
+import { cellWidth, SetRow } from './set-row';
 
 export interface SetTableProps {
   exercise: WorkoutExercise;
+  /** Boxes per set, from the exercise's measures. */
+  measures: Measure[];
   last: ExerciseHistoryEntry | undefined;
   units: UnitSystem;
   onSelect: (index: number, field: SetField) => void;
@@ -32,6 +36,7 @@ const HEADER = 'font-inter-semibold text-[11px] leading-3.5 tracking-[0.9px] tex
 /** Logging table (design 03·C) with a TARGETS ⇄ LAST toggle in the header. */
 export function SetTable({
   exercise,
+  measures,
   last,
   units,
   onSelect,
@@ -47,6 +52,23 @@ export function SetTable({
   const column = useWorkoutSessionStore((s) => s.column);
   const toggleColumn = useWorkoutSessionStore((s) => s.toggleColumn);
   const separator = decimalSeparator();
+  const headers: Record<Measure, string> = {
+    weight: t(`common:units.${weightUnit(units)}`).toUpperCase(),
+    reps: t('table.reps'),
+    seconds: t('table.seconds'),
+  };
+
+  /** A box's text: the keypad buffer while editing, the logged value, or the suggested count. */
+  const cellValue = (set: WorkoutSet, field: Measure, editing: boolean, index: number) => {
+    if (editing) return field === 'weight' ? displayInput(input.weight, separator) : input[field];
+    if (field === 'weight') {
+      return set.completedAt && set.weightKg != null ? formatWeightValue(set.weightKg, units) : '';
+    }
+    const value = set.completedAt
+      ? valueOf(set, field)
+      : valueOf(suggestSet(exercise, index, last), field);
+    return value != null ? formatNumber(value, 0) : '';
+  };
 
   return (
     <View>
@@ -65,10 +87,11 @@ export function SetTable({
             <Icon name="swap" size={12} color={colors.fg} />
           </PressableScale>
         </View>
-        <Text className={`${HEADER} w-19.5 text-center`}>
-          {t(`common:units.${weightUnit(units)}`).toUpperCase()}
-        </Text>
-        <Text className={`${HEADER} w-19.5 text-center`}>{t('table.reps')}</Text>
+        {measures.map((m) => (
+          <Text key={m} className={`${HEADER} ${cellWidth(measures.length)} text-center`}>
+            {headers[m]}
+          </Text>
+        ))}
         <View className="w-7 items-end">
           <View className="size-6 rounded-full border-2 border-track" />
         </View>
@@ -80,30 +103,19 @@ export function SetTable({
           const previous = last?.sets[i];
           const middle =
             column === 'targets'
-              ? targetLabel(set)
+              ? targetLabel(set, exercise.exerciseId)
               : previous
-                ? formatSet(previous.weightKg, previous.reps, units)
+                ? formatSet(previous, units)
                 : null;
-          const suggested = done ? null : suggestSet(exercise, i, last);
-          const kg = selected
-            ? displayInput(input.kg, separator)
-            : done && set.weightKg != null
-              ? formatWeightValue(set.weightKg, units)
-              : '';
-          const reps = selected
-            ? input.reps
-            : done
-              ? String(set.reps ?? '')
-              : suggested?.reps != null
-                ? formatNumber(suggested.reps, 0)
-                : '';
           return (
             <View key={set.id} onLayout={(e) => onRowLayout?.(i, e.nativeEvent.layout.y)}>
               <SetRow
                 number={i + 1}
                 middle={middle}
-                kg={kg}
-                reps={reps}
+                cells={measures.map((field) => ({
+                  field,
+                  value: cellValue(set, field, selected, i),
+                }))}
                 rir={set.targetRir}
                 done={done}
                 record={done && set.isPr}

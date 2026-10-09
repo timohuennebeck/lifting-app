@@ -56,6 +56,25 @@ Users write `tickets` and `ticket_messages` from the app. The team works with th
   Update 1.4.3" / "Coming in update 1.4.3"), or `note` for custom text, shown as written (not translated).
 - Users can only reopen (logged as `kind = 'reopened'`); messages are append-only.
 
+## Exercise catalog (team side)
+
+Exercises live in `public.exercises`. Every install reads them, also logged out, and the app pulls
+changes hourly, so new exercises ship without a release. Edit them with the service role.
+
+- **`id`:** a slug such as `bench-press`. Workouts store it, so never rename or delete an exercise; set
+  `is_active = false` to hide it from the picker while history keeps its name.
+- **`name` / `instructions`:** per language (`en`, `de`, `pt-PT`, `pt-BR`); English is required and
+  the fallback. Instructions are a list of `{ "title", "text" }` steps.
+- **`equipment`, `muscles`:** codes the app translates. `muscles` maps body map regions to their
+  share of the work, e.g. `{"chest": 0.6, "triceps": 0.25, "front_delts": 0.15}`.
+- **`measures`:** what one set records, and so which boxes the workout screen shows:
+  `{weight,reps}` (kg × reps, also bodyweight moves with added weight), `{reps}` (push-ups),
+  `{seconds}` (planks) or `{weight,seconds}` (weighted holds).
+- **`image_path`:** a file in the public `exercise-media` bucket. `supabase seed buckets` uploads the
+  bundled photos (`--linked` for the hosted project).
+- **Before a release:** `npm run catalog:pull` refreshes the snapshot the app ships for its first
+  launch (`src/shared/data/exercise-catalog.json`).
+
 ## App config and legal documents (team side)
 
 Both are readable without an account (onboarding runs logged out) and written with the service role.

@@ -42,11 +42,13 @@ export function ExerciseHistoryList({ entries, units }: ExerciseHistoryListProps
               latest={i === 0}
               open={expanded}
               onToggle={() => setOpen(expanded ? null : entry.workoutId)}
-              title={formatSet(entry.topSet.weightKg, entry.topSet.reps, units)}
+              title={formatSet(entry.topSet, units)}
               stats={
                 <>
                   {minutes ? <Metric label={t('detail.minutes')} value={String(minutes)} /> : null}
-                  <Metric label={t('detail.volume')} value={formatNumber(entry.volumeKg, 0)} />
+                  {entry.volumeKg > 0 ? (
+                    <Metric label={t('detail.volume')} value={formatNumber(entry.volumeKg, 0)} />
+                  ) : null}
                   <Metric label={t('detail.pr')} value={String(prs)} highlight={prs > 0} />
                 </>
               }
@@ -54,7 +56,7 @@ export function ExerciseHistoryList({ entries, units }: ExerciseHistoryListProps
               renderSet={(s) => (
                 <>
                   <Text variant="label" className="flex-1 text-lg text-fg-soft">
-                    {formatSet(s.weightKg, s.reps, units)}
+                    {formatSet(s, units)}
                   </Text>
                   {s.rir !== null ? (
                     <View

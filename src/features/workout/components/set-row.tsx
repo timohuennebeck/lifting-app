@@ -29,8 +29,12 @@ function BlinkingCursor() {
   return <Animated.View className="h-5 w-0.5 rounded-full bg-accent" style={style} />;
 }
 
+/** Box width: one of two boxes, or a single box spanning both (planks, push-ups). */
+export const cellWidth = (count: number) => (count > 1 ? 'w-19.5' : 'w-41.5');
+
 interface CellProps {
   value: string;
+  className: string;
   active: boolean;
   pristine: boolean;
   label: string;
@@ -38,7 +42,7 @@ interface CellProps {
   children?: ReactNode;
 }
 
-function Cell({ value, active, pristine, label, onPress, children }: CellProps) {
+function Cell({ value, className, active, pristine, label, onPress, children }: CellProps) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -46,7 +50,8 @@ function Cell({ value, active, pristine, label, onPress, children }: CellProps) 
       accessibilityValue={{ text: value }}
       onPress={onPress}
       className={cn(
-        'relative h-11 w-19.5 flex-row items-center justify-center gap-0.5 rounded-xl bg-white/8',
+        'relative h-11 flex-row items-center justify-center gap-0.5 rounded-xl bg-white/8',
+        className,
         active && 'border-2 border-accent',
       )}
     >
@@ -67,12 +72,19 @@ function Cell({ value, active, pristine, label, onPress, children }: CellProps) 
   );
 }
 
+export interface SetCell {
+  field: SetField;
+  value: string;
+}
+
+const CELL_LABEL = { weight: 'weightCell', reps: 'repsCell', seconds: 'secondsCell' } as const;
+
 export interface SetRowProps {
   number: number;
   /** Targets ("7–9") or last time ("60 kg × 9"), whichever column is shown. */
   middle: string | null;
-  kg: string;
-  reps: string;
+  /** One box per measure of the exercise, e.g. KG and REPS, or only SEC. */
+  cells: SetCell[];
   rir: number | null;
   done: boolean;
   record: boolean;
@@ -83,12 +95,11 @@ export interface SetRowProps {
   onToggleDone: () => void;
 }
 
-/** One row of the logging table: SET · TARGETS/LAST · KG · REPS · done. */
+/** One row of the logging table: SET · TARGETS/LAST · KG · REPS (or SEC) · done. */
 export function SetRow({
   number,
   middle,
-  kg,
-  reps,
+  cells,
   rir,
   done,
   record,
@@ -102,7 +113,7 @@ export function SetRow({
   return (
     <Pressable
       accessibilityLabel={t('table.setLabel', { n: number })}
-      onPress={() => onSelect('kg')}
+      onPress={() => onSelect(cells[0].field)}
       className="h-14 flex-row items-center gap-2.5"
     >
       <View
@@ -120,22 +131,22 @@ export function SetRow({
           {middle ?? '–'}
         </Text>
       </View>
-      <Cell
-        value={kg}
-        active={selected && field === 'kg'}
-        pristine={pristine}
-        label={t('table.weightCell')}
-        onPress={() => onSelect('kg')}
-      />
-      <Cell
-        value={reps}
-        active={selected && field === 'reps'}
-        pristine={pristine}
-        label={t('table.repsCell')}
-        onPress={() => onSelect('reps')}
-      >
-        {rir != null ? <RirBadge rir={rir} className="absolute -right-1.75 -bottom-1.75" /> : null}
-      </Cell>
+      {cells.map((cell) => (
+        <Cell
+          key={cell.field}
+          value={cell.value}
+          className={cellWidth(cells.length)}
+          active={selected && field === cell.field}
+          pristine={pristine}
+          label={t(`table.${CELL_LABEL[cell.field]}`)}
+          onPress={() => onSelect(cell.field)}
+        >
+          {/* Reps in reserve belong to the reps box. */}
+          {cell.field === 'reps' && rir != null ? (
+            <RirBadge rir={rir} className="absolute -right-1.75 -bottom-1.75" />
+          ) : null}
+        </Cell>
+      ))}
       <PressableScale
         haptic={done ? 'tap' : 'press'}
         hitSlop={10}

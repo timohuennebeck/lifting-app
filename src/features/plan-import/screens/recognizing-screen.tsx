@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Svg, { Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
 
+import { exerciseName } from '@/shared/data/exercises';
 import { haptics } from '@/shared/lib/haptics';
 import { useAccentColor } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -29,7 +30,7 @@ const FRAME_OFFSET = 130;
 
 /** 06b-4: "recognizing" animation, then the spoken changes land in the plan. */
 export function RecognizingScreen() {
-  const { t } = useTranslation(['planImport', 'exercises', 'common']);
+  const { t } = useTranslation(['planImport', 'common']);
   const accent = useAccentColor();
   const plan = useImportStore((s) => s.plan);
   const take = useImportStore((s) => s.voiceTake);
@@ -63,8 +64,8 @@ export function RecognizingScreen() {
     `${long[script.weekday]} · ${dayName}`,
     ...script.remove
       .filter((id) => existing?.exercises.some((e) => e.exerciseId === id))
-      .map((id) => `− ${t(`exercises:${id}.name`)}`),
-    ...script.add.flatMap((e) => [t(`exercises:${e.exerciseId}.name`), `${e.sets} × ${e.reps}`]),
+      .map((id) => `− ${exerciseName(id)}`),
+    ...script.add.flatMap((e) => [exerciseName(e.exerciseId), `${e.sets} × ${e.reps}`]),
   ].slice(0, POSITIONS.length);
   const chips: ScanChip[] = labels.map((label, i) => ({
     label,

@@ -1,18 +1,16 @@
-import { getExercise } from '@/shared/data/exercises';
+import { getExercise, measuresOf } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { restSecondsFor } from '@/shared/data/templates';
 import { logSet, useExerciseHistory, type WorkoutDetail } from '@/shared/data/workouts';
+import type { SetValues } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 
 import { unlogSet } from '../data/workout-mutations';
-import { parseInput, toInput } from '../lib/keypad';
+import { parseSetInput, toSetInput } from '../lib/set-input';
 import { firstOpenSet, suggestSet } from '../lib/suggest';
-import { fromDisplayWeight, toDisplayWeight } from '../lib/weight';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
-export interface RecordHit {
-  kg: number;
-  reps: number;
+export interface RecordHit extends SetValues {
   at: number;
 }
 
@@ -31,25 +29,22 @@ export function useLiveWorkout(workout: WorkoutDetail, onRecord: (hit: RecordHit
   const doneSets = allSets.filter((s) => s.completedAt).length;
   const selectedIndex = exercise?.sets.findIndex((s) => s.id === selectedSetId) ?? -1;
   const openIndex = firstOpenSet(exercise);
-  const bodyweight = getExercise(exercise?.exerciseId ?? '')?.equipment === 'bodyweight';
+  const exerciseId = exercise?.exerciseId ?? '';
+  const measures = measuresOf(exerciseId);
+  const bodyweight = getExercise(exerciseId)?.equipment === 'bodyweight';
   const nextOpenExercise = [...exercises.keys()]
     .map((k) => (exerciseIndex + 1 + k) % exercises.length)
     .find((k) => k !== exerciseIndex && firstOpenSet(exercises[k]) >= 0);
 
-  const inputFor = (index: number) => {
-    const v = suggestSet(exercise, index, last);
-    return {
-      kg: v.kg == null ? '' : toInput(toDisplayWeight(v.kg, units)),
-      reps: toInput(v.reps),
-    };
-  };
+  const inputFor = (index: number) => toSetInput(suggestSet(exercise, index, last), units);
 
-  const selectSet = (index: number, field: SetField = 'kg') => {
+  const selectSet = (index: number, field: SetField = measures[0]) => {
     const set = exercise?.sets[index];
     if (set) useWorkoutSessionStore.getState().select(set.id, inputFor(index), field);
   };
 
-  async function commit(index: number, kgDisplay: number, reps: number) {
+  /** Logs set `index` with values in kg. */
+  async function commit(index: number, values: SetValues) {
     const set = exercise.sets[index];
     const store = useWorkoutSessionStore.getState();
     const editing = !!set.completedAt;
@@ -57,10 +52,9 @@ export function useLiveWorkout(workout: WorkoutDetail, onRecord: (hit: RecordHit
     if (!editing && next >= 0) {
       const nextSet = exercise.sets[next];
       const nextInput = inputFor(next);
-      store.select(nextSet.id, {
-        kg: nextSet.weightKg != null ? nextInput.kg : toInput(kgDisplay),
-        reps: nextInput.reps,
-      });
+      // An empty next set carries over the weight just logged.
+      if (nextSet.weightKg == null) nextInput.weight = toSetInput(values, units).weight;
+      store.select(nextSet.id, nextInput, measures[0]);
     } else {
       store.closeKeypad();
     }
@@ -68,21 +62,20 @@ export function useLiveWorkout(workout: WorkoutDetail, onRecord: (hit: RecordHit
     if (!editing && !workoutDone) {
       store.startRest(restSecondsFor(exercise.exerciseId, exercise.restSeconds));
     }
-    const kg = fromDisplayWeight(kgDisplay, units);
     let isPr: boolean;
     try {
-      isPr = await logSet(set.id, exercise.exerciseId, kg, reps);
+      isPr = await logSet(set.id, exercise.exerciseId, values);
     } catch (error) {
       // The keypad already moved on; reopen this set so the failed log isn't mistaken for saved.
       console.error(error);
       haptics.error();
       store.skipRest();
-      store.select(set.id, { kg: toInput(kgDisplay), reps: toInput(reps) });
+      store.select(set.id, toSetInput(values, units), measures[0]);
       return;
     }
     if (isPr && !set.isPr) {
       haptics.success();
-      onRecord({ kg, reps, at: Date.now() });
+      onRecord({ ...values, at: Date.now() });
     }
   }
 
@@ -90,14 +83,13 @@ export function useLiveWorkout(workout: WorkoutDetail, onRecord: (hit: RecordHit
   function confirmInput() {
     const { input, focusField } = useWorkoutSessionStore.getState();
     if (selectedIndex < 0) return;
-    const kg = parseInput(input.kg) ?? (bodyweight ? 0 : null);
-    const reps = parseInput(input.reps);
-    if (kg == null || !reps) {
+    const { values, missing } = parseSetInput(input, measures, bodyweight, units);
+    if (missing) {
       haptics.error();
-      focusField(kg == null ? 'kg' : 'reps');
+      focusField(missing);
       return;
     }
-    void commit(selectedIndex, kg, reps);
+    void commit(selectedIndex, values);
   }
 
   /** The round check at the end of a row: logs with the prefill, or re-opens a set. */
@@ -108,19 +100,18 @@ export function useLiveWorkout(workout: WorkoutDetail, onRecord: (hit: RecordHit
       return;
     }
     if (index === selectedIndex) return confirmInput();
-    const v = inputFor(index);
-    const kg = parseInput(v.kg) ?? (bodyweight ? 0 : null);
-    const reps = parseInput(v.reps);
-    if (kg == null || !reps) {
-      selectSet(index, kg == null ? 'kg' : 'reps');
+    const { values, missing } = parseSetInput(inputFor(index), measures, bodyweight, units);
+    if (missing) {
+      selectSet(index, missing);
       return;
     }
-    void commit(index, kg, reps);
+    void commit(index, values);
   }
 
   return {
     units,
     exercise,
+    measures,
     exerciseIndex,
     last,
     doneSets,

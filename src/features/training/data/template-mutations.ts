@@ -1,5 +1,6 @@
 import { and, eq, inArray } from 'drizzle-orm';
 
+import { defaultTargets, isTimed } from '@/shared/data/exercises';
 import { newId, nowIso } from '@/shared/data/json';
 import { nextPosition } from '@/shared/data/positions';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
@@ -19,12 +20,11 @@ import {
   type PlanSetDraft,
 } from '@/shared/data/templates';
 
-/** Default prescription for a freshly added exercise. */
-const NEW_EXERCISE_SETS: PlanSetDraft[] = Array.from({ length: 3 }, () => ({
-  repsMin: 8,
-  repsMax: 12,
-  rir: 2,
-}));
+/** Default prescription for a freshly added exercise: three sets at its default targets. */
+function newExerciseSets(exerciseId: string): PlanSetDraft[] {
+  const { min, max, rir } = defaultTargets(exerciseId);
+  return Array.from({ length: 3 }, () => ({ targetMin: min, targetMax: max, rir }));
+}
 
 async function touchTemplate(tx: Tx, templateId: string) {
   await tx.update(templates).set({ updated_at: nowIso() }).where(eq(templates.id, templateId));
@@ -145,19 +145,34 @@ export async function addTemplateExercise(userId: string, templateId: string, ex
     );
     await insertTemplateExercise(tx, userId, templateId, position, {
       exerciseId,
-      sets: NEW_EXERCISE_SETS,
+      sets: newExerciseSets(exerciseId),
     });
     await touchTemplate(tx, templateId);
   });
 }
 
-/** Replaces the exercise but keeps its sets and rest time. */
+/**
+ * Replaces the exercise but keeps its sets and rest time. Set targets reset when switching
+ * between reps and seconds.
+ */
 export async function swapTemplateExercise(templateExerciseId: string, exerciseId: string) {
   await drizzle.transaction(async (tx) => {
+    const previous = await tx
+      .select({ exercise_id: templateExercises.exercise_id })
+      .from(templateExercises)
+      .where(eq(templateExercises.id, templateExerciseId))
+      .get();
     await tx
       .update(templateExercises)
       .set({ exercise_id: exerciseId })
       .where(eq(templateExercises.id, templateExerciseId));
+    if (isTimed(previous?.exercise_id ?? '') !== isTimed(exerciseId)) {
+      const { min, max, rir } = defaultTargets(exerciseId);
+      await tx
+        .update(templateSets)
+        .set({ target_min: min, target_max: max, rir })
+        .where(eq(templateSets.template_exercise_id, templateExerciseId));
+    }
     await touchTemplate(tx, await templateOf(tx, templateExerciseId));
   });
 }

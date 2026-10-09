@@ -64,11 +64,18 @@ export function HistorySessionRow({
             icon="timer"
             value={`${minutesBetween(session.startedAt, session.finishedAt)} ${minLabel}`}
           />
-          <Stat icon="dumbbell" value={formatWeight(session.volumeKg, units)} />
+          {/* Volume only exists for weighted sets. */}
+          {session.volumeKg > 0 ? (
+            <Stat icon="dumbbell" value={formatWeight(session.volumeKg, units)} />
+          ) : null}
           <Stat
             icon="star"
             color={session.hasPr ? accent : colors.dim}
-            value={`${formatWeightValue(top.weightKg, units)} × ${top.reps}`}
+            value={
+              top.weightKg != null && top.reps != null
+                ? `${formatWeightValue(top.weightKg, units)} × ${top.reps}`
+                : formatSet(top, units)
+            }
           />
         </>
       }
@@ -76,7 +83,7 @@ export function HistorySessionRow({
       renderSet={(set) => (
         <>
           <Text variant="bodyStrong" className="flex-1 text-lg leading-5.5">
-            {formatSet(set.weightKg, set.reps, units)}
+            {formatSet(set, units)}
           </Text>
           {set.rir != null ? <RirBadge rir={set.rir} size={24} /> : null}
         </>
