@@ -48,7 +48,7 @@ export interface ExerciseResultsProps {
 /**
  * The exercises matching the search and the muscle chip picked above them: the trained ones
  * first, last done on top, with their heaviest set (★); then the others A–Z with the letter
- * index. A tap opens the exercise, on its history when it has one.
+ * index. A tap opens the exercise on its "Übung" tab.
  */
 export function ExerciseResults({ query, bottomInset }: ExerciseResultsProps) {
   const { t } = useTranslation(['exercises', 'common']);
@@ -133,14 +133,7 @@ export function ExerciseResults({ query, bottomInset }: ExerciseResultsProps) {
                 haptic="select"
                 activeScale={0.98}
                 accessibilityRole="button"
-                onPress={() =>
-                  // Trained: straight to the history with the records.
-                  router.push(
-                    item.record
-                      ? { pathname: '/exercise/[id]/history', params: { id: item.id } }
-                      : { pathname: '/exercise/[id]', params: { id: item.id } },
-                  )
-                }
+                onPress={() => router.push({ pathname: '/exercise/[id]', params: { id: item.id } })}
                 className="h-19.5 flex-row items-center gap-3.5"
               >
                 <ExerciseThumb exerciseId={item.id} name={item.name} />
