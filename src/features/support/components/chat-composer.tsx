@@ -55,7 +55,7 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
 
   return (
     <View className="px-3 pt-2">
-      <View className="gap-3.5 rounded-[28px] border-[0.5px] border-white/12 bg-tile px-2.5 pt-4 pb-2.5">
+      <View className="gap-3.5 rounded-[28px] bg-tile px-2.5 pt-4 pb-2.5">
         {draft.shots.length ? (
           <ScreenshotTiles
             draft={draft}
