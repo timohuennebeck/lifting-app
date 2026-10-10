@@ -30,28 +30,6 @@
     "units": "Unidades",
     "kilograms": "Quilogramas",
     "pounds": "Libras",
-    "account": {
-      "title": "Conta",
-      "hint": "Palavra-passe, email",
-      "email": "Alterar email",
-      "password": "Alterar palavra-passe",
-      "passwordHint": "Define uma nova palavra-passe"
-    },
-    "email": {
-      "title": "Alterar email",
-      "subtitle": "Enviamos um link para o teu endereço antigo e para o novo. Quando confirmares os dois, passa a valer o novo.",
-      "label": "Novo email",
-      "send": "Enviar links",
-      "sentTitle": "Verifica as tuas caixas de entrada",
-      "sent": "Confirma a alteração com os links enviados para {{old}} e {{new}}. Até lá, o teu endereço antigo continua ativo.",
-      "same": "Esse já é o teu email.",
-      "taken": "Este email já pertence a outra conta."
-    },
-    "password": {
-      "title": "Alterar palavra-passe",
-      "subtitle": "A partir de agora, entras com a nova palavra-passe.",
-      "label": "Nova palavra-passe"
-    },
     "links": {
       "help": "Ajuda",
       "privacy": "Privacidade",
@@ -62,7 +40,6 @@
     "signOutConfirm": {
       "title": "Terminar sessão?",
       "option": "Terminar sessão neste dispositivo",
-      "body": "Os teus dados de treino ficam guardados na tua conta. Podes voltar a entrar a qualquer momento.",
       "unsynced_one": "{{count}} alteração ainda não foi sincronizada. Terminar sessão mesmo assim? Vai perder-se.",
       "unsynced_other": "{{count}} alterações ainda não foram sincronizadas. Terminar sessão mesmo assim? Vão perder-se."
     },

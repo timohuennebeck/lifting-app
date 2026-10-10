@@ -12,7 +12,7 @@ export interface SignOutSheetProps {
   onSignOut: () => void;
 }
 
-/** "Abmelden": its one option comes selected, as in the other sheets; red if data would be lost. */
+/** Shown before signing out only when unsynced data would be lost; its one option comes selected. */
 export function SignOutSheet({ visible, onClose, unsynced, onSignOut }: SignOutSheetProps) {
   const { t } = useTranslation('profile');
   return (
@@ -26,12 +26,9 @@ export function SignOutSheet({ visible, onClose, unsynced, onSignOut }: SignOutS
       options={[
         {
           value: 'signOut',
-          tone: unsynced > 0 ? 'danger' : 'accent',
+          tone: 'danger',
           title: t('settings.signOutConfirm.option'),
-          description:
-            unsynced > 0
-              ? t('settings.signOutConfirm.unsynced', { count: unsynced })
-              : t('settings.signOutConfirm.body'),
+          description: t('settings.signOutConfirm.unsynced', { count: unsynced }),
           cta: t('settings.signOut'),
           renderIcon: (active) => (
             <Icon name="sign-out" size={18} color={active ? colors.bg : colors.fg} />

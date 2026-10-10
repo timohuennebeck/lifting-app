@@ -30,28 +30,6 @@
     "units": "Einheiten",
     "kilograms": "Kilogramm",
     "pounds": "Pfund",
-    "account": {
-      "title": "Konto",
-      "hint": "Passwort, E-Mail",
-      "email": "E-Mail ändern",
-      "password": "Passwort ändern",
-      "passwordHint": "Neues Passwort festlegen"
-    },
-    "email": {
-      "title": "E-Mail ändern",
-      "subtitle": "Wir schicken dir einen Link an deine alte und deine neue Adresse. Sobald du beide bestätigt hast, gilt die neue.",
-      "label": "Neue E-Mail",
-      "send": "Links senden",
-      "sentTitle": "Schau in deine Postfächer",
-      "sent": "Bestätige die Änderung über die Links an {{old}} und {{new}}. Bis dahin bleibt deine alte Adresse aktiv.",
-      "same": "Das ist schon deine E-Mail-Adresse.",
-      "taken": "Diese E-Mail gehört schon zu einem anderen Konto."
-    },
-    "password": {
-      "title": "Passwort ändern",
-      "subtitle": "Mit dem neuen Passwort meldest du dich ab jetzt an.",
-      "label": "Neues Passwort"
-    },
     "links": {
       "help": "Hilfe",
       "privacy": "Datenschutz",
@@ -62,7 +40,6 @@
     "signOutConfirm": {
       "title": "Abmelden?",
       "option": "Auf diesem Gerät abmelden",
-      "body": "Deine Trainingsdaten bleiben in deinem Konto gespeichert. Du kannst dich jederzeit wieder anmelden.",
       "unsynced_one": "{{count}} Änderung ist noch nicht synchronisiert. Trotzdem abmelden? Sie geht dabei verloren.",
       "unsynced_other": "{{count}} Änderungen sind noch nicht synchronisiert. Trotzdem abmelden? Sie gehen dabei verloren."
     },

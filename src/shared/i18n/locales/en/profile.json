@@ -30,28 +30,6 @@
     "units": "Units",
     "kilograms": "Kilograms",
     "pounds": "Pounds",
-    "account": {
-      "title": "Account",
-      "hint": "Password, email",
-      "email": "Change email",
-      "password": "Change password",
-      "passwordHint": "Set a new password"
-    },
-    "email": {
-      "title": "Change email",
-      "subtitle": "We'll send a link to your old and your new address. Once you've confirmed both, the new one applies.",
-      "label": "New email",
-      "send": "Send links",
-      "sentTitle": "Check your inboxes",
-      "sent": "Confirm the change with the links sent to {{old}} and {{new}}. Until then, your old address stays active.",
-      "same": "That's already your email address.",
-      "taken": "This email already belongs to another account."
-    },
-    "password": {
-      "title": "Change password",
-      "subtitle": "You'll sign in with the new password from now on.",
-      "label": "New password"
-    },
     "links": {
       "help": "Help",
       "privacy": "Privacy",
@@ -62,7 +40,6 @@
     "signOutConfirm": {
       "title": "Sign out?",
       "option": "Sign out on this device",
-      "body": "Your training data stays saved in your account. You can sign in again anytime.",
       "unsynced_one": "{{count}} change hasn't synced yet. Sign out anyway? It will be lost.",
       "unsynced_other": "{{count}} changes haven't synced yet. Sign out anyway? They'll be lost."
     },

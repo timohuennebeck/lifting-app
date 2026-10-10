@@ -318,20 +318,6 @@ const ICONS = {
     render: stroke('M1.5 4h13M6 4V2h4v2M3 4l1 12h8l1-12M6.5 7.5v5M9.5 7.5v5', 1.6),
   },
   pencil: { viewBox: '0 0 16 16', render: stroke('M11 2l3 3-8.5 8.5L2 14l.5-3.5z', 1.6) },
-  mail: {
-    viewBox: '0 0 18 14',
-    render: stroke(
-      'M2.5 1.5h13a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1zM2 2.5l7 5.25 7-5.25',
-      1.7,
-    ),
-  },
-  lock: {
-    viewBox: '0 0 16 18',
-    render: stroke(
-      'M3 8h10a1 1 0 0 1 1 1v6.5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1zM4.75 8V5.25a3.25 3.25 0 0 1 6.5 0V8',
-      1.7,
-    ),
-  },
   'sign-out': {
     viewBox: '0 0 18 18',
     render: stroke(

@@ -15,11 +15,9 @@ import { saveProfile, useProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
 import { detectLanguage } from '@/shared/i18n';
 import { haptics } from '@/shared/lib/haptics';
-import { colors } from '@/shared/lib/theme';
 import { requireUserId, useSessionStore } from '@/shared/stores/session-store';
 import { useSettingsStore } from '@/shared/stores/settings-store';
 import { Button } from '@/shared/ui/button';
-import { Icon } from '@/shared/ui/icon';
 import { LanguageFlag } from '@/shared/ui/language-flag';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
@@ -28,16 +26,13 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
-import { type AccountAction, AccountSheet } from '../components/account-sheet';
-import { ChangeEmailSheet } from '../components/change-email-sheet';
-import { ChangePasswordSheet } from '../components/change-password-sheet';
 import { DeleteAccountSheet } from '../components/delete-account-sheet';
 import { ProSection } from '../components/pro-section';
 import { SignOutSheet } from '../components/sign-out-sheet';
 import { UnitBadge } from '../components/unit-badge';
 import { deleteAccount } from '../lib/delete-account';
 
-type OpenSheet = 'account' | AccountAction | 'language' | 'signOut' | 'delete';
+type OpenSheet = 'language' | 'signOut' | 'delete';
 
 const LINKS: { key: 'help' | 'privacy' | 'terms'; href: Href }[] = [
   { key: 'help', href: '/support' },
@@ -59,21 +54,25 @@ export function SettingsScreen() {
   const units = profile?.unitSystem ?? 'metric';
   const close = () => setSheet(null);
 
-  const openSignOut = async () => {
-    // Signing out clears the local database and photo files, including anything not
-    // uploaded yet: queued changes, body-check photos and support screenshots.
+  const signOut = () => {
+    haptics.warning();
+    void supabase.auth.signOut();
+  };
+
+  // Signing out clears the local database and photo files, including anything not uploaded
+  // yet (queued changes, body-check photos, support screenshots): only then does it ask first.
+  const requestSignOut = async () => {
     const [{ count: changes }, photos] = await Promise.all([
       db.getUploadQueueStats(),
       countLocalPendingPhotos(requireUserId()),
     ]);
-    setUnsynced(changes + photos + useUploadQueueStore.getState().pending.length);
+    const count = changes + photos + useUploadQueueStore.getState().pending.length;
+    if (count === 0) {
+      signOut();
+      return;
+    }
+    setUnsynced(count);
     setSheet('signOut');
-  };
-
-  const signOut = () => {
-    close();
-    haptics.warning();
-    afterSheetClose(() => void supabase.auth.signOut());
   };
 
   const removeAccount = async () => {
@@ -104,24 +103,19 @@ export function SettingsScreen() {
       <Stack.Screen options={{ animation: 'slide_from_right', gestureEnabled: true }} />
 
       <View className="gap-2.5 px-4 pt-4">
-        <PressableScale
-          haptic="tap"
-          activeScale={0.98}
-          accessibilityRole="button"
-          onPress={() => setSheet('account')}
-          className="flex-row items-center gap-3.5 rounded-[22px] border border-white/8 bg-surface p-4"
-        >
+        <View className="flex-row items-center gap-3.5 rounded-[22px] border border-white/8 bg-surface p-4">
           <UserAvatar size={52} />
           <View className="min-w-0 flex-1 gap-0.5">
             <Text variant="bodyStrong" numberOfLines={1}>
               {profile?.firstName ?? ''}
             </Text>
-            <Text tone="subtle" className="text-sm" numberOfLines={1}>
-              {email ? `${email} · ${t('settings.account.hint')}` : t('settings.account.hint')}
-            </Text>
+            {email ? (
+              <Text tone="subtle" className="text-sm" numberOfLines={1}>
+                {email}
+              </Text>
+            ) : null}
           </View>
-          <Icon name="chevron-right" size={7} color={colors.dim} />
-        </PressableScale>
+        </View>
 
         <View className="flex-row gap-2.5">
           <PreferenceCard
@@ -168,7 +162,7 @@ export function SettingsScreen() {
           label={t('settings.signOut')}
           variant="secondary"
           className="self-stretch"
-          onPress={openSignOut}
+          onPress={requestSignOut}
         />
         <TextButton
           label={t('settings.deleteAccount')}
@@ -182,23 +176,15 @@ export function SettingsScreen() {
         </Text>
       </View>
 
-      <AccountSheet
-        visible={sheet === 'account'}
-        onClose={close}
-        email={email}
-        onChoose={(action) => {
-          close();
-          afterSheetClose(() => setSheet(action));
-        }}
-      />
-      <ChangeEmailSheet visible={sheet === 'email'} onClose={close} currentEmail={email} />
-      <ChangePasswordSheet visible={sheet === 'password'} onClose={close} />
       <LanguageSheet visible={sheet === 'language'} onClose={close} />
       <SignOutSheet
         visible={sheet === 'signOut'}
         onClose={close}
         unsynced={unsynced}
-        onSignOut={signOut}
+        onSignOut={() => {
+          close();
+          afterSheetClose(signOut);
+        }}
       />
       <DeleteAccountSheet
         visible={sheet === 'delete'}
