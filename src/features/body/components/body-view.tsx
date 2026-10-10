@@ -6,18 +6,22 @@ import { View } from 'react-native';
 import { useBodyCheckPhotos } from '@/features/body-check/data/body-checks';
 import { POSES, type BodyPose } from '@/features/body-check/lib/poses';
 import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
+import { saveProfile, useProfile } from '@/shared/data/profile';
 import { formatShortDate } from '@/shared/lib/format';
+import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
 import { Card } from '@/shared/ui/card';
 import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
+import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
 import { useNextCheck } from '../hooks/use-next-check';
 import { BodyPhotoCard, NextCheckCard } from './body-photo-card';
 import { CheckHistoryRow } from './check-history-row';
+import { CheckRhythmSheet } from './check-rhythm-sheet';
 
 function openCamera() {
   startBodyCheck();
@@ -30,9 +34,13 @@ const openCheck = (id: string) => router.push(`/body-check/result/${id}`);
 export function BodyView() {
   const { t } = useTranslation(['body', 'bodyCheck']);
   const camera = useCameraAccess(openCamera);
-  const { checks, dueAt, due, daysLeft } = useNextCheck();
+  const { profile } = useProfile();
+  const { checks, allowed, interval, dueAt, due, earliestAt, canStart, daysLeft } = useNextCheck();
   const { data: photos = {} } = useBodyCheckPhotos();
   const [pose, setPose] = useState<BodyPose>('front');
+  const [rhythmOpen, setRhythmOpen] = useState(false);
+  // A due check starts right away; before that, the next check opens the rhythm sheet.
+  const openNext = due ? camera.request : () => setRhythmOpen(true);
 
   const first = checks[0];
   const latest = checks[checks.length - 1];
@@ -40,8 +48,8 @@ export function BodyView() {
   const nextTitle = t('check', { n: checks.length + 1 });
 
   return (
-    // A check starts from the next check's card or row once it is due; the first from the
-    // empty state.
+    // A check starts from the next check's card or row once it is due (earlier from the rhythm
+    // sheet they open); the first from the empty state. Under-18s get no new checks.
     <>
       <Text variant="paragraph" tone="subtle" className="px-5 pt-4">
         {t('subtitle')}
@@ -50,15 +58,17 @@ export function BodyView() {
       {!latest ? (
         <Card className="mx-4 mt-6 items-center gap-4 py-8">
           <View className="size-16 items-center justify-center rounded-full bg-elevated">
-            <Icon name="camera" size={26} color={colors.accent} />
+            <Icon name="camera" size={26} color={allowed ? colors.accent : colors.subtle} />
           </View>
           <Text variant="headline" className="text-center">
-            {t('empty.title')}
+            {t(allowed ? 'empty.title' : 'adultsOnly.title')}
           </Text>
           <Text variant="paragraph" tone="muted" className="text-center">
-            {t('empty.body')}
+            {t(allowed ? 'empty.body' : 'adultsOnly.body')}
           </Text>
-          <Button label={t('start')} size="md" className="mt-1 px-6" onPress={camera.request} />
+          {allowed ? (
+            <Button label={t('start')} size="md" className="mt-1 px-6" onPress={camera.request} />
+          ) : null}
         </Card>
       ) : (
         <>
@@ -114,13 +124,13 @@ export function BodyView() {
                 >
                   <Icon name="arrow-right" size={16} color={colors.onAccent} />
                 </View>
-              ) : (
+              ) : allowed ? (
                 <NextCheckCard
                   title={nextTitle}
                   note={due ? t('dueNow') : t('dueOn', { date: formatShortDate(dueAt) })}
-                  onPress={due ? camera.request : undefined}
+                  onPress={openNext}
                 />
-              )}
+              ) : null}
             </View>
           </View>
 
@@ -141,26 +151,28 @@ export function BodyView() {
           </Text>
           <View className="px-5 pt-1">
             {/* The next check is always listed first, so its date is never a surprise. */}
-            <CheckHistoryRow
-              title={nextTitle}
-              date={due ? t('today') : formatShortDate(dueAt)}
-              onPress={due ? camera.request : undefined}
-              trailing={
-                due ? (
-                  <View className="h-6.5 justify-center rounded-full border-[1.5px] border-accent px-2.5">
-                    <Text variant="caption" tone="accent" className="text-xs">
-                      {t('due')}
-                    </Text>
-                  </View>
-                ) : (
-                  <View className="h-8 justify-center rounded-full bg-elevated px-3">
-                    <Text variant="caption" className="text-xs">
-                      {t('inDays', { count: daysLeft })}
-                    </Text>
-                  </View>
-                )
-              }
-            />
+            {allowed ? (
+              <CheckHistoryRow
+                title={nextTitle}
+                date={due ? t('today') : formatShortDate(dueAt)}
+                onPress={openNext}
+                trailing={
+                  due ? (
+                    <View className="h-6.5 justify-center rounded-full border-[1.5px] border-accent px-2.5">
+                      <Text variant="caption" tone="accent" className="text-xs">
+                        {t('due')}
+                      </Text>
+                    </View>
+                  ) : (
+                    <View className="h-8 justify-center rounded-full bg-elevated px-3">
+                      <Text variant="caption" className="text-xs">
+                        {t('inDays', { count: daysLeft })}
+                      </Text>
+                    </View>
+                  )
+                }
+              />
+            ) : null}
             {checks
               .map((check, i) => (
                 <CheckHistoryRow
@@ -176,6 +188,25 @@ export function BodyView() {
           </View>
         </>
       )}
+      <CheckRhythmSheet
+        visible={rhythmOpen}
+        onClose={() => setRhythmOpen(false)}
+        interval={interval}
+        onIntervalChange={(days) => {
+          if (!profile) return;
+          void saveProfile(profile.id, { bodyCheckIntervalDays: days }).catch((error) => {
+            console.warn('Saving the check rhythm failed', error);
+            haptics.error();
+          });
+        }}
+        dueAt={dueAt}
+        earliestAt={earliestAt}
+        canStart={canStart}
+        onStart={() => {
+          setRhythmOpen(false);
+          afterSheetClose(camera.request);
+        }}
+      />
       <CameraAccessSheet {...camera.sheet} body={t('bodyCheck:camera.access')} />
     </>
   );

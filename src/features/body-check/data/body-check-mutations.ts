@@ -24,9 +24,9 @@ export interface SaveBodyCheckInput {
 }
 
 /**
- * Saves a check local-first: photos move to their final files, then the check and
- * its photo rows are inserted in one transaction (storage_path stays null until
- * the upload queue has uploaded the file). PowerSync syncs the rows.
+ * Saves an analysed check: the photos move to their final files on this device, then the check
+ * and its photo rows are inserted in one transaction. The analysis already uploaded the photos,
+ * and the server takes the values from the analysis, not from here. PowerSync syncs the rows.
  */
 export async function saveBodyCheck({ checkId, userId, result, photos }: SaveBodyCheckInput) {
   const rollback = finalizePhotos(checkId, photos);
@@ -47,7 +47,7 @@ export async function saveBodyCheck({ checkId, userId, result, photos }: SaveBod
           user_id: userId,
           body_check_id: checkId,
           pose,
-          storage_path: null,
+          storage_path: storagePathOf(userId, checkId, pose),
           created_at: createdAt,
         });
       }

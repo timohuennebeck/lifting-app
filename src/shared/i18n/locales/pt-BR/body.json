@@ -14,6 +14,24 @@
   "start": "Iniciar check corporal",
   "empty": {
     "title": "Nenhum check corporal ainda",
-    "body": "Tire quatro fotos e receba uma pontuação da sua composição corporal. Repita a cada poucas semanas para ver seu progresso."
+    "body": "Tire três fotos e receba uma pontuação da sua composição corporal. Repita regularmente para ver seu progresso."
+  },
+  "rhythm": {
+    "title": "Frequência do check",
+    "subtitle": "Com que frequência você quer fazer o check corporal?",
+    "options": {
+      "7": "Toda semana",
+      "14": "A cada 2 semanas",
+      "21": "A cada 3 semanas",
+      "28": "A cada 4 semanas"
+    },
+    "nextOn": "Próximo check previsto para {{date}}",
+    "checkNow": "Fazer check agora",
+    "availableOn": "Disponível a partir de {{date}}",
+    "gapNote": "Entre dois checks há pelo menos {{days}} dias."
+  },
+  "adultsOnly": {
+    "title": "A partir de 18 anos",
+    "body": "O check corporal só está disponível a partir dos 18 anos."
   }
 }

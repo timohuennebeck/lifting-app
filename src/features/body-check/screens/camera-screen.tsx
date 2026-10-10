@@ -40,7 +40,7 @@ const BOTTOM_SCRIM: GradientStop[] = [
   [1, 0],
 ];
 
-/** 08a: full-screen camera that walks through the four poses, with self-timer. */
+/** 08a: full-screen camera that walks through the three poses, with self-timer. */
 export function CameraScreen() {
   const { t } = useTranslation(['bodyCheck', 'common']);
   const insets = useSafeAreaInsets();

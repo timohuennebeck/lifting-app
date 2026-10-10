@@ -30,6 +30,8 @@ export const profiles = sqliteTable('profiles', {
   avatar_path: text(),
   // "About you" on the profile, up to 150 characters.
   bio: text(),
+  // Days between body checks: 7, 14, 21 or 28.
+  body_check_interval_days: integer(),
   onboarded_at: text(),
   created_at: text().notNull(),
   updated_at: text().notNull(),

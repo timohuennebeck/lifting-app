@@ -36,7 +36,7 @@ function ShotBadge({ warn }: ShotBadgeProps) {
   );
 }
 
-/** Row of the four pose thumbnails with labels (camera 08a and review 08b). */
+/** Row of the pose thumbnails with labels (camera 08a and review 08b). */
 export function PoseStrip({ shots, active, onSelect }: PoseStripProps) {
   const { t } = useTranslation('bodyCheck');
   return (

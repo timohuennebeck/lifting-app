@@ -3,6 +3,7 @@ import { type ReactNode, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { isBodyCheckAge } from '@/features/body-check/lib/eligibility';
 import { acceptDocuments } from '@/features/legal/data/legal-acceptances';
 import { fetchCurrentDocuments, type LegalKind } from '@/features/legal/data/legal-documents';
 import { START_STEPS } from '@/features/onboarding/lib/flow';
@@ -75,7 +76,7 @@ export function CreateAccountScreen() {
       const documents = await fetchCurrentDocuments(i18n.language);
       let userId = session?.user.id;
       if (!userId) {
-        const draft = useOnboardingStore.getState().draft;
+        const { draft } = useOnboardingStore.getState();
         const { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
@@ -86,10 +87,13 @@ export function CreateAccountScreen() {
         if (!data.session) return fail('confirmEmail');
         userId = data.session.user.id;
       }
-      await persistOnboarding(userId, useOnboardingStore.getState().draft);
+      const { draft } = useOnboardingStore.getState();
+      await persistOnboarding(userId, draft);
       await acceptDocuments(userId, documents);
       haptics.success();
-      router.push('/body-check');
+      // The body check is for adults only; younger users go straight to the app.
+      if (isBodyCheckAge(draft.age)) router.push('/body-check');
+      else useOnboardingStore.getState().complete();
     } catch {
       fail('generic');
     } finally {

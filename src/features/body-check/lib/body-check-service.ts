@@ -1,15 +1,11 @@
+import { FunctionsFetchError, FunctionsHttpError } from '@supabase/supabase-js';
 import { File } from 'expo-file-system';
 
-import type { Profile } from '@/shared/data/profile';
-import { wait } from '@/shared/lib/async';
-import { clamp, roundTenth } from '@/shared/lib/math';
+import { supabase } from '@/shared/data/supabase';
+import { uploadJpeg } from '@/shared/data/supabase-storage';
 
-import type { StoredPhoto } from './photo-files';
-import { GROUPS, POSES, type BodyGroup, type BodyPose } from './poses';
-
-export interface CheckPhotoInput extends StoredPhoto {
-  pose: BodyPose;
-}
+import { PHOTO_BUCKET, type StoredPhoto, storagePathOf } from './photo-files';
+import { POSES, type BodyGroup, type BodyPose } from './poses';
 
 export interface BodyCheckMetrics {
   /** Estimated body fat in percent. */
@@ -28,100 +24,106 @@ export interface BodyCheckResult {
   metrics: BodyCheckMetrics;
 }
 
-export interface PreviousCheck {
-  score: number;
-  groupScores: Partial<GroupScores>;
-  metrics: Partial<BodyCheckMetrics>;
+/** Why a photo can't be used: the on-device check finds blur, the analysis the rest. */
+export type PhotoIssue = 'blurry' | 'dark' | 'notFullBody' | 'wrongPose' | 'noPerson' | 'clothing';
+
+export interface PhotoRejection {
+  pose: BodyPose;
+  issue: PhotoIssue;
 }
 
-export type AnalysisProfile = Pick<Profile, 'sex' | 'age' | 'weightKg' | 'heightCm' | 'experience'>;
+export type AnalysisOutcome =
+  | { status: 'ok'; result: BodyCheckResult }
+  /** The analysis could not judge these photos; nothing was scored. */
+  | { status: 'retake'; issues: PhotoRejection[] };
 
-export type PhotoIssue = 'blurry';
+export type AnalysisFailure = 'offline' | 'tooSoon' | 'limit' | 'notAdult' | 'refused' | 'failed';
 
-// Starting values of a first check, as in design 08d-A.
-const BASE_GROUPS: GroupScores = {
-  shoulders: 81,
-  chest: 78,
-  arms: 76,
-  back: 70,
-  core: 68,
-  legs: 61,
-};
-const BASE_METRICS: BodyCheckMetrics = { bodyFat: 15, proportions: 88, definition: 66 };
-const EXPERIENCE_OFFSET = { none: -6, beginner: -3, intermediate: 0, advanced: 4 } as const;
-const MAX_SCORE = 98;
-const MOCK_LATENCY_MS = 1500;
-
-/** Overall score: muscle groups weigh 60 %, proportions and definition 20 % each. */
-function overallScore(groups: GroupScores, metrics: BodyCheckMetrics) {
-  const mean = GROUPS.reduce((sum, g) => sum + groups[g], 0) / GROUPS.length;
-  return Math.round(
-    clamp(0.6 * mean + 0.2 * metrics.proportions + 0.2 * metrics.definition, 0, 100),
-  );
-}
-
-function firstCheck(profile: AnalysisProfile | null): Omit<BodyCheckResult, 'score'> {
-  const offset = EXPERIENCE_OFFSET[profile?.experience ?? 'intermediate'];
-  const groupScores = { ...BASE_GROUPS };
-  for (const g of GROUPS) groupScores[g] = clamp(BASE_GROUPS[g] + offset, 20, MAX_SCORE);
-  let bodyFat = profile?.sex === 'female' ? BASE_METRICS.bodyFat + 8 : BASE_METRICS.bodyFat;
-  if (profile?.weightKg && profile.heightCm) {
-    const bmi = profile.weightKg / (profile.heightCm / 100) ** 2;
-    bodyFat += clamp((bmi - 24) * 1.2, -3, 10);
+export class AnalysisError extends Error {
+  constructor(readonly reason: AnalysisFailure) {
+    super(`Body-check analysis failed: ${reason}`);
   }
-  if ((profile?.age ?? 0) > 40) bodyFat += 2;
-  return {
-    groupScores,
-    metrics: {
-      bodyFat: roundTenth(bodyFat),
-      proportions: BASE_METRICS.proportions,
-      definition: clamp(BASE_METRICS.definition + offset, 20, MAX_SCORE),
-    },
-  };
 }
 
-/** A follow-up check improves slightly on the previous one (deterministic). */
-function nextCheck(previous: PreviousCheck): Omit<BodyCheckResult, 'score'> {
-  const groupScores = { ...BASE_GROUPS };
-  GROUPS.forEach((g, i) => {
-    const before = previous.groupScores[g] ?? BASE_GROUPS[g];
-    groupScores[g] = Math.min(MAX_SCORE, before + 1 + ((i + previous.score) % 3));
-  });
-  const m = { ...BASE_METRICS, ...previous.metrics };
-  return {
-    groupScores,
-    metrics: {
-      bodyFat: Math.max(6, roundTenth(m.bodyFat - 0.5)),
-      proportions: Math.min(MAX_SCORE, m.proportions + 1),
-      definition: Math.min(MAX_SCORE, m.definition + 2),
-    },
-  };
+const SERVER_ISSUES: Record<string, PhotoIssue> = {
+  blurry: 'blurry',
+  dark: 'dark',
+  not_full_body: 'notFullBody',
+  wrong_pose: 'wrongPose',
+  no_person: 'noPerson',
+  clothing: 'clothing',
+};
+
+const SERVER_ERRORS: Record<string, AnalysisFailure> = {
+  too_soon: 'tooSoon',
+  limit: 'limit',
+  not_adult: 'notAdult',
+  refused: 'refused',
+};
+
+interface ServerAnalysis {
+  status: 'ok' | 'retake';
+  result?: BodyCheckResult;
+  issues?: { pose: BodyPose; issue: string }[];
+}
+
+async function failureOf(error: unknown): Promise<AnalysisFailure> {
+  if (error instanceof FunctionsFetchError) return 'offline';
+  if (error instanceof FunctionsHttpError) {
+    const body = await (error.context as Response).json().catch(() => null);
+    return SERVER_ERRORS[body?.error] ?? 'failed';
+  }
+  return 'failed';
+}
+
+/** Puts the photos where the analysis reads them (and where the saved check keeps them). */
+async function uploadPhotos(
+  checkId: string,
+  userId: string,
+  photos: Record<BodyPose, StoredPhoto>,
+) {
+  try {
+    await Promise.all(
+      POSES.map((pose) =>
+        uploadJpeg(PHOTO_BUCKET, storagePathOf(userId, checkId, pose), new File(photos[pose].uri)),
+      ),
+    );
+  } catch (error) {
+    console.warn('Uploading the body-check photos failed', error);
+    throw new AnalysisError('offline');
+  }
 }
 
 /**
- * Scores a body check from its four photos. MOCKED: values are derived from the
- * profile and the previous check, not from the images. Replace the body with a
- * call to an Edge Function that receives the photos and returns the same shape.
+ * Uploads the three photos and has the analyze-body-check Edge Function score them. Needs a
+ * connection; throws an AnalysisError with the reason otherwise.
  */
 export async function analyzeBodyCheck(
-  photos: CheckPhotoInput[],
-  profile: AnalysisProfile | null,
-  previous: PreviousCheck | null,
-): Promise<BodyCheckResult> {
-  if (POSES.some((pose) => !photos.some((p) => p.pose === pose))) {
-    throw new Error('A body check needs one photo per pose');
+  checkId: string,
+  userId: string,
+  photos: Record<BodyPose, StoredPhoto>,
+): Promise<AnalysisOutcome> {
+  await uploadPhotos(checkId, userId, photos);
+  const { data, error } = await supabase.functions.invoke<ServerAnalysis>('analyze-body-check', {
+    body: { checkId },
+  });
+  if (error) throw new AnalysisError(await failureOf(error));
+  if (data?.status === 'ok' && data.result) return { status: 'ok', result: data.result };
+  if (data?.status === 'retake' && data.issues?.length) {
+    return {
+      status: 'retake',
+      issues: data.issues.map((i) => ({ pose: i.pose, issue: SERVER_ISSUES[i.issue] ?? 'blurry' })),
+    };
   }
-  await wait(MOCK_LATENCY_MS);
-  const { groupScores, metrics } = previous ? nextCheck(previous) : firstCheck(profile);
-  return { score: overallScore(groupScores, metrics), groupScores, metrics };
+  throw new AnalysisError('failed');
 }
 
 // JPEG bytes per pixel below this mean little detail (blur, darkness) at our quality.
 const MIN_BYTES_PER_PIXEL = 0.035;
 
 /**
- * Quick on-device quality check of a stored shot. Heuristic stand-in: very small
- * JPEGs for their size are usually blurry or too dark. Replace with a real check.
+ * Quick on-device check of a stored shot before anything is uploaded: very small JPEGs for
+ * their size are usually blurry or too dark. The analysis judges the photos properly.
  */
 export function assessPhoto(photo: StoredPhoto): PhotoIssue | null {
   try {

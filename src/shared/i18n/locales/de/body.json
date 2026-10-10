@@ -14,6 +14,24 @@
   "start": "Körpercheck starten",
   "empty": {
     "title": "Noch kein Körpercheck",
-    "body": "Mach vier Fotos und erhalte einen Wert für deine Körperkomposition. Wiederhole den Check alle paar Wochen, um deinen Fortschritt zu sehen."
+    "body": "Mach drei Fotos und erhalte einen Wert für deine Körperkomposition. Wiederhole den Check regelmäßig, um deinen Fortschritt zu sehen."
+  },
+  "rhythm": {
+    "title": "Check-Rhythmus",
+    "subtitle": "Wie oft möchtest du einen Körpercheck machen?",
+    "options": {
+      "7": "Jede Woche",
+      "14": "Alle 2 Wochen",
+      "21": "Alle 3 Wochen",
+      "28": "Alle 4 Wochen"
+    },
+    "nextOn": "Nächster Check fällig am {{date}}",
+    "checkNow": "Check jetzt machen",
+    "availableOn": "Möglich ab {{date}}",
+    "gapNote": "Zwischen zwei Checks liegen mindestens {{days}} Tage."
+  },
+  "adultsOnly": {
+    "title": "Ab 18 Jahren",
+    "body": "Der Körpercheck ist erst ab 18 Jahren verfügbar."
   }
 }

@@ -23,6 +23,9 @@ cp .env.example .env
 npm run supabase:keys           # writes supabase/signing_key.json (gitignored)
 npm run supabase:start          # copy the publishable key into .env
 
+# Body check analysis: the Edge Function needs an OpenAI key (see the file)
+cp supabase/functions/.env.example supabase/functions/.env
+
 # PowerSync service, joined to the Supabase docker network
 npm run powersync:up
 
@@ -88,6 +91,20 @@ Documents are readable without an account (onboarding runs logged out) and writt
   (else English, else `pt-BR`), linked from the sign-up screen and Settings. Write the text as Markdown:
   headings, paragraphs, `>` quotes, lists, `**bold**` and `[links](https://…)`. Locally,
   `supabase/seed.sql` adds placeholder documents on `npm run supabase:reset`.
+
+## Body check analysis
+
+The app uploads the three photos (front, side, back) to the private `body-checks` bucket and calls the
+`analyze-body-check` Edge Function, which sends them to OpenAI (`gpt-6.1-sol` on the EU endpoint by
+default) and returns the check's values, or the photos to retake.
+
+- **Secrets:** `supabase/functions/.env` locally (loaded by `supabase start`); in production
+  `npx supabase secrets set --env-file supabase/functions/.env`. The key must belong to an OpenAI project
+  created in the EU region. `OPENAI_MODEL` and `OPENAI_BASE_URL` override the defaults.
+- **Rules (server-side):** adults only (profile age 18+), at least 6 days since the last saved check,
+  at most 5 analyses per user in 24 hours.
+- **`body_check_analyses`:** one row per analysis, server-only. Saving a check takes its score, values
+  and time from the analysis; a check without one is rejected.
 
 ## Languages
 

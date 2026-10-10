@@ -4,13 +4,9 @@
       "short": "Frontal",
       "name": "Frontal"
     },
-    "left": {
-      "short": "Links",
-      "name": "Seite links"
-    },
-    "right": {
-      "short": "Rechts",
-      "name": "Seite rechts"
+    "side": {
+      "short": "Seite",
+      "name": "Seite"
     },
     "back": {
       "short": "Hinten",
@@ -52,20 +48,26 @@
   "review": {
     "title": "Passt so?",
     "subtitle": "Prüfe, ob jedes Foto scharf ist und dein ganzer Körper drauf ist.",
+    "rejectedSubtitle": "Die Analyse konnte nicht jedes Foto auswerten. Nimm die markierten neu auf.",
     "noPhoto": "Kein Foto vorhanden",
-    "blurry": "Leicht verwackelt",
+    "issues": {
+      "blurry": "Verwackelt",
+      "dark": "Zu dunkel",
+      "notFullBody": "Nicht ganz im Bild",
+      "wrongPose": "Falsche Pose",
+      "noPerson": "Niemand erkannt",
+      "clothing": "Kleidung zu weit"
+    },
     "retakePhoto": "Foto neu aufnehmen",
     "takePhoto": "Foto aufnehmen",
     "take": {
       "front": "Frontal aufnehmen",
-      "left": "Seite links aufnehmen",
-      "right": "Seite rechts aufnehmen",
+      "side": "Seite aufnehmen",
       "back": "Hinten aufnehmen"
     },
     "retake": {
       "front": "Frontal neu aufnehmen",
-      "left": "Seite links neu aufnehmen",
-      "right": "Seite rechts neu aufnehmen",
+      "side": "Seite neu aufnehmen",
       "back": "Hinten neu aufnehmen"
     },
     "cta": "Weiter zur Analyse",
@@ -81,7 +83,14 @@
     "done": "Deine Ergebnisse sind da",
     "keepOpen": "Bitte App geöffnet lassen",
     "cta": "Ergebnis ansehen",
-    "error": "Die Analyse hat nicht geklappt. Bitte versuch es noch einmal."
+    "errors": {
+      "offline": "Für die Analyse brauchst du eine Internetverbindung. Deine Fotos bleiben erhalten.",
+      "tooSoon": "Zwischen zwei Checks liegen mindestens 6 Tage.",
+      "limit": "Du hast heute schon mehrere Analysen gestartet. Versuch es morgen wieder.",
+      "notAdult": "Der Körpercheck ist erst ab 18 Jahren verfügbar.",
+      "refused": "Diese Fotos können wir nicht auswerten. Bitte nimm sie in Sportkleidung oder Unterwäsche neu auf.",
+      "failed": "Die Analyse hat nicht geklappt. Bitte versuch es noch einmal."
+    }
   },
   "result": {
     "baselineOn": "Dein Startwert · {{date}}",

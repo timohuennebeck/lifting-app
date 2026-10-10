@@ -4,13 +4,9 @@
       "short": "Front",
       "name": "Front"
     },
-    "left": {
-      "short": "Left",
-      "name": "Left side"
-    },
-    "right": {
-      "short": "Right",
-      "name": "Right side"
+    "side": {
+      "short": "Side",
+      "name": "Side"
     },
     "back": {
       "short": "Back",
@@ -52,20 +48,26 @@
   "review": {
     "title": "Looks good?",
     "subtitle": "Check that every photo is sharp and shows your whole body.",
+    "rejectedSubtitle": "The analysis couldn’t read every photo. Retake the marked ones.",
     "noPhoto": "No photo yet",
-    "blurry": "Slightly blurry",
+    "issues": {
+      "blurry": "Blurry",
+      "dark": "Too dark",
+      "notFullBody": "Not fully in frame",
+      "wrongPose": "Wrong pose",
+      "noPerson": "Nobody found",
+      "clothing": "Clothes too loose"
+    },
     "retakePhoto": "Retake photo",
     "takePhoto": "Take photo",
     "take": {
       "front": "Take front photo",
-      "left": "Take left side photo",
-      "right": "Take right side photo",
+      "side": "Take side photo",
       "back": "Take back photo"
     },
     "retake": {
       "front": "Retake front photo",
-      "left": "Retake left side photo",
-      "right": "Retake right side photo",
+      "side": "Retake side photo",
       "back": "Retake back photo"
     },
     "cta": "Continue to analysis",
@@ -81,7 +83,14 @@
     "done": "Your results are ready",
     "keepOpen": "Please keep the app open",
     "cta": "View result",
-    "error": "The analysis didn't work. Please try again."
+    "errors": {
+      "offline": "The analysis needs an internet connection. Your photos are kept.",
+      "tooSoon": "Two checks are at least 6 days apart.",
+      "limit": "You’ve started several analyses today. Please try again tomorrow.",
+      "notAdult": "The body check is only available from age 18.",
+      "refused": "We can’t analyse these photos. Please retake them in sportswear or underwear.",
+      "failed": "The analysis didn't work. Please try again."
+    }
   },
   "result": {
     "baselineOn": "Your baseline · {{date}}",

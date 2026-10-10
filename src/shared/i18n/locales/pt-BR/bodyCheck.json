@@ -4,13 +4,9 @@
       "short": "Frente",
       "name": "Frente"
     },
-    "left": {
-      "short": "Esquerda",
-      "name": "Lado esquerdo"
-    },
-    "right": {
-      "short": "Direita",
-      "name": "Lado direito"
+    "side": {
+      "short": "Lado",
+      "name": "Lado"
     },
     "back": {
       "short": "Costas",
@@ -52,20 +48,26 @@
   "review": {
     "title": "Ficou bom?",
     "subtitle": "Confira se cada foto está nítida e mostra seu corpo inteiro.",
+    "rejectedSubtitle": "A análise não conseguiu avaliar todas as fotos. Refaça as marcadas.",
     "noPhoto": "Nenhuma foto ainda",
-    "blurry": "Levemente tremida",
+    "issues": {
+      "blurry": "Tremida",
+      "dark": "Escura demais",
+      "notFullBody": "Corpo não inteiro",
+      "wrongPose": "Pose errada",
+      "noPerson": "Ninguém na foto",
+      "clothing": "Roupa larga demais"
+    },
     "retakePhoto": "Refazer foto",
     "takePhoto": "Tirar foto",
     "take": {
       "front": "Tirar foto de frente",
-      "left": "Tirar foto do lado esquerdo",
-      "right": "Tirar foto do lado direito",
+      "side": "Tirar foto de lado",
       "back": "Tirar foto de costas"
     },
     "retake": {
       "front": "Refazer foto de frente",
-      "left": "Refazer foto do lado esquerdo",
-      "right": "Refazer foto do lado direito",
+      "side": "Refazer foto de lado",
       "back": "Refazer foto de costas"
     },
     "cta": "Continuar para a análise",
@@ -81,7 +83,14 @@
     "done": "Seus resultados estão prontos",
     "keepOpen": "Mantenha o app aberto",
     "cta": "Ver resultado",
-    "error": "A análise falhou. Tente novamente."
+    "errors": {
+      "offline": "A análise precisa de conexão com a internet. Suas fotos ficam salvas.",
+      "tooSoon": "Entre dois checks há pelo menos 6 dias.",
+      "limit": "Você já iniciou várias análises hoje. Tente novamente amanhã.",
+      "notAdult": "O check corporal só está disponível a partir dos 18 anos.",
+      "refused": "Não conseguimos analisar essas fotos. Refaça-as com roupa esportiva ou roupa íntima.",
+      "failed": "A análise falhou. Tente novamente."
+    }
   },
   "result": {
     "baselineOn": "Seu valor inicial · {{date}}",

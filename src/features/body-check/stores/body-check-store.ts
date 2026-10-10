@@ -2,19 +2,31 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { newId } from '@/shared/data/json';
+import { supabase } from '@/shared/data/supabase';
 import { mmkvStorage } from '@/shared/lib/storage';
+import { useSessionStore } from '@/shared/stores/session-store';
 
-import type { BodyCheckResult, PhotoIssue } from '../lib/body-check-service';
+import type { BodyCheckResult, PhotoIssue, PhotoRejection } from '../lib/body-check-service';
 import {
   deleteAbandonedDrafts,
   deleteDrafts,
   deleteFile,
+  PHOTO_BUCKET,
   type StoredPhoto,
+  storagePathOf,
 } from '../lib/photo-files';
-import { nextMissingPose, TIMER_STEPS, type BodyPose, type TimerSeconds } from '../lib/poses';
+import {
+  nextMissingPose,
+  POSES,
+  TIMER_STEPS,
+  type BodyPose,
+  type TimerSeconds,
+} from '../lib/poses';
 
 export interface Shot extends StoredPhoto {
   issue: PhotoIssue | null;
+  /** The analysis could not judge this photo: it has to be retaken. */
+  rejected?: boolean;
 }
 
 export type CameraFacing = 'front' | 'back';
@@ -30,6 +42,8 @@ interface BodyCheckState {
   reviewPose: BodyPose | null;
   /** The camera was opened from the review screen to replace one photo. */
   retaking: boolean;
+  /** The photos were uploaded for an analysis (and are removed if the check is discarded). */
+  uploaded: boolean;
   result: BodyCheckResult | null;
   /** Persisted camera preferences. */
   timer: TimerSeconds;
@@ -39,6 +53,9 @@ interface BodyCheckState {
   addShot: (pose: BodyPose, shot: Shot) => void;
   selectReviewPose: (pose: BodyPose) => void;
   retake: (pose: BodyPose) => void;
+  setUploaded: () => void;
+  /** Marks the photos the analysis rejected and selects the first on the review screen. */
+  rejectShots: (rejections: PhotoRejection[]) => void;
   setResult: (result: BodyCheckResult) => void;
   cycleTimer: () => void;
   toggleFacing: () => void;
@@ -54,8 +71,18 @@ const EMPTY = {
   pose: 'front',
   reviewPose: null,
   retaking: false,
+  uploaded: false,
   result: null,
 } as const;
+
+/** Removes a discarded check's uploaded photos; best effort, offline they stay. */
+function removeUploads(checkId: string) {
+  const userId = useSessionStore.getState().session?.user.id;
+  if (!userId) return;
+  void supabase.storage
+    .from(PHOTO_BUCKET)
+    .remove(POSES.map((pose) => storagePathOf(userId, checkId, pose)));
+}
 
 /** Draft of the running body check plus the camera's timer and lens preferences. */
 export const useBodyCheckStore = create<BodyCheckState>()(
@@ -86,6 +113,15 @@ export const useBodyCheckStore = create<BodyCheckState>()(
       },
       selectReviewPose: (reviewPose) => set({ reviewPose }),
       retake: (pose) => set({ pose, retaking: true }),
+      setUploaded: () => set({ uploaded: true }),
+      rejectShots: (rejections) => {
+        const shots = { ...get().shots };
+        for (const { pose, issue } of rejections) {
+          const shot = shots[pose];
+          if (shot) shots[pose] = { ...shot, issue, rejected: true };
+        }
+        set({ shots, reviewPose: rejections[0]?.pose ?? null });
+      },
       setResult: (result) => set({ result }),
       cycleTimer: () =>
         set((s) => ({
@@ -93,8 +129,9 @@ export const useBodyCheckStore = create<BodyCheckState>()(
         })),
       toggleFacing: () => set((s) => ({ facing: s.facing === 'front' ? 'back' : 'front' })),
       discard: () => {
-        const { checkId } = get();
+        const { checkId, uploaded } = get();
         if (checkId) deleteDrafts(checkId);
+        if (checkId && uploaded) removeUploads(checkId);
         set(EMPTY);
       },
       clear: () => set(EMPTY),

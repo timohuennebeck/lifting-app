@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { Alert, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useProfile } from '@/shared/data/profile';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
+import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
 import { useTimedProgress } from '@/shared/ui/scan-stage';
 import { ScreenHeader } from '@/shared/ui/screen-header';
@@ -16,51 +16,77 @@ import { Text } from '@/shared/ui/text';
 import { AnalysisTile } from '../components/analysis-tile';
 import { GroupMarquee } from '../components/group-marquee';
 import { useBodyChecks } from '../data/body-checks';
-import { analyzeBodyCheck, type BodyCheckResult } from '../lib/body-check-service';
-import { GROUPS, POSES } from '../lib/poses';
+import {
+  AnalysisError,
+  type AnalysisOutcome,
+  analyzeBodyCheck,
+  type BodyCheckResult,
+} from '../lib/body-check-service';
+import { GROUPS, POSES, type BodyPose } from '../lib/poses';
 import { useCloseCheck } from '../hooks/use-close-check';
-import { useBodyCheckStore } from '../stores/body-check-store';
+import { type Shot, useBodyCheckStore } from '../stores/body-check-store';
 
-const DURATION_MS = 9000;
+/** Roughly how long the analysis takes; the animation waits at 99 % if it takes longer. */
+const DURATION_MS = 14000;
 const TILE_MAX = 216;
-/** Height of everything but the two tile rows (header, score, chips, CTA). */
+/** Height of everything but the tile row (header, score, chips, CTA). */
 const CHROME_HEIGHT = 330;
+/** Side padding and gaps of the tile row. */
+const ROW_CHROME = 32 + 2 * 10;
 
-/** 08c-H: analyses the four photos behind a reveal animation, then offers the result. */
+/** Running analyses by check, so a remounted screen picks up the same one instead of paying twice. */
+const running = new Map<string, Promise<AnalysisOutcome>>();
+
+function analysisOf(checkId: string, userId: string, photos: Record<BodyPose, Shot>) {
+  let analysis = running.get(checkId);
+  if (!analysis) {
+    analysis = analyzeBodyCheck(checkId, userId, photos).finally(() => running.delete(checkId));
+    running.set(checkId, analysis);
+  }
+  return analysis;
+}
+
+/**
+ * 08c-H: uploads the three photos and has them analysed behind a reveal animation, then offers
+ * the result. Photos the analysis can't judge go back to the review screen for a retake.
+ */
 export function AnalysisScreen() {
   const { t } = useTranslation(['bodyCheck', 'common']);
   const close = useCloseCheck();
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
-  const { height } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const checkId = useBodyCheckStore((s) => s.checkId);
   const shots = useBodyCheckStore((s) => s.shots);
-  const { profile, isLoading: profileLoading } = useProfile();
+  const userId = useUserId();
   const { data: checks } = useBodyChecks();
   const [result, setResult] = useState<BodyCheckResult | null>(null);
   const progress = useTimedProgress(DURATION_MS);
-  const ready = !!checks && !profileLoading;
+  const complete = POSES.every((p) => shots[p]);
 
   const analyze = useEffectEvent(() => {
-    const photos = POSES.flatMap((pose) => {
-      const shot = shots[pose];
-      return shot ? [{ ...shot, pose }] : [];
-    });
-    const last = checks?.at(-1);
-    const previous = last
-      ? { score: last.score, groupScores: last.groupScores, metrics: last.metrics }
-      : null;
+    if (!checkId || !userId || !complete) return;
+    const store = useBodyCheckStore.getState();
+    // Marked first: whatever got uploaded is removed again if the check is discarded.
+    store.setUploaded();
     let active = true;
-    analyzeBodyCheck(photos, profile, previous)
-      .then((r) => {
+    analysisOf(checkId, userId, shots as Record<BodyPose, Shot>)
+      .then((outcome) => {
         if (!active) return;
-        setResult(r);
-        useBodyCheckStore.getState().setResult(r);
+        if (outcome.status === 'retake') {
+          haptics.warning();
+          useBodyCheckStore.getState().rejectShots(outcome.issues);
+          router.back();
+          return;
+        }
+        setResult(outcome.result);
+        useBodyCheckStore.getState().setResult(outcome.result);
       })
       .catch((error) => {
         if (!active) return;
         console.warn('Body-check analysis failed', error);
-        Alert.alert(t('analysis.error'));
+        const reason = error instanceof AnalysisError ? error.reason : 'failed';
+        Alert.alert(t(`analysis.errors.${reason}`));
         router.back();
       });
     return () => {
@@ -68,9 +94,7 @@ export function AnalysisScreen() {
     };
   });
 
-  useEffect(() => {
-    if (ready) return analyze();
-  }, [ready]);
+  useEffect(() => analyze(), []);
 
   // Waits at 99 % if the analysis takes longer than the animation.
   const pct = Math.floor(Math.min(result ? 1 : 0.99, progress) * 100);
@@ -80,36 +104,37 @@ export function AnalysisScreen() {
     if (done) haptics.success();
   }, [done]);
 
-  if (!checkId || POSES.some((p) => !shots[p])) return <Redirect href="/body-check/review" />;
+  if (!checkId || !complete) return <Redirect href="/body-check/review" />;
 
-  const segment = done ? POSES.length - 1 : Math.floor(pct / 25);
+  // The tiles fill one after another; the stage text moves on in its own steps.
+  const share = 100 / POSES.length;
+  const segment = done ? POSES.length - 1 : Math.floor(pct / share);
   const stages = t('analysis.stages', { returnObjects: true });
   const finalStage = checks?.length
     ? t('analysis.finalStage.next')
     : t('analysis.finalStage.first');
-  const stage = done ? t('analysis.done') : [...stages, finalStage][segment];
-  const tileHeight = clamp((height - insets.top - footerInset - CHROME_HEIGHT) / 2, 120, TILE_MAX);
+  const steps = [...stages, finalStage];
+  const stage = done ? t('analysis.done') : steps[Math.floor((pct / 100) * steps.length)];
+  const tileWidth = (width - ROW_CHROME) / POSES.length;
+  const tileHeight = clamp(
+    Math.min(tileWidth * 1.5, height - insets.top - footerInset - CHROME_HEIGHT),
+    120,
+    TILE_MAX,
+  );
 
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
       <ScreenHeader title={t('analysis.title')} onBack={close} />
-      <View className="gap-2.5 px-4 pt-3.5">
-        {[0, 2].map((row) => (
-          <View key={row} className="flex-row gap-2.5">
-            {POSES.slice(row, row + 2).map((pose, j) => {
-              const i = row + j;
-              return (
-                <AnalysisTile
-                  key={pose}
-                  uri={shots[pose]?.uri ?? ''}
-                  label={t(`poses.${pose}.short`)}
-                  progress={done ? 1 : clamp((pct - i * 25) / 25, 0, 1)}
-                  active={!done && i === segment}
-                  height={tileHeight}
-                />
-              );
-            })}
-          </View>
+      <View className="flex-row gap-2.5 px-4 pt-3.5">
+        {POSES.map((pose, i) => (
+          <AnalysisTile
+            key={pose}
+            uri={shots[pose]?.uri ?? ''}
+            label={t(`poses.${pose}.short`)}
+            progress={done ? 1 : clamp((pct - i * share) / share, 0, 1)}
+            active={!done && i === segment}
+            height={tileHeight}
+          />
         ))}
       </View>
       <View className="items-center gap-1.5 px-5 pt-6.5">

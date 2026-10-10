@@ -4,13 +4,9 @@
       "short": "Frente",
       "name": "Frente"
     },
-    "left": {
-      "short": "Esquerda",
-      "name": "Lado esquerdo"
-    },
-    "right": {
-      "short": "Direita",
-      "name": "Lado direito"
+    "side": {
+      "short": "Lado",
+      "name": "Lado"
     },
     "back": {
       "short": "Costas",
@@ -52,20 +48,26 @@
   "review": {
     "title": "Está bem assim?",
     "subtitle": "Verifica se cada foto está nítida e mostra o teu corpo inteiro.",
+    "rejectedSubtitle": "A análise não conseguiu avaliar todas as fotos. Repete as marcadas.",
     "noPhoto": "Ainda sem foto",
-    "blurry": "Ligeiramente tremida",
+    "issues": {
+      "blurry": "Tremida",
+      "dark": "Demasiado escura",
+      "notFullBody": "Corpo não inteiro",
+      "wrongPose": "Pose errada",
+      "noPerson": "Ninguém na foto",
+      "clothing": "Roupa demasiado larga"
+    },
     "retakePhoto": "Repetir foto",
     "takePhoto": "Tirar foto",
     "take": {
       "front": "Tirar foto de frente",
-      "left": "Tirar foto do lado esquerdo",
-      "right": "Tirar foto do lado direito",
+      "side": "Tirar foto de lado",
       "back": "Tirar foto de costas"
     },
     "retake": {
       "front": "Repetir foto de frente",
-      "left": "Repetir foto do lado esquerdo",
-      "right": "Repetir foto do lado direito",
+      "side": "Repetir foto de lado",
       "back": "Repetir foto de costas"
     },
     "cta": "Continuar para a análise",
@@ -81,7 +83,14 @@
     "done": "Os teus resultados estão prontos",
     "keepOpen": "Mantém a app aberta",
     "cta": "Ver resultado",
-    "error": "A análise falhou. Tenta novamente."
+    "errors": {
+      "offline": "A análise precisa de ligação à internet. As tuas fotos ficam guardadas.",
+      "tooSoon": "Entre dois checks há pelo menos 6 dias.",
+      "limit": "Já iniciaste várias análises hoje. Tenta novamente amanhã.",
+      "notAdult": "O check corporal só está disponível a partir dos 18 anos.",
+      "refused": "Não conseguimos analisar estas fotos. Repete-as com roupa desportiva ou roupa interior.",
+      "failed": "A análise falhou. Tenta novamente."
+    }
   },
   "result": {
     "baselineOn": "O teu valor inicial · {{date}}",

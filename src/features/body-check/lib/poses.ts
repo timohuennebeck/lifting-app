@@ -1,5 +1,5 @@
-/** The four body-check poses in capture order (design BC_POSES). */
-export const POSES = ['front', 'left', 'right', 'back'] as const;
+/** The three body-check poses in capture order. */
+export const POSES = ['front', 'side', 'back'] as const;
 export type BodyPose = (typeof POSES)[number];
 
 /** Muscle groups a check scores, in the design's order (BC_GROUPS). */
