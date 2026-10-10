@@ -16,7 +16,7 @@ import { ProfileHeader } from './profile-header';
 /**
  * Profile tab: the user's photo, name and about stay on top; below them "Profil" (activity,
  * history) and "Feedback" (tickets) swipe like Fortschritt. Unread team replies show as a count
- * on "Feedback"; the speech bubble in the header opens the full tickets page.
+ * on "Feedback"; the headset in the header opens the full tickets page.
  */
 export function ProfileLayout() {
   const { t } = useTranslation(['common', 'support']);
@@ -29,8 +29,8 @@ export function ProfileLayout() {
         greeting={false}
         actions={
           <IconButton
-            icon="chat"
-            iconSize={17}
+            icon="headset"
+            iconSize={18}
             accessibilityLabel={t('support:feedback.allTickets')}
             onPress={() => router.push('/support')}
           />

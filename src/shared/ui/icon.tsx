@@ -94,12 +94,12 @@ const ICONS = {
     viewBox: '0 0 14 14',
     render: (c) => <Rect x={2} y={2} width={10} height={10} rx={1.5} fill={c} />,
   },
-  // Speech bubble: the tickets with the team.
-  chat: {
+  // Headset: the support team, for the user's tickets.
+  headset: {
     viewBox: '0 0 16 16',
     render: stroke(
-      'M4 2.75h8a1.75 1.75 0 0 1 1.75 1.75v5A1.75 1.75 0 0 1 12 11.25H7.5l-3 2.35v-2.35H4A1.75 1.75 0 0 1 2.25 9.5v-5A1.75 1.75 0 0 1 4 2.75z',
-      1.6,
+      'M3 9.25V8a5 5 0 0 1 10 0v1.25M3 8.75h1.4a.9.9 0 0 1 .9.9v2.2a.9.9 0 0 1-.9.9H3.9A.9.9 0 0 1 3 11.85zM13 8.75h-1.4a.9.9 0 0 0-.9.9v2.2a.9.9 0 0 0 .9.9h.5a.9.9 0 0 0 .9-.9zM12.6 12.6c-.4 1-1.4 1.4-2.6 1.4h-1',
+      1.7,
     ),
   },
   search: {
