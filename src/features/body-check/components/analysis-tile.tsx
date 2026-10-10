@@ -59,7 +59,7 @@ export function AnalysisTile({ uri, label, progress, active, height }: AnalysisT
               animationIterationCount: 'infinite',
               animationTimingFunction: 'ease-in-out',
             }
-          : { animationName: 'none' },
+          : { animationName: 'none', animationDuration: '0s' },
       ]}
     >
       <View className="flex-1 overflow-hidden rounded-[22px] bg-surface">

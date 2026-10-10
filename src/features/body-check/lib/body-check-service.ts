@@ -66,12 +66,24 @@ interface ServerAnalysis {
   issues?: { pose: BodyPose; issue: string }[];
 }
 
+function errorCode(text: string): string | undefined {
+  try {
+    return JSON.parse(text)?.error;
+  } catch {
+    return undefined;
+  }
+}
+
 async function failureOf(error: unknown): Promise<AnalysisFailure> {
   if (error instanceof FunctionsFetchError) return 'offline';
   if (error instanceof FunctionsHttpError) {
-    const body = await (error.context as Response).json().catch(() => null);
-    return SERVER_ERRORS[body?.error] ?? 'failed';
+    const response = error.context as Response;
+    const text = await response.text().catch(() => '');
+    // Names the answer in the app's log; the function's own log has the details.
+    console.warn(`analyze-body-check answered ${response.status}: ${text.slice(0, 300)}`);
+    return SERVER_ERRORS[errorCode(text) ?? ''] ?? 'failed';
   }
+  console.warn('analyze-body-check could not be called', error);
   return 'failed';
 }
 
