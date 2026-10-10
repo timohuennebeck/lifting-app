@@ -43,7 +43,8 @@ function MuscleGroup({ label, shares, primary, className }: MuscleGroupProps) {
           </Text>
         </View>
       </View>
-      <View className="max-w-full items-start gap-2.5">
+      {/* Side by side where they fit, the next line where they don't. */}
+      <View className="flex-row flex-wrap gap-2.5 self-stretch">
         {shares.map((s) => (
           <MuscleTile key={s.muscle} muscle={s.muscle} percent={s.percent} highlight={primary} />
         ))}
