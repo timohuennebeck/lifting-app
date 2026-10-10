@@ -3,10 +3,11 @@ import { ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 /**
- * One page of the Progress tab: scrolls on its own and clears the native tab bar. The tab turns
- * the automatic insets off for its pager, so each page asks for them here.
+ * One page of a tab with swipeable top tabs (Fortschritt, Profil): scrolls on its own and clears
+ * the native tab bar. Those tabs turn the automatic insets off for their pager, so each page asks
+ * for them here.
  */
-export function ProgressPage({ children }: { children: ReactNode }) {
+export function PagerPage({ children }: { children: ReactNode }) {
   const insets = useSafeAreaInsets();
   return (
     <ScrollView

@@ -63,6 +63,10 @@
     "muscles": "Músculos",
     "body": "Corpo"
   },
+  "profileTab": {
+    "profile": "Perfil",
+    "feedback": "Feedback"
+  },
   "search": {
     "open": "Buscar exercícios",
     "title": "Exercícios",

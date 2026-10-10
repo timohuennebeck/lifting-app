@@ -24,12 +24,6 @@
     "justNow": "Agora mesmo",
     "yesterday": "Ontem"
   },
-  "profile": {
-    "openTickets": "Pedidos abertos",
-    "allTickets": "Todos os pedidos",
-    "create": "Criar pedido",
-    "empty": "Não tens pedidos abertos. Encontraste um erro ou tens uma ideia? Diz-nos."
-  },
   "sheet": {
     "bug": "Reportar erro",
     "bugHint": "Algo não está a funcionar",
@@ -85,5 +79,9 @@
     "newTicket": "Novo pedido",
     "screenshot": "Captura de ecrã",
     "notFound": "Este pedido já não existe."
+  },
+  "feedback": {
+    "emptyTitle": "Encontraste um erro ou tens uma ideia?",
+    "create": "Reportar um erro ou partilhar uma ideia"
   }
 }

@@ -4,8 +4,7 @@ import { ActivityIndicator, Alert, Linking, View } from 'react-native';
 
 import { ProBadge } from '@/features/paywall/components/pro-badge';
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
-import { OpenTicketsSection } from '@/features/support/components/open-tickets-section';
-import { TabScreen } from '@/shared/components/tab-screen';
+import { PagerPage } from '@/shared/components/pager-page';
 import { UserAvatar } from '@/shared/components/user-avatar';
 import { saveProfile, useProfile } from '@/shared/data/profile';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
@@ -38,6 +37,7 @@ interface LocalPhoto {
   replaces: string | null;
 }
 
+/** Profile, "Profil": photo, name, about, activity and workout history; feedback has its own tab. */
 export function ProfileScreen() {
   const { t } = useTranslation(['profile', 'common']);
   const { profile } = useProfile();
@@ -108,7 +108,7 @@ export function ProfileScreen() {
   }
 
   return (
-    <TabScreen greeting={false}>
+    <PagerPage>
       <View className="items-start px-5 pt-4">
         <PressableScale
           haptic="tap"
@@ -162,8 +162,6 @@ export function ProfileScreen() {
         </PressableScale>
       </View>
 
-      <OpenTicketsSection />
-
       <View className="mx-5 mt-7.5">
         <View className="flex-row items-baseline justify-between">
           <Text variant="overline" tone="subtle" className="text-[11px]">
@@ -216,6 +214,6 @@ export function ProfileScreen() {
         optional={editingShown === 'about'}
         onSave={saveText}
       />
-    </TabScreen>
+    </PagerPage>
   );
 }

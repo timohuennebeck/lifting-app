@@ -55,6 +55,10 @@
     "muscles": "Muscles",
     "body": "Body"
   },
+  "profileTab": {
+    "profile": "Profile",
+    "feedback": "Feedback"
+  },
   "search": {
     "open": "Search exercises",
     "title": "Exercises",

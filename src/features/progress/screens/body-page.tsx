@@ -1,11 +1,11 @@
 import { BodyView } from '@/features/body/components/body-view';
 
-import { ProgressPage } from '../components/progress-page';
+import { PagerPage } from '@/shared/components/pager-page';
 
 export function BodyPage() {
   return (
-    <ProgressPage>
+    <PagerPage>
       <BodyView />
-    </ProgressPage>
+    </PagerPage>
   );
 }

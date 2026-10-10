@@ -1,11 +1,11 @@
 import { MusclesView } from '@/features/muscles/components/muscles-view';
 
-import { ProgressPage } from '../components/progress-page';
+import { PagerPage } from '@/shared/components/pager-page';
 
 export function MusclesPage() {
   return (
-    <ProgressPage>
+    <PagerPage>
       <MusclesView />
-    </ProgressPage>
+    </PagerPage>
   );
 }

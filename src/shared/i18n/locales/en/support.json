@@ -24,12 +24,6 @@
     "justNow": "Just now",
     "yesterday": "Yesterday"
   },
-  "profile": {
-    "openTickets": "Open tickets",
-    "allTickets": "All tickets",
-    "create": "Create ticket",
-    "empty": "No open tickets. Found a bug or have an idea? Let us know."
-  },
   "sheet": {
     "bug": "Report a bug",
     "bugHint": "Something isn't working",
@@ -85,5 +79,9 @@
     "newTicket": "New ticket",
     "screenshot": "Screenshot",
     "notFound": "This ticket doesn't exist anymore."
+  },
+  "feedback": {
+    "emptyTitle": "Found a bug or have an idea?",
+    "create": "Report a bug or share an idea"
   }
 }

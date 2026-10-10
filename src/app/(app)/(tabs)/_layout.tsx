@@ -21,7 +21,8 @@ export default function TabsLayout() {
         <NativeTabs.Trigger.Label>{t('tabs.progress')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="figure.stand" md="accessibility_new" />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="profile">
+      {/* Swipeable top tabs too: each page clears the tab bar itself, as on Fortschritt. */}
+      <NativeTabs.Trigger name="profile" disableAutomaticContentInsets>
         <NativeTabs.Trigger.Label>{t('tabs.profile')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf={{ default: 'person.crop.circle', selected: 'person.crop.circle.fill' }}

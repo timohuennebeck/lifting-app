@@ -24,12 +24,6 @@
     "justNow": "Gerade eben",
     "yesterday": "Gestern"
   },
-  "profile": {
-    "openTickets": "Offene Tickets",
-    "allTickets": "Alle Tickets",
-    "create": "Ticket erstellen",
-    "empty": "Keine offenen Tickets. Fehler entdeckt oder eine Idee? Schreib uns."
-  },
   "sheet": {
     "bug": "Fehler melden",
     "bugHint": "Etwas funktioniert nicht",
@@ -85,5 +79,9 @@
     "newTicket": "Neues Ticket",
     "screenshot": "Screenshot",
     "notFound": "Dieses Ticket gibt es nicht mehr."
+  },
+  "feedback": {
+    "emptyTitle": "Fehler entdeckt oder eine Idee?",
+    "create": "Fehler melden oder Idee teilen"
   }
 }

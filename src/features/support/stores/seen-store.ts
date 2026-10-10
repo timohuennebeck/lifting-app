@@ -31,3 +31,12 @@ export function useHasUnread(ticketId: string, lastTeamAt: string | null) {
   const seenAt = useSeenStore((s) => s.seen[ticketId]);
   return !!lastTeamAt && (!seenAt || toMs(lastTeamAt) > toMs(seenAt));
 }
+
+/** How many of these tickets have a team reply the user hasn't opened yet. */
+export function useUnreadCount(tickets: { id: string; lastTeamAt: string | null }[]) {
+  const seen = useSeenStore((s) => s.seen);
+  return tickets.filter(
+    (ticket) =>
+      !!ticket.lastTeamAt && (!seen[ticket.id] || toMs(ticket.lastTeamAt) > toMs(seen[ticket.id])),
+  ).length;
+}
