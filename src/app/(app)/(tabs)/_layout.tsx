@@ -15,7 +15,9 @@ export default function TabsLayout() {
         <NativeTabs.Trigger.Label>{t('tabs.training')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="dumbbell.fill" md="fitness_center" />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="progress">
+      {/* iOS would give the swipeable pager (the first scroll view) the tab bar's insets, which
+          shifted its pages up; each page's own scroll view clears the tab bar instead. */}
+      <NativeTabs.Trigger name="progress" disableAutomaticContentInsets>
         <NativeTabs.Trigger.Label>{t('tabs.progress')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="figure.stand" md="accessibility_new" />
       </NativeTabs.Trigger>

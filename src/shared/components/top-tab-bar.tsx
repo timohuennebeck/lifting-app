@@ -14,10 +14,11 @@ export interface TopTabBarProps {
     emit: (event: { type: 'tabPress'; target: string; canPreventDefault: true }) => {
       defaultPrevented: boolean;
     };
-    navigate: (name: string) => void;
   };
   descriptors: Record<string, { options: { title?: string } } | undefined>;
   position: Animated.AnimatedInterpolation<number>;
+  /** Moves the pager to a route and updates the state with it. */
+  jumpTo: (key: string) => void;
   /** Counts shown next to tab titles, by route name. */
   badges?: Record<string, number | undefined>;
   className?: string;
@@ -32,6 +33,7 @@ export function TopTabBar({
   navigation,
   descriptors,
   position,
+  jumpTo,
   badges,
   className,
 }: TopTabBarProps) {
@@ -54,7 +56,9 @@ export function TopTabBar({
           target: route.key,
           canPreventDefault: true,
         });
-        if (name !== focused && !event.defaultPrevented) navigation.navigate(route.name);
+        // Not navigate(): that only moves the pager when its own idea of the page differs, and
+        // after a tap iOS doesn't always tell it, so a later tap back left the page in place.
+        if (name !== focused && !event.defaultPrevented) jumpTo(route.key);
       }}
     />
   );
