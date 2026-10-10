@@ -105,22 +105,23 @@ export function ProfileHeader() {
   return (
     <>
       {/* Photo on the left, everything else beside it, so the tabs below get the room. */}
-      <View className="flex-row items-start gap-4 px-5 pt-3">
+      <View className="flex-row items-center gap-4 px-5 pt-3">
         <PressableScale
           haptic="tap"
           accessibilityLabel={t('avatar.change')}
           disabled={uploading}
           onPress={() => setAvatarOpen(true)}
-          className="rounded-full border-[2.5px] border-accent p-0.75"
+          className="rounded-full border-[3px] border-accent p-1"
         >
-          <UserAvatar size={64} className="border-0" previewUri={local?.uri} />
+          {/* As tall as the name, membership and about beside it. */}
+          <UserAvatar size={84} className="border-0" previewUri={local?.uri} />
           {uploading ? (
-            <View className="absolute inset-0.75 items-center justify-center rounded-full bg-black/45">
+            <View className="absolute inset-1 items-center justify-center rounded-full bg-black/45">
               <ActivityIndicator color={colors.fg} />
             </View>
           ) : null}
-          <View className="absolute -right-0.5 -bottom-0.5 size-6 items-center justify-center rounded-full border-[2.5px] border-bg bg-elevated">
-            <Icon name="photo-camera" size={11} color={colors.fg} />
+          <View className="absolute -right-0.5 -bottom-0.5 size-7.5 items-center justify-center rounded-full border-[3px] border-bg bg-elevated">
+            <Icon name="photo-camera" size={13} color={colors.fg} />
           </View>
         </PressableScale>
         <View className="min-w-0 flex-1 gap-1">
