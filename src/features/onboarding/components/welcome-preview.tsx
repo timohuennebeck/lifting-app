@@ -14,11 +14,12 @@ import Animated, {
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { exerciseName, getExercise } from '@/shared/data/exercises';
+import { muscleShares } from '@/shared/data/muscles';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
-import { MUSCLE_CARDS, type MuscleId } from '@/shared/ui/muscle-map/body-paths';
-import { MuscleMap } from '@/shared/ui/muscle-map/muscle-map';
+import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
+import { MuscleTile } from '@/shared/ui/muscle-map/muscle-tile';
 import { PLAN_ADD_SIZE, PlanSlot } from '@/shared/ui/plan-slot';
 import { Text } from '@/shared/ui/text';
 
@@ -41,38 +42,6 @@ const EXERCISES = [
   { id: 'dumbbell-shoulder-press', reps: '7–9', rir: [3, 2, 1] },
   { id: 'incline-dumbbell-press', reps: '9–11', rir: [3, 2] },
 ] as const;
-
-/** The landscape tiles of the mockup (03·0d) with the design's counts for the full Push day. */
-const TILES = [
-  { muscle: 'front_delts', exercises: 4, sets: 9 },
-  { muscle: 'chest', exercises: 3, sets: 8 },
-] as const;
-
-interface PreviewTileProps {
-  muscle: MuscleId;
-  exercises: number;
-  sets: number;
-}
-
-function PreviewTile({ muscle, exercises, sets }: PreviewTileProps) {
-  const { t } = useTranslation(['onboarding', 'muscles']);
-  const card = MUSCLE_CARDS[muscle];
-  return (
-    <View className="h-26 w-62.5 flex-row overflow-hidden rounded-2xl bg-tile">
-      <View className="size-26">
-        <MuscleMap view={card.view} viewBox={card.viewBox} selected={[muscle]} fit="cover" />
-      </View>
-      <View className="justify-center gap-1 px-3.5">
-        <Text variant="label" className="text-base">
-          {t(`muscles:names.${muscle}`)}
-        </Text>
-        <Text variant="caption" tone="subtle" className="font-inter">
-          {t('onboarding:welcome.preview.tileMeta', { exercises, sets })}
-        </Text>
-      </View>
-    </View>
-  );
-}
 
 interface PreviewExerciseProps {
   id: (typeof EXERCISES)[number]['id'];
@@ -156,6 +125,8 @@ export interface WelcomePreviewProps {
 export function WelcomePreview({ active }: WelcomePreviewProps) {
   const { t } = useTranslation('onboarding');
   const offset = useSharedValue(0);
+  // Shares of the exercises shown, worked out like on the real workout page.
+  const shares = muscleShares(EXERCISES.map((e) => ({ exerciseId: e.id, sets: e.rir.length })));
 
   // Hold, scroll down, hold, scroll back – a 14 s loop like the prototype.
   useEffect(() => {
@@ -243,9 +214,9 @@ export function WelcomePreview({ active }: WelcomePreviewProps) {
               <Text variant="headline" className="px-5 pt-6">
                 {t('welcome.preview.musclesWorked')}
               </Text>
-              <View className="flex-row gap-2.5 px-5 pt-3.5">
-                {TILES.map((tile) => (
-                  <PreviewTile key={tile.muscle} {...tile} />
+              <View className="flex-row gap-2 px-4 pt-3.5">
+                {shares.map((s) => (
+                  <MuscleTile key={s.muscle} muscle={s.muscle} percent={s.percent} />
                 ))}
               </View>
               <View className="flex-row items-center gap-3 px-5 pt-7.5">

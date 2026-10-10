@@ -18,8 +18,7 @@
       "exercises_many": "{{count}} exercícios",
       "exercises_other": "{{count}} exercícios",
       "duration": "Duração estimada: {{minutes}} min",
-      "startWorkout": "Começar treino",
-      "tileMeta": "{{exercises}} exercícios · {{sets}} séries"
+      "startWorkout": "Começar treino"
     }
   },
   "name": {
