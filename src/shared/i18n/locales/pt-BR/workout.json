@@ -36,14 +36,9 @@
     "progress": "{{done}} de {{total}} séries registradas",
     "finish": "Terminar treino",
     "finishHint": "Registre pelo menos uma série para terminar.",
-    "later": "Continuar depois",
-    "discard": "Descartar treino"
-  },
-  "discard": {
-    "title": "Descartar treino?",
-    "message": "Todas as séries registradas deste treino serão apagadas.",
-    "keep": "Continuar treinando",
-    "confirm": "Descartar"
+    "finishDescription": "Salva o treino no seu histórico",
+    "discard": "Descartar treino",
+    "discardDescription": "Apaga o treino com todas as séries registradas"
   },
   "swap": {
     "title": "Trocar exercício",

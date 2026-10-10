@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 import { defaultSetDrafts, isTimed } from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
@@ -9,6 +9,7 @@ import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { cn } from '@/shared/lib/cn';
 import { formatDuration } from '@/shared/lib/format';
+import { haptics } from '@/shared/lib/haptics';
 import { appendKey, backspace, type KeypadKey } from '@/shared/lib/keypad';
 import { clamp } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
@@ -32,15 +33,13 @@ interface Focus {
   field: TargetField;
 }
 
-/** A row with one target box set (null clears it); min and max stay in order where both are set. */
-function withTarget(set: SetDraft, field: TargetField, value: number | null): SetDraft {
-  if (field === 'min') {
-    const max = value != null && set.targetMax != null ? Math.max(value, set.targetMax) : null;
-    return { ...set, targetMin: value, targetMax: max ?? set.targetMax };
-  }
-  const min = value != null && set.targetMin != null ? Math.min(value, set.targetMin) : null;
-  return { ...set, targetMax: value, targetMin: min ?? set.targetMin };
-}
+/** A row with one target box set (null clears it); the other box is never changed. */
+const withTarget = (set: SetDraft, field: TargetField, value: number | null): SetDraft =>
+  field === 'min' ? { ...set, targetMin: value } : { ...set, targetMax: value };
+
+/** A minimum above the maximum: shown as an error rather than corrected behind the user's back. */
+const outOfOrder = (set: SetDraft) =>
+  set.targetMin != null && set.targetMax != null && set.targetMin > set.targetMax;
 
 const boxValue = (set: SetDraft, field: TargetField) =>
   field === 'min' ? set.targetMin : set.targetMax;
@@ -140,13 +139,23 @@ export function SetTargetsForm({
     focusBox(null);
     setSets((all) => all.filter((_, j) => j !== index));
   };
-  const stepRest = (delta: number) =>
+  const stepRest = (delta: number) => {
+    focusBox(null);
     setRest((r) => clamp((r ?? defaultRest) + delta, REST_MIN, REST_MAX));
+  };
+  // A tap anywhere else on the page closes the number pad (what was typed is kept).
+  const dismiss = () => {
+    if (focus) focusBox(null);
+  };
 
   const save = async () => {
     const final = withBuffer();
     setSets(final);
     setFocus(null);
+    if (final.some(outOfOrder)) {
+      haptics.error();
+      return;
+    }
     setSaving(true);
     try {
       await onSave(final, rest);
@@ -156,6 +165,8 @@ export function SetTargetsForm({
   };
 
   const shown = withBuffer();
+  // From what is entered, not what is being typed: no error flashes up on the first digit.
+  const invalid = sets.some(outOfOrder);
 
   return (
     <View className="flex-1">
@@ -163,114 +174,137 @@ export function SetTargetsForm({
         ref={scroll}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ paddingBottom: focus ? keypadHeight + 24 : 24 }}
+        // Grows to the page, so a tap below the rows also reaches the closing area.
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: focus ? keypadHeight + 24 : 24 }}
       >
-        <View className="flex-row items-center gap-2.5 px-5 pt-6 pb-2">
-          {(['set', timed ? 'minSeconds' : 'min', timed ? 'maxSeconds' : 'max'] as const).map(
-            (key) => (
-              <Text
-                key={key}
-                variant="overline"
-                className={cn(
-                  'text-center text-[11px] tracking-[0.9px] text-dim',
-                  key === 'set' ? 'w-10' : 'flex-1',
-                )}
-              >
-                {t(`sets.${key}`)}
-              </Text>
-            ),
-          )}
-          <Text variant="overline" className="w-7 text-right text-[11px] tracking-[0.9px] text-dim">
-            {timed ? '' : t('sets.rir')}
-          </Text>
-        </View>
-        <View className="gap-2.5 px-5" onLayout={(e) => (listTop.current = e.nativeEvent.layout.y)}>
-          {shown.map((set, i) => (
-            <SetEditorRow
-              key={set.key}
-              index={i}
-              set={set}
-              timed={timed}
-              activeField={focus?.index === i ? focus.field : null}
-              buffer={buffer}
-              pristine={pristine}
-              onFocus={(field) => focusBox({ index: i, field })}
-              onRirPress={() => {
-                focusBox(null);
-                setRirIndex(i);
-              }}
-              onRemove={sets.length > 1 ? () => removeSet(i) : undefined}
-            />
-          ))}
-        </View>
-        <View className="flex-row px-5 pt-4">
-          <IconButton
-            icon="plus"
-            size={40}
-            iconSize={14}
-            haptic="tap"
-            className="bg-raised"
-            disabled={sets.length >= MAX_SETS}
-            accessibilityLabel={t('sets.addSet')}
-            onPress={addSet}
-          />
-        </View>
-
-        <View className="mx-5 mt-5.5 gap-3.5 pt-5">
-          <View className="flex-row items-center justify-between gap-3">
-            <View className="min-w-0 flex-1">
-              <Text variant="label" className="text-base">
-                {t('sets.customRest')}
-              </Text>
-              <Text variant="caption" tone="subtle" className="mt-0.75 font-inter">
-                {t('sets.customRestHint')}
-              </Text>
-            </View>
-            <ToggleSwitch
-              value={rest !== null}
-              accessibilityLabel={t('sets.customRest')}
-              onChange={(on) => setRest(on ? defaultRest : null)}
-            />
+        <Pressable accessible={false} onPress={dismiss} className="flex-1">
+          <View className="flex-row items-center gap-2.5 px-5 pt-6 pb-2">
+            {(['set', timed ? 'minSeconds' : 'min', timed ? 'maxSeconds' : 'max'] as const).map(
+              (key) => (
+                <Text
+                  key={key}
+                  variant="overline"
+                  className={cn(
+                    'text-center text-[11px] tracking-[0.9px] text-dim',
+                    key === 'set' ? 'w-10' : 'flex-1',
+                  )}
+                >
+                  {t(`sets.${key}`)}
+                </Text>
+              ),
+            )}
+            <Text
+              variant="overline"
+              className="w-7 text-right text-[11px] tracking-[0.9px] text-dim"
+            >
+              {timed ? '' : t('sets.rir')}
+            </Text>
           </View>
           <View
-            className={cn(
-              'h-16 flex-row items-center justify-between',
-              rest === null && 'opacity-35',
-            )}
-            pointerEvents={rest === null ? 'none' : 'auto'}
+            className="gap-2.5 px-5"
+            onLayout={(e) => (listTop.current = e.nativeEvent.layout.y)}
           >
-            <IconButton
-              icon="minus"
-              size={48}
-              haptic="select"
-              className="bg-raised"
-              accessibilityLabel={t('common:actions.decrease')}
-              disabled={shownRest <= REST_MIN}
-              onPress={() => stepRest(-REST_STEP)}
-            />
-            <View className="flex-row items-baseline gap-1.5">
-              <Text variant="headline" className="text-[26px] leading-7.5">
-                {formatDuration(shownRest)}
-              </Text>
-              <Text variant="caption" tone="subtle" className="font-inter text-sm">
-                {t('sets.minutes')}
-              </Text>
-            </View>
+            {shown.map((set, i) => (
+              <SetEditorRow
+                key={set.key}
+                index={i}
+                set={set}
+                timed={timed}
+                activeField={focus?.index === i ? focus.field : null}
+                buffer={buffer}
+                pristine={pristine}
+                onFocus={(field) => focusBox({ index: i, field })}
+                onRirPress={() => {
+                  focusBox(null);
+                  setRirIndex(i);
+                }}
+                error={outOfOrder(sets[i] ?? set)}
+                onRemove={sets.length > 1 ? () => removeSet(i) : undefined}
+              />
+            ))}
+          </View>
+          {invalid ? (
+            <Text variant="caption" tone="danger" className="px-5 pt-3">
+              {t(timed ? 'sets.orderErrorSeconds' : 'sets.orderError')}
+            </Text>
+          ) : null}
+          <View className="flex-row px-5 pt-4">
             <IconButton
               icon="plus"
-              size={48}
-              haptic="select"
+              size={40}
+              iconSize={14}
+              haptic="tap"
               className="bg-raised"
-              accessibilityLabel={t('common:actions.increase')}
-              disabled={shownRest >= REST_MAX}
-              onPress={() => stepRest(REST_STEP)}
+              disabled={sets.length >= MAX_SETS}
+              accessibilityLabel={t('sets.addSet')}
+              onPress={addSet}
             />
           </View>
-        </View>
+
+          <View className="mx-5 mt-5.5 gap-3.5 pt-5">
+            <View className="flex-row items-center justify-between gap-3">
+              <View className="min-w-0 flex-1">
+                <Text variant="label" className="text-base">
+                  {t('sets.customRest')}
+                </Text>
+                <Text variant="caption" tone="subtle" className="mt-0.75 font-inter">
+                  {t('sets.customRestHint')}
+                </Text>
+              </View>
+              <ToggleSwitch
+                value={rest !== null}
+                accessibilityLabel={t('sets.customRest')}
+                onChange={(on) => {
+                  focusBox(null);
+                  setRest(on ? defaultRest : null);
+                }}
+              />
+            </View>
+            <View
+              className={cn(
+                'h-16 flex-row items-center justify-between',
+                rest === null && 'opacity-35',
+              )}
+              pointerEvents={rest === null ? 'none' : 'auto'}
+            >
+              <IconButton
+                icon="minus"
+                size={48}
+                haptic="select"
+                className="bg-raised"
+                accessibilityLabel={t('common:actions.decrease')}
+                disabled={shownRest <= REST_MIN}
+                onPress={() => stepRest(-REST_STEP)}
+              />
+              <View className="flex-row items-baseline gap-1.5">
+                <Text variant="headline" className="text-[26px] leading-7.5">
+                  {formatDuration(shownRest)}
+                </Text>
+                <Text variant="caption" tone="subtle" className="font-inter text-sm">
+                  {t('sets.minutes')}
+                </Text>
+              </View>
+              <IconButton
+                icon="plus"
+                size={48}
+                haptic="select"
+                className="bg-raised"
+                accessibilityLabel={t('common:actions.increase')}
+                disabled={shownRest >= REST_MAX}
+                onPress={() => stepRest(REST_STEP)}
+              />
+            </View>
+          </View>
+        </Pressable>
       </ScrollView>
 
       <View className="px-4 pt-1.5" style={{ paddingBottom: footerInset }}>
-        <Button label={t('common:actions.done')} loading={saving} onPress={save} />
+        <Button
+          label={t('common:actions.done')}
+          disabled={invalid}
+          loading={saving}
+          onPress={save}
+        />
       </View>
 
       {focus ? (

@@ -36,14 +36,9 @@
     "progress": "{{done}} von {{total}} Sätzen eingetragen",
     "finish": "Training beenden",
     "finishHint": "Trage mindestens einen Satz ein, um zu beenden.",
-    "later": "Später weitermachen",
-    "discard": "Training verwerfen"
-  },
-  "discard": {
-    "title": "Training verwerfen?",
-    "message": "Alle eingetragenen Sätze dieses Trainings werden gelöscht.",
-    "keep": "Weiter trainieren",
-    "confirm": "Verwerfen"
+    "finishDescription": "Speichert das Training in deiner Historie",
+    "discard": "Training verwerfen",
+    "discardDescription": "Löscht das Training mit allen eingetragenen Sätzen"
   },
   "swap": {
     "title": "Übung tauschen",

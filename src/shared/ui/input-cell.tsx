@@ -36,6 +36,8 @@ export interface InputCellProps {
   onPress: () => void;
   /** Dim text in an empty box that isn't being typed into, e.g. "Optional". */
   placeholder?: string;
+  /** Red ring, e.g. a minimum above the maximum. */
+  error?: boolean;
   className?: string;
   children?: ReactNode;
 }
@@ -48,6 +50,7 @@ export function InputCell({
   label,
   onPress,
   placeholder,
+  error,
   className,
   children,
 }: InputCellProps) {
@@ -64,8 +67,14 @@ export function InputCell({
     >
       {/* The focus ring is drawn over the box: a border would move what is placed inside it
           (the RIR badge). */}
-      {active ? (
-        <View pointerEvents="none" className="absolute inset-0 rounded-xl border-2 border-accent" />
+      {active || error ? (
+        <View
+          pointerEvents="none"
+          className={cn(
+            'absolute inset-0 rounded-xl border-2',
+            active ? 'border-accent' : 'border-danger',
+          )}
+        />
       ) : null}
       {value ? (
         <View>

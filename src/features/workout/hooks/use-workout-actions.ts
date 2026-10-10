@@ -1,16 +1,13 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert } from 'react-native';
-import { useTranslation } from 'react-i18next';
 
 import { discardWorkout, finishWorkout } from '@/shared/data/workouts';
 import { haptics } from '@/shared/lib/haptics';
 
 import { useWorkoutSessionStore } from '../stores/workout-session-store';
 
-/** Finish (→ summary), discard (with confirm) or leave the running workout. */
+/** Finish (→ summary), discard or leave the running workout. */
 export function useWorkoutActions(workoutId: string) {
-  const { t } = useTranslation('workout');
   const [finishing, setFinishing] = useState(false);
 
   async function finish() {
@@ -32,20 +29,12 @@ export function useWorkoutActions(workoutId: string) {
   /** Closes the screen; the workout keeps running and can be resumed. */
   const leave = () => (router.canGoBack() ? router.back() : router.replace('/'));
 
-  /** Deletes the workout without asking (nothing logged yet). */
+  /** Deletes the workout and leaves (the menu's "Discard" is its confirmation). */
   async function abandon() {
     useWorkoutSessionStore.getState().reset();
     leave();
     await discardWorkout(workoutId);
   }
 
-  function discard() {
-    haptics.warning();
-    Alert.alert(t('discard.title'), t('discard.message'), [
-      { text: t('discard.keep'), style: 'cancel' },
-      { text: t('discard.confirm'), style: 'destructive', onPress: abandon },
-    ]);
-  }
-
-  return { finish, discard, abandon, leave, finishing };
+  return { finish, abandon, leave, finishing };
 }

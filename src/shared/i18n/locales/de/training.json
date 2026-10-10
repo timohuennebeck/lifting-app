@@ -96,6 +96,8 @@
     "minSeconds": "Min (s)",
     "maxSeconds": "Max (s)",
     "optional": "Optional",
+    "orderError": "Max darf nicht kleiner als Min sein.",
+    "orderErrorSeconds": "Max (s) darf nicht kleiner als Min (s) sein.",
     "rir": "RIR",
     "addSet": "Satz hinzufügen",
     "removeSet": "Satz entfernen",

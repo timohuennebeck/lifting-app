@@ -1,11 +1,14 @@
-import { View } from 'react-native';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Button } from '@/shared/ui/button';
-import { Sheet } from '@/shared/ui/sheet';
-import { Text } from '@/shared/ui/text';
+import { MinusGlyph } from '@/features/training/components/glyphs';
+import { colors } from '@/shared/lib/theme';
+import { ChoiceSheet } from '@/shared/ui/choice-sheet';
+import { Icon } from '@/shared/ui/icon';
 
 import { useWorkoutActions } from '../hooks/use-workout-actions';
+
+type MenuOption = 'finish' | 'discard';
 
 export interface WorkoutMenuSheetProps {
   visible: boolean;
@@ -16,7 +19,10 @@ export interface WorkoutMenuSheetProps {
   totalSets: number;
 }
 
-/** Finish, continue later or discard the running workout. */
+/**
+ * The workout's X: finish or discard, as radio cards with the button below (the usual sheet
+ * style). The button is the confirmation, so discarding doesn't ask again.
+ */
 export function WorkoutMenuSheet({
   visible,
   onClose,
@@ -26,45 +32,51 @@ export function WorkoutMenuSheet({
   totalSets,
 }: WorkoutMenuSheetProps) {
   const { t } = useTranslation('workout');
-  const { finish, discard, leave, finishing } = useWorkoutActions(workoutId);
+  const { finish, abandon, finishing } = useWorkoutActions(workoutId);
   const canFinish = doneSets > 0;
+  const initial: MenuOption = canFinish ? 'finish' : 'discard';
+  const [option, setOption] = useState<MenuOption>(initial);
+  const [wasVisible, setWasVisible] = useState(visible);
+  if (visible !== wasVisible) {
+    setWasVisible(visible);
+    if (visible) setOption(initial);
+  }
 
   return (
-    <Sheet
+    <ChoiceSheet
       visible={visible}
       onClose={onClose}
       title={name}
       subtitle={t('menu.progress', { done: doneSets, total: totalSets })}
-    >
-      <View className="gap-2.5">
-        <Button
-          label={t('menu.finish')}
-          icon="check"
-          disabled={!canFinish}
-          loading={finishing}
-          onPress={finish}
-        />
-        {!canFinish ? (
-          <Text variant="caption" tone="subtle" className="text-center font-inter">
-            {t('menu.finishHint')}
-          </Text>
-        ) : null}
-        <Button
-          label={t('menu.later')}
-          variant="secondary"
-          onPress={() => {
-            onClose();
-            leave();
-          }}
-        />
-        <Button
-          label={t('menu.discard')}
-          variant="danger"
-          icon="trash"
-          haptic="none"
-          onPress={discard}
-        />
-      </View>
-    </Sheet>
+      value={option}
+      onChange={setOption}
+      onConfirm={(value) => {
+        if (value === 'finish') return void finish();
+        onClose();
+        void abandon();
+      }}
+      loading={finishing}
+      note={option === 'finish' && !canFinish ? t('menu.finishHint') : undefined}
+      options={[
+        {
+          value: 'finish',
+          title: t('menu.finish'),
+          description: t('menu.finishDescription'),
+          cta: t('menu.finish'),
+          ctaDisabled: !canFinish,
+          renderIcon: (active) => (
+            <Icon name="check" size={16} color={active ? colors.onAccent : colors.fg} />
+          ),
+        },
+        {
+          value: 'discard',
+          tone: 'danger',
+          title: t('menu.discard'),
+          description: t('menu.discardDescription'),
+          cta: t('menu.discard'),
+          renderIcon: (active) => <MinusGlyph color={active ? colors.bg : colors.fg} />,
+        },
+      ]}
+    />
   );
 }

@@ -96,6 +96,8 @@
     "minSeconds": "Mín (s)",
     "maxSeconds": "Máx (s)",
     "optional": "Opcional",
+    "orderError": "O máx. não pode ser menor que o mín.",
+    "orderErrorSeconds": "O máx. (s) não pode ser menor que o mín. (s).",
     "rir": "RIR",
     "addSet": "Adicionar série",
     "removeSet": "Remover série",

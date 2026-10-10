@@ -36,14 +36,9 @@
     "progress": "{{done}} of {{total}} sets logged",
     "finish": "Finish workout",
     "finishHint": "Log at least one set to finish.",
-    "later": "Continue later",
-    "discard": "Discard workout"
-  },
-  "discard": {
-    "title": "Discard workout?",
-    "message": "All logged sets of this workout will be deleted.",
-    "keep": "Keep training",
-    "confirm": "Discard"
+    "finishDescription": "Saves the workout to your history",
+    "discard": "Discard workout",
+    "discardDescription": "Deletes the workout and all logged sets"
   },
   "swap": {
     "title": "Swap exercise",

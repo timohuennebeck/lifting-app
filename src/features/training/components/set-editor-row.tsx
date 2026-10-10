@@ -30,6 +30,8 @@ export interface SetEditorRowProps {
   pristine: boolean;
   onFocus: (field: TargetField) => void;
   onRirPress: () => void;
+  /** Min above max: both boxes get a red ring. */
+  error?: boolean;
   /** Undefined when the set can't be removed (last remaining set). */
   onRemove?: () => void;
 }
@@ -44,6 +46,7 @@ export function SetEditorRow({
   pristine,
   onFocus,
   onRirPress,
+  error,
   onRemove,
 }: SetEditorRowProps) {
   const { t } = useTranslation('training');
@@ -57,6 +60,7 @@ export function SetEditorRow({
         pristine={pristine}
         label={t(timed ? `sets.${field}Seconds` : `sets.${field}`)}
         placeholder={t('sets.optional')}
+        error={error}
         onPress={() => onFocus(field)}
         className="min-w-0 flex-1"
       />
