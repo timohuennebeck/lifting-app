@@ -13,8 +13,8 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
+import { workoutMuscleSplit } from '@/features/exercises/lib/muscle-groups';
 import { exerciseName, getExercise } from '@/shared/data/exercises';
-import { muscleShares } from '@/shared/data/muscles';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -125,8 +125,10 @@ export interface WelcomePreviewProps {
 export function WelcomePreview({ active }: WelcomePreviewProps) {
   const { t } = useTranslation('onboarding');
   const offset = useSharedValue(0);
-  // Shares of the exercises shown, worked out like on the real workout page.
-  const shares = muscleShares(EXERCISES.map((e) => ({ exerciseId: e.id, sets: e.rir.length })));
+  // The muscles of the exercises shown, split like on the real workout page.
+  const { primary, secondary } = workoutMuscleSplit(
+    EXERCISES.map((e) => ({ exerciseId: e.id, sets: e.rir.length })),
+  );
 
   // Hold, scroll down, hold, scroll back – a 14 s loop like the prototype.
   useEffect(() => {
@@ -213,15 +215,17 @@ export function WelcomePreview({ active }: WelcomePreviewProps) {
               </Text>
               <View className="flex-row items-center gap-2 px-5 pt-6">
                 <Text variant="headline">{t('welcome.preview.musclesWorked')}</Text>
-                <Icon name="info" size={18} color={colors.subtle} />
+                <View className="size-6.5 items-center justify-center rounded-full bg-control">
+                  <Icon name="info-glyph" size={12} color={colors.fg} />
+                </View>
               </View>
               <View className="flex-row gap-2 px-4 pt-3.5">
-                {shares.map((s, i) => (
+                {[...primary, ...secondary].map((s) => (
                   <MuscleTile
                     key={s.muscle}
                     muscle={s.muscle}
                     percent={s.percent}
-                    highlight={i === 0}
+                    highlight={primary.includes(s)}
                   />
                 ))}
               </View>

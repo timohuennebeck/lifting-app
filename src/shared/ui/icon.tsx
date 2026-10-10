@@ -221,6 +221,16 @@ const ICONS = {
       </>
     ),
   },
+  // The "i" alone, for a round button that is its circle.
+  'info-glyph': {
+    viewBox: '0 0 14 14',
+    render: (c) => (
+      <>
+        <Path d="M7 6.2v5" stroke={c} strokeWidth={2.2} strokeLinecap="round" />
+        <Circle cx={7} cy={3.2} r={1.35} fill={c} />
+      </>
+    ),
+  },
   'replay-10': { viewBox: '0 0 24 24', render: seek(false) },
   'forward-10': { viewBox: '0 0 24 24', render: seek(true) },
   target: {

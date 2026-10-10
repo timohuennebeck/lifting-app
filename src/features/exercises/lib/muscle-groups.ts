@@ -1,5 +1,5 @@
 import { getExercise } from '@/shared/data/exercises';
-import { muscleShares } from '@/shared/data/muscles';
+import { type MuscleShare, muscleShares } from '@/shared/data/muscles';
 import type { BodyPartId, MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 export const MUSCLE_GROUP_IDS = [
@@ -51,19 +51,22 @@ export function splitMuscles(exerciseId: string) {
   };
 }
 
+/** Below this share of a workout a muscle is secondary, even where an exercise targets it. */
+const WORKOUT_PRIMARY_MIN_PERCENT = 10;
+
 /**
  * A workout's muscles by share, split like an exercise's: primary where at least one exercise
- * targets them directly, secondary where they only ever help.
+ * targets them directly and they get a real part of the work, secondary otherwise. Only the
+ * grouping; the shares are the same as everywhere else.
  */
 export function workoutMuscleSplit(items: { exerciseId: string; sets: number }[]) {
   const targeted = new Set(
     items.filter((i) => i.sets > 0).flatMap((i) => splitMuscles(i.exerciseId).primary),
   );
+  const isPrimary = (s: MuscleShare) =>
+    targeted.has(s.muscle) && s.percent >= WORKOUT_PRIMARY_MIN_PERCENT;
   const shares = muscleShares(items);
-  return {
-    primary: shares.filter((s) => targeted.has(s.muscle)),
-    secondary: shares.filter((s) => !targeted.has(s.muscle)),
-  };
+  return { primary: shares.filter(isPrimary), secondary: shares.filter((s) => !isPrimary(s)) };
 }
 
 /** Muscles of an exercise, highest share first. */
