@@ -65,34 +65,12 @@
     "empty": "Noch keine Trainings. Beende ein Training mit dieser Übung, um deinen Fortschritt zu sehen."
   },
   "summary": {
-    "title": "Geschafft.",
+    "title": "{{name}} erledigt.",
     "records_one": "{{count}} neuer Rekord",
     "records_other": "{{count}} neue Rekorde",
     "noRecords": "Stark gemacht",
-    "sets_one": "Satz",
-    "sets_other": "Sätze",
     "newRecord": "NEUER REKORD",
     "previously": "vorher {{value}}"
-  },
-  "compare": {
-    "title": "Das ist, als hättest du gehoben",
-    "caption": "{{volume}} insgesamt · {{one}} ≈ {{weight}}",
-    "animals": {
-      "polarBear_one": "{{value}} Eisbär",
-      "polarBear_other": "{{value}} Eisbären",
-      "giraffe_one": "{{value}} Giraffe",
-      "giraffe_other": "{{value}} Giraffen",
-      "hippo_one": "{{value}} Nilpferd",
-      "hippo_other": "{{value}} Nilpferde",
-      "rhino_one": "{{value}} Nashorn",
-      "rhino_other": "{{value}} Nashörner",
-      "elephant_one": "{{value}} Elefant",
-      "elephant_other": "{{value}} Elefanten",
-      "spermWhale_one": "{{value}} Pottwal",
-      "spermWhale_other": "{{value}} Pottwale",
-      "blueWhale_one": "{{value}} Blauwal",
-      "blueWhale_other": "{{value}} Blauwale"
-    }
   },
   "builder": {
     "title": "Leeres Training"

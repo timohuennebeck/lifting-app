@@ -65,34 +65,12 @@
     "empty": "Ainda sem treinos. Termine um treino com este exercício para ver seu progresso."
   },
   "summary": {
-    "title": "Pronto.",
+    "title": "{{name}} concluído.",
     "records_one": "{{count}} novo recorde",
     "records_other": "{{count}} novos recordes",
     "noRecords": "Mandou bem",
-    "sets_one": "Série",
-    "sets_other": "Séries",
     "newRecord": "NOVO RECORDE",
     "previously": "antes {{value}}"
-  },
-  "compare": {
-    "title": "É como levantar",
-    "caption": "{{volume}} no total · {{one}} ≈ {{weight}}",
-    "animals": {
-      "polarBear_one": "{{value}} urso-polar",
-      "polarBear_other": "{{value}} ursos-polares",
-      "giraffe_one": "{{value}} girafa",
-      "giraffe_other": "{{value}} girafas",
-      "hippo_one": "{{value}} hipopótamo",
-      "hippo_other": "{{value}} hipopótamos",
-      "rhino_one": "{{value}} rinoceronte",
-      "rhino_other": "{{value}} rinocerontes",
-      "elephant_one": "{{value}} elefante",
-      "elephant_other": "{{value}} elefantes",
-      "spermWhale_one": "{{value}} cachalote",
-      "spermWhale_other": "{{value}} cachalotes",
-      "blueWhale_one": "{{value}} baleia-azul",
-      "blueWhale_other": "{{value}} baleias-azuis"
-    }
   },
   "builder": {
     "title": "Treino vazio"

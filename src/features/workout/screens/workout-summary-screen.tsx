@@ -1,51 +1,28 @@
 import { router, useLocalSearchParams } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTranslation } from 'react-i18next';
 
-import { mainShares, muscleShares } from '@/shared/data/muscles';
+import { workoutMuscleSplit } from '@/features/exercises/lib/muscle-groups';
+import { MuscleSplit } from '@/features/muscles/components/muscle-split';
 import { useUnits } from '@/shared/data/profile';
 import { useWorkout } from '@/shared/data/workouts';
 import { minutesBetween } from '@/shared/lib/date';
-import { formatNumber, formatVolumeValue, weightUnit } from '@/shared/lib/format';
+import { formatNumber } from '@/shared/lib/format';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
-import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { MuscleMap } from '@/shared/ui/muscle-map';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 import { RecordCard } from '../components/record-card';
-import { VolumeComparison } from '../components/volume-comparison';
 import { useWorkoutRecords } from '../data/workout-records';
 
-/** Fades the muscle maps into the background (CSS mask in the design). */
-const MAPS_FADE: GradientStop[] = [
-  [0.6, 0],
-  [1, 1],
-];
-
-interface StatProps {
-  value: string;
-  unit: string;
-}
-
-function Stat({ value, unit }: StatProps) {
-  return (
-    <View className="flex-1 flex-row items-baseline justify-center gap-1">
-      <Text className="font-inter-semibold text-2xl leading-6">{value}</Text>
-      <Text variant="caption" tone="subtle" className="font-inter">
-        {unit}
-      </Text>
-    </View>
-  );
-}
-
-/** Workout done (design 03s·C): trained muscles, totals, records and a fun comparison. */
+/** Workout done: its name, time and records, the muscles it worked, then each new record. */
 export function WorkoutSummaryScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { t } = useTranslation(['workout', 'common', 'muscles']);
+  const { t } = useTranslation(['workout', 'common']);
   const insets = useSafeAreaInsets();
   const units = useUnits();
   const { data: workout } = useWorkout(id);
@@ -53,81 +30,58 @@ export function WorkoutSummaryScreen() {
 
   const close = () => (router.canDismiss() ? router.dismissAll() : router.replace('/'));
 
-  const done = (workout?.exercises ?? []).map((e) => ({
-    exerciseId: e.exerciseId,
-    sets: e.sets.filter((s) => s.completedAt),
-  }));
-  const setCount = done.reduce((sum, e) => sum + e.sets.length, 0);
-  const volumeKg = done.reduce(
-    (sum, e) => sum + e.sets.reduce((v, s) => v + (s.weightKg ?? 0) * (s.reps ?? 0), 0),
-    0,
-  );
-  const shares = muscleShares(done.map((e) => ({ exerciseId: e.exerciseId, sets: e.sets.length })));
-  const main = mainShares(shares);
-  const trained = main.map((s) => s.muscle);
-  const chips = main.slice(0, 6);
+  const name = workout?.name ?? '';
   const minutes = workout ? minutesBetween(workout.startedAt, workout.finishedAt) : 0;
+  // Only the sets that were done count.
+  const { primary, secondary } = workoutMuscleSplit(
+    (workout?.exercises ?? []).map((e) => ({
+      exerciseId: e.exerciseId,
+      sets: e.sets.filter((s) => s.completedAt).length,
+    })),
+  );
+  const primaryIds = primary.map((s) => s.muscle);
+  const secondaryIds = secondary.map((s) => s.muscle);
 
   return (
-    <Screen header={<ScreenHeader onBack={close} title={workout?.name ?? ''} />}>
+    <Screen header={<ScreenHeader icon="close" onBack={close} title={name} />}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 130 + insets.bottom }}
       >
-        <View className="-mt-1.5 pt-81">
-          <View className="absolute inset-x-0 top-0 h-107.5 flex-row justify-center gap-4 px-4.5">
-            <View className="h-full w-40">
-              <MuscleMap view="front" selected={trained} />
-            </View>
-            <View className="h-full w-40">
-              <MuscleMap view="back" selected={trained} />
-            </View>
-            <Gradient from="top" stops={MAPS_FADE} />
-          </View>
-          <View className="mx-5 gap-2">
-            <Text className="font-inter-semibold text-[34px] leading-8.5">
-              {t('summary.title')}
-            </Text>
-            <Text variant="body" className="text-base text-fg">
-              {`${workout?.name ?? ''} · ${
-                records.length
-                  ? t('summary.records', { count: records.length })
-                  : t('summary.noRecords')
-              }`}
-            </Text>
-            <View className="flex-row flex-wrap gap-1.5 pt-1.5">
-              {chips.map((c) => (
-                <View
-                  key={c.muscle}
-                  className="h-7.5 flex-row items-center gap-1.75 rounded-full bg-chip px-3"
-                >
-                  <View className="size-1.75 rounded-full bg-accent" />
-                  <Text variant="caption">{t(`muscles:names.${c.muscle}`)}</Text>
-                </View>
-              ))}
-            </View>
-          </View>
+        <View className="gap-1.5 px-5 pt-3">
+          <Text className="font-inter-semibold text-[32px] leading-9">
+            {t('summary.title', { name })}
+          </Text>
+          <Text tone="secondary" className="font-inter text-[15px] leading-5">
+            {`${formatNumber(minutes, 0)} ${t('common:units.minShort')} · ${
+              records.length
+                ? t('summary.records', { count: records.length })
+                : t('summary.noRecords')
+            }`}
+          </Text>
         </View>
-        <View className="flex-row px-5 pt-6.5">
-          {volumeKg > 0 ? (
-            <Stat
-              value={formatVolumeValue(volumeKg, units)}
-              unit={t(`common:units.${weightUnit(units)}`)}
+        <View
+          className="mx-4 mt-7 flex-row justify-center gap-2 rounded-[24px] bg-surface py-6.5"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        >
+          {(['front', 'back'] as const).map((view) => (
+            <MuscleMap
+              key={view}
+              view={view}
+              selected={primaryIds}
+              secondary={secondaryIds}
+              width={135}
+              height={245}
             />
-          ) : null}
-          <Stat value={formatNumber(minutes, 0)} unit={t('common:units.minShort')} />
-          <Stat value={formatNumber(setCount, 0)} unit={t('summary.sets', { count: setCount })} />
+          ))}
         </View>
+        <MuscleSplit primary={primary} secondary={secondary} className="px-4 pt-6" />
         {records.length ? (
-          <View className="gap-2.5 px-4 pt-7">
+          <View className="gap-2.5 px-4 pt-9">
             {records.map((r) => (
               <RecordCard key={r.exerciseId} record={r} units={units} />
             ))}
-          </View>
-        ) : null}
-        {volumeKg > 0 ? (
-          <View className="px-4 pt-7">
-            <VolumeComparison volumeKg={volumeKg} units={units} />
           </View>
         ) : null}
       </ScrollView>

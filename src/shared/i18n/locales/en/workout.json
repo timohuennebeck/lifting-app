@@ -65,34 +65,12 @@
     "empty": "No sessions yet. Finish a workout with this exercise to see your progress."
   },
   "summary": {
-    "title": "Done.",
+    "title": "{{name}} done.",
     "records_one": "{{count}} new record",
     "records_other": "{{count}} new records",
     "noRecords": "Well done",
-    "sets_one": "Set",
-    "sets_other": "Sets",
     "newRecord": "NEW RECORD",
     "previously": "previously {{value}}"
-  },
-  "compare": {
-    "title": "That's like lifting",
-    "caption": "{{volume}} in total · {{one}} ≈ {{weight}}",
-    "animals": {
-      "polarBear_one": "{{value}} polar bear",
-      "polarBear_other": "{{value}} polar bears",
-      "giraffe_one": "{{value}} giraffe",
-      "giraffe_other": "{{value}} giraffes",
-      "hippo_one": "{{value}} hippo",
-      "hippo_other": "{{value}} hippos",
-      "rhino_one": "{{value}} rhino",
-      "rhino_other": "{{value}} rhinos",
-      "elephant_one": "{{value}} elephant",
-      "elephant_other": "{{value}} elephants",
-      "spermWhale_one": "{{value}} sperm whale",
-      "spermWhale_other": "{{value}} sperm whales",
-      "blueWhale_one": "{{value}} blue whale",
-      "blueWhale_other": "{{value}} blue whales"
-    }
   },
   "builder": {
     "title": "Empty workout"
