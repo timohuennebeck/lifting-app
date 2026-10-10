@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -15,10 +15,12 @@ export interface TemplateRowProps {
   exerciseCount: number;
   onPress: () => void;
   onStart: () => void;
+  /** "⋯": rename or delete. */
+  onMore: () => void;
   starting?: boolean;
 }
 
-/** Numbered template row with a quick-start play button (01·V·A). */
+/** Numbered template row with "⋯" (rename, delete) and a quick-start play button (01·V·A). */
 export function TemplateRow({
   index,
   name,
@@ -26,6 +28,7 @@ export function TemplateRow({
   exerciseCount,
   onPress,
   onStart,
+  onMore,
   starting,
 }: TemplateRowProps) {
   const { t } = useTranslation('training');
@@ -33,25 +36,37 @@ export function TemplateRow({
     <ListRow
       onPress={onPress}
       activeScale={0.98}
-      className="px-3"
+      // Opaque: the row slides over the delete button when swiped.
+      className="bg-bg px-3"
       badge={padIndex(index)}
       title={name}
       subtitle={t('list.meta', { count: exerciseCount, minutes })}
       trailing={
-        <PressableScale
-          haptic="press"
-          hitSlop={8}
-          accessibilityLabel={t('list.start', { name })}
-          onPress={onStart}
-          disabled={starting}
-          className="size-10 items-center justify-center rounded-full bg-elevated"
-        >
-          {starting ? (
-            <ActivityIndicator size="small" color={colors.fg} />
-          ) : (
-            <Icon name="play" size={12} />
-          )}
-        </PressableScale>
+        <View className="flex-row gap-2">
+          <PressableScale
+            haptic="tap"
+            hitSlop={4}
+            accessibilityLabel={t('list.more', { name })}
+            onPress={onMore}
+            className="size-10 items-center justify-center rounded-full bg-elevated"
+          >
+            <Icon name="more" size={14} />
+          </PressableScale>
+          <PressableScale
+            haptic="press"
+            hitSlop={4}
+            accessibilityLabel={t('list.start', { name })}
+            onPress={onStart}
+            disabled={starting}
+            className="size-10 items-center justify-center rounded-full bg-elevated"
+          >
+            {starting ? (
+              <ActivityIndicator size="small" color={colors.fg} />
+            ) : (
+              <Icon name="play" size={12} />
+            )}
+          </PressableScale>
+        </View>
       }
     />
   );

@@ -119,6 +119,13 @@ export function SignInScreen() {
             {t(`errors.${error}`)}
           </Text>
         ) : null}
+        <TextButton
+          label={t('forgot.link')}
+          tone="muted"
+          onPress={() => router.push('/forgot-password')}
+          className="self-end"
+          textClassName="text-sm"
+        />
       </View>
     </Screen>
   );

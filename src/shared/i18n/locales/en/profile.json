@@ -1,10 +1,19 @@
 {
   "memberSince": "Member since {{date}}",
-  "facts": {
-    "perWeek_one": "Trains {{count}}× per week",
-    "perWeek_other": "Trains {{count}}× per week",
-    "workouts_one": "{{count}} workout finished",
-    "workouts_other": "{{count}} workouts finished"
+  "name": {
+    "title": "Your name",
+    "subtitle": "Shown on your profile.",
+    "label": "Name",
+    "placeholder": "First name",
+    "edit": "Change name"
+  },
+  "about": {
+    "title": "About you",
+    "subtitle": "Shown on your profile.",
+    "label": "Description",
+    "placeholder": "Tell people a bit about yourself…",
+    "add": "Add a description",
+    "edit": "Edit description"
   },
   "activity": "Activity",
   "lastMonths": "Last 3 months",

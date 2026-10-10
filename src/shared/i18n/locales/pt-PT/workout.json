@@ -98,5 +98,8 @@
       "blueWhale_one": "{{value}} baleia-azul",
       "blueWhale_other": "{{value}} baleias-azuis"
     }
+  },
+  "builder": {
+    "title": "Treino vazio"
   }
 }

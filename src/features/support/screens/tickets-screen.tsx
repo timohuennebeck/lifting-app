@@ -35,6 +35,7 @@ export function TicketsScreen() {
     >
       <TextField
         icon="search"
+        shape="pill"
         clearable
         autoCorrect={false}
         returnKeyType="search"

@@ -28,6 +28,8 @@ export const profiles = sqliteTable('profiles', {
   language: text(),
   // Path in the private "avatars" bucket; null shows the initials.
   avatar_path: text(),
+  // "About you" on the profile, up to 150 characters.
+  bio: text(),
   onboarded_at: text(),
   created_at: text().notNull(),
   updated_at: text().notNull(),

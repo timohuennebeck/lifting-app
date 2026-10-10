@@ -206,6 +206,7 @@ export function ExerciseSearchBar({
     <View className="flex-row items-center gap-2">
       <TextField
         icon="search"
+        shape="pill"
         clearable
         value={query}
         onChangeText={onChangeQuery}

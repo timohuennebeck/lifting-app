@@ -6,15 +6,15 @@ import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 
 /**
- * Starts a workout from a template (a null id starts an empty one) and opens live
- * logging; resumes a running one instead.
+ * Starts a workout from a template and opens live logging; resumes a running one instead.
+ * (An empty workout is put together in the builder first.)
  */
 export function useStartTemplate() {
   const [startingId, setStartingId] = useState<string | null>(null);
   // State isn't updated yet on a double tap, which would start two workouts.
   const starting = useRef(false);
 
-  const start = async (template: { id: string | null; name: string }) => {
+  const start = async (template: { id: string; name: string }) => {
     if (starting.current) return;
     starting.current = true;
     setStartingId(template.id);

@@ -46,6 +46,8 @@ export default function RootLayout() {
   useCatalogRefresh();
   const ready = useSessionStore((s) => s.ready);
   const signedIn = useSessionStore((s) => !!s.session);
+  // A password reset signs in with its code; the app opens once the new password is set.
+  const recovering = useSessionStore((s) => s.recovering);
   const onboarded = useOnboardingStore((s) => s.completed);
   useEffect(() => {
     if (fontsLoaded && ready) SplashScreen.hideAsync();
@@ -53,7 +55,7 @@ export default function RootLayout() {
 
   if (!fontsLoaded || !ready) return null;
 
-  const inApp = signedIn && onboarded;
+  const inApp = signedIn && onboarded && !recovering;
 
   return (
     <GestureHandlerRootView className="flex-1 bg-bg">

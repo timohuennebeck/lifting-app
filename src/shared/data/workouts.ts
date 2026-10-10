@@ -27,6 +27,7 @@ import {
   type SetTargets,
 } from './exercises';
 import { newId, nowIso } from './json';
+import type { PlanExerciseDraft } from './templates';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
 import {
@@ -97,6 +98,39 @@ const workoutExerciseIds = (workoutId: string) =>
 /** Copies a template (or nothing, for an empty workout) into a new running workout. */
 export async function startWorkout(userId: string, name: string, templateId: string | null) {
   return drizzle.transaction((tx) => insertWorkout(tx, userId, name, templateId));
+}
+
+/**
+ * Starts a workout with exercises and target sets put together beforehand (an empty workout,
+ * which isn't a template). Returns the new workout id.
+ */
+export async function startDraftWorkout(
+  userId: string,
+  name: string,
+  exercises: PlanExerciseDraft[],
+) {
+  return drizzle.transaction(async (tx) => {
+    const workoutId = await insertWorkout(tx, userId, name, null);
+    for (const [position, exercise] of exercises.entries()) {
+      const workoutExerciseId = newId();
+      await tx.insert(workoutExercises).values({
+        id: workoutExerciseId,
+        user_id: userId,
+        workout_id: workoutId,
+        exercise_id: exercise.exerciseId,
+        position,
+        rest_seconds: exercise.restSeconds ?? null,
+      });
+      for (const [k, set] of exercise.sets.entries()) {
+        await insertWorkoutSet(tx, userId, workoutExerciseId, k, {
+          min: set.targetMin,
+          max: set.targetMax,
+          rir: set.rir,
+        });
+      }
+    }
+    return workoutId;
+  });
 }
 
 /** `startWorkout` inside an existing transaction. Returns the new workout id. */

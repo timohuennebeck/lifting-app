@@ -1,11 +1,10 @@
 import { muscleWeights } from '@/features/exercises/lib/muscle-groups';
-import { colors } from '@/shared/lib/theme';
+import { rirColor } from '@/shared/lib/rir';
 
-/** Set editor and picker: hard sets accent, RIR 2 light, easy sets dark. */
-export function editorRirStyle(rir: number | null, accent: string) {
-  if (rir === null || rir >= 3) return { bg: '#2E2E2C', dark: false };
-  if (rir === 2) return { bg: colors.fgMid, dark: true };
-  return { bg: accent, dark: true };
+/** Set editor and picker: the RIR badge colours (red near failure, else amber); grey without. */
+export function editorRirStyle(rir: number | null) {
+  if (rir === null) return { bg: '#2E2E2C', dark: false };
+  return { bg: rirColor(rir), dark: true };
 }
 
 /** Splits an exercise's muscles into primary (≥ 30 % or the top one) and secondary. */

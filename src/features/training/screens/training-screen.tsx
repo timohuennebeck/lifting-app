@@ -5,18 +5,24 @@ import { View } from 'react-native';
 
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useProfile } from '@/shared/data/profile';
-import { useCollections, useTemplates } from '@/shared/data/templates';
+import { type TemplateSummary, useCollections, useTemplates } from '@/shared/data/templates';
+import { useLastDefined } from '@/shared/hooks/use-last-defined';
+import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { afterSheetClose } from '@/shared/ui/sheet';
+import { SwipeToDelete } from '@/shared/ui/swipe-to-delete';
 import { Text } from '@/shared/ui/text';
+import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
 import { type CollectionTab, CollectionTabs } from '../components/collection-tabs';
 import { CreateSheet } from '../components/create-sheet';
 import { CollectionsGlyph } from '../components/glyphs';
 import { NewCollectionSheet } from '../components/new-collection-sheet';
+import { type TemplateOption, TemplateOptionsSheet } from '../components/template-options-sheet';
 import { TemplateRow } from '../components/template-row';
+import { deleteTemplate, renameTemplate } from '../data/template-mutations';
 import { useStartTemplate } from '../hooks/use-start-template';
 
 const NONE = 'none';
@@ -31,6 +37,13 @@ export function TrainingScreen() {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [newCollectionOpen, setNewCollectionOpen] = useState(false);
+  // "⋯" opens the options with rename selected; swiping the row opens them on delete.
+  const [options, setOptions] = useState<{ tpl: TemplateSummary; option: TemplateOption } | null>(
+    null,
+  );
+  const optionsShown = useLastDefined(options);
+  const [renaming, setRenaming] = useState<TemplateSummary | null>(null);
+  const renameShown = useLastDefined(renaming);
 
   const looseCount = templates.filter((tpl) => !tpl.collectionId).length;
   const tabs: CollectionTab[] = [
@@ -79,16 +92,22 @@ export function TrainingScreen() {
       ) : null}
       <View className="px-2 pt-3">
         {rows.map((tpl, i) => (
-          <TemplateRow
+          <SwipeToDelete
             key={tpl.id}
-            index={i + 1}
-            name={tpl.name}
-            minutes={tpl.estimatedMinutes}
-            exerciseCount={tpl.exerciseCount}
-            starting={startingId === tpl.id}
-            onPress={() => router.push(`/template/${tpl.id}`)}
-            onStart={() => start(tpl)}
-          />
+            label={t('list.delete', { name: tpl.name })}
+            onDelete={() => setOptions({ tpl, option: 'delete' })}
+          >
+            <TemplateRow
+              index={i + 1}
+              name={tpl.name}
+              minutes={tpl.estimatedMinutes}
+              exerciseCount={tpl.exerciseCount}
+              starting={startingId === tpl.id}
+              onPress={() => router.push(`/template/${tpl.id}`)}
+              onStart={() => start(tpl)}
+              onMore={() => setOptions({ tpl, option: 'rename' })}
+            />
+          </SwipeToDelete>
         ))}
       </View>
       {!isLoading && !rows.length ? (
@@ -123,6 +142,38 @@ export function TrainingScreen() {
         onCreateTemplate={() => {
           setCreateOpen(false);
           afterSheetClose(openNewTemplate);
+        }}
+      />
+      <TemplateOptionsSheet
+        visible={!!options}
+        onClose={() => setOptions(null)}
+        name={optionsShown?.tpl.name ?? ''}
+        exerciseCount={optionsShown?.tpl.exerciseCount ?? 0}
+        minutes={optionsShown?.tpl.estimatedMinutes ?? 0}
+        initialOption={optionsShown?.option}
+        onRename={() => {
+          const tpl = options?.tpl ?? null;
+          setOptions(null);
+          afterSheetClose(() => setRenaming(tpl));
+        }}
+        onDelete={async () => {
+          const tpl = options?.tpl;
+          setOptions(null);
+          if (!tpl) return;
+          await deleteTemplate(tpl.id);
+          haptics.success();
+        }}
+      />
+      <TextInputSheet
+        visible={!!renaming}
+        onClose={() => setRenaming(null)}
+        title={t('options.renameTitle')}
+        initialValue={renameShown?.name}
+        placeholder={t('options.namePlaceholder')}
+        ctaLabel={t('common:actions.save')}
+        onSubmit={async (name) => {
+          if (renaming) await renameTemplate(renaming.id, name);
+          setRenaming(null);
         }}
       />
       <NewCollectionSheet

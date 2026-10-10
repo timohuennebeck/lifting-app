@@ -23,7 +23,7 @@ export function RirPickerSheet({ visible, value, onClose, onSelect }: RirPickerS
     <Sheet visible={visible} onClose={onClose} className="px-5">
       <View className="flex-row justify-between gap-3 pb-2.5">
         {RIR_VALUES.map((rir) => {
-          const style = editorRirStyle(rir, colors.accent);
+          const style = editorRirStyle(rir);
           const selected = rir === value;
           return (
             <PressableScale

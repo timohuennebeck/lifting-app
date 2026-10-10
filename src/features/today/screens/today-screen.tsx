@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
-import { useStartTemplate } from '@/features/training/hooks/use-start-template';
+import { useWorkoutDraftStore } from '@/features/workout/stores/workout-draft-store';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useUnits } from '@/shared/data/profile';
 import { useActiveWorkout } from '@/shared/data/workouts';
@@ -30,7 +30,6 @@ export function TodayScreen() {
   const { data: active } = useActiveWorkout();
   const { days, planTemplates } = useWeekPlan(today);
   const day = days[selected];
-  const { start } = useStartTemplate();
 
   const pills = (
     <ScrollView
@@ -53,7 +52,11 @@ export function TodayScreen() {
       ) : (
         <PressableScale
           haptic="press"
-          onPress={() => start({ id: null, name: t('emptyWorkoutName') })}
+          onPress={() => {
+            // Put together first, started from the builder.
+            useWorkoutDraftStore.getState().begin(t('emptyWorkoutName'));
+            router.push('/workout/new');
+          }}
           className="h-10 flex-row items-center gap-1.75 rounded-full bg-elevated px-3.75"
         >
           <Icon name="plus" size={12} />

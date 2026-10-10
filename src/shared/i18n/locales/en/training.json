@@ -9,6 +9,8 @@
     "meta_one": "{{minutes}} min · {{count}} exercise",
     "meta_other": "{{minutes}} min · {{count}} exercises",
     "start": "Start {{name}}",
+    "more": "Options for {{name}}",
+    "delete": "Delete {{name}}",
     "empty": "No templates yet",
     "emptyCollection": "No templates here yet",
     "emptyHint": "Create a template to plan your exercises and sets."
@@ -41,7 +43,8 @@
     "deleteKeepHint": "Templates move to “No collection”",
     "deleteAll": "Delete collection and templates",
     "deleteAllHint": "Logged workouts are kept",
-    "renameA11y": "Rename {{name}}",
+    "deleteHint": "Next you choose what happens to its templates",
+    "moreA11y": "Options for {{name}}",
     "deleteA11y": "Delete {{name}}"
   },
   "newTemplate": {

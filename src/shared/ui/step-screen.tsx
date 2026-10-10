@@ -39,6 +39,8 @@ export interface StepScreenProps extends Omit<StepTitleProps, 'className'> {
   scroll?: boolean;
   contentClassName?: string;
   titleClassName?: string;
+  /** No back button, e.g. after a step that can't be undone. */
+  hideBack?: boolean;
 }
 
 /** Step frame of the onboarding, plan and import flows: progress header, title, content, CTA. */
@@ -53,10 +55,11 @@ export function StepScreen({
   footer,
   scroll,
   contentClassName,
+  hideBack,
 }: StepScreenProps) {
   return (
     <Screen
-      header={<StepHeader step={step} total={total} />}
+      header={<StepHeader step={step} total={total} hideBack={hideBack} />}
       footer={footer}
       scroll={scroll}
       contentClassName={contentClassName}

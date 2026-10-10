@@ -98,5 +98,8 @@
       "blueWhale_one": "{{value}} blue whale",
       "blueWhale_other": "{{value}} blue whales"
     }
+  },
+  "builder": {
+    "title": "Empty workout"
   }
 }

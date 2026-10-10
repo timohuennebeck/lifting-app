@@ -13,6 +13,8 @@
   "inDays_other": "in {{count}} days",
   "history": "History",
   "start": "Start body check",
+  "availableIn_one": "Available in {{count}} day",
+  "availableIn_other": "Available in {{count}} days",
   "empty": {
     "title": "No body check yet",
     "body": "Take four photos and get a score for your body composition. Repeat it every few weeks to see your progress."

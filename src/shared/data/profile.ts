@@ -79,6 +79,8 @@ export interface Profile {
   language: AppLanguage | null;
   /** Profile photo in the "avatars" bucket; null shows the initials. */
   avatarPath: string | null;
+  /** "About you", written by the user. */
+  bio: string | null;
   onboardedAt: string | null;
   createdAt: string;
 }
@@ -102,6 +104,7 @@ function toProfile(r: ProfileRecord): Profile {
     activeCollectionId: r.active_collection_id,
     language: r.language as AppLanguage | null,
     avatarPath: r.avatar_path,
+    bio: r.bio,
     onboardedAt: r.onboarded_at,
     createdAt: r.created_at,
   };
@@ -150,6 +153,7 @@ const toColumns = (p: ProfilePatch) => ({
   active_collection_id: p.activeCollectionId,
   language: p.language,
   avatar_path: p.avatarPath,
+  bio: p.bio,
   onboarded_at: p.onboardedAt,
 });
 

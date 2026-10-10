@@ -98,5 +98,8 @@
       "blueWhale_one": "{{value}} Blauwal",
       "blueWhale_other": "{{value}} Blauwale"
     }
+  },
+  "builder": {
+    "title": "Leeres Training"
   }
 }

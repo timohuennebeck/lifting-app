@@ -88,7 +88,8 @@ export interface NextCheckCardProps {
   title: string;
   /** When it is due, e.g. "Fällig am 3. Okt." */
   note: string;
-  onPress: () => void;
+  /** Undefined until the check is due: the tile then doesn't react. */
+  onPress?: () => void;
 }
 
 /** Empty tile beside the only check so far: the next one, and when it is due. */
@@ -100,6 +101,7 @@ export function NextCheckCard({ title, note, onPress }: NextCheckCardProps) {
         activeScale={0.98}
         accessibilityLabel={`${title} · ${note}`}
         onPress={onPress}
+        disabled={!onPress}
         className="h-62.5 w-full items-center justify-center gap-1 rounded-[22px] border border-white/8 bg-surface px-4"
       >
         <View className="mb-3 size-12 items-center justify-center rounded-full bg-elevated">

@@ -23,6 +23,8 @@ export type AuthErrorKey =
   | 'weakPassword'
   | 'emailNotConfirmed'
   | 'rateLimited'
+  | 'invalidCode'
+  | 'samePassword'
   | 'network'
   | 'generic';
 
@@ -41,6 +43,10 @@ export function authErrorKey(error: AuthError): AuthErrorKey {
     case 'over_request_rate_limit':
     case 'over_email_send_rate_limit':
       return 'rateLimited';
+    case 'otp_expired':
+      return 'invalidCode';
+    case 'same_password':
+      return 'samePassword';
     default:
       return error.name === 'AuthRetryableFetchError' ? 'network' : 'generic';
   }

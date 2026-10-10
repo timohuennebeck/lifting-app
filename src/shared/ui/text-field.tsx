@@ -1,4 +1,4 @@
-import { createContext, type Ref, useContext, useRef, useState } from 'react';
+import { type Ref, useRef, useState } from 'react';
 import { Pressable, TextInput, type TextInputProps, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -9,12 +9,6 @@ import { Icon, type IconName } from './icon';
 import { PressableScale } from './pressable-scale';
 import { Text } from './text';
 
-/** Field shape of an area: rounded corners in onboarding, a pill once signed in. */
-export type TextFieldShape = 'rounded' | 'pill';
-const ShapeContext = createContext<TextFieldShape>('rounded');
-/** Sets the shape of every TextField below it (the signed-in app uses 'pill'). */
-export const TextFieldShapeProvider = ShapeContext.Provider;
-
 export interface TextFieldProps extends TextInputProps {
   label?: string;
   /** Shows a round clear button while the field has text. */
@@ -24,6 +18,8 @@ export interface TextFieldProps extends TextInputProps {
   error?: string;
   /** Leading icon, e.g. `search`. */
   icon?: IconName;
+  /** A pill for search fields; every other field has rounded corners. */
+  shape?: 'rounded' | 'pill';
   className?: string;
   ref?: Ref<TextInput>;
 }
@@ -34,6 +30,7 @@ export function TextField({
   revealable,
   error,
   icon,
+  shape = 'rounded',
   className,
   value,
   onChangeText,
@@ -45,7 +42,6 @@ export function TextField({
   ...props
 }: TextFieldProps) {
   const { t } = useTranslation();
-  const shape = useContext(ShapeContext);
   const [focused, setFocused] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const input = useRef<TextInput | null>(null);

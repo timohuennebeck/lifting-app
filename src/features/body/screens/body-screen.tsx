@@ -48,7 +48,16 @@ export function BodyScreen() {
   const nextTitle = t('check', { n: checks.length + 1 });
 
   return (
-    <TabScreen footer={<Button label={t('start')} onPress={camera.request} />}>
+    <TabScreen
+      footer={
+        // Until the next check is due nothing starts one; the button says when it opens.
+        <Button
+          label={!latest || due ? t('start') : t('availableIn', { count: daysLeft })}
+          disabled={!!latest && !due}
+          onPress={camera.request}
+        />
+      }
+    >
       <View className="gap-2 px-5 pt-4">
         <Text variant="headline" className="text-[30px] leading-7.5">
           {t('title')}
@@ -128,7 +137,7 @@ export function BodyScreen() {
                 <NextCheckCard
                   title={nextTitle}
                   note={due ? t('dueNow') : t('dueOn', { date: formatShortDate(dueAt) })}
-                  onPress={camera.request}
+                  onPress={due ? camera.request : undefined}
                 />
               )}
             </View>
@@ -154,7 +163,7 @@ export function BodyScreen() {
             <CheckHistoryRow
               title={nextTitle}
               date={due ? t('today') : formatShortDate(dueAt)}
-              onPress={camera.request}
+              onPress={due ? camera.request : undefined}
               trailing={
                 due ? (
                   <View className="h-6.5 justify-center rounded-full border-[1.5px] border-accent px-2.5">

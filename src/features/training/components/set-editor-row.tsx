@@ -1,16 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 import type { PlanSetDraft } from '@/shared/data/templates';
 import { formatRir } from '@/shared/lib/rir';
 import { colors } from '@/shared/lib/theme';
 import { InputCell } from '@/shared/ui/input-cell';
 import { PressableScale } from '@/shared/ui/pressable-scale';
+import { SwipeToDelete } from '@/shared/ui/swipe-to-delete';
 import { Text } from '@/shared/ui/text';
 
 import { editorRirStyle } from '../lib/training-ui';
-import { MinusGlyph } from './glyphs';
 
 export interface SetDraft extends PlanSetDraft {
   key: string;
@@ -48,7 +47,7 @@ export function SetEditorRow({
   onRemove,
 }: SetEditorRowProps) {
   const { t } = useTranslation('training');
-  const rir = editorRirStyle(set.rir, colors.accent);
+  const rir = editorRirStyle(set.rir);
   const cell = (field: TargetField) => {
     const value = field === 'min' ? set.targetMin : set.targetMax;
     return (
@@ -65,25 +64,7 @@ export function SetEditorRow({
   };
 
   return (
-    <Swipeable
-      enabled={!!onRemove}
-      friction={1.6}
-      rightThreshold={40}
-      overshootRight={false}
-      renderRightActions={() => (
-        // The app's delete mark (as in "Remove exercise"), not a trash can.
-        <PressableScale
-          haptic="warning"
-          accessibilityLabel={t('sets.removeSet')}
-          onPress={onRemove}
-          className="ml-2.5 w-14 items-center justify-center"
-        >
-          <View className="size-10 items-center justify-center rounded-full bg-danger-bg">
-            <MinusGlyph color={colors.red} width={14} />
-          </View>
-        </PressableScale>
-      )}
-    >
+    <SwipeToDelete onDelete={onRemove} label={t('sets.removeSet')}>
       <View className="h-14 flex-row items-center gap-2.5 bg-bg">
         <View className="size-10 items-center justify-center rounded-full bg-elevated">
           <Text variant="label" className="text-base">
@@ -110,6 +91,6 @@ export function SetEditorRow({
           </PressableScale>
         )}
       </View>
-    </Swipeable>
+    </SwipeToDelete>
   );
 }

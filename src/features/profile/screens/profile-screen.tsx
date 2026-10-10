@@ -7,7 +7,8 @@ import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { OpenTicketsSection } from '@/features/support/components/open-tickets-section';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { UserAvatar } from '@/shared/components/user-avatar';
-import { useProfile } from '@/shared/data/profile';
+import { saveProfile, useProfile } from '@/shared/data/profile';
+import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { useWorkoutCount, useWorkoutHistory } from '@/shared/data/workouts';
 import { formatDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
@@ -21,9 +22,13 @@ import { Text } from '@/shared/ui/text';
 import { ActivityHeatmap } from '../components/activity-heatmap';
 import { type AvatarAction, AvatarSheet } from '../components/avatar-sheet';
 import { HistoryEntry } from '../components/history-entry';
+import { ProfileTextSheet } from '../components/profile-text-sheet';
 import { pickAvatar, removeAvatar, saveAvatar } from '../lib/avatar';
 
 const PAGE = 10;
+/** Matches the check on profiles.bio. */
+const BIO_MAX = 150;
+const NAME_MAX = 40;
 
 interface LocalPhoto {
   uri: string;
@@ -89,12 +94,18 @@ export function ProfileScreen() {
   const { data: history = [] } = useWorkoutHistory(visible);
   const { data: workoutCount = 0 } = useWorkoutCount();
   const name = profile?.firstName ?? '';
-  const facts = [
-    profile?.trainingDays.length
-      ? t('facts.perWeek', { count: profile.trainingDays.length })
-      : null,
-    t('facts.workouts', { count: workoutCount }),
-  ].filter(Boolean);
+  const [editing, setEditing] = useState<'name' | 'about' | null>(null);
+  const editingShown = useLastDefined(editing);
+
+  async function saveText(value: string) {
+    if (!profile) return;
+    await saveProfile(
+      profile.id,
+      editing === 'name' ? { firstName: value } : { bio: value || null },
+    );
+    haptics.success();
+    setEditing(null);
+  }
 
   return (
     <TabScreen greeting={false}>
@@ -116,9 +127,17 @@ export function ProfileScreen() {
             <Icon name="photo-camera" size={15} color={colors.fg} />
           </View>
         </PressableScale>
-        <Text className="mt-4.5 font-inter-semibold text-[34px] leading-9.5 tracking-[-0.7px]">
-          {name}
-        </Text>
+        <PressableScale
+          haptic="tap"
+          activeScale={0.98}
+          accessibilityLabel={t('name.edit')}
+          onPress={() => setEditing('name')}
+          className="mt-4.5"
+        >
+          <Text className="font-inter-semibold text-[34px] leading-9.5 tracking-[-0.7px]">
+            {name}
+          </Text>
+        </PressableScale>
         <View className="mt-3 flex-row items-center gap-2.5">
           {isPro ? <ProBadge className="self-center" /> : null}
           {profile?.createdAt ? (
@@ -129,13 +148,18 @@ export function ProfileScreen() {
             </Text>
           ) : null}
         </View>
-        <View className="mt-4.5 gap-2">
-          {facts.map((fact) => (
-            <Text key={fact} variant="paragraph" className="text-fg-mid">
-              {`• ${fact}`}
-            </Text>
-          ))}
-        </View>
+        {/* The user's own description; tapping it edits it (01b-3). */}
+        <PressableScale
+          haptic="tap"
+          activeScale={0.98}
+          accessibilityLabel={t(profile?.bio ? 'about.edit' : 'about.add')}
+          onPress={() => setEditing('about')}
+          className="mt-4.5 self-stretch"
+        >
+          <Text variant="paragraph" className={profile?.bio ? 'text-fg-mid' : 'text-dim'}>
+            {profile?.bio || t('about.add')}
+          </Text>
+        </PressableScale>
       </View>
 
       <OpenTicketsSection />
@@ -178,6 +202,19 @@ export function ProfileScreen() {
         onClose={() => setAvatarOpen(false)}
         hasPhoto={!!profile?.avatarPath}
         onAction={onAvatarAction}
+      />
+      <ProfileTextSheet
+        visible={!!editing}
+        onClose={() => setEditing(null)}
+        title={t(`${editingShown ?? 'name'}.title`)}
+        subtitle={t(`${editingShown ?? 'name'}.subtitle`)}
+        label={t(`${editingShown ?? 'name'}.label`)}
+        placeholder={t(`${editingShown ?? 'name'}.placeholder`)}
+        initialValue={(editingShown === 'about' ? profile?.bio : profile?.firstName) ?? ''}
+        maxLength={editingShown === 'about' ? BIO_MAX : NAME_MAX}
+        multiline={editingShown === 'about'}
+        optional={editingShown === 'about'}
+        onSave={saveText}
       />
     </TabScreen>
   );

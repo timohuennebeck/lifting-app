@@ -14,7 +14,8 @@ import { colors } from '@/shared/lib/theme';
 
 import { Text } from './text';
 
-function BlinkingCursor() {
+/** The accent text caret, blinking. */
+export function BlinkingCursor() {
   const opacity = useSharedValue(1);
   useEffect(() => {
     const step = (to: number) => withDelay(500, withTiming(to, { duration: 0 }));
