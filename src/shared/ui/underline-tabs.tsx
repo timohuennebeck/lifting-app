@@ -15,8 +15,8 @@ import { Text } from './text';
 export interface UnderlineTab<T extends string> {
   key: T;
   label: string;
-  /** A small accent dot after the label: something there wants attention. */
-  dot?: boolean;
+  /** A count in an accent circle after the label, e.g. 1 for a due body check. */
+  badge?: number;
 }
 
 export interface UnderlineTabsProps<T extends string> {
@@ -69,7 +69,13 @@ export function UnderlineTabs<T extends string>({
           <Text variant="label" tone={tab.key === value ? 'default' : 'subtle'}>
             {tab.label}
           </Text>
-          {tab.dot ? <View className="size-1.75 rounded-full bg-accent" /> : null}
+          {tab.badge ? (
+            <View className="h-4.5 min-w-4.5 items-center justify-center rounded-full bg-accent px-1">
+              <Text tone="onAccent" className="font-inter-bold text-[11px] leading-3.5">
+                {tab.badge}
+              </Text>
+            </View>
+          ) : null}
         </PressableScale>
       ))}
       <Animated.View

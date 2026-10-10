@@ -16,7 +16,7 @@ export function ProgressScreen() {
   const { t } = useTranslation();
   const view = useProgressStore((s) => s.view);
   const setView = useProgressStore((s) => s.setView);
-  // A due body check shows as a dot on "Körper".
+  // A due body check shows as a badge with 1 on "Körper".
   const { due } = useNextCheck();
 
   return (
@@ -29,7 +29,7 @@ export function ProgressScreen() {
           tabs={VIEWS.map((key) => ({
             key,
             label: t(`progressTab.${key}`),
-            dot: key === 'body' && due,
+            badge: key === 'body' && due ? 1 : undefined,
           }))}
           value={view}
           onChange={setView}
