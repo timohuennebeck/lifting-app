@@ -20,8 +20,6 @@ export interface TabScreenProps {
   footer?: ReactNode;
   /** For drag and drop lists that scroll the page while dragging. */
   scrollRef?: AnimatedRef<Animated.ScrollView>;
-  /** Children (by index) that stick under the header once scrolled to, e.g. tabs. */
-  stickyHeaderIndices?: number[];
 }
 
 const FOOTER_SPACE = 110;
@@ -35,7 +33,6 @@ export function TabScreen({
   pinned,
   footer,
   scrollRef,
-  stickyHeaderIndices,
 }: TabScreenProps) {
   const insets = useSafeAreaInsets();
   const [tabBarInset, setTabBarInset] = useState(insets.bottom);
@@ -45,7 +42,6 @@ export function TabScreen({
       {pinned}
       <Animated.ScrollView
         ref={scrollRef}
-        stickyHeaderIndices={stickyHeaderIndices}
         contentInsetAdjustmentBehavior="never"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{

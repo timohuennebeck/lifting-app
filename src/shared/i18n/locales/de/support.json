@@ -82,6 +82,7 @@
   },
   "feedback": {
     "emptyTitle": "Fehler entdeckt oder eine Idee?",
-    "create": "Fehler melden oder Idee teilen"
+    "create": "Fehler melden oder Idee teilen",
+    "allTickets": "Alle Tickets"
   }
 }

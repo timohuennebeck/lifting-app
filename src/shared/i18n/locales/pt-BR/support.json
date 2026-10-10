@@ -82,6 +82,7 @@
   },
   "feedback": {
     "emptyTitle": "Achou um erro ou tem uma ideia?",
-    "create": "Relatar um erro ou compartilhar uma ideia"
+    "create": "Relatar um erro ou compartilhar uma ideia",
+    "allTickets": "Todos os tickets"
   }
 }

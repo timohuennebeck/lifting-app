@@ -94,6 +94,14 @@ const ICONS = {
     viewBox: '0 0 14 14',
     render: (c) => <Rect x={2} y={2} width={10} height={10} rx={1.5} fill={c} />,
   },
+  // Speech bubble: the tickets with the team.
+  chat: {
+    viewBox: '0 0 16 16',
+    render: stroke(
+      'M4 2.75h8a1.75 1.75 0 0 1 1.75 1.75v5A1.75 1.75 0 0 1 12 11.25H7.5l-3 2.35v-2.35H4A1.75 1.75 0 0 1 2.25 9.5v-5A1.75 1.75 0 0 1 4 2.75z',
+      1.6,
+    ),
+  },
   search: {
     viewBox: '0 0 16 16',
     render: (c) => (

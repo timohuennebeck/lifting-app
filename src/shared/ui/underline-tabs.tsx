@@ -19,7 +19,7 @@ export interface UnderlineTabsProps<T extends string> {
   value: T;
   onChange: (key: T) => void;
   /** The pager's position as a tab index (fractions while swiping); the underline follows it. */
-  position: Animated.Value | Animated.AnimatedInterpolation<number>;
+  position: Animated.AnimatedInterpolation<number>;
   className?: string;
 }
 

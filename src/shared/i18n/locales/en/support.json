@@ -82,6 +82,7 @@
   },
   "feedback": {
     "emptyTitle": "Found a bug or have an idea?",
-    "create": "Report a bug or share an idea"
+    "create": "Report a bug or share an idea",
+    "allTickets": "All tickets"
   }
 }

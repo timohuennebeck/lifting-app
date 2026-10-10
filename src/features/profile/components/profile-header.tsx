@@ -1,34 +1,24 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Alert, Animated, Linking, View } from 'react-native';
+import { ActivityIndicator, Alert, Linking, View } from 'react-native';
 
 import { ProBadge } from '@/features/paywall/components/pro-badge';
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
-import { FeedbackList } from '@/features/support/components/feedback-list';
-import { useTickets } from '@/features/support/data/tickets';
-import { useUnreadCount } from '@/features/support/stores/seen-store';
-import { TabScreen } from '@/shared/components/tab-screen';
 import { UserAvatar } from '@/shared/components/user-avatar';
 import { saveProfile, useProfile } from '@/shared/data/profile';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
-import { useWorkoutCount, useWorkoutHistory } from '@/shared/data/workouts';
 import { formatDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
-import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
-import { UnderlineTabs } from '@/shared/ui/underline-tabs';
 
-import { ActivityHeatmap } from '../components/activity-heatmap';
-import { type AvatarAction, AvatarSheet } from '../components/avatar-sheet';
-import { HistoryEntry } from '../components/history-entry';
-import { ProfileTextSheet } from '../components/profile-text-sheet';
 import { pickAvatar, removeAvatar, saveAvatar } from '../lib/avatar';
+import { type AvatarAction, AvatarSheet } from './avatar-sheet';
+import { ProfileTextSheet } from './profile-text-sheet';
 
-const PAGE = 10;
 /** Matches the check on profiles.bio. */
 const BIO_MAX = 150;
 const NAME_MAX = 40;
@@ -41,29 +31,12 @@ interface LocalPhoto {
   replaces: string | null;
 }
 
-const TABS = ['profile', 'feedback'] as const;
-type ProfileTab = (typeof TABS)[number];
-
 /**
- * Profile: photo, name and about, then "Profil | Feedback". The tabs stick under the header once
- * the top part has scrolled away; "Profil" shows activity and workout history, "Feedback" the
- * tickets, with unread replies counted on it.
+ * The fixed top of the profile: photo, name, membership and about, each editable by tapping
+ * (01b-2, 01b-3). Stays in place above the swipeable tabs.
  */
-export function ProfileScreen() {
+export function ProfileHeader() {
   const { t } = useTranslation(['profile', 'common']);
-  const [tab, setTab] = useState<ProfileTab>('profile');
-  // The underline's position as a tab index, eased on each switch.
-  const [tabPosition] = useState(() => new Animated.Value(0));
-  const { data: tickets = [] } = useTickets();
-  const unread = useUnreadCount(tickets);
-  const selectTab = (next: ProfileTab) => {
-    setTab(next);
-    Animated.timing(tabPosition, {
-      toValue: TABS.indexOf(next),
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
-  };
   const { profile } = useProfile();
   const isPro = useIsPro();
   const [avatarOpen, setAvatarOpen] = useState(false);
@@ -114,9 +87,6 @@ export function ProfileScreen() {
       }
     });
   }
-  const [visible, setVisible] = useState(PAGE);
-  const { data: history = [] } = useWorkoutHistory(visible);
-  const { data: workoutCount = 0 } = useWorkoutCount();
   const name = profile?.firstName ?? '';
   const [editing, setEditing] = useState<'name' | 'about' | null>(null);
   const editingShown = useLastDefined(editing);
@@ -132,8 +102,7 @@ export function ProfileScreen() {
   }
 
   return (
-    // Children: the top part, the tabs (sticky), then the open tab and the sheets.
-    <TabScreen greeting={false} stickyHeaderIndices={[1]}>
+    <>
       <View className="items-start px-5 pt-4">
         <PressableScale
           haptic="tap"
@@ -186,58 +155,6 @@ export function ProfileScreen() {
           </Text>
         </PressableScale>
       </View>
-
-      {/* Opaque, so the content scrolls underneath it once it sticks. */}
-      <View className="bg-bg px-4 pt-6">
-        <UnderlineTabs
-          tabs={[
-            { key: 'profile', label: t('common:profileTab.profile') },
-            { key: 'feedback', label: t('common:profileTab.feedback'), badge: unread || undefined },
-          ]}
-          value={tab}
-          onChange={selectTab}
-          position={tabPosition}
-        />
-      </View>
-      {tab === 'profile' ? (
-        <View>
-          <View className="mx-5 mt-7.5">
-            <View className="flex-row items-baseline justify-between">
-              <Text variant="overline" tone="subtle" className="text-[11px]">
-                {t('activity')}
-              </Text>
-              <Text tone="subtle" className="text-xs">
-                {t('lastMonths')}
-              </Text>
-            </View>
-            <ActivityHeatmap />
-          </View>
-
-          <Text variant="overline" tone="subtle" className="mx-5 mt-7 mb-3 text-[11px]">
-            {t('history')}
-          </Text>
-          <View className="mx-5">
-            {history.length ? (
-              history.map((w) => <HistoryEntry key={w.id} workout={w} userName={name} />)
-            ) : (
-              <Text variant="paragraph" tone="subtle">
-                {t('historyEmpty')}
-              </Text>
-            )}
-          </View>
-          {workoutCount > visible ? (
-            <Button
-              label={t('showMore')}
-              variant="secondary"
-              size="md"
-              className="mx-5 mt-2"
-              onPress={() => setVisible((v) => v + PAGE)}
-            />
-          ) : null}
-        </View>
-      ) : (
-        <FeedbackList />
-      )}
       <AvatarSheet
         visible={avatarOpen}
         onClose={() => setAvatarOpen(false)}
@@ -257,6 +174,6 @@ export function ProfileScreen() {
         optional={editingShown === 'about'}
         onSave={saveText}
       />
-    </TabScreen>
+    </>
   );
 }
