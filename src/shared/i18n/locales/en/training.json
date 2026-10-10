@@ -26,7 +26,6 @@
     "programNote": "AI-generated programs are coming soon. Until then, build your plan from templates."
   },
   "collections": {
-    "title": "Collections",
     "templateCount_one": "{{count}} template",
     "templateCount_other": "{{count}} templates",
     "renameTitle": "Rename collection",

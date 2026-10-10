@@ -26,7 +26,6 @@
     "programNote": "KI-generierte Programme kommen bald. Bis dahin stellst du deinen Plan aus Templates zusammen."
   },
   "collections": {
-    "title": "Sammlungen",
     "templateCount_one": "{{count}} Template",
     "templateCount_other": "{{count}} Templates",
     "renameTitle": "Sammlung umbenennen",

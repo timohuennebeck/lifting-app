@@ -1,6 +1,6 @@
 {
   "ios": {
-    "NSCameraUsageDescription": "O Forge usa a câmera para fotografar seu plano de treino e tirar as fotos do seu check-up corporal.",
-    "NSPhotoLibraryUsageDescription": "O Forge permite importar um plano de treino das suas fotos e anexar capturas de tela aos chamados de suporte."
+    "NSCameraUsageDescription": "O Forge usa a câmera para fotografar seu plano de treino, tirar as fotos do seu check corporal e sua foto de perfil.",
+    "NSPhotoLibraryUsageDescription": "O Forge permite importar um plano de treino das suas fotos, anexar capturas de tela aos chamados de suporte e escolher uma foto de perfil."
   }
 }

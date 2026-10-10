@@ -26,7 +26,6 @@
     "programNote": "Programas gerados por IA chegam em breve. Até lá, monte seu plano a partir de modelos."
   },
   "collections": {
-    "title": "Coleções",
     "templateCount_one": "{{count}} modelo",
     "templateCount_other": "{{count}} modelos",
     "renameTitle": "Renomear coleção",
