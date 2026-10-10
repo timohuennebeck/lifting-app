@@ -513,7 +513,16 @@ export interface ExerciseHistoryEntry {
   hasPr: boolean;
 }
 
-const exerciseHistoryQuery = (exerciseId: string) =>
+/** Sets that count for an exercise's history: completed (see hasKnownWeight), workout finished. */
+const historySetsOf = (exerciseId: string) =>
+  and(
+    eq(workoutExercises.exercise_id, exerciseId),
+    isNotNull(workoutSets.completed_at),
+    isNotNull(workouts.finished_at),
+    hasKnownWeight(workoutSets, workoutExercises),
+  );
+
+const exerciseHistoryQuery = (exerciseId: string, where?: SQL) =>
   drizzle
     .select({
       workout_id: workouts.id,
@@ -530,14 +539,7 @@ const exerciseHistoryQuery = (exerciseId: string) =>
     .from(workoutSets)
     .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
     .innerJoin(workouts, eq(workouts.id, workoutExercises.workout_id))
-    .where(
-      and(
-        eq(workoutExercises.exercise_id, exerciseId),
-        isNotNull(workoutSets.completed_at),
-        isNotNull(workouts.finished_at),
-        hasKnownWeight(workoutSets, workoutExercises),
-      ),
-    )
+    .where(and(historySetsOf(exerciseId), where))
     .orderBy(desc(workouts.started_at), workoutExercises.position, workoutSets.position);
 
 function toExerciseHistory(rows: RowOf<typeof exerciseHistoryQuery>[]): ExerciseHistoryEntry[] {
@@ -576,6 +578,26 @@ export function useExerciseHistory(exerciseId: string | undefined) {
     enabled: !!exerciseId,
     query: exerciseHistoryQuery(exerciseId ?? ''),
     map: toExerciseHistory,
+  });
+}
+
+const toLastSession = (rows: RowOf<typeof exerciseHistoryQuery>[]) => toExerciseHistory(rows)[0];
+
+/** The newest session of `useExerciseHistory` alone ("last time"), without loading the rest. */
+export function useLastExerciseSession(exerciseId: string | undefined) {
+  const latest = drizzle
+    .select({ id: workouts.id })
+    .from(workoutSets)
+    .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
+    .innerJoin(workouts, eq(workouts.id, workoutExercises.workout_id))
+    .where(historySetsOf(exerciseId ?? ''))
+    .orderBy(desc(workouts.started_at))
+    .limit(1);
+  return useDrizzleQuery({
+    queryKey: queryKeys.workouts.lastExerciseSession(exerciseId ?? '').queryKey,
+    enabled: !!exerciseId,
+    query: exerciseHistoryQuery(exerciseId ?? '', inArray(workouts.id, latest)),
+    map: toLastSession,
   });
 }
 

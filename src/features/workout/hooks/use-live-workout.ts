@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { isBodyweight, measuresOf } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { restSecondsFor } from '@/shared/data/templates';
-import { logSet, useExerciseHistory, type WorkoutDetail } from '@/shared/data/workouts';
+import { logSet, useLastExerciseSession, type WorkoutDetail } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 
@@ -22,8 +22,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   const { exercises } = workout;
   const exerciseIndex = Math.min(storedIndex, exercises.length - 1);
   const exercise = exercises[exerciseIndex];
-  const { data: history } = useExerciseHistory(exercise?.exerciseId);
-  const last = history?.[0];
+  const { data: last } = useLastExerciseSession(exercise?.exerciseId);
 
   const allSets = exercises.flatMap((e) => e.sets);
   const doneSets = allSets.filter((s) => s.completedAt).length;

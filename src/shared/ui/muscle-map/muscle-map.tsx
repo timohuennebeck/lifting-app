@@ -4,9 +4,25 @@ import Svg, { Path } from 'react-native-svg';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 
-import { BODY, type BodyPartId, type BodyView } from './body-paths';
+import { BODY, type BodyPartId, type BodyPath, type BodyView } from './body-paths';
 
 const FILL = { sil: '#181818', hd: '#2E2E2E', m: '#3E3E3E', fx: '#3E3E3E' } as const;
+
+const cropCache = new Map<string, BodyPath[]>();
+
+/** The paths of a view that reach into a viewBox, worked out once per crop. */
+function pathsIn(view: BodyView, viewBox: string) {
+  const key = `${view} ${viewBox}`;
+  let paths = cropCache.get(key);
+  if (!paths) {
+    const [x, y, w, h] = viewBox.split(/[\s,]+/).map(Number);
+    paths = BODY[view].paths.filter(
+      ({ box: [minX, minY, maxX, maxY] }) => minX < x + w && maxX > x && minY < y + h && maxY > y,
+    );
+    cropCache.set(key, paths);
+  }
+  return paths;
+}
 
 export interface MuscleMapProps {
   view: BodyView;
@@ -42,6 +58,8 @@ export const MuscleMap = memo(function MuscleMap({
 }: MuscleMapProps) {
   const accent = accentOverride ?? colors.accent;
   const art = BODY[view];
+  // 'cover' never shows more than the viewBox, so the paths outside it are left out.
+  const paths = viewBox && fit === 'cover' ? pathsIn(view, viewBox) : art.paths;
   const active = new Set(selected);
   const helping = new Set(secondary);
 
@@ -52,7 +70,7 @@ export const MuscleMap = memo(function MuscleMap({
       viewBox={viewBox ?? art.viewBox}
       preserveAspectRatio={fit === 'cover' ? 'xMidYMid slice' : 'xMidYMid meet'}
     >
-      {art.paths.map((p, i) => {
+      {paths.map((p, i) => {
         const muscle = p.muscle;
         const on = muscle !== null && active.has(muscle);
         const helps = muscle !== null && helping.has(muscle);
