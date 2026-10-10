@@ -54,9 +54,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   const [sheet, setSheet] = useState<SheetKind | null>(null);
   const live = useLiveWorkout(workout);
   const { abandon, finish, finishing } = useWorkoutActions(workout.id);
-  const goTo = useWorkoutSessionStore((s) => s.goTo);
   const field = useWorkoutSessionStore((s) => s.field);
-  const closeKeypad = useWorkoutSessionStore((s) => s.closeKeypad);
   const { exercise, exerciseIndex, selectedIndex, openIndex } = live;
   const count = workout.exercises.length;
   const keypadOpen = selectedIndex >= 0;
@@ -80,13 +78,13 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     }
   }, [selectedIndex, keypadHeight]);
 
-  // Android back closes the keypad first.
-  useHardwareBack(closeKeypad, keypadOpen);
+  // Android back closes the keypad first (what was typed stays).
+  useHardwareBack(live.closeInput, keypadOpen);
 
   const go = (index: number) => {
     if (index < 0 || index >= count || index === exerciseIndex) return;
     haptics.select();
-    goTo(index);
+    live.goToExercise(index);
   };
 
   // Swiping the exercise drags it along; past the threshold it slides out and the next slides in.
@@ -159,7 +157,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
 
   const onSelect = (index: number, f: SetField) => {
     if (index !== selectedIndex) return live.selectSet(index, f);
-    if (f === field) return closeKeypad();
+    if (f === field) return live.closeInput();
     useWorkoutSessionStore.getState().focusField(f);
   };
 
@@ -251,6 +249,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
           {keypadOpen ? (
             <WeightKeypad
               onConfirm={live.confirmInput}
+              onDismiss={live.closeInput}
               onLayout={(e) => setKeypadHeight(e.nativeEvent.layout.height)}
             />
           ) : null}

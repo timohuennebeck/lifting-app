@@ -7,7 +7,7 @@ import { logSet, useExerciseHistory, type WorkoutDetail } from '@/shared/data/wo
 import type { SetValues } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 
-import { unlogSet } from '../data/workout-mutations';
+import { saveOpenSetValues, unlogSet } from '../data/workout-mutations';
 import { parseSetInput, toSetInput, typedValues } from '../lib/set-input';
 import { firstOpenSet, rowValues } from '../lib/suggest';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
@@ -18,6 +18,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   const storedIndex = useWorkoutSessionStore((s) => s.exerciseIndex);
   const selectedSetId = useWorkoutSessionStore((s) => s.selectedSetId);
   const logged = useWorkoutSessionStore((s) => s.logged);
+  const drafts = useWorkoutSessionStore((s) => s.drafts);
   const { exercises } = workout;
   const exerciseIndex = Math.min(storedIndex, exercises.length - 1);
   const exercise = exercises[exerciseIndex];
@@ -32,9 +33,9 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   const measures = measuresOf(exerciseId);
   const bodyweight = isBodyweight(exerciseId);
 
-  // A logged set shows its values at once; the entry goes when the database has them.
+  // Logged and kept values show at once; their entries go when the database has them.
   useEffect(() => {
-    const { clearLogged } = useWorkoutSessionStore.getState();
+    const { clearLogged, clearDraft } = useWorkoutSessionStore.getState();
     for (const set of exercises.flatMap((e) => e.sets)) {
       const values = logged[set.id];
       if (
@@ -46,20 +47,71 @@ export function useLiveWorkout(workout: WorkoutDetail) {
       ) {
         clearLogged(set.id);
       }
+      const draft = drafts[set.id];
+      if (draft && (Object.keys(draft) as (keyof SetValues)[]).every((k) => set[k] === draft[k])) {
+        clearDraft(set.id);
+      }
     }
-  }, [exercises, logged]);
+  }, [exercises, logged, drafts]);
 
   /** A row's keypad prefill: what it shows, following a row above that is being typed in. */
   const inputFor = (index: number) => {
     const { input } = useWorkoutSessionStore.getState();
     const typed =
       selectedIndex >= 0 ? { index: selectedIndex, values: typedValues(input, units) } : null;
-    return toSetInput(rowValues(exercise, index, logged, typed), units);
+    return toSetInput(rowValues(exercise, index, logged, typed, drafts), units);
+  };
+
+  /**
+   * The keypad is closing or moving to another row without the check: what was typed stays.
+   * An open set keeps the boxes typed into as its own values (still not logged); a logged set
+   * takes the edit when every box still has a value.
+   */
+  function keepTyped() {
+    const store = useWorkoutSessionStore.getState();
+    const set = exercise?.sets[selectedIndex];
+    if (!set || !store.edited.length) return;
+    if (set.completedAt || logged[set.id]) {
+      const { values, missing } = parseSetInput(store.input, measures, bodyweight, units);
+      if (missing) return;
+      store.markLogged(set.id, values);
+      logSet(set.id, exercise.exerciseId, values).catch((error) => {
+        console.error(error);
+        haptics.error();
+        store.clearLogged(set.id);
+      });
+      return;
+    }
+    const typed = typedValues(store.input, units);
+    const values: Partial<SetValues> = {};
+    for (const field of store.edited) {
+      if (field === 'weight') values.weightKg = typed.weightKg;
+      else values[field] = typed[field];
+    }
+    store.markDraft(set.id, values);
+    saveOpenSetValues(set.id, values).catch((error) => {
+      console.error(error);
+      haptics.error();
+      store.clearDraft(set.id);
+    });
+  }
+
+  const closeInput = () => {
+    keepTyped();
+    useWorkoutSessionStore.getState().closeKeypad();
+  };
+
+  /** Shows another exercise; values typed into the open row stay. */
+  const goToExercise = (index: number) => {
+    keepTyped();
+    useWorkoutSessionStore.getState().goTo(index);
   };
 
   const selectSet = (index: number, field: SetField = measures[0]) => {
     const set = exercise?.sets[index];
-    if (set) useWorkoutSessionStore.getState().select(set.id, inputFor(index), field);
+    if (!set) return;
+    if (index !== selectedIndex) keepTyped();
+    useWorkoutSessionStore.getState().select(set.id, inputFor(index), field);
   };
 
   /** Logs set `index` with values in kg. */
@@ -69,6 +121,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     const editing = !!set.completedAt;
     // Shown at once; the rest timer starts, so the keypad closes instead of moving on.
     store.markLogged(set.id, values);
+    store.clearDraft(set.id);
     store.closeKeypad();
     const workoutDone = allSets.every((s) => s.completedAt || s.id === set.id);
     if (!editing && !workoutDone) {
@@ -140,6 +193,8 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     selectedIndex,
     openIndex,
     selectSet,
+    closeInput,
+    goToExercise,
     confirmInput,
     toggleDone,
   };

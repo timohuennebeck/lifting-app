@@ -57,6 +57,7 @@ export function SetTable({
   const column = useWorkoutSessionStore((s) => s.column);
   const toggleColumn = useWorkoutSessionStore((s) => s.toggleColumn);
   const logged = useWorkoutSessionStore((s) => s.logged);
+  const drafts = useWorkoutSessionStore((s) => s.drafts);
   const separator = decimalSeparator();
   const headers: Record<Measure, string> = {
     weight: t(`common:units.${weightUnit(units)}`).toUpperCase(),
@@ -72,7 +73,7 @@ export function SetTable({
   /** A box's text: the keypad buffer while editing, else what the row holds (see rowValues). */
   const cellValue = (field: Measure, editing: boolean, index: number) => {
     if (editing) return field === 'weight' ? displayInput(input.weight, separator) : input[field];
-    const value = valueOf(rowValues(exercise, index, logged, typed), field);
+    const value = valueOf(rowValues(exercise, index, logged, typed, drafts), field);
     if (value == null) return '';
     return field === 'weight' ? formatWeightValue(value, units) : formatNumber(value, 0);
   };

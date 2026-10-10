@@ -19,11 +19,15 @@ interface WorkoutSessionState {
   input: Record<SetField, string>;
   /** The next key press replaces the field instead of appending. */
   pristine: boolean;
+  /** Boxes typed into since the row was selected: closing the keypad keeps those. */
+  edited: SetField[];
   restEndsAt: number | null;
   restSeconds: number;
   column: MiddleColumn;
   /** Values of sets just logged, shown until the database has them (no flash of empty boxes). */
   logged: Record<string, SetValues>;
+  /** Values kept in open sets when the keypad closed, shown until the database has them. */
+  drafts: Record<string, Partial<SetValues>>;
   attach: (workoutId: string) => void;
   goTo: (exerciseIndex: number) => void;
   select: (setId: string, input: Record<SetField, string>, field: SetField) => void;
@@ -37,6 +41,8 @@ interface WorkoutSessionState {
   toggleColumn: () => void;
   markLogged: (setId: string, values: SetValues) => void;
   clearLogged: (setId: string) => void;
+  markDraft: (setId: string, values: Partial<SetValues>) => void;
+  clearDraft: (setId: string) => void;
   reset: () => void;
 }
 
@@ -46,10 +52,15 @@ const idle = {
   field: 'weight' as SetField,
   input: { weight: '', reps: '', seconds: '' },
   pristine: true,
+  edited: [] as SetField[],
   restEndsAt: null,
   restSeconds: 0,
   logged: {} as Record<string, SetValues>,
+  drafts: {} as Record<string, Partial<SetValues>>,
 };
+
+const withField = (edited: SetField[], field: SetField) =>
+  edited.includes(field) ? edited : [...edited, field];
 
 /** UI state of the live workout that isn't stored in the database. */
 export const useWorkoutSessionStore = create<WorkoutSessionState>()(
@@ -66,7 +77,8 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
         ),
       goTo: (exerciseIndex) =>
         set({ exerciseIndex: Math.max(0, exerciseIndex), selectedSetId: null }),
-      select: (selectedSetId, input, field) => set({ selectedSetId, input, field, pristine: true }),
+      select: (selectedSetId, input, field) =>
+        set({ selectedSetId, input, field, pristine: true, edited: [] }),
       focusField: (field) => set({ field, pristine: true }),
       closeKeypad: () => set({ selectedSetId: null }),
       pressKey: (key) =>
@@ -76,11 +88,13 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
             [s.field]: appendKey(s.input[s.field], key, s.field === 'weight', s.pristine),
           },
           pristine: false,
+          edited: withField(s.edited, s.field),
         })),
       pressBackspace: () =>
         set((s) => ({
           input: { ...s.input, [s.field]: s.pristine ? '' : backspace(s.input[s.field]) },
           pristine: false,
+          edited: withField(s.edited, s.field),
         })),
       startRest: (seconds) =>
         set({ restEndsAt: Date.now() + seconds * 1000, restSeconds: seconds }),
@@ -97,6 +111,13 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
         set((s) => {
           const { [setId]: _gone, ...logged } = s.logged;
           return { logged };
+        }),
+      markDraft: (setId, values) =>
+        set((s) => ({ drafts: { ...s.drafts, [setId]: { ...s.drafts[setId], ...values } } })),
+      clearDraft: (setId) =>
+        set((s) => {
+          const { [setId]: _gone, ...drafts } = s.drafts;
+          return { drafts };
         }),
       reset: () => set({ ...idle, workoutId: null }),
     }),

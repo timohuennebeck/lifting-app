@@ -1,9 +1,10 @@
-import { asc, desc, eq, inArray } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull } from 'drizzle-orm';
 
 import { defaultTargets, swapTargets } from '@/shared/data/exercises';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
 import { workoutExercises, workoutSets } from '@/shared/data/powersync/schema';
 import type { PlanSetDraft } from '@/shared/data/templates';
+import type { SetValues } from '@/shared/lib/format';
 import { insertWorkoutSet } from '@/shared/data/workouts';
 
 async function exerciseOf(tx: Tx, workoutExerciseId: string) {
@@ -67,6 +68,18 @@ export async function addWorkoutSet(userId: string, workoutExerciseId: string) {
 
 export async function removeWorkoutSet(setId: string) {
   await drizzle.delete(workoutSets).where(eq(workoutSets.id, setId));
+}
+
+/** Keeps values typed into an open set without logging it (the keypad closed before the check). */
+export async function saveOpenSetValues(setId: string, values: Partial<SetValues>) {
+  await drizzle
+    .update(workoutSets)
+    .set({
+      ...('weightKg' in values ? { weight_kg: values.weightKg } : {}),
+      ...('reps' in values ? { reps: values.reps } : {}),
+      ...('seconds' in values ? { seconds: values.seconds } : {}),
+    })
+    .where(and(eq(workoutSets.id, setId), isNull(workoutSets.completed_at)));
 }
 
 /** Marks a logged set as open again; its values stay as the prefill. */
