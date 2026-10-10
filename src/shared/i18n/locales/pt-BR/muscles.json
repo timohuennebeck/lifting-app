@@ -28,5 +28,9 @@
   "subtitle": "Últimos {{days}} dias · {{count}} séries no total",
   "range_one": "{{count}} dia",
   "range_other": "{{count}} dias",
-  "notTrained": "Não treinados"
+  "notTrained": "Não treinados",
+  "breakdown": {
+    "primary": "Primários",
+    "secondary": "Secundários"
+  }
 }

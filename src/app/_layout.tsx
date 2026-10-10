@@ -89,6 +89,8 @@ export default function RootLayout() {
                 <Stack.Screen name="legal/[kind]" options={{ animation: 'slide_from_right' }} />
                 {/* Exercise info, from the live workout and from the plan import. */}
                 <Stack.Screen name="exercise/[id]" options={{ animation: 'slide_from_right' }} />
+                {/* Muscle breakdown of a workout, from the overview, builder and plan import. */}
+                <Stack.Screen name="workout-muscles" options={{ animation: 'slide_from_right' }} />
               </Stack>
             </ThemeProvider>
           </QueryClientProvider>

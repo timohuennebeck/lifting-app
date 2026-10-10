@@ -12,7 +12,7 @@ import {
 } from '@/features/training/components/exercise-menu-sheet';
 import { PlanBar } from '@/features/training/components/plan-bar';
 import { TemplateExerciseCard } from '@/features/training/components/template-exercise-card';
-import { muscleShares } from '@/shared/data/muscles';
+import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
 import { estimateMinutes } from '@/shared/data/templates';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { cn } from '@/shared/lib/cn';
@@ -21,7 +21,6 @@ import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { EmptyExercises } from '@/shared/ui/empty-exercises';
 import { IconButton } from '@/shared/ui/icon-button';
-import { MuscleTileRow } from '@/shared/ui/muscle-map';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { afterSheetClose } from '@/shared/ui/sheet';
@@ -66,7 +65,6 @@ export function ConfirmScreen() {
     sets: e.sets.length,
     restSeconds: e.restSeconds ?? null,
   }));
-  const shares = muscleShares(items);
   const weekdays = t('common:weekdays.long', { returnObjects: true }) as string[];
   const empty = exercises.length === 0;
 
@@ -178,16 +176,7 @@ export function ConfirmScreen() {
               </View>
             ) : null}
 
-            {shares.length ? (
-              <>
-                <Text variant="headline" className="px-5 pt-6">
-                  {t('training:overview.musclesWorked')}
-                </Text>
-                <View className="pt-3.5">
-                  <MuscleTileRow shares={shares} />
-                </View>
-              </>
-            ) : null}
+            <WorkedMuscles title={day?.name ?? ''} items={items} />
 
             <View className={cn('flex-row items-center gap-3 px-5', empty ? 'pt-9' : 'pt-7.5')}>
               <View className="min-w-0 flex-1">

@@ -55,6 +55,7 @@
     "noFixedDay": "No fixed day – train whenever it suits you.",
     "fixedDay": "Planned for {{day}}.",
     "musclesWorked": "Muscles worked",
+    "musclesInfo": "Muscle breakdown",
     "exercises_one": "{{count}} exercise",
     "exercises_other": "{{count}} exercises",
     "noExercises": "No exercises",

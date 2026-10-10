@@ -28,5 +28,9 @@
   "subtitle": "Last {{days}} days · {{count}} sets total",
   "range_one": "{{count}} day",
   "range_other": "{{count}} days",
-  "notTrained": "Not trained"
+  "notTrained": "Not trained",
+  "breakdown": {
+    "primary": "Primary",
+    "secondary": "Secondary"
+  }
 }

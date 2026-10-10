@@ -1,4 +1,5 @@
 import { getExercise } from '@/shared/data/exercises';
+import { muscleShares } from '@/shared/data/muscles';
 import type { BodyPartId, MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 export const MUSCLE_GROUP_IDS = [
@@ -47,6 +48,21 @@ export function splitMuscles(exerciseId: string) {
   return {
     primary: entries.filter(([, w], i) => i === 0 || w >= 0.3).map(([m]) => m),
     secondary: entries.filter(([, w], i) => i > 0 && w < 0.3).map(([m]) => m),
+  };
+}
+
+/**
+ * A workout's muscles by share, split like an exercise's: primary where at least one exercise
+ * targets them directly, secondary where they only ever help.
+ */
+export function workoutMuscleSplit(items: { exerciseId: string; sets: number }[]) {
+  const targeted = new Set(
+    items.filter((i) => i.sets > 0).flatMap((i) => splitMuscles(i.exerciseId).primary),
+  );
+  const shares = muscleShares(items);
+  return {
+    primary: shares.filter((s) => targeted.has(s.muscle)),
+    secondary: shares.filter((s) => !targeted.has(s.muscle)),
   };
 }
 

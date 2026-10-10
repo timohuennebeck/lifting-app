@@ -211,9 +211,10 @@ export function WelcomePreview({ active }: WelcomePreviewProps) {
               <Text variant="paragraph" tone="subtle" className="px-5 pt-2">
                 {t('welcome.preview.noFixedDay')}
               </Text>
-              <Text variant="headline" className="px-5 pt-6">
-                {t('welcome.preview.musclesWorked')}
-              </Text>
+              <View className="flex-row items-center gap-2 px-5 pt-6">
+                <Text variant="headline">{t('welcome.preview.musclesWorked')}</Text>
+                <Icon name="info" size={18} color={colors.subtle} />
+              </View>
               <View className="flex-row gap-2 px-4 pt-3.5">
                 {shares.map((s, i) => (
                   <MuscleTile

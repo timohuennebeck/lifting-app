@@ -6,7 +6,7 @@ import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Sortable from 'react-native-sortables';
 
-import { muscleShares } from '@/shared/data/muscles';
+import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
 import {
   estimateMinutes,
   type TemplateExerciseDetail,
@@ -21,7 +21,6 @@ import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { EmptyExercises } from '@/shared/ui/empty-exercises';
 import { IconButton } from '@/shared/ui/icon-button';
-import { MuscleTileRow } from '@/shared/ui/muscle-map';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { afterSheetClose } from '@/shared/ui/sheet';
@@ -69,7 +68,6 @@ export function TemplateScreen() {
     sets: e.sets.length,
     restSeconds: e.restSeconds,
   }));
-  const shares = muscleShares(items);
   const minutes = estimateMinutes(items);
   const collectionName = collectionId
     ? (collections.find((c) => c.id === collectionId)?.name ?? '')
@@ -170,16 +168,7 @@ export function TemplateScreen() {
             : t('overview.noFixedDay')}
         </Text>
 
-        {shares.length ? (
-          <>
-            <Text variant="headline" className="px-5 pt-6">
-              {t('overview.musclesWorked')}
-            </Text>
-            <View className="pt-3.5">
-              <MuscleTileRow shares={shares} />
-            </View>
-          </>
-        ) : null}
+        <WorkedMuscles title={template?.name ?? ''} items={items} />
 
         <View className={cn('flex-row items-center gap-3 px-5', empty ? 'pt-9' : 'pt-7.5')}>
           <View className="min-w-0 flex-1">

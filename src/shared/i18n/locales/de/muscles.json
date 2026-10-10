@@ -28,5 +28,9 @@
   "subtitle": "Letzte {{days}} Tage · {{count}} Sätze gesamt",
   "range_one": "{{count}} Tag",
   "range_other": "{{count}} Tage",
-  "notTrained": "Nicht trainiert"
+  "notTrained": "Nicht trainiert",
+  "breakdown": {
+    "primary": "Primär",
+    "secondary": "Sekundär"
+  }
 }

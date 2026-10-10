@@ -55,6 +55,7 @@
     "noFixedDay": "Kein fester Tag – trainiere, wann es dir passt.",
     "fixedDay": "Geplant für {{day}}.",
     "musclesWorked": "Beanspruchte Muskeln",
+    "musclesInfo": "Muskeln aufgeschlüsselt",
     "exercises_one": "{{count}} Übung",
     "exercises_other": "{{count}} Übungen",
     "noExercises": "Keine Übungen",
