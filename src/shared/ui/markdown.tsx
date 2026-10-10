@@ -128,6 +128,10 @@ const HEADING = {
   3: 'mt-4 text-base leading-5.5',
 } as const;
 
+/** Text without its inline Markdown: **bold** and *italic* lose their stars, links keep their label. */
+export const plainText = (text: string) =>
+  text.replace(INLINE, (_, bold, label, _url, italic) => bold ?? label ?? italic ?? '');
+
 export interface MarkdownProps {
   blocks: MarkdownBlock[];
   className?: string;
@@ -137,51 +141,58 @@ export interface MarkdownProps {
 export function Markdown({ blocks, className }: MarkdownProps) {
   return (
     <View className={cn('gap-3', className)}>
-      {blocks.map((block, i) => {
-        switch (block.type) {
-          case 'heading':
-            return (
-              <Text
-                key={i}
-                accessibilityRole="header"
-                className={cn('font-inter-semibold text-fg', HEADING[block.level])}
-              >
-                {inline(block.text)}
-              </Text>
-            );
-          case 'paragraph':
-            return (
-              <Text key={i} variant="paragraph" tone="secondary">
-                {inline(block.text)}
-              </Text>
-            );
-          case 'quote':
-            return (
-              <View key={i} className="border-l-2 border-accent pl-3">
-                <Text variant="paragraph" tone="muted">
-                  {inline(block.text)}
-                </Text>
-              </View>
-            );
-          case 'list':
-            return (
-              <View key={i} className="gap-1.5">
-                {block.items.map((item, j) => (
-                  <View key={j} className="flex-row gap-2">
-                    <Text variant="paragraph" tone="subtle" className="min-w-4">
-                      {block.ordered ? `${j + 1}.` : '•'}
-                    </Text>
-                    <Text variant="paragraph" tone="secondary" className="flex-1">
-                      {inline(item)}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            );
-          case 'rule':
-            return <View key={i} className="my-2 h-px bg-white/8" />;
-        }
-      })}
+      {blocks.map((block, i) => (
+        <MarkdownBlockView key={i} block={block} />
+      ))}
     </View>
   );
 }
+
+/** One block in the app's type styles (for pages that lay blocks out themselves). */
+export function MarkdownBlockView({ block }: { block: MarkdownBlock }) {
+  switch (block.type) {
+    case 'heading':
+      return (
+        <Text
+          accessibilityRole="header"
+          className={cn('font-inter-semibold text-fg', HEADING[block.level])}
+        >
+          {inline(block.text)}
+        </Text>
+      );
+    case 'paragraph':
+      return (
+        <Text variant="paragraph" tone="secondary">
+          {inline(block.text)}
+        </Text>
+      );
+    case 'quote':
+      return (
+        <View className="border-l-2 border-accent pl-3">
+          <Text variant="paragraph" tone="muted">
+            {inline(block.text)}
+          </Text>
+        </View>
+      );
+    case 'list':
+      return (
+        <View className="gap-1.5">
+          {block.items.map((item, j) => (
+            <View key={j} className="flex-row gap-2">
+              <Text variant="paragraph" tone="subtle" className="min-w-4">
+                {block.ordered ? `${j + 1}.` : '•'}
+              </Text>
+              <Text variant="paragraph" tone="secondary" className="flex-1">
+                {inline(item)}
+              </Text>
+            </View>
+          ))}
+        </View>
+      );
+    case 'rule':
+      return <View className="my-2 h-px bg-white/8" />;
+  }
+}
+
+/** Heading sizes, for pages that draw headings of their own. */
+export const MARKDOWN_HEADING = HEADING;

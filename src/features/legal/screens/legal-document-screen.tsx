@@ -1,4 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
+import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,20 +11,44 @@ import { Markdown, parseMarkdown } from '@/shared/ui/markdown';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
+import { ToggleSwitch } from '@/shared/ui/toggle-switch';
 
-import { isLegalKind, type LegalKind, useLegalDocument } from '../data/legal-documents';
+import { LegalDiffView } from '../components/legal-diff-view';
+import {
+  isLegalKind,
+  type LegalKind,
+  useLegalDocument,
+  useLegalDocumentById,
+} from '../data/legal-documents';
+import { diffLegalDocuments } from '../lib/legal-diff';
 
-/** Terms of use or privacy policy, as published in `legal_documents`. */
+/**
+ * Terms of use or privacy policy, as published in `legal_documents`. From the update page it
+ * gets `compare` (the version the user accepted, by id) and `section`: then everything changed
+ * since that version is marked and the page opens at the section.
+ */
 export function LegalDocumentScreen() {
-  const { kind } = useLocalSearchParams<{ kind: string }>();
+  const { kind, compare, section } = useLocalSearchParams<{
+    kind: string;
+    compare?: string;
+    section?: string;
+  }>();
   return (
     <Screen header={<ScreenHeader />}>
-      {isLegalKind(kind) ? <LegalDocumentBody kind={kind} /> : null}
+      {isLegalKind(kind) ? (
+        <LegalDocumentBody kind={kind} compareId={compare || undefined} section={section} />
+      ) : null}
     </Screen>
   );
 }
 
-function LegalDocumentBody({ kind }: { kind: LegalKind }) {
+interface LegalDocumentBodyProps {
+  kind: LegalKind;
+  compareId?: string;
+  section?: string;
+}
+
+function LegalDocumentBody({ kind, compareId, section }: LegalDocumentBodyProps) {
   const { t, i18n } = useTranslation();
   const insets = useSafeAreaInsets();
   const {
@@ -34,6 +59,31 @@ function LegalDocumentBody({ kind }: { kind: LegalKind }) {
     refetch,
   } = useLegalDocument(kind, i18n.language);
   const blocks = doc ? parseMarkdown(doc.contentMd) : [];
+  const { data: previous } = useLegalDocumentById(compareId);
+  const diff = useMemo(
+    () => (doc && previous ? diffLegalDocuments(previous.contentMd, doc.contentMd) : null),
+    [doc, previous],
+  );
+  const [marked, setMarked] = useState(true);
+  const scroll = useRef<ScrollView>(null);
+  // The asked-for section is scrolled to once both its place and where the sections start
+  // are known (layout reports them in no fixed order).
+  const sectionsTop = useRef<number | null>(null);
+  const sectionY = useRef<number | null>(null);
+  const scrolled = useRef(false);
+  const scrollToSection = () => {
+    if (scrolled.current || sectionsTop.current == null || sectionY.current == null) return;
+    scrolled.current = true;
+    scroll.current?.scrollTo({
+      y: Math.max(0, sectionsTop.current + sectionY.current - 16),
+      animated: false,
+    });
+  };
+  const onSectionLayout = (key: string, y: number) => {
+    if (key !== section) return;
+    sectionY.current = y;
+    scrollToSection();
+  };
 
   if (isPending) {
     return (
@@ -65,6 +115,7 @@ function LegalDocumentBody({ kind }: { kind: LegalKind }) {
   const ownTitle = first?.type === 'heading' && first.level === 1;
   return (
     <ScrollView
+      ref={scroll}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
     >
@@ -79,7 +130,40 @@ function LegalDocumentBody({ kind }: { kind: LegalKind }) {
           })}
         </Text>
       </View>
-      <Markdown blocks={ownTitle ? rest : blocks} className="px-5 pt-4" />
+      {diff && previous ? (
+        <View className="mx-5 mt-4 gap-3 rounded-[22px] bg-surface p-4">
+          <View className="flex-row items-center justify-between gap-3">
+            <Text variant="label" className="min-w-0 flex-1">
+              {t('legal.compare.since', { version: previous.version })}
+            </Text>
+            <ToggleSwitch
+              value={marked}
+              onChange={setMarked}
+              accessibilityLabel={t('legal.compare.toggle')}
+            />
+          </View>
+          <View className="flex-row items-center gap-3">
+            <Text variant="caption" className="rounded-md bg-accent px-1.5 text-on-accent">
+              {t('legal.compare.new')}
+            </Text>
+            <Text variant="caption" tone="subtle" className="line-through">
+              {t('legal.compare.removed')}
+            </Text>
+          </View>
+        </View>
+      ) : null}
+      {diff && marked ? (
+        <View
+          onLayout={(e) => {
+            sectionsTop.current = e.nativeEvent.layout.y;
+            scrollToSection();
+          }}
+        >
+          <LegalDiffView sections={diff} onSectionLayout={onSectionLayout} className="px-5 pt-4" />
+        </View>
+      ) : (
+        <Markdown blocks={ownTitle ? rest : blocks} className="px-5 pt-4" />
+      )}
     </ScrollView>
   );
 }

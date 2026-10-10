@@ -77,10 +77,34 @@
     "unavailable": "Este documento ainda não está disponível.",
     "loadFailed": "Não foi possível carregar o documento. Verifica a ligação e tenta novamente.",
     "update": {
-      "title": "Termos atualizados",
+      "titleTerms": "Os nossos termos de utilização foram atualizados",
+      "titlePrivacy": "A nossa política de privacidade foi atualizada",
+      "titleBoth": "Os nossos textos legais foram atualizados",
+      "changes_one": "Mudou {{count}} parte desde a tua última aceitação.",
+      "changes_other": "Mudaram {{count}} partes desde a tua última aceitação.",
       "subtitle": "Atualizámos os nossos textos legais. Lê a nova versão e aceita-a para continuares a usar o Forge.",
-      "accept": "Aceitar",
-      "signOut": "Terminar sessão"
+      "accept": "Aceito",
+      "signOut": "Terminar sessão",
+      "intro": "Introdução",
+      "section": "§ {{number}}",
+      "docSection": "{{doc}} § {{number}}",
+      "docShort": {
+        "terms": "Termos",
+        "privacy": "Privacidade"
+      },
+      "kinds": {
+        "added": "Novo",
+        "changed": "Alterado",
+        "removed": "Removido"
+      }
+    },
+    "compare": {
+      "new": "Novo",
+      "removed": "Removido",
+      "toggle": "Marcar alterações",
+      "since": "Alterações desde a versão {{version}}",
+      "a11yNew": "Novo: {{text}}",
+      "a11yRemoved": "Removido: {{text}}"
     }
   },
   "keypad": {

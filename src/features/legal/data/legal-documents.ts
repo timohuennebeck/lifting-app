@@ -23,6 +23,7 @@ export interface LegalDocument {
 
 export const legalKeys = createQueryKeys('legalDocuments', {
   current: (kind: LegalKind, language: string) => [kind, language],
+  byId: (id: string) => [id],
   accepted: null,
   pending: (language: string, acceptedIds: string[]) => [language, ...acceptedIds],
 });
@@ -42,11 +43,33 @@ const localesFor = (language: string) => [...new Set([language, 'en', 'pt-BR'])]
  * The version of a document in effect now, from `public.legal_documents` (readable logged out,
  * so the links on the sign-up screen work). Null when none has been published.
  */
+const COLUMNS = 'id, kind, locale, version, content_md, effective_at, requires_reacceptance';
+
+interface LegalDocumentRow {
+  id: string;
+  kind: LegalKind;
+  locale: string;
+  version: string;
+  content_md: string;
+  effective_at: string;
+  requires_reacceptance: boolean | null;
+}
+
+const toDocument = (row: LegalDocumentRow): LegalDocument => ({
+  id: row.id,
+  kind: row.kind,
+  locale: row.locale,
+  version: row.version,
+  contentMd: row.content_md,
+  effectiveAt: row.effective_at,
+  requiresReacceptance: !!row.requires_reacceptance,
+});
+
 export async function fetchCurrentDocument(kind: LegalKind, language: string) {
   const locales = localesFor(language);
   const { data, error } = await supabase
     .from('legal_documents')
-    .select('id, kind, locale, version, content_md, effective_at, requires_reacceptance')
+    .select(COLUMNS)
     .eq('kind', kind)
     .in('locale', locales)
     .lte('effective_at', new Date().toISOString())
@@ -54,16 +77,38 @@ export async function fetchCurrentDocument(kind: LegalKind, language: string) {
   if (error) throw error;
   const rows = data ?? [];
   const row = locales.map((l) => rows.find((r) => r.locale === l)).find(Boolean);
-  if (!row) return null;
-  return {
-    id: row.id,
-    kind: row.kind,
-    locale: row.locale,
-    version: row.version,
-    contentMd: row.content_md,
-    effectiveAt: row.effective_at,
-    requiresReacceptance: !!row.requires_reacceptance,
-  } as LegalDocument;
+  return row ? toDocument(row as LegalDocumentRow) : null;
+}
+
+/** One version of a document in one language, or null when it doesn't exist there. */
+export async function fetchDocumentVersion(kind: LegalKind, locale: string, version: string) {
+  const { data, error } = await supabase
+    .from('legal_documents')
+    .select(COLUMNS)
+    .eq('kind', kind)
+    .eq('locale', locale)
+    .eq('version', version)
+    .limit(1);
+  if (error) throw error;
+  const row = (data ?? [])[0] as LegalDocumentRow | undefined;
+  return row ? toDocument(row) : null;
+}
+
+async function fetchDocumentById(id: string) {
+  const { data, error } = await supabase.from('legal_documents').select(COLUMNS).eq('id', id);
+  if (error) throw error;
+  const row = (data ?? [])[0] as LegalDocumentRow | undefined;
+  return row ? toDocument(row) : null;
+}
+
+/** A published version by its id (they never change, so it's cached for good). */
+export function useLegalDocumentById(id: string | undefined) {
+  return useQuery({
+    queryKey: legalKeys.byId(id ?? '').queryKey,
+    queryFn: () => fetchDocumentById(id ?? ''),
+    enabled: !!id,
+    staleTime: Infinity,
+  });
 }
 
 export function useLegalDocument(kind: LegalKind, language: string) {

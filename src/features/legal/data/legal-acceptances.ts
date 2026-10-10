@@ -10,7 +10,12 @@ import { supabase } from '@/shared/data/supabase';
 import { useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 import { HOUR_MS } from '@/shared/lib/date';
 
-import { fetchCurrentDocuments, type LegalDocument, legalKeys } from './legal-documents';
+import {
+  fetchCurrentDocuments,
+  fetchDocumentVersion,
+  type LegalDocument,
+  legalKeys,
+} from './legal-documents';
 
 const acceptedQuery = () =>
   drizzle.select({ documentId: legalAcceptances.document_id }).from(legalAcceptances);
@@ -38,20 +43,49 @@ export async function acceptDocuments(userId: string, documents: LegalDocument[]
   );
 }
 
+/** A version to accept, with the one this user accepted last (compared on the update page). */
+export interface PendingDocument {
+  document: LegalDocument;
+  /** The version accepted last, in the language shown now; null without one there. */
+  previous: LegalDocument | null;
+  /** Its version number, also when that language doesn't have it (e.g. "2.4"). */
+  previousVersion: string | null;
+}
+
 /**
  * Documents in effect that require a new acceptance the user hasn't given. An acceptance counts
  * for its kind and version in every language, so switching the app language never asks again.
  */
-async function fetchPendingDocuments(language: string, acceptedIds: string[]) {
+async function fetchPendingDocuments(
+  language: string,
+  acceptedIds: string[],
+): Promise<PendingDocument[]> {
   const due = (await fetchCurrentDocuments(language)).filter((d) => d.requiresReacceptance);
-  if (!due.length || !acceptedIds.length) return due;
-  const { data, error } = await supabase
-    .from('legal_documents')
-    .select('kind, version')
-    .in('id', acceptedIds);
-  if (error) throw error;
-  const accepted = new Set((data ?? []).map((r) => `${r.kind}:${r.version}`));
-  return due.filter((d) => !accepted.has(`${d.kind}:${d.version}`));
+  if (!due.length) return [];
+  let accepted: { kind: string; version: string; effective_at: string }[] = [];
+  if (acceptedIds.length) {
+    const { data, error } = await supabase
+      .from('legal_documents')
+      .select('kind, version, effective_at')
+      .in('id', acceptedIds);
+    if (error) throw error;
+    accepted = data ?? [];
+  }
+  const pending: PendingDocument[] = [];
+  for (const document of due) {
+    const last = accepted
+      .filter((a) => a.kind === document.kind)
+      .sort((a, b) => b.effective_at.localeCompare(a.effective_at))[0];
+    if (last?.version === document.version) continue;
+    pending.push({
+      document,
+      previous: last
+        ? await fetchDocumentVersion(document.kind, document.locale, last.version)
+        : null,
+      previousVersion: last?.version ?? null,
+    });
+  }
+  return pending;
 }
 
 /**

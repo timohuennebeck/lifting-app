@@ -1,31 +1,49 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { supabase } from '@/shared/data/supabase';
 import { useActiveWorkout } from '@/shared/data/workouts';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
+import { cn } from '@/shared/lib/cn';
 import { formatDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { requireUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
-import { Icon } from '@/shared/ui/icon';
+import { Icon, type IconName } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-import { StepTitle } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
-import { acceptDocuments, usePendingLegalDocuments } from '../data/legal-acceptances';
+import {
+  acceptDocuments,
+  type PendingDocument,
+  usePendingLegalDocuments,
+} from '../data/legal-acceptances';
+import { diffLegalDocuments, type LegalChange, legalChanges } from '../lib/legal-diff';
 
 const LONG_DATE = { day: 'numeric', month: 'long', year: 'numeric' } as const;
 
+const CHANGE_ICON: Record<LegalChange['kind'], { icon: IconName; box: string; color: string }> = {
+  added: { icon: 'plus', box: 'bg-accent', color: colors.onAccent },
+  changed: { icon: 'pencil', box: 'bg-fg', color: colors.bg },
+  removed: { icon: 'minus', box: 'bg-control', color: colors.fg },
+};
+
+interface ChangeRow {
+  change: LegalChange;
+  pending: PendingDocument;
+}
+
 /**
- * Covers the app while a new terms or privacy version that needs consent is in effect: read
- * it, then agree or sign out. Waits while a workout is running, so it never interrupts a set.
+ * Covers the app while a new terms or privacy version that needs consent is in effect: what
+ * changed since the version the user accepted (worked out by comparing both), each change
+ * opening the document there with the edits marked; then agree or sign out. Waits while a
+ * workout is running, so it never interrupts a set.
  */
 export function LegalUpdateGate() {
   const { t, i18n } = useTranslation('common');
@@ -37,12 +55,33 @@ export function LegalUpdateGate() {
   const shown = pending.length > 0 && !activeWorkout;
   // Back would reach the app underneath.
   useHardwareBack(() => {}, shown);
+  const rows = useMemo(
+    () =>
+      pending.flatMap((p): ChangeRow[] =>
+        p.previous
+          ? legalChanges(diffLegalDocuments(p.previous.contentMd, p.document.contentMd)).map(
+              (change) => ({ change, pending: p }),
+            )
+          : [],
+      ),
+    [pending],
+  );
   if (!shown) return null;
+
+  const kinds = new Set(pending.map((p) => p.document.kind));
+  const both = kinds.size > 1;
+  const title = both
+    ? t('legal.update.titleBoth')
+    : t(kinds.has('terms') ? 'legal.update.titleTerms' : 'legal.update.titlePrivacy');
+  const first = pending[0];
 
   async function accept() {
     setBusy(true);
     try {
-      await acceptDocuments(requireUserId(), pending);
+      await acceptDocuments(
+        requireUserId(),
+        pending.map((p) => p.document),
+      );
       haptics.success();
     } catch (error) {
       console.warn('Recording the legal acceptance failed', error);
@@ -52,38 +91,95 @@ export function LegalUpdateGate() {
     }
   }
 
+  const sectionLabel = ({ change, pending: p }: ChangeRow) => {
+    const doc = t(`legal.update.docShort.${p.document.kind}`);
+    if (!change.number) return both ? doc : '';
+    return both
+      ? t('legal.update.docSection', { doc, number: change.number })
+      : t('legal.update.section', { number: change.number });
+  };
+
   return (
     <View
       className="absolute inset-0 bg-bg"
       style={{ paddingTop: insets.top, paddingBottom: footerInset }}
     >
-      <View className="flex-1">
-        <StepTitle title={t('legal.update.title')} subtitle={t('legal.update.subtitle')} />
-        <View className="gap-2.5 px-4 pt-6">
-          {pending.map((document) => (
-            <PressableScale
-              key={document.id}
-              haptic="tap"
-              activeScale={0.98}
-              accessibilityRole="link"
-              onPress={() => router.push(`/legal/${document.kind}`)}
-              className="flex-row items-center gap-3 rounded-[22px] bg-surface p-4"
-            >
-              <View className="min-w-0 flex-1 gap-0.5">
-                <Text variant="bodyStrong">{t(`legal.${document.kind}`)}</Text>
-                <Text tone="subtle" className="text-sm">
-                  {t('legal.meta', {
-                    version: document.version,
-                    date: formatDate(new Date(document.effectiveAt), LONG_DATE),
-                  })}
-                </Text>
-              </View>
-              <Icon name="chevron-right" size={7} color={colors.dim} />
-            </PressableScale>
-          ))}
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
+        <VersionIllustration from={first.previousVersion} to={first.document.version} />
+        <View className="gap-2.5 px-5 pt-7">
+          <Text accessibilityRole="header" className="font-inter-semibold text-[28px] leading-8">
+            {title}
+          </Text>
+          <Text variant="paragraph" tone="subtle">
+            {rows.length
+              ? t('legal.update.changes', { count: rows.length })
+              : t('legal.update.subtitle')}
+          </Text>
         </View>
-      </View>
-      <View className="gap-1 px-4">
+        <View className="gap-1 px-4 pt-5">
+          {rows.length
+            ? rows.map((row) => {
+                const { change, pending: p } = row;
+                const look = CHANGE_ICON[change.kind];
+                const name = change.title || t('legal.update.intro');
+                return (
+                  <PressableScale
+                    key={`${p.document.id}-${change.key}`}
+                    haptic="tap"
+                    activeScale={0.98}
+                    accessibilityRole="link"
+                    accessibilityLabel={`${t(`legal.update.kinds.${change.kind}`)}: ${name} ${sectionLabel(row)}`}
+                    onPress={() =>
+                      router.push({
+                        pathname: '/legal/[kind]',
+                        params: {
+                          kind: p.document.kind,
+                          compare: p.previous?.id ?? '',
+                          section: change.key,
+                        },
+                      })
+                    }
+                    className="min-h-14 flex-row items-center gap-3.5 px-1 py-2"
+                  >
+                    <View
+                      className={cn('size-10 items-center justify-center rounded-full', look.box)}
+                    >
+                      <Icon name={look.icon} size={13} color={look.color} />
+                    </View>
+                    <Text variant="label" className="min-w-0 flex-1 text-base">
+                      {name}
+                    </Text>
+                    <Text tone="subtle" className="text-sm">
+                      {sectionLabel(row)}
+                    </Text>
+                  </PressableScale>
+                );
+              })
+            : // Nothing to compare with (never accepted a version): open the new texts instead.
+              pending.map(({ document }) => (
+                <PressableScale
+                  key={document.id}
+                  haptic="tap"
+                  activeScale={0.98}
+                  accessibilityRole="link"
+                  onPress={() => router.push(`/legal/${document.kind}`)}
+                  className="mb-1.5 flex-row items-center gap-3 rounded-[22px] bg-surface p-4"
+                >
+                  <View className="min-w-0 flex-1 gap-0.5">
+                    <Text variant="bodyStrong">{t(`legal.${document.kind}`)}</Text>
+                    <Text tone="subtle" className="text-sm">
+                      {t('legal.meta', {
+                        version: document.version,
+                        date: formatDate(new Date(document.effectiveAt), LONG_DATE),
+                      })}
+                    </Text>
+                  </View>
+                  <Icon name="chevron-right" size={7} color={colors.dim} />
+                </PressableScale>
+              ))}
+        </View>
+      </ScrollView>
+      <View className="gap-1 px-4 pt-2">
         <Button label={t('legal.update.accept')} loading={busy} onPress={accept} />
         <TextButton
           label={t('legal.update.signOut')}
@@ -91,6 +187,57 @@ export function LegalUpdateGate() {
           onPress={() => void supabase.auth.signOut()}
         />
       </View>
+    </View>
+  );
+}
+
+/** The accepted version (grey) turning into the new one (neon), as two tilted pages. */
+function VersionIllustration({ from, to }: { from: string | null; to: string }) {
+  return (
+    <View className="mx-4 mt-4 h-60 flex-row items-center justify-center gap-4 overflow-hidden rounded-[28px] bg-surface">
+      {from ? (
+        <>
+          <Page version={from} old />
+          <View className="size-12 items-center justify-center rounded-full bg-control">
+            <Icon name="arrow-right" size={16} color={colors.fg} />
+          </View>
+        </>
+      ) : null}
+      <Page version={to} />
+    </View>
+  );
+}
+
+const OLD_LINES = ['w-full', 'w-3/4', 'w-full', 'w-1/2'];
+const NEW_LINES = [
+  ['w-full', 'bg-on-accent/30'],
+  ['w-4/5', 'bg-on-accent'],
+  ['w-full', 'bg-on-accent/30'],
+  ['w-11/12', 'bg-on-accent'],
+  ['w-1/2', 'bg-on-accent/30'],
+] as const;
+
+function Page({ version, old }: { version: string; old?: boolean }) {
+  return (
+    <View
+      className={cn(
+        'gap-2.5 rounded-[18px] p-4',
+        old ? 'h-36 w-28 bg-elevated' : 'h-42 w-33 bg-accent',
+      )}
+      style={{ transform: [{ rotate: old ? '-6deg' : '5deg' }] }}
+    >
+      <Text
+        className={cn('mb-1 font-inter-semibold text-base', old ? 'text-dim' : 'text-on-accent')}
+      >
+        {`v${version}`}
+      </Text>
+      {old
+        ? OLD_LINES.map((w, i) => (
+            <View key={i} className={cn('h-1.5 rounded-full bg-white/10', w)} />
+          ))
+        : NEW_LINES.map(([w, tone], i) => (
+            <View key={i} className={cn('h-1.5 rounded-full', w, tone)} />
+          ))}
     </View>
   );
 }
