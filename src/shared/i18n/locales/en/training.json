@@ -1,6 +1,5 @@
 {
   "header": {
-    "collections": "Collections",
     "create": "Create new"
   },
   "list": {
@@ -30,8 +29,6 @@
     "title": "Collections",
     "templateCount_one": "{{count}} template",
     "templateCount_other": "{{count}} templates",
-    "empty": "No collections yet",
-    "emptyHint": "Group your templates, for example by training block.",
     "renameTitle": "Rename collection",
     "newTitle": "New collection",
     "namePlaceholder": "Collection name",

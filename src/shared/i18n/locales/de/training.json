@@ -1,6 +1,5 @@
 {
   "header": {
-    "collections": "Sammlungen",
     "create": "Neu erstellen"
   },
   "list": {
@@ -30,8 +29,6 @@
     "title": "Sammlungen",
     "templateCount_one": "{{count}} Template",
     "templateCount_other": "{{count}} Templates",
-    "empty": "Noch keine Sammlungen",
-    "emptyHint": "Gruppiere deine Templates, zum Beispiel nach Trainingsblock.",
     "renameTitle": "Sammlung umbenennen",
     "newTitle": "Neue Sammlung",
     "namePlaceholder": "Name der Sammlung",

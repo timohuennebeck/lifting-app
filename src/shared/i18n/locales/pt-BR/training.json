@@ -1,6 +1,5 @@
 {
   "header": {
-    "collections": "Coleções",
     "create": "Criar novo"
   },
   "list": {
@@ -30,8 +29,6 @@
     "title": "Coleções",
     "templateCount_one": "{{count}} modelo",
     "templateCount_other": "{{count}} modelos",
-    "empty": "Você ainda não tem coleções",
-    "emptyHint": "Agrupe seus modelos, por exemplo por bloco de treino.",
     "renameTitle": "Renomear coleção",
     "newTitle": "Nova coleção",
     "namePlaceholder": "Nome da coleção",

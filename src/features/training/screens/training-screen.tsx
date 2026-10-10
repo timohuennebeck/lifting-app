@@ -7,28 +7,41 @@ import Sortable from 'react-native-sortables';
 
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useProfile } from '@/shared/data/profile';
-import { type TemplateSummary, useCollections, useTemplates } from '@/shared/data/templates';
+import {
+  type CollectionSummary,
+  type TemplateSummary,
+  useCollections,
+  useTemplates,
+} from '@/shared/data/templates';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
-import { PressableScale } from '@/shared/ui/pressable-scale';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
+import { CollectionOptionsSheet } from '../components/collection-options-sheet';
 import { type CollectionTab, CollectionTabs } from '../components/collection-tabs';
 import { CreateSheet } from '../components/create-sheet';
-import { CollectionsGlyph } from '../components/glyphs';
+import { DeleteCollectionSheet } from '../components/delete-collection-sheet';
 import { NewCollectionSheet } from '../components/new-collection-sheet';
 import { TemplateOptionsSheet } from '../components/template-options-sheet';
 import { TemplateRow } from '../components/template-row';
-import { deleteTemplate, renameTemplate, reorderTemplates } from '../data/template-mutations';
+import {
+  deleteTemplate,
+  renameCollection,
+  renameTemplate,
+  reorderTemplates,
+} from '../data/template-mutations';
 import { useStartTemplate } from '../hooks/use-start-template';
 
 const NONE = 'none';
 
-/** Training tab: templates grouped by collection (01·V·A) with create flows (01·V·A·6/7). */
+/**
+ * Training tab: templates grouped by collection (01·V·A) with create flows (01·V·A·6/7). Holding a
+ * collection renames or deletes it (01·V·A·4, 01·V·A·5).
+ */
 export function TrainingScreen() {
   const { t } = useTranslation(['training', 'common']);
   const { profile } = useProfile();
@@ -45,10 +58,26 @@ export function TrainingScreen() {
   const dragging = useRef(false);
   const [renaming, setRenaming] = useState<TemplateSummary | null>(null);
   const renameShown = useLastDefined(renaming);
+  const [collectionOptions, setCollectionOptions] = useState<CollectionSummary | null>(null);
+  const collectionOptionsShown = useLastDefined(collectionOptions);
+  const [renamingCollection, setRenamingCollection] = useState<CollectionSummary | null>(null);
+  const renamingCollectionShown = useLastDefined(renamingCollection);
+  const [deletingCollection, setDeletingCollection] = useState<CollectionSummary | null>(null);
+  // Collection options → rename or delete: the next sheet opens once this one has gone.
+  const thenFromCollection = (next: (c: CollectionSummary) => void) => {
+    const collection = collectionOptions;
+    setCollectionOptions(null);
+    if (collection) afterSheetClose(() => next(collection));
+  };
 
   const looseCount = templates.filter((tpl) => !tpl.collectionId).length;
   const tabs: CollectionTab[] = [
-    ...collections.map((c) => ({ key: c.id, name: c.name, count: c.templateCount })),
+    ...collections.map((c) => ({
+      key: c.id,
+      name: c.name,
+      count: c.templateCount,
+      editable: true,
+    })),
     ...(looseCount ? [{ key: NONE, name: t('list.noCollection'), count: looseCount }] : []),
   ];
   const fallbackKey =
@@ -68,14 +97,6 @@ export function TrainingScreen() {
       scrollRef={scrollRef}
       headerActions={
         <>
-          <PressableScale
-            hitSlop={4}
-            accessibilityLabel={t('header.collections')}
-            onPress={() => router.push('/template/collections')}
-            className="size-10.5 items-center justify-center rounded-full bg-elevated"
-          >
-            <CollectionsGlyph />
-          </PressableScale>
           <IconButton
             icon="plus"
             iconSize={14}
@@ -89,7 +110,13 @@ export function TrainingScreen() {
         {t('list.title')}
       </Text>
       {tabs.length ? (
-        <CollectionTabs tabs={tabs} selected={selected} onSelect={setSelectedKey} />
+        <CollectionTabs
+          tabs={tabs}
+          selected={selected}
+          onSelect={setSelectedKey}
+          onOptions={(key) => setCollectionOptions(collections.find((c) => c.id === key) ?? null)}
+          optionsLabel={(name) => t('collections.moreA11y', { name })}
+        />
       ) : null}
       <View className="px-4 pt-3">
         {/* Hold a training to drag it to another place in its collection. */}
@@ -203,6 +230,33 @@ export function TrainingScreen() {
           setSelectedKey(id);
           setNewCollectionOpen(false);
         }}
+      />
+      <CollectionOptionsSheet
+        visible={!!collectionOptions}
+        onClose={() => setCollectionOptions(null)}
+        name={collectionOptionsShown?.name ?? ''}
+        templateCount={collectionOptionsShown?.templateCount ?? 0}
+        onRename={() => thenFromCollection(setRenamingCollection)}
+        onDelete={() => thenFromCollection(setDeletingCollection)}
+      />
+      <TextInputSheet
+        visible={!!renamingCollection}
+        onClose={() => setRenamingCollection(null)}
+        title={t('collections.renameTitle')}
+        subtitle={t('collections.templateCount', {
+          count: renamingCollectionShown?.templateCount ?? 0,
+        })}
+        initialValue={renamingCollectionShown?.name}
+        placeholder={t('collections.namePlaceholder')}
+        ctaLabel={t('common:actions.save')}
+        onSubmit={async (name) => {
+          if (renamingCollection) await renameCollection(renamingCollection.id, name);
+          setRenamingCollection(null);
+        }}
+      />
+      <DeleteCollectionSheet
+        collection={deletingCollection}
+        onClose={() => setDeletingCollection(null)}
       />
     </TabScreen>
   );

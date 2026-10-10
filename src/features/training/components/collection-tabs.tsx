@@ -1,6 +1,7 @@
 import { ScrollView } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
+import { haptics } from '@/shared/lib/haptics';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
@@ -8,16 +9,31 @@ export interface CollectionTab {
   key: string;
   name: string;
   count: number;
+  /** A real collection, so holding it offers rename and delete ("Ohne Sammlung" isn't). */
+  editable?: boolean;
 }
 
 export interface CollectionTabsProps {
   tabs: CollectionTab[];
   selected: string | null;
   onSelect: (key: string) => void;
+  /** Holding a collection: its "⋯" options. */
+  onOptions: (key: string) => void;
+  /** What a screen reader offers instead of the hold, e.g. "Optionen für Push Pull Legs". */
+  optionsLabel: (name: string) => string;
 }
 
-/** Horizontally scrolling collection pills with template counts (01·V·A). */
-export function CollectionTabs({ tabs, selected, onSelect }: CollectionTabsProps) {
+/**
+ * Horizontally scrolling collection pills with template counts (01·V·A); holding one opens its
+ * options.
+ */
+export function CollectionTabs({
+  tabs,
+  selected,
+  onSelect,
+  onOptions,
+  optionsLabel,
+}: CollectionTabsProps) {
   return (
     <ScrollView
       horizontal
@@ -36,6 +52,20 @@ export function CollectionTabs({ tabs, selected, onSelect }: CollectionTabsProps
             accessibilityRole="tab"
             accessibilityState={{ selected: active }}
             onPress={() => onSelect(tab.key)}
+            onLongPress={
+              tab.editable
+                ? () => {
+                    haptics.press();
+                    onOptions(tab.key);
+                  }
+                : undefined
+            }
+            accessibilityActions={
+              tab.editable ? [{ name: 'longpress', label: optionsLabel(tab.name) }] : undefined
+            }
+            onAccessibilityAction={(e) => {
+              if (e.nativeEvent.actionName === 'longpress') onOptions(tab.key);
+            }}
             className={cn(
               'h-9 flex-row items-center gap-1.5 rounded-full px-3.5',
               active ? 'bg-accent' : 'bg-surface',
