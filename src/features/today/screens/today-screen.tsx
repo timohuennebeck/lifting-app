@@ -7,6 +7,7 @@ import { useWorkoutDraftStore } from '@/features/workout/stores/workout-draft-st
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useUnits } from '@/shared/data/profile';
 import { useActiveWorkout } from '@/shared/data/workouts';
+import { useToday } from '@/shared/hooks/use-today';
 import { isSameDay, mondayIndex } from '@/shared/lib/date';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -23,8 +24,13 @@ import { useWeekPlan } from '../hooks/use-week-plan';
 export function TodayScreen() {
   const { t } = useTranslation('today');
   const { t: tc } = useTranslation();
-  const today = new Date();
-  const [selected, setSelected] = useState(mondayIndex(today));
+  // The tab stays mounted: the day comes from a clock so it moves on overnight, and a picked
+  // weekday only counts on the day it was picked.
+  const dayKey = useToday();
+  const today = new Date(dayKey);
+  const [pick, setPick] = useState<{ day: number; index: number } | null>(null);
+  const selected = pick?.day === dayKey ? pick.index : mondayIndex(today);
+  const select = (index: number) => setPick({ day: dayKey, index });
   const [rescheduling, setRescheduling] = useState(false);
   const units = useUnits();
   const { data: active } = useActiveWorkout();
@@ -73,7 +79,7 @@ export function TodayScreen() {
       pinned={
         <View>
           {pills}
-          <WeekStrip days={days} today={today} selected={selected} onSelect={setSelected} />
+          <WeekStrip days={days} today={today} selected={selected} onSelect={select} />
         </View>
       }
     >
@@ -98,7 +104,7 @@ export function TodayScreen() {
         template={day.planned}
         planTemplates={planTemplates}
         onClose={() => setRescheduling(false)}
-        onMoved={setSelected}
+        onMoved={select}
       />
     </TabScreen>
   );
