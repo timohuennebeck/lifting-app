@@ -8,18 +8,19 @@ import { MUSCLE_CARDS, MuscleMap, MuscleTile } from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
 
 import { useExerciseId } from '../components/exercise-layout';
-import { exerciseMuscles } from '../lib/muscle-groups';
+import { splitMuscles } from '../lib/muscle-groups';
 
 /** Exercise page, "Übung": the worked muscles as chips with their share beside a body map, then the technique. */
 export function ExerciseTechniquePage() {
   const exerciseId = useExerciseId();
   const { t, i18n } = useTranslation(['exercises', 'muscles']);
   const insets = useSafeAreaInsets();
-  const muscles = exerciseMuscles(exerciseId);
+  // Primary muscles in neon, the helping ones in grey: on the chips and on the figure.
+  const { primary, secondary } = splitMuscles(exerciseId);
   // Each muscle's share of the exercise, as on the workout page.
   const shares = muscleShares([{ exerciseId, sets: 1 }]);
   const steps = exerciseInstructions(exerciseId, i18n.language);
-  const view = muscles[0] ? MUSCLE_CARDS[muscles[0]].view : 'front';
+  const view = primary[0] ? MUSCLE_CARDS[primary[0]].view : 'front';
 
   return (
     <ScrollView
@@ -29,12 +30,17 @@ export function ExerciseTechniquePage() {
     >
       <View className="flex-row items-start gap-1.5">
         <View className="min-w-0 flex-1 items-start gap-2">
-          {shares.map((s, i) => (
-            <MuscleTile key={s.muscle} muscle={s.muscle} percent={s.percent} highlight={i === 0} />
+          {shares.map((s) => (
+            <MuscleTile
+              key={s.muscle}
+              muscle={s.muscle}
+              percent={s.percent}
+              highlight={primary.includes(s.muscle)}
+            />
           ))}
         </View>
         <View className="h-45 w-19">
-          <MuscleMap view={view} selected={muscles} width={76} height={180} />
+          <MuscleMap view={view} selected={primary} secondary={secondary} width={76} height={180} />
         </View>
       </View>
       <View>

@@ -4,14 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
+import { splitMuscles } from '@/features/exercises/lib/muscle-groups';
 import { exerciseName, isTimed } from '@/shared/data/exercises';
 import { formatTargetLabel } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
-
-import { splitMuscles } from '../lib/training-ui';
 
 /** One target set of the card: rep (or second) range and RIR. */
 export interface OverviewSet {

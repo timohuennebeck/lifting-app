@@ -11,6 +11,8 @@ const FILL = { sil: '#181818', hd: '#2E2E2E', m: '#3E3E3E', fx: '#3E3E3E' } as c
 export interface MuscleMapProps {
   view: BodyView;
   selected?: readonly BodyPartId[];
+  /** Lit in light grey: muscles that only help, beside the selected ones. */
+  secondary?: readonly BodyPartId[];
   /** Makes muscles tappable; called with the tapped muscle. */
   onToggle?: (part: BodyPartId) => void;
   /** Limits which parts react to taps (default: all); keep it a stable function. */
@@ -29,6 +31,7 @@ export interface MuscleMapProps {
 export const MuscleMap = memo(function MuscleMap({
   view,
   selected = [],
+  secondary = [],
   onToggle,
   isSelectable,
   viewBox,
@@ -40,6 +43,7 @@ export const MuscleMap = memo(function MuscleMap({
   const accent = accentOverride ?? colors.accent;
   const art = BODY[view];
   const active = new Set(selected);
+  const helping = new Set(secondary);
 
   return (
     <Svg
@@ -51,13 +55,14 @@ export const MuscleMap = memo(function MuscleMap({
       <G>
         {art.paths.map((p, i) => {
           const on = p.muscle !== null && active.has(p.muscle);
+          const helps = p.muscle !== null && helping.has(p.muscle);
           const muscle = p.muscle;
           const tappable = !!onToggle && !!muscle && (!isSelectable || isSelectable(muscle));
           return (
             <Path
               key={i}
               d={p.d}
-              fill={on ? accent : FILL[p.kind]}
+              fill={on ? accent : helps ? colors.fg2 : FILL[p.kind]}
               stroke={p.kind === 'sil' ? '#2C2C2C' : undefined}
               strokeWidth={p.kind === 'sil' ? 2 : undefined}
               onPress={

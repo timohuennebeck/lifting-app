@@ -41,6 +41,15 @@ export function muscleWeights(exerciseId: string) {
   return (Object.entries(muscles) as [MuscleId, number][]).sort((a, b) => b[1] - a[1]);
 }
 
+/** Splits an exercise's muscles into primary (≥ 30 % or the top one) and secondary. */
+export function splitMuscles(exerciseId: string) {
+  const entries = muscleWeights(exerciseId);
+  return {
+    primary: entries.filter(([, w], i) => i === 0 || w >= 0.3).map(([m]) => m),
+    secondary: entries.filter(([, w], i) => i > 0 && w < 0.3).map(([m]) => m),
+  };
+}
+
 /** Muscles of an exercise, highest share first. */
 export function exerciseMuscles(exerciseId: string): MuscleId[] {
   return muscleWeights(exerciseId).map(([m]) => m);
