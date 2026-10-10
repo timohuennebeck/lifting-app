@@ -56,8 +56,16 @@ const normalize = (text: string) =>
     .replace(/[^\p{L}\p{N}§%€$]+/gu, ' ')
     .trim();
 
-const blockText = (block: MarkdownBlock) =>
-  block.type === 'list' ? block.items.join(' ') : block.type === 'rule' ? '---' : block.text;
+function blockText(block: MarkdownBlock) {
+  switch (block.type) {
+    case 'list':
+      return block.items.join(' ');
+    case 'rule':
+      return '---';
+    default:
+      return block.text;
+  }
+}
 
 /** Sections by heading (levels 2 and 3); the document's own title (level 1) isn't one. */
 function splitSections(markdown: string): Section[] {
@@ -170,6 +178,17 @@ function wordSegments(oldText: string, newText: string): DiffSegment[] {
 const whole = (text: string, change: 'added' | 'removed'): DiffSegment[] => [
   { text: plainText(text), change },
 ];
+
+/** The heading of a section in both versions: word by word when it was renamed. */
+function keptHeading(
+  oldSection: Section,
+  newSection: Section,
+  renamed: boolean,
+): DiffSegment[] | null {
+  if (!newSection.headingText) return null;
+  if (!renamed) return [{ text: plainText(newSection.headingText) }];
+  return wordSegments(oldSection.headingText ?? '', newSection.headingText);
+}
 
 function wholeBlock(block: MarkdownBlock, change: 'added' | 'removed'): DiffBlock {
   switch (block.type) {
@@ -322,11 +341,7 @@ export function diffLegalDocuments(oldMarkdown: string, newMarkdown: string): Di
       number: n.number,
       title: n.title,
       level: n.level,
-      heading: n.headingText
-        ? headingChanged
-          ? wordSegments(o.headingText ?? '', n.headingText)
-          : [{ text: plainText(n.headingText) }]
-        : null,
+      heading: keptHeading(o, n, headingChanged),
       blocks: textChanged
         ? diffBlocks(o.blocks, n.blocks)
         : n.blocks.map((block): DiffBlock => ({ type: 'same', block })),

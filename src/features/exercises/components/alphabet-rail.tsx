@@ -11,6 +11,8 @@ import { Text } from '@/shared/ui/text';
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const MAX_ROW = 15;
+/** Letters that have entries; the current one is accent, empty ones faint. */
+const AVAILABLE_COLOR = '#C8C8C3';
 
 export interface AlphabetRailProps {
   /** Letters that have entries; others are dimmed. */
@@ -35,6 +37,11 @@ export function AlphabetRail({ available, active, onJump }: AlphabetRailProps) {
     onJump(letter);
   }
 
+  const colorOf = (letter: string) => {
+    if (letter === active) return colors.accent;
+    return available.has(letter) ? AVAILABLE_COLOR : colors.outline;
+  };
+
   const pan = Gesture.Pan()
     .minDistance(0)
     .onBegin((e) => scheduleOnRN(jumpTo, e.y))
@@ -52,10 +59,7 @@ export function AlphabetRail({ available, active, onJump }: AlphabetRailProps) {
             <View key={c} className="w-5.5 items-center justify-center" style={{ height: row }}>
               <Text
                 className="font-inter-semibold text-[10px] leading-3"
-                style={{
-                  color:
-                    c === active ? colors.accent : available.has(c) ? '#C8C8C3' : colors.outline,
-                }}
+                style={{ color: colorOf(c) }}
               >
                 {c}
               </Text>

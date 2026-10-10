@@ -108,13 +108,9 @@ export function SetTargetsForm({
   // The check moves on: min → max → the next row; after the last box the pad closes.
   function confirm() {
     if (!focus) return;
-    const next: Focus | null =
-      focus.field === 'min'
-        ? { index: focus.index, field: 'max' }
-        : focus.index + 1 < sets.length
-          ? { index: focus.index + 1, field: 'min' }
-          : null;
-    focusBox(next);
+    if (focus.field === 'min') focusBox({ index: focus.index, field: 'max' });
+    else if (focus.index + 1 < sets.length) focusBox({ index: focus.index + 1, field: 'min' });
+    else focusBox(null);
   }
 
   useHardwareBack(() => focusBox(null), !!focus);

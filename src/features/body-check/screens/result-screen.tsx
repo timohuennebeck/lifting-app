@@ -90,6 +90,9 @@ export function ResultScreen() {
   const { bodyFat, proportions, definition } = check.metrics;
   const fatRange = bodyFatRange(profile?.sex);
   const date = formatDate(new Date(check.createdAt), { day: 'numeric', month: 'long' });
+  let close = exitBodyCheck;
+  if (justSaved) close = leaveSaved;
+  else if (draft) close = closeDraft;
 
   async function remove() {
     if (!saved || !userId) return;
@@ -133,7 +136,7 @@ export function ResultScreen() {
           icon="chevron-left"
           iconSize={7}
           accessibilityLabel={t('common:actions.close')}
-          onPress={justSaved ? leaveSaved : draft ? closeDraft : exitBodyCheck}
+          onPress={close}
         />
         <View className="flex-row items-center gap-2">
           <PressableScale

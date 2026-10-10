@@ -43,16 +43,11 @@ export function parseSetInput(
   const count = (m: 'reps' | 'seconds') =>
     measures.includes(m) ? parseInput(input[m]) || null : null;
   const weight = parseInput(input.weight);
-  const values: SetValues = {
-    weightKg: !measures.includes('weight')
-      ? null
-      : weight != null
-        ? fromDisplayWeight(weight, units)
-        : bodyweight
-          ? 0
-          : null,
-    reps: count('reps'),
-    seconds: count('seconds'),
-  };
+  let weightKg: number | null = null;
+  if (measures.includes('weight')) {
+    if (weight != null) weightKg = fromDisplayWeight(weight, units);
+    else if (bodyweight) weightKg = 0;
+  }
+  const values: SetValues = { weightKg, reps: count('reps'), seconds: count('seconds') };
   return { values, missing: measures.find((m) => valueOf(values, m) == null) };
 }

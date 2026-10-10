@@ -27,6 +27,33 @@ function openCamera() {
 
 const openCheck = (id: string) => router.push(`/body-check/result/${id}`);
 
+interface NoChecksCardProps {
+  /** Old enough for body checks; under-18s are told why there are none. */
+  allowed: boolean;
+  onStart: () => void;
+}
+
+/** Empty state before the first check. */
+function NoChecksCard({ allowed, onStart }: NoChecksCardProps) {
+  const { t } = useTranslation('body');
+  return (
+    <Card className="mx-4 mt-6 items-center gap-4 py-8">
+      <View className="size-16 items-center justify-center rounded-full bg-elevated">
+        <Icon name="camera" size={26} color={allowed ? colors.accent : colors.subtle} />
+      </View>
+      <Text variant="headline" className="text-center">
+        {t(allowed ? 'empty.title' : 'adultsOnly.title')}
+      </Text>
+      <Text variant="paragraph" tone="muted" className="text-center">
+        {t(allowed ? 'empty.body' : 'adultsOnly.body')}
+      </Text>
+      {allowed ? (
+        <Button label={t('start')} size="md" className="mt-1 px-6" onPress={onStart} />
+      ) : null}
+    </Card>
+  );
+}
+
 /** Progress tab, "Körper": the body score, before/after photos and the check history. */
 export function BodyView() {
   const { t } = useTranslation(['body', 'bodyCheck']);
@@ -39,6 +66,8 @@ export function BodyView() {
 
   const first = checks[0];
   const latest = checks[checks.length - 1];
+  // With two checks or more, the first and the latest are compared side by side.
+  const compared = checks.length > 1;
   const delta = latest && first ? latest.score - first.score : 0;
   const nextTitle = t('check', { n: checks.length + 1 });
 
@@ -51,20 +80,7 @@ export function BodyView() {
       </Text>
 
       {!latest ? (
-        <Card className="mx-4 mt-6 items-center gap-4 py-8">
-          <View className="size-16 items-center justify-center rounded-full bg-elevated">
-            <Icon name="camera" size={26} color={allowed ? colors.accent : colors.subtle} />
-          </View>
-          <Text variant="headline" className="text-center">
-            {t(allowed ? 'empty.title' : 'adultsOnly.title')}
-          </Text>
-          <Text variant="paragraph" tone="muted" className="text-center">
-            {t(allowed ? 'empty.body' : 'adultsOnly.body')}
-          </Text>
-          {allowed ? (
-            <Button label={t('start')} size="md" className="mt-1 px-6" onPress={camera.request} />
-          ) : null}
-        </Card>
+        <NoChecksCard allowed={allowed} onStart={camera.request} />
       ) : (
         <>
           <View className="flex-row items-end justify-between gap-3 px-5 pt-5.5">
@@ -76,7 +92,7 @@ export function BodyView() {
                 /100
               </Text>
             </View>
-            {checks.length > 1 ? (
+            {compared ? (
               <View className="mb-1 rounded-full bg-accent px-2.75 py-1.5">
                 <Text variant="caption" tone="onAccent">
                   {t('sinceStart', { delta: `${delta >= 0 ? '+' : '−'}${Math.abs(delta)}` })}
@@ -92,7 +108,7 @@ export function BodyView() {
           {/* No padding on the row itself: the arrow is centred on its width. */}
           <View className="px-4 pt-6">
             <View className="flex-row gap-2.5">
-              {checks.length > 1 ? (
+              {compared ? (
                 <BodyPhotoCard
                   checkId={first.id}
                   pose={pose}
@@ -112,14 +128,15 @@ export function BodyView() {
                 score={latest.score}
                 latest
               />
-              {checks.length > 1 ? (
+              {compared ? (
                 <View
                   pointerEvents="none"
                   className="absolute top-1/2 left-1/2 -mt-5 -ml-5 size-10 items-center justify-center rounded-full bg-accent"
                 >
                   <Icon name="arrow-right" size={16} color={colors.onAccent} />
                 </View>
-              ) : allowed ? (
+              ) : null}
+              {!compared && allowed ? (
                 <NextCheckCard title={nextTitle} note={t('startNow')} onPress={camera.request} />
               ) : null}
             </View>

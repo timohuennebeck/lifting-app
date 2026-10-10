@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
@@ -74,6 +74,29 @@ export function TodayScreen() {
     </ScrollView>
   );
 
+  // A finished workout wins over the plan; a day with neither is a rest day.
+  let card: ReactNode;
+  if (day.workout) {
+    card = <DoneCard workout={day.workout} date={day.date} today={today} units={units} />;
+  } else if (day.planned) {
+    card = (
+      <PlannedCard
+        template={day.planned}
+        date={day.date}
+        today={today}
+        activeWorkoutId={active?.id ?? null}
+        onReschedule={() => setRescheduling(true)}
+      />
+    );
+  } else {
+    card = (
+      <RestDayCard
+        dayName={tc('weekdays.long', { returnObjects: true })[selected]}
+        isToday={isSameDay(day.date, today)}
+      />
+    );
+  }
+
   return (
     <TabScreen
       pinned={
@@ -83,22 +106,7 @@ export function TodayScreen() {
         </View>
       }
     >
-      {day.workout ? (
-        <DoneCard workout={day.workout} date={day.date} today={today} units={units} />
-      ) : day.planned ? (
-        <PlannedCard
-          template={day.planned}
-          date={day.date}
-          today={today}
-          activeWorkoutId={active?.id ?? null}
-          onReschedule={() => setRescheduling(true)}
-        />
-      ) : (
-        <RestDayCard
-          dayName={tc('weekdays.long', { returnObjects: true })[selected]}
-          isToday={isSameDay(day.date, today)}
-        />
-      )}
+      {card}
       <RescheduleSheet
         visible={rescheduling}
         template={day.planned}

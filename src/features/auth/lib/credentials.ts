@@ -2,6 +2,9 @@ import type { AuthError } from '@supabase/supabase-js';
 
 export const MIN_PASSWORD_LENGTH = 8;
 
+/** Steps of the password reset (email, code, new password). */
+export const RESET_STEPS = 3;
+
 export const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
 
 export type PasswordScore = 0 | 1 | 2 | 3 | 4;

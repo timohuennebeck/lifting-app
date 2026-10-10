@@ -24,6 +24,14 @@ const WORD_MS = 260;
 const LEAD_MS = 500;
 const SETTLE_MS = 400;
 const HANDOFF_MS = 700;
+/** Word colours once the utterance is understood. */
+const TOKEN_COLORS: Record<TokenKind, string> = {
+  day: colors.accent,
+  number: colors.accent,
+  exercise: colors.fg,
+  remove: colors.danger,
+  filler: colors.dim,
+};
 
 /** 06b-3: voice input. MOCK: the mic plays a scripted utterance instead of real recognition. */
 export function VoiceScreen() {
@@ -40,6 +48,9 @@ export function VoiceScreen() {
     startedAt === null ? 0 : clamp(Math.floor((elapsed - LEAD_MS) / WORD_MS) + 1, 0, words.length);
   const recognized = startedAt !== null && elapsed >= LEAD_MS + words.length * WORD_MS + SETTLE_MS;
   const tick = Math.floor(now / 250);
+  let status = t('planImport:voice.tap');
+  if (recognized) status = t('planImport:voice.understood');
+  else if (startedAt !== null) status = t('planImport:voice.listening');
 
   useEffect(() => {
     if (!recognized || handedOff.current) return;
@@ -60,16 +71,7 @@ export function VoiceScreen() {
     }
   }
 
-  const color = (kind: TokenKind) => {
-    if (!recognized) return colors.fgMid;
-    return {
-      day: colors.accent,
-      number: colors.accent,
-      exercise: colors.fg,
-      remove: colors.danger,
-      filler: colors.dim,
-    }[kind];
-  };
+  const color = (kind: TokenKind) => (recognized ? TOKEN_COLORS[kind] : colors.fgMid);
   const bar = (j: number) =>
     recognized ? 6 : 8 + Math.round(Math.abs(Math.sin(tick * 1.7 + j * 2.3)) * (shown ? 30 : 10));
   const bars = (from: number) => (
@@ -142,11 +144,7 @@ export function VoiceScreen() {
           {startedAt !== null ? bars(4) : null}
         </View>
         <Text variant="label" tone="muted" className="font-inter-medium">
-          {startedAt === null
-            ? t('planImport:voice.tap')
-            : recognized
-              ? t('planImport:voice.understood')
-              : t('planImport:voice.listening')}
+          {status}
         </Text>
       </View>
     </Screen>

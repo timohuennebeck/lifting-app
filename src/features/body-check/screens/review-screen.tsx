@@ -33,6 +33,39 @@ function shoot(pose: BodyPose, replace: boolean) {
   router.back();
 }
 
+const analyze = () => router.push('/body-check/analysis');
+
+interface ReviewActionsProps {
+  missing: BodyPose | undefined;
+  weak: BodyPose | undefined;
+  /** A photo the analysis rejected: no "continue anyway". */
+  rejected: boolean;
+}
+
+/** The next step: take a missing pose, retake a weak one, or start the analysis. */
+function ReviewActions({ missing, weak, rejected }: ReviewActionsProps) {
+  const { t } = useTranslation('bodyCheck');
+  if (missing) {
+    return <Button label={t(`review.take.${missing}`)} onPress={() => shoot(missing, false)} />;
+  }
+  if (weak) {
+    return (
+      <>
+        <Button label={t(`review.retake.${weak}`)} onPress={() => shoot(weak, true)} />
+        {rejected ? null : (
+          <TextButton
+            label={t('review.continueAnyway')}
+            tone="secondary"
+            className="min-h-11"
+            onPress={analyze}
+          />
+        )}
+      </>
+    );
+  }
+  return <Button label={t('review.cta')} onPress={analyze} />;
+}
+
 /**
  * 08b: check each pose's photo, retake weak or missing ones (or those the analysis rejected),
  * then start the analysis.
@@ -55,7 +88,6 @@ export function ReviewScreen() {
   const shot = shots[selected];
   const taken = POSES.filter((p) => shots[p]).length;
   const photoHeight = clamp(stageHeight - STAGE_CHROME, 120, PHOTO_MAX_HEIGHT);
-  const analyze = () => router.push('/body-check/analysis');
 
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
@@ -159,23 +191,7 @@ export function ReviewScreen() {
       </View>
 
       <View className="mt-auto gap-1 px-4 pt-6" style={{ paddingBottom: footerInset }}>
-        {missing ? (
-          <Button label={t(`review.take.${missing}`)} onPress={() => shoot(missing, false)} />
-        ) : weak ? (
-          <>
-            <Button label={t(`review.retake.${weak}`)} onPress={() => shoot(weak, true)} />
-            {rejected ? null : (
-              <TextButton
-                label={t('review.continueAnyway')}
-                tone="secondary"
-                className="min-h-11"
-                onPress={analyze}
-              />
-            )}
-          </>
-        ) : (
-          <Button label={t('review.cta')} onPress={analyze} />
-        )}
+        <ReviewActions missing={missing} weak={weak} rejected={rejected} />
       </View>
     </View>
   );

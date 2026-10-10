@@ -11,7 +11,7 @@ import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 import { TextField } from '@/shared/ui/text-field';
 
-import { type AuthErrorKey, authErrorKey, isValidEmail } from '../lib/credentials';
+import { type AuthErrorKey, authErrorKey, isValidEmail, RESET_STEPS } from '../lib/credentials';
 
 /** Password reset 1/3 (design PW-A): the email the code goes to. */
 export function ForgotPasswordScreen() {
@@ -46,7 +46,7 @@ export function ForgotPasswordScreen() {
   return (
     <StepScreen
       step={1}
-      total={3}
+      total={RESET_STEPS}
       title={t('forgot.title')}
       subtitle={t('forgot.subtitle')}
       scroll

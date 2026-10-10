@@ -52,11 +52,13 @@ export function SetEditorRow({
   const { t } = useTranslation('training');
   const rir = editorRirStyle(set.rir);
   const cell = (field: TargetField) => {
-    const value = field === 'min' ? set.targetMin : set.targetMax;
+    const active = activeField === field;
+    const target = field === 'min' ? set.targetMin : set.targetMax;
+    const saved = target == null ? '' : String(target);
     return (
       <InputCell
-        value={activeField === field ? buffer : value == null ? '' : String(value)}
-        active={activeField === field}
+        value={active ? buffer : saved}
+        active={active}
         pristine={pristine}
         label={t(timed ? `sets.${field}Seconds` : `sets.${field}`)}
         placeholder={t('sets.optional')}

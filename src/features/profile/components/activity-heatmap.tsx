@@ -8,6 +8,13 @@ import { colors } from '@/shared/lib/theme';
 const WEEKS = 13;
 const dayKey = (d: Date) => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 
+/** Accent opacity of a day from its share of the busiest day's sets: none, or one of three steps. */
+function shade(share: number) {
+  if (share === 0) return 0;
+  if (share > 0.66) return 1;
+  return share > 0.33 ? 0.6 : 0.3;
+}
+
 /** 13-week grid (columns = weeks, rows = Mon–Sun) shaded by completed sets per day. */
 export function ActivityHeatmap() {
   const thisWeek = startOfWeek(new Date());
@@ -23,8 +30,8 @@ export function ActivityHeatmap() {
     const first = new Date(fromIso);
     return Array.from({ length: WEEKS }, (_, w) =>
       Array.from({ length: 7 }, (_, d) => {
-        const value = (sets.get(dayKey(addDays(first, w * 7 + d))) ?? 0) / max;
-        return value === 0 ? 0 : value > 0.66 ? 1 : value > 0.33 ? 0.6 : 0.3;
+        const daySets = sets.get(dayKey(addDays(first, w * 7 + d))) ?? 0;
+        return shade(daySets / max);
       }),
     );
   }, [workouts, fromIso]);

@@ -48,9 +48,9 @@ export function CodeInput({
             <Text variant="headline" className="text-xl">
               {value[i]}
             </Text>
-          ) : i === current ? (
-            <BlinkingCursor />
           ) : null}
+          {/* The current box is the first empty one. */}
+          {i === current ? <BlinkingCursor /> : null}
         </View>
       ))}
       <TextInput

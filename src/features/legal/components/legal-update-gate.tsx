@@ -25,6 +25,7 @@ import {
   type PendingDocument,
   usePendingLegalDocuments,
 } from '../data/legal-acceptances';
+import type { LegalDocument } from '../data/legal-documents';
 import { diffLegalDocuments, type LegalChange, legalChanges } from '../lib/legal-diff';
 
 const LONG_DATE = { day: 'numeric', month: 'long', year: 'numeric' } as const;
@@ -124,65 +125,15 @@ export function LegalUpdateGate() {
         </View>
         <View className="gap-1 px-4 pt-5">
           {rows.length
-            ? rows.map((row) => {
-                const { change, pending: p } = row;
-                const look = CHANGE_ICON[change.kind];
-                const name = change.title || t('legal.update.intro');
-                return (
-                  <PressableScale
-                    key={`${p.document.id}-${change.key}`}
-                    haptic="tap"
-                    activeScale={0.98}
-                    accessibilityRole="link"
-                    accessibilityLabel={`${t(`legal.update.kinds.${change.kind}`)}: ${name} ${sectionLabel(row)}`}
-                    onPress={() =>
-                      router.push({
-                        pathname: '/legal/[kind]',
-                        params: {
-                          kind: p.document.kind,
-                          compare: p.previous?.id ?? '',
-                          section: change.key,
-                        },
-                      })
-                    }
-                    className="min-h-14 flex-row items-center gap-3.5 px-1 py-2"
-                  >
-                    <View
-                      className={cn('size-10 items-center justify-center rounded-full', look.box)}
-                    >
-                      <Icon name={look.icon} size={13} color={look.color} />
-                    </View>
-                    <Text variant="label" className="min-w-0 flex-1 text-base">
-                      {name}
-                    </Text>
-                    <Text tone="subtle" className="text-sm">
-                      {sectionLabel(row)}
-                    </Text>
-                  </PressableScale>
-                );
-              })
+            ? rows.map((row) => (
+                <ChangeLink
+                  key={`${row.pending.document.id}-${row.change.key}`}
+                  row={row}
+                  section={sectionLabel(row)}
+                />
+              ))
             : // Nothing to compare with (never accepted a version): open the new texts instead.
-              pending.map(({ document }) => (
-                <PressableScale
-                  key={document.id}
-                  haptic="tap"
-                  activeScale={0.98}
-                  accessibilityRole="link"
-                  onPress={() => router.push(`/legal/${document.kind}`)}
-                  className="mb-1.5 flex-row items-center gap-3 rounded-[22px] bg-surface p-4"
-                >
-                  <View className="min-w-0 flex-1 gap-0.5">
-                    <Text variant="bodyStrong">{t(`legal.${document.kind}`)}</Text>
-                    <Text tone="subtle" className="text-sm">
-                      {t('legal.meta', {
-                        version: document.version,
-                        date: formatDate(new Date(document.effectiveAt), LONG_DATE),
-                      })}
-                    </Text>
-                  </View>
-                  <Icon name="chevron-right" size={7} color={colors.dim} />
-                </PressableScale>
-              ))}
+              pending.map(({ document }) => <DocumentLink key={document.id} document={document} />)}
         </View>
       </ScrollView>
       <View className="gap-1 px-4 pt-2">
@@ -194,6 +145,67 @@ export function LegalUpdateGate() {
         />
       </View>
     </View>
+  );
+}
+
+/** One changed section: opens the document there with the edits marked. */
+function ChangeLink({ row: { change, pending }, section }: { row: ChangeRow; section: string }) {
+  const { t } = useTranslation('common');
+  const look = CHANGE_ICON[change.kind];
+  const name = change.title || t('legal.update.intro');
+  return (
+    <PressableScale
+      haptic="tap"
+      activeScale={0.98}
+      accessibilityRole="link"
+      accessibilityLabel={`${t(`legal.update.kinds.${change.kind}`)}: ${name} ${section}`}
+      onPress={() =>
+        router.push({
+          pathname: '/legal/[kind]',
+          params: {
+            kind: pending.document.kind,
+            compare: pending.previous?.id ?? '',
+            section: change.key,
+          },
+        })
+      }
+      className="min-h-14 flex-row items-center gap-3.5 px-1 py-2"
+    >
+      <View className={cn('size-10 items-center justify-center rounded-full', look.box)}>
+        <Icon name={look.icon} size={13} color={look.color} />
+      </View>
+      <Text variant="label" className="min-w-0 flex-1 text-base">
+        {name}
+      </Text>
+      <Text tone="subtle" className="text-sm">
+        {section}
+      </Text>
+    </PressableScale>
+  );
+}
+
+/** A new version as a card that opens it, with its version number and date. */
+function DocumentLink({ document }: { document: LegalDocument }) {
+  const { t } = useTranslation('common');
+  return (
+    <PressableScale
+      haptic="tap"
+      activeScale={0.98}
+      accessibilityRole="link"
+      onPress={() => router.push(`/legal/${document.kind}`)}
+      className="mb-1.5 flex-row items-center gap-3 rounded-[22px] bg-surface p-4"
+    >
+      <View className="min-w-0 flex-1 gap-0.5">
+        <Text variant="bodyStrong">{t(`legal.${document.kind}`)}</Text>
+        <Text tone="subtle" className="text-sm">
+          {t('legal.meta', {
+            version: document.version,
+            date: formatDate(new Date(document.effectiveAt), LONG_DATE),
+          })}
+        </Text>
+      </View>
+      <Icon name="chevron-right" size={7} color={colors.dim} />
+    </PressableScale>
   );
 }
 

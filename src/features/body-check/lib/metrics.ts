@@ -8,8 +8,11 @@ export type ScoreTier = 'veryGood' | 'good' | 'average' | 'low';
 export type BodyFatTier = 'athletic' | 'fit' | 'average' | 'high';
 export type GroupBand = 'top' | 'mid' | 'focus';
 
-export const scoreTier = (value: number): ScoreTier =>
-  value >= 85 ? 'veryGood' : value >= 70 ? 'good' : value >= 50 ? 'average' : 'low';
+export function scoreTier(value: number): ScoreTier {
+  if (value >= 85) return 'veryGood';
+  if (value >= 70) return 'good';
+  return value >= 50 ? 'average' : 'low';
+}
 
 /** Scale shown under the body-fat estimate, in percent. */
 export const bodyFatRange = (sex: Sex | null | undefined) =>

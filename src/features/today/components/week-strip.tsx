@@ -58,9 +58,8 @@ export function WeekStrip({ days, today, selected, onSelect }: WeekStripProps) {
               </View>
             ) : (
               <View className="size-10.25 items-center justify-center">
-                {day.planned ? (
-                  <DashedRing color={isSelected ? colors.accent : '#4A4A47'} />
-                ) : isSelected ? (
+                {day.planned ? <DashedRing color={isSelected ? colors.accent : '#4A4A47'} /> : null}
+                {isSelected && !day.planned ? (
                   <View className="absolute size-8.5 rounded-full bg-elevated" />
                 ) : null}
                 <Text

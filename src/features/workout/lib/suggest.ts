@@ -45,8 +45,11 @@ export function rowValues(
     return merge({ ...pick(set), ...drafts[set.id] }, passedOn(i - 1));
   };
   // What a row hands down to the one below it.
-  const passedOn = (i: number): SetValues =>
-    i < 0 ? NONE : i === typed?.index ? typed.values : (loggedAt(i) ?? open(i));
+  const passedOn = (i: number): SetValues => {
+    if (i < 0) return NONE;
+    if (i === typed?.index) return typed.values;
+    return loggedAt(i) ?? open(i);
+  };
   return loggedAt(index) ?? open(index);
 }
 

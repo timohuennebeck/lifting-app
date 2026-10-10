@@ -49,6 +49,14 @@ export function ProfileScreen() {
   const avatarPath = profile?.avatarPath ?? null;
   if (local?.path && avatarPath !== local.path && avatarPath !== local.replaces) setLocal(null);
   const uploading = !!local && !local.path;
+  const [visible, setVisible] = useState(PAGE);
+  const { data: history = [] } = useWorkoutHistory(visible);
+  const { data: workoutCount = 0 } = useWorkoutCount();
+  const name = profile?.firstName ?? '';
+  const [editing, setEditing] = useState<'name' | 'about' | null>(null);
+  // The sheet keeps its copy while it animates out.
+  const editingField = useLastDefined(editing) ?? 'name';
+  const editingAbout = editingField === 'about';
 
   async function onAvatarAction(action: AvatarAction) {
     setAvatarOpen(false);
@@ -90,12 +98,6 @@ export function ProfileScreen() {
       }
     });
   }
-  const [visible, setVisible] = useState(PAGE);
-  const { data: history = [] } = useWorkoutHistory(visible);
-  const { data: workoutCount = 0 } = useWorkoutCount();
-  const name = profile?.firstName ?? '';
-  const [editing, setEditing] = useState<'name' | 'about' | null>(null);
-  const editingShown = useLastDefined(editing);
 
   async function saveText(value: string) {
     if (!profile) return;
@@ -211,14 +213,14 @@ export function ProfileScreen() {
       <ProfileTextSheet
         visible={!!editing}
         onClose={() => setEditing(null)}
-        title={t(`${editingShown ?? 'name'}.title`)}
-        subtitle={t(`${editingShown ?? 'name'}.subtitle`)}
-        label={t(`${editingShown ?? 'name'}.label`)}
-        placeholder={t(`${editingShown ?? 'name'}.placeholder`)}
-        initialValue={(editingShown === 'about' ? profile?.bio : profile?.firstName) ?? ''}
-        maxLength={editingShown === 'about' ? BIO_MAX : NAME_MAX}
-        multiline={editingShown === 'about'}
-        optional={editingShown === 'about'}
+        title={t(`${editingField}.title`)}
+        subtitle={t(`${editingField}.subtitle`)}
+        label={t(`${editingField}.label`)}
+        placeholder={t(`${editingField}.placeholder`)}
+        initialValue={(editingAbout ? profile?.bio : profile?.firstName) ?? ''}
+        maxLength={editingAbout ? BIO_MAX : NAME_MAX}
+        multiline={editingAbout}
+        optional={editingAbout}
         onSave={saveText}
       />
     </TabScreen>

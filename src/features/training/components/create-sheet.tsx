@@ -34,9 +34,11 @@ export function CreateSheet({
       value={kind}
       onChange={setKind}
       note={kind === 'program' ? t('create.programNote') : undefined}
-      onConfirm={(value) =>
-        value === 'collection' ? onCreateCollection() : value === 'template' && onCreateTemplate()
-      }
+      onConfirm={(value) => {
+        // "program" is coming soon: its CTA is disabled.
+        if (value === 'collection') onCreateCollection();
+        else if (value === 'template') onCreateTemplate();
+      }}
       options={[
         {
           value: 'collection',

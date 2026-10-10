@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ScrollView, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -107,12 +107,10 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
       offset.set(atEdge ? e.translationX * 0.25 : e.translationX);
     })
     .onEnd((e) => {
-      const direction =
-        e.translationX < -SWIPE_DISTANCE || e.velocityX < -SWIPE_VELOCITY
-          ? 1
-          : e.translationX > SWIPE_DISTANCE || e.velocityX > SWIPE_VELOCITY
-            ? -1
-            : 0;
+      // Swiped left: the next exercise; swiped right: the one before.
+      let direction = 0;
+      if (e.translationX < -SWIPE_DISTANCE || e.velocityX < -SWIPE_VELOCITY) direction = 1;
+      else if (e.translationX > SWIPE_DISTANCE || e.velocityX > SWIPE_VELOCITY) direction = -1;
       const target = exerciseIndex + direction;
       if (!direction || target < 0 || target >= count) {
         offset.set(withTiming(0, SLIDE));
@@ -161,12 +159,10 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
 
   const exerciseName = exercise ? nameOf(exercise.exerciseId, i18n.language) : '';
 
-  const shownSet =
-    selectedIndex >= 0
-      ? selectedIndex
-      : openIndex >= 0
-        ? openIndex
-        : (exercise?.sets.length ?? 1) - 1;
+  // "Set n of m": the set being typed in, else the first open one, else the last.
+  let shownSet = (exercise?.sets.length ?? 1) - 1;
+  if (selectedIndex >= 0) shownSet = selectedIndex;
+  else if (openIndex >= 0) shownSet = openIndex;
 
   return (
     <View className="flex-1">
@@ -296,14 +292,10 @@ export function WorkoutScreen() {
     if (id) attach(id);
   }, [id, attach]);
 
-  return (
-    <Screen>
-      {/* A finished workout renders nothing while finish() moves on to the summary. */}
-      {workout === undefined || workout?.finishedAt ? null : workout ? (
-        <LiveWorkout workout={workout} />
-      ) : attachedId === id ? (
-        <MissingWorkout />
-      ) : null}
-    </Screen>
-  );
+  // Blank while loading, and for a finished workout while finish() moves on to the summary.
+  let content: ReactNode = null;
+  if (workout && !workout.finishedAt) content = <LiveWorkout workout={workout} />;
+  else if (workout === null && attachedId === id) content = <MissingWorkout />;
+
+  return <Screen>{content}</Screen>;
 }

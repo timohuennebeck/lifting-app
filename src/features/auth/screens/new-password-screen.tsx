@@ -18,7 +18,12 @@ import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
 import { PasswordStrength } from '../components/password-strength';
-import { type AuthErrorKey, authErrorKey, MIN_PASSWORD_LENGTH } from '../lib/credentials';
+import {
+  type AuthErrorKey,
+  authErrorKey,
+  MIN_PASSWORD_LENGTH,
+  RESET_STEPS,
+} from '../lib/credentials';
 
 /** Password reset 3/3: the new password; the user is signed in afterwards. */
 export function NewPasswordScreen() {
@@ -63,7 +68,7 @@ export function NewPasswordScreen() {
   return (
     <StepScreen
       step={3}
-      total={3}
+      total={RESET_STEPS}
       hideBack
       title={t('forgot.newTitle')}
       subtitle={t('forgot.newSubtitle')}

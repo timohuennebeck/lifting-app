@@ -34,6 +34,35 @@ function formatRecord(exerciseId: string, best: SetValues, units: UnitSystem) {
   return `+${formatSet(best, units)}`;
 }
 
+interface RecordSummaryProps {
+  exerciseId: string;
+  record: ExerciseRecord;
+  units: UnitSystem;
+}
+
+/** A trained exercise's heaviest set and when it was last done, at the end of its row. */
+function RecordSummary({ exerciseId, record, units }: RecordSummaryProps) {
+  const { t } = useTranslation('common');
+  const value = formatRecord(exerciseId, record.best, units);
+  const date = formatShortDate(record.lastAt);
+  return (
+    <View
+      className="items-end"
+      accessible
+      accessibilityLabel={t('search.recordA11y', { value, date })}
+    >
+      {/* The star marks a personal record, as in the exercise history. */}
+      <View className="flex-row items-center gap-1.5">
+        <Icon name="star" size={13} color={colors.accent} />
+        <Text variant="label">{value}</Text>
+      </View>
+      <Text variant="caption" tone="subtle" className="mt-0.5 font-inter">
+        {date}
+      </Text>
+    </View>
+  );
+}
+
 export interface ExerciseResultsProps {
   query: string;
   /** Height of the search bar over the foot of the list, so the last rows clear it. */
@@ -109,23 +138,7 @@ export function ExerciseResults({ query, bottomInset }: ExerciseResultsProps) {
                   </Text>
                 </View>
                 {item.record ? (
-                  <View
-                    className="items-end"
-                    accessible
-                    accessibilityLabel={t('common:search.recordA11y', {
-                      value: formatRecord(item.id, item.record.best, units),
-                      date: formatShortDate(item.record.lastAt),
-                    })}
-                  >
-                    {/* The star marks a personal record, as in the exercise history. */}
-                    <View className="flex-row items-center gap-1.5">
-                      <Icon name="star" size={13} color={colors.accent} />
-                      <Text variant="label">{formatRecord(item.id, item.record.best, units)}</Text>
-                    </View>
-                    <Text variant="caption" tone="subtle" className="mt-0.5 font-inter">
-                      {formatShortDate(item.record.lastAt)}
-                    </Text>
-                  </View>
+                  <RecordSummary exerciseId={item.id} record={item.record} units={units} />
                 ) : null}
               </PressableScale>
             </View>

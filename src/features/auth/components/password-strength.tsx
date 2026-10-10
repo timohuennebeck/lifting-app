@@ -6,7 +6,8 @@ import { Text } from '@/shared/ui/text';
 
 import { MIN_PASSWORD_LENGTH, passwordScore } from '../lib/credentials';
 
-const LEVEL_COLORS = ['#FF4D4D', '#FF9F2E', '#FFD426'] as const;
+/** Colour and verdict per score 1–4. */
+const LEVEL_COLORS = ['#FF4D4D', '#FF9F2E', '#FFD426', colors.accent] as const;
 const LEVEL_KEYS = ['weak', 'okay', 'good', 'strong'] as const;
 
 export interface PasswordStrengthProps {
@@ -17,12 +18,10 @@ export interface PasswordStrengthProps {
 export function PasswordStrength({ password }: PasswordStrengthProps) {
   const { t } = useTranslation('auth');
   const score = passwordScore(password);
-  const color = score > 0 ? (score === 4 ? colors.accent : LEVEL_COLORS[score - 1]) : colors.muted;
-  const verdict = !password
-    ? ''
-    : password.length < MIN_PASSWORD_LENGTH
-      ? t('strength.tooShort')
-      : t(`strength.${LEVEL_KEYS[score - 1]}`);
+  const color = score > 0 ? LEVEL_COLORS[score - 1] : colors.muted;
+  let verdict = '';
+  if (password.length >= MIN_PASSWORD_LENGTH) verdict = t(`strength.${LEVEL_KEYS[score - 1]}`);
+  else if (password) verdict = t('strength.tooShort');
 
   return (
     <View className="gap-2 px-1 pt-1.5">

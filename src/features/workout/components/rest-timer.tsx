@@ -27,6 +27,31 @@ interface ChoiceProps {
   onPress: () => void;
 }
 
+interface NudgeButtonProps {
+  icon: IconName;
+  accessibilityLabel: string;
+  disabled: boolean;
+  onPress: () => void;
+}
+
+/** Round −10 s / +10 s button beside the countdown; dimmed while no timer runs. */
+function NudgeButton({ icon, accessibilityLabel, disabled, onPress }: NudgeButtonProps) {
+  return (
+    <PressableScale
+      haptic="select"
+      disabled={disabled}
+      accessibilityLabel={accessibilityLabel}
+      onPress={onPress}
+      className={cn(
+        'size-14 items-center justify-center rounded-full bg-control',
+        disabled && 'opacity-35',
+      )}
+    >
+      <Icon name={icon} size={26} color={colors.fg} />
+    </PressableScale>
+  );
+}
+
 function Choice({ label, icon, accessibilityLabel, onPress }: ChoiceProps) {
   return (
     <PressableScale
@@ -59,10 +84,11 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
   const startRest = useWorkoutSessionStore((s) => s.startRest);
   const addRest = useWorkoutSessionStore((s) => s.addRest);
   const skipRest = useWorkoutSessionStore((s) => s.skipRest);
-  const base = resting ? colors.accent : colors.fg;
+  const tint = resting ? colors.accent : colors.fg;
+  const progress = resting ? fraction : 0;
 
   const pulse = useAnimatedStyle(() => ({
-    color: interpolateColor(flash.get(), [0, 1], [base, colors.accent]),
+    color: interpolateColor(flash.get(), [0, 1], [tint, colors.accent]),
     transform: [{ scale: 1 + flash.get() * 0.15 }],
   }));
   const label = formatDuration(remainingSeconds);
@@ -82,29 +108,23 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
         onPress={() => setOpen(true)}
         className="ml-auto flex-row items-center gap-1.5"
       >
-        <Icon name="timer" size={16} color={resting ? colors.accent : colors.fg} />
+        <Icon name="timer" size={16} color={tint} />
         <Animated.Text className="font-inter-semibold text-xl tabular-nums" style={pulse}>
           {label}
         </Animated.Text>
       </PressableScale>
-      <ProgressBar value={resting ? fraction : 0} className="h-1.5 w-24 flex-none" />
+      <ProgressBar value={progress} className="h-1.5 w-24 flex-none" />
       <Sheet visible={open} onClose={() => setOpen(false)} title={t('rest.title')}>
-        <ProgressBar value={resting ? fraction : 0} className="h-1.5 w-full flex-none" />
+        <ProgressBar value={progress} className="h-1.5 w-full flex-none" />
         <View className="flex-row items-center justify-between py-6">
-          <PressableScale
-            haptic="select"
-            disabled={!resting}
+          <NudgeButton
+            icon="replay-10"
             accessibilityLabel={t('rest.minus', { seconds: NUDGE })}
+            disabled={!resting}
             onPress={() => addRest(-NUDGE)}
-            className={cn(
-              'size-14 items-center justify-center rounded-full bg-control',
-              !resting && 'opacity-35',
-            )}
-          >
-            <Icon name="replay-10" size={26} color={colors.fg} />
-          </PressableScale>
+          />
           <View className="flex-row items-center gap-2">
-            <Icon name="timer" size={22} color={resting ? colors.accent : colors.fg} />
+            <Icon name="timer" size={22} color={tint} />
             <Text
               variant="headline"
               tone={resting ? 'accent' : 'default'}
@@ -113,18 +133,12 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
               {formatDuration(resting ? remainingSeconds : defaultSeconds)}
             </Text>
           </View>
-          <PressableScale
-            haptic="select"
-            disabled={!resting}
+          <NudgeButton
+            icon="forward-10"
             accessibilityLabel={t('rest.plus', { seconds: NUDGE })}
+            disabled={!resting}
             onPress={() => addRest(NUDGE)}
-            className={cn(
-              'size-14 items-center justify-center rounded-full bg-control',
-              !resting && 'opacity-35',
-            )}
-          >
-            <Icon name="forward-10" size={26} color={colors.fg} />
-          </PressableScale>
+          />
         </View>
         <Text variant="label" className="pb-3 text-base">
           {t('rest.restart')}

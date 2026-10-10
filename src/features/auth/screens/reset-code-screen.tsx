@@ -14,7 +14,7 @@ import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
 import { CodeInput } from '../components/code-input';
-import { type AuthErrorKey, authErrorKey } from '../lib/credentials';
+import { type AuthErrorKey, authErrorKey, RESET_STEPS } from '../lib/credentials';
 
 const CODE_LENGTH = 6;
 /** A new code can be asked for this long after the last one. */
@@ -85,7 +85,7 @@ export function ResetCodeScreen() {
   return (
     <StepScreen
       step={2}
-      total={3}
+      total={RESET_STEPS}
       title={t('forgot.codeTitle')}
       footer={
         <View className="gap-1">

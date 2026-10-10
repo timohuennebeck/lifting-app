@@ -36,6 +36,13 @@ function ShotBadge({ warn }: ShotBadgeProps) {
   );
 }
 
+/** Thumbnail ring: accent for the pose shown, orange for a weak photo, else a faint line. */
+function ringOf(selected: boolean, warn: boolean) {
+  if (selected) return `inset 0 0 0 2px ${colors.accent}`;
+  if (warn) return `inset 0 0 0 1.5px ${WARN_COLOR}`;
+  return 'inset 0 0 0 1px rgba(255,255,255,0.18)';
+}
+
 /** Row of the pose thumbnails with labels (camera 08a and review 08b). */
 export function PoseStrip({ shots, active, onSelect }: PoseStripProps) {
   const { t } = useTranslation('bodyCheck');
@@ -45,11 +52,7 @@ export function PoseStrip({ shots, active, onSelect }: PoseStripProps) {
         const shot = shots[pose];
         const selected = pose === active;
         const warn = !!shot?.issue;
-        const ring = selected
-          ? `inset 0 0 0 2px ${colors.accent}`
-          : warn
-            ? `inset 0 0 0 1.5px ${WARN_COLOR}`
-            : 'inset 0 0 0 1px rgba(255,255,255,0.18)';
+        const ring = ringOf(selected, warn);
         return (
           <PressableScale
             key={pose}

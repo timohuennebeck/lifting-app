@@ -80,6 +80,13 @@ export function SetTable({
     return measure === 'weight' ? formatWeightValue(value, units) : formatNumber(value, 0);
   };
 
+  /** The middle column of row `index`: its targets, or the same set last time (if there was one). */
+  const middleLabel = (index: number) => {
+    if (column === 'targets') return targetLabel(exercise.sets[index], exercise.exerciseId);
+    const previous = last?.sets[index];
+    return previous ? formatSet(previous, units) : null;
+  };
+
   return (
     <View>
       <View className="flex-row items-center gap-2.5 px-5 pt-6 pb-2">
@@ -110,18 +117,11 @@ export function SetTable({
         {exercise.sets.map((set, i) => {
           const selected = set.id === selectedSetId;
           const done = !!set.completedAt || !!logged[set.id];
-          const previous = last?.sets[i];
-          const middle =
-            column === 'targets'
-              ? targetLabel(set, exercise.exerciseId)
-              : previous
-                ? formatSet(previous, units)
-                : null;
           return (
             <View key={set.id} onLayout={(e) => onRowLayout?.(i, e.nativeEvent.layout.y)}>
               <SetRow
                 number={i + 1}
-                middle={middle}
+                middle={middleLabel(i)}
                 cells={measures.map((measure) => ({
                   field: measure,
                   value: cellValue(measure, selected, i),

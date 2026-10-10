@@ -11,16 +11,12 @@ import { MarkedText } from './marked-text';
 /** What a screen reader says for a changed passage: the changes named, not just coloured. */
 function useSpoken() {
   const { t } = useTranslation('common');
-  return (segments: DiffSegment[]) =>
-    segments
-      .map((s) =>
-        s.change === 'added'
-          ? t('legal.compare.a11yNew', { text: s.text })
-          : s.change === 'removed'
-            ? t('legal.compare.a11yRemoved', { text: s.text })
-            : s.text,
-      )
-      .join(' ');
+  const spokenSegment = ({ text, change }: DiffSegment) => {
+    if (change === 'added') return t('legal.compare.a11yNew', { text });
+    if (change === 'removed') return t('legal.compare.a11yRemoved', { text });
+    return text;
+  };
+  return (segments: DiffSegment[]) => segments.map(spokenSegment).join(' ');
 }
 
 interface SegmentTextProps {

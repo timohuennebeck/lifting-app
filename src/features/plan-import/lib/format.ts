@@ -3,10 +3,13 @@ import { formatNumber } from '@/shared/lib/format';
 /** Steps in the "Import plan" branch. */
 export const IMPORT_STEPS = 3;
 
+const KB = 1024;
+const MB = 1024 * KB;
+
 export function formatFileSize(bytes: number) {
-  return bytes >= 1048576
-    ? `${formatNumber(bytes / 1048576, 1)} MB`
-    : `${formatNumber(Math.max(1, Math.round(bytes / 1024)), 0)} KB`;
+  return bytes >= MB
+    ? `${formatNumber(bytes / MB, 1)} MB`
+    : `${formatNumber(Math.max(1, Math.round(bytes / KB)), 0)} KB`;
 }
 
 /** Upper-case file extension, e.g. "PDF"; falls back to the MIME subtype. */

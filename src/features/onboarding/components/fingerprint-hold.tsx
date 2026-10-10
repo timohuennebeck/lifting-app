@@ -32,6 +32,12 @@ const ZOOM_EASING = Easing.bezier(0.8, 0, 0.15, 1);
 
 type Phase = 'idle' | 'holding' | 'sealed';
 
+const HINT_KEYS = {
+  idle: 'promise.hold',
+  holding: 'promise.holding',
+  sealed: 'promise.sealed',
+} as const satisfies Record<Phase, string>;
+
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 interface RidgeProps {
@@ -139,13 +145,6 @@ export function FingerprintHold({ onSealed }: FingerprintHoldProps) {
     };
   });
 
-  const hint =
-    phase === 'sealed'
-      ? t('promise.sealed')
-      : phase === 'holding'
-        ? t('promise.holding')
-        : t('promise.hold');
-
   return (
     <View className="items-center gap-5">
       <Pressable
@@ -194,7 +193,7 @@ export function FingerprintHold({ onSealed }: FingerprintHoldProps) {
       </Pressable>
       <Animated.View style={hintStyle}>
         <Text variant="label" tone="muted" accessibilityLiveRegion="polite">
-          {hint}
+          {t(HINT_KEYS[phase])}
         </Text>
       </Animated.View>
     </View>
