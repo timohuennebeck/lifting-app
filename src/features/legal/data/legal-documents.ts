@@ -39,10 +39,6 @@ export async function fetchCurrentDocuments(language: string) {
 /** The app language first; English, then the default locale, when it has no translation. */
 const localesFor = (language: string) => [...new Set([language, 'en', 'pt-BR'])];
 
-/**
- * The version of a document in effect now, from `public.legal_documents` (readable logged out,
- * so the links on the sign-up screen work). Null when none has been published.
- */
 const COLUMNS = 'id, kind, locale, version, content_md, effective_at, requires_reacceptance';
 
 interface LegalDocumentRow {
@@ -65,6 +61,10 @@ const toDocument = (row: LegalDocumentRow): LegalDocument => ({
   requiresReacceptance: !!row.requires_reacceptance,
 });
 
+/**
+ * The version of a document in effect now, from `public.legal_documents` (readable logged out,
+ * so the links on the sign-up screen work). Null when none has been published.
+ */
 export async function fetchCurrentDocument(kind: LegalKind, language: string) {
   const locales = localesFor(language);
   const { data, error } = await supabase
