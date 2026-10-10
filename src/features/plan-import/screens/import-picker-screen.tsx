@@ -32,12 +32,7 @@ export function ImportPickerScreen() {
     <ExercisePickerPage
       title={swap ? t('confirm.swap') : t('confirm.add')}
       mode={swap ? 'swap' : 'add'}
-      items={exercises.map((e, i) => ({
-        key: String(i),
-        exerciseId: e.exerciseId,
-        sets: e.sets.length,
-      }))}
-      swapKey={swap ? String(at) : undefined}
+      exerciseIds={exercises.map((e) => e.exerciseId)}
       onDone={done}
     />
   );

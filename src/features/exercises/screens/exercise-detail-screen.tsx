@@ -1,4 +1,5 @@
 import { Image } from 'expo-image';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -13,19 +14,12 @@ import { MUSCLE_CARDS, MuscleMap } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
+import { ExerciseThumb } from '../components/exercise-thumb';
 import { exerciseMuscles, primaryGroup } from '../lib/muscle-groups';
-import { ExerciseThumb } from './exercise-thumb';
-
-export interface ExerciseDetailProps {
-  exerciseId: string;
-  onClose: () => void;
-  /** Extra top padding for the close button, e.g. the status bar inset. */
-  topInset?: number;
-}
 
 type Tab = 'exercise' | 'history';
 
-/** Shades the photo under the close button and blends its foot into the page. */
+/** Shades the photo under the back button and blends its foot into the page. */
 const HERO_FADE: GradientStop[] = [
   [0, 0.55],
   [0.25, 0],
@@ -33,13 +27,28 @@ const HERO_FADE: GradientStop[] = [
   [0.92, 1],
 ];
 
-/** Exercise detail (design 06e): photo, worked muscles, technique steps and history. */
-export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDetailProps) {
+/**
+ * Exercise info (design 06e): photo, worked muscles, technique steps and history. A regular page
+ * with a back chevron, opened from the live workout and the plan import.
+ */
+export function ExerciseDetailScreen() {
+  const { id: exerciseId } = useLocalSearchParams<{ id: string }>();
   const { t, i18n } = useTranslation(['exercises', 'muscles', 'common']);
   const insets = useSafeAreaInsets();
   const [tab, setTab] = useState<Tab>('exercise');
   const exercise = getExercise(exerciseId);
-  if (!exercise) return null;
+  const back = (
+    <View className="absolute left-4" style={{ top: insets.top + 16 }}>
+      <IconButton
+        icon="chevron-left"
+        iconSize={7}
+        accessibilityLabel={t('common:actions.back')}
+        onPress={() => router.back()}
+      />
+    </View>
+  );
+  // An exercise the catalog doesn't have: nothing to show but the way back.
+  if (!exercise) return <View className="flex-1 bg-bg">{back}</View>;
 
   const name = exerciseName(exerciseId, i18n.language);
   const muscles = exerciseMuscles(exerciseId);
@@ -65,13 +74,7 @@ export function ExerciseDetail({ exerciseId, onClose, topInset = 0 }: ExerciseDe
           />
         )}
         <Gradient from="top" stops={HERO_FADE} />
-        <View className="absolute left-4" style={{ top: topInset + 16 }}>
-          <IconButton
-            icon="close"
-            accessibilityLabel={t('common:actions.close')}
-            onPress={onClose}
-          />
-        </View>
+        {back}
         <View className="absolute right-5 bottom-1.5 left-5">
           <Text variant="headline" className="text-[30px] leading-8">
             {name}

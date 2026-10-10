@@ -1,32 +1,27 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
+import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 
 import { ExerciseLibrary, ExerciseSearchBar } from './exercise-library';
 
-/** Sets an added exercise starts with (counted for the muscle tiles). */
-export const NEW_EXERCISE_SETS = 3;
-
-/** An exercise of the training being edited, for the muscle tiles. */
-export interface PickerItem {
-  /** Its id in the training (workout or template exercise, or an index). */
-  key: string;
-  exerciseId: string;
-  sets: number;
-}
+/** The list fades out behind the search bar (as under other pages' bottom buttons). */
+const FADE: GradientStop[] = [
+  [0, 1],
+  [0.6, 1],
+  [1, 0],
+];
 
 export interface ExercisePickerPageProps {
   title: string;
   mode: 'add' | 'swap';
-  /** What the training holds now; listed as selected and not pickable. */
-  items: PickerItem[];
-  /** In swap mode: the entry being replaced (its muscles leave once something is picked). */
-  swapKey?: string;
+  /** Exercises the training holds now; listed as selected and not pickable. */
+  exerciseIds: string[];
   /** Applies the picks; the page closes once it resolves. Not called without picks. */
   onDone: (picked: string[]) => Promise<void> | void;
 }
@@ -34,33 +29,18 @@ export interface ExercisePickerPageProps {
 /**
  * The exercise library as a page (design 06c): picks collect under "Selected" (tap the check to
  * undo) and are applied with "Done"; back discards them. Adding takes several exercises, a swap
- * one (a new pick replaces the last).
+ * one (a new pick replaces the last). The search field is focused on arrival.
  */
-export function ExercisePickerPage({
-  title,
-  mode,
-  items,
-  swapKey,
-  onDone,
-}: ExercisePickerPageProps) {
+export function ExercisePickerPage({ title, mode, exerciseIds, onDone }: ExercisePickerPageProps) {
   const footerInset = useFooterInset();
   const [query, setQuery] = useState('');
   const [picked, setPicked] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
-  const swap = mode === 'swap';
-  const replaced = items.find((item) => item.key === swapKey);
-
-  // What the training works once the picks are applied.
-  const muscleItems = [
-    ...items.filter((item) => !(swap && picked.length && item === replaced)),
-    ...picked.map((exerciseId) => ({
-      exerciseId,
-      sets: swap ? (replaced?.sets ?? NEW_EXERCISE_SETS) : NEW_EXERCISE_SETS,
-    })),
-  ];
+  // The bar floats over the list; its height keeps the last rows clear of it.
+  const [barHeight, setBarHeight] = useState(0);
 
   const pick = (exerciseId: string) => {
-    setPicked((current) => (swap ? [exerciseId] : [...current, exerciseId]));
+    setPicked((current) => (mode === 'swap' ? [exerciseId] : [...current, exerciseId]));
     setQuery('');
   };
 
@@ -80,24 +60,39 @@ export function ExercisePickerPage({
       <View className="flex-1 px-4 pt-2">
         <ExerciseLibrary
           query={query}
-          selectedIds={[...items.map((item) => item.exerciseId), ...picked]}
+          selectedIds={[...exerciseIds, ...picked]}
           removableIds={picked}
           mode={mode}
-          muscleItems={muscleItems}
+          bottomInset={barHeight}
           onPick={pick}
           onUnpick={(id) => setPicked((current) => current.filter((p) => p !== id))}
         />
       </View>
-      <KeyboardStickyView offset={{ closed: 0, opened: footerInset - 8 }}>
-        <View className="px-4 pt-2" style={{ paddingBottom: footerInset }}>
+      <KeyboardStickyView
+        offset={{ closed: 0, opened: footerInset - 8 }}
+        style={styles.bar}
+        pointerEvents="box-none"
+      >
+        <View
+          pointerEvents="box-none"
+          className="px-4 pt-8"
+          style={{ paddingBottom: footerInset }}
+          onLayout={(e) => setBarHeight(e.nativeEvent.layout.height)}
+        >
+          <Gradient from="bottom" stops={FADE} />
           <ExerciseSearchBar
             query={query}
             onChangeQuery={setQuery}
             onDone={done}
             doneDisabled={saving}
+            autoFocus
           />
         </View>
       </KeyboardStickyView>
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  bar: { position: 'absolute', left: 0, right: 0, bottom: 0 },
+});

@@ -26,7 +26,7 @@
     "title": "Rest",
     "minus": "−{{seconds}} s",
     "plus": "+{{seconds}} s",
-    "restart": "Restart with new timer",
+    "restart": "Restart timer",
     "stop": "Stop timer",
     "restartDefault": "Restart with the default rest",
     "restartWith": "Restart with {{time}}"

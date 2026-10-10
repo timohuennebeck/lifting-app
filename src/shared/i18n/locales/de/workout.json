@@ -26,7 +26,7 @@
     "title": "Pause",
     "minus": "−{{seconds}} s",
     "plus": "+{{seconds}} s",
-    "restart": "Mit neuem Timer neu starten",
+    "restart": "Timer neu starten",
     "stop": "Timer stoppen",
     "restartDefault": "Mit der Standardpause neu starten",
     "restartWith": "Mit {{time}} neu starten"

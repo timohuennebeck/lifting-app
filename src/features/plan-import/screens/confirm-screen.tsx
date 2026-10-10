@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ExerciseDetailModal } from '@/features/exercises/components/exercise-detail-modal';
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { EditableTitle } from '@/features/training/components/editable-title';
 import {
@@ -56,7 +55,6 @@ export function ConfirmScreen() {
   const [menuFor, setMenuFor] = useState<number | null>(null);
   const menuShown = useLastDefined(menuFor);
   const [renameOpen, setRenameOpen] = useState(false);
-  const [detailId, setDetailId] = useState<string | null>(null);
   if (!plan) return <Redirect href="/import" />;
 
   const index = Math.min(dayIndex, plan.days.length - 1);
@@ -228,7 +226,9 @@ export function ConfirmScreen() {
                     }))}
                     review={!!e.raw}
                     onMenu={() => setMenuFor(i)}
-                    onPress={() => setDetailId(e.exerciseId)}
+                    onPress={() =>
+                      router.push({ pathname: '/exercise/[id]', params: { id: e.exerciseId } })
+                    }
                   >
                     {e.raw ? (
                       <ReviewPrompt
@@ -280,7 +280,6 @@ export function ConfirmScreen() {
           setRenameOpen(false);
         }}
       />
-      <ExerciseDetailModal exerciseId={detailId} onClose={() => setDetailId(null)} />
     </Screen>
   );
 }

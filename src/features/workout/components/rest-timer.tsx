@@ -33,10 +33,10 @@ function Choice({ label, icon, accessibilityLabel, onPress }: ChoiceProps) {
       haptic="select"
       accessibilityLabel={accessibilityLabel}
       onPress={onPress}
-      className="h-14 flex-row items-center gap-2.5 rounded-full bg-control px-5"
+      className="h-11 flex-row items-center gap-2 rounded-full bg-control px-4"
     >
-      {icon ? <Icon name={icon} size={14} color={colors.fg} /> : null}
-      <Text variant="bodyStrong" className="text-lg tabular-nums">
+      {icon ? <Icon name={icon} size={13} color={colors.fg} /> : null}
+      <Text variant="bodyStrong" className="text-base tabular-nums">
         {label}
       </Text>
     </PressableScale>
@@ -48,7 +48,10 @@ export interface RestTimerProps {
   defaultSeconds: number;
 }
 
-/** Header rest countdown; flashes when done and opens a sheet to adjust, stop or restart it. */
+/**
+ * Header rest countdown with a bar that empties as it runs; flashes when done and opens a sheet
+ * to adjust, stop or restart it.
+ */
 export function RestTimer({ defaultSeconds }: RestTimerProps) {
   const { t } = useTranslation('workout');
   const { resting, remainingSeconds, fraction, flash } = useRestTimer();
@@ -84,6 +87,7 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
           {label}
         </Animated.Text>
       </PressableScale>
+      <ProgressBar value={resting ? fraction : 0} className="h-1.5 w-24 flex-none" />
       <Sheet visible={open} onClose={() => setOpen(false)} title={t('rest.title')}>
         <ProgressBar value={resting ? fraction : 0} className="h-1.5 w-full flex-none" />
         <View className="flex-row items-center justify-between py-6">
@@ -97,7 +101,7 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
               !resting && 'opacity-35',
             )}
           >
-            <Text variant="label">{t('rest.minus', { seconds: NUDGE })}</Text>
+            <Icon name="replay-10" size={26} color={colors.fg} />
           </PressableScale>
           <View className="flex-row items-center gap-2">
             <Icon name="timer" size={22} color={resting ? colors.accent : colors.fg} />
@@ -119,7 +123,7 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
               !resting && 'opacity-35',
             )}
           >
-            <Text variant="label">{t('rest.plus', { seconds: NUDGE })}</Text>
+            <Icon name="forward-10" size={26} color={colors.fg} />
           </PressableScale>
         </View>
         <Text variant="label" className="pb-3 text-base">
@@ -128,8 +132,10 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          className="-mx-4 grow-0"
-          contentContainerClassName="gap-2 px-4"
+          className="-mx-4"
+          // A horizontal ScrollView grows by default, and the pills stretched to its height.
+          style={{ flexGrow: 0 }}
+          contentContainerClassName="items-center gap-2 px-4"
         >
           <Choice
             icon="stop"

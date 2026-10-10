@@ -66,13 +66,14 @@ export function SetTable({
 
   /**
    * A box's text: the keypad buffer while editing, the logged value (the one just entered while
-   * it is still being saved), or the suggested count.
+   * it is still being saved, or kept after the check is undone), or the suggested count.
    */
   const cellValue = (set: WorkoutSet, field: Measure, editing: boolean, index: number) => {
     if (editing) return field === 'weight' ? displayInput(input.weight, separator) : input[field];
     const saved = logged[set.id] ?? (set.completedAt ? set : undefined);
     if (field === 'weight') {
-      return saved?.weightKg != null ? formatWeightValue(saved.weightKg, units) : '';
+      const weightKg = saved ? saved.weightKg : set.weightKg;
+      return weightKg != null ? formatWeightValue(weightKg, units) : '';
     }
     const value = valueOf(saved ?? suggestSet(exercise, index, last), field);
     return value != null ? formatNumber(value, 0) : '';

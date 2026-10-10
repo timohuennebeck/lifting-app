@@ -12,7 +12,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { scheduleOnRN } from 'react-native-worklets';
 import { useTranslation } from 'react-i18next';
 
-import { ExerciseDetailModal } from '@/features/exercises/components/exercise-detail-modal';
 import { exerciseName as nameOf } from '@/shared/data/exercises';
 import { restSecondsFor } from '@/shared/data/templates';
 import { useWorkout, type WorkoutDetail } from '@/shared/data/workouts';
@@ -49,8 +48,6 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const [sheet, setSheet] = useState<SheetKind | null>(null);
-  // "Info": how the exercise works and its history (design 06e).
-  const [infoId, setInfoId] = useState<string | null>(null);
   const live = useLiveWorkout(workout);
   const { abandon } = useWorkoutActions(workout.id);
   const goTo = useWorkoutSessionStore((s) => s.goTo);
@@ -175,7 +172,6 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
         <>
           <WorkoutTopBar
             startedAt={workout.startedAt}
-            progress={(exerciseIndex + 1) / count}
             restSeconds={restSecondsFor(exercise.exerciseId, exercise.restSeconds)}
             onClose={() => setSheet('menu')}
           />
@@ -213,7 +209,10 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                   </Text>
                 </View>
                 <ExerciseActions
-                  onInfo={() => setInfoId(exercise.exerciseId)}
+                  // How the exercise works and its history (design 06e).
+                  onInfo={() =>
+                    router.push({ pathname: '/exercise/[id]', params: { id: exercise.exerciseId } })
+                  }
                   onTargets={() =>
                     router.push({
                       pathname: '/workout/targets/[exerciseId]',
@@ -251,7 +250,6 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
           onAdd={() => openPicker('add')}
         />
       )}
-      <ExerciseDetailModal exerciseId={infoId} onClose={() => setInfoId(null)} />
       <WorkoutMenuSheet
         visible={sheet === 'menu'}
         onClose={() => setSheet(null)}

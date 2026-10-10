@@ -76,6 +76,8 @@ export default function RootLayout() {
                 </Stack.Protected>
                 {/* Open from sign-up and from settings alike. */}
                 <Stack.Screen name="legal/[kind]" options={{ animation: 'slide_from_right' }} />
+                {/* Exercise info, from the live workout and from the plan import. */}
+                <Stack.Screen name="exercise/[id]" options={{ animation: 'slide_from_right' }} />
               </Stack>
             </ThemeProvider>
           </QueryClientProvider>

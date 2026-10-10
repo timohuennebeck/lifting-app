@@ -61,8 +61,7 @@ export function WorkoutPickerScreen() {
     <ExercisePickerPage
       title={swap ? t('swap.title') : t('addExercise')}
       mode={swap ? 'swap' : 'add'}
-      items={exercises.map((e) => ({ key: e.id, exerciseId: e.exerciseId, sets: e.sets.length }))}
-      swapKey={target?.id}
+      exerciseIds={exercises.map((e) => e.exerciseId)}
       onDone={done}
     />
   );

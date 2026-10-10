@@ -35,8 +35,7 @@ export function TemplatePickerScreen() {
     <ExercisePickerPage
       title={swap ? t('overview.swapTitle') : t('overview.addExercise')}
       mode={swap ? 'swap' : 'add'}
-      items={exercises.map((e) => ({ key: e.id, exerciseId: e.exerciseId, sets: e.sets.length }))}
-      swapKey={templateExerciseId}
+      exerciseIds={exercises.map((e) => e.exerciseId)}
       onDone={done}
     />
   );

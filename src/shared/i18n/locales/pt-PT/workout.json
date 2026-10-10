@@ -26,7 +26,7 @@
     "title": "Descanso",
     "minus": "−{{seconds}} s",
     "plus": "+{{seconds}} s",
-    "restart": "Reiniciar com novo temporizador",
+    "restart": "Reiniciar temporizador",
     "stop": "Parar temporizador",
     "restartDefault": "Reiniciar com o descanso padrão",
     "restartWith": "Reiniciar com {{time}}"

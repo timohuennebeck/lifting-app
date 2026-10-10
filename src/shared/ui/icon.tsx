@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import Svg, { Circle, Path, Rect } from 'react-native-svg';
+import Svg, { Circle, Path, Rect, Text } from 'react-native-svg';
 
 import { colors } from '@/shared/lib/theme';
 
@@ -19,6 +19,37 @@ const stroke = (d: string, width = 2) =>
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+    );
+  };
+
+/** Circular arrow around "10": back (counter-clockwise) or forward, as in video players. */
+const seek = (forward: boolean) =>
+  function SeekIcon(color: string) {
+    return (
+      <>
+        <Path
+          d={
+            forward
+              ? 'M12 5A8 8 0 1 0 19.52 10.26M9.5 2.5L12 5 9.5 7.5'
+              : 'M12 5A8 8 0 1 1 4.48 10.26M14.5 2.5L12 5l2.5 2.5'
+          }
+          stroke={color}
+          strokeWidth={2}
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <Text
+          x={12}
+          y={15.9}
+          fill={color}
+          fontSize={7.5}
+          fontFamily="Inter_700Bold"
+          textAnchor="middle"
+        >
+          10
+        </Text>
+      </>
     );
   };
 
@@ -178,6 +209,18 @@ const ICONS = {
       </>
     ),
   },
+  info: {
+    viewBox: '0 0 14 14',
+    render: (c) => (
+      <>
+        <Circle cx={7} cy={7} r={5.7} fill="none" stroke={c} strokeWidth={1.6} />
+        <Path d="M7 6.4v3.4" stroke={c} strokeWidth={1.6} strokeLinecap="round" />
+        <Circle cx={7} cy={4.4} r={0.95} fill={c} />
+      </>
+    ),
+  },
+  'replay-10': { viewBox: '0 0 24 24', render: seek(false) },
+  'forward-10': { viewBox: '0 0 24 24', render: seek(true) },
   target: {
     viewBox: '0 0 14 14',
     render: (c) => (

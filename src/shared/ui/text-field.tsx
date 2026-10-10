@@ -1,5 +1,5 @@
-import { createContext, type Ref, useContext, useState } from 'react';
-import { TextInput, type TextInputProps, View } from 'react-native';
+import { createContext, type Ref, useContext, useRef, useState } from 'react';
+import { Pressable, TextInput, type TextInputProps, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { cn } from '@/shared/lib/cn';
@@ -48,6 +48,12 @@ export function TextField({
   const shape = useContext(ShapeContext);
   const [focused, setFocused] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const input = useRef<TextInput | null>(null);
+  const setInput = (node: TextInput | null) => {
+    input.current = node;
+    if (typeof ref === 'function') ref(node);
+    else if (ref) ref.current = node;
+  };
   const hasValue = !!value?.length;
   // Multi-line fields only round their corners: a pill that tall looks like a capsule.
   const radius = shape === 'pill' && !multiline ? 'rounded-full' : 'rounded-[18px]';
@@ -59,9 +65,12 @@ export function TextField({
           {label}
         </Text>
       ) : null}
-      <View
+      <Pressable
         // One field style app-wide: 56pt, 16pt text. The 1pt line never changes; the 2pt focus or
         // error ring is drawn on top of it, so neither the field nor its text can shift.
+        // A tap anywhere on the field focuses it, not only on the text line.
+        accessible={false}
+        onPress={() => input.current?.focus()}
         className={cn(
           'flex-row gap-3 border border-white/8 bg-pill pr-1.75 pl-4.25',
           radius,
@@ -80,7 +89,7 @@ export function TextField({
         ) : null}
         {icon ? <Icon name={icon} size={16} color={colors.dim} /> : null}
         <TextInput
-          ref={ref}
+          ref={setInput}
           value={value}
           onChangeText={onChangeText}
           placeholderTextColor={colors.dim}
@@ -98,10 +107,12 @@ export function TextField({
           }}
           multiline={multiline}
           // Font size only: a line height on a single-line input pushes the text off-centre on iOS.
+          // A single line is only as tall as its text and the row centres it: filling the field's
+          // height, the text sat low on iOS once focused.
           textAlignVertical={multiline ? 'top' : 'center'}
           className={cn(
             'min-w-0 flex-1 font-inter text-[16px] text-fg',
-            multiline ? 'min-h-32 py-3.5 leading-5.5' : 'h-full py-0',
+            multiline ? 'min-h-32 py-3.5 leading-5.5' : 'py-0',
           )}
           {...props}
         />
@@ -125,7 +136,7 @@ export function TextField({
             <Icon name="close" size={12} />
           </PressableScale>
         ) : null}
-      </View>
+      </Pressable>
       {error ? (
         <Text variant="caption" tone="danger" className="px-1">
           {error}

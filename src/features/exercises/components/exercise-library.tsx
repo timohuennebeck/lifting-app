@@ -1,22 +1,20 @@
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatList, ScrollView, View, type ViewToken } from 'react-native';
+import { FlatList, View, type ViewToken } from 'react-native';
 
-import { muscleShares } from '@/shared/data/muscles';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
-import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
-import { MuscleTileRow } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
 import { type ExerciseOption, useExerciseSearch } from '../hooks/use-exercise-search';
-import { MUSCLE_GROUP_IDS, type MuscleGroupId } from '../lib/muscle-groups';
+import type { MuscleGroupId } from '../lib/muscle-groups';
 import { AlphabetRail } from './alphabet-rail';
 import { ExerciseThumb } from './exercise-thumb';
+import { MuscleGroupFilter } from './muscle-group-filter';
 
 const ROW_HEIGHT = 78;
 const ANCHOR_HEIGHT = 41;
@@ -31,10 +29,10 @@ export interface ExerciseLibraryProps {
   mode: 'add' | 'swap';
   onPick: (exerciseId: string) => void;
   onUnpick?: (exerciseId: string) => void;
-  /** Exercises behind the "Muscles worked" tiles; defaults to the selected ones. */
-  muscleItems?: { exerciseId: string; sets: number }[];
-  /** Horizontal padding of the page or sheet, for the full-width rows (tiles, chips). */
+  /** Horizontal padding of the page, for the full-width filter row. */
   inset?: number;
+  /** Height of what covers the foot of the list (the search bar), so the last rows clear it. */
+  bottomInset?: number;
 }
 
 interface Row extends ExerciseOption {
@@ -43,7 +41,7 @@ interface Row extends ExerciseOption {
   selected: boolean;
 }
 
-/** Exercise library (design 06c): muscle tiles, group filter, A–Z list with index. */
+/** Exercise library (design 06c): muscle group boxes, A–Z list with index. */
 export function ExerciseLibrary({
   query,
   selectedIds,
@@ -51,8 +49,8 @@ export function ExerciseLibrary({
   mode,
   onPick,
   onUnpick,
-  muscleItems,
   inset = 16,
+  bottomInset = 0,
 }: ExerciseLibraryProps) {
   const { t } = useTranslation('exercises');
   const [group, setGroup] = useState<MuscleGroupId | null>(null);
@@ -80,9 +78,6 @@ export function ExerciseLibrary({
     return acc;
   }, []);
   const letters = new Set(free.map((r) => r.letter));
-  const shares = muscleShares(
-    muscleItems ?? selectedIds.map((exerciseId) => ({ exerciseId, sets: 1 })),
-  );
 
   // FlatList requires a callback that never changes identity.
   const [onViewable] = useState(() => ({ viewableItems }: { viewableItems: ViewToken<Row>[] }) => {
@@ -100,43 +95,13 @@ export function ExerciseLibrary({
 
   return (
     <View className="flex-1">
-      {shares.length ? (
-        <View className="mb-3 gap-2.5" style={{ marginHorizontal: -inset }}>
-          <Text
-            variant="overline"
-            tone="subtle"
-            className="tracking-[1.5px]"
-            style={{ paddingHorizontal: inset }}
-          >
-            {t('picker.muscles')}
-          </Text>
-          <MuscleTileRow shares={shares} />
-        </View>
-      ) : null}
-      <View className="h-10" style={{ marginHorizontal: -inset }}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerClassName="gap-2"
-          contentContainerStyle={{ paddingHorizontal: inset }}
-          keyboardShouldPersistTaps="handled"
-        >
-          <Chip label={t('groups.all')} selected={!group} onPress={() => setGroup(null)} />
-          {MUSCLE_GROUP_IDS.map((g) => (
-            <Chip
-              key={g}
-              label={t(`groups.${g}`)}
-              selected={group === g}
-              onPress={() => setGroup(group === g ? null : g)}
-            />
-          ))}
-        </ScrollView>
-      </View>
+      <MuscleGroupFilter value={group} onChange={setGroup} inset={inset} />
       <View className="mt-1 flex-1 flex-row">
         <FlatList
           ref={listRef}
           className="flex-1"
-          contentContainerClassName="pr-7 pb-24"
+          contentContainerClassName="pr-7"
+          contentContainerStyle={{ paddingBottom: bottomInset + 16 }}
           data={rows}
           keyExtractor={(r) => r.id}
           keyboardShouldPersistTaps="handled"
@@ -207,7 +172,7 @@ export function ExerciseLibrary({
           }}
         />
         {rows.length ? (
-          <View className="absolute top-2 -right-2 bottom-2">
+          <View className="absolute top-2 -right-2" style={{ bottom: bottomInset + 8 }}>
             <AlphabetRail available={letters} active={activeLetter} onJump={jump} />
           </View>
         ) : null}
@@ -225,6 +190,7 @@ export interface ExerciseSearchBarProps {
   onChangeQuery: (query: string) => void;
   onDone: () => void;
   doneDisabled?: boolean;
+  autoFocus?: boolean;
 }
 
 /** Search field with the "Done" button, pinned under the library. */
@@ -233,6 +199,7 @@ export function ExerciseSearchBar({
   onChangeQuery,
   onDone,
   doneDisabled,
+  autoFocus,
 }: ExerciseSearchBarProps) {
   const { t } = useTranslation('exercises');
   return (
@@ -245,6 +212,7 @@ export function ExerciseSearchBar({
         placeholder={t('picker.search')}
         autoCorrect={false}
         returnKeyType="search"
+        autoFocus={autoFocus}
         className="flex-1"
       />
       <Button
