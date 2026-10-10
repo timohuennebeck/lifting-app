@@ -5,12 +5,12 @@ import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import type { PlanSetDraft } from '@/shared/data/templates';
 import { formatRir } from '@/shared/lib/rir';
 import { colors } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
 import { InputCell } from '@/shared/ui/input-cell';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { editorRirStyle } from '../lib/training-ui';
+import { MinusGlyph } from './glyphs';
 
 export interface SetDraft extends PlanSetDraft {
   key: string;
@@ -49,18 +49,20 @@ export function SetEditorRow({
 }: SetEditorRowProps) {
   const { t } = useTranslation('training');
   const rir = editorRirStyle(set.rir, colors.accent);
-  const cell = (field: TargetField) => (
-    <InputCell
-      value={
-        activeField === field ? buffer : String(field === 'min' ? set.targetMin : set.targetMax)
-      }
-      active={activeField === field}
-      pristine={pristine}
-      label={t(timed ? `sets.${field}Seconds` : `sets.${field}`)}
-      onPress={() => onFocus(field)}
-      className="min-w-0 flex-1"
-    />
-  );
+  const cell = (field: TargetField) => {
+    const value = field === 'min' ? set.targetMin : set.targetMax;
+    return (
+      <InputCell
+        value={activeField === field ? buffer : value == null ? '' : String(value)}
+        active={activeField === field}
+        pristine={pristine}
+        label={t(timed ? `sets.${field}Seconds` : `sets.${field}`)}
+        placeholder={t('sets.optional')}
+        onPress={() => onFocus(field)}
+        className="min-w-0 flex-1"
+      />
+    );
+  };
 
   return (
     <Swipeable
@@ -69,14 +71,16 @@ export function SetEditorRow({
       rightThreshold={40}
       overshootRight={false}
       renderRightActions={() => (
+        // The app's delete mark (as in "Remove exercise"), not a trash can.
         <PressableScale
           haptic="warning"
           accessibilityLabel={t('sets.removeSet')}
           onPress={onRemove}
-          className="ml-2.5 w-16 items-center justify-center rounded-xl"
-          style={{ backgroundColor: colors.red }}
+          className="ml-2.5 w-14 items-center justify-center"
         >
-          <Icon name="trash" size={16} color={colors.bg} />
+          <View className="size-10 items-center justify-center rounded-full bg-danger-bg">
+            <MinusGlyph color={colors.red} width={14} />
+          </View>
         </PressableScale>
       )}
     >

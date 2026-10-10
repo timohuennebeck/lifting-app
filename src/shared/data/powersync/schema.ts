@@ -81,8 +81,9 @@ export const templateSets = sqliteTable(
     template_exercise_id: text().notNull(),
     position: integer().notNull(),
     // Reps, or seconds for timed exercises.
-    target_min: integer().notNull(),
-    target_max: integer().notNull(),
+    // Both optional: a target can be a range, only a minimum or maximum, or none.
+    target_min: integer(),
+    target_max: integer(),
     rir: integer(),
   },
   (t) => [index('exercise').on(t.template_exercise_id)],

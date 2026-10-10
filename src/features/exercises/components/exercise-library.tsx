@@ -215,13 +215,7 @@ export function ExerciseSearchBar({
         autoFocus={autoFocus}
         className="flex-1"
       />
-      <Button
-        label={t('picker.done')}
-        size="md"
-        disabled={doneDisabled}
-        onPress={onDone}
-        className="h-14"
-      />
+      <Button label={t('picker.done')} size="sm" disabled={doneDisabled} onPress={onDone} />
     </View>
   );
 }

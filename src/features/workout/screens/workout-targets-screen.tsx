@@ -2,7 +2,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { SetTargetsForm } from '@/features/training/components/set-targets-form';
-import { defaultTargets } from '@/shared/data/exercises';
 import { useWorkout } from '@/shared/data/workouts';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -27,16 +26,12 @@ export function WorkoutTargetsScreen() {
         <SetTargetsForm
           key={exercise.id}
           exerciseId={exercise.exerciseId}
-          initialSets={exercise.sets.map((s) => {
-            const fallback = defaultTargets(exercise.exerciseId);
-            const min = s.targetMin ?? fallback.min;
-            return {
-              key: s.id,
-              targetMin: min,
-              targetMax: s.targetMax ?? Math.max(min, fallback.max),
-              rir: s.targetRir,
-            };
-          })}
+          initialSets={exercise.sets.map((s) => ({
+            key: s.id,
+            targetMin: s.targetMin,
+            targetMax: s.targetMax,
+            rir: s.targetRir,
+          }))}
           initialRest={exercise.restSeconds}
           onSave={async (sets, rest) => {
             await saveWorkoutTargets(requireUserId(), exercise.id, sets, rest);

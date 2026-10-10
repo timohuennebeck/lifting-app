@@ -59,7 +59,7 @@ export async function addWorkoutSet(userId: string, workoutExerciseId: string) {
       .limit(1)
       .get();
     const targets = last
-      ? { min: last.target_min ?? 8, max: last.target_max ?? 12, rir: last.target_rir }
+      ? { min: last.target_min, max: last.target_max, rir: last.target_rir }
       : defaultTargets(await exerciseOf(tx, workoutExerciseId));
     await insertWorkoutSet(tx, userId, workoutExerciseId, (last?.position ?? -1) + 1, targets);
   });

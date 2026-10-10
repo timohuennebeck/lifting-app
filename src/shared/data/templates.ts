@@ -23,8 +23,9 @@ const EXERCISE_SECONDS = 150;
 const DEFAULT_REST = 90;
 
 export interface PlanSetDraft {
-  targetMin: number;
-  targetMax: number;
+  /** Reps, or seconds for timed exercises; either may be left out. */
+  targetMin: number | null;
+  targetMax: number | null;
   rir: number | null;
 }
 

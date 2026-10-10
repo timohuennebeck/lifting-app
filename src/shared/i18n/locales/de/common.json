@@ -27,6 +27,7 @@
     "reps_one": "{{count}} Wdh.",
     "reps_other": "{{count}} Wdh.",
     "repRange": "{{range}} Wdh.",
+    "atMost": "max. {{value}}",
     "minShort": "Min"
   },
   "weekdays": {

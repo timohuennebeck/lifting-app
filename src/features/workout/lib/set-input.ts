@@ -19,6 +19,16 @@ export const toSetInput = (values: SetValues, units: UnitSystem): Record<SetFiel
   seconds: toInput(values.seconds),
 });
 
+/** What has been typed so far (weights in kg), without defaults: the rows below show it. */
+export function typedValues(input: Record<SetField, string>, units: UnitSystem): SetValues {
+  const weight = parseInput(input.weight);
+  return {
+    weightKg: weight == null ? null : fromDisplayWeight(weight, units),
+    reps: parseInput(input.reps) || null,
+    seconds: parseInput(input.seconds) || null,
+  };
+}
+
 /**
  * Set values (weights in kg) from keypad strings for the exercise's measures, and the first
  * box still missing a value. An empty weight on a bodyweight exercise means no extra weight.

@@ -15,8 +15,8 @@ import { splitMuscles } from '../lib/training-ui';
 /** One target set of the card: rep (or second) range and RIR. */
 export interface OverviewSet {
   key: string;
-  min: number;
-  max: number;
+  min: number | null;
+  max: number | null;
   rir: number | null;
 }
 
@@ -81,7 +81,7 @@ export function TemplateExerciseCard({
                 </Text>
               </View>
               <Text variant="body" className="flex-1 text-sm text-fg-soft">
-                {formatTargetLabel(set.min, set.max, timed)}
+                {formatTargetLabel(set.min, set.max, timed) ?? '–'}
               </Text>
               {set.rir != null ? <RirBadge rir={set.rir} /> : null}
             </View>

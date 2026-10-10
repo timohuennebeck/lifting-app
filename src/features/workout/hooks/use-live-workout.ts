@@ -8,8 +8,8 @@ import type { SetValues } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 
 import { unlogSet } from '../data/workout-mutations';
-import { parseSetInput, toSetInput } from '../lib/set-input';
-import { firstOpenSet, suggestSet } from '../lib/suggest';
+import { parseSetInput, toSetInput, typedValues } from '../lib/set-input';
+import { firstOpenSet, rowValues } from '../lib/suggest';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
 /** Current exercise, progress and set logging for the live workout screen. */
@@ -49,7 +49,13 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     }
   }, [exercises, logged]);
 
-  const inputFor = (index: number) => toSetInput(suggestSet(exercise, index, last), units);
+  /** A row's keypad prefill: what it shows, following a row above that is being typed in. */
+  const inputFor = (index: number) => {
+    const { input } = useWorkoutSessionStore.getState();
+    const typed =
+      selectedIndex >= 0 ? { index: selectedIndex, values: typedValues(input, units) } : null;
+    return toSetInput(rowValues(exercise, index, logged, typed), units);
+  };
 
   const selectSet = (index: number, field: SetField = measures[0]) => {
     const set = exercise?.sets[index];

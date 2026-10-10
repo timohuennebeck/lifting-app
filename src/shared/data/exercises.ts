@@ -180,9 +180,9 @@ export const isBodyweight = (exerciseId: string) =>
 export const isTimed = (exerciseId: string) => hasMeasure(exerciseId, 'seconds');
 
 export interface SetTargets {
-  /** Reps, or seconds for timed exercises. */
-  min: number;
-  max: number;
+  /** Reps, or seconds for timed exercises; either may be left out. */
+  min: number | null;
+  max: number | null;
   rir: number | null;
 }
 

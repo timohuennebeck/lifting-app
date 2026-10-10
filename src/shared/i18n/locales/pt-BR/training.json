@@ -92,6 +92,7 @@
     "max": "Máx",
     "minSeconds": "Mín (s)",
     "maxSeconds": "Máx (s)",
+    "optional": "Opcional",
     "rir": "RIR",
     "addSet": "Adicionar série",
     "removeSet": "Remover série",

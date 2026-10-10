@@ -71,20 +71,27 @@ export function formatSet({ weightKg, reps, seconds }: SetValues, units: UnitSys
     : i18n.t('common:units.reps', { count: reps ?? 0 });
 }
 
-/** "8" or "8–10". */
-const formatRepRange = (min: number, max: number) => (min === max ? `${min}` : `${min}–${max}`);
-
-/** A target: "8–10" reps, or "30–45 s" for timed exercises. */
-const formatTarget = (min: number, max: number, timed: boolean) =>
-  timed ? `${formatRepRange(min, max)} ${i18n.t('common:units.sec')}` : formatRepRange(min, max);
-
-/** A target with its unit, for overviews: "8–10 Wdh." / "8–10 reps", or "30–45 s". */
-export const formatTargetLabel = (min: number, max: number, timed: boolean) =>
+/** "8 Wdh.", "8–10 Wdh." or "8+ Wdh." (a count or range with the unit), or "30–45 s". */
+const withUnit = (range: string, timed: boolean, count?: number) =>
   timed
-    ? formatTarget(min, max, true)
-    : min === max
-      ? i18n.t('common:units.reps', { count: min })
-      : i18n.t('common:units.repRange', { range: formatRepRange(min, max) });
+    ? `${range} ${i18n.t('common:units.sec')}`
+    : count !== undefined
+      ? i18n.t('common:units.reps', { count })
+      : i18n.t('common:units.repRange', { range });
+
+/**
+ * A target with its unit, for overviews: "8–10 Wdh." / "8 Wdh.", "8+ Wdh." with only a minimum,
+ * "max. 12 Wdh." with only a maximum; seconds for timed exercises ("30–45 s"). Null without
+ * either.
+ */
+export function formatTargetLabel(min: number | null, max: number | null, timed: boolean) {
+  if (min != null && max != null) {
+    return min === max ? withUnit(`${min}`, timed, min) : withUnit(`${min}–${max}`, timed);
+  }
+  if (min != null) return withUnit(`${min}+`, timed);
+  if (max != null) return i18n.t('common:units.atMost', { value: withUnit(`${max}`, timed, max) });
+  return null;
+}
 
 /** 70 → 5′10″ */
 export function feetInches(totalInches: number) {

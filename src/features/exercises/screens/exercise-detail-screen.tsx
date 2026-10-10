@@ -2,7 +2,14 @@ import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import Animated, {
+  useAnimatedRef,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ExerciseHistoryPanel } from '@/features/workout/components/exercise-history-panel';
@@ -17,7 +24,8 @@ import { Text } from '@/shared/ui/text';
 import { ExerciseThumb } from '../components/exercise-thumb';
 import { exerciseMuscles, primaryGroup } from '../lib/muscle-groups';
 
-type Tab = 'exercise' | 'history';
+const TABS = ['exercise', 'history'] as const;
+type Tab = (typeof TABS)[number];
 
 /** Shades the photo under the back button and blends its foot into the page. */
 const HERO_FADE: GradientStop[] = [
@@ -36,6 +44,24 @@ export function ExerciseDetailScreen() {
   const { t, i18n } = useTranslation(['exercises', 'muscles', 'common']);
   const insets = useSafeAreaInsets();
   const [tab, setTab] = useState<Tab>('exercise');
+  const { width } = useWindowDimensions();
+  const pager = useAnimatedRef<Animated.ScrollView>();
+  const scrollX = useSharedValue(0);
+  const tabWidth = useSharedValue(0);
+  const page = useSharedValue(0);
+  // The tab switches as soon as the swipe passes halfway.
+  const onScroll = useAnimatedScrollHandler((e) => {
+    scrollX.set(e.contentOffset.x);
+    const current = Math.round(e.contentOffset.x / width);
+    if (current !== page.get() && current >= 0 && current < TABS.length) {
+      page.set(current);
+      scheduleOnRN(setTab, TABS[current]);
+    }
+  });
+  const underline = useAnimatedStyle(() => ({
+    width: tabWidth.get(),
+    transform: [{ translateX: (scrollX.get() / width) * tabWidth.get() }],
+  }));
   const exercise = getExercise(exerciseId);
   const back = (
     <View className="absolute left-4" style={{ top: insets.top + 16 }}>
@@ -84,80 +110,102 @@ export function ExerciseDetailScreen() {
           </Text>
         </View>
       </View>
-      <View className="mx-4 mt-3 flex-row border-b border-control">
-        {(['exercise', 'history'] as const).map((key) => (
+      <View
+        className="mx-4 mt-3 flex-row border-b border-control"
+        onLayout={(e) => tabWidth.set(e.nativeEvent.layout.width / TABS.length)}
+      >
+        {TABS.map((key, i) => (
           <PressableScale
             key={key}
             haptic="select"
             accessibilityRole="tab"
             accessibilityState={{ selected: tab === key }}
-            onPress={() => setTab(key)}
-            className={cn(
-              'h-11.5 flex-1 items-center justify-center',
-              tab === key && 'border-b-2 border-accent',
-            )}
+            onPress={() => {
+              setTab(key);
+              pager.current?.scrollTo({ x: i * width, animated: true });
+            }}
+            className="h-11.5 flex-1 items-center justify-center"
           >
             <Text variant="label" tone={tab === key ? 'default' : 'subtle'}>
               {t(`exercises:detail.tabs.${key}`)}
             </Text>
           </PressableScale>
         ))}
+        {/* Follows the swipe between the pages. */}
+        <Animated.View
+          pointerEvents="none"
+          className="absolute -bottom-px left-0 h-0.5 bg-accent"
+          style={underline}
+        />
       </View>
-      <ScrollView
+      {/* Swipe left and right between the tabs. */}
+      <Animated.ScrollView
+        ref={pager}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
         className="flex-1"
-        contentContainerClassName="gap-5 px-4 pt-7"
-        contentContainerStyle={{ paddingBottom: insets.bottom + 30 }}
-        showsVerticalScrollIndicator={false}
       >
-        {tab === 'exercise' ? (
-          <>
-            <View className="flex-row items-center gap-1">
-              <View className="min-w-0 flex-1 flex-row flex-wrap gap-1.5">
-                {muscles.map((m, i) => (
-                  <View
-                    key={m}
-                    className={cn(
-                      'h-8.5 justify-center rounded-full px-3.5',
-                      i === 0 ? 'bg-accent' : 'bg-elevated',
-                    )}
-                  >
-                    <Text variant="caption" tone={i === 0 ? 'onAccent' : 'default'}>
-                      {t(`muscles:names.${m}`)}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-              <View className="h-45 w-27.5">
-                <MuscleMap view={view} selected={muscles} width={110} height={180} />
-              </View>
-            </View>
-            <View>
-              <Text variant="overline" tone="subtle" className="pb-1">
-                {t('exercises:detail.technique')}
-              </Text>
-              {steps.map((step, i) => (
-                <View key={i} className="flex-row gap-3.5 py-2.5">
-                  <View className="size-7.5 items-center justify-center rounded-full bg-elevated">
-                    <Text variant="caption" className="text-sm">
-                      {i + 1}
-                    </Text>
-                  </View>
-                  <View className="min-w-0 flex-1">
-                    <Text variant="bodyStrong" className="text-base">
-                      {step.title}
-                    </Text>
-                    <Text variant="paragraph" tone="muted" className="mt-1 text-sm leading-5">
-                      {step.text}
-                    </Text>
-                  </View>
+        <ScrollView
+          style={{ width }}
+          contentContainerClassName="gap-5 px-4 pt-7"
+          contentContainerStyle={{ paddingBottom: insets.bottom + 30 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <View className="flex-row items-center gap-1">
+            <View className="min-w-0 flex-1 flex-row flex-wrap gap-1.5">
+              {muscles.map((m, i) => (
+                <View
+                  key={m}
+                  className={cn(
+                    'h-8.5 justify-center rounded-full px-3.5',
+                    i === 0 ? 'bg-accent' : 'bg-elevated',
+                  )}
+                >
+                  <Text variant="caption" tone={i === 0 ? 'onAccent' : 'default'}>
+                    {t(`muscles:names.${m}`)}
+                  </Text>
                 </View>
               ))}
             </View>
-          </>
-        ) : (
+            <View className="h-45 w-27.5">
+              <MuscleMap view={view} selected={muscles} width={110} height={180} />
+            </View>
+          </View>
+          <View>
+            <Text variant="overline" tone="subtle" className="pb-1">
+              {t('exercises:detail.technique')}
+            </Text>
+            {steps.map((step, i) => (
+              <View key={i} className="flex-row gap-3.5 py-2.5">
+                <View className="size-7.5 items-center justify-center rounded-full bg-elevated">
+                  <Text variant="caption" className="text-sm">
+                    {i + 1}
+                  </Text>
+                </View>
+                <View className="min-w-0 flex-1">
+                  <Text variant="bodyStrong" className="text-base">
+                    {step.title}
+                  </Text>
+                  <Text variant="paragraph" tone="muted" className="mt-1 text-sm leading-5">
+                    {step.text}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+        <ScrollView
+          style={{ width }}
+          contentContainerClassName="px-4 pt-7"
+          contentContainerStyle={{ paddingBottom: insets.bottom + 30 }}
+          showsVerticalScrollIndicator={false}
+        >
           <ExerciseHistoryPanel exerciseId={exerciseId} />
-        )}
-      </ScrollView>
+        </ScrollView>
+      </Animated.ScrollView>
     </View>
   );
 }

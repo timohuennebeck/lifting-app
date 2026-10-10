@@ -27,6 +27,7 @@
     "reps_one": "{{count}} rep",
     "reps_other": "{{count}} reps",
     "repRange": "{{range}} reps",
+    "atMost": "up to {{value}}",
     "minShort": "Min"
   },
   "weekdays": {

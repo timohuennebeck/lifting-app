@@ -33,6 +33,8 @@ export interface InputCellProps {
   pristine: boolean;
   label: string;
   onPress: () => void;
+  /** Dim text in an empty box that isn't being typed into, e.g. "Optional". */
+  placeholder?: string;
   className?: string;
   children?: ReactNode;
 }
@@ -44,6 +46,7 @@ export function InputCell({
   pristine,
   label,
   onPress,
+  placeholder,
   className,
   children,
 }: InputCellProps) {
@@ -82,6 +85,10 @@ export function InputCell({
         </View>
       ) : active ? (
         <BlinkingCursor />
+      ) : placeholder ? (
+        <Text variant="label" className="font-inter text-dim">
+          {placeholder}
+        </Text>
       ) : null}
       {children}
     </Pressable>

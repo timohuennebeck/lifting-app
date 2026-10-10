@@ -32,6 +32,19 @@ interface Focus {
   field: TargetField;
 }
 
+/** A row with one target box set (null clears it); min and max stay in order where both are set. */
+function withTarget(set: SetDraft, field: TargetField, value: number | null): SetDraft {
+  if (field === 'min') {
+    const max = value != null && set.targetMax != null ? Math.max(value, set.targetMax) : null;
+    return { ...set, targetMin: value, targetMax: max ?? set.targetMax };
+  }
+  const min = value != null && set.targetMin != null ? Math.min(value, set.targetMin) : null;
+  return { ...set, targetMax: value, targetMin: min ?? set.targetMin };
+}
+
+const boxValue = (set: SetDraft, field: TargetField) =>
+  field === 'min' ? set.targetMin : set.targetMax;
+
 export interface SetTargetsFormProps {
   exerciseId: string;
   initialSets: SetDraft[];
@@ -74,16 +87,14 @@ export function SetTargetsForm({
     scroll.current?.scrollTo({ y, animated: true });
   }, [focus]);
 
-  /** The sets with the buffer written into its box; min and max stay in order. */
+  /**
+   * The sets with what is typed written into its box and the same box of every row below, so
+   * they follow as it is typed. An emptied box clears the target (min and max are optional).
+   */
   function withBuffer(): SetDraft[] {
-    if (!focus || pristine || !buffer) return sets;
-    const value = clamp(Number(buffer), 1, limit);
-    return sets.map((s, i) => {
-      if (i !== focus.index) return s;
-      return focus.field === 'min'
-        ? { ...s, targetMin: value, targetMax: Math.max(value, s.targetMax) }
-        : { ...s, targetMax: value, targetMin: Math.min(value, s.targetMin) };
-    });
+    if (!focus || pristine) return sets;
+    const value = buffer ? clamp(Number(buffer), 1, limit) : null;
+    return sets.map((s, i) => (i < focus.index ? s : withTarget(s, focus.field, value)));
   }
 
   function focusBox(next: Focus | null) {
@@ -91,8 +102,8 @@ export function SetTargetsForm({
     setSets(current);
     setFocus(next);
     setPristine(true);
-    const set = next && current[next.index];
-    setBuffer(set ? String(next.field === 'min' ? set.targetMin : set.targetMax) : '');
+    const value = next ? boxValue(current[next.index], next.field) : null;
+    setBuffer(value == null ? '' : String(value));
   }
 
   // The check moves on: min → max → the next row; after the last box the pad closes.
@@ -144,6 +155,8 @@ export function SetTargetsForm({
     }
   };
 
+  const shown = withBuffer();
+
   return (
     <View className="flex-1">
       <ScrollView
@@ -172,7 +185,7 @@ export function SetTargetsForm({
           </Text>
         </View>
         <View className="gap-2.5 px-5" onLayout={(e) => (listTop.current = e.nativeEvent.layout.y)}>
-          {sets.map((set, i) => (
+          {shown.map((set, i) => (
             <SetEditorRow
               key={set.key}
               index={i}
@@ -276,8 +289,9 @@ export function SetTargetsForm({
         value={rirIndex !== null ? (sets[rirIndex]?.rir ?? null) : null}
         onClose={() => setRirIndex(null)}
         onSelect={(rir) => {
+          // Like the boxes, the rows below take the same RIR.
           if (rirIndex !== null) {
-            setSets((all) => all.map((s, i) => (i === rirIndex ? { ...s, rir } : s)));
+            setSets((all) => all.map((s, i) => (i >= rirIndex ? { ...s, rir } : s)));
           }
           setRirIndex(null);
         }}

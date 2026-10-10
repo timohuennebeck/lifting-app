@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useUserId } from '@/shared/stores/session-store';
 import type { Measure } from '@/shared/data/exercises';
-import type { ExerciseHistoryEntry, WorkoutExercise, WorkoutSet } from '@/shared/data/workouts';
+import type { ExerciseHistoryEntry, WorkoutExercise } from '@/shared/data/workouts';
 import {
   formatNumber,
   formatSet,
@@ -19,8 +19,8 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { addWorkoutSet } from '../data/workout-mutations';
-import { valueOf } from '../lib/set-input';
-import { carriedSet, suggestSet, targetLabel } from '../lib/suggest';
+import { typedValues, valueOf } from '../lib/set-input';
+import { rowValues, targetLabel } from '../lib/suggest';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 import { cellWidth, SetRow } from './set-row';
 
@@ -64,23 +64,17 @@ export function SetTable({
     seconds: t('table.seconds'),
   };
 
-  /**
-   * A box's text: the keypad buffer while editing, the logged value (the one just entered while
-   * it is still being saved, or kept after the check is undone), or the suggested value (a row
-   * without values of its own takes those logged in the row before it).
-   */
-  const cellValue = (set: WorkoutSet, field: Measure, editing: boolean, index: number) => {
+  const selectedIndex = exercise.sets.findIndex((s) => s.id === selectedSetId);
+  // Rows below the one being typed in follow it as it is typed.
+  const typed =
+    selectedIndex >= 0 ? { index: selectedIndex, values: typedValues(input, units) } : null;
+
+  /** A box's text: the keypad buffer while editing, else what the row holds (see rowValues). */
+  const cellValue = (field: Measure, editing: boolean, index: number) => {
     if (editing) return field === 'weight' ? displayInput(input.weight, separator) : input[field];
-    const saved = logged[set.id] ?? (set.completedAt ? set : undefined);
-    if (field === 'weight') {
-      // An open row shows its own weight, else the one logged in the row before it.
-      const weightKg = saved
-        ? saved.weightKg
-        : (set.weightKg ?? carriedSet(exercise, index)?.weightKg ?? null);
-      return weightKg != null ? formatWeightValue(weightKg, units) : '';
-    }
-    const value = valueOf(saved ?? suggestSet(exercise, index, last), field);
-    return value != null ? formatNumber(value, 0) : '';
+    const value = valueOf(rowValues(exercise, index, logged, typed), field);
+    if (value == null) return '';
+    return field === 'weight' ? formatWeightValue(value, units) : formatNumber(value, 0);
   };
 
   return (
@@ -127,7 +121,7 @@ export function SetTable({
                 middle={middle}
                 cells={measures.map((field) => ({
                   field,
-                  value: cellValue(set, field, selected, i),
+                  value: cellValue(field, selected, i),
                 }))}
                 rir={set.targetRir}
                 done={done}
