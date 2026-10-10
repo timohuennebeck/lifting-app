@@ -215,8 +215,13 @@ export function WelcomePreview({ active }: WelcomePreviewProps) {
                 {t('welcome.preview.musclesWorked')}
               </Text>
               <View className="flex-row gap-2 px-4 pt-3.5">
-                {shares.map((s) => (
-                  <MuscleTile key={s.muscle} muscle={s.muscle} percent={s.percent} />
+                {shares.map((s, i) => (
+                  <MuscleTile
+                    key={s.muscle}
+                    muscle={s.muscle}
+                    percent={s.percent}
+                    highlight={i === 0}
+                  />
                 ))}
               </View>
               <View className="flex-row items-center gap-3 px-5 pt-7.5">

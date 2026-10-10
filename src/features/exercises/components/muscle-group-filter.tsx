@@ -55,7 +55,8 @@ export function MuscleGroupFilter({ value, onChange, inset }: MuscleGroupFilterP
               art={GROUP_ART[group]}
               lit={MUSCLE_GROUPS[group]}
               label={t(`groups.${group}`)}
-              active={selected}
+              highlight={selected}
+              selected={selected}
             />
           </PressableScale>
         );

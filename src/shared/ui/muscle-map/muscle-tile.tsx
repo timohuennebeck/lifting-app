@@ -39,19 +39,21 @@ export interface MuscleChipProps {
   label: string;
   /** Share 0–100 in a badge on the right; none when undefined. */
   percent?: number;
-  /** Neon border, muscle and badge; grey without a border otherwise (e.g. an unselected filter). */
-  active?: boolean;
+  /** Muscle and badge in neon, e.g. the muscle worked most; grey otherwise. */
+  highlight?: boolean;
+  /** Neon border: the chip picked in a filter. */
+  selected?: boolean;
 }
 
 /** Pill with the muscle on a round crop of the body map, its name and optionally its share. */
-export function MuscleChip({ art, lit, label, percent, active }: MuscleChipProps) {
+export function MuscleChip({ art, lit, label, percent, highlight, selected }: MuscleChipProps) {
   const card = MUSCLE_CARDS[art];
   return (
     <View
       className={cn(
-        // The border is always there, clear when inactive, so selecting never resizes the chip.
+        // The border is always there, clear unless selected, so selecting never resizes the chip.
         'flex-row items-center gap-2.5 rounded-full border-[1.5px] bg-tile py-0.5 pl-0.75',
-        active ? 'border-accent' : 'border-transparent',
+        selected ? 'border-accent' : 'border-transparent',
         percent !== undefined ? 'pr-2.25' : 'pr-5',
       )}
     >
@@ -60,7 +62,7 @@ export function MuscleChip({ art, lit, label, percent, active }: MuscleChipProps
           view={card.view}
           viewBox={card.viewBox}
           selected={lit ?? [art]}
-          accent={active ? colors.accent : colors.fg2}
+          accent={highlight ? colors.accent : colors.fg2}
           fit="cover"
         />
       </View>
@@ -72,10 +74,10 @@ export function MuscleChip({ art, lit, label, percent, active }: MuscleChipProps
         <View
           className={cn(
             'ml-0.5 h-8.25 justify-center rounded-full px-2.75',
-            active ? 'bg-accent' : 'bg-control',
+            highlight ? 'bg-accent' : 'bg-control',
           )}
         >
-          <Text variant="label" tone={active ? 'onAccent' : 'default'}>
+          <Text variant="label" tone={highlight ? 'onAccent' : 'default'}>
             {`${percent} %`}
           </Text>
         </View>
@@ -88,10 +90,14 @@ export interface MuscleTileProps {
   muscle: MuscleId;
   /** Share 0–100; hidden when undefined. */
   percent?: number;
+  /** In neon: the muscle worked most, as on the template cards. */
+  highlight?: boolean;
 }
 
-/** A worked muscle with its share ("Beanspruchte Muskeln"), in grey: nothing to select there. */
-export function MuscleTile({ muscle, percent }: MuscleTileProps) {
+/** A worked muscle with its share ("Beanspruchte Muskeln"); grey unless it's the top one. */
+export function MuscleTile({ muscle, percent, highlight }: MuscleTileProps) {
   const { t } = useTranslation('muscles');
-  return <MuscleChip art={muscle} label={t(`names.${muscle}`)} percent={percent} />;
+  return (
+    <MuscleChip art={muscle} label={t(`names.${muscle}`)} percent={percent} highlight={highlight} />
+  );
 }

@@ -29,8 +29,8 @@ export function ExerciseTechniquePage() {
     >
       <View className="flex-row items-start gap-1.5">
         <View className="min-w-0 flex-1 items-start gap-2">
-          {shares.map((s) => (
-            <MuscleTile key={s.muscle} muscle={s.muscle} percent={s.percent} />
+          {shares.map((s, i) => (
+            <MuscleTile key={s.muscle} muscle={s.muscle} percent={s.percent} highlight={i === 0} />
           ))}
         </View>
         <View className="h-45 w-19">

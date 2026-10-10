@@ -16,8 +16,9 @@ export function MuscleTileRow({ shares }: MuscleTileRowProps) {
       showsHorizontalScrollIndicator={false}
       contentContainerClassName="gap-2 px-4"
     >
-      {shares.map((s) => (
-        <MuscleTile key={s.muscle} muscle={s.muscle} percent={s.percent} />
+      {/* Sorted by share: the first is the muscle worked most. */}
+      {shares.map((s, i) => (
+        <MuscleTile key={s.muscle} muscle={s.muscle} percent={s.percent} highlight={i === 0} />
       ))}
     </ScrollView>
   );
