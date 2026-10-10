@@ -16,7 +16,7 @@ interface MuscleGroupProps {
 /** "PRIMÄR ②" over its chips; primary in neon, secondary in grey. */
 function MuscleGroup({ label, shares, primary, className }: MuscleGroupProps) {
   return (
-    <View className={cn('gap-2.5', className)}>
+    <View className={cn('gap-3.5', className)}>
       <View className="flex-row items-center gap-2" accessibilityRole="header">
         <Text variant="overline" tone={primary ? 'accent' : 'subtle'}>
           {label}
@@ -37,15 +37,9 @@ function MuscleGroup({ label, shares, primary, className }: MuscleGroupProps) {
         </View>
       </View>
       {/* Side by side where they fit, the next line where they don't. */}
-      <View className="flex-row flex-wrap gap-2">
+      <View className="flex-row flex-wrap gap-2.5">
         {shares.map((s) => (
-          <MuscleTile
-            key={s.muscle}
-            muscle={s.muscle}
-            percent={s.percent}
-            highlight={primary}
-            compact
-          />
+          <MuscleTile key={s.muscle} muscle={s.muscle} percent={s.percent} highlight={primary} />
         ))}
       </View>
     </View>
@@ -58,11 +52,11 @@ export interface MuscleSplitProps {
   className?: string;
 }
 
-/** A workout's muscles as "Primär" and "Sekundär" groups of small chips (summary, breakdown). */
+/** A workout's muscles as "Primär" and "Sekundär" groups of chips (summary, breakdown). */
 export function MuscleSplit({ primary, secondary, className }: MuscleSplitProps) {
   const { t } = useTranslation('muscles');
   return (
-    <View className={cn('gap-5', className)}>
+    <View className={cn('gap-6', className)}>
       {primary.length ? (
         <MuscleGroup label={t('breakdown.primary')} shares={primary} primary />
       ) : null}
