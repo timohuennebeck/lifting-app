@@ -24,6 +24,12 @@
     "justNow": "Agora mesmo",
     "yesterday": "Ontem"
   },
+  "profile": {
+    "openTickets": "Chamados abertos",
+    "allTickets": "Todos os chamados",
+    "create": "Abrir chamado",
+    "empty": "Nenhum chamado aberto. Encontrou um erro ou tem uma ideia? Fale com a gente."
+  },
   "sheet": {
     "bug": "Relatar erro",
     "bugHint": "Algo não está funcionando",
@@ -79,10 +85,5 @@
     "newTicket": "Novo chamado",
     "screenshot": "Captura de tela",
     "notFound": "Este chamado não existe mais."
-  },
-  "feedback": {
-    "emptyTitle": "Achou um erro ou tem uma ideia?",
-    "create": "Relatar um erro ou compartilhar uma ideia",
-    "allTickets": "Todos os tickets"
   }
 }

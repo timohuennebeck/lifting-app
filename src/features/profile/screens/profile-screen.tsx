@@ -4,22 +4,28 @@ import { ActivityIndicator, Alert, Linking, View } from 'react-native';
 
 import { ProBadge } from '@/features/paywall/components/pro-badge';
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
+import { OpenTicketsSection } from '@/features/support/components/open-tickets-section';
+import { TabScreen } from '@/shared/components/tab-screen';
 import { UserAvatar } from '@/shared/components/user-avatar';
 import { saveProfile, useProfile } from '@/shared/data/profile';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
+import { useWorkoutCount, useWorkoutHistory } from '@/shared/data/workouts';
 import { formatDate } from '@/shared/lib/format';
-import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
+import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
+import { ActivityHeatmap } from '../components/activity-heatmap';
+import { type AvatarAction, AvatarSheet } from '../components/avatar-sheet';
+import { HistoryEntry } from '../components/history-entry';
+import { ProfileTextSheet } from '../components/profile-text-sheet';
 import { pickAvatar, removeAvatar, saveAvatar } from '../lib/avatar';
-import { type AvatarAction, AvatarSheet } from './avatar-sheet';
-import { ProfileTextSheet } from './profile-text-sheet';
 
+const PAGE = 10;
 /** Matches the check on profiles.bio. */
 const BIO_MAX = 150;
 const NAME_MAX = 40;
@@ -32,11 +38,7 @@ interface LocalPhoto {
   replaces: string | null;
 }
 
-/**
- * The fixed top of the profile, compact: the photo with name, membership and about beside it,
- * each editable by tapping (01b-2, 01b-3). Stays in place above the swipeable tabs.
- */
-export function ProfileHeader() {
+export function ProfileScreen() {
   const { t } = useTranslation(['profile', 'common']);
   const { profile } = useProfile();
   const isPro = useIsPro();
@@ -88,6 +90,9 @@ export function ProfileHeader() {
       }
     });
   }
+  const [visible, setVisible] = useState(PAGE);
+  const { data: history = [] } = useWorkoutHistory(visible);
+  const { data: workoutCount = 0 } = useWorkoutCount();
   const name = profile?.firstName ?? '';
   const [editing, setEditing] = useState<'name' | 'about' | null>(null);
   const editingShown = useLastDefined(editing);
@@ -103,9 +108,8 @@ export function ProfileHeader() {
   }
 
   return (
-    <>
-      {/* Photo on the left, everything else beside it, so the tabs below get the room. */}
-      <View className="flex-row items-center gap-4 px-5 pt-3">
+    <TabScreen greeting={false}>
+      <View className="items-start px-5 pt-4">
         <PressableScale
           haptic="tap"
           accessibilityLabel={t('avatar.change')}
@@ -113,57 +117,86 @@ export function ProfileHeader() {
           onPress={() => setAvatarOpen(true)}
           className="rounded-full border-[3px] border-accent p-1"
         >
-          {/* As tall as the name, membership and about beside it. */}
-          <UserAvatar size={84} className="border-0" previewUri={local?.uri} />
+          <UserAvatar size={106} className="border-0" previewUri={local?.uri} />
           {uploading ? (
             <View className="absolute inset-1 items-center justify-center rounded-full bg-black/45">
               <ActivityIndicator color={colors.fg} />
             </View>
           ) : null}
-          <View className="absolute -right-0.5 -bottom-0.5 size-7.5 items-center justify-center rounded-full border-[3px] border-bg bg-elevated">
-            <Icon name="photo-camera" size={13} color={colors.fg} />
+          <View className="absolute right-0 bottom-0 size-9 items-center justify-center rounded-full border-[3px] border-bg bg-elevated">
+            <Icon name="photo-camera" size={15} color={colors.fg} />
           </View>
         </PressableScale>
-        <View className="min-w-0 flex-1 gap-1">
-          <View className="flex-row items-center gap-2">
-            <PressableScale
-              haptic="tap"
-              activeScale={0.98}
-              accessibilityLabel={t('name.edit')}
-              onPress={() => setEditing('name')}
-              className="min-w-0 shrink"
-            >
-              <Text numberOfLines={1} className="font-inter-semibold text-[22px] leading-7">
-                {name}
-              </Text>
-            </PressableScale>
-            {isPro ? <ProBadge className="self-center" /> : null}
-          </View>
+        <PressableScale
+          haptic="tap"
+          activeScale={0.98}
+          accessibilityLabel={t('name.edit')}
+          onPress={() => setEditing('name')}
+          className="mt-4.5"
+        >
+          <Text className="font-inter-semibold text-[34px] leading-9.5 tracking-[-0.7px]">
+            {name}
+          </Text>
+        </PressableScale>
+        <View className="mt-3 flex-row items-center gap-2.5">
+          {isPro ? <ProBadge className="self-center" /> : null}
           {profile?.createdAt ? (
-            <Text tone="muted" className="text-[13px] leading-4.5">
+            <Text tone="muted" className="text-sm">
               {t('memberSince', {
                 date: formatDate(new Date(profile.createdAt), { month: 'long', year: 'numeric' }),
               })}
             </Text>
           ) : null}
-          {/* The user's own description; tapping it edits it (01b-3). */}
-          <PressableScale
-            haptic="tap"
-            activeScale={0.98}
-            accessibilityLabel={t(profile?.bio ? 'about.edit' : 'about.add')}
-            onPress={() => setEditing('about')}
-            className="mt-1"
-          >
-            <Text
-              variant="paragraph"
-              numberOfLines={2}
-              className={cn('text-sm leading-5', profile?.bio ? 'text-fg-mid' : 'text-dim')}
-            >
-              {profile?.bio || t('about.add')}
-            </Text>
-          </PressableScale>
         </View>
+        {/* The user's own description; tapping it edits it (01b-3). */}
+        <PressableScale
+          haptic="tap"
+          activeScale={0.98}
+          accessibilityLabel={t(profile?.bio ? 'about.edit' : 'about.add')}
+          onPress={() => setEditing('about')}
+          className="mt-4.5 self-stretch"
+        >
+          <Text variant="paragraph" className={profile?.bio ? 'text-fg-mid' : 'text-dim'}>
+            {profile?.bio || t('about.add')}
+          </Text>
+        </PressableScale>
       </View>
+
+      <OpenTicketsSection />
+
+      <View className="mx-5 mt-7.5">
+        <View className="flex-row items-baseline justify-between">
+          <Text variant="overline" tone="subtle" className="text-[11px]">
+            {t('activity')}
+          </Text>
+          <Text tone="subtle" className="text-xs">
+            {t('lastMonths')}
+          </Text>
+        </View>
+        <ActivityHeatmap />
+      </View>
+
+      <Text variant="overline" tone="subtle" className="mx-5 mt-7 mb-3 text-[11px]">
+        {t('history')}
+      </Text>
+      <View className="mx-5">
+        {history.length ? (
+          history.map((w) => <HistoryEntry key={w.id} workout={w} userName={name} />)
+        ) : (
+          <Text variant="paragraph" tone="subtle">
+            {t('historyEmpty')}
+          </Text>
+        )}
+      </View>
+      {workoutCount > visible ? (
+        <Button
+          label={t('showMore')}
+          variant="secondary"
+          size="md"
+          className="mx-5 mt-2"
+          onPress={() => setVisible((v) => v + PAGE)}
+        />
+      ) : null}
       <AvatarSheet
         visible={avatarOpen}
         onClose={() => setAvatarOpen(false)}
@@ -183,6 +216,6 @@ export function ProfileHeader() {
         optional={editingShown === 'about'}
         onSave={saveText}
       />
-    </>
+    </TabScreen>
   );
 }
