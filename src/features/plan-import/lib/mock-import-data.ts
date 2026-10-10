@@ -3,7 +3,7 @@ import type { PlanSetDraft } from '@/shared/data/templates';
 import type { ImportedDay, ImportedExercise } from './plan-import-service';
 
 /** `sets` sets of `min`–`max` reps without RIR, as read from a paper plan. */
-export function readSets(sets: number, min: number, max = min): PlanSetDraft[] {
+function readSets(sets: number, min: number, max = min): PlanSetDraft[] {
   return Array.from({ length: sets }, () => ({ targetMin: min, targetMax: max, rir: null }));
 }
 

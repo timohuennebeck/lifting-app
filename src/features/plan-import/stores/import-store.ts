@@ -13,8 +13,6 @@ interface ImportState {
   plan: ImportedPlan | null;
   /** Selected day tab on the confirm screen. */
   dayIndex: number;
-  /** Counts voice inputs, to cycle through the scripted mock utterances. */
-  voiceTake: number;
   setFile: (file: ImportFile) => void;
   addPhotos: (photos: ImportPhoto[]) => void;
   replacePhoto: (index: number, photo: ImportPhoto) => void;
@@ -24,7 +22,6 @@ interface ImportState {
   setPlan: (plan: ImportedPlan) => void;
   editPlan: (edit: (plan: ImportedPlan) => ImportedPlan) => void;
   selectDay: (index: number) => void;
-  nextVoiceTake: () => void;
   /** Forgets the session, e.g. on sign-out. */
   reset: () => void;
 }
@@ -33,7 +30,7 @@ const NO_PHOTOS: ImportPhoto[] = [];
 const photosOf = (source: ImportSource | null) =>
   source?.kind === 'photos' ? source.photos : NO_PHOTOS;
 
-const EMPTY = { source: null, plan: null, dayIndex: 0, voiceTake: 0 } as const;
+const EMPTY = { source: null, plan: null, dayIndex: 0 } as const;
 
 /** In-memory state of one plan import session (source, detected plan, review position). */
 export const useImportStore = create<ImportState>()((set) => ({
@@ -60,7 +57,6 @@ export const useImportStore = create<ImportState>()((set) => ({
   setPlan: (plan) => set({ plan, dayIndex: 0 }),
   editPlan: (edit) => set((s) => (s.plan ? { plan: edit(s.plan) } : {})),
   selectDay: (dayIndex) => set({ dayIndex }),
-  nextVoiceTake: () => set((s) => ({ voiceTake: s.voiceTake + 1 })),
   reset: () => set(EMPTY),
 }));
 

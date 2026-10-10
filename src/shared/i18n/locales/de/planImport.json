@@ -52,32 +52,6 @@
     ],
     "error": "Wir konnten den Plan nicht lesen. Bitte versuch es noch einmal."
   },
-  "voice": {
-    "title": "Spracheingabe",
-    "format": "TAG · ÜBUNGEN · SÄTZE × WIEDERHOLUNGEN",
-    "example": "„Freitag Schultern, Seitheben drei mal fünfzehn“",
-    "tap": "Tippen zum Sprechen",
-    "listening": "Ich höre zu …",
-    "understood": "Verstanden",
-    "stop": "Zuhören beenden",
-    "scripts": [
-      "d:Freitag d:Schultern: e:Schulterdrücken n:vier n:mal n:acht, e:Seitheben n:drei n:mal n:fünfzehn, e:Reverse e:Flys n:drei n:mal n:zwölf",
-      "d:Samstag d:Arme: e:Kurzhantel-Curls n:drei n:mal n:zwölf, e:Trizepsdrücken n:drei n:mal n:fünfzehn",
-      "d:Montag: e:Hack e:Squat x:raus, 0:dafür e:Bankdrücken n:drei n:mal n:zwölf 0:und e:French e:Press n:drei n:mal n:zehn"
-    ],
-    "days": {
-      "shoulders": "Schultern",
-      "arms": "Arme",
-      "push": "Push"
-    }
-  },
-  "recognizing": {
-    "stages": [
-      "Erkenne Trainingstag …",
-      "Ordne Übungen zu …",
-      "Übernehme Sätze und Wiederholungen …"
-    ]
-  },
   "confirm": {
     "planName": "Planname",
     "dayUnknown": "Den Tag „{{raw}}“ konnten wir nicht lesen – das Training bleibt ohne festen Tag.",

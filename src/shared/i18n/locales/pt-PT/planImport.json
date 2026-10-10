@@ -52,32 +52,6 @@
     ],
     "error": "Não conseguimos ler este plano. Tenta novamente."
   },
-  "voice": {
-    "title": "Entrada por voz",
-    "format": "DIA · EXERCÍCIOS · SÉRIES × REPETIÇÕES",
-    "example": "“Sexta ombros, elevação lateral três vezes quinze”",
-    "tap": "Toca para falar",
-    "listening": "A ouvir …",
-    "understood": "Percebido",
-    "stop": "Parar de ouvir",
-    "scripts": [
-      "d:Sexta d:ombros: e:desenvolvimento n:quatro n:vezes n:oito, e:elevação e:lateral n:três n:vezes n:quinze, e:aberturas e:invertidas n:três n:vezes n:doze",
-      "d:Sábado d:braços: e:curl e:com e:halteres n:três n:vezes n:doze, e:tríceps e:na e:polia n:três n:vezes n:quinze",
-      "d:Segunda: e:hack e:squat x:fora, 0:em 0:vez 0:disso e:supino n:três n:vezes n:doze 0:e e:tríceps e:francês n:três n:vezes n:dez"
-    ],
-    "days": {
-      "shoulders": "Ombros",
-      "arms": "Braços",
-      "push": "Push"
-    }
-  },
-  "recognizing": {
-    "stages": [
-      "A detetar o dia de treino …",
-      "A associar exercícios …",
-      "A aplicar séries e repetições …"
-    ]
-  },
   "confirm": {
     "planName": "Nome do plano",
     "dayUnknown": "Não conseguimos ler o dia “{{raw}}” – este treino fica sem dia fixo.",
