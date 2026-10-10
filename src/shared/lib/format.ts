@@ -122,9 +122,13 @@ export function formatDate(date: Date, options: Intl.DateTimeFormatOptions) {
 /** "14:02" or "02:02 PM" */
 export const formatTime = (date: Date) => formatDate(date, { hour: '2-digit', minute: '2-digit' });
 
-/** "8 Oct" */
-export const formatShortDate = (date: Date | number | string) =>
-  formatDate(new Date(date), { day: 'numeric', month: 'short' });
+/** "8 Oct", or "16 Aug 2025" for another year */
+export function formatShortDate(date: Date | number | string) {
+  const d = new Date(date);
+  // Without the year a date from last year reads like one from this year.
+  const otherYear = d.getFullYear() !== new Date().getFullYear();
+  return formatDate(d, { day: 'numeric', month: 'short', ...(otherYear && { year: 'numeric' }) });
+}
 
 /** "Wed, 8 Oct" */
 export const formatWeekdayDate = (date: Date) =>
