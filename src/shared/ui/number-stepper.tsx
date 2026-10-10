@@ -1,5 +1,5 @@
-import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { clamp } from '@/shared/lib/math';
@@ -15,7 +15,6 @@ export interface NumberStepperProps {
   /** Caption under the number, e.g. "YEARS". */
   unit?: string;
   format?: (value: number) => string;
-  className?: string;
 }
 
 /** Big number with round −/+ buttons (Age, frequency). */
@@ -26,12 +25,11 @@ export function NumberStepper({
   max,
   unit,
   format = String,
-  className,
 }: NumberStepperProps) {
   const { t } = useTranslation();
   const set = (next: number) => onChange(clamp(next, min, max));
   return (
-    <View className={cn('flex-row items-center justify-between gap-3', className)}>
+    <View className="flex-row items-center justify-between gap-3 px-5 pt-9">
       <IconButton
         icon="minus"
         size={64}

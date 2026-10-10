@@ -45,11 +45,6 @@ export function ProgramGlyph({ color }: GlyphProps) {
   );
 }
 
-/** Short bar used for delete / remove. */
-export function MinusGlyph({ color, width = 16 }: GlyphProps & { width?: number }) {
-  return <View className="h-[2.5px] rounded-xs" style={{ width, backgroundColor: color }} />;
-}
-
 /** "Aa" rename mark. */
 export function RenameGlyph({ color }: GlyphProps) {
   return (

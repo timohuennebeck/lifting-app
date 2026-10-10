@@ -1,5 +1,6 @@
-import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
+
+import { saveAsJpeg } from '@/shared/lib/jpeg';
 
 export const MAX_SCREENSHOTS = 5;
 const MAX_EDGE = 1600;
@@ -29,16 +30,10 @@ export async function pickScreenshots(limit: number): Promise<PickedImage[]> {
 
 /** Scales the long edge down to 1600 px and re-encodes as JPEG; returns the new file URI. */
 export async function compressScreenshot(image: PickedImage) {
-  const context = ImageManipulator.manipulate(image.uri);
+  let resize: { width: number } | { height: number } | undefined;
   if (Math.max(image.width, image.height) > MAX_EDGE) {
-    context.resize(image.width >= image.height ? { width: MAX_EDGE } : { height: MAX_EDGE });
+    resize = image.width >= image.height ? { width: MAX_EDGE } : { height: MAX_EDGE };
   }
-  const rendered = await context.renderAsync();
-  try {
-    const result = await rendered.saveAsync({ compress: JPEG_QUALITY, format: SaveFormat.JPEG });
-    return result.uri;
-  } finally {
-    rendered.release();
-    context.release();
-  }
+  const result = await saveAsJpeg(image.uri, JPEG_QUALITY, resize);
+  return result.uri;
 }

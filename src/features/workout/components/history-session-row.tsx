@@ -54,8 +54,6 @@ export function HistorySessionRow({
 
   return (
     <HistoryRow
-      className="px-2"
-      activeScale={0.99}
       day={formatDate(new Date(session.startedAt), { day: 'numeric' })}
       latest={latest}
       open={open}

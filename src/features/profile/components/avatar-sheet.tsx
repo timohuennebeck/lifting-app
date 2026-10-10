@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { MinusGlyph } from '@/features/training/components/glyphs';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon, type IconName } from '@/shared/ui/icon';
+import { MinusGlyph } from '@/shared/ui/minus-glyph';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';

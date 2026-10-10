@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 
 import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
+import { MinusGlyph } from '@/shared/ui/minus-glyph';
 
-import { MinusGlyph, RenameGlyph } from './glyphs';
+import { RenameGlyph } from './glyphs';
 
 type CollectionOption = 'rename' | 'delete';
 

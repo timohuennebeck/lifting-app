@@ -1,5 +1,6 @@
 import { Directory, File, Paths } from 'expo-file-system';
-import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
+
+import { saveAsJpeg } from '@/shared/lib/jpeg';
 
 import { POSES, type BodyPose } from './poses';
 
@@ -37,12 +38,8 @@ export async function storeShot(
   checkId: string,
   pose: BodyPose,
 ): Promise<StoredPhoto> {
-  const context = ImageManipulator.manipulate(source.uri);
-  if (source.width > MAX_WIDTH) context.resize({ width: MAX_WIDTH });
-  const image = await context.renderAsync();
-  const saved = await image.saveAsync({ compress: JPEG_QUALITY, format: SaveFormat.JPEG });
-  context.release();
-  image.release();
+  const resize = source.width > MAX_WIDTH ? { width: MAX_WIDTH } : undefined;
+  const saved = await saveAsJpeg(source.uri, JPEG_QUALITY, resize);
 
   const directory = checkDirectory(checkId);
   directory.create({ intermediates: true, idempotent: true });

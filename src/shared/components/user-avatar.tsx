@@ -1,5 +1,5 @@
 import { useAvatarUrl } from '@/shared/data/avatar';
-import { useProfile } from '@/shared/data/profile';
+import { type Profile, useProfile } from '@/shared/data/profile';
 import { Avatar, type AvatarProps } from '@/shared/ui/avatar';
 
 export type UserAvatarProps = Omit<AvatarProps, 'name' | 'uri' | 'cacheKey'> & {
@@ -8,8 +8,20 @@ export type UserAvatarProps = Omit<AvatarProps, 'name' | 'uri' | 'cacheKey'> & {
 };
 
 /** The signed-in user's profile photo, or their initials. */
-export function UserAvatar({ previewUri, ...props }: UserAvatarProps) {
+export function UserAvatar(props: UserAvatarProps) {
   const { profile } = useProfile();
+  return <ProfileAvatar {...props} profile={profile} />;
+}
+
+export interface ProfileAvatarProps extends UserAvatarProps {
+  profile: Pick<Profile, 'firstName' | 'avatarPath'> | null;
+}
+
+/**
+ * `UserAvatar` for a profile the caller already has, e.g. list rows from their screen: every
+ * `useProfile` registers its own database watcher and re-runs the query on each change.
+ */
+export function ProfileAvatar({ profile, previewUri, ...props }: ProfileAvatarProps) {
   const path = profile?.avatarPath ?? null;
   const { data: url } = useAvatarUrl(path);
   return (

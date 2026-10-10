@@ -38,7 +38,6 @@ export function DaysScreen() {
       }
     >
       <NumberStepper
-        className="px-5 pt-9"
         value={count}
         min={1}
         max={7}

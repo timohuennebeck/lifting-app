@@ -28,10 +28,10 @@ export type CheckPhotos = Partial<Record<BodyPose, string | null>>;
 const toChecks = (rows: BodyCheckRecord[]): BodyCheck[] =>
   rows.map((r) => ({
     id: r.id,
-    score: r.score ?? 0,
+    score: r.score,
     groupScores: parseJson(r.group_scores, {}),
     metrics: parseJson(r.metrics, {}),
-    createdAt: r.created_at ?? '',
+    createdAt: r.created_at,
   }));
 
 /** All body checks, oldest first (check numbers follow this order). */

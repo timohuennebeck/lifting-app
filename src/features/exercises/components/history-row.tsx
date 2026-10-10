@@ -19,8 +19,6 @@ export interface HistoryRowProps {
   sets: ExerciseHistorySet[];
   /** Weight × reps and RIR of one set, after its number. */
   renderSet: (set: ExerciseHistorySet) => ReactNode;
-  activeScale?: number;
-  className?: string;
 }
 
 /** Past session of one exercise; tapping it expands every logged set. */
@@ -33,17 +31,15 @@ export function HistoryRow({
   stats,
   sets,
   renderSet,
-  activeScale,
-  className,
 }: HistoryRowProps) {
   const chevron = useAnimatedStyle(() => ({
     transform: [{ rotate: withTiming(open ? '180deg' : '0deg', { duration: 200 }) }],
   }));
   return (
-    <View className={className}>
+    <View className="px-2">
       <ListRow
         haptic="select"
-        activeScale={activeScale}
+        activeScale={0.99}
         accessibilityState={{ expanded: open }}
         onPress={onToggle}
         badge={day}

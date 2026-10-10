@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { cn } from '@/shared/lib/cn';
+import { clamp } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -53,7 +54,7 @@ export function ReviewScreen() {
   const selected = reviewPose ?? missing ?? weak ?? POSES[0];
   const shot = shots[selected];
   const taken = POSES.filter((p) => shots[p]).length;
-  const photoHeight = Math.min(PHOTO_MAX_HEIGHT, Math.max(120, stageHeight - STAGE_CHROME));
+  const photoHeight = clamp(stageHeight - STAGE_CHROME, 120, PHOTO_MAX_HEIGHT);
   const analyze = () => router.push('/body-check/analysis');
 
   return (

@@ -59,12 +59,13 @@ async function setExercisePosition(tx: Tx, templateExerciseId: string, position:
 /** Closes gaps in the exercise positions. Returns the ids in order (index = position). */
 async function renumberExercises(tx: Tx, templateId: string) {
   const rows = await tx
-    .select({ id: templateExercises.id })
+    .select({ id: templateExercises.id, position: templateExercises.position })
     .from(templateExercises)
     .where(eq(templateExercises.template_id, templateId))
     .orderBy(templateExercises.position);
   for (const [position, row] of rows.entries()) {
-    await setExercisePosition(tx, row.id, position);
+    // Only rows that are off: every write is queued for upload.
+    if (row.position !== position) await setExercisePosition(tx, row.id, position);
   }
   return rows.map((r) => r.id);
 }
@@ -133,7 +134,14 @@ export async function renameTemplate(templateId: string, name: string) {
 /** Saves the order of one collection's templates after a drag on the Training tab. */
 export async function reorderTemplates(orderedIds: string[]) {
   await drizzle.transaction(async (tx) => {
+    const rows = await tx
+      .select({ id: templates.id, position: templates.position })
+      .from(templates)
+      .where(inArray(templates.id, orderedIds));
+    // Only rows whose position changes: every write is queued for upload.
+    const stored = new Map(rows.map((r) => [r.id, r.position]));
     for (const [position, id] of orderedIds.entries()) {
+      if (stored.get(id) === position) continue;
       await tx.update(templates).set({ position }).where(eq(templates.id, id));
     }
   });

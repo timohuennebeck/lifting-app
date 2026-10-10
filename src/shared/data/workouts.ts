@@ -27,7 +27,6 @@ import {
   type SetTargets,
 } from './exercises';
 import { newId, nowIso } from './json';
-import type { PlanExerciseDraft } from './templates';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
 import {
@@ -38,6 +37,7 @@ import {
   workoutSets,
 } from './powersync/schema';
 import { queryKeys } from './query-keys';
+import type { PlanExerciseDraft } from './templates';
 import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /** Epley estimated one-rep max. */

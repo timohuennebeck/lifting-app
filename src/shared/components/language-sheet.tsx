@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { detectLanguage } from '@/shared/i18n';
+import { useAppLanguage } from '@/shared/hooks/use-app-language';
 import { APP_LANGUAGES } from '@/shared/i18n/resources';
 import { useSettingsStore } from '@/shared/stores/settings-store';
 import { LanguageFlag } from '@/shared/ui/language-flag';
@@ -14,7 +14,7 @@ export interface LanguageSheetProps {
 /** Picks the app language (welcome screen and settings). */
 export function LanguageSheet({ visible, onClose }: LanguageSheetProps) {
   const { t } = useTranslation();
-  const language = useSettingsStore((s) => s.language) ?? detectLanguage();
+  const language = useAppLanguage();
   const setLanguage = useSettingsStore((s) => s.setLanguage);
   return (
     <RadioListSheet

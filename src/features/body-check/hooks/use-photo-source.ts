@@ -3,6 +3,7 @@ import type { ImageSource } from 'expo-image';
 import { useMemo } from 'react';
 
 import { signedUrl } from '@/shared/data/supabase-storage';
+import { MINUTE_MS } from '@/shared/lib/date';
 
 import { bodyCheckPhotoKeys } from '../data/body-check-keys';
 import { PHOTO_BUCKET, photoFile } from '../lib/photo-files';
@@ -10,7 +11,7 @@ import type { BodyPose } from '../lib/poses';
 
 const SIGNED_URL_SECONDS = 60 * 60;
 // Refresh well before the signed URL expires.
-const SIGNED_URL_STALE_MS = 50 * 60 * 1000;
+const SIGNED_URL_STALE_MS = 50 * MINUTE_MS;
 
 /**
  * Image source of a saved check photo: the local file when this device took it,

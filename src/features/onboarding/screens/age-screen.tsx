@@ -28,7 +28,6 @@ export function AgeScreen() {
         min={AGE_RANGE.min}
         max={AGE_RANGE.max}
         unit={t('age.unit')}
-        className="px-5 pt-9"
       />
     </StepScreen>
   );

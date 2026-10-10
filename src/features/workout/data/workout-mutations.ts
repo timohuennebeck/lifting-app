@@ -4,8 +4,9 @@ import { defaultTargets, swapTargets } from '@/shared/data/exercises';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
 import { workoutExercises, workoutSets } from '@/shared/data/powersync/schema';
 import type { PlanSetDraft } from '@/shared/data/templates';
-import type { SetValues } from '@/shared/lib/format';
 import { insertWorkoutSet } from '@/shared/data/workouts';
+import type { SetValues } from '@/shared/lib/format';
+import { clamp } from '@/shared/lib/math';
 
 async function exerciseOf(tx: Tx, workoutExerciseId: string) {
   const row = await tx
@@ -136,15 +137,18 @@ export async function reorderWorkoutExercise(
 ) {
   await drizzle.transaction(async (tx) => {
     const rows = await tx
-      .select({ id: workoutExercises.id })
+      .select({ id: workoutExercises.id, position: workoutExercises.position })
       .from(workoutExercises)
       .where(eq(workoutExercises.workout_id, workoutId))
       .orderBy(asc(workoutExercises.position));
     const ids = rows.map((r) => r.id);
     if (!ids.includes(workoutExerciseId)) return;
     const order = ids.filter((id) => id !== workoutExerciseId);
-    order.splice(Math.min(Math.max(toIndex, 0), order.length), 0, workoutExerciseId);
+    order.splice(clamp(toIndex, 0, order.length), 0, workoutExerciseId);
+    // Only rows whose position changes: every write is queued for upload.
+    const stored = new Map(rows.map((r) => [r.id, r.position]));
     for (const [position, id] of order.entries()) {
+      if (stored.get(id) === position) continue;
       await tx.update(workoutExercises).set({ position }).where(eq(workoutExercises.id, id));
     }
   });

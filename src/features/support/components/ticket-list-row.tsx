@@ -1,7 +1,8 @@
 import { View } from 'react-native';
 
+import { ProfileAvatar } from '@/shared/components/user-avatar';
+import type { Profile } from '@/shared/data/profile';
 import { cn } from '@/shared/lib/cn';
-import { UserAvatar } from '@/shared/components/user-avatar';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
@@ -12,10 +13,12 @@ import { TicketPills } from './ticket-pills';
 
 export interface TicketListRowProps {
   ticket: TicketSummary;
+  /** The signed-in user's profile, from the screen (not watched once per row). */
+  profile: Profile | null;
 }
 
 /** Row of "My tickets": the user's avatar with the team badge, subject and latest reply (01f-2). */
-export function TicketListRow({ ticket }: TicketListRowProps) {
+export function TicketListRow({ ticket, profile }: TicketListRowProps) {
   const { unread, when, preview, open } = useTicketRow(ticket);
   return (
     <PressableScale className="flex-row items-center gap-3 py-3" onPress={open}>
@@ -26,7 +29,7 @@ export function TicketListRow({ ticket }: TicketListRowProps) {
             unread ? 'border-accent' : 'border-transparent',
           )}
         >
-          <UserAvatar size={48} className="border-0" />
+          <ProfileAvatar profile={profile} size={48} className="border-0" />
         </View>
         <View className="absolute right-0 bottom-0 rounded-full bg-bg p-[2.5px]">
           <TeamAvatar size={22} />

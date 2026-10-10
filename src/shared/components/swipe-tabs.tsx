@@ -1,5 +1,8 @@
+import { TopTabs } from 'expo-router/js-top-tabs';
+import type { ReactNode } from 'react';
 import type { Animated } from 'react-native';
 
+import { colors } from '@/shared/lib/theme';
 import { UnderlineTabs } from '@/shared/ui/underline-tabs';
 
 interface TabRoute {
@@ -19,25 +22,17 @@ export interface TopTabBarProps {
   position: Animated.AnimatedInterpolation<number>;
   /** Moves the pager to a route and updates the state with it. */
   jumpTo: (key: string) => void;
-  className?: string;
 }
 
 /**
- * The bar of the swipeable top tabs (Progress tab, exercise page) in the app's look: titles from
- * the screens' options, an underline that follows the swipe.
+ * The tab bar in the app's look: titles from the screens' options, an underline that follows the
+ * swipe.
  */
-export function TopTabBar({
-  state,
-  navigation,
-  descriptors,
-  position,
-  jumpTo,
-  className,
-}: TopTabBarProps) {
+function TopTabBar({ state, navigation, descriptors, position, jumpTo }: TopTabBarProps) {
   const focused = state.routes[state.index]?.name ?? '';
   return (
     <UnderlineTabs
-      className={className}
+      className="mx-4 mt-3"
       position={position}
       value={focused}
       tabs={state.routes.map((route) => ({
@@ -57,5 +52,24 @@ export function TopTabBar({
         if (name !== focused && !event.defaultPrevented) jumpTo(route.key);
       }}
     />
+  );
+}
+
+const SCREEN_OPTIONS = { sceneStyle: { backgroundColor: colors.bg } };
+
+export interface SwipeTabsProps {
+  /** The tabs as `TopTabs.Screen`s. */
+  children: ReactNode;
+}
+
+/** The swipeable top tabs (Progress tab, exercise page) with the app's tab bar and page color. */
+export function SwipeTabs({ children }: SwipeTabsProps) {
+  return (
+    <TopTabs
+      tabBar={(props: TopTabBarProps) => <TopTabBar {...props} />}
+      screenOptions={SCREEN_OPTIONS}
+    >
+      {children}
+    </TopTabs>
   );
 }

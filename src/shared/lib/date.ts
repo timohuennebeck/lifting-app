@@ -16,12 +16,15 @@ export const addDays = (date: Date, days: number) =>
   new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
 
 /** Monday 00:00 of the week containing `date`. */
-export const startOfWeek = (date: Date) => addDays(startOfDay(date), -mondayIndex(date));
+export const startOfWeek = (date: Date) => addDays(date, -mondayIndex(date));
 
 export const isSameDay = (a: Date, b: Date) =>
   a.getFullYear() === b.getFullYear() &&
   a.getMonth() === b.getMonth() &&
   a.getDate() === b.getDate();
+
+/** Whether `date` falls on the calendar day before `now`. */
+export const isYesterday = (date: Date, now: Date) => isSameDay(date, addDays(now, -1));
 
 /** Whole minutes between two ISO timestamps (at least 1), or 0 while unfinished. */
 export function minutesBetween(fromIso: string, toIso: string | null) {

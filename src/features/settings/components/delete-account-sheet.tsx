@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 
-import { MinusGlyph } from '@/features/training/components/glyphs';
 import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
+import { MinusGlyph } from '@/shared/ui/minus-glyph';
 
 export interface DeleteAccountSheetProps {
   visible: boolean;

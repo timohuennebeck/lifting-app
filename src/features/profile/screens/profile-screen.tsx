@@ -6,7 +6,7 @@ import { ProBadge } from '@/features/paywall/components/pro-badge';
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { OpenTicketsSection } from '@/features/support/components/open-tickets-section';
 import { TabScreen } from '@/shared/components/tab-screen';
-import { UserAvatar } from '@/shared/components/user-avatar';
+import { ProfileAvatar } from '@/shared/components/user-avatar';
 import { saveProfile, useProfile } from '@/shared/data/profile';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { useWorkoutCount, useWorkoutHistory } from '@/shared/data/workouts';
@@ -117,7 +117,12 @@ export function ProfileScreen() {
           onPress={() => setAvatarOpen(true)}
           className="rounded-full border-[3px] border-accent p-1"
         >
-          <UserAvatar size={106} className="border-0" previewUri={local?.uri} />
+          <ProfileAvatar
+            profile={profile}
+            size={106}
+            className="border-0"
+            previewUri={local?.uri}
+          />
           {uploading ? (
             <View className="absolute inset-1 items-center justify-center rounded-full bg-black/45">
               <ActivityIndicator color={colors.fg} />
@@ -181,7 +186,7 @@ export function ProfileScreen() {
       </Text>
       <View className="mx-5">
         {history.length ? (
-          history.map((w) => <HistoryEntry key={w.id} workout={w} userName={name} />)
+          history.map((w) => <HistoryEntry key={w.id} workout={w} profile={profile} />)
         ) : (
           <Text variant="paragraph" tone="subtle">
             {t('historyEmpty')}

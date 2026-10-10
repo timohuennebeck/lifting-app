@@ -17,6 +17,7 @@ import Svg, { Path } from 'react-native-svg';
 import { scheduleOnRN } from 'react-native-worklets';
 
 import { haptics } from '@/shared/lib/haptics';
+import { clamp } from '@/shared/lib/math';
 import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
@@ -43,7 +44,7 @@ interface RidgeProps {
 /** A ridge fades in once the hold reaches it, so the print fills line by line. */
 function Ridge({ d, index, progress, color }: RidgeProps) {
   const animatedProps = useAnimatedProps(() => ({
-    fillOpacity: Math.min(1, Math.max(0, progress.get() * RIDGE_PATHS.length - index)),
+    fillOpacity: clamp(progress.get() * RIDGE_PATHS.length - index, 0, 1),
   }));
   return <AnimatedPath d={d} fill={color} animatedProps={animatedProps} />;
 }

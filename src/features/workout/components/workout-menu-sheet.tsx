@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { MinusGlyph } from '@/features/training/components/glyphs';
 import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
 import { Icon } from '@/shared/ui/icon';
+import { MinusGlyph } from '@/shared/ui/minus-glyph';
 
 import { useWorkoutActions } from '../hooks/use-workout-actions';
 

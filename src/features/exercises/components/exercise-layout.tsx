@@ -6,9 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { TopTabBar, type TopTabBarProps } from '@/shared/components/top-tab-bar';
+import { SwipeTabs } from '@/shared/components/swipe-tabs';
 import { exerciseName, getExercise } from '@/shared/data/exercises';
-import { colors } from '@/shared/lib/theme';
 import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Text } from '@/shared/ui/text';
@@ -85,13 +84,10 @@ export function ExerciseLayout() {
         </View>
       </View>
       <ExerciseIdContext value={exerciseId}>
-        <TopTabs
-          tabBar={(props: TopTabBarProps) => <TopTabBar {...props} className="mx-4 mt-3" />}
-          screenOptions={{ sceneStyle: { backgroundColor: colors.bg } }}
-        >
+        <SwipeTabs>
           <TopTabs.Screen name="index" options={{ title: t('exercises:detail.tabs.exercise') }} />
           <TopTabs.Screen name="history" options={{ title: t('exercises:detail.tabs.history') }} />
-        </TopTabs>
+        </SwipeTabs>
       </ExerciseIdContext>
     </View>
   );

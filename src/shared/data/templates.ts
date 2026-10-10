@@ -299,7 +299,7 @@ function toTemplateDetail([t]: RowOf<typeof templateDetailQuery>[]): TemplateDet
   };
 }
 
-/** Keeps the previous template while another one loads, e.g. when the plan bar switches. */
+/** Keeps the previous template while another one loads. */
 export function useTemplateDetail(templateId: string | undefined) {
   return useDrizzleQuery({
     queryKey: queryKeys.templates.detail(templateId ?? '').queryKey,

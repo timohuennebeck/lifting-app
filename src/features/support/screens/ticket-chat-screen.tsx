@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useProfile } from '@/shared/data/profile';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { useNow } from '@/shared/hooks/use-now';
+import { MINUTE_MS } from '@/shared/lib/date';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
@@ -47,7 +48,7 @@ export function TicketChatScreen() {
   const scrollRef = useRef<Animated.ScrollView>(null);
   const scrolled = useRef(false);
   // Re-render each minute so "just now" ages.
-  const now = new Date(useNow(60_000));
+  const now = new Date(useNow(MINUTE_MS));
 
   // Only replies that arrive while the chat is on screen count as read.
   const focused = useIsFocused();

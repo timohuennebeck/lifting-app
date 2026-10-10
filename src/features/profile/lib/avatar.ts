@@ -1,5 +1,4 @@
 import { File } from 'expo-file-system';
-import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 
 import { AVATAR_BUCKET } from '@/shared/data/avatar';
@@ -7,6 +6,7 @@ import { newId } from '@/shared/data/json';
 import { saveProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
 import { uploadJpeg } from '@/shared/data/supabase-storage';
+import { saveAsJpeg } from '@/shared/lib/jpeg';
 
 /** Profile photos are stored as square JPEGs this size. */
 const SIZE = 512;
@@ -36,12 +36,7 @@ export async function pickAvatar(source: AvatarSource): Promise<string | 'denied
   const asset = result.canceled ? undefined : result.assets[0];
   if (!asset) return null;
 
-  const context = ImageManipulator.manipulate(asset.uri);
-  context.resize({ width: SIZE, height: SIZE });
-  const image = await context.renderAsync();
-  const saved = await image.saveAsync({ compress: JPEG_QUALITY, format: SaveFormat.JPEG });
-  context.release();
-  image.release();
+  const saved = await saveAsJpeg(asset.uri, JPEG_QUALITY, { width: SIZE, height: SIZE });
   return saved.uri;
 }
 

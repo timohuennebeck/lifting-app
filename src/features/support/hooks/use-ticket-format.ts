@@ -1,12 +1,11 @@
 import { useTranslation } from 'react-i18next';
 
-import { addDays, isSameDay, MINUTE_MS, startOfDay } from '@/shared/lib/date';
+import { isSameDay, isYesterday, MINUTE_MS } from '@/shared/lib/date';
 import { formatDate, formatShortDate, formatTime, formatWeekdayDate } from '@/shared/lib/format';
 
 import type { TicketKind, TicketStatus } from '../data/tickets';
 import { toMs } from '../lib/ticket-format';
 
-const isYesterday = (date: Date, now: Date) => isSameDay(date, addDays(startOfDay(now), -1));
 const isJustNow = (date: Date, now: Date) => now.getTime() - date.getTime() < 2 * MINUTE_MS;
 
 /** Localized dates, titles and status copy for tickets and the chat. */

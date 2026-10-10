@@ -9,14 +9,13 @@ import { countLocalPendingPhotos } from '@/features/body-check/data/body-checks'
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { useUploadQueueStore } from '@/features/support/stores/upload-queue-store';
 import { LanguageSheet } from '@/shared/components/language-sheet';
-import { UserAvatar } from '@/shared/components/user-avatar';
+import { ProfileAvatar } from '@/shared/components/user-avatar';
 import { db } from '@/shared/data/powersync/database';
 import { saveProfile, useProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
-import { detectLanguage } from '@/shared/i18n';
+import { useAppLanguage } from '@/shared/hooks/use-app-language';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId, useSessionStore } from '@/shared/stores/session-store';
-import { useSettingsStore } from '@/shared/stores/settings-store';
 import { Button } from '@/shared/ui/button';
 import { LanguageFlag } from '@/shared/ui/language-flag';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -47,7 +46,7 @@ export function SettingsScreen() {
   const { profile } = useProfile();
   const isPro = useIsPro();
   const email = useSessionStore((s) => s.session?.user.email) ?? '';
-  const language = useSettingsStore((s) => s.language) ?? detectLanguage();
+  const language = useAppLanguage();
   const [sheet, setSheet] = useState<OpenSheet | null>(null);
   const [unsynced, setUnsynced] = useState(0);
   const [deleting, setDeleting] = useState(false);
@@ -91,7 +90,7 @@ export function SettingsScreen() {
 
       <View className="gap-2.5 px-4 pt-4">
         <View className="flex-row items-center gap-3.5 rounded-[22px] bg-surface p-4">
-          <UserAvatar size={52} />
+          <ProfileAvatar profile={profile} size={52} />
           <View className="min-w-0 flex-1 gap-0.5">
             <Text variant="bodyStrong" numberOfLines={1}>
               {profile?.firstName ?? ''}

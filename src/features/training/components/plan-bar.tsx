@@ -63,7 +63,7 @@ export function PlanBar({ items, currentIndex, onSelect, onAdd }: PlanBarProps) 
             >
               {item.name}
             </Text>
-            <PlanSlot number={index + 1} done={false} selected={current} review={item.review} />
+            <PlanSlot number={index + 1} selected={current} review={item.review} />
           </PressableScale>
         );
       })}

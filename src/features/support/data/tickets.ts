@@ -103,11 +103,11 @@ const toTicket = (r: TicketRecord): Ticket => ({
   id: r.id,
   number: r.number,
   kind: r.kind === 'idea' ? 'idea' : 'bug',
-  status: (r.status as TicketStatus | null) ?? 'open',
+  status: r.status as TicketStatus,
   priority: r.priority,
-  subject: r.subject ?? '',
-  createdAt: r.created_at ?? '',
-  updatedAt: r.updated_at ?? r.created_at ?? '',
+  subject: r.subject,
+  createdAt: r.created_at,
+  updatedAt: r.updated_at,
   closedAt: r.closed_at,
 });
 
@@ -134,11 +134,11 @@ const toTicketOrNull = (rows: TicketRecord[]) => (rows[0] ? toTicket(rows[0]) : 
 const toMessages = (rows: TicketMessageRecord[]): TicketMessage[] =>
   rows.map((r) => ({
     id: r.id,
-    ticketId: r.ticket_id ?? '',
+    ticketId: r.ticket_id,
     author: r.author === 'team' ? 'team' : 'user',
-    body: r.body ?? '',
+    body: r.body,
     attachments: parseJson<string[]>(r.attachments, []),
-    createdAt: r.created_at ?? '',
+    createdAt: r.created_at,
   }));
 
 const toEvents = (rows: TicketEventRecord[]): TicketEvent[] =>

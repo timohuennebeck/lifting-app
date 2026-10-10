@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
+import { MinusGlyph } from '@/shared/ui/minus-glyph';
 
 import { type DeleteCollectionMode, deleteCollection } from '../data/template-mutations';
-import { MinusGlyph } from './glyphs';
 
 export interface DeleteCollectionSheetProps {
   collection: { id: string; name: string; templateCount: number } | null;
