@@ -22,7 +22,9 @@ export function CollectionTabs({ tabs, selected, onSelect }: CollectionTabsProps
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      className="grow-0 pt-4 pb-1"
+      // A horizontal ScrollView grows by default; this one is as tall as its tabs.
+      style={{ flexGrow: 0, flexShrink: 0 }}
+      className="pt-4 pb-1"
       contentContainerClassName="gap-1.5 px-5"
     >
       {tabs.map((tab) => {

@@ -15,5 +15,3 @@ export function splitMuscles(exerciseId: string) {
     secondary: entries.filter(([, w], i) => i > 0 && w < 0.3).map(([m]) => m),
   };
 }
-
-export const padIndex = (n: number) => String(n).padStart(2, '0');

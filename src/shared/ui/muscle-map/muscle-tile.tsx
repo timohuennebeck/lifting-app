@@ -60,7 +60,7 @@ export function MuscleChip({ art, lit, label, percent, active }: MuscleChipProps
           view={card.view}
           viewBox={card.viewBox}
           selected={lit ?? [art]}
-          accent={active ? colors.accent : colors.muted}
+          accent={active ? colors.accent : colors.fg2}
           fit="cover"
         />
       </View>

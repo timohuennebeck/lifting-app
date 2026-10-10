@@ -91,12 +91,13 @@ export function TrainingScreen() {
       {tabs.length ? (
         <CollectionTabs tabs={tabs} selected={selected} onSelect={setSelectedKey} />
       ) : null}
-      <View className="px-2 pt-3">
+      <View className="px-4 pt-3">
         {/* Hold a training to drag it to another place in its collection. */}
         <Sortable.Grid
           data={rows}
           keyExtractor={(tpl) => tpl.id}
           columns={1}
+          rowGap={8}
           scrollableRef={scrollRef}
           dragActivationDelay={250}
           activeItemScale={1.03}
@@ -110,12 +111,12 @@ export function TrainingScreen() {
             setTimeout(() => (dragging.current = false), 150);
             if (toIndex !== fromIndex) void reorderTemplates(data.map((tpl) => tpl.id));
           }}
-          renderItem={({ item: tpl, index }) => (
+          renderItem={({ item: tpl }) => (
             <TemplateRow
-              index={index + 1}
               name={tpl.name}
               minutes={tpl.estimatedMinutes}
               exerciseCount={tpl.exerciseCount}
+              items={tpl.items}
               starting={startingId === tpl.id}
               onPress={() => {
                 if (!dragging.current) router.push(`/template/${tpl.id}`);
