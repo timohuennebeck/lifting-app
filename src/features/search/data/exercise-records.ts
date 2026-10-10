@@ -4,6 +4,7 @@ import { and, eq, isNotNull, sql } from 'drizzle-orm';
 import { drizzle } from '@/shared/data/powersync/database';
 import { workoutExercises, workouts, workoutSets } from '@/shared/data/powersync/schema';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
+import { hasKnownWeight } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 
 const searchKeys = createQueryKeys('search', { records: null });
@@ -17,39 +18,50 @@ export interface ExerciseRecord {
 
 // Sets of finished workouts, ranked per exercise by weight, then reps, then seconds (a missing
 // value counts as -1, so exercises without weight start at reps); ties keep any one of them.
-const rankedSets = drizzle
-  .select({
-    exercise_id: workoutExercises.exercise_id,
-    weight_kg: workoutSets.weight_kg,
-    reps: workoutSets.reps,
-    seconds: workoutSets.seconds,
-    last_at: sql<string>`max(${workouts.started_at}) over (
+// Built per call: hasKnownWeight reads the current exercise catalog.
+const rankedSets = () =>
+  drizzle
+    .select({
+      exercise_id: workoutExercises.exercise_id,
+      weight_kg: workoutSets.weight_kg,
+      reps: workoutSets.reps,
+      seconds: workoutSets.seconds,
+      last_at: sql<string>`max(${workouts.started_at}) over (
       partition by ${workoutExercises.exercise_id}
     )`.as('last_at'),
-    rank: sql<number>`row_number() over (
+      rank: sql<number>`row_number() over (
       partition by ${workoutExercises.exercise_id}
       order by coalesce(${workoutSets.weight_kg}, -1) desc, coalesce(${workoutSets.reps}, -1) desc,
         coalesce(${workoutSets.seconds}, -1) desc
     )`.as('rank'),
-  })
-  .from(workoutSets)
-  .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
-  .innerJoin(workouts, eq(workouts.id, workoutExercises.workout_id))
-  .where(and(isNotNull(workoutSets.completed_at), isNotNull(workouts.finished_at)))
-  .as('ranked_sets');
+    })
+    .from(workoutSets)
+    .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
+    .innerJoin(workouts, eq(workouts.id, workoutExercises.workout_id))
+    // The same sets as an exercise's history: a weighted exercise's set without a weight doesn't count.
+    .where(
+      and(
+        isNotNull(workoutSets.completed_at),
+        isNotNull(workouts.finished_at),
+        hasKnownWeight(workoutSets, workoutExercises),
+      ),
+    )
+    .as('ranked_sets');
 
 // One row per exercise, aggregated in SQLite instead of loading every logged set.
-const recordsQuery = () =>
-  drizzle
+const recordsQuery = () => {
+  const ranked = rankedSets();
+  return drizzle
     .select({
-      exercise_id: rankedSets.exercise_id,
-      weight_kg: rankedSets.weight_kg,
-      reps: rankedSets.reps,
-      seconds: rankedSets.seconds,
-      last_at: rankedSets.last_at,
+      exercise_id: ranked.exercise_id,
+      weight_kg: ranked.weight_kg,
+      reps: ranked.reps,
+      seconds: ranked.seconds,
+      last_at: ranked.last_at,
     })
-    .from(rankedSets)
-    .where(eq(rankedSets.rank, 1));
+    .from(ranked)
+    .where(eq(ranked.rank, 1));
+};
 
 function toRecords(rows: RowOf<typeof recordsQuery>[]) {
   const records = new Map<string, ExerciseRecord>();
