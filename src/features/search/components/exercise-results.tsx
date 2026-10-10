@@ -5,10 +5,12 @@ import { FlatList, View, type ViewToken } from 'react-native';
 
 import { AlphabetRail } from '@/features/exercises/components/alphabet-rail';
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
+import { MuscleGroupFilter } from '@/features/exercises/components/muscle-group-filter';
 import {
   type ExerciseOption,
   useExerciseSearch,
 } from '@/features/exercises/hooks/use-exercise-search';
+import type { MuscleGroupId } from '@/features/exercises/lib/muscle-groups';
 import { isBodyweight } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { formatSet, formatShortDate, type SetValues, type UnitSystem } from '@/shared/lib/format';
@@ -44,16 +46,17 @@ export interface ExerciseResultsProps {
 }
 
 /**
- * The exercises matching the search: the trained ones first, last done on top, with their
- * heaviest set (★); then the others A–Z with the letter index. A tap opens the exercise, on its
- * history when it has one.
+ * The exercises matching the search and the muscle chip picked above them: the trained ones
+ * first, last done on top, with their heaviest set (★); then the others A–Z with the letter
+ * index. A tap opens the exercise, on its history when it has one.
  */
 export function ExerciseResults({ query, bottomInset }: ExerciseResultsProps) {
   const { t } = useTranslation(['exercises', 'common']);
   const units = useUnits();
+  const [group, setGroup] = useState<MuscleGroupId | null>(null);
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
   const listRef = useRef<FlatList<Row>>(null);
-  const options = useExerciseSearch(query);
+  const options = useExerciseSearch(query, group);
   const { data: records } = useExerciseRecords();
 
   const trained = options
@@ -94,7 +97,10 @@ export function ExerciseResults({ query, bottomInset }: ExerciseResultsProps) {
 
   return (
     <View className="flex-1">
-      <View className="flex-1 flex-row px-4">
+      <View className="px-4">
+        <MuscleGroupFilter value={group} onChange={setGroup} inset={16} />
+      </View>
+      <View className="mt-1 flex-1 flex-row px-4">
         <FlatList
           ref={listRef}
           className="flex-1"
