@@ -105,11 +105,20 @@ async function uploadPhotos(
   }
 }
 
-/** Removes a check's photos from storage; best effort, offline they stay. */
+/**
+ * Removes a check's photos from storage: every file in its folder, so a check from the four-pose
+ * days loses its left and right photos too. Best effort; offline they stay.
+ */
 export function removeUploadedPhotos(checkId: string, userId: string) {
-  void supabase.storage
-    .from(PHOTO_BUCKET)
-    .remove(POSES.map((pose) => storagePathOf(userId, checkId, pose)));
+  const bucket = supabase.storage.from(PHOTO_BUCKET);
+  const folder = `${userId}/${checkId}`;
+  void bucket
+    .list(folder)
+    .then(({ data }) => {
+      const paths = (data ?? []).map((file) => `${folder}/${file.name}`);
+      return paths.length ? bucket.remove(paths) : null;
+    })
+    .catch((error) => console.warn('Removing body-check photos failed', error));
 }
 
 /**

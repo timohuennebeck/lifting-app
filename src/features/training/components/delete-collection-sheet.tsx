@@ -32,6 +32,9 @@ export function DeleteCollectionSheet({ collection, onClose }: DeleteCollectionS
       await deleteCollection(collection.id, value);
       haptics.success();
       onClose();
+    } catch (error) {
+      console.warn('Deleting the collection failed', error);
+      haptics.error();
     } finally {
       setBusy(false);
     }

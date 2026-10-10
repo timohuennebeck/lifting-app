@@ -25,18 +25,19 @@ interface ImportState {
   editPlan: (edit: (plan: ImportedPlan) => ImportedPlan) => void;
   selectDay: (index: number) => void;
   nextVoiceTake: () => void;
+  /** Forgets the session, e.g. on sign-out. */
+  reset: () => void;
 }
 
 const NO_PHOTOS: ImportPhoto[] = [];
 const photosOf = (source: ImportSource | null) =>
   source?.kind === 'photos' ? source.photos : NO_PHOTOS;
 
+const EMPTY = { source: null, plan: null, dayIndex: 0, voiceTake: 0 } as const;
+
 /** In-memory state of one plan import session (source, detected plan, review position). */
 export const useImportStore = create<ImportState>()((set) => ({
-  source: null,
-  plan: null,
-  dayIndex: 0,
-  voiceTake: 0,
+  ...EMPTY,
   setFile: (file) => set({ source: { kind: 'file', file } }),
   addPhotos: (photos) =>
     set((s) => ({ source: { kind: 'photos', photos: [...photosOf(s.source), ...photos] } })),
@@ -60,6 +61,7 @@ export const useImportStore = create<ImportState>()((set) => ({
   editPlan: (edit) => set((s) => (s.plan ? { plan: edit(s.plan) } : {})),
   selectDay: (dayIndex) => set({ dayIndex }),
   nextVoiceTake: () => set((s) => ({ voiceTake: s.voiceTake + 1 })),
+  reset: () => set(EMPTY),
 }));
 
 export const usePhotos = () => useImportStore((s) => photosOf(s.source));

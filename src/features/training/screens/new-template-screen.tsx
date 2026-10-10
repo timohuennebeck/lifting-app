@@ -32,6 +32,9 @@ export function NewTemplateScreen() {
       const id = await createTemplate(requireUserId(), name, collectionId);
       haptics.success();
       router.replace(`/template/${id}`);
+    } catch (error) {
+      console.warn('Creating the template failed', error);
+      haptics.error();
     } finally {
       setSaving(false);
     }

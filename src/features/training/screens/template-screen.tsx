@@ -85,7 +85,12 @@ export function TemplateScreen() {
     if (!template) return;
     setOptionsOpen(false);
     router.back();
-    await deleteTemplate(template.id);
+    try {
+      await deleteTemplate(template.id);
+    } catch (error) {
+      console.warn('Deleting the template failed', error);
+      haptics.error();
+    }
   };
 
   const header = (

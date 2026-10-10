@@ -7,6 +7,7 @@ import {
   refreshSubscription,
   useSubscriptionStore,
 } from '@/features/paywall/stores/subscription-store';
+import { useImportStore } from '@/features/plan-import/stores/import-store';
 import { clearLocalAttachments } from '@/features/support/data/attachments';
 import { useUploadQueueStore } from '@/features/support/stores/upload-queue-store';
 import { useWorkoutSessionStore } from '@/features/workout/stores/workout-session-store';
@@ -42,6 +43,8 @@ export function useAuthListener() {
         // Body-check photos are just as private; clearLocalPhotos also removes the drafts.
         useBodyCheckStore.getState().clear();
         clearLocalPhotos();
+        // So is a plan import in progress (its photos and the detected plan).
+        useImportStore.getState().reset();
       }
     });
     return () => data.subscription.unsubscribe();

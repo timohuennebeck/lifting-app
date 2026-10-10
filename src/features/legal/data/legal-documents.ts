@@ -66,18 +66,23 @@ const toDocument = (row: LegalDocumentRow): LegalDocument => ({
  * so the links on the sign-up screen work). Null when none has been published.
  */
 async function fetchCurrentDocument(kind: LegalKind, language: string) {
-  const locales = localesFor(language);
-  const { data, error } = await supabase
-    .from('legal_documents')
-    .select(COLUMNS)
-    .eq('kind', kind)
-    .in('locale', locales)
-    .lte('effective_at', new Date().toISOString())
-    .order('effective_at', { ascending: false });
-  if (error) throw error;
-  const rows = data ?? [];
-  const row = locales.map((l) => rows.find((r) => r.locale === l)).find(Boolean);
-  return row ? toDocument(row as LegalDocumentRow) : null;
+  const now = new Date().toISOString();
+  // Only the newest version, one locale at a time: usually the app language already has it, so
+  // older versions and other languages are never downloaded.
+  for (const locale of localesFor(language)) {
+    const { data, error } = await supabase
+      .from('legal_documents')
+      .select(COLUMNS)
+      .eq('kind', kind)
+      .eq('locale', locale)
+      .lte('effective_at', now)
+      .order('effective_at', { ascending: false })
+      .limit(1);
+    if (error) throw error;
+    const row = (data ?? [])[0] as LegalDocumentRow | undefined;
+    if (row) return toDocument(row);
+  }
+  return null;
 }
 
 /** One version of a document in one language, or null when it doesn't exist there. */
