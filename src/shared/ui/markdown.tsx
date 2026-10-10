@@ -123,9 +123,9 @@ function inline(text: string): ReactNode[] {
 }
 
 const HEADING = {
-  1: 'mt-6 text-[24px] leading-7.5',
-  2: 'mt-6 text-[19px] leading-6',
-  3: 'mt-4 text-base leading-5.5',
+  1: { space: 'mt-6', type: 'text-[24px] leading-7.5' },
+  2: { space: 'mt-6', type: 'text-[19px] leading-6' },
+  3: { space: 'mt-4', type: 'text-base leading-5.5' },
 } as const;
 
 /** Text without its inline Markdown: **bold** and *italic* lose their stars, links keep their label. */
@@ -155,7 +155,11 @@ export function MarkdownBlockView({ block }: { block: MarkdownBlock }) {
       return (
         <Text
           accessibilityRole="header"
-          className={cn('font-inter-semibold text-fg', HEADING[block.level])}
+          className={cn(
+            'font-inter-semibold text-fg',
+            HEADING[block.level].space,
+            HEADING[block.level].type,
+          )}
         >
           {inline(block.text)}
         </Text>
@@ -194,5 +198,5 @@ export function MarkdownBlockView({ block }: { block: MarkdownBlock }) {
   }
 }
 
-/** Heading sizes, for pages that draw headings of their own. */
+/** Heading spacing and sizes, for pages that draw headings of their own. */
 export const MARKDOWN_HEADING = HEADING;

@@ -1,28 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { type LayoutChangeEvent, Text as RNText, View } from 'react-native';
+import { type AccessibilityRole, type LayoutChangeEvent, Text as RNText, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { MARKDOWN_HEADING, MarkdownBlockView } from '@/shared/ui/markdown';
-import { Text } from '@/shared/ui/text';
+import { Text, type TextTone, type TextVariant } from '@/shared/ui/text';
 
 import type { DiffBlock, DiffSection, DiffSegment } from '../lib/legal-diff';
-
-/** New words on neon, removed ones struck through in grey. */
-function Segments({ segments }: { segments: DiffSegment[] }) {
-  return segments.map((segment, i) =>
-    segment.change === 'added' ? (
-      <RNText key={i} className="bg-accent text-on-accent">
-        {segment.text}
-      </RNText>
-    ) : segment.change === 'removed' ? (
-      <RNText key={i} className="text-dim line-through">
-        {segment.text}
-      </RNText>
-    ) : (
-      <RNText key={i}>{segment.text}</RNText>
-    ),
-  );
-}
+import { MarkedText } from './marked-text';
 
 /** What a screen reader says for a changed passage: the changes named, not just coloured. */
 function useSpoken() {
@@ -39,23 +23,51 @@ function useSpoken() {
       .join(' ');
 }
 
+interface SegmentTextProps {
+  segments: DiffSegment[];
+  variant?: TextVariant;
+  tone?: TextTone;
+  textClassName?: string;
+  className?: string;
+  accessibilityRole?: AccessibilityRole;
+}
+
+/** Removed words struck through in grey, new ones on rounded neon. */
+function SegmentText({ segments, className, textClassName, ...text }: SegmentTextProps) {
+  const spoken = useSpoken()(segments);
+  if (segments.some((s) => s.change === 'added')) {
+    return (
+      <MarkedText
+        segments={segments}
+        className={className}
+        textClassName={textClassName}
+        accessibilityLabel={spoken}
+        {...text}
+      />
+    );
+  }
+  // Nothing on neon: plain text flows on its own.
+  return (
+    <Text {...text} className={cn(textClassName, className)} accessibilityLabel={spoken}>
+      {segments.map((s, i) => (
+        <RNText key={i} className={s.change === 'removed' ? 'text-dim line-through' : undefined}>
+          {s.text}
+        </RNText>
+      ))}
+    </Text>
+  );
+}
+
 function BlockView({ block }: { block: DiffBlock }) {
-  const spoken = useSpoken();
   switch (block.type) {
     case 'same':
       return <MarkdownBlockView block={block.block} />;
     case 'paragraph':
-      return (
-        <Text variant="paragraph" tone="secondary" accessibilityLabel={spoken(block.segments)}>
-          <Segments segments={block.segments} />
-        </Text>
-      );
+      return <SegmentText segments={block.segments} variant="paragraph" tone="secondary" />;
     case 'quote':
       return (
         <View className="border-l-2 border-accent pl-3">
-          <Text variant="paragraph" tone="muted" accessibilityLabel={spoken(block.segments)}>
-            <Segments segments={block.segments} />
-          </Text>
+          <SegmentText segments={block.segments} variant="paragraph" tone="muted" />
         </View>
       );
     case 'list':
@@ -66,14 +78,12 @@ function BlockView({ block }: { block: DiffBlock }) {
               <Text variant="paragraph" tone="subtle" className="min-w-4">
                 {block.ordered ? `${j + 1}.` : '•'}
               </Text>
-              <Text
+              <SegmentText
+                segments={item}
                 variant="paragraph"
                 tone="secondary"
-                className="flex-1"
-                accessibilityLabel={spoken(item)}
-              >
-                <Segments segments={item} />
-              </Text>
+                className="min-w-0 flex-1"
+              />
             </View>
           ))}
         </View>
@@ -94,32 +104,32 @@ export interface LegalDiffViewProps {
 
 /** The new version with everything changed since the compared one marked, section by section. */
 export function LegalDiffView({ sections, onSectionLayout, className }: LegalDiffViewProps) {
-  const spoken = useSpoken();
   return (
     <View className={cn('gap-3', className)}>
-      {sections.map((section) => (
-        <View
-          key={section.key}
-          className="gap-3"
-          onLayout={(e: LayoutChangeEvent) => onSectionLayout(section.key, e.nativeEvent.layout.y)}
-        >
-          {section.heading ? (
-            <Text
-              accessibilityRole="header"
-              accessibilityLabel={spoken(section.heading)}
-              className={cn(
-                'font-inter-semibold text-fg',
-                MARKDOWN_HEADING[section.level === 3 ? 3 : 2],
-              )}
-            >
-              <Segments segments={section.heading} />
-            </Text>
-          ) : null}
-          {section.blocks.map((block, i) => (
-            <BlockView key={i} block={block} />
-          ))}
-        </View>
-      ))}
+      {sections.map((section) => {
+        const heading = MARKDOWN_HEADING[section.level === 3 ? 3 : 2];
+        return (
+          <View
+            key={section.key}
+            className="gap-3"
+            onLayout={(e: LayoutChangeEvent) =>
+              onSectionLayout(section.key, e.nativeEvent.layout.y)
+            }
+          >
+            {section.heading ? (
+              <SegmentText
+                segments={section.heading}
+                accessibilityRole="header"
+                textClassName={cn('font-inter-semibold text-fg', heading.type)}
+                className={heading.space}
+              />
+            ) : null}
+            {section.blocks.map((block, i) => (
+              <BlockView key={i} block={block} />
+            ))}
+          </View>
+        );
+      })}
     </View>
   );
 }

@@ -91,10 +91,6 @@
       }
     },
     "compare": {
-      "new": "New",
-      "removed": "Removed",
-      "toggle": "Mark changes",
-      "since": "Changes since version {{version}}",
       "a11yNew": "New: {{text}}",
       "a11yRemoved": "Removed: {{text}}"
     }

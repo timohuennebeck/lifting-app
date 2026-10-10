@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,7 +11,6 @@ import { Markdown, parseMarkdown } from '@/shared/ui/markdown';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
-import { ToggleSwitch } from '@/shared/ui/toggle-switch';
 
 import { LegalDiffView } from '../components/legal-diff-view';
 import {
@@ -64,7 +63,6 @@ function LegalDocumentBody({ kind, compareId, section }: LegalDocumentBodyProps)
     () => (doc && previous ? diffLegalDocuments(previous.contentMd, doc.contentMd) : null),
     [doc, previous],
   );
-  const [marked, setMarked] = useState(true);
   const scroll = useRef<ScrollView>(null);
   // The asked-for section is scrolled to once both its place and where the sections start
   // are known (layout reports them in no fixed order).
@@ -75,7 +73,8 @@ function LegalDocumentBody({ kind, compareId, section }: LegalDocumentBodyProps)
     if (scrolled.current || sectionsTop.current == null || sectionY.current == null) return;
     scrolled.current = true;
     scroll.current?.scrollTo({
-      y: Math.max(0, sectionsTop.current + sectionY.current - 16),
+      // Within the gap between sections, so no line of the one before peeks in.
+      y: Math.max(0, sectionsTop.current + sectionY.current - 8),
       animated: false,
     });
   };
@@ -130,29 +129,7 @@ function LegalDocumentBody({ kind, compareId, section }: LegalDocumentBodyProps)
           })}
         </Text>
       </View>
-      {diff && previous ? (
-        <View className="mx-5 mt-4 gap-3 rounded-[22px] bg-surface p-4">
-          <View className="flex-row items-center justify-between gap-3">
-            <Text variant="label" className="min-w-0 flex-1">
-              {t('legal.compare.since', { version: previous.version })}
-            </Text>
-            <ToggleSwitch
-              value={marked}
-              onChange={setMarked}
-              accessibilityLabel={t('legal.compare.toggle')}
-            />
-          </View>
-          <View className="flex-row items-center gap-3">
-            <Text variant="caption" className="rounded-md bg-accent px-1.5 text-on-accent">
-              {t('legal.compare.new')}
-            </Text>
-            <Text variant="caption" tone="subtle" className="line-through">
-              {t('legal.compare.removed')}
-            </Text>
-          </View>
-        </View>
-      ) : null}
-      {diff && marked ? (
+      {diff ? (
         <View
           onLayout={(e) => {
             sectionsTop.current = e.nativeEvent.layout.y;

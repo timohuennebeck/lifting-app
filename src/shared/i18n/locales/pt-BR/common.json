@@ -99,10 +99,6 @@
       }
     },
     "compare": {
-      "new": "Novo",
-      "removed": "Removido",
-      "toggle": "Marcar alterações",
-      "since": "Alterações desde a versão {{version}}",
       "a11yNew": "Novo: {{text}}",
       "a11yRemoved": "Removido: {{text}}"
     }
