@@ -55,7 +55,8 @@
     "exercises": "Exercises",
     "recent": "Recently trained",
     "muscles": "Muscles",
-    "body": "Body"
+    "body": "Body",
+    "recordA11y": "Personal record: {{value}}, last on {{date}}"
   },
   "settings": "Settings",
   "legal": {

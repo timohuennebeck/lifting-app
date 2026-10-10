@@ -15,6 +15,8 @@ import type { MuscleGroupId } from '@/features/exercises/lib/muscle-groups';
 import { isBodyweight } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { formatSet, formatShortDate, type SetValues, type UnitSystem } from '@/shared/lib/format';
+import { colors } from '@/shared/lib/theme';
+import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
@@ -159,8 +161,19 @@ export function ExerciseRecordsList() {
                   </Text>
                 </View>
                 {item.record ? (
-                  <View className="items-end">
-                    <Text variant="label">{formatRecord(item.id, item.record.best, units)}</Text>
+                  <View
+                    className="items-end"
+                    accessible
+                    accessibilityLabel={t('common:progressTab.recordA11y', {
+                      value: formatRecord(item.id, item.record.best, units),
+                      date: formatShortDate(item.record.lastAt),
+                    })}
+                  >
+                    {/* The star marks a personal record, as in the exercise history. */}
+                    <View className="flex-row items-center gap-1.5">
+                      <Icon name="star" size={13} color={colors.accent} />
+                      <Text variant="label">{formatRecord(item.id, item.record.best, units)}</Text>
+                    </View>
                     <Text variant="caption" tone="subtle" className="mt-0.5 font-inter">
                       {formatShortDate(item.record.lastAt)}
                     </Text>

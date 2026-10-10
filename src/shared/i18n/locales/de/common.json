@@ -55,7 +55,8 @@
     "exercises": "Übungen",
     "recent": "Zuletzt trainiert",
     "muscles": "Muskeln",
-    "body": "Körper"
+    "body": "Körper",
+    "recordA11y": "Bestleistung: {{value}}, zuletzt am {{date}}"
   },
   "settings": "Einstellungen",
   "legal": {

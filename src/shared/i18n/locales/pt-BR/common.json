@@ -63,7 +63,8 @@
     "exercises": "Exercícios",
     "recent": "Treinados recentemente",
     "muscles": "Músculos",
-    "body": "Corpo"
+    "body": "Corpo",
+    "recordA11y": "Recorde pessoal: {{value}}, último em {{date}}"
   },
   "settings": "Configurações",
   "legal": {
