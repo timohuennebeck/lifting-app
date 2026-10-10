@@ -2,20 +2,19 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { PagerPage } from '@/shared/components/pager-page';
 import { useProfile } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
 import { Text } from '@/shared/ui/text';
 
-import { FeedbackSheet } from '../components/feedback-sheet';
-import { TicketListRow } from '../components/ticket-list-row';
 import { useTickets } from '../data/tickets';
+import { FeedbackSheet } from './feedback-sheet';
+import { TicketListRow } from './ticket-list-row';
 
 /**
  * Profile, "Feedback": the user's tickets with the team's replies, newest activity first, and a
  * way to report a bug or share an idea. Without tickets it invites the first one.
  */
-export function FeedbackPage() {
+export function FeedbackList() {
   const { t } = useTranslation('support');
   const { profile } = useProfile();
   const { data: tickets = [], isLoading } = useTickets();
@@ -31,7 +30,7 @@ export function FeedbackPage() {
   );
 
   return (
-    <PagerPage>
+    <>
       {tickets.length ? (
         <View className="gap-1 px-5 pt-5">
           {create}
@@ -55,6 +54,6 @@ export function FeedbackPage() {
         </View>
       ) : null}
       <FeedbackSheet visible={sheetOpen} onClose={() => setSheetOpen(false)} />
-    </PagerPage>
+    </>
   );
 }
