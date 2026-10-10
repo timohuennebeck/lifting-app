@@ -10,9 +10,7 @@ import { Text } from './text';
 const VARIANTS = {
   primary: { box: 'bg-accent', text: 'onAccent', icon: colors.onAccent },
   secondary: { box: 'bg-control', text: 'default', icon: colors.fg },
-  outline: { box: 'border border-line bg-transparent', text: 'default', icon: colors.fg },
   ghost: { box: 'bg-transparent', text: 'secondary', icon: colors.fg2 },
-  danger: { box: 'bg-danger-bg', text: 'danger', icon: colors.danger },
 } as const;
 
 const SIZES = {

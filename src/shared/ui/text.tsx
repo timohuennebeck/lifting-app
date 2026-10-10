@@ -4,7 +4,6 @@ import { cn } from '@/shared/lib/cn';
 
 const VARIANTS = {
   display: 'font-inter-semibold text-display',
-  hero: 'font-inter-semibold text-hero uppercase',
   title: 'font-inter-semibold text-title uppercase',
   headline: 'font-inter-semibold text-headline',
   body: 'font-inter text-body',

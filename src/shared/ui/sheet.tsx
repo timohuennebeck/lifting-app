@@ -34,10 +34,6 @@ export interface SheetProps {
   subtitle?: string;
   children: ReactNode;
   className?: string;
-  /** A fixed height such as ['92%']; omit to size the sheet to its content. */
-  snapPoints?: string[];
-  /** Pinned to the bottom of the sheet; rides above the keyboard. */
-  footer?: ReactNode;
 }
 
 /**
@@ -84,8 +80,6 @@ function SheetBody({
   subtitle,
   children,
   className,
-  snapPoints,
-  footer,
 }: MountedSheetProps) {
   const footerInset = useFooterInset();
   const { height: windowHeight } = useWindowDimensions();
@@ -126,8 +120,6 @@ function SheetBody({
     paddingBottom: Math.max(0, -keyboard.get()),
   }));
 
-  const fixed = snapPoints?.[0] ? (parseFloat(snapPoints[0]) / 100) * windowHeight : undefined;
-
   return (
     <GestureHandlerRootView style={StyleSheet.absoluteFill}>
       <Animated.View style={[StyleSheet.absoluteFill, backdropStyle]} className="bg-black">
@@ -137,8 +129,7 @@ function SheetBody({
         onLayout={(e) => sheetHeight.set(e.nativeEvent.layout.height)}
         style={[
           sheetStyle,
-          fixed ? { height: fixed } : { maxHeight: windowHeight * MAX_HEIGHT },
-          { backgroundColor: colors.sheet },
+          { maxHeight: windowHeight * MAX_HEIGHT, backgroundColor: colors.sheet },
         ]}
         className="absolute inset-x-0 bottom-0 rounded-t-[34px]"
       >
@@ -161,16 +152,11 @@ function SheetBody({
           </View>
         </GestureDetector>
         <View
-          className={cn('px-4', !title && 'pt-3', fixed && 'flex-1', className)}
-          style={{ paddingBottom: footer ? 0 : footerInset }}
+          className={cn('px-4', !title && 'pt-3', className)}
+          style={{ paddingBottom: footerInset }}
         >
           {children}
         </View>
-        {footer ? (
-          <View className="px-4 pt-2" style={{ paddingBottom: footerInset }}>
-            {footer}
-          </View>
-        ) : null}
       </Animated.View>
     </GestureHandlerRootView>
   );

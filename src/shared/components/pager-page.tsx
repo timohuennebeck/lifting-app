@@ -1,25 +1,32 @@
 import { type ReactNode, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
+import Animated, { type AnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TabBarInset } from './tab-bar-inset';
 
+export interface PagerPageProps {
+  children: ReactNode;
+  scrollRef?: AnimatedRef<Animated.ScrollView>;
+}
+
 /**
- * One page of a tab with swipeable top tabs (Fortschritt): scrolls on its own and keeps its last
- * rows clear of the native tab bar.
+ * Scrolling body of a tab, below TabScreen's header or as one page of the swipeable top tabs
+ * (Fortschritt): keeps its last rows clear of the native tab bar.
  */
-export function PagerPage({ children }: { children: ReactNode }) {
+export function PagerPage({ children, scrollRef }: PagerPageProps) {
   const insets = useSafeAreaInsets();
   const [tabBarInset, setTabBarInset] = useState(insets.bottom);
   return (
     <View className="flex-1">
-      <ScrollView
+      <Animated.ScrollView
+        ref={scrollRef}
         contentInsetAdjustmentBehavior="never"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 1, paddingBottom: tabBarInset + 24 }}
       >
         {children}
-      </ScrollView>
+      </Animated.ScrollView>
       <TabBarInset onChange={setTabBarInset} />
     </View>
   );

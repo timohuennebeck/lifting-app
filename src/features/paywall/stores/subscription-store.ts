@@ -15,20 +15,18 @@ interface SubscriptionState {
   plan: PlanId | null;
   /** ISO timestamp; set while the purchase started with a free trial. */
   trialEndsAt: string | null;
-  purchasedAt: string | null;
   /** Mirrors what the purchases service reported after a purchase or restore. */
   apply: (info: CustomerInfo) => void;
   reset: () => void;
 }
 
-const empty = { isPro: false, plan: null, trialEndsAt: null, purchasedAt: null };
+const empty = { isPro: false, plan: null, trialEndsAt: null };
 
 export const useSubscriptionStore = create<SubscriptionState>()(
   persist(
     (set) => ({
       ...empty,
-      apply: ({ isPro, plan, trialEndsAt, purchasedAt }) =>
-        set({ isPro, plan, trialEndsAt, purchasedAt }),
+      apply: ({ isPro, plan, trialEndsAt }) => set({ isPro, plan, trialEndsAt }),
       reset: () => set(empty),
     }),
     { name: 'subscription', storage: createJSONStorage(() => mmkvStorage) },

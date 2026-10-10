@@ -1,6 +1,6 @@
 export const MINUTE_MS = 60_000;
 export const HOUR_MS = 60 * MINUTE_MS;
-export const DAY_MS = 86_400_000;
+export const DAY_MS = 24 * HOUR_MS;
 
 /** "Last N days" choices of the Muscles tab and the exercise history. */
 export const DAY_RANGES = [7, 14, 30, 90] as const;

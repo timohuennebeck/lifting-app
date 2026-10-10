@@ -71,11 +71,13 @@ export function SetTable({
     selectedIndex >= 0 ? { index: selectedIndex, values: typedValues(input, units) } : null;
 
   /** A box's text: the keypad buffer while editing, else what the row holds (see rowValues). */
-  const cellValue = (field: Measure, editing: boolean, index: number) => {
-    if (editing) return field === 'weight' ? displayInput(input.weight, separator) : input[field];
-    const value = valueOf(rowValues(exercise, index, logged, typed, drafts), field);
+  const cellValue = (measure: Measure, editing: boolean, index: number) => {
+    if (editing) {
+      return measure === 'weight' ? displayInput(input.weight, separator) : input[measure];
+    }
+    const value = valueOf(rowValues(exercise, index, logged, typed, drafts), measure);
     if (value == null) return '';
-    return field === 'weight' ? formatWeightValue(value, units) : formatNumber(value, 0);
+    return measure === 'weight' ? formatWeightValue(value, units) : formatNumber(value, 0);
   };
 
   return (
@@ -120,9 +122,9 @@ export function SetTable({
               <SetRow
                 number={i + 1}
                 middle={middle}
-                cells={measures.map((field) => ({
-                  field,
-                  value: cellValue(field, selected, i),
+                cells={measures.map((measure) => ({
+                  field: measure,
+                  value: cellValue(measure, selected, i),
                 }))}
                 rir={set.targetRir}
                 done={done}

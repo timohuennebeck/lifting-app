@@ -3,7 +3,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { isOnboardedAfterSync } from '@/features/onboarding/lib/persist-onboarding';
+import {
+  adoptSignUpName,
+  isOnboardedAfterSync,
+} from '@/features/onboarding/lib/persist-onboarding';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { supabase } from '@/shared/data/supabase';
 import { haptics } from '@/shared/lib/haptics';
@@ -54,10 +57,7 @@ export function SignInScreen() {
         store.complete();
         return;
       }
-      const metaName = data.user.user_metadata?.first_name;
-      if (!store.draft.firstName && typeof metaName === 'string') {
-        store.update({ firstName: metaName });
-      }
+      adoptSignUpName(data.user);
       setPhase('idle');
       // The user went back while syncing; replacing now would replace the screen they're on.
       if (!navigation.isFocused()) return;

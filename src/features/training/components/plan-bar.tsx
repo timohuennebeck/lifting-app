@@ -10,13 +10,7 @@ import { Text } from '@/shared/ui/text';
 
 /** A strip entry; `review` adds the plan import's amber dot. */
 export interface PlanBarItem {
-  /** Unique per slot. */
-  key: string;
-  id: string;
   name: string;
-  /** 1-based slot in the strip. */
-  number: number;
-  done?: boolean;
   review?: boolean;
 }
 
@@ -24,18 +18,17 @@ const SLOT = 52;
 
 export interface PlanBarProps {
   items: PlanBarItem[];
-  currentId: string;
-  onSelect: (templateId: string) => void;
+  currentIndex: number;
+  onSelect: (index: number) => void;
   onAdd: () => void;
 }
 
-/** Plan strip of the collection's trainings, done ones checked (03·0b). */
-export function PlanBar({ items, currentId, onSelect, onAdd }: PlanBarProps) {
+/** Plan strip of the plan's days, numbered, with a "+" to add a day (03·0b). */
+export function PlanBar({ items, currentIndex, onSelect, onAdd }: PlanBarProps) {
   const { t } = useTranslation('training');
-  const currentIndex = items.findLastIndex((item) => item.id === currentId);
   const { width } = useWindowDimensions();
   const scroller = useRef<ScrollView>(null);
-  // After a finished cycle the strip is twice as long; keep the current slot in view.
+  // Keep the current slot in view.
   const offset = Math.max(0, SLOT * (currentIndex + 2) - width);
   useEffect(() => {
     scroller.current?.scrollTo({ x: offset, animated: true });
@@ -51,16 +44,15 @@ export function PlanBar({ items, currentId, onSelect, onAdd }: PlanBarProps) {
       contentContainerClassName="px-3.5 pt-3.5 pb-4"
     >
       {items.map((item, index) => {
-        // A template can show twice (last cycle + this one); highlight the later slot.
         const current = index === currentIndex;
         return (
           <PressableScale
-            key={item.key}
+            key={index}
             haptic="select"
             accessibilityRole="tab"
             accessibilityState={{ selected: current }}
             accessibilityLabel={item.name}
-            onPress={() => onSelect(item.id)}
+            onPress={() => onSelect(index)}
             className="items-center gap-2 px-0.5"
             style={{ width: SLOT }}
           >
@@ -71,12 +63,7 @@ export function PlanBar({ items, currentId, onSelect, onAdd }: PlanBarProps) {
             >
               {item.name}
             </Text>
-            <PlanSlot
-              number={item.number}
-              done={!!item.done}
-              selected={current}
-              review={item.review}
-            />
+            <PlanSlot number={index + 1} done={false} selected={current} review={item.review} />
           </PressableScale>
         );
       })}

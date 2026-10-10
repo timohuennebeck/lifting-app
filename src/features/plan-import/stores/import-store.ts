@@ -25,7 +25,6 @@ interface ImportState {
   editPlan: (edit: (plan: ImportedPlan) => ImportedPlan) => void;
   selectDay: (index: number) => void;
   nextVoiceTake: () => void;
-  reset: () => void;
 }
 
 const NO_PHOTOS: ImportPhoto[] = [];
@@ -61,7 +60,6 @@ export const useImportStore = create<ImportState>()((set) => ({
   editPlan: (edit) => set((s) => (s.plan ? { plan: edit(s.plan) } : {})),
   selectDay: (dayIndex) => set({ dayIndex }),
   nextVoiceTake: () => set((s) => ({ voiceTake: s.voiceTake + 1 })),
-  reset: () => set({ source: null, plan: null, dayIndex: 0, voiceTake: 0 }),
 }));
 
 export const usePhotos = () => useImportStore((s) => photosOf(s.source));

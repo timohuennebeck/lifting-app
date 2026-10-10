@@ -6,7 +6,6 @@ import { signedUrl, uploadJpeg } from '@/shared/data/supabase-storage';
 import { supportKeys } from './support-keys';
 
 export const ATTACHMENT_BUCKET = 'ticket-attachments';
-const BUCKET = ATTACHMENT_BUCKET;
 const URL_TTL_SECONDS = 60 * 60;
 // Refresh signed URLs five minutes before they expire.
 const URL_FRESH_MS = (URL_TTL_SECONDS - 5 * 60) * 1000;
@@ -17,12 +16,12 @@ export const attachmentPath = (userId: string, ticketId: string, fileId: string)
 
 /** Device copy of a screenshot, kept under its bucket path for offline sending and display. */
 export const localAttachment = (path: string) =>
-  new File(Paths.document, BUCKET, ...path.split('/'));
+  new File(Paths.document, ATTACHMENT_BUCKET, ...path.split('/'));
 
 /** Copies a compressed screenshot to its permanent local place before the message is saved. */
 export function keepLocalCopy(path: string, sourceUri: string) {
   const parts = path.split('/');
-  new Directory(Paths.document, BUCKET, ...parts.slice(0, -1)).create({
+  new Directory(Paths.document, ATTACHMENT_BUCKET, ...parts.slice(0, -1)).create({
     intermediates: true,
     idempotent: true,
   });
@@ -31,12 +30,13 @@ export function keepLocalCopy(path: string, sourceUri: string) {
 
 /** Removes every local screenshot copy, e.g. when the account signs out. */
 export function clearLocalAttachments() {
-  const root = new Directory(Paths.document, BUCKET);
+  const root = new Directory(Paths.document, ATTACHMENT_BUCKET);
   if (root.exists) root.delete();
 }
 
 /** Uploads the local copy; retrying the same path overwrites a partial upload. */
-export const uploadAttachment = (path: string) => uploadJpeg(BUCKET, path, localAttachment(path));
+export const uploadAttachment = (path: string) =>
+  uploadJpeg(ATTACHMENT_BUCKET, path, localAttachment(path));
 
 /** Local copy when this device sent it, otherwise a cached signed URL. */
 export function useAttachmentUrl(path: string) {
@@ -44,7 +44,7 @@ export function useAttachmentUrl(path: string) {
     queryKey: supportKeys.attachmentUrl(path).queryKey,
     queryFn: async () => {
       const local = localAttachment(path);
-      return local.exists ? local.uri : signedUrl(BUCKET, path, URL_TTL_SECONDS);
+      return local.exists ? local.uri : signedUrl(ATTACHMENT_BUCKET, path, URL_TTL_SECONDS);
     },
     staleTime: URL_FRESH_MS,
     gcTime: URL_FRESH_MS,

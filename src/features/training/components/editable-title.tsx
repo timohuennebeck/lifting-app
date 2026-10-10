@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TextInput } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
@@ -7,17 +8,11 @@ export interface EditableTitleProps {
   value: string;
   /** Called with the trimmed new name when editing ends with a change. */
   onSubmit: (name: string) => void;
-  accessibilityLabel: string;
-  maxLength?: number;
 }
 
 /** A page title that turns into a text field when tapped (rename in place). */
-export function EditableTitle({
-  value,
-  onSubmit,
-  accessibilityLabel,
-  maxLength = 40,
-}: EditableTitleProps) {
+export function EditableTitle({ value, onSubmit }: EditableTitleProps) {
+  const { t } = useTranslation('training');
   // The text being typed; null while not editing, so outside renames show up.
   const [draft, setDraft] = useState<string | null>(null);
   // A submitted name shows until the saved one replaces the old value.
@@ -39,8 +34,8 @@ export function EditableTitle({
       onChangeText={(text) => setDraft(text.replace(/\n/g, ''))}
       onFocus={() => setDraft(value)}
       onBlur={finish}
-      accessibilityLabel={accessibilityLabel}
-      maxLength={maxLength}
+      accessibilityLabel={t('options.rename')}
+      maxLength={40}
       multiline
       scrollEnabled={false}
       submitBehavior="blurAndSubmit"

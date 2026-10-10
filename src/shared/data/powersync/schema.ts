@@ -222,33 +222,34 @@ export const legalAcceptances = sqliteTable('legal_acceptances', {
   platform: text(),
 });
 
-// Relations power nested reads such as `drizzle.query.templates.findMany({ with: … })`.
-export const templatesRelations = relations(templates, ({ many }) => ({
+// Relations power nested reads such as `drizzle.query.templates.findMany({ with: … })`; Drizzle
+// finds them through `drizzleSchema`. Each `many` needs the `one` pointing back.
+const templatesRelations = relations(templates, ({ many }) => ({
   exercises: many(templateExercises),
 }));
 
-export const templateExercisesRelations = relations(templateExercises, ({ one, many }) => ({
+const templateExercisesRelations = relations(templateExercises, ({ one, many }) => ({
   template: one(templates, { fields: [templateExercises.template_id], references: [templates.id] }),
   sets: many(templateSets),
 }));
 
-export const templateSetsRelations = relations(templateSets, ({ one }) => ({
+const templateSetsRelations = relations(templateSets, ({ one }) => ({
   exercise: one(templateExercises, {
     fields: [templateSets.template_exercise_id],
     references: [templateExercises.id],
   }),
 }));
 
-export const workoutsRelations = relations(workouts, ({ many }) => ({
+const workoutsRelations = relations(workouts, ({ many }) => ({
   exercises: many(workoutExercises),
 }));
 
-export const workoutExercisesRelations = relations(workoutExercises, ({ one, many }) => ({
+const workoutExercisesRelations = relations(workoutExercises, ({ one, many }) => ({
   workout: one(workouts, { fields: [workoutExercises.workout_id], references: [workouts.id] }),
   sets: many(workoutSets),
 }));
 
-export const workoutSetsRelations = relations(workoutSets, ({ one }) => ({
+const workoutSetsRelations = relations(workoutSets, ({ one }) => ({
   exercise: one(workoutExercises, {
     fields: [workoutSets.workout_exercise_id],
     references: [workoutExercises.id],

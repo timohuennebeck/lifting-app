@@ -27,7 +27,6 @@ export function PressableScale({
   onPressOut,
   onPress,
   style,
-  disabled,
   ...props
 }: PressableScaleProps) {
   // 0 at rest, 1 while pressed. Timed both ways: a spring here overshoots and looks bouncy.
@@ -39,7 +38,6 @@ export function PressableScale({
   return (
     <AnimatedPressable
       accessibilityRole="button"
-      disabled={disabled}
       onPressIn={(e) => {
         pressed.set(withTiming(1, { duration: 90, easing: Easing.out(Easing.quad) }));
         onPressIn?.(e);

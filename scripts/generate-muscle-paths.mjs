@@ -1,5 +1,5 @@
 // Converts the design's muscle SVGs into a typed path table for react-native-svg.
-// Usage: node scripts/generate-muscle-paths.mjs
+// Usage: node scripts/generate-muscle-paths.mjs, then run prettier on the written file.
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -12,7 +12,8 @@ const attr = (tag, name) => new RegExp(`${name}="([^"]*)"`).exec(tag)?.[1];
 // Same rule as design/muscle-map.js: unlabelled "fx" shapes become knees, hands or feet by height.
 function jointFor(front, d) {
   const y = Number(/M\s*[\d.]+[\s,]+([\d.]+)/.exec(d)?.[1]);
-  if (front) return y > 990 && y < 1070 ? 'knees' : y > 690 && y < 830 ? 'hands' : y > 1190 ? 'feet' : null;
+  if (front)
+    return y > 990 && y < 1070 ? 'knees' : y > 690 && y < 830 ? 'hands' : y > 1190 ? 'feet' : null;
   return y > 700 && y < 830 ? 'hands' : y > 1300 ? 'feet' : null;
 }
 

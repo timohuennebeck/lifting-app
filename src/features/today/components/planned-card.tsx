@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
@@ -37,7 +37,7 @@ export function PlannedCard({
   const [busy, setBusy] = useState(false);
   const { start, startingId } = useStartTemplate();
   const starting = startingId === template.id;
-  const shares = useMemo(() => muscleShares(template.items), [template.items]);
+  const shares = muscleShares(template.items);
   const isFuture = startOfDay(date) > startOfDay(today);
   const label = isSameDay(date, today)
     ? t('status.plannedToday')

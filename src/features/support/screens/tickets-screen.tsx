@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { FlatList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useProfile } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
@@ -18,7 +17,6 @@ import { useTickets } from '../data/tickets';
 export function TicketsScreen() {
   const { t } = useTranslation('support');
   const insets = useSafeAreaInsets();
-  const { profile } = useProfile();
   const { data: tickets = [], isLoading } = useTickets();
   const [sheetOpen, setSheetOpen] = useState(false);
   const openSheet = () => setSheetOpen(true);
@@ -42,9 +40,7 @@ export function TicketsScreen() {
       <FlatList
         data={tickets}
         keyExtractor={(ticket) => ticket.id}
-        renderItem={({ item }) => (
-          <TicketListRow ticket={item} userName={profile?.firstName ?? ''} />
-        )}
+        renderItem={({ item }) => <TicketListRow ticket={item} />}
         showsVerticalScrollIndicator={false}
         contentContainerClassName="px-5 pt-3.5"
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}

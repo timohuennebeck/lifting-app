@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import Svg, { G, Path } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
@@ -52,31 +52,29 @@ export const MuscleMap = memo(function MuscleMap({
       viewBox={viewBox ?? art.viewBox}
       preserveAspectRatio={fit === 'cover' ? 'xMidYMid slice' : 'xMidYMid meet'}
     >
-      <G>
-        {art.paths.map((p, i) => {
-          const on = p.muscle !== null && active.has(p.muscle);
-          const helps = p.muscle !== null && helping.has(p.muscle);
-          const muscle = p.muscle;
-          const tappable = !!onToggle && !!muscle && (!isSelectable || isSelectable(muscle));
-          return (
-            <Path
-              key={i}
-              d={p.d}
-              fill={on ? accent : helps ? colors.fg2 : FILL[p.kind]}
-              stroke={p.kind === 'sil' ? '#2C2C2C' : undefined}
-              strokeWidth={p.kind === 'sil' ? 2 : undefined}
-              onPress={
-                tappable
-                  ? () => {
-                      haptics.select();
-                      onToggle(muscle);
-                    }
-                  : undefined
-              }
-            />
-          );
-        })}
-      </G>
+      {art.paths.map((p, i) => {
+        const muscle = p.muscle;
+        const on = muscle !== null && active.has(muscle);
+        const helps = muscle !== null && helping.has(muscle);
+        const tappable = !!onToggle && !!muscle && (!isSelectable || isSelectable(muscle));
+        return (
+          <Path
+            key={i}
+            d={p.d}
+            fill={on ? accent : helps ? colors.fg2 : FILL[p.kind]}
+            stroke={p.kind === 'sil' ? '#2C2C2C' : undefined}
+            strokeWidth={p.kind === 'sil' ? 2 : undefined}
+            onPress={
+              tappable
+                ? () => {
+                    haptics.select();
+                    onToggle(muscle);
+                  }
+                : undefined
+            }
+          />
+        );
+      })}
     </Svg>
   );
 });

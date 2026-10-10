@@ -12,7 +12,7 @@ import { TrialTimeline } from '../components/trial-timeline';
 import { useOffering } from '../hooks/use-offering';
 import { parsePlanId, usePaywallFlow } from '../hooks/use-paywall-flow';
 import { usePurchase } from '../hooks/use-purchases';
-import { formatPrice, TRIAL_DAYS } from '../lib/purchases-service';
+import { TRIAL_DAYS } from '../lib/purchases-service';
 
 /** The reminder goes out this many days before billing starts. */
 const REMINDER_DAYS_BEFORE = 2;
@@ -22,14 +22,11 @@ export function TrialScreen() {
   const { t } = useTranslation(['paywall', 'common']);
   const flow = usePaywallFlow();
   const planId = parsePlanId(useLocalSearchParams<{ plan?: string }>().plan);
-  const { offering, plan, isError, isFetching, refetch } = useOffering();
-  // Only a missing offering blocks buying; a failed background refresh keeps the cache.
-  const failed = !offering && isError;
+  const { offering, plan, priceOf, failed, loading, refetch } = useOffering();
   const { buy, busy } = usePurchase();
 
-  const selected = plan(planId);
-  const period = selected?.period ?? (planId === 'monthly' ? 'month' : 'day');
-  const price = selected && offering ? formatPrice(selected.price, offering.currency) : null;
+  const period = plan(planId)?.period ?? (planId === 'monthly' ? 'month' : 'day');
+  const price = priceOf(planId);
   const days = offering?.trialDays ?? TRIAL_DAYS;
 
   const start = async () => {
@@ -43,7 +40,7 @@ export function TrialScreen() {
         <View className="gap-2.5">
           <Button
             label={failed ? t('common:actions.retry') : t('trial.cta')}
-            loading={busy || (!offering && (!isError || isFetching))}
+            loading={busy || loading}
             onPress={failed ? () => refetch() : start}
           />
           <Text variant="caption" tone="subtle" className="text-center font-inter text-xs">

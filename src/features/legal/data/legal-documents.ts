@@ -65,7 +65,7 @@ const toDocument = (row: LegalDocumentRow): LegalDocument => ({
  * The version of a document in effect now, from `public.legal_documents` (readable logged out,
  * so the links on the sign-up screen work). Null when none has been published.
  */
-export async function fetchCurrentDocument(kind: LegalKind, language: string) {
+async function fetchCurrentDocument(kind: LegalKind, language: string) {
   const locales = localesFor(language);
   const { data, error } = await supabase
     .from('legal_documents')

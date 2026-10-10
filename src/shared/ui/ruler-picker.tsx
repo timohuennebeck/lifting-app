@@ -129,11 +129,11 @@ export function RulerPicker({
         color={colors.accent}
         radius={1.5}
         className="absolute"
-        style={[
+        style={
           vertical
             ? { right: 0, top: extent / 2 - TICK / 2, height: TICK, width: 96 }
-            : { bottom: 0, left: extent / 2 - TICK / 2, width: TICK, height: 96 },
-        ]}
+            : { bottom: 0, left: extent / 2 - TICK / 2, width: TICK, height: 96 }
+        }
       />
       <Gradient from={vertical ? 'top' : 'left'} stops={EDGE_FADE} />
     </View>

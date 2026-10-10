@@ -13,7 +13,6 @@ import {
   useTemplateDetail,
 } from '@/shared/data/templates';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
-import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
@@ -25,6 +24,7 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
+import { ExerciseListHeader } from '../components/exercise-list-header';
 import { type ExerciseMenuAction, ExerciseMenuSheet } from '../components/exercise-menu-sheet';
 import { TemplateExerciseCard } from '../components/template-exercise-card';
 import { TemplateOptionsSheet } from '../components/template-options-sheet';
@@ -127,26 +127,12 @@ export function TemplateScreen() {
       >
         <WorkedMuscles title={template.name} items={items} />
 
-        <View className={cn('flex-row items-center gap-3 px-5', empty ? 'pt-9' : 'pt-7.5')}>
-          <View className="min-w-0 flex-1">
-            <Text variant="headline">
-              {empty
-                ? t('overview.noExercises')
-                : t('overview.exercises', { count: exercises.length })}
-            </Text>
-            <Text variant="paragraph" tone="subtle" className="mt-1.5 text-sm leading-4.5">
-              {t('overview.duration', { minutes })}
-            </Text>
-          </View>
-          <IconButton
-            icon="plus"
-            size={empty ? 56 : 44}
-            iconSize={empty ? 18 : 14}
-            accessibilityLabel={t('overview.addExercise')}
-            className="bg-raised"
-            onPress={() => openPicker({ mode: 'add' })}
-          />
-        </View>
+        <ExerciseListHeader
+          count={exercises.length}
+          minutes={minutes}
+          addLabel={t('overview.addExercise')}
+          onAdd={() => openPicker({ mode: 'add' })}
+        />
 
         <View className="px-5 pt-2">
           {empty ? (

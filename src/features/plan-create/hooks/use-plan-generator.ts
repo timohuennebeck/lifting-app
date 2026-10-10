@@ -33,9 +33,8 @@ export function usePlanGenerator() {
     string
   >;
 
-  function generate(overrides: Partial<GeneratePlanInput> = {}, name = suggestions[0]) {
-    return generatePlan({ ...input, ...overrides }, { name, days });
-  }
+  /** The plan for the current answers, named after the generated split. */
+  const generate = () => generatePlan(input, { name: suggestions[0], days });
 
-  return { input, split, suggestions, generate };
+  return { input, suggestions, generate };
 }

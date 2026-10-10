@@ -40,7 +40,7 @@ export interface ExerciseHistoryPanelProps {
 }
 
 /**
- * An exercise's history: top-weight chart over 7–90 days and the sessions by month (designs
+ * An exercise's history: best-set chart over 7–90 days and the sessions by month (designs
  * 03·C·2H·V5/V5H). Shown in the "History" tab of the exercise info.
  */
 export function ExerciseHistoryPanel({ exerciseId }: ExerciseHistoryPanelProps) {

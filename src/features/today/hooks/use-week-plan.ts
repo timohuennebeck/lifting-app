@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { useProfile } from '@/shared/data/profile';
 import { type TemplateSummary, useTemplates } from '@/shared/data/templates';
 import { type WorkoutSummary, useWorkoutsInRange } from '@/shared/data/workouts';
@@ -20,28 +18,22 @@ export function useWeekPlan(today: Date) {
   const toIso = addDays(monday, 7).toISOString();
   const { profile } = useProfile();
   const { data: workouts } = useWorkoutsInRange(fromIso, toIso);
-  const { data: templates } = useTemplates();
+  const { data: templates = [] } = useTemplates();
 
-  const planTemplates = useMemo(() => {
-    const all = templates ?? [];
-    // Fall back to the first collection when no plan is marked active.
-    // Templates without a collection sort first (NULL position), so skip them here.
-    const collectionId =
-      profile?.activeCollectionId ?? all.find((t) => t.collectionId)?.collectionId ?? null;
-    return all.filter((t) => t.collectionId === collectionId && t.weekday !== null);
-  }, [templates, profile?.activeCollectionId]);
-
-  const days = useMemo<WeekDay[]>(
-    () =>
-      Array.from({ length: 7 }, (_, i) => {
-        const date = addDays(new Date(fromIso), i);
-        const workout =
-          (workouts ?? []).find((w) => mondayIndex(new Date(w.startedAt)) === i) ?? null;
-        const planned = planTemplates.find((t) => t.weekday === i) ?? null;
-        return { date, workout, planned };
-      }),
-    [fromIso, workouts, planTemplates],
+  // Fall back to the first collection when no plan is marked active.
+  // Templates without a collection sort first (NULL position), so skip them here.
+  const collectionId =
+    profile?.activeCollectionId ?? templates.find((t) => t.collectionId)?.collectionId ?? null;
+  const planTemplates = templates.filter(
+    (t) => t.collectionId === collectionId && t.weekday !== null,
   );
+
+  const days = Array.from({ length: 7 }, (_, i): WeekDay => {
+    const date = addDays(new Date(fromIso), i);
+    const workout = (workouts ?? []).find((w) => mondayIndex(new Date(w.startedAt)) === i) ?? null;
+    const planned = planTemplates.find((t) => t.weekday === i) ?? null;
+    return { date, workout, planned };
+  });
 
   return { days, planTemplates };
 }

@@ -24,7 +24,7 @@ export interface RadioListSheetProps<T extends string> {
   onSelect: (value: T) => void;
 }
 
-/** Sheet with one radio row per option (language, units); a tap applies it. */
+/** Sheet with one radio row per option (the app language); a tap applies it. */
 export function RadioListSheet<T extends string>({
   visible,
   onClose,

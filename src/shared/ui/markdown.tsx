@@ -122,7 +122,8 @@ function inline(text: string): ReactNode[] {
   return out;
 }
 
-const HEADING = {
+/** Heading spacing and sizes, also for pages that draw headings of their own. */
+export const MARKDOWN_HEADING = {
   1: { space: 'mt-6', type: 'text-[24px] leading-7.5' },
   2: { space: 'mt-6', type: 'text-[19px] leading-6' },
   3: { space: 'mt-4', type: 'text-base leading-5.5' },
@@ -157,8 +158,8 @@ export function MarkdownBlockView({ block }: { block: MarkdownBlock }) {
           accessibilityRole="header"
           className={cn(
             'font-inter-semibold text-fg',
-            HEADING[block.level].space,
-            HEADING[block.level].type,
+            MARKDOWN_HEADING[block.level].space,
+            MARKDOWN_HEADING[block.level].type,
           )}
         >
           {inline(block.text)}
@@ -197,6 +198,3 @@ export function MarkdownBlockView({ block }: { block: MarkdownBlock }) {
       return <View className="my-2 h-px bg-white/8" />;
   }
 }
-
-/** Heading spacing and sizes, for pages that draw headings of their own. */
-export const MARKDOWN_HEADING = HEADING;

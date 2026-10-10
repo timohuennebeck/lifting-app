@@ -12,11 +12,10 @@ import { TicketPills } from './ticket-pills';
 
 export interface TicketListRowProps {
   ticket: TicketSummary;
-  userName: string;
 }
 
 /** Row of "My tickets": the user's avatar with the team badge, subject and latest reply (01f-2). */
-export function TicketListRow({ ticket, userName }: TicketListRowProps) {
+export function TicketListRow({ ticket }: TicketListRowProps) {
   const { unread, when, preview, open } = useTicketRow(ticket);
   return (
     <PressableScale className="flex-row items-center gap-3 py-3" onPress={open}>

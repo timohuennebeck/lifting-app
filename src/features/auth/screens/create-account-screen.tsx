@@ -74,9 +74,9 @@ export function CreateAccountScreen() {
       // Creating the account accepts the documents linked below the button: the versions in
       // effect now, loaded first so that no account exists without a record of them.
       const documents = await fetchCurrentDocuments(i18n.language);
+      const { draft } = useOnboardingStore.getState();
       let userId = session?.user.id;
       if (!userId) {
-        const { draft } = useOnboardingStore.getState();
         const { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
@@ -87,7 +87,6 @@ export function CreateAccountScreen() {
         if (!data.session) return fail('confirmEmail');
         userId = data.session.user.id;
       }
-      const { draft } = useOnboardingStore.getState();
       await persistOnboarding(userId, draft);
       await acceptDocuments(userId, documents);
       haptics.success();

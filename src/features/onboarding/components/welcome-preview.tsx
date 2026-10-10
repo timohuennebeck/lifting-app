@@ -43,18 +43,15 @@ interface PreviewExerciseProps {
 function PreviewExercise({ id, reps, rir, last }: PreviewExerciseProps) {
   const { t: tm, i18n } = useTranslation('muscles');
   const exercise = getExercise(id);
+  const name = exerciseName(id, i18n.language);
   const muscles = Object.entries(exercise?.muscles ?? {}) as [MuscleId, number][];
   return (
     <View className={cn('flex-row gap-3.5 py-4.5', !last && 'border-b border-raised')}>
-      <ExerciseThumb
-        exerciseId={id}
-        name={exerciseName(id, i18n.language)}
-        className="h-21.5 w-16"
-      />
+      <ExerciseThumb exerciseId={id} name={name} className="h-21.5 w-16" />
       <View className="min-w-0 flex-1 gap-2.5">
         <View className="flex-row items-start gap-2.5">
           <Text variant="label" className="flex-1 pt-1.25 text-base leading-5">
-            {exerciseName(id, i18n.language)}
+            {name}
           </Text>
           <View className="size-8 items-center justify-center">
             <Icon name="more" size={16} color={colors.fgSoft} />

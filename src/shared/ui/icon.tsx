@@ -201,16 +201,6 @@ const ICONS = {
       </>
     ),
   },
-  chart: {
-    viewBox: '0 0 14 14',
-    render: (c) => (
-      <>
-        <Rect x={1} y={6} width={3} height={7} rx={1} fill={c} />
-        <Rect x={5.5} y={1} width={3} height={12} rx={1} fill={c} />
-        <Rect x={10} y={4} width={3} height={9} rx={1} fill={c} />
-      </>
-    ),
-  },
   info: {
     viewBox: '0 0 14 14',
     render: (c) => (
@@ -322,10 +312,6 @@ const ICONS = {
         <Circle cx={2} cy={16} r={2} fill={c} />
       </>
     ),
-  },
-  trash: {
-    viewBox: '0 0 16 18',
-    render: stroke('M1.5 4h13M6 4V2h4v2M3 4l1 12h8l1-12M6.5 7.5v5M9.5 7.5v5', 1.6),
   },
   pencil: { viewBox: '0 0 16 16', render: stroke('M11 2l3 3-8.5 8.5L2 14l.5-3.5z', 1.6) },
   bolt: {

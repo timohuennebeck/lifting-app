@@ -66,10 +66,6 @@ export async function addWorkoutSet(userId: string, workoutExerciseId: string) {
   });
 }
 
-export async function removeWorkoutSet(setId: string) {
-  await drizzle.delete(workoutSets).where(eq(workoutSets.id, setId));
-}
-
 /** Keeps values typed into an open set without logging it (the keypad closed before the check). */
 export async function saveOpenSetValues(setId: string, values: Partial<SetValues>) {
   await drizzle

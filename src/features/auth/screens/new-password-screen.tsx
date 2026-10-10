@@ -3,7 +3,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { isOnboardedAfterSync } from '@/features/onboarding/lib/persist-onboarding';
+import {
+  adoptSignUpName,
+  isOnboardedAfterSync,
+} from '@/features/onboarding/lib/persist-onboarding';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { supabase } from '@/shared/data/supabase';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
@@ -48,10 +51,7 @@ export function NewPasswordScreen() {
         store.complete();
         return;
       }
-      const metaName = data.user.user_metadata?.first_name;
-      if (!store.draft.firstName && typeof metaName === 'string') {
-        store.update({ firstName: metaName });
-      }
+      adoptSignUpName(data.user);
       router.replace('/name');
     } catch {
       haptics.error();

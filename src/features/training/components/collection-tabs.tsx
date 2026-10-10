@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
@@ -19,21 +20,14 @@ export interface CollectionTabsProps {
   onSelect: (key: string) => void;
   /** Holding a collection: its "⋯" options. */
   onOptions: (key: string) => void;
-  /** What a screen reader offers instead of the hold, e.g. "Optionen für Push Pull Legs". */
-  optionsLabel: (name: string) => string;
 }
 
 /**
  * Horizontally scrolling collection pills with template counts (01·V·A); holding one opens its
  * options.
  */
-export function CollectionTabs({
-  tabs,
-  selected,
-  onSelect,
-  onOptions,
-  optionsLabel,
-}: CollectionTabsProps) {
+export function CollectionTabs({ tabs, selected, onSelect, onOptions }: CollectionTabsProps) {
+  const { t } = useTranslation('training');
   return (
     <ScrollView
       horizontal
@@ -60,8 +54,11 @@ export function CollectionTabs({
                   }
                 : undefined
             }
+            // What a screen reader offers instead of the hold, e.g. "Optionen für Push Pull Legs".
             accessibilityActions={
-              tab.editable ? [{ name: 'longpress', label: optionsLabel(tab.name) }] : undefined
+              tab.editable
+                ? [{ name: 'longpress', label: t('collections.moreA11y', { name: tab.name }) }]
+                : undefined
             }
             onAccessibilityAction={(e) => {
               if (e.nativeEvent.actionName === 'longpress') onOptions(tab.key);

@@ -96,14 +96,12 @@ export function TrainingScreen() {
     <TabScreen
       scrollRef={scrollRef}
       headerActions={
-        <>
-          <IconButton
-            icon="plus"
-            iconSize={14}
-            accessibilityLabel={t('header.create')}
-            onPress={() => setCreateOpen(true)}
-          />
-        </>
+        <IconButton
+          icon="plus"
+          iconSize={14}
+          accessibilityLabel={t('header.create')}
+          onPress={() => setCreateOpen(true)}
+        />
       }
     >
       <Text variant="title" className="px-5 pt-8 normal-case">
@@ -115,7 +113,6 @@ export function TrainingScreen() {
           selected={selected}
           onSelect={setSelectedKey}
           onOptions={(key) => setCollectionOptions(collections.find((c) => c.id === key) ?? null)}
-          optionsLabel={(name) => t('collections.moreA11y', { name })}
         />
       ) : null}
       <View className="px-4 pt-3">

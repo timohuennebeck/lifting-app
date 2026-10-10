@@ -35,8 +35,6 @@ import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
-type SheetKind = 'menu';
-
 const SWIPE_DISTANCE = 70;
 const SWIPE_VELOCITY = 600;
 const SLIDE = { duration: 200, easing: Easing.out(Easing.cubic) };
@@ -51,7 +49,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   const { t, i18n } = useTranslation(['workout', 'common']);
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
-  const [sheet, setSheet] = useState<SheetKind | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const live = useLiveWorkout(workout);
   const { abandon, finish, finishing } = useWorkoutActions(workout.id);
   const field = useWorkoutSessionStore((s) => s.field);
@@ -177,7 +175,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
           <WorkoutTopBar
             startedAt={workout.startedAt}
             restSeconds={restSecondsFor(exercise.exerciseId, exercise.restSeconds)}
-            onClose={() => setSheet('menu')}
+            onClose={() => setMenuOpen(true)}
           />
           {/* Pinned: the strip stays put while the sets scroll. */}
           <ExerciseStrip
@@ -258,13 +256,13 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
         <EmptyWorkout
           name={workout.name}
           onBack={abandon}
-          onMenu={() => setSheet('menu')}
+          onMenu={() => setMenuOpen(true)}
           onAdd={() => openPicker('add')}
         />
       )}
       <WorkoutMenuSheet
-        visible={sheet === 'menu'}
-        onClose={() => setSheet(null)}
+        visible={menuOpen}
+        onClose={() => setMenuOpen(false)}
         workoutId={workout.id}
         name={workout.name}
         doneSets={live.doneSets}

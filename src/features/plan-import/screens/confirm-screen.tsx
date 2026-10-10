@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { EditableTitle } from '@/features/training/components/editable-title';
+import { ExerciseListHeader } from '@/features/training/components/exercise-list-header';
 import {
   type ExerciseMenuAction,
   ExerciseMenuSheet,
@@ -15,7 +16,6 @@ import { TemplateExerciseCard } from '@/features/training/components/template-ex
 import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
 import { estimateMinutes } from '@/shared/data/templates';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
-import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
@@ -65,7 +65,7 @@ export function ConfirmScreen() {
     sets: e.sets.length,
     restSeconds: e.restSeconds ?? null,
   }));
-  const weekdays = t('common:weekdays.long', { returnObjects: true }) as string[];
+  const weekdays = t('common:weekdays.long', { returnObjects: true });
   const empty = exercises.length === 0;
 
   function editDay(edit: (day: ImportedDay) => ImportedDay) {
@@ -144,24 +144,14 @@ export function ConfirmScreen() {
         contentContainerStyle={{ paddingBottom: insets.bottom + 130 }}
       >
         <PlanBar
-          items={plan.days.map((d, i) => ({
-            key: String(i),
-            id: String(i),
-            name: d.name,
-            number: i + 1,
-            review: needsReview(d),
-          }))}
-          currentId={String(index)}
-          onSelect={(id) => selectDay(Number(id))}
+          items={plan.days.map((d) => ({ name: d.name, review: needsReview(d) }))}
+          currentIndex={index}
+          onSelect={selectDay}
           onAdd={addDay}
         />
         {day ? (
           <>
-            <EditableTitle
-              value={day.name}
-              accessibilityLabel={t('training:options.rename')}
-              onSubmit={(name) => editDay((d) => ({ ...d, name }))}
-            />
+            <EditableTitle value={day.name} onSubmit={(name) => editDay((d) => ({ ...d, name }))} />
             <Text variant="paragraph" tone="subtle" className="px-5 pt-2">
               {day.weekday !== null && weekdays[day.weekday]
                 ? t('training:overview.fixedDay', { day: weekdays[day.weekday] })
@@ -176,28 +166,14 @@ export function ConfirmScreen() {
               </View>
             ) : null}
 
-            <WorkedMuscles title={day?.name ?? ''} items={items} />
+            <WorkedMuscles title={day.name} items={items} />
 
-            <View className={cn('flex-row items-center gap-3 px-5', empty ? 'pt-9' : 'pt-7.5')}>
-              <View className="min-w-0 flex-1">
-                <Text variant="headline">
-                  {empty
-                    ? t('training:overview.noExercises')
-                    : t('training:overview.exercises', { count: exercises.length })}
-                </Text>
-                <Text variant="paragraph" tone="subtle" className="mt-1.5 text-sm leading-4.5">
-                  {t('training:overview.duration', { minutes: estimateMinutes(items) })}
-                </Text>
-              </View>
-              <IconButton
-                icon="plus"
-                size={empty ? 56 : 44}
-                iconSize={empty ? 18 : 14}
-                accessibilityLabel={t('planImport:confirm.add')}
-                className="bg-raised"
-                onPress={() => openPicker({ mode: 'add' })}
-              />
-            </View>
+            <ExerciseListHeader
+              count={exercises.length}
+              minutes={estimateMinutes(items)}
+              addLabel={t('planImport:confirm.add')}
+              onAdd={() => openPicker({ mode: 'add' })}
+            />
 
             <View className="px-5 pt-2">
               {empty ? (

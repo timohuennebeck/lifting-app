@@ -131,7 +131,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     try {
       isPr = await logSet(set.id, exercise.exerciseId, values);
     } catch (error) {
-      // The keypad already moved on; reopen this set so the failed log isn't mistaken for saved.
+      // The keypad already closed; reopen this set so the failed log isn't mistaken for saved.
       console.error(error);
       haptics.error();
       store.skipRest();

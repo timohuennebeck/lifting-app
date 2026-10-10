@@ -1,5 +1,4 @@
 import { router } from 'expo-router';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { muscleShares } from '@/shared/data/muscles';
@@ -20,7 +19,7 @@ export interface DoneCardProps {
 
 export function DoneCard({ workout, date, today, units }: DoneCardProps) {
   const { t } = useTranslation('today');
-  const shares = useMemo(() => muscleShares(workout.items), [workout.items]);
+  const shares = muscleShares(workout.items);
   const stats: DayStat[] = [
     {
       icon: 'timer',

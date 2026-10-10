@@ -16,7 +16,7 @@ import { PlanCard } from '../components/plan-card';
 import { useOffering } from '../hooks/use-offering';
 import { usePaywallFlow } from '../hooks/use-paywall-flow';
 import { usePurchase, useRestorePurchases } from '../hooks/use-purchases';
-import { formatPrice, type PlanId } from '../lib/purchases-service';
+import type { PlanId } from '../lib/purchases-service';
 import { useIsPro } from '../stores/subscription-store';
 
 const BENEFITS = ['import', 'history', 'suggestions'] as const;
@@ -29,17 +29,11 @@ export function PaywallScreen() {
   const footerInset = useFooterInset();
   const flow = usePaywallFlow();
   const isPro = useIsPro();
-  const { offering, plan, isError, isFetching, refetch } = useOffering();
-  // Only a missing offering blocks buying; a failed background refresh keeps the cache.
-  const failed = !offering && isError;
+  const { offering, plan, priceOf, failed, loading, refetch } = useOffering();
   const { buy, busy } = usePurchase();
   const { restore, restoring } = useRestorePurchases();
   const [selected, setSelected] = useState<PlanId>('daily');
 
-  const priceOf = (id: PlanId) => {
-    const p = plan(id);
-    return p && offering ? formatPrice(p.price, offering.currency) : null;
-  };
   const current = plan(selected);
   const price = priceOf(selected);
 
@@ -125,7 +119,7 @@ export function PaywallScreen() {
         {/* Without an offering there is nothing to buy; let the user load it again. */}
         <Button
           label={failed ? t('common:actions.retry') : t('paywall.continue')}
-          loading={busy || (!offering && (!isError || isFetching))}
+          loading={busy || loading}
           disabled={restoring}
           onPress={failed ? () => refetch() : onContinue}
         />

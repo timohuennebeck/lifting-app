@@ -28,7 +28,7 @@ export function EditSetsScreen() {
             key: s.id,
             targetMin: s.target_min,
             targetMax: s.target_max,
-            rir: s.rir ?? null,
+            rir: s.rir,
           }))}
           initialRest={exercise.restSeconds}
           onSave={async (sets, rest) => {

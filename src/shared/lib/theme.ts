@@ -2,7 +2,6 @@
 export const colors = {
   bg: '#0A0A0A',
   control: '#262626',
-  raised: '#1E1E1E',
   line: '#2A2A28',
   track: '#3A3A38',
   fg: '#F4F4F0',

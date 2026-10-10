@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Sortable from 'react-native-sortables';
 
 import { EditableTitle } from '@/features/training/components/editable-title';
+import { ExerciseListHeader } from '@/features/training/components/exercise-list-header';
 import {
   type ExerciseMenuAction,
   ExerciseMenuSheet,
@@ -16,17 +17,14 @@ import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
 import { estimateMinutes } from '@/shared/data/templates';
 import { getActiveWorkoutId, startDraftWorkout } from '@/shared/data/workouts';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
-import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { EmptyExercises } from '@/shared/ui/empty-exercises';
-import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { afterSheetClose } from '@/shared/ui/sheet';
-import { Text } from '@/shared/ui/text';
 
 import { useWorkoutDraftStore } from '../stores/workout-draft-store';
 
@@ -98,34 +96,16 @@ export function WorkoutBuilderScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 130 }}
       >
-        <EditableTitle
-          value={name}
-          accessibilityLabel={t('training:options.rename')}
-          onSubmit={rename}
-        />
+        <EditableTitle value={name} onSubmit={rename} />
 
         <WorkedMuscles title={name} items={items} />
 
-        <View className={cn('flex-row items-center gap-3 px-5', empty ? 'pt-9' : 'pt-7.5')}>
-          <View className="min-w-0 flex-1">
-            <Text variant="headline">
-              {empty
-                ? t('training:overview.noExercises')
-                : t('training:overview.exercises', { count: exercises.length })}
-            </Text>
-            <Text variant="paragraph" tone="subtle" className="mt-1.5 text-sm leading-4.5">
-              {t('training:overview.duration', { minutes: estimateMinutes(items) })}
-            </Text>
-          </View>
-          <IconButton
-            icon="plus"
-            size={empty ? 56 : 44}
-            iconSize={empty ? 18 : 14}
-            accessibilityLabel={t('training:overview.addExercise')}
-            className="bg-raised"
-            onPress={() => openPicker({ mode: 'add' })}
-          />
-        </View>
+        <ExerciseListHeader
+          count={exercises.length}
+          minutes={estimateMinutes(items)}
+          addLabel={t('training:overview.addExercise')}
+          onAdd={() => openPicker({ mode: 'add' })}
+        />
 
         <View className="px-5 pt-2">
           {empty ? (

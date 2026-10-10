@@ -1,3 +1,4 @@
+import type { User } from '@supabase/supabase-js';
 import { eq } from 'drizzle-orm';
 
 import { nowIso } from '@/shared/data/json';
@@ -7,7 +8,7 @@ import { saveProfile } from '@/shared/data/profile';
 import { insertPlan } from '@/shared/data/templates';
 import { type AppLanguage, i18n } from '@/shared/i18n';
 
-import type { OnboardingDraft } from '../stores/onboarding-store';
+import { type OnboardingDraft, useOnboardingStore } from '../stores/onboarding-store';
 
 /**
  * Writes the onboarding answers as the user's profile and stores the drafted plan
@@ -67,4 +68,11 @@ export async function isOnboardedAfterSync(userId: string, timeoutMs = 8000) {
     .where(eq(profiles.id, userId))
     .get();
   return !!row?.onboarded_at;
+}
+
+/** Signed in, onboarding goes on: a draft without a name takes the one given at sign-up. */
+export function adoptSignUpName(user: User) {
+  const { draft, update } = useOnboardingStore.getState();
+  const name = user.user_metadata?.first_name;
+  if (!draft.firstName && typeof name === 'string') update({ firstName: name });
 }

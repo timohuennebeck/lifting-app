@@ -40,8 +40,6 @@ import {
 import { queryKeys } from './query-keys';
 import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
-export type { SetTargets };
-
 /** Epley estimated one-rep max. */
 const estimateOneRepMax = (kg: number, reps: number) => kg * (1 + reps / 30);
 
@@ -204,14 +202,12 @@ export async function insertWorkoutSet(
   });
 }
 
-/** Adds an exercise with `setCount` empty sets to a running workout. */
-export async function addWorkoutExercise(
-  userId: string,
-  workoutId: string,
-  exerciseId: string,
-  setCount = 3,
-  target: SetTargets = defaultTargets(exerciseId),
-) {
+/** Sets of an exercise added to a running workout. */
+const NEW_EXERCISE_SETS = 3;
+
+/** Adds an exercise with empty sets at its default targets to a running workout. */
+export async function addWorkoutExercise(userId: string, workoutId: string, exerciseId: string) {
+  const target = defaultTargets(exerciseId);
   await drizzle.transaction(async (tx) => {
     const id = newId();
     await tx.insert(workoutExercises).values({
@@ -222,7 +218,7 @@ export async function addWorkoutExercise(
       position: nextPosition(workoutExercises.position, eq(workoutExercises.workout_id, workoutId)),
       rest_seconds: null,
     });
-    for (let i = 0; i < setCount; i++) await insertWorkoutSet(tx, userId, id, i, target);
+    for (let i = 0; i < NEW_EXERCISE_SETS; i++) await insertWorkoutSet(tx, userId, id, i, target);
   });
 }
 

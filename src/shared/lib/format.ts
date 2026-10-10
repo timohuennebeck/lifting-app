@@ -42,7 +42,7 @@ export const formatWeight = (kg: number, units: UnitSystem) =>
   `${formatWeightValue(kg, units)} ${weightUnit(units)}`;
 
 /** A volume total (weight × reps) as a whole number in the user's unit, without the label. */
-export const formatVolumeValue = (kg: number, units: UnitSystem) =>
+const formatVolumeValue = (kg: number, units: UnitSystem) =>
   formatNumber(units === 'imperial' ? kgToLb(kg) : kg, 0);
 
 /** A volume total in the user's unit, e.g. "4,250 kg" or "9,370 lb". */
@@ -97,11 +97,6 @@ export function formatTargetLabel(min: number | null, max: number | null, timed:
 export function feetInches(totalInches: number) {
   const inches = Math.round(totalInches);
   return `${Math.floor(inches / 12)}′${inches % 12}″`;
-}
-
-/** "178 cm" or "5′10″" depending on the unit system. */
-export function formatHeight(cm: number, units: UnitSystem) {
-  return units === 'imperial' ? feetInches(cm / CM_PER_INCH) : `${Math.round(cm)} cm`;
 }
 
 /** "1:30" or "1:02:05"; `alwaysHours` makes an elapsed clock like "0:07:20". */

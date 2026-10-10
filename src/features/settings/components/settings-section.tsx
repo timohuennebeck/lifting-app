@@ -12,7 +12,7 @@ export interface SettingsSectionProps {
   children: ReactNode;
 }
 
-/** Overline title plus a rounded group, like the profile sections. */
+/** Overline title plus a rounded group. */
 export function SettingsSection({ title, children }: SettingsSectionProps) {
   return (
     <View className="gap-2.5 px-4 pt-7">
@@ -27,36 +27,21 @@ export function SettingsSection({ title, children }: SettingsSectionProps) {
 export interface SettingsRowProps {
   label: string;
   value?: string;
-  leading?: ReactNode;
   trailing?: ReactNode;
   onPress: () => void;
   onLongPress?: () => void;
-  accessibilityRole?: 'button' | 'radio';
-  selected?: boolean;
 }
 
 /** Tappable row inside a SettingsSection; shows a chevron unless `trailing` is given. */
-export function SettingsRow({
-  label,
-  value,
-  leading,
-  trailing,
-  onPress,
-  onLongPress,
-  accessibilityRole = 'button',
-  selected,
-}: SettingsRowProps) {
+export function SettingsRow({ label, value, trailing, onPress, onLongPress }: SettingsRowProps) {
   return (
     <PressableScale
       activeScale={0.99}
       haptic="select"
-      accessibilityRole={accessibilityRole}
-      accessibilityState={accessibilityRole === 'radio' ? { checked: !!selected } : undefined}
       onPress={onPress}
       onLongPress={onLongPress}
       className="h-14 flex-row items-center gap-3 px-4"
     >
-      {leading}
       <Text variant="label" className="flex-1">
         {label}
       </Text>

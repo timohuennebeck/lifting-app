@@ -79,14 +79,11 @@ export function applyVoiceScript(plan: ImportedPlan, script: VoiceScript, newDay
     day = { name: newDayName, weekday: script.weekday, exercises: [] };
     days.push(day);
   }
-  const target = day;
-  target.exercises = target.exercises.filter(
-    (e) => !script.remove.includes(e.exerciseId as string),
-  );
+  day.exercises = day.exercises.filter((e) => !script.remove.includes(e.exerciseId));
   for (const { exerciseId, sets, reps } of script.add) {
-    if (target.exercises.some((e) => e.exerciseId === exerciseId)) continue;
-    target.exercises.push({ exerciseId, sets: readSets(sets, reps), restSeconds: null });
+    if (day.exercises.some((e) => e.exerciseId === exerciseId)) continue;
+    day.exercises.push({ exerciseId, sets: readSets(sets, reps), restSeconds: null });
   }
   days.sort((a, b) => (a.weekday ?? 7) - (b.weekday ?? 7));
-  return { plan: { ...plan, days }, dayIndex: days.indexOf(target) };
+  return { plan: { ...plan, days }, dayIndex: days.indexOf(day) };
 }

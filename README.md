@@ -40,7 +40,7 @@ src/
   app/                 Expo Router routes only (thin files re-exporting feature screens)
   features/<feature>/  components, screens, data, hooks, lib, stores per feature
   shared/              ui primitives, components, data layer, i18n, lib, stores
-supabase/              config + migrations (RLS, PowerSync publication)
+supabase/              config, migrations (RLS, PowerSync publication), Edge Function, email templates
 powersync/             self-hosted service config, sync streams, docker compose
 ```
 
@@ -73,8 +73,7 @@ changes hourly, so new exercises ship without a release. Edit them with the serv
 - **`measures`:** what one set records, and so which boxes the workout screen shows:
   `{weight,reps}` (kg × reps, also bodyweight moves with added weight), `{reps}` (push-ups),
   `{seconds}` (planks) or `{weight,seconds}` (weighted holds).
-- **`image_path`:** a file in the public `exercise-media` bucket. `supabase seed buckets` uploads the
-  bundled photos (`--linked` for the hosted project).
+- **`image_path`:** a file in the public `exercise-media` bucket.
 - **Before a release:** `npm run catalog:pull` refreshes the snapshot the app ships for its first
   launch (`src/shared/data/exercise-catalog.json`).
 
@@ -86,7 +85,8 @@ Documents are readable without an account (onboarding runs logged out) and writt
   can't be edited or deleted; publish a new `version` instead. Set `requires_reacceptance` when users who
   accepted an older version have to accept again.
 - **`legal_acceptances`:** one row per accepted document version; the server sets `accepted_at`. The
-  app doesn't write them yet: recording the acceptance at sign-up is on the to-do list.
+  app writes them on sign-up (the versions in effect then) and when a user agrees to a version that
+  requires re-acceptance; until then that version covers the app, showing what changed.
 - **In the app:** `/legal/terms` and `/legal/privacy` show the version in effect, in the app language
   (else English, else `pt-BR`), linked from the sign-up screen and Settings. Write the text as Markdown:
   headings, paragraphs, `>` quotes, lists, `**bold**` and `[links](https://…)`. Locally,

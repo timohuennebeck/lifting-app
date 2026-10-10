@@ -6,7 +6,7 @@ import { haptics } from '@/shared/lib/haptics';
 
 import { useWorkoutSessionStore } from '../stores/workout-session-store';
 
-/** Finish (→ summary), discard or leave the running workout. */
+/** Finish (→ summary) or discard the running workout. */
 export function useWorkoutActions(workoutId: string) {
   const [finishing, setFinishing] = useState(false);
 
@@ -26,15 +26,13 @@ export function useWorkoutActions(workoutId: string) {
     }
   }
 
-  /** Closes the screen; the workout keeps running and can be resumed. */
-  const leave = () => (router.canGoBack() ? router.back() : router.replace('/'));
-
   /** Deletes the workout and leaves (the menu's "Discard" is its confirmation). */
   async function abandon() {
     useWorkoutSessionStore.getState().reset();
-    leave();
+    if (router.canGoBack()) router.back();
+    else router.replace('/');
     await discardWorkout(workoutId);
   }
 
-  return { finish, abandon, leave, finishing };
+  return { finish, abandon, finishing };
 }
