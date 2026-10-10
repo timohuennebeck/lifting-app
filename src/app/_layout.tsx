@@ -29,6 +29,8 @@ import { useSessionStore } from '@/shared/stores/session-store';
 SplashScreen.preventAutoHideAsync();
 Uniwind.setTheme('dark');
 
+const LEGAL_CHECK_WAIT_MS = 2500;
+
 const navigationTheme = {
   ...DarkTheme,
   colors: { ...DarkTheme.colors, background: colors.bg, card: colors.bg, text: colors.fg },
@@ -49,13 +51,20 @@ export default function RootLayout() {
   // A password reset signs in with its code; the app opens once the new password is set.
   const recovering = useSessionStore((s) => s.recovering);
   const onboarded = useOnboardingStore((s) => s.completed);
+  const inApp = signedIn && onboarded && !recovering;
   useEffect(() => {
-    if (fontsLoaded && ready) SplashScreen.hideAsync();
-  }, [fontsLoaded, ready]);
+    if (!fontsLoaded || !ready) return;
+    if (!inApp) {
+      SplashScreen.hide();
+      return;
+    }
+    // In the app it waits for the legal check, which hides it (LegalUpdateGate); a slow or
+    // missing connection never keeps it up longer than this.
+    const timer = setTimeout(SplashScreen.hide, LEGAL_CHECK_WAIT_MS);
+    return () => clearTimeout(timer);
+  }, [fontsLoaded, ready, inApp]);
 
   if (!fontsLoaded || !ready) return null;
-
-  const inApp = signedIn && onboarded && !recovering;
 
   return (
     <GestureHandlerRootView className="flex-1 bg-bg">

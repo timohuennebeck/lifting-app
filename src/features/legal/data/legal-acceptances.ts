@@ -1,3 +1,4 @@
+import { useStatus } from '@powersync/react-native';
 import { useQuery } from '@tanstack/react-query';
 import Constants from 'expo-constants';
 import { useEffect } from 'react';
@@ -60,48 +61,62 @@ async function fetchPendingDocuments(
   language: string,
   acceptedIds: string[],
 ): Promise<PendingDocument[]> {
-  const due = (await fetchCurrentDocuments(language)).filter((d) => d.requiresReacceptance);
-  if (!due.length) return [];
-  let accepted: { kind: string; version: string; effective_at: string }[] = [];
-  if (acceptedIds.length) {
-    const { data, error } = await supabase
-      .from('legal_documents')
-      .select('kind, version, effective_at')
-      .in('id', acceptedIds);
-    if (error) throw error;
-    accepted = data ?? [];
-  }
-  const pending: PendingDocument[] = [];
-  for (const document of due) {
-    const last = accepted
-      .filter((a) => a.kind === document.kind)
-      .sort((a, b) => b.effective_at.localeCompare(a.effective_at))[0];
-    if (last?.version === document.version) continue;
-    pending.push({
-      document,
-      previous: last
-        ? await fetchDocumentVersion(document.kind, document.locale, last.version)
-        : null,
-      previousVersion: last?.version ?? null,
-    });
-  }
-  return pending;
+  // Side by side: on launch the splash screen waits for this.
+  const [current, accepted] = await Promise.all([
+    fetchCurrentDocuments(language),
+    fetchAcceptedVersions(acceptedIds),
+  ]);
+  const pending = await Promise.all(
+    current
+      .filter((d) => d.requiresReacceptance)
+      .map(async (document): Promise<PendingDocument | null> => {
+        const last = accepted
+          .filter((a) => a.kind === document.kind)
+          .sort((a, b) => b.effective_at.localeCompare(a.effective_at))[0];
+        if (last?.version === document.version) return null;
+        return {
+          document,
+          previous: last
+            ? await fetchDocumentVersion(document.kind, document.locale, last.version)
+            : null,
+          previousVersion: last?.version ?? null,
+        };
+      }),
+  );
+  return pending.filter((p) => p !== null);
+}
+
+async function fetchAcceptedVersions(ids: string[]) {
+  if (!ids.length) return [];
+  const { data, error } = await supabase
+    .from('legal_documents')
+    .select('kind, version, effective_at')
+    .in('id', ids);
+  if (error) throw error;
+  return data ?? [];
 }
 
 /**
  * New versions to accept before the app can be used. Checked online on start, hourly and when
  * the app comes back to the foreground; offline nothing is pending, so nothing ever blocks.
+ * `settled` once the first check is done, failed included.
  */
 export function usePendingLegalDocuments(language: string) {
+  // Until the first sync, acceptances made on another device aren't here yet.
+  const { hasSynced } = useStatus();
   const { data: acceptedIds } = useDrizzleQuery({
     queryKey: legalKeys.accepted.queryKey,
     query: acceptedQuery(),
     map: toSortedIds,
   });
-  const { data = [], refetch } = useQuery({
+  const {
+    data = [],
+    status,
+    refetch,
+  } = useQuery({
     queryKey: legalKeys.pending(language, acceptedIds ?? []).queryKey,
     queryFn: () => fetchPendingDocuments(language, acceptedIds ?? []),
-    enabled: !!acceptedIds,
+    enabled: !!acceptedIds && hasSynced === true,
     staleTime: HOUR_MS,
     refetchInterval: HOUR_MS,
   });
@@ -111,5 +126,5 @@ export function usePendingLegalDocuments(language: string) {
     });
     return () => sub.remove();
   }, [refetch]);
-  return data;
+  return { pending: data, settled: status !== 'pending' };
 }

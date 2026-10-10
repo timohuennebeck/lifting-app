@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
-import { useMemo, useState } from 'react';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -49,10 +50,15 @@ export function LegalUpdateGate() {
   const { t, i18n } = useTranslation('common');
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
-  const pending = usePendingLegalDocuments(i18n.language);
+  const { pending, settled } = usePendingLegalDocuments(i18n.language);
   const { data: activeWorkout } = useActiveWorkout();
   const [busy, setBusy] = useState(false);
   const shown = pending.length > 0 && !activeWorkout;
+  // On launch the splash screen stays until this check is done, so the app never shows first
+  // with the gate popping up over it (the root layout stops waiting after a moment).
+  useEffect(() => {
+    if (settled) SplashScreen.hide();
+  }, [settled]);
   // Back would reach the app underneath.
   useHardwareBack(() => {}, shown);
   const rows = useMemo(
