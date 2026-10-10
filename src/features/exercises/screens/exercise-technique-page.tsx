@@ -3,19 +3,21 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { exerciseInstructions } from '@/shared/data/exercises';
-import { cn } from '@/shared/lib/cn';
-import { MUSCLE_CARDS, MuscleMap } from '@/shared/ui/muscle-map';
+import { muscleShares } from '@/shared/data/muscles';
+import { MUSCLE_CARDS, MuscleMap, MuscleTile } from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
 
 import { useExerciseId } from '../components/exercise-layout';
 import { exerciseMuscles } from '../lib/muscle-groups';
 
-/** Exercise page, "Übung": the worked muscles on chips and a body map, then the technique. */
+/** Exercise page, "Übung": the worked muscles as chips with their share beside a body map, then the technique. */
 export function ExerciseTechniquePage() {
   const exerciseId = useExerciseId();
   const { t, i18n } = useTranslation(['exercises', 'muscles']);
   const insets = useSafeAreaInsets();
   const muscles = exerciseMuscles(exerciseId);
+  // Each muscle's share of the exercise, as on the workout page.
+  const shares = muscleShares([{ exerciseId, sets: 1 }]);
   const steps = exerciseInstructions(exerciseId, i18n.language);
   const view = muscles[0] ? MUSCLE_CARDS[muscles[0]].view : 'front';
 
@@ -25,24 +27,14 @@ export function ExerciseTechniquePage() {
       contentContainerStyle={{ paddingBottom: insets.bottom + 30 }}
       showsVerticalScrollIndicator={false}
     >
-      <View className="flex-row items-center gap-1">
-        <View className="min-w-0 flex-1 flex-row flex-wrap gap-1.5">
-          {muscles.map((m, i) => (
-            <View
-              key={m}
-              className={cn(
-                'h-8.5 justify-center rounded-full px-3.5',
-                i === 0 ? 'bg-accent' : 'bg-elevated',
-              )}
-            >
-              <Text variant="caption" tone={i === 0 ? 'onAccent' : 'default'}>
-                {t(`muscles:names.${m}`)}
-              </Text>
-            </View>
+      <View className="flex-row items-start gap-1.5">
+        <View className="min-w-0 flex-1 items-start gap-2">
+          {shares.map((s) => (
+            <MuscleTile key={s.muscle} muscle={s.muscle} percent={s.percent} />
           ))}
         </View>
-        <View className="h-45 w-27.5">
-          <MuscleMap view={view} selected={muscles} width={110} height={180} />
+        <View className="h-45 w-19">
+          <MuscleMap view={view} selected={muscles} width={76} height={180} />
         </View>
       </View>
       <View>

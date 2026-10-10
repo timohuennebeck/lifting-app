@@ -64,7 +64,8 @@ export function MuscleChip({ art, lit, label, percent, active }: MuscleChipProps
           fit="cover"
         />
       </View>
-      <Text variant="label" numberOfLines={1}>
+      {/* Shrinks to "Vordere Schul…" where the chip has less room than it needs. */}
+      <Text variant="label" numberOfLines={1} className="shrink">
         {label}
       </Text>
       {percent !== undefined ? (

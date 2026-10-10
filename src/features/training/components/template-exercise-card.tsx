@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -52,7 +53,14 @@ export function TemplateExerciseCard({
       onPress={onPress}
       className="flex-row gap-3.5 py-4.5"
     >
-      <ExerciseThumb exerciseId={exerciseId} name={name} className="h-21.5 w-16 bg-elevated" />
+      {/* The photo opens how the exercise works and its history; the rest of the row edits it. */}
+      <PressableScale
+        accessibilityRole="button"
+        accessibilityLabel={t('training:overview.exerciseInfo', { name })}
+        onPress={() => router.push({ pathname: '/exercise/[id]', params: { id: exerciseId } })}
+      >
+        <ExerciseThumb exerciseId={exerciseId} name={name} className="h-21.5 w-16 bg-elevated" />
+      </PressableScale>
       <View className="min-w-0 flex-1 gap-2.5">
         <View className="flex-row items-start gap-2.5">
           <Text variant="label" className="flex-1 pt-1.25 text-base leading-5">

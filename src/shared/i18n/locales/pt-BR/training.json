@@ -65,6 +65,7 @@
     "addTraining": "Adicionar treino",
     "more": "Mais opções",
     "exerciseMenu": "Opções de {{name}}",
+    "exerciseInfo": "Sobre {{name}}",
     "notFound": "Este treino não existe mais.",
     "swapTitle": "Trocar exercício",
     "newTraining": "Treino {{number}}"
