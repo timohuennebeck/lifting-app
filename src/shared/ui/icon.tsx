@@ -318,13 +318,6 @@ const ICONS = {
     render: stroke('M1.5 4h13M6 4V2h4v2M3 4l1 12h8l1-12M6.5 7.5v5M9.5 7.5v5', 1.6),
   },
   pencil: { viewBox: '0 0 16 16', render: stroke('M11 2l3 3-8.5 8.5L2 14l.5-3.5z', 1.6) },
-  'sign-out': {
-    viewBox: '0 0 18 18',
-    render: stroke(
-      'M7 2.5H3.5a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1H7M12 5.5L15.5 9 12 12.5M15.5 9H6.5',
-      1.7,
-    ),
-  },
   bolt: {
     viewBox: '0 0 256 256',
     render: (c) => (

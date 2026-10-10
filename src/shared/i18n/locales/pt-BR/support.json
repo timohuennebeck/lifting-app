@@ -53,11 +53,9 @@
   },
   "list": {
     "title": "Chamados",
-    "search": "Buscar",
     "create": "Abrir chamado",
     "empty": "Nenhum chamado ainda",
-    "emptyHint": "Relate um erro ou sugira um recurso. Respondemos aqui mesmo no chat.",
-    "noResults": "Nenhum chamado corresponde a “{{query}}”."
+    "emptyHint": "Relate um erro ou sugira um recurso. Respondemos aqui mesmo no chat."
   },
   "chat": {
     "today": "Hoje",

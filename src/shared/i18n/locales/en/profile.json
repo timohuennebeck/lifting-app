@@ -30,6 +30,11 @@
     "units": "Units",
     "kilograms": "Kilograms",
     "pounds": "Pounds",
+    "notifications": {
+      "title": "Notifications",
+      "workoutReminder": "Workout reminder",
+      "restSound": "Sound when rest ends"
+    },
     "links": {
       "help": "Help",
       "privacy": "Privacy",
@@ -39,7 +44,7 @@
     "signOut": "Sign out",
     "signOutConfirm": {
       "title": "Sign out?",
-      "option": "Sign out on this device",
+      "titleNamed": "Sign out as {{name}}?",
       "unsynced_one": "{{count}} change hasn't synced yet. Sign out anyway? It will be lost.",
       "unsynced_other": "{{count}} changes haven't synced yet. Sign out anyway? They'll be lost."
     },
@@ -49,7 +54,7 @@
       "subtitle": "This can't be undone.",
       "option": "Delete account permanently",
       "body": "All your data will be deleted.",
-      "subscription": "This doesn't end an active subscription. Cancel it in the App Store or on Google Play.",
+      "subscription": "This doesn't end an active subscription. Cancel it in the store you bought it from.",
       "failed": "Your account couldn't be deleted. Check your connection and try again."
     }
   },

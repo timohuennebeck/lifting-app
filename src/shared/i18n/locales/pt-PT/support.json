@@ -53,11 +53,9 @@
   },
   "list": {
     "title": "Pedidos",
-    "search": "Pesquisar",
     "create": "Criar pedido",
     "empty": "Ainda sem pedidos",
-    "emptyHint": "Reporta um erro ou sugere uma funcionalidade. Respondemos aqui mesmo no chat.",
-    "noResults": "Nenhum pedido corresponde a “{{query}}”."
+    "emptyHint": "Reporta um erro ou sugere uma funcionalidade. Respondemos aqui mesmo no chat."
   },
   "chat": {
     "today": "Hoje",

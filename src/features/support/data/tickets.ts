@@ -63,8 +63,6 @@ export interface TicketSummary extends Ticket {
   lastTeamAt: string | null;
   /** Latest message time (or the ticket's update), for sorting and the row date. */
   activityAt: string;
-  /** Lower-cased number, subject and message bodies for the search field. */
-  searchText: string;
 }
 
 const lastMessage = alias(ticketMessages, 'last_message');
@@ -72,7 +70,7 @@ const lastMessage = alias(ticketMessages, 'last_message');
 /** Messages of the ticket in the outer query, for correlated subqueries. */
 const messagesOfTicket = eq(ticketMessages.ticket_id, tickets.id);
 
-/** Every ticket with its latest message, latest team reply and all message bodies. */
+/** Every ticket with its latest message and latest team reply. */
 const ticketListQuery = () =>
   drizzle
     .select({
@@ -85,10 +83,6 @@ const ticketListQuery = () =>
         .select({ at: max(ticketMessages.created_at) })
         .from(ticketMessages)
         .where(and(messagesOfTicket, eq(ticketMessages.author, 'team')))}`,
-      bodies: sql<string | null>`${drizzle
-        .select({ bodies: sql`group_concat(${ticketMessages.body}, ' ')` })
-        .from(ticketMessages)
-        .where(messagesOfTicket)}`,
     })
     .from(tickets)
     .leftJoin(
@@ -132,7 +126,6 @@ const toSummaries = (rows: RowOf<typeof ticketListQuery>[]): TicketSummary[] =>
         : null,
       lastTeamAt: r.last_team_at,
       activityAt: r.last_at ?? ticket.updatedAt,
-      searchText: `#${r.number ?? ''} ${ticket.subject} ${r.bodies ?? ''}`.toLowerCase(),
     };
   });
 

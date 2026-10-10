@@ -30,6 +30,11 @@
     "units": "Einheiten",
     "kilograms": "Kilogramm",
     "pounds": "Pfund",
+    "notifications": {
+      "title": "Benachrichtigungen",
+      "workoutReminder": "Trainings-Erinnerung",
+      "restSound": "Ton bei Pausenende"
+    },
     "links": {
       "help": "Hilfe",
       "privacy": "Datenschutz",
@@ -39,7 +44,7 @@
     "signOut": "Abmelden",
     "signOutConfirm": {
       "title": "Abmelden?",
-      "option": "Auf diesem Gerät abmelden",
+      "titleNamed": "Als {{name}} abmelden?",
       "unsynced_one": "{{count}} Änderung ist noch nicht synchronisiert. Trotzdem abmelden? Sie geht dabei verloren.",
       "unsynced_other": "{{count}} Änderungen sind noch nicht synchronisiert. Trotzdem abmelden? Sie gehen dabei verloren."
     },
@@ -49,7 +54,7 @@
       "subtitle": "Das lässt sich nicht rückgängig machen.",
       "option": "Konto endgültig löschen",
       "body": "Alle deine Daten werden gelöscht.",
-      "subscription": "Ein laufendes Abo endet dadurch nicht. Kündige es im App Store oder bei Google Play.",
+      "subscription": "Ein laufendes Abo endet dadurch nicht. Kündige es im jeweiligen Store.",
       "failed": "Dein Konto konnte nicht gelöscht werden. Prüf deine Verbindung und versuch es noch mal."
     }
   },

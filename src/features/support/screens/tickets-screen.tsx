@@ -5,62 +5,51 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useProfile } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
+import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
-import { TextField } from '@/shared/ui/text-field';
 
 import { FeedbackSheet } from '../components/feedback-sheet';
 import { TicketListRow } from '../components/ticket-list-row';
 import { useTickets } from '../data/tickets';
 
-/** All tickets with team replies, searchable (design 01f-2). */
+/** All tickets with team replies (design 01f-2); "+" starts a new one as on the profile. */
 export function TicketsScreen() {
   const { t } = useTranslation('support');
   const insets = useSafeAreaInsets();
   const { profile } = useProfile();
   const { data: tickets = [], isLoading } = useTickets();
-  const [query, setQuery] = useState('');
   const [sheetOpen, setSheetOpen] = useState(false);
-  const needle = query.trim().toLowerCase();
-  const shown = needle ? tickets.filter((ticket) => ticket.searchText.includes(needle)) : tickets;
   const openSheet = () => setSheetOpen(true);
 
   return (
     <Screen
       header={
-        // Like 01f-2 there is no header action; new tickets start from the profile.
-        <ScreenHeader title={t('list.title')} />
+        <ScreenHeader
+          title={t('list.title')}
+          action={
+            <IconButton
+              icon="plus"
+              iconSize={14}
+              accessibilityLabel={t('list.create')}
+              onPress={openSheet}
+            />
+          }
+        />
       }
     >
-      <TextField
-        icon="search"
-        shape="pill"
-        clearable
-        autoCorrect={false}
-        returnKeyType="search"
-        value={query}
-        onChangeText={setQuery}
-        placeholder={t('list.search')}
-        className="mx-5 mt-3.5"
-      />
       <FlatList
-        data={shown}
+        data={tickets}
         keyExtractor={(ticket) => ticket.id}
         renderItem={({ item }) => (
           <TicketListRow ticket={item} userName={profile?.firstName ?? ''} />
         )}
-        keyboardDismissMode="on-drag"
-        keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         contentContainerClassName="px-5 pt-3.5"
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
         ListEmptyComponent={
-          isLoading ? null : needle ? (
-            <Text variant="paragraph" tone="subtle" className="pt-8 text-center">
-              {t('list.noResults', { query: query.trim() })}
-            </Text>
-          ) : (
+          isLoading ? null : (
             <View className="items-center gap-4 px-3 pt-12">
               <View className="items-center gap-2">
                 <Text variant="headline" className="text-center">

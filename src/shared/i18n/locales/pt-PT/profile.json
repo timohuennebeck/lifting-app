@@ -30,6 +30,11 @@
     "units": "Unidades",
     "kilograms": "Quilogramas",
     "pounds": "Libras",
+    "notifications": {
+      "title": "Notificações",
+      "workoutReminder": "Lembrete de treino",
+      "restSound": "Som no fim do descanso"
+    },
     "links": {
       "help": "Ajuda",
       "privacy": "Privacidade",
@@ -39,7 +44,7 @@
     "signOut": "Terminar sessão",
     "signOutConfirm": {
       "title": "Terminar sessão?",
-      "option": "Terminar sessão neste dispositivo",
+      "titleNamed": "Terminar sessão como {{name}}?",
       "unsynced_one": "{{count}} alteração ainda não foi sincronizada. Terminar sessão mesmo assim? Vai perder-se.",
       "unsynced_other": "{{count}} alterações ainda não foram sincronizadas. Terminar sessão mesmo assim? Vão perder-se."
     },
@@ -49,7 +54,7 @@
       "subtitle": "Isto não pode ser desfeito.",
       "option": "Eliminar conta definitivamente",
       "body": "Todos os teus dados serão eliminados.",
-      "subscription": "Isto não termina uma subscrição ativa. Cancela-a na App Store ou no Google Play.",
+      "subscription": "Isto não termina uma subscrição ativa. Cancela-a na loja onde a compraste.",
       "failed": "Não foi possível eliminar a tua conta. Verifica a ligação e tenta novamente."
     }
   },

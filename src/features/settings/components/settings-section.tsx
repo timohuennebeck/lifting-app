@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 
-import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
+import { ToggleSwitch } from '@/shared/ui/toggle-switch';
 
 export interface SettingsSectionProps {
   title: string;
@@ -19,9 +19,7 @@ export function SettingsSection({ title, children }: SettingsSectionProps) {
       <Text variant="overline" tone="subtle" className="px-1 text-[11px]">
         {title}
       </Text>
-      <View className="overflow-hidden rounded-[22px] border border-white/8 bg-surface">
-        {children}
-      </View>
+      <View className="overflow-hidden rounded-[22px] bg-surface">{children}</View>
     </View>
   );
 }
@@ -33,7 +31,6 @@ export interface SettingsRowProps {
   trailing?: ReactNode;
   onPress: () => void;
   onLongPress?: () => void;
-  first?: boolean;
   accessibilityRole?: 'button' | 'radio';
   selected?: boolean;
 }
@@ -46,7 +43,6 @@ export function SettingsRow({
   trailing,
   onPress,
   onLongPress,
-  first,
   accessibilityRole = 'button',
   selected,
 }: SettingsRowProps) {
@@ -58,7 +54,7 @@ export function SettingsRow({
       accessibilityState={accessibilityRole === 'radio' ? { checked: !!selected } : undefined}
       onPress={onPress}
       onLongPress={onLongPress}
-      className={cn('h-14 flex-row items-center gap-3 px-4', !first && 'border-t border-white/6')}
+      className="h-14 flex-row items-center gap-3 px-4"
     >
       {leading}
       <Text variant="label" className="flex-1">
@@ -71,5 +67,23 @@ export function SettingsRow({
       ) : null}
       {trailing ?? <Icon name="chevron-right" size={7} color={colors.dim} />}
     </PressableScale>
+  );
+}
+
+export interface SettingsToggleRowProps {
+  label: string;
+  value: boolean;
+  onChange: (value: boolean) => void;
+}
+
+/** A row inside a SettingsSection with an on/off switch. */
+export function SettingsToggleRow({ label, value, onChange }: SettingsToggleRowProps) {
+  return (
+    <View className="h-15 flex-row items-center gap-3 px-4">
+      <Text variant="label" className="flex-1">
+        {label}
+      </Text>
+      <ToggleSwitch value={value} onChange={onChange} accessibilityLabel={label} />
+    </View>
   );
 }

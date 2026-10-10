@@ -53,11 +53,9 @@
   },
   "list": {
     "title": "Tickets",
-    "search": "Search",
     "create": "Create ticket",
     "empty": "No tickets yet",
-    "emptyHint": "Report a bug or suggest a feature. We reply right here in the chat.",
-    "noResults": "No tickets match “{{query}}”."
+    "emptyHint": "Report a bug or suggest a feature. We reply right here in the chat."
   },
   "chat": {
     "today": "Today",

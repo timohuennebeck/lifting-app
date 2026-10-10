@@ -27,6 +27,7 @@ import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
 import { DeleteAccountSheet } from '../components/delete-account-sheet';
+import { NotificationsSection } from '../components/notifications-section';
 import { ProSection } from '../components/pro-section';
 import { SignOutSheet } from '../components/sign-out-sheet';
 import { UnitBadge } from '../components/unit-badge';
@@ -60,18 +61,13 @@ export function SettingsScreen() {
   };
 
   // Signing out clears the local database and photo files, including anything not uploaded
-  // yet (queued changes, body-check photos, support screenshots): only then does it ask first.
+  // yet (queued changes, body-check photos, support screenshots): the sheet warns about those.
   const requestSignOut = async () => {
     const [{ count: changes }, photos] = await Promise.all([
       db.getUploadQueueStats(),
       countLocalPendingPhotos(requireUserId()),
     ]);
-    const count = changes + photos + useUploadQueueStore.getState().pending.length;
-    if (count === 0) {
-      signOut();
-      return;
-    }
-    setUnsynced(count);
+    setUnsynced(changes + photos + useUploadQueueStore.getState().pending.length);
     setSheet('signOut');
   };
 
@@ -90,20 +86,11 @@ export function SettingsScreen() {
   };
 
   return (
-    <Screen
-      scroll
-      header={
-        <ScreenHeader
-          className="pt-2.5"
-          iconSize={9}
-          title={<Text variant="headline">{t('common:settings')}</Text>}
-        />
-      }
-    >
+    <Screen scroll header={<ScreenHeader title={t('common:settings')} />}>
       <Stack.Screen options={{ animation: 'slide_from_right', gestureEnabled: true }} />
 
       <View className="gap-2.5 px-4 pt-4">
-        <View className="flex-row items-center gap-3.5 rounded-[22px] border border-white/8 bg-surface p-4">
+        <View className="flex-row items-center gap-3.5 rounded-[22px] bg-surface p-4">
           <UserAvatar size={52} />
           <View className="min-w-0 flex-1 gap-0.5">
             <Text variant="bodyStrong" numberOfLines={1}>
@@ -137,6 +124,8 @@ export function SettingsScreen() {
           />
         </View>
       </View>
+
+      <NotificationsSection />
 
       <ProSection />
 
@@ -180,6 +169,8 @@ export function SettingsScreen() {
       <SignOutSheet
         visible={sheet === 'signOut'}
         onClose={close}
+        name={profile?.firstName ?? ''}
+        email={email}
         unsynced={unsynced}
         onSignOut={() => {
           close();
@@ -207,7 +198,7 @@ interface PreferenceCardProps {
 /** Half-width card: an icon, then the setting and its value (language, units). */
 function PreferenceCard({ label, value, icon, onPress }: PreferenceCardProps) {
   return (
-    // A plain slot takes the half: a card's own border and padding would skew the widths.
+    // A plain slot takes the half: a card's own padding would skew the widths.
     <View className="min-w-0 flex-1">
       <PressableScale
         haptic="tap"
@@ -215,7 +206,7 @@ function PreferenceCard({ label, value, icon, onPress }: PreferenceCardProps) {
         accessibilityRole="button"
         accessibilityLabel={`${label}, ${value}`}
         onPress={onPress}
-        className="gap-3.5 rounded-[22px] border border-white/8 bg-surface p-4"
+        className="gap-3.5 rounded-[22px] bg-surface p-4"
       >
         {icon}
         <View className="gap-0.5">

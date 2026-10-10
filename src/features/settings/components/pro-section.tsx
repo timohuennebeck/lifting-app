@@ -39,7 +39,6 @@ export function ProSection() {
     <SettingsSection title={t('settings.section')}>
       {isPro ? (
         <SettingsRow
-          first
           label={t('settings.manage')}
           value={status}
           trailing={<Icon name="arrow-up-right" size={14} color={colors.dim} />}
@@ -48,7 +47,6 @@ export function ProSection() {
         />
       ) : (
         <SettingsRow
-          first
           label={t('settings.title')}
           value={t('settings.upgrade')}
           onPress={() => router.push('/pro')}

@@ -53,11 +53,9 @@
   },
   "list": {
     "title": "Tickets",
-    "search": "Suchen",
     "create": "Ticket erstellen",
     "empty": "Noch keine Tickets",
-    "emptyHint": "Melde einen Fehler oder wünsch dir eine Funktion. Wir antworten dir direkt hier im Chat.",
-    "noResults": "Keine Tickets zu „{{query}}“."
+    "emptyHint": "Melde einen Fehler oder wünsch dir eine Funktion. Wir antworten dir direkt hier im Chat."
   },
   "chat": {
     "today": "Heute",
