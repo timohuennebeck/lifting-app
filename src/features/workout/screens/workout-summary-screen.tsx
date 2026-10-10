@@ -61,7 +61,7 @@ export function WorkoutSummaryScreen() {
           </Text>
         </View>
         <View
-          className="mx-4 mt-7 flex-row justify-center gap-2 rounded-[24px] bg-surface py-6.5"
+          className="mt-8 flex-row justify-center gap-2"
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
         >
