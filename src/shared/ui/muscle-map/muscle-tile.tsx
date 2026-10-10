@@ -39,7 +39,7 @@ export interface MuscleChipProps {
   label: string;
   /** Share 0–100 in a badge on the right; none when undefined. */
   percent?: number;
-  /** Neon border, muscle and badge; grey otherwise (e.g. an unselected filter). */
+  /** Neon border, muscle and badge; grey without a border otherwise (e.g. an unselected filter). */
   active?: boolean;
 }
 
@@ -49,8 +49,9 @@ export function MuscleChip({ art, lit, label, percent, active }: MuscleChipProps
   return (
     <View
       className={cn(
+        // The border is always there, clear when inactive, so selecting never resizes the chip.
         'flex-row items-center gap-2.5 rounded-full border-[1.5px] bg-tile py-0.5 pl-0.75',
-        active ? 'border-accent' : 'border-line',
+        active ? 'border-accent' : 'border-transparent',
         percent !== undefined ? 'pr-2.25' : 'pr-5',
       )}
     >
