@@ -17,11 +17,23 @@ export interface LegalDocument {
   version: string;
   contentMd: string;
   effectiveAt: string;
+  /** Users who accepted an older version must accept this one before they go on. */
+  requiresReacceptance: boolean;
 }
 
-const legalKeys = createQueryKeys('legalDocuments', {
+export const legalKeys = createQueryKeys('legalDocuments', {
   current: (kind: LegalKind, language: string) => [kind, language],
+  accepted: null,
+  pending: (language: string, acceptedIds: string[]) => [language, ...acceptedIds],
 });
+
+/** The terms and the privacy policy in effect now; a kind with nothing published is left out. */
+export async function fetchCurrentDocuments(language: string) {
+  const documents = await Promise.all(
+    LEGAL_KINDS.map((kind) => fetchCurrentDocument(kind, language)),
+  );
+  return documents.filter((d): d is LegalDocument => d !== null);
+}
 
 /** The app language first; English, then the default locale, when it has no translation. */
 const localesFor = (language: string) => [...new Set([language, 'en', 'pt-BR'])];
@@ -30,11 +42,11 @@ const localesFor = (language: string) => [...new Set([language, 'en', 'pt-BR'])]
  * The version of a document in effect now, from `public.legal_documents` (readable logged out,
  * so the links on the sign-up screen work). Null when none has been published.
  */
-async function fetchCurrentDocument(kind: LegalKind, language: string) {
+export async function fetchCurrentDocument(kind: LegalKind, language: string) {
   const locales = localesFor(language);
   const { data, error } = await supabase
     .from('legal_documents')
-    .select('id, kind, locale, version, content_md, effective_at')
+    .select('id, kind, locale, version, content_md, effective_at, requires_reacceptance')
     .eq('kind', kind)
     .in('locale', locales)
     .lte('effective_at', new Date().toISOString())
@@ -50,6 +62,7 @@ async function fetchCurrentDocument(kind: LegalKind, language: string) {
     version: row.version,
     contentMd: row.content_md,
     effectiveAt: row.effective_at,
+    requiresReacceptance: !!row.requires_reacceptance,
   } as LegalDocument;
 }
 

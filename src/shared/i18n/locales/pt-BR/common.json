@@ -66,7 +66,13 @@
     "privacy": "Política de Privacidade",
     "meta": "Versão {{version}} · em vigor desde {{date}}",
     "unavailable": "Este documento ainda não está disponível.",
-    "loadFailed": "Não foi possível carregar o documento. Verifique sua conexão e tente novamente."
+    "loadFailed": "Não foi possível carregar o documento. Verifique sua conexão e tente novamente.",
+    "update": {
+      "title": "Termos atualizados",
+      "subtitle": "Atualizamos nossos textos legais. Leia a nova versão e aceite-a para continuar usando o Forge.",
+      "accept": "Aceitar",
+      "signOut": "Sair"
+    }
   },
   "keypad": {
     "close": "Ocultar teclado",

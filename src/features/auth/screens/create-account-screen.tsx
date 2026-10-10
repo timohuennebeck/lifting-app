@@ -3,7 +3,8 @@ import { type ReactNode, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import type { LegalKind } from '@/features/legal/data/legal-documents';
+import { acceptDocuments } from '@/features/legal/data/legal-acceptances';
+import { fetchCurrentDocuments, type LegalKind } from '@/features/legal/data/legal-documents';
 import { START_STEPS } from '@/features/onboarding/lib/flow';
 import { persistOnboarding } from '@/features/onboarding/lib/persist-onboarding';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
@@ -69,6 +70,9 @@ export function CreateAccountScreen() {
     setBusy(true);
     setError(null);
     try {
+      // Creating the account accepts the documents linked below the button: the versions in
+      // effect now, loaded first so that no account exists without a record of them.
+      const documents = await fetchCurrentDocuments(i18n.language);
       let userId = session?.user.id;
       if (!userId) {
         const draft = useOnboardingStore.getState().draft;
@@ -83,6 +87,7 @@ export function CreateAccountScreen() {
         userId = data.session.user.id;
       }
       await persistOnboarding(userId, useOnboardingStore.getState().draft);
+      await acceptDocuments(userId, documents);
       haptics.success();
       router.push('/body-check');
     } catch {

@@ -58,7 +58,13 @@
     "privacy": "Privacy Policy",
     "meta": "Version {{version}} · effective {{date}}",
     "unavailable": "This document isn't available yet.",
-    "loadFailed": "Couldn't load the document. Check your connection and try again."
+    "loadFailed": "Couldn't load the document. Check your connection and try again.",
+    "update": {
+      "title": "Updated terms",
+      "subtitle": "We've updated our legal texts. Read the new version and agree to it to keep using Forge.",
+      "accept": "Agree",
+      "signOut": "Sign out"
+    }
   },
   "keypad": {
     "close": "Hide keypad",

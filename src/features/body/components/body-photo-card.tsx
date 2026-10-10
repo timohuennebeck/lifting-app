@@ -102,7 +102,7 @@ export function NextCheckCard({ title, note, onPress }: NextCheckCardProps) {
         accessibilityLabel={`${title} · ${note}`}
         onPress={onPress}
         disabled={!onPress}
-        className="h-62.5 w-full items-center justify-center gap-1 rounded-[22px] border border-white/8 bg-surface px-4"
+        className="h-62.5 w-full items-center justify-center gap-1 rounded-[22px] bg-surface px-4"
       >
         <View className="mb-3 size-12 items-center justify-center rounded-full bg-elevated">
           <Icon name="plus" size={14} color={colors.fg} />
