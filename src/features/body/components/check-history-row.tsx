@@ -7,8 +7,9 @@ import { Text } from '@/shared/ui/text';
 
 export interface CheckHistoryRowProps {
   title: string;
-  date: string;
-  /** Score 0–100; omitted for the upcoming (due) check. */
+  /** Omitted for the next check. */
+  date?: string;
+  /** Score 0–100; omitted for the next check. */
   score?: number;
   latest?: boolean;
   trailing?: ReactNode;
@@ -24,11 +25,11 @@ export function CheckHistoryRow({
   trailing,
   onPress,
 }: CheckHistoryRowProps) {
-  const due = score === undefined;
+  const next = score === undefined;
   return (
     <PressableScale
       activeScale={0.98}
-      accessibilityLabel={`${title} · ${date}`}
+      accessibilityLabel={date ? `${title} · ${date}` : title}
       onPress={onPress}
       disabled={!onPress}
       className="gap-2.5 py-3.5"
@@ -36,11 +37,13 @@ export function CheckHistoryRow({
       <View className="flex-row items-center justify-between">
         <Text variant="label">
           {title}
-          <Text variant="label" tone="subtle" className="font-inter">
-            {` · ${date}`}
-          </Text>
+          {date ? (
+            <Text variant="label" tone="subtle" className="font-inter">
+              {` · ${date}`}
+            </Text>
+          ) : null}
         </Text>
-        {due ? (
+        {next ? (
           trailing
         ) : (
           <Text variant="headline" tone={latest ? 'accent' : 'default'} className="text-xl">
@@ -48,7 +51,7 @@ export function CheckHistoryRow({
           </Text>
         )}
       </View>
-      {due ? (
+      {next ? (
         <View className="h-2 flex-row gap-1 overflow-hidden">
           {Array.from({ length: 40 }, (_, i) => (
             <View key={i} className="h-2 w-1.5 rounded-sm bg-control" />

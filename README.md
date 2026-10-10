@@ -101,8 +101,7 @@ default) and returns the check's values, or the photos to retake.
 - **Secrets:** `supabase/functions/.env` locally (loaded by `supabase start`); in production
   `npx supabase secrets set --env-file supabase/functions/.env`. The key must belong to an OpenAI project
   created in the EU region. `OPENAI_MODEL` and `OPENAI_BASE_URL` override the defaults.
-- **Rules (server-side):** adults only (profile age 18+), at least 6 days since the last saved check,
-  at most 5 analyses per user in 24 hours.
+- **Rules (server-side):** adults only (profile age 18+), at most 5 analyses per user in 24 hours.
 - **`body_check_analyses`:** one row per analysis, server-only. Saving a check takes its score, values
   and time from the analysis; a check without one is rejected.
 

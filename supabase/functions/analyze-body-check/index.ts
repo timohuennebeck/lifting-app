@@ -19,9 +19,8 @@ import {
 } from './analysis.ts';
 
 const BUCKET = 'body-checks';
-/** Same rules as the app (features/body-check/lib/eligibility.ts). */
+/** Same rule as the app (features/body-check/lib/eligibility.ts). */
 const MIN_AGE = 18;
-const MIN_GAP_DAYS = 6;
 /** Analyses per user in 24 hours, retakes included; each one is an OpenAI call. */
 const DAILY_LIMIT = 5;
 const DAY_MS = 86_400_000;
@@ -119,12 +118,6 @@ Deno.serve(async (req) => {
   ]);
 
   if ((profile?.age ?? 0) < MIN_AGE) return reply(403, { error: 'not_adult' });
-  if (previous) {
-    const earliest = Date.parse(previous.created_at) + MIN_GAP_DAYS * DAY_MS;
-    if (Date.now() < earliest) {
-      return reply(409, { error: 'too_soon', earliestAt: new Date(earliest).toISOString() });
-    }
-  }
   if ((count ?? 0) >= DAILY_LIMIT) return reply(429, { error: 'limit' });
 
   const photos = await Promise.all(

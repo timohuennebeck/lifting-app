@@ -85,7 +85,6 @@
     "cta": "Ver resultado",
     "errors": {
       "offline": "A análise precisa de ligação à internet. As tuas fotos ficam guardadas.",
-      "tooSoon": "Entre dois checks há pelo menos 6 dias.",
       "limit": "Já iniciaste várias análises hoje. Tenta novamente amanhã.",
       "notAdult": "O check corporal só está disponível a partir dos 18 anos.",
       "refused": "Não conseguimos analisar estas fotos. Repete-as com roupa desportiva ou roupa interior.",

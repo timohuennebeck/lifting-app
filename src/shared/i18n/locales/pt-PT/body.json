@@ -3,32 +3,14 @@
   "sinceStart": "{{delta}} desde o início",
   "checkLabel": "Check {{n}} · {{date}}",
   "check": "Check {{n}}",
-  "today": "hoje",
-  "due": "Pendente",
   "baseline": "Valor inicial",
-  "dueOn": "Previsto para {{date}}",
-  "dueNow": "Pendente agora",
-  "inDays_one": "daqui a {{count}} dia",
-  "inDays_other": "daqui a {{count}} dias",
+  "startNow": "Iniciar agora",
+  "startShort": "Iniciar",
   "history": "Histórico",
   "start": "Iniciar check corporal",
   "empty": {
     "title": "Ainda sem check corporal",
     "body": "Tira três fotos e recebe uma pontuação da tua composição corporal. Repete regularmente para veres o teu progresso."
-  },
-  "rhythm": {
-    "title": "Frequência do check",
-    "subtitle": "Com que frequência queres fazer o check corporal?",
-    "options": {
-      "7": "Todas as semanas",
-      "14": "De 2 em 2 semanas",
-      "21": "De 3 em 3 semanas",
-      "28": "De 4 em 4 semanas"
-    },
-    "nextOn": "Próximo check previsto para {{date}}",
-    "checkNow": "Fazer check agora",
-    "availableOn": "Disponível a partir de {{date}}",
-    "gapNote": "Entre dois checks há pelo menos {{days}} dias."
   },
   "adultsOnly": {
     "title": "A partir de 18 anos",

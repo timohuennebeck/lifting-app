@@ -85,7 +85,6 @@
     "cta": "Ergebnis ansehen",
     "errors": {
       "offline": "Für die Analyse brauchst du eine Internetverbindung. Deine Fotos bleiben erhalten.",
-      "tooSoon": "Zwischen zwei Checks liegen mindestens 6 Tage.",
       "limit": "Du hast heute schon mehrere Analysen gestartet. Versuch es morgen wieder.",
       "notAdult": "Der Körpercheck ist erst ab 18 Jahren verfügbar.",
       "refused": "Diese Fotos können wir nicht auswerten. Bitte nimm sie in Sportkleidung oder Unterwäsche neu auf.",

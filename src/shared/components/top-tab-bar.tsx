@@ -19,8 +19,6 @@ export interface TopTabBarProps {
   position: Animated.AnimatedInterpolation<number>;
   /** Moves the pager to a route and updates the state with it. */
   jumpTo: (key: string) => void;
-  /** Counts shown next to tab titles, by route name. */
-  badges?: Record<string, number | undefined>;
   className?: string;
 }
 
@@ -34,7 +32,6 @@ export function TopTabBar({
   descriptors,
   position,
   jumpTo,
-  badges,
   className,
 }: TopTabBarProps) {
   const focused = state.routes[state.index]?.name ?? '';
@@ -46,7 +43,6 @@ export function TopTabBar({
       tabs={state.routes.map((route) => ({
         key: route.name,
         label: descriptors[route.key]?.options.title ?? route.name,
-        badge: badges?.[route.name],
       }))}
       onChange={(name) => {
         const route = state.routes.find((r) => r.name === name);

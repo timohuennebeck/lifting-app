@@ -86,13 +86,12 @@ export function BodyPhotoCard({
 export interface NextCheckCardProps {
   /** "Check 2" */
   title: string;
-  /** When it is due, e.g. "Fällig am 3. Okt." */
+  /** E.g. "Jetzt starten". */
   note: string;
-  /** Undefined until the check is due: the tile then doesn't react. */
-  onPress?: () => void;
+  onPress: () => void;
 }
 
-/** Empty tile beside the only check so far: the next one, and when it is due. */
+/** Empty tile beside the only check so far: starts the next one. */
 export function NextCheckCard({ title, note, onPress }: NextCheckCardProps) {
   return (
     <CardSlot>
@@ -101,7 +100,6 @@ export function NextCheckCard({ title, note, onPress }: NextCheckCardProps) {
         activeScale={0.98}
         accessibilityLabel={`${title} · ${note}`}
         onPress={onPress}
-        disabled={!onPress}
         className="h-62.5 w-full items-center justify-center gap-1 rounded-[22px] bg-surface px-4"
       >
         <View className="mb-3 size-12 items-center justify-center rounded-full bg-elevated">

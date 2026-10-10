@@ -10,8 +10,6 @@ import { Text } from './text';
 export interface UnderlineTab<T extends string> {
   key: T;
   label: string;
-  /** A count in an accent circle after the label, e.g. 1 for a due body check. */
-  badge?: number;
 }
 
 export interface UnderlineTabsProps<T extends string> {
@@ -52,18 +50,11 @@ export function UnderlineTabs<T extends string>({
           accessibilityRole="tab"
           accessibilityState={{ selected: tab.key === value }}
           onPress={() => onChange(tab.key)}
-          className="h-11.5 flex-1 flex-row items-center justify-center gap-1.5"
+          className="h-11.5 flex-1 items-center justify-center"
         >
           <Text variant="label" tone={tab.key === value ? 'default' : 'subtle'}>
             {tab.label}
           </Text>
-          {tab.badge ? (
-            <View className="h-4.5 min-w-4.5 items-center justify-center rounded-full bg-accent px-1">
-              <Text tone="onAccent" className="font-inter-bold text-[11px] leading-3.5">
-                {tab.badge}
-              </Text>
-            </View>
-          ) : null}
         </PressableScale>
       ))}
       <Animated.View

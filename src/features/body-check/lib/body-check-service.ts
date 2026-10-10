@@ -37,7 +37,7 @@ export type AnalysisOutcome =
   /** The analysis could not judge these photos; nothing was scored. */
   | { status: 'retake'; issues: PhotoRejection[] };
 
-export type AnalysisFailure = 'offline' | 'tooSoon' | 'limit' | 'notAdult' | 'refused' | 'failed';
+export type AnalysisFailure = 'offline' | 'limit' | 'notAdult' | 'refused' | 'failed';
 
 export class AnalysisError extends Error {
   constructor(readonly reason: AnalysisFailure) {
@@ -55,7 +55,6 @@ const SERVER_ISSUES: Record<string, PhotoIssue> = {
 };
 
 const SERVER_ERRORS: Record<string, AnalysisFailure> = {
-  too_soon: 'tooSoon',
   limit: 'limit',
   not_adult: 'notAdult',
   refused: 'refused',

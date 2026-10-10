@@ -3,32 +3,14 @@
   "sinceStart": "{{delta}} since start",
   "checkLabel": "Check {{n}} · {{date}}",
   "check": "Check {{n}}",
-  "today": "today",
-  "due": "Due",
   "baseline": "Baseline",
-  "dueOn": "Due {{date}}",
-  "dueNow": "Due now",
-  "inDays_one": "in {{count}} day",
-  "inDays_other": "in {{count}} days",
+  "startNow": "Start now",
+  "startShort": "Start",
   "history": "History",
   "start": "Start body check",
   "empty": {
     "title": "No body check yet",
     "body": "Take three photos and get a score for your body composition. Repeat it regularly to see your progress."
-  },
-  "rhythm": {
-    "title": "Check rhythm",
-    "subtitle": "How often do you want to do a body check?",
-    "options": {
-      "7": "Every week",
-      "14": "Every 2 weeks",
-      "21": "Every 3 weeks",
-      "28": "Every 4 weeks"
-    },
-    "nextOn": "Next check due {{date}}",
-    "checkNow": "Check now",
-    "availableOn": "Available from {{date}}",
-    "gapNote": "Two checks are at least {{days}} days apart."
   },
   "adultsOnly": {
     "title": "18 and over",

@@ -25,11 +25,6 @@ const HEIGHT_CM = { min: 120, max: 230 } as const;
 const HEIGHT_IN = { min: 47, max: 91 } as const;
 export const FIRST_NAME_MAX = 24;
 
-/** How often the user wants a body check, in days (picked on the Körper tab). */
-export const BODY_CHECK_INTERVALS = [7, 14, 21, 28] as const;
-export type BodyCheckInterval = (typeof BODY_CHECK_INTERVALS)[number];
-export const DEFAULT_BODY_CHECK_INTERVAL: BodyCheckInterval = 14;
-
 /** Body-weight range in the user's unit (kg or lb). */
 export const bodyWeightRange = (units: UnitSystem) =>
   units === 'imperial' ? WEIGHT_LB : WEIGHT_KG;
@@ -86,7 +81,6 @@ export interface Profile {
   avatarPath: string | null;
   /** "About you", written by the user. */
   bio: string | null;
-  bodyCheckIntervalDays: BodyCheckInterval;
   onboardedAt: string | null;
   createdAt: string;
 }
@@ -111,8 +105,6 @@ function toProfile(r: ProfileRecord): Profile {
     language: r.language as AppLanguage | null,
     avatarPath: r.avatar_path,
     bio: r.bio,
-    bodyCheckIntervalDays:
-      (r.body_check_interval_days as BodyCheckInterval | null) ?? DEFAULT_BODY_CHECK_INTERVAL,
     onboardedAt: r.onboarded_at,
     createdAt: r.created_at,
   };
@@ -162,7 +154,6 @@ const toColumns = (p: ProfilePatch) => ({
   language: p.language,
   avatar_path: p.avatarPath,
   bio: p.bio,
-  body_check_interval_days: p.bodyCheckIntervalDays,
   onboarded_at: p.onboardedAt,
 });
 

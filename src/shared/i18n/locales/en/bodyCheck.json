@@ -85,7 +85,6 @@
     "cta": "View result",
     "errors": {
       "offline": "The analysis needs an internet connection. Your photos are kept.",
-      "tooSoon": "Two checks are at least 6 days apart.",
       "limit": "You’ve started several analyses today. Please try again tomorrow.",
       "notAdult": "The body check is only available from age 18.",
       "refused": "We can’t analyse these photos. Please retake them in sportswear or underwear.",
