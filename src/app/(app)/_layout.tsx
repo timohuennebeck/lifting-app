@@ -21,6 +21,7 @@ export default function AppLayout() {
         <Stack.Screen name="body-check" options={{ gestureEnabled: false }} />
         <Stack.Screen name="pro" options={{ gestureEnabled: false, animation: 'fade' }} />
         <Stack.Screen name="support" />
+        <Stack.Screen name="search" options={{ animation: 'slide_from_right' }} />
       </Stack>
       {/* Above every screen while a new legal version needs the user's consent. */}
       <LegalUpdateGate />

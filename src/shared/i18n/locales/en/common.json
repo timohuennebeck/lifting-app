@@ -52,10 +52,13 @@
     "profile": "Profile"
   },
   "progressTab": {
-    "exercises": "Exercises",
-    "recent": "Recently trained",
     "muscles": "Muscles",
-    "body": "Body",
+    "body": "Body"
+  },
+  "search": {
+    "open": "Search exercises",
+    "title": "Exercises",
+    "recent": "Recently trained",
     "recordA11y": "Personal record: {{value}}, last on {{date}}"
   },
   "settings": "Settings",

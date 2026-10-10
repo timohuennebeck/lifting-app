@@ -14,13 +14,16 @@ import { Text } from '@/shared/ui/text';
 import { UserAvatar } from './user-avatar';
 
 export interface TabHeaderProps {
-  /** Extra round buttons placed before the settings button. */
+  /** Extra round buttons placed before search and settings. */
   actions?: ReactNode;
   /** Avatar, date and greeting on the left; the profile tab hides them (01b-2). */
   greeting?: boolean;
 }
 
-/** Header shared by all tabs: avatar, today's date, greeting, optional actions and settings. */
+/**
+ * Header shared by all tabs: avatar, today's date, greeting, optional actions, then search
+ * (exercises and their records) and settings, always in the same place.
+ */
 export function TabHeader({ actions, greeting = true }: TabHeaderProps) {
   const { t } = useTranslation();
   const { profile } = useProfile();
@@ -50,6 +53,12 @@ export function TabHeader({ actions, greeting = true }: TabHeaderProps) {
       )}
       <View className="flex-row gap-2">
         {actions}
+        <IconButton
+          icon="search"
+          iconSize={17}
+          accessibilityLabel={t('search.open')}
+          onPress={() => router.push('/search')}
+        />
         <IconButton
           icon="settings"
           iconSize={20}

@@ -6,7 +6,7 @@ import { workoutExercises, workouts, workoutSets } from '@/shared/data/powersync
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 import type { SetValues } from '@/shared/lib/format';
 
-const progressKeys = createQueryKeys('progress', { records: null });
+const searchKeys = createQueryKeys('search', { records: null });
 
 export interface ExerciseRecord {
   /** The heaviest set: most weight, then most reps, then most seconds. */
@@ -56,7 +56,7 @@ function toRecords(rows: RowOf<typeof recordsQuery>[]) {
 /** Each trained exercise's heaviest set and when it was last done, from finished workouts. */
 export function useExerciseRecords() {
   return useDrizzleQuery({
-    queryKey: progressKeys.records.queryKey,
+    queryKey: searchKeys.records.queryKey,
     query: recordsQuery(),
     map: toRecords,
   });

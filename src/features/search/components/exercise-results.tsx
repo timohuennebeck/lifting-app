@@ -2,16 +2,13 @@ import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, View, type ViewToken } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AlphabetRail } from '@/features/exercises/components/alphabet-rail';
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
-import { MuscleGroupFilter } from '@/features/exercises/components/muscle-group-filter';
 import {
   type ExerciseOption,
   useExerciseSearch,
 } from '@/features/exercises/hooks/use-exercise-search';
-import type { MuscleGroupId } from '@/features/exercises/lib/muscle-groups';
 import { isBodyweight } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { formatSet, formatShortDate, type SetValues, type UnitSystem } from '@/shared/lib/format';
@@ -19,7 +16,6 @@ import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
-import { TextField } from '@/shared/ui/text-field';
 
 import { type ExerciseRecord, useExerciseRecords } from '../data/exercise-records';
 
@@ -41,20 +37,23 @@ function formatRecord(exerciseId: string, best: SetValues, units: UnitSystem) {
   return `+${formatSet(best, units)}`;
 }
 
+export interface ExerciseResultsProps {
+  query: string;
+  /** Height of the search bar over the foot of the list, so the last rows clear it. */
+  bottomInset: number;
+}
+
 /**
- * Every exercise (search, muscle group boxes): the trained ones first, last done on top, with
- * their heaviest set; then the others A–Z with the letter index. A tap opens the exercise, on
- * its history when it has one.
+ * The exercises matching the search: the trained ones first, last done on top, with their
+ * heaviest set (★); then the others A–Z with the letter index. A tap opens the exercise, on its
+ * history when it has one.
  */
-export function ExerciseRecordsList() {
+export function ExerciseResults({ query, bottomInset }: ExerciseResultsProps) {
   const { t } = useTranslation(['exercises', 'common']);
-  const insets = useSafeAreaInsets();
   const units = useUnits();
-  const [query, setQuery] = useState('');
-  const [group, setGroup] = useState<MuscleGroupId | null>(null);
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
   const listRef = useRef<FlatList<Row>>(null);
-  const options = useExerciseSearch(query, group);
+  const options = useExerciseSearch(query);
   const { data: records } = useExerciseRecords();
 
   const trained = options
@@ -63,7 +62,7 @@ export function ExerciseRecordsList() {
     .sort((a, b) => (b.record?.lastAt ?? '').localeCompare(a.record?.lastAt ?? ''));
   const rest = options.filter((o) => !records?.has(o.id));
   const rows: Row[] = [
-    ...trained.map((o, i) => ({ ...o, heading: i === 0 ? t('common:progressTab.recent') : null })),
+    ...trained.map((o, i) => ({ ...o, heading: i === 0 ? t('common:search.recent') : null })),
     ...rest.map((o, i) => ({
       ...o,
       record: undefined,
@@ -76,7 +75,7 @@ export function ExerciseRecordsList() {
   }, []);
   // The index covers the A–Z part below the trained exercises.
   const letters = new Set(rest.map((r) => r.letter));
-  const bottom = insets.bottom + 24;
+  const bottom = bottomInset + 16;
 
   // FlatList requires a callback that never changes identity.
   const [onViewable] = useState(() => ({ viewableItems }: { viewableItems: ViewToken<Row>[] }) => {
@@ -95,22 +94,7 @@ export function ExerciseRecordsList() {
 
   return (
     <View className="flex-1">
-      <TextField
-        icon="search"
-        shape="pill"
-        clearable
-        value={query}
-        onChangeText={setQuery}
-        placeholder={t('picker.search')}
-        autoCorrect={false}
-        returnKeyType="search"
-        className="mx-4 mt-4"
-      />
-      {/* Scrolls edge to edge: it offsets the page padding it sits in. */}
-      <View className="px-4 pt-3">
-        <MuscleGroupFilter value={group} onChange={setGroup} inset={16} />
-      </View>
-      <View className="mt-1 flex-1 flex-row px-4">
+      <View className="flex-1 flex-row px-4">
         <FlatList
           ref={listRef}
           className="flex-1"
@@ -164,7 +148,7 @@ export function ExerciseRecordsList() {
                   <View
                     className="items-end"
                     accessible
-                    accessibilityLabel={t('common:progressTab.recordA11y', {
+                    accessibilityLabel={t('common:search.recordA11y', {
                       value: formatRecord(item.id, item.record.best, units),
                       date: formatShortDate(item.record.lastAt),
                     })}

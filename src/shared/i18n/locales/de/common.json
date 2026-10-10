@@ -52,10 +52,13 @@
     "profile": "Profil"
   },
   "progressTab": {
-    "exercises": "Übungen",
-    "recent": "Zuletzt trainiert",
     "muscles": "Muskeln",
-    "body": "Körper",
+    "body": "Körper"
+  },
+  "search": {
+    "open": "Übungen suchen",
+    "title": "Übungen",
+    "recent": "Zuletzt trainiert",
     "recordA11y": "Bestleistung: {{value}}, zuletzt am {{date}}"
   },
   "settings": "Einstellungen",

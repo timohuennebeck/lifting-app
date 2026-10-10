@@ -6,12 +6,11 @@ import { MusclesView } from '@/features/muscles/components/muscles-view';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { UnderlineTabs } from '@/shared/ui/underline-tabs';
 
-import { ExerciseRecordsList } from '../components/exercise-records-list';
 import { type ProgressView, useProgressStore } from '../stores/progress-store';
 
-const VIEWS: ProgressView[] = ['exercises', 'muscles', 'body'];
+const VIEWS: ProgressView[] = ['muscles', 'body'];
 
-/** Progress tab: exercises with their records, trained muscles and body checks, one at a time. */
+/** Progress tab: trained muscles and body checks, one at a time (records are in the search). */
 export function ProgressScreen() {
   const { t } = useTranslation();
   const view = useProgressStore((s) => s.view);
@@ -21,8 +20,6 @@ export function ProgressScreen() {
 
   return (
     <TabScreen
-      // The exercise list scrolls on its own, under the pinned tabs.
-      scroll={view !== 'exercises'}
       pinned={
         <UnderlineTabs
           className="mx-4 mt-3"
@@ -36,13 +33,7 @@ export function ProgressScreen() {
         />
       }
     >
-      {view === 'exercises' ? (
-        <ExerciseRecordsList />
-      ) : view === 'muscles' ? (
-        <MusclesView />
-      ) : (
-        <BodyView />
-      )}
+      {view === 'muscles' ? <MusclesView /> : <BodyView />}
     </TabScreen>
   );
 }

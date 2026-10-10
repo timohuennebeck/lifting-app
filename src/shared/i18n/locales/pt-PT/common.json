@@ -60,10 +60,13 @@
     "profile": "Perfil"
   },
   "progressTab": {
-    "exercises": "Exercícios",
-    "recent": "Treinados recentemente",
     "muscles": "Músculos",
-    "body": "Corpo",
+    "body": "Corpo"
+  },
+  "search": {
+    "open": "Pesquisar exercícios",
+    "title": "Exercícios",
+    "recent": "Treinados recentemente",
     "recordA11y": "Recorde pessoal: {{value}}, último a {{date}}"
   },
   "settings": "Definições",
