@@ -3,11 +3,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { useBodyCheckPhotos, useBodyChecks } from '@/features/body-check/data/body-checks';
+import { useBodyCheckPhotos } from '@/features/body-check/data/body-checks';
 import { POSES, type BodyPose } from '@/features/body-check/lib/poses';
 import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
-import { useNow } from '@/shared/hooks/use-now';
-import { DAY_MS, MINUTE_MS } from '@/shared/lib/date';
 import { formatShortDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -17,11 +15,9 @@ import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
+import { useNextCheck } from '../hooks/use-next-check';
 import { BodyPhotoCard, NextCheckCard } from './body-photo-card';
 import { CheckHistoryRow } from './check-history-row';
-
-/** A new check is due this many days after the last one. */
-const CHECK_INTERVAL_DAYS = 21;
 
 function openCamera() {
   startBodyCheck();
@@ -34,16 +30,12 @@ const openCheck = (id: string) => router.push(`/body-check/result/${id}`);
 export function BodyView() {
   const { t } = useTranslation(['body', 'bodyCheck']);
   const camera = useCameraAccess(openCamera);
-  const { data: checks = [] } = useBodyChecks();
+  const { checks, dueAt, due, daysLeft } = useNextCheck();
   const { data: photos = {} } = useBodyCheckPhotos();
   const [pose, setPose] = useState<BodyPose>('front');
-  const now = useNow(MINUTE_MS);
 
   const first = checks[0];
   const latest = checks[checks.length - 1];
-  const dueAt = latest ? Date.parse(latest.createdAt) + CHECK_INTERVAL_DAYS * DAY_MS : 0;
-  const due = !!latest && now >= dueAt;
-  const daysLeft = Math.ceil((dueAt - now) / DAY_MS);
   const delta = latest && first ? latest.score - first.score : 0;
   const nextTitle = t('check', { n: checks.length + 1 });
 

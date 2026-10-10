@@ -25,7 +25,7 @@ const ROW_HEIGHT = 78;
 const ANCHOR_HEIGHT = 41;
 
 interface Row extends ExerciseOption {
-  /** Its letter above the first row of a letter. */
+  /** "Zuletzt trainiert" above the first trained row, the letter above the first of a letter. */
   heading: string | null;
   record: ExerciseRecord | undefined;
 }
@@ -40,8 +40,9 @@ function formatRecord(exerciseId: string, best: SetValues, units: UnitSystem) {
 }
 
 /**
- * Every exercise A–Z (search, muscle group boxes, letter index); the trained ones show their
- * heaviest set and when they were last done. A tap opens the exercise on its history.
+ * Every exercise (search, muscle group boxes): the trained ones first, last done on top, with
+ * their heaviest set; then the others A–Z with the letter index. A tap opens the exercise, on
+ * its history when it has one.
  */
 export function ExerciseRecordsList() {
   const { t } = useTranslation(['exercises', 'common']);
@@ -54,26 +55,36 @@ export function ExerciseRecordsList() {
   const options = useExerciseSearch(query, group);
   const { data: records } = useExerciseRecords();
 
-  const rows: Row[] = options.map((o, i) => ({
-    ...o,
-    heading: i === 0 || options[i - 1].letter !== o.letter ? o.letter : null,
-    record: records?.get(o.id),
-  }));
+  const trained = options
+    .filter((o) => records?.has(o.id))
+    .map((o) => ({ ...o, record: records?.get(o.id) }))
+    .sort((a, b) => (b.record?.lastAt ?? '').localeCompare(a.record?.lastAt ?? ''));
+  const rest = options.filter((o) => !records?.has(o.id));
+  const rows: Row[] = [
+    ...trained.map((o, i) => ({ ...o, heading: i === 0 ? t('common:progressTab.recent') : null })),
+    ...rest.map((o, i) => ({
+      ...o,
+      record: undefined,
+      heading: i === 0 || rest[i - 1].letter !== o.letter ? o.letter : null,
+    })),
+  ];
   const offsets = rows.reduce<number[]>((acc, row, i) => {
     acc.push((acc[i - 1] ?? 0) + (i ? rowHeight(rows[i - 1]) : 0));
     return acc;
   }, []);
-  const letters = new Set(rows.map((r) => r.letter));
+  // The index covers the A–Z part below the trained exercises.
+  const letters = new Set(rest.map((r) => r.letter));
   const bottom = insets.bottom + 24;
 
   // FlatList requires a callback that never changes identity.
   const [onViewable] = useState(() => ({ viewableItems }: { viewableItems: ViewToken<Row>[] }) => {
     const first = viewableItems[0]?.item;
-    if (first) setActiveLetter(first.letter);
+    // The trained exercises on top aren't part of the A–Z index.
+    if (first) setActiveLetter(first.record ? null : first.letter);
   });
 
   function jump(letter: string) {
-    const index = rows.findIndex((r) => r.letter >= letter);
+    const index = rows.findIndex((r, i) => i >= trained.length && r.letter >= letter);
     const target = index < 0 ? rows.length - 1 : index;
     if (target < 0) return;
     setActiveLetter(rows[target].letter);
@@ -159,7 +170,7 @@ export function ExerciseRecordsList() {
             </View>
           )}
         />
-        {rows.length ? (
+        {rest.length ? (
           <View className="absolute top-2 right-2" style={{ bottom: bottom + 8 }}>
             <AlphabetRail available={letters} active={activeLetter} onJump={jump} />
           </View>

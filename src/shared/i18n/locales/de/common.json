@@ -52,8 +52,8 @@
     "profile": "Profil"
   },
   "progressTab": {
-    "title": "Fortschritt",
     "exercises": "Übungen",
+    "recent": "Zuletzt trainiert",
     "muscles": "Muskeln",
     "body": "Körper"
   },

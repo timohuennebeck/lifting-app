@@ -15,6 +15,8 @@ import { Text } from './text';
 export interface UnderlineTab<T extends string> {
   key: T;
   label: string;
+  /** A small accent dot after the label: something there wants attention. */
+  dot?: boolean;
 }
 
 export interface UnderlineTabsProps<T extends string> {
@@ -62,11 +64,12 @@ export function UnderlineTabs<T extends string>({
           accessibilityRole="tab"
           accessibilityState={{ selected: tab.key === value }}
           onPress={() => onChange(tab.key)}
-          className="h-11.5 flex-1 items-center justify-center"
+          className="h-11.5 flex-1 flex-row items-center justify-center gap-1.5"
         >
           <Text variant="label" tone={tab.key === value ? 'default' : 'subtle'}>
             {tab.label}
           </Text>
+          {tab.dot ? <View className="size-1.75 rounded-full bg-accent" /> : null}
         </PressableScale>
       ))}
       <Animated.View
