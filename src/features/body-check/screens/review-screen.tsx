@@ -20,7 +20,7 @@ import { POSES, WARN_COLOR, type BodyPose } from '../lib/poses';
 import { useBodyCheckStore } from '../stores/body-check-store';
 
 const STAGE_MAX = 400;
-/** Space under the photo for the pills, as in the design (400 − 22 − 304). */
+/** Stage height around the photo: its 22pt top margin and the pills under it (400 − 304). */
 const STAGE_CHROME = 96;
 const PHOTO_MAX_HEIGHT = 304;
 

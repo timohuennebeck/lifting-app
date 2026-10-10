@@ -20,20 +20,26 @@ const letterOf = (name: string) => name.normalize('NFD').charAt(0).toUpperCase()
 export function useExerciseSearch(query: string, group?: MuscleGroupId | null) {
   const { i18n } = useTranslation();
   const rows = useCatalogStore((s) => s.rows);
+  // Names, groups and order change with the language or the catalog, not with each keystroke.
+  const options = useMemo(
+    () =>
+      activeExerciseIds(rows)
+        .map((id): ExerciseOption => {
+          const name = exerciseName(id, i18n.language);
+          return {
+            id,
+            name,
+            group: primaryGroup(id),
+            letter: letterOf(name),
+          };
+        })
+        .sort((a, b) => a.name.localeCompare(b.name, i18n.language)),
+    [i18n.language, rows],
+  );
   return useMemo(() => {
     const q = query.trim().toLocaleLowerCase(i18n.language);
-    return activeExerciseIds(rows)
-      .map((id): ExerciseOption => {
-        const name = exerciseName(id, i18n.language);
-        return {
-          id,
-          name,
-          group: primaryGroup(id),
-          letter: letterOf(name),
-        };
-      })
+    return options
       .filter((o) => !q || o.name.toLocaleLowerCase(i18n.language).includes(q))
-      .filter((o) => !group || o.group === group)
-      .sort((a, b) => a.name.localeCompare(b.name, i18n.language));
-  }, [query, group, i18n.language, rows]);
+      .filter((o) => !group || o.group === group);
+  }, [options, query, group, i18n.language]);
 }

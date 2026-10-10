@@ -29,7 +29,8 @@ export const storagePathOf = (userId: string, checkId: string, pose: BodyPose) =
 
 /**
  * Resizes and compresses a camera shot into the check's folder. Drafts get a unique
- * name so a retake never shows a cached image; `finalizePhotos` renames them on save.
+ * name so a retake never shows a cached image; `finalizePhotos` copies them to their final
+ * names on save.
  */
 export async function storeShot(
   source: StoredPhoto,

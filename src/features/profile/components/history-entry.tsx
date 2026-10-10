@@ -16,8 +16,7 @@ export interface HistoryEntryProps {
 
 /** "<name> finished <workout> in <duration>" feed row; opens the summary. */
 export function HistoryEntry({ workout, userName }: HistoryEntryProps) {
-  const { t } = useTranslation('profile');
-  const { t: tc } = useTranslation();
+  const { t } = useTranslation(['profile', 'common']);
   const started = new Date(workout.startedAt);
   const now = new Date();
   const yesterday = addDays(startOfDay(now), -1);
@@ -27,7 +26,7 @@ export function HistoryEntry({ workout, userName }: HistoryEntryProps) {
     : isSameDay(started, yesterday)
       ? t('when.yesterday', { time })
       : formatWeekdayDate(started);
-  const duration = `${minutesBetween(workout.startedAt, workout.finishedAt)} ${tc('units.minShort')}`;
+  const duration = `${minutesBetween(workout.startedAt, workout.finishedAt)} ${t('common:units.minShort')}`;
 
   return (
     <PressableScale

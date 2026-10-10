@@ -9,6 +9,7 @@ import { type GroupBand, groupBands } from '../lib/metrics';
 import { WARN_COLOR } from '../lib/poses';
 
 const BANDS: GroupBand[] = ['top', 'mid', 'focus'];
+const TINT = { top: colors.accent, focus: WARN_COLOR, mid: null } as const;
 
 export interface GroupBandsProps {
   scores: Partial<GroupScores>;
@@ -18,7 +19,6 @@ export interface GroupBandsProps {
 export function GroupBands({ scores }: GroupBandsProps) {
   const { t } = useTranslation('bodyCheck');
   const bands = groupBands(scores);
-  const tint = { top: colors.accent, focus: WARN_COLOR, mid: null } as const;
 
   return (
     <View className="px-5">
@@ -34,7 +34,7 @@ export function GroupBands({ scores }: GroupBandsProps) {
           </View>
           <View className="flex-row flex-wrap gap-2">
             {bands[band].map(({ group, value }) => {
-              const color = tint[band];
+              const color = TINT[band];
               return (
                 <View
                   key={group}

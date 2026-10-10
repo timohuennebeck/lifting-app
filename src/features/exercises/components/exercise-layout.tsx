@@ -33,7 +33,7 @@ export const useExerciseId = () => use(ExerciseIdContext);
 /**
  * Exercise info (design 06e): photo, name and the swipeable tabs "Übung" (muscles, technique)
  * and "Historie" (/exercise/[id]/history). Both stay mounted. Opened from the live workout, the
- * plan import and the search.
+ * templates, the plan import and the search.
  */
 export function ExerciseLayout() {
   const { id: exerciseId } = useLocalSearchParams<{ id: string }>();

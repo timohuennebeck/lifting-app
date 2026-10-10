@@ -2,26 +2,22 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { newId } from '@/shared/data/json';
-import { supabase } from '@/shared/data/supabase';
 import { mmkvStorage } from '@/shared/lib/storage';
 import { useSessionStore } from '@/shared/stores/session-store';
 
-import type { BodyCheckResult, PhotoIssue, PhotoRejection } from '../lib/body-check-service';
+import {
+  type BodyCheckResult,
+  type PhotoIssue,
+  type PhotoRejection,
+  removeUploadedPhotos,
+} from '../lib/body-check-service';
 import {
   deleteAbandonedDrafts,
   deleteDrafts,
   deleteFile,
-  PHOTO_BUCKET,
   type StoredPhoto,
-  storagePathOf,
 } from '../lib/photo-files';
-import {
-  nextMissingPose,
-  POSES,
-  TIMER_STEPS,
-  type BodyPose,
-  type TimerSeconds,
-} from '../lib/poses';
+import { nextMissingPose, TIMER_STEPS, type BodyPose, type TimerSeconds } from '../lib/poses';
 
 export interface Shot extends StoredPhoto {
   issue: PhotoIssue | null;
@@ -75,13 +71,10 @@ const EMPTY = {
   result: null,
 } as const;
 
-/** Removes a discarded check's uploaded photos; best effort, offline they stay. */
+/** Removes a discarded check's uploaded photos. */
 function removeUploads(checkId: string) {
   const userId = useSessionStore.getState().session?.user.id;
-  if (!userId) return;
-  void supabase.storage
-    .from(PHOTO_BUCKET)
-    .remove(POSES.map((pose) => storagePathOf(userId, checkId, pose)));
+  if (userId) removeUploadedPhotos(checkId, userId);
 }
 
 /** Draft of the running body check plus the camera's timer and lens preferences. */

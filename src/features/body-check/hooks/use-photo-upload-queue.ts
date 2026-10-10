@@ -22,7 +22,8 @@ async function uploadPendingPhotos(userId: string) {
 }
 
 /**
- * Background upload of body-check photos to Supabase Storage while signed in; see
+ * Background upload to Supabase Storage of body-check photos saved without one: older checks,
+ * from before the analysis uploaded the photos itself. Runs while signed in; see
  * useBackgroundDrain for when it runs and retries. Mounted once in the (app) layout.
  */
 export function usePhotoUploadQueue() {

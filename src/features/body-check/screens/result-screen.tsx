@@ -199,7 +199,7 @@ export function ResultScreen() {
                     checkId={id}
                     pose={pose}
                     uri={saved ? undefined : shots[pose]?.uri}
-                    storagePath={photos?.[id]?.[pose]?.storagePath}
+                    storagePath={photos?.[id]?.[pose]}
                     accessibilityLabel={t(`poses.${pose}.name`)}
                   />
                 </View>

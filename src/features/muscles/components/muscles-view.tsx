@@ -2,23 +2,18 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { MUSCLE_REGION, muscleShares } from '@/shared/data/muscles';
+import { MUSCLE_REGION, type MuscleShare, muscleShares } from '@/shared/data/muscles';
 import { useMuscleVolume } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
 import { addDays, DAY_RANGES, type DayRange, startOfDay } from '@/shared/lib/date';
-import { BodyMaps, MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
+import { BodyMaps, MUSCLE_IDS } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { MuscleShareTile } from './muscle-share-tile';
 
-interface TileData {
-  muscle: MuscleId;
-  percent: number;
-}
-
 interface TileGridProps {
-  tiles: TileData[];
+  tiles: MuscleShare[];
   trained: boolean;
 }
 

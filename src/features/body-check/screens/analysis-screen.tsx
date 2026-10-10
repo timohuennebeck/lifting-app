@@ -66,9 +66,8 @@ export function AnalysisScreen() {
 
   const analyze = useEffectEvent(() => {
     if (!checkId || !userId || !complete) return;
-    const store = useBodyCheckStore.getState();
     // Marked first: whatever got uploaded is removed again if the check is discarded.
-    store.setUploaded();
+    useBodyCheckStore.getState().setUploaded();
     let active = true;
     analysisOf(checkId, userId, shots as Record<BodyPose, Shot>)
       .then((outcome) => {

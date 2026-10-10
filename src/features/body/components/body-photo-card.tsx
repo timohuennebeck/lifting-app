@@ -23,10 +23,6 @@ export interface BodyPhotoCardProps {
 }
 
 /**
- * Before/after tile of the Body tab with the check's photo of the selected pose.
- * Falls back to a body silhouette while the photo is not available on this device.
- */
-/**
  * Half of the card row. A flex box can't shrink below its own border and padding, so those
  * would make one card wider than the other; the slot has none and the card fills it.
  */
@@ -34,6 +30,10 @@ function CardSlot({ children }: { children: ReactNode }) {
   return <View className="min-w-0 flex-1">{children}</View>;
 }
 
+/**
+ * Before/after tile of the Body tab with the check's photo of the selected pose.
+ * Falls back to a body silhouette while the photo is not available on this device.
+ */
 export function BodyPhotoCard({
   checkId,
   pose,

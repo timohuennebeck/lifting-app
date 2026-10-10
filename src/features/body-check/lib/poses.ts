@@ -10,12 +10,12 @@ export type BodyGroup = (typeof GROUPS)[number];
 export const TIMER_STEPS = [3, 10, 0] as const;
 export type TimerSeconds = (typeof TIMER_STEPS)[number];
 
-/** Warning orange of the review and result screens (not part of the theme tokens). */
+/** Warning orange of the camera, review and result screens (not part of the theme tokens). */
 export const WARN_COLOR = '#FF8A3D';
 
 /** First pose without a photo, preferring poses after `from`. */
-export function nextMissingPose(taken: Partial<Record<BodyPose, unknown>>, from?: BodyPose) {
-  const start = from ? POSES.indexOf(from) + 1 : 0;
+export function nextMissingPose(taken: Partial<Record<BodyPose, unknown>>, from: BodyPose) {
+  const start = POSES.indexOf(from) + 1;
   const order = [...POSES.slice(start), ...POSES.slice(0, start)];
   return order.find((pose) => !taken[pose]) ?? null;
 }

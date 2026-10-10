@@ -19,15 +19,11 @@ export interface BodyCheck {
   createdAt: string;
 }
 
-export interface BodyCheckPhoto {
-  id: string;
-  checkId: string;
-  pose: BodyPose;
-  /** Path in the storage bucket; null until the upload finished. */
-  storagePath: string | null;
-}
-
-export type CheckPhotos = Partial<Record<BodyPose, BodyCheckPhoto>>;
+/**
+ * Storage path of each pose's photo in the bucket. New checks are saved with them (the analysis
+ * uploads the photos first); an older photo has null until the upload queue has caught up.
+ */
+export type CheckPhotos = Partial<Record<BodyPose, string | null>>;
 
 const toChecks = (rows: BodyCheckRecord[]): BodyCheck[] =>
   rows.map((r) => ({
@@ -50,7 +46,6 @@ export function useBodyChecks() {
 const photoListQuery = () =>
   drizzle
     .select({
-      id: bodyCheckPhotos.id,
       body_check_id: bodyCheckPhotos.body_check_id,
       pose: bodyCheckPhotos.pose,
       storage_path: bodyCheckPhotos.storage_path,
@@ -60,19 +55,13 @@ const photoListQuery = () =>
 function byCheck(rows: RowOf<typeof photoListQuery>[]) {
   const out: Record<string, CheckPhotos> = {};
   for (const r of rows) {
-    const pose = r.pose as BodyPose;
     out[r.body_check_id] ??= {};
-    out[r.body_check_id][pose] = {
-      id: r.id,
-      checkId: r.body_check_id,
-      pose,
-      storagePath: r.storage_path,
-    };
+    out[r.body_check_id][r.pose as BodyPose] = r.storage_path;
   }
   return out;
 }
 
-/** Photos of every check, grouped by check id and pose. */
+/** Storage paths of every check's photos, by check id and pose. */
 export function useBodyCheckPhotos() {
   return useDrizzleQuery({
     queryKey: bodyCheckPhotoKeys.list.queryKey,

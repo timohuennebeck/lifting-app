@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatList, View, type ViewToken } from 'react-native';
+import { FlatList, View } from 'react-native';
 
 import { AlphabetRail } from '@/features/exercises/components/alphabet-rail';
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
@@ -10,6 +10,7 @@ import {
   type ExerciseOption,
   useExerciseSearch,
 } from '@/features/exercises/hooks/use-exercise-search';
+import { useLetterIndex } from '@/features/exercises/hooks/use-letter-index';
 import type { MuscleGroupId } from '@/features/exercises/lib/muscle-groups';
 import { isBodyweight } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
@@ -21,16 +22,10 @@ import { Text } from '@/shared/ui/text';
 
 import { type ExerciseRecord, useExerciseRecords } from '../data/exercise-records';
 
-const ROW_HEIGHT = 78;
-const ANCHOR_HEIGHT = 41;
-
-interface Row extends ExerciseOption {
-  /** "Zuletzt trainiert" above the first trained row, the letter above the first of a letter. */
-  heading: string | null;
-  record: ExerciseRecord | undefined;
+interface ResultOption extends ExerciseOption {
+  /** Set for the trained exercises listed first. */
+  record?: ExerciseRecord;
 }
-
-const rowHeight = (row: Row | undefined) => ROW_HEIGHT + (row?.heading ? ANCHOR_HEIGHT : 0);
 
 /** "100 kg × 5"; bodyweight exercises show added weight as "+10 kg × 8", none as "12 Wdh.". */
 function formatRecord(exerciseId: string, best: SetValues, units: UnitSystem) {
@@ -54,51 +49,23 @@ export function ExerciseResults({ query, bottomInset }: ExerciseResultsProps) {
   const { t } = useTranslation(['exercises', 'common']);
   const units = useUnits();
   const [group, setGroup] = useState<MuscleGroupId | null>(null);
-  const [activeLetter, setActiveLetter] = useState<string | null>(null);
-  const listRef = useRef<FlatList<Row>>(null);
   const options = useExerciseSearch(query, group);
   const { data: records } = useExerciseRecords();
 
-  const trained = options
+  const trained: ResultOption[] = options
     .filter((o) => records?.has(o.id))
     .map((o) => ({ ...o, record: records?.get(o.id) }))
     .sort((a, b) => (b.record?.lastAt ?? '').localeCompare(a.record?.lastAt ?? ''));
   const rest = options.filter((o) => !records?.has(o.id));
-  const rows: Row[] = [
-    ...trained.map((o, i) => ({ ...o, heading: i === 0 ? t('common:search.recent') : null })),
-    ...rest.map((o, i) => ({
-      ...o,
-      record: undefined,
-      heading: i === 0 || rest[i - 1].letter !== o.letter ? o.letter : null,
-    })),
-  ];
-  const offsets = rows.reduce<number[]>((acc, row, i) => {
-    acc.push((acc[i - 1] ?? 0) + (i ? rowHeight(rows[i - 1]) : 0));
-    return acc;
-  }, []);
   // The index covers the A–Z part below the trained exercises.
-  const letters = new Set(rest.map((r) => r.letter));
+  const { listRef, rows, letters, activeLetter, jump, onViewableItemsChanged, getItemLayout } =
+    useLetterIndex<ResultOption>(trained, t('common:search.recent'), rest);
   const bottom = bottomInset + 16;
-
-  // FlatList requires a callback that never changes identity.
-  const [onViewable] = useState(() => ({ viewableItems }: { viewableItems: ViewToken<Row>[] }) => {
-    const first = viewableItems[0]?.item;
-    // The trained exercises on top aren't part of the A–Z index.
-    if (first) setActiveLetter(first.record ? null : first.letter);
-  });
-
-  function jump(letter: string) {
-    const index = rows.findIndex((r, i) => i >= trained.length && r.letter >= letter);
-    const target = index < 0 ? rows.length - 1 : index;
-    if (target < 0) return;
-    setActiveLetter(rows[target].letter);
-    listRef.current?.scrollToIndex({ index: target, animated: false });
-  }
 
   return (
     <View className="flex-1">
       <View className="px-4">
-        <MuscleGroupFilter value={group} onChange={setGroup} inset={16} />
+        <MuscleGroupFilter value={group} onChange={setGroup} />
       </View>
       <View className="mt-1 flex-1 flex-row px-4">
         <FlatList
@@ -111,12 +78,8 @@ export function ExerciseResults({ query, bottomInset }: ExerciseResultsProps) {
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
           showsVerticalScrollIndicator={false}
-          getItemLayout={(_, index) => ({
-            length: rowHeight(rows[index]),
-            offset: offsets[index] ?? 0,
-            index,
-          })}
-          onViewableItemsChanged={onViewable}
+          getItemLayout={getItemLayout}
+          onViewableItemsChanged={onViewableItemsChanged}
           ListEmptyComponent={
             <Text variant="label" tone="subtle" className="py-10 text-center font-inter">
               {t('picker.empty')}

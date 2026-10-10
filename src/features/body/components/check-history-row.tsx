@@ -13,7 +13,7 @@ export interface CheckHistoryRowProps {
   score?: number;
   latest?: boolean;
   trailing?: ReactNode;
-  onPress?: () => void;
+  onPress: () => void;
 }
 
 /** History entry: title, score and a four-segment 0–100 scale with a marker. */
@@ -31,7 +31,6 @@ export function CheckHistoryRow({
       activeScale={0.98}
       accessibilityLabel={date ? `${title} · ${date}` : title}
       onPress={onPress}
-      disabled={!onPress}
       className="gap-2.5 py-3.5"
     >
       <View className="flex-row items-center justify-between">

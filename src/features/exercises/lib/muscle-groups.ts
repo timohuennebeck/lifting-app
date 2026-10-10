@@ -37,7 +37,7 @@ export function groupOfMuscle(muscle: MuscleId): MuscleGroupId {
 }
 
 /** Muscles of an exercise with their weights, highest share first. */
-export function muscleWeights(exerciseId: string) {
+function muscleWeights(exerciseId: string) {
   const muscles = getExercise(exerciseId)?.muscles ?? {};
   return (Object.entries(muscles) as [MuscleId, number][]).sort((a, b) => b[1] - a[1]);
 }
@@ -69,12 +69,8 @@ export function workoutMuscleSplit(items: { exerciseId: string; sets: number }[]
   return { primary: shares.filter(isPrimary), secondary: shares.filter((s) => !isPrimary(s)) };
 }
 
-/** Muscles of an exercise, highest share first. */
-export function exerciseMuscles(exerciseId: string): MuscleId[] {
-  return muscleWeights(exerciseId).map(([m]) => m);
-}
-
+/** Group of the exercise's main muscle; core for an exercise without muscles. */
 export function primaryGroup(exerciseId: string): MuscleGroupId {
-  const muscle = exerciseMuscles(exerciseId)[0];
+  const muscle = muscleWeights(exerciseId)[0]?.[0];
   return muscle ? groupOfMuscle(muscle) : 'core';
 }

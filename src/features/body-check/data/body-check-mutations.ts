@@ -3,14 +3,12 @@ import { eq } from 'drizzle-orm';
 import { newId, nowIso } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import { bodyCheckPhotos, bodyChecks } from '@/shared/data/powersync/schema';
-import { supabase } from '@/shared/data/supabase';
 
-import type { BodyCheckResult } from '../lib/body-check-service';
+import { type BodyCheckResult, removeUploadedPhotos } from '../lib/body-check-service';
 import {
   deleteCheckFiles,
   deleteDrafts,
   finalizePhotos,
-  PHOTO_BUCKET,
   type StoredPhoto,
   storagePathOf,
 } from '../lib/photo-files';
@@ -77,7 +75,5 @@ export async function deleteBodyCheck(checkId: string, userId: string) {
     await tx.delete(bodyChecks).where(eq(bodyChecks.id, checkId));
   });
   deleteCheckFiles(checkId);
-  void supabase.storage
-    .from(PHOTO_BUCKET)
-    .remove(POSES.map((pose) => storagePathOf(userId, checkId, pose)));
+  removeUploadedPhotos(checkId, userId);
 }

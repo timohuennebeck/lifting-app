@@ -96,7 +96,7 @@ export function BodyView() {
                 <BodyPhotoCard
                   checkId={first.id}
                   pose={pose}
-                  storagePath={photos[first.id]?.[pose]?.storagePath}
+                  storagePath={photos[first.id]?.[pose]}
                   label={t('checkLabel', { n: 1, date: formatShortDate(first.createdAt) })}
                   score={first.score}
                 />
@@ -104,7 +104,7 @@ export function BodyView() {
               <BodyPhotoCard
                 checkId={latest.id}
                 pose={pose}
-                storagePath={photos[latest.id]?.[pose]?.storagePath}
+                storagePath={photos[latest.id]?.[pose]}
                 label={t('checkLabel', {
                   n: checks.length,
                   date: formatShortDate(latest.createdAt),

@@ -1,21 +1,12 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { KeyboardStickyView } from 'react-native-keyboard-controller';
+import { View } from 'react-native';
 
-import { useFooterInset } from '@/shared/hooks/use-footer-inset';
-import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 
-import { ExerciseLibrary, ExerciseSearchBar } from './exercise-library';
-
-/** The list fades out behind the search bar (as under other pages' bottom buttons). */
-const FADE: GradientStop[] = [
-  [0, 1],
-  [0.6, 1],
-  [1, 0],
-];
+import { ExerciseLibrary } from './exercise-library';
+import { ExerciseSearchBar } from './exercise-search-bar';
 
 export interface ExercisePickerPageProps {
   title: string;
@@ -32,11 +23,9 @@ export interface ExercisePickerPageProps {
  * one (a new pick replaces the last). The search field is focused on arrival.
  */
 export function ExercisePickerPage({ title, mode, exerciseIds, onDone }: ExercisePickerPageProps) {
-  const footerInset = useFooterInset();
   const [query, setQuery] = useState('');
   const [picked, setPicked] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
-  // The bar floats over the list; its height keeps the last rows clear of it.
   const [barHeight, setBarHeight] = useState(0);
 
   const pick = (exerciseId: string) => {
@@ -68,31 +57,13 @@ export function ExercisePickerPage({ title, mode, exerciseIds, onDone }: Exercis
           onUnpick={(id) => setPicked((current) => current.filter((p) => p !== id))}
         />
       </View>
-      <KeyboardStickyView
-        offset={{ closed: 0, opened: footerInset - 8 }}
-        style={styles.bar}
-        pointerEvents="box-none"
-      >
-        <View
-          pointerEvents="box-none"
-          className="px-4 pt-8"
-          style={{ paddingBottom: footerInset }}
-          onLayout={(e) => setBarHeight(e.nativeEvent.layout.height)}
-        >
-          <Gradient from="bottom" stops={FADE} />
-          <ExerciseSearchBar
-            query={query}
-            onChangeQuery={setQuery}
-            onDone={done}
-            doneDisabled={saving}
-            autoFocus
-          />
-        </View>
-      </KeyboardStickyView>
+      <ExerciseSearchBar
+        query={query}
+        onChangeQuery={setQuery}
+        onHeight={setBarHeight}
+        onDone={done}
+        doneDisabled={saving}
+      />
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  bar: { position: 'absolute', left: 0, right: 0, bottom: 0 },
-});

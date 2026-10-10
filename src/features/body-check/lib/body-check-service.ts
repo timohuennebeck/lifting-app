@@ -105,6 +105,13 @@ async function uploadPhotos(
   }
 }
 
+/** Removes a check's photos from storage; best effort, offline they stay. */
+export function removeUploadedPhotos(checkId: string, userId: string) {
+  void supabase.storage
+    .from(PHOTO_BUCKET)
+    .remove(POSES.map((pose) => storagePathOf(userId, checkId, pose)));
+}
+
 /**
  * Uploads the three photos and has the analyze-body-check Edge Function score them. Needs a
  * connection; throws an AnalysisError with the reason otherwise.
