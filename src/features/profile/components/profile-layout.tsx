@@ -39,7 +39,7 @@ export function ProfileLayout() {
       <ProfileHeader />
       <TopTabs
         tabBar={(props: TopTabBarProps) => (
-          <TopTabBar {...props} className="mx-4 mt-5" badges={{ feedback: unread || undefined }} />
+          <TopTabBar {...props} className="mx-4 mt-4" badges={{ feedback: unread || undefined }} />
         )}
         screenOptions={{ sceneStyle: { backgroundColor: colors.bg } }}
       >

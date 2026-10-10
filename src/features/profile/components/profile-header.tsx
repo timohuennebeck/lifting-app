@@ -8,6 +8,7 @@ import { UserAvatar } from '@/shared/components/user-avatar';
 import { saveProfile, useProfile } from '@/shared/data/profile';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { formatDate } from '@/shared/lib/format';
+import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -32,8 +33,8 @@ interface LocalPhoto {
 }
 
 /**
- * The fixed top of the profile: photo, name, membership and about, each editable by tapping
- * (01b-2, 01b-3). Stays in place above the swipeable tabs.
+ * The fixed top of the profile, compact: the photo with name, membership and about beside it,
+ * each editable by tapping (01b-2, 01b-3). Stays in place above the swipeable tabs.
  */
 export function ProfileHeader() {
   const { t } = useTranslation(['profile', 'common']);
@@ -103,57 +104,64 @@ export function ProfileHeader() {
 
   return (
     <>
-      <View className="items-start px-5 pt-4">
+      {/* Photo on the left, everything else beside it, so the tabs below get the room. */}
+      <View className="flex-row items-start gap-4 px-5 pt-3">
         <PressableScale
           haptic="tap"
           accessibilityLabel={t('avatar.change')}
           disabled={uploading}
           onPress={() => setAvatarOpen(true)}
-          className="rounded-full border-[3px] border-accent p-1"
+          className="rounded-full border-[2.5px] border-accent p-0.75"
         >
-          <UserAvatar size={106} className="border-0" previewUri={local?.uri} />
+          <UserAvatar size={64} className="border-0" previewUri={local?.uri} />
           {uploading ? (
-            <View className="absolute inset-1 items-center justify-center rounded-full bg-black/45">
+            <View className="absolute inset-0.75 items-center justify-center rounded-full bg-black/45">
               <ActivityIndicator color={colors.fg} />
             </View>
           ) : null}
-          <View className="absolute right-0 bottom-0 size-9 items-center justify-center rounded-full border-[3px] border-bg bg-elevated">
-            <Icon name="photo-camera" size={15} color={colors.fg} />
+          <View className="absolute -right-0.5 -bottom-0.5 size-6 items-center justify-center rounded-full border-[2.5px] border-bg bg-elevated">
+            <Icon name="photo-camera" size={11} color={colors.fg} />
           </View>
         </PressableScale>
-        <PressableScale
-          haptic="tap"
-          activeScale={0.98}
-          accessibilityLabel={t('name.edit')}
-          onPress={() => setEditing('name')}
-          className="mt-4.5"
-        >
-          <Text className="font-inter-semibold text-[34px] leading-9.5 tracking-[-0.7px]">
-            {name}
-          </Text>
-        </PressableScale>
-        <View className="mt-3 flex-row items-center gap-2.5">
-          {isPro ? <ProBadge className="self-center" /> : null}
+        <View className="min-w-0 flex-1 gap-1">
+          <View className="flex-row items-center gap-2">
+            <PressableScale
+              haptic="tap"
+              activeScale={0.98}
+              accessibilityLabel={t('name.edit')}
+              onPress={() => setEditing('name')}
+              className="min-w-0 shrink"
+            >
+              <Text numberOfLines={1} className="font-inter-semibold text-[22px] leading-7">
+                {name}
+              </Text>
+            </PressableScale>
+            {isPro ? <ProBadge className="self-center" /> : null}
+          </View>
           {profile?.createdAt ? (
-            <Text tone="muted" className="text-sm">
+            <Text tone="muted" className="text-[13px] leading-4.5">
               {t('memberSince', {
                 date: formatDate(new Date(profile.createdAt), { month: 'long', year: 'numeric' }),
               })}
             </Text>
           ) : null}
+          {/* The user's own description; tapping it edits it (01b-3). */}
+          <PressableScale
+            haptic="tap"
+            activeScale={0.98}
+            accessibilityLabel={t(profile?.bio ? 'about.edit' : 'about.add')}
+            onPress={() => setEditing('about')}
+            className="mt-1"
+          >
+            <Text
+              variant="paragraph"
+              numberOfLines={2}
+              className={cn('text-sm leading-5', profile?.bio ? 'text-fg-mid' : 'text-dim')}
+            >
+              {profile?.bio || t('about.add')}
+            </Text>
+          </PressableScale>
         </View>
-        {/* The user's own description; tapping it edits it (01b-3). */}
-        <PressableScale
-          haptic="tap"
-          activeScale={0.98}
-          accessibilityLabel={t(profile?.bio ? 'about.edit' : 'about.add')}
-          onPress={() => setEditing('about')}
-          className="mt-4.5 self-stretch"
-        >
-          <Text variant="paragraph" className={profile?.bio ? 'text-fg-mid' : 'text-dim'}>
-            {profile?.bio || t('about.add')}
-          </Text>
-        </PressableScale>
       </View>
       <AvatarSheet
         visible={avatarOpen}
