@@ -128,10 +128,12 @@ export function ExerciseResults({ query, bottomInset }: ExerciseResultsProps) {
                 activeScale={0.98}
                 accessibilityRole="button"
                 onPress={() =>
-                  router.push({
-                    pathname: '/exercise/[id]',
-                    params: { id: item.id, tab: item.record ? 'history' : 'exercise' },
-                  })
+                  // Trained: straight to the history with the records.
+                  router.push(
+                    item.record
+                      ? { pathname: '/exercise/[id]/history', params: { id: item.id } }
+                      : { pathname: '/exercise/[id]', params: { id: item.id } },
+                  )
                 }
                 className="h-19.5 flex-row items-center gap-3.5"
               >
