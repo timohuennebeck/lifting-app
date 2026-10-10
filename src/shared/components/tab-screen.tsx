@@ -1,10 +1,11 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { View } from 'react-native';
 import Animated, { type AnimatedRef } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BottomFade } from '@/shared/ui/bottom-fade';
 
+import { TabBarInset } from './tab-bar-inset';
 import { TabHeader } from './tab-header';
 
 export interface TabScreenProps {
@@ -19,6 +20,8 @@ export interface TabScreenProps {
   footer?: ReactNode;
   /** For drag and drop lists that scroll the page while dragging. */
   scrollRef?: AnimatedRef<Animated.ScrollView>;
+  /** Children (by index) that stick under the header once scrolled to, e.g. tabs. */
+  stickyHeaderIndices?: number[];
 }
 
 const FOOTER_SPACE = 110;
@@ -32,23 +35,27 @@ export function TabScreen({
   pinned,
   footer,
   scrollRef,
+  stickyHeaderIndices,
 }: TabScreenProps) {
   const insets = useSafeAreaInsets();
+  const [tabBarInset, setTabBarInset] = useState(insets.bottom);
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
       <TabHeader actions={headerActions} greeting={greeting} />
       {pinned}
       <Animated.ScrollView
         ref={scrollRef}
-        contentInsetAdjustmentBehavior="automatic"
+        stickyHeaderIndices={stickyHeaderIndices}
+        contentInsetAdjustmentBehavior="never"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           flexGrow: 1,
-          paddingBottom: insets.bottom + (footer ? FOOTER_SPACE : 24),
+          paddingBottom: tabBarInset + (footer ? FOOTER_SPACE : 24),
         }}
       >
         {children}
       </Animated.ScrollView>
+      <TabBarInset onChange={setTabBarInset} />
       {footer ? (
         // The view's own safe area includes the native tab bar, so the CTA sits above it.
         <SafeAreaView edges={['bottom']} pointerEvents="box-none" style={FOOTER_STYLE}>
