@@ -15,13 +15,9 @@ export default function TabsLayout() {
         <NativeTabs.Trigger.Label>{t('tabs.training')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="dumbbell.fill" md="fitness_center" />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="muscles">
-        <NativeTabs.Trigger.Label>{t('tabs.muscles')}</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="figure.strengthtraining.traditional" md="accessibility_new" />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="body">
-        <NativeTabs.Trigger.Label>{t('tabs.body')}</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="figure.stand" md="person" />
+      <NativeTabs.Trigger name="progress">
+        <NativeTabs.Trigger.Label>{t('tabs.progress')}</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="chart.line.uptrend.xyaxis" md="trending_up" />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="profile">
         <NativeTabs.Trigger.Label>{t('tabs.profile')}</NativeTabs.Trigger.Label>

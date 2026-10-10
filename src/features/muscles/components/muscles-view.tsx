@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { TabScreen } from '@/shared/components/tab-screen';
 import { MUSCLE_REGION, muscleShares } from '@/shared/data/muscles';
 import { useMuscleVolume } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
@@ -11,7 +10,7 @@ import { BodyMaps, MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-import { MuscleShareTile } from '../components/muscle-share-tile';
+import { MuscleShareTile } from './muscle-share-tile';
 
 interface TileData {
   muscle: MuscleId;
@@ -55,7 +54,8 @@ function SectionLabel({ label, first }: SectionLabelProps) {
   );
 }
 
-export function MusclesScreen() {
+/** Progress tab, "Muskeln": sets per muscle over 7, 30 or 90 days on body maps and tiles. */
+export function MusclesView() {
   const { t } = useTranslation('muscles');
   const [range, setRange] = useState<DayRange>(30);
   // "Last 7 days" is today and the 6 days before. One query covers the longest range, so
@@ -82,15 +82,10 @@ export function MusclesScreen() {
   }, [volume, rangeStart]);
 
   return (
-    <TabScreen>
-      <View className="px-5 pt-4">
-        <Text variant="headline" className="text-[30px] leading-7.5">
-          {t('title')}
-        </Text>
-        <Text variant="paragraph" tone="subtle" className="mt-2.5">
-          {t('subtitle', { days: range, count: totalSets })}
-        </Text>
-      </View>
+    <>
+      <Text variant="paragraph" tone="subtle" className="px-5 pt-4">
+        {t('subtitle', { days: range, count: totalSets })}
+      </Text>
       <View className="flex-row gap-1.5 px-5 pt-4" accessibilityRole="tablist">
         {DAY_RANGES.map((r) => (
           <PressableScale
@@ -129,6 +124,6 @@ export function MusclesScreen() {
           <TileGrid tiles={untrained} trained={false} />
         </>
       ) : null}
-    </TabScreen>
+    </>
   );
 }

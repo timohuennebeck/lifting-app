@@ -48,9 +48,14 @@
   "tabs": {
     "today": "Today",
     "training": "Training",
-    "muscles": "Muscles",
-    "body": "Body",
+    "progress": "Progress",
     "profile": "Profile"
+  },
+  "progressTab": {
+    "title": "Progress",
+    "exercises": "Exercises",
+    "muscles": "Muscles",
+    "body": "Body"
   },
   "settings": "Settings",
   "legal": {

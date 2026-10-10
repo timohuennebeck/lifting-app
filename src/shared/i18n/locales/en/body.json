@@ -1,5 +1,4 @@
 {
-  "title": "Body composition",
   "subtitle": "Your body score from your photos",
   "sinceStart": "{{delta}} since start",
   "checkLabel": "Check {{n}} · {{date}}",

@@ -19,6 +19,8 @@ export interface TabScreenProps {
   footer?: ReactNode;
   /** For drag and drop lists that scroll the page while dragging. */
   scrollRef?: AnimatedRef<Animated.ScrollView>;
+  /** False when the content brings its own list (it fills the space under the header). */
+  scroll?: boolean;
 }
 
 const FOOTER_SPACE = 110;
@@ -32,23 +34,27 @@ export function TabScreen({
   pinned,
   footer,
   scrollRef,
+  scroll = true,
 }: TabScreenProps) {
   const insets = useSafeAreaInsets();
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
       <TabHeader actions={headerActions} greeting={greeting} />
       {pinned}
-      <Animated.ScrollView
-        ref={scrollRef}
-        contentInsetAdjustmentBehavior="automatic"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          flexGrow: 1,
-          paddingBottom: insets.bottom + (footer ? FOOTER_SPACE : 24),
-        }}
-      >
-        {children}
-      </Animated.ScrollView>
+      {!scroll ? <View className="flex-1">{children}</View> : null}
+      {scroll ? (
+        <Animated.ScrollView
+          ref={scrollRef}
+          contentInsetAdjustmentBehavior="automatic"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: insets.bottom + (footer ? FOOTER_SPACE : 24),
+          }}
+        >
+          {children}
+        </Animated.ScrollView>
+      ) : null}
       {footer ? (
         // The view's own safe area includes the native tab bar, so the CTA sits above it.
         <SafeAreaView edges={['bottom']} pointerEvents="box-none" style={FOOTER_STYLE}>

@@ -37,18 +37,22 @@ const HERO_FADE: GradientStop[] = [
 
 /**
  * Exercise info (design 06e): photo, worked muscles, technique steps and history. A regular page
- * with a back chevron, opened from the live workout and the plan import.
+ * with a back chevron, opened from the live workout, the plan import and the Progress tab
+ * (`tab=history` opens on the history).
  */
 export function ExerciseDetailScreen() {
-  const { id: exerciseId } = useLocalSearchParams<{ id: string }>();
+  const { id: exerciseId, tab: initialTab } = useLocalSearchParams<{ id: string; tab?: string }>();
+  const firstPage = initialTab === 'history' ? 1 : 0;
   const { t, i18n } = useTranslation(['exercises', 'muscles', 'common']);
   const insets = useSafeAreaInsets();
-  const [tab, setTab] = useState<Tab>('exercise');
+  const [tab, setTab] = useState<Tab>(TABS[firstPage]);
   const { width } = useWindowDimensions();
   const pager = useAnimatedRef<Animated.ScrollView>();
-  const scrollX = useSharedValue(0);
+  const scrollX = useSharedValue(firstPage * width);
   const tabWidth = useSharedValue(0);
-  const page = useSharedValue(0);
+  const page = useSharedValue(firstPage);
+  // Where the pager starts; also set once it has its size, where contentOffset isn't applied.
+  const startOffset = { x: firstPage * width, y: 0 };
   // The tab switches as soon as the swipe passes halfway.
   const onScroll = useAnimatedScrollHandler((e) => {
     scrollX.set(e.contentOffset.x);
@@ -146,6 +150,10 @@ export function ExerciseDetailScreen() {
         showsHorizontalScrollIndicator={false}
         onScroll={onScroll}
         scrollEventThrottle={16}
+        contentOffset={startOffset}
+        onLayout={() => {
+          if (firstPage) pager.current?.scrollTo({ x: firstPage * width, animated: false });
+        }}
         className="flex-1"
       >
         <ScrollView

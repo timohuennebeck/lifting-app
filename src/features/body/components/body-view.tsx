@@ -6,7 +6,6 @@ import { View } from 'react-native';
 import { useBodyCheckPhotos, useBodyChecks } from '@/features/body-check/data/body-checks';
 import { POSES, type BodyPose } from '@/features/body-check/lib/poses';
 import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
-import { TabScreen } from '@/shared/components/tab-screen';
 import { useNow } from '@/shared/hooks/use-now';
 import { DAY_MS, MINUTE_MS } from '@/shared/lib/date';
 import { formatShortDate } from '@/shared/lib/format';
@@ -18,8 +17,8 @@ import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
-import { BodyPhotoCard, NextCheckCard } from '../components/body-photo-card';
-import { CheckHistoryRow } from '../components/check-history-row';
+import { BodyPhotoCard, NextCheckCard } from './body-photo-card';
+import { CheckHistoryRow } from './check-history-row';
 
 /** A new check is due this many days after the last one. */
 const CHECK_INTERVAL_DAYS = 21;
@@ -31,7 +30,8 @@ function openCamera() {
 
 const openCheck = (id: string) => router.push(`/body-check/result/${id}`);
 
-export function BodyScreen() {
+/** Progress tab, "Körper": the body score, before/after photos and the check history. */
+export function BodyView() {
   const { t } = useTranslation(['body', 'bodyCheck']);
   const camera = useCameraAccess(openCamera);
   const { data: checks = [] } = useBodyChecks();
@@ -50,15 +50,10 @@ export function BodyScreen() {
   return (
     // A check starts from the next check's card or row once it is due; the first from the
     // empty state.
-    <TabScreen>
-      <View className="gap-2 px-5 pt-4">
-        <Text variant="headline" className="text-[30px] leading-7.5">
-          {t('title')}
-        </Text>
-        <Text variant="paragraph" tone="subtle">
-          {t('subtitle')}
-        </Text>
-      </View>
+    <>
+      <Text variant="paragraph" tone="subtle" className="px-5 pt-4">
+        {t('subtitle')}
+      </Text>
 
       {!latest ? (
         <Card className="mx-4 mt-6 items-center gap-4 py-8">
@@ -190,6 +185,6 @@ export function BodyScreen() {
         </>
       )}
       <CameraAccessSheet {...camera.sheet} body={t('bodyCheck:camera.access')} />
-    </TabScreen>
+    </>
   );
 }

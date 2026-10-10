@@ -25,7 +25,6 @@
     "upper": "Parte superior",
     "lower": "Parte inferior"
   },
-  "title": "Músculos treinados",
   "subtitle": "Últimos {{days}} dias · {{count}} séries no total",
   "range_one": "{{count}} dia",
   "range_other": "{{count}} dias",

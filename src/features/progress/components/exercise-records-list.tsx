@@ -1,0 +1,170 @@
+import { router } from 'expo-router';
+import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { FlatList, View, type ViewToken } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { AlphabetRail } from '@/features/exercises/components/alphabet-rail';
+import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
+import { MuscleGroupFilter } from '@/features/exercises/components/muscle-group-filter';
+import {
+  type ExerciseOption,
+  useExerciseSearch,
+} from '@/features/exercises/hooks/use-exercise-search';
+import type { MuscleGroupId } from '@/features/exercises/lib/muscle-groups';
+import { isBodyweight } from '@/shared/data/exercises';
+import { useUnits } from '@/shared/data/profile';
+import { formatSet, formatShortDate, type SetValues, type UnitSystem } from '@/shared/lib/format';
+import { PressableScale } from '@/shared/ui/pressable-scale';
+import { Text } from '@/shared/ui/text';
+import { TextField } from '@/shared/ui/text-field';
+
+import { type ExerciseRecord, useExerciseRecords } from '../data/exercise-records';
+
+const ROW_HEIGHT = 78;
+const ANCHOR_HEIGHT = 41;
+
+interface Row extends ExerciseOption {
+  /** Its letter above the first row of a letter. */
+  heading: string | null;
+  record: ExerciseRecord | undefined;
+}
+
+const rowHeight = (row: Row | undefined) => ROW_HEIGHT + (row?.heading ? ANCHOR_HEIGHT : 0);
+
+/** "100 kg × 5"; bodyweight exercises show added weight as "+10 kg × 8", none as "12 Wdh.". */
+function formatRecord(exerciseId: string, best: SetValues, units: UnitSystem) {
+  if (!isBodyweight(exerciseId) || best.weightKg == null) return formatSet(best, units);
+  if (best.weightKg === 0) return formatSet({ ...best, weightKg: null }, units);
+  return `+${formatSet(best, units)}`;
+}
+
+/**
+ * Every exercise A–Z (search, muscle group boxes, letter index); the trained ones show their
+ * heaviest set and when they were last done. A tap opens the exercise on its history.
+ */
+export function ExerciseRecordsList() {
+  const { t } = useTranslation(['exercises', 'common']);
+  const insets = useSafeAreaInsets();
+  const units = useUnits();
+  const [query, setQuery] = useState('');
+  const [group, setGroup] = useState<MuscleGroupId | null>(null);
+  const [activeLetter, setActiveLetter] = useState<string | null>(null);
+  const listRef = useRef<FlatList<Row>>(null);
+  const options = useExerciseSearch(query, group);
+  const { data: records } = useExerciseRecords();
+
+  const rows: Row[] = options.map((o, i) => ({
+    ...o,
+    heading: i === 0 || options[i - 1].letter !== o.letter ? o.letter : null,
+    record: records?.get(o.id),
+  }));
+  const offsets = rows.reduce<number[]>((acc, row, i) => {
+    acc.push((acc[i - 1] ?? 0) + (i ? rowHeight(rows[i - 1]) : 0));
+    return acc;
+  }, []);
+  const letters = new Set(rows.map((r) => r.letter));
+  const bottom = insets.bottom + 24;
+
+  // FlatList requires a callback that never changes identity.
+  const [onViewable] = useState(() => ({ viewableItems }: { viewableItems: ViewToken<Row>[] }) => {
+    const first = viewableItems[0]?.item;
+    if (first) setActiveLetter(first.letter);
+  });
+
+  function jump(letter: string) {
+    const index = rows.findIndex((r) => r.letter >= letter);
+    const target = index < 0 ? rows.length - 1 : index;
+    if (target < 0) return;
+    setActiveLetter(rows[target].letter);
+    listRef.current?.scrollToIndex({ index: target, animated: false });
+  }
+
+  return (
+    <View className="flex-1">
+      <TextField
+        icon="search"
+        shape="pill"
+        clearable
+        value={query}
+        onChangeText={setQuery}
+        placeholder={t('picker.search')}
+        autoCorrect={false}
+        returnKeyType="search"
+        className="mx-4 mt-4"
+      />
+      {/* Scrolls edge to edge: it offsets the page padding it sits in. */}
+      <View className="px-4 pt-3">
+        <MuscleGroupFilter value={group} onChange={setGroup} inset={16} />
+      </View>
+      <View className="mt-1 flex-1 flex-row px-4">
+        <FlatList
+          ref={listRef}
+          className="flex-1"
+          contentContainerClassName="pr-7"
+          contentContainerStyle={{ paddingBottom: bottom }}
+          data={rows}
+          keyExtractor={(r) => r.id}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          showsVerticalScrollIndicator={false}
+          getItemLayout={(_, index) => ({
+            length: rowHeight(rows[index]),
+            offset: offsets[index] ?? 0,
+            index,
+          })}
+          onViewableItemsChanged={onViewable}
+          ListEmptyComponent={
+            <Text variant="label" tone="subtle" className="py-10 text-center font-inter">
+              {t('picker.empty')}
+            </Text>
+          }
+          renderItem={({ item }) => (
+            <View>
+              {item.heading ? (
+                <Text variant="overline" tone="subtle" className="pt-4.5 pb-1.5">
+                  {item.heading}
+                </Text>
+              ) : null}
+              <PressableScale
+                haptic="select"
+                activeScale={0.98}
+                accessibilityRole="button"
+                onPress={() =>
+                  router.push({
+                    pathname: '/exercise/[id]',
+                    params: { id: item.id, tab: item.record ? 'history' : 'exercise' },
+                  })
+                }
+                className="h-19.5 flex-row items-center gap-3.5"
+              >
+                <ExerciseThumb exerciseId={item.id} name={item.name} />
+                <View className="min-w-0 flex-1">
+                  <Text variant="label" numberOfLines={2} className="leading-5">
+                    {item.name}
+                  </Text>
+                  <Text variant="caption" tone="subtle" className="mt-0.5 font-inter">
+                    {t(`groups.${item.group}`)}
+                  </Text>
+                </View>
+                {item.record ? (
+                  <View className="items-end">
+                    <Text variant="label">{formatRecord(item.id, item.record.best, units)}</Text>
+                    <Text variant="caption" tone="subtle" className="mt-0.5 font-inter">
+                      {formatShortDate(item.record.lastAt)}
+                    </Text>
+                  </View>
+                ) : null}
+              </PressableScale>
+            </View>
+          )}
+        />
+        {rows.length ? (
+          <View className="absolute top-2 right-2" style={{ bottom: bottom + 8 }}>
+            <AlphabetRail available={letters} active={activeLetter} onJump={jump} />
+          </View>
+        ) : null}
+      </View>
+    </View>
+  );
+}

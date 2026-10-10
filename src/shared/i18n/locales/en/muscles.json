@@ -25,7 +25,6 @@
     "upper": "Upper body",
     "lower": "Lower body"
   },
-  "title": "Trained muscles",
   "subtitle": "Last {{days}} days · {{count}} sets total",
   "range_one": "{{count}} day",
   "range_other": "{{count}} days",
