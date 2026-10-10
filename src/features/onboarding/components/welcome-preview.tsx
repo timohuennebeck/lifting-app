@@ -20,22 +20,12 @@ import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 import { MuscleTile } from '@/shared/ui/muscle-map/muscle-tile';
-import { PLAN_ADD_SIZE, PlanSlot } from '@/shared/ui/plan-slot';
 import { Text } from '@/shared/ui/text';
 
 /** The mockup renders a full 390×844 screen and scales it into a 180×390 phone. */
 const SCALE = 0.4615;
-const SCROLL = 440;
+const SCROLL = 230;
 const RIR_COLORS: Record<number, string> = { 3: '#EEA53A', 2: '#EEA53A', 1: '#E2483D' };
-
-const DAYS = [
-  { key: 'push', state: 'done' },
-  { key: 'pull', state: 'done' },
-  { key: 'legs', state: 'done' },
-  { key: 'push', state: 'today' },
-  { key: 'pull', state: 'next' },
-  { key: 'legs', state: 'next' },
-] as const;
 
 const EXERCISES = [
   { id: 'close-grip-bench-press', reps: '7–9', rir: [3, 2, 1] },
@@ -174,45 +164,13 @@ export function WelcomePreview({ active }: WelcomePreviewProps) {
             <View className="size-10.5 items-center justify-center rounded-full bg-elevated">
               <Icon name="close" size={14} />
             </View>
-            <Text variant="bodyStrong">{t('welcome.preview.plan')}</Text>
+            <Text variant="bodyStrong">{t('welcome.preview.push')}</Text>
             <View className="size-10.5 items-center justify-center rounded-full bg-elevated">
               <Icon name="more" size={14} />
             </View>
           </View>
           <View className="flex-1 overflow-hidden">
             <Animated.View style={scrollStyle}>
-              <View className="flex-row px-3.5 pt-3.5 pb-4">
-                {DAYS.map((day, i) => (
-                  <View key={i} className="flex-1 items-center gap-2">
-                    <Text
-                      variant="caption"
-                      tone={day.state === 'today' ? 'default' : 'subtle'}
-                      className={cn(day.state !== 'today' && 'font-inter-medium')}
-                    >
-                      {t(`welcome.preview.${day.key}`)}
-                    </Text>
-                    <PlanSlot
-                      number={i + 1}
-                      done={day.state === 'done'}
-                      selected={day.state === 'today'}
-                    />
-                  </View>
-                ))}
-                <View className="flex-1 items-center justify-end">
-                  <View
-                    className="items-center justify-center rounded-full bg-elevated"
-                    style={{ width: PLAN_ADD_SIZE, height: PLAN_ADD_SIZE }}
-                  >
-                    <Icon name="plus" size={13} />
-                  </View>
-                </View>
-              </View>
-              <Text variant="title" className="px-5 pt-7.5 normal-case">
-                {t('welcome.preview.push')}
-              </Text>
-              <Text variant="paragraph" tone="subtle" className="px-5 pt-2">
-                {t('welcome.preview.noFixedDay')}
-              </Text>
               <View className="flex-row items-center gap-2 px-5 pt-6">
                 <Text variant="headline">{t('welcome.preview.musclesWorked')}</Text>
                 <View className="size-6.5 items-center justify-center rounded-full bg-control">

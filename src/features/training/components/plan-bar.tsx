@@ -8,13 +8,17 @@ import { PLAN_ADD_SIZE, PlanSlot } from '@/shared/ui/plan-slot';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-import type { PlanItem } from '../data/use-plan-progress';
-
 /** A strip entry; `review` adds the plan import's amber dot. */
-export type PlanBarItem = Pick<PlanItem, 'key' | 'id' | 'name' | 'number'> & {
+export interface PlanBarItem {
+  /** Unique per slot. */
+  key: string;
+  id: string;
+  name: string;
+  /** 1-based slot in the strip. */
+  number: number;
   done?: boolean;
   review?: boolean;
-};
+}
 
 const SLOT = 52;
 

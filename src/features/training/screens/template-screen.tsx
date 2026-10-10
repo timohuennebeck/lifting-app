@@ -10,13 +10,11 @@ import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
 import {
   estimateMinutes,
   type TemplateExerciseDetail,
-  useCollections,
   useTemplateDetail,
 } from '@/shared/data/templates';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
-import { requireUserId } from '@/shared/stores/session-store';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { EmptyExercises } from '@/shared/ui/empty-exercises';
@@ -27,31 +25,27 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
-import { EditableTitle } from '../components/editable-title';
 import { type ExerciseMenuAction, ExerciseMenuSheet } from '../components/exercise-menu-sheet';
-import { PlanBar } from '../components/plan-bar';
 import { TemplateExerciseCard } from '../components/template-exercise-card';
 import { TemplateOptionsSheet } from '../components/template-options-sheet';
 import {
-  createTemplate,
   deleteTemplate,
   moveTemplateExercise,
   removeTemplateExercise,
   renameTemplate,
   reorderTemplateExercise,
 } from '../data/template-mutations';
-import { usePlanProgress } from '../data/use-plan-progress';
 import { useStartTemplate } from '../hooks/use-start-template';
 
-/** Training overview with plan bar, muscles, editable exercise list and start CTA (03·0b). */
+/**
+ * Training overview: its name on top, the muscles, the editable exercise list and the start CTA
+ * (03·0b). "⋯" renames or deletes it.
+ */
 export function TemplateScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation(['training', 'common']);
   const insets = useSafeAreaInsets();
   const { data: template, isLoading } = useTemplateDetail(id);
-  const { data: collections = [] } = useCollections();
-  const collectionId = template?.collectionId ?? null;
-  const { data: plan = [] } = usePlanProgress(collectionId, !!template);
   const { start, startingId } = useStartTemplate();
 
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
@@ -69,9 +63,6 @@ export function TemplateScreen() {
     restSeconds: e.restSeconds,
   }));
   const minutes = estimateMinutes(items);
-  const collectionName = collectionId
-    ? (collections.find((c) => c.id === collectionId)?.name ?? '')
-    : t('list.noCollection');
   const menuIndex = menuShown ? exercises.findIndex((e) => e.id === menuShown.id) : -1;
 
   // Adding and swapping happen on the library page; picks apply when it closes with "Done".
@@ -90,22 +81,6 @@ export function TemplateScreen() {
     else await moveTemplateExercise(target.id, action === 'moveUp' ? -1 : 1);
   };
 
-  // "+" in the plan strip adds a training at once; it is renamed by tapping its title.
-  const adding = useRef(false);
-  const addTraining = async () => {
-    if (adding.current) return;
-    adding.current = true;
-    try {
-      const count = new Set(plan.map((p) => p.id)).size;
-      const name = t('overview.newTraining', { number: count + 1 });
-      const newId = await createTemplate(requireUserId(), name, collectionId);
-      haptics.success();
-      router.setParams({ id: newId });
-    } finally {
-      adding.current = false;
-    }
-  };
-
   const onDelete = async () => {
     if (!template) return;
     setOptionsOpen(false);
@@ -116,7 +91,7 @@ export function TemplateScreen() {
   const header = (
     <ScreenHeader
       icon="chevron-left-thin"
-      title={template ? collectionName : ''}
+      title={template?.name ?? ''}
       action={
         <IconButton
           icon="more"
@@ -142,7 +117,6 @@ export function TemplateScreen() {
   }
 
   const empty = exercises.length === 0;
-  const weekdays = t('common:weekdays.long', { returnObjects: true }) as string[];
 
   return (
     <Screen header={header}>
@@ -151,24 +125,7 @@ export function TemplateScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + (empty ? 40 : 130) }}
       >
-        <PlanBar
-          items={plan}
-          currentId={template.id}
-          onSelect={(templateId) => router.setParams({ id: templateId })}
-          onAdd={addTraining}
-        />
-        <EditableTitle
-          value={template.name}
-          accessibilityLabel={t('options.rename')}
-          onSubmit={(name) => renameTemplate(template.id, name)}
-        />
-        <Text variant="paragraph" tone="subtle" className="px-5 pt-2">
-          {template.weekday !== null && weekdays[template.weekday]
-            ? t('overview.fixedDay', { day: weekdays[template.weekday] })
-            : t('overview.noFixedDay')}
-        </Text>
-
-        <WorkedMuscles title={template?.name ?? ''} items={items} />
+        <WorkedMuscles title={template.name} items={items} />
 
         <View className={cn('flex-row items-center gap-3 px-5', empty ? 'pt-9' : 'pt-7.5')}>
           <View className="min-w-0 flex-1">

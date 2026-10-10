@@ -65,8 +65,7 @@
     "exerciseMenu": "Options for {{name}}",
     "exerciseInfo": "About {{name}}",
     "notFound": "This training no longer exists.",
-    "swapTitle": "Swap exercise",
-    "newTraining": "Workout {{number}}"
+    "swapTitle": "Swap exercise"
   },
   "exerciseMenu": {
     "editSets": "Edit sets",

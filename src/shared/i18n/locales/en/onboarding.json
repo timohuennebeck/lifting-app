@@ -8,11 +8,7 @@
     "signIn": "Sign in",
     "language": "Language",
     "preview": {
-      "plan": "Push Pull Legs",
       "push": "Push",
-      "pull": "Pull",
-      "legs": "Legs",
-      "noFixedDay": "No fixed day – train whenever it suits you.",
       "musclesWorked": "Muscles worked",
       "exercises_one": "{{count}} exercise",
       "exercises_other": "{{count}} exercises",
