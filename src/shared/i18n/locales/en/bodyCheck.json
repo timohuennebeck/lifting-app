@@ -56,7 +56,7 @@
       "notFullBody": "Not fully in frame",
       "wrongPose": "Wrong pose",
       "noPerson": "Nobody found",
-      "clothing": "Clothes too loose"
+      "clothing": "Body shape hidden"
     },
     "retakePhoto": "Retake photo",
     "takePhoto": "Take photo",
