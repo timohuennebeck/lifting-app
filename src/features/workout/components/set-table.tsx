@@ -20,7 +20,7 @@ import { Text } from '@/shared/ui/text';
 
 import { addWorkoutSet } from '../data/workout-mutations';
 import { valueOf } from '../lib/set-input';
-import { suggestSet, targetLabel } from '../lib/suggest';
+import { carriedSet, suggestSet, targetLabel } from '../lib/suggest';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 import { cellWidth, SetRow } from './set-row';
 
@@ -66,13 +66,17 @@ export function SetTable({
 
   /**
    * A box's text: the keypad buffer while editing, the logged value (the one just entered while
-   * it is still being saved, or kept after the check is undone), or the suggested count.
+   * it is still being saved, or kept after the check is undone), or the suggested value (a row
+   * without values of its own takes those logged in the row before it).
    */
   const cellValue = (set: WorkoutSet, field: Measure, editing: boolean, index: number) => {
     if (editing) return field === 'weight' ? displayInput(input.weight, separator) : input[field];
     const saved = logged[set.id] ?? (set.completedAt ? set : undefined);
     if (field === 'weight') {
-      const weightKg = saved ? saved.weightKg : set.weightKg;
+      // An open row shows its own weight, else the one logged in the row before it.
+      const weightKg = saved
+        ? saved.weightKg
+        : (set.weightKg ?? carriedSet(exercise, index)?.weightKg ?? null);
       return weightKg != null ? formatWeightValue(weightKg, units) : '';
     }
     const value = valueOf(saved ?? suggestSet(exercise, index, last), field);

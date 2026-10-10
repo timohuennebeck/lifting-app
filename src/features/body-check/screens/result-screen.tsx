@@ -15,9 +15,10 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { CheckPhoto } from '../components/check-photo';
+import { DeleteCheckSheet } from '../components/delete-check-sheet';
 import { GroupBands } from '../components/group-bands';
 import { MetricRow } from '../components/metric-row';
-import { saveBodyCheck } from '../data/body-check-mutations';
+import { deleteBodyCheck, saveBodyCheck } from '../data/body-check-mutations';
 import { useBodyCheckPhotos, useBodyChecks } from '../data/body-checks';
 import { useCloseCheck } from '../hooks/use-close-check';
 import { bodyFatRange, bodyFatShare, bodyFatTier, scoreTier } from '../lib/metrics';
@@ -49,6 +50,7 @@ export function ResultScreen() {
   const closeDraft = useCloseCheck();
   const [saving, setSaving] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // After saving: a short "Gespeichert" pause, then leave. Closing earlier does the same.
   useEffect(() => {
@@ -89,6 +91,19 @@ export function ResultScreen() {
   const fatRange = bodyFatRange(profile?.sex);
   const date = formatDate(new Date(check.createdAt), { day: 'numeric', month: 'long' });
 
+  async function remove() {
+    if (!saved || !userId) return;
+    setMenuOpen(false);
+    exitBodyCheck();
+    try {
+      await deleteBodyCheck(saved.id, userId);
+      haptics.success();
+    } catch (error) {
+      console.warn('Deleting the body check failed', error);
+      haptics.error();
+    }
+  }
+
   async function save() {
     const complete = POSES.every((p) => shots[p]);
     if (!draft || !userId || !complete || saving) return;
@@ -120,15 +135,27 @@ export function ResultScreen() {
           accessibilityLabel={t('common:actions.close')}
           onPress={justSaved ? leaveSaved : draft ? closeDraft : exitBodyCheck}
         />
-        <PressableScale
-          haptic="tap"
-          onPress={() => Share.share({ message: t('result.shareMessage', { score: check.score }) })}
-          className="h-10.5 justify-center rounded-full bg-elevated px-4"
-        >
-          <Text variant="label" className="text-sm">
-            {t('result.share')}
-          </Text>
-        </PressableScale>
+        <View className="flex-row items-center gap-2">
+          <PressableScale
+            haptic="tap"
+            onPress={() =>
+              Share.share({ message: t('result.shareMessage', { score: check.score }) })
+            }
+            className="h-10.5 justify-center rounded-full bg-elevated px-4"
+          >
+            <Text variant="label" className="text-sm">
+              {t('result.share')}
+            </Text>
+          </PressableScale>
+          {saved ? (
+            <IconButton
+              icon="more"
+              iconSize={18}
+              accessibilityLabel={t('result.more')}
+              onPress={() => setMenuOpen(true)}
+            />
+          ) : null}
+        </View>
       </View>
 
       <ScrollView
@@ -239,6 +266,13 @@ export function ResultScreen() {
           />
         </BottomFade>
       ) : null}
+      <DeleteCheckSheet
+        visible={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        title={t('result.check', { n: number })}
+        subtitle={date}
+        onDelete={remove}
+      />
     </View>
   );
 }

@@ -124,6 +124,9 @@
     "saveResult": "Guardar resultado",
     "saved": "Guardado",
     "share": "Partilhar",
+    "more": "Mais opções",
+    "delete": "Eliminar check",
+    "deleteHint": "As fotos e os valores deste check são eliminados definitivamente.",
     "shareMessage": "A minha pontuação corporal no Forge: {{score}}/100",
     "notFound": "Este check corporal já não existe."
   }

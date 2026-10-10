@@ -1,17 +1,26 @@
 import { isBodyweight, isTimed, measuresOf } from '@/shared/data/exercises';
 import type { ExerciseHistoryEntry, WorkoutExercise, WorkoutSet } from '@/shared/data/workouts';
-import { formatTarget, type SetValues } from '@/shared/lib/format';
+import { formatTargetLabel, type SetValues } from '@/shared/lib/format';
 
-/** "7–9" or "30–45 s" target label, or null without targets. */
+/** "7–9 Wdh." or "30–45 s" target label, or null without targets. */
 export function targetLabel(set: WorkoutSet, exerciseId: string) {
   if (set.targetMin == null) return null;
-  return formatTarget(set.targetMin, set.targetMax ?? set.targetMin, isTimed(exerciseId));
+  return formatTargetLabel(set.targetMin, set.targetMax ?? set.targetMin, isTimed(exerciseId));
 }
 
 /**
- * Prefill for a set: its own values, else the last logged weight of this session / the same
- * set last time, and last time's reps or seconds or the target middle. Measures the exercise
- * doesn't use stay null.
+ * The set logged last before set `index`: its values carry over to the rows after it that have
+ * none of their own yet.
+ */
+export const carriedSet = (exercise: WorkoutExercise, index: number) => {
+  const set = exercise.sets[index];
+  return exercise.sets.filter((s) => s.completedAt && s.position < set.position).at(-1);
+};
+
+/**
+ * Prefill for a set: its own values, else those of the set logged before it, else the last
+ * logged weight of this session / the same set last time, and last time's reps or seconds or
+ * the target middle. Measures the exercise doesn't use stay null.
  */
 export function suggestSet(
   exercise: WorkoutExercise,
@@ -22,6 +31,7 @@ export function suggestSet(
   const measures = measuresOf(exercise.exerciseId);
   if (!set) return { weightKg: null, reps: null, seconds: null };
   const previous = last?.sets[index] ?? last?.sets.at(-1);
+  const carried = carriedSet(exercise, index);
   const logged = exercise.sets.filter((s) => s.completedAt && s.weightKg != null);
   const loggedBefore = logged.filter((s) => s.position < set.position).at(-1) ?? logged.at(-1);
   const bodyweight = isBodyweight(exercise.exerciseId);
@@ -31,11 +41,17 @@ export function suggestSet(
       : null;
   return {
     weightKg: measures.includes('weight')
-      ? (set.weightKg ?? loggedBefore?.weightKg ?? previous?.weightKg ?? (bodyweight ? 0 : null))
+      ? (set.weightKg ??
+        carried?.weightKg ??
+        loggedBefore?.weightKg ??
+        previous?.weightKg ??
+        (bodyweight ? 0 : null))
       : null,
-    reps: measures.includes('reps') ? (set.reps ?? last?.sets[index]?.reps ?? target) : null,
+    reps: measures.includes('reps')
+      ? (set.reps ?? carried?.reps ?? last?.sets[index]?.reps ?? target)
+      : null,
     seconds: measures.includes('seconds')
-      ? (set.seconds ?? last?.sets[index]?.seconds ?? target)
+      ? (set.seconds ?? carried?.seconds ?? last?.sets[index]?.seconds ?? target)
       : null,
   };
 }

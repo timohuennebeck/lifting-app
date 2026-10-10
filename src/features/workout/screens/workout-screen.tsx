@@ -4,6 +4,7 @@ import { ScrollView, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Easing,
+  FadeIn,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -17,6 +18,7 @@ import { restSecondsFor } from '@/shared/data/templates';
 import { useWorkout, type WorkoutDetail } from '@/shared/data/workouts';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { haptics } from '@/shared/lib/haptics';
+import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
 import { Text } from '@/shared/ui/text';
@@ -38,6 +40,8 @@ type SheetKind = 'menu';
 const SWIPE_DISTANCE = 70;
 const SWIPE_VELOCITY = 600;
 const SLIDE = { duration: 200, easing: Easing.out(Easing.cubic) };
+/** Room for the "Finish workout" button over the foot of the sets. */
+const FINISH_BAR_HEIGHT = 80;
 
 interface LiveWorkoutProps {
   workout: WorkoutDetail;
@@ -49,13 +53,15 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   const { width } = useWindowDimensions();
   const [sheet, setSheet] = useState<SheetKind | null>(null);
   const live = useLiveWorkout(workout);
-  const { abandon } = useWorkoutActions(workout.id);
+  const { abandon, finish, finishing } = useWorkoutActions(workout.id);
   const goTo = useWorkoutSessionStore((s) => s.goTo);
   const field = useWorkoutSessionStore((s) => s.field);
   const closeKeypad = useWorkoutSessionStore((s) => s.closeKeypad);
   const { exercise, exerciseIndex, selectedIndex, openIndex } = live;
   const count = workout.exercises.length;
   const keypadOpen = selectedIndex >= 0;
+  // Every set logged: "Finish workout" appears at the bottom.
+  const allDone = live.totalSets > 0 && live.doneSets === live.totalSets;
 
   const scrollRef = useRef<ScrollView>(null);
   const layout = useRef({ scrollY: 0, viewport: 0, block: 0, table: 0, rows: [] as number[] });
@@ -190,7 +196,9 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
             onScroll={(e) => (layout.current.scrollY = e.nativeEvent.contentOffset.y)}
             onLayout={(e) => (layout.current.viewport = e.nativeEvent.layout.height)}
             contentContainerStyle={{
-              paddingBottom: keypadOpen ? keypadHeight + 24 : insets.bottom + 24,
+              paddingBottom: keypadOpen
+                ? keypadHeight + 24
+                : insets.bottom + 24 + (allDone ? FINISH_BAR_HEIGHT : 0),
             }}
           >
             <GestureDetector gesture={swipe}>
@@ -235,6 +243,11 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
               </Animated.View>
             </GestureDetector>
           </ScrollView>
+          {allDone && !keypadOpen ? (
+            <BottomFade entering={FadeIn.duration(250)}>
+              <Button label={t('menu.finish')} loading={finishing} onPress={finish} />
+            </BottomFade>
+          ) : null}
           {keypadOpen ? (
             <WeightKeypad
               onConfirm={live.confirmInput}

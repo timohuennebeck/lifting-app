@@ -56,9 +56,13 @@ export function InputCell({
       className={cn(
         'relative h-11 flex-row items-center justify-center rounded-xl bg-white/8',
         className,
-        active && 'border-2 border-accent',
       )}
     >
+      {/* The focus ring is drawn over the box: a border would move what is placed inside it
+          (the RIR badge). */}
+      {active ? (
+        <View pointerEvents="none" className="absolute inset-0 rounded-xl border-2 border-accent" />
+      ) : null}
       {value ? (
         <View>
           <Text

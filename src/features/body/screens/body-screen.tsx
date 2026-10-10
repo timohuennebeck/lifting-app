@@ -7,7 +7,8 @@ import { useBodyCheckPhotos, useBodyChecks } from '@/features/body-check/data/bo
 import { POSES, type BodyPose } from '@/features/body-check/lib/poses';
 import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
 import { TabScreen } from '@/shared/components/tab-screen';
-import { DAY_MS } from '@/shared/lib/date';
+import { useNow } from '@/shared/hooks/use-now';
+import { DAY_MS, MINUTE_MS } from '@/shared/lib/date';
 import { formatShortDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -17,7 +18,7 @@ import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
-import { BodyPhotoCard } from '../components/body-photo-card';
+import { BodyPhotoCard, NextCheckCard } from '../components/body-photo-card';
 import { CheckHistoryRow } from '../components/check-history-row';
 
 /** A new check is due this many days after the last one. */
@@ -36,12 +37,15 @@ export function BodyScreen() {
   const { data: checks = [] } = useBodyChecks();
   const { data: photos = {} } = useBodyCheckPhotos();
   const [pose, setPose] = useState<BodyPose>('front');
+  const now = useNow(MINUTE_MS);
 
   const first = checks[0];
   const latest = checks[checks.length - 1];
-  const due =
-    latest && new Date().getTime() - Date.parse(latest.createdAt) >= CHECK_INTERVAL_DAYS * DAY_MS;
+  const dueAt = latest ? Date.parse(latest.createdAt) + CHECK_INTERVAL_DAYS * DAY_MS : 0;
+  const due = !!latest && now >= dueAt;
+  const daysLeft = Math.ceil((dueAt - now) / DAY_MS);
   const delta = latest && first ? latest.score - first.score : 0;
+  const nextTitle = t('check', { n: checks.length + 1 });
 
   return (
     <TabScreen footer={<Button label={t('start')} onPress={camera.request} />}>
@@ -83,35 +87,51 @@ export function BodyScreen() {
                   {t('sinceStart', { delta: `${delta >= 0 ? '+' : '−'}${Math.abs(delta)}` })}
                 </Text>
               </View>
-            ) : null}
+            ) : (
+              <View className="mb-1 rounded-full bg-elevated px-2.75 py-1.5">
+                <Text variant="caption">{t('baseline')}</Text>
+              </View>
+            )}
           </View>
 
-          <View className="flex-row gap-2.5 px-4 pt-6">
-            {checks.length > 1 ? (
+          {/* No padding on the row itself: the arrow is centred on its width. */}
+          <View className="px-4 pt-6">
+            <View className="flex-row gap-2.5">
+              {checks.length > 1 ? (
+                <BodyPhotoCard
+                  checkId={first.id}
+                  pose={pose}
+                  storagePath={photos[first.id]?.[pose]?.storagePath}
+                  label={t('checkLabel', { n: 1, date: formatShortDate(first.createdAt) })}
+                  score={first.score}
+                />
+              ) : null}
               <BodyPhotoCard
-                checkId={first.id}
+                checkId={latest.id}
                 pose={pose}
-                storagePath={photos[first.id]?.[pose]?.storagePath}
-                label={t('checkLabel', { n: 1, date: formatShortDate(first.createdAt) })}
-                score={first.score}
+                storagePath={photos[latest.id]?.[pose]?.storagePath}
+                label={t('checkLabel', {
+                  n: checks.length,
+                  date: formatShortDate(latest.createdAt),
+                })}
+                score={latest.score}
+                latest
               />
-            ) : null}
-            <BodyPhotoCard
-              checkId={latest.id}
-              pose={pose}
-              storagePath={photos[latest.id]?.[pose]?.storagePath}
-              label={t('checkLabel', { n: checks.length, date: formatShortDate(latest.createdAt) })}
-              score={latest.score}
-              latest
-            />
-            {checks.length > 1 ? (
-              <View
-                pointerEvents="none"
-                className="absolute top-32.25 left-1/2 -ml-5 size-10 items-center justify-center rounded-full bg-accent"
-              >
-                <Icon name="arrow-right" size={16} color={colors.onAccent} />
-              </View>
-            ) : null}
+              {checks.length > 1 ? (
+                <View
+                  pointerEvents="none"
+                  className="absolute top-1/2 left-1/2 -mt-5 -ml-5 size-10 items-center justify-center rounded-full bg-accent"
+                >
+                  <Icon name="arrow-right" size={16} color={colors.onAccent} />
+                </View>
+              ) : (
+                <NextCheckCard
+                  title={nextTitle}
+                  note={due ? t('dueNow') : t('dueOn', { date: formatShortDate(dueAt) })}
+                  onPress={camera.request}
+                />
+              )}
+            </View>
           </View>
 
           <View className="flex-row justify-center gap-1.5 px-4 pt-3.5">
@@ -130,20 +150,27 @@ export function BodyScreen() {
             {t('history')}
           </Text>
           <View className="px-5 pt-1">
-            {due ? (
-              <CheckHistoryRow
-                title={t('check', { n: checks.length + 1 })}
-                date={t('today')}
-                onPress={camera.request}
-                trailing={
+            {/* The next check is always listed first, so its date is never a surprise. */}
+            <CheckHistoryRow
+              title={nextTitle}
+              date={due ? t('today') : formatShortDate(dueAt)}
+              onPress={camera.request}
+              trailing={
+                due ? (
                   <View className="h-6.5 justify-center rounded-full border-[1.5px] border-accent px-2.5">
                     <Text variant="caption" tone="accent" className="text-xs">
                       {t('due')}
                     </Text>
                   </View>
-                }
-              />
-            ) : null}
+                ) : (
+                  <View className="h-8 justify-center rounded-full bg-elevated px-3">
+                    <Text variant="caption" className="text-xs">
+                      {t('inDays', { count: daysLeft })}
+                    </Text>
+                  </View>
+                )
+              }
+            />
             {checks
               .map((check, i) => (
                 <CheckHistoryRow

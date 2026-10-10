@@ -3,9 +3,17 @@ import { eq } from 'drizzle-orm';
 import { newId, nowIso } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import { bodyCheckPhotos, bodyChecks } from '@/shared/data/powersync/schema';
+import { supabase } from '@/shared/data/supabase';
 
 import type { BodyCheckResult } from '../lib/body-check-service';
-import { deleteDrafts, finalizePhotos, type StoredPhoto } from '../lib/photo-files';
+import {
+  deleteCheckFiles,
+  deleteDrafts,
+  finalizePhotos,
+  PHOTO_BUCKET,
+  type StoredPhoto,
+  storagePathOf,
+} from '../lib/photo-files';
 import { POSES, type BodyPose } from '../lib/poses';
 
 export interface SaveBodyCheckInput {
@@ -57,4 +65,19 @@ export async function setPhotoStoragePath(photoId: string, storagePath: string) 
     .update(bodyCheckPhotos)
     .set({ storage_path: storagePath })
     .where(eq(bodyCheckPhotos.id, photoId));
+}
+
+/**
+ * Deletes a check with its photos: the rows (synced; local tables have no cascades), the files
+ * on this device and, best effort, in storage (offline they stay there).
+ */
+export async function deleteBodyCheck(checkId: string, userId: string) {
+  await drizzle.transaction(async (tx) => {
+    await tx.delete(bodyCheckPhotos).where(eq(bodyCheckPhotos.body_check_id, checkId));
+    await tx.delete(bodyChecks).where(eq(bodyChecks.id, checkId));
+  });
+  deleteCheckFiles(checkId);
+  void supabase.storage
+    .from(PHOTO_BUCKET)
+    .remove(POSES.map((pose) => storagePathOf(userId, checkId, pose)));
 }

@@ -85,6 +85,16 @@ export function deleteDrafts(checkId: string) {
   }
 }
 
+/** Deletes a check's folder with all its photos, e.g. when the check is deleted. */
+export function deleteCheckFiles(checkId: string) {
+  try {
+    const directory = checkDirectory(checkId);
+    if (directory.exists) directory.delete();
+  } catch (error) {
+    console.warn('Could not delete check photos', error);
+  }
+}
+
 /** Removes every local check photo, e.g. when the account signs out. */
 export function clearLocalPhotos() {
   try {

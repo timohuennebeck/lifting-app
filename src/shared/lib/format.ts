@@ -75,7 +75,7 @@ export function formatSet({ weightKg, reps, seconds }: SetValues, units: UnitSys
 const formatRepRange = (min: number, max: number) => (min === max ? `${min}` : `${min}–${max}`);
 
 /** A target: "8–10" reps, or "30–45 s" for timed exercises. */
-export const formatTarget = (min: number, max: number, timed: boolean) =>
+const formatTarget = (min: number, max: number, timed: boolean) =>
   timed ? `${formatRepRange(min, max)} ${i18n.t('common:units.sec')}` : formatRepRange(min, max);
 
 /** A target with its unit, for overviews: "8–10 Wdh." / "8–10 reps", or "30–45 s". */

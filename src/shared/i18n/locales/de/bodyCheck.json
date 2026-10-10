@@ -124,6 +124,9 @@
     "saveResult": "Ergebnis speichern",
     "saved": "Gespeichert",
     "share": "Teilen",
+    "more": "Weitere Optionen",
+    "delete": "Check löschen",
+    "deleteHint": "Die Fotos und Werte dieses Checks werden endgültig gelöscht.",
     "shareMessage": "Mein Körperwert in Forge: {{score}}/100",
     "notFound": "Dieser Körpercheck ist nicht mehr vorhanden."
   }

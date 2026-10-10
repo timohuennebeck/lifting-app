@@ -18,7 +18,7 @@ export interface MetricRowProps {
 /** Result metric with value and a four-segment scale (design 08d-A "Basis"). */
 export function MetricRow({ label, note, value, unit, position, min, max }: MetricRowProps) {
   return (
-    <View className="gap-2.5 border-b border-chip py-3.5">
+    <View className="gap-2.5 py-3.5">
       <View className="flex-row items-baseline justify-between gap-3">
         <Text variant="label">{label}</Text>
         <View className="flex-row items-baseline gap-2">

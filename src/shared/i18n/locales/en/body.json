@@ -6,6 +6,11 @@
   "check": "Check {{n}}",
   "today": "today",
   "due": "Due",
+  "baseline": "Baseline",
+  "dueOn": "Due {{date}}",
+  "dueNow": "Due now",
+  "inDays_one": "in {{count}} day",
+  "inDays_other": "in {{count}} days",
   "history": "History",
   "start": "Start body check",
   "empty": {

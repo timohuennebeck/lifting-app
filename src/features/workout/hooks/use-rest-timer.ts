@@ -43,7 +43,10 @@ export function useRestTimer() {
     return () => clearTimeout(id);
   }, [restEndsAt, flash]);
 
-  const remainingMs = restEndsAt != null ? Math.max(0, restEndsAt - now) : 0;
+  // Until the clock catches up with a timer that just started, it shows the full length
+  // instead of a jump from a stale time.
+  const remainingMs =
+    restEndsAt != null ? Math.min(restSeconds * 1000, Math.max(0, restEndsAt - now)) : 0;
   return {
     resting: restEndsAt != null,
     remainingSeconds: Math.ceil(remainingMs / 1000),

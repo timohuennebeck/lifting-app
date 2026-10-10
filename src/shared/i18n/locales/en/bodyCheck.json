@@ -124,6 +124,9 @@
     "saveResult": "Save result",
     "saved": "Saved",
     "share": "Share",
+    "more": "More options",
+    "delete": "Delete check",
+    "deleteHint": "This check’s photos and values are deleted for good.",
     "shareMessage": "My body score in Forge: {{score}}/100",
     "notFound": "This body check no longer exists."
   }

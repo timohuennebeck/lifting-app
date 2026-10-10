@@ -6,6 +6,11 @@
   "check": "Check {{n}}",
   "today": "hoje",
   "due": "Pendente",
+  "baseline": "Valor inicial",
+  "dueOn": "Previsto para {{date}}",
+  "dueNow": "Pendente agora",
+  "inDays_one": "em {{count}} dia",
+  "inDays_other": "em {{count}} dias",
   "history": "Histórico",
   "start": "Iniciar check corporal",
   "empty": {

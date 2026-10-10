@@ -6,6 +6,11 @@
   "check": "Check {{n}}",
   "today": "heute",
   "due": "Fällig",
+  "baseline": "Startwert",
+  "dueOn": "Fällig am {{date}}",
+  "dueNow": "Jetzt fällig",
+  "inDays_one": "in {{count}} Tag",
+  "inDays_other": "in {{count}} Tagen",
   "history": "Historie",
   "start": "Körpercheck starten",
   "empty": {
