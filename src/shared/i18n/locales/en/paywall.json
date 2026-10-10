@@ -92,20 +92,9 @@
     "section": "Subscription",
     "title": "Forge Pro",
     "upgrade": "Upgrade",
-    "active": "Active",
     "trialUntil": "Trial until {{date}}",
-    "restore": "Restore purchases",
-    "details": {
-      "trial": {
-        "day": "Your free trial runs until {{date}}. After that, your daily plan starts.",
-        "month": "Your free trial runs until {{date}}. After that, your monthly plan starts."
-      },
-      "active": {
-        "day": "Your daily plan has been active since {{date}}.",
-        "month": "Your monthly plan has been active since {{date}}."
-      }
-    },
     "manage": "Manage subscription",
-    "reset": "Reset (test mode)"
+    "planMonthly": "Pro · monthly",
+    "planDaily": "Pro · daily"
   }
 }

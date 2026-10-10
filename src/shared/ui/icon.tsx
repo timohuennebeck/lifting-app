@@ -67,6 +67,8 @@ const ICONS = {
   minus: { viewBox: '0 0 14 14', render: stroke('M2 7h10', 2.2) },
   'arrow-right': { viewBox: '0 0 18 16', render: stroke('M1 8h15M10 2l6 6-6 6', 2.2) },
   'arrow-up': { viewBox: '0 0 16 16', render: stroke('M8 13V3M3.5 7.5L8 3l4.5 4.5', 2.2) },
+  // Opens something outside the app (e.g. the store's subscription page).
+  'arrow-up-right': { viewBox: '0 0 16 16', render: stroke('M4.5 11.5l7-7M6 4.5h5.5V10', 1.8) },
   swap: {
     viewBox: '0 0 14 14',
     render: stroke('M1.5 4.5h10M9 2l2.5 2.5L9 7M12.5 9.5h-10M5 7l-2.5 2.5L5 12', 1.6),
@@ -316,6 +318,27 @@ const ICONS = {
     render: stroke('M1.5 4h13M6 4V2h4v2M3 4l1 12h8l1-12M6.5 7.5v5M9.5 7.5v5', 1.6),
   },
   pencil: { viewBox: '0 0 16 16', render: stroke('M11 2l3 3-8.5 8.5L2 14l.5-3.5z', 1.6) },
+  mail: {
+    viewBox: '0 0 18 14',
+    render: stroke(
+      'M2.5 1.5h13a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1zM2 2.5l7 5.25 7-5.25',
+      1.7,
+    ),
+  },
+  lock: {
+    viewBox: '0 0 16 18',
+    render: stroke(
+      'M3 8h10a1 1 0 0 1 1 1v6.5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1zM4.75 8V5.25a3.25 3.25 0 0 1 6.5 0V8',
+      1.7,
+    ),
+  },
+  'sign-out': {
+    viewBox: '0 0 18 18',
+    render: stroke(
+      'M7 2.5H3.5a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1H7M12 5.5L15.5 9 12 12.5M15.5 9H6.5',
+      1.7,
+    ),
+  },
   bolt: {
     viewBox: '0 0 256 256',
     render: (c) => (

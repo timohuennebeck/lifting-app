@@ -30,29 +30,52 @@
     "units": "Einheiten",
     "metric": "Metrisch (kg, cm)",
     "imperial": "Imperial (lb, ft)",
-    "bodyData": "Körperdaten",
-    "fields": {
-      "firstName": "Name",
-      "sex": "Geschlecht",
-      "age": "Alter",
-      "weight": "Gewicht",
-      "height": "Größe"
+    "kilograms": "Kilogramm",
+    "pounds": "Pfund",
+    "account": {
+      "title": "Konto",
+      "hint": "Passwort, E-Mail",
+      "email": "E-Mail ändern",
+      "password": "Passwort ändern",
+      "passwordHint": "Neues Passwort festlegen"
     },
-    "sexes": {
-      "female": "Weiblich",
-      "male": "Männlich",
-      "unspecified": "Keine Angabe"
+    "email": {
+      "title": "E-Mail ändern",
+      "subtitle": "Wir schicken dir einen Link an deine alte und deine neue Adresse. Sobald du beide bestätigt hast, gilt die neue.",
+      "label": "Neue E-Mail",
+      "send": "Links senden",
+      "sentTitle": "Schau in deine Postfächer",
+      "sent": "Bestätige die Änderung über die Links an {{old}} und {{new}}. Bis dahin bleibt deine alte Adresse aktiv.",
+      "same": "Das ist schon deine E-Mail-Adresse.",
+      "taken": "Diese E-Mail gehört schon zu einem anderen Konto."
     },
-    "years": "Jahre",
-    "notSet": "Nicht angegeben",
-    "feetInches": "ft / in",
-    "legal": "Rechtliches",
+    "password": {
+      "title": "Passwort ändern",
+      "subtitle": "Mit dem neuen Passwort meldest du dich ab jetzt an.",
+      "label": "Neues Passwort"
+    },
+    "links": {
+      "help": "Hilfe",
+      "privacy": "Datenschutz",
+      "terms": "AGB"
+    },
+    "version": "v{{version}}",
     "signOut": "Abmelden",
     "signOutConfirm": {
       "title": "Abmelden?",
+      "option": "Auf diesem Gerät abmelden",
       "body": "Deine Trainingsdaten bleiben in deinem Konto gespeichert. Du kannst dich jederzeit wieder anmelden.",
       "unsynced_one": "{{count}} Änderung ist noch nicht synchronisiert. Trotzdem abmelden? Sie geht dabei verloren.",
       "unsynced_other": "{{count}} Änderungen sind noch nicht synchronisiert. Trotzdem abmelden? Sie gehen dabei verloren."
+    },
+    "deleteAccount": "Konto löschen",
+    "deleteConfirm": {
+      "title": "Konto löschen?",
+      "subtitle": "Das lässt sich nicht rückgängig machen.",
+      "option": "Konto endgültig löschen",
+      "body": "Dein Profil, alle Trainings, Körperchecks mit Fotos und Support-Anfragen werden gelöscht.",
+      "subscription": "Ein laufendes Abo endet dadurch nicht. Kündige es im App Store oder bei Google Play.",
+      "failed": "Dein Konto konnte nicht gelöscht werden. Prüf deine Verbindung und versuch es noch mal."
     }
   },
   "avatar": {

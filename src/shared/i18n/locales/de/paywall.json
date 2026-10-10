@@ -92,20 +92,9 @@
     "section": "Abo",
     "title": "Forge Pro",
     "upgrade": "Upgraden",
-    "active": "Aktiv",
     "trialUntil": "Test bis {{date}}",
-    "restore": "Käufe wiederherstellen",
-    "details": {
-      "trial": {
-        "day": "Dein kostenloser Test läuft bis {{date}}. Danach startet dein Tagesabo.",
-        "month": "Dein kostenloser Test läuft bis {{date}}. Danach startet dein Monatsabo."
-      },
-      "active": {
-        "day": "Dein Tagesabo ist seit {{date}} aktiv.",
-        "month": "Dein Monatsabo ist seit {{date}} aktiv."
-      }
-    },
     "manage": "Abo verwalten",
-    "reset": "Zurücksetzen (Testmodus)"
+    "planMonthly": "Pro · monatlich",
+    "planDaily": "Pro · täglich"
   }
 }

@@ -30,29 +30,52 @@
     "units": "Unidades",
     "metric": "Métrico (kg, cm)",
     "imperial": "Imperial (lb, ft)",
-    "bodyData": "Dados corporais",
-    "fields": {
-      "firstName": "Nome",
-      "sex": "Sexo",
-      "age": "Idade",
-      "weight": "Peso",
-      "height": "Altura"
+    "kilograms": "Quilogramas",
+    "pounds": "Libras",
+    "account": {
+      "title": "Conta",
+      "hint": "Senha, e-mail",
+      "email": "Alterar e-mail",
+      "password": "Alterar senha",
+      "passwordHint": "Defina uma nova senha"
     },
-    "sexes": {
-      "female": "Feminino",
-      "male": "Masculino",
-      "unspecified": "Não informado"
+    "email": {
+      "title": "Alterar e-mail",
+      "subtitle": "Enviaremos um link para o seu endereço antigo e para o novo. Depois que você confirmar os dois, o novo passa a valer.",
+      "label": "Novo e-mail",
+      "send": "Enviar links",
+      "sentTitle": "Confira suas caixas de entrada",
+      "sent": "Confirme a alteração pelos links enviados para {{old}} e {{new}}. Até lá, seu endereço antigo continua ativo.",
+      "same": "Esse já é o seu e-mail.",
+      "taken": "Este e-mail já pertence a outra conta."
     },
-    "years": "Anos",
-    "notSet": "Não definido",
-    "feetInches": "ft / in",
-    "legal": "Informações legais",
+    "password": {
+      "title": "Alterar senha",
+      "subtitle": "A partir de agora, você entra com a nova senha.",
+      "label": "Nova senha"
+    },
+    "links": {
+      "help": "Ajuda",
+      "privacy": "Privacidade",
+      "terms": "Termos"
+    },
+    "version": "v{{version}}",
     "signOut": "Sair",
     "signOutConfirm": {
       "title": "Sair da conta?",
+      "option": "Sair neste dispositivo",
       "body": "Seus dados de treino ficam salvos na sua conta. Você pode entrar novamente a qualquer momento.",
       "unsynced_one": "{{count}} alteração ainda não foi sincronizada. Sair mesmo assim? Ela será perdida.",
       "unsynced_other": "{{count}} alterações ainda não foram sincronizadas. Sair mesmo assim? Elas serão perdidas."
+    },
+    "deleteAccount": "Excluir conta",
+    "deleteConfirm": {
+      "title": "Excluir conta?",
+      "subtitle": "Isso não pode ser desfeito.",
+      "option": "Excluir conta permanentemente",
+      "body": "Seu perfil, todos os treinos, checks corporais com fotos e solicitações de suporte serão excluídos.",
+      "subscription": "Isso não encerra uma assinatura ativa. Cancele-a na App Store ou no Google Play.",
+      "failed": "Não foi possível excluir sua conta. Verifique sua conexão e tente novamente."
     }
   },
   "avatar": {

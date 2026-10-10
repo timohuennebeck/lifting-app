@@ -32,6 +32,7 @@ export interface SettingsRowProps {
   leading?: ReactNode;
   trailing?: ReactNode;
   onPress: () => void;
+  onLongPress?: () => void;
   first?: boolean;
   accessibilityRole?: 'button' | 'radio';
   selected?: boolean;
@@ -44,6 +45,7 @@ export function SettingsRow({
   leading,
   trailing,
   onPress,
+  onLongPress,
   first,
   accessibilityRole = 'button',
   selected,
@@ -55,6 +57,7 @@ export function SettingsRow({
       accessibilityRole={accessibilityRole}
       accessibilityState={accessibilityRole === 'radio' ? { checked: !!selected } : undefined}
       onPress={onPress}
+      onLongPress={onLongPress}
       className={cn('h-14 flex-row items-center gap-3 px-4', !first && 'border-t border-white/6')}
     >
       {leading}

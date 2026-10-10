@@ -5,7 +5,8 @@ import { signedUrl, uploadJpeg } from '@/shared/data/supabase-storage';
 
 import { supportKeys } from './support-keys';
 
-const BUCKET = 'ticket-attachments';
+export const ATTACHMENT_BUCKET = 'ticket-attachments';
+const BUCKET = ATTACHMENT_BUCKET;
 const URL_TTL_SECONDS = 60 * 60;
 // Refresh signed URLs five minutes before they expire.
 const URL_FRESH_MS = (URL_TTL_SECONDS - 5 * 60) * 1000;

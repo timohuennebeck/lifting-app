@@ -30,29 +30,52 @@
     "units": "Units",
     "metric": "Metric (kg, cm)",
     "imperial": "Imperial (lb, ft)",
-    "bodyData": "Body data",
-    "fields": {
-      "firstName": "Name",
-      "sex": "Sex",
-      "age": "Age",
-      "weight": "Weight",
-      "height": "Height"
+    "kilograms": "Kilograms",
+    "pounds": "Pounds",
+    "account": {
+      "title": "Account",
+      "hint": "Password, email",
+      "email": "Change email",
+      "password": "Change password",
+      "passwordHint": "Set a new password"
     },
-    "sexes": {
-      "female": "Female",
-      "male": "Male",
-      "unspecified": "Not specified"
+    "email": {
+      "title": "Change email",
+      "subtitle": "We'll send a link to your old and your new address. Once you've confirmed both, the new one applies.",
+      "label": "New email",
+      "send": "Send links",
+      "sentTitle": "Check your inboxes",
+      "sent": "Confirm the change with the links sent to {{old}} and {{new}}. Until then, your old address stays active.",
+      "same": "That's already your email address.",
+      "taken": "This email already belongs to another account."
     },
-    "years": "Years",
-    "notSet": "Not set",
-    "feetInches": "ft / in",
-    "legal": "Legal",
+    "password": {
+      "title": "Change password",
+      "subtitle": "You'll sign in with the new password from now on.",
+      "label": "New password"
+    },
+    "links": {
+      "help": "Help",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "version": "v{{version}}",
     "signOut": "Sign out",
     "signOutConfirm": {
       "title": "Sign out?",
+      "option": "Sign out on this device",
       "body": "Your training data stays saved in your account. You can sign in again anytime.",
       "unsynced_one": "{{count}} change hasn't synced yet. Sign out anyway? It will be lost.",
       "unsynced_other": "{{count}} changes haven't synced yet. Sign out anyway? They'll be lost."
+    },
+    "deleteAccount": "Delete account",
+    "deleteConfirm": {
+      "title": "Delete account?",
+      "subtitle": "This can't be undone.",
+      "option": "Delete account permanently",
+      "body": "Your profile, all workouts, body checks with photos and support requests will be deleted.",
+      "subscription": "This doesn't end an active subscription. Cancel it in the App Store or on Google Play.",
+      "failed": "Your account couldn't be deleted. Check your connection and try again."
     }
   },
   "avatar": {

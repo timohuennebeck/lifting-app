@@ -93,20 +93,9 @@
     "section": "Assinatura",
     "title": "Forge Pro",
     "upgrade": "Fazer upgrade",
-    "active": "Ativo",
     "trialUntil": "Teste até {{date}}",
-    "restore": "Restaurar compras",
-    "details": {
-      "trial": {
-        "day": "Seu teste grátis vai até {{date}}. Depois começa sua assinatura diária.",
-        "month": "Seu teste grátis vai até {{date}}. Depois começa sua assinatura mensal."
-      },
-      "active": {
-        "day": "Sua assinatura diária está ativa desde {{date}}.",
-        "month": "Sua assinatura mensal está ativa desde {{date}}."
-      }
-    },
     "manage": "Gerenciar assinatura",
-    "reset": "Redefinir (modo de teste)"
+    "planMonthly": "Pro · mensal",
+    "planDaily": "Pro · diário"
   }
 }

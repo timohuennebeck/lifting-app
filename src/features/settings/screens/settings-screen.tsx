@@ -1,94 +1,94 @@
-import { router, Stack } from 'expo-router';
-import { useState } from 'react';
+import Constants from 'expo-constants';
+import { type Href, router, Stack } from 'expo-router';
+import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { countLocalPendingPhotos } from '@/features/body-check/data/body-checks';
-import { LEGAL_KINDS } from '@/features/legal/data/legal-documents';
+import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { useUploadQueueStore } from '@/features/support/stores/upload-queue-store';
+import { LanguageSheet } from '@/shared/components/language-sheet';
+import { UserAvatar } from '@/shared/components/user-avatar';
 import { db } from '@/shared/data/powersync/database';
-import { type ProfilePatch, saveProfile, useProfile } from '@/shared/data/profile';
+import { saveProfile, useProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
-import { APP_LANGUAGES, type AppLanguage } from '@/shared/i18n/resources';
-import { formatHeight, formatWeight, type UnitSystem } from '@/shared/lib/format';
+import { detectLanguage } from '@/shared/i18n';
 import { haptics } from '@/shared/lib/haptics';
-import { requireUserId } from '@/shared/stores/session-store';
+import { colors } from '@/shared/lib/theme';
+import { requireUserId, useSessionStore } from '@/shared/stores/session-store';
 import { useSettingsStore } from '@/shared/stores/settings-store';
 import { Button } from '@/shared/ui/button';
-import { CheckBadge } from '@/shared/ui/check-item';
+import { Icon } from '@/shared/ui/icon';
 import { LanguageFlag } from '@/shared/ui/language-flag';
+import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
-import { SegmentedControl } from '@/shared/ui/segmented-control';
+import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
+import { TextButton } from '@/shared/ui/text-button';
 
-import { type BodyField, BodyFieldSheet } from '../components/body-field-sheet';
+import { type AccountAction, AccountSheet } from '../components/account-sheet';
+import { ChangeEmailSheet } from '../components/change-email-sheet';
+import { ChangePasswordSheet } from '../components/change-password-sheet';
+import { DeleteAccountSheet } from '../components/delete-account-sheet';
 import { ProSection } from '../components/pro-section';
-import { SettingsRow, SettingsSection } from '../components/settings-section';
+import { SignOutSheet } from '../components/sign-out-sheet';
+import { UnitBadge, UnitsSheet } from '../components/units-sheet';
+import { deleteAccount } from '../lib/delete-account';
 
-interface BodyRow {
-  field: BodyField;
-  value: string;
-}
+type OpenSheet = 'account' | AccountAction | 'language' | 'units' | 'signOut' | 'delete';
+
+const LINKS: { key: 'help' | 'privacy' | 'terms'; href: Href }[] = [
+  { key: 'help', href: '/support' },
+  { key: 'privacy', href: '/legal/privacy' },
+  { key: 'terms', href: '/legal/terms' },
+];
 
 export function SettingsScreen() {
-  const { t, i18n } = useTranslation('profile');
-  const { t: tc } = useTranslation();
+  const { t } = useTranslation(['profile', 'common']);
   const insets = useSafeAreaInsets();
   const { profile } = useProfile();
-  const language = useSettingsStore((s) => s.language) ?? (i18n.language as AppLanguage);
-  const setLanguage = useSettingsStore((s) => s.setLanguage);
-  const [editing, setEditing] = useState<BodyField | null>(null);
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const [session, setSession] = useState(0);
+  const isPro = useIsPro();
+  const email = useSessionStore((s) => s.session?.user.email) ?? '';
+  const language = useSettingsStore((s) => s.language) ?? detectLanguage();
+  const [sheet, setSheet] = useState<OpenSheet | null>(null);
+  const [unsynced, setUnsynced] = useState(0);
+  const [deleting, setDeleting] = useState(false);
 
   const units = profile?.unitSystem ?? 'metric';
-  const save = (patch: ProfilePatch) => saveProfile(requireUserId(), patch);
-  const edit = (field: BodyField) => {
-    setEditing(field);
-    setSession((s) => s + 1);
-    setSheetOpen(true);
-  };
+  const close = () => setSheet(null);
 
-  const signOut = async () => {
+  const openSignOut = async () => {
     // Signing out clears the local database and photo files, including anything not
     // uploaded yet: queued changes, body-check photos and support screenshots.
     const [{ count: changes }, photos] = await Promise.all([
       db.getUploadQueueStats(),
       countLocalPendingPhotos(requireUserId()),
     ]);
-    const count = changes + photos + useUploadQueueStore.getState().pending.length;
-    Alert.alert(
-      t('settings.signOutConfirm.title'),
-      count > 0
-        ? t('settings.signOutConfirm.unsynced', { count })
-        : t('settings.signOutConfirm.body'),
-      [
-        { text: tc('actions.cancel'), style: 'cancel' },
-        {
-          text: t('settings.signOut'),
-          style: 'destructive',
-          onPress: () => {
-            haptics.warning();
-            supabase.auth.signOut();
-          },
-        },
-      ],
-    );
+    setUnsynced(changes + photos + useUploadQueueStore.getState().pending.length);
+    setSheet('signOut');
   };
 
-  const notSet = t('settings.notSet');
-  const bodyRows: BodyRow[] = [
-    { field: 'firstName', value: profile?.firstName || notSet },
-    { field: 'sex', value: profile?.sex ? t(`settings.sexes.${profile.sex}`) : notSet },
-    { field: 'age', value: profile?.age ? String(profile.age) : notSet },
-    {
-      field: 'weight',
-      value: profile?.weightKg ? formatWeight(profile.weightKg, units) : notSet,
-    },
-    { field: 'height', value: profile?.heightCm ? formatHeight(profile.heightCm, units) : notSet },
-  ];
+  const signOut = () => {
+    close();
+    haptics.warning();
+    afterSheetClose(() => void supabase.auth.signOut());
+  };
+
+  const removeAccount = async () => {
+    setDeleting(true);
+    try {
+      // The root guard leaves the app once the session is gone.
+      await deleteAccount(requireUserId());
+    } catch (error) {
+      console.warn('Deleting the account failed', error);
+      haptics.error();
+      setDeleting(false);
+      close();
+      afterSheetClose(() => Alert.alert(t('settings.deleteConfirm.failed')));
+    }
+  };
 
   return (
     <Screen
@@ -97,85 +97,151 @@ export function SettingsScreen() {
         <ScreenHeader
           className="pt-2.5"
           iconSize={9}
-          title={<Text variant="headline">{tc('settings')}</Text>}
+          title={<Text variant="headline">{t('common:settings')}</Text>}
         />
       }
     >
       <Stack.Screen options={{ animation: 'slide_from_right', gestureEnabled: true }} />
 
-      <ProSection />
+      <View className="gap-2.5 px-4 pt-4">
+        <PressableScale
+          haptic="tap"
+          activeScale={0.98}
+          accessibilityRole="button"
+          onPress={() => setSheet('account')}
+          className="flex-row items-center gap-3.5 rounded-[22px] border border-white/8 bg-surface p-4"
+        >
+          <UserAvatar size={52} />
+          <View className="min-w-0 flex-1 gap-0.5">
+            <Text variant="bodyStrong" numberOfLines={1}>
+              {profile?.firstName ?? ''}
+            </Text>
+            <Text tone="subtle" className="text-sm" numberOfLines={1}>
+              {email ? `${email} · ${t('settings.account.hint')}` : t('settings.account.hint')}
+            </Text>
+          </View>
+          <Icon name="chevron-right" size={7} color={colors.dim} />
+        </PressableScale>
 
-      <SettingsSection title={t('settings.language')}>
-        {APP_LANGUAGES.map((lang, i) => (
-          <SettingsRow
-            key={lang}
-            first={i === 0}
-            label={tc(`languages.${lang}`)}
-            accessibilityRole="radio"
-            selected={lang === language}
-            leading={<LanguageFlag language={lang} size={28} />}
-            trailing={
-              lang === language ? (
-                <CheckBadge size={24} glyph={12} />
-              ) : (
-                <View className="size-6 rounded-full border-[1.5px] border-outline" />
-              )
-            }
-            onPress={() => setLanguage(lang)}
+        <View className="flex-row gap-2.5">
+          <PreferenceCard
+            label={t('settings.language')}
+            value={t(`common:languages.${language}`)}
+            icon={<LanguageFlag language={language} size={32} />}
+            onPress={() => setSheet('language')}
           />
-        ))}
-      </SettingsSection>
-
-      <SettingsSection title={t('settings.units')}>
-        <View className="p-3">
-          <SegmentedControl<UnitSystem>
-            options={[
-              { value: 'metric', label: t('settings.metric') },
-              { value: 'imperial', label: t('settings.imperial') },
-            ]}
-            value={units}
-            onChange={(unitSystem) => save({ unitSystem })}
+          <PreferenceCard
+            label={t('settings.units')}
+            value={t(units === 'metric' ? 'settings.kilograms' : 'settings.pounds')}
+            icon={<UnitBadge units={units} />}
+            onPress={() => setSheet('units')}
           />
         </View>
-      </SettingsSection>
-
-      <SettingsSection title={t('settings.bodyData')}>
-        {bodyRows.map((row, i) => (
-          <SettingsRow
-            key={row.field}
-            first={i === 0}
-            label={t(`settings.fields.${row.field}`)}
-            value={row.value}
-            onPress={() => edit(row.field)}
-          />
-        ))}
-      </SettingsSection>
-
-      <SettingsSection title={t('settings.legal')}>
-        {LEGAL_KINDS.map((kind, i) => (
-          <SettingsRow
-            key={kind}
-            first={i === 0}
-            label={tc(`legal.${kind}`)}
-            onPress={() => router.push(`/legal/${kind}`)}
-          />
-        ))}
-      </SettingsSection>
-
-      <View className="px-4 pt-8" style={{ paddingBottom: insets.bottom }}>
-        <Button label={t('settings.signOut')} variant="danger" onPress={signOut} />
       </View>
 
-      {profile ? (
-        <BodyFieldSheet
-          field={editing}
-          visible={sheetOpen}
-          session={session}
-          profile={profile}
-          onSave={save}
-          onClose={() => setSheetOpen(false)}
+      <ProSection />
+
+      <View className="flex-row flex-wrap gap-2 px-4 pt-7">
+        {LINKS.map((link) => (
+          <PressableScale
+            key={link.key}
+            activeScale={0.98}
+            haptic="select"
+            accessibilityRole="link"
+            onPress={() => router.push(link.href)}
+            className="h-10 justify-center rounded-full bg-pill px-4"
+          >
+            <Text variant="caption" className="text-sm">
+              {t(`settings.links.${link.key}`)}
+            </Text>
+          </PressableScale>
+        ))}
+      </View>
+
+      <View className="items-center px-4 pt-8" style={{ paddingBottom: insets.bottom + 8 }}>
+        <Button
+          label={t('settings.signOut')}
+          variant="secondary"
+          className="self-stretch"
+          onPress={openSignOut}
         />
-      ) : null}
+        <TextButton
+          label={t('settings.deleteAccount')}
+          tone="danger"
+          haptic="select"
+          className="mt-2"
+          onPress={() => setSheet('delete')}
+        />
+        <Text tone="subtle" className="pt-2 text-xs">
+          {t('settings.version', { version: Constants.expoConfig?.version ?? '' })}
+        </Text>
+      </View>
+
+      <AccountSheet
+        visible={sheet === 'account'}
+        onClose={close}
+        email={email}
+        onChoose={(action) => {
+          close();
+          afterSheetClose(() => setSheet(action));
+        }}
+      />
+      <ChangeEmailSheet visible={sheet === 'email'} onClose={close} currentEmail={email} />
+      <ChangePasswordSheet visible={sheet === 'password'} onClose={close} />
+      <LanguageSheet visible={sheet === 'language'} onClose={close} />
+      <UnitsSheet
+        visible={sheet === 'units'}
+        onClose={close}
+        value={units}
+        onSelect={(unitSystem) => void saveProfile(requireUserId(), { unitSystem })}
+      />
+      <SignOutSheet
+        visible={sheet === 'signOut'}
+        onClose={close}
+        unsynced={unsynced}
+        onSignOut={signOut}
+      />
+      <DeleteAccountSheet
+        visible={sheet === 'delete'}
+        onClose={close}
+        subscribed={isPro}
+        deleting={deleting}
+        onDelete={removeAccount}
+      />
     </Screen>
+  );
+}
+
+interface PreferenceCardProps {
+  label: string;
+  value: string;
+  icon: ReactNode;
+  onPress: () => void;
+}
+
+/** Half-width card: an icon, then the setting and its value (language, units). */
+function PreferenceCard({ label, value, icon, onPress }: PreferenceCardProps) {
+  return (
+    // A plain slot takes the half: a card's own border and padding would skew the widths.
+    <View className="min-w-0 flex-1">
+      <PressableScale
+        haptic="tap"
+        activeScale={0.98}
+        accessibilityRole="button"
+        accessibilityLabel={`${label}, ${value}`}
+        onPress={onPress}
+        className="gap-3.5 rounded-[22px] border border-white/8 bg-surface p-4"
+      >
+        {icon}
+        <View className="gap-0.5">
+          <Text tone="subtle" className="text-sm">
+            {label}
+          </Text>
+          <Text variant="bodyStrong" numberOfLines={1}>
+            {value}
+          </Text>
+        </View>
+      </PressableScale>
+    </View>
   );
 }

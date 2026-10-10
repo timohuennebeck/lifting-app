@@ -93,20 +93,9 @@
     "section": "Subscrição",
     "title": "Forge Pro",
     "upgrade": "Fazer upgrade",
-    "active": "Ativo",
     "trialUntil": "Teste até {{date}}",
-    "restore": "Restaurar compras",
-    "details": {
-      "trial": {
-        "day": "O teu teste grátis dura até {{date}}. Depois começa a tua subscrição diária.",
-        "month": "O teu teste grátis dura até {{date}}. Depois começa a tua subscrição mensal."
-      },
-      "active": {
-        "day": "A tua subscrição diária está ativa desde {{date}}.",
-        "month": "A tua subscrição mensal está ativa desde {{date}}."
-      }
-    },
     "manage": "Gerir subscrição",
-    "reset": "Repor (modo de teste)"
+    "planMonthly": "Pro · mensal",
+    "planDaily": "Pro · diário"
   }
 }
