@@ -16,8 +16,6 @@ export interface TemplateOptionsSheetProps {
   minutes: number;
   onRename: () => void;
   onDelete: () => void;
-  /** Selected when the sheet opens: "delete" when it was reached by swiping the row. */
-  initialOption?: TemplateOption;
 }
 
 /** "⋯" options of a training: rename or delete (03·0b·M). */
@@ -29,14 +27,13 @@ export function TemplateOptionsSheet({
   minutes,
   onRename,
   onDelete,
-  initialOption = 'rename',
 }: TemplateOptionsSheetProps) {
   const { t } = useTranslation(['training', 'common']);
-  const [option, setOption] = useState<TemplateOption>(initialOption);
+  const [option, setOption] = useState<TemplateOption>('rename');
   const [wasVisible, setWasVisible] = useState(visible);
   if (visible !== wasVisible) {
     setWasVisible(visible);
-    if (visible) setOption(initialOption);
+    if (visible) setOption('rename');
   }
 
   return (

@@ -13,8 +13,6 @@
   "inDays_other": "daqui a {{count}} dias",
   "history": "Histórico",
   "start": "Iniciar check corporal",
-  "availableIn_one": "Disponível daqui a {{count}} dia",
-  "availableIn_other": "Disponível daqui a {{count}} dias",
   "empty": {
     "title": "Ainda sem check corporal",
     "body": "Tira quatro fotos e recebe uma pontuação da tua composição corporal. Repete a cada poucas semanas para veres o teu progresso."

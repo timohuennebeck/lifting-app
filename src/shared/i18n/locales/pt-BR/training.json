@@ -10,7 +10,6 @@
     "meta_other": "{{minutes}} min · {{count}} exercícios",
     "start": "Iniciar {{name}}",
     "more": "Opções para {{name}}",
-    "delete": "Excluir {{name}}",
     "empty": "Você ainda não tem modelos",
     "emptyCollection": "Ainda não há modelos aqui",
     "emptyHint": "Crie um modelo para planejar seus exercícios e séries."
@@ -44,8 +43,7 @@
     "deleteAll": "Excluir coleção e modelos",
     "deleteAllHint": "Os treinos registrados são mantidos",
     "deleteHint": "Depois você escolhe o que acontece com os templates",
-    "moreA11y": "Opções para {{name}}",
-    "deleteA11y": "Excluir {{name}}"
+    "moreA11y": "Opções para {{name}}"
   },
   "newTemplate": {
     "title": "Novo modelo",

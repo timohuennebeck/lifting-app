@@ -48,16 +48,9 @@ export function BodyScreen() {
   const nextTitle = t('check', { n: checks.length + 1 });
 
   return (
-    <TabScreen
-      footer={
-        // Until the next check is due nothing starts one; the button says when it opens.
-        <Button
-          label={!latest || due ? t('start') : t('availableIn', { count: daysLeft })}
-          disabled={!!latest && !due}
-          onPress={camera.request}
-        />
-      }
-    >
+    // A check starts from the next check's card or row once it is due; the first from the
+    // empty state.
+    <TabScreen>
       <View className="gap-2 px-5 pt-4">
         <Text variant="headline" className="text-[30px] leading-7.5">
           {t('title')}
@@ -78,6 +71,7 @@ export function BodyScreen() {
           <Text variant="paragraph" tone="muted" className="text-center">
             {t('empty.body')}
           </Text>
+          <Button label={t('start')} size="md" className="mt-1 px-6" onPress={camera.request} />
         </Card>
       ) : (
         <>

@@ -34,10 +34,10 @@ import { ChangePasswordSheet } from '../components/change-password-sheet';
 import { DeleteAccountSheet } from '../components/delete-account-sheet';
 import { ProSection } from '../components/pro-section';
 import { SignOutSheet } from '../components/sign-out-sheet';
-import { UnitBadge, UnitsSheet } from '../components/units-sheet';
+import { UnitBadge } from '../components/unit-badge';
 import { deleteAccount } from '../lib/delete-account';
 
-type OpenSheet = 'account' | AccountAction | 'language' | 'units' | 'signOut' | 'delete';
+type OpenSheet = 'account' | AccountAction | 'language' | 'signOut' | 'delete';
 
 const LINKS: { key: 'help' | 'privacy' | 'terms'; href: Href }[] = [
   { key: 'help', href: '/support' },
@@ -134,7 +134,12 @@ export function SettingsScreen() {
             label={t('settings.units')}
             value={t(units === 'metric' ? 'settings.kilograms' : 'settings.pounds')}
             icon={<UnitBadge units={units} />}
-            onPress={() => setSheet('units')}
+            // Two options: a tap switches to the other one.
+            onPress={() =>
+              void saveProfile(requireUserId(), {
+                unitSystem: units === 'metric' ? 'imperial' : 'metric',
+              })
+            }
           />
         </View>
       </View>
@@ -189,12 +194,6 @@ export function SettingsScreen() {
       <ChangeEmailSheet visible={sheet === 'email'} onClose={close} currentEmail={email} />
       <ChangePasswordSheet visible={sheet === 'password'} onClose={close} />
       <LanguageSheet visible={sheet === 'language'} onClose={close} />
-      <UnitsSheet
-        visible={sheet === 'units'}
-        onClose={close}
-        value={units}
-        onSelect={(unitSystem) => void saveProfile(requireUserId(), { unitSystem })}
-      />
       <SignOutSheet
         visible={sheet === 'signOut'}
         onClose={close}

@@ -1,7 +1,9 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
+import Animated, { useAnimatedRef } from 'react-native-reanimated';
+import Sortable from 'react-native-sortables';
 
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useProfile } from '@/shared/data/profile';
@@ -12,7 +14,6 @@ import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { afterSheetClose } from '@/shared/ui/sheet';
-import { SwipeToDelete } from '@/shared/ui/swipe-to-delete';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
@@ -20,9 +21,9 @@ import { type CollectionTab, CollectionTabs } from '../components/collection-tab
 import { CreateSheet } from '../components/create-sheet';
 import { CollectionsGlyph } from '../components/glyphs';
 import { NewCollectionSheet } from '../components/new-collection-sheet';
-import { type TemplateOption, TemplateOptionsSheet } from '../components/template-options-sheet';
+import { TemplateOptionsSheet } from '../components/template-options-sheet';
 import { TemplateRow } from '../components/template-row';
-import { deleteTemplate, renameTemplate } from '../data/template-mutations';
+import { deleteTemplate, renameTemplate, reorderTemplates } from '../data/template-mutations';
 import { useStartTemplate } from '../hooks/use-start-template';
 
 const NONE = 'none';
@@ -37,11 +38,11 @@ export function TrainingScreen() {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [newCollectionOpen, setNewCollectionOpen] = useState(false);
-  // "⋯" opens the options with rename selected; swiping the row opens them on delete.
-  const [options, setOptions] = useState<{ tpl: TemplateSummary; option: TemplateOption } | null>(
-    null,
-  );
+  const [options, setOptions] = useState<TemplateSummary | null>(null);
   const optionsShown = useLastDefined(options);
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  // A drag ends with a release over the row: that must not open the template.
+  const dragging = useRef(false);
   const [renaming, setRenaming] = useState<TemplateSummary | null>(null);
   const renameShown = useLastDefined(renaming);
 
@@ -64,7 +65,7 @@ export function TrainingScreen() {
 
   return (
     <TabScreen
-      contentClassName="pt-3"
+      scrollRef={scrollRef}
       headerActions={
         <>
           <PressableScale
@@ -84,31 +85,50 @@ export function TrainingScreen() {
         </>
       }
     >
-      <Text variant="title" className="px-5 pt-5 normal-case">
+      <Text variant="title" className="px-5 pt-8 normal-case">
         {t('list.title')}
       </Text>
       {tabs.length ? (
         <CollectionTabs tabs={tabs} selected={selected} onSelect={setSelectedKey} />
       ) : null}
       <View className="px-2 pt-3">
-        {rows.map((tpl, i) => (
-          <SwipeToDelete
-            key={tpl.id}
-            label={t('list.delete', { name: tpl.name })}
-            onDelete={() => setOptions({ tpl, option: 'delete' })}
-          >
+        {/* Hold a training to drag it to another place in its collection. */}
+        <Sortable.Grid
+          data={rows}
+          keyExtractor={(tpl) => tpl.id}
+          columns={1}
+          scrollableRef={scrollRef}
+          dragActivationDelay={250}
+          activeItemScale={1.03}
+          inactiveItemOpacity={0.6}
+          hapticsEnabled={false}
+          onDragStart={() => {
+            dragging.current = true;
+            haptics.press();
+          }}
+          onDragEnd={({ data, fromIndex, toIndex }) => {
+            setTimeout(() => (dragging.current = false), 150);
+            if (toIndex !== fromIndex) void reorderTemplates(data.map((tpl) => tpl.id));
+          }}
+          renderItem={({ item: tpl, index }) => (
             <TemplateRow
-              index={i + 1}
+              index={index + 1}
               name={tpl.name}
               minutes={tpl.estimatedMinutes}
               exerciseCount={tpl.exerciseCount}
               starting={startingId === tpl.id}
-              onPress={() => router.push(`/template/${tpl.id}`)}
-              onStart={() => start(tpl)}
-              onMore={() => setOptions({ tpl, option: 'rename' })}
+              onPress={() => {
+                if (!dragging.current) router.push(`/template/${tpl.id}`);
+              }}
+              onStart={() => {
+                if (!dragging.current) start(tpl);
+              }}
+              onMore={() => {
+                if (!dragging.current) setOptions(tpl);
+              }}
             />
-          </SwipeToDelete>
-        ))}
+          )}
+        />
       </View>
       {!isLoading && !rows.length ? (
         <View className="items-center gap-4 px-8 pt-12">
@@ -147,17 +167,16 @@ export function TrainingScreen() {
       <TemplateOptionsSheet
         visible={!!options}
         onClose={() => setOptions(null)}
-        name={optionsShown?.tpl.name ?? ''}
-        exerciseCount={optionsShown?.tpl.exerciseCount ?? 0}
-        minutes={optionsShown?.tpl.estimatedMinutes ?? 0}
-        initialOption={optionsShown?.option}
+        name={optionsShown?.name ?? ''}
+        exerciseCount={optionsShown?.exerciseCount ?? 0}
+        minutes={optionsShown?.estimatedMinutes ?? 0}
         onRename={() => {
-          const tpl = options?.tpl ?? null;
+          const tpl = options;
           setOptions(null);
           afterSheetClose(() => setRenaming(tpl));
         }}
         onDelete={async () => {
-          const tpl = options?.tpl;
+          const tpl = options;
           setOptions(null);
           if (!tpl) return;
           await deleteTemplate(tpl.id);

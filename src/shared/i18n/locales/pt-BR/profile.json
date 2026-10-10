@@ -28,8 +28,6 @@
   "settings": {
     "language": "Idioma",
     "units": "Unidades",
-    "metric": "Métrico (kg, cm)",
-    "imperial": "Imperial (lb, ft)",
     "kilograms": "Quilogramas",
     "pounds": "Libras",
     "account": {
@@ -73,7 +71,7 @@
       "title": "Excluir conta?",
       "subtitle": "Isso não pode ser desfeito.",
       "option": "Excluir conta permanentemente",
-      "body": "Seu perfil, todos os treinos, checks corporais com fotos e solicitações de suporte serão excluídos.",
+      "body": "Todos os seus dados serão excluídos.",
       "subscription": "Isso não encerra uma assinatura ativa. Cancele-a na App Store ou no Google Play.",
       "failed": "Não foi possível excluir sua conta. Verifique sua conexão e tente novamente."
     }

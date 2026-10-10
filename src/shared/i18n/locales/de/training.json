@@ -10,7 +10,6 @@
     "meta_other": "{{minutes}} Min · {{count}} Übungen",
     "start": "{{name}} starten",
     "more": "Optionen für {{name}}",
-    "delete": "{{name}} löschen",
     "empty": "Noch keine Templates",
     "emptyCollection": "Hier gibt es noch keine Templates",
     "emptyHint": "Erstelle ein Template, um Übungen und Sätze zu planen."
@@ -44,8 +43,7 @@
     "deleteAll": "Sammlung und Templates löschen",
     "deleteAllHint": "Geloggte Trainings bleiben erhalten",
     "deleteHint": "Danach wählst du, was mit den Templates passiert",
-    "moreA11y": "Optionen für {{name}}",
-    "deleteA11y": "{{name}} löschen"
+    "moreA11y": "Optionen für {{name}}"
   },
   "newTemplate": {
     "title": "Neues Template",

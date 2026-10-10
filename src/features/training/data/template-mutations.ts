@@ -130,6 +130,15 @@ export async function renameTemplate(templateId: string, name: string) {
     .where(eq(templates.id, templateId));
 }
 
+/** Saves the order of one collection's templates after a drag on the Training tab. */
+export async function reorderTemplates(orderedIds: string[]) {
+  await drizzle.transaction(async (tx) => {
+    for (const [position, id] of orderedIds.entries()) {
+      await tx.update(templates).set({ position }).where(eq(templates.id, id));
+    }
+  });
+}
+
 export async function deleteTemplate(templateId: string) {
   await drizzle.transaction((tx) => deleteTemplateTx(tx, templateId));
 }

@@ -13,8 +13,6 @@
   "inDays_other": "in {{count}} Tagen",
   "history": "Historie",
   "start": "Körpercheck starten",
-  "availableIn_one": "Verfügbar in {{count}} Tag",
-  "availableIn_other": "Verfügbar in {{count}} Tagen",
   "empty": {
     "title": "Noch kein Körpercheck",
     "body": "Mach vier Fotos und erhalte einen Wert für deine Körperkomposition. Wiederhole den Check alle paar Wochen, um deinen Fortschritt zu sehen."

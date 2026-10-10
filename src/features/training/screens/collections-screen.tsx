@@ -13,7 +13,6 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { afterSheetClose } from '@/shared/ui/sheet';
-import { SwipeToDelete } from '@/shared/ui/swipe-to-delete';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
@@ -22,10 +21,7 @@ import { DeleteCollectionSheet } from '../components/delete-collection-sheet';
 import { NewCollectionSheet } from '../components/new-collection-sheet';
 import { renameCollection } from '../data/template-mutations';
 
-/**
- * Manage collections: "⋯" renames or deletes, swiping a row left deletes (01·V·S, 01·V·A·4,
- * 01·V·A·5), as with trainings.
- */
+/** Manage collections: "⋯" renames or deletes (01·V·S, 01·V·A·4, 01·V·A·5). */
 export function CollectionsScreen() {
   const { t } = useTranslation(['training', 'common']);
   const insets = useSafeAreaInsets();
@@ -65,30 +61,24 @@ export function CollectionsScreen() {
         contentContainerStyle={{ paddingBottom: insets.bottom + 40 }}
       >
         {collections.map((c) => (
-          <SwipeToDelete
+          <ListRow
             key={c.id}
-            label={t('collections.deleteA11y', { name: c.name })}
-            onDelete={() => setDeleting(c)}
-          >
-            <ListRow
-              // Opaque: the row slides over the delete button when swiped.
-              className="bg-bg px-3"
-              badge={c.templateCount}
-              title={c.name}
-              subtitle={t('collections.templateCount', { count: c.templateCount })}
-              trailing={
-                <PressableScale
-                  haptic="tap"
-                  hitSlop={4}
-                  accessibilityLabel={t('collections.moreA11y', { name: c.name })}
-                  onPress={() => setOptions(c)}
-                  className="size-10 items-center justify-center rounded-full bg-elevated"
-                >
-                  <Icon name="more" size={14} />
-                </PressableScale>
-              }
-            />
-          </SwipeToDelete>
+            className="px-3"
+            badge={c.templateCount}
+            title={c.name}
+            subtitle={t('collections.templateCount', { count: c.templateCount })}
+            trailing={
+              <PressableScale
+                haptic="tap"
+                hitSlop={4}
+                accessibilityLabel={t('collections.moreA11y', { name: c.name })}
+                onPress={() => setOptions(c)}
+                className="size-10 items-center justify-center rounded-full bg-elevated"
+              >
+                <Icon name="more" size={14} />
+              </PressableScale>
+            }
+          />
         ))}
         {!isLoading && !collections.length ? (
           <View className="items-center gap-4 px-8 pt-16">

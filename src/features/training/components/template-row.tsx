@@ -36,7 +36,7 @@ export function TemplateRow({
     <ListRow
       onPress={onPress}
       activeScale={0.98}
-      // Opaque: the row slides over the delete button when swiped.
+      // Opaque: a dragged row passes over the others.
       className="bg-bg px-3"
       badge={padIndex(index)}
       title={name}

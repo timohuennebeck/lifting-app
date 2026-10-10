@@ -28,8 +28,6 @@
   "settings": {
     "language": "Language",
     "units": "Units",
-    "metric": "Metric (kg, cm)",
-    "imperial": "Imperial (lb, ft)",
     "kilograms": "Kilograms",
     "pounds": "Pounds",
     "account": {
@@ -73,7 +71,7 @@
       "title": "Delete account?",
       "subtitle": "This can't be undone.",
       "option": "Delete account permanently",
-      "body": "Your profile, all workouts, body checks with photos and support requests will be deleted.",
+      "body": "All your data will be deleted.",
       "subscription": "This doesn't end an active subscription. Cancel it in the App Store or on Google Play.",
       "failed": "Your account couldn't be deleted. Check your connection and try again."
     }

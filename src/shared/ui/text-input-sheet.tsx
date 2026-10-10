@@ -59,6 +59,8 @@ export function TextInputSheet({
           maxLength={40}
           returnKeyType="done"
           onSubmitEditing={submit}
+          // The sheet is there to type a name: the keyboard comes up with it.
+          autoFocus
         />
         <Button label={ctaLabel} disabled={!valid} loading={busy} onPress={submit} />
       </View>

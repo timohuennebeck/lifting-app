@@ -28,8 +28,6 @@
   "settings": {
     "language": "Idioma",
     "units": "Unidades",
-    "metric": "Métrico (kg, cm)",
-    "imperial": "Imperial (lb, ft)",
     "kilograms": "Quilogramas",
     "pounds": "Libras",
     "account": {
@@ -73,7 +71,7 @@
       "title": "Eliminar conta?",
       "subtitle": "Isto não pode ser desfeito.",
       "option": "Eliminar conta definitivamente",
-      "body": "O teu perfil, todos os treinos, checks corporais com fotos e pedidos de suporte serão eliminados.",
+      "body": "Todos os teus dados serão eliminados.",
       "subscription": "Isto não termina uma subscrição ativa. Cancela-a na App Store ou no Google Play.",
       "failed": "Não foi possível eliminar a tua conta. Verifica a ligação e tenta novamente."
     }

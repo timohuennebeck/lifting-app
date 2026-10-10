@@ -28,8 +28,6 @@
   "settings": {
     "language": "Sprache",
     "units": "Einheiten",
-    "metric": "Metrisch (kg, cm)",
-    "imperial": "Imperial (lb, ft)",
     "kilograms": "Kilogramm",
     "pounds": "Pfund",
     "account": {
@@ -73,7 +71,7 @@
       "title": "Konto löschen?",
       "subtitle": "Das lässt sich nicht rückgängig machen.",
       "option": "Konto endgültig löschen",
-      "body": "Dein Profil, alle Trainings, Körperchecks mit Fotos und Support-Anfragen werden gelöscht.",
+      "body": "Alle deine Daten werden gelöscht.",
       "subscription": "Ein laufendes Abo endet dadurch nicht. Kündige es im App Store oder bei Google Play.",
       "failed": "Dein Konto konnte nicht gelöscht werden. Prüf deine Verbindung und versuch es noch mal."
     }

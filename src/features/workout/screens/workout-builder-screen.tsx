@@ -1,8 +1,10 @@
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
+import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Sortable from 'react-native-sortables';
 
 import { EditableTitle } from '@/features/training/components/editable-title';
 import {
@@ -44,6 +46,9 @@ export function WorkoutBuilderScreen() {
   const [starting, setStarting] = useState(false);
   // State isn't updated yet on a double tap, which would start two workouts.
   const startingRef = useRef(false);
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  // A drag ends with a release over the card: that must not open its sets.
+  const dragging = useRef(false);
 
   const items = exercises.map((e) => ({
     exerciseId: e.exerciseId,
@@ -90,7 +95,8 @@ export function WorkoutBuilderScreen() {
 
   return (
     <Screen header={<ScreenHeader icon="chevron-left-thin" title={t('builder.title')} />}>
-      <ScrollView
+      <Animated.ScrollView
+        ref={scrollRef}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 130 }}
       >
@@ -136,23 +142,45 @@ export function WorkoutBuilderScreen() {
           {empty ? (
             <EmptyExercises hint={t('training:overview.emptyHint')} />
           ) : (
-            exercises.map((e, i) => (
-              <TemplateExerciseCard
-                key={`${e.exerciseId}-${i}`}
-                exerciseId={e.exerciseId}
-                sets={e.sets.map((set, k) => ({
-                  key: String(k),
-                  min: set.targetMin,
-                  max: set.targetMax,
-                  rir: set.rir,
-                }))}
-                onMenu={() => setMenuFor(i)}
-                onPress={() => openSets(i)}
-              />
-            ))
+            // Hold an exercise to drag it to another place, as in a template.
+            <Sortable.Grid
+              data={exercises}
+              keyExtractor={(e) => e.key}
+              columns={1}
+              scrollableRef={scrollRef}
+              dragActivationDelay={250}
+              activeItemScale={1.03}
+              inactiveItemOpacity={0.6}
+              hapticsEnabled={false}
+              onDragStart={() => {
+                dragging.current = true;
+                haptics.press();
+              }}
+              onDragEnd={({ fromIndex, toIndex }) => {
+                setTimeout(() => (dragging.current = false), 150);
+                if (toIndex !== fromIndex) move(fromIndex, toIndex);
+              }}
+              renderItem={({ item: e, index }) => (
+                <TemplateExerciseCard
+                  exerciseId={e.exerciseId}
+                  sets={e.sets.map((set, k) => ({
+                    key: String(k),
+                    min: set.targetMin,
+                    max: set.targetMax,
+                    rir: set.rir,
+                  }))}
+                  onMenu={() => {
+                    if (!dragging.current) setMenuFor(index);
+                  }}
+                  onPress={() => {
+                    if (!dragging.current) openSets(index);
+                  }}
+                />
+              )}
+            />
           )}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
 
       <BottomFade>
         <Button
