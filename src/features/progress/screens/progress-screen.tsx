@@ -4,9 +4,8 @@ import { View } from 'react-native';
 import { BodyView } from '@/features/body/components/body-view';
 import { MusclesView } from '@/features/muscles/components/muscles-view';
 import { TabScreen } from '@/shared/components/tab-screen';
-import { cn } from '@/shared/lib/cn';
-import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
+import { UnderlineTabs } from '@/shared/ui/underline-tabs';
 
 import { ExerciseRecordsList } from '../components/exercise-records-list';
 import { type ProgressView, useProgressStore } from '../stores/progress-store';
@@ -21,39 +20,19 @@ export function ProgressScreen() {
 
   return (
     <TabScreen
-      // The exercise list scrolls on its own, under the pinned title and pills.
+      // The exercise list scrolls on its own, under the pinned title and tabs.
       scroll={view !== 'exercises'}
       pinned={
         <View>
           <Text variant="title" className="px-5 pt-5 normal-case">
             {t('progressTab.title')}
           </Text>
-          <View className="flex-row gap-1.5 px-5 pt-4" accessibilityRole="tablist">
-            {VIEWS.map((key) => {
-              const active = key === view;
-              return (
-                <PressableScale
-                  key={key}
-                  haptic="select"
-                  accessibilityRole="tab"
-                  accessibilityState={{ selected: active }}
-                  onPress={() => setView(key)}
-                  className={cn(
-                    'h-9 justify-center rounded-full px-3.5',
-                    active ? 'bg-accent' : 'bg-surface',
-                  )}
-                >
-                  <Text
-                    variant="caption"
-                    tone={active ? 'onAccent' : 'secondary'}
-                    className="text-sm"
-                  >
-                    {t(`progressTab.${key}`)}
-                  </Text>
-                </PressableScale>
-              );
-            })}
-          </View>
+          <UnderlineTabs
+            className="mx-4 mt-3"
+            tabs={VIEWS.map((key) => ({ key, label: t(`progressTab.${key}`) }))}
+            value={view}
+            onChange={setView}
+          />
         </View>
       }
     >

@@ -6,7 +6,7 @@ import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native'
 import Animated, {
   useAnimatedRef,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
@@ -18,8 +18,8 @@ import { cn } from '@/shared/lib/cn';
 import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { IconButton } from '@/shared/ui/icon-button';
 import { MUSCLE_CARDS, MuscleMap } from '@/shared/ui/muscle-map';
-import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
+import { UnderlineTabs } from '@/shared/ui/underline-tabs';
 
 import { ExerciseThumb } from '../components/exercise-thumb';
 import { exerciseMuscles, primaryGroup } from '../lib/muscle-groups';
@@ -49,7 +49,6 @@ export function ExerciseDetailScreen() {
   const { width } = useWindowDimensions();
   const pager = useAnimatedRef<Animated.ScrollView>();
   const scrollX = useSharedValue(firstPage * width);
-  const tabWidth = useSharedValue(0);
   const page = useSharedValue(firstPage);
   // Where the pager starts; also set once it has its size, where contentOffset isn't applied.
   const startOffset = { x: firstPage * width, y: 0 };
@@ -62,10 +61,7 @@ export function ExerciseDetailScreen() {
       scheduleOnRN(setTab, TABS[current]);
     }
   });
-  const underline = useAnimatedStyle(() => ({
-    width: tabWidth.get(),
-    transform: [{ translateX: (scrollX.get() / width) * tabWidth.get() }],
-  }));
+  const pagePosition = useDerivedValue(() => scrollX.get() / width);
   const exercise = getExercise(exerciseId);
   const back = (
     <View className="absolute left-4" style={{ top: insets.top + 16 }}>
@@ -114,34 +110,17 @@ export function ExerciseDetailScreen() {
           </Text>
         </View>
       </View>
-      <View
-        className="mx-4 mt-3 flex-row border-b border-control"
-        onLayout={(e) => tabWidth.set(e.nativeEvent.layout.width / TABS.length)}
-      >
-        {TABS.map((key, i) => (
-          <PressableScale
-            key={key}
-            haptic="select"
-            accessibilityRole="tab"
-            accessibilityState={{ selected: tab === key }}
-            onPress={() => {
-              setTab(key);
-              pager.current?.scrollTo({ x: i * width, animated: true });
-            }}
-            className="h-11.5 flex-1 items-center justify-center"
-          >
-            <Text variant="label" tone={tab === key ? 'default' : 'subtle'}>
-              {t(`exercises:detail.tabs.${key}`)}
-            </Text>
-          </PressableScale>
-        ))}
-        {/* Follows the swipe between the pages. */}
-        <Animated.View
-          pointerEvents="none"
-          className="absolute -bottom-px left-0 h-0.5 bg-accent"
-          style={underline}
-        />
-      </View>
+      {/* The underline follows the swipe between the pages. */}
+      <UnderlineTabs
+        className="mx-4 mt-3"
+        tabs={TABS.map((key) => ({ key, label: t(`exercises:detail.tabs.${key}`) }))}
+        value={tab}
+        position={pagePosition}
+        onChange={(key) => {
+          setTab(key);
+          pager.current?.scrollTo({ x: TABS.indexOf(key) * width, animated: true });
+        }}
+      />
       {/* Swipe left and right between the tabs. */}
       <Animated.ScrollView
         ref={pager}
