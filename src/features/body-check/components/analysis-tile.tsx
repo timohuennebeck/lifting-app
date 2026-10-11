@@ -1,14 +1,15 @@
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { CheckBadge } from '@/shared/ui/check-item';
-import { Gradient } from '@/shared/ui/gradient';
 import { Text } from '@/shared/ui/text';
+
+import { PhotoTile } from './photo-tile';
 
 const PULSE: CSSAnimationKeyframes = {
   from: { transform: [{ scale: 1.005 }] },
@@ -62,33 +63,26 @@ export function AnalysisTile({ uri, label, progress, active, height }: AnalysisT
           : { animationName: 'none', animationDuration: '0s' },
       ]}
     >
-      <View className="flex-1 overflow-hidden rounded-[22px] bg-surface">
+      <PhotoTile
+        label={label}
+        border={!active}
+        trailing={
+          done ? (
+            <CheckBadge size={22} glyph={11} />
+          ) : (
+            <Text variant="caption" tone="secondary" className="text-xs">
+              {`${Math.round(progress * 100)}%`}
+            </Text>
+          )
+        }
+      >
         <Image source={{ uri }} contentFit="cover" style={StyleSheet.absoluteFill} />
         {width && !done ? (
           <Svg width={width} height={height} style={StyleSheet.absoluteFill}>
             <Path d={remainingSlice(width, height, progress)} fill="rgba(10,10,10,0.72)" />
           </Svg>
         ) : null}
-        <Gradient from="bottom" size={70} color="black" opacity={0.75} />
-        {!active ? (
-          <View
-            pointerEvents="none"
-            className="absolute inset-0 rounded-[22px] border border-white/10"
-          />
-        ) : null}
-        <View className="absolute right-3 bottom-3 left-3 flex-row items-center justify-between">
-          <Text variant="label" className="text-sm">
-            {label}
-          </Text>
-          {done ? (
-            <CheckBadge size={22} glyph={11} />
-          ) : (
-            <Text variant="caption" tone="secondary" className="text-xs">
-              {`${Math.round(progress * 100)}%`}
-            </Text>
-          )}
-        </View>
-      </View>
+      </PhotoTile>
     </Animated.View>
   );
 }

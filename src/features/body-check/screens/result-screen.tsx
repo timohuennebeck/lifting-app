@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, ScrollView, Share, View } from 'react-native';
+import { Alert, ScrollView, Share, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useProfile } from '@/shared/data/profile';
@@ -10,6 +10,7 @@ import { haptics } from '@/shared/lib/haptics';
 import { useUserId } from '@/shared/stores/session-store';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
+import { CheckBadge } from '@/shared/ui/check-item';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
@@ -18,6 +19,7 @@ import { CheckPhoto } from '../components/check-photo';
 import { DeleteCheckSheet } from '../components/delete-check-sheet';
 import { GroupBands } from '../components/group-bands';
 import { MetricRow } from '../components/metric-row';
+import { PhotoTile, photoTileHeight } from '../components/photo-tile';
 import { deleteBodyCheck, saveBodyCheck } from '../data/body-check-mutations';
 import { useBodyCheckPhotos, useBodyChecks } from '../data/body-checks';
 import { useCloseCheck } from '../hooks/use-close-check';
@@ -40,6 +42,7 @@ export function ResultScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation(['bodyCheck', 'common']);
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
   const userId = useUserId();
   const { profile } = useProfile();
   const { data: checks } = useBodyChecks();
@@ -90,6 +93,7 @@ export function ResultScreen() {
   const { bodyFat, proportions, definition } = check.metrics;
   const fatRange = bodyFatRange(profile?.sex);
   const date = formatDate(new Date(check.createdAt), { day: 'numeric', month: 'long' });
+  const tileHeight = photoTileHeight(width);
   let close = exitBodyCheck;
   if (justSaved) close = leaveSaved;
   else if (draft) close = closeDraft;
@@ -189,35 +193,35 @@ export function ResultScreen() {
           </View>
         </View>
 
-        <View className="gap-3 px-5 pt-6.5 pb-2">
-          <Text variant="overline" tone="subtle" className="text-xs tracking-[1px]">
-            {t('result.basis')}
-          </Text>
-          <View className="flex-row gap-2">
-            {POSES.map((pose) => (
-              <View key={pose} className="flex-1 gap-1.5">
-                <PressableScale
-                  accessibilityRole="imagebutton"
-                  accessibilityLabel={t(`poses.${pose}.name`)}
-                  onPress={() =>
-                    router.push({ pathname: '/body-check/photo/[id]', params: { id, pose } })
-                  }
-                  className="aspect-3/4 overflow-hidden rounded-xl border border-white/10 bg-surface"
-                >
-                  <CheckPhoto
-                    key={saved ? 'saved' : 'draft'}
-                    checkId={id}
-                    pose={pose}
-                    uri={saved ? undefined : shots[pose]?.uri}
-                    storagePath={photos?.[id]?.[pose]}
-                  />
-                </PressableScale>
-                <Text variant="caption" tone="muted" className="text-center text-xs">
-                  {t(`poses.${pose}.short`)}
-                </Text>
-              </View>
-            ))}
-          </View>
+        <Text variant="overline" tone="subtle" className="px-5 pt-6.5 text-xs tracking-[1px]">
+          {t('result.basis')}
+        </Text>
+        <View className="flex-row gap-2.5 px-4 pt-3 pb-2">
+          {POSES.map((pose) => (
+            <PressableScale
+              key={pose}
+              accessibilityRole="imagebutton"
+              accessibilityLabel={t(`poses.${pose}.name`)}
+              onPress={() =>
+                router.push({ pathname: '/body-check/photo/[id]', params: { id, pose } })
+              }
+              className="flex-1"
+              style={{ height: tileHeight }}
+            >
+              <PhotoTile
+                label={t(`poses.${pose}.short`)}
+                trailing={<CheckBadge size={22} glyph={11} />}
+              >
+                <CheckPhoto
+                  key={saved ? 'saved' : 'draft'}
+                  checkId={id}
+                  pose={pose}
+                  uri={saved ? undefined : shots[pose]?.uri}
+                  storagePath={photos?.[id]?.[pose]}
+                />
+              </PhotoTile>
+            </PressableScale>
+          ))}
         </View>
 
         <View className="px-5 pt-2.5">

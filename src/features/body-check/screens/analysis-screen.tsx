@@ -14,6 +14,7 @@ import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 import { AnalysisTile } from '../components/analysis-tile';
+import { photoTileHeight } from '../components/photo-tile';
 import { GroupMarquee } from '../components/group-marquee';
 import { useBodyChecks } from '../data/body-checks';
 import {
@@ -28,11 +29,8 @@ import { type Shot, useBodyCheckStore } from '../stores/body-check-store';
 
 /** Roughly how long the analysis takes; the animation waits at 99 % if it takes longer. */
 const DURATION_MS = 14000;
-const TILE_MAX = 216;
 /** Height of everything but the tile row (header, score, chips, CTA). */
 const CHROME_HEIGHT = 330;
-/** Side padding and gaps of the tile row. */
-const ROW_CHROME = 32 + 2 * 10;
 
 /** Running analyses by check, so a remounted screen picks up the same one instead of paying twice. */
 const running = new Map<string, Promise<AnalysisOutcome>>();
@@ -114,12 +112,7 @@ export function AnalysisScreen() {
     : t('analysis.finalStage.first');
   const steps = [...stages, finalStage];
   const stage = done ? t('analysis.done') : steps[Math.floor((pct / 100) * steps.length)];
-  const tileWidth = (width - ROW_CHROME) / POSES.length;
-  const tileHeight = clamp(
-    Math.min(tileWidth * 1.5, height - insets.top - footerInset - CHROME_HEIGHT),
-    120,
-    TILE_MAX,
-  );
+  const tileHeight = photoTileHeight(width, height - insets.top - footerInset - CHROME_HEIGHT);
 
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
