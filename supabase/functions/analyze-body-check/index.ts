@@ -1,6 +1,6 @@
 // Analyses a body check: the app uploads the three photos to
 // body-checks/<user id>/<check id>/<pose>.jpg, then calls this function with the check id.
-// The photos go to OpenAI (EU endpoint by default); the answer is either the check's values or
+// The photos go to OpenAI's Responses API; the answer is either the check's values or
 // the photos to retake. Every analysis takes a row in body_check_analyses first, which limits how
 // often a user can run one and is the only source the saved check's values are taken from.
 import { encodeBase64 } from 'jsr:@std/encoding@1/base64';
@@ -23,12 +23,11 @@ const BUCKET = 'body-checks';
 const MIN_AGE = 18;
 /** Analyses per user in 24 hours, retakes included; each one is an OpenAI call. */
 const DAILY_LIMIT = 5;
+const OPENAI_URL = 'https://api.openai.com/v1/responses';
 const OPENAI_TIMEOUT_MS = 120_000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
-// EU data residency needs an OpenAI project created in the EU region.
-const OPENAI_BASE_URL = Deno.env.get('OPENAI_BASE_URL') ?? 'https://eu.api.openai.com/v1';
 const OPENAI_MODEL = Deno.env.get('OPENAI_MODEL') ?? 'gpt-6.1-sol';
 const OPENAI_REASONING_EFFORT = Deno.env.get('OPENAI_REASONING_EFFORT');
 
@@ -58,7 +57,7 @@ async function askModel(context: string, photos: string[]) {
       { type: 'input_image', image_url: photos[i], detail: 'high' },
     ]),
   ];
-  const response = await fetch(`${OPENAI_BASE_URL}/responses`, {
+  const response = await fetch(OPENAI_URL, {
     method: 'POST',
     headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({

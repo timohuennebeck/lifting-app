@@ -95,12 +95,12 @@ Documents are readable without an account (onboarding runs logged out) and writt
 ## Body check analysis
 
 The app uploads the three photos (front, side, back) to the private `body-checks` bucket and calls the
-`analyze-body-check` Edge Function, which sends them to OpenAI (`gpt-6.1-sol` on the EU endpoint by
-default) and returns the check's values, or the photos to retake.
+`analyze-body-check` Edge Function, which sends them to OpenAI (`gpt-6.1-sol` by default, via the
+standard API at `api.openai.com`) and returns the check's values, or the photos to retake.
 
 - **Secrets:** `supabase/functions/.env` locally (loaded by `supabase start`); in production
-  `npx supabase secrets set --env-file supabase/functions/.env`. The key must belong to an OpenAI project
-  created in the EU region. `OPENAI_MODEL` and `OPENAI_BASE_URL` override the defaults.
+  `npx supabase secrets set --env-file supabase/functions/.env`. `OPENAI_API_KEY` is an OpenAI API
+  key; `OPENAI_MODEL` overrides the default model.
 - **Rules (server-side):** adults only (profile age 18+), at most 5 analyses per user in 24 hours.
 - **`body_check_analyses`:** one row per analysis, server-only. Saving a check takes its score, values
   and time from the analysis; a check without one is rejected.
