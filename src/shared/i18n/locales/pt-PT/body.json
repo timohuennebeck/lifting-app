@@ -15,5 +15,12 @@
   "adultsOnly": {
     "title": "A partir de 18 anos",
     "body": "O check corporal só está disponível a partir dos 18 anos."
+  },
+  "compare": {
+    "title": "Comparar",
+    "edit": "Alterar comparação",
+    "pickFor": "Escolher check para {{side}}",
+    "daysBetween_one": "{{count}} dia de intervalo",
+    "daysBetween_other": "{{count}} dias de intervalo"
   }
 }

@@ -18,8 +18,22 @@ export interface BodyPhotoCardProps {
   storagePath?: string | null;
   label: string;
   score: number;
-  /** The latest check: accent ring, accent score and check badge. */
-  latest?: boolean;
+  /** The "after" check: accent score. */
+  after?: boolean;
+  /** Accent ring: the latest check, or the side being picked on the compare page. */
+  selected?: boolean;
+  /** Check badge in the corner (the latest check on the Körper tab). */
+  done?: boolean;
+  /** Toned down like a desaturated "before" shot. */
+  muted?: boolean;
+  /** Faded out: the side not being picked on the compare page. */
+  faded?: boolean;
+  /** "A" or "B" in the top-left corner (compare page). */
+  badge?: 'A' | 'B';
+  onPress?: () => void;
+  /** A pencil in the top-right corner, e.g. to pick other checks to compare. */
+  onEdit?: () => void;
+  editLabel?: string;
 }
 
 /**
@@ -40,45 +54,92 @@ export function BodyPhotoCard({
   storagePath,
   label,
   score,
-  latest,
+  after,
+  selected,
+  done,
+  muted,
+  faded,
+  badge,
+  onPress,
+  onEdit,
+  editLabel,
 }: BodyPhotoCardProps) {
+  const className = cn(
+    'h-62.5 w-full overflow-hidden rounded-[22px] bg-surface',
+    selected ? 'border-2 border-accent' : 'border border-white/8',
+    faded && 'opacity-45',
+  );
+  const content = (
+    <>
+      <CheckPhoto
+        checkId={checkId}
+        pose={pose}
+        storagePath={storagePath}
+        fallback={
+          <View className="absolute inset-0 p-4 opacity-60">
+            <MuscleMap view={pose === 'back' ? 'back' : 'front'} />
+          </View>
+        }
+      />
+      {muted ? <View pointerEvents="none" className="absolute inset-0 bg-black/25" /> : null}
+      <Gradient from="bottom" size={80} color="black" opacity={0.8} />
+      <View className="absolute right-3 bottom-3 left-3 flex-row items-end justify-between">
+        <View className="gap-0.5">
+          <Text variant="caption" tone="secondary" className="text-xs">
+            {label}
+          </Text>
+          <Text
+            variant="headline"
+            tone={after ? 'accent' : 'default'}
+            className="text-[28px] leading-7"
+          >
+            {score}
+          </Text>
+        </View>
+        {done ? <CheckBadge size={22} glyph={11} /> : null}
+      </View>
+      {badge ? (
+        <View
+          className={cn(
+            'absolute top-3 left-3 size-6.5 items-center justify-center rounded-full',
+            badge === 'A' ? 'bg-fg' : 'bg-accent',
+          )}
+        >
+          <Text variant="caption" tone="onAccent" className="font-inter-bold text-xs">
+            {badge}
+          </Text>
+        </View>
+      ) : null}
+      {onEdit ? (
+        <PressableScale
+          haptic="tap"
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel={editLabel}
+          onPress={onEdit}
+          className="absolute top-3 right-3 size-8 items-center justify-center rounded-full bg-black/45"
+        >
+          <Icon name="pencil" size={13} color={colors.fg} />
+        </PressableScale>
+      ) : null}
+    </>
+  );
   return (
     <CardSlot>
-      <View
-        className={cn(
-          'h-62.5 w-full overflow-hidden rounded-[22px] bg-surface',
-          latest ? 'border-2 border-accent' : 'border border-white/8',
-        )}
-      >
-        <CheckPhoto
-          checkId={checkId}
-          pose={pose}
-          storagePath={storagePath}
-          fallback={
-            <View className="absolute inset-0 p-4 opacity-60">
-              <MuscleMap view={pose === 'back' ? 'back' : 'front'} />
-            </View>
-          }
-        />
-        {/* Older photo is toned down like the design's desaturated "before" shot. */}
-        {!latest ? <View pointerEvents="none" className="absolute inset-0 bg-black/25" /> : null}
-        <Gradient from="bottom" size={80} color="black" opacity={0.8} />
-        <View className="absolute right-3 bottom-3 left-3 flex-row items-end justify-between">
-          <View className="gap-0.5">
-            <Text variant="caption" tone="secondary" className="text-xs">
-              {label}
-            </Text>
-            <Text
-              variant="headline"
-              tone={latest ? 'accent' : 'default'}
-              className="text-[28px] leading-7"
-            >
-              {score}
-            </Text>
-          </View>
-          {latest ? <CheckBadge size={22} glyph={11} /> : null}
-        </View>
-      </View>
+      {onPress ? (
+        <PressableScale
+          activeScale={0.98}
+          haptic="select"
+          accessibilityLabel={`${label}, ${score}`}
+          accessibilityState={{ selected }}
+          onPress={onPress}
+          className={className}
+        >
+          {content}
+        </PressableScale>
+      ) : (
+        <View className={className}>{content}</View>
+      )}
     </CardSlot>
   );
 }

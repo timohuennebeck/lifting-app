@@ -15,5 +15,12 @@
   "adultsOnly": {
     "title": "18 and over",
     "body": "The body check is only available from age 18."
+  },
+  "compare": {
+    "title": "Compare",
+    "edit": "Change comparison",
+    "pickFor": "Pick check for {{side}}",
+    "daysBetween_one": "{{count}} day between",
+    "daysBetween_other": "{{count}} days between"
   }
 }

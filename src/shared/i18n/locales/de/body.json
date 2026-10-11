@@ -15,5 +15,12 @@
   "adultsOnly": {
     "title": "Ab 18 Jahren",
     "body": "Der Körpercheck ist erst ab 18 Jahren verfügbar."
+  },
+  "compare": {
+    "title": "Vergleichen",
+    "edit": "Vergleich ändern",
+    "pickFor": "Check für {{side}} wählen",
+    "daysBetween_one": "{{count}} Tag dazwischen",
+    "daysBetween_other": "{{count}} Tage dazwischen"
   }
 }

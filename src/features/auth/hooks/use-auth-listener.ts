@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import { clearLocalPhotos } from '@/features/body-check/lib/photo-files';
 import { useBodyCheckStore } from '@/features/body-check/stores/body-check-store';
+import { useCompareStore } from '@/features/body/stores/compare-store';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import {
   refreshSubscription,
@@ -45,6 +46,8 @@ export function useAuthListener() {
         clearLocalPhotos();
         // So is a plan import in progress (its photos and the detected plan).
         useImportStore.getState().reset();
+        // The picked before/after checks belong to the account too.
+        useCompareStore.getState().reset();
       }
     });
     return () => data.subscription.unsubscribe();

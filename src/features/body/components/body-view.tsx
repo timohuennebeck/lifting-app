@@ -17,6 +17,8 @@ import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
+import { comparedPair } from '../lib/comparison';
+import { useCompareStore } from '../stores/compare-store';
 import { BodyPhotoCard, NextCheckCard } from './body-photo-card';
 import { CheckHistoryRow } from './check-history-row';
 
@@ -26,6 +28,8 @@ function openCamera() {
 }
 
 const openCheck = (id: string) => router.push(`/body-check/result/${id}`);
+const openCompare = (side: 'a' | 'b') =>
+  router.push({ pathname: '/body-compare', params: { side } });
 
 interface NoChecksCardProps {
   /** Old enough for body checks; under-18s are told why there are none. */
@@ -64,10 +68,13 @@ export function BodyView() {
   const [pose, setPose] = useState<BodyPose>('front');
   const allowed = isBodyCheckAge(profile?.age);
 
+  const saved = useCompareStore();
   const first = checks[0];
   const latest = checks[checks.length - 1];
-  // With two checks or more, the first and the latest are compared side by side.
-  const compared = checks.length > 1;
+  // With two checks or more, two are compared side by side: first and latest, or the user's pick.
+  const pair = comparedPair(checks, saved);
+  const compared = !!pair;
+  const numberOf = (id: string) => checks.findIndex((c) => c.id === id) + 1;
   const delta = latest && first ? latest.score - first.score : 0;
   const nextTitle = t('check', { n: checks.length + 1 });
 
@@ -108,26 +115,49 @@ export function BodyView() {
           {/* No padding on the row itself: the arrow is centred on its width. */}
           <View className="px-4 pt-6">
             <View className="flex-row gap-2.5">
-              {compared ? (
+              {pair ? (
+                <>
+                  <BodyPhotoCard
+                    checkId={pair.before.id}
+                    pose={pose}
+                    storagePath={photos[pair.before.id]?.[pose]}
+                    label={t('checkLabel', {
+                      n: numberOf(pair.before.id),
+                      date: formatShortDate(pair.before.createdAt),
+                    })}
+                    score={pair.before.score}
+                    muted
+                    onEdit={() => openCompare('a')}
+                    editLabel={t('compare.edit')}
+                  />
+                  <BodyPhotoCard
+                    checkId={pair.after.id}
+                    pose={pose}
+                    storagePath={photos[pair.after.id]?.[pose]}
+                    label={t('checkLabel', {
+                      n: numberOf(pair.after.id),
+                      date: formatShortDate(pair.after.createdAt),
+                    })}
+                    score={pair.after.score}
+                    after
+                    selected
+                    done={pair.after.id === latest.id}
+                    onEdit={() => openCompare('b')}
+                    editLabel={t('compare.edit')}
+                  />
+                </>
+              ) : (
                 <BodyPhotoCard
-                  checkId={first.id}
+                  checkId={latest.id}
                   pose={pose}
-                  storagePath={photos[first.id]?.[pose]}
-                  label={t('checkLabel', { n: 1, date: formatShortDate(first.createdAt) })}
-                  score={first.score}
+                  storagePath={photos[latest.id]?.[pose]}
+                  label={t('checkLabel', { n: 1, date: formatShortDate(latest.createdAt) })}
+                  score={latest.score}
+                  after
+                  selected
+                  done
                 />
-              ) : null}
-              <BodyPhotoCard
-                checkId={latest.id}
-                pose={pose}
-                storagePath={photos[latest.id]?.[pose]}
-                label={t('checkLabel', {
-                  n: checks.length,
-                  date: formatShortDate(latest.createdAt),
-                })}
-                score={latest.score}
-                latest
-              />
+              )}
               {compared ? (
                 <View
                   pointerEvents="none"
