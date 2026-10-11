@@ -46,7 +46,7 @@ Alle Daten in unserer Datenbank sind deinem Konto zugeordnet. Technische Zugriff
 
 Die ersten Schritte der Einrichtung kannst du ohne Konto durchlaufen. Dabei lädt die App den Übungskatalog (Namen, Anleitungen, Bilder und Videos der Übungen) und diese Rechtstexte von unseren Servern. Den Übungskatalog prüft sie beim Start und danach stündlich auf Änderungen. Dabei fallen nur technisch notwendige Verbindungsdaten an (Abschnitt 4.11).
 
-Deine Antworten in der Einrichtung (zum Beispiel Vorname, Alter, Gewicht, Größe, Ziel, Beschwerden und der erstellte oder importierte Plan) speichert die App zunächst nur auf deinem Gerät. Den Plan erstellt die App ebenfalls auf deinem Gerät. An uns gehen diese Angaben erst, wenn du ein Konto erstellst (Abschnitte 4.3 und 4.4).
+Deine Antworten in der Einrichtung (zum Beispiel Vorname, Geburtsdatum, Gewicht, Größe, Ziel, Beschwerden und der erstellte oder importierte Plan) speichert die App zunächst nur auf deinem Gerät. Den Plan erstellt die App ebenfalls auf deinem Gerät. An uns gehen diese Angaben erst, wenn du ein Konto erstellst (Abschnitte 4.3 und 4.4).
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der App, die du nutzen möchtest).
 
@@ -72,7 +72,7 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.
 
 Wenn du ein Konto erstellst, speichern wir deine Angaben aus der Einrichtung als dein Profil. Einen Teil davon kannst du später in den Einstellungen und in deinem Profil ändern.
 
-- Vorname, biologisches Geschlecht (auch „Keine Angabe“ ist möglich) und Alter
+- Vorname, biologisches Geschlecht (auch „Keine Angabe“ ist möglich) und Geburtsdatum
 - Körpergewicht, Körpergröße und deine bevorzugten Einheiten (metrisch oder imperial)
 - Trainingserfahrung, Trainingsziel, Muskelgruppen mit Fokus, verfügbare Ausstattung, Trainingstage und gewünschte Trainingsdauer
 - deine App-Sprache, damit unser Support dir in deiner Sprache antworten kann
@@ -114,7 +114,7 @@ Die App verkleinert die Fotos auf höchstens 1080 Pixel Breite und speichert sie
 **Auswertung durch ein KI-Modell von OpenAI:** Die Werte deines Checks ermittelt ein KI-Modell von OpenAI. Dafür übermittelt unser Server an OpenAI:
 
 - die drei Fotos dieses Checks und, falls vorhanden, die Fotos deines vorherigen Checks, damit das Modell Veränderungen direkt vergleichen kann
-- Geschlecht, Alter, Größe, Gewicht und Trainingserfahrung aus deinem Profil
+- Geschlecht, Alter (aus deinem Geburtsdatum berechnet), Größe, Gewicht und Trainingserfahrung aus deinem Profil
 - die Werte deines vorherigen Checks, damit die Werte von Check zu Check vergleichbar bleiben
 
 Deinen Namen, deine E-Mail-Adresse und deine Konto-ID übermitteln wir nicht. OpenAI verarbeitet die Daten in den USA (Abschnitt 8). Wir haben eingestellt, dass OpenAI die Anfrage nicht für einen späteren Abruf speichert. Nach eigenen Angaben nutzt OpenAI Daten aus seiner API nicht zum Training seiner Modelle und bewahrt sie bis zu 30 Tage auf, um Missbrauch zu erkennen. [[PLATZHALTER: Aufbewahrungsdauer und Ausschluss vom Training laut aktuellem Vertrag mit OpenAI bestätigen]]

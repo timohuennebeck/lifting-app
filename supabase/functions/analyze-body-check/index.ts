@@ -7,6 +7,7 @@ import { encodeBase64 } from 'jsr:@std/encoding@1/base64';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 import {
+  ageFrom,
   type AnalysisProfile,
   contextText,
   INSTRUCTIONS,
@@ -133,7 +134,7 @@ Deno.serve(async (req) => {
   const [{ data: profile }, { data: previous }] = await Promise.all([
     admin
       .from('profiles')
-      .select('sex, age, height_cm, weight_kg, experience')
+      .select('sex, birth_date, height_cm, weight_kg, experience')
       .eq('id', userId)
       .maybeSingle<AnalysisProfile>(),
     admin
@@ -145,7 +146,10 @@ Deno.serve(async (req) => {
       .limit(1)
       .maybeSingle<PreviousCheck>(),
   ]);
-  if ((profile?.age ?? 0) < MIN_AGE) return reply(403, { error: 'not_adult' });
+  // An unknown birth date counts as under age. On the 18th birthday east of UTC this still says
+  // no for those first hours (the app goes by the local date).
+  const age = profile?.birth_date ? ageFrom(profile.birth_date, new Date()) : 0;
+  if (age < MIN_AGE) return reply(403, { error: 'not_adult' });
   if (!(await hasPro(userId))) return reply(403, { error: 'not_pro' });
 
   // The previous check's photos let the model compare pose by pose; any it lacks (a check from

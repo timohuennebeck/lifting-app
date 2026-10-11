@@ -1,1 +1,1 @@
-export { AgeScreen as default } from '@/features/onboarding/screens/age-screen';
+export { BirthDateScreen as default } from '@/features/onboarding/screens/birth-date-screen';

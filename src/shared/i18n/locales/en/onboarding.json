@@ -27,9 +27,13 @@
     "female": "Female",
     "unspecified": "Prefer not to say"
   },
-  "age": {
-    "title": "HOW OLD ARE YOU?",
-    "unit": "Years"
+  "birthDate": {
+    "title": "WHEN'S YOUR\nBIRTHDAY?",
+    "placeholder": { "day": "DD", "month": "MM", "year": "YYYY" },
+    "age_one": "{{count}} year old",
+    "age_other": "{{count}} years old",
+    "tooYoung": "Traqa is for ages {{min}} and up.",
+    "invalid": "Please check the date."
   },
   "units": {
     "title": "WHICH UNITS\nDO YOU USE?",

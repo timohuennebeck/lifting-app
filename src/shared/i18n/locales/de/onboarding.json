@@ -27,9 +27,13 @@
     "female": "Weiblich",
     "unspecified": "Keine Angabe"
   },
-  "age": {
-    "title": "WIE ALT BIST DU?",
-    "unit": "Jahre"
+  "birthDate": {
+    "title": "WANN HAST DU\nGEBURTSTAG?",
+    "placeholder": { "day": "TT", "month": "MM", "year": "JJJJ" },
+    "age_one": "{{count}} Jahr",
+    "age_other": "{{count}} Jahre",
+    "tooYoung": "Traqa ist ab {{min}} Jahren.",
+    "invalid": "Bitte prüf das Datum."
   },
   "units": {
     "title": "WELCHE EINHEITEN\nNUTZT DU?",

@@ -17,7 +17,7 @@ export type Experience = 'none' | 'beginner' | 'intermediate' | 'advanced';
 export type Goal = 'hypertrophy' | 'strength' | 'strength_hypertrophy';
 export type EquipmentAccess = 'gym' | 'home' | 'bodyweight';
 
-/** Limits of the body measurements, in onboarding and in Settings. */
+/** Limits of the body measurements, in onboarding and in Settings. Ages in whole years. */
 export const AGE_RANGE = { min: 14, max: 99 } as const;
 const WEIGHT_KG = { min: 30, max: 250, step: 0.5 } as const;
 const WEIGHT_LB = { min: 66, max: 550, step: 1 } as const;
@@ -58,11 +58,23 @@ export function heightFromDisplay(value: number, units: UnitSystem) {
   return units === 'imperial' ? Math.round(v * CM_PER_INCH) : v;
 }
 
+/**
+ * Whole years someone born on `birthDate` (YYYY-MM-DD) is on `today`, counting the birthday
+ * itself. A 29 February birthday falls on 1 March in other years.
+ */
+export function ageFrom(birthDate: string, today = new Date()) {
+  const [year, month, day] = birthDate.split('-').map(Number);
+  const todayMonth = today.getMonth() + 1;
+  const hadBirthday = todayMonth > month || (todayMonth === month && today.getDate() >= day);
+  return today.getFullYear() - year - (hadBirthday ? 0 : 1);
+}
+
 export interface Profile {
   id: string;
   firstName: string;
   sex: Sex | null;
-  age: number | null;
+  /** ISO date (YYYY-MM-DD); see `ageFrom`. */
+  birthDate: string | null;
   unitSystem: UnitSystem;
   weightKg: number | null;
   heightCm: number | null;
@@ -90,7 +102,7 @@ function toProfile(r: ProfileRecord): Profile {
     id: r.id,
     firstName: r.first_name ?? '',
     sex: r.sex as Sex | null,
-    age: r.age,
+    birthDate: r.birth_date,
     unitSystem: (r.unit_system as UnitSystem | null) ?? 'metric',
     weightKg: r.weight_kg,
     heightCm: r.height_cm,
@@ -139,7 +151,7 @@ const toJson = (value: unknown[] | undefined) => value && JSON.stringify(value);
 const toColumns = (p: ProfilePatch) => ({
   first_name: p.firstName,
   sex: p.sex,
-  age: p.age,
+  birth_date: p.birthDate,
   unit_system: p.unitSystem,
   weight_kg: p.weightKg,
   height_cm: p.heightCm,

@@ -41,6 +41,43 @@ function Key({ label, onPress, disabled, className, children, accessibilityLabel
   );
 }
 
+export interface DigitPadProps {
+  onKey: (key: KeypadKey) => void;
+  onBackspace: () => void;
+  className?: string;
+}
+
+/**
+ * Always-visible phone-style pad (1–9, 0 and backspace) with the keys of the number pad, for a
+ * step whose only input is digits, such as the birth date in onboarding.
+ */
+export function DigitPad({ onKey, onBackspace, className }: DigitPadProps) {
+  const { t } = useTranslation();
+  const digit = (key: KeypadKey) => (
+    <Key key={key} label={key} onPress={() => onKey(key)} className="h-13 flex-1" />
+  );
+  return (
+    <View className={cn('gap-1.5', className)}>
+      {KEYPAD_ROWS.map((row) => (
+        <View key={row.join()} className="flex-row gap-1.5">
+          {row.map(digit)}
+        </View>
+      ))}
+      <View className="flex-row gap-1.5">
+        <View className="flex-1" />
+        {digit('0')}
+        <Key
+          accessibilityLabel={t('keypad.backspace')}
+          onPress={onBackspace}
+          className="h-13 flex-1"
+        >
+          <Icon name="backspace" size={24} color={colors.fg} />
+        </Key>
+      </View>
+    </View>
+  );
+}
+
 export interface NumberKeypadProps {
   /** Enables the decimal key (weights). */
   decimal: boolean;

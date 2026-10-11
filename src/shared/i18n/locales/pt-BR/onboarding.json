@@ -28,9 +28,14 @@
     "female": "Feminino",
     "unspecified": "Prefiro não informar"
   },
-  "age": {
-    "title": "QUANTOS ANOS VOCÊ TEM?",
-    "unit": "Anos"
+  "birthDate": {
+    "title": "QUANDO É SEU\nANIVERSÁRIO?",
+    "placeholder": { "day": "DD", "month": "MM", "year": "AAAA" },
+    "age_one": "{{count}} ano",
+    "age_many": "{{count}} anos",
+    "age_other": "{{count}} anos",
+    "tooYoung": "O Traqa é a partir de {{min}} anos.",
+    "invalid": "Confira a data."
   },
   "units": {
     "title": "QUAIS UNIDADES\nVOCÊ USA?",

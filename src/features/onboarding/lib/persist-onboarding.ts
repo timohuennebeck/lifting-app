@@ -31,7 +31,7 @@ export async function persistOnboarding(userId: string, draft: OnboardingDraft) 
       {
         firstName: draft.firstName.trim(),
         sex: draft.sex,
-        age: draft.age,
+        birthDate: draft.birthDate,
         unitSystem: draft.unitSystem,
         weightKg: draft.weightKg,
         heightCm: draft.heightCm,

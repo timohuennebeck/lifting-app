@@ -15,8 +15,7 @@
   "adultsOnly": {
     "title": "Locked for now",
     "body": "Body check photos are only available from age 18.",
-    "unlocksIn_one": "Unlocks for you in a year at the latest.",
-    "unlocksIn_other": "Unlocks for you in {{count}} years at the latest."
+    "unlocksOn": "Unlocks for you on {{date}}."
   },
   "compare": {
     "title": "Compare",

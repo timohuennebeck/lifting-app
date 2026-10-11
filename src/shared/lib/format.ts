@@ -130,6 +130,10 @@ export function formatShortDate(date: Date | number | string) {
   return formatDate(d, { day: 'numeric', month: 'short', ...(otherYear && { year: 'numeric' }) });
 }
 
+/** "14. September 2028", "September 14, 2028" or "14 de setembro de 2028" */
+export const formatLongDate = (date: Date) =>
+  formatDate(date, { day: 'numeric', month: 'long', year: 'numeric' });
+
 /** "Wed, 8 Oct" */
 export const formatWeekdayDate = (date: Date) =>
   formatDate(date, { weekday: 'short', day: 'numeric', month: 'short' });

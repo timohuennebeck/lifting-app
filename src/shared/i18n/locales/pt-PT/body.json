@@ -15,8 +15,7 @@
   "adultsOnly": {
     "title": "Bloqueado por agora",
     "body": "As fotos do check corporal só estão disponíveis a partir dos 18 anos.",
-    "unlocksIn_one": "Para ti, daqui a um ano, no máximo.",
-    "unlocksIn_other": "Para ti, daqui a {{count}} anos, no máximo."
+    "unlocksOn": "Para ti, a partir de {{date}}."
   },
   "compare": {
     "title": "Comparar",

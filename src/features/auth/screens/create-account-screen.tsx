@@ -81,7 +81,7 @@ export function CreateAccountScreen() {
     await acceptDocuments(userId, documents);
     haptics.success();
     // The body check is for adults only; younger users go straight to the app.
-    if (isBodyCheckAge(draft.age)) router.push('/body-check');
+    if (isBodyCheckAge(draft.birthDate)) router.push('/body-check');
     else useOnboardingStore.getState().complete();
   };
 

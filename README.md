@@ -101,7 +101,7 @@ standard API at `api.openai.com`) and returns the check's values, or the photos 
 - **Secrets:** `supabase/functions/.env` locally (loaded by `supabase start`); in production
   `npx supabase secrets set --env-file supabase/functions/.env`. `OPENAI_API_KEY` is an OpenAI API
   key; `OPENAI_MODEL` overrides the default model.
-- **Rules (server-side):** adults only (profile age 18+), at most 5 analyses per user in 24 hours.
+- **Rules (server-side):** adults only (18+ by the profile's birth date), at most 5 analyses per user in 24 hours.
 - **`body_check_analyses`:** one row per analysis, server-only. Saving a check takes its score, values
   and time from the analysis; a check without one is rejected.
 

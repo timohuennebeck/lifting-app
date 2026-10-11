@@ -5,12 +5,12 @@ import { StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
 import { useBodyCheckPhotos, useBodyChecks } from '@/features/body-check/data/body-checks';
-import { BODY_CHECK_MIN_AGE, isBodyCheckAge } from '@/features/body-check/lib/eligibility';
+import { bodyCheckUnlockDate, isBodyCheckAge } from '@/features/body-check/lib/eligibility';
 import { POSES, type BodyPose } from '@/features/body-check/lib/poses';
 import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
 import { type Profile, useProfile } from '@/shared/data/profile';
 import { cn } from '@/shared/lib/cn';
-import { formatShortDate } from '@/shared/lib/format';
+import { formatLongDate, formatShortDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
@@ -90,13 +90,13 @@ function PlaceholderCard({ letter, lit, locked, tilt }: PlaceholderCardProps) {
 interface NoChecksProps {
   /** Old enough for body checks; under-18s get a locked state instead. */
   allowed: boolean;
-  /** Says when the lock lifts, in whole years; unknown leaves that out. */
-  age: Profile['age'] | undefined;
+  /** Says on which day the lock lifts; unknown leaves that out. */
+  birthDate: Profile['birthDate'] | undefined;
   onStart: () => void;
 }
 
 /** Empty state before the first check: two blank cards to compare later. */
-function NoChecks({ allowed, age, onStart }: NoChecksProps) {
+function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
   const { t } = useTranslation('body');
   if (!allowed) {
     return (
@@ -121,11 +121,10 @@ function NoChecks({ allowed, age, onStart }: NoChecksProps) {
         <Text variant="headline" className="mt-9 text-center">
           {t('adultsOnly.title')}
         </Text>
-        {/* The profile only knows the age in years, so the latest it can be. */}
         <Text variant="paragraph" tone="subtle" className="mt-2 text-center">
           {t('adultsOnly.body')}
-          {age != null
-            ? ` ${t('adultsOnly.unlocksIn', { count: BODY_CHECK_MIN_AGE - age })}`
+          {birthDate
+            ? ` ${t('adultsOnly.unlocksOn', { date: formatLongDate(bodyCheckUnlockDate(birthDate)) })}`
             : null}
         </Text>
       </View>
@@ -163,7 +162,7 @@ export function BodyView() {
   const { data: checks = [] } = useBodyChecks();
   const { data: photos = {} } = useBodyCheckPhotos();
   const [pose, setPose] = useState<BodyPose>('front');
-  const allowed = isBodyCheckAge(profile?.age);
+  const allowed = isBodyCheckAge(profile?.birthDate);
 
   const saved = useCompareStore();
   const first = checks[0];
@@ -184,7 +183,7 @@ export function BodyView() {
       </Text>
 
       {!latest ? (
-        <NoChecks allowed={allowed} age={profile?.age} onStart={camera.request} />
+        <NoChecks allowed={allowed} birthDate={profile?.birthDate} onStart={camera.request} />
       ) : (
         <>
           <View className="flex-row items-end justify-between gap-3 px-5 pt-5.5">

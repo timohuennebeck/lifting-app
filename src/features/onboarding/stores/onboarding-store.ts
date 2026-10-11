@@ -11,7 +11,8 @@ import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 export interface OnboardingDraft {
   firstName: string;
   sex: Sex | null;
-  age: number;
+  /** ISO date (YYYY-MM-DD); null until a valid one is typed. */
+  birthDate: string | null;
   unitSystem: UnitSystem;
   weightKg: number;
   heightCm: number;
@@ -38,7 +39,7 @@ const IMPERIAL_REGIONS = ['US', 'LR', 'MM'];
 const initialDraft = (): OnboardingDraft => ({
   firstName: '',
   sex: null,
-  age: 28,
+  birthDate: null,
   unitSystem: IMPERIAL_REGIONS.includes(getLocales()[0]?.regionCode ?? '') ? 'imperial' : 'metric',
   weightKg: 78,
   heightCm: 178,
@@ -73,7 +74,7 @@ export const useOnboardingStore = create<OnboardingState>()(
     {
       name: 'onboarding',
       storage: createJSONStorage(() => mmkvStorage),
-      version: 1,
+      version: 2,
       migrate: (persisted, version) => {
         const state = persisted as OnboardingState;
         // v1 renamed plan set targets from repsMin/repsMax to targetMin/targetMax.
@@ -90,6 +91,11 @@ export const useOnboardingStore = create<OnboardingState>()(
               });
             }
           }
+        }
+        // v2 asks for the birth date instead of the age.
+        if (version < 2 && state.draft) {
+          delete (state.draft as { age?: number }).age;
+          state.draft.birthDate = null;
         }
         return state;
       },

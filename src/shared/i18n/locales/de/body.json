@@ -15,8 +15,7 @@
   "adultsOnly": {
     "title": "Leider gesperrt",
     "body": "Körpercheck-Fotos sind erst ab 18 verfügbar.",
-    "unlocksIn_one": "Für dich in spätestens einem Jahr.",
-    "unlocksIn_other": "Für dich in spätestens {{count}} Jahren."
+    "unlocksOn": "Für dich ab dem {{date}}."
   },
   "compare": {
     "title": "Vergleichen",

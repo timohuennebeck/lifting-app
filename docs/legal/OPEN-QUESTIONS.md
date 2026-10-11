@@ -45,10 +45,10 @@ Every placeholder must be resolved before publication. Beyond filling in facts, 
 26. **Explicit consent flow (blocker).** Placeholder „Beschreibung, wie und an welcher Stelle der App die Einwilligung für Gesundheitsdaten eingeholt wird“ (DS §4.4). Why: the app has no consent step. The only legal line is on Create Account („Mit der Erstellung akzeptierst du … die Datenschutzerklärung“), which is not a valid explicit consent, and complaints are collected in onboarding before any legal text is shown (`src/app/(onboarding)/complaints.tsx`).
 27. **Weight and height as health data (decision).** No placeholder; DS §4.3 and §4.4 currently treat them as health data. Why: this is the conservative reading, but weight and height are mandatory onboarding steps with prefilled defaults (78 kg / 178 cm, `onboarding-store.ts`), so keeping it requires a way to decline; if you drop it, edit DS §4.3, §4.4 and the summary.
 28. **DPIA (decision).** No placeholder. Why: systematic processing of health data, including body photos in underwear, likely requires a data protection impact assessment (Art. 35 GDPR), which in Germany also triggers the DPO duty (item 7).
-29. **Withdrawal path in the app (blocker).** Placeholder „Ort in der App, an dem die Einwilligung für Gesundheitsdaten widerrufen werden kann“ (DS §12). Why: complaints can't be changed after onboarding, and the refactored settings screen no longer edits sex, age, weight or height; withdrawing must be as easy as consenting (Art. 7(3) GDPR).
+29. **Withdrawal path in the app (blocker).** Placeholder „Ort in der App, an dem die Einwilligung für Gesundheitsdaten widerrufen werden kann“ (DS §12). Why: complaints can't be changed after onboarding, and the refactored settings screen no longer edits sex, birth date, weight or height; withdrawing must be as easy as consenting (Art. 7(3) GDPR).
 30. **Correcting profile data (decision).** No placeholder. Why: Art. 16 GDPR; right now users can only edit name, bio, avatar and units in the app (`profile-screen.tsx`, `settings-screen.tsx`). DS §4.3 says "a part" is editable, which stays true, but body data needs a correction path.
 31. **Team access to body photos.** Placeholder „Festlegen und beschreiben, wer im Team unter welchen Umständen auf Körpercheck-Fotos zugreifen kann“ (DS §4.6). Why: the app promises „Fotos bleiben privat – nur für dich“, but the service role can read the private `body-checks` bucket.
-32. **Minors and health data consent (blocker).** Placeholder „Regelung für Minderjährige, insbesondere zur Einwilligung in die Verarbeitung von Gesundheitsdaten“ (DS §16). Why: the app accepts age 14 (`AGE_RANGE` in `src/shared/data/profile.ts`; the DB check even allows 13), while Germany sets the Art. 8 GDPR consent age at 16.
+32. **Minors and health data consent (blocker).** Placeholder „Regelung für Minderjährige, insbesondere zur Einwilligung in die Verarbeitung von Gesundheitsdaten“ (DS §16). Why: the app accepts age 14 (`AGE_RANGE` in `src/shared/data/profile.ts`, also the DB check on `birth_date`), while Germany sets the Art. 8 GDPR consent age at 16.
 
 ## E. Code that is mocked or differs from what the UI says
 
@@ -62,7 +62,7 @@ Every placeholder must be resolved before publication. Beyond filling in facts, 
 40. **Device backups.** Placeholder „Entscheidung, ob Körpercheck-Fotos und Screenshots von Gerätebackups ausgeschlossen werden“ (DS §5). Why: photos are stored in the app's documents directory, which iCloud/Google backups can include (a comment in `use-auth-listener.ts` already notes this).
 41. **Local data at rest (decision).** No placeholder. Why: the local SQLite file (`traqa.db`) and MMKV aren't encrypted by the app. DS makes no such claim, but consider encryption for health data.
 42. **Keys left after sign-out (minor).** No placeholder. Why: MMKV keeps `account.language.<userId>`, `account.metadataLanguage.<userId>` and the mock purchase receipt after sign-out, while DS §5 says only settings like the language remain.
-43. **Age range mismatch.** No placeholder. Why: the DB allows 13–100 and the app 14–99; align both with the minimum age (item 47).
+43. **Age range mismatch.** No placeholder. Why: the DB allows birth dates from 1900 up to 14 years ago and the app ages 14–99; align both with the minimum age (item 47).
 44. **Coach video persona (decision).** No placeholder. Why: the paywall welcome shows „Max Krüger, Head Coach bei Traqa“ with a demo photo (`coach-video.ts`); if he isn't a real person, this may be misleading advertising (UWG).
 45. **Support response time.** Placeholder „Ob die in der App genannte Antwortzeit von 24 bis 48 Stunden verbindlich zugesagt wird“ (NB §9). Why: the auto-reply states „Unser Team antwortet dir innerhalb von 24–48 Stunden“ as a firm promise.
 46. **Support retention.** Placeholder „Gegebenenfalls kürzere Löschfrist für abgeschlossene Support-Anfragen“ (DS §4.8). Why: tickets and messages can't be deleted by users (RLS) and live until account deletion; storage limitation (Art. 5(1)(e) GDPR) may call for a shorter period.
@@ -127,6 +127,8 @@ Every placeholder must be resolved before publication. Beyond filling in facts, 
 90. **Contract language.** Placeholder „Vertragssprache festlegen“ (NB §15). Why: the app ships in en, de, pt-PT and pt-BR with per-locale documents; decide which version governs.
 
 ---
+
+Note: the profile now stores the birth date instead of the age (`birth_date`, `supabase/migrations/20261011090000_profile_birth_date.sql`), so the app can show the day the 18+ body check unlocks; DS §4.1 and §4.3 say „Geburtsdatum“, and the body check analysis still sends only the age in years (DS §4.6). Weigh this against data minimisation (Art. 5(1)(c) GDPR): the age alone would be enough to gate the check.
 
 Note: after these drafts were written, the settings lost the email and password sheets (password only via „Passwort vergessen“) and „Käufe wiederherstellen“ moved to the paywall; DS §4.2 and NB §3, §6 were updated to match.
 

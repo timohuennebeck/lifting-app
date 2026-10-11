@@ -13,7 +13,8 @@ export const profiles = sqliteTable('profiles', {
   user_id: text().notNull(),
   first_name: text(),
   sex: text(),
-  age: integer(),
+  // Postgres date, synced as an ISO date (YYYY-MM-DD).
+  birth_date: text(),
   unit_system: text(),
   weight_kg: real(),
   height_cm: integer(),

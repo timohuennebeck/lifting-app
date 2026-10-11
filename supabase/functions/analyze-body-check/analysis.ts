@@ -21,7 +21,8 @@ export type PhotoIssue = Exclude<(typeof PHOTO_ISSUES)[number], 'none'>;
 
 export interface AnalysisProfile {
   sex: string | null;
-  age: number | null;
+  /** ISO date (YYYY-MM-DD). */
+  birth_date: string | null;
   height_cm: number | null;
   weight_kg: number | null;
   experience: string | null;
@@ -113,6 +114,17 @@ const round = (value: number, min: number, max: number) =>
 
 const DAY_MS = 86_400_000;
 
+/**
+ * Whole years someone born on `birthDate` (YYYY-MM-DD) is on `today`, as the app counts them
+ * (`ageFrom` in src/shared/data/profile.ts), here on the UTC date.
+ */
+export function ageFrom(birthDate: string, today: Date) {
+  const [year, month, day] = birthDate.split('-').map(Number);
+  const todayMonth = today.getUTCMonth() + 1;
+  const hadBirthday = todayMonth > month || (todayMonth === month && today.getUTCDate() >= day);
+  return today.getUTCFullYear() - year - (hadBirthday ? 0 : 1);
+}
+
 /** The text before the photos: who is in them and what the last check found. */
 export function contextText(
   profile: AnalysisProfile | null,
@@ -121,7 +133,7 @@ export function contextText(
 ) {
   const facts = [
     profile?.sex && profile.sex !== 'unspecified' ? `sex ${profile.sex}` : null,
-    profile?.age ? `${profile.age} years` : null,
+    profile?.birth_date ? `${ageFrom(profile.birth_date, now)} years` : null,
     profile?.height_cm ? `${profile.height_cm} cm` : null,
     profile?.weight_kg ? `${profile.weight_kg} kg` : null,
     profile?.experience ? `training experience ${profile.experience}` : null,
