@@ -17,6 +17,8 @@ import { queryClient } from '@/shared/data/query-client';
 import { supabase } from '@/shared/data/supabase';
 import { useSessionStore } from '@/shared/stores/session-store';
 
+import { signOutOfGoogle } from '../lib/google-sign-in';
+
 /** Mirrors Supabase auth into the session store and (dis)connects PowerSync. */
 export function useAuthListener() {
   const setSession = useSessionStore((s) => s.setSession);
@@ -48,6 +50,8 @@ export function useAuthListener() {
         useImportStore.getState().reset();
         // The picked before/after checks belong to the account too.
         useCompareStore.getState().reset();
+        // The next Google sign-in asks for the account again instead of reusing this one.
+        signOutOfGoogle();
       }
     });
     return () => data.subscription.unsubscribe();

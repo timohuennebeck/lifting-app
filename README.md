@@ -105,6 +105,26 @@ standard API at `api.openai.com`) and returns the check's values, or the photos 
 - **`body_check_analyses`:** one row per analysis, server-only. Saving a check takes its score, values
   and time from the analysis; a check without one is rejected.
 
+## Google Sign-In
+
+The app uses Google's native sign-in (`@react-native-google-signin/google-signin`) and exchanges
+the ID token with Supabase (`signInWithIdToken`). Until the client IDs are set, the Google button
+says it isn't available yet.
+
+1. **Google Cloud** (APIs & Services): set up the OAuth consent screen (app name, support email;
+   scopes `openid`, `email`, `profile`), then create three OAuth client IDs:
+   - **Web application**: its client ID is the one the ID token is issued for.
+   - **iOS**: bundle ID `com.horizonalpha.forge`.
+   - **Android**: package `com.horizonalpha.forge` and the SHA-1 of the signing key, one client
+     per key (debug keystore for local builds, EAS credentials, Play App Signing).
+2. **App:** in `.env`, `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` and `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`.
+   `app.config.ts` turns the iOS ID into the URL scheme, so make a new development build.
+3. **Supabase (local):** `cp supabase/.env.example supabase/.env`, put the web and iOS client IDs
+   in `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID` (comma-separated), set `enabled = true` under
+   `[auth.external.google]` in `config.toml`, restart Supabase.
+4. **Supabase (production):** Authentication → Providers → Google: enable, the same client IDs,
+   "Skip nonce checks" on.
+
 ## Languages
 
 The app language is mirrored to `profiles.language` (for the team) and to the auth user metadata

@@ -5,9 +5,16 @@ import { View } from 'react-native';
 
 import { isBodyCheckAge } from '@/features/body-check/lib/eligibility';
 import { acceptDocuments } from '@/features/legal/data/legal-acceptances';
-import { fetchCurrentDocuments, type LegalKind } from '@/features/legal/data/legal-documents';
+import {
+  fetchCurrentDocuments,
+  type LegalDocument,
+  type LegalKind,
+} from '@/features/legal/data/legal-documents';
 import { START_STEPS } from '@/features/onboarding/lib/flow';
-import { persistOnboarding } from '@/features/onboarding/lib/persist-onboarding';
+import {
+  isOnboardedAfterSync,
+  persistOnboarding,
+} from '@/features/onboarding/lib/persist-onboarding';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { supabase } from '@/shared/data/supabase';
 import { i18n } from '@/shared/i18n';
@@ -26,6 +33,7 @@ import {
   isValidEmail,
   MIN_PASSWORD_LENGTH,
 } from '../lib/credentials';
+import { signInWithGoogle } from '../lib/google-sign-in';
 
 type ErrorKey = AuthErrorKey | 'confirmEmail';
 
@@ -52,7 +60,7 @@ export function CreateAccountScreen() {
   const session = useSessionStore((s) => s.session);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState<'email' | 'google' | null>(null);
   const [error, setError] = useState<ErrorKey | null>(null);
 
   // Already signed in (e.g. came back from the next step): just save and continue.
@@ -66,9 +74,20 @@ export function CreateAccountScreen() {
     setError(key);
   };
 
+  /** Saves the onboarding answers to the new account with the accepted documents, then goes on. */
+  const finish = async (userId: string, documents: LegalDocument[]) => {
+    const { draft } = useOnboardingStore.getState();
+    await persistOnboarding(userId, draft);
+    await acceptDocuments(userId, documents);
+    haptics.success();
+    // The body check is for adults only; younger users go straight to the app.
+    if (isBodyCheckAge(draft.age)) router.push('/body-check');
+    else useOnboardingStore.getState().complete();
+  };
+
   const submit = async () => {
     if (!valid || busy) return;
-    setBusy(true);
+    setBusy('email');
     setError(null);
     try {
       // Creating the account accepts the documents linked below the button: the versions in
@@ -87,16 +106,34 @@ export function CreateAccountScreen() {
         if (!data.session) return fail('confirmEmail');
         userId = data.session.user.id;
       }
-      await persistOnboarding(userId, draft);
-      await acceptDocuments(userId, documents);
-      haptics.success();
-      // The body check is for adults only; younger users go straight to the app.
-      if (isBodyCheckAge(draft.age)) router.push('/body-check');
-      else useOnboardingStore.getState().complete();
+      await finish(userId, documents);
     } catch {
       fail('generic');
     } finally {
-      setBusy(false);
+      setBusy(null);
+    }
+  };
+
+  const google = async () => {
+    if (busy) return;
+    setBusy('google');
+    setError(null);
+    try {
+      // Loaded first for the same reason as with email: Google creates the account right away.
+      const documents = await fetchCurrentDocuments(i18n.language);
+      const user = await signInWithGoogle();
+      if (!user) return;
+      // A Google account that is already set up keeps its own profile and plan.
+      if (await isOnboardedAfterSync(user.id)) {
+        haptics.success();
+        useOnboardingStore.getState().complete();
+        return;
+      }
+      await finish(user.id, documents);
+    } catch {
+      fail('generic');
+    } finally {
+      setBusy(null);
     }
   };
 
@@ -112,8 +149,8 @@ export function CreateAccountScreen() {
         <View className="gap-3">
           <Button
             label={signedIn ? tc('actions.continue') : t('createAccount.submit')}
-            disabled={!valid}
-            loading={busy}
+            disabled={!valid || busy === 'google'}
+            loading={busy === 'email'}
             onPress={submit}
           />
           <Text
@@ -134,7 +171,11 @@ export function CreateAccountScreen() {
       }
     >
       <View className="px-4 pt-5">
-        <SocialSignIn />
+        <SocialSignIn
+          onGoogle={google}
+          googleBusy={busy === 'google'}
+          disabled={signedIn || !!busy}
+        />
       </View>
       <View className="px-4 pt-3.5">
         <CredentialFields

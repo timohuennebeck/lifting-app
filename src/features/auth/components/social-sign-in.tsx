@@ -1,12 +1,15 @@
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
+import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
+
+import { googleSignInReady } from '../lib/google-sign-in';
 
 type Provider = 'Google' | 'Facebook';
 
@@ -53,14 +56,28 @@ const PROVIDERS = [
   { name: 'Facebook', Logo: FacebookLogo },
 ] as const satisfies readonly { name: Provider; Logo: () => ReactNode }[];
 
+export interface SocialSignInProps {
+  /** Signs in with Google; the screen decides what follows. */
+  onGoogle: () => void;
+  /** Google sign-in is running: a spinner in place of its logo. */
+  googleBusy?: boolean;
+  disabled?: boolean;
+}
+
 /**
- * Google / Facebook buttons plus the "or with email" divider.
- * Social sign-in is not wired up yet, so the buttons explain that in a sheet.
+ * Google / Facebook buttons plus the "or with email" divider. Facebook, and Google until its
+ * client IDs are set up, explain in a sheet that they aren't available yet.
  */
-export function SocialSignIn() {
+export function SocialSignIn({ onGoogle, googleBusy, disabled }: SocialSignInProps) {
   const { t } = useTranslation('auth');
   const [provider, setProvider] = useState<Provider>('Google');
   const [open, setOpen] = useState(false);
+
+  function press(name: Provider) {
+    if (name === 'Google' && googleSignInReady) return onGoogle();
+    setProvider(name);
+    setOpen(true);
+  }
 
   return (
     <View>
@@ -68,13 +85,16 @@ export function SocialSignIn() {
         {PROVIDERS.map(({ name, Logo }) => (
           <PressableScale
             key={name}
-            onPress={() => {
-              setProvider(name);
-              setOpen(true);
-            }}
+            disabled={disabled}
+            accessibilityState={{ disabled, busy: name === 'Google' && googleBusy }}
+            onPress={() => press(name)}
             className="h-13 flex-1 flex-row items-center justify-center gap-2.5 rounded-full bg-pill"
           >
-            <Logo />
+            {name === 'Google' && googleBusy ? (
+              <ActivityIndicator size="small" color={colors.fg} />
+            ) : (
+              <Logo />
+            )}
             <Text variant="label">{name}</Text>
           </PressableScale>
         ))}

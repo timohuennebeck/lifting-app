@@ -1,3 +1,4 @@
+import type { User } from '@supabase/supabase-js';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,8 +21,9 @@ import { TextButton } from '@/shared/ui/text-button';
 import { CredentialFields } from '../components/credential-fields';
 import { SocialSignIn } from '../components/social-sign-in';
 import { type AuthErrorKey, authErrorKey, isValidEmail } from '../lib/credentials';
+import { signInWithGoogle } from '../lib/google-sign-in';
 
-type Phase = 'idle' | 'signingIn' | 'syncing';
+type Phase = 'idle' | 'signingIn' | 'google' | 'syncing';
 
 export function SignInScreen() {
   const { t } = useTranslation('auth');
@@ -34,6 +36,32 @@ export function SignInScreen() {
   const valid = isValidEmail(email) && password.length > 0;
   const busy = phase !== 'idle';
 
+  const fail = (key: AuthErrorKey) => {
+    haptics.error();
+    setError(key);
+    setPhase('idle');
+  };
+
+  /** Signed in: into the app, or into onboarding for an account that hasn't finished it. */
+  const continueAs = async (user: User) => {
+    haptics.success();
+    setPhase('syncing');
+    const store = useOnboardingStore.getState();
+    if (await isOnboardedAfterSync(user.id)) {
+      // The root guard switches to the app once onboarding is marked complete.
+      store.complete();
+      return;
+    }
+    adoptSignUpName(user);
+    setPhase('idle');
+    // The user went back while syncing; replacing now would replace the screen they're on.
+    if (!navigation.isFocused()) return;
+    // A finished draft (e.g. "already registered" on Create Account) goes back there:
+    // it now shows "Continue" and saves the draft instead of restarting the flow.
+    if (store.draft.plan) router.dismissTo('/create-account');
+    else router.replace('/name');
+  };
+
   const submit = async () => {
     if (!valid || busy) return;
     setPhase('signingIn');
@@ -44,31 +72,24 @@ export function SignInScreen() {
         password,
       });
       if (signInError || !data.user) {
-        haptics.error();
-        setError(signInError ? authErrorKey(signInError) : 'generic');
-        setPhase('idle');
-        return;
+        return fail(signInError ? authErrorKey(signInError) : 'generic');
       }
-      haptics.success();
-      setPhase('syncing');
-      const store = useOnboardingStore.getState();
-      if (await isOnboardedAfterSync(data.user.id)) {
-        // The root guard switches to the app once onboarding is marked complete.
-        store.complete();
-        return;
-      }
-      adoptSignUpName(data.user);
-      setPhase('idle');
-      // The user went back while syncing; replacing now would replace the screen they're on.
-      if (!navigation.isFocused()) return;
-      // A finished draft (e.g. "already registered" on Create Account) goes back there:
-      // it now shows "Continue" and saves the draft instead of restarting the flow.
-      if (store.draft.plan) router.dismissTo('/create-account');
-      else router.replace('/name');
+      await continueAs(data.user);
     } catch {
-      haptics.error();
-      setError('generic');
-      setPhase('idle');
+      fail('generic');
+    }
+  };
+
+  const google = async () => {
+    if (busy) return;
+    setPhase('google');
+    setError(null);
+    try {
+      const user = await signInWithGoogle();
+      if (user) await continueAs(user);
+      else setPhase('idle');
+    } catch {
+      fail('generic');
     }
   };
 
@@ -78,7 +99,12 @@ export function SignInScreen() {
       header={<ScreenHeader />}
       footer={
         <View className="gap-1">
-          <Button label={t('signIn.submit')} disabled={!valid} loading={busy} onPress={submit} />
+          <Button
+            label={t('signIn.submit')}
+            disabled={!valid || phase === 'google'}
+            loading={phase === 'signingIn' || phase === 'syncing'}
+            onPress={submit}
+          />
           {phase === 'syncing' ? (
             <Text variant="caption" tone="subtle" className="min-h-12 py-4 text-center">
               {t('signIn.syncing')}
@@ -96,7 +122,7 @@ export function SignInScreen() {
       <StepTitle title={t('signIn.title')} subtitle={t('signIn.subtitle')} />
       {/* Same sign-in options as account creation. */}
       <View className="px-4 pt-5">
-        <SocialSignIn />
+        <SocialSignIn onGoogle={google} googleBusy={phase === 'google'} disabled={busy} />
       </View>
       <View className="px-4 pt-3.5">
         <CredentialFields

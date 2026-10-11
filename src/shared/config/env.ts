@@ -10,4 +10,8 @@ export const env = {
     process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   ),
   powerSyncUrl: required('EXPO_PUBLIC_POWERSYNC_URL', process.env.EXPO_PUBLIC_POWERSYNC_URL),
+  // Optional: Google Sign-In's OAuth client IDs. Without them the Google button says it's not
+  // available yet.
+  googleWebClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+  googleIosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
 };

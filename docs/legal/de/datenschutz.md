@@ -52,9 +52,9 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der App, die du nutz
 
 ### 4.2 Dein Konto
 
-Um Forge zu nutzen, erstellst du ein Konto mit E-Mail-Adresse und Passwort. Dabei verarbeiten wir:
+Um Forge zu nutzen, erstellst du ein Konto mit E-Mail-Adresse und Passwort oder meldest dich mit deinem Google-Konto an. Dabei verarbeiten wir:
 
-- deine E-Mail-Adresse und dein Passwort (das Passwort speichern wir nur als kryptografischen Hashwert, nie im Klartext)
+- deine E-Mail-Adresse und dein Passwort (das Passwort speichern wir nur als kryptografischen Hashwert, nie im Klartext; mit Google-Anmeldung gibt es bei uns kein Passwort)
 - deinen Vornamen und deine App-Sprache: die Sprache, damit Konto-E-Mails in deiner Sprache ankommen, den Vornamen, damit die App ihn nach einer Anmeldung auf einem neuen Gerät wieder eintragen kann
 - technische Kontodaten wie den Zeitpunkt der Registrierung und der letzten Anmeldung sowie Anmelde-Tokens
 
@@ -62,7 +62,9 @@ Wir schicken dir E-Mails, die für dein Konto nötig sind: gegebenenfalls zur Be
 
 Damit du angemeldet bleibst, speichert die App deine Anmeldesitzung auf deinem Gerät.
 
-Die Schaltflächen für eine Anmeldung mit Google oder Facebook sind in der App bereits zu sehen, die Funktion ist aber noch nicht verfügbar. Dabei werden keine Daten an Google oder Facebook übertragen. Bevor wir diese Anmeldung einführen, ergänzen wir diese Datenschutzerklärung.
+**Anmeldung mit Google:** Wenn du „Google“ wählst, öffnet sich die Anmeldung von Google auf deinem Gerät. Google bestätigt uns danach deine Anmeldung und übermittelt uns deine E-Mail-Adresse, deinen Namen, die Adresse deines Google-Profilbilds und eine Kennung deines Google-Kontos. Diese Angaben speichern wir zu deinem Konto. Google erfährt dabei, dass du dich bei Forge anmeldest. Für die Anmeldung über dein Google-Konto ist Google eigenständig verantwortlich; es gilt die Datenschutzerklärung von Google. [[PLATZHALTER: Vertragspartner von Google für Nutzer in der EU mit Anschrift, Rolle von Google und Drittlandübermittlung an Google in den USA rechtlich prüfen]]
+
+Die Schaltfläche für eine Anmeldung mit Facebook ist in der App bereits zu sehen, die Funktion ist aber noch nicht verfügbar. Dabei werden keine Daten an Facebook übertragen. Bevor wir diese Anmeldung einführen, ergänzen wir diese Datenschutzerklärung.
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.
 
@@ -240,7 +242,7 @@ Wir geben deine Daten nur weiter, wenn das für die genannten Zwecke nötig ist,
 - **OpenAI** (KI-Auswertung der Körpercheck-Fotos, Abschnitt 4.6): [[PLATZHALTER: Vertragspartner und Anschrift laut Auftragsverarbeitungsvertrag (Data Processing Addendum) mit OpenAI]]; Verarbeitung in den USA
 - geplant: PostHog (Abschnitt 4.12) und RevenueCat (Abschnitt 4.13)
 
-Apple und Google erhalten bei App-Downloads und Käufen Daten als eigenständig Verantwortliche (Abschnitt 4.10).
+Apple und Google erhalten bei App-Downloads und Käufen Daten als eigenständig Verantwortliche (Abschnitt 4.10), Google ebenso bei der Anmeldung mit Google (Abschnitt 4.2).
 
 In unserem Team haben nur die Personen Zugriff auf deine Daten, die ihn für Betrieb und Support brauchen. [[PLATZHALTER: Kreis der zugriffsberechtigten Personen im Team bestätigen]]
 
@@ -313,7 +315,7 @@ Du kannst dich bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77 DSGVO
 
 ## 14. Musst du uns Daten geben?
 
-Für ein Konto brauchen wir deine E-Mail-Adresse und ein Passwort. Ohne Konto kannst du Forge nach der Einrichtung nicht nutzen und deine Daten nicht sichern. Die Angaben in der Einrichtung braucht die App, um deinen Plan zu erstellen. Freiwillig sind insbesondere Angaben zu Beschwerden, dein Geschlecht (du kannst „Keine Angabe“ wählen), der Körpercheck, ein Profilfoto und der Text „Über dich“.
+Für ein Konto brauchen wir deine E-Mail-Adresse und ein Passwort oder dein Google-Konto. Ohne Konto kannst du Forge nach der Einrichtung nicht nutzen und deine Daten nicht sichern. Die Angaben in der Einrichtung braucht die App, um deinen Plan zu erstellen. Freiwillig sind insbesondere Angaben zu Beschwerden, dein Geschlecht (du kannst „Keine Angabe“ wählen), der Körpercheck, ein Profilfoto und der Text „Über dich“.
 
 ## 15. Keine automatisierten Entscheidungen
 

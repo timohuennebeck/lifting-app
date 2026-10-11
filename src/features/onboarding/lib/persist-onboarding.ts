@@ -73,6 +73,13 @@ export async function isOnboardedAfterSync(userId: string, timeoutMs = 8000) {
 /** Signed in, onboarding goes on: a draft without a name takes the one given at sign-up. */
 export function adoptSignUpName(user: User) {
   const { draft, update } = useOnboardingStore.getState();
-  const name = user.user_metadata?.first_name;
-  if (!draft.firstName && typeof name === 'string') update({ firstName: name });
+  const { first_name: firstName, full_name: fullName } = user.user_metadata ?? {};
+  // Email sign-up stores the first name; Google gives the full name.
+  const name =
+    typeof firstName === 'string'
+      ? firstName
+      : typeof fullName === 'string'
+        ? fullName.split(' ')[0]
+        : undefined;
+  if (!draft.firstName && name) update({ firstName: name });
 }
