@@ -178,9 +178,12 @@ export function BodyView() {
     // A check starts from the next check's card or row whenever the user wants; the first from
     // the empty state. Under-18s get no new checks.
     <>
-      <Text variant="paragraph" tone="subtle" className="px-5 pt-4">
-        {t('subtitle')}
-      </Text>
+      {/* The locked state explains itself. */}
+      {latest || allowed ? (
+        <Text variant="paragraph" tone="subtle" className="px-5 pt-4">
+          {t('subtitle')}
+        </Text>
+      ) : null}
 
       {!latest ? (
         <NoChecks allowed={allowed} birthDate={profile?.birthDate} onStart={camera.request} />
