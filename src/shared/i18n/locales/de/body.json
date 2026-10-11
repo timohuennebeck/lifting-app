@@ -9,8 +9,8 @@
   "history": "Historie",
   "start": "Körpercheck starten",
   "empty": {
-    "title": "Noch kein Körpercheck",
-    "body": "Mach drei Fotos und erhalte einen Wert für deine Körperkomposition. Wiederhole den Check regelmäßig, um deinen Fortschritt zu sehen."
+    "title": "Kein Körpercheck vorhanden",
+    "body": "Mach deinen ersten Check und vergleiche später."
   },
   "adultsOnly": {
     "title": "Ab 18 Jahren",

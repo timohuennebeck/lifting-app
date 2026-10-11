@@ -8,11 +8,11 @@ import { isBodyCheckAge } from '@/features/body-check/lib/eligibility';
 import { POSES, type BodyPose } from '@/features/body-check/lib/poses';
 import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
 import { useProfile } from '@/shared/data/profile';
+import { cn } from '@/shared/lib/cn';
 import { formatShortDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
-import { Card } from '@/shared/ui/card';
 import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
@@ -31,30 +31,80 @@ const openCheck = (id: string) => router.push(`/body-check/result/${id}`);
 const openCompare = (side: 'a' | 'b') =>
   router.push({ pathname: '/body-compare', params: { side } });
 
-interface NoChecksCardProps {
+interface PlaceholderCardProps {
+  letter: 'A' | 'B';
+  /** Neon outline and badge: the check that comes first. */
+  lit: boolean;
+  tilt: number;
+}
+
+/** An empty photo card of the comparison, tilted, with a question mark. */
+function PlaceholderCard({ letter, lit, tilt }: PlaceholderCardProps) {
+  return (
+    <View
+      className={cn(
+        'h-30 w-23 items-center justify-center rounded-[18px] bg-surface',
+        lit ? 'border-2 border-accent' : 'border border-line',
+      )}
+      style={{ transform: [{ rotate: `${tilt}deg` }] }}
+    >
+      <View
+        className={cn(
+          'absolute top-2 left-2 size-6 items-center justify-center rounded-full',
+          lit ? 'bg-accent' : 'bg-control',
+        )}
+      >
+        <Text variant="caption" tone={lit ? 'onAccent' : 'subtle'} className="text-xs">
+          {letter}
+        </Text>
+      </View>
+      <Text
+        className={cn(
+          'font-inter-semibold text-[34px] leading-10',
+          lit ? 'text-dim' : 'text-track',
+        )}
+      >
+        ?
+      </Text>
+    </View>
+  );
+}
+
+interface NoChecksProps {
   /** Old enough for body checks; under-18s are told why there are none. */
   allowed: boolean;
   onStart: () => void;
 }
 
-/** Empty state before the first check. */
-function NoChecksCard({ allowed, onStart }: NoChecksCardProps) {
+/** Empty state before the first check: two blank cards to compare later. */
+function NoChecks({ allowed, onStart }: NoChecksProps) {
   const { t } = useTranslation('body');
   return (
-    <Card className="mx-4 mt-6 items-center gap-4 py-8">
-      <View className="size-16 items-center justify-center rounded-full bg-elevated">
-        <Icon name="camera" size={26} color={allowed ? colors.accent : colors.subtle} />
+    <View className="flex-1 items-center justify-center px-8 pt-6 pb-12">
+      <View
+        className="flex-row items-center gap-2"
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
+        <PlaceholderCard letter="A" lit={allowed} tilt={-7} />
+        <View
+          className={cn(
+            'size-10 items-center justify-center rounded-full',
+            allowed ? 'bg-accent' : 'bg-elevated',
+          )}
+        >
+          <Icon name="arrow-right" size={16} color={allowed ? colors.onAccent : colors.subtle} />
+        </View>
+        <PlaceholderCard letter="B" lit={false} tilt={7} />
       </View>
-      <Text variant="headline" className="text-center">
+      <Text variant="headline" className="mt-9 text-center">
         {t(allowed ? 'empty.title' : 'adultsOnly.title')}
       </Text>
-      <Text variant="paragraph" tone="muted" className="text-center">
+      <Text variant="paragraph" tone="subtle" className="mt-2 text-center">
         {t(allowed ? 'empty.body' : 'adultsOnly.body')}
       </Text>
-      {allowed ? (
-        <Button label={t('start')} size="md" className="mt-1 px-6" onPress={onStart} />
-      ) : null}
-    </Card>
+      {allowed ? <Button label={t('start')} className="mt-6 h-12 px-7" onPress={onStart} /> : null}
+    </View>
   );
 }
 
@@ -87,7 +137,7 @@ export function BodyView() {
       </Text>
 
       {!latest ? (
-        <NoChecksCard allowed={allowed} onStart={camera.request} />
+        <NoChecks allowed={allowed} onStart={camera.request} />
       ) : (
         <>
           <View className="flex-row items-end justify-between gap-3 px-5 pt-5.5">

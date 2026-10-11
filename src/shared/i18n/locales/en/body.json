@@ -10,7 +10,7 @@
   "start": "Start body check",
   "empty": {
     "title": "No body check yet",
-    "body": "Take three photos and get a score for your body composition. Repeat it regularly to see your progress."
+    "body": "Take your first check and compare later."
   },
   "adultsOnly": {
     "title": "18 and over",

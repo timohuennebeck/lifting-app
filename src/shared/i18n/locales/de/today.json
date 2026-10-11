@@ -23,11 +23,15 @@
   "resume": "Fortsetzen",
   "reschedule": "Umplanen",
   "markDone": "Als erledigt markieren",
-  "rest": {
-    "titleToday": "Ruhetag",
-    "title": "Nichts geplant",
-    "body": "Für {{day}} ist kein Training geplant. Erhol dich – oder starte jederzeit ein leeres Training.",
-    "openTraining": "Training öffnen"
+  "unplanned": {
+    "title": "Kein Training geplant",
+    "body": "Push, Pull oder Legs? Tippe zum Auswählen."
+  },
+  "planSheet": {
+    "title": "Training auswählen",
+    "subtitle": "Für {{day}} einplanen.",
+    "current": "Bisher {{day}}",
+    "noDay": "Noch ohne Tag"
   },
   "rescheduleSheet": {
     "title": "Umplanen",

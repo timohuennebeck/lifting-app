@@ -23,11 +23,15 @@
   "resume": "Retomar",
   "reschedule": "Reagendar",
   "markDone": "Marcar como feito",
-  "rest": {
-    "titleToday": "Dia de descanso",
-    "title": "Nada planeado",
-    "body": "Não há treino planeado para {{day}}. Recupera ou inicia um treino vazio quando quiseres.",
-    "openTraining": "Abrir treinos"
+  "unplanned": {
+    "title": "Nenhum treino planeado",
+    "body": "Push, pull ou pernas? Toca para escolher."
+  },
+  "planSheet": {
+    "title": "Escolher treino",
+    "subtitle": "Planear para {{day}}.",
+    "current": "Atualmente: {{day}}",
+    "noDay": "Ainda sem dia"
   },
   "rescheduleSheet": {
     "title": "Reagendar",

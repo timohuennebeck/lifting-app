@@ -24,9 +24,8 @@ export function useWeekPlan(today: Date) {
   // Templates without a collection sort first (NULL position), so skip them here.
   const collectionId =
     profile?.activeCollectionId ?? templates.find((t) => t.collectionId)?.collectionId ?? null;
-  const planTemplates = templates.filter(
-    (t) => t.collectionId === collectionId && t.weekday !== null,
-  );
+  const plan = templates.filter((t) => t.collectionId === collectionId);
+  const planTemplates = plan.filter((t) => t.weekday !== null);
 
   const days = Array.from({ length: 7 }, (_, i): WeekDay => {
     const date = addDays(new Date(fromIso), i);
@@ -35,5 +34,6 @@ export function useWeekPlan(today: Date) {
     return { date, workout, planned };
   });
 
-  return { days, planTemplates };
+  // `plan` also holds the templates without a day: what an empty day can be filled with.
+  return { days, plan, planTemplates };
 }

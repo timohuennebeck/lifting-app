@@ -10,7 +10,7 @@
   "start": "Iniciar check corporal",
   "empty": {
     "title": "Nenhum check corporal ainda",
-    "body": "Tire três fotos e receba uma pontuação da sua composição corporal. Repita regularmente para ver seu progresso."
+    "body": "Faça seu primeiro check e compare depois."
   },
   "adultsOnly": {
     "title": "A partir de 18 anos",

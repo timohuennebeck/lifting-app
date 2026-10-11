@@ -23,11 +23,15 @@
   "resume": "Resume",
   "reschedule": "Reschedule",
   "markDone": "Mark as done",
-  "rest": {
-    "titleToday": "Rest day",
-    "title": "Nothing planned",
-    "body": "No workout is planned for {{day}}. Recover, or start an empty workout anytime.",
-    "openTraining": "Open training"
+  "unplanned": {
+    "title": "No workout planned",
+    "body": "Push, pull or legs? Tap to choose."
+  },
+  "planSheet": {
+    "title": "Choose a workout",
+    "subtitle": "Plan it for {{day}}.",
+    "current": "Currently {{day}}",
+    "noDay": "No day yet"
   },
   "rescheduleSheet": {
     "title": "Reschedule",

@@ -8,22 +8,22 @@ import { TabScreen } from '@/shared/components/tab-screen';
 import { useUnits } from '@/shared/data/profile';
 import { useActiveWorkout } from '@/shared/data/workouts';
 import { useToday } from '@/shared/hooks/use-today';
-import { isSameDay, mondayIndex } from '@/shared/lib/date';
+import { mondayIndex } from '@/shared/lib/date';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { DoneCard } from '../components/done-card';
+import { PlanDaySheet } from '../components/plan-day-sheet';
 import { PlannedCard } from '../components/planned-card';
 import { RescheduleSheet } from '../components/reschedule-sheet';
-import { RestDayCard } from '../components/rest-day-card';
+import { UnplannedDay } from '../components/unplanned-day';
 import { WeekStrip } from '../components/week-strip';
 import { useWeekPlan } from '../hooks/use-week-plan';
 
 export function TodayScreen() {
   const { t } = useTranslation('today');
-  const { t: tc } = useTranslation();
   // The tab stays mounted: the day comes from a clock so it moves on overnight, and a picked
   // weekday only counts on the day it was picked.
   const dayKey = useToday();
@@ -32,9 +32,10 @@ export function TodayScreen() {
   const selected = pick?.day === dayKey ? pick.index : mondayIndex(today);
   const select = (index: number) => setPick({ day: dayKey, index });
   const [rescheduling, setRescheduling] = useState(false);
+  const [planning, setPlanning] = useState(false);
   const units = useUnits();
   const { data: active } = useActiveWorkout();
-  const { days, planTemplates } = useWeekPlan(today);
+  const { days, plan, planTemplates } = useWeekPlan(today);
   const day = days[selected];
 
   const pills = (
@@ -74,7 +75,8 @@ export function TodayScreen() {
     </ScrollView>
   );
 
-  // A finished workout wins over the plan; a day with neither is a rest day.
+  // A finished workout wins over the plan; a day with neither gets one picked from the plan, or
+  // without a plan yet from the Training tab.
   let card: ReactNode;
   if (day.workout) {
     card = <DoneCard workout={day.workout} date={day.date} today={today} units={units} />;
@@ -90,9 +92,8 @@ export function TodayScreen() {
     );
   } else {
     card = (
-      <RestDayCard
-        dayName={tc('weekdays.long', { returnObjects: true })[selected]}
-        isToday={isSameDay(day.date, today)}
+      <UnplannedDay
+        onPress={() => (plan.length ? setPlanning(true) : router.navigate('/training'))}
       />
     );
   }
@@ -113,6 +114,12 @@ export function TodayScreen() {
         planTemplates={planTemplates}
         onClose={() => setRescheduling(false)}
         onMoved={select}
+      />
+      <PlanDaySheet
+        visible={planning}
+        weekday={selected}
+        templates={plan}
+        onClose={() => setPlanning(false)}
       />
     </TabScreen>
   );
