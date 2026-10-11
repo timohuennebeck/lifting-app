@@ -11,7 +11,7 @@ import { queryKeys } from '@/shared/data/query-keys';
 import { supabase } from '@/shared/data/supabase';
 import { HOUR_MS } from '@/shared/lib/date';
 
-/** The API returns at most this many rows per request (Supabase's `max_rows`). */
+/** Rows asked for per request; the API may cap a page lower (Supabase's `max_rows`). */
 const PAGE_SIZE = 1000;
 
 /**
@@ -21,15 +21,20 @@ const PAGE_SIZE = 1000;
 async function fetchCatalogChanges() {
   const since = latestUpdate(useCatalogStore.getState().rows);
   const rows: ExerciseRow[] = [];
-  for (let from = 0; ; from += PAGE_SIZE) {
+  // Pages until one comes back empty, so a lower cap on the server only means more requests.
+  for (;;) {
     let query = supabase.from('exercises').select('*');
     if (since) query = query.gt('updated_at', since);
-    const { data, error } = await query.order('id').range(from, from + PAGE_SIZE - 1);
+    const { data, error } = await query.order('id').range(rows.length, rows.length + PAGE_SIZE - 1);
     if (error) throw error;
+    if (!data.length) break;
     rows.push(...(data as ExerciseRow[]));
-    if (data.length < PAGE_SIZE) break;
   }
   if (rows.length) useCatalogStore.setState((s) => ({ rows: mergeRows(s.rows, rows) }));
+  // Nothing usable on first launch counts as a failed download, so the retry screen shows.
+  if (!Object.keys(useCatalogStore.getState().rows).length) {
+    throw new Error('The exercise catalog is empty');
+  }
   return rows.length;
 }
 
