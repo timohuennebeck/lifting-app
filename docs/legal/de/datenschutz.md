@@ -13,6 +13,7 @@ Hier erfährst du, welche personenbezogenen Daten wir verarbeiten, wenn du die A
 - Forge speichert deine Pläne und Trainings zuerst auf deinem Gerät und gleicht sie mit deinem Konto ab, sobald du online bist.
 - Andere Nutzer können dein Profil, deine Trainings und deine Fotos nicht sehen.
 - Angaben zu Beschwerden, deine Körpermaße und deine Körpercheck-Fotos behandeln wir als Gesundheitsdaten. Wir verarbeiten sie nur mit deiner ausdrücklichen Einwilligung.
+- Für den Körpercheck wertet ein KI-Modell von OpenAI deine Fotos aus. Dafür übermitteln wir sie an OpenAI in den USA.
 - Die App enthält derzeit keine Werbung und keine Werbe- oder Analyse-Tracker.
 - Du kannst dein Konto jederzeit in der App löschen. Damit löschen wir auch deine Fotos und alle Daten deines Kontos.
 
@@ -87,7 +88,7 @@ Einige Angaben sind Gesundheitsdaten im Sinne von Art. 9 DSGVO und damit besonde
 - **Körpermaße:** dein Körpergewicht und deine Körpergröße (Abschnitt 4.3).
 - **Körpercheck:** deine Körpercheck-Fotos und die Werte, die daraus entstehen, zum Beispiel ein geschätzter Körperfettanteil (Abschnitt 4.6).
 
-Diese Daten verarbeiten wir nur mit deiner ausdrücklichen Einwilligung (Art. 9 Abs. 2 lit. a in Verbindung mit Art. 6 Abs. 1 lit. a DSGVO). [[PLATZHALTER: Beschreibung, wie und an welcher Stelle der App die Einwilligung für Gesundheitsdaten eingeholt wird]]
+Diese Daten verarbeiten wir nur mit deiner ausdrücklichen Einwilligung (Art. 9 Abs. 2 lit. a in Verbindung mit Art. 6 Abs. 1 lit. a DSGVO). Für den Körpercheck fragen wir vor deinem ersten Check in einem eigenen Schritt nach deiner Einwilligung und nennen dabei auch die Auswertung durch OpenAI in den USA. [[PLATZHALTER: Beschreibung, wie und an welcher Stelle der App die Einwilligung für Beschwerden und Körpermaße eingeholt wird; den Satz zum Körpercheck erst veröffentlichen, wenn der Einwilligungsschritt in der App live ist]]
 
 Angaben zu Beschwerden und der Körpercheck sind freiwillig: Du kannst „Keine Beschwerden“ wählen und den Körpercheck überspringen. Deine Einwilligung kannst du jederzeit mit Wirkung für die Zukunft widerrufen (Abschnitt 12).
 
@@ -104,13 +105,21 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.
 
 ### 4.6 Körpercheck
 
-Der Körpercheck ist freiwillig. Dafür nimmst du mit der Kamera vier Fotos auf: von vorne, von links, von rechts und von hinten. Die App empfiehlt, dafür Unterwäsche oder Sportkleidung zu tragen.
+Der Körpercheck ist freiwillig und erst ab 18 Jahren verfügbar. Dafür nimmst du mit der Kamera drei Fotos auf: von vorne, von der Seite und von hinten. Die App empfiehlt, dafür Unterwäsche oder eng anliegende Sportkleidung zu tragen. Auf den Fotos kann dein Gesicht zu sehen sein.
 
-Die App verkleinert die Fotos auf höchstens 1080 Pixel Breite und speichert sie auf deinem Gerät. Sobald du online bist, lädt sie die Fotos in einen nicht öffentlichen Speicherbereich deines Kontos hoch, damit du sie auch auf deinen anderen Geräten siehst.
+Die App verkleinert die Fotos auf höchstens 1080 Pixel Breite und speichert sie auf deinem Gerät. Wenn du die Auswertung startest, lädt sie die Fotos in einen nicht öffentlichen Speicherbereich deines Kontos hoch. Dort bleiben sie, damit du sie auch auf deinen anderen Geräten siehst. Für die Auswertung brauchst du eine Internetverbindung.
 
-Zu jedem Check speichern wir einen Gesamtwert, Werte für sechs Muskelgruppen (Schultern, Brust, Arme, Rücken, Bauch, Beine) sowie einen geschätzten Körperfettanteil und Werte für Proportionen und Definition.
+**Auswertung durch ein KI-Modell von OpenAI:** Die Werte deines Checks ermittelt ein KI-Modell von OpenAI. Dafür übermittelt unser Server an OpenAI:
 
-So entstehen die Werte derzeit: Die App berechnet sie auf deinem Gerät aus deinen Profilangaben (Geschlecht, Alter, Gewicht, Größe und Trainingserfahrung) und deinem vorherigen Check. Die Fotos selbst werden dafür nicht automatisiert ausgewertet und an keinen Analysedienst übermittelt. [[PLATZHALTER: Falls eine automatisierte Auswertung der Fotos eingeführt wird, hier Verfahren, Ort der Verarbeitung und beteiligte Dienstleister beschreiben]]
+- deine drei Fotos
+- Geschlecht, Alter, Größe, Gewicht und Trainingserfahrung aus deinem Profil
+- die Werte deines vorherigen Checks, damit die Werte von Check zu Check vergleichbar bleiben
+
+Deinen Namen, deine E-Mail-Adresse und deine Konto-ID übermitteln wir nicht. OpenAI verarbeitet die Daten in den USA (Abschnitt 8). Wir haben eingestellt, dass OpenAI die Anfrage nicht für einen späteren Abruf speichert. Nach eigenen Angaben nutzt OpenAI Daten aus seiner API nicht zum Training seiner Modelle und bewahrt sie bis zu 30 Tage auf, um Missbrauch zu erkennen. [[PLATZHALTER: Aufbewahrungsdauer und Ausschluss vom Training laut aktuellem Vertrag mit OpenAI bestätigen]]
+
+Das Modell prüft zuerst, ob die Fotos auswertbar sind, zum Beispiel ob sie hell genug sind und der ganze Körper zu sehen ist. Ist ein Foto nicht auswertbar, bittet dich die App, es neu aufzunehmen. Sonst liefert das Modell Werte für sechs Muskelgruppen (Schultern, Brust, Arme, Rücken, Bauch, Beine), einen geschätzten Körperfettanteil sowie Werte für Proportionen und Definition. Daraus berechnet unser Server den Gesamtwert. Diese Werte speichern wir zu deinem Check.
+
+Jede Auswertung protokollieren wir mit Zeitpunkt und Ergebnis. So begrenzen wir die Zahl der Auswertungen pro Tag und stellen sicher, dass gespeicherte Werte aus einer Auswertung stammen. Das Protokoll löschen wir mit deinem Konto.
 
 Die Werte sind grobe Schätzungen und keine medizinische Messung oder Diagnose.
 
@@ -118,15 +127,13 @@ Wer Zugriff hat: [[PLATZHALTER: Festlegen und beschreiben, wer im Team unter wel
 
 Du kannst einzelne Checks in der App löschen. Dann löschen wir die Fotos auf deinem Gerät und in unserem Speicher. [[PLATZHALTER: Bestätigen, dass die Löschung im Speicher auch bei fehlender Internetverbindung zuverlässig nachgeholt wird]]
 
-Rechtsgrundlage: deine ausdrückliche Einwilligung (Abschnitt 4.4).
+Rechtsgrundlage: deine ausdrückliche Einwilligung (Abschnitt 4.4), auch für die Übermittlung an OpenAI in die USA. [[PLATZHALTER: Prüfen, ob für die Übermittlung zusätzlich Art. 49 Abs. 1 lit. a DSGVO genannt werden soll, falls OpenAI nicht unter dem EU-US Data Privacy Framework zertifiziert ist]]
 
 ### 4.7 Plan-Import
 
 Du kannst einen vorhandenen Trainingsplan importieren: per Foto mit der Kamera (zum Beispiel von Papier, Whiteboard oder Bildschirm), als bis zu zehn Bilder aus deiner Mediathek oder als Datei (PDF, Excel, CSV, Text oder Bild). Bitte achte darauf, dass auf den Bildern und in den Dateien keine Daten anderer Personen zu sehen sind.
 
 So funktioniert es derzeit: Die automatische Erkennung ist noch nicht an einen Dienst angebunden. Deine Fotos und Dateien bleiben auf deinem Gerät, die App überträgt sie nicht. Gespeichert wird nur der Plan, den du am Ende bestätigst (Abschnitt 4.5). [[PLATZHALTER: Sobald die Erkennung live ist: wohin Fotos und Dateien übertragen werden, ob ein externer Texterkennungs- oder KI-Dienst beteiligt ist, wo er seinen Sitz hat und wann die Dateien gelöscht werden]]
-
-Die Spracheingabe beim Import greift derzeit nicht auf dein Mikrofon zu. Es werden keine Audiodaten aufgenommen oder übertragen. Bevor wir eine echte Spracherkennung einführen, ergänzen wir diese Datenschutzerklärung.
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.
 
@@ -230,6 +237,7 @@ Wir geben deine Daten nur weiter, wenn das für die genannten Zwecke nötig ist,
 - **Supabase** (Datenbank, Anmeldung, Dateispeicher): [[PLATZHALTER: Vertragspartner und Anschrift von Supabase laut Auftragsverarbeitungsvertrag]]; Serverstandort: [[PLATZHALTER: Supabase-Region des Produktivprojekts]]
 - **PowerSync** (Synchronisation zwischen App und Datenbank; der Dienst hält dafür eine Kopie deiner synchronisierten Daten vor): [[PLATZHALTER: PowerSync Cloud oder selbst betrieben; Vertragspartner bzw. Hosting-Anbieter mit Anschrift]]; Serverstandort: [[PLATZHALTER: Region des PowerSync-Dienstes]]
 - **E-Mail-Versand:** [[PLATZHALTER: E-Mail-Versanddienst]]
+- **OpenAI** (KI-Auswertung der Körpercheck-Fotos, Abschnitt 4.6): [[PLATZHALTER: Vertragspartner und Anschrift laut Auftragsverarbeitungsvertrag (Data Processing Addendum) mit OpenAI]]; Verarbeitung in den USA
 - geplant: PostHog (Abschnitt 4.12) und RevenueCat (Abschnitt 4.13)
 
 Apple und Google erhalten bei App-Downloads und Käufen Daten als eigenständig Verantwortliche (Abschnitt 4.10).
@@ -240,13 +248,14 @@ Behörden und Gerichten geben wir Daten nur, wenn wir gesetzlich dazu verpflicht
 
 ## 8. Übermittlung in Drittländer
 
-Wir möchten deine Daten in Rechenzentren in der EU speichern. [[PLATZHALTER: Für jeden Dienst bestätigen, dass die Daten in der EU gespeichert werden]] Einige der Dienstleister, die wir nutzen oder planen, haben ihren Sitz in den USA. Deshalb können Daten auch in ein Land außerhalb der EU und des EWR übermittelt werden, etwa bei Wartung oder Support durch den Dienstleister.
+Dein Konto, deine Trainings und deine Fotos möchten wir in Rechenzentren in der EU speichern. [[PLATZHALTER: Für jeden Dienst bestätigen, dass die Daten in der EU gespeichert werden]] Einige der Dienstleister, die wir nutzen oder planen, haben ihren Sitz in den USA. Deshalb können Daten auch in ein Land außerhalb der EU und des EWR übermittelt werden, etwa bei Wartung oder Support durch den Dienstleister. Für die Auswertung des Körperchecks übermitteln wir Daten bei jeder Auswertung an OpenAI in den USA (Abschnitt 4.6).
 
 Wenn wir Daten in ein Drittland übermitteln, stützen wir das auf einen Angemessenheitsbeschluss der EU-Kommission (für die USA das EU-US Data Privacy Framework, soweit der Empfänger zertifiziert ist) oder auf Standardvertragsklauseln der EU-Kommission (Art. 46 Abs. 2 lit. c DSGVO).
 
 - Supabase: [[PLATZHALTER: Drittlandübermittlung bei Supabase und Garantie]]
 - PowerSync: [[PLATZHALTER: Drittlandübermittlung bei PowerSync und Garantie]]
 - E-Mail-Versand: [[PLATZHALTER: Drittlandübermittlung beim E-Mail-Versanddienst und Garantie]]
+- OpenAI: [[PLATZHALTER: Prüfen, ob OpenAI unter dem EU-US Data Privacy Framework zertifiziert ist; sonst Standardvertragsklauseln laut Data Processing Addendum nennen]]
 - PostHog und RevenueCat (geplant): siehe Abschnitte 4.12 und 4.13
 
 ## 9. Wie lange wir deine Daten speichern
@@ -293,7 +302,7 @@ Für alle Anliegen genügt eine E-Mail an [[PLATZHALTER: Kontakt-E-Mail für Dat
 Eine Einwilligung kannst du jederzeit mit Wirkung für die Zukunft widerrufen (Art. 7 Abs. 3 DSGVO). Die Verarbeitung bis zum Widerruf bleibt rechtmäßig.
 
 - **Gesundheitsdaten:** [[PLATZHALTER: Ort in der App, an dem die Einwilligung für Gesundheitsdaten widerrufen werden kann]]
-- **Körpercheck:** Lösche deine Checks in der App und mache keine neuen.
+- **Körpercheck:** Lösche deine Checks in der App und mache keine neuen. [[PLATZHALTER: Sobald es in der App möglich ist: Einwilligung für den Körpercheck in den Einstellungen widerrufen; dabei werden alle Körpercheck-Fotos und -Werte gelöscht]]
 - **Produktanalyse (geplant):** siehe Abschnitt 4.12.
 
 Du kannst den Widerruf auch per E-Mail an [[PLATZHALTER: Kontakt-E-Mail für Datenschutzanfragen]] erklären.
@@ -308,7 +317,7 @@ Für ein Konto brauchen wir deine E-Mail-Adresse und ein Passwort. Ohne Konto ka
 
 ## 15. Keine automatisierten Entscheidungen
 
-Die App erstellt Pläne, Vorschläge und Körpercheck-Werte automatisch. Das sind Empfehlungen für dein Training. Entscheidungen, die dir gegenüber rechtliche Wirkung entfalten oder dich in ähnlicher Weise erheblich beeinträchtigen (Art. 22 DSGVO), treffen wir nicht.
+Die App erstellt Pläne, Vorschläge und Körpercheck-Werte automatisch; die Körpercheck-Werte ermittelt ein KI-Modell von OpenAI (Abschnitt 4.6). Das sind Empfehlungen und Schätzungen für dein Training. Entscheidungen, die dir gegenüber rechtliche Wirkung entfalten oder dich in ähnlicher Weise erheblich beeinträchtigen (Art. 22 DSGVO), treffen wir nicht.
 
 ## 16. Kinder und Jugendliche
 
