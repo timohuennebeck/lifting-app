@@ -349,10 +349,10 @@ skip_nonce_check = false
 email_optional = false
 
 # Google Sign-In: the app gets an ID token from Google's own sign-in and exchanges it here, so
-# no secret is needed. Turn it on once supabase/.env has the client IDs (README, "Google
-# Sign-In"); `supabase start` fails while it's on without them.
+# no secret is needed. The client IDs come from supabase/.env (README, "Google Sign-In"); without
+# them Supabase still starts, only Google sign-in fails.
 [auth.external.google]
-enabled = false
+enabled = true
 client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
 # The native Google Sign-In SDK on iOS sets a nonce the app can't pass on.
 skip_nonce_check = true

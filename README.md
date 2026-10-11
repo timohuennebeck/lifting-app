@@ -120,8 +120,7 @@ says it isn't available yet.
 2. **App:** in `.env`, `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` and `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`.
    `app.config.ts` turns the iOS ID into the URL scheme, so make a new development build.
 3. **Supabase (local):** `cp supabase/.env.example supabase/.env`, put the web and iOS client IDs
-   in `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID` (comma-separated), set `enabled = true` under
-   `[auth.external.google]` in `config.toml`, restart Supabase.
+   in `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID` (comma-separated), restart Supabase.
 4. **Supabase (production):** Authentication → Providers → Google: enable, the same client IDs,
    "Skip nonce checks" on.
 
