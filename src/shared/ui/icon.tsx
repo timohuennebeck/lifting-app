@@ -53,7 +53,7 @@ const seek = (forward: boolean) =>
     );
   };
 
-// Icon set traced from the Forge design file.
+// Icon set traced from the Traqa design file.
 const ICONS = {
   'chevron-left': { viewBox: '0 0 10 16', render: stroke('M8 2L2 8l6 6', 2.8) },
   'chevron-left-thin': { viewBox: '0 0 10 16', render: stroke('M8 2L2 8l6 6', 2.2) },

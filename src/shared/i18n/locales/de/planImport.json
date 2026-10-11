@@ -29,7 +29,7 @@
     "retake": "Seite {{count}} neu aufnehmen",
     "permission": {
       "title": "KAMERAZUGRIFF",
-      "body": "Um deinen Plan zu fotografieren, braucht Forge Zugriff auf deine Kamera. Die Fotos bleiben auf deinem Gerät, bis du sie importierst.",
+      "body": "Um deinen Plan zu fotografieren, braucht Traqa Zugriff auf deine Kamera. Die Fotos bleiben auf deinem Gerät, bis du sie importierst.",
       "allow": "Kamera erlauben",
       "settings": "Einstellungen öffnen"
     },

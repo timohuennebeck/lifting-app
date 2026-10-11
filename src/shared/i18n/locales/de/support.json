@@ -1,5 +1,5 @@
 {
-  "team": "Forge-Team",
+  "team": "Traqa-Team",
   "teamReplyTime": "Antwortet meist innerhalb von 24–48 Std.",
   "kind": {
     "bug": "Fehler",
@@ -15,7 +15,7 @@
   "ticketNumber": "Ticket #{{number}}",
   "ticketPending": "Neues Ticket",
   "preview": {
-    "team": "Forge-Team: {{text}}",
+    "team": "Traqa-Team: {{text}}",
     "user": "Du: {{text}}",
     "screenshots_one": "Screenshot",
     "screenshots_other": "{{count}} Screenshots"

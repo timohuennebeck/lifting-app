@@ -1,6 +1,6 @@
 {
   "ios": {
-    "NSCameraUsageDescription": "O Forge usa a câmera para fotografar seu plano de treino, tirar as fotos do seu check corporal e sua foto de perfil.",
-    "NSPhotoLibraryUsageDescription": "O Forge permite importar um plano de treino das suas fotos, anexar capturas de tela aos chamados de suporte e escolher uma foto de perfil."
+    "NSCameraUsageDescription": "O Traqa usa a câmera para fotografar seu plano de treino, tirar as fotos do seu check corporal e sua foto de perfil.",
+    "NSPhotoLibraryUsageDescription": "O Traqa permite importar um plano de treino das suas fotos, anexar capturas de tela aos chamados de suporte e escolher uma foto de perfil."
   }
 }

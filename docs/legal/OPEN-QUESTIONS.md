@@ -8,7 +8,7 @@ Every placeholder must be resolved before publication. Beyond filling in facts, 
 
 ## A. Company and contacts
 
-1. **Legal entity name and form.** Placeholder „Name des Unternehmens mit Rechtsform“ (DS §1, NB §1). Why: Art. 13(1)(a) GDPR requires the controller's identity and the terms need a contracting party. Forge is a private project, so this is presumably the owner as a private person (name instead of a company; items 3 and 4 then fall away). The app ID `app.forgelifting.mobile` says nothing about who the provider is.
+1. **Legal entity name and form.** Placeholder „Name des Unternehmens mit Rechtsform“ (DS §1, NB §1). Why: Art. 13(1)(a) GDPR requires the controller's identity and the terms need a contracting party. Traqa is a private project, so this is presumably the owner as a private person (name instead of a company; items 3 and 4 then fall away). The app ID `app.traqa.mobile` says nothing about who the provider is.
 2. **Postal address.** Placeholder „Straße, Hausnummer, PLZ, Ort, Land“ (DS §1, NB §1). Why: mandatory controller contact data; it also determines the competent supervisory authority (item 8).
 3. **Legal representative(s).** Placeholder „Geschäftsführung bzw. vertretungsberechtigte Person“ (DS §1, NB §1). Why: identifies who acts for the controller/provider.
 4. **Commercial register.** Placeholder „Registergericht und Registernummer, falls vorhanden“ (NB §1). Why: provider identification; also needed for the Impressum (item 9).
@@ -60,10 +60,10 @@ Every placeholder must be resolved before publication. Beyond filling in facts, 
 38. **Trial reminder (blocker).** Placeholder „Ob und wie wir vor dem Ende des Testzeitraums erinnern“ (NB §6). Why: the trial screen promises a reminder two days before billing (`REMINDER_DAYS_BEFORE` in `trial-screen.tsx`), but the app has no notification or email mechanism, and DS §6 says the app sends no push notifications.
 39. **Body-check deletion in storage (blocker).** Placeholder „Bestätigen, dass die Löschung im Speicher auch bei fehlender Internetverbindung zuverlässig nachgeholt wird“ (DS §4.6). Why: `deleteBodyCheck` removes the bucket files fire-and-forget, so offline or on error the photos stay until account deletion. The same pattern applies to replaced or removed avatars (`src/features/profile/lib/avatar.ts`).
 40. **Device backups.** Placeholder „Entscheidung, ob Körpercheck-Fotos und Screenshots von Gerätebackups ausgeschlossen werden“ (DS §5). Why: photos are stored in the app's documents directory, which iCloud/Google backups can include (a comment in `use-auth-listener.ts` already notes this).
-41. **Local data at rest (decision).** No placeholder. Why: the local SQLite file (`forge.db`) and MMKV aren't encrypted by the app. DS makes no such claim, but consider encryption for health data.
+41. **Local data at rest (decision).** No placeholder. Why: the local SQLite file (`traqa.db`) and MMKV aren't encrypted by the app. DS makes no such claim, but consider encryption for health data.
 42. **Keys left after sign-out (minor).** No placeholder. Why: MMKV keeps `account.language.<userId>`, `account.metadataLanguage.<userId>` and the mock purchase receipt after sign-out, while DS §5 says only settings like the language remain.
 43. **Age range mismatch.** No placeholder. Why: the DB allows 13–100 and the app 14–99; align both with the minimum age (item 47).
-44. **Coach video persona (decision).** No placeholder. Why: the paywall welcome shows „Max Krüger, Head Coach bei Forge“ with a demo photo (`coach-video.ts`); if he isn't a real person, this may be misleading advertising (UWG).
+44. **Coach video persona (decision).** No placeholder. Why: the paywall welcome shows „Max Krüger, Head Coach bei Traqa“ with a demo photo (`coach-video.ts`); if he isn't a real person, this may be misleading advertising (UWG).
 45. **Support response time.** Placeholder „Ob die in der App genannte Antwortzeit von 24 bis 48 Stunden verbindlich zugesagt wird“ (NB §9). Why: the auto-reply states „Unser Team antwortet dir innerhalb von 24–48 Stunden“ as a firm promise.
 46. **Support retention.** Placeholder „Gegebenenfalls kürzere Löschfrist für abgeschlossene Support-Anfragen“ (DS §4.8). Why: tickets and messages can't be deleted by users (RLS) and live until account deletion; storage limitation (Art. 5(1)(e) GDPR) may call for a shorter period.
 
@@ -76,14 +76,14 @@ Every placeholder must be resolved before publication. Beyond filling in facts, 
 ## G. Subscriptions, purchases and RevenueCat
 
 50. **Purchase data flows (blocker).** Placeholder „Die Kaufabwicklung ist im aktuellen Code eine Testversion; vor dem Livegang ergänzen, welche Kaufdaten auf unseren Servern oder bei RevenueCat gespeichert werden“ (DS §4.10). Why: purchases are a deterministic mock (`createMockPurchases` in `purchases-service.ts`), so the real data flows are unknown until RevenueCat is integrated.
-51. **Free vs. Pro features.** Placeholder „Abgrenzung zwischen kostenlosen Funktionen und Forge Pro festlegen“ (NB §4). Why: the paywall advertises plan import, history and records, and weight suggestions as Pro benefits; the terms must match what is actually gated.
+51. **Free vs. Pro features.** Placeholder „Abgrenzung zwischen kostenlosen Funktionen und Traqa Pro festlegen“ (NB §4). Why: the paywall advertises plan import, history and records, and weight suggestions as Pro benefits; the terms must match what is actually gated.
 52. **Plans and prices.** Placeholder „Angebotene Abos mit Preisen und Laufzeiten“ (NB §6). Why: the values in code (daily 0,99 €, monthly 9,99 €) are mock data.
 53. **Trial length.** Placeholder „Länge des Testzeitraums“ (NB §6). Why: `TRIAL_DAYS = 7` is mock; the real value comes from the store configuration.
-54. **Trial eligibility scope.** Placeholder „Store-Konto oder Forge-Konto“ (NB §6). Why: introductory-offer eligibility is decided by the stores, not by the app.
+54. **Trial eligibility scope.** Placeholder „Store-Konto oder Traqa-Konto“ (NB §6). Why: introductory-offer eligibility is decided by the stores, not by the app.
 55. **Cancellation deadline.** Placeholder „Kündigungsfrist laut Store, z. B. 24 Stunden vor Ablauf der Laufzeit“ (NB §6). Why: it must match each store's actual auto-renewal rules.
 56. **Contracting party for in-app purchases (blocker).** Placeholder „Bestätigen, wer bei In-App-Käufen Vertragspartner ist (Apple bzw. Google oder wir)“ (NB §6). Why: it decides who owes the withdrawal notice, invoices and refunds (items 57, 61).
 57. **Withdrawal notice.** Placeholder „Vollständige Widerrufsbelehrung, soweit wir selbst Vertragspartner sind, einschließlich Regelungen zum vorzeitigen Erlöschen des Widerrufsrechts bzw. zum Wertersatz“ (NB §7). Why: it is mandatory if you are the seller, and early expiry for digital products needs express consent and acknowledgement at purchase.
-58. **Entitlement binding.** Placeholder „Ob Forge Pro an das Store-Konto oder an das Forge-Konto gebunden ist und auf welchen Geräten es gilt“ (NB §6). Why: the code resets Pro on sign-out and restores it from the store account; the RevenueCat app-user-ID design decides this.
+58. **Entitlement binding.** Placeholder „Ob Traqa Pro an das Store-Konto oder an das Traqa-Konto gebunden ist und auf welchen Geräten es gilt“ (NB §6). Why: the code resets Pro on sign-out and restores it from the store account; the RevenueCat app-user-ID design decides this.
 59. **Price changes.** Placeholder „Regelung für Preisänderungen bei laufenden Abos“ (NB §6). Why: price changes need a valid mechanism; the stores run their own consent flows.
 60. **§ 312k BGB cancellation button (lawyer).** No placeholder. Why: check whether the statutory cancellation-button duty for online consumer subscriptions applies to store-sold subscriptions.
 61. **Purchase record retention.** Placeholder „Konkrete Aufbewahrungsfrist und betroffene Kaufdaten“ (DS §9). Why: HGB/AO retention only applies to records you keep yourself, which depends on item 56.
@@ -116,7 +116,7 @@ Every placeholder must be resolved before publication. Beyond filling in facts, 
 
 ## J. Terms of use decisions
 
-82. **Medical device status.** Placeholder „Bestätigen, dass Forge nach seiner Zweckbestimmung kein Medizinprodukt ist“ (NB §5). Why: complaint-based exercise exclusion and body-fat estimates could be read as a medical purpose under the MDR; marketing claims must stay consistent with the intended purpose.
+82. **Medical device status.** Placeholder „Bestätigen, dass Traqa nach seiner Zweckbestimmung kein Medizinprodukt ist“ (NB §5). Why: complaint-based exercise exclusion and body-fat estimates could be read as a medical purpose under the MDR; marketing claims must stay consistent with the intended purpose.
 83. **Ideas and feedback.** Placeholder „Regelung, ob und wie wir Ideen und Feedback aus dem Support nutzen dürfen“ (NB §8). Why: without a clause, rights to implement user suggestions are unclear.
 84. **Commercial use.** Placeholder „Ob eine gewerbliche Nutzung, z. B. durch Trainer für ihre Kunden, erlaubt ist“ (NB §10). Why: it defines the user group and affects consumer-law assumptions.
 85. **Notice period for free accounts.** Placeholder „Kündigungsfrist für kostenlose Konten“ (NB §13). Why: ordinary termination by the provider needs a reasonable notice period.

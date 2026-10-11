@@ -1,4 +1,4 @@
-# Forge
+# Traqa
 
 Workout logger built with Expo Router, Supabase, PowerSync and Uniwind. The original
 Claude Design handoff (prototype, chat transcript, assets) lives in [`design/`](design/README.md).
@@ -114,8 +114,8 @@ says it isn't available yet.
 1. **Google Cloud** (APIs & Services): set up the OAuth consent screen (app name, support email;
    scopes `openid`, `email`, `profile`), then create three OAuth client IDs:
    - **Web application**: its client ID is the one the ID token is issued for.
-   - **iOS**: bundle ID `app.forgelifting.mobile`.
-   - **Android**: package `app.forgelifting.mobile` and the SHA-1 of the signing key, one client
+   - **iOS**: bundle ID `app.traqa.mobile`.
+   - **Android**: package `app.traqa.mobile` and the SHA-1 of the signing key, one client
      per key (debug keystore for local builds, EAS credentials, Play App Signing).
 2. **App:** in `.env`, `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` and `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`.
    `app.config.ts` turns the iOS ID into the URL scheme, so make a new development build.
@@ -132,11 +132,11 @@ iOS only (Android and web don't show the button). The app uses Apple's native sh
 app ID, so no secret is needed.
 
 1. **Apple Developer** (paid membership; a free personal team can't sign this capability): the
-   app ID `app.forgelifting.mobile` needs "Sign in with Apple". Xcode's automatic signing and
+   app ID `app.traqa.mobile` needs "Sign in with Apple". Xcode's automatic signing and
    EAS-managed credentials add it from the entitlement the config plugin sets.
 2. **Supabase (local):** already on in `config.toml` (`[auth.external.apple]`).
 3. **Supabase (production):** Authentication → Providers → Apple: enable, Client IDs
-   `app.forgelifting.mobile`.
+   `app.traqa.mobile`.
 
 ## Languages
 

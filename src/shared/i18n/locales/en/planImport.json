@@ -29,7 +29,7 @@
     "retake": "Retake page {{count}}",
     "permission": {
       "title": "CAMERA ACCESS",
-      "body": "To photograph your plan, Forge needs access to your camera. Photos stay on your device until you import them.",
+      "body": "To photograph your plan, Traqa needs access to your camera. Photos stay on your device until you import them.",
       "allow": "Allow camera",
       "settings": "Open settings"
     },

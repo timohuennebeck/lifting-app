@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "Forge",
-    "slug": "forge",
+    "name": "Traqa",
+    "slug": "traqa",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "forge",
+    "scheme": "traqa",
     "userInterfaceStyle": "dark",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "app.forgelifting.mobile",
+      "bundleIdentifier": "app.traqa.mobile",
       "supportsTablet": false,
       "infoPlist": {
         "CFBundleAllowMixedLocalizations": true
@@ -23,7 +23,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "app.forgelifting.mobile"
+      "package": "app.traqa.mobile"
     },
     "locales": {
       "de": "./locales/de.json",
@@ -52,7 +52,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Forge uses the camera to photograph your training plan, to take your body check photos and your profile photo.",
+          "cameraPermission": "Traqa uses the camera to photograph your training plan, to take your body check photos and your profile photo.",
           "microphonePermission": false,
           "recordAudioAndroid": false
         }
@@ -60,7 +60,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Forge lets you import a training plan from your photos, attach screenshots to support tickets and pick a profile photo.",
+          "photosPermission": "Traqa lets you import a training plan from your photos, attach screenshots to support tickets and pick a profile photo.",
           "microphonePermission": false
         }
       ],

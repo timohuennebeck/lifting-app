@@ -7,7 +7,7 @@ export const parsePlanId = (value: unknown): PlanId => (value === 'monthly' ? 'm
 
 /**
  * The same screens run in onboarding (/paywall → /create-account) and as the
- * Forge Pro modal from Settings (/pro, closed back to where it was opened).
+ * Traqa Pro modal from Settings (/pro, closed back to where it was opened).
  */
 export function usePaywallFlow() {
   const segments = useSegments();

@@ -1,11 +1,11 @@
 {
-  "badge": "FORGE PRO",
+  "badge": "TRAQA PRO",
   "restore": "Käufe wiederherstellen",
   "restoring": "Wird wiederhergestellt …",
   "paywall": {
     "before": "Vorher",
     "after": "Nachher",
-    "brand": "FORGE",
+    "brand": "TRAQA",
     "pro": "PRO",
     "subtitle": "Dein Plan importiert, jeder Satz getrackt, jeder Fortschritt sichtbar.",
     "benefits": {
@@ -65,11 +65,11 @@
   },
   "welcome": {
     "header": "Nachricht von deinem Coach",
-    "role": "Head Coach bei Forge",
+    "role": "Head Coach bei Traqa",
     "cta": "Los geht's",
     "captions": {
-      "hello": "Hey {{name}}, ich bin Max, Head Coach bei Forge.",
-      "helloAnon": "Hey, ich bin Max, Head Coach bei Forge.",
+      "hello": "Hey {{name}}, ich bin Max, Head Coach bei Traqa.",
+      "helloAnon": "Hey, ich bin Max, Head Coach bei Traqa.",
       "thanks": "Danke, dass du dabei bist. Das bedeutet uns echt viel.",
       "plan": "Dein Plan steht. Ab jetzt zählt jeder Satz.",
       "seeYou": "Wir sehen uns beim ersten Training!"
@@ -84,13 +84,13 @@
   },
   "restoreResult": {
     "successTitle": "Käufe wiederhergestellt",
-    "successBody": "Forge Pro ist wieder aktiv.",
+    "successBody": "Traqa Pro ist wieder aktiv.",
     "emptyTitle": "Nichts zum Wiederherstellen",
     "emptyBody": "Wir haben für dieses Konto kein aktives Abo gefunden."
   },
   "settings": {
     "section": "Abo",
-    "title": "Forge Pro",
+    "title": "Traqa Pro",
     "upgrade": "Upgraden",
     "trialUntil": "Test bis {{date}}",
     "manage": "Abo verwalten",

@@ -22,7 +22,7 @@ import { useIsPro } from '../stores/subscription-store';
 const BENEFITS = ['import', 'history', 'suggestions'] as const;
 const PLAN_IDS: PlanId[] = ['daily', 'monthly'];
 
-/** Forge Pro paywall: before/after header, benefits, plan picker. */
+/** Traqa Pro paywall: before/after header, benefits, plan picker. */
 export function PaywallScreen() {
   const { t } = useTranslation(['paywall', 'common']);
   const insets = useSafeAreaInsets();

@@ -29,7 +29,7 @@
     "retake": "Repetir página {{count}}",
     "permission": {
       "title": "ACESSO À CÂMARA",
-      "body": "Para fotografar o teu plano, a Forge precisa de acesso à câmara. As fotos ficam no teu dispositivo até as importares.",
+      "body": "Para fotografar o teu plano, o Traqa precisa de acesso à câmara. As fotos ficam no teu dispositivo até as importares.",
       "allow": "Permitir câmara",
       "settings": "Abrir definições"
     },

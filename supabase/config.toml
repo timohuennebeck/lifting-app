@@ -2,6 +2,8 @@
 # https://supabase.com/docs/guides/local-development/cli/config
 # A string used to distinguish different Supabase projects on the same host. Defaults to the
 # working directory name when running `supabase init`.
+# The local stack's internal name (Docker containers, volumes, the network PowerSync joins);
+# renaming it would start an empty database.
 project_id = "forge"
 
 [api]
@@ -160,7 +162,7 @@ site_url = "http://127.0.0.1:3000"
 # The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
 # external_url = ""
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://127.0.0.1:3000", "forge://**"]
+additional_redirect_urls = ["https://127.0.0.1:3000", "traqa://**"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # JWT issuer URL. If not set, defaults to auth.external_url.
@@ -245,11 +247,11 @@ otp_expiry = 3600
 
 # Account emails in the user's app language (user_metadata.language, set by the app).
 [auth.email.template.confirmation]
-subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Bestätige deine E-Mail für Forge{{ else if eq $l "pt-PT" }}Confirma o teu email no Forge{{ else if eq $l "pt-BR" }}Confirme seu e-mail no Forge{{ else }}Confirm your email for Forge{{ end }}'
+subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Bestätige deine E-Mail für Traqa{{ else if eq $l "pt-PT" }}Confirma o teu email no Traqa{{ else if eq $l "pt-BR" }}Confirme seu e-mail no Traqa{{ else }}Confirm your email for Traqa{{ end }}'
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.email.template.recovery]
-subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Passwort für Forge zurücksetzen{{ else if eq $l "pt-PT" }}Repor a palavra-passe do Forge{{ else if eq $l "pt-BR" }}Redefinir a senha do Forge{{ else }}Reset your Forge password{{ end }}'
+subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Passwort für Traqa zurücksetzen{{ else if eq $l "pt-PT" }}Repor a palavra-passe do Traqa{{ else if eq $l "pt-BR" }}Redefinir a senha do Traqa{{ else }}Reset your Traqa password{{ end }}'
 content_path = "./supabase/templates/recovery.html"
 
 [auth.email.template.email_change]
@@ -336,7 +338,7 @@ max_frequency = "5s"
 # here. Its audience is the app ID; no secret is needed for that.
 [auth.external.apple]
 enabled = true
-client_id = "app.forgelifting.mobile"
+client_id = "app.traqa.mobile"
 secret = ""
 # Overrides the default auth callback URL derived from auth.external_url.
 redirect_uri = ""

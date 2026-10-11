@@ -1,11 +1,11 @@
 {
-  "badge": "FORGE PRO",
+  "badge": "TRAQA PRO",
   "restore": "Restore purchases",
   "restoring": "Restoring …",
   "paywall": {
     "before": "Before",
     "after": "After",
-    "brand": "FORGE",
+    "brand": "TRAQA",
     "pro": "PRO",
     "subtitle": "Your plan imported, every set tracked, all your progress visible.",
     "benefits": {
@@ -65,11 +65,11 @@
   },
   "welcome": {
     "header": "A message from your coach",
-    "role": "Head Coach at Forge",
+    "role": "Head Coach at Traqa",
     "cta": "Let's go",
     "captions": {
-      "hello": "Hey {{name}}, I'm Max, Head Coach at Forge.",
-      "helloAnon": "Hey, I'm Max, Head Coach at Forge.",
+      "hello": "Hey {{name}}, I'm Max, Head Coach at Traqa.",
+      "helloAnon": "Hey, I'm Max, Head Coach at Traqa.",
       "thanks": "Thanks for being here. It really means a lot to us.",
       "plan": "Your plan is ready. From now on, every set counts.",
       "seeYou": "See you at your first workout!"
@@ -84,13 +84,13 @@
   },
   "restoreResult": {
     "successTitle": "Purchases restored",
-    "successBody": "Forge Pro is active again.",
+    "successBody": "Traqa Pro is active again.",
     "emptyTitle": "Nothing to restore",
     "emptyBody": "We couldn't find an active subscription for this account."
   },
   "settings": {
     "section": "Subscription",
-    "title": "Forge Pro",
+    "title": "Traqa Pro",
     "upgrade": "Upgrade",
     "trialUntil": "Trial until {{date}}",
     "manage": "Manage subscription",

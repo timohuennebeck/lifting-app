@@ -9,7 +9,7 @@ insert into public.legal_documents (kind, locale, version, content_md, effective
 
 ## 1. Scope
 
-These terms apply to the use of the **Forge** app.
+These terms apply to the use of the **Traqa** app.
 
 ## 2. Your account
 
@@ -37,7 +37,7 @@ $md$, '2026-10-01'),
 
 ## 1. Geltungsbereich
 
-Diese Bedingungen gelten für die Nutzung der App **Forge**.
+Diese Bedingungen gelten für die Nutzung der App **Traqa**.
 
 ## 2. Dein Konto
 

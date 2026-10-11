@@ -8,7 +8,7 @@ export interface ProBadgeProps {
   className?: string;
 }
 
-/** "FORGE PRO" pill from the profile header; render it when `useIsPro()` is true. */
+/** "TRAQA PRO" pill from the profile header; render it when `useIsPro()` is true. */
 export function ProBadge({ className }: ProBadgeProps) {
   const { t } = useTranslation('paywall');
   return (

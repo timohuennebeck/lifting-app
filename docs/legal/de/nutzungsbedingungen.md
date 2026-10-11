@@ -6,11 +6,11 @@ Version: [[PLATZHALTER: Versionsnummer]]
 
 Stand: [[PLATZHALTER: Datum]]
 
-Diese Nutzungsbedingungen regeln, wie du die App Forge nutzen kannst. Bitte lies sie aufmerksam. Wie wir mit deinen Daten umgehen, erklären wir in unserer Datenschutzerklärung.
+Diese Nutzungsbedingungen regeln, wie du die App Traqa nutzen kannst. Bitte lies sie aufmerksam. Wie wir mit deinen Daten umgehen, erklären wir in unserer Datenschutzerklärung.
 
 ## 1. Anbieter und Geltungsbereich
 
-Anbieter der App Forge ist:
+Anbieter der App Traqa ist:
 
 - [[PLATZHALTER: Name des Unternehmens mit Rechtsform]]
 - Anschrift: [[PLATZHALTER: Straße, Hausnummer, PLZ, Ort, Land]]
@@ -22,18 +22,18 @@ Im Folgenden nennen wir uns „wir“. Diese Bedingungen gelten für alle Funkti
 
 ## 2. Mindestalter
 
-Du musst mindestens [[PLATZHALTER: Mindestalter]] Jahre alt sein, um Forge zu nutzen. [[PLATZHALTER: Regelung für Minderjährige, z. B. Zustimmung der Erziehungsberechtigten, insbesondere für Käufe]]
+Du musst mindestens [[PLATZHALTER: Mindestalter]] Jahre alt sein, um Traqa zu nutzen. [[PLATZHALTER: Regelung für Minderjährige, z. B. Zustimmung der Erziehungsberechtigten, insbesondere für Käufe]]
 
 ## 3. Dein Konto
 
-- Um Forge nach der Einrichtung zu nutzen, brauchst du ein Konto mit E-Mail-Adresse und Passwort. Der Vertrag über die kostenlose Nutzung kommt zustande, wenn du dein Konto erstellst.
+- Um Traqa nach der Einrichtung zu nutzen, brauchst du ein Konto mit E-Mail-Adresse und Passwort. Der Vertrag über die kostenlose Nutzung kommt zustande, wenn du dein Konto erstellst.
 - Mache bei der Registrierung wahre Angaben. Dein Passwort kannst du bei der Anmeldung über „Passwort vergessen“ zurücksetzen.
 - Halte dein Passwort geheim. Wenn du vermutest, dass jemand anderes dein Konto nutzt, setze dein Passwort zurück und informiere uns.
 - Dein Konto ist persönlich und nicht übertragbar.
 
-## 4. Was Forge bietet
+## 4. Was Traqa bietet
 
-Forge unterstützt dich beim Krafttraining. Je nach Version und Abo gehören dazu insbesondere:
+Traqa unterstützt dich beim Krafttraining. Je nach Version und Abo gehören dazu insbesondere:
 
 - ein Trainingsplan, den die App aus deinen Angaben erstellt, zum Beispiel aus Ziel, Erfahrung, Ausstattung, Trainingstagen und Beschwerden
 - der Import eines vorhandenen Plans per Foto oder Datei
@@ -42,34 +42,34 @@ Forge unterstützt dich beim Krafttraining. Je nach Version und Abo gehören daz
 - ein Übungskatalog mit Anleitungen, Bildern und Videos
 - ein Support-Chat für Fehlermeldungen und Ideen
 
-Welche Funktionen kostenlos sind und welche Forge Pro erfordern, siehst du in der App. [[PLATZHALTER: Abgrenzung zwischen kostenlosen Funktionen und Forge Pro festlegen]]
+Welche Funktionen kostenlos sind und welche Traqa Pro erfordern, siehst du in der App. [[PLATZHALTER: Abgrenzung zwischen kostenlosen Funktionen und Traqa Pro festlegen]]
 
 Die Erkennung beim Plan-Import kann Fehler machen. Prüfe den erkannten Plan deshalb, bevor du ihn übernimmst; unsichere Stellen markiert die App zur Prüfung.
 
-Forge funktioniert auch ohne Internetverbindung. Deine Daten werden synchronisiert, sobald du online bist. Änderungen, die bei einer Abmeldung noch nicht synchronisiert sind, gehen verloren; die App warnt dich vorher.
+Traqa funktioniert auch ohne Internetverbindung. Deine Daten werden synchronisiert, sobald du online bist. Änderungen, die bei einer Abmeldung noch nicht synchronisiert sind, gehen verloren; die App warnt dich vorher.
 
-Forge ist ein Hilfsmittel für dein Training. Einen bestimmten Trainingserfolg schulden wir nicht.
+Traqa ist ein Hilfsmittel für dein Training. Einen bestimmten Trainingserfolg schulden wir nicht.
 
 ## 5. Gesundheitshinweise
 
-> Forge ersetzt keine ärztliche Beratung, Diagnose oder Behandlung.
+> Traqa ersetzt keine ärztliche Beratung, Diagnose oder Behandlung.
 
-- Forge gibt allgemeine Trainingsempfehlungen. Die App bietet keine medizinische, physiotherapeutische oder ernährungsbezogene Beratung. Forge ist kein Medizinprodukt. [[PLATZHALTER: Bestätigen, dass Forge nach seiner Zweckbestimmung kein Medizinprodukt ist]]
+- Traqa gibt allgemeine Trainingsempfehlungen. Die App bietet keine medizinische, physiotherapeutische oder ernährungsbezogene Beratung. Traqa ist kein Medizinprodukt. [[PLATZHALTER: Bestätigen, dass Traqa nach seiner Zweckbestimmung kein Medizinprodukt ist]]
 - Lass dich vor Beginn eines Trainingsprogramms ärztlich beraten, besonders bei Vorerkrankungen (zum Beispiel des Herz-Kreislauf-Systems), bei Beschwerden oder Verletzungen, nach Operationen, in der Schwangerschaft oder Stillzeit und wenn du lange nicht trainiert hast.
 - Wenn du Beschwerden angibst, meidet die App Übungen, die diese Körperstellen belasten. Das ersetzt keine Diagnose und keine Therapie.
 - Die Werte des Körperchecks, zum Beispiel der geschätzte Körperfettanteil, sind grobe Schätzungen. Sie sind keine medizinische Messung und keine Diagnose.
 - Pläne und Vorschläge sind eine Orientierung. Wähle Gewichte und Wiederholungen so, dass du sie mit sauberer Technik sicher schaffst. Nutze bei schweren Gewichten Sicherungen oder eine Hilfestellung.
 - Hör sofort auf, wenn du Schmerzen, Schwindel, Atemnot oder Druck in der Brust spürst, und hol bei Bedarf ärztliche Hilfe.
 
-## 6. Forge Pro, Testzeitraum und Abo
+## 6. Traqa Pro, Testzeitraum und Abo
 
-- **Kauf:** Forge Pro kaufst du in der App über den App Store oder über Google Play. Zahlung und Abrechnung übernimmt der jeweilige Store. [[PLATZHALTER: Bestätigen, wer bei In-App-Käufen Vertragspartner ist (Apple bzw. Google oder wir)]]
+- **Kauf:** Traqa Pro kaufst du in der App über den App Store oder über Google Play. Zahlung und Abrechnung übernimmt der jeweilige Store. [[PLATZHALTER: Bestätigen, wer bei In-App-Käufen Vertragspartner ist (Apple bzw. Google oder wir)]]
 - **Preise und Laufzeiten:** Die aktuellen Preise und Laufzeiten siehst du vor dem Kauf in der App und im Store. [[PLATZHALTER: Angebotene Abos mit Preisen und Laufzeiten]]
-- **Testzeitraum:** Forge Pro kann mit einem kostenlosen Testzeitraum von [[PLATZHALTER: Länge des Testzeitraums]] beginnen. Den Test kannst du einmal pro [[PLATZHALTER: Store-Konto oder Forge-Konto]] nutzen. Kündigst du nicht rechtzeitig vor dem Ende des Tests, geht er automatisch in ein kostenpflichtiges Abo über. [[PLATZHALTER: Ob und wie wir vor dem Ende des Testzeitraums erinnern]]
+- **Testzeitraum:** Traqa Pro kann mit einem kostenlosen Testzeitraum von [[PLATZHALTER: Länge des Testzeitraums]] beginnen. Den Test kannst du einmal pro [[PLATZHALTER: Store-Konto oder Traqa-Konto]] nutzen. Kündigst du nicht rechtzeitig vor dem Ende des Tests, geht er automatisch in ein kostenpflichtiges Abo über. [[PLATZHALTER: Ob und wie wir vor dem Ende des Testzeitraums erinnern]]
 - **Verlängerung:** Dein Abo verlängert sich automatisch um die gewählte Laufzeit, wenn du es nicht spätestens [[PLATZHALTER: Kündigungsfrist laut Store, z. B. 24 Stunden vor Ablauf der Laufzeit]] kündigst.
-- **Kündigung:** Du kündigst in den Abo-Einstellungen deines Store-Kontos. In der App findest du den Link dazu in den Einstellungen unter „Abo verwalten“. Nach der Kündigung bleibt Forge Pro bis zum Ende der bezahlten Laufzeit aktiv.
+- **Kündigung:** Du kündigst in den Abo-Einstellungen deines Store-Kontos. In der App findest du den Link dazu in den Einstellungen unter „Abo verwalten“. Nach der Kündigung bleibt Traqa Pro bis zum Ende der bezahlten Laufzeit aktiv.
 - **Wichtig:** Wenn du die App oder dein Konto löschst, wird dein Abo nicht gekündigt.
-- **Käufe wiederherstellen:** Hast du Forge Pro schon gekauft, kannst du den Kauf auf der Forge-Pro-Seite der App unter „Käufe wiederherstellen“ erneut aktivieren. [[PLATZHALTER: Ob Forge Pro an das Store-Konto oder an das Forge-Konto gebunden ist und auf welchen Geräten es gilt]]
+- **Käufe wiederherstellen:** Hast du Traqa Pro schon gekauft, kannst du den Kauf auf der Traqa-Pro-Seite der App unter „Käufe wiederherstellen“ erneut aktivieren. [[PLATZHALTER: Ob Traqa Pro an das Store-Konto oder an das Traqa-Konto gebunden ist und auf welchen Geräten es gilt]]
 - **Erstattungen:** Erstattungen richten sich nach den Bedingungen des jeweiligen Stores. Wende dich dafür an Apple bzw. Google.
 - **Preisänderungen:** [[PLATZHALTER: Regelung für Preisänderungen bei laufenden Abos]]
 
@@ -81,7 +81,7 @@ Als Verbraucher hast du bei Verträgen über digitale Inhalte und digitale Diens
 
 ## 8. Deine Inhalte
 
-Inhalte, die du in Forge einstellst, bleiben deine, zum Beispiel Pläne, Trainingsdaten, Fotos, dein Text „Über dich“ und deine Support-Nachrichten. Du räumst uns daran nur die einfachen, nicht übertragbaren Rechte ein, die wir brauchen, um die App für dich bereitzustellen: deine Inhalte speichern, synchronisieren, verarbeiten und dir anzeigen sowie deine Support-Anfragen bearbeiten. Diese Rechte enden, wenn du die Inhalte oder dein Konto löschst.
+Inhalte, die du in Traqa einstellst, bleiben deine, zum Beispiel Pläne, Trainingsdaten, Fotos, dein Text „Über dich“ und deine Support-Nachrichten. Du räumst uns daran nur die einfachen, nicht übertragbaren Rechte ein, die wir brauchen, um die App für dich bereitzustellen: deine Inhalte speichern, synchronisieren, verarbeiten und dir anzeigen sowie deine Support-Anfragen bearbeiten. Diese Rechte enden, wenn du die Inhalte oder dein Konto löschst.
 
 - Lade nur Inhalte hoch, an denen du die nötigen Rechte hast. Trainingspläne von Trainern, aus Büchern oder Apps darfst du nur importieren, soweit du sie für dein eigenes Training nutzen darfst.
 - Auf deinen Fotos und Screenshots dürfen keine anderen Personen zu sehen sein, die nicht eingewilligt haben.
@@ -95,7 +95,7 @@ Im Support-Chat der App kannst du Fehler melden und Funktionen vorschlagen. Wir 
 
 ## 10. Erlaubte Nutzung
 
-Du darfst Forge nur für dein eigenes Training nutzen. [[PLATZHALTER: Ob eine gewerbliche Nutzung, z. B. durch Trainer für ihre Kunden, erlaubt ist]] Nicht erlaubt ist insbesondere:
+Du darfst Traqa nur für dein eigenes Training nutzen. [[PLATZHALTER: Ob eine gewerbliche Nutzung, z. B. durch Trainer für ihre Kunden, erlaubt ist]] Nicht erlaubt ist insbesondere:
 
 - technische Schutzmaßnahmen oder die Abo-Abfrage zu umgehen
 - automatisiert auf die App oder unsere Server zuzugreifen, Inhalte massenhaft auszulesen oder unsere Server übermäßig zu belasten
@@ -106,9 +106,9 @@ Die App, der Übungskatalog mit Texten, Bildern und Videos sowie Marken und Desi
 
 ## 11. Verfügbarkeit, Updates und Änderungen der App
 
-- Wir bemühen uns, dass Forge zuverlässig funktioniert. Eine ununterbrochene Verfügbarkeit unserer Server können wir aber nicht zusagen, etwa bei Wartung oder bei Störungen unserer Dienstleister. Viele Funktionen kannst du auch dann offline nutzen.
-- Wir stellen dir Updates bereit, die nötig sind, damit Forge vertragsgemäß funktioniert, insbesondere Sicherheitsupdates (§ 327f BGB). Bitte installiere sie zeitnah.
-- Wir dürfen Forge ändern und weiterentwickeln, wenn dafür ein triftiger Grund besteht (zum Beispiel neue technische Anforderungen, Sicherheit, Weiterentwicklung der App oder eine geänderte Rechtslage), dir dadurch keine zusätzlichen Kosten entstehen und wir dich klar und verständlich informieren. Beeinträchtigt eine Änderung deinen Zugang zu Forge oder die Nutzbarkeit mehr als nur unerheblich, informieren wir dich vorab. Du kannst den Vertrag dann nach Maßgabe von § 327r BGB unentgeltlich beenden.
+- Wir bemühen uns, dass Traqa zuverlässig funktioniert. Eine ununterbrochene Verfügbarkeit unserer Server können wir aber nicht zusagen, etwa bei Wartung oder bei Störungen unserer Dienstleister. Viele Funktionen kannst du auch dann offline nutzen.
+- Wir stellen dir Updates bereit, die nötig sind, damit Traqa vertragsgemäß funktioniert, insbesondere Sicherheitsupdates (§ 327f BGB). Bitte installiere sie zeitnah.
+- Wir dürfen Traqa ändern und weiterentwickeln, wenn dafür ein triftiger Grund besteht (zum Beispiel neue technische Anforderungen, Sicherheit, Weiterentwicklung der App oder eine geänderte Rechtslage), dir dadurch keine zusätzlichen Kosten entstehen und wir dich klar und verständlich informieren. Beeinträchtigt eine Änderung deinen Zugang zu Traqa oder die Nutzbarkeit mehr als nur unerheblich, informieren wir dich vorab. Du kannst den Vertrag dann nach Maßgabe von § 327r BGB unentgeltlich beenden.
 - Den Übungskatalog aktualisieren wir laufend.
 
 ## 12. Haftung
@@ -121,7 +121,7 @@ Die App, der Übungskatalog mit Texten, Bildern und Videos sowie Marken und Desi
 
 ## 13. Laufzeit, Kündigung und Kontolöschung
 
-- Der Vertrag über die Nutzung von Forge läuft auf unbestimmte Zeit.
+- Der Vertrag über die Nutzung von Traqa läuft auf unbestimmte Zeit.
 - Du kannst ihn jederzeit beenden, indem du dein Konto in der App löschst: in den Einstellungen unter „Konto löschen“. Du kannst die Löschung auch per E-Mail an [[PLATZHALTER: Kontakt-E-Mail für allgemeine Anfragen und Support]] verlangen.
 - Wir können den Vertrag über die kostenlose Nutzung mit einer Frist von [[PLATZHALTER: Kündigungsfrist für kostenlose Konten]] kündigen. Ein bezahltes Abo bleibt davon bis zum Ende der bezahlten Laufzeit unberührt.
 - Das Recht beider Seiten, aus wichtigem Grund fristlos zu kündigen, bleibt unberührt. Ein wichtiger Grund liegt für uns insbesondere bei schweren oder wiederholten Verstößen gegen diese Bedingungen vor.

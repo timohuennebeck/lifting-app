@@ -33,7 +33,7 @@ export const useSubscriptionStore = create<SubscriptionState>()(
   ),
 );
 
-/** True while the user has Forge Pro (trial or paid). */
+/** True while the user has Traqa Pro (trial or paid). */
 export const useIsPro = () => useSubscriptionStore((s) => s.isPro);
 
 /** Trial end as a Date while the trial is still running, else null. */
