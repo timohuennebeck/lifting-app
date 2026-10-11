@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { useResetOnOpen } from '@/shared/hooks/use-reset-on-open';
 import { Button } from '@/shared/ui/button';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
@@ -39,14 +40,9 @@ export function ProfileTextSheet({
   onSave,
 }: ProfileTextSheetProps) {
   const { t } = useTranslation('common');
-  const [value, setValue] = useState(initialValue);
-  const [busy, setBusy] = useState(false);
-  const [wasVisible, setWasVisible] = useState(visible);
   // A fresh draft each time the sheet opens.
-  if (visible !== wasVisible) {
-    setWasVisible(visible);
-    if (visible) setValue(initialValue);
-  }
+  const [value, setValue] = useResetOnOpen(visible, initialValue);
+  const [busy, setBusy] = useState(false);
   const valid = optional || value.trim().length > 0;
 
   async function save() {

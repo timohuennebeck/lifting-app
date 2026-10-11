@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { type AccessibilityRole, type LayoutChangeEvent, Text as RNText, View } from 'react-native';
+import { type LayoutChangeEvent, Text as RNText, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { MARKDOWN_HEADING, MarkdownBlockView } from '@/shared/ui/markdown';
-import { Text, type TextTone, type TextVariant } from '@/shared/ui/text';
+import { Text } from '@/shared/ui/text';
 
 import type { DiffBlock, DiffSection, DiffSegment } from '../lib/legal-diff';
-import { MarkedText } from './marked-text';
+import { MarkedText, type MarkedTextProps } from './marked-text';
 
 /** What a screen reader says for a changed passage: the changes named, not just coloured. */
 function useSpoken() {
@@ -19,14 +19,7 @@ function useSpoken() {
   return (segments: DiffSegment[]) => segments.map(spokenSegment).join(' ');
 }
 
-interface SegmentTextProps {
-  segments: DiffSegment[];
-  variant?: TextVariant;
-  tone?: TextTone;
-  textClassName?: string;
-  className?: string;
-  accessibilityRole?: AccessibilityRole;
-}
+type SegmentTextProps = Omit<MarkedTextProps, 'accessibilityLabel'>;
 
 /** Removed words struck through in grey, new ones on rounded neon. */
 function SegmentText({ segments, className, textClassName, ...text }: SegmentTextProps) {

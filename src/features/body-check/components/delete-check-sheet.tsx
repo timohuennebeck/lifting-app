@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
-import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
-import { MinusGlyph } from '@/shared/ui/minus-glyph';
+import { deleteIcon } from '@/shared/ui/minus-glyph';
 
 export interface DeleteCheckSheetProps {
   visible: boolean;
@@ -38,7 +37,7 @@ export function DeleteCheckSheet({
           title: t('result.delete'),
           description: t('result.deleteHint'),
           cta: t('common:actions.delete'),
-          renderIcon: (active) => <MinusGlyph color={active ? colors.bg : colors.fg} />,
+          renderIcon: deleteIcon,
         },
       ]}
     />

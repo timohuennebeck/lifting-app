@@ -51,15 +51,21 @@ interface LegalDocumentRow {
   requires_reacceptance: boolean | null;
 }
 
-const toDocument = (row: LegalDocumentRow): LegalDocument => ({
-  id: row.id,
-  kind: row.kind,
-  locale: row.locale,
-  version: row.version,
-  contentMd: row.content_md,
-  effectiveAt: row.effective_at,
-  requiresReacceptance: !!row.requires_reacceptance,
-});
+/** The first row of a query's answer as a document; null without one. */
+function firstDocument(answer: { data: unknown[] | null; error: unknown }): LegalDocument | null {
+  if (answer.error) throw answer.error;
+  const row = answer.data?.[0] as LegalDocumentRow | undefined;
+  if (!row) return null;
+  return {
+    id: row.id,
+    kind: row.kind,
+    locale: row.locale,
+    version: row.version,
+    contentMd: row.content_md,
+    effectiveAt: row.effective_at,
+    requiresReacceptance: !!row.requires_reacceptance,
+  };
+}
 
 /**
  * The version of a document in effect now, from `public.legal_documents` (readable logged out,
@@ -70,41 +76,36 @@ async function fetchCurrentDocument(kind: LegalKind, language: string) {
   // Only the newest version, one locale at a time: usually the app language already has it, so
   // older versions and other languages are never downloaded.
   for (const locale of localesFor(language)) {
-    const { data, error } = await supabase
-      .from('legal_documents')
-      .select(COLUMNS)
-      .eq('kind', kind)
-      .eq('locale', locale)
-      .lte('effective_at', now)
-      .order('effective_at', { ascending: false })
-      .limit(1);
-    if (error) throw error;
-    const row = (data ?? [])[0] as LegalDocumentRow | undefined;
-    if (row) return toDocument(row);
+    const document = firstDocument(
+      await supabase
+        .from('legal_documents')
+        .select(COLUMNS)
+        .eq('kind', kind)
+        .eq('locale', locale)
+        .lte('effective_at', now)
+        .order('effective_at', { ascending: false })
+        .limit(1),
+    );
+    if (document) return document;
   }
   return null;
 }
 
 /** One version of a document in one language, or null when it doesn't exist there. */
 export async function fetchDocumentVersion(kind: LegalKind, locale: string, version: string) {
-  const { data, error } = await supabase
-    .from('legal_documents')
-    .select(COLUMNS)
-    .eq('kind', kind)
-    .eq('locale', locale)
-    .eq('version', version)
-    .limit(1);
-  if (error) throw error;
-  const row = (data ?? [])[0] as LegalDocumentRow | undefined;
-  return row ? toDocument(row) : null;
+  return firstDocument(
+    await supabase
+      .from('legal_documents')
+      .select(COLUMNS)
+      .eq('kind', kind)
+      .eq('locale', locale)
+      .eq('version', version)
+      .limit(1),
+  );
 }
 
-async function fetchDocumentById(id: string) {
-  const { data, error } = await supabase.from('legal_documents').select(COLUMNS).eq('id', id);
-  if (error) throw error;
-  const row = (data ?? [])[0] as LegalDocumentRow | undefined;
-  return row ? toDocument(row) : null;
-}
+const fetchDocumentById = async (id: string) =>
+  firstDocument(await supabase.from('legal_documents').select(COLUMNS).eq('id', id));
 
 /** A published version by its id (they never change, so it's cached for good). */
 export function useLegalDocumentById(id: string | undefined) {

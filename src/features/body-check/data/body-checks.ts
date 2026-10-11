@@ -70,6 +70,10 @@ export function useBodyCheckPhotos() {
   });
 }
 
+/** Where-clause for the user's photos still waiting for their upload. */
+const awaitingUpload = (userId: string) =>
+  and(isNull(bodyCheckPhotos.storage_path), eq(bodyCheckPhotos.user_id, userId));
+
 /** Number of the user's photos that still wait for their upload. */
 export function usePendingPhotoCount(userId: string | null) {
   return useDrizzleQuery({
@@ -77,7 +81,7 @@ export function usePendingPhotoCount(userId: string | null) {
     query: drizzle
       .select({ count: count() })
       .from(bodyCheckPhotos)
-      .where(and(isNull(bodyCheckPhotos.storage_path), eq(bodyCheckPhotos.user_id, userId ?? ''))),
+      .where(awaitingUpload(userId ?? '')),
     enabled: !!userId,
     map: firstCount,
   });
@@ -98,9 +102,7 @@ export async function localPendingPhotos(userId: string) {
       pose: bodyCheckPhotos.pose,
     })
     .from(bodyCheckPhotos)
-    .where(
-      and(isNull(bodyCheckPhotos.storage_path), eq(bodyCheckPhotos.user_id, userId)),
-    )) as PendingPhotoRow[];
+    .where(awaitingUpload(userId))) as PendingPhotoRow[];
   // Photos taken on another device that has not uploaded them yet are skipped.
   return rows.filter((row) => photoFile(row.body_check_id, row.pose).exists);
 }

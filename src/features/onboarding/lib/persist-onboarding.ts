@@ -51,10 +51,13 @@ export async function persistOnboarding(userId: string, draft: OnboardingDraft) 
   });
 }
 
+/** How long a sign-in waits for the first download before it goes by the local data. */
+const FIRST_SYNC_TIMEOUT_MS = 8000;
+
 /** Waits (bounded) for the first PowerSync download, then tells whether onboarding is done. */
-export async function isOnboardedAfterSync(userId: string, timeoutMs = 8000) {
+export async function isOnboardedAfterSync(userId: string) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  const timer = setTimeout(() => controller.abort(), FIRST_SYNC_TIMEOUT_MS);
   try {
     await db.waitForFirstSync(controller.signal);
   } catch {

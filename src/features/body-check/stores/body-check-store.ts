@@ -17,7 +17,13 @@ import {
   deleteFile,
   type StoredPhoto,
 } from '../lib/photo-files';
-import { nextMissingPose, TIMER_STEPS, type BodyPose, type TimerSeconds } from '../lib/poses';
+import {
+  nextMissingPose,
+  POSES,
+  TIMER_STEPS,
+  type BodyPose,
+  type TimerSeconds,
+} from '../lib/poses';
 
 export interface Shot extends StoredPhoto {
   issue: PhotoIssue | null;
@@ -27,6 +33,10 @@ export interface Shot extends StoredPhoto {
 
 export type CameraFacing = 'front' | 'back';
 export type Shots = Partial<Record<BodyPose, Shot>>;
+
+/** Whether every pose has its photo. */
+export const hasAllShots = (shots: Shots): shots is Record<BodyPose, Shot> =>
+  POSES.every((pose) => shots[pose]);
 
 interface BodyCheckState {
   /** Id of the check being recorded; also names its photo folder. */

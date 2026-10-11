@@ -1,13 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
 
-import { cn } from '@/shared/lib/cn';
-import { colors } from '@/shared/lib/theme';
-import { Icon, type IconName } from '@/shared/ui/icon';
-import { MinusGlyph } from '@/shared/ui/minus-glyph';
-import { PressableScale } from '@/shared/ui/pressable-scale';
-import { Sheet } from '@/shared/ui/sheet';
-import { Text } from '@/shared/ui/text';
+import { ActionSheet } from '@/shared/ui/action-sheet';
+import type { IconName } from '@/shared/ui/icon';
 
 export type ExerciseMenuAction = 'editSets' | 'swap' | 'moveUp' | 'moveDown' | 'remove';
 
@@ -40,43 +34,11 @@ export function ExerciseMenuSheet({
   hidden = [],
 }: ExerciseMenuSheetProps) {
   const { t } = useTranslation('training');
-  const available = ACTIONS.filter(
+  const items = ACTIONS.filter(
     ({ action }) =>
       !hidden.includes(action) &&
       (action !== 'moveUp' || canMoveUp) &&
       (action !== 'moveDown' || canMoveDown),
-  );
-  return (
-    <Sheet visible={visible} onClose={onClose}>
-      <View className="gap-1">
-        {available.map(({ action, icon }) => {
-          const danger = action === 'remove';
-          return (
-            <PressableScale
-              key={action}
-              haptic={danger ? 'warning' : 'tap'}
-              onPress={() => onAction(action)}
-              className="h-14 flex-row items-center gap-3.5 rounded-[18px] px-2"
-            >
-              <View
-                className={cn(
-                  'size-10 items-center justify-center rounded-full',
-                  danger ? 'bg-danger-bg' : 'bg-control',
-                )}
-              >
-                {icon ? (
-                  <Icon name={icon} size={14} color={colors.fg} />
-                ) : (
-                  <MinusGlyph color={colors.red} width={14} />
-                )}
-              </View>
-              <Text variant="label" className={cn('text-base', danger && 'text-red')}>
-                {t(`exerciseMenu.${action}`)}
-              </Text>
-            </PressableScale>
-          );
-        })}
-      </View>
-    </Sheet>
-  );
+  ).map(({ action, icon }) => ({ action, icon, label: t(`exerciseMenu.${action}`) }));
+  return <ActionSheet visible={visible} onClose={onClose} items={items} onAction={onAction} />;
 }

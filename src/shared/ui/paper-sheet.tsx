@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
 
-import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 
 import { Text } from './text';
@@ -11,10 +10,9 @@ const PENCIL = '#BDB7A9';
 
 interface PaperSheetProps {
   /** Day badge in the header, e.g. "Mo" or "D1". */
-  tag?: string;
+  tag: string;
   /** Lines light up one after another, like being read. */
-  scanning?: boolean;
-  className?: string;
+  scanning: boolean;
 }
 
 /** A line lights up in the accent as the scan passes, then reads as written. */
@@ -28,18 +26,16 @@ const SCAN: CSSAnimationKeyframes = {
 };
 
 /** Stylised training-plan page used in import and plan-building illustrations. */
-function PaperSheet({ tag, scanning, className }: PaperSheetProps) {
+function PaperSheet({ tag, scanning }: PaperSheetProps) {
   return (
     <View
-      className={cn('gap-3.5 rounded-xl bg-paper px-4.5 py-5', className)}
+      className="flex-1 gap-3.5 rounded-xl bg-paper px-4.5 py-5"
       style={{ boxShadow: '0 26px 50px rgba(0,0,0,0.6)' }}
     >
       <View className="flex-row items-center gap-1.75">
-        {tag ? (
-          <View className="rounded-full bg-ink px-2 py-0.75">
-            <Text className="font-inter-semibold text-[11px] leading-3.25 text-paper">{tag}</Text>
-          </View>
-        ) : null}
+        <View className="rounded-full bg-ink px-2 py-0.75">
+          <Text className="font-inter-semibold text-[11px] leading-3.25 text-paper">{tag}</Text>
+        </View>
         <View className="h-2 w-[40%] rounded bg-ink" />
       </View>
       {LINE_WIDTHS.map((width, i) => (
@@ -85,7 +81,7 @@ export function PaperStack({ tags }: PaperStackProps) {
           className="absolute h-52.5 w-40"
           style={{ left: p.left, top: p.top, transform: [{ rotate: p.rotate }] }}
         >
-          <PaperSheet tag={tags[i]} scanning={i === STACK.length - 1} className="flex-1" />
+          <PaperSheet tag={tags[i]} scanning={i === STACK.length - 1} />
         </View>
       ))}
     </View>

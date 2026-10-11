@@ -15,7 +15,6 @@ export const colors = {
   /** The one accent: neon (mirrors --color-accent). */
   accent: '#DFFF1F',
   onAccent: '#0A0A0A',
-  danger: '#E08A7A',
   red: '#ED4042',
   /** Amber for things the plan import wasn't sure about (design 05b). */
   review: '#FFB547',

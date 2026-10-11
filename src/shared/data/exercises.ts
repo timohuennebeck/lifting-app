@@ -7,7 +7,7 @@ import { i18n } from '@/shared/i18n';
 import { mmkvStorage } from '@/shared/lib/storage';
 import { MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
-import type { PlanSetDraft } from './templates';
+import type { PlanExerciseDraft, PlanSetDraft } from './templates';
 
 // The catalog lives in Supabase (`public.exercises`). The app downloads all of it on first launch
 // and keeps it on the device for offline use; `useCatalogRefresh` then fetches what changed.
@@ -123,12 +123,15 @@ export function getExercise(id: string): Exercise | undefined {
   return row ? toExercise(row) : undefined;
 }
 
-/** Ids of the exercises users can pick (the catalog without retired ones). */
-export function activeExerciseIds(rows = useCatalogStore.getState().rows) {
-  return Object.values(rows)
-    .filter((r) => r.is_active)
+/** Ids of the catalog's exercises that `keep` accepts. */
+const idsWhere = (keep: (row: ExerciseRow) => boolean, rows = useCatalogStore.getState().rows) =>
+  Object.values(rows)
+    .filter(keep)
     .map((r) => r.id);
-}
+
+/** Ids of the exercises users can pick (the catalog without retired ones). */
+export const activeExerciseIds = (rows = useCatalogStore.getState().rows) =>
+  idsWhere((r) => r.is_active, rows);
 
 /** Text in the app language, falling back to English. */
 function localized<T>(texts: Record<string, T> | undefined, language: string) {
@@ -155,15 +158,10 @@ export const hasMeasure = (exerciseId: string, measure: Measure) =>
 
 /** Catalog exercises that don't log `measure`, e.g. the ones without weight. */
 export const exerciseIdsWithout = (measure: Measure) =>
-  Object.values(useCatalogStore.getState().rows)
-    .filter((r) => !r.measures.includes(measure))
-    .map((r) => r.id);
+  idsWhere((r) => !r.measures.includes(measure));
 
 /** Catalog exercises done with the body as the load (pull-ups, dips, …). */
-export const bodyweightExerciseIds = () =>
-  Object.values(useCatalogStore.getState().rows)
-    .filter((r) => r.equipment === 'bodyweight')
-    .map((r) => r.id);
+export const bodyweightExerciseIds = () => idsWhere((r) => r.equipment === 'bodyweight');
 
 export const isBodyweight = (exerciseId: string) =>
   getExercise(exerciseId)?.equipment === 'bodyweight';
@@ -194,3 +192,25 @@ export function defaultSetDrafts(exerciseId: string, count: number): PlanSetDraf
  */
 export const swapTargets = (fromId: string, toId: string): SetTargets | null =>
   isTimed(fromId) !== isTimed(toId) ? defaultTargets(toId) : null;
+
+/** Sets of an exercise added to a plan, template or workout. */
+const NEW_EXERCISE_SETS = 3;
+
+/** An exercise as the library adds it: three sets at its default targets, its default rest. */
+export const newExerciseDraft = (exerciseId: string): PlanExerciseDraft => ({
+  exerciseId,
+  sets: defaultSetDrafts(exerciseId, NEW_EXERCISE_SETS),
+  restSeconds: null,
+});
+
+/** `draft` with another exercise; its sets get new defaults where `swapTargets` resets them. */
+export const swapExerciseDraft = <T extends PlanExerciseDraft>(
+  draft: T,
+  exerciseId: string,
+): T => ({
+  ...draft,
+  exerciseId,
+  sets: swapTargets(draft.exerciseId, exerciseId)
+    ? defaultSetDrafts(exerciseId, draft.sets.length)
+    : draft.sets,
+});

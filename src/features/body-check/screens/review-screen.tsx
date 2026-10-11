@@ -94,7 +94,6 @@ export function ReviewScreen() {
       <View className="flex-row items-center gap-3.5 py-1.5 pr-5 pl-4">
         <IconButton
           icon="chevron-left"
-          iconSize={7}
           accessibilityLabel={t('common:actions.back')}
           onPress={() => router.back()}
         />

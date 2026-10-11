@@ -8,8 +8,11 @@ export interface ChartPoint extends ChartInput {
   y: number;
 }
 
+/** Room above the highest and below the lowest value. */
+const PAD = 10;
+
 /** Maps time/value pairs (oldest first) onto a width × height box. */
-export function buildLineChart(data: ChartInput[], width: number, height: number, pad = 10) {
+export function buildLineChart(data: ChartInput[], width: number, height: number) {
   if (!data.length || width <= 0) return { points: [] as ChartPoint[], line: '', area: '' };
   const t0 = data[0].time;
   const t1 = data[data.length - 1].time;
@@ -22,7 +25,7 @@ export function buildLineChart(data: ChartInput[], width: number, height: number
     y:
       max === min
         ? height / 2
-        : height - pad - ((d.value - min) / (max - min)) * (height - 2 * pad),
+        : height - PAD - ((d.value - min) / (max - min)) * (height - 2 * PAD),
   }));
   const coords = points.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`);
   // A single session is drawn as a flat line across the chart.

@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { UserAvatar } from '@/shared/components/user-avatar';
+import { ProfileAvatar } from '@/shared/components/user-avatar';
+import type { Profile } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
@@ -9,7 +10,7 @@ import { Text } from '@/shared/ui/text';
 export interface SignOutSheetProps {
   visible: boolean;
   onClose: () => void;
-  name: string;
+  profile: Profile | null;
   email: string;
   /** Changes and photos not uploaded yet: signing out deletes them from this device. */
   unsynced: number;
@@ -20,16 +21,17 @@ export interface SignOutSheetProps {
 export function SignOutSheet({
   visible,
   onClose,
-  name,
+  profile,
   email,
   unsynced,
   onSignOut,
 }: SignOutSheetProps) {
   const { t } = useTranslation(['profile', 'common']);
+  const name = profile?.firstName;
   return (
     <Sheet visible={visible} onClose={onClose}>
       <View className="flex-row items-center gap-3.5 px-1 pt-3">
-        <UserAvatar size={52} className="border-0" />
+        <ProfileAvatar profile={profile} size={52} className="border-0" />
         <View className="min-w-0 flex-1 gap-0.5">
           <Text variant="bodyStrong" numberOfLines={2}>
             {name

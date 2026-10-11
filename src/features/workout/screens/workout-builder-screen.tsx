@@ -14,7 +14,7 @@ import {
 } from '@/features/training/components/exercise-menu-sheet';
 import { TemplateExerciseCard } from '@/features/training/components/template-exercise-card';
 import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
-import { estimateMinutes } from '@/shared/data/templates';
+import { estimateMinutes, exerciseItems } from '@/shared/data/templates';
 import { getActiveWorkoutId, startDraftWorkout } from '@/shared/data/workouts';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
@@ -47,11 +47,7 @@ export function WorkoutBuilderScreen() {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const drag = useSortableDrag(({ fromIndex, toIndex }) => move(fromIndex, toIndex));
 
-  const items = exercises.map((e) => ({
-    exerciseId: e.exerciseId,
-    sets: e.sets.length,
-    restSeconds: e.restSeconds ?? null,
-  }));
+  const items = exerciseItems(exercises);
   const empty = exercises.length === 0;
 
   const openPicker = (params: { mode: 'add' } | { mode: 'swap'; index: string }) =>
@@ -121,12 +117,7 @@ export function WorkoutBuilderScreen() {
               renderItem={({ item: e, index }) => (
                 <TemplateExerciseCard
                   exerciseId={e.exerciseId}
-                  sets={e.sets.map((set, k) => ({
-                    key: String(k),
-                    min: set.targetMin,
-                    max: set.targetMax,
-                    rir: set.rir,
-                  }))}
+                  sets={e.sets}
                   onMenu={drag.unlessDragging(() => setMenuFor(index))}
                   onPress={drag.unlessDragging(() => openSets(index))}
                 />

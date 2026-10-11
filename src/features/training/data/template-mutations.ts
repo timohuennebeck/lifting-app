@@ -1,6 +1,6 @@
 import { and, eq, inArray } from 'drizzle-orm';
 
-import { defaultSetDrafts, swapTargets } from '@/shared/data/exercises';
+import { newExerciseDraft, swapTargets } from '@/shared/data/exercises';
 import { newId, nowIso } from '@/shared/data/json';
 import { nextPosition } from '@/shared/data/positions';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
@@ -19,9 +19,6 @@ import {
   insertTemplateSets,
   type PlanSetDraft,
 } from '@/shared/data/templates';
-
-/** Sets of a freshly added exercise. */
-const NEW_EXERCISE_SETS = 3;
 
 async function touchTemplate(tx: Tx, templateId: string) {
   await tx.update(templates).set({ updated_at: nowIso() }).where(eq(templates.id, templateId));
@@ -157,10 +154,7 @@ export async function addTemplateExercise(userId: string, templateId: string, ex
       templateExercises.position,
       eq(templateExercises.template_id, templateId),
     );
-    await insertTemplateExercise(tx, userId, templateId, position, {
-      exerciseId,
-      sets: defaultSetDrafts(exerciseId, NEW_EXERCISE_SETS),
-    });
+    await insertTemplateExercise(tx, userId, templateId, position, newExerciseDraft(exerciseId));
     await touchTemplate(tx, templateId);
   });
 }

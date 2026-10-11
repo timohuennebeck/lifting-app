@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useResetOnOpen } from '@/shared/hooks/use-reset-on-open';
 import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
-import { MinusGlyph } from '@/shared/ui/minus-glyph';
+import { deleteIcon } from '@/shared/ui/minus-glyph';
 
 import { RenameGlyph } from './glyphs';
 
@@ -29,12 +29,7 @@ export function CollectionOptionsSheet({
   onDelete,
 }: CollectionOptionsSheetProps) {
   const { t } = useTranslation(['training', 'common']);
-  const [option, setOption] = useState<CollectionOption>('rename');
-  const [wasVisible, setWasVisible] = useState(visible);
-  if (visible !== wasVisible) {
-    setWasVisible(visible);
-    if (visible) setOption('rename');
-  }
+  const [option, setOption] = useResetOnOpen<CollectionOption>(visible, 'rename');
 
   return (
     <ChoiceSheet
@@ -59,7 +54,7 @@ export function CollectionOptionsSheet({
           title: t('collections.deleteKeep'),
           description: t('collections.deleteHint'),
           cta: t('common:actions.continue'),
-          renderIcon: (active) => <MinusGlyph color={active ? colors.bg : colors.fg} />,
+          renderIcon: deleteIcon,
         },
       ]}
     />

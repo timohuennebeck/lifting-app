@@ -136,16 +136,15 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
   }
   return (
     <View className="flex-1 items-center justify-center px-8 pt-6 pb-12">
+      {/* The gap between the cards fits the arrow drawn over the middle of the row. */}
       <View
-        className="flex-row items-center gap-2"
+        className="flex-row items-center gap-14"
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
       >
         <PlaceholderCard letter="A" lit tilt={-7} />
-        <View className="size-10 items-center justify-center rounded-full bg-accent">
-          <Icon name="arrow-right" size={16} color={colors.onAccent} />
-        </View>
         <PlaceholderCard letter="B" lit={false} tilt={7} />
+        <CompareArrow />
       </View>
       <Text variant="headline" className="mt-9 text-center">
         {t('empty.title')}

@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { formatDate } from '@/shared/lib/format';
@@ -35,7 +35,7 @@ function Photo({ source, label, date, after, focusX }: PhotoProps) {
         contentFit="cover"
         contentPosition={{ left: focusX, top: '30%' }}
         accessibilityLabel={label}
-        style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }}
+        style={StyleSheet.absoluteFill}
       />
       <View
         className={cn(

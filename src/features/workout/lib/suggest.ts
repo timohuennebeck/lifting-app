@@ -33,8 +33,8 @@ export function rowValues(
   exercise: WorkoutExercise,
   index: number,
   logged: Record<string, SetValues>,
-  typed?: TypedRow | null,
-  drafts: Record<string, Partial<SetValues>> = {},
+  typed: TypedRow | null,
+  drafts: Record<string, Partial<SetValues>>,
 ): SetValues {
   const loggedAt = (i: number) => {
     const set = exercise.sets[i];

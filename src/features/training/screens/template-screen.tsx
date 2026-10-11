@@ -9,6 +9,7 @@ import Sortable from 'react-native-sortables';
 import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
 import {
   estimateMinutes,
+  exerciseItems,
   type TemplateExerciseDetail,
   useTemplateDetail,
 } from '@/shared/data/templates';
@@ -57,11 +58,7 @@ export function TemplateScreen() {
   const menuShown = useLastDefined(menuFor);
 
   const exercises = template?.exercises ?? [];
-  const items = exercises.map((e) => ({
-    exerciseId: e.exerciseId,
-    sets: e.sets.length,
-    restSeconds: e.restSeconds,
-  }));
+  const items = exerciseItems(exercises);
   const minutes = estimateMinutes(items);
   const menuIndex = menuShown ? exercises.findIndex((e) => e.id === menuShown.id) : -1;
 
@@ -153,12 +150,7 @@ export function TemplateScreen() {
               renderItem={({ item: exercise }) => (
                 <TemplateExerciseCard
                   exerciseId={exercise.exerciseId}
-                  sets={exercise.sets.map((set) => ({
-                    key: set.id,
-                    min: set.target_min,
-                    max: set.target_max,
-                    rir: set.rir,
-                  }))}
+                  sets={exercise.sets}
                   onMenu={drag.unlessDragging(() => setMenuFor(exercise))}
                   onPress={drag.unlessDragging(() =>
                     router.push(`/template/${template.id}/sets/${exercise.id}`),

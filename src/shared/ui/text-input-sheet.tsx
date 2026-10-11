@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 
+import { useResetOnOpen } from '@/shared/hooks/use-reset-on-open';
+
 import { Button } from './button';
 import { Sheet } from './sheet';
 import { TextField } from './text-field';
@@ -28,14 +30,8 @@ export function TextInputSheet({
   ctaLabel,
   onSubmit,
 }: TextInputSheetProps) {
-  const [value, setValue] = useState(initialValue);
+  const [value, setValue] = useResetOnOpen(visible, initialValue);
   const [busy, setBusy] = useState(false);
-  const [wasVisible, setWasVisible] = useState(visible);
-  // Reset the draft whenever the sheet is (re)opened.
-  if (visible !== wasVisible) {
-    setWasVisible(visible);
-    if (visible) setValue(initialValue);
-  }
   const valid = value.trim().length > 0;
 
   const submit = async () => {

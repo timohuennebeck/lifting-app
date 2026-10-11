@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useResetOnOpen } from '@/shared/hooks/use-reset-on-open';
 import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
-import { MinusGlyph } from '@/shared/ui/minus-glyph';
+import { deleteIcon } from '@/shared/ui/minus-glyph';
 
 import { RenameGlyph } from './glyphs';
 
@@ -30,12 +30,7 @@ export function TemplateOptionsSheet({
   onDelete,
 }: TemplateOptionsSheetProps) {
   const { t } = useTranslation(['training', 'common']);
-  const [option, setOption] = useState<TemplateOption>('rename');
-  const [wasVisible, setWasVisible] = useState(visible);
-  if (visible !== wasVisible) {
-    setWasVisible(visible);
-    if (visible) setOption('rename');
-  }
+  const [option, setOption] = useResetOnOpen<TemplateOption>(visible, 'rename');
 
   return (
     <ChoiceSheet
@@ -60,7 +55,7 @@ export function TemplateOptionsSheet({
           title: t('options.delete'),
           description: t('options.deleteHint', { name }),
           cta: t('common:actions.delete'),
-          renderIcon: (active) => <MinusGlyph color={active ? colors.bg : colors.fg} />,
+          renderIcon: deleteIcon,
         },
       ]}
     />

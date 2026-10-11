@@ -1,9 +1,6 @@
-import { defaultSetDrafts, swapTargets } from '@/shared/data/exercises';
+import { newExerciseDraft, swapExerciseDraft } from '@/shared/data/exercises';
 
 import type { ImportedDay, ImportedExercise, ImportedPlan } from './plan-import-service';
-
-/** Sets an exercise added during the check starts with. */
-const NEW_SETS = 3;
 
 /** Drops the import's doubts about an exercise once the user has settled it. */
 export const settle = ({
@@ -29,24 +26,9 @@ export const editExerciseAt = (
 /** Appends exercises with default target sets. */
 export const addExercises = (day: ImportedDay, exerciseIds: string[]): ImportedDay => ({
   ...day,
-  exercises: [
-    ...day.exercises,
-    ...exerciseIds.map((exerciseId) => ({
-      exerciseId,
-      sets: defaultSetDrafts(exerciseId, NEW_SETS),
-      restSeconds: null,
-    })),
-  ],
+  exercises: [...day.exercises, ...exerciseIds.map((id) => newExerciseDraft(id))],
 });
 
 /** Replaces exercise `at`; its sets get new defaults when the measures differ. */
 export const swapExercise = (day: ImportedDay, at: number, exerciseId: string): ImportedDay =>
-  editExerciseAt(day, at, (e) =>
-    settle({
-      ...e,
-      exerciseId,
-      sets: swapTargets(e.exerciseId, exerciseId)
-        ? defaultSetDrafts(exerciseId, e.sets.length)
-        : e.sets,
-    }),
-  );
+  editExerciseAt(day, at, (e) => settle(swapExerciseDraft(e, exerciseId)));

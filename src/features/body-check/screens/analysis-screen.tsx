@@ -5,6 +5,7 @@ import { Alert, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
+import { singleFlight } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
 import { useUserId } from '@/shared/stores/session-store';
@@ -17,32 +18,15 @@ import { AnalysisTile } from '../components/analysis-tile';
 import { photoTileHeight } from '../components/photo-tile';
 import { GroupMarquee } from '../components/group-marquee';
 import { useBodyChecks } from '../data/body-checks';
-import {
-  AnalysisError,
-  type AnalysisOutcome,
-  analyzeBodyCheck,
-  type BodyCheckResult,
-} from '../lib/body-check-service';
-import { GROUPS, POSES, type BodyPose } from '../lib/poses';
+import { AnalysisError, analyzeBodyCheck, type BodyCheckResult } from '../lib/body-check-service';
+import { GROUPS, POSES } from '../lib/poses';
 import { useCloseCheck } from '../hooks/use-close-check';
-import { type Shot, useBodyCheckStore } from '../stores/body-check-store';
+import { hasAllShots, useBodyCheckStore } from '../stores/body-check-store';
 
 /** Roughly how long the analysis takes; the animation waits at 99 % if it takes longer. */
 const DURATION_MS = 14000;
 /** Height of everything but the tile row (header, score, chips, CTA). */
 const CHROME_HEIGHT = 330;
-
-/** Running analyses by check, so a remounted screen picks up the same one instead of paying twice. */
-const running = new Map<string, Promise<AnalysisOutcome>>();
-
-function analysisOf(checkId: string, userId: string, photos: Record<BodyPose, Shot>) {
-  let analysis = running.get(checkId);
-  if (!analysis) {
-    analysis = analyzeBodyCheck(checkId, userId, photos).finally(() => running.delete(checkId));
-    running.set(checkId, analysis);
-  }
-  return analysis;
-}
 
 /**
  * 08c-H: uploads the three photos and has them analysed behind a reveal animation, then offers
@@ -60,14 +44,15 @@ export function AnalysisScreen() {
   const { data: checks } = useBodyChecks();
   const [result, setResult] = useState<BodyCheckResult | null>(null);
   const progress = useTimedProgress(DURATION_MS);
-  const complete = POSES.every((p) => shots[p]);
+  const complete = hasAllShots(shots);
 
   const analyze = useEffectEvent(() => {
-    if (!checkId || !userId || !complete) return;
+    if (!checkId || !userId || !hasAllShots(shots)) return;
     // Marked first: whatever got uploaded is removed again if the check is discarded.
     useBodyCheckStore.getState().setUploaded();
     let active = true;
-    analysisOf(checkId, userId, shots as Record<BodyPose, Shot>)
+    // One run per check: a remounted screen picks up the same one instead of paying twice.
+    singleFlight(`body-check-analysis:${checkId}`, () => analyzeBodyCheck(checkId, userId, shots))
       .then((outcome) => {
         if (!active) return;
         if (outcome.status === 'retake') {

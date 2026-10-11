@@ -6,13 +6,7 @@ import { getExercise } from './exercises';
 import { newId, nowIso } from './json';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
-import {
-  collections,
-  templateExercises,
-  templates,
-  templateSets,
-  type TemplateSetRecord,
-} from './powersync/schema';
+import { collections, templateExercises, templates, templateSets } from './powersync/schema';
 import { queryKeys } from './query-keys';
 import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
@@ -136,6 +130,16 @@ export function restSecondsFor(exerciseId: string, override: number | null | und
   return override ?? getExercise(exerciseId)?.restSeconds ?? DEFAULT_REST;
 }
 
+/** Exercises as `estimateMinutes` and the muscle shares take them: set count and rest. */
+export const exerciseItems = (
+  exercises: { exerciseId: string; sets: readonly unknown[]; restSeconds?: number | null }[],
+) =>
+  exercises.map((e) => ({
+    exerciseId: e.exerciseId,
+    sets: e.sets.length,
+    restSeconds: e.restSeconds ?? null,
+  }));
+
 /** Rough session length in minutes from sets and rest times. */
 export function estimateMinutes(
   items: { exerciseId: string; sets: number; restSeconds?: number | null }[],
@@ -247,7 +251,9 @@ export function useCollections() {
   });
 }
 
-export type TemplateSetDetail = Pick<TemplateSetRecord, 'id' | 'target_min' | 'target_max' | 'rir'>;
+export interface TemplateSetDetail extends PlanSetDraft {
+  id: string;
+}
 
 export interface TemplateExerciseDetail {
   id: string;
@@ -294,7 +300,12 @@ function toTemplateDetail([t]: RowOf<typeof templateDetailQuery>[]): TemplateDet
       id: e.id,
       exerciseId: e.exercise_id,
       restSeconds: e.rest_seconds,
-      sets: e.sets,
+      sets: e.sets.map((set) => ({
+        id: set.id,
+        targetMin: set.target_min,
+        targetMax: set.target_max,
+        rir: set.rir,
+      })),
     })),
   };
 }

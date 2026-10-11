@@ -49,13 +49,12 @@ async function clientSecret(config: AppleConfig, now = Date.now()) {
   return `${header}.${claims}.${encodeBase64Url(new Uint8Array(signature))}`;
 }
 
-async function post(path: string, params: Record<string, string>) {
-  return await fetch(`${APPLE}/auth/${path}`, {
+const post = (path: string, params: Record<string, string>) =>
+  fetch(`${APPLE}/auth/${path}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams(params),
   });
-}
 
 /**
  * Exchanges a fresh authorization code for the user's tokens, then revokes them, which ends the

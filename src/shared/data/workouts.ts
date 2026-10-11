@@ -21,9 +21,9 @@ import { getOrInsert } from '@/shared/lib/map';
 
 import {
   bodyweightExerciseIds,
-  defaultTargets,
   exerciseIdsWithout,
   isBodyweight,
+  newExerciseDraft,
   type SetTargets,
 } from './exercises';
 import { newId, nowIso } from './json';
@@ -110,22 +110,7 @@ export async function startDraftWorkout(
   return drizzle.transaction(async (tx) => {
     const workoutId = await insertWorkout(tx, userId, name, null);
     for (const [position, exercise] of exercises.entries()) {
-      const workoutExerciseId = newId();
-      await tx.insert(workoutExercises).values({
-        id: workoutExerciseId,
-        user_id: userId,
-        workout_id: workoutId,
-        exercise_id: exercise.exerciseId,
-        position,
-        rest_seconds: exercise.restSeconds ?? null,
-      });
-      for (const [k, set] of exercise.sets.entries()) {
-        await insertWorkoutSet(tx, userId, workoutExerciseId, k, {
-          min: set.targetMin,
-          max: set.targetMax,
-          rir: set.rir,
-        });
-      }
+      await insertWorkoutExercise(tx, userId, workoutId, position, exercise);
     }
     return workoutId;
   });
@@ -202,24 +187,43 @@ export async function insertWorkoutSet(
   });
 }
 
-/** Sets of an exercise added to a running workout. */
-const NEW_EXERCISE_SETS = 3;
-
-/** Adds an exercise with empty sets at its default targets to a running workout. */
-export async function addWorkoutExercise(userId: string, workoutId: string, exerciseId: string) {
-  const target = defaultTargets(exerciseId);
-  await drizzle.transaction(async (tx) => {
-    const id = newId();
-    await tx.insert(workoutExercises).values({
-      id,
-      user_id: userId,
-      workout_id: workoutId,
-      exercise_id: exerciseId,
-      position: nextPosition(workoutExercises.position, eq(workoutExercises.workout_id, workoutId)),
-      rest_seconds: null,
-    });
-    for (let i = 0; i < NEW_EXERCISE_SETS; i++) await insertWorkoutSet(tx, userId, id, i, target);
+/** Adds an exercise with one empty set per target; `position` may be a `nextPosition` subquery. */
+async function insertWorkoutExercise(
+  tx: Tx,
+  userId: string,
+  workoutId: string,
+  position: number | SQL<number>,
+  exercise: PlanExerciseDraft,
+) {
+  const id = newId();
+  await tx.insert(workoutExercises).values({
+    id,
+    user_id: userId,
+    workout_id: workoutId,
+    exercise_id: exercise.exerciseId,
+    position,
+    rest_seconds: exercise.restSeconds ?? null,
   });
+  for (const [k, set] of exercise.sets.entries()) {
+    await insertWorkoutSet(tx, userId, id, k, {
+      min: set.targetMin,
+      max: set.targetMax,
+      rir: set.rir,
+    });
+  }
+}
+
+/** Appends an exercise with empty sets at its default targets to a running workout. */
+export async function addWorkoutExercise(userId: string, workoutId: string, exerciseId: string) {
+  await drizzle.transaction((tx) =>
+    insertWorkoutExercise(
+      tx,
+      userId,
+      workoutId,
+      nextPosition(workoutExercises.position, eq(workoutExercises.workout_id, workoutId)),
+      newExerciseDraft(exerciseId),
+    ),
+  );
 }
 
 /** Best set score for an exercise across all completed sets, excluding one set. */

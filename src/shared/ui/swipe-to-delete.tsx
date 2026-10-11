@@ -4,6 +4,7 @@ import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 import { colors } from '@/shared/lib/theme';
 
+import { MinusGlyph } from './minus-glyph';
 import { PressableScale } from './pressable-scale';
 
 export interface SwipeToDeleteProps {
@@ -36,7 +37,7 @@ export function SwipeToDelete({ children, onDelete, label }: SwipeToDeleteProps)
           className="ml-2.5 w-14 items-center justify-center"
         >
           <View className="size-10 items-center justify-center rounded-full bg-danger-bg">
-            <View className="h-[2.5px] w-3.5 rounded-xs" style={{ backgroundColor: colors.red }} />
+            <MinusGlyph color={colors.red} width={14} />
           </View>
         </PressableScale>
       )}

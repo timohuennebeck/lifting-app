@@ -42,10 +42,8 @@ export interface MuscleMapProps {
   isSelectable?: (part: BodyPartId) => boolean;
   /** Highlight color; defaults to the accent (e.g. pass red for pain). */
   accent?: string;
-  /** Crops to a region, e.g. MUSCLE_CARDS[id].viewBox. */
+  /** Crops to a region (MUSCLE_CARDS[id].viewBox) that covers the box, like CSS object-fit. */
   viewBox?: string;
-  /** 'cover' fills the box and crops, like CSS object-fit. */
-  fit?: 'contain' | 'cover';
   width?: number | `${number}%`;
   height?: number | `${number}%`;
 }
@@ -59,14 +57,13 @@ export const MuscleMap = memo(function MuscleMap({
   isSelectable,
   viewBox,
   accent: accentOverride,
-  fit = 'contain',
   width = '100%',
   height = '100%',
 }: MuscleMapProps) {
   const accent = accentOverride ?? colors.accent;
   const art = BODY[view];
-  // 'cover' never shows more than the viewBox, so the paths outside it are left out.
-  const paths = viewBox && fit === 'cover' ? pathsIn(view, viewBox) : art.paths;
+  // A crop never shows more than its viewBox, so the paths outside it are left out.
+  const paths = viewBox ? pathsIn(view, viewBox) : art.paths;
   const active = new Set(selected);
   const helping = new Set(secondary);
 
@@ -75,7 +72,7 @@ export const MuscleMap = memo(function MuscleMap({
       width={width}
       height={height}
       viewBox={viewBox ?? art.viewBox}
-      preserveAspectRatio={fit === 'cover' ? 'xMidYMid slice' : 'xMidYMid meet'}
+      preserveAspectRatio={viewBox ? 'xMidYMid slice' : 'xMidYMid meet'}
     >
       {paths.map((p, i) => {
         const muscle = p.muscle;
@@ -115,13 +112,5 @@ export interface MuscleCropProps {
 /** The body map cropped to one muscle, covering its box (chips, circles, tiles). */
 export function MuscleCrop({ muscle, selected, accent }: MuscleCropProps) {
   const card = MUSCLE_CARDS[muscle];
-  return (
-    <MuscleMap
-      view={card.view}
-      viewBox={card.viewBox}
-      selected={selected}
-      accent={accent}
-      fit="cover"
-    />
-  );
+  return <MuscleMap view={card.view} viewBox={card.viewBox} selected={selected} accent={accent} />;
 }

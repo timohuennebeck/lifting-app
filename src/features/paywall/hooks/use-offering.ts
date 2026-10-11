@@ -18,10 +18,10 @@ export function useOffering() {
     return p && offering ? formatPrice(p.price, offering.currency) : null;
   };
   return {
-    ...query,
     offering,
     plan,
     priceOf,
+    refetch: query.refetch,
     /** Nothing to buy from: loading failed (a failed background refresh keeps the cache). */
     failed: !offering && query.isError,
     /** No offering yet: it is loading, or loading again after a failure. */

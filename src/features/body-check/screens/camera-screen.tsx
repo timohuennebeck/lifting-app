@@ -30,7 +30,7 @@ import { useCloseCheck } from '../hooks/use-close-check';
 import { assessPhoto } from '../lib/body-check-service';
 import { deleteFile, storeShot } from '../lib/photo-files';
 import { POSES, type TimerSeconds } from '../lib/poses';
-import { startBodyCheck, useBodyCheckStore } from '../stores/body-check-store';
+import { hasAllShots, startBodyCheck, useBodyCheckStore } from '../stores/body-check-store';
 
 /** Design offsets (390×844 frame) of the framing corners above the controls. */
 const FRAME_TOP = 74;
@@ -141,7 +141,7 @@ export function CameraScreen() {
     if (!camera.current || !store.checkId || busy) return;
     const target = store.pose;
     const id = store.checkId;
-    const wasComplete = POSES.every((p) => store.shots[p]);
+    const wasComplete = hasAllShots(store.shots);
     setBusy(true);
     haptics.heavy();
     flash.fire();
@@ -155,7 +155,7 @@ export function CameraScreen() {
       if (issue) haptics.warning();
       current.addShot(target, { ...stored, issue });
       const next = useBodyCheckStore.getState();
-      const complete = POSES.every((p) => next.shots[p]);
+      const complete = hasAllShots(next.shots);
       const openReview = current.retaking || (complete && !wasComplete);
       if (openReview && focusedRef.current) router.push('/body-check/review');
       // Auto: a pause to turn to the next missing pose (already selected), then its countdown.
@@ -306,7 +306,6 @@ export function CameraScreen() {
             <View className="flex-row items-center justify-between">
               <IconButton
                 icon="chevron-left"
-                iconSize={7}
                 accessibilityLabel={t('common:actions.close')}
                 onPress={close}
               />

@@ -6,23 +6,17 @@ import { View } from 'react-native';
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { splitMuscles } from '@/features/exercises/lib/muscle-groups';
 import { exerciseName, isTimed } from '@/shared/data/exercises';
+import type { PlanSetDraft } from '@/shared/data/templates';
 import { formatTargetLabel } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
 
-/** One target set of the card: rep (or second) range and RIR. */
-export interface OverviewSet {
-  key: string;
-  min: number | null;
-  max: number | null;
-  rir: number | null;
-}
-
 export interface TemplateExerciseCardProps {
   exerciseId: string;
-  sets: OverviewSet[];
+  /** Target sets: rep (or second) range and RIR. */
+  sets: PlanSetDraft[];
   onMenu: () => void;
   onPress: () => void;
   /** Amber dot after the name: the plan import isn't sure about this match. */
@@ -81,14 +75,14 @@ export function TemplateExerciseCard({
         </View>
         <View className="gap-1.5">
           {sets.map((set, i) => (
-            <View key={set.key} className="flex-row items-center gap-2.5">
+            <View key={i} className="flex-row items-center gap-2.5">
               <View className="size-6 items-center justify-center rounded-full bg-elevated">
                 <Text variant="caption" className="text-xs">
                   {i + 1}
                 </Text>
               </View>
               <Text variant="body" className="flex-1 text-sm text-fg-soft">
-                {formatTargetLabel(set.min, set.max, timed) ?? '–'}
+                {formatTargetLabel(set.targetMin, set.targetMax, timed) ?? '–'}
               </Text>
               {set.rir != null ? <RirBadge rir={set.rir} /> : null}
             </View>

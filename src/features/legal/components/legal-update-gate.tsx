@@ -10,7 +10,7 @@ import { useActiveWorkout } from '@/shared/data/workouts';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { cn } from '@/shared/lib/cn';
-import { formatDate } from '@/shared/lib/format';
+import { formatLongDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -27,8 +27,6 @@ import {
 } from '../data/legal-acceptances';
 import type { LegalDocument } from '../data/legal-documents';
 import { diffLegalDocuments, type LegalChange, legalChanges } from '../lib/legal-diff';
-
-const LONG_DATE = { day: 'numeric', month: 'long', year: 'numeric' } as const;
 
 const CHANGE_ICON: Record<LegalChange['kind'], { icon: IconName; box: string; color: string }> = {
   added: { icon: 'plus', box: 'bg-accent', color: colors.onAccent },
@@ -200,7 +198,7 @@ function DocumentLink({ document }: { document: LegalDocument }) {
         <Text tone="subtle" className="text-sm">
           {t('legal.meta', {
             version: document.version,
-            date: formatDate(new Date(document.effectiveAt), LONG_DATE),
+            date: formatLongDate(new Date(document.effectiveAt)),
           })}
         </Text>
       </View>

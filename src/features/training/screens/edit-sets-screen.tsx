@@ -24,12 +24,7 @@ export function EditSetsScreen() {
         <SetTargetsForm
           key={exercise.id}
           exerciseId={exercise.exerciseId}
-          initialSets={exercise.sets.map((s) => ({
-            key: s.id,
-            targetMin: s.target_min,
-            targetMax: s.target_max,
-            rir: s.rir,
-          }))}
+          initialSets={exercise.sets.map(({ id, ...set }) => ({ ...set, key: id }))}
           initialRest={exercise.restSeconds}
           onSave={async (sets, rest) => {
             await saveTemplateSets(requireUserId(), exercise.id, sets, rest);

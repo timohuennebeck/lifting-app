@@ -43,7 +43,6 @@ export function ExerciseLayout() {
     <View className="absolute left-4" style={{ top: insets.top + 16 }}>
       <IconButton
         icon="chevron-left"
-        iconSize={7}
         accessibilityLabel={t('common:actions.back')}
         onPress={() => router.back()}
       />

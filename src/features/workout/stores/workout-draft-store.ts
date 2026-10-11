@@ -1,11 +1,8 @@
 import { create } from 'zustand';
 
-import { defaultSetDrafts, swapTargets } from '@/shared/data/exercises';
+import { newExerciseDraft, swapExerciseDraft } from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
 import type { PlanExerciseDraft, PlanSetDraft } from '@/shared/data/templates';
-
-/** Sets an exercise added to the draft starts with. */
-const NEW_SETS = 3;
 
 /** A draft exercise; `key` stays with it when it is dragged to another place. */
 export type DraftExercise = PlanExerciseDraft & { key: string };
@@ -41,22 +38,10 @@ export const useWorkoutDraftStore = create<WorkoutDraftState>()((set) => {
       set((s) => ({
         exercises: [
           ...s.exercises,
-          ...exerciseIds.map((exerciseId) => ({
-            key: newId(),
-            exerciseId,
-            sets: defaultSetDrafts(exerciseId, NEW_SETS),
-            restSeconds: null,
-          })),
+          ...exerciseIds.map((id) => ({ ...newExerciseDraft(id), key: newId() })),
         ],
       })),
-    swap: (at, exerciseId) =>
-      editAt(at, (e) => ({
-        ...e,
-        exerciseId,
-        sets: swapTargets(e.exerciseId, exerciseId)
-          ? defaultSetDrafts(exerciseId, e.sets.length)
-          : e.sets,
-      })),
+    swap: (at, exerciseId) => editAt(at, (e) => swapExerciseDraft(e, exerciseId)),
     remove: (at) => set((s) => ({ exercises: s.exercises.filter((_, i) => i !== at) })),
     move: (at, to) =>
       set((s) => {

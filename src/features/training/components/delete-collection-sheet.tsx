@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { haptics } from '@/shared/lib/haptics';
-import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
-import { MinusGlyph } from '@/shared/ui/minus-glyph';
+import { deleteIcon } from '@/shared/ui/minus-glyph';
 
 import { type DeleteCollectionMode, deleteCollection } from '../data/template-mutations';
 
@@ -40,7 +39,6 @@ export function DeleteCollectionSheet({ collection, onClose }: DeleteCollectionS
     }
   };
 
-  const icon = (active: boolean) => <MinusGlyph color={active ? colors.bg : colors.fg} />;
   return (
     <ChoiceSheet
       visible={!!collection}
@@ -58,7 +56,7 @@ export function DeleteCollectionSheet({ collection, onClose }: DeleteCollectionS
           title: t('collections.deleteKeep'),
           description: t('collections.deleteKeepHint'),
           cta: t('common:actions.delete'),
-          renderIcon: icon,
+          renderIcon: deleteIcon,
         },
         {
           value: 'withTemplates',
@@ -66,7 +64,7 @@ export function DeleteCollectionSheet({ collection, onClose }: DeleteCollectionS
           title: t('collections.deleteAll'),
           description: t('collections.deleteAllHint'),
           cta: t('common:actions.delete'),
-          renderIcon: icon,
+          renderIcon: deleteIcon,
         },
       ]}
     />

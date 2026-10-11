@@ -168,7 +168,7 @@ export function SettingsScreen() {
       <SignOutSheet
         visible={sheet === 'signOut'}
         onClose={close}
-        name={profile?.firstName ?? ''}
+        profile={profile}
         email={email}
         unsynced={unsynced}
         onSignOut={() => {

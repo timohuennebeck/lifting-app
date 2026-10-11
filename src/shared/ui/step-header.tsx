@@ -23,7 +23,6 @@ export function StepHeader({ step, total, hideBack }: StepHeaderProps) {
       ) : (
         <IconButton
           icon="chevron-left"
-          iconSize={7}
           accessibilityLabel={t('actions.back')}
           onPress={() => router.back()}
         />

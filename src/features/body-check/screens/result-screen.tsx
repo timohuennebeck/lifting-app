@@ -25,8 +25,8 @@ import { useBodyCheckPhotos, useBodyChecks } from '../data/body-checks';
 import { useCloseCheck } from '../hooks/use-close-check';
 import { bodyFatRange, bodyFatShare, bodyFatTier, scoreTier } from '../lib/metrics';
 import { exitBodyCheck } from '../lib/navigation';
-import { POSES, type BodyPose } from '../lib/poses';
-import { type Shot, useBodyCheckStore } from '../stores/body-check-store';
+import { POSES } from '../lib/poses';
+import { hasAllShots, useBodyCheckStore } from '../stores/body-check-store';
 
 /** How long "Saved" shows before the flow closes. */
 const SAVED_PAUSE_MS = 700;
@@ -73,7 +73,6 @@ export function ResultScreen() {
         <View className="px-4 py-1.5">
           <IconButton
             icon="chevron-left"
-            iconSize={7}
             accessibilityLabel={t('common:actions.close')}
             onPress={exitBodyCheck}
           />
@@ -112,16 +111,10 @@ export function ResultScreen() {
   }
 
   async function save() {
-    const complete = POSES.every((p) => shots[p]);
-    if (!draft || !userId || !complete || saving) return;
+    if (!draft || !userId || !hasAllShots(shots) || saving) return;
     setSaving(true);
     try {
-      await saveBodyCheck({
-        checkId: id,
-        userId,
-        result: draft,
-        photos: shots as Record<BodyPose, Shot>,
-      });
+      await saveBodyCheck({ checkId: id, userId, result: draft, photos: shots });
       haptics.success();
       setJustSaved(true);
     } catch (error) {
@@ -138,7 +131,6 @@ export function ResultScreen() {
       <View className="flex-row items-center justify-between px-4 py-1.5">
         <IconButton
           icon="chevron-left"
-          iconSize={7}
           accessibilityLabel={t('common:actions.close')}
           onPress={close}
         />

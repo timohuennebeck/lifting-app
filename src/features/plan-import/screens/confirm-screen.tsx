@@ -14,7 +14,7 @@ import {
 import { PlanBar } from '@/features/training/components/plan-bar';
 import { TemplateExerciseCard } from '@/features/training/components/template-exercise-card';
 import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
-import { estimateMinutes } from '@/shared/data/templates';
+import { estimateMinutes, exerciseItems } from '@/shared/data/templates';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
@@ -60,11 +60,7 @@ export function ConfirmScreen() {
   const day = plan.days[index];
   const exercises = day?.exercises ?? [];
   const pending = pendingReviews(plan);
-  const items = exercises.map((e) => ({
-    exerciseId: e.exerciseId,
-    sets: e.sets.length,
-    restSeconds: e.restSeconds ?? null,
-  }));
+  const items = exerciseItems(exercises);
   const weekdays = t('common:weekdays.long', { returnObjects: true });
   const empty = exercises.length === 0;
 
@@ -183,12 +179,7 @@ export function ConfirmScreen() {
                   <TemplateExerciseCard
                     key={`${e.exerciseId}-${i}`}
                     exerciseId={e.exerciseId}
-                    sets={e.sets.map((set, k) => ({
-                      key: String(k),
-                      min: set.targetMin,
-                      max: set.targetMax,
-                      rir: set.rir,
-                    }))}
+                    sets={e.sets}
                     review={!!e.raw}
                     onMenu={() => setMenuFor(i)}
                     onPress={() =>

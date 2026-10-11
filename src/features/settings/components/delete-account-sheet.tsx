@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
-import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
-import { MinusGlyph } from '@/shared/ui/minus-glyph';
+import { deleteIcon } from '@/shared/ui/minus-glyph';
 
 export interface DeleteAccountSheetProps {
   visible: boolean;
@@ -40,7 +39,7 @@ export function DeleteAccountSheet({
           title: t('settings.deleteConfirm.option'),
           description: t('settings.deleteConfirm.body'),
           cta: t('settings.deleteAccount'),
-          renderIcon: (active) => <MinusGlyph color={active ? colors.bg : colors.fg} />,
+          renderIcon: deleteIcon,
         },
       ]}
     />

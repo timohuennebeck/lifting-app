@@ -41,13 +41,9 @@ export const formatWeightValue = (kg: number, units: UnitSystem) =>
 export const formatWeight = (kg: number, units: UnitSystem) =>
   `${formatWeightValue(kg, units)} ${weightUnit(units)}`;
 
-/** A volume total (weight × reps) as a whole number in the user's unit, without the label. */
-const formatVolumeValue = (kg: number, units: UnitSystem) =>
-  formatNumber(units === 'imperial' ? kgToLb(kg) : kg, 0);
-
-/** A volume total in the user's unit, e.g. "4,250 kg" or "9,370 lb". */
+/** A volume total (weight × reps), whole, in the user's unit: "4,250 kg" or "9,370 lb". */
 export const formatVolume = (kg: number, units: UnitSystem) =>
-  `${formatVolumeValue(kg, units)} ${weightUnit(units)}`;
+  `${formatNumber(units === 'imperial' ? kgToLb(kg) : kg, 0)} ${weightUnit(units)}`;
 
 /** What a set holds; measures the exercise doesn't use are null. */
 export interface SetValues {

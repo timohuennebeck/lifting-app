@@ -1,10 +1,10 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useResetOnOpen } from '@/shared/hooks/use-reset-on-open';
 import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
 import { Icon } from '@/shared/ui/icon';
-import { MinusGlyph } from '@/shared/ui/minus-glyph';
+import { deleteIcon } from '@/shared/ui/minus-glyph';
 
 import { useWorkoutActions } from '../hooks/use-workout-actions';
 
@@ -35,12 +35,7 @@ export function WorkoutMenuSheet({
   const { finish, abandon, finishing } = useWorkoutActions(workoutId);
   const canFinish = doneSets > 0;
   const initial: MenuOption = canFinish ? 'finish' : 'discard';
-  const [option, setOption] = useState<MenuOption>(initial);
-  const [wasVisible, setWasVisible] = useState(visible);
-  if (visible !== wasVisible) {
-    setWasVisible(visible);
-    if (visible) setOption(initial);
-  }
+  const [option, setOption] = useResetOnOpen(visible, initial);
 
   return (
     <ChoiceSheet
@@ -74,7 +69,7 @@ export function WorkoutMenuSheet({
           title: t('menu.discard'),
           description: t('menu.discardDescription'),
           cta: t('menu.discard'),
-          renderIcon: (active) => <MinusGlyph color={active ? colors.bg : colors.fg} />,
+          renderIcon: deleteIcon,
         },
       ]}
     />

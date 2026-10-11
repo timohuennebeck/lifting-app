@@ -283,7 +283,6 @@ export const drizzleSchema = {
 export const AppSchema = new DrizzleAppSchema(drizzleSchema);
 
 export type ProfileRecord = typeof profiles.$inferSelect;
-export type TemplateSetRecord = typeof templateSets.$inferSelect;
 export type BodyCheckRecord = typeof bodyChecks.$inferSelect;
 export type TicketRecord = typeof tickets.$inferSelect;
 export type TicketMessageRecord = typeof ticketMessages.$inferSelect;
