@@ -111,13 +111,13 @@ Die App verkleinert die Fotos auf höchstens 1080 Pixel Breite und speichert sie
 
 **Auswertung durch ein KI-Modell von OpenAI:** Die Werte deines Checks ermittelt ein KI-Modell von OpenAI. Dafür übermittelt unser Server an OpenAI:
 
-- deine drei Fotos
+- die drei Fotos dieses Checks und, falls vorhanden, die Fotos deines vorherigen Checks, damit das Modell Veränderungen direkt vergleichen kann
 - Geschlecht, Alter, Größe, Gewicht und Trainingserfahrung aus deinem Profil
 - die Werte deines vorherigen Checks, damit die Werte von Check zu Check vergleichbar bleiben
 
 Deinen Namen, deine E-Mail-Adresse und deine Konto-ID übermitteln wir nicht. OpenAI verarbeitet die Daten in den USA (Abschnitt 8). Wir haben eingestellt, dass OpenAI die Anfrage nicht für einen späteren Abruf speichert. Nach eigenen Angaben nutzt OpenAI Daten aus seiner API nicht zum Training seiner Modelle und bewahrt sie bis zu 30 Tage auf, um Missbrauch zu erkennen. [[PLATZHALTER: Aufbewahrungsdauer und Ausschluss vom Training laut aktuellem Vertrag mit OpenAI bestätigen]]
 
-Das Modell prüft zuerst, ob die Fotos auswertbar sind, zum Beispiel ob sie hell genug sind und der ganze Körper zu sehen ist. Ist ein Foto nicht auswertbar, bittet dich die App, es neu aufzunehmen. Sonst liefert das Modell Werte für sechs Muskelgruppen (Schultern, Brust, Arme, Rücken, Bauch, Beine), einen geschätzten Körperfettanteil sowie Werte für Proportionen und Definition. Daraus berechnet unser Server den Gesamtwert. Diese Werte speichern wir zu deinem Check.
+Das Modell prüft zuerst, ob die Fotos auswertbar sind, zum Beispiel ob sie hell genug sind und dein Körper mindestens vom Kopf bis zu den Knien zu sehen ist. Ist ein Foto nicht auswertbar, bittet dich die App, es neu aufzunehmen. Sonst liefert das Modell Werte für sechs Muskelgruppen (Schultern, Brust, Arme, Rücken, Bauch, Beine), einen geschätzten Körperfettanteil sowie Werte für Proportionen und Definition. Daraus berechnet unser Server den Gesamtwert. Diese Werte speichern wir zu deinem Check.
 
 Jede Auswertung protokollieren wir mit Zeitpunkt und Ergebnis. So begrenzen wir die Zahl der Auswertungen pro Tag und stellen sicher, dass gespeicherte Werte aus einer Auswertung stammen. Das Protokoll löschen wir mit deinem Konto.
 

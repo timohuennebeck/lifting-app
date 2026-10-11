@@ -10,7 +10,9 @@ import {
   type AnalysisProfile,
   contextText,
   INSTRUCTIONS,
+  modelInput,
   type ModelOutput,
+  type Photos,
   POSES,
   type PreviousCheck,
   readResponse,
@@ -49,14 +51,15 @@ async function photoDataUrl(path: string) {
   return `data:image/jpeg;base64,${encodeBase64(new Uint8Array(await data.arrayBuffer()))}`;
 }
 
-async function askModel(context: string, photos: string[]) {
-  const content = [
-    { type: 'input_text', text: context },
-    ...POSES.flatMap((pose, i) => [
-      { type: 'input_text', text: `${pose} photo:` },
-      { type: 'input_image', image_url: photos[i], detail: 'high' },
-    ]),
-  ];
+/** A check's photos that are in storage, as data URLs. */
+async function checkPhotos(userId: string, checkId: string): Promise<Partial<Photos>> {
+  const urls = await Promise.all(
+    POSES.map((pose) => photoDataUrl(`${userId}/${checkId}/${pose}.jpg`)),
+  );
+  return Object.fromEntries(POSES.flatMap((pose, i) => (urls[i] ? [[pose, urls[i]]] : [])));
+}
+
+async function askModel(content: ReturnType<typeof modelInput>) {
   const response = await fetch(OPENAI_URL, {
     method: 'POST',
     headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
@@ -103,18 +106,22 @@ Deno.serve(async (req) => {
       .maybeSingle<AnalysisProfile>(),
     admin
       .from('body_checks')
-      .select('created_at, group_scores, metrics')
+      .select('id, created_at, group_scores, metrics')
       .eq('user_id', userId)
+      .neq('id', checkId)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle<PreviousCheck>(),
   ]);
   if ((profile?.age ?? 0) < MIN_AGE) return reply(403, { error: 'not_adult' });
 
-  const photos = await Promise.all(
-    POSES.map((pose) => photoDataUrl(`${userId}/${checkId}/${pose}.jpg`)),
-  );
-  if (photos.some((p) => !p)) return reply(400, { error: 'photos_missing' });
+  // The previous check's photos let the model compare pose by pose; any it lacks (a check from
+  // another device not uploaded yet, the four-pose days) are left out.
+  const [photos, previousPhotos] = await Promise.all([
+    checkPhotos(userId, checkId),
+    previous ? checkPhotos(userId, previous.id) : {},
+  ]);
+  if (POSES.some((pose) => !photos[pose])) return reply(400, { error: 'photos_missing' });
 
   // The analysis takes one of the day's slots before OpenAI is called (in one locked step, so
   // parallel requests can't share the last one); a call OpenAI rejected gives it back.
@@ -135,7 +142,8 @@ Deno.serve(async (req) => {
 
   let answer: Awaited<ReturnType<typeof askModel>>;
   try {
-    answer = await askModel(contextText(profile, previous, new Date()), photos as string[]);
+    const context = contextText(profile, previous, new Date());
+    answer = await askModel(modelInput(context, photos as Photos, previousPhotos));
   } catch (error) {
     // A timeout may still have been billed, so the slot stays used.
     console.error('OpenAI request failed', error);

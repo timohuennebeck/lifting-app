@@ -34,6 +34,7 @@ export interface Metrics {
 }
 
 export interface PreviousCheck {
+  id: string;
   created_at: string;
   group_scores: Partial<Record<Group, number>>;
   metrics: Partial<Metrics>;
@@ -87,9 +88,9 @@ export const SCHEMA = {
   },
 };
 
-export const INSTRUCTIONS = `You assess body-composition photos for a strength-training app. You get three photos of the same adult (front, side, back), their profile and, if there is one, the values of their previous check.
+export const INSTRUCTIONS = `You assess body-composition photos for a strength-training app. You get three photos of the same adult (front, side, back), their profile and, if there is one, the values and photos of their previous check.
 
-First check every photo and set its issue:
+First check every photo of this check and set its issue (the previous check's photos are only for comparison):
 - "no_person": no person visible.
 - "not_full_body": the head or the body down to the knees is cut off. Missing feet or lower legs are fine (small rooms).
 - "wrong_pose": the person does not face the camera (front), stand sideways (side) or turn their back to the camera (back) as labelled.
@@ -99,13 +100,13 @@ First check every photo and set its issue:
 - "none": the photo is usable.
 Be lenient: flag a photo only if the problem keeps you from judging the body.
 
-Then estimate from what is visible (with the lower legs cut off, judge the legs by the thighs):
+Then estimate from what is visible in this check's photos (with the lower legs cut off, judge the legs by the thighs):
 - body_fat_percent: estimated body fat in percent, one decimal.
 - groups: development of each muscle group from 0 to 100, judged for the person's sex. 20 = clearly untrained, 50 = average untrained adult, 70 = visibly trained recreational lifter, 85 = advanced lifter, 95 or more = elite natural athlete.
 - proportions: 0 to 100, balance of the physique: upper against lower body, left against right, shoulders against waist.
 - definition: 0 to 100, how visible the separation between muscles is (mostly a matter of leanness).
 
-Consistency matters more than precision: users repeat the check every few weeks and compare the results. If there is a previous check, start from its values and change a value only where you see a clear visible difference. Lighting, pump, posture or a full stomach are not progress. Never comment on attractiveness. If a photo is unusable, still fill in your best estimates; they are ignored.`;
+Consistency matters more than precision: users repeat the check every few weeks and compare the results. If there is a previous check, compare each pose with its previous photo, start from the previous values and change a value only where the photos show a clear visible difference; a small but clear change is worth 1 to 3 points. Different lighting, camera distance or angle, pump, posture or a full stomach are not progress. Never comment on attractiveness. If a photo is unusable, still fill in your best estimates; they are ignored.`;
 
 const round = (value: number, min: number, max: number) =>
   Math.round(Math.min(max, Math.max(min, value)));
@@ -141,8 +142,28 @@ export function contextText(
   } else {
     lines.push('This is the first check.');
   }
-  lines.push('The photos follow in the order front, side, back.');
+  lines.push('Each photo is labelled with its pose and the check it is from.');
   return lines.join('\n');
+}
+
+export type Photos = Record<Pose, string>;
+
+/**
+ * The model's input: the context, then pose by pose the previous check's photo (where there is
+ * one) right before this check's, so each pair can be compared directly.
+ */
+export function modelInput(context: string, photos: Photos, previous: Partial<Photos>) {
+  const image = (url: string) => ({ type: 'input_image', image_url: url, detail: 'high' });
+  return [
+    { type: 'input_text', text: context },
+    ...POSES.flatMap((pose) => [
+      ...(previous[pose]
+        ? [{ type: 'input_text', text: `${pose}, previous check:` }, image(previous[pose])]
+        : []),
+      { type: 'input_text', text: `${pose}, this check:` },
+      image(photos[pose]),
+    ]),
+  ];
 }
 
 /** Overall score: muscle groups weigh 60 %, proportions and definition 20 % each. */
