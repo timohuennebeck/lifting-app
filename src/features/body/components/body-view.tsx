@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
 import { useBodyCheckPhotos, useBodyChecks } from '@/features/body-check/data/body-checks';
-import { isBodyCheckAge } from '@/features/body-check/lib/eligibility';
+import { BODY_CHECK_MIN_AGE, isBodyCheckAge } from '@/features/body-check/lib/eligibility';
 import { POSES, type BodyPose } from '@/features/body-check/lib/poses';
 import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
 import { type Profile, useProfile } from '@/shared/data/profile';
@@ -31,9 +31,6 @@ function openCamera() {
 const openCheck = (id: string) => router.push(`/body-check/result/${id}`);
 const openCompare = (side: 'a' | 'b') =>
   router.push({ pathname: '/body-compare', params: { side } });
-
-/** Age the copy of the locked state counts towards (the rule itself is `isBodyCheckAge`). */
-const ADULT_AGE = 18;
 
 // Faint stripes over a locked card as one path, each bottom-left to top-right, 13pt apart along
 // the edges (about 9pt across), enough to cover the card; the card clips them to its corners.
@@ -128,7 +125,9 @@ function NoChecks({ allowed, age, onStart }: NoChecksProps) {
             figures: tabular ones widen the hyphen in "Körpercheck-Fotos". */}
         <Text variant="paragraph" tone="subtle" className="mt-2 text-center proportional-nums">
           {t('adultsOnly.body')}
-          {age != null ? ` ${t('adultsOnly.unlocksIn', { count: ADULT_AGE - age })}` : null}
+          {age != null
+            ? ` ${t('adultsOnly.unlocksIn', { count: BODY_CHECK_MIN_AGE - age })}`
+            : null}
         </Text>
       </View>
     );
