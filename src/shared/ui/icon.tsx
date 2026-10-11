@@ -314,6 +314,22 @@ const ICONS = {
     ),
   },
   pencil: { viewBox: '0 0 16 16', render: stroke('M11 2l3 3-8.5 8.5L2 14l.5-3.5z', 1.6) },
+  // Padlock: shackle on top of a rounded body.
+  lock: {
+    viewBox: '0 0 18 20',
+    render: (c) => (
+      <>
+        <Path
+          d="M5.2 8.8V6a3.8 3.8 0 0 1 7.6 0v2.8"
+          stroke={c}
+          strokeWidth={1.8}
+          fill="none"
+          strokeLinecap="round"
+        />
+        <Rect x={1.8} y={8.8} width={14.4} height={10} rx={2.6} fill={c} />
+      </>
+    ),
+  },
   bolt: {
     viewBox: '0 0 256 256',
     render: (c) => (

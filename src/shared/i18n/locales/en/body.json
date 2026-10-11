@@ -13,8 +13,10 @@
     "body": "Take your first check and compare later."
   },
   "adultsOnly": {
-    "title": "18 and over",
-    "body": "The body check is only available from age 18."
+    "title": "Locked for now",
+    "body": "Body check photos are only available from age 18.",
+    "unlocksIn_one": "Unlocks for you in a year at the latest.",
+    "unlocksIn_other": "Unlocks for you in {{count}} years at the latest."
   },
   "compare": {
     "title": "Compare",

@@ -13,8 +13,10 @@
     "body": "Faça seu primeiro check e compare depois."
   },
   "adultsOnly": {
-    "title": "A partir de 18 anos",
-    "body": "O check corporal só está disponível a partir dos 18 anos."
+    "title": "Bloqueado por enquanto",
+    "body": "As fotos do check corporal só estão disponíveis a partir dos 18 anos.",
+    "unlocksIn_one": "Para você, em no máximo um ano.",
+    "unlocksIn_other": "Para você, em no máximo {{count}} anos."
   },
   "compare": {
     "title": "Comparar",

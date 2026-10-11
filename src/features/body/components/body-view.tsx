@@ -1,13 +1,14 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 
 import { useBodyCheckPhotos, useBodyChecks } from '@/features/body-check/data/body-checks';
 import { isBodyCheckAge } from '@/features/body-check/lib/eligibility';
 import { POSES, type BodyPose } from '@/features/body-check/lib/poses';
 import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
-import { useProfile } from '@/shared/data/profile';
+import { type Profile, useProfile } from '@/shared/data/profile';
 import { cn } from '@/shared/lib/cn';
 import { formatShortDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
@@ -31,23 +32,38 @@ const openCheck = (id: string) => router.push(`/body-check/result/${id}`);
 const openCompare = (side: 'a' | 'b') =>
   router.push({ pathname: '/body-compare', params: { side } });
 
+/** Age the copy of the locked state counts towards (the rule itself is `isBodyCheckAge`). */
+const ADULT_AGE = 18;
+
+// Faint stripes over a locked card as one path, each bottom-left to top-right, 13pt apart along
+// the edges (about 9pt across), enough to cover the card; the card clips them to its corners.
+const HATCH = Array.from({ length: 16 }, (_, k) => `M${(k + 1) * 13} 0L0 ${(k + 1) * 13}`).join('');
+
 interface PlaceholderCardProps {
   letter: 'A' | 'B';
   /** Neon outline and badge: the check that comes first. */
   lit: boolean;
+  /** Hatched, with a padlock instead of the question mark (under 18). */
+  locked?: boolean;
   tilt: number;
 }
 
-/** An empty photo card of the comparison, tilted, with a question mark. */
-function PlaceholderCard({ letter, lit, tilt }: PlaceholderCardProps) {
+/** An empty photo card of the comparison, tilted, with a question mark or a padlock. */
+function PlaceholderCard({ letter, lit, locked, tilt }: PlaceholderCardProps) {
   return (
     <View
       className={cn(
         'h-30 w-23 items-center justify-center rounded-[18px] bg-surface',
         lit ? 'border-2 border-accent' : 'border border-line',
+        locked && 'overflow-hidden',
       )}
       style={{ transform: [{ rotate: `${tilt}deg` }] }}
     >
+      {locked ? (
+        <Svg width="100%" height="100%" style={StyleSheet.absoluteFill}>
+          <Path d={HATCH} stroke={colors.fg} strokeOpacity={0.05} strokeWidth={1.5} />
+        </Svg>
+      ) : null}
       <View
         className={cn(
           'absolute top-2 left-2 size-6 items-center justify-center rounded-full',
@@ -58,27 +74,65 @@ function PlaceholderCard({ letter, lit, tilt }: PlaceholderCardProps) {
           {letter}
         </Text>
       </View>
-      <Text
-        className={cn(
-          'font-inter-semibold text-[34px] leading-10',
-          lit ? 'text-dim' : 'text-track',
-        )}
-      >
-        ?
-      </Text>
+      {locked ? (
+        <Icon name="lock" size={26} color={colors.track} />
+      ) : (
+        <Text
+          className={cn(
+            'font-inter-semibold text-[34px] leading-10',
+            lit ? 'text-dim' : 'text-track',
+          )}
+        >
+          ?
+        </Text>
+      )}
     </View>
   );
 }
 
 interface NoChecksProps {
-  /** Old enough for body checks; under-18s are told why there are none. */
+  /** Old enough for body checks; under-18s get a locked state instead. */
   allowed: boolean;
+  /** Says when the lock lifts, in whole years; unknown leaves that out. */
+  age: Profile['age'] | undefined;
   onStart: () => void;
 }
 
 /** Empty state before the first check: two blank cards to compare later. */
-function NoChecks({ allowed, onStart }: NoChecksProps) {
+function NoChecks({ allowed, age, onStart }: NoChecksProps) {
   const { t } = useTranslation('body');
+  if (!allowed) {
+    return (
+      <View className="flex-1 items-center justify-center px-8 pt-6 pb-12">
+        {/* Both cards dim and locked, the "18+" seal on top of both. */}
+        <View
+          className="flex-row items-center gap-4"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        >
+          <PlaceholderCard letter="A" lit={false} locked tilt={-7} />
+          <PlaceholderCard letter="B" lit={false} locked tilt={7} />
+          <View
+            className="absolute top-1/2 left-1/2 -mt-7.25 -ml-7.25 size-14.5 items-center justify-center rounded-full border-[3px] border-bg bg-accent"
+            style={{ transform: [{ rotate: '-8deg' }] }}
+          >
+            <Text tone="onAccent" className="font-inter-bold text-xl">
+              18+
+            </Text>
+          </View>
+        </View>
+        <Text variant="headline" className="mt-9 text-center">
+          {t('adultsOnly.title')}
+        </Text>
+        {/* The profile only knows the age in years, so the latest it can be. Proportional
+            figures: tabular ones widen the hyphen in "Körpercheck-Fotos". */}
+        <Text variant="paragraph" tone="subtle" className="mt-2 text-center proportional-nums">
+          {t('adultsOnly.body')}
+          {age != null ? ` ${t('adultsOnly.unlocksIn', { count: ADULT_AGE - age })}` : null}
+        </Text>
+      </View>
+    );
+  }
   return (
     <View className="flex-1 items-center justify-center px-8 pt-6 pb-12">
       <View
@@ -86,24 +140,19 @@ function NoChecks({ allowed, onStart }: NoChecksProps) {
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
       >
-        <PlaceholderCard letter="A" lit={allowed} tilt={-7} />
-        <View
-          className={cn(
-            'size-10 items-center justify-center rounded-full',
-            allowed ? 'bg-accent' : 'bg-elevated',
-          )}
-        >
-          <Icon name="arrow-right" size={16} color={allowed ? colors.onAccent : colors.subtle} />
+        <PlaceholderCard letter="A" lit tilt={-7} />
+        <View className="size-10 items-center justify-center rounded-full bg-accent">
+          <Icon name="arrow-right" size={16} color={colors.onAccent} />
         </View>
         <PlaceholderCard letter="B" lit={false} tilt={7} />
       </View>
       <Text variant="headline" className="mt-9 text-center">
-        {t(allowed ? 'empty.title' : 'adultsOnly.title')}
+        {t('empty.title')}
       </Text>
       <Text variant="paragraph" tone="subtle" className="mt-2 text-center">
-        {t(allowed ? 'empty.body' : 'adultsOnly.body')}
+        {t('empty.body')}
       </Text>
-      {allowed ? <Button label={t('start')} className="mt-6 h-12 px-7" onPress={onStart} /> : null}
+      <Button label={t('start')} className="mt-6 h-12 px-7" onPress={onStart} />
     </View>
   );
 }
@@ -137,7 +186,7 @@ export function BodyView() {
       </Text>
 
       {!latest ? (
-        <NoChecks allowed={allowed} onStart={camera.request} />
+        <NoChecks allowed={allowed} age={profile?.age} onStart={camera.request} />
       ) : (
         <>
           <View className="flex-row items-end justify-between gap-3 px-5 pt-5.5">
