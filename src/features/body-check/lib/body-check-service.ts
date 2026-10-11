@@ -1,8 +1,10 @@
 import { FunctionsFetchError, FunctionsHttpError } from '@supabase/supabase-js';
 import { File } from 'expo-file-system';
 
+import { db } from '@/shared/data/powersync/database';
 import { supabase } from '@/shared/data/supabase';
 import { uploadJpeg } from '@/shared/data/supabase-storage';
+import { wait } from '@/shared/lib/async';
 import { averageBrightness } from '@/shared/lib/jpeg';
 
 import { PHOTO_BUCKET, type StoredPhoto, storagePathOf } from './photo-files';
@@ -123,6 +125,31 @@ export function removeUploadedPhotos(checkId: string, userId: string) {
     .catch((error) => console.warn('Removing body-check photos failed', error));
 }
 
+/** How long the analysis waits for a profile change to reach the server. */
+const PROFILE_UPLOAD_TIMEOUT_MS = 30_000;
+
+/**
+ * Waits (bounded) until no profile change is left in PowerSync's upload queue, since the analysis
+ * checks the birth date on the server: right after sign-up the profile is still on its way there,
+ * behind the onboarding plan. False when one is still waiting.
+ */
+async function profileUploaded() {
+  const deadline = Date.now() + PROFILE_UPLOAD_TIMEOUT_MS;
+  try {
+    while (
+      await db.getOptional(
+        "SELECT 1 FROM ps_crud WHERE json_extract(data, '$.type') = 'profiles' LIMIT 1",
+      )
+    ) {
+      if (Date.now() >= deadline) return false;
+      await wait(500);
+    }
+  } catch (error) {
+    console.warn('Reading the upload queue failed', error);
+  }
+  return true;
+}
+
 /**
  * Uploads the three photos and has the analyze-body-check Edge Function score them. Needs a
  * connection; throws an AnalysisError with the reason otherwise.
@@ -133,10 +160,15 @@ export async function analyzeBodyCheck(
   photos: Record<BodyPose, StoredPhoto>,
 ): Promise<AnalysisOutcome> {
   await uploadPhotos(checkId, userId, photos);
+  const profileSynced = await profileUploaded();
   const { data, error } = await supabase.functions.invoke<ServerAnalysis>('analyze-body-check', {
     body: { checkId },
   });
-  if (error) throw new AnalysisError(await failureOf(error));
+  if (error) {
+    const reason = await failureOf(error);
+    // The server may not have the birth date yet: worth another try, not the 18+ message.
+    throw new AnalysisError(reason === 'notAdult' && !profileSynced ? 'failed' : reason);
+  }
   if (data?.status === 'ok' && data.result) return { status: 'ok', result: data.result };
   if (data?.status === 'retake' && data.issues?.length) {
     return {
