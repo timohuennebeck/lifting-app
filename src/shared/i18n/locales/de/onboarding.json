@@ -29,11 +29,9 @@
   },
   "birthDate": {
     "title": "WANN HAST DU\nGEBURTSTAG?",
-    "placeholder": { "day": "TT", "month": "MM", "year": "JJJJ" },
     "age_one": "{{count}} Jahr",
     "age_other": "{{count}} Jahre",
-    "tooYoung": "Traqa ist ab {{min}} Jahren.",
-    "invalid": "Bitte prüf das Datum."
+    "tooYoung": "Traqa ist ab {{min}} Jahren."
   },
   "units": {
     "title": "WELCHE EINHEITEN\nNUTZT DU?",

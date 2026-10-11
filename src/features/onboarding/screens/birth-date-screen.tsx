@@ -3,36 +3,36 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { AGE_RANGE } from '@/shared/data/profile';
-import { haptics } from '@/shared/lib/haptics';
+import { AGE_RANGE, ageFrom } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
-import { DigitPad } from '@/shared/ui/number-keypad';
+import { DateWheel } from '@/shared/ui/date-wheel';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
-import { DateDigits } from '../components/date-digits';
-import { DATE_DIGITS, dateLayout, readBirthDate, toDigits } from '../lib/birth-date-input';
 import { ABOUT_STEPS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
+
+/** The wheels start on 1 January of the year someone this old was born. */
+const START_AGE = 25;
 
 export function BirthDateScreen() {
   const { t } = useTranslation('onboarding');
   const { t: tc } = useTranslation();
   const { birthDate } = useDraft();
   const update = useUpdateDraft();
-  const { fields, separator } = dateLayout();
-  // No default date; coming back shows the one given before.
-  const [digits, setDigits] = useState(() => (birthDate ? toDigits(birthDate, fields) : ''));
-  const input = readBirthDate(digits, fields);
-  const failed = input.status === 'invalid' || input.status === 'tooYoung';
+  const thisYear = new Date().getFullYear();
+  const [value, setValue] = useState(birthDate ?? `${thisYear - START_AGE}-01-01`);
+  // Only a turned wheel counts as an answer, so nobody passes the 18+ gate on the start date.
+  // Coming back shows the date given before.
+  const [picked, setPicked] = useState(birthDate != null);
+  const age = ageFrom(value);
+  const tooYoung = age < AGE_RANGE.min;
 
-  // The draft only holds a valid date, so Continue and the account step can rely on it.
-  const type = (next: string) => {
-    const result = readBirthDate(next, fields);
-    const fails = result.status === 'invalid' || result.status === 'tooYoung';
-    if (fails && !failed) haptics.error();
-    setDigits(next);
-    update({ birthDate: result.status === 'valid' ? result.birthDate : null });
+  // The draft only holds an allowed date, so Continue and the account step can rely on it.
+  const pick = (next: string) => {
+    setValue(next);
+    setPicked(true);
+    update({ birthDate: ageFrom(next) >= AGE_RANGE.min ? next : null });
   };
 
   return (
@@ -43,44 +43,31 @@ export function BirthDateScreen() {
       footer={
         <Button
           label={tc('actions.continue')}
-          disabled={input.status !== 'valid'}
+          disabled={!picked || tooYoung}
           onPress={() => router.push('/units')}
         />
       }
     >
-      <View className="flex-1 justify-between pt-10">
-        <View className="items-center gap-2 px-4">
-          <DateDigits
-            digits={digits}
-            fields={fields}
-            separator={separator}
-            placeholder={{
-              day: t('birthDate.placeholder.day'),
-              month: t('birthDate.placeholder.month'),
-              year: t('birthDate.placeholder.year'),
-            }}
-          />
-          {/* Kept in place while empty so the date doesn't move. */}
-          <Text
-            variant="label"
-            tone={failed ? 'danger' : 'subtle'}
-            accessibilityLiveRegion="polite"
-            className="text-center"
-          >
-            {input.status === 'valid'
-              ? t('birthDate.age', { count: input.age })
-              : input.status === 'tooYoung'
-                ? t('birthDate.tooYoung', { min: AGE_RANGE.min })
-                : input.status === 'invalid'
-                  ? t('birthDate.invalid')
-                  : ' '}
-          </Text>
-        </View>
-        <DigitPad
-          className="px-4 pb-3"
-          onKey={(key) => digits.length < DATE_DIGITS && type(digits + key)}
-          onBackspace={() => digits && type(digits.slice(0, -1))}
+      <View className="gap-3 px-4 pt-8">
+        <DateWheel
+          value={value}
+          onChange={pick}
+          minYear={thisYear - AGE_RANGE.max}
+          maxYear={thisYear - AGE_RANGE.min}
         />
+        {/* Kept in place before the first pick so the wheels don't move. */}
+        <Text
+          variant="label"
+          tone={picked && tooYoung ? 'danger' : 'subtle'}
+          accessibilityLiveRegion="polite"
+          className="text-center"
+        >
+          {!picked
+            ? ' '
+            : tooYoung
+              ? t('birthDate.tooYoung', { min: AGE_RANGE.min })
+              : t('birthDate.age', { count: age })}
+        </Text>
       </View>
     </StepScreen>
   );

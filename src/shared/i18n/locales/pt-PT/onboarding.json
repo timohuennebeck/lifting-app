@@ -30,12 +30,10 @@
   },
   "birthDate": {
     "title": "QUANDO\nFAZES ANOS?",
-    "placeholder": { "day": "DD", "month": "MM", "year": "AAAA" },
     "age_one": "{{count}} ano",
     "age_many": "{{count}} anos",
     "age_other": "{{count}} anos",
-    "tooYoung": "O Traqa é a partir dos {{min}} anos.",
-    "invalid": "Verifica a data."
+    "tooYoung": "O Traqa é a partir dos {{min}} anos."
   },
   "units": {
     "title": "QUE UNIDADES\nUSAS?",

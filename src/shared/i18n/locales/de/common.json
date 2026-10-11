@@ -101,6 +101,11 @@
     "backspace": "Löschen",
     "confirm": "Übernehmen"
   },
+  "dateWheel": {
+    "day": "Tag",
+    "month": "Monat",
+    "year": "Jahr"
+  },
   "cameraAccess": {
     "title": "Kamera erlauben"
   }

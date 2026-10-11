@@ -23,6 +23,13 @@ export const isSameDay = (a: Date, b: Date) =>
   a.getMonth() === b.getMonth() &&
   a.getDate() === b.getDate();
 
+/** Days in a month (1–12) of a year, e.g. 29 for February 2028. */
+export const daysInMonth = (year: number, month: number) => new Date(year, month, 0).getDate();
+
+/** An ISO date (YYYY-MM-DD) from a year, month (1–12) and day. */
+export const isoDate = (year: number, month: number, day: number) =>
+  `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
 /** Whether `date` falls on the calendar day before `now`. */
 export const isYesterday = (date: Date, now: Date) => isSameDay(date, addDays(now, -1));
 
