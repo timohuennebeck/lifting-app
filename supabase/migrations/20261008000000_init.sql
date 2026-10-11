@@ -1,4 +1,4 @@
--- Forge core schema. Every row carries user_id so PowerSync can stream per user.
+-- Traqa core schema. Every row carries user_id so PowerSync can stream per user.
 
 create table public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
