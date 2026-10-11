@@ -1,26 +1,13 @@
 // Revokes the app's Apple tokens before an account that signed in with Apple is deleted. The app
 // gets a fresh authorization code from Apple's sheet and sends it here; the code is exchanged and
 // the tokens revoked right away, so nothing is stored.
-import { createClient } from 'jsr:@supabase/supabase-js@2';
-
+import { reply, requestUser } from '../_shared/common.ts';
 import { type AppleConfig, revokeWithCode } from './apple.ts';
 
 const TEAM_ID = Deno.env.get('APPLE_TEAM_ID');
 const KEY_ID = Deno.env.get('APPLE_KEY_ID');
 const PRIVATE_KEY = Deno.env.get('APPLE_PRIVATE_KEY');
 const CLIENT_ID = Deno.env.get('APPLE_CLIENT_ID') ?? 'app.traqa.mobile';
-
-const admin = createClient(
-  Deno.env.get('SUPABASE_URL')!,
-  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-  { auth: { persistSession: false, autoRefreshToken: false } },
-);
-
-const reply = (status: number, body: unknown) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  });
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return reply(405, { error: 'method_not_allowed' });
@@ -31,9 +18,7 @@ Deno.serve(async (req) => {
     return reply(500, { error: 'not_configured' });
   }
 
-  const token = req.headers.get('Authorization')?.replace(/^Bearer\s+/i, '');
-  const { data: auth } = token ? await admin.auth.getUser(token) : { data: { user: null } };
-  const user = auth.user;
+  const user = await requestUser(req);
   if (!user) return reply(401, { error: 'unauthorized' });
   const providers: unknown = user.app_metadata?.providers;
   if (!Array.isArray(providers) || !providers.includes('apple')) {

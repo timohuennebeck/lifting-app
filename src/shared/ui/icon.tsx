@@ -164,21 +164,6 @@ const ICONS = {
       />
     ),
   },
-  mic: {
-    viewBox: '0 0 14 18',
-    render: (c) => (
-      <>
-        <Rect x={4} y={1} width={6} height={10} rx={3} fill={c} />
-        <Path
-          d="M1.5 8.5a5.5 5.5 0 0 0 11 0M7 14v3"
-          stroke={c}
-          strokeWidth={1.6}
-          fill="none"
-          strokeLinecap="round"
-        />
-      </>
-    ),
-  },
   camera: {
     viewBox: '0 0 22 22',
     render: stroke(

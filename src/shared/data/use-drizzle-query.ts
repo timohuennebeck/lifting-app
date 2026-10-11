@@ -35,6 +35,9 @@ function compilable<TRow>(queryKey: readonly unknown[], query: DrizzleQuery<TRow
   return { execute, compile: () => getOrInsert(compiled, JSON.stringify(queryKey), compile) };
 }
 
+/** `map` for a `select({ count: count() })` query: the count. */
+export const firstCount = (rows: { count: number }[]) => rows[0]?.count ?? 0;
+
 /**
  * Watched Drizzle query via PowerSync's TanStack Query integration, with a typed row
  * mapper. Re-renders automatically when any table used by `query` changes.

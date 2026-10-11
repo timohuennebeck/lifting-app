@@ -12,12 +12,12 @@ export interface NumberStepperProps {
   onChange: (value: number) => void;
   min: number;
   max: number;
-  /** Caption under the number, e.g. "YEARS". */
+  /** Caption under the number, e.g. "PRO WOCHE". */
   unit?: string;
   format?: (value: number) => string;
 }
 
-/** Big number with round −/+ buttons (Age, frequency). */
+/** Big number with round −/+ buttons (training days per week). */
 export function NumberStepper({
   value,
   onChange,

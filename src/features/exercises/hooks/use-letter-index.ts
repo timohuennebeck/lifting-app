@@ -3,7 +3,7 @@ import type { FlatList, ViewToken } from 'react-native';
 
 import type { ExerciseOption } from './use-exercise-search';
 
-/** A row is `h-19.5`; a heading above it (overline, `pt-4.5 pb-1.5`) adds the second. */
+/** Heights of an ExerciseIndexRow (`h-19.5`) and of its heading (overline, `pt-4.5 pb-1.5`). */
 const ROW_HEIGHT = 78;
 const HEADING_HEIGHT = 41;
 
@@ -34,8 +34,8 @@ export function useLetterIndex<T extends ExerciseOption>(pinned: T[], title: str
       heading: i === 0 || rest[i - 1].letter !== o.letter ? o.letter : null,
     })),
   ];
-  const offsets = rows.reduce<number[]>((acc, row, i) => {
-    acc.push((acc[i - 1] ?? 0) + (i ? rowHeight(rows[i - 1]) : 0));
+  const offsets = rows.reduce<number[]>((acc, _, i) => {
+    acc.push(i ? acc[i - 1] + rowHeight(rows[i - 1]) : 0);
     return acc;
   }, []);
 

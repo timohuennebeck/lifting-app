@@ -1,5 +1,5 @@
 export type PlanId = 'monthly' | 'yearly';
-export type BillingPeriod = 'month' | 'year';
+type BillingPeriod = 'month' | 'year';
 
 /** The plans in the order the paywall shows them. */
 export const PLAN_IDS: PlanId[] = ['yearly', 'monthly'];
@@ -9,9 +9,8 @@ export const DEFAULT_TRIAL_DAYS = 7;
 
 export interface Plan {
   id: PlanId;
-  /** Price per period in the offering's currency. */
+  /** Price per period (PERIOD_OF) in the offering's currency. */
   price: number;
-  period: BillingPeriod;
 }
 
 export interface Offering {
@@ -27,16 +26,11 @@ export interface Offering {
 export interface CustomerInfo {
   isPro: boolean;
   plan: PlanId | null;
+  /** ISO timestamp; set while the purchase started with a free trial. */
   trialEndsAt: string | null;
-  purchasedAt: string | null;
 }
 
-export const NO_PRO: CustomerInfo = {
-  isPro: false,
-  plan: null,
-  trialEndsAt: null,
-  purchasedAt: null,
-};
+export const NO_PRO: CustomerInfo = { isPro: false, plan: null, trialEndsAt: null };
 
 export interface PurchasesService {
   /** Ties purchases to the signed-in account, so Pro follows it to other devices; null signs out. */

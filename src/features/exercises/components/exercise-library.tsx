@@ -2,17 +2,15 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, View } from 'react-native';
 
-import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
-import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { useExerciseSearch } from '../hooks/use-exercise-search';
 import { useLetterIndex } from '../hooks/use-letter-index';
 import type { MuscleGroupId } from '../lib/muscle-groups';
 import { AlphabetRail } from './alphabet-rail';
-import { ExerciseThumb } from './exercise-thumb';
+import { ExerciseIndexRow } from './exercise-index-row';
 import { MuscleGroupFilter } from './muscle-group-filter';
 
 export interface ExerciseLibraryProps {
@@ -75,32 +73,13 @@ export function ExerciseLibrary({
             // Selected rows that came with the training stay dimmed and can't be tapped.
             const locked = selected && !removable;
             return (
-              <View>
-                {item.heading ? (
-                  <Text variant="overline" tone="subtle" className="pt-4.5 pb-1.5">
-                    {item.heading}
-                  </Text>
-                ) : null}
-                <PressableScale
-                  haptic="select"
-                  disabled={locked}
-                  accessibilityState={{ disabled: locked, selected }}
-                  onPress={() => (selected ? onUnpick(item.id) : onPick(item.id))}
-                  className="h-19.5 flex-row items-center gap-3.5"
-                >
-                  <ExerciseThumb
-                    exerciseId={item.id}
-                    name={item.name}
-                    className={locked ? 'opacity-45' : undefined}
-                  />
-                  <View className={cn('min-w-0 flex-1', locked && 'opacity-45')}>
-                    <Text variant="label" numberOfLines={2} className="leading-5">
-                      {item.name}
-                    </Text>
-                    <Text variant="caption" tone="subtle" className="mt-0.5 font-inter">
-                      {t(`groups.${item.group}`)}
-                    </Text>
-                  </View>
+              <ExerciseIndexRow
+                item={item}
+                dimmed={locked}
+                disabled={locked}
+                accessibilityState={{ disabled: locked, selected }}
+                onPress={() => (selected ? onUnpick(item.id) : onPick(item.id))}
+                trailing={
                   <View
                     className="size-8 items-center justify-center rounded-full bg-elevated"
                     style={
@@ -119,8 +98,8 @@ export function ExerciseLibrary({
                       <Icon name={mode === 'swap' ? 'swap' : 'plus'} size={12} />
                     )}
                   </View>
-                </PressableScale>
-              </View>
+                }
+              />
             );
           }}
         />

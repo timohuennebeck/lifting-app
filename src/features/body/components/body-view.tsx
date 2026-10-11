@@ -4,9 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-import { useBodyCheckPhotos, useBodyChecks } from '@/features/body-check/data/body-checks';
+import { PoseChips } from '@/features/body-check/components/pose-chips';
+import {
+  type BodyCheck,
+  useBodyCheckPhotos,
+  useBodyChecks,
+} from '@/features/body-check/data/body-checks';
 import { bodyCheckUnlockDate, isBodyCheckAge } from '@/features/body-check/lib/eligibility';
-import { POSES, type BodyPose } from '@/features/body-check/lib/poses';
+import type { BodyPose } from '@/features/body-check/lib/poses';
 import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
 import { type Profile, useProfile } from '@/shared/data/profile';
 import { cn } from '@/shared/lib/cn';
@@ -14,13 +19,12 @@ import { formatLongDate, formatShortDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
-import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
 import { comparedPair } from '../lib/comparison';
 import { useCompareStore } from '../stores/compare-store';
-import { BodyPhotoCard, NextCheckCard } from './body-photo-card';
+import { BodyPhotoCard, CompareArrow, NextCheckCard } from './body-photo-card';
 import { CheckHistoryRow } from './check-history-row';
 
 function openCamera() {
@@ -170,7 +174,8 @@ export function BodyView() {
   // With two checks or more, two are compared side by side: first and latest, or the user's pick.
   const pair = comparedPair(checks, saved);
   const compared = !!pair;
-  const numberOf = (id: string) => checks.findIndex((c) => c.id === id) + 1;
+  const labelOf = (check: BodyCheck) =>
+    t('checkLabel', { n: checks.indexOf(check) + 1, date: formatShortDate(check.createdAt) });
   const delta = latest && first ? latest.score - first.score : 0;
   const nextTitle = t('check', { n: checks.length + 1 });
 
@@ -220,10 +225,7 @@ export function BodyView() {
                     checkId={pair.before.id}
                     pose={pose}
                     storagePath={photos[pair.before.id]?.[pose]}
-                    label={t('checkLabel', {
-                      n: numberOf(pair.before.id),
-                      date: formatShortDate(pair.before.createdAt),
-                    })}
+                    label={labelOf(pair.before)}
                     score={pair.before.score}
                     muted
                     onPress={() => openCheck(pair.before.id)}
@@ -234,10 +236,7 @@ export function BodyView() {
                     checkId={pair.after.id}
                     pose={pose}
                     storagePath={photos[pair.after.id]?.[pose]}
-                    label={t('checkLabel', {
-                      n: numberOf(pair.after.id),
-                      date: formatShortDate(pair.after.createdAt),
-                    })}
+                    label={labelOf(pair.after)}
                     score={pair.after.score}
                     after
                     selected
@@ -252,7 +251,7 @@ export function BodyView() {
                   checkId={latest.id}
                   pose={pose}
                   storagePath={photos[latest.id]?.[pose]}
-                  label={t('checkLabel', { n: 1, date: formatShortDate(latest.createdAt) })}
+                  label={labelOf(latest)}
                   score={latest.score}
                   after
                   selected
@@ -260,31 +259,14 @@ export function BodyView() {
                   onPress={() => openCheck(latest.id)}
                 />
               )}
-              {compared ? (
-                <View
-                  pointerEvents="none"
-                  className="absolute top-1/2 left-1/2 -mt-5 -ml-5 size-10 items-center justify-center rounded-full bg-accent"
-                >
-                  <Icon name="arrow-right" size={16} color={colors.onAccent} />
-                </View>
-              ) : null}
+              {compared ? <CompareArrow /> : null}
               {!compared && allowed ? (
                 <NextCheckCard title={nextTitle} note={t('startNow')} onPress={camera.request} />
               ) : null}
             </View>
           </View>
 
-          <View className="flex-row justify-center gap-1.5 px-4 pt-3.5">
-            {POSES.map((p) => (
-              <Chip
-                key={p}
-                label={t(`bodyCheck:poses.${p}.short`)}
-                selected={p === pose}
-                onPress={() => setPose(p)}
-                className="h-7.5 px-2.75"
-              />
-            ))}
-          </View>
+          <PoseChips pose={pose} onChange={setPose} className="px-4 pt-3.5" />
 
           <Text variant="overline" tone="subtle" className="px-5 pt-7 text-xs">
             {t('history')}

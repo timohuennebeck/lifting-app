@@ -5,11 +5,11 @@ import { ActivityIndicator, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors } from '@/shared/lib/theme';
-import { Chip } from '@/shared/ui/chip';
 import { IconButton } from '@/shared/ui/icon-button';
 import { ZoomableView } from '@/shared/ui/zoomable-view';
 
 import { CheckPhoto } from '../components/check-photo';
+import { PoseChips } from '../components/pose-chips';
 import { useBodyCheckPhotos, useBodyChecks } from '../data/body-checks';
 import { POSES, type BodyPose } from '../lib/poses';
 import { useBodyCheckStore } from '../stores/body-check-store';
@@ -52,19 +52,8 @@ export function PhotoViewerScreen() {
       <View className="absolute left-4" style={{ top: insets.top + 6 }}>
         <IconButton icon="close" accessibilityLabel={t('common:actions.close')} onPress={close} />
       </View>
-      <View
-        className="absolute inset-x-0 flex-row justify-center gap-1.5"
-        style={{ bottom: insets.bottom + 16 }}
-      >
-        {POSES.map((p) => (
-          <Chip
-            key={p}
-            label={t(`poses.${p}.short`)}
-            selected={p === pose}
-            onPress={() => setPose(p)}
-            className="h-7.5 px-2.75"
-          />
-        ))}
+      <View className="absolute inset-x-0" style={{ bottom: insets.bottom + 16 }}>
+        <PoseChips pose={pose} onChange={setPose} />
       </View>
     </View>
   );

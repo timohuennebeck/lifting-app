@@ -5,8 +5,8 @@ import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 
 import { Text } from '../text';
-import { MUSCLE_CARDS, type MuscleId } from './body-paths';
-import { MuscleMap } from './muscle-map';
+import type { MuscleId } from './body-paths';
+import { MuscleCrop } from './muscle-map';
 
 export interface MusclePercentProps {
   percent: number;
@@ -47,7 +47,6 @@ export interface MuscleChipProps {
 
 /** Pill with the muscle on a round crop of the body map, its name and optionally its share. */
 export function MuscleChip({ art, lit, label, percent, highlight, selected }: MuscleChipProps) {
-  const card = MUSCLE_CARDS[art];
   const badged = percent !== undefined;
   return (
     <View
@@ -60,12 +59,10 @@ export function MuscleChip({ art, lit, label, percent, highlight, selected }: Mu
       )}
     >
       <View className="size-11.5 overflow-hidden rounded-full bg-elevated">
-        <MuscleMap
-          view={card.view}
-          viewBox={card.viewBox}
+        <MuscleCrop
+          muscle={art}
           selected={lit ?? [art]}
           accent={highlight ? colors.accent : colors.fg2}
-          fit="cover"
         />
       </View>
       {/* Shrinks to "Vordere Schul…" where the chip has less room than it needs. */}

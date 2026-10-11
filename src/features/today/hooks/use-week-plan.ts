@@ -17,7 +17,7 @@ export function useWeekPlan(today: Date) {
   const fromIso = monday.toISOString();
   const toIso = addDays(monday, 7).toISOString();
   const { profile } = useProfile();
-  const { data: workouts } = useWorkoutsInRange(fromIso, toIso);
+  const { data: workouts = [] } = useWorkoutsInRange(fromIso, toIso);
   const { data: templates = [] } = useTemplates();
 
   // Fall back to the first collection when no plan is marked active.
@@ -28,8 +28,8 @@ export function useWeekPlan(today: Date) {
   const planTemplates = plan.filter((t) => t.weekday !== null);
 
   const days = Array.from({ length: 7 }, (_, i): WeekDay => {
-    const date = addDays(new Date(fromIso), i);
-    const workout = (workouts ?? []).find((w) => mondayIndex(new Date(w.startedAt)) === i) ?? null;
+    const date = addDays(monday, i);
+    const workout = workouts.find((w) => mondayIndex(new Date(w.startedAt)) === i) ?? null;
     const planned = planTemplates.find((t) => t.weekday === i) ?? null;
     return { date, workout, planned };
   });

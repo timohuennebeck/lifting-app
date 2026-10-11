@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated, { useAnimatedRef } from 'react-native-reanimated';
@@ -14,6 +14,7 @@ import {
   useTemplates,
 } from '@/shared/data/templates';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
+import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -54,8 +55,9 @@ export function TrainingScreen() {
   const [options, setOptions] = useState<TemplateSummary | null>(null);
   const optionsShown = useLastDefined(options);
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  // A drag ends with a release over the row: that must not open the template.
-  const dragging = useRef(false);
+  const drag = useSortableDrag<TemplateSummary>(
+    ({ data }) => void reorderTemplates(data.map((tpl) => tpl.id)),
+  );
   const [renaming, setRenaming] = useState<TemplateSummary | null>(null);
   const renameShown = useLastDefined(renaming);
   const [collectionOptions, setCollectionOptions] = useState<CollectionSummary | null>(null);
@@ -123,18 +125,7 @@ export function TrainingScreen() {
           columns={1}
           rowGap={8}
           scrollableRef={scrollRef}
-          dragActivationDelay={250}
-          activeItemScale={1.03}
-          inactiveItemOpacity={0.6}
-          hapticsEnabled={false}
-          onDragStart={() => {
-            dragging.current = true;
-            haptics.press();
-          }}
-          onDragEnd={({ data, fromIndex, toIndex }) => {
-            setTimeout(() => (dragging.current = false), 150);
-            if (toIndex !== fromIndex) void reorderTemplates(data.map((tpl) => tpl.id));
-          }}
+          {...drag.gridProps}
           renderItem={({ item: tpl }) => (
             <TemplateRow
               name={tpl.name}
@@ -142,15 +133,9 @@ export function TrainingScreen() {
               exerciseCount={tpl.exerciseCount}
               items={tpl.items}
               starting={startingId === tpl.id}
-              onPress={() => {
-                if (!dragging.current) router.push(`/template/${tpl.id}`);
-              }}
-              onStart={() => {
-                if (!dragging.current) start(tpl);
-              }}
-              onMore={() => {
-                if (!dragging.current) setOptions(tpl);
-              }}
+              onPress={drag.unlessDragging(() => router.push(`/template/${tpl.id}`))}
+              onStart={drag.unlessDragging(() => start(tpl))}
+              onMore={drag.unlessDragging(() => setOptions(tpl))}
             />
           )}
         />

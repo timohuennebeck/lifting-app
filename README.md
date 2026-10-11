@@ -40,7 +40,7 @@ src/
   app/                 Expo Router routes only (thin files re-exporting feature screens)
   features/<feature>/  components, screens, data, hooks, lib, stores per feature
   shared/              ui primitives, components, data layer, i18n, lib, stores
-supabase/              config, migrations (RLS, PowerSync publication), Edge Function, email templates
+supabase/              config, migrations (RLS, PowerSync publication), Edge Functions, email templates
 powersync/             self-hosted service config, sync streams, docker compose
 ```
 

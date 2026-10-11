@@ -4,7 +4,7 @@ import { parseJson } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import { bodyCheckPhotos, bodyChecks, type BodyCheckRecord } from '@/shared/data/powersync/schema';
 import { queryKeys } from '@/shared/data/query-keys';
-import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
+import { firstCount, type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 
 import type { BodyCheckMetrics, GroupScores } from '../lib/body-check-service';
 import { photoFile } from '../lib/photo-files';
@@ -70,14 +70,12 @@ export function useBodyCheckPhotos() {
   });
 }
 
-const firstCount = (rows: { n: number }[]) => rows[0]?.n ?? 0;
-
 /** Number of the user's photos that still wait for their upload. */
 export function usePendingPhotoCount(userId: string | null) {
   return useDrizzleQuery({
     queryKey: bodyCheckPhotoKeys.pendingCount(userId ?? '').queryKey,
     query: drizzle
-      .select({ n: count() })
+      .select({ count: count() })
       .from(bodyCheckPhotos)
       .where(and(isNull(bodyCheckPhotos.storage_path), eq(bodyCheckPhotos.user_id, userId ?? ''))),
     enabled: !!userId,

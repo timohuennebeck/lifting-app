@@ -38,7 +38,7 @@ import {
 } from './powersync/schema';
 import { queryKeys } from './query-keys';
 import type { PlanExerciseDraft } from './templates';
-import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
+import { firstCount, type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /** Epley estimated one-rep max. */
 const estimateOneRepMax = (kg: number, reps: number) => kg * (1 + reps / 30);
@@ -481,16 +481,11 @@ export function useWorkoutHistory(limit: number) {
   });
 }
 
-const workoutCountQuery = () =>
-  drizzle.select({ count: count() }).from(workouts).where(isNotNull(workouts.finished_at));
-
-const firstCount = (rows: RowOf<typeof workoutCountQuery>[]) => rows[0]?.count ?? 0;
-
 /** Number of finished workouts. */
 export function useWorkoutCount() {
   return useDrizzleQuery({
     queryKey: queryKeys.workouts.count.queryKey,
-    query: workoutCountQuery(),
+    query: drizzle.select({ count: count() }).from(workouts).where(isNotNull(workouts.finished_at)),
     map: firstCount,
   });
 }

@@ -129,18 +129,20 @@ const MIN_EXERCISES = 2;
 const MAX_EXERCISES = 8;
 const MAX_SETS = 5;
 
+const isNovice = (experience: Experience | null) =>
+  experience === 'none' || experience === 'beginner';
+
 export function splitFor(
   dayCount: number,
   experience: Experience | null,
 ): { kind: SplitKind; days: DayKind[] } {
-  const novice = experience === 'none' || experience === 'beginner';
   switch (dayCount) {
     case 0:
     case 1:
     case 2:
       return { kind: 'full', days: Array(Math.max(1, dayCount)).fill('full') };
     case 3:
-      return novice
+      return isNovice(experience)
         ? { kind: 'full', days: ['full', 'full', 'full'] }
         : { kind: 'ppl', days: ['push', 'pull', 'legs'] };
     case 4:
@@ -211,11 +213,13 @@ function buildDay(
     if (!options.length) continue;
     const exerciseId = options[variant % options.length];
     const sets = setCount(slot.compound, items.length, exerciseId, input, focusGroups);
-    const next = [...items, { exerciseId, sets, compound: slot.compound }];
+    const item = { exerciseId, sets, compound: slot.compound };
     // Too long: skip it, a cheaper slot further down may still fit.
-    if (items.length >= MIN_EXERCISES && estimateMinutes(next) > input.sessionMinutes) continue;
+    if (items.length >= MIN_EXERCISES && estimateMinutes([...items, item]) > input.sessionMinutes) {
+      continue;
+    }
     used.add(exerciseId);
-    items.push(next[next.length - 1]);
+    items.push(item);
   }
   return items.map(({ exerciseId, sets, compound }) => ({
     exerciseId,
@@ -232,7 +236,7 @@ function setCount(
   focusGroups: MuscleGroupId[],
 ) {
   let sets = compound && goal === 'strength' ? 4 : 3;
-  if (experience === 'none' || experience === 'beginner') sets = Math.min(sets, 3);
+  if (isNovice(experience)) sets = Math.min(sets, 3);
   if (experience === 'advanced' && position === 0) sets += 1;
   if (focusGroups.includes(primaryGroup(exerciseId))) sets += 1;
   return Math.min(MAX_SETS, sets);

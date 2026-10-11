@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated, { useAnimatedRef } from 'react-native-reanimated';
@@ -13,6 +13,7 @@ import {
   useTemplateDetail,
 } from '@/shared/data/templates';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
+import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
 import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
@@ -49,8 +50,7 @@ export function TemplateScreen() {
   const { start, startingId } = useStartTemplate();
 
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  // Letting go of a dragged exercise also ends a press on it; that one isn't a tap.
-  const dragging = useRef(false);
+  const drag = useSortableDrag(({ key, toIndex }) => void reorderTemplateExercise(key, toIndex));
   const [menuFor, setMenuFor] = useState<TemplateExerciseDetail | null>(null);
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [renameOpen, setRenameOpen] = useState(false);
@@ -149,18 +149,7 @@ export function TemplateScreen() {
               keyExtractor={(exercise) => exercise.id}
               columns={1}
               scrollableRef={scrollRef}
-              dragActivationDelay={250}
-              activeItemScale={1.03}
-              inactiveItemOpacity={0.6}
-              hapticsEnabled={false}
-              onDragStart={() => {
-                dragging.current = true;
-                haptics.press();
-              }}
-              onDragEnd={({ key, fromIndex, toIndex }) => {
-                setTimeout(() => (dragging.current = false), 150);
-                if (toIndex !== fromIndex) void reorderTemplateExercise(key, toIndex);
-              }}
+              {...drag.gridProps}
               renderItem={({ item: exercise }) => (
                 <TemplateExerciseCard
                   exerciseId={exercise.exerciseId}
@@ -170,13 +159,10 @@ export function TemplateScreen() {
                     max: set.target_max,
                     rir: set.rir,
                   }))}
-                  onMenu={() => {
-                    if (!dragging.current) setMenuFor(exercise);
-                  }}
-                  onPress={() => {
-                    if (!dragging.current)
-                      router.push(`/template/${template.id}/sets/${exercise.id}`);
-                  }}
+                  onMenu={drag.unlessDragging(() => setMenuFor(exercise))}
+                  onPress={drag.unlessDragging(() =>
+                    router.push(`/template/${template.id}/sets/${exercise.id}`),
+                  )}
                 />
               )}
             />

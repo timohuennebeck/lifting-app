@@ -12,8 +12,8 @@ import {
 } from './purchases-types';
 
 const PLANS: Plan[] = [
-  { id: 'yearly', price: 59.99, period: 'year' },
-  { id: 'monthly', price: 9.99, period: 'month' },
+  { id: 'yearly', price: 59.99 },
+  { id: 'monthly', price: 9.99 },
 ];
 
 // The mock "store account" lives in MMKV so restore works across sessions and sign-outs.
@@ -53,7 +53,6 @@ export function createMockPurchases(): PurchasesService {
         isPro: true,
         plan: planId,
         trialEndsAt: trial ? new Date(now + DEFAULT_TRIAL_DAYS * DAY_MS).toISOString() : null,
-        purchasedAt: new Date(now).toISOString(),
       };
       storage.set(RECEIPT_KEY, JSON.stringify(info));
       return info;

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { FlatList, View } from 'react-native';
 
 import { AlphabetRail } from '@/features/exercises/components/alphabet-rail';
-import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
+import { ExerciseIndexRow } from '@/features/exercises/components/exercise-index-row';
 import { MuscleGroupFilter } from '@/features/exercises/components/muscle-group-filter';
 import {
   type ExerciseOption,
@@ -17,7 +17,6 @@ import { useUnits } from '@/shared/data/profile';
 import { formatSet, formatShortDate, type SetValues, type UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
-import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { type ExerciseRecord, useExerciseRecords } from '../data/exercise-records';
@@ -115,33 +114,17 @@ export function ExerciseResults({ query, bottomInset }: ExerciseResultsProps) {
             </Text>
           }
           renderItem={({ item }) => (
-            <View>
-              {item.heading ? (
-                <Text variant="overline" tone="subtle" className="pt-4.5 pb-1.5">
-                  {item.heading}
-                </Text>
-              ) : null}
-              <PressableScale
-                haptic="select"
-                activeScale={0.98}
-                accessibilityRole="button"
-                onPress={() => router.push({ pathname: '/exercise/[id]', params: { id: item.id } })}
-                className="h-19.5 flex-row items-center gap-3.5"
-              >
-                <ExerciseThumb exerciseId={item.id} name={item.name} />
-                <View className="min-w-0 flex-1">
-                  <Text variant="label" numberOfLines={2} className="leading-5">
-                    {item.name}
-                  </Text>
-                  <Text variant="caption" tone="subtle" className="mt-0.5 font-inter">
-                    {t(`groups.${item.group}`)}
-                  </Text>
-                </View>
-                {item.record ? (
+            <ExerciseIndexRow
+              item={item}
+              activeScale={0.98}
+              accessibilityRole="button"
+              onPress={() => router.push({ pathname: '/exercise/[id]', params: { id: item.id } })}
+              trailing={
+                item.record ? (
                   <RecordSummary exerciseId={item.id} record={item.record} units={units} />
-                ) : null}
-              </PressableScale>
-            </View>
+                ) : null
+              }
+            />
           )}
         />
         {rest.length ? (

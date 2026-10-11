@@ -5,7 +5,7 @@ import { type MuscleShare, muscleShares } from '@/shared/data/muscles';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
-import { MUSCLE_CARDS, MuscleMap, type MuscleId } from '@/shared/ui/muscle-map';
+import { MuscleCrop, type MuscleId } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
@@ -19,7 +19,6 @@ const FRONT_SIZE = 56;
 const STACK_WIDTH = 116;
 
 function MuscleCircle({ muscle, front }: { muscle: MuscleId | null; front: boolean }) {
-  const card = MUSCLE_CARDS[muscle ?? 'chest'];
   return (
     <View
       className={cn(
@@ -28,12 +27,10 @@ function MuscleCircle({ muscle, front }: { muscle: MuscleId | null; front: boole
         front ? 'border-[1.5px] border-accent' : 'border-2 border-surface',
       )}
     >
-      <MuscleMap
-        view={card.view}
-        viewBox={card.viewBox}
+      <MuscleCrop
+        muscle={muscle ?? 'chest'}
         selected={muscle ? [muscle] : []}
         accent={front ? colors.accent : colors.fg2}
-        fit="cover"
       />
     </View>
   );

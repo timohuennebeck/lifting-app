@@ -5,25 +5,23 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CheckPhoto } from '@/features/body-check/components/check-photo';
+import { PoseChips } from '@/features/body-check/components/pose-chips';
 import {
   type BodyCheck,
   useBodyCheckPhotos,
   useBodyChecks,
 } from '@/features/body-check/data/body-checks';
-import { POSES, type BodyPose } from '@/features/body-check/lib/poses';
+import type { BodyPose } from '@/features/body-check/lib/poses';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { cn } from '@/shared/lib/cn';
 import { DAY_MS } from '@/shared/lib/date';
 import { formatShortDate } from '@/shared/lib/format';
-import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
-import { Chip } from '@/shared/ui/chip';
-import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
-import { BodyPhotoCard } from '../components/body-photo-card';
+import { BodyPhotoCard, CompareArrow } from '../components/body-photo-card';
 import { comparedPair, inOrder } from '../lib/comparison';
 import { useCompareStore } from '../stores/compare-store';
 
@@ -87,7 +85,7 @@ function CheckThumb({ check, pose, storagePath, side, onPress }: CheckThumbProps
  */
 export function CompareScreen() {
   const { side } = useLocalSearchParams<{ side?: string }>();
-  const { t } = useTranslation(['body', 'bodyCheck', 'common']);
+  const { t } = useTranslation(['body', 'common']);
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
   const { data: checks = [] } = useBodyChecks();
@@ -115,19 +113,17 @@ export function CompareScreen() {
     check.id === before.id ? 'A' : check.id === after.id ? 'B' : null;
   const days = Math.round((Date.parse(after.createdAt) - Date.parse(before.createdAt)) / DAY_MS);
 
-  function choose(check: BodyCheck) {
-    if (!before || !after || sideOf(check)) return;
+  const choose = (check: BodyCheck) => {
+    if (sideOf(check)) return;
     // Before always comes first in time: picking past the other side swaps them.
     const pair = active === 'A' ? inOrder(check, after) : inOrder(before, check);
     setPicked({ beforeId: pair.before.id, afterId: pair.after.id });
-  }
+  };
 
-  function done() {
-    if (before && after) {
-      useCompareStore.getState().save(before.id, after.id, checks[checks.length - 1].id);
-    }
+  const done = () => {
+    useCompareStore.getState().save(before.id, after.id, checks[checks.length - 1].id);
     router.back();
-  }
+  };
 
   const card = (check: BodyCheck, cardSide: Side) => (
     <BodyPhotoCard
@@ -152,26 +148,11 @@ export function CompareScreen() {
         <View className="flex-row gap-2.5">
           {card(before, 'A')}
           {card(after, 'B')}
-          <View
-            pointerEvents="none"
-            className="absolute top-1/2 left-1/2 -mt-5 -ml-5 size-10 items-center justify-center rounded-full bg-accent"
-          >
-            <Icon name="arrow-right" size={16} color={colors.onAccent} />
-          </View>
+          <CompareArrow />
         </View>
       </View>
 
-      <View className="flex-row justify-center gap-1.5 px-4 pt-3.5">
-        {POSES.map((p) => (
-          <Chip
-            key={p}
-            label={t(`bodyCheck:poses.${p}.short`)}
-            selected={p === pose}
-            onPress={() => setPose(p)}
-            className="h-7.5 px-2.75"
-          />
-        ))}
-      </View>
+      <PoseChips pose={pose} onChange={setPose} className="px-4 pt-3.5" />
 
       <View className="flex-row items-baseline justify-between gap-3 px-5 pt-7 pb-3">
         <Text variant="overline" tone="subtle" className="text-xs">

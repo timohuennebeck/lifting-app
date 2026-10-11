@@ -16,7 +16,13 @@ import { PlanCard } from '../components/plan-card';
 import { useOffering } from '../hooks/use-offering';
 import { usePaywallFlow } from '../hooks/use-paywall-flow';
 import { usePurchase, useRestorePurchases } from '../hooks/use-purchases';
-import { formatPrice, PLAN_IDS, type PlanId, yearlySavings } from '../lib/purchases-service';
+import {
+  formatPrice,
+  PERIOD_OF,
+  PLAN_IDS,
+  type PlanId,
+  yearlySavings,
+} from '../lib/purchases-service';
 import { useIsPro } from '../stores/subscription-store';
 
 const BENEFITS = ['import', 'history', 'suggestions'] as const;
@@ -33,8 +39,8 @@ export function PaywallScreen() {
   const { restore, restoring } = useRestorePurchases();
   const [selected, setSelected] = useState<PlanId>('yearly');
 
-  const current = plan(selected);
   const price = priceOf(selected);
+  const period = PERIOD_OF[selected];
   const yearly = plan('yearly');
   const savings = offering ? yearlySavings(offering) : null;
   // The yearly plan's price per month, for its small print.
@@ -131,11 +137,11 @@ export function PaywallScreen() {
           onPress={failed ? () => refetch() : onContinue}
         />
         <Text variant="caption" tone="subtle" className="text-center font-inter text-xs">
-          {current && price
+          {price
             ? t(
                 offering?.trialEligible
-                  ? `paywall.fine.${current.period}`
-                  : `paywall.fineNoTrial.${current.period}`,
+                  ? `paywall.fine.${period}`
+                  : `paywall.fineNoTrial.${period}`,
                 { price, perMonth },
               )
             : ' '}

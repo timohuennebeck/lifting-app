@@ -4,7 +4,14 @@ import Svg, { Path } from 'react-native-svg';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 
-import { BODY, type BodyPartId, type BodyPath, type BodyView } from './body-paths';
+import {
+  BODY,
+  type BodyPartId,
+  type BodyPath,
+  type BodyView,
+  MUSCLE_CARDS,
+  type MuscleId,
+} from './body-paths';
 
 const FILL = { sil: '#181818', hd: '#2E2E2E', m: '#3E3E3E', fx: '#3E3E3E' } as const;
 
@@ -96,3 +103,25 @@ export const MuscleMap = memo(function MuscleMap({
     </Svg>
   );
 });
+
+export interface MuscleCropProps {
+  /** The muscle whose crop of the body map (MUSCLE_CARDS) fills the box. */
+  muscle: MuscleId;
+  /** Muscles lit on it; keep it a stable array. */
+  selected: readonly BodyPartId[];
+  accent?: string;
+}
+
+/** The body map cropped to one muscle, covering its box (chips, circles, tiles). */
+export function MuscleCrop({ muscle, selected, accent }: MuscleCropProps) {
+  const card = MUSCLE_CARDS[muscle];
+  return (
+    <MuscleMap
+      view={card.view}
+      viewBox={card.viewBox}
+      selected={selected}
+      accent={accent}
+      fit="cover"
+    />
+  );
+}

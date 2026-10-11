@@ -45,10 +45,8 @@ export interface ScanStageProps {
   /** Stage labels, shown one after another as a segmented progress. */
   stages: readonly string[];
   chips?: ScanChip[];
-  /** Artwork in the middle of the ripples (paper stack, mic, …). */
-  children?: ReactNode;
-  /** Pinned above the artwork, e.g. a progress header. */
-  header?: ReactNode;
+  /** Artwork in the middle of the ripples (the paper stack). */
+  children: ReactNode;
   /** Tapping anywhere, e.g. to skip the animation. */
   onPress?: () => void;
   /** Screen-reader label for `onPress`. */
@@ -61,7 +59,6 @@ export function ScanStage({
   stages,
   chips = [],
   children,
-  header,
   onPress,
   pressLabel,
 }: ScanStageProps) {
@@ -148,11 +145,6 @@ export function ScanStage({
           },
         ]}
       />
-      {header ? (
-        <View className="absolute inset-x-0 top-0" style={{ paddingTop: insets.top }}>
-          {header}
-        </View>
-      ) : null}
       <View
         pointerEvents="none"
         className="absolute items-center justify-center"

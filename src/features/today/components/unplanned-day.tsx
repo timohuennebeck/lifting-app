@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
-import { MUSCLE_CARDS, MuscleMap, type MuscleId } from '@/shared/ui/muscle-map';
+import { MuscleCrop, type MuscleId } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
@@ -17,19 +17,12 @@ const STEP = 44;
 const STACK_WIDTH = STEP * MUSCLES.length + OUTER;
 
 function MuscleCircle({ muscle, left }: { muscle: MuscleId; left: number }) {
-  const card = MUSCLE_CARDS[muscle];
   return (
     <View
       className="absolute top-0 overflow-hidden rounded-full border-bg bg-elevated"
       style={{ left, width: OUTER, height: OUTER, borderWidth: RING }}
     >
-      <MuscleMap
-        view={card.view}
-        viewBox={card.viewBox}
-        selected={[muscle]}
-        accent={colors.dim}
-        fit="cover"
-      />
+      <MuscleCrop muscle={muscle} selected={[muscle]} accent={colors.dim} />
     </View>
   );
 }

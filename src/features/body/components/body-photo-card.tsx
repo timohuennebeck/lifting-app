@@ -30,7 +30,7 @@ export interface BodyPhotoCardProps {
   faded?: boolean;
   /** "A" or "B" in the top-left corner (compare page). */
   badge?: 'A' | 'B';
-  onPress?: () => void;
+  onPress: () => void;
   /** A pencil in the top-right corner, e.g. to pick other checks to compare. */
   onEdit?: () => void;
   editLabel?: string;
@@ -64,70 +64,60 @@ export function BodyPhotoCard({
   onEdit,
   editLabel,
 }: BodyPhotoCardProps) {
-  const className = cn(
-    'h-62.5 w-full overflow-hidden rounded-[22px] bg-surface',
-    selected ? 'border-2 border-accent' : 'border border-white/8',
-    faded && 'opacity-45',
-  );
-  const content = (
-    <>
-      <CheckPhoto
-        checkId={checkId}
-        pose={pose}
-        storagePath={storagePath}
-        fallback={
-          <View className="absolute inset-0 p-4 opacity-60">
-            <MuscleMap view={pose === 'back' ? 'back' : 'front'} />
-          </View>
-        }
-      />
-      {muted ? <View pointerEvents="none" className="absolute inset-0 bg-black/25" /> : null}
-      <Gradient from="bottom" size={80} color="black" opacity={0.8} />
-      <View className="absolute right-3 bottom-3 left-3 flex-row items-end justify-between">
-        <View className="gap-0.5">
-          <Text variant="caption" tone="secondary" className="text-xs">
-            {label}
-          </Text>
-          <Text
-            variant="headline"
-            tone={after ? 'accent' : 'default'}
-            className="text-[28px] leading-7"
-          >
-            {score}
-          </Text>
-        </View>
-        {done ? <CheckBadge size={22} glyph={11} /> : null}
-      </View>
-      {badge ? (
-        <View
-          className={cn(
-            'absolute top-3 left-3 size-6.5 items-center justify-center rounded-full',
-            badge === 'A' ? 'bg-fg' : 'bg-accent',
-          )}
-        >
-          <Text variant="caption" tone="onAccent" className="font-inter-bold text-xs">
-            {badge}
-          </Text>
-        </View>
-      ) : null}
-    </>
-  );
   return (
     <CardSlot>
-      {onPress ? (
-        <PressableScale
-          activeScale={0.98}
-          haptic="select"
-          accessibilityLabel={`${label}, ${score}`}
-          accessibilityState={{ selected }}
-          onPress={onPress}
-          className={className}
-        >
-          {content}
-        </PressableScale>
-      ) : (
-        <View className={className}>{content}</View>
-      )}
+      <PressableScale
+        activeScale={0.98}
+        haptic="select"
+        accessibilityLabel={`${label}, ${score}`}
+        accessibilityState={{ selected }}
+        onPress={onPress}
+        className={cn(
+          'h-62.5 w-full overflow-hidden rounded-[22px] bg-surface',
+          selected ? 'border-2 border-accent' : 'border border-white/8',
+          faded && 'opacity-45',
+        )}
+      >
+        <CheckPhoto
+          checkId={checkId}
+          pose={pose}
+          storagePath={storagePath}
+          fallback={
+            <View className="absolute inset-0 p-4 opacity-60">
+              <MuscleMap view={pose === 'back' ? 'back' : 'front'} />
+            </View>
+          }
+        />
+        {muted ? <View pointerEvents="none" className="absolute inset-0 bg-black/25" /> : null}
+        <Gradient from="bottom" size={80} color="black" opacity={0.8} />
+        <View className="absolute right-3 bottom-3 left-3 flex-row items-end justify-between">
+          <View className="gap-0.5">
+            <Text variant="caption" tone="secondary" className="text-xs">
+              {label}
+            </Text>
+            <Text
+              variant="headline"
+              tone={after ? 'accent' : 'default'}
+              className="text-[28px] leading-7"
+            >
+              {score}
+            </Text>
+          </View>
+          {done ? <CheckBadge size={22} glyph={11} /> : null}
+        </View>
+        {badge ? (
+          <View
+            className={cn(
+              'absolute top-3 left-3 size-6.5 items-center justify-center rounded-full',
+              badge === 'A' ? 'bg-fg' : 'bg-accent',
+            )}
+          >
+            <Text variant="caption" tone="onAccent" className="font-inter-bold text-xs">
+              {badge}
+            </Text>
+          </View>
+        ) : null}
+      </PressableScale>
       {/* Beside the card, not in it: a button can't sit inside another one (web). */}
       {onEdit ? (
         <PressableScale
@@ -175,5 +165,17 @@ export function NextCheckCard({ title, note, onPress }: NextCheckCardProps) {
         </Text>
       </PressableScale>
     </CardSlot>
+  );
+}
+
+/** The accent arrow from the before to the after card, centred on their row. */
+export function CompareArrow() {
+  return (
+    <View
+      pointerEvents="none"
+      className="absolute top-1/2 left-1/2 -mt-5 -ml-5 size-10 items-center justify-center rounded-full bg-accent"
+    >
+      <Icon name="arrow-right" size={16} color={colors.onAccent} />
+    </View>
   );
 }

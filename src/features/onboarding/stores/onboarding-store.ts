@@ -11,7 +11,7 @@ import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 export interface OnboardingDraft {
   firstName: string;
   sex: Sex | null;
-  /** ISO date (YYYY-MM-DD); null until a valid one is typed. */
+  /** ISO date (YYYY-MM-DD); null until an allowed one is picked. */
   birthDate: string | null;
   unitSystem: UnitSystem;
   weightKg: number;

@@ -1,7 +1,7 @@
 import { ageFrom, type Profile } from '@/shared/data/profile';
 
 /** The body check is for adults only; the analysis function checks it too. */
-export const BODY_CHECK_MIN_AGE = 18;
+const BODY_CHECK_MIN_AGE = 18;
 
 /** Whether the profile's birth date allows body checks (an unknown one does not). */
 export const isBodyCheckAge = (birthDate: Profile['birthDate'] | undefined) =>

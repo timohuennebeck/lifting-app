@@ -11,7 +11,6 @@ import {
   type CustomerInfo,
   NO_PRO,
   NothingToRestoreError,
-  PERIOD_OF,
   PLAN_IDS,
   type PlanId,
   PurchaseCancelledError,
@@ -48,7 +47,6 @@ function toCustomerInfo(info: StoreCustomerInfo): CustomerInfo {
     isPro: true,
     plan: planOfProduct(pro.productIdentifier),
     trialEndsAt: pro.periodType === 'TRIAL' ? pro.expirationDate : null,
-    purchasedAt: pro.latestPurchaseDate,
   };
 }
 
@@ -114,11 +112,7 @@ export function createRevenueCatPurchases(apiKey: string): PurchasesService {
       }
       return {
         currency: products[0].currencyCode,
-        plans: plans.map(({ id, product }) => ({
-          id,
-          price: product.price,
-          period: PERIOD_OF[id],
-        })),
+        plans: plans.map(({ id, product }) => ({ id, price: product.price })),
         trialDays,
         trialEligible,
       };

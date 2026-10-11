@@ -2,13 +2,13 @@
 // Deno APIs, so it can be tested outside the Edge runtime.
 
 export const POSES = ['front', 'side', 'back'] as const;
-export type Pose = (typeof POSES)[number];
+type Pose = (typeof POSES)[number];
 
 /** Muscle groups a check scores, in the app's order. */
-export const GROUPS = ['shoulders', 'chest', 'arms', 'back', 'core', 'legs'] as const;
-export type Group = (typeof GROUPS)[number];
+const GROUPS = ['shoulders', 'chest', 'arms', 'back', 'core', 'legs'] as const;
+type Group = (typeof GROUPS)[number];
 
-export const PHOTO_ISSUES = [
+const PHOTO_ISSUES = [
   'none',
   'dark',
   'blurry',
@@ -17,7 +17,7 @@ export const PHOTO_ISSUES = [
   'no_person',
   'clothing',
 ] as const;
-export type PhotoIssue = Exclude<(typeof PHOTO_ISSUES)[number], 'none'>;
+type PhotoIssue = Exclude<(typeof PHOTO_ISSUES)[number], 'none'>;
 
 export interface AnalysisProfile {
   sex: string | null;
@@ -28,7 +28,7 @@ export interface AnalysisProfile {
   experience: string | null;
 }
 
-export interface Metrics {
+interface Metrics {
   bodyFat: number;
   proportions: number;
   definition: number;
@@ -41,13 +41,13 @@ export interface PreviousCheck {
   metrics: Partial<Metrics>;
 }
 
-export interface CheckResult {
+interface CheckResult {
   score: number;
   groupScores: Record<Group, number>;
   metrics: Metrics;
 }
 
-export type Analysis =
+type Analysis =
   | { status: 'ok'; result: CheckResult }
   | { status: 'retake'; issues: { pose: Pose; issue: PhotoIssue }[] };
 
@@ -179,11 +179,7 @@ export function modelInput(context: string, photos: Photos, previous: Partial<Ph
 }
 
 /** Overall score: muscle groups weigh 60 %, proportions and definition 20 % each. */
-export function overallScore(
-  groups: Record<Group, number>,
-  proportions: number,
-  definition: number,
-) {
+function overallScore(groups: Record<Group, number>, proportions: number, definition: number) {
   const mean = GROUPS.reduce((sum, g) => sum + groups[g], 0) / GROUPS.length;
   return round(0.6 * mean + 0.2 * proportions + 0.2 * definition, 0, 100);
 }

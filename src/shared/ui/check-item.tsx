@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { type StyleProp, View, type ViewStyle } from 'react-native';
+import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
@@ -13,15 +13,14 @@ export interface CheckBadgeProps {
   /** Size of the check glyph in pt. */
   glyph: number;
   className?: string;
-  style?: StyleProp<ViewStyle>;
 }
 
 /** Accent circle with a check: done, selected or included. */
-export function CheckBadge({ size, glyph, className, style }: CheckBadgeProps) {
+export function CheckBadge({ size, glyph, className }: CheckBadgeProps) {
   return (
     <View
       className={cn('items-center justify-center rounded-full bg-accent', className)}
-      style={[{ width: size, height: size }, style]}
+      style={{ width: size, height: size }}
     >
       <Icon name="check" size={glyph} color={colors.onAccent} />
     </View>

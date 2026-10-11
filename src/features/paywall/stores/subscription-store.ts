@@ -3,26 +3,20 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { mmkvStorage } from '@/shared/lib/storage';
 
-import { type CustomerInfo, type PlanId, purchases } from '../lib/purchases-service';
+import { type CustomerInfo, NO_PRO, purchases } from '../lib/purchases-service';
 
-interface SubscriptionState {
-  isPro: boolean;
-  plan: PlanId | null;
-  /** ISO timestamp; set while the purchase started with a free trial. */
-  trialEndsAt: string | null;
+interface SubscriptionState extends CustomerInfo {
   /** Mirrors what the purchases service reported after a purchase or restore. */
   apply: (info: CustomerInfo) => void;
   reset: () => void;
 }
 
-const empty = { isPro: false, plan: null, trialEndsAt: null };
-
 export const useSubscriptionStore = create<SubscriptionState>()(
   persist(
     (set) => ({
-      ...empty,
+      ...NO_PRO,
       apply: ({ isPro, plan, trialEndsAt }) => set({ isPro, plan, trialEndsAt }),
-      reset: () => set(empty),
+      reset: () => set(NO_PRO),
     }),
     { name: 'subscription', storage: createJSONStorage(() => mmkvStorage) },
   ),

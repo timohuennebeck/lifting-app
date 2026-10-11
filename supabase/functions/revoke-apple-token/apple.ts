@@ -18,7 +18,7 @@ export interface AppleConfig {
 const utf8 = (text: string) => new TextEncoder().encode(text);
 
 /** The short-lived ES256 JWT Apple takes instead of a fixed client secret. */
-export async function clientSecret(config: AppleConfig, now = Date.now()) {
+async function clientSecret(config: AppleConfig, now = Date.now()) {
   const der = decodeBase64(config.privateKey.replace(/-----[^-]+-----|\\n|\s/g, ''));
   const key = await crypto.subtle.importKey(
     'pkcs8',

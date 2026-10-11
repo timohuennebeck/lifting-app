@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated, { scrollTo, useAnimatedRef } from 'react-native-reanimated';
@@ -8,8 +8,8 @@ import { scheduleOnUI } from 'react-native-worklets';
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { exerciseName } from '@/shared/data/exercises';
 import type { WorkoutExercise } from '@/shared/data/workouts';
+import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
 import { cn } from '@/shared/lib/cn';
-import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { CheckBadge } from '@/shared/ui/check-item';
 import { Icon } from '@/shared/ui/icon';
@@ -39,8 +39,7 @@ export function ExerciseStrip({
 }: ExerciseStripProps) {
   const { t, i18n } = useTranslation('workout');
   const scroll = useAnimatedRef<Animated.ScrollView>();
-  // Letting go of a dragged tile also ends a press on it; that one isn't a tap.
-  const dragging = useRef(false);
+  const drag = useSortableDrag(({ key, toIndex }) => onReorder(key, toIndex));
 
   // Keep the current exercise in view when it changes.
   useEffect(() => {
@@ -69,18 +68,9 @@ export function ExerciseStrip({
         columnGap={GAP}
         scrollableRef={scroll}
         autoScrollDirection="horizontal"
-        dragActivationDelay={250}
+        {...drag.gridProps}
         activeItemScale={1.06}
         inactiveItemOpacity={0.7}
-        hapticsEnabled={false}
-        onDragStart={() => {
-          dragging.current = true;
-          haptics.press();
-        }}
-        onDragEnd={({ key, fromIndex, toIndex }) => {
-          setTimeout(() => (dragging.current = false), 150);
-          if (toIndex !== fromIndex) onReorder(key, toIndex);
-        }}
         renderItem={({ item: exercise, index: i }) => {
           const current = i === currentIndex;
           const done = exercise.sets.length > 0 && exercise.sets.every((s) => s.completedAt);
@@ -90,9 +80,7 @@ export function ExerciseStrip({
               haptic="select"
               accessibilityLabel={name}
               accessibilityState={{ selected: current }}
-              onPress={() => {
-                if (!dragging.current) onSelect(i);
-              }}
+              onPress={drag.unlessDragging(() => onSelect(i))}
               className="w-16 gap-1.5"
             >
               <View>

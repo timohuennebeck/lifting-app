@@ -4,8 +4,7 @@ import { View } from 'react-native';
 import { muscleShares } from '@/shared/data/muscles';
 import type { TemplateSummary } from '@/shared/data/templates';
 import { haptics } from '@/shared/lib/haptics';
-import { colors } from '@/shared/lib/theme';
-import { MUSCLE_CARDS, MuscleMap } from '@/shared/ui/muscle-map';
+import { MuscleCrop } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
@@ -14,16 +13,9 @@ import { rescheduleTemplate } from '../data/today-mutations';
 
 function TemplateMuscle({ template }: { template: TemplateSummary }) {
   const top = muscleShares(template.items)[0]?.muscle;
-  const card = MUSCLE_CARDS[top ?? 'chest'];
   return (
     <View className="size-11 overflow-hidden rounded-full bg-elevated">
-      <MuscleMap
-        view={card.view}
-        viewBox={card.viewBox}
-        selected={top ? [top] : []}
-        accent={colors.accent}
-        fit="cover"
-      />
+      <MuscleCrop muscle={top ?? 'chest'} selected={top ? [top] : []} />
     </View>
   );
 }

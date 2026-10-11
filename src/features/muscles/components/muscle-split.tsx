@@ -10,13 +10,12 @@ interface MuscleGroupProps {
   label: string;
   shares: MuscleShare[];
   primary: boolean;
-  className?: string;
 }
 
 /** "PRIMÄR ②" over its chips; primary in neon, secondary in grey. */
-function MuscleGroup({ label, shares, primary, className }: MuscleGroupProps) {
+function MuscleGroup({ label, shares, primary }: MuscleGroupProps) {
   return (
-    <View className={cn('gap-3.5', className)}>
+    <View className="gap-3.5">
       <View className="flex-row items-center gap-2" accessibilityRole="header">
         <Text variant="overline" tone={primary ? 'accent' : 'subtle'}>
           {label}

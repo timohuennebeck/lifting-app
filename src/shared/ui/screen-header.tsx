@@ -20,7 +20,6 @@ const ICON_SIZE: Record<HeaderIcon, number> = {
 export interface ScreenHeaderProps {
   /** Leading button: back chevron (thin on the training screens) or close cross. */
   icon?: HeaderIcon;
-  iconSize?: number;
   /** Defaults to `router.back()`. */
   onBack?: () => void;
   /** A string renders as a centred one-line title. */
@@ -34,7 +33,6 @@ export interface ScreenHeaderProps {
 /** Top bar of pushed and modal screens: back/close button, title and an optional action. */
 export function ScreenHeader({
   icon = 'chevron-left',
-  iconSize,
   onBack,
   title,
   action,
@@ -45,7 +43,7 @@ export function ScreenHeader({
     <View className={cn('flex-row items-center gap-3 px-4 py-1.5', className)}>
       <IconButton
         icon={icon}
-        iconSize={iconSize ?? ICON_SIZE[icon]}
+        iconSize={ICON_SIZE[icon]}
         accessibilityLabel={t(icon === 'close' ? 'actions.close' : 'actions.back')}
         onPress={onBack ?? (() => router.back())}
       />

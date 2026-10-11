@@ -3,13 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
-import {
-  MUSCLE_CARDS,
-  MUSCLE_IDS,
-  MuscleMap,
-  type MuscleId,
-  MusclePercent,
-} from '@/shared/ui/muscle-map';
+import { MUSCLE_IDS, MuscleCrop, type MuscleId, MusclePercent } from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
 
 export interface MuscleShareTileProps {
@@ -30,7 +24,6 @@ export const MuscleShareTile = memo(function MuscleShareTile({
   trained,
 }: MuscleShareTileProps) {
   const { t } = useTranslation('muscles');
-  const card = MUSCLE_CARDS[muscle];
   return (
     <View
       className={cn(
@@ -44,12 +37,7 @@ export const MuscleShareTile = memo(function MuscleShareTile({
           trained ? 'bg-elevated' : 'bg-surface',
         )}
       >
-        <MuscleMap
-          view={card.view}
-          viewBox={card.viewBox}
-          selected={trained ? ONLY[muscle] : NONE}
-          fit="cover"
-        />
+        <MuscleCrop muscle={muscle} selected={trained ? ONLY[muscle] : NONE} />
       </View>
       <View className="gap-0.5 px-1">
         <MusclePercent percent={percent} muted={!trained} />

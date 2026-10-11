@@ -4,8 +4,8 @@
 // the photos to retake. Every analysis takes a row in body_check_analyses first, which limits how
 // often a user can run one and is the only source the saved check's values are taken from.
 import { encodeBase64 } from 'jsr:@std/encoding@1/base64';
-import { createClient } from 'jsr:@supabase/supabase-js@2';
 
+import { admin, reply, requestUser } from '../_shared/common.ts';
 import {
   ageFrom,
   type AnalysisProfile,
@@ -36,18 +36,6 @@ const OPENAI_REASONING_EFFORT = Deno.env.get('OPENAI_REASONING_EFFORT');
 const REVENUECAT_SECRET_KEY = Deno.env.get('REVENUECAT_SECRET_KEY');
 /** RevenueCat entitlement that unlocks Traqa Pro (same as the app). */
 const PRO_ENTITLEMENT = 'pro';
-
-const admin = createClient(
-  Deno.env.get('SUPABASE_URL')!,
-  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-  { auth: { persistSession: false, autoRefreshToken: false } },
-);
-
-const reply = (status: number, body: unknown) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  });
 
 async function photoDataUrl(path: string) {
   const { data, error } = await admin.storage.from(BUCKET).download(path);
@@ -121,9 +109,7 @@ Deno.serve(async (req) => {
     return reply(500, { error: 'not_configured' });
   }
 
-  const token = req.headers.get('Authorization')?.replace(/^Bearer\s+/i, '');
-  const { data: auth } = token ? await admin.auth.getUser(token) : { data: { user: null } };
-  const userId = auth.user?.id;
+  const userId = (await requestUser(req))?.id;
   if (!userId) return reply(401, { error: 'unauthorized' });
 
   const { checkId } = await req.json().catch(() => ({}));
