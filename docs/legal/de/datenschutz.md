@@ -274,9 +274,10 @@ Wenn wir Daten in ein Drittland übermitteln, stützen wir das auf einen Angemes
 
 Du kannst dein Konto jederzeit in der App löschen: in den Einstellungen unter „Konto löschen“. Dabei passiert Folgendes:
 
-1. Die App löscht dein Profilfoto, deine Körpercheck-Fotos und deine Support-Screenshots aus unserem Speicher.
-2. Danach wird dein Konto gelöscht. Damit werden automatisch alle zugehörigen Daten in unserer Datenbank gelöscht: Profil, Pläne, Trainings, Körperchecks, Support-Anfragen mit allen Nachrichten und deine gespeicherten Zustimmungen.
-3. Zum Schluss meldet die App dich auf diesem Gerät ab und löscht die dort gespeicherten Daten.
+1. Hast du dich mit Apple angemeldet, bestätigst du das auf einem Apple-Gerät noch einmal bei Apple. Damit beenden wir die Verbindung zwischen deinem Apple Account und Traqa: Unser Server tauscht die Bestätigung bei Apple gegen deine Anmeldeschlüssel und lässt sie sofort ungültig machen. Gespeichert wird dabei nichts.
+2. Die App löscht dein Profilfoto, deine Körpercheck-Fotos und deine Support-Screenshots aus unserem Speicher.
+3. Danach wird dein Konto gelöscht. Damit werden automatisch alle zugehörigen Daten in unserer Datenbank gelöscht: Profil, Pläne, Trainings, Körperchecks, Support-Anfragen mit allen Nachrichten und deine gespeicherten Zustimmungen.
+4. Zum Schluss meldet die App dich auf diesem Gerät ab und löscht die dort gespeicherten Daten.
 
 **Ein laufendes Abo endet dadurch nicht.** Kündige es im App Store oder bei Google Play.
 

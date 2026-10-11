@@ -137,6 +137,13 @@ app ID, so no secret is needed.
 2. **Supabase (local):** already on in `config.toml` (`[auth.external.apple]`).
 3. **Supabase (production):** Authentication → Providers → Apple: enable, Client IDs
    `app.traqa.mobile`.
+4. **Revoking on account deletion** (App Store guideline 5.1.1(v)): deleting an Apple account
+   shows Apple's sheet once more; the `revoke-apple-token` Edge Function exchanges that code and
+   revokes the tokens. It needs a Sign in with Apple key: Apple Developer → Keys → new key with
+   "Sign in with Apple" (primary app ID `app.traqa.mobile`), download the `.p8` (only possible
+   once). Put `APPLE_TEAM_ID`, `APPLE_KEY_ID` and `APPLE_PRIVATE_KEY` in
+   `supabase/functions/.env` (see the example file); in production set the secrets and deploy
+   the function. Without them the deletion still works, only the revocation is skipped.
 
 ## Languages
 

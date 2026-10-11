@@ -413,6 +413,10 @@ deno_version = 2
 # The function checks the user's token itself, which works with the asymmetric signing keys.
 verify_jwt = false
 
+[functions.revoke-apple-token]
+# Same as above: the function checks the user's token itself.
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 55327

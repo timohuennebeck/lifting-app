@@ -1,3 +1,5 @@
+import { revokeAppleSignIn } from '@/features/auth/lib/apple-sign-in';
+import { appleSignInAvailable } from '@/features/auth/lib/social-sign-in';
 import { ATTACHMENT_BUCKET } from '@/features/support/data/attachments';
 import { PHOTO_BUCKET } from '@/features/body-check/lib/photo-files';
 import { AVATAR_BUCKET } from '@/shared/data/avatar';
@@ -22,11 +24,22 @@ async function listFiles(bucket: string, folder: string): Promise<string[]> {
   }
 }
 
+/** Whether the signed-in account has signed in with Apple. */
+async function usesApple() {
+  const { data } = await supabase.auth.getSession();
+  const providers: unknown = data.session?.user.app_metadata?.providers;
+  return Array.isArray(providers) && providers.includes('apple');
+}
+
 /**
  * Deletes the signed-in user's account for good: their files (profile photo, body-check photos,
  * support screenshots), then the user, which removes all their rows; then signs out on this device.
+ * An Apple account first lets Apple revoke the app's access; closing Apple's sheet cancels, and
+ * then this resolves false with nothing deleted.
  */
 export async function deleteAccount(userId: string) {
+  // Only possible where Sign in with Apple exists; an Apple account deleted on Android stays linked.
+  if (appleSignInAvailable && (await usesApple()) && !(await revokeAppleSignIn())) return false;
   for (const bucket of [AVATAR_BUCKET, PHOTO_BUCKET, ATTACHMENT_BUCKET]) {
     const paths = await listFiles(bucket, userId);
     for (let i = 0; i < paths.length; i += PAGE) {
@@ -38,4 +51,5 @@ export async function deleteAccount(userId: string) {
   if (error) throw error;
   // The user is gone, so there is no server session left to end: only this device's.
   await supabase.auth.signOut({ scope: 'local' });
+  return true;
 }

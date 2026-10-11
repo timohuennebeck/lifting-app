@@ -73,8 +73,8 @@ export function SettingsScreen() {
   const removeAccount = async () => {
     setDeleting(true);
     try {
-      // The root guard leaves the app once the session is gone.
-      await deleteAccount(requireUserId());
+      // The root guard leaves the app once the session is gone. Closing Apple's sheet cancels.
+      if (!(await deleteAccount(requireUserId()))) setDeleting(false);
     } catch (error) {
       console.warn('Deleting the account failed', error);
       haptics.error();

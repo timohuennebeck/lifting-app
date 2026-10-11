@@ -41,3 +41,23 @@ export async function signInWithApple() {
     throw error;
   }
 }
+
+/**
+ * Account deletion: Apple's sheet once more for a fresh authorization code, with which the server
+ * revokes the app's Apple tokens (App Store guideline 5.1.1(v)). False when the user closes the
+ * sheet; a failed revocation doesn't hold up the deletion.
+ */
+export async function revokeAppleSignIn() {
+  let code: string | null;
+  try {
+    ({ authorizationCode: code } = await signInAsync());
+  } catch (error) {
+    if (isCancel(error)) return false;
+    console.warn('Apple sign-in for the revocation failed', error);
+    return true;
+  }
+  if (!code) return true;
+  const { error } = await supabase.functions.invoke('revoke-apple-token', { body: { code } });
+  if (error) console.warn('Revoking the Apple tokens failed', error);
+  return true;
+}
