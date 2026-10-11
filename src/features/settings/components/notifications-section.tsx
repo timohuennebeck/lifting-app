@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useSettingsStore } from '@/shared/stores/settings-store';
+
 import { SettingsSection, SettingsToggleRow } from './settings-section';
 
 /**
- * Workout reminder and rest-end sound. Design only for now: the switches don't schedule
- * reminders or play sounds yet, and they aren't saved.
+ * Workout reminder and rest-end sound. The reminder is design only for now (it schedules
+ * nothing and isn't saved); the rest sound is a saved setting the rest timer follows.
  */
 export function NotificationsSection() {
   const { t } = useTranslation('profile');
   const [reminder, setReminder] = useState(true);
-  const [restSound, setRestSound] = useState(true);
+  const restSound = useSettingsStore((s) => s.restSound);
   return (
     <SettingsSection title={t('settings.notifications.title')}>
       <SettingsToggleRow
@@ -21,7 +23,7 @@ export function NotificationsSection() {
       <SettingsToggleRow
         label={t('settings.notifications.restSound')}
         value={restSound}
-        onChange={setRestSound}
+        onChange={useSettingsStore.getState().setRestSound}
       />
     </SettingsSection>
   );

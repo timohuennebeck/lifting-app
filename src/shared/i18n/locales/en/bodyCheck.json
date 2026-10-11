@@ -28,6 +28,8 @@
       "allow": "Allow camera",
       "settings": "Open settings"
     },
+    "auto": "Auto",
+    "autoA11y": "Automatic: one tap takes all photos one after another",
     "timer": "Timer {{value}}",
     "timerOff": "off",
     "seconds": "{{value}} s",

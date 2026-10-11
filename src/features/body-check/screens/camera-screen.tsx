@@ -8,7 +8,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
+import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
+import { playSound, preloadSounds } from '@/shared/lib/sounds';
 import { CameraPermission } from '@/shared/ui/camera/camera-permission';
 import {
   CameraSideButton,
@@ -27,7 +29,7 @@ import { PoseStrip } from '../components/pose-strip';
 import { useCloseCheck } from '../hooks/use-close-check';
 import { assessPhoto } from '../lib/body-check-service';
 import { deleteFile, storeShot } from '../lib/photo-files';
-import { POSES } from '../lib/poses';
+import { POSES, type TimerSeconds } from '../lib/poses';
 import { startBodyCheck, useBodyCheckStore } from '../stores/body-check-store';
 
 /** Design offsets (390×844 frame) of the framing corners above the controls. */
@@ -40,7 +42,12 @@ const BOTTOM_SCRIM: GradientStop[] = [
   [1, 0],
 ];
 
-/** 08a: full-screen camera that walks through the three poses, with self-timer. */
+const TIMER_SOUNDS = { 3: 'photoTimer3', 10: 'photoTimer10' } as const;
+
+/**
+ * 08a: full-screen camera that walks through the three poses, with self-timer. The timer sound
+ * ticks the countdown and clicks when the photo is taken; with Auto on, one tap takes them all.
+ */
 export function CameraScreen() {
   const { t } = useTranslation(['bodyCheck', 'common']);
   const insets = useSafeAreaInsets();
@@ -63,7 +70,11 @@ export function CameraScreen() {
   const shots = useBodyCheckStore((s) => s.shots);
   const pose = useBodyCheckStore((s) => s.pose);
   const timer = useBodyCheckStore((s) => s.timer);
+  const auto = useBodyCheckStore((s) => s.auto);
   const facing = useBodyCheckStore((s) => s.facing);
+  // When the running countdown ends, and how to silence its sound if it's cancelled.
+  const countdownEndsAt = useRef(0);
+  const stopTimerSound = useRef<(() => void) | null>(null);
   const flash = useShutterFlash();
   const taken = POSES.filter((p) => shots[p]).length;
 
@@ -71,6 +82,25 @@ export function CameraScreen() {
   useEffect(() => {
     if (!useBodyCheckStore.getState().checkId) startBodyCheck();
   }, []);
+
+  // Loaded ahead so the countdown sound starts in step; silenced when the camera closes.
+  useEffect(() => {
+    preloadSounds('photoTimer3', 'photoTimer10');
+    return () => stopTimerSound.current?.();
+  }, []);
+
+  function startCountdown(seconds: Exclude<TimerSeconds, 0>) {
+    haptics.tap();
+    countdownEndsAt.current = Date.now() + seconds * 1000;
+    stopTimerSound.current = playSound(TIMER_SOUNDS[seconds]);
+    setCount(seconds);
+  }
+
+  function cancelCountdown() {
+    stopTimerSound.current?.();
+    stopTimerSound.current = null;
+    setCount(0);
+  }
 
   // The user asked for the camera by starting the check, so ask the system right away.
   const permissionStatus = permission?.status;
@@ -86,7 +116,8 @@ export function CameraScreen() {
     return () => sub.remove();
   }, [getPermission]);
 
-  async function capture() {
+  /** `timed`: the timer sound already clicked, so the camera's own shutter sound stays off. */
+  async function capture(timed: boolean) {
     const store = useBodyCheckStore.getState();
     if (!camera.current || !store.checkId || busy) return;
     const target = store.pose;
@@ -96,7 +127,7 @@ export function CameraScreen() {
     haptics.heavy();
     flash.fire();
     try {
-      const pic = await camera.current.takePictureAsync({ quality: 0.9 });
+      const pic = await camera.current.takePictureAsync({ quality: 0.9, shutterSound: !timed });
       const stored = await storeShot(pic, id, target);
       const current = useBodyCheckStore.getState();
       // The check was closed while the photo was processed.
@@ -104,9 +135,14 @@ export function CameraScreen() {
       const issue = assessPhoto(stored);
       if (issue) haptics.warning();
       current.addShot(target, { ...stored, issue });
-      const complete = POSES.every((p) => useBodyCheckStore.getState().shots[p]);
+      const next = useBodyCheckStore.getState();
+      const complete = POSES.every((p) => next.shots[p]);
       const openReview = current.retaking || (complete && !wasComplete);
       if (openReview && focusedRef.current) router.push('/body-check/review');
+      // Auto: the next missing pose (already selected) gets its countdown right away.
+      else if (next.auto && next.timer && !complete && focusedRef.current) {
+        startCountdown(next.timer);
+      }
     } catch (error) {
       console.warn('Body-check photo failed', error);
       Alert.alert(t('camera.error'));
@@ -117,19 +153,23 @@ export function CameraScreen() {
 
   const tick = useEffectEvent(() => {
     // Leaving the screen (review opened on top) cancels the countdown.
-    if (!focused) return setCount(0);
+    if (!focused) return cancelCountdown();
     if (count > 1) {
       haptics.tap();
       setCount(count - 1);
       return;
     }
+    stopTimerSound.current = null;
     setCount(0);
-    void capture();
+    void capture(true);
   });
 
   useEffect(() => {
     if (count <= 0) return;
-    const id = setTimeout(tick, 1000);
+    // Every step is due at a fixed time from the start, so the photo is taken right on the
+    // timer sound's shutter click instead of drifting with each render.
+    const due = countdownEndsAt.current - (count - 1) * 1000;
+    const id = setTimeout(tick, Math.max(0, due - Date.now()));
     return () => clearTimeout(id);
   }, [count]);
 
@@ -137,12 +177,11 @@ export function CameraScreen() {
     if (busy) return;
     if (count > 0) {
       haptics.select();
-      setCount(0);
+      cancelCountdown();
       return;
     }
-    if (!timer) return void capture();
-    haptics.tap();
-    setCount(timer);
+    if (!timer) return void capture(false);
+    startCountdown(timer);
   }
 
   if (!permission) return <View className="flex-1 bg-black" />;
@@ -238,6 +277,21 @@ export function CameraScreen() {
               >
                 {t(`poses.${pose}.short`)}
               </Text>
+              <PressableScale
+                haptic="select"
+                accessibilityRole="switch"
+                accessibilityLabel={t('camera.autoA11y')}
+                accessibilityState={{ checked: auto }}
+                onPress={() => useBodyCheckStore.getState().toggleAuto()}
+                className={cn(
+                  'mr-2 h-10.5 justify-center rounded-full px-3.5',
+                  auto ? 'bg-accent' : 'bg-elevated',
+                )}
+              >
+                <Text variant="caption" tone={auto ? 'onAccent' : 'default'}>
+                  {t('camera.auto')}
+                </Text>
+              </PressableScale>
               <PressableScale
                 haptic="select"
                 accessibilityLabel={t('camera.timerA11y')}

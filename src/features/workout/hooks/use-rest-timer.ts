@@ -4,21 +4,44 @@ import { useSharedValue, withDelay, withSequence, withTiming } from 'react-nativ
 import { useNow } from '@/shared/hooks/use-now';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
+import { playSound, preloadSounds } from '@/shared/lib/sounds';
+import { useSettingsStore } from '@/shared/stores/settings-store';
 
 import { useWorkoutSessionStore } from '../stores/workout-session-store';
 
 // A timer that ran out this long ago (e.g. app was closed) ends silently.
 const STALE_MS = 5000;
+/** The rest-end sound's chime comes this long after it starts, so it starts this early. */
+const SOUND_LEAD_MS = 3000;
 
 /**
  * Rest countdown from the session store. Fires a haptic and a flash (0→1→0
- * shared value) when it reaches zero. Mount it once per screen.
+ * shared value) when it reaches zero, and plays the rest-end sound so its chime lands on zero
+ * (unless it is turned off in Settings). Mount it once per screen.
  */
 export function useRestTimer() {
   const restEndsAt = useWorkoutSessionStore((s) => s.restEndsAt);
   const restSeconds = useWorkoutSessionStore((s) => s.restSeconds);
+  const restSound = useSettingsStore((s) => s.restSound);
   const now = useNow(250, restEndsAt != null);
   const flash = useSharedValue(0);
+
+  useEffect(() => {
+    if (restEndsAt == null || !restSound) return;
+    preloadSounds('restEnd');
+    let stop: (() => void) | undefined;
+    const start = () => {
+      // A rest shorter than the lead starts the sound part-way, so the chime still lands on zero.
+      const late = SOUND_LEAD_MS - (restEndsAt - Date.now());
+      stop = playSound('restEnd', Math.max(0, late) / 1000);
+    };
+    const id = setTimeout(start, Math.max(0, restEndsAt - SOUND_LEAD_MS - Date.now()));
+    return () => {
+      clearTimeout(id);
+      // Skipped or changed before the end: silence it. At the end the chime plays out.
+      if (Date.now() < restEndsAt) stop?.();
+    };
+  }, [restEndsAt, restSound]);
 
   useEffect(() => {
     if (restEndsAt == null) return;

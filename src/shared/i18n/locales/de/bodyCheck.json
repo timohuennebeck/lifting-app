@@ -28,6 +28,8 @@
       "allow": "Kamera erlauben",
       "settings": "Einstellungen öffnen"
     },
+    "auto": "Auto",
+    "autoA11y": "Automatisch: ein Tipp nimmt alle Fotos nacheinander auf",
     "timer": "Timer {{value}}",
     "timerOff": "Aus",
     "seconds": "{{value}} s",

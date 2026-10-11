@@ -28,6 +28,8 @@
       "allow": "Permitir câmera",
       "settings": "Abrir ajustes"
     },
+    "auto": "Auto",
+    "autoA11y": "Automático: um toque tira todas as fotos em sequência",
     "timer": "Timer {{value}}",
     "timerOff": "desligado",
     "seconds": "{{value}} s",

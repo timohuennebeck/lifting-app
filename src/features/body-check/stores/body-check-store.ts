@@ -43,6 +43,8 @@ interface BodyCheckState {
   result: BodyCheckResult | null;
   /** Persisted camera preferences. */
   timer: TimerSeconds;
+  /** One shutter tap takes every photo: each one starts the next pose's countdown. */
+  auto: boolean;
   facing: CameraFacing;
   start: () => void;
   setPose: (pose: BodyPose) => void;
@@ -54,6 +56,7 @@ interface BodyCheckState {
   rejectShots: (rejections: PhotoRejection[]) => void;
   setResult: (result: BodyCheckResult) => void;
   cycleTimer: () => void;
+  toggleAuto: () => void;
   toggleFacing: () => void;
   /** Drops the draft and deletes its photos. */
   discard: () => void;
@@ -77,12 +80,13 @@ function removeUploads(checkId: string) {
   if (userId) removeUploadedPhotos(checkId, userId);
 }
 
-/** Draft of the running body check plus the camera's timer and lens preferences. */
+/** Draft of the running body check plus the camera's timer, auto and lens preferences. */
 export const useBodyCheckStore = create<BodyCheckState>()(
   persist(
     (set, get) => ({
       ...EMPTY,
       timer: TIMER_STEPS[0],
+      auto: false,
       facing: 'front',
       start: () => {
         get().discard();
@@ -116,10 +120,15 @@ export const useBodyCheckStore = create<BodyCheckState>()(
         set({ shots, reviewPose: rejections[0]?.pose ?? null });
       },
       setResult: (result) => set({ result }),
+      // Auto needs a countdown to turn to the next pose: no timer means no auto, and turning
+      // auto on brings the shortest timer back.
       cycleTimer: () =>
-        set((s) => ({
-          timer: TIMER_STEPS[(TIMER_STEPS.indexOf(s.timer) + 1) % TIMER_STEPS.length],
-        })),
+        set((s) => {
+          const timer = TIMER_STEPS[(TIMER_STEPS.indexOf(s.timer) + 1) % TIMER_STEPS.length];
+          return { timer, auto: s.auto && timer > 0 };
+        }),
+      toggleAuto: () =>
+        set((s) => (s.auto ? { auto: false } : { auto: true, timer: s.timer || TIMER_STEPS[0] })),
       toggleFacing: () => set((s) => ({ facing: s.facing === 'front' ? 'back' : 'front' })),
       discard: () => {
         const { checkId, uploaded } = get();
@@ -132,7 +141,7 @@ export const useBodyCheckStore = create<BodyCheckState>()(
     {
       name: 'body-check-camera',
       storage: createJSONStorage(() => mmkvStorage),
-      partialize: (s) => ({ timer: s.timer, facing: s.facing }),
+      partialize: (s) => ({ timer: s.timer, auto: s.auto, facing: s.facing }),
     },
   ),
 );
