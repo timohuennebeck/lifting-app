@@ -144,6 +144,10 @@ app ID, so no secret is needed.
    `supabase/functions/.env` (see the example file); in production set the secrets and deploy
    the function. Without them the deletion still works, only the revocation is skipped.
 
+App IDs in the developer account: `npm run apple:ids` lists them with the App Store record that
+uses each one, `npm run apple:ids -- delete <identifier> …` deletes unused ones after asking. It
+needs an App Store Connect API key in `.env` (see `.env.example`).
+
 ## Languages
 
 The app language is mirrored to `profiles.language` (for the team) and to the auth user metadata
