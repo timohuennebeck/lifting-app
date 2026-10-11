@@ -9,9 +9,7 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
-import { googleSignInReady } from '../lib/google-sign-in';
-
-type Provider = 'Google' | 'Facebook';
+import { appleSignInAvailable, providerReady, type SocialProvider } from '../lib/social-sign-in';
 
 function GoogleLogo() {
   return (
@@ -36,65 +34,51 @@ function GoogleLogo() {
   );
 }
 
-function FacebookLogo() {
+function AppleLogo() {
   return (
     <Svg width={20} height={20} viewBox="0 0 24 24">
       <Path
-        fill="#0866FF"
-        d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07"
-      />
-      <Path
-        fill="#FFFFFF"
-        d="M16.67 15.56l.53-3.5h-3.32V9.8c0-.96.46-1.89 1.96-1.89h1.5V4.95s-1.37-.24-2.68-.24c-2.74 0-4.54 1.68-4.54 4.7v2.66H7.08v3.49h3.04V24a12.3 12.3 0 0 0 3.76 0v-8.44z"
+        fill={colors.fg}
+        d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
       />
     </Svg>
   );
 }
 
 const PROVIDERS = [
-  { name: 'Google', Logo: GoogleLogo },
-  { name: 'Facebook', Logo: FacebookLogo },
-] as const satisfies readonly { name: Provider; Logo: () => ReactNode }[];
+  { id: 'google', name: 'Google', Logo: GoogleLogo },
+  { id: 'apple', name: 'Apple', Logo: AppleLogo },
+] as const satisfies readonly { id: SocialProvider; name: string; Logo: () => ReactNode }[];
 
 export interface SocialSignInProps {
-  /** Signs in with Google; the screen decides what follows. */
-  onGoogle: () => void;
-  /** Google sign-in is running: a spinner in place of its logo. */
-  googleBusy?: boolean;
+  /** Signs in with the provider; the screen decides what follows. */
+  onSignIn: (provider: SocialProvider) => void;
+  /** The provider whose sign-in is running: a spinner in place of its logo. */
+  busy?: SocialProvider | null;
   disabled?: boolean;
 }
 
 /**
- * Google / Facebook buttons plus the "or with email" divider. Facebook, and Google until its
- * client IDs are set up, explain in a sheet that they aren't available yet.
+ * Google and (on Apple devices) Apple buttons plus the "or with email" divider. Until Google's
+ * client IDs are set up, its button explains in a sheet that it isn't available yet.
  */
-export function SocialSignIn({ onGoogle, googleBusy, disabled }: SocialSignInProps) {
+export function SocialSignIn({ onSignIn, busy, disabled }: SocialSignInProps) {
   const { t } = useTranslation('auth');
-  const [provider, setProvider] = useState<Provider>('Google');
-  const [open, setOpen] = useState(false);
-
-  function press(name: Provider) {
-    if (name === 'Google' && googleSignInReady) return onGoogle();
-    setProvider(name);
-    setOpen(true);
-  }
+  const [unavailable, setUnavailable] = useState(false);
+  const providers = PROVIDERS.filter(({ id }) => id !== 'apple' || appleSignInAvailable);
 
   return (
     <View>
       <View className="flex-row gap-2.5">
-        {PROVIDERS.map(({ name, Logo }) => (
+        {providers.map(({ id, name, Logo }) => (
           <PressableScale
-            key={name}
+            key={id}
             disabled={disabled}
-            accessibilityState={{ disabled, busy: name === 'Google' && googleBusy }}
-            onPress={() => press(name)}
+            accessibilityState={{ disabled, busy: busy === id }}
+            onPress={() => (providerReady(id) ? onSignIn(id) : setUnavailable(true))}
             className="h-13 flex-1 flex-row items-center justify-center gap-2.5 rounded-full bg-pill"
           >
-            {name === 'Google' && googleBusy ? (
-              <ActivityIndicator size="small" color={colors.fg} />
-            ) : (
-              <Logo />
-            )}
+            {busy === id ? <ActivityIndicator size="small" color={colors.fg} /> : <Logo />}
             <Text variant="label">{name}</Text>
           </PressableScale>
         ))}
@@ -107,12 +91,12 @@ export function SocialSignIn({ onGoogle, googleBusy, disabled }: SocialSignInPro
         <View className="h-px flex-1 bg-white/10" />
       </View>
       <Sheet
-        visible={open}
-        onClose={() => setOpen(false)}
+        visible={unavailable}
+        onClose={() => setUnavailable(false)}
         title={t('social.unavailableTitle')}
-        subtitle={t('social.unavailableBody', { provider })}
+        subtitle={t('social.unavailableBody', { provider: 'Google' })}
       >
-        <Button label={t('social.ok')} onPress={() => setOpen(false)} />
+        <Button label={t('social.ok')} onPress={() => setUnavailable(false)} />
       </Sheet>
     </View>
   );

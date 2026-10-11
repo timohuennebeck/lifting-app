@@ -125,6 +125,19 @@ says it isn't available yet.
 4. **Supabase (production):** Authentication → Providers → Google: enable, the same client IDs,
    "Skip nonce checks" on.
 
+## Sign in with Apple
+
+iOS only (Android and web don't show the button). The app uses Apple's native sheet
+(`expo-apple-authentication`) and exchanges the identity token with Supabase; its audience is the
+app ID, so no secret is needed.
+
+1. **Apple Developer** (paid membership; a free personal team can't sign this capability): the
+   app ID `app.forgelifting.mobile` needs "Sign in with Apple". Xcode's automatic signing and
+   EAS-managed credentials add it from the entitlement the config plugin sets.
+2. **Supabase (local):** already on in `config.toml` (`[auth.external.apple]`).
+3. **Supabase (production):** Authentication → Providers → Apple: enable, Client IDs
+   `app.forgelifting.mobile`.
+
 ## Languages
 
 The app language is mirrored to `profiles.language` (for the team) and to the auth user metadata

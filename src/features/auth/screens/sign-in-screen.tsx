@@ -21,9 +21,9 @@ import { TextButton } from '@/shared/ui/text-button';
 import { CredentialFields } from '../components/credential-fields';
 import { SocialSignIn } from '../components/social-sign-in';
 import { type AuthErrorKey, authErrorKey, isValidEmail } from '../lib/credentials';
-import { signInWithGoogle } from '../lib/google-sign-in';
+import { signInWith, type SocialProvider } from '../lib/social-sign-in';
 
-type Phase = 'idle' | 'signingIn' | 'google' | 'syncing';
+type Phase = 'idle' | 'signingIn' | SocialProvider | 'syncing';
 
 export function SignInScreen() {
   const { t } = useTranslation('auth');
@@ -35,6 +35,7 @@ export function SignInScreen() {
   const [error, setError] = useState<AuthErrorKey | null>(null);
   const valid = isValidEmail(email) && password.length > 0;
   const busy = phase !== 'idle';
+  const socialBusy = phase === 'google' || phase === 'apple' ? phase : null;
 
   const fail = (key: AuthErrorKey) => {
     haptics.error();
@@ -80,12 +81,12 @@ export function SignInScreen() {
     }
   };
 
-  const google = async () => {
+  const social = async (provider: SocialProvider) => {
     if (busy) return;
-    setPhase('google');
+    setPhase(provider);
     setError(null);
     try {
-      const user = await signInWithGoogle();
+      const user = await signInWith(provider);
       if (user) await continueAs(user);
       else setPhase('idle');
     } catch {
@@ -101,7 +102,7 @@ export function SignInScreen() {
         <View className="gap-1">
           <Button
             label={t('signIn.submit')}
-            disabled={!valid || phase === 'google'}
+            disabled={!valid || !!socialBusy}
             loading={phase === 'signingIn' || phase === 'syncing'}
             onPress={submit}
           />
@@ -122,7 +123,7 @@ export function SignInScreen() {
       <StepTitle title={t('signIn.title')} subtitle={t('signIn.subtitle')} />
       {/* Same sign-in options as account creation. */}
       <View className="px-4 pt-5">
-        <SocialSignIn onGoogle={google} googleBusy={phase === 'google'} disabled={busy} />
+        <SocialSignIn onSignIn={social} busy={socialBusy} disabled={busy} />
       </View>
       <View className="px-4 pt-3.5">
         <CredentialFields

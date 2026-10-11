@@ -33,7 +33,7 @@ import {
   isValidEmail,
   MIN_PASSWORD_LENGTH,
 } from '../lib/credentials';
-import { signInWithGoogle } from '../lib/google-sign-in';
+import { signInWith, type SocialProvider } from '../lib/social-sign-in';
 
 type ErrorKey = AuthErrorKey | 'confirmEmail';
 
@@ -60,7 +60,7 @@ export function CreateAccountScreen() {
   const session = useSessionStore((s) => s.session);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [busy, setBusy] = useState<'email' | 'google' | null>(null);
+  const [busy, setBusy] = useState<'email' | SocialProvider | null>(null);
   const [error, setError] = useState<ErrorKey | null>(null);
 
   // Already signed in (e.g. came back from the next step): just save and continue.
@@ -114,16 +114,16 @@ export function CreateAccountScreen() {
     }
   };
 
-  const google = async () => {
+  const social = async (provider: SocialProvider) => {
     if (busy) return;
-    setBusy('google');
+    setBusy(provider);
     setError(null);
     try {
-      // Loaded first for the same reason as with email: Google creates the account right away.
+      // Loaded first for the same reason as with email: the provider creates the account at once.
       const documents = await fetchCurrentDocuments(i18n.language);
-      const user = await signInWithGoogle();
+      const user = await signInWith(provider);
       if (!user) return;
-      // A Google account that is already set up keeps its own profile and plan.
+      // An account that is already set up keeps its own profile and plan.
       if (await isOnboardedAfterSync(user.id)) {
         haptics.success();
         useOnboardingStore.getState().complete();
@@ -149,7 +149,7 @@ export function CreateAccountScreen() {
         <View className="gap-3">
           <Button
             label={signedIn ? tc('actions.continue') : t('createAccount.submit')}
-            disabled={!valid || busy === 'google'}
+            disabled={!valid || (!!busy && busy !== 'email')}
             loading={busy === 'email'}
             onPress={submit}
           />
@@ -172,8 +172,8 @@ export function CreateAccountScreen() {
     >
       <View className="px-4 pt-5">
         <SocialSignIn
-          onGoogle={google}
-          googleBusy={busy === 'google'}
+          onSignIn={social}
+          busy={busy === 'email' ? null : busy}
           disabled={signedIn || !!busy}
         />
       </View>

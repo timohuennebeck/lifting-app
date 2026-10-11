@@ -65,7 +65,8 @@
         }
       ],
       "expo-document-picker",
-      "expo-video"
+      "expo-video",
+      "expo-apple-authentication"
     ],
     "experiments": {
       "typedRoutes": true,
