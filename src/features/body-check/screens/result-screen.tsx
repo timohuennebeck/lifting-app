@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, ScrollView, Share, View } from 'react-native';
@@ -196,16 +196,22 @@ export function ResultScreen() {
           <View className="flex-row gap-2">
             {POSES.map((pose) => (
               <View key={pose} className="flex-1 gap-1.5">
-                <View className="aspect-3/4 overflow-hidden rounded-xl border border-white/10 bg-surface">
+                <PressableScale
+                  accessibilityRole="imagebutton"
+                  accessibilityLabel={t(`poses.${pose}.name`)}
+                  onPress={() =>
+                    router.push({ pathname: '/body-check/photo/[id]', params: { id, pose } })
+                  }
+                  className="aspect-3/4 overflow-hidden rounded-xl border border-white/10 bg-surface"
+                >
                   <CheckPhoto
                     key={saved ? 'saved' : 'draft'}
                     checkId={id}
                     pose={pose}
                     uri={saved ? undefined : shots[pose]?.uri}
                     storagePath={photos?.[id]?.[pose]}
-                    accessibilityLabel={t(`poses.${pose}.name`)}
                   />
-                </View>
+                </PressableScale>
                 <Text variant="caption" tone="muted" className="text-center text-xs">
                   {t(`poses.${pose}.short`)}
                 </Text>

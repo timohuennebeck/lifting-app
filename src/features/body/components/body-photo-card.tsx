@@ -110,18 +110,6 @@ export function BodyPhotoCard({
           </Text>
         </View>
       ) : null}
-      {onEdit ? (
-        <PressableScale
-          haptic="tap"
-          hitSlop={8}
-          accessibilityRole="button"
-          accessibilityLabel={editLabel}
-          onPress={onEdit}
-          className="absolute top-3 right-3 size-8 items-center justify-center rounded-full bg-black/45"
-        >
-          <Icon name="pencil" size={13} color={colors.fg} />
-        </PressableScale>
-      ) : null}
     </>
   );
   return (
@@ -140,6 +128,19 @@ export function BodyPhotoCard({
       ) : (
         <View className={className}>{content}</View>
       )}
+      {/* Beside the card, not in it: a button can't sit inside another one (web). */}
+      {onEdit ? (
+        <PressableScale
+          haptic="tap"
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel={editLabel}
+          onPress={onEdit}
+          className="absolute top-3 right-3 size-8 items-center justify-center rounded-full bg-black/45"
+        >
+          <Icon name="pencil" size={13} color={colors.fg} />
+        </PressableScale>
+      ) : null}
     </CardSlot>
   );
 }

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image, type ImageContentFit, type ImageProps } from 'expo-image';
 import type { ReactNode } from 'react';
 import { StyleSheet } from 'react-native';
 
@@ -13,6 +13,9 @@ export interface CheckPhotoProps {
   uri?: string;
   /** Rendered while no image is available (not uploaded yet, offline, …). */
   fallback?: ReactNode;
+  /** "contain" shows the whole photo, e.g. full screen. */
+  contentFit?: ImageContentFit;
+  onLoad?: ImageProps['onLoad'];
   accessibilityLabel?: string;
 }
 
@@ -23,6 +26,8 @@ export function CheckPhoto({
   storagePath,
   uri,
   fallback = null,
+  contentFit = 'cover',
+  onLoad,
   accessibilityLabel,
 }: CheckPhotoProps) {
   const saved = usePhotoSource(checkId, pose, storagePath);
@@ -31,7 +36,8 @@ export function CheckPhoto({
   return (
     <Image
       source={source}
-      contentFit="cover"
+      contentFit={contentFit}
+      onLoad={onLoad}
       transition={150}
       accessibilityLabel={accessibilityLabel}
       style={StyleSheet.absoluteFill}

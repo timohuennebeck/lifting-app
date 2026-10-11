@@ -127,6 +127,7 @@ export function BodyView() {
                     })}
                     score={pair.before.score}
                     muted
+                    onPress={() => openCheck(pair.before.id)}
                     onEdit={() => openCompare('a')}
                     editLabel={t('compare.edit')}
                   />
@@ -142,6 +143,7 @@ export function BodyView() {
                     after
                     selected
                     done={pair.after.id === latest.id}
+                    onPress={() => openCheck(pair.after.id)}
                     onEdit={() => openCompare('b')}
                     editLabel={t('compare.edit')}
                   />
@@ -156,6 +158,7 @@ export function BodyView() {
                   after
                   selected
                   done
+                  onPress={() => openCheck(latest.id)}
                 />
               )}
               {compared ? (
