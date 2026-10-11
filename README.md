@@ -74,8 +74,9 @@ changes hourly, so new exercises ship without a release. Edit them with the serv
   `{weight,reps}` (kg × reps, also bodyweight moves with added weight), `{reps}` (push-ups),
   `{seconds}` (planks) or `{weight,seconds}` (weighted holds).
 - **`image_path`:** a file in the public `exercise-media` bucket.
-- **Before a release:** `npm run catalog:pull` refreshes the snapshot the app ships for its first
-  launch (`src/shared/data/exercise-catalog.json`).
+- **In the app:** downloaded in full on first launch (the app needs a connection once), kept on the
+  device, then refreshed with the rows changed since, on launch and hourly. A change here reaches
+  every install without an app release.
 
 ## Legal documents (team side)
 

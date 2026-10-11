@@ -20,6 +20,7 @@ import { Uniwind } from 'uniwind';
 
 import { useAuthListener } from '@/features/auth/hooks/use-auth-listener';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
+import { CatalogOffline } from '@/shared/components/catalog-offline';
 import { db } from '@/shared/data/powersync/database';
 import { queryClient } from '@/shared/data/query-client';
 import { useCatalogRefresh } from '@/shared/hooks/use-catalog-refresh';
@@ -45,15 +46,17 @@ export default function RootLayout() {
   });
   useAuthListener();
   // Also before login: onboarding builds the first plan from the catalog.
-  useCatalogRefresh();
+  const catalog = useCatalogRefresh();
   const ready = useSessionStore((s) => s.ready);
   const signedIn = useSessionStore((s) => !!s.session);
   // A password reset signs in with its code; the app opens once the new password is set.
   const recovering = useSessionStore((s) => s.recovering);
   const onboarded = useOnboardingStore((s) => s.completed);
   const inApp = signedIn && onboarded && !recovering;
+  // On first launch the splash stays up until the exercises are downloaded or that failed.
+  const catalogSettled = catalog.ready || catalog.failed;
   useEffect(() => {
-    if (!fontsLoaded || !ready) return;
+    if (!fontsLoaded || !ready || !catalogSettled) return;
     if (!inApp) {
       SplashScreen.hide();
       return;
@@ -62,7 +65,7 @@ export default function RootLayout() {
     // missing connection never keeps it up longer than this.
     const timer = setTimeout(SplashScreen.hide, LEGAL_CHECK_WAIT_MS);
     return () => clearTimeout(timer);
-  }, [fontsLoaded, ready, inApp]);
+  }, [fontsLoaded, ready, catalogSettled, inApp]);
 
   if (!fontsLoaded || !ready) return null;
 
@@ -92,6 +95,9 @@ export default function RootLayout() {
                 {/* Muscle breakdown of a workout, from the overview, builder and plan import. */}
                 <Stack.Screen name="workout-muscles" options={{ animation: 'slide_from_right' }} />
               </Stack>
+              {catalog.failed ? (
+                <CatalogOffline retrying={catalog.retrying} onRetry={catalog.retry} />
+              ) : null}
             </ThemeProvider>
           </QueryClientProvider>
         </PowerSyncContext.Provider>

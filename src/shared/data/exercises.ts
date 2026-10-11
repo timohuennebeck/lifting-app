@@ -7,11 +7,10 @@ import { i18n } from '@/shared/i18n';
 import { mmkvStorage } from '@/shared/lib/storage';
 import { MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
-import snapshot from './exercise-catalog.json';
 import type { PlanSetDraft } from './templates';
 
-// The catalog lives in Supabase (`public.exercises`). The app ships a snapshot of it for the
-// first launch and offline use, and `useCatalogRefresh` adds newer rows from the API.
+// The catalog lives in Supabase (`public.exercises`). The app downloads all of it on first launch
+// and keeps it on the device for offline use; `useCatalogRefresh` then fetches what changed.
 
 export type Equipment = 'barbell' | 'dumbbell' | 'machine' | 'cable' | 'bodyweight';
 
@@ -92,17 +91,10 @@ interface CatalogState {
   rows: Record<string, ExerciseRow>;
 }
 
-const bundled = mergeRows({}, snapshot as unknown as ExerciseRow[]);
-
 export const useCatalogStore = create<CatalogState>()(
-  persist(() => ({ rows: bundled }), {
+  persist(() => ({ rows: {} }), {
     name: 'exercise-catalog',
     storage: createJSONStorage(() => mmkvStorage),
-    // An app update may bundle newer rows than the cache holds.
-    merge: (persisted, current) => ({
-      ...current,
-      rows: mergeRows(current.rows, Object.values((persisted as CatalogState | null)?.rows ?? {})),
-    }),
   }),
 );
 

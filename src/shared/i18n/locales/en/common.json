@@ -108,5 +108,9 @@
   },
   "cameraAccess": {
     "title": "Allow camera"
+  },
+  "catalogOffline": {
+    "title": "No connection",
+    "body": "On first launch, Traqa downloads its exercises. Check your internet connection and try again."
   }
 }

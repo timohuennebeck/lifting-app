@@ -116,5 +116,9 @@
   },
   "cameraAccess": {
     "title": "Permitir câmera"
+  },
+  "catalogOffline": {
+    "title": "Sem conexão",
+    "body": "Na primeira abertura, o Traqa baixa os exercícios. Verifique sua conexão com a internet e tente novamente."
   }
 }

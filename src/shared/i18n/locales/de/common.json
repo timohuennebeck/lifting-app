@@ -108,5 +108,9 @@
   },
   "cameraAccess": {
     "title": "Kamera erlauben"
+  },
+  "catalogOffline": {
+    "title": "Keine Verbindung",
+    "body": "Beim ersten Start lädt Traqa die Übungen herunter. Prüf deine Internetverbindung und versuch es noch einmal."
   }
 }

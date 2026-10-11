@@ -116,5 +116,9 @@
   },
   "cameraAccess": {
     "title": "Permitir câmara"
+  },
+  "catalogOffline": {
+    "title": "Sem ligação",
+    "body": "No primeiro arranque, o Traqa descarrega os exercícios. Verifica a tua ligação à internet e tenta novamente."
   }
 }
