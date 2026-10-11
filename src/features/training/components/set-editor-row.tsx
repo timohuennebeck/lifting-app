@@ -73,7 +73,7 @@ export function SetEditorRow({
     <SwipeToDelete onDelete={onRemove} label={t('sets.removeSet')}>
       <View className="h-14 flex-row items-center gap-2.5 bg-bg">
         <View className="size-10 items-center justify-center rounded-full bg-elevated">
-          <Text variant="label" className="text-base">
+          <Text variant="label" className="text-base tabular-nums">
             {index + 1}
           </Text>
         </View>

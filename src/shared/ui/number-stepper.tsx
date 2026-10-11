@@ -41,7 +41,9 @@ export function NumberStepper({
         onPress={() => set(value - 1)}
       />
       <View className="items-center gap-1.5">
-        <Text variant="display">{format(value)}</Text>
+        <Text variant="display" className="tabular-nums">
+          {format(value)}
+        </Text>
         {unit ? (
           <Text variant="overline" tone="subtle">
             {unit}

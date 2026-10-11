@@ -273,7 +273,7 @@ export function SetTargetsForm({
                 onPress={() => stepRest(-REST_STEP)}
               />
               <View className="flex-row items-baseline gap-1.5">
-                <Text variant="headline" className="text-[26px] leading-7.5">
+                <Text variant="headline" className="text-[26px] leading-7.5 tabular-nums">
                   {formatDuration(shownRest)}
                 </Text>
                 <Text variant="caption" tone="subtle" className="font-inter text-sm">

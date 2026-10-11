@@ -60,7 +60,9 @@ export function HistoryRow({
           {sets.map((set, i) => (
             <View key={i} className="h-11 flex-row items-center gap-3">
               <View className="size-7 items-center justify-center rounded-full bg-elevated">
-                <Text variant="caption">{i + 1}</Text>
+                <Text variant="caption" className="tabular-nums">
+                  {i + 1}
+                </Text>
               </View>
               {renderSet(set)}
             </View>

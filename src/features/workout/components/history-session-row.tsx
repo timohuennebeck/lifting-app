@@ -83,7 +83,7 @@ export function HistorySessionRow({
       sets={session.sets}
       renderSet={(set) => (
         <>
-          <Text variant="bodyStrong" className="flex-1 text-lg leading-5.5">
+          <Text variant="bodyStrong" className="flex-1 text-lg leading-5.5 tabular-nums">
             {formatSet(set, units)}
           </Text>
           {set.rir != null ? <RirBadge rir={set.rir} size={24} /> : null}

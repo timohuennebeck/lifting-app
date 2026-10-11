@@ -65,12 +65,20 @@ export function SetRow({
           record && 'bg-accent',
         )}
       >
-        <Text variant="bodyStrong" tone={record ? 'onAccent' : 'default'} className="text-base">
+        <Text
+          variant="bodyStrong"
+          tone={record ? 'onAccent' : 'default'}
+          className="text-base tabular-nums"
+        >
           {number}
         </Text>
       </View>
       <View className="flex-1 items-center">
-        <Text variant="label" numberOfLines={1} className={cn('font-inter', !middle && 'text-dim')}>
+        <Text
+          variant="label"
+          numberOfLines={1}
+          className={cn('font-inter tabular-nums', !middle && 'text-dim')}
+        >
           {middle ?? '–'}
         </Text>
       </View>

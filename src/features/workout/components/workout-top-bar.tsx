@@ -15,7 +15,7 @@ interface ElapsedClockProps {
 function ElapsedClock({ startedAt }: ElapsedClockProps) {
   const now = useNow(1000);
   return (
-    <Text variant="bodyStrong" className="text-xl leading-6">
+    <Text variant="bodyStrong" className="text-xl leading-6 tabular-nums">
       {formatDuration((now - Date.parse(startedAt)) / 1000, { alwaysHours: true })}
     </Text>
   );

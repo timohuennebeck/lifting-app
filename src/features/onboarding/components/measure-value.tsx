@@ -46,7 +46,7 @@ export function MeasureValue({ value, amount, unit }: MeasureValueProps) {
   return (
     <View className="flex-row items-baseline gap-2">
       <Animated.View style={style}>
-        <Text variant="display" accessibilityLiveRegion="polite">
+        <Text variant="display" className="tabular-nums" accessibilityLiveRegion="polite">
           {value}
         </Text>
       </Animated.View>

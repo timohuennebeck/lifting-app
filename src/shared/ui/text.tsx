@@ -34,7 +34,5 @@ export interface TextProps extends RNTextProps {
 }
 
 export function Text({ variant = 'body', tone = 'default', className, ...props }: TextProps) {
-  return (
-    <RNText className={cn(VARIANTS[variant], TONES[tone], 'tabular-nums', className)} {...props} />
-  );
+  return <RNText className={cn(VARIANTS[variant], TONES[tone], className)} {...props} />;
 }

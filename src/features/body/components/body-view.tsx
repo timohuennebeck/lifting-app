@@ -121,9 +121,8 @@ function NoChecks({ allowed, age, onStart }: NoChecksProps) {
         <Text variant="headline" className="mt-9 text-center">
           {t('adultsOnly.title')}
         </Text>
-        {/* The profile only knows the age in years, so the latest it can be. Proportional
-            figures: tabular ones widen the hyphen in "Körpercheck-Fotos". */}
-        <Text variant="paragraph" tone="subtle" className="mt-2 text-center proportional-nums">
+        {/* The profile only knows the age in years, so the latest it can be. */}
+        <Text variant="paragraph" tone="subtle" className="mt-2 text-center">
           {t('adultsOnly.body')}
           {age != null
             ? ` ${t('adultsOnly.unlocksIn', { count: BODY_CHECK_MIN_AGE - age })}`
