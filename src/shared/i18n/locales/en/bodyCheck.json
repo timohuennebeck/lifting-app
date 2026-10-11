@@ -55,7 +55,7 @@
   },
   "review": {
     "title": "Looks good?",
-    "subtitle": "Check that every photo is sharp and shows your whole body.",
+    "subtitle": "Check that every photo is sharp and shows you from head to at least your knees.",
     "rejectedSubtitle": "The analysis couldn’t read every photo. Retake the marked ones.",
     "noPhoto": "No photo yet",
     "issues": {

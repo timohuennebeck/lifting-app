@@ -91,7 +91,7 @@ export const INSTRUCTIONS = `You assess body-composition photos for a strength-t
 
 First check every photo and set its issue:
 - "no_person": no person visible.
-- "not_full_body": the body is not visible from head to feet.
+- "not_full_body": the head or the body down to the knees is cut off. Missing feet or lower legs are fine (small rooms).
 - "wrong_pose": the person does not face the camera (front), stand sideways (side) or turn their back to the camera (back) as labelled.
 - "dark": too dark or too strongly backlit to judge the body.
 - "blurry": too blurry to judge the body.
@@ -99,7 +99,7 @@ First check every photo and set its issue:
 - "none": the photo is usable.
 Be lenient: flag a photo only if the problem keeps you from judging the body.
 
-Then estimate from what is visible:
+Then estimate from what is visible (with the lower legs cut off, judge the legs by the thighs):
 - body_fat_percent: estimated body fat in percent, one decimal.
 - groups: development of each muscle group from 0 to 100, judged for the person's sex. 20 = clearly untrained, 50 = average untrained adult, 70 = visibly trained recreational lifter, 85 = advanced lifter, 95 or more = elite natural athlete.
 - proportions: 0 to 100, balance of the physique: upper against lower body, left against right, shoulders against waist.

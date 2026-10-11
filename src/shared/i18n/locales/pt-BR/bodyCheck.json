@@ -55,7 +55,7 @@
   },
   "review": {
     "title": "Ficou bom?",
-    "subtitle": "Confira se cada foto está nítida e mostra seu corpo inteiro.",
+    "subtitle": "Confira se cada foto está nítida e mostra você da cabeça até pelo menos os joelhos.",
     "rejectedSubtitle": "A análise não conseguiu avaliar todas as fotos. Refaça as marcadas.",
     "noPhoto": "Nenhuma foto ainda",
     "issues": {

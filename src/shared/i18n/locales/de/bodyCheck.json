@@ -55,7 +55,7 @@
   },
   "review": {
     "title": "Passt so?",
-    "subtitle": "Prüfe, ob jedes Foto scharf ist und dein ganzer Körper drauf ist.",
+    "subtitle": "Prüfe, ob jedes Foto scharf ist und dich mindestens vom Kopf bis zu den Knien zeigt.",
     "rejectedSubtitle": "Die Analyse konnte nicht jedes Foto auswerten. Nimm die markierten neu auf.",
     "noPhoto": "Kein Foto vorhanden",
     "issues": {
