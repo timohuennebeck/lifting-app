@@ -3,6 +3,7 @@ import { File } from 'expo-file-system';
 
 import { supabase } from '@/shared/data/supabase';
 import { uploadJpeg } from '@/shared/data/supabase-storage';
+import { averageBrightness } from '@/shared/lib/jpeg';
 
 import { PHOTO_BUCKET, type StoredPhoto, storagePathOf } from './photo-files';
 import { POSES, type BodyGroup, type BodyPose } from './poses';
@@ -24,7 +25,7 @@ export interface BodyCheckResult {
   metrics: BodyCheckMetrics;
 }
 
-/** Why a photo can't be used: the on-device check finds blur, the analysis the rest. */
+/** Why a photo can't be used: the on-device check finds darkness and blur, the analysis the rest. */
 export type PhotoIssue = 'blurry' | 'dark' | 'notFullBody' | 'wrongPose' | 'noPerson' | 'clothing';
 
 export interface PhotoRejection {
@@ -145,18 +146,36 @@ export async function analyzeBodyCheck(
   throw new AnalysisError('failed');
 }
 
-// JPEG bytes per pixel below this mean little detail (blur, darkness) at our quality.
+// Average brightness (0–255) of the whole shot below which it's too dark. Measured on the
+// whole frame, not the person: the camera exposes for the whole frame, so it only stays this
+// dark when there isn't enough light, whatever the skin tone or clothes. Backlight is left to
+// the analysis.
+const MIN_BRIGHTNESS = 45;
+// JPEG bytes per pixel below this mean little detail (usually blur) at our quality.
 const MIN_BYTES_PER_PIXEL = 0.035;
 
-/**
- * Quick on-device check of a stored shot before anything is uploaded: very small JPEGs for
- * their size are usually blurry or too dark. The analysis judges the photos properly.
- */
-export function assessPhoto(photo: StoredPhoto): PhotoIssue | null {
+async function isDark(photo: StoredPhoto) {
   try {
-    const bytes = new File(photo.uri).size;
-    return bytes / (photo.width * photo.height) < MIN_BYTES_PER_PIXEL ? 'blurry' : null;
-  } catch {
-    return null;
+    return (await averageBrightness(photo.uri)) < MIN_BRIGHTNESS;
+  } catch (error) {
+    console.warn('Measuring the photo brightness failed', error);
+    return false;
   }
+}
+
+function isBlurry(photo: StoredPhoto) {
+  try {
+    return new File(photo.uri).size / (photo.width * photo.height) < MIN_BYTES_PER_PIXEL;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Quick on-device check of a stored shot before anything is uploaded: too dark, or so little
+ * detail that it's probably blurry. The analysis judges the photos properly.
+ */
+export async function assessPhoto(photo: StoredPhoto): Promise<PhotoIssue | null> {
+  if (await isDark(photo)) return 'dark';
+  return isBlurry(photo) ? 'blurry' : null;
 }

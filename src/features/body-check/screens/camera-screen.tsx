@@ -148,10 +148,10 @@ export function CameraScreen() {
     try {
       const pic = await camera.current.takePictureAsync({ quality: 0.9, shutterSound: !timed });
       const stored = await storeShot(pic, id, target);
+      const issue = await assessPhoto(stored);
       const current = useBodyCheckStore.getState();
       // The check was closed while the photo was processed.
       if (current.checkId !== id) return deleteFile(stored.uri);
-      const issue = assessPhoto(stored);
       if (issue) haptics.warning();
       current.addShot(target, { ...stored, issue });
       const next = useBodyCheckStore.getState();

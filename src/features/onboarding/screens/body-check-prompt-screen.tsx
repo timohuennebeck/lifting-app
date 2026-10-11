@@ -16,7 +16,7 @@ import { TextButton } from '@/shared/ui/text-button';
 import { START_STEPS } from '../lib/flow';
 import { useOnboardingStore } from '../stores/onboarding-store';
 
-const TIPS = ['light', 'clothes', 'framing', 'privacy'] as const;
+const TIPS = ['light', 'clothes', 'framing', 'same', 'privacy'] as const;
 /** Example full-body shot from the design (image slot "Ganzkörperfoto"). */
 const EXAMPLE_PHOTO = require('@/assets/images/demo-person.jpg');
 
