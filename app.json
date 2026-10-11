@@ -9,7 +9,7 @@
     "userInterfaceStyle": "dark",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.horizonalpha.forge",
+      "bundleIdentifier": "app.forgelifting.mobile",
       "supportsTablet": false,
       "infoPlist": {
         "CFBundleAllowMixedLocalizations": true
@@ -23,7 +23,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.horizonalpha.forge"
+      "package": "app.forgelifting.mobile"
     },
     "locales": {
       "de": "./locales/de.json",

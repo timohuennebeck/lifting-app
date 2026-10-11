@@ -114,8 +114,8 @@ says it isn't available yet.
 1. **Google Cloud** (APIs & Services): set up the OAuth consent screen (app name, support email;
    scopes `openid`, `email`, `profile`), then create three OAuth client IDs:
    - **Web application**: its client ID is the one the ID token is issued for.
-   - **iOS**: bundle ID `com.horizonalpha.forge`.
-   - **Android**: package `com.horizonalpha.forge` and the SHA-1 of the signing key, one client
+   - **iOS**: bundle ID `app.forgelifting.mobile`.
+   - **Android**: package `app.forgelifting.mobile` and the SHA-1 of the signing key, one client
      per key (debug keystore for local builds, EAS credentials, Play App Signing).
 2. **App:** in `.env`, `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` and `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`.
    `app.config.ts` turns the iOS ID into the URL scheme, so make a new development build.

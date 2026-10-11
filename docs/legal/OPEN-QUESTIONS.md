@@ -8,7 +8,7 @@ Every placeholder must be resolved before publication. Beyond filling in facts, 
 
 ## A. Company and contacts
 
-1. **Legal entity name and form.** Placeholder „Name des Unternehmens mit Rechtsform“ (DS §1, NB §1). Why: Art. 13(1)(a) GDPR requires the controller's identity and the terms need a contracting party. Do not derive it from the bundle id `com.horizonalpha.forge`.
+1. **Legal entity name and form.** Placeholder „Name des Unternehmens mit Rechtsform“ (DS §1, NB §1). Why: Art. 13(1)(a) GDPR requires the controller's identity and the terms need a contracting party. Forge is a private project, so this is presumably the owner as a private person (name instead of a company; items 3 and 4 then fall away). The app ID `app.forgelifting.mobile` says nothing about who the provider is.
 2. **Postal address.** Placeholder „Straße, Hausnummer, PLZ, Ort, Land“ (DS §1, NB §1). Why: mandatory controller contact data; it also determines the competent supervisory authority (item 8).
 3. **Legal representative(s).** Placeholder „Geschäftsführung bzw. vertretungsberechtigte Person“ (DS §1, NB §1). Why: identifies who acts for the controller/provider.
 4. **Commercial register.** Placeholder „Registergericht und Registernummer, falls vorhanden“ (NB §1). Why: provider identification; also needed for the Impressum (item 9).
