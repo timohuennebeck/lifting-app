@@ -24,19 +24,20 @@
     },
     "continue": "Weiter",
     "fine": {
-      "day": "Danach {{price}} pro Tag · jederzeit kündbar",
+      "year": "Danach {{price}} pro Jahr ({{perMonth}} / Monat) · jederzeit kündbar",
       "month": "Danach {{price}} pro Monat · jederzeit kündbar"
     },
     "fineNoTrial": {
-      "day": "{{price}} pro Tag · jederzeit kündbar",
+      "year": "{{price}} pro Jahr ({{perMonth}} / Monat) · jederzeit kündbar",
       "month": "{{price}} pro Monat · jederzeit kündbar"
     }
   },
   "plans": {
-    "daily": {
-      "label": "Täglich",
-      "price": "{{price}} / Tag",
-      "note": "täglich kündbar"
+    "yearly": {
+      "label": "Jährlich",
+      "price": "{{price}} / Jahr",
+      "note": "jährlich kündbar",
+      "savings": "{{percent}} % sparen"
     },
     "monthly": {
       "label": "Monatlich",
@@ -54,12 +55,12 @@
     "day": "Tag {{day}}",
     "reminderBody": "Du bekommst eine Erinnerung, dass dein Test bald endet.",
     "startBody": {
-      "day": "Dein Tagesabo startet. Vorher jederzeit kündbar.",
+      "year": "Dein Jahresabo startet. Vorher jederzeit kündbar.",
       "month": "Dein Monatsabo startet. Vorher jederzeit kündbar."
     },
     "cta": "Kostenlos testen",
     "fine": {
-      "day": "Danach {{price}} pro Tag",
+      "year": "Danach {{price}} pro Jahr",
       "month": "Danach {{price}} pro Monat"
     }
   },
@@ -95,6 +96,6 @@
     "trialUntil": "Test bis {{date}}",
     "manage": "Abo verwalten",
     "planMonthly": "Pro · monatlich",
-    "planDaily": "Pro · täglich"
+    "planYearly": "Pro · jährlich"
   }
 }

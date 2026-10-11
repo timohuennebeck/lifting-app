@@ -4,6 +4,7 @@ import { clearLocalPhotos } from '@/features/body-check/lib/photo-files';
 import { useBodyCheckStore } from '@/features/body-check/stores/body-check-store';
 import { useCompareStore } from '@/features/body/stores/compare-store';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
+import { purchases } from '@/features/paywall/lib/purchases-service';
 import {
   refreshSubscription,
   useSubscriptionStore,
@@ -30,7 +31,7 @@ export function useAuthListener() {
       // profile updates; the connector fetches fresh tokens on its own.
       if (session && (event === 'INITIAL_SESSION' || event === 'SIGNED_IN')) {
         db.connect(connector);
-        refreshSubscription();
+        refreshSubscription(session.user.id);
       } else if (event === 'SIGNED_OUT') {
         db.disconnectAndClear();
         queryClient.clear();
@@ -40,6 +41,7 @@ export function useAuthListener() {
         useWorkoutSessionStore.getState().reset();
         // Pro belongs to the account; the next one restores its own purchases.
         useSubscriptionStore.getState().reset();
+        void purchases.setUser(null).catch((error) => console.warn('Store sign-out failed', error));
         // Screenshot copies are private to the account (and would sit in device backups).
         useUploadQueueStore.getState().reset();
         clearLocalAttachments();

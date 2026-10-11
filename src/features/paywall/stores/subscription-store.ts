@@ -3,12 +3,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { mmkvStorage } from '@/shared/lib/storage';
 
-import {
-  type CustomerInfo,
-  NothingToRestoreError,
-  type PlanId,
-  purchases,
-} from '../lib/purchases-service';
+import { type CustomerInfo, type PlanId, purchases } from '../lib/purchases-service';
 
 interface SubscriptionState {
   isPro: boolean;
@@ -43,14 +38,19 @@ export function trialEnd(trialEndsAt: string | null, now = Date.now()) {
   return end.getTime() > now ? end : null;
 }
 
+// Renewals, expiries and purchases on other devices while the app runs.
+purchases.onChange((info) => useSubscriptionStore.getState().apply(info));
+
 /**
- * Re-reads Pro from the store account after sign-in and on launch, so a renewal or an
- * expired subscription shows up without tapping Restore. Offline keeps the cached state.
+ * Links purchases to the signed-in account and re-reads Pro on launch and after sign-in, so a
+ * renewal or an expired subscription shows up without tapping Restore. Offline keeps the cached
+ * state.
  */
-export async function refreshSubscription() {
+export async function refreshSubscription(userId: string) {
   try {
-    useSubscriptionStore.getState().apply(await purchases.restore());
+    await purchases.setUser(userId);
+    useSubscriptionStore.getState().apply(await purchases.getCustomerInfo());
   } catch (error) {
-    if (error instanceof NothingToRestoreError) useSubscriptionStore.getState().reset();
+    console.warn('Refreshing the subscription failed', error);
   }
 }

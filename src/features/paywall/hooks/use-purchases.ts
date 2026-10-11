@@ -6,7 +6,12 @@ import { Alert } from 'react-native';
 import { haptics } from '@/shared/lib/haptics';
 
 import { paywallKeys } from '../data/paywall-keys';
-import { NothingToRestoreError, type PlanId, purchases } from '../lib/purchases-service';
+import {
+  NothingToRestoreError,
+  type PlanId,
+  PurchaseCancelledError,
+  purchases,
+} from '../lib/purchases-service';
 import { useSubscriptionStore } from '../stores/subscription-store';
 
 /** Buys a plan through the purchases service and mirrors the result into the store. */
@@ -23,7 +28,10 @@ export function usePurchase() {
       queryClient.invalidateQueries({ queryKey: paywallKeys.offering.queryKey });
       haptics.success();
       return true;
-    } catch {
+    } catch (error) {
+      // Closing the store's sheet isn't an error.
+      if (error instanceof PurchaseCancelledError) return false;
+      console.warn('Purchase failed', error);
       haptics.error();
       Alert.alert(t('errors.generic'));
       return false;

@@ -16,11 +16,10 @@ import { PlanCard } from '../components/plan-card';
 import { useOffering } from '../hooks/use-offering';
 import { usePaywallFlow } from '../hooks/use-paywall-flow';
 import { usePurchase, useRestorePurchases } from '../hooks/use-purchases';
-import type { PlanId } from '../lib/purchases-service';
+import { formatPrice, PLAN_IDS, type PlanId, yearlySavings } from '../lib/purchases-service';
 import { useIsPro } from '../stores/subscription-store';
 
 const BENEFITS = ['import', 'history', 'suggestions'] as const;
-const PLAN_IDS: PlanId[] = ['daily', 'monthly'];
 
 /** Traqa Pro paywall: before/after header, benefits, plan picker. */
 export function PaywallScreen() {
@@ -32,10 +31,14 @@ export function PaywallScreen() {
   const { offering, plan, priceOf, failed, loading, refetch } = useOffering();
   const { buy, busy } = usePurchase();
   const { restore, restoring } = useRestorePurchases();
-  const [selected, setSelected] = useState<PlanId>('daily');
+  const [selected, setSelected] = useState<PlanId>('yearly');
 
   const current = plan(selected);
   const price = priceOf(selected);
+  const yearly = plan('yearly');
+  const savings = offering ? yearlySavings(offering) : null;
+  // The yearly plan's price per month, for its small print.
+  const perMonth = yearly && offering ? formatPrice(yearly.price / 12, offering.currency) : null;
 
   const onContinue = async () => {
     if (isPro) return flow.exit();
@@ -105,7 +108,11 @@ export function PaywallScreen() {
                 key={id}
                 label={t(`plans.${id}.label`)}
                 price={p ? t(`plans.${id}.price`, { price: p }) : null}
-                note={t(`plans.${id}.note`)}
+                note={
+                  id === 'yearly' && savings
+                    ? t('plans.yearly.savings', { percent: savings })
+                    : t(`plans.${id}.note`)
+                }
                 selected={selected === id}
                 onPress={() => setSelected(id)}
               />
@@ -129,7 +136,7 @@ export function PaywallScreen() {
                 offering?.trialEligible
                   ? `paywall.fine.${current.period}`
                   : `paywall.fineNoTrial.${current.period}`,
-                { price },
+                { price, perMonth },
               )
             : ' '}
         </Text>

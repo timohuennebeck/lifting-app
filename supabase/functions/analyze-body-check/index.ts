@@ -32,6 +32,9 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 const OPENAI_MODEL = Deno.env.get('OPENAI_MODEL') ?? 'gpt-6.1-sol';
 const OPENAI_REASONING_EFFORT = Deno.env.get('OPENAI_REASONING_EFFORT');
+const REVENUECAT_SECRET_KEY = Deno.env.get('REVENUECAT_SECRET_KEY');
+/** RevenueCat entitlement that unlocks Traqa Pro (same as the app). */
+const PRO_ENTITLEMENT = 'pro';
 
 const admin = createClient(
   Deno.env.get('SUPABASE_URL')!,
@@ -57,6 +60,35 @@ async function checkPhotos(userId: string, checkId: string): Promise<Partial<Pho
     POSES.map((pose) => photoDataUrl(`${userId}/${checkId}/${pose}.jpg`)),
   );
   return Object.fromEntries(POSES.flatMap((pose, i) => (urls[i] ? [[pose, urls[i]]] : [])));
+}
+
+/**
+ * Whether RevenueCat lists an active Pro entitlement for the user. Without a key (local
+ * development) or when RevenueCat can't be reached it lets the analysis through: the app shows
+ * the paywall itself, this only keeps the OpenAI cost to paying users.
+ */
+async function hasPro(userId: string) {
+  if (!REVENUECAT_SECRET_KEY) return true;
+  try {
+    const response = await fetch(
+      `https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(userId)}`,
+      {
+        headers: { Authorization: `Bearer ${REVENUECAT_SECRET_KEY}` },
+        signal: AbortSignal.timeout(10_000),
+      },
+    );
+    if (!response.ok) {
+      console.error('Checking Pro with RevenueCat failed', response.status, await response.text());
+      return true;
+    }
+    const entitlement = (await response.json()).subscriber?.entitlements?.[PRO_ENTITLEMENT];
+    if (!entitlement) return false;
+    // No expiry date = lifetime.
+    return entitlement.expires_date === null || Date.parse(entitlement.expires_date) > Date.now();
+  } catch (error) {
+    console.error('Checking Pro with RevenueCat failed', error);
+    return true;
+  }
 }
 
 async function askModel(content: ReturnType<typeof modelInput>) {
@@ -114,6 +146,7 @@ Deno.serve(async (req) => {
       .maybeSingle<PreviousCheck>(),
   ]);
   if ((profile?.age ?? 0) < MIN_AGE) return reply(403, { error: 'not_adult' });
+  if (!(await hasPro(userId))) return reply(403, { error: 'not_pro' });
 
   // The previous check's photos let the model compare pose by pose; any it lacks (a check from
   // another device not uploaded yet, the four-pose days) are left out.

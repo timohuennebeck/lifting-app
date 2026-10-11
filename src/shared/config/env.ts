@@ -14,4 +14,6 @@ export const env = {
   // available yet.
   googleWebClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
   googleIosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+  // Optional: RevenueCat's public iOS SDK key. Without it purchases are simulated.
+  revenueCatIosKey: process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY,
 };

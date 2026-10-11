@@ -7,6 +7,7 @@ import { paywallKeys } from '@/features/paywall/data/paywall-keys';
 import {
   MANAGE_SUBSCRIPTIONS_URL,
   resetMockPurchases,
+  usesStore,
 } from '@/features/paywall/lib/purchases-service';
 import { trialEnd, useSubscriptionStore } from '@/features/paywall/stores/subscription-store';
 import { formatShortDate } from '@/shared/lib/format';
@@ -26,9 +27,9 @@ export function ProSection() {
   const trialEndDate = trialEnd(trialEndsAt);
   const status = trialEndDate
     ? t('settings.trialUntil', { date: formatShortDate(trialEndDate) })
-    : t(plan === 'monthly' ? 'settings.planMonthly' : 'settings.planDaily');
+    : t(plan === 'monthly' ? 'settings.planMonthly' : 'settings.planYearly');
 
-  // Purchases are mocked: a long press lets testers start over from the paywall.
+  // While purchases are simulated, a long press lets testers start over from the paywall.
   const resetForTesting = () => {
     resetMockPurchases();
     useSubscriptionStore.getState().reset();
@@ -43,7 +44,7 @@ export function ProSection() {
           value={status}
           trailing={<Icon name="arrow-up-right" size={14} color={colors.dim} />}
           onPress={() => Linking.openURL(MANAGE_SUBSCRIPTIONS_URL)}
-          onLongPress={__DEV__ ? resetForTesting : undefined}
+          onLongPress={__DEV__ && !usesStore ? resetForTesting : undefined}
         />
       ) : (
         <SettingsRow

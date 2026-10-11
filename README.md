@@ -148,6 +148,26 @@ App IDs in the developer account: `npm run apple:ids` lists them with the App St
 uses each one, `npm run apple:ids -- delete <identifier> …` deletes unused ones after asking. It
 needs an App Store Connect API key in `.env` (see `.env.example`).
 
+## Purchases (RevenueCat)
+
+On iOS the paywall buys through RevenueCat (`react-native-purchases`) once
+`EXPO_PUBLIC_REVENUECAT_IOS_KEY` (the public `appl_…` key) is in `.env`; without it, and on Android
+for now, purchases are simulated in development builds only. The RevenueCat app user ID is the
+Supabase user ID; purchases made before sign-up move to the account at login.
+
+What the code expects:
+
+- **App Store Connect:** subscription group "Traqa Pro" with `traqa_pro_monthly` (1 month,
+  9,99 €) and `traqa_pro_yearly` (1 year, 59,99 €), each with a 1-week free-trial introductory
+  offer. The Paid Apps agreement must be active, also for sandbox purchases.
+- **RevenueCat:** entitlement `pro` with both products; offering `default` (current) with the
+  packages `$rc_monthly` → `traqa_pro_monthly` and `$rc_annual` → `traqa_pro_yearly`.
+- **Server check:** with `REVENUECAT_SECRET_KEY` (a v1 secret key, `sk_…`) in
+  `supabase/functions/.env`, the body check analysis only runs for accounts with an active `pro`
+  entitlement. Without the key, or when RevenueCat can't be reached, it isn't checked.
+- **Testing:** a development build on an iPhone, signed in to a sandbox tester under Settings →
+  App Store → Sandbox Account.
+
 ## Languages
 
 The app language is mirrored to `profiles.language` (for the team) and to the auth user metadata

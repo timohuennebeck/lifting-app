@@ -95,6 +95,7 @@
       "offline": "A análise precisa de conexão com a internet. Suas fotos ficam salvas.",
       "limit": "Você já iniciou várias análises hoje. Tente novamente amanhã.",
       "notAdult": "O check corporal só está disponível a partir dos 18 anos.",
+      "notPro": "A análise precisa do Traqa Pro.",
       "refused": "Não conseguimos analisar essas fotos. Refaça-as com roupa esportiva ou roupa íntima.",
       "failed": "A análise falhou. Tente novamente."
     }

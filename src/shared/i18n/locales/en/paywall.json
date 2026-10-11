@@ -24,19 +24,20 @@
     },
     "continue": "Continue",
     "fine": {
-      "day": "Then {{price}} per day · cancel anytime",
+      "year": "Then {{price}} per year ({{perMonth}} / month) · cancel anytime",
       "month": "Then {{price}} per month · cancel anytime"
     },
     "fineNoTrial": {
-      "day": "{{price}} per day · cancel anytime",
+      "year": "{{price}} per year ({{perMonth}} / month) · cancel anytime",
       "month": "{{price}} per month · cancel anytime"
     }
   },
   "plans": {
-    "daily": {
-      "label": "Daily",
-      "price": "{{price}} / day",
-      "note": "cancel any day"
+    "yearly": {
+      "label": "Yearly",
+      "price": "{{price}} / year",
+      "note": "billed yearly",
+      "savings": "Save {{percent}}%"
     },
     "monthly": {
       "label": "Monthly",
@@ -54,12 +55,12 @@
     "day": "Day {{day}}",
     "reminderBody": "You'll get a reminder that your trial ends soon.",
     "startBody": {
-      "day": "Your daily plan starts. Cancel anytime before then.",
+      "year": "Your yearly plan starts. Cancel anytime before then.",
       "month": "Your monthly plan starts. Cancel anytime before then."
     },
     "cta": "Start free trial",
     "fine": {
-      "day": "Then {{price}} per day",
+      "year": "Then {{price}} per year",
       "month": "Then {{price}} per month"
     }
   },
@@ -95,6 +96,6 @@
     "trialUntil": "Trial until {{date}}",
     "manage": "Manage subscription",
     "planMonthly": "Pro · monthly",
-    "planDaily": "Pro · daily"
+    "planYearly": "Pro · yearly"
   }
 }

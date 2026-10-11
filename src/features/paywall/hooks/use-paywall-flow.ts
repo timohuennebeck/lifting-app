@@ -3,7 +3,7 @@ import { router, useNavigation, useSegments } from 'expo-router';
 import type { PlanId } from '../lib/purchases-service';
 
 /** The plan travels between paywall steps as a route param. */
-export const parsePlanId = (value: unknown): PlanId => (value === 'monthly' ? 'monthly' : 'daily');
+export const parsePlanId = (value: unknown): PlanId => (value === 'monthly' ? 'monthly' : 'yearly');
 
 /**
  * The same screens run in onboarding (/paywall → /create-account) and as the

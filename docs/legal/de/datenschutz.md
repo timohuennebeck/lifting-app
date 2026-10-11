@@ -191,13 +191,11 @@ Voraussichtlich verarbeitet werden Nutzungsereignisse mit Zeitpunkt, eine pseudo
 
 Rechtsgrundlage: deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG). Du kannst sie jederzeit widerrufen: [[PLATZHALTER: Ort in der App, an dem die Einwilligung in die Analyse widerrufen werden kann]]
 
-### 4.13 Geplant: Abo-Verwaltung mit RevenueCat
+### 4.13 Abo-Verwaltung mit RevenueCat
 
-> Dieser Abschnitt beschreibt einen geplanten Dienst. Traqa nutzt RevenueCat derzeit noch nicht.
+Käufe und Abos verwalten wir über RevenueCat, derzeit für Käufe über den App Store. RevenueCat prüft für uns die Kaufbelege von Apple und teilt der App mit, ob Traqa Pro aktiv ist. Bevor unser Server einen Körpercheck auswertet, fragt er bei RevenueCat nach, ob dein Konto Traqa Pro hat.
 
-Wir planen, Käufe und Abos über RevenueCat zu verwalten. RevenueCat prüft für uns die Kaufbelege von Apple und Google und teilt der App mit, ob Traqa Pro aktiv ist.
-
-Voraussichtlich verarbeitet werden eine Kennung, über die RevenueCat deine Käufe deinem Konto zuordnet [[PLATZHALTER: Welche Kennung an RevenueCat übermittelt wird, z. B. eine pseudonyme Nutzer-ID]], Kauf- und Abo-Informationen aus dem Store (zum Beispiel Produkt, Preis, Währung, Kauf-, Verlängerungs- und Ablaufdaten, Testzeitraum und Transaktionskennungen) sowie technische Angaben wie Plattform und App-Version. [[PLATZHALTER: Endgültige Liste der an RevenueCat übermittelten Daten bestätigen]]
+Damit RevenueCat deine Käufe deinem Konto zuordnen kann, übermitteln wir deine Konto-ID, eine zufällige Kennung ohne Namen oder E-Mail-Adresse. Kaufst du vor dem Erstellen deines Kontos, vergibt RevenueCat zunächst eine eigene zufällige Kennung und ordnet den Kauf danach deinem Konto zu. Außerdem verarbeitet RevenueCat Kauf- und Abo-Informationen aus dem Store (zum Beispiel Produkt, Preis, Währung, Kauf-, Verlängerungs- und Ablaufdaten, Testzeitraum und Transaktionskennungen) sowie technische Angaben wie Plattform und App-Version. [[PLATZHALTER: Endgültige Liste der an RevenueCat übermittelten Daten bestätigen]]
 
 - Anbieter: RevenueCat, [[PLATZHALTER: Vertragspartner und Anschrift von RevenueCat laut Auftragsverarbeitungsvertrag]]
 - Rolle: [[PLATZHALTER: Rolle von RevenueCat laut Vertrag bestätigen, z. B. Auftragsverarbeiter]]
@@ -240,7 +238,8 @@ Wir geben deine Daten nur weiter, wenn das für die genannten Zwecke nötig ist,
 - **PowerSync** (Synchronisation zwischen App und Datenbank; der Dienst hält dafür eine Kopie deiner synchronisierten Daten vor): [[PLATZHALTER: PowerSync Cloud oder selbst betrieben; Vertragspartner bzw. Hosting-Anbieter mit Anschrift]]; Serverstandort: [[PLATZHALTER: Region des PowerSync-Dienstes]]
 - **E-Mail-Versand:** [[PLATZHALTER: E-Mail-Versanddienst]]
 - **OpenAI** (KI-Auswertung der Körpercheck-Fotos, Abschnitt 4.6): [[PLATZHALTER: Vertragspartner und Anschrift laut Auftragsverarbeitungsvertrag (Data Processing Addendum) mit OpenAI]]; Verarbeitung in den USA
-- geplant: PostHog (Abschnitt 4.12) und RevenueCat (Abschnitt 4.13)
+- **RevenueCat** (Abo-Verwaltung, Abschnitt 4.13): siehe dort
+- geplant: PostHog (Abschnitt 4.12)
 
 Apple und Google erhalten bei App-Downloads und Käufen Daten als eigenständig Verantwortliche (Abschnitt 4.10), Google und Apple ebenso bei der Anmeldung über ihr Konto (Abschnitt 4.2).
 
@@ -258,7 +257,8 @@ Wenn wir Daten in ein Drittland übermitteln, stützen wir das auf einen Angemes
 - PowerSync: [[PLATZHALTER: Drittlandübermittlung bei PowerSync und Garantie]]
 - E-Mail-Versand: [[PLATZHALTER: Drittlandübermittlung beim E-Mail-Versanddienst und Garantie]]
 - OpenAI: [[PLATZHALTER: Prüfen, ob OpenAI unter dem EU-US Data Privacy Framework zertifiziert ist; sonst Standardvertragsklauseln laut Data Processing Addendum nennen]]
-- PostHog und RevenueCat (geplant): siehe Abschnitte 4.12 und 4.13
+- RevenueCat: siehe Abschnitt 4.13
+- PostHog (geplant): siehe Abschnitt 4.12
 
 ## 9. Wie lange wir deine Daten speichern
 

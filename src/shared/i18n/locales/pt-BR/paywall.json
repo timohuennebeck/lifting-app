@@ -24,19 +24,20 @@
     },
     "continue": "Continuar",
     "fine": {
-      "day": "Depois {{price}} por dia · cancele quando quiser",
+      "year": "Depois {{price}} por ano ({{perMonth}} / mês) · cancele quando quiser",
       "month": "Depois {{price}} por mês · cancele quando quiser"
     },
     "fineNoTrial": {
-      "day": "{{price}} por dia · cancele quando quiser",
+      "year": "{{price}} por ano ({{perMonth}} / mês) · cancele quando quiser",
       "month": "{{price}} por mês · cancele quando quiser"
     }
   },
   "plans": {
-    "daily": {
-      "label": "Diário",
-      "price": "{{price}} / dia",
-      "note": "cancelável por dia"
+    "yearly": {
+      "label": "Anual",
+      "price": "{{price}} / ano",
+      "note": "cobrado por ano",
+      "savings": "Economize {{percent}}%"
     },
     "monthly": {
       "label": "Mensal",
@@ -55,12 +56,12 @@
     "day": "Dia {{day}}",
     "reminderBody": "Você recebe um lembrete de que seu teste está acabando.",
     "startBody": {
-      "day": "Sua assinatura diária começa. Cancele quando quiser antes disso.",
+      "year": "Sua assinatura anual começa. Cancele quando quiser antes disso.",
       "month": "Sua assinatura mensal começa. Cancele quando quiser antes disso."
     },
     "cta": "Testar grátis",
     "fine": {
-      "day": "Depois {{price}} por dia",
+      "year": "Depois {{price}} por ano",
       "month": "Depois {{price}} por mês"
     }
   },
@@ -96,6 +97,6 @@
     "trialUntil": "Teste até {{date}}",
     "manage": "Gerenciar assinatura",
     "planMonthly": "Pro · mensal",
-    "planDaily": "Pro · diário"
+    "planYearly": "Pro · anual"
   }
 }

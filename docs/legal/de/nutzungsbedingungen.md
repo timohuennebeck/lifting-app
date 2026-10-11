@@ -64,8 +64,8 @@ Traqa ist ein Hilfsmittel für dein Training. Einen bestimmten Trainingserfolg s
 ## 6. Traqa Pro, Testzeitraum und Abo
 
 - **Kauf:** Traqa Pro kaufst du in der App über den App Store oder über Google Play. Zahlung und Abrechnung übernimmt der jeweilige Store. [[PLATZHALTER: Bestätigen, wer bei In-App-Käufen Vertragspartner ist (Apple bzw. Google oder wir)]]
-- **Preise und Laufzeiten:** Die aktuellen Preise und Laufzeiten siehst du vor dem Kauf in der App und im Store. [[PLATZHALTER: Angebotene Abos mit Preisen und Laufzeiten]]
-- **Testzeitraum:** Traqa Pro kann mit einem kostenlosen Testzeitraum von [[PLATZHALTER: Länge des Testzeitraums]] beginnen. Den Test kannst du einmal pro [[PLATZHALTER: Store-Konto oder Traqa-Konto]] nutzen. Kündigst du nicht rechtzeitig vor dem Ende des Tests, geht er automatisch in ein kostenpflichtiges Abo über. [[PLATZHALTER: Ob und wie wir vor dem Ende des Testzeitraums erinnern]]
+- **Preise und Laufzeiten:** Traqa Pro gibt es als Monatsabo (derzeit 9,99 € pro Monat) und als Jahresabo (derzeit 59,99 € pro Jahr). Die aktuellen Preise in deiner Währung siehst du vor dem Kauf in der App und im Store.
+- **Testzeitraum:** Traqa Pro kann mit einem kostenlosen Testzeitraum von 7 Tagen beginnen. Ob du ihn nutzen kannst, entscheidet der Store: in der Regel einmal pro Store-Konto. Kündigst du nicht rechtzeitig vor dem Ende des Tests, geht er automatisch in ein kostenpflichtiges Abo über. [[PLATZHALTER: Ob und wie wir vor dem Ende des Testzeitraums erinnern]]
 - **Verlängerung:** Dein Abo verlängert sich automatisch um die gewählte Laufzeit, wenn du es nicht spätestens [[PLATZHALTER: Kündigungsfrist laut Store, z. B. 24 Stunden vor Ablauf der Laufzeit]] kündigst.
 - **Kündigung:** Du kündigst in den Abo-Einstellungen deines Store-Kontos. In der App findest du den Link dazu in den Einstellungen unter „Abo verwalten“. Nach der Kündigung bleibt Traqa Pro bis zum Ende der bezahlten Laufzeit aktiv.
 - **Wichtig:** Wenn du die App oder dein Konto löschst, wird dein Abo nicht gekündigt.
