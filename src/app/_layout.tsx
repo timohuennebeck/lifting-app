@@ -76,25 +76,32 @@ export default function RootLayout() {
           <QueryClientProvider client={queryClient}>
             <ThemeProvider value={navigationTheme}>
               <StatusBar style="light" />
-              <Stack
-                screenOptions={{
-                  headerShown: false,
-                  contentStyle: { backgroundColor: colors.bg },
-                }}
-              >
-                <Stack.Protected guard={inApp}>
-                  <Stack.Screen name="(app)" />
-                </Stack.Protected>
-                <Stack.Protected guard={!inApp}>
-                  <Stack.Screen name="(onboarding)" />
-                </Stack.Protected>
-                {/* Open from sign-up and from settings alike. */}
-                <Stack.Screen name="legal/[kind]" options={{ animation: 'slide_from_right' }} />
-                {/* Exercise info, from the live workout and from the plan import. */}
-                <Stack.Screen name="exercise/[id]" options={{ animation: 'slide_from_right' }} />
-                {/* Muscle breakdown of a workout, from the overview, builder and plan import. */}
-                <Stack.Screen name="workout-muscles" options={{ animation: 'slide_from_right' }} />
-              </Stack>
+              {/* Screens read the exercises as they render (and don't re-render when the
+                  download lands), so they only mount once the catalog is there. */}
+              {catalog.ready ? (
+                <Stack
+                  screenOptions={{
+                    headerShown: false,
+                    contentStyle: { backgroundColor: colors.bg },
+                  }}
+                >
+                  <Stack.Protected guard={inApp}>
+                    <Stack.Screen name="(app)" />
+                  </Stack.Protected>
+                  <Stack.Protected guard={!inApp}>
+                    <Stack.Screen name="(onboarding)" />
+                  </Stack.Protected>
+                  {/* Open from sign-up and from settings alike. */}
+                  <Stack.Screen name="legal/[kind]" options={{ animation: 'slide_from_right' }} />
+                  {/* Exercise info, from the live workout and from the plan import. */}
+                  <Stack.Screen name="exercise/[id]" options={{ animation: 'slide_from_right' }} />
+                  {/* Muscle breakdown of a workout, from the overview, builder and plan import. */}
+                  <Stack.Screen
+                    name="workout-muscles"
+                    options={{ animation: 'slide_from_right' }}
+                  />
+                </Stack>
+              ) : null}
               {catalog.failed ? (
                 <CatalogOffline retrying={catalog.retrying} onRetry={catalog.retry} />
               ) : null}
