@@ -39,7 +39,13 @@
     "cancelTimer": "Cancelar timer",
     "error": "Não foi possível salvar a foto. Tente novamente.",
     "access": "Para as fotos do seu check corporal. Elas ficam privadas.",
-    "tapToCancel": "Toque para cancelar"
+    "tapToCancel": "Toque para cancelar",
+    "turn": {
+      "next": "Próxima pose",
+      "front": "Fique de frente para a câmera",
+      "side": "Vire de lado",
+      "back": "Fique de costas para a câmera"
+    }
   },
   "discard": {
     "title": "Descartar check corporal?",

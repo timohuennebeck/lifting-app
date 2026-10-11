@@ -39,7 +39,13 @@
     "cancelTimer": "Selbstauslöser abbrechen",
     "error": "Das Foto konnte nicht gespeichert werden. Bitte versuch es noch einmal.",
     "access": "Für deine Körpercheck-Fotos. Sie bleiben privat.",
-    "tapToCancel": "Tippen, um abzubrechen"
+    "tapToCancel": "Tippen, um abzubrechen",
+    "turn": {
+      "next": "Nächste Pose",
+      "front": "Stell dich frontal zur Kamera",
+      "side": "Dreh dich zur Seite",
+      "back": "Dreh dich mit dem Rücken zur Kamera"
+    }
   },
   "discard": {
     "title": "Körpercheck verwerfen?",

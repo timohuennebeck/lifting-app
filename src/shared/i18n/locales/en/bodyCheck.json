@@ -39,7 +39,13 @@
     "cancelTimer": "Cancel self-timer",
     "error": "The photo couldn't be saved. Please try again.",
     "access": "For your body check photos. They stay private.",
-    "tapToCancel": "Tap to cancel"
+    "tapToCancel": "Tap to cancel",
+    "turn": {
+      "next": "Next pose",
+      "front": "Face the camera",
+      "side": "Turn to the side",
+      "back": "Turn your back to the camera"
+    }
   },
   "discard": {
     "title": "Discard body check?",

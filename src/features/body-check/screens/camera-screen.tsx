@@ -43,6 +43,8 @@ const BOTTOM_SCRIM: GradientStop[] = [
 ];
 
 const TIMER_SOUNDS = { 3: 'photoTimer3', 10: 'photoTimer10' } as const;
+/** Auto: time between two photos to turn to the next pose, before its countdown starts. */
+const TURN_MS = 5000;
 
 /**
  * 08a: full-screen camera that walks through the three poses, with self-timer. The timer sound
@@ -66,11 +68,15 @@ export function CameraScreen() {
   const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const [count, setCount] = useState(0);
+  // Auto: the pause after a photo while the user turns to the next pose.
+  const [turning, setTurning] = useState(false);
   const checkId = useBodyCheckStore((s) => s.checkId);
   const shots = useBodyCheckStore((s) => s.shots);
   const pose = useBodyCheckStore((s) => s.pose);
   const timer = useBodyCheckStore((s) => s.timer);
-  const auto = useBodyCheckStore((s) => s.auto);
+  const retaking = useBodyCheckStore((s) => s.retaking);
+  // Retaking one photo from the review screen: just that one, whatever Auto says.
+  const auto = useBodyCheckStore((s) => s.auto) && !retaking;
   const facing = useBodyCheckStore((s) => s.facing);
   // When the running countdown ends, and how to silence its sound if it's cancelled.
   const countdownEndsAt = useRef(0);
@@ -100,7 +106,20 @@ export function CameraScreen() {
     stopTimerSound.current?.();
     stopTimerSound.current = null;
     setCount(0);
+    setTurning(false);
   }
+
+  const endTurn = useEffectEvent(() => {
+    setTurning(false);
+    const { timer: seconds } = useBodyCheckStore.getState();
+    if (focused && seconds) startCountdown(seconds);
+  });
+
+  useEffect(() => {
+    if (!turning) return;
+    const id = setTimeout(endTurn, TURN_MS);
+    return () => clearTimeout(id);
+  }, [turning]);
 
   // The user asked for the camera by starting the check, so ask the system right away.
   const permissionStatus = permission?.status;
@@ -139,9 +158,9 @@ export function CameraScreen() {
       const complete = POSES.every((p) => next.shots[p]);
       const openReview = current.retaking || (complete && !wasComplete);
       if (openReview && focusedRef.current) router.push('/body-check/review');
-      // Auto: the next missing pose (already selected) gets its countdown right away.
+      // Auto: a pause to turn to the next missing pose (already selected), then its countdown.
       else if (next.auto && next.timer && !complete && focusedRef.current) {
-        startCountdown(next.timer);
+        setTurning(true);
       }
     } catch (error) {
       console.warn('Body-check photo failed', error);
@@ -175,7 +194,7 @@ export function CameraScreen() {
 
   function shutter() {
     if (busy) return;
-    if (count > 0) {
+    if (count > 0 || turning) {
       haptics.select();
       cancelCountdown();
       return;
@@ -219,31 +238,52 @@ export function CameraScreen() {
       <Gradient from="top" size={200} color="black" opacity={0.6} />
       <Gradient from="bottom" size={300} color="black" stops={BOTTOM_SCRIM} />
 
-      {count > 0 ? (
-        // Countdown: only the pose, the number and a stop button; a tap anywhere cancels.
+      {count > 0 || turning ? (
+        // Countdown (or Auto's pause to turn): the pose, the number and a stop button; a tap
+        // anywhere cancels.
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t('camera.cancelTimer')}
           onPress={shutter}
           style={StyleSheet.absoluteFill}
         >
-          <Text
-            variant="caption"
-            tone="accent"
-            className="absolute inset-x-0 text-center font-inter-semibold text-[13px] tracking-[1.6px] uppercase"
-            style={{ top: insets.top + 18 }}
-          >
-            {t(`poses.${pose}.name`)}
-          </Text>
+          {turning ? null : (
+            <Text
+              variant="caption"
+              tone="accent"
+              className="absolute inset-x-0 text-center font-inter-semibold text-[13px] tracking-[1.6px] uppercase"
+              style={{ top: insets.top + 18 }}
+            >
+              {t(`poses.${pose}.name`)}
+            </Text>
+          )}
           <View
             pointerEvents="none"
             className="absolute items-center justify-center"
             style={frame}
             accessibilityLiveRegion="assertive"
           >
-            <Animated.View key={count} entering={FadeIn.duration(160)}>
-              <CountdownNumber value={count} />
-            </Animated.View>
+            {turning ? (
+              <Animated.View entering={FadeIn.duration(200)} className="items-center gap-2 px-6">
+                <Text
+                  variant="caption"
+                  tone="secondary"
+                  className="font-inter-semibold tracking-[1.6px] uppercase"
+                >
+                  {t('camera.turn.next')}
+                </Text>
+                <Text className="text-center font-inter-semibold text-[44px] leading-12 text-accent">
+                  {t(`poses.${pose}.name`)}
+                </Text>
+                <Text variant="paragraph" tone="secondary" className="text-center">
+                  {t(`camera.turn.${pose}`)}
+                </Text>
+              </Animated.View>
+            ) : (
+              <Animated.View key={count} entering={FadeIn.duration(160)}>
+                <CountdownNumber value={count} />
+              </Animated.View>
+            )}
           </View>
           <View
             pointerEvents="none"
@@ -277,21 +317,24 @@ export function CameraScreen() {
               >
                 {t(`poses.${pose}.short`)}
               </Text>
-              <PressableScale
-                haptic="select"
-                accessibilityRole="switch"
-                accessibilityLabel={t('camera.autoA11y')}
-                accessibilityState={{ checked: auto }}
-                onPress={() => useBodyCheckStore.getState().toggleAuto()}
-                className={cn(
-                  'mr-2 h-10.5 justify-center rounded-full px-3.5',
-                  auto ? 'bg-accent' : 'bg-elevated',
-                )}
-              >
-                <Text variant="caption" tone={auto ? 'onAccent' : 'default'}>
-                  {t('camera.auto')}
-                </Text>
-              </PressableScale>
+              {/* Retaking one photo: no Auto, it would only ever take that one. */}
+              {retaking ? null : (
+                <PressableScale
+                  haptic="select"
+                  accessibilityRole="switch"
+                  accessibilityLabel={t('camera.autoA11y')}
+                  accessibilityState={{ checked: auto }}
+                  onPress={() => useBodyCheckStore.getState().toggleAuto()}
+                  className={cn(
+                    'mr-2 h-10.5 justify-center rounded-full px-3.5',
+                    auto ? 'bg-accent' : 'bg-elevated',
+                  )}
+                >
+                  <Text variant="caption" tone={auto ? 'onAccent' : 'default'}>
+                    {t('camera.auto')}
+                  </Text>
+                </PressableScale>
+              )}
               <PressableScale
                 haptic="select"
                 accessibilityLabel={t('camera.timerA11y')}

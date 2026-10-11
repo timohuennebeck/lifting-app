@@ -33,7 +33,17 @@ export function preloadSounds(...names: SoundName[]) {
 /** Plays a sound from `fromSeconds` into it; returns a function that stops it again. */
 export function playSound(name: SoundName, fromSeconds = 0) {
   const player = playerFor(name);
-  void player.seekTo(fromSeconds);
-  player.play();
-  return () => player.pause();
+  let stopped = false;
+  // Played only once the seek is done: a player left at the end of the sound (it played before)
+  // would otherwise stay silent.
+  void player
+    .seekTo(fromSeconds)
+    .catch((error) => console.warn('Seeking the sound failed', error))
+    .then(() => {
+      if (!stopped) player.play();
+    });
+  return () => {
+    stopped = true;
+    player.pause();
+  };
 }
