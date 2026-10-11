@@ -14,9 +14,9 @@ import { clamp } from '@/shared/lib/math';
 
 const MAX_SCALE = 4;
 const DOUBLE_TAP_SCALE = 2.5;
-/** Unzoomed, a drag this far (or a fast flick) closes or swipes. */
-const SWIPE_DISTANCE = 100;
-const SWIPE_VELOCITY = 900;
+/** Unzoomed, a drag this far (or a fast flick) up or down closes. */
+const DISMISS_DISTANCE = 100;
+const DISMISS_VELOCITY = 900;
 
 export interface ZoomableViewProps {
   children: ReactNode;
@@ -24,16 +24,13 @@ export interface ZoomableViewProps {
   contentAspect?: number;
   /** Unzoomed drag up or down. */
   onDismiss: () => void;
-  /** Unzoomed drag sideways: 1 for the next item, -1 for the previous one. */
-  onSwipe?: (direction: 1 | -1) => void;
 }
 
 /**
  * Full-screen content to look at closely: pinch or double-tap to zoom, drag to move the zoomed
- * content. Unzoomed, dragging sideways swipes and dragging up or down closes. Remount it (key)
- * to reset the zoom.
+ * content. Unzoomed, dragging up or down closes. Remount it (key) to reset the zoom.
  */
-export function ZoomableView({ children, contentAspect, onDismiss, onSwipe }: ZoomableViewProps) {
+export function ZoomableView({ children, contentAspect, onDismiss }: ZoomableViewProps) {
   const { width, height } = useWindowDimensions();
   // The content's size on screen unzoomed: the bars beside it are never panned into view.
   const fitWidth = contentAspect ? Math.min(width, height * contentAspect) : width;
@@ -98,7 +95,6 @@ export function ZoomableView({ children, contentAspect, onDismiss, onSwipe }: Zo
         x.set(clamp(from.x + e.translationX, -maxX(s), maxX(s)));
         y.set(clamp(from.y + e.translationY, -maxY(s), maxY(s)));
       } else {
-        x.set(onSwipe ? e.translationX : 0);
         y.set(e.translationY);
       }
     })
@@ -109,14 +105,10 @@ export function ZoomableView({ children, contentAspect, onDismiss, onSwipe }: Zo
         y.set(withDecay({ velocity: e.velocityY, clamp: [-maxY(s), maxY(s)] }));
         return;
       }
-      const sideways = Math.abs(e.translationX) > Math.abs(e.translationY);
-      const far = (distance: number, velocity: number) =>
-        Math.abs(distance) > SWIPE_DISTANCE || Math.abs(velocity) > SWIPE_VELOCITY;
-      if (!sideways && far(e.translationY, e.velocityY)) return scheduleOnRN(onDismiss);
-      // Back in place also after a swipe: there may be nothing to swipe to.
-      reset();
-      if (sideways && onSwipe && far(e.translationX, e.velocityX)) {
-        scheduleOnRN(onSwipe, e.translationX < 0 ? 1 : -1);
+      if (Math.abs(e.translationY) > DISMISS_DISTANCE || Math.abs(e.velocityY) > DISMISS_VELOCITY) {
+        scheduleOnRN(onDismiss);
+      } else {
+        reset();
       }
     });
 
@@ -133,10 +125,7 @@ export function ZoomableView({ children, contentAspect, onDismiss, onSwipe }: Zo
 
   const contentStyle = useAnimatedStyle(() => ({
     // Unzoomed, the content fades while it is dragged away.
-    opacity:
-      scale.get() > 1
-        ? 1
-        : interpolate(Math.max(Math.abs(x.get()), Math.abs(y.get())), [0, height / 2], [1, 0.4]),
+    opacity: scale.get() > 1 ? 1 : interpolate(Math.abs(y.get()), [0, height / 2], [1, 0.4]),
     transform: [{ translateX: x.get() }, { translateY: y.get() }, { scale: scale.get() }],
   }));
 

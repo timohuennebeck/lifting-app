@@ -17,8 +17,8 @@ import { useBodyCheckStore } from '../stores/body-check-store';
 const close = () => router.back();
 
 /**
- * A check's photos full screen, to look closely: zoom in, swipe or pick the pose, and close with
- * the X or by dragging the photo away.
+ * A check's photos full screen, to look closely: zoom in, pick the pose, and close with the X or
+ * by dragging the photo away.
  */
 export function PhotoViewerScreen() {
   const params = useLocalSearchParams<{ id: string; pose?: string }>();
@@ -35,14 +35,9 @@ export function PhotoViewerScreen() {
   // A check that isn't saved yet shows its draft photos.
   const draft = draftId === id && !checks?.some((c) => c.id === id);
 
-  function swipe(direction: 1 | -1) {
-    const next = POSES[POSES.indexOf(pose) + direction];
-    if (next) setPose(next);
-  }
-
   return (
     <View className="flex-1 bg-black">
-      <ZoomableView key={pose} contentAspect={aspect} onDismiss={close} onSwipe={swipe}>
+      <ZoomableView key={pose} contentAspect={aspect} onDismiss={close}>
         <CheckPhoto
           checkId={id}
           pose={pose}
