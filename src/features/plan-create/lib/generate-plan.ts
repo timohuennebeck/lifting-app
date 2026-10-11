@@ -45,7 +45,7 @@ const SLOTS = {
   // Photographed exercises lead, so a fresh plan looks like the design's (03·0b).
   hPush: {
     candidates: [
-      'close-grip-bench-press',
+      'smith-close-grip-bench-press',
       'bench-press',
       'incline-dumbbell-press',
       'push-up',
@@ -54,7 +54,7 @@ const SLOTS = {
     compound: true,
   },
   inclinePush: {
-    candidates: ['incline-dumbbell-press', 'close-grip-bench-press', 'push-up', 'dip'],
+    candidates: ['incline-dumbbell-press', 'smith-close-grip-bench-press', 'push-up', 'dip'],
     compound: true,
   },
   vPush: {
@@ -102,8 +102,8 @@ const FOCUS_SLOT: Record<MuscleGroupId, SlotId> = {
 };
 
 const EQUIPMENT: Record<EquipmentAccess, readonly string[]> = {
-  gym: ['barbell', 'dumbbell', 'machine', 'cable', 'bodyweight'],
-  home: ['barbell', 'dumbbell', 'bodyweight'],
+  gym: ['barbell', 'dumbbell', 'kettlebell', 'machine', 'cable', 'bodyweight'],
+  home: ['barbell', 'dumbbell', 'kettlebell', 'bodyweight'],
   bodyweight: ['bodyweight'],
 };
 /** Catalog exercises that also work without their listed equipment. */
@@ -116,7 +116,7 @@ const ALSO_AT: Partial<Record<EquipmentAccess, readonly string[]>> = {
 const COMPLAINT_AVOID: Record<string, readonly string[]> = {
   neck: ['upright-row', 'deadlift'],
   shoulders: ['upright-row', 'dip', 'front-raise', 'arnold-press'],
-  elbows: ['french-press', 'close-grip-bench-press', 'chin-up'],
+  elbows: ['french-press', 'close-grip-bench-press', 'smith-close-grip-bench-press', 'chin-up'],
   wrists: ['push-up', 'french-press', 'front-raise'],
   upper_back: ['t-bar-row', 'deadlift'],
   lower_back: ['deadlift', 'romanian-deadlift', 'squat', 't-bar-row'],

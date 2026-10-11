@@ -18,6 +18,7 @@
   "equipment": {
     "barbell": "Langhantel",
     "dumbbell": "Kurzhanteln",
+    "kettlebell": "Kettlebell",
     "machine": "Maschine",
     "cable": "Kabelzug",
     "bodyweight": "Körpergewicht"

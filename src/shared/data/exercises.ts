@@ -12,7 +12,7 @@ import type { PlanSetDraft } from './templates';
 // The catalog lives in Supabase (`public.exercises`). The app downloads all of it on first launch
 // and keeps it on the device for offline use; `useCatalogRefresh` then fetches what changed.
 
-export type Equipment = 'barbell' | 'dumbbell' | 'machine' | 'cable' | 'bodyweight';
+export type Equipment = 'barbell' | 'dumbbell' | 'kettlebell' | 'machine' | 'cable' | 'bodyweight';
 
 /** What one set records; the workout screen shows one box per measure. */
 export type Measure = 'weight' | 'reps' | 'seconds';

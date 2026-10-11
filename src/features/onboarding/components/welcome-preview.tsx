@@ -28,7 +28,7 @@ const SCROLL = 230;
 const RIR_COLORS: Record<number, string> = { 3: '#EEA53A', 2: '#EEA53A', 1: '#E2483D' };
 
 const EXERCISES = [
-  { id: 'close-grip-bench-press', reps: '7–9', rir: [3, 2, 1] },
+  { id: 'smith-close-grip-bench-press', reps: '7–9', rir: [3, 2, 1] },
   { id: 'dumbbell-shoulder-press', reps: '7–9', rir: [3, 2, 1] },
   { id: 'incline-dumbbell-press', reps: '9–11', rir: [3, 2] },
 ] as const;
