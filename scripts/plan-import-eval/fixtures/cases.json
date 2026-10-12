@@ -126,7 +126,7 @@
           "weekday": null,
           "exercises": [
             {
-              "ex": ["bench-press"],
+              "ex": ["paused-bench-press", "bench-press"],
               "sets": 4,
               "reps": [5, 5],
               "rir": 2,
