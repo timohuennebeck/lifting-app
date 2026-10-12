@@ -44,28 +44,31 @@ export function ExerciseTechniquePage() {
           <MuscleMap view={view} selected={primary} secondary={secondary} width={76} height={180} />
         </View>
       </View>
-      <View>
-        <Text variant="overline" tone="subtle" className="pb-1">
-          {t('exercises:detail.technique')}
-        </Text>
-        {steps.map((step, i) => (
-          <View key={i} className="flex-row gap-3.5 py-2.5">
-            <View className="size-7.5 items-center justify-center rounded-full bg-elevated">
-              <Text variant="caption" className="text-sm">
-                {i + 1}
-              </Text>
+      {/* Custom exercises have no technique steps. */}
+      {steps.length ? (
+        <View>
+          <Text variant="overline" tone="subtle" className="pb-1">
+            {t('exercises:detail.technique')}
+          </Text>
+          {steps.map((step, i) => (
+            <View key={i} className="flex-row gap-3.5 py-2.5">
+              <View className="size-7.5 items-center justify-center rounded-full bg-elevated">
+                <Text variant="caption" className="text-sm">
+                  {i + 1}
+                </Text>
+              </View>
+              <View className="min-w-0 flex-1">
+                <Text variant="bodyStrong" className="text-base">
+                  {step.title}
+                </Text>
+                <Text variant="paragraph" tone="muted" className="mt-1 text-sm leading-5">
+                  {step.text}
+                </Text>
+              </View>
             </View>
-            <View className="min-w-0 flex-1">
-              <Text variant="bodyStrong" className="text-base">
-                {step.title}
-              </Text>
-              <Text variant="paragraph" tone="muted" className="mt-1 text-sm leading-5">
-                {step.text}
-              </Text>
-            </View>
-          </View>
-        ))}
-      </View>
+          ))}
+        </View>
+      ) : null}
     </ScrollView>
   );
 }
