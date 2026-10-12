@@ -28,8 +28,8 @@ import { basename, extname, join } from 'node:path';
 const HERE = import.meta.dirname;
 const FIXTURES = join(HERE, 'fixtures');
 const PARALLEL = 3;
-/** Set once the function answers 429: no further imports are sent. */
-let limited = false;
+/** Why no further imports are sent: the limit was reached, or the function doesn't answer. */
+let stopped = null;
 const { EXPO_PUBLIC_SUPABASE_URL: SUPABASE_URL, EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: KEY } =
   process.env;
 if (!SUPABASE_URL || !KEY) {
@@ -115,14 +115,21 @@ function requestBody({ files, as, language }, shrink) {
 
 async function analyze(body) {
   const started = performance.now();
-  const response = await fetch(`${SUPABASE_URL}/functions/v1/analyze-plan`, {
-    method: 'POST',
-    headers: { apikey: KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  const seconds = (performance.now() - started) / 1000;
+  const seconds = () => (performance.now() - started) / 1000;
+  let response;
+  try {
+    response = await fetch(`${SUPABASE_URL}/functions/v1/analyze-plan`, {
+      method: 'POST',
+      headers: { apikey: KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  } catch (error) {
+    return { status: 0, seconds: seconds(), plan: null, error: error.cause?.code ?? error.message };
+  }
   const answer = await response.json().catch(() => ({}));
-  return { status: response.status, seconds, plan: answer.plan ?? null, error: answer.error };
+  // The function answers { error }; the runtime and gateway { code, message } or { message }.
+  const error = answer.error ?? [answer.code, answer.message].filter(Boolean).join(': ');
+  return { status: response.status, seconds: seconds(), plan: answer.plan ?? null, error };
 }
 
 /** Catalog exercises by id, for readable output (ids when the catalog can't be read). */
@@ -145,7 +152,7 @@ async function pool(items, run) {
   let next = 0;
   await Promise.all(
     Array.from({ length: Math.min(PARALLEL, items.length) }, async () => {
-      while (next < items.length && !limited) {
+      while (next < items.length && !stopped) {
         const i = next++;
         results[i] = await run(items[i]);
       }
@@ -343,23 +350,33 @@ const percent = (c) => (c.total ? `${Math.round((c.ok / c.total) * 100)} %` : 'â
 
 // ---------- runs ----------
 
-/** One import; null once the import limit is reached, so the rest is skipped, not scored. */
+/**
+ * One import; null once the limit is reached or the function doesn't answer (503 or no
+ * connection), so the rest is skipped instead of scored as failures.
+ */
 async function send(body) {
-  if (limited) return null;
+  if (stopped) return null;
   const result = await analyze(body);
-  if (result.status !== 429) return result;
-  limited = true;
+  if (result.status === 429) stopped = { limit: true };
+  else if (result.status === 503 || result.status === 0) {
+    stopped = { down: `${result.status || 'no connection'} ${result.error}`.trim() };
+  } else return result;
   return null;
 }
 
-/** After a run: what wasn't sent because of the limit, and how to lift it. */
-function reportLimit(skipped) {
-  if (!limited) return '';
-  const text =
-    `The import limit was reached; not run: ${skipped.join(', ')}. For a local run set ` +
-    'PLAN_IMPORT_IP_LIMIT=1000 in supabase/functions/.env and restart Supabase (npx supabase ' +
-    'stop, then npx supabase start). To reset the count right away, run ' +
-    '`delete from public.plan_import_requests;` in Supabase Studio.';
+/** After a run: what wasn't sent and why, and what to do about it. */
+function reportStop(skipped) {
+  if (!stopped) return '';
+  const notRun = skipped.length ? `; not run: ${skipped.join(', ')}` : '';
+  const text = stopped.limit
+    ? `The import limit was reached${notRun}. For a local run set PLAN_IMPORT_IP_LIMIT=1000 in ` +
+      'supabase/functions/.env and restart Supabase (npx supabase stop, then npx supabase ' +
+      'start). To reset the count right away, run `delete from public.plan_import_requests;` ' +
+      'in Supabase Studio.'
+    : `analyze-plan didn't answer (${stopped.down})${notRun}. Locally, npx supabase start ` +
+      'serves the functions; stopping `npx supabase functions serve` takes them down until you ' +
+      'run npx supabase stop and npx supabase start again. A BOOT_ERROR means the function ' +
+      "didn't start: keep `npx supabase functions serve` running in another terminal to see why.";
   console.error(`\n${text}`);
   return text;
 }
@@ -385,7 +402,7 @@ async function runFixtures() {
     console.log(`${passed(s) ? 'PASS' : 'FAIL'}  ${c.id}  ${result.seconds.toFixed(1)} s`);
     return { case: c, result, score: s };
   });
-  const limitNote = reportLimit(
+  const stopNote = reportStop(
     cases.filter((c) => !results.some((r) => r.case === c)).map((c) => c.id),
   );
   if (!results.length) process.exit(1);
@@ -419,7 +436,7 @@ async function runFixtures() {
   }
   writeReport(
     'report',
-    `# Plan import test\n\n${limitNote && `${limitNote}\n\n`}${table}\n\n${details}\n`,
+    `# Plan import test\n\n${stopNote && `${stopNote}\n\n`}${table}\n\n${details}\n`,
     results,
   );
 }
@@ -455,7 +472,7 @@ async function runDir() {
     console.log(`\n== ${item.id}  ${result.seconds.toFixed(1)} s\n${text}`);
     return { import: item, result, text };
   });
-  reportLimit(imports.filter((i) => !results.some((r) => r.import === i)).map((i) => i.id));
+  reportStop(imports.filter((i) => !results.some((r) => r.import === i)).map((i) => i.id));
   if (!results.length) process.exit(1);
   writeReport(
     'read',
