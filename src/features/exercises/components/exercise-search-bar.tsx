@@ -41,6 +41,7 @@ export function ExerciseSearchBar({
     <TextField
       icon="search"
       shape="pill"
+      compact
       clearable
       value={query}
       onChangeText={onChangeQuery}
@@ -67,7 +68,14 @@ export function ExerciseSearchBar({
         {onDone ? (
           <View className="flex-row items-center gap-2">
             {field}
-            <Button label={t('picker.done')} size="sm" disabled={doneDisabled} onPress={onDone} />
+            {/* As tall as the compact field beside it. */}
+            <Button
+              label={t('picker.done')}
+              size="sm"
+              disabled={doneDisabled}
+              className="h-11"
+              onPress={onDone}
+            />
           </View>
         ) : (
           field

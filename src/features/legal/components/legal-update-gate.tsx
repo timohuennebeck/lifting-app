@@ -112,7 +112,7 @@ export function LegalUpdateGate() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
         <VersionIllustration from={first.previousVersion} to={first.document.version} />
         <View className="gap-2.5 px-5 pt-7">
-          <Text accessibilityRole="header" className="font-inter-semibold text-[28px] leading-8">
+          <Text accessibilityRole="header" className="font-inter-semibold text-[28px] leading-8.5">
             {title}
           </Text>
           <Text variant="paragraph" tone="subtle">

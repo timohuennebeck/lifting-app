@@ -73,7 +73,7 @@ export function TrialScreen() {
       </View>
 
       <View className="items-center px-5.5 pt-5.5">
-        <Text variant="title" className="text-center text-2xl leading-7">
+        <Text variant="title" className="text-center text-2xl leading-7.5">
           {t('trial.title')}
         </Text>
         <Text tone="muted" className="mt-2 text-center text-sm leading-5">

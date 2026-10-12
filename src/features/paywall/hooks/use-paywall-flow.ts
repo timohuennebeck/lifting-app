@@ -15,6 +15,8 @@ export function usePaywallFlow() {
   const inApp = segments[0] === '(app)';
 
   return {
+    /** Opened from Settings; in onboarding the paywall can't be left without a plan. */
+    inApp,
     toTrial: (plan: PlanId) =>
       router.push({ pathname: inApp ? '/pro/trial' : '/paywall/trial', params: { plan } }),
     /** After a purchase: the thank-you screen replaces the paywall step. */

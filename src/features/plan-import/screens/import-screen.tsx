@@ -13,11 +13,22 @@ import { IMPORT_STEPS } from '../lib/format';
 import { pickPlanFile } from '../lib/pick-source';
 import { useImportStore } from '../stores/import-store';
 
-/** 05: choose how to import a plan (photo or file), or switch to building one. */
+/** 05: choose how to import a plan (photo or file), or build one exercise by exercise. */
 export function ImportScreen() {
   const { t } = useTranslation('planImport');
   const camera = useCameraAccess(() => router.push('/import/camera'));
   const setFile = useImportStore((s) => s.setFile);
+  const setPlan = useImportStore((s) => s.setPlan);
+
+  // No plan at hand: the same editor an import ends in, starting with one empty training day.
+  function buildOwn() {
+    setPlan({
+      name: t('index.ownPlan'),
+      days: [{ name: t('confirm.newDay', { number: 1 }), weekday: null, exercises: [] }],
+      newExercises: [],
+    });
+    router.push('/import/confirm');
+  }
 
   async function uploadFile() {
     try {
@@ -59,11 +70,7 @@ export function ImportScreen() {
           <FormatCards shadow={false} className="mt-1" />
         </SourceCard>
       </View>
-      <PressableScale
-        haptic="select"
-        onPress={() => router.push('/create/goal')}
-        className="items-center px-5 pt-4.5 pb-2"
-      >
+      <PressableScale haptic="select" onPress={buildOwn} className="items-center px-5 pt-4.5 pb-2">
         <Text variant="caption" tone="subtle" className="font-inter text-sm">
           {`${t('index.noPlan')} `}
           <Text variant="caption" className="text-sm">

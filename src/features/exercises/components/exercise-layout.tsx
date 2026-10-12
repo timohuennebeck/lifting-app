@@ -104,7 +104,7 @@ export function ExerciseLayout() {
           </View>
         ) : null}
         <View className="absolute right-5 bottom-1.5 left-5">
-          <Text variant="headline" className="text-[30px] leading-8">
+          <Text variant="headline" className="text-[30px] leading-9">
             {name}
           </Text>
           <Text variant="label" tone="muted" className="mt-2 font-inter">

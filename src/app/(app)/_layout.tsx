@@ -20,8 +20,6 @@ export default function AppLayout() {
         <Stack.Screen name="pro" options={{ gestureEnabled: false, animation: 'fade' }} />
         <Stack.Screen name="support" />
         <Stack.Screen name="search" options={{ animation: 'slide_from_right' }} />
-        <Stack.Screen name="custom-exercise/new" options={{ animation: 'slide_from_bottom' }} />
-        <Stack.Screen name="custom-exercise/[id]" options={{ animation: 'slide_from_bottom' }} />
       </Stack>
       {/* Above every screen while a new legal version needs the user's consent. */}
       <LegalUpdateGate />

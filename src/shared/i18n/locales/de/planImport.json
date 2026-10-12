@@ -11,7 +11,8 @@
       "description": "PDF, Excel, CSV oder Screenshot"
     },
     "noPlan": "Kein Plan zur Hand?",
-    "createOwn": "Selbst erstellen"
+    "createOwn": "Selbst erstellen",
+    "ownPlan": "Mein Plan"
   },
   "options": {
     "title": "PASST SO?",
@@ -70,7 +71,7 @@
     "check_one": "Noch {{count}} Punkt prüfen",
     "check_other": "Noch {{count}} Punkte prüfen",
     "empty": "Noch keine Übungen. Füg eine mit + hinzu.",
-    "newDay": "Training {{number}}",
+    "newDay": "Tag {{number}}",
     "renamePlan": "Plan umbenennen",
     "newExercise": "Neu · wird als eigene Übung angelegt"
   },

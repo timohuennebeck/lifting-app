@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ScrollView, useWindowDimensions, View } from 'react-native';
+import { Alert, ScrollView, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Easing,
@@ -30,7 +30,7 @@ import { SetTable } from '../components/set-table';
 import { WeightKeypad } from '../components/weight-keypad';
 import { WorkoutMenuSheet } from '../components/workout-menu-sheet';
 import { WorkoutTopBar } from '../components/workout-top-bar';
-import { reorderWorkoutExercise } from '../data/workout-mutations';
+import { removeWorkoutExercise, reorderWorkoutExercise } from '../data/workout-mutations';
 import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
@@ -151,6 +151,22 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
       params: { workoutId: workout.id, mode, workoutExerciseId: exercise?.id ?? '' },
     });
 
+  // Logged sets go with the exercise: ask first then. The next one moves into its place.
+  const remove = () => {
+    if (!exercise) return;
+    const drop = () => {
+      // What was typed belongs to sets that are about to go.
+      useWorkoutSessionStore.getState().closeKeypad();
+      haptics.success();
+      void removeWorkoutExercise(exercise.id);
+    };
+    if (!exercise.sets.some((s) => s.completedAt)) return drop();
+    Alert.alert(t('remove.confirmTitle'), t('remove.confirmMessage'), [
+      { text: t('common:actions.cancel'), style: 'cancel' },
+      { text: t('remove.confirm'), style: 'destructive', onPress: drop },
+    ]);
+  };
+
   const onSelect = (index: number, f: SetField) => {
     if (index !== selectedIndex) return live.selectSet(index, f);
     if (f === field) return live.closeInput();
@@ -199,9 +215,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                 onLayout={(e) => (layout.current.block = e.nativeEvent.layout.y)}
               >
                 <View className="px-5 pt-5">
-                  <Text className="font-inter-semibold text-[30px] leading-7.5">
-                    {exerciseName}
-                  </Text>
+                  <Text className="font-inter-semibold text-[30px] leading-9">{exerciseName}</Text>
                   <Text variant="label" tone="subtle" className="mt-2 font-inter">
                     {exercise.sets.length
                       ? t('setOf', { current: shownSet + 1, total: exercise.sets.length })
@@ -210,7 +224,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                 </View>
                 <ExerciseActions
                   // How the exercise works and its history (design 06e).
-                  onInfo={() =>
+                  onDetails={() =>
                     router.push({ pathname: '/exercise/[id]', params: { id: exercise.exerciseId } })
                   }
                   onTargets={() =>
@@ -220,6 +234,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                     })
                   }
                   onSwap={() => openPicker('swap')}
+                  onRemove={remove}
                 />
                 <View onLayout={(e) => (layout.current.table = e.nativeEvent.layout.y)}>
                   <SetTable

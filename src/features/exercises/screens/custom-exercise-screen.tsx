@@ -189,7 +189,6 @@ export function CustomExerciseScreen() {
       scroll
       header={
         <ScreenHeader
-          icon="close"
           title={t(existing ? 'custom.editTitle' : 'custom.title')}
           action={
             <Button
@@ -213,7 +212,8 @@ export function CustomExerciseScreen() {
           maxLength={NAME_MAX}
           autoFocus={!existing}
           returnKeyType="done"
-          className="font-inter-semibold text-[30px] leading-9 text-fg"
+          // Font size only: a line height on a single-line input cuts the placeholder on iOS.
+          className="py-0 font-inter-semibold text-[30px] text-fg"
         />
         {taken ? (
           <Text variant="caption" tone="danger" className="pt-1">

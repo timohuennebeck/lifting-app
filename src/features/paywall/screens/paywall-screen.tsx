@@ -66,7 +66,8 @@ export function PaywallScreen() {
         showsVerticalScrollIndicator={false}
       >
         <ScreenHeader
-          icon="close"
+          // Onboarding goes on only with a plan (or a restored one); from Settings it closes.
+          icon={flow.inApp ? 'close' : null}
           onBack={flow.exit}
           action={
             <TextButton

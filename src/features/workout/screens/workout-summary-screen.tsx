@@ -49,7 +49,7 @@ export function WorkoutSummaryScreen() {
         contentContainerStyle={{ paddingBottom: 130 + insets.bottom }}
       >
         <View className="gap-1.5 px-5 pt-3">
-          <Text className="font-inter-semibold text-[32px] leading-9">
+          <Text className="font-inter-semibold text-[32px] leading-9.5">
             {t('summary.title', { name })}
           </Text>
           <Text tone="secondary" className="font-inter text-[15px] leading-5">

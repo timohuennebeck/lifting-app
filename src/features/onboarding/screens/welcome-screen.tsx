@@ -52,11 +52,11 @@ export function WelcomeScreen() {
         <Text
           variant="title"
           accessibilityRole="header"
-          className="text-center text-[32px] leading-8 tracking-[-0.3px]"
+          className="text-center text-[32px] leading-9.5 tracking-[-0.3px]"
         >
           {t('welcome.headline')}
           {'\n'}
-          <Text variant="title" tone="accent" className="text-[32px] leading-8 tracking-[-0.3px]">
+          <Text variant="title" tone="accent" className="text-[32px] leading-9.5 tracking-[-0.3px]">
             {t('welcome.headlineAccent')}
           </Text>
         </Text>

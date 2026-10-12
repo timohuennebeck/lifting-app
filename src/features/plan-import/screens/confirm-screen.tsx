@@ -40,7 +40,8 @@ import { useImportStore } from '../stores/import-store';
 
 /**
  * 06c: the detected plan in the training overview layout (03·0b). Days sit in the plan strip;
- * amber dots mark what the import wasn't sure about until the user checks it.
+ * amber dots mark what the import wasn't sure about until the user checks it. "Selbst erstellen"
+ * opens it with an empty plan to build day by day.
  */
 export function ConfirmScreen() {
   const { t } = useTranslation(['planImport', 'training', 'common']);
@@ -63,6 +64,8 @@ export function ConfirmScreen() {
   const items = exerciseItems(exercises);
   const weekdays = t('common:weekdays.long', { returnObjects: true });
   const empty = exercises.length === 0;
+  // A plan built here starts empty; it needs an exercise before it can be taken over.
+  const hasExercises = plan.days.some((d) => d.exercises.length > 0);
   const newIds = new Set(plan.newExercises.map((e) => e.id));
 
   function editDay(edit: (day: ImportedDay) => ImportedDay) {
@@ -218,6 +221,7 @@ export function ConfirmScreen() {
               : t('planImport:confirm.cta')
           }
           variant={pending ? 'secondary' : 'primary'}
+          disabled={!hasExercises}
           onPress={submit}
         />
       </BottomFade>

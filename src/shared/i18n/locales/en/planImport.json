@@ -11,7 +11,8 @@
       "description": "PDF, Excel, CSV or screenshot"
     },
     "noPlan": "No plan at hand?",
-    "createOwn": "Create it myself"
+    "createOwn": "Create it myself",
+    "ownPlan": "My plan"
   },
   "options": {
     "title": "LOOKS GOOD?",
@@ -70,7 +71,7 @@
     "check_one": "Check {{count}} item",
     "check_other": "Check {{count}} items",
     "empty": "No exercises yet. Add one with +.",
-    "newDay": "Workout {{number}}",
+    "newDay": "Day {{number}}",
     "renamePlan": "Rename plan",
     "newExercise": "New · added as your own exercise"
   },

@@ -8,10 +8,12 @@
   --font-inter-semibold: 'Inter_600SemiBold';
   --font-inter-bold: 'Inter_700Bold';
 
+  /* Text with letters needs a line height of at least 1.18× its size: iOS cuts off what rises
+     above the line, like the dots of Ä, Ö and Ü. Only figures (display) sit tighter. */
   --text-display: 88px;
   --text-display--line-height: 88px;
   --text-title: 30px;
-  --text-title--line-height: 30px;
+  --text-title--line-height: 36px;
   --text-headline: 22px;
   --text-headline--line-height: 26px;
   --text-body: 17px;

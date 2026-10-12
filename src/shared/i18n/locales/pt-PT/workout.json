@@ -4,9 +4,10 @@
   "noSets": "Ainda sem séries",
   "missing": "Este treino já não está disponível.",
   "actions": {
-    "info": "Info",
+    "details": "Exercício e histórico",
     "targets": "Metas",
-    "swap": "Trocar"
+    "swap": "Trocar",
+    "remove": "Remover"
   },
   "table": {
     "set": "SÉRIE",
@@ -45,6 +46,11 @@
     "confirmTitle": "Trocar exercício?",
     "confirmMessage": "As séries já registadas deste exercício serão apagadas.",
     "confirm": "Trocar"
+  },
+  "remove": {
+    "confirmTitle": "Remover exercício?",
+    "confirmMessage": "As séries já registadas deste exercício serão apagadas.",
+    "confirm": "Remover"
   },
   "empty": {
     "title": "Sem exercícios",

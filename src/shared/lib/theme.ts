@@ -16,6 +16,8 @@ export const colors = {
   accent: '#DFFF1F',
   onAccent: '#0A0A0A',
   red: '#ED4042',
+  /** Soft red for destructive actions (mirrors --color-danger). */
+  danger: '#E08A7A',
   /** Amber for things the plan import wasn't sure about (design 05b). */
   review: '#FFB547',
   /** iOS' text selection highlight (system blue). */

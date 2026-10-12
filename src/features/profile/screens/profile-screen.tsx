@@ -141,7 +141,7 @@ export function ProfileScreen() {
           onPress={() => setEditing('name')}
           className="mt-4.5"
         >
-          <Text className="font-inter-semibold text-[34px] leading-9.5 tracking-[-0.7px]">
+          <Text className="font-inter-semibold text-[34px] leading-10 tracking-[-0.7px]">
             {name}
           </Text>
         </PressableScale>

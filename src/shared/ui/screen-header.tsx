@@ -9,8 +9,8 @@ import { IconButton } from './icon-button';
 import { Text } from './text';
 
 export interface ScreenHeaderProps {
-  /** Leading button: back chevron (thin on the training screens) or close cross. */
-  icon?: 'chevron-left' | 'chevron-left-thin' | 'close';
+  /** Leading button: back chevron (thin on the training screens) or close cross; null for none. */
+  icon?: 'chevron-left' | 'chevron-left-thin' | 'close' | null;
   /** Defaults to `router.back()`. */
   onBack?: () => void;
   /** A string renders as a centred one-line title. */
@@ -32,11 +32,15 @@ export function ScreenHeader({
   const { t } = useTranslation();
   return (
     <View className={cn('flex-row items-center gap-3 px-4 py-1.5', className)}>
-      <IconButton
-        icon={icon}
-        accessibilityLabel={t(icon === 'close' ? 'actions.close' : 'actions.back')}
-        onPress={onBack ?? (() => router.back())}
-      />
+      {icon ? (
+        <IconButton
+          icon={icon}
+          accessibilityLabel={t(icon === 'close' ? 'actions.close' : 'actions.back')}
+          onPress={onBack ?? (() => router.back())}
+        />
+      ) : (
+        <View className="size-10.5" />
+      )}
       <View className="min-w-0 flex-1">
         {typeof title === 'string' ? (
           <Text variant="bodyStrong" numberOfLines={1} className="text-center">

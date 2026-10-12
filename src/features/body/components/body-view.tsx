@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
@@ -91,6 +91,15 @@ function PlaceholderCard({ letter, lit, locked, tilt }: PlaceholderCardProps) {
   );
 }
 
+/**
+ * The gap between the two placeholder cards, with what sits in it centred and drawn over the
+ * cards' edges where it is wider. A column of the row rather than an absolute overlay: the row
+ * is only as wide as its cards, and percentages of that size don't centre reliably on device.
+ */
+function CardGap({ className, children }: { className: string; children: ReactNode }) {
+  return <View className={cn('z-10 items-center', className)}>{children}</View>;
+}
+
 interface NoChecksProps {
   /** Old enough for body checks; under-18s get a locked state instead. */
   allowed: boolean;
@@ -105,22 +114,24 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
   if (!allowed) {
     return (
       <View className="flex-1 items-center justify-center px-8 pt-6 pb-12">
-        {/* Both cards dim and locked, the "18+" seal on top of both. */}
+        {/* Both cards dim and locked, the "18+" seal in the gap over both of their edges. */}
         <View
-          className="flex-row items-center gap-4"
+          className="flex-row items-center"
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
         >
           <PlaceholderCard letter="A" lit={false} locked tilt={-7} />
+          <CardGap className="w-8">
+            <View
+              className="size-14.5 items-center justify-center rounded-full border-[3px] border-bg bg-accent"
+              style={{ transform: [{ rotate: '-8deg' }] }}
+            >
+              <Text tone="onAccent" className="font-inter-bold text-xl">
+                18+
+              </Text>
+            </View>
+          </CardGap>
           <PlaceholderCard letter="B" lit={false} locked tilt={7} />
-          <View
-            className="absolute top-1/2 left-1/2 -mt-7.25 -ml-7.25 size-14.5 items-center justify-center rounded-full border-[3px] border-bg bg-accent"
-            style={{ transform: [{ rotate: '-8deg' }] }}
-          >
-            <Text tone="onAccent" className="font-inter-bold text-xl">
-              18+
-            </Text>
-          </View>
         </View>
         <Text variant="headline" className="mt-9 text-center">
           {t('adultsOnly.title')}
@@ -136,15 +147,16 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
   }
   return (
     <View className="flex-1 items-center justify-center px-8 pt-6 pb-12">
-      {/* The gap between the cards fits the arrow drawn over the middle of the row. */}
       <View
-        className="flex-row items-center gap-14"
+        className="flex-row items-center"
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
       >
         <PlaceholderCard letter="A" lit tilt={-7} />
+        <CardGap className="w-14">
+          <CompareArrow inline />
+        </CardGap>
         <PlaceholderCard letter="B" lit={false} tilt={7} />
-        <CompareArrow />
       </View>
       <Text variant="headline" className="mt-9 text-center">
         {t('empty.title')}

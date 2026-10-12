@@ -46,7 +46,7 @@ export function WorkoutDayCard({ status, name, shares, stats, actions }: Workout
         </View>
       </View>
       <View className="gap-1.5">
-        <Text variant="headline" className="text-[28px] leading-7 tracking-[-0.3px]">
+        <Text variant="headline" className="text-[28px] leading-8.5 tracking-[-0.3px]">
           {name}
         </Text>
         {summary ? (

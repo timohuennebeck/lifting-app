@@ -11,7 +11,8 @@
       "description": "PDF, Excel, CSV ou captura de ecrã"
     },
     "noPlan": "Não tens o plano à mão?",
-    "createOwn": "Criar eu mesmo"
+    "createOwn": "Criar eu mesmo",
+    "ownPlan": "O meu plano"
   },
   "options": {
     "title": "ESTÁ BEM ASSIM?",
@@ -70,7 +71,7 @@
     "check_one": "Rever {{count}} ponto",
     "check_other": "Rever {{count}} pontos",
     "empty": "Ainda sem exercícios. Adiciona um com +.",
-    "newDay": "Treino {{number}}",
+    "newDay": "Dia {{number}}",
     "renamePlan": "Mudar o nome do plano",
     "newExercise": "Novo · criado como exercício próprio"
   },

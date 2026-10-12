@@ -10,21 +10,25 @@ interface ExerciseAction {
   icon: IconName;
   label: string;
   onPress: () => void;
+  danger?: boolean;
 }
 
 export interface ExerciseActionsProps {
-  onInfo: () => void;
+  /** The exercise's page: how it works and its history. */
+  onDetails: () => void;
   onTargets: () => void;
   onSwap: () => void;
+  onRemove: () => void;
 }
 
-/** Info · Targets · Swap pills under the exercise title. */
-export function ExerciseActions({ onInfo, onTargets, onSwap }: ExerciseActionsProps) {
+/** Exercise & history · Targets · Swap · Remove pills under the exercise title. */
+export function ExerciseActions({ onDetails, onTargets, onSwap, onRemove }: ExerciseActionsProps) {
   const { t } = useTranslation('workout');
   const actions: ExerciseAction[] = [
-    { icon: 'info', label: t('actions.info'), onPress: onInfo },
+    { icon: 'info', label: t('actions.details'), onPress: onDetails },
     { icon: 'target', label: t('actions.targets'), onPress: onTargets },
     { icon: 'swap', label: t('actions.swap'), onPress: onSwap },
+    { icon: 'trash', label: t('actions.remove'), onPress: onRemove, danger: true },
   ];
   return (
     <ScrollView
@@ -38,8 +42,10 @@ export function ExerciseActions({ onInfo, onTargets, onSwap }: ExerciseActionsPr
           onPress={a.onPress}
           className="h-11 flex-row items-center gap-2 rounded-full bg-raised px-4"
         >
-          <Icon name={a.icon} size={14} color={colors.fg} />
-          <Text variant="label">{a.label}</Text>
+          <Icon name={a.icon} size={14} color={a.danger ? colors.danger : colors.fg} />
+          <Text variant="label" tone={a.danger ? 'danger' : 'default'}>
+            {a.label}
+          </Text>
         </PressableScale>
       ))}
     </ScrollView>

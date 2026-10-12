@@ -11,7 +11,8 @@
       "description": "PDF, Excel, CSV ou print"
     },
     "noPlan": "Está sem o plano em mãos?",
-    "createOwn": "Criar eu mesmo"
+    "createOwn": "Criar eu mesmo",
+    "ownPlan": "Meu plano"
   },
   "options": {
     "title": "ESTÁ CERTO ASSIM?",
@@ -70,7 +71,7 @@
     "check_one": "Revisar {{count}} item",
     "check_other": "Revisar {{count}} itens",
     "empty": "Ainda sem exercícios. Adicione um com +.",
-    "newDay": "Treino {{number}}",
+    "newDay": "Dia {{number}}",
     "renamePlan": "Renomear plano",
     "newExercise": "Novo · criado como exercício personalizado"
   },

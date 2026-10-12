@@ -129,6 +129,14 @@ export async function saveWorkoutTargets(
   });
 }
 
+/** Takes an exercise out of a running workout, with its sets (logged or not). */
+export async function removeWorkoutExercise(workoutExerciseId: string) {
+  await drizzle.transaction(async (tx) => {
+    await tx.delete(workoutSets).where(eq(workoutSets.workout_exercise_id, workoutExerciseId));
+    await tx.delete(workoutExercises).where(eq(workoutExercises.id, workoutExerciseId));
+  });
+}
+
 /** Drops a workout exercise at `toIndex` (drag and drop in the exercise strip). */
 export async function reorderWorkoutExercise(
   workoutId: string,

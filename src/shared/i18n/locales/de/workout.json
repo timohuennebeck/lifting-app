@@ -4,9 +4,10 @@
   "noSets": "Noch keine Sätze",
   "missing": "Dieses Training ist nicht mehr verfügbar.",
   "actions": {
-    "info": "Info",
+    "details": "Übung & Historie",
     "targets": "Targets",
-    "swap": "Tauschen"
+    "swap": "Tauschen",
+    "remove": "Entfernen"
   },
   "table": {
     "set": "SATZ",
@@ -45,6 +46,11 @@
     "confirmTitle": "Übung tauschen?",
     "confirmMessage": "Die bereits eingetragenen Sätze dieser Übung werden gelöscht.",
     "confirm": "Tauschen"
+  },
+  "remove": {
+    "confirmTitle": "Übung entfernen?",
+    "confirmMessage": "Die bereits eingetragenen Sätze dieser Übung werden gelöscht.",
+    "confirm": "Entfernen"
   },
   "empty": {
     "title": "Keine Übungen",

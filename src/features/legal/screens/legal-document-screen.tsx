@@ -119,7 +119,7 @@ function LegalDocumentBody({ kind, compareId, section }: LegalDocumentBodyProps)
       contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
     >
       <View className="gap-2 px-5 pt-4">
-        <Text accessibilityRole="header" className="font-inter-semibold text-[30px] leading-8">
+        <Text accessibilityRole="header" className="font-inter-semibold text-[30px] leading-9">
           {ownTitle ? first.text : t(`legal.${kind}`)}
         </Text>
         <Text variant="caption" tone="subtle" className="font-inter">

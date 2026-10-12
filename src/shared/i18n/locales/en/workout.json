@@ -4,9 +4,10 @@
   "noSets": "No sets yet",
   "missing": "This workout is no longer available.",
   "actions": {
-    "info": "Info",
+    "details": "Exercise & history",
     "targets": "Targets",
-    "swap": "Swap"
+    "swap": "Swap",
+    "remove": "Remove"
   },
   "table": {
     "set": "SET",
@@ -45,6 +46,11 @@
     "confirmTitle": "Swap exercise?",
     "confirmMessage": "The sets you already logged for this exercise will be cleared.",
     "confirm": "Swap"
+  },
+  "remove": {
+    "confirmTitle": "Remove exercise?",
+    "confirmMessage": "The sets you already logged for this exercise will be deleted.",
+    "confirm": "Remove"
   },
   "empty": {
     "title": "No exercises",
