@@ -27,7 +27,7 @@ const CHIP = 'h-11 flex-row items-center rounded-full bg-raised';
 export function ExerciseActions({ onInfo, onTargets, onSwap, onMore }: ExerciseActionsProps) {
   const { t } = useTranslation('workout');
   const actions: ExerciseAction[] = [
-    { icon: 'info', label: t('actions.info'), onPress: onInfo },
+    { icon: 'book', label: t('actions.info'), onPress: onInfo },
     { icon: 'target', label: t('actions.targets'), onPress: onTargets },
     { icon: 'swap', label: t('actions.swap'), onPress: onSwap },
   ];
