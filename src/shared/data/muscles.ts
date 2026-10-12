@@ -1,6 +1,6 @@
 import { type MuscleId, MUSCLE_IDS } from '@/shared/ui/muscle-map/body-paths';
 
-import { getExercise, isCardio } from './exercises';
+import { type Exercise, getExercise, isCardio } from './exercises';
 
 export type MuscleRegion = 'upper' | 'lower';
 
@@ -43,8 +43,8 @@ function toShares(load: Map<MuscleId, number>): MuscleShare[] {
 }
 
 /** An exercise's muscles with their weights, as the catalog lists them. */
-export const muscleWeights = (exerciseId: string) =>
-  Object.entries(getExercise(exerciseId)?.muscles ?? {}) as [MuscleId, number][];
+export const muscleWeights = (exercise: Exercise | undefined) =>
+  Object.entries(exercise?.muscles ?? {}) as [MuscleId, number][];
 
 /**
  * Distributes set counts over muscles using each exercise's muscle weights, highest share
@@ -55,7 +55,7 @@ export function muscleShares(items: { exerciseId: string; sets: number }[]): Mus
   for (const { exerciseId, sets } of items) {
     // Exercises without sets (e.g. skipped in a finished workout) trained nothing.
     if (sets <= 0 || isCardio(exerciseId)) continue;
-    for (const [muscle, weight] of muscleWeights(exerciseId)) {
+    for (const [muscle, weight] of muscleWeights(getExercise(exerciseId))) {
       load.set(muscle, (load.get(muscle) ?? 0) + weight * sets);
     }
   }
@@ -63,7 +63,8 @@ export function muscleShares(items: { exerciseId: string; sets: number }[]): Mus
 }
 
 /** The muscles one exercise works, by share; cardio too, for its own page. */
-export const exerciseShares = (exerciseId: string) => toShares(new Map(muscleWeights(exerciseId)));
+export const exerciseShares = (exercise: Exercise | undefined) =>
+  toShares(new Map(muscleWeights(exercise)));
 
 /** Muscles below this share are side work; maps and chips show only the main ones. */
 const MAIN_MUSCLE_MIN_PERCENT = 8;

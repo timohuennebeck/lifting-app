@@ -13,7 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { scheduleOnRN } from 'react-native-worklets';
 import { useTranslation } from 'react-i18next';
 
-import { exerciseName as nameOf } from '@/shared/data/exercises';
+import { useExerciseName } from '@/shared/data/exercises';
 import { restSecondsFor } from '@/shared/data/templates';
 import { useWorkout, type WorkoutDetail } from '@/shared/data/workouts';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
@@ -157,7 +157,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     useWorkoutSessionStore.getState().focusField(f);
   };
 
-  const exerciseName = exercise ? nameOf(exercise.exerciseId, i18n.language) : '';
+  const exerciseName = useExerciseName(exercise?.exerciseId ?? '', i18n.language);
 
   // "Set n of m": the set being typed in, else the first open one, else the last.
   let shownSet = (exercise?.sets.length ?? 1) - 1;

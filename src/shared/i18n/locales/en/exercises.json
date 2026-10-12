@@ -29,5 +29,30 @@
       "history": "History"
     },
     "technique": "Technique"
+  },
+  "custom": {
+    "label": "Custom exercise",
+    "create": "Create custom exercise",
+    "title": "Custom exercise",
+    "editTitle": "Edit exercise",
+    "menu": "Exercise options",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "namePlaceholder": "Exercise name",
+    "nameTaken": "This exercise already exists.",
+    "tapMuscle": "Tap a muscle",
+    "showBack": "Show back",
+    "showFront": "Show front",
+    "primary": "Primary",
+    "secondary": "Secondary",
+    "roleHint": "Tap a muscle to switch between primary and secondary.",
+    "noMuscles": "Tap the muscles the exercise trains on the figure.",
+    "logs": "What gets logged?",
+    "reps": "Reps",
+    "time": "Time",
+    "weight": "With weight",
+    "locked": "Already logged: what this exercise records stays as it is.",
+    "rest": "Rest between sets"
   }
 }

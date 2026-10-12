@@ -18,6 +18,7 @@ const JSON_COLUMNS: Record<string, readonly string[]> = {
   profiles: ['complaints', 'focus', 'training_days'],
   body_checks: ['group_scores', 'metrics'],
   ticket_messages: ['attachments'],
+  custom_exercises: ['primary_muscles', 'secondary_muscles', 'measures'],
 };
 
 // Users may only insert into these tables. A retried insert that already went through must not

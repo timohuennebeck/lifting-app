@@ -21,6 +21,7 @@ import { Uniwind } from 'uniwind';
 import { useAuthListener } from '@/features/auth/hooks/use-auth-listener';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { CatalogOffline } from '@/shared/components/catalog-offline';
+import { CustomExerciseGate } from '@/shared/components/custom-exercise-gate';
 import { db } from '@/shared/data/powersync/database';
 import { queryClient } from '@/shared/data/query-client';
 import { useCatalogRefresh } from '@/shared/hooks/use-catalog-refresh';
@@ -77,30 +78,36 @@ export default function RootLayout() {
             <ThemeProvider value={navigationTheme}>
               <StatusBar style="light" />
               {/* Screens read the exercises as they render (and don't re-render when the
-                  download lands), so they only mount once the catalog is there. */}
+                  download lands), so they only mount once the catalog and the user's own
+                  exercises are there. */}
               {catalog.ready ? (
-                <Stack
-                  screenOptions={{
-                    headerShown: false,
-                    contentStyle: { backgroundColor: colors.bg },
-                  }}
-                >
-                  <Stack.Protected guard={inApp}>
-                    <Stack.Screen name="(app)" />
-                  </Stack.Protected>
-                  <Stack.Protected guard={!inApp}>
-                    <Stack.Screen name="(onboarding)" />
-                  </Stack.Protected>
-                  {/* Open from sign-up and from settings alike. */}
-                  <Stack.Screen name="legal/[kind]" options={{ animation: 'slide_from_right' }} />
-                  {/* Exercise info, from the live workout and from the plan import. */}
-                  <Stack.Screen name="exercise/[id]" options={{ animation: 'slide_from_right' }} />
-                  {/* Muscle breakdown of a workout, from the overview, builder and plan import. */}
-                  <Stack.Screen
-                    name="workout-muscles"
-                    options={{ animation: 'slide_from_right' }}
-                  />
-                </Stack>
+                <CustomExerciseGate>
+                  <Stack
+                    screenOptions={{
+                      headerShown: false,
+                      contentStyle: { backgroundColor: colors.bg },
+                    }}
+                  >
+                    <Stack.Protected guard={inApp}>
+                      <Stack.Screen name="(app)" />
+                    </Stack.Protected>
+                    <Stack.Protected guard={!inApp}>
+                      <Stack.Screen name="(onboarding)" />
+                    </Stack.Protected>
+                    {/* Open from sign-up and from settings alike. */}
+                    <Stack.Screen name="legal/[kind]" options={{ animation: 'slide_from_right' }} />
+                    {/* Exercise info, from the live workout and from the plan import. */}
+                    <Stack.Screen
+                      name="exercise/[id]"
+                      options={{ animation: 'slide_from_right' }}
+                    />
+                    {/* Muscle breakdown of a workout, from the overview, builder and plan import. */}
+                    <Stack.Screen
+                      name="workout-muscles"
+                      options={{ animation: 'slide_from_right' }}
+                    />
+                  </Stack>
+                </CustomExerciseGate>
               ) : null}
               {catalog.failed ? (
                 <CatalogOffline retrying={catalog.retrying} onRetry={catalog.retry} />

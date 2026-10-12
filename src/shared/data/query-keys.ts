@@ -31,10 +31,16 @@ const exerciseCatalogKeys = createQueryKeys('exerciseCatalog', {
   changes: null,
 });
 
+const customExerciseKeys = createQueryKeys('customExercises', {
+  list: null,
+  logged: (exerciseId: string) => [exerciseId],
+});
+
 export const queryKeys = mergeQueryKeys(
   profileKeys,
   templateKeys,
   workoutKeys,
   bodyCheckKeys,
   exerciseCatalogKeys,
+  customExerciseKeys,
 );

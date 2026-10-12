@@ -223,6 +223,21 @@ export const legalAcceptances = sqliteTable('legal_acceptances', {
   platform: text(),
 });
 
+// Exercises the user added; template and workout exercise_ids point at them like at the catalog.
+export const customExercises = sqliteTable('custom_exercises', {
+  id: text().primaryKey(),
+  user_id: text().notNull(),
+  name: text().notNull(),
+  // JSON lists of muscle ids, as tapped in the form.
+  primary_muscles: text().notNull(),
+  secondary_muscles: text().notNull(),
+  // JSON list of measures, e.g. ["weight","reps"].
+  measures: text().notNull(),
+  rest_seconds: integer().notNull(),
+  archived_at: text(),
+  created_at: text().notNull(),
+});
+
 // Relations power nested reads such as `drizzle.query.templates.findMany({ with: … })`; Drizzle
 // finds them through `drizzleSchema`. Each `many` needs the `one` pointing back.
 const templatesRelations = relations(templates, ({ many }) => ({
@@ -272,6 +287,7 @@ export const drizzleSchema = {
   ticketMessages,
   ticketEvents,
   legalAcceptances,
+  customExercises,
   templatesRelations,
   templateExercisesRelations,
   templateSetsRelations,
@@ -284,6 +300,7 @@ export const AppSchema = new DrizzleAppSchema(drizzleSchema);
 
 export type ProfileRecord = typeof profiles.$inferSelect;
 export type BodyCheckRecord = typeof bodyChecks.$inferSelect;
+export type CustomExerciseRecord = typeof customExercises.$inferSelect;
 export type TicketRecord = typeof tickets.$inferSelect;
 export type TicketMessageRecord = typeof ticketMessages.$inferSelect;
 export type TicketEventRecord = typeof ticketEvents.$inferSelect;

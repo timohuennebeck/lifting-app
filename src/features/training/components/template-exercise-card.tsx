@@ -5,7 +5,7 @@ import { View } from 'react-native';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { splitMuscles } from '@/features/exercises/lib/muscle-groups';
-import { exerciseName, isTimed } from '@/shared/data/exercises';
+import { isTimed, useExercise, useExerciseName } from '@/shared/data/exercises';
 import type { PlanSetDraft } from '@/shared/data/templates';
 import { formatTargetLabel } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
@@ -35,9 +35,10 @@ export function TemplateExerciseCard({
   children,
 }: TemplateExerciseCardProps) {
   const { t, i18n } = useTranslation(['muscles', 'training']);
-  const name = exerciseName(exerciseId, i18n.language);
+  const exercise = useExercise(exerciseId);
+  const name = useExerciseName(exerciseId, i18n.language);
   const timed = isTimed(exerciseId);
-  const { primary, secondary } = splitMuscles(exerciseId);
+  const { primary, secondary } = splitMuscles(exercise);
 
   return (
     <PressableScale

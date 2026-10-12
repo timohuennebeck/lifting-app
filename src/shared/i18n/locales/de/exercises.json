@@ -29,5 +29,30 @@
       "history": "Historie"
     },
     "technique": "Technik"
+  },
+  "custom": {
+    "label": "Eigene Übung",
+    "create": "Eigene Übung anlegen",
+    "title": "Eigene Übung",
+    "editTitle": "Übung bearbeiten",
+    "menu": "Optionen für die Übung",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "save": "Sichern",
+    "namePlaceholder": "Name der Übung",
+    "nameTaken": "Diese Übung gibt es schon.",
+    "tapMuscle": "Muskel antippen",
+    "showBack": "Rückseite zeigen",
+    "showFront": "Vorderseite zeigen",
+    "primary": "Primär",
+    "secondary": "Sekundär",
+    "roleHint": "Tippe einen Muskel an, um zwischen primär und sekundär zu wechseln.",
+    "noMuscles": "Tippe auf der Figur die Muskeln an, die die Übung trainiert.",
+    "logs": "Was wird geloggt?",
+    "reps": "Wiederholungen",
+    "time": "Zeit",
+    "weight": "Mit Gewicht",
+    "locked": "Schon geloggt: Was die Übung aufzeichnet, bleibt jetzt so.",
+    "rest": "Pause zwischen Sätzen"
   }
 }

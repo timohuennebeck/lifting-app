@@ -6,7 +6,7 @@ import Sortable from 'react-native-sortables';
 import { scheduleOnUI } from 'react-native-worklets';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
-import { exerciseName } from '@/shared/data/exercises';
+import { exerciseName, useCustomExerciseStore } from '@/shared/data/exercises';
 import type { WorkoutExercise } from '@/shared/data/workouts';
 import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
 import { cn } from '@/shared/lib/cn';
@@ -38,6 +38,8 @@ export function ExerciseStrip({
   onReorder,
 }: ExerciseStripProps) {
   const { t, i18n } = useTranslation('workout');
+  // Renamed custom exercises show their new name (see `useExercise`).
+  const custom = useCustomExerciseStore((s) => s.exercises);
   const scroll = useAnimatedRef<Animated.ScrollView>();
   const drag = useSortableDrag(({ key, toIndex }) => onReorder(key, toIndex));
 
@@ -74,7 +76,7 @@ export function ExerciseStrip({
         renderItem={({ item: exercise, index: i }) => {
           const current = i === currentIndex;
           const done = exercise.sets.length > 0 && exercise.sets.every((s) => s.completedAt);
-          const name = exerciseName(exercise.exerciseId, i18n.language);
+          const name = exerciseName(exercise.exerciseId, i18n.language, custom);
           return (
             <PressableScale
               haptic="select"

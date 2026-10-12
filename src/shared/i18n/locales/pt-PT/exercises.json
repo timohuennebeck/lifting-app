@@ -29,5 +29,30 @@
       "history": "Histórico"
     },
     "technique": "Técnica"
+  },
+  "custom": {
+    "label": "Exercício próprio",
+    "create": "Criar exercício próprio",
+    "title": "Exercício próprio",
+    "editTitle": "Editar exercício",
+    "menu": "Opções do exercício",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "save": "Guardar",
+    "namePlaceholder": "Nome do exercício",
+    "nameTaken": "Este exercício já existe.",
+    "tapMuscle": "Toque num músculo",
+    "showBack": "Mostrar costas",
+    "showFront": "Mostrar frente",
+    "primary": "Primário",
+    "secondary": "Secundário",
+    "roleHint": "Toque num músculo para alternar entre primário e secundário.",
+    "noMuscles": "Toque na figura nos músculos que o exercício trabalha.",
+    "logs": "O que é registado?",
+    "reps": "Repetições",
+    "time": "Tempo",
+    "weight": "Com peso",
+    "locked": "Já registado: o que este exercício regista fica assim.",
+    "rest": "Descanso entre séries"
   }
 }

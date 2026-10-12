@@ -11,6 +11,8 @@ import type { PlanExerciseDraft, PlanSetDraft } from './templates';
 
 // The catalog lives in Supabase (`public.exercises`). The app downloads all of it on first launch
 // and keeps it on the device for offline use; `useCatalogRefresh` then fetches what changed.
+// The user's own exercises (`custom_exercises`, synced by PowerSync) are mirrored next to it, so
+// every lookup below finds both.
 
 export type Equipment = 'barbell' | 'dumbbell' | 'kettlebell' | 'machine' | 'cable' | 'bodyweight';
 
@@ -43,7 +45,8 @@ export interface ExerciseRow {
 
 export interface Exercise {
   id: string;
-  equipment: Equipment;
+  /** Null for the user's own exercises. */
+  equipment: Equipment | null;
   /** {weight, reps}, {reps}, {seconds} or {weight, seconds}, in display order. */
   measures: Measure[];
   image: ImageSourcePropType | null;
@@ -53,6 +56,20 @@ export interface Exercise {
   muscles: Partial<Record<MuscleId, number>>;
   /** Inactive exercises stay for history but aren't offered anymore. */
   isActive: boolean;
+  /** The user's own exercise: its muscles as picked in the form. */
+  custom: { primary: MuscleId[]; secondary: MuscleId[] } | null;
+}
+
+/** An exercise the user added (`custom_exercises`). */
+export interface CustomExercise {
+  id: string;
+  name: string;
+  primary: MuscleId[];
+  secondary: MuscleId[];
+  measures: Measure[];
+  restSeconds: number;
+  /** Deleted by the user: hidden from the picker, kept for history and plans. */
+  archived: boolean;
 }
 
 /** Exercise media live in the public `exercise-media` bucket. */
@@ -102,7 +119,21 @@ export const useCatalogStore = create<CatalogState>()(
   }),
 );
 
-const derived = new WeakMap<ExerciseRow, Exercise>();
+interface CustomExerciseState {
+  exercises: Record<string, CustomExercise>;
+  /** Set once the local database was read, so ids of custom exercises resolve from the start. */
+  loaded: boolean;
+}
+
+/** The user's own exercises, mirrored from the local database by `useCustomExerciseSync`. */
+export const useCustomExerciseStore = create<CustomExerciseState>(() => ({
+  exercises: {},
+  loaded: false,
+}));
+
+const customExercises = () => useCustomExerciseStore.getState().exercises;
+
+const derived = new WeakMap<ExerciseRow | CustomExercise, Exercise>();
 
 function toExercise(row: ExerciseRow): Exercise {
   let exercise = derived.get(row);
@@ -116,15 +147,60 @@ function toExercise(row: ExerciseRow): Exercise {
       // Muscles a newer catalog added have no place on this app's body map yet.
       muscles: Object.fromEntries(Object.entries(row.muscles).filter(([m]) => MUSCLES.includes(m))),
       isActive: row.is_active,
+      custom: null,
     };
     derived.set(row, exercise);
   }
   return exercise;
 }
 
-export function getExercise(id: string): Exercise | undefined {
-  const row = useCatalogStore.getState().rows[id];
-  return row ? toExercise(row) : undefined;
+/** In a custom exercise's shares a primary muscle counts this many times a secondary one. */
+const PRIMARY_WEIGHT = 2;
+
+function fromCustom(custom: CustomExercise): Exercise {
+  let exercise = derived.get(custom);
+  if (!exercise) {
+    const { primary, secondary } = custom;
+    const total = PRIMARY_WEIGHT * primary.length + secondary.length;
+    exercise = {
+      id: custom.id,
+      equipment: null,
+      measures: custom.measures,
+      image: null,
+      restSeconds: custom.restSeconds,
+      muscles: Object.fromEntries([
+        ...primary.map((m) => [m, PRIMARY_WEIGHT / total]),
+        ...secondary.map((m) => [m, 1 / total]),
+      ]),
+      isActive: !custom.archived,
+      custom: { primary, secondary },
+    };
+    derived.set(custom, exercise);
+  }
+  return exercise;
+}
+
+const exerciseOf = (row: ExerciseRow | undefined, custom: CustomExercise | undefined) =>
+  row ? toExercise(row) : custom ? fromCustom(custom) : undefined;
+
+export const getExercise = (id: string): Exercise | undefined =>
+  exerciseOf(useCatalogStore.getState().rows[id], customExercises()[id]);
+
+// Render code reads exercises through these hooks: the React Compiler keeps what a plain lookup
+// returned for the same id, so a catalog update or an edit of the user's own exercise wouldn't show.
+
+/** `getExercise`, re-rendering when the exercise changes. */
+export function useExercise(id: string) {
+  const row = useCatalogStore((s) => s.rows[id]);
+  const custom = useCustomExerciseStore((s) => s.exercises[id]);
+  return exerciseOf(row, custom);
+}
+
+/** `exerciseName`, re-rendering when the exercise changes. */
+export function useExerciseName(id: string, language: string) {
+  const row = useCatalogStore((s) => s.rows[id]);
+  const custom = useCustomExerciseStore((s) => s.exercises[id]);
+  return nameOf(row, custom, language) ?? id;
 }
 
 /** Ids of the catalog's exercises that `keep` accepts. */
@@ -133,19 +209,34 @@ const idsWhere = (keep: (row: ExerciseRow) => boolean, rows = useCatalogStore.ge
     .filter(keep)
     .map((r) => r.id);
 
-/** Ids of the exercises users can pick (the catalog without retired ones). */
-export const activeExerciseIds = (rows = useCatalogStore.getState().rows) =>
-  idsWhere((r) => r.is_active, rows);
+/** Ids of the exercises users can pick: the catalog without retired ones, and their own. */
+export const activeExerciseIds = (
+  rows = useCatalogStore.getState().rows,
+  custom = customExercises(),
+) => [
+  ...idsWhere((r) => r.is_active, rows),
+  ...Object.values(custom)
+    .filter((c) => !c.archived)
+    .map((c) => c.id),
+];
 
 /** Text in the app language, falling back to English. */
 function localized<T>(texts: Record<string, T> | undefined, language: string) {
   return texts?.[language] ?? texts?.en;
 }
 
-/** Localized exercise name; the id when the exercise isn't in the catalog. */
-export function exerciseName(id: string, language = i18n.language) {
-  return localized(useCatalogStore.getState().rows[id]?.name, language) ?? id;
-}
+const nameOf = (
+  row: ExerciseRow | undefined,
+  custom: CustomExercise | undefined,
+  language: string,
+) => localized(row?.name, language) ?? custom?.name;
+
+/**
+ * Localized exercise name (a custom exercise's own); the id for an unknown exercise. A list
+ * rendering names passes the user's exercises from `useCustomExerciseStore` (see `useExercise`).
+ */
+export const exerciseName = (id: string, language = i18n.language, custom = customExercises()) =>
+  nameOf(useCatalogStore.getState().rows[id], custom[id], language) ?? id;
 
 export function exerciseInstructions(id: string, language = i18n.language): TechniqueStep[] {
   return localized(useCatalogStore.getState().rows[id]?.instructions, language) ?? [];
@@ -160,9 +251,13 @@ export const measuresOf = (exerciseId: string): Measure[] =>
 export const hasMeasure = (exerciseId: string, measure: Measure) =>
   measuresOf(exerciseId).includes(measure);
 
-/** Catalog exercises that don't log `measure`, e.g. the ones without weight. */
-export const exerciseIdsWithout = (measure: Measure) =>
-  idsWhere((r) => !r.measures.includes(measure));
+/** Exercises that don't log `measure`, e.g. the ones without weight. */
+export const exerciseIdsWithout = (measure: Measure) => [
+  ...idsWhere((r) => !r.measures.includes(measure)),
+  ...Object.values(customExercises())
+    .filter((c) => !c.measures.includes(measure))
+    .map((c) => c.id),
+];
 
 /** Catalog exercises done with the body as the load (pull-ups, dips, …). */
 export const bodyweightExerciseIds = () => idsWhere((r) => r.equipment === 'bodyweight');
@@ -191,8 +286,10 @@ export interface SetTargets {
 }
 
 /** Targets of a new set: 8–12 reps at 2 RIR, or a 30–45 s hold (RIR is about reps). */
-export const defaultTargets = (exerciseId: string): SetTargets =>
-  isTimed(exerciseId) ? { min: 30, max: 45, rir: null } : { min: 8, max: 12, rir: 2 };
+export const targetsFor = (timed: boolean): SetTargets =>
+  timed ? { min: 30, max: 45, rir: null } : { min: 8, max: 12, rir: 2 };
+
+export const defaultTargets = (exerciseId: string): SetTargets => targetsFor(isTimed(exerciseId));
 
 /** `count` new plan sets at the exercise's default targets. */
 export function defaultSetDrafts(exerciseId: string, count: number): PlanSetDraft[] {

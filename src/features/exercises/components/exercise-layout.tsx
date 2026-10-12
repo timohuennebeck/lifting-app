@@ -1,13 +1,17 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { TopTabs } from 'expo-router/js-top-tabs';
-import { createContext, use } from 'react';
+import { createContext, use, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SwipeTabs } from '@/shared/components/swipe-tabs';
-import { exerciseName, getExercise } from '@/shared/data/exercises';
+import { archiveCustomExercise } from '@/shared/data/custom-exercises';
+import { useExercise, useExerciseName } from '@/shared/data/exercises';
+import { haptics } from '@/shared/lib/haptics';
+import { afterSheetClose } from '@/shared/ui/sheet';
+import { ActionSheet } from '@/shared/ui/action-sheet';
 import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Text } from '@/shared/ui/text';
@@ -38,7 +42,9 @@ export function ExerciseLayout() {
   const { id: exerciseId } = useLocalSearchParams<{ id: string }>();
   const { t, i18n } = useTranslation(['exercises', 'common']);
   const insets = useSafeAreaInsets();
-  const exercise = getExercise(exerciseId);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const exercise = useExercise(exerciseId);
+  const name = useExerciseName(exerciseId, i18n.language);
   const back = (
     <View className="absolute left-4" style={{ top: insets.top + 16 }}>
       <IconButton
@@ -48,10 +54,23 @@ export function ExerciseLayout() {
       />
     </View>
   );
-  // An exercise the catalog doesn't have: nothing to show but the way back.
+  // An exercise neither the catalog nor the user has: nothing to show but the way back.
   if (!exercise) return <View className="flex-1 bg-bg">{back}</View>;
 
-  const name = exerciseName(exerciseId, i18n.language);
+  // The user's own exercises can be edited or deleted; a deleted one only keeps its history.
+  const editable = !!exercise.custom && exercise.isActive;
+
+  const onMenu = (action: 'edit' | 'delete') => {
+    setMenuOpen(false);
+    if (action === 'edit') {
+      afterSheetClose(() => router.push(`/custom-exercise/${exerciseId}`));
+      return;
+    }
+    void archiveCustomExercise(exerciseId).then(() => {
+      haptics.success();
+      router.back();
+    });
+  };
 
   return (
     <View className="flex-1 bg-bg">
@@ -73,12 +92,21 @@ export function ExerciseLayout() {
         )}
         <Gradient from="top" stops={HERO_FADE} />
         {back}
+        {editable ? (
+          <View className="absolute right-4" style={{ top: insets.top + 16 }}>
+            <IconButton
+              icon="more"
+              accessibilityLabel={t('exercises:custom.menu')}
+              onPress={() => setMenuOpen(true)}
+            />
+          </View>
+        ) : null}
         <View className="absolute right-5 bottom-1.5 left-5">
           <Text variant="headline" className="text-[30px] leading-8">
             {name}
           </Text>
           <Text variant="label" tone="muted" className="mt-2 font-inter">
-            {`${t(`exercises:equipment.${exercise.equipment}`)} · ${t(`exercises:groups.${primaryGroup(exerciseId)}`)}`}
+            {`${exercise.equipment ? t(`exercises:equipment.${exercise.equipment}`) : t('exercises:custom.label')} · ${t(`exercises:groups.${primaryGroup(exercise)}`)}`}
           </Text>
         </View>
       </View>
@@ -88,6 +116,17 @@ export function ExerciseLayout() {
           <TopTabs.Screen name="history" options={{ title: t('exercises:detail.tabs.history') }} />
         </SwipeTabs>
       </ExerciseIdContext>
+      {editable ? (
+        <ActionSheet
+          visible={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          onAction={onMenu}
+          items={[
+            { action: 'edit', icon: 'pencil', label: t('exercises:custom.edit') },
+            { action: 'delete', label: t('exercises:custom.delete') },
+          ]}
+        />
+      ) : null}
     </View>
   );
 }

@@ -8,22 +8,19 @@ import { restSecondsFor } from '@/shared/data/templates';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { cn } from '@/shared/lib/cn';
-import { formatDuration } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { appendKey, backspace, type KeypadKey } from '@/shared/lib/keypad';
 import { clamp } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 import { NumberKeypad } from '@/shared/ui/number-keypad';
+import { RestStepper } from '@/shared/ui/rest-stepper';
 import { Text } from '@/shared/ui/text';
 import { ToggleSwitch } from '@/shared/ui/toggle-switch';
 
 import { RirPickerSheet } from './rir-picker-sheet';
 import { type SetDraft, SetEditorRow, type TargetField } from './set-editor-row';
 
-const REST_STEP = 15;
-const REST_MIN = 15;
-const REST_MAX = 600;
 const MAX_SETS = 10;
 /** Row height plus gap, for scrolling the edited row above the number pad. */
 const ROW = 66;
@@ -134,10 +131,6 @@ export function SetTargetsForm({
   const removeSet = (index: number) => {
     focusBox(null);
     setSets((all) => all.filter((_, j) => j !== index));
-  };
-  const stepRest = (delta: number) => {
-    focusBox(null);
-    setRest((r) => clamp((r ?? defaultRest) + delta, REST_MIN, REST_MAX));
   };
   // A tap anywhere else on the page closes the number pad (what was typed is kept).
   const dismiss = () => {
@@ -257,37 +250,15 @@ export function SetTargetsForm({
               />
             </View>
             <View
-              className={cn(
-                'h-16 flex-row items-center justify-between',
-                rest === null && 'opacity-35',
-              )}
+              className={cn(rest === null && 'opacity-35')}
               pointerEvents={rest === null ? 'none' : 'auto'}
             >
-              <IconButton
-                icon="minus"
-                size={48}
-                haptic="select"
-                className="bg-raised"
-                accessibilityLabel={t('common:actions.decrease')}
-                disabled={shownRest <= REST_MIN}
-                onPress={() => stepRest(-REST_STEP)}
-              />
-              <View className="flex-row items-baseline gap-1.5">
-                <Text variant="headline" className="text-[26px] leading-7.5 tabular-nums">
-                  {formatDuration(shownRest)}
-                </Text>
-                <Text variant="caption" tone="subtle" className="font-inter text-sm">
-                  {t('sets.minutes')}
-                </Text>
-              </View>
-              <IconButton
-                icon="plus"
-                size={48}
-                haptic="select"
-                className="bg-raised"
-                accessibilityLabel={t('common:actions.increase')}
-                disabled={shownRest >= REST_MAX}
-                onPress={() => stepRest(REST_STEP)}
+              <RestStepper
+                value={shownRest}
+                onChange={(seconds) => {
+                  focusBox(null);
+                  setRest(seconds);
+                }}
               />
             </View>
           </View>

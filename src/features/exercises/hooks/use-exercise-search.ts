@@ -1,7 +1,12 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { activeExerciseIds, exerciseName, useCatalogStore } from '@/shared/data/exercises';
+import {
+  activeExerciseIds,
+  exerciseName,
+  useCatalogStore,
+  useCustomExerciseStore,
+} from '@/shared/data/exercises';
 
 import { type MuscleGroupId, primaryGroup } from '../lib/muscle-groups';
 
@@ -20,10 +25,11 @@ const letterOf = (name: string) => name.normalize('NFD').charAt(0).toUpperCase()
 export function useExerciseSearch(query: string, group?: MuscleGroupId | null) {
   const { i18n } = useTranslation();
   const rows = useCatalogStore((s) => s.rows);
-  // Names, groups and order change with the language or the catalog, not with each keystroke.
+  const custom = useCustomExerciseStore((s) => s.exercises);
+  // Names, groups and order change with the language or the exercises, not with each keystroke.
   const options = useMemo(
     () =>
-      activeExerciseIds(rows)
+      activeExerciseIds(rows, custom)
         .map((id): ExerciseOption => {
           const name = exerciseName(id, i18n.language);
           return {
@@ -34,7 +40,7 @@ export function useExerciseSearch(query: string, group?: MuscleGroupId | null) {
           };
         })
         .sort((a, b) => a.name.localeCompare(b.name, i18n.language)),
-    [i18n.language, rows],
+    [i18n.language, rows, custom],
   );
   return useMemo(() => {
     const q = query.trim().toLocaleLowerCase(i18n.language);

@@ -1,4 +1,4 @@
-import { isCardio } from '@/shared/data/exercises';
+import { type Exercise, getExercise, isCardio } from '@/shared/data/exercises';
 import { type MuscleShare, muscleShares, muscleWeights } from '@/shared/data/muscles';
 import type { BodyPartId, MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
@@ -37,11 +37,17 @@ export function groupOfMuscle(muscle: MuscleId): MuscleGroupId {
 }
 
 /** Muscles of an exercise with their weights, highest share first. */
-const sortedWeights = (exerciseId: string) => muscleWeights(exerciseId).sort((a, b) => b[1] - a[1]);
+const sortedWeights = (exercise: Exercise | undefined) =>
+  muscleWeights(exercise).sort((a, b) => b[1] - a[1]);
 
-/** Splits an exercise's muscles into primary (≥ 30 % or the top one) and secondary. */
-export function splitMuscles(exerciseId: string) {
-  const entries = sortedWeights(exerciseId);
+/**
+ * Splits an exercise's muscles into primary (≥ 30 % or the top one) and secondary; a custom
+ * exercise's as the user picked them. Takes the exercise (`useExercise` in render code) or its id.
+ */
+export function splitMuscles(exercise: Exercise | string | undefined) {
+  const ex = typeof exercise === 'string' ? getExercise(exercise) : exercise;
+  if (ex?.custom) return { primary: ex.custom.primary, secondary: ex.custom.secondary };
+  const entries = sortedWeights(ex);
   return {
     primary: entries.filter(([, w], i) => i === 0 || w >= 0.3).map(([m]) => m),
     secondary: entries.filter(([, w], i) => i > 0 && w < 0.3).map(([m]) => m),
@@ -68,8 +74,10 @@ export function workoutMuscleSplit(items: { exerciseId: string; sets: number }[]
   return { primary: shares.filter(isPrimary), secondary: shares.filter((s) => !isPrimary(s)) };
 }
 
-/** Group of the exercise's main muscle; core for an exercise without muscles. */
-export function primaryGroup(exerciseId: string): MuscleGroupId {
-  const muscle = sortedWeights(exerciseId)[0]?.[0];
+/** Group of the exercise's main muscle; core for an exercise without muscles. Like `splitMuscles`. */
+export function primaryGroup(exercise: Exercise | string | undefined): MuscleGroupId {
+  const muscle = sortedWeights(
+    typeof exercise === 'string' ? getExercise(exercise) : exercise,
+  )[0]?.[0];
   return muscle ? groupOfMuscle(muscle) : 'core';
 }

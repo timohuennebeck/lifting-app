@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
-import { exerciseName } from '@/shared/data/exercises';
+import { useExerciseName } from '@/shared/data/exercises';
 import { formatSet, type UnitSystem } from '@/shared/lib/format';
 import { Text } from '@/shared/ui/text';
 
@@ -16,7 +16,7 @@ export interface RecordCardProps {
 /** New personal record with the previous best (design 03s·C). */
 export function RecordCard({ record, units }: RecordCardProps) {
   const { t, i18n } = useTranslation('workout');
-  const name = exerciseName(record.exerciseId, i18n.language);
+  const name = useExerciseName(record.exerciseId, i18n.language);
   return (
     <View className="flex-row items-center gap-3.5 py-1.5">
       <ExerciseThumb

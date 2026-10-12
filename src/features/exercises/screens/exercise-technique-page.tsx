@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { exerciseInstructions } from '@/shared/data/exercises';
+import { exerciseInstructions, useExercise } from '@/shared/data/exercises';
 import { exerciseShares } from '@/shared/data/muscles';
 import { MUSCLE_CARDS, MuscleMap, MuscleTile } from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
@@ -15,10 +15,11 @@ export function ExerciseTechniquePage() {
   const exerciseId = useExerciseId();
   const { t, i18n } = useTranslation(['exercises', 'muscles']);
   const insets = useSafeAreaInsets();
+  const exercise = useExercise(exerciseId);
   // Primary muscles in neon, the helping ones in grey: on the chips and on the figure.
-  const { primary, secondary } = splitMuscles(exerciseId);
+  const { primary, secondary } = splitMuscles(exercise);
   // Each muscle's share of the exercise, as on the workout page.
-  const shares = exerciseShares(exerciseId);
+  const shares = exerciseShares(exercise);
   const steps = exerciseInstructions(exerciseId, i18n.language);
   const view = primary[0] ? MUSCLE_CARDS[primary[0]].view : 'front';
 

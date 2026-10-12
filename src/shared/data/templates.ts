@@ -14,7 +14,7 @@ import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 const SET_SECONDS = 45;
 /** Setup, warm-up and transition time per exercise. */
 const EXERCISE_SECONDS = 150;
-const DEFAULT_REST = 90;
+export const DEFAULT_REST = 90;
 
 export interface PlanSetDraft {
   /** Reps, or seconds for timed exercises; either may be left out. */
