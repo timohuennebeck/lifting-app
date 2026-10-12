@@ -8,10 +8,12 @@ import { TabHeader } from './tab-header';
 
 export interface TabScreenProps {
   children: ReactNode;
-  /** Extra header buttons, placed before search and settings. */
+  /** Extra header buttons, placed before search. */
   headerActions?: ReactNode;
   /** Shows the avatar and greeting in the header (default true). */
   greeting?: boolean;
+  /** Shows settings after search in the header (profile tab). */
+  settings?: boolean;
   /** Rendered under the header, outside the scroll area. */
   pinned?: ReactNode;
   /** For drag and drop lists that scroll the page while dragging. */
@@ -23,13 +25,14 @@ export function TabScreen({
   children,
   headerActions,
   greeting,
+  settings,
   pinned,
   scrollRef,
 }: TabScreenProps) {
   const insets = useSafeAreaInsets();
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-      <TabHeader actions={headerActions} greeting={greeting} />
+      <TabHeader actions={headerActions} greeting={greeting} settings={settings} />
       {pinned}
       <PagerPage scrollRef={scrollRef}>{children}</PagerPage>
     </View>

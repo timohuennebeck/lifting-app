@@ -110,7 +110,7 @@ export function ProfileScreen() {
   }
 
   return (
-    <TabScreen greeting={false}>
+    <TabScreen greeting={false} settings>
       <View className="items-start px-5 pt-4">
         <PressableScale
           haptic="tap"
