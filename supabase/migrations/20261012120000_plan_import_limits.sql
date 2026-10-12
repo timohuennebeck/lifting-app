@@ -14,7 +14,7 @@ create index on public.plan_import_requests (created_at);
 alter table public.plan_import_requests enable row level security;
 
 -- Takes one import for the network if it and everyone together are below their limits in the
--- last 24 hours: its row id (deleted again when OpenAI fails), or null. Locked per network so
+-- last 24 hours: its row id (deleted again when OpenAI fails), or null. One lock for all, so
 -- parallel requests can't both take the last one. Rows older than two days go along the way.
 create function public.start_plan_import(p_ip_hash text, p_ip_limit int, p_daily_limit int)
 returns bigint
@@ -24,7 +24,7 @@ as $$
 declare
   slot bigint;
 begin
-  perform pg_advisory_xact_lock(hashtextextended('plan_import:' || p_ip_hash, 0));
+  perform pg_advisory_xact_lock(hashtextextended('plan_import', 0));
   delete from public.plan_import_requests where created_at < now() - interval '2 days';
   if (
     select count(*) from public.plan_import_requests

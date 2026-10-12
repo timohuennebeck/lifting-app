@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
-import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
+import { useOnboardingStore, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { exerciseName } from '@/shared/data/exercises';
 import { haptics } from '@/shared/lib/haptics';
 import { PaperStack } from '@/shared/ui/paper-sheet';
@@ -48,8 +48,14 @@ export function AnalysisScreen() {
     if (!result || !animated || opened.current) return;
     opened.current = true;
     setPlan(result);
-    // Exercises the catalog doesn't have show by name in the review and are created at sign-up.
-    updateDraft({ customExercises: result.newExercises });
+    // Exercises the catalog doesn't have show by name in the review and are created at sign-up
+    // (those the plan still uses). Kept from earlier imports too: their plan may still be the draft.
+    updateDraft({
+      customExercises: [
+        ...useOnboardingStore.getState().draft.customExercises,
+        ...result.newExercises,
+      ],
+    });
     haptics.success();
     router.replace('/import/confirm');
   }, [result, animated, setPlan, updateDraft]);

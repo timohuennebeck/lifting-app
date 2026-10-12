@@ -62,6 +62,9 @@ const SERVER_ERRORS: Record<string, ImportFailure> = {
   too_large: 'tooLarge',
 };
 
+/** Photos per import; the analyze-plan function accepts no more. */
+export const MAX_PHOTOS = 10;
+
 /** Longest side photos are shrunk to: plenty for handwriting, small enough to send quickly. */
 const MAX_SIDE = 2000;
 
@@ -86,7 +89,10 @@ async function jpegBase64(uri: string) {
 
 async function requestBody(source: ImportSource) {
   if (source.kind === 'photos') {
-    return { photos: await Promise.all(source.photos.map((p) => jpegBase64(p.uri))) };
+    // One at a time: a full-size camera photo takes tens of MB while it is decoded.
+    const photos: string[] = [];
+    for (const p of source.photos) photos.push(await jpegBase64(p.uri));
+    return { photos };
   }
   const { file } = source;
   if (file.mimeType?.startsWith('image/')) {

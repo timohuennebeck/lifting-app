@@ -27,6 +27,7 @@
     "shutter": "Tirar foto",
     "library": "Escolher da galeria",
     "retake": "Repetir página {{count}}",
+    "full": "No máximo {{count}} páginas por importação",
     "permission": {
       "title": "ACESSO À CÂMARA",
       "body": "Para fotografar o teu plano, o Traqa precisa de acesso à câmara. As fotos ficam no teu dispositivo até as importares.",

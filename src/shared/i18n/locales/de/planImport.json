@@ -27,6 +27,7 @@
     "shutter": "Foto aufnehmen",
     "library": "Aus Mediathek wählen",
     "retake": "Seite {{count}} neu aufnehmen",
+    "full": "Höchstens {{count}} Seiten pro Import",
     "permission": {
       "title": "KAMERAZUGRIFF",
       "body": "Um deinen Plan zu fotografieren, braucht Traqa Zugriff auf deine Kamera. Die Fotos bleiben auf deinem Gerät, bis du sie importierst.",

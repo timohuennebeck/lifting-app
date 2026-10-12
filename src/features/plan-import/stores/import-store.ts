@@ -1,10 +1,11 @@
 import { create } from 'zustand';
 
-import type {
-  ImportedPlan,
-  ImportFile,
-  ImportPhoto,
-  ImportSource,
+import {
+  type ImportedPlan,
+  type ImportFile,
+  type ImportPhoto,
+  type ImportSource,
+  MAX_PHOTOS,
 } from '../lib/plan-import-service';
 
 interface ImportState {
@@ -37,7 +38,9 @@ export const useImportStore = create<ImportState>()((set) => ({
   ...EMPTY,
   setFile: (file) => set({ source: { kind: 'file', file } }),
   addPhotos: (photos) =>
-    set((s) => ({ source: { kind: 'photos', photos: [...photosOf(s.source), ...photos] } })),
+    set((s) => ({
+      source: { kind: 'photos', photos: [...photosOf(s.source), ...photos].slice(0, MAX_PHOTOS) },
+    })),
   replacePhoto: (index, photo) =>
     set((s) => ({
       source: {

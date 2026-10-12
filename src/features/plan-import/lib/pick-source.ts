@@ -29,12 +29,12 @@ export async function pickPlanFile(): Promise<ImportFile | null> {
   };
 }
 
-/** Lets the user pick one or more photos of their plan from the library. */
-export async function pickPlanPhotos(): Promise<ImportPhoto[]> {
+/** Lets the user pick up to `limit` (at least 1) photos of their plan from the library. */
+export async function pickPlanPhotos(limit: number): Promise<ImportPhoto[]> {
   const result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ['images'],
-    allowsMultipleSelection: true,
-    selectionLimit: 10,
+    allowsMultipleSelection: limit > 1,
+    selectionLimit: limit,
     quality: 0.8,
   });
   if (result.canceled) return [];

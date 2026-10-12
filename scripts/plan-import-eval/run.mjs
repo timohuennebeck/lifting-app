@@ -266,17 +266,16 @@ function score(expect, result, names, language) {
     }
     const used = new Set();
     const missed = [];
-    for (const e of want.exercises) {
-      const free = got.exercises
-        .map((a, j) => ({ a, j }))
-        .filter(
-          ({ a, j }) =>
-            !used.has(j) && (e.ex?.includes(a.exerciseId) || (e.new && newIds.has(a.exerciseId))),
-        );
-      // For a new exercise, the one named like it, else any new one.
+    for (const [k, e] of want.exercises.entries()) {
+      const free = got.exercises.map((a, j) => ({ a, j })).filter(({ j }) => !used.has(j));
+      const isNew = ({ a }) => newIds.has(a.exerciseId);
+      // A catalog exercise by id; a new one by its name, else the new one in the same place.
       const match =
-        (e.new && free.find(({ a }) => sameName(createdName(plan, a.exerciseId), e.new))) ||
-        free[0];
+        free.find(({ a }) => e.ex?.includes(a.exerciseId)) ??
+        (e.new
+          ? (free.find((f) => isNew(f) && sameName(createdName(plan, f.a.exerciseId), e.new)) ??
+            free.find((f) => isNew(f) && f.j === k))
+          : undefined);
       tally(s.exercises, !!match);
       if (!match) {
         missed.push(e);

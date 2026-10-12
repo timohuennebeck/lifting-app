@@ -17,9 +17,15 @@ import {
 } from './plan.ts';
 
 const OPENAI_TIMEOUT_MS = 120_000;
+/** A whole number from the environment; the default when unset or not a number. */
+function envLimit(name: string, fallback: number) {
+  const value = Number(Deno.env.get(name));
+  return Number.isInteger(value) && value >= 0 ? value : fallback;
+}
+
 /** Imports per network (hashed IP) and in total in 24 hours; each one is a paid model call. */
-const IP_LIMIT = Number(Deno.env.get('PLAN_IMPORT_IP_LIMIT') ?? 10);
-const DAILY_LIMIT = Number(Deno.env.get('PLAN_IMPORT_DAILY_LIMIT') ?? 1000);
+const IP_LIMIT = envLimit('PLAN_IMPORT_IP_LIMIT', 10);
+const DAILY_LIMIT = envLimit('PLAN_IMPORT_DAILY_LIMIT', 1000);
 const MAX_PHOTOS = 10;
 /** Decoded sizes; the app shrinks photos to well below this. */
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
@@ -51,8 +57,32 @@ async function loadCatalog() {
   return catalogCache.rows;
 }
 
-/** The network the request came from, as a keyed hash: the IP itself is never stored. */
+/**
+ * The network the request came from: its IPv4 address, or the /64 an IPv6 address is in (one
+ * connection gets a whole /64, so single addresses would be free to rotate).
+ */
+function networkOf(ip: string) {
+  // IPv4, also with a port or written as IPv6 (::ffff:1.2.3.4).
+  const v4 = ip.match(/(\d{1,3}(?:\.\d{1,3}){3})(?::\d+)?$/);
+  if (v4) return v4[1];
+  if (!ip.includes(':')) return ip;
+  const [head, tail = ''] = ip.toLowerCase().split('::');
+  const left = head ? head.split(':') : [];
+  const right = tail ? tail.split(':') : [];
+  const groups = [
+    ...left,
+    ...Array(Math.max(0, 8 - left.length - right.length)).fill('0'),
+    ...right,
+  ];
+  return `${groups
+    .slice(0, 4)
+    .map((g) => g.padStart(4, '0'))
+    .join(':')}::/64`;
+}
+
+/** The network as a keyed hash: the IP itself is never stored. */
 async function networkHash(req: Request) {
+  // The first address is the client's as the platform's proxies forward it.
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
   const key = await crypto.subtle.importKey(
     'raw',
@@ -61,7 +91,7 @@ async function networkHash(req: Request) {
     false,
     ['sign'],
   );
-  return encodeHex(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(ip)));
+  return encodeHex(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(networkOf(ip))));
 }
 
 const isBase64 = (value: unknown): value is string =>

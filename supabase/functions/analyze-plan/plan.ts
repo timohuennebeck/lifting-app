@@ -246,21 +246,20 @@ export function toImportedPlan(
   // The same new exercise on two days is one exercise.
   const created = new Map<string, NewExercise>();
 
-  const newExercise = ({
-    name,
-    primary,
-    secondary,
-    timed,
-    weighted,
-  }: NonNullable<ModelExercise['new_exercise']>) => {
-    const key = cut(name, 60).toLocaleLowerCase();
+  const newExercise = (
+    { name, primary, secondary, timed, weighted }: NonNullable<ModelExercise['new_exercise']>,
+    raw: string,
+  ) => {
+    // A name the database accepts (1–60 characters): the line as written if the model gave none.
+    const clean = cut(name, 60) || cut(raw, 60);
+    const key = clean.toLocaleLowerCase();
     let fresh = created.get(key);
-    if (!fresh && primary.length) {
+    if (!fresh && clean && primary.length) {
       fresh = {
         id: newId(),
-        name: cut(name, 60),
-        primary: primary as Muscle[],
-        secondary: secondary.filter((m) => !primary.includes(m)) as Muscle[],
+        name: clean,
+        primary: [...new Set(primary)] as Muscle[],
+        secondary: [...new Set(secondary)].filter((m) => !primary.includes(m)) as Muscle[],
         measures: [...(weighted ? ['weight'] : []), timed ? 'seconds' : 'reps'],
         restSeconds: DEFAULT_REST_SECONDS,
       };
@@ -270,7 +269,9 @@ export function toImportedPlan(
   };
 
   const exerciseOf = (line: ModelExercise): ImportedExercise | null => {
-    const fresh = line.catalog_id ? undefined : line.new_exercise && newExercise(line.new_exercise);
+    const fresh = line.catalog_id
+      ? undefined
+      : line.new_exercise && newExercise(line.new_exercise, line.raw);
     const id = line.catalog_id ?? fresh?.id;
     if (!id) return null;
     const timed = fresh ? fresh.measures.includes('seconds') : timedIds.has(id);

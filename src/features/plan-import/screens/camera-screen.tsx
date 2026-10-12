@@ -24,7 +24,7 @@ import { IconButton } from '@/shared/ui/icon-button';
 import { Text } from '@/shared/ui/text';
 
 import { pickPlanPhotos } from '../lib/pick-source';
-import type { ImportPhoto } from '../lib/plan-import-service';
+import { type ImportPhoto, MAX_PHOTOS } from '../lib/plan-import-service';
 import { useImportStore, usePhotos } from '../stores/import-store';
 
 /** Bottom panel height from the design, home indicator area included. */
@@ -56,6 +56,9 @@ export function CameraScreen() {
   // Shots taken and still being saved; the camera refuses new ones while it is busy with them.
   const running = useRef(0);
   const photos = usePhotos();
+  const shots = photos.length + pending;
+  // An import takes at most MAX_PHOTOS pages; a retake replaces one.
+  const full = retakeIndex === null && shots >= MAX_PHOTOS;
   const addPhotos = useImportStore((s) => s.addPhotos);
   const replacePhoto = useImportStore((s) => s.replacePhoto);
   const truncatePhotos = useImportStore((s) => s.truncatePhotos);
@@ -119,7 +122,7 @@ export function CameraScreen() {
   }
 
   async function shoot() {
-    if (busy || !camera.current) return;
+    if (busy || full || !camera.current) return;
     haptics.heavy();
     flash.fire();
     if (retakeIndex !== null) {
@@ -161,7 +164,8 @@ export function CameraScreen() {
   useHardwareBack(close);
 
   async function fromLibrary() {
-    const picked = await pickPlanPhotos();
+    if (full) return;
+    const picked = await pickPlanPhotos(retakeIndex !== null ? 1 : MAX_PHOTOS - shots);
     if (!picked.length || closed.current) return;
     if (retakeIndex !== null) return replace(picked[0]);
     // After the shots taken before, then on to the review once those are saved, like "Done".
@@ -195,7 +199,6 @@ export function CameraScreen() {
   }
 
   const panelHeight = Math.max(PANEL_HEIGHT, 160 + insets.bottom);
-  const shots = photos.length + pending;
 
   return (
     <View className="flex-1 bg-black">
@@ -228,7 +231,9 @@ export function CameraScreen() {
           <Text variant="caption">
             {retakeIndex !== null
               ? t('planImport:camera.retake', { count: retakeIndex + 1 })
-              : t('planImport:camera.page', { count: shots + 1 })}
+              : full
+                ? t('planImport:camera.full', { count: MAX_PHOTOS })
+                : t('planImport:camera.page', { count: shots + 1 })}
           </Text>
         </View>
         <IconButton
@@ -268,6 +273,8 @@ export function CameraScreen() {
           start={
             <CameraSideButton
               accessibilityLabel={t('planImport:camera.library')}
+              disabled={full}
+              className={full ? 'opacity-40' : undefined}
               onPress={fromLibrary}
             >
               <Icon name="image" size={20} />
@@ -286,6 +293,7 @@ export function CameraScreen() {
         >
           <ShutterButton
             busy={busy}
+            disabled={full}
             accessibilityLabel={t('planImport:camera.shutter')}
             onPress={shoot}
           />

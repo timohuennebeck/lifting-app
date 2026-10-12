@@ -27,6 +27,7 @@
     "shutter": "Take photo",
     "library": "Choose from library",
     "retake": "Retake page {{count}}",
+    "full": "Up to {{count}} pages per import",
     "permission": {
       "title": "CAMERA ACCESS",
       "body": "To photograph your plan, Traqa needs access to your camera. Photos stay on your device until you import them.",
