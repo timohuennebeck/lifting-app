@@ -109,6 +109,15 @@ async function spreadsheetText(bytes: Uint8Array) {
   ).join('\n\n');
 }
 
+/** Text in UTF-8, else Windows-1252 (what Excel on Windows saves CSV files as by default). */
+function decodeText(bytes: Uint8Array) {
+  try {
+    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch {
+    return new TextDecoder('windows-1252').decode(bytes);
+  }
+}
+
 /** The file as content the model reads: PDFs and images as they are, text and sheets as text. */
 async function fileContent(file: PlanFile) {
   const type = file.mimeType.toLowerCase();
@@ -127,7 +136,7 @@ async function fileContent(file: PlanFile) {
   const text =
     /\.(xlsx|xls)$/.test(name) || type.includes('spreadsheet') || type.includes('excel')
       ? await spreadsheetText(bytes)
-      : new TextDecoder().decode(bytes);
+      : decodeText(bytes);
   return { type: 'input_text', text: `File "${file.name}":\n${text.slice(0, MAX_TEXT)}` };
 }
 

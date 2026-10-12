@@ -95,7 +95,8 @@ async function requestBody(source: ImportSource) {
     return { photos };
   }
   const { file } = source;
-  if (file.mimeType?.startsWith('image/')) {
+  // Some file providers leave the type out; the name still tells an image.
+  if (file.mimeType?.startsWith('image/') || /\.(jpe?g|png|heic|heif|webp)$/i.test(file.name)) {
     return { file: { name: file.name, mimeType: 'image/jpeg', data: await jpegBase64(file.uri) } };
   }
   const data = await new File(file.uri).base64();
