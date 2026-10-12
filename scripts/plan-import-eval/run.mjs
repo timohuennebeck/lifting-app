@@ -6,7 +6,7 @@
 //
 // Needs the function with an OpenAI key at EXPO_PUBLIC_SUPABASE_URL from .env: locally
 // `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 15 imports, so
-// set PLAN_IMPORT_IP_LIMIT=1000 there first), or the deployed project.
+// set PLAN_IMPORT_IP_LIMIT=1000 there first, then restart Supabase), or the deployed project.
 // Usage: npm run plan:eval                          all fixtures
 //        npm run plan:eval -- 05 09                 only these cases
 //        npm run plan:eval -- --dir ~/Desktop/plans [--lang de]
@@ -28,6 +28,8 @@ import { basename, extname, join } from 'node:path';
 const HERE = import.meta.dirname;
 const FIXTURES = join(HERE, 'fixtures');
 const PARALLEL = 3;
+/** Set once the function answers 429: no further imports are sent. */
+let limited = false;
 const { EXPO_PUBLIC_SUPABASE_URL: SUPABASE_URL, EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: KEY } =
   process.env;
 if (!SUPABASE_URL || !KEY) {
@@ -137,18 +139,19 @@ async function loadNames() {
   }
 }
 
+/** Runs `run` over the items, a few at a time; stops taking new ones once the limit is hit. */
 async function pool(items, run) {
   const results = new Array(items.length);
   let next = 0;
   await Promise.all(
     Array.from({ length: Math.min(PARALLEL, items.length) }, async () => {
-      while (next < items.length) {
+      while (next < items.length && !limited) {
         const i = next++;
         results[i] = await run(items[i]);
       }
     }),
   );
-  return results;
+  return results.filter(Boolean);
 }
 
 // ---------- reading a plan ----------
@@ -340,13 +343,25 @@ const percent = (c) => (c.total ? `${Math.round((c.ok / c.total) * 100)} %` : '�
 
 // ---------- runs ----------
 
-function stopOnLimit(result) {
-  if (result.status !== 429) return;
-  console.error(
-    '\nThe import limit was reached. For a local run set PLAN_IMPORT_IP_LIMIT=1000 in ' +
-      'supabase/functions/.env and restart `npx supabase functions serve`.',
-  );
-  process.exit(1);
+/** One import; null once the import limit is reached, so the rest is skipped, not scored. */
+async function send(body) {
+  if (limited) return null;
+  const result = await analyze(body);
+  if (result.status !== 429) return result;
+  limited = true;
+  return null;
+}
+
+/** After a run: what wasn't sent because of the limit, and how to lift it. */
+function reportLimit(skipped) {
+  if (!limited) return '';
+  const text =
+    `The import limit was reached; not run: ${skipped.join(', ')}. For a local run set ` +
+    'PLAN_IMPORT_IP_LIMIT=1000 in supabase/functions/.env and restart Supabase (npx supabase ' +
+    'stop, then npx supabase start). To reset the count right away, run ' +
+    '`delete from public.plan_import_requests;` in Supabase Studio.';
+  console.error(`\n${text}`);
+  return text;
 }
 
 function writeReport(name, text, results) {
@@ -364,12 +379,16 @@ async function runFixtures() {
   console.log(`${cases.length} cases against ${SUPABASE_URL}, ${PARALLEL} at a time …\n`);
   const results = await pool(cases, async (c) => {
     const files = c.files.map((f) => join(FIXTURES, f));
-    const result = await analyze(requestBody({ ...c, files }, false));
-    stopOnLimit(result);
+    const result = await send(requestBody({ ...c, files }, false));
+    if (!result) return null;
     const s = score(c.expect, result, names, c.language);
     console.log(`${passed(s) ? 'PASS' : 'FAIL'}  ${c.id}  ${result.seconds.toFixed(1)} s`);
     return { case: c, result, score: s };
   });
+  const limitNote = reportLimit(
+    cases.filter((c) => !results.some((r) => r.case === c)).map((c) => c.id),
+  );
+  if (!results.length) process.exit(1);
 
   const header =
     '| case | time | days | weekdays | exercises | sets | reps | RIR/rest | extra | to review | |';
@@ -398,7 +417,11 @@ async function runFixtures() {
   for (const { case: c, score: s } of results) {
     if (s.issues.length) console.log(`\n${c.id}\n${s.issues.map((i) => `  - ${i}`).join('\n')}`);
   }
-  writeReport('report', `# Plan import test\n\n${table}\n\n${details}\n`, results);
+  writeReport(
+    'report',
+    `# Plan import test\n\n${limitNote && `${limitNote}\n\n`}${table}\n\n${details}\n`,
+    results,
+  );
 }
 
 async function runDir() {
@@ -424,14 +447,16 @@ async function runDir() {
   }
   console.log(`${imports.length} imports from ${dir} (app language ${dirLanguage}) …`);
   const results = await pool(imports, async (item) => {
-    const result = await analyze(requestBody({ ...item, language: dirLanguage }, true));
-    stopOnLimit(result);
+    const result = await send(requestBody({ ...item, language: dirLanguage }, true));
+    if (!result) return null;
     const text = result.plan
       ? describePlan(result.plan, names, dirLanguage)
       : `(${result.status} ${result.error ?? ''})`;
     console.log(`\n== ${item.id}  ${result.seconds.toFixed(1)} s\n${text}`);
     return { import: item, result, text };
   });
+  reportLimit(imports.filter((i) => !results.some((r) => r.import === i)).map((i) => i.id));
+  if (!results.length) process.exit(1);
   writeReport(
     'read',
     `# Plan import: ${dir}\n\n${results.map((r) => `## ${r.import.id} (${r.result.seconds.toFixed(1)} s)\n\n\`\`\`\n${r.text}\n\`\`\``).join('\n\n')}\n`,
