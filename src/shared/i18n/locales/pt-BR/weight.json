@@ -1,0 +1,35 @@
+{
+  "open": "Peso",
+  "history": {
+    "title": "Histórico",
+    "calendar": "Calendário",
+    "add": "Registrar peso",
+    "trend": "Tendência",
+    "difference": "Diferença",
+    "range": "{{count}} D",
+    "changes": "Variação · Tendência",
+    "days_one": "{{count}} dia",
+    "days_other": "{{count}} dias",
+    "entries": "Registros",
+    "belowTrend": "{{value}} abaixo da tendência",
+    "aboveTrend": "{{value}} acima da tendência",
+    "onTrend": "na tendência",
+    "delete": "Excluir",
+    "empty": "Registre seu peso para ver sua tendência."
+  },
+  "calendar": {
+    "title": "Calendário",
+    "entries_one": "{{count}} registro",
+    "entries_other": "{{count}} registros"
+  },
+  "entry": {
+    "title": "Peso",
+    "history": "Histórico",
+    "today": "Hoje, {{date}}",
+    "yesterday": "Ontem, {{date}}",
+    "since": "{{value}} desde {{date}}",
+    "first": "Seu primeiro registro",
+    "delete": "Excluir registro",
+    "date": "Data"
+  }
+}

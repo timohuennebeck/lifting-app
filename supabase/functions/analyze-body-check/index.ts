@@ -19,6 +19,8 @@ import {
   type PreviousCheck,
   SCHEMA,
   toAnalysis,
+  type WeightEntryRow,
+  weightHistorySince,
 } from './analysis.ts';
 
 const BUCKET = 'body-checks';
@@ -100,12 +102,18 @@ Deno.serve(async (req) => {
     return reply(400, { error: 'bad_request' });
   }
 
-  const [{ data: profile }, { data: previous }] = await Promise.all([
+  const [{ data: profile }, { data: weights }, { data: previous }] = await Promise.all([
     admin
       .from('profiles')
-      .select('sex, birth_date, height_cm, weight_kg, experience')
+      .select('sex, birth_date, height_cm, experience')
       .eq('id', userId)
       .maybeSingle<AnalysisProfile>(),
+    admin
+      .from('weight_entries')
+      .select('date, weight_kg')
+      .eq('user_id', userId)
+      .gte('date', weightHistorySince(new Date()))
+      .order('date'),
     admin
       .from('body_checks')
       .select('id, created_at, group_scores, metrics')
@@ -148,7 +156,7 @@ Deno.serve(async (req) => {
 
   let answer: Awaited<ReturnType<typeof askModel>>;
   try {
-    const context = contextText(profile, previous, new Date());
+    const context = contextText(profile, (weights ?? []) as WeightEntryRow[], previous, new Date());
     answer = await askModel(modelInput(context, photos as Photos, previousPhotos));
   } catch (error) {
     // A timeout may still have been billed, so the slot stays used.

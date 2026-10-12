@@ -8,13 +8,16 @@ import { profiles } from '@/shared/data/powersync/schema';
 import { saveProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
 import { insertPlan } from '@/shared/data/templates';
+import { saveWeightEntry } from '@/shared/data/weight-entries';
 import { type AppLanguage, i18n } from '@/shared/i18n';
+import { toIsoDate } from '@/shared/lib/date';
 
 import { type OnboardingDraft, useOnboardingStore } from '../stores/onboarding-store';
 
 /**
- * Writes the onboarding answers as the user's profile and stores the drafted plan
- * as their active collection. Safe to call again: the plan is only inserted once.
+ * Writes the onboarding answers as the user's profile, the weight as their first weight entry,
+ * and stores the drafted plan as their active collection. Safe to call again: the plan is only
+ * inserted once, and the weight replaces the day's entry.
  */
 export async function persistOnboarding(userId: string, draft: OnboardingDraft) {
   // One transaction: a failed profile write must not leave a plan behind that a retry duplicates.
@@ -42,7 +45,6 @@ export async function persistOnboarding(userId: string, draft: OnboardingDraft) 
         sex: draft.sex,
         birthDate: draft.birthDate,
         unitSystem: draft.unitSystem,
-        weightKg: draft.weightKg,
         heightCm: draft.heightCm,
         experience: draft.experience,
         complaints: draft.complaints,
@@ -58,6 +60,9 @@ export async function persistOnboarding(userId: string, draft: OnboardingDraft) 
       tx,
     );
   });
+  // On its own: an upload the server rejects is dropped whole, and an entry must not take the
+  // profile and plan with it.
+  await saveWeightEntry(userId, toIsoDate(new Date()), draft.weightKg);
 }
 
 /** How long an onboarded account waits for its data before the app opens without it. */

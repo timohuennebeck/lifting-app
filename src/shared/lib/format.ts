@@ -15,11 +15,11 @@ export const lbToKg = (lb: number) => lb * KG_PER_LB;
 // Intl formatters are costly to build and this runs per set row on every keypad press.
 const numberFormats = new Map<string, Intl.NumberFormat>();
 
-export function formatNumber(value: number, maximumFractionDigits = 1) {
+export function formatNumber(value: number, maximumFractionDigits = 1, minimumFractionDigits = 0) {
   const format = getOrInsert(
     numberFormats,
-    `${i18n.language}|${maximumFractionDigits}`,
-    () => new Intl.NumberFormat(i18n.language, { maximumFractionDigits }),
+    `${i18n.language}|${maximumFractionDigits}|${minimumFractionDigits}`,
+    () => new Intl.NumberFormat(i18n.language, { maximumFractionDigits, minimumFractionDigits }),
   );
   return format.format(value);
 }

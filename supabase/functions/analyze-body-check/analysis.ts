@@ -24,8 +24,14 @@ export interface AnalysisProfile {
   /** ISO date (YYYY-MM-DD). */
   birth_date: string | null;
   height_cm: number | null;
-  weight_kg: number | null;
   experience: string | null;
+}
+
+/** A row of weight_entries, oldest first. */
+export interface WeightEntryRow {
+  /** The user's calendar day (YYYY-MM-DD). */
+  date: string;
+  weight_kg: number;
 }
 
 interface Metrics {
@@ -125,9 +131,44 @@ export function ageFrom(birthDate: string, today: Date) {
   return today.getUTCFullYear() - year - (hadBirthday ? 0 : 1);
 }
 
+const WEIGHT_TREND_DAYS = 30;
+
+/** The first day of weight entries to read: enough to settle the trend before the 30 days. */
+export const weightHistorySince = (now: Date) =>
+  new Date(now.getTime() - 120 * DAY_MS).toISOString().slice(0, 10);
+
+const dayNumber = (date: string) => Math.round(Date.parse(`${date}T00:00:00Z`) / DAY_MS);
+const kg = (value: number) => `${Math.round(value * 10) / 10} kg`;
+
+/**
+ * The latest weigh-in and how the smoothed trend moved over the last 30 days, as the app's
+ * weight history shows it: each weigh-in moves the trend 10 % toward the scale, a gap of n days
+ * counting n times.
+ */
+export function weightText(entries: WeightEntryRow[], now: Date) {
+  const last = entries.at(-1);
+  if (!last) return null;
+  const since = Math.round(now.getTime() / DAY_MS) - WEIGHT_TREND_DAYS;
+  let trend = entries[0].weight_kg;
+  let trendAtStart: number | null = null;
+  entries.forEach((e, i) => {
+    if (i) {
+      const days = Math.max(1, dayNumber(e.date) - dayNumber(entries[i - 1].date));
+      trend += (1 - 0.9 ** days) * (e.weight_kg - trend);
+    }
+    if (dayNumber(e.date) <= since) trendAtStart = trend;
+  });
+  const change =
+    trendAtStart === null
+      ? ''
+      : `, ${trend - trendAtStart >= 0 ? '+' : '−'}${kg(Math.abs(trend - trendAtStart))} over ${WEIGHT_TREND_DAYS} days`;
+  return `weight ${kg(last.weight_kg)} on ${last.date} (trend ${kg(trend)}${change})`;
+}
+
 /** The text before the photos: who is in them and what the last check found. */
 export function contextText(
   profile: AnalysisProfile | null,
+  weights: WeightEntryRow[],
   previous: PreviousCheck | null,
   now: Date,
 ) {
@@ -135,7 +176,7 @@ export function contextText(
     profile?.sex && profile.sex !== 'unspecified' ? `sex ${profile.sex}` : null,
     profile?.birth_date ? `${ageFrom(profile.birth_date, now)} years` : null,
     profile?.height_cm ? `${profile.height_cm} cm` : null,
-    profile?.weight_kg ? `${profile.weight_kg} kg` : null,
+    weightText(weights, now),
     profile?.experience ? `training experience ${profile.experience}` : null,
   ].filter(Boolean);
   const lines = [`Profile: ${facts.length ? facts.join(', ') : 'unknown'}.`];

@@ -1,0 +1,35 @@
+{
+  "open": "Gewicht",
+  "history": {
+    "title": "Historie",
+    "calendar": "Kalender",
+    "add": "Gewicht eintragen",
+    "trend": "Trend",
+    "difference": "Unterschied",
+    "range": "{{count}} T",
+    "changes": "Veränderung · Trend",
+    "days_one": "{{count}} Tag",
+    "days_other": "{{count}} Tage",
+    "entries": "Einträge",
+    "belowTrend": "{{value}} unter Trend",
+    "aboveTrend": "{{value}} über Trend",
+    "onTrend": "genau im Trend",
+    "delete": "Löschen",
+    "empty": "Trag dein Gewicht ein, um deinen Trend zu sehen."
+  },
+  "calendar": {
+    "title": "Kalender",
+    "entries_one": "{{count}} Eintrag",
+    "entries_other": "{{count}} Einträge"
+  },
+  "entry": {
+    "title": "Gewicht",
+    "history": "Historie",
+    "today": "Heute, {{date}}",
+    "yesterday": "Gestern, {{date}}",
+    "since": "{{value}} seit {{date}}",
+    "first": "Dein erster Eintrag",
+    "delete": "Eintrag löschen",
+    "date": "Datum"
+  }
+}

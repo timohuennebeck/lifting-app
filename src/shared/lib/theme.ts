@@ -4,6 +4,7 @@ export const colors = {
   control: '#262626',
   line: '#2A2A28',
   track: '#3A3A38',
+  chip: '#1A1A1A',
   fg: '#F4F4F0',
   fgSoft: '#E6E6E1',
   fgMid: '#D6D6D1',

@@ -94,6 +94,17 @@ Documents are readable without an account (onboarding runs logged out) and writt
   headings, paragraphs, `>` quotes, lists, `**bold**` and `[links](https://…)`. Locally,
   `supabase/seed.sql` adds placeholder documents on `npm run supabase:reset`.
 
+## Weight tracking
+
+- **`weight_entries`:** one row per user and calendar day: `date` (the user's own day, no time
+  zone) and `weight_kg` (always kg, two decimals). The id comes from user and date
+  (`private.weight_entry_id`, in the app `weightEntryId`: the first 32 hex digits of SHA-256 of
+  `<user id>:<date>`), so two devices saving the same day write one row and the last save wins.
+- **In the app:** the scale button in the top bar opens the history, its calendar and the entry
+  screen. The trend is computed on the device: each weigh-in moves it 10 % toward the scale value.
+  The onboarding weight becomes the first entry; bodyweight exercise scores and the body check
+  analysis use the latest one. `profiles.weight_kg` was moved into the table and dropped.
+
 ## Body check analysis
 
 The app uploads the three photos (front, side, back) to the private `body-checks` bucket and calls the

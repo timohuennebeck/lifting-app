@@ -12,6 +12,7 @@ import deProfile from './locales/de/profile.json';
 import deSupport from './locales/de/support.json';
 import deToday from './locales/de/today.json';
 import deTraining from './locales/de/training.json';
+import deWeight from './locales/de/weight.json';
 import deWorkout from './locales/de/workout.json';
 import enAuth from './locales/en/auth.json';
 import enBody from './locales/en/body.json';
@@ -27,6 +28,7 @@ import enProfile from './locales/en/profile.json';
 import enSupport from './locales/en/support.json';
 import enToday from './locales/en/today.json';
 import enTraining from './locales/en/training.json';
+import enWeight from './locales/en/weight.json';
 import enWorkout from './locales/en/workout.json';
 import ptBRAuth from './locales/pt-BR/auth.json';
 import ptBRBody from './locales/pt-BR/body.json';
@@ -42,6 +44,7 @@ import ptBRProfile from './locales/pt-BR/profile.json';
 import ptBRSupport from './locales/pt-BR/support.json';
 import ptBRToday from './locales/pt-BR/today.json';
 import ptBRTraining from './locales/pt-BR/training.json';
+import ptBRWeight from './locales/pt-BR/weight.json';
 import ptBRWorkout from './locales/pt-BR/workout.json';
 import ptPTAuth from './locales/pt-PT/auth.json';
 import ptPTBody from './locales/pt-PT/body.json';
@@ -57,6 +60,7 @@ import ptPTProfile from './locales/pt-PT/profile.json';
 import ptPTSupport from './locales/pt-PT/support.json';
 import ptPTToday from './locales/pt-PT/today.json';
 import ptPTTraining from './locales/pt-PT/training.json';
+import ptPTWeight from './locales/pt-PT/weight.json';
 import ptPTWorkout from './locales/pt-PT/workout.json';
 
 // English is the source language; other locales mirror its keys.
@@ -77,6 +81,7 @@ export const resources = {
     body: enBody,
     profile: enProfile,
     exercises: enExercises,
+    weight: enWeight,
   },
   de: {
     common: deCommon,
@@ -94,6 +99,7 @@ export const resources = {
     body: deBody,
     profile: deProfile,
     exercises: deExercises,
+    weight: deWeight,
   },
   'pt-PT': {
     common: ptPTCommon,
@@ -111,6 +117,7 @@ export const resources = {
     body: ptPTBody,
     profile: ptPTProfile,
     exercises: ptPTExercises,
+    weight: ptPTWeight,
   },
   'pt-BR': {
     common: ptBRCommon,
@@ -128,6 +135,7 @@ export const resources = {
     body: ptBRBody,
     profile: ptBRProfile,
     exercises: ptBRExercises,
+    weight: ptBRWeight,
   },
 } as const;
 

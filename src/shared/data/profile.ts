@@ -76,7 +76,6 @@ export interface Profile {
   /** ISO date (YYYY-MM-DD); see `ageFrom`. */
   birthDate: string | null;
   unitSystem: UnitSystem;
-  weightKg: number | null;
   heightCm: number | null;
   experience: Experience | null;
   complaints: string[];
@@ -104,7 +103,6 @@ function toProfile(r: ProfileRecord): Profile {
     sex: r.sex as Sex | null,
     birthDate: r.birth_date,
     unitSystem: (r.unit_system as UnitSystem | null) ?? 'metric',
-    weightKg: r.weight_kg,
     heightCm: r.height_cm,
     experience: r.experience as Experience | null,
     complaints: parseJson(r.complaints, []),
@@ -153,7 +151,6 @@ const toColumns = (p: ProfilePatch) => ({
   sex: p.sex,
   birth_date: p.birthDate,
   unit_system: p.unitSystem,
-  weight_kg: p.weightKg,
   height_cm: p.heightCm,
   experience: p.experience,
   complaints: toJson(p.complaints),

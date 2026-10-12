@@ -8,7 +8,7 @@ import { TabHeader } from './tab-header';
 
 export interface TabScreenProps {
   children: ReactNode;
-  /** Extra header buttons, placed before search. */
+  /** Extra header buttons, placed before weight and search. */
   headerActions?: ReactNode;
   /** Shows the avatar and greeting in the header (default true). */
   greeting?: boolean;

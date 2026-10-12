@@ -16,7 +16,6 @@ export const profiles = sqliteTable('profiles', {
   // Postgres date, synced as an ISO date (YYYY-MM-DD).
   birth_date: text(),
   unit_system: text(),
-  weight_kg: real(),
   height_cm: integer(),
   experience: text(),
   complaints: text(),
@@ -238,6 +237,20 @@ export const customExercises = sqliteTable('custom_exercises', {
   created_at: text().notNull(),
 });
 
+// Body weight, one entry per calendar day; the id comes from user and date (`weightEntryId`).
+export const weightEntries = sqliteTable(
+  'weight_entries',
+  {
+    id: text().primaryKey(),
+    user_id: text().notNull(),
+    // Postgres date (YYYY-MM-DD): the user's calendar day, no time zone.
+    date: text().notNull(),
+    weight_kg: real().notNull(),
+    created_at: text().notNull(),
+  },
+  (t) => [index('date').on(t.date)],
+);
+
 // Relations power nested reads such as `drizzle.query.templates.findMany({ with: … })`; Drizzle
 // finds them through `drizzleSchema`. Each `many` needs the `one` pointing back.
 const templatesRelations = relations(templates, ({ many }) => ({
@@ -288,6 +301,7 @@ export const drizzleSchema = {
   ticketEvents,
   legalAcceptances,
   customExercises,
+  weightEntries,
   templatesRelations,
   templateExercisesRelations,
   templateSetsRelations,
@@ -301,6 +315,7 @@ export const AppSchema = new DrizzleAppSchema(drizzleSchema);
 export type ProfileRecord = typeof profiles.$inferSelect;
 export type BodyCheckRecord = typeof bodyChecks.$inferSelect;
 export type CustomExerciseRecord = typeof customExercises.$inferSelect;
+export type WeightEntryRecord = typeof weightEntries.$inferSelect;
 export type TicketRecord = typeof tickets.$inferSelect;
 export type TicketMessageRecord = typeof ticketMessages.$inferSelect;
 export type TicketEventRecord = typeof ticketEvents.$inferSelect;

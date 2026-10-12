@@ -30,6 +30,20 @@ export const daysInMonth = (year: number, month: number) => new Date(year, month
 export const isoDate = (year: number, month: number, day: number) =>
   `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
+/** The ISO date (YYYY-MM-DD) of `date`'s local calendar day. */
+export const toIsoDate = (date: Date) =>
+  isoDate(date.getFullYear(), date.getMonth() + 1, date.getDate());
+
+/** Local midnight of an ISO date (YYYY-MM-DD). */
+export function fromIsoDate(iso: string) {
+  const [year, month, day] = iso.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
+
+/** Calendar days from one ISO date to another (negative when `to` comes first). */
+export const daysBetween = (from: string, to: string) =>
+  Math.round((fromIsoDate(to).getTime() - fromIsoDate(from).getTime()) / DAY_MS);
+
 /** Whether `date` falls on the calendar day before `now`. */
 export const isYesterday = (date: Date, now: Date) => isSameDay(date, addDays(now, -1));
 

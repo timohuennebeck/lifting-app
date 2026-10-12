@@ -120,6 +120,64 @@ const ICONS = {
       </>
     ),
   },
+  calendar: {
+    viewBox: '0 0 16 16',
+    render: (c) => (
+      <>
+        <Rect
+          x={1.4}
+          y={3}
+          width={13.2}
+          height={11}
+          rx={2.6}
+          stroke={c}
+          strokeWidth={1.7}
+          fill="none"
+        />
+        <Path
+          d="M1.4 6.6h13.2M5 1.3v3.2M11 1.3v3.2"
+          stroke={c}
+          strokeWidth={1.7}
+          strokeLinecap="round"
+        />
+      </>
+    ),
+  },
+  // Bathroom scale: the weight history in the top bar.
+  scale: {
+    viewBox: '0 0 20 20',
+    render: (c) => (
+      <>
+        <Rect
+          x={2.2}
+          y={2.2}
+          width={15.6}
+          height={15.6}
+          rx={4.4}
+          stroke={c}
+          strokeWidth={1.8}
+          fill="none"
+        />
+        <Path
+          d="M5.6 9.8a4.4 4.4 0 0 1 8.8 0zM10 9.8l1.6-2.6"
+          stroke={c}
+          strokeWidth={1.6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
+      </>
+    ),
+  },
+  // Zigzag arrows for a trend that went down or up.
+  'trend-down': {
+    viewBox: '0 0 14 8',
+    render: stroke('M.8.8l4.6 4.4 3-3 4.6 4.6M8.6 7.1h4.6V2.5', 1.5),
+  },
+  'trend-up': {
+    viewBox: '0 0 14 8',
+    render: stroke('M.8 7.2l4.6-4.4 3 3L13 1.2M8.6.9h4.6v4.6', 1.5),
+  },
   timer: {
     viewBox: '0 0 16 18',
     render: (c) => (

@@ -1,0 +1,35 @@
+{
+  "open": "Weight",
+  "history": {
+    "title": "History",
+    "calendar": "Calendar",
+    "add": "Log weight",
+    "trend": "Trend",
+    "difference": "Difference",
+    "range": "{{count}} D",
+    "changes": "Change · Trend",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "entries": "Entries",
+    "belowTrend": "{{value}} below trend",
+    "aboveTrend": "{{value}} above trend",
+    "onTrend": "right on trend",
+    "delete": "Delete",
+    "empty": "Log your weight to see your trend."
+  },
+  "calendar": {
+    "title": "Calendar",
+    "entries_one": "{{count}} entry",
+    "entries_other": "{{count}} entries"
+  },
+  "entry": {
+    "title": "Weight",
+    "history": "History",
+    "today": "Today, {{date}}",
+    "yesterday": "Yesterday, {{date}}",
+    "since": "{{value}} since {{date}}",
+    "first": "Your first entry",
+    "delete": "Delete entry",
+    "date": "Date"
+  }
+}

@@ -36,6 +36,10 @@ const customExerciseKeys = createQueryKeys('customExercises', {
   logged: (exerciseId: string) => [exerciseId],
 });
 
+const weightKeys = createQueryKeys('weight', {
+  entries: null,
+});
+
 export const queryKeys = mergeQueryKeys(
   profileKeys,
   templateKeys,
@@ -43,4 +47,5 @@ export const queryKeys = mergeQueryKeys(
   bodyCheckKeys,
   exerciseCatalogKeys,
   customExerciseKeys,
+  weightKeys,
 );

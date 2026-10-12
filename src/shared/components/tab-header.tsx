@@ -14,7 +14,7 @@ import { Text } from '@/shared/ui/text';
 import { ProfileAvatar } from './user-avatar';
 
 export interface TabHeaderProps {
-  /** Extra round buttons placed before search. */
+  /** Extra round buttons placed before weight and search. */
   actions?: ReactNode;
   /** Avatar, date and greeting on the left; the profile tab hides them (01b-2). */
   greeting?: boolean;
@@ -23,11 +23,11 @@ export interface TabHeaderProps {
 }
 
 /**
- * Header shared by all tabs: avatar, today's date, greeting, optional actions, then search
- * (exercises and their records), always in the same place.
+ * Header shared by all tabs: avatar, today's date, greeting, optional actions, then the weight
+ * history and search (exercises and their records), always in the same place.
  */
 export function TabHeader({ actions, greeting = true, settings = false }: TabHeaderProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'weight']);
   const { profile } = useProfile();
   // Ticks every minute so the date turns over at midnight.
   const now = useNow(MINUTE_MS, greeting);
@@ -55,6 +55,12 @@ export function TabHeader({ actions, greeting = true, settings = false }: TabHea
       )}
       <View className="flex-row gap-2">
         {actions}
+        <IconButton
+          icon="scale"
+          iconSize={19}
+          accessibilityLabel={t('weight:open')}
+          onPress={() => router.push('/body-weight')}
+        />
         <IconButton
           icon="search"
           iconSize={17}

@@ -31,9 +31,9 @@ import { newId, nowIso } from './json';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
 import {
-  profiles,
   templateExercises,
   templateSets,
+  weightEntries,
   workoutExercises,
   workouts,
   workoutSets,
@@ -42,15 +42,15 @@ import { queryKeys } from './query-keys';
 import type { PlanExerciseDraft } from './templates';
 import { firstCount, type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
-/** Body weight assumed until the profile has one. */
+/** Body weight assumed until the user logged one. */
 const DEFAULT_BODYWEIGHT_KG = 75;
 
 /**
- * The user's body weight, for bodyweight and assisted sets where the logged weight is only the
- * added load or the assistance: without it a pull-up at 0 kg would score 0 whatever the reps.
- * The device only holds the user's own profile.
+ * The user's latest body weight, for bodyweight and assisted sets where the logged weight is
+ * only the added load or the assistance: without it a pull-up at 0 kg would score 0 whatever the
+ * reps. The device only holds the user's own weight entries.
  */
-const bodyweightSql = sql<number>`coalesce((select ${profiles.weight_kg} from ${profiles}), ${DEFAULT_BODYWEIGHT_KG})`;
+const bodyweightSql = sql<number>`coalesce((select ${weightEntries.weight_kg} from ${weightEntries} order by ${weightEntries.date} desc limit 1), ${DEFAULT_BODYWEIGHT_KG})`;
 
 /**
  * Whether a completed set counts for history and records. "Mark as done" completes the sets of
