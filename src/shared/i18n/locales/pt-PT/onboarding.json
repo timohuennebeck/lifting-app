@@ -2,19 +2,15 @@
   "welcome": {
     "headline": "O TEU PLANO.",
     "headlineAccent": "O TEU PROGRESSO.",
-    "subtitle": "Importa o teu plano ou cria um novo. Sem escrever.",
+    "subtitle": "Importa o teu plano ou cria um novo.\nSem escrever.",
     "start": "Vamos lá",
     "haveAccount": "Já tenho uma conta · ",
     "signIn": "Iniciar sessão",
     "language": "Idioma",
-    "preview": {
-      "push": "Push",
-      "musclesWorked": "Músculos trabalhados",
-      "exercises_one": "{{count}} exercício",
-      "exercises_many": "{{count}} exercícios",
-      "exercises_other": "{{count}} exercícios",
-      "duration": "Duração estimada: {{minutes}} min",
-      "startWorkout": "Começar treino"
+    "features": {
+      "import": "Importar plano por foto",
+      "create": "Criar plano",
+      "progress": "Acompanhar o progresso"
     }
   },
   "name": {
@@ -98,15 +94,10 @@
     "title": "FAZER UM CHECK CORPORAL?",
     "subtitle": "Com base nas tuas fotos, adaptamos o plano aos teus pontos fracos.",
     "lightStrong": "Luz forte",
-    "lightRest": " de frente",
     "clothesStrong": "Roupa interior",
-    "clothesRest": " ou roupa desportiva",
     "framingStrong": "Corpo inteiro na imagem",
-    "framingRest": " da cabeça aos pés",
     "sameStrong": "Mesmo sítio, mesma luz",
-    "sameRest": " em cada check",
     "privacyStrong": "As fotos ficam privadas",
-    "privacyRest": " só para ti",
     "now": "Tirar fotos agora",
     "later": "Mais tarde"
   }

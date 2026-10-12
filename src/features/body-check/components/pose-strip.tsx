@@ -14,6 +14,8 @@ export interface PoseStripProps {
   shots: Shots;
   active: BodyPose;
   onSelect: (pose: BodyPose) => void;
+  /** Under a photo shown full screen: the shown one is marked white, not in the accent. */
+  viewing?: boolean;
 }
 
 interface ShotBadgeProps {
@@ -36,15 +38,15 @@ function ShotBadge({ warn }: ShotBadgeProps) {
   );
 }
 
-/** Thumbnail ring: accent for the pose shown, orange for a weak photo, else a faint line. */
-function ringOf(selected: boolean, warn: boolean) {
-  if (selected) return `inset 0 0 0 2px ${colors.accent}`;
+/** Thumbnail ring: the pose shown (accent, white over a photo), orange for a weak photo. */
+function ringOf(selected: boolean, warn: boolean, viewing: boolean) {
+  if (selected) return `inset 0 0 0 2px ${viewing ? colors.fg : colors.accent}`;
   if (warn) return `inset 0 0 0 1.5px ${WARN_COLOR}`;
   return 'inset 0 0 0 1px rgba(255,255,255,0.18)';
 }
 
-/** Row of the pose thumbnails with labels (camera 08a and review 08b). */
-export function PoseStrip({ shots, active, onSelect }: PoseStripProps) {
+/** Row of the pose thumbnails with labels (camera 08a, live and over a taken photo). */
+export function PoseStrip({ shots, active, onSelect, viewing = false }: PoseStripProps) {
   const { t } = useTranslation('bodyCheck');
   return (
     <View className="flex-row items-start justify-center gap-4.5">
@@ -52,7 +54,7 @@ export function PoseStrip({ shots, active, onSelect }: PoseStripProps) {
         const shot = shots[pose];
         const selected = pose === active;
         const warn = !!shot?.issue;
-        const ring = ringOf(selected, warn);
+        const ring = ringOf(selected, warn, viewing);
         return (
           <PressableScale
             key={pose}
@@ -82,7 +84,7 @@ export function PoseStrip({ shots, active, onSelect }: PoseStripProps) {
             </View>
             <Text
               variant="caption"
-              tone={selected ? 'accent' : 'muted'}
+              tone={selected ? (viewing ? 'default' : 'accent') : 'muted'}
               className="tracking-[0.5px] uppercase"
             >
               {t(`poses.${pose}.short`)}

@@ -4,10 +4,10 @@
   "noSets": "Noch keine Sätze",
   "missing": "Dieses Training ist nicht mehr verfügbar.",
   "actions": {
-    "details": "Übung & Historie",
+    "info": "Info",
     "targets": "Targets",
     "swap": "Tauschen",
-    "remove": "Entfernen"
+    "more": "Mehr"
   },
   "table": {
     "set": "SATZ",
@@ -21,7 +21,8 @@
     "repsCell": "Wiederholungen",
     "secondsCell": "Sekunden",
     "done": "Satz erledigt",
-    "addSet": "Satz hinzufügen"
+    "addSet": "Satz hinzufügen",
+    "removeSet": "Satz entfernen"
   },
   "rest": {
     "title": "Pause",

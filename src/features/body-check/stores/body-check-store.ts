@@ -44,9 +44,9 @@ interface BodyCheckState {
   shots: Shots;
   /** Pose the camera is shooting. */
   pose: BodyPose;
-  /** Pose picked on the review screen; null until the user picks one. */
-  reviewPose: BodyPose | null;
-  /** The camera was opened from the review screen to replace one photo. */
+  /** Pose whose photo the camera shows full screen; null while shooting. */
+  viewPose: BodyPose | null;
+  /** Retaking one photo: once taken, the camera shows it instead of moving on. */
   retaking: boolean;
   /** The photos were uploaded for an analysis (and are removed if the check is discarded). */
   uploaded: boolean;
@@ -59,10 +59,11 @@ interface BodyCheckState {
   start: () => void;
   setPose: (pose: BodyPose) => void;
   addShot: (pose: BodyPose, shot: Shot) => void;
-  selectReviewPose: (pose: BodyPose) => void;
+  /** Shows a taken photo full screen, or (null) goes back to shooting. */
+  view: (pose: BodyPose | null) => void;
   retake: (pose: BodyPose) => void;
   setUploaded: () => void;
-  /** Marks the photos the analysis rejected and selects the first on the review screen. */
+  /** Marks the photos the analysis rejected and shows the first of them. */
   rejectShots: (rejections: PhotoRejection[]) => void;
   setResult: (result: BodyCheckResult) => void;
   cycleTimer: () => void;
@@ -78,7 +79,7 @@ const EMPTY = {
   checkId: null,
   shots: {},
   pose: 'front',
-  reviewPose: null,
+  viewPose: null,
   retaking: false,
   uploaded: false,
   result: null,
@@ -104,7 +105,8 @@ export const useBodyCheckStore = create<BodyCheckState>()(
         set({ checkId });
         deleteAbandonedDrafts(checkId);
       },
-      setPose: (pose) => set({ pose }),
+      // Shooting another pose ends a retake and leaves a photo shown full screen.
+      setPose: (pose) => set({ pose, retaking: false, viewPose: null }),
       addShot: (pose, shot) => {
         const s = get();
         const replaced = s.shots[pose];
@@ -115,11 +117,11 @@ export const useBodyCheckStore = create<BodyCheckState>()(
           result: null,
           retaking: false,
           pose: nextMissingPose(shots, pose) ?? pose,
-          reviewPose: s.retaking ? pose : s.reviewPose,
+          viewPose: s.retaking ? pose : s.viewPose,
         });
       },
-      selectReviewPose: (reviewPose) => set({ reviewPose }),
-      retake: (pose) => set({ pose, retaking: true }),
+      view: (viewPose) => set({ viewPose }),
+      retake: (pose) => set({ pose, retaking: true, viewPose: null }),
       setUploaded: () => set({ uploaded: true }),
       rejectShots: (rejections) => {
         const shots = { ...get().shots };
@@ -127,7 +129,7 @@ export const useBodyCheckStore = create<BodyCheckState>()(
           const shot = shots[pose];
           if (shot) shots[pose] = { ...shot, issue, rejected: true };
         }
-        set({ shots, reviewPose: rejections[0]?.pose ?? null });
+        set({ shots, viewPose: rejections[0]?.pose ?? null });
       },
       setResult: (result) => set({ result }),
       // Auto needs a countdown to turn to the next pose: no timer means no auto, and turning

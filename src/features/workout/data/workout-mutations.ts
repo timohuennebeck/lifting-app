@@ -129,6 +129,11 @@ export async function saveWorkoutTargets(
   });
 }
 
+/** Deletes one set of a running workout (swiped away). */
+export async function removeWorkoutSet(setId: string) {
+  await drizzle.delete(workoutSets).where(eq(workoutSets.id, setId));
+}
+
 /** Takes an exercise out of a running workout, with its sets (logged or not). */
 export async function removeWorkoutExercise(workoutExerciseId: string) {
   await drizzle.transaction(async (tx) => {

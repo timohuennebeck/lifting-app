@@ -10,7 +10,7 @@ export type BodyGroup = (typeof GROUPS)[number];
 export const TIMER_STEPS = [3, 10, 0] as const;
 export type TimerSeconds = (typeof TIMER_STEPS)[number];
 
-/** Warning orange of the camera, review and result screens (not part of the theme tokens). */
+/** Warning orange of the camera and result screens (not part of the theme tokens). */
 export const WARN_COLOR = '#FF8A3D';
 
 /** First pose without a photo, preferring poses after `from`. */

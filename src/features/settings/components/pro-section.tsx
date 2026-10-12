@@ -50,7 +50,8 @@ export function ProSection() {
         <SettingsRow
           label={t('settings.title')}
           value={t('settings.upgrade')}
-          onPress={() => router.push('/pro')}
+          // Back to the paywall when it is already open below (a locked app), else opens it.
+          onPress={() => router.navigate('/pro')}
         />
       )}
     </SettingsSection>

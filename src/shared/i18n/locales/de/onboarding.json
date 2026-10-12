@@ -2,18 +2,15 @@
   "welcome": {
     "headline": "DEIN PLAN.",
     "headlineAccent": "DEIN FORTSCHRITT.",
-    "subtitle": "Plan importieren oder neu erstellen. Ohne Tippen.",
+    "subtitle": "Plan importieren oder neu erstellen.\nOhne Tippen.",
     "start": "Los geht's",
     "haveAccount": "Ich habe schon ein Konto · ",
     "signIn": "Anmelden",
     "language": "Sprache",
-    "preview": {
-      "push": "Push",
-      "musclesWorked": "Beanspruchte Muskeln",
-      "exercises_one": "{{count}} Übung",
-      "exercises_other": "{{count}} Übungen",
-      "duration": "Geschätzte Dauer: {{minutes}} Min.",
-      "startWorkout": "Training starten"
+    "features": {
+      "import": "Plan per Foto importieren",
+      "create": "Plan erstellen",
+      "progress": "Fortschritt verfolgen"
     }
   },
   "name": {
@@ -95,15 +92,10 @@
     "title": "KÖRPERCHECK MACHEN?",
     "subtitle": "Basierend auf deinen Fotos passen wir den Plan an deine Schwachstellen an.",
     "lightStrong": "Helles Licht",
-    "lightRest": " von vorne",
     "clothesStrong": "Unterwäsche",
-    "clothesRest": " oder Sportkleidung",
     "framingStrong": "Kompletter Körper im Bild",
-    "framingRest": " Kopf bis Fuß",
     "sameStrong": "Gleicher Ort, gleiches Licht",
-    "sameRest": " bei jedem Check",
     "privacyStrong": "Fotos bleiben privat",
-    "privacyRest": " nur für dich",
     "now": "Fotos jetzt machen",
     "later": "Später"
   }

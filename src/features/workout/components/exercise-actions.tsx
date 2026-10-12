@@ -10,44 +10,47 @@ interface ExerciseAction {
   icon: IconName;
   label: string;
   onPress: () => void;
-  danger?: boolean;
 }
 
 export interface ExerciseActionsProps {
   /** The exercise's page: how it works and its history. */
-  onDetails: () => void;
+  onInfo: () => void;
   onTargets: () => void;
   onSwap: () => void;
-  onRemove: () => void;
+  /** The "⋯" menu: reorder, remove. */
+  onMore: () => void;
 }
 
-/** Exercise & history · Targets · Swap · Remove pills under the exercise title. */
-export function ExerciseActions({ onDetails, onTargets, onSwap, onRemove }: ExerciseActionsProps) {
+const CHIP = 'h-11 flex-row items-center rounded-full bg-raised';
+
+/** Info · Targets · Swap pills and a round "⋯" under the exercise title. */
+export function ExerciseActions({ onInfo, onTargets, onSwap, onMore }: ExerciseActionsProps) {
   const { t } = useTranslation('workout');
   const actions: ExerciseAction[] = [
-    { icon: 'info', label: t('actions.details'), onPress: onDetails },
+    { icon: 'info', label: t('actions.info'), onPress: onInfo },
     { icon: 'target', label: t('actions.targets'), onPress: onTargets },
     { icon: 'swap', label: t('actions.swap'), onPress: onSwap },
-    { icon: 'trash', label: t('actions.remove'), onPress: onRemove, danger: true },
   ];
   return (
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerClassName="gap-2 px-5 pt-4.5"
+      // Snug enough that all four fit across a 390pt screen.
+      contentContainerClassName="gap-1.5 px-5 pt-4.5"
     >
       {actions.map((a) => (
-        <PressableScale
-          key={a.icon}
-          onPress={a.onPress}
-          className="h-11 flex-row items-center gap-2 rounded-full bg-raised px-4"
-        >
-          <Icon name={a.icon} size={14} color={a.danger ? colors.danger : colors.fg} />
-          <Text variant="label" tone={a.danger ? 'danger' : 'default'}>
-            {a.label}
-          </Text>
+        <PressableScale key={a.icon} onPress={a.onPress} className={`${CHIP} gap-2 px-3.5`}>
+          <Icon name={a.icon} size={14} color={colors.fg} />
+          <Text variant="label">{a.label}</Text>
         </PressableScale>
       ))}
+      <PressableScale
+        accessibilityLabel={t('actions.more')}
+        onPress={onMore}
+        className={`${CHIP} w-11 justify-center`}
+      >
+        <Icon name="more" size={14} color={colors.fg} />
+      </PressableScale>
     </ScrollView>
   );
 }

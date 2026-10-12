@@ -21,7 +21,13 @@ import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
+import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
+
+import {
+  type ExerciseMenuAction,
+  ExerciseMenuSheet,
+} from '@/features/training/components/exercise-menu-sheet';
 
 import { EmptyWorkout } from '../components/empty-workout';
 import { ExerciseActions } from '../components/exercise-actions';
@@ -30,14 +36,22 @@ import { SetTable } from '../components/set-table';
 import { WeightKeypad } from '../components/weight-keypad';
 import { WorkoutMenuSheet } from '../components/workout-menu-sheet';
 import { WorkoutTopBar } from '../components/workout-top-bar';
-import { removeWorkoutExercise, reorderWorkoutExercise } from '../data/workout-mutations';
+import {
+  removeWorkoutExercise,
+  removeWorkoutSet,
+  reorderWorkoutExercise,
+} from '../data/workout-mutations';
 import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
 const SWIPE_DISTANCE = 70;
 const SWIPE_VELOCITY = 600;
-const SLIDE = { duration: 200, easing: Easing.out(Easing.cubic) };
+/** The exercise leaves quickly and the next one settles in: about a quarter second in all. */
+const SLIDE_OUT = { duration: 110, easing: Easing.in(Easing.quad) };
+const SLIDE_IN = { duration: 160, easing: Easing.out(Easing.cubic) };
+/** A swipe that didn't go far enough springs back. */
+const SNAP_BACK = { duration: 160, easing: Easing.out(Easing.cubic) };
 /** Room for the "Finish workout" button over the foot of the sets. */
 const FINISH_BAR_HEIGHT = 80;
 
@@ -50,6 +64,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [exerciseMenuOpen, setExerciseMenuOpen] = useState(false);
   const live = useLiveWorkout(workout);
   const { abandon, finish, finishing } = useWorkoutActions(workout.id);
   const field = useWorkoutSessionStore((s) => s.field);
@@ -94,7 +109,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     if (!direction) return;
     slideIn.set(0);
     offset.set(direction * width);
-    offset.set(withTiming(0, SLIDE));
+    offset.set(withTiming(0, SLIDE_IN));
   }, [exerciseIndex, offset, slideIn, width]);
 
   const swipe = Gesture.Pan()
@@ -113,11 +128,11 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
       else if (e.translationX > SWIPE_DISTANCE || e.velocityX > SWIPE_VELOCITY) direction = -1;
       const target = exerciseIndex + direction;
       if (!direction || target < 0 || target >= count) {
-        offset.set(withTiming(0, SLIDE));
+        offset.set(withTiming(0, SNAP_BACK));
         return;
       }
       offset.set(
-        withTiming(-direction * width, SLIDE, (done) => {
+        withTiming(-direction * width, SLIDE_OUT, (done) => {
           if (!done) return;
           slideIn.set(direction);
           scheduleOnRN(go, target);
@@ -166,6 +181,25 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
       { text: t('remove.confirm'), style: 'destructive', onPress: drop },
     ]);
   };
+
+  // A set swiped away: its typed and logged values go with it.
+  const removeSet = (index: number) => {
+    const set = exercise?.sets[index];
+    if (!set) return;
+    const store = useWorkoutSessionStore.getState();
+    if (store.selectedSetId === set.id) store.closeKeypad();
+    store.clearLogged(set.id);
+    store.clearDraft(set.id);
+    void removeWorkoutSet(set.id);
+  };
+
+  function onExerciseMenu(action: ExerciseMenuAction) {
+    setExerciseMenuOpen(false);
+    if (!exercise) return;
+    if (action === 'remove') afterSheetClose(remove);
+    else if (action === 'moveUp') void reorder(exercise.id, exerciseIndex - 1);
+    else if (action === 'moveDown') void reorder(exercise.id, exerciseIndex + 1);
+  }
 
   const onSelect = (index: number, f: SetField) => {
     if (index !== selectedIndex) return live.selectSet(index, f);
@@ -224,7 +258,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                 </View>
                 <ExerciseActions
                   // How the exercise works and its history (design 06e).
-                  onDetails={() =>
+                  onInfo={() =>
                     router.push({ pathname: '/exercise/[id]', params: { id: exercise.exerciseId } })
                   }
                   onTargets={() =>
@@ -234,7 +268,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                     })
                   }
                   onSwap={() => openPicker('swap')}
-                  onRemove={remove}
+                  onMore={() => setExerciseMenuOpen(true)}
                 />
                 <View onLayout={(e) => (layout.current.table = e.nativeEvent.layout.y)}>
                   <SetTable
@@ -244,6 +278,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                     units={live.units}
                     onSelect={onSelect}
                     onToggleDone={live.toggleDone}
+                    onRemove={removeSet}
                     onRowLayout={(i, y) => (layout.current.rows[i] = y + 48)}
                   />
                 </View>
@@ -271,6 +306,15 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
           onAdd={() => openPicker('add')}
         />
       )}
+      <ExerciseMenuSheet
+        visible={exerciseMenuOpen}
+        onClose={() => setExerciseMenuOpen(false)}
+        // Targets and swap are chips of their own.
+        hidden={['editSets', 'swap']}
+        canMoveUp={exerciseIndex > 0}
+        canMoveDown={exerciseIndex < count - 1}
+        onAction={onExerciseMenu}
+      />
       <WorkoutMenuSheet
         visible={menuOpen}
         onClose={() => setMenuOpen(false)}

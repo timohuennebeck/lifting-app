@@ -4,10 +4,10 @@
   "noSets": "No sets yet",
   "missing": "This workout is no longer available.",
   "actions": {
-    "details": "Exercise & history",
+    "info": "Info",
     "targets": "Targets",
     "swap": "Swap",
-    "remove": "Remove"
+    "more": "More"
   },
   "table": {
     "set": "SET",
@@ -21,7 +21,8 @@
     "repsCell": "Reps",
     "secondsCell": "Seconds",
     "done": "Set done",
-    "addSet": "Add set"
+    "addSet": "Add set",
+    "removeSet": "Remove set"
   },
   "rest": {
     "title": "Rest",

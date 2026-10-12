@@ -2,18 +2,15 @@
   "welcome": {
     "headline": "YOUR PLAN.",
     "headlineAccent": "YOUR PROGRESS.",
-    "subtitle": "Import your plan or create a new one. No typing.",
+    "subtitle": "Import your plan or create a new one.\nNo typing.",
     "start": "Let's go",
     "haveAccount": "I already have an account · ",
     "signIn": "Sign in",
     "language": "Language",
-    "preview": {
-      "push": "Push",
-      "musclesWorked": "Muscles worked",
-      "exercises_one": "{{count}} exercise",
-      "exercises_other": "{{count}} exercises",
-      "duration": "Estimated duration: {{minutes}} min",
-      "startWorkout": "Start workout"
+    "features": {
+      "import": "Import a plan from a photo",
+      "create": "Create a plan",
+      "progress": "Track your progress"
     }
   },
   "name": {
@@ -95,15 +92,10 @@
     "title": "DO A BODY CHECK?",
     "subtitle": "Based on your photos we adapt the plan to your weak spots.",
     "lightStrong": "Bright light",
-    "lightRest": " from the front",
     "clothesStrong": "Underwear",
-    "clothesRest": " or sportswear",
     "framingStrong": "Whole body in frame",
-    "framingRest": " head to toe",
     "sameStrong": "Same place, same light",
-    "sameRest": " every check",
     "privacyStrong": "Photos stay private",
-    "privacyRest": " just for you",
     "now": "Take photos now",
     "later": "Later"
   }

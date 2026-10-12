@@ -53,11 +53,9 @@
     "keep": "Continuar",
     "confirm": "Descartar"
   },
-  "review": {
-    "title": "Ficou bom?",
-    "subtitle": "Confira se cada foto está nítida e mostra você da cabeça até pelo menos os joelhos.",
-    "rejectedSubtitle": "A análise não conseguiu avaliar todas as fotos. Refaça as marcadas.",
-    "noPhoto": "Nenhuma foto ainda",
+  "photo": {
+    "ok": "Foto está boa",
+    "retake": "Refazer foto",
     "issues": {
       "blurry": "Tremida",
       "dark": "Escura demais",
@@ -65,21 +63,7 @@
       "wrongPose": "Pose errada",
       "noPerson": "Ninguém na foto",
       "clothing": "Roupa cobre o corpo"
-    },
-    "retakePhoto": "Refazer foto",
-    "takePhoto": "Tirar foto",
-    "take": {
-      "front": "Tirar foto de frente",
-      "side": "Tirar foto de lado",
-      "back": "Tirar foto de costas"
-    },
-    "retake": {
-      "front": "Refazer foto de frente",
-      "side": "Refazer foto de lado",
-      "back": "Refazer foto de costas"
-    },
-    "cta": "Continuar para a análise",
-    "continueAnyway": "Continuar mesmo assim"
+    }
   },
   "analysis": {
     "title": "Check corporal",
@@ -98,6 +82,11 @@
       "notPro": "A análise precisa do Traqa Pro.",
       "refused": "Não conseguimos analisar essas fotos. Refaça-as com roupa esportiva ou roupa íntima.",
       "failed": "A análise falhou. Tente novamente."
+    },
+    "row": {
+      "done": "Registrado",
+      "active": "Medindo o corpo …",
+      "waiting": "Aguardando …"
     }
   },
   "result": {

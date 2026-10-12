@@ -4,10 +4,10 @@
   "noSets": "Ainda sem séries",
   "missing": "Este treino não está mais disponível.",
   "actions": {
-    "details": "Exercício e histórico",
+    "info": "Info",
     "targets": "Metas",
     "swap": "Trocar",
-    "remove": "Remover"
+    "more": "Mais"
   },
   "table": {
     "set": "SÉRIE",
@@ -21,7 +21,8 @@
     "repsCell": "Repetições",
     "secondsCell": "Segundos",
     "done": "Série concluída",
-    "addSet": "Adicionar série"
+    "addSet": "Adicionar série",
+    "removeSet": "Remover série"
   },
   "rest": {
     "title": "Descanso",

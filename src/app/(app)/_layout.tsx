@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 
 import { LegalUpdateGate } from '@/features/legal/components/legal-update-gate';
+import { useSubscriptionGate } from '@/features/paywall/hooks/use-subscription-gate';
 import { useAttachmentUploadQueue } from '@/features/support/hooks/use-attachment-upload-queue';
 import { useSyncAccountLanguage } from '@/shared/hooks/use-sync-account-language';
 import { colors } from '@/shared/lib/theme';
@@ -9,6 +10,8 @@ export default function AppLayout() {
   // Background uploads of ticket screenshots, also after restarts.
   useAttachmentUploadQueue();
   useSyncAccountLanguage();
+  // The whole app is Pro: without a subscription only the paywall and the account stay open.
+  useSubscriptionGate();
 
   return (
     <>

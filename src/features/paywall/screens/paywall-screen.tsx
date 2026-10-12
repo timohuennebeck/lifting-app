@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
@@ -5,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { Button } from '@/shared/ui/button';
+import { IconButton } from '@/shared/ui/icon-button';
 import { CheckItem } from '@/shared/ui/check-item';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
@@ -66,9 +68,19 @@ export function PaywallScreen() {
         showsVerticalScrollIndicator={false}
       >
         <ScreenHeader
-          // Onboarding goes on only with a plan (or a restored one); from Settings it closes.
-          icon={flow.inApp ? 'close' : null}
+          // Onboarding and a locked app go on only with a plan (or a restored one); from
+          // Settings it closes. Locked, Settings stays reachable for the account.
+          icon={flow.closable ? 'close' : null}
           onBack={flow.exit}
+          leading={
+            flow.locked ? (
+              <IconButton
+                icon="settings"
+                accessibilityLabel={t('common:settings')}
+                onPress={() => router.push('/settings')}
+              />
+            ) : undefined
+          }
           action={
             <TextButton
               label={restoring ? t('restoring') : t('restore')}

@@ -9,7 +9,6 @@ export default function BodyCheckLayout() {
         name="camera"
         options={{ animation: 'fade', contentStyle: { backgroundColor: 'black' } }}
       />
-      <Stack.Screen name="review" />
       <Stack.Screen name="analysis" options={{ animation: 'fade', gestureEnabled: false }} />
       <Stack.Screen name="result/[id]" options={{ animation: 'fade', gestureEnabled: false }} />
       {/* A tapped photo fades in; it closes by dragging, not the edge swipe. */}

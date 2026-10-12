@@ -53,11 +53,9 @@
     "keep": "Weitermachen",
     "confirm": "Verwerfen"
   },
-  "review": {
-    "title": "Passt so?",
-    "subtitle": "Prüfe, ob jedes Foto scharf ist und dich mindestens vom Kopf bis zu den Knien zeigt.",
-    "rejectedSubtitle": "Die Analyse konnte nicht jedes Foto auswerten. Nimm die markierten neu auf.",
-    "noPhoto": "Kein Foto vorhanden",
+  "photo": {
+    "ok": "Foto passt",
+    "retake": "Foto neu aufnehmen",
     "issues": {
       "blurry": "Verwackelt",
       "dark": "Zu dunkel",
@@ -65,21 +63,7 @@
       "wrongPose": "Falsche Pose",
       "noPerson": "Niemand erkannt",
       "clothing": "Kleidung verdeckt Körper"
-    },
-    "retakePhoto": "Foto neu aufnehmen",
-    "takePhoto": "Foto aufnehmen",
-    "take": {
-      "front": "Frontal aufnehmen",
-      "side": "Seite aufnehmen",
-      "back": "Hinten aufnehmen"
-    },
-    "retake": {
-      "front": "Frontal neu aufnehmen",
-      "side": "Seite neu aufnehmen",
-      "back": "Hinten neu aufnehmen"
-    },
-    "cta": "Weiter zur Analyse",
-    "continueAnyway": "Trotzdem weiter"
+    }
   },
   "analysis": {
     "title": "Körpercheck",
@@ -98,6 +82,11 @@
       "notPro": "Für die Analyse brauchst du Traqa Pro.",
       "refused": "Diese Fotos können wir nicht auswerten. Bitte nimm sie in Sportkleidung oder Unterwäsche neu auf.",
       "failed": "Die Analyse hat nicht geklappt. Bitte versuch es noch einmal."
+    },
+    "row": {
+      "done": "Erfasst",
+      "active": "Körper wird vermessen …",
+      "waiting": "Wartet …"
     }
   },
   "result": {

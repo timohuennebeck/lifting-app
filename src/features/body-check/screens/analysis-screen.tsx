@@ -14,8 +14,7 @@ import { useTimedProgress } from '@/shared/ui/scan-stage';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
-import { AnalysisTile } from '../components/analysis-tile';
-import { photoTileHeight } from '../components/photo-tile';
+import { AnalysisRow } from '../components/analysis-row';
 import { GroupMarquee } from '../components/group-marquee';
 import { useBodyChecks } from '../data/body-checks';
 import { AnalysisError, analyzeBodyCheck, type BodyCheckResult } from '../lib/body-check-service';
@@ -25,19 +24,23 @@ import { hasAllShots, useBodyCheckStore } from '../stores/body-check-store';
 
 /** Roughly how long the analysis takes; the animation waits at 99 % if it takes longer. */
 const DURATION_MS = 14000;
-/** Height of everything but the tile row (header, score, chips, CTA). */
+/** Height of everything but the photo rows (header, percentage, chips, button). */
 const CHROME_HEIGHT = 330;
+const ROW_GAP = 14;
+/** Photo height of a row: as tall as the screen allows, within these bounds. */
+const MIN_PHOTO = 72;
+const MAX_PHOTO = 124;
 
 /**
- * 08c-H: uploads the three photos and has them analysed behind a reveal animation, then offers
- * the result. Photos the analysis can't judge go back to the review screen for a retake.
+ * 08c-H: uploads the three photos and has them analysed, pose by pose in rows, then offers the
+ * result. Photos the analysis can't judge go back to the camera, shown with what's wrong.
  */
 export function AnalysisScreen() {
   const { t } = useTranslation(['bodyCheck', 'common']);
   const close = useCloseCheck();
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
-  const { width, height } = useWindowDimensions();
+  const { height } = useWindowDimensions();
   const checkId = useBodyCheckStore((s) => s.checkId);
   const shots = useBodyCheckStore((s) => s.shots);
   const userId = useUserId();
@@ -86,7 +89,7 @@ export function AnalysisScreen() {
     if (done) haptics.success();
   }, [done]);
 
-  if (!checkId || !complete) return <Redirect href="/body-check/review" />;
+  if (!checkId || !complete) return <Redirect href="/body-check/camera" />;
 
   // The tiles fill one after another; the stage text moves on in its own steps.
   const share = 100 / POSES.length;
@@ -97,25 +100,38 @@ export function AnalysisScreen() {
     : t('analysis.finalStage.first');
   const steps = [...stages, finalStage];
   const stage = done ? t('analysis.done') : steps[Math.floor((pct / 100) * steps.length)];
-  const tileHeight = photoTileHeight(width, height - insets.top - footerInset - CHROME_HEIGHT);
+  const rowsHeight = height - insets.top - footerInset - CHROME_HEIGHT;
+  const photoHeight = clamp(
+    (rowsHeight - ROW_GAP * (POSES.length - 1)) / POSES.length,
+    MIN_PHOTO,
+    MAX_PHOTO,
+  );
 
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-      <ScreenHeader title={t('analysis.title')} onBack={close} />
-      <View className="flex-row gap-2.5 px-4 pt-3.5">
-        {POSES.map((pose, i) => (
-          <AnalysisTile
-            key={pose}
-            uri={shots[pose]?.uri ?? ''}
-            label={t(`poses.${pose}.short`)}
-            progress={done ? 1 : clamp((pct - i * share) / share, 0, 1)}
-            active={!done && i === segment}
-            height={tileHeight}
-          />
-        ))}
+      <ScreenHeader icon="close" title={t('analysis.title')} onBack={close} />
+      <View className="px-4 pt-3.5" style={{ gap: ROW_GAP }}>
+        {POSES.map((pose, i) => {
+          const progress = done ? 1 : clamp((pct - i * share) / share, 0, 1);
+          let state: 'waiting' | 'active' | 'done' = 'waiting';
+          if (progress >= 1) state = 'done';
+          else if (i === segment) state = 'active';
+          return (
+            <AnalysisRow
+              key={pose}
+              uri={shots[pose]?.uri ?? ''}
+              label={t(`poses.${pose}.name`)}
+              progress={progress}
+              state={state}
+              height={photoHeight}
+            />
+          );
+        })}
       </View>
       <View className="items-center gap-1.5 px-5 pt-6.5">
-        <Text className="font-inter-semibold text-[48px] leading-12 text-accent">{`${pct}%`}</Text>
+        <Text className="font-inter-semibold text-[56px] leading-16 text-accent tabular-nums">
+          {`${pct}%`}
+        </Text>
         <Text
           variant="bodyStrong"
           className="mt-1.5 text-center text-base"

@@ -13,16 +13,25 @@ export interface SwipeToDeleteProps {
   onDelete?: () => void;
   /** Accessibility label of the delete button, e.g. "Delete Push". */
   label: string;
+  /**
+   * Only a swipe to the left moves the row: one to the right is left to a swipe around it
+   * (the live workout's swipe to the previous exercise).
+   */
+  leftOnly?: boolean;
 }
+
+/** Further than any finger travels: a swipe to the right never moves a `leftOnly` row. */
+const NEVER = 100_000;
 
 /**
  * Swipe a row left to reveal the app's delete mark (the red minus of "Remove exercise"). The row
  * needs an opaque background, as it slides over the button.
  */
-export function SwipeToDelete({ children, onDelete, label }: SwipeToDeleteProps) {
+export function SwipeToDelete({ children, onDelete, label, leftOnly }: SwipeToDeleteProps) {
   return (
     <Swipeable
       enabled={!!onDelete}
+      dragOffsetFromLeftEdge={leftOnly ? NEVER : undefined}
       friction={1.6}
       rightThreshold={40}
       overshootRight={false}

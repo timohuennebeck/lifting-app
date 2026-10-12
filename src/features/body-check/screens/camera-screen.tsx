@@ -26,6 +26,7 @@ import { Text } from '@/shared/ui/text';
 
 import { CountdownNumber, FlipCameraIcon, FramingCorners } from '../components/camera-chrome';
 import { PoseStrip } from '../components/pose-strip';
+import { ShotView } from '../components/shot-view';
 import { useCloseCheck } from '../hooks/use-close-check';
 import { assessPhoto } from '../lib/body-check-service';
 import { deleteFile, storeShot } from '../lib/photo-files';
@@ -49,6 +50,8 @@ const TURN_MS = 5000;
 /**
  * 08a: full-screen camera that walks through the three poses, with self-timer. The timer sound
  * ticks the countdown and clicks when the photo is taken; with Auto on, one tap takes them all.
+ * A taken photo's thumbnail shows it full screen to check or retake; "Fertig" (all three)
+ * starts the analysis, which sends photos it can't judge back here.
  */
 export function CameraScreen() {
   const { t } = useTranslation(['bodyCheck', 'common']);
@@ -61,8 +64,13 @@ export function CameraScreen() {
     focusedRef.current = focused;
   }, [focused]);
   const close = useCloseCheck();
-  // Android back on the flow's first screen would drop the modal without asking.
-  useHardwareBack(close);
+  const shots = useBodyCheckStore((s) => s.shots);
+  const viewPose = useBodyCheckStore((s) => s.viewPose);
+  // A taken photo shown full screen over the (paused) camera.
+  const viewShot = viewPose ? shots[viewPose] : undefined;
+  // Android back closes a shown photo; on the flow's first screen it would otherwise drop the
+  // modal without asking.
+  useHardwareBack(() => (viewShot ? useBodyCheckStore.getState().view(null) : close()));
   const [permission, requestPermission, getPermission] = useCameraPermissions();
   const camera = useRef<CameraView>(null);
   const [ready, setReady] = useState(false);
@@ -71,11 +79,10 @@ export function CameraScreen() {
   // Auto: the pause after a photo while the user turns to the next pose.
   const [turning, setTurning] = useState(false);
   const checkId = useBodyCheckStore((s) => s.checkId);
-  const shots = useBodyCheckStore((s) => s.shots);
   const pose = useBodyCheckStore((s) => s.pose);
   const timer = useBodyCheckStore((s) => s.timer);
   const retaking = useBodyCheckStore((s) => s.retaking);
-  // Retaking one photo from the review screen: just that one, whatever Auto says.
+  // Retaking one photo: just that one, whatever Auto says.
   const auto = useBodyCheckStore((s) => s.auto) && !retaking;
   const facing = useBodyCheckStore((s) => s.facing);
   // When the running countdown ends, and how to silence its sound if it's cancelled.
@@ -83,6 +90,15 @@ export function CameraScreen() {
   const stopTimerSound = useRef<(() => void) | null>(null);
   const flash = useShutterFlash();
   const taken = POSES.filter((p) => shots[p]).length;
+  // Every pose taken and none the analysis sent back: "Fertig" starts the analysis.
+  const finished = hasAllShots(shots) && !POSES.some((p) => shots[p]?.rejected);
+
+  // A thumbnail with a photo shows it; an empty one is the pose to shoot next.
+  const selectPose = (p: (typeof POSES)[number]) => {
+    const store = useBodyCheckStore.getState();
+    if (store.shots[p]) store.view(p);
+    else store.setPose(p);
+  };
 
   // Opened without a running check (e.g. deep link): start one.
   useEffect(() => {
@@ -141,7 +157,7 @@ export function CameraScreen() {
     if (!camera.current || !store.checkId || busy) return;
     const target = store.pose;
     const id = store.checkId;
-    const wasComplete = hasAllShots(store.shots);
+    const wasRetaking = store.retaking;
     setBusy(true);
     haptics.heavy();
     flash.fire();
@@ -153,13 +169,12 @@ export function CameraScreen() {
       // The check was closed while the photo was processed.
       if (current.checkId !== id) return deleteFile(stored.uri);
       if (issue) haptics.warning();
+      // A retaken photo shows full screen right away (the store selects it).
       current.addShot(target, { ...stored, issue });
       const next = useBodyCheckStore.getState();
       const complete = hasAllShots(next.shots);
-      const openReview = current.retaking || (complete && !wasComplete);
-      if (openReview && focusedRef.current) router.push('/body-check/review');
       // Auto: a pause to turn to the next missing pose (already selected), then its countdown.
-      else if (next.auto && next.timer && !complete && focusedRef.current) {
+      if (next.auto && next.timer && !complete && !wasRetaking && focusedRef.current) {
         setTurning(true);
       }
     } catch (error) {
@@ -171,7 +186,7 @@ export function CameraScreen() {
   }
 
   const tick = useEffectEvent(() => {
-    // Leaving the screen (review opened on top) cancels the countdown.
+    // Leaving the screen (the analysis opened on top) cancels the countdown.
     if (!focused) return cancelCountdown();
     if (count > 1) {
       haptics.tap();
@@ -231,7 +246,7 @@ export function CameraScreen() {
         style={StyleSheet.absoluteFill}
         facing={facing}
         animateShutter={false}
-        active={focused}
+        active={focused && !viewShot}
         onCameraReady={() => setReady(true)}
         onMountError={() => Alert.alert(t('camera.error'))}
       />
@@ -350,11 +365,7 @@ export function CameraScreen() {
           </View>
 
           <View className="absolute inset-x-0 items-center gap-5.5" style={{ bottom: footerInset }}>
-            <PoseStrip
-              shots={shots}
-              active={pose}
-              onSelect={(p) => useBodyCheckStore.getState().setPose(p)}
-            />
+            <PoseStrip shots={shots} active={pose} onSelect={selectPose} />
             <CaptureRow
               start={
                 <CameraSideButton
@@ -366,12 +377,12 @@ export function CameraScreen() {
                 </CameraSideButton>
               }
               end={
-                taken ? (
+                finished ? (
                   <DonePill
                     label={t('common:actions.done')}
                     count={taken}
                     disabled={busy}
-                    onPress={() => router.push('/body-check/review')}
+                    onPress={() => router.push('/body-check/analysis')}
                   />
                 ) : null
               }
@@ -386,6 +397,16 @@ export function CameraScreen() {
           </View>
         </>
       )}
+
+      {viewPose && viewShot ? (
+        <ShotView
+          pose={viewPose}
+          shot={viewShot}
+          strip={<PoseStrip shots={shots} active={viewPose} onSelect={selectPose} viewing />}
+          onClose={() => useBodyCheckStore.getState().view(null)}
+          onRetake={() => useBodyCheckStore.getState().retake(viewPose)}
+        />
+      ) : null}
 
       <ShutterFlash opacity={flash.opacity} />
     </View>

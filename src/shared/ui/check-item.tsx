@@ -32,6 +32,16 @@ const SIZES = {
   sm: { size: 24, glyph: 14 },
 } as const;
 
+/** A short point as a pill: the accent check and a few words (onboarding 00, 08·0A). */
+export function CheckChip({ label }: { label: string }) {
+  return (
+    <View className="h-8.5 flex-row items-center gap-2 rounded-full bg-elevated pr-3.5 pl-1.5">
+      <CheckBadge size={22} glyph={10} />
+      <Text variant="caption">{label}</Text>
+    </View>
+  );
+}
+
 export interface CheckItemProps {
   /** Row text; nest a second Text for a lighter tail. */
   children: ReactNode;

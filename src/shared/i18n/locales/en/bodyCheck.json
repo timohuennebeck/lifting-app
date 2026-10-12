@@ -53,11 +53,9 @@
     "keep": "Keep going",
     "confirm": "Discard"
   },
-  "review": {
-    "title": "Looks good?",
-    "subtitle": "Check that every photo is sharp and shows you from head to at least your knees.",
-    "rejectedSubtitle": "The analysis couldn’t read every photo. Retake the marked ones.",
-    "noPhoto": "No photo yet",
+  "photo": {
+    "ok": "Photo looks good",
+    "retake": "Retake photo",
     "issues": {
       "blurry": "Blurry",
       "dark": "Too dark",
@@ -65,21 +63,7 @@
       "wrongPose": "Wrong pose",
       "noPerson": "Nobody found",
       "clothing": "Clothes hide body"
-    },
-    "retakePhoto": "Retake photo",
-    "takePhoto": "Take photo",
-    "take": {
-      "front": "Take front photo",
-      "side": "Take side photo",
-      "back": "Take back photo"
-    },
-    "retake": {
-      "front": "Retake front photo",
-      "side": "Retake side photo",
-      "back": "Retake back photo"
-    },
-    "cta": "Continue to analysis",
-    "continueAnyway": "Continue anyway"
+    }
   },
   "analysis": {
     "title": "Body check",
@@ -98,6 +82,11 @@
       "notPro": "The analysis needs Traqa Pro.",
       "refused": "We can’t analyse these photos. Please retake them in sportswear or underwear.",
       "failed": "The analysis didn't work. Please try again."
+    },
+    "row": {
+      "done": "Captured",
+      "active": "Measuring your body …",
+      "waiting": "Waiting …"
     }
   },
   "result": {

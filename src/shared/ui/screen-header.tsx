@@ -13,6 +13,8 @@ export interface ScreenHeaderProps {
   icon?: 'chevron-left' | 'chevron-left-thin' | 'close' | null;
   /** Defaults to `router.back()`. */
   onBack?: () => void;
+  /** Replaces the leading button. */
+  leading?: ReactNode;
   /** A string renders as a centred one-line title. */
   title?: ReactNode;
   /** Trailing button; an empty slot of the same size keeps the title centred. */
@@ -25,6 +27,7 @@ export interface ScreenHeaderProps {
 export function ScreenHeader({
   icon = 'chevron-left',
   onBack,
+  leading,
   title,
   action,
   className,
@@ -32,15 +35,16 @@ export function ScreenHeader({
   const { t } = useTranslation();
   return (
     <View className={cn('flex-row items-center gap-3 px-4 py-1.5', className)}>
-      {icon ? (
-        <IconButton
-          icon={icon}
-          accessibilityLabel={t(icon === 'close' ? 'actions.close' : 'actions.back')}
-          onPress={onBack ?? (() => router.back())}
-        />
-      ) : (
-        <View className="size-10.5" />
-      )}
+      {leading ??
+        (icon ? (
+          <IconButton
+            icon={icon}
+            accessibilityLabel={t(icon === 'close' ? 'actions.close' : 'actions.back')}
+            onPress={onBack ?? (() => router.back())}
+          />
+        ) : (
+          <View className="size-10.5" />
+        ))}
       <View className="min-w-0 flex-1">
         {typeof title === 'string' ? (
           <Text variant="bodyStrong" numberOfLines={1} className="text-center">
