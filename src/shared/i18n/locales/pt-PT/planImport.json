@@ -48,9 +48,15 @@
       "A ler a caligrafia …",
       "A detetar exercícios …",
       "A associar dias da semana …",
-      "A aplicar os pesos …"
+      "A aplicar séries e repetições …"
     ],
-    "error": "Não conseguimos ler este plano. Tenta novamente."
+    "errors": {
+      "failed": "Não conseguimos ler este plano. Tenta novamente.",
+      "offline": "Sem ligação. Verifica a internet e tenta novamente.",
+      "limit": "Hoje já não são possíveis mais importações. Tenta amanhã ou cria um plano.",
+      "notAPlan": "Isto não parece um plano de treino. Tenta outra foto ou outro ficheiro.",
+      "tooLarge": "O ficheiro é demasiado grande. Usa um mais pequeno (até 15 MB)."
+    }
   },
   "confirm": {
     "planName": "Nome do plano",
@@ -64,7 +70,8 @@
     "check_other": "Rever {{count}} pontos",
     "empty": "Ainda sem exercícios. Adiciona um com +.",
     "newDay": "Treino {{number}}",
-    "renamePlan": "Mudar o nome do plano"
+    "renamePlan": "Mudar o nome do plano",
+    "newExercise": "Novo · criado como exercício próprio"
   },
   "errors": {
     "file": "Não foi possível abrir o ficheiro.",

@@ -123,15 +123,22 @@ interface CustomExerciseState {
   exercises: Record<string, CustomExercise>;
   /** Set once the local database was read, so ids of custom exercises resolve from the start. */
   loaded: boolean;
+  /**
+   * Exercises an onboarding plan import found that aren't in the catalog: shown by name in the
+   * plan before the account exists, created with it (see the onboarding store).
+   */
+  drafts: Record<string, CustomExercise>;
 }
 
 /** The user's own exercises, mirrored from the local database by `useCustomExerciseSync`. */
 export const useCustomExerciseStore = create<CustomExerciseState>(() => ({
   exercises: {},
   loaded: false,
+  drafts: {},
 }));
 
 const customExercises = () => useCustomExerciseStore.getState().exercises;
+const draftExercise = (id: string) => useCustomExerciseStore.getState().drafts[id];
 
 const derived = new WeakMap<ExerciseRow | CustomExercise, Exercise>();
 
@@ -184,7 +191,7 @@ const exerciseOf = (row: ExerciseRow | undefined, custom: CustomExercise | undef
   row ? toExercise(row) : custom ? fromCustom(custom) : undefined;
 
 export const getExercise = (id: string): Exercise | undefined =>
-  exerciseOf(useCatalogStore.getState().rows[id], customExercises()[id]);
+  exerciseOf(useCatalogStore.getState().rows[id], customExercises()[id] ?? draftExercise(id));
 
 // Render code reads exercises through these hooks: the React Compiler keeps what a plain lookup
 // returned for the same id, so a catalog update or an edit of the user's own exercise wouldn't show.
@@ -192,14 +199,14 @@ export const getExercise = (id: string): Exercise | undefined =>
 /** `getExercise`, re-rendering when the exercise changes. */
 export function useExercise(id: string) {
   const row = useCatalogStore((s) => s.rows[id]);
-  const custom = useCustomExerciseStore((s) => s.exercises[id]);
+  const custom = useCustomExerciseStore((s) => s.exercises[id] ?? s.drafts[id]);
   return exerciseOf(row, custom);
 }
 
 /** `exerciseName`, re-rendering when the exercise changes. */
 export function useExerciseName(id: string, language: string) {
   const row = useCatalogStore((s) => s.rows[id]);
-  const custom = useCustomExerciseStore((s) => s.exercises[id]);
+  const custom = useCustomExerciseStore((s) => s.exercises[id] ?? s.drafts[id]);
   return nameOf(row, custom, language) ?? id;
 }
 
@@ -236,7 +243,7 @@ const nameOf = (
  * rendering names passes the user's exercises from `useCustomExerciseStore` (see `useExercise`).
  */
 export const exerciseName = (id: string, language = i18n.language, custom = customExercises()) =>
-  nameOf(useCatalogStore.getState().rows[id], custom[id], language) ?? id;
+  nameOf(useCatalogStore.getState().rows[id], custom[id] ?? draftExercise(id), language) ?? id;
 
 export function exerciseInstructions(id: string, language = i18n.language): TechniqueStep[] {
   return localized(useCatalogStore.getState().rows[id]?.instructions, language) ?? [];

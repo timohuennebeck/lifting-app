@@ -5,7 +5,7 @@ import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 import { type CustomExercise, type Measure, targetsFor, useCustomExerciseStore } from './exercises';
 import { newId, nowIso, parseJson } from './json';
-import { drizzle } from './powersync/database';
+import { drizzle, type Executor } from './powersync/database';
 import {
   type CustomExerciseRecord,
   customExercises,
@@ -57,12 +57,25 @@ const columns = (draft: CustomExerciseDraft) => ({
   rest_seconds: draft.restSeconds,
 });
 
+/** Adds custom exercises under the ids plans already reference (an imported plan's). */
+export async function insertCustomExercises(
+  db: Executor,
+  userId: string,
+  exercises: CustomExercise[],
+) {
+  if (!exercises.length) return;
+  const createdAt = nowIso();
+  await db
+    .insert(customExercises)
+    .values(
+      exercises.map((e) => ({ id: e.id, user_id: userId, ...columns(e), created_at: createdAt })),
+    );
+}
+
 /** Adds a custom exercise; returns its id, which plans and workouts reference. */
 export async function createCustomExercise(userId: string, draft: CustomExerciseDraft) {
   const id = newId();
-  await drizzle
-    .insert(customExercises)
-    .values({ id, user_id: userId, ...columns(draft), created_at: nowIso() });
+  await insertCustomExercises(drizzle, userId, [{ ...draft, id, archived: false }]);
   return id;
 }
 

@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SwipeTabs } from '@/shared/components/swipe-tabs';
 import { archiveCustomExercise } from '@/shared/data/custom-exercises';
-import { useExercise, useExerciseName } from '@/shared/data/exercises';
+import { useCustomExerciseStore, useExercise, useExerciseName } from '@/shared/data/exercises';
 import { haptics } from '@/shared/lib/haptics';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { ActionSheet } from '@/shared/ui/action-sheet';
@@ -45,6 +45,8 @@ export function ExerciseLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const exercise = useExercise(exerciseId);
   const name = useExerciseName(exerciseId, i18n.language);
+  // An imported plan's new exercise isn't saved before sign-up: nothing to edit yet.
+  const saved = useCustomExerciseStore((s) => !!s.exercises[exerciseId]);
   const back = (
     <View className="absolute left-4" style={{ top: insets.top + 16 }}>
       <IconButton
@@ -58,7 +60,7 @@ export function ExerciseLayout() {
   if (!exercise) return <View className="flex-1 bg-bg">{back}</View>;
 
   // The user's own exercises can be edited or deleted; a deleted one only keeps its history.
-  const editable = !!exercise.custom && exercise.isActive;
+  const editable = saved && exercise.isActive;
 
   const onMenu = (action: 'edit' | 'delete') => {
     setMenuOpen(false);

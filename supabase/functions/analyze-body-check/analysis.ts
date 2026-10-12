@@ -205,29 +205,3 @@ export function toAnalysis(output: ModelOutput): Analysis {
     },
   };
 }
-
-interface ResponseContent {
-  type: string;
-  text?: string;
-  refusal?: string;
-}
-
-interface ResponsesApiResult {
-  status?: string;
-  output?: { type: string; content?: ResponseContent[] }[];
-}
-
-/** The answer text of a Responses API result, or why there is none. */
-export function readResponse(
-  body: ResponsesApiResult,
-): { text: string } | { refusal: string } | { incomplete: string } {
-  if (body.status && body.status !== 'completed') return { incomplete: body.status };
-  for (const item of body.output ?? []) {
-    if (item.type !== 'message') continue;
-    for (const content of item.content ?? []) {
-      if (content.type === 'refusal') return { refusal: content.refusal ?? '' };
-      if (content.type === 'output_text' && content.text) return { text: content.text };
-    }
-  }
-  return { incomplete: 'no_text' };
-}

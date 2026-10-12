@@ -46,7 +46,8 @@ powersync/             self-hosted service config, sync streams, docker compose
 
 ## Scripts
 
-`npm run typecheck`, `npm run lint`, `npm run format`, `npm run supabase:reset`.
+`npm run typecheck`, `npm run lint`, `npm run format`, `npm run supabase:reset`, `npm run plan:eval`
+(plan import test, see below).
 
 ## Support tickets (team side)
 
@@ -105,6 +106,24 @@ standard API at `api.openai.com`) and returns the check's values, or the photos 
 - **Rules (server-side):** adults only (18+ by the profile's birth date), at most 5 analyses per user in 24 hours.
 - **`body_check_analyses`:** one row per analysis, server-only. Saving a check takes its score, values
   and time from the analysis; a check without one is rejected.
+
+## Plan import
+
+In onboarding, users can import their plan from photos or a file (PDF, Excel, CSV, text) instead of
+creating one. The app shrinks photos to JPEGs and calls the `analyze-plan` Edge Function, which sends
+them to OpenAI together with the exercise catalog and returns the plan in the app's shape: each line
+matched to a catalog exercise, or a new exercise the app creates for the user at sign-up. Lines it
+isn't sure about come with alternatives for the user to review.
+
+- **Secrets:** the same `OPENAI_API_KEY` and `OPENAI_MODEL` as the body check.
+- **Rules (server-side):** it runs before there is an account, so imports are limited per network
+  (`PLAN_IMPORT_IP_LIMIT`, default 10) and in total (`PLAN_IMPORT_DAILY_LIMIT`, default 1,000) per
+  24 hours. `plan_import_requests` keeps a keyed hash of the IP, never the IP itself.
+- **Testing:** `npm run plan:eval` sends the 15 test plans in `scripts/plan-import-eval/fixtures`
+  (typed, spreadsheet, handwritten, whiteboard, screenshot; German, English, Portuguese) to the
+  function and scores what it read against `cases.json`. `npm run plan:eval -- --dir <folder>` reads
+  your own photos and files and prints what it found. One run is 15 imports, so set
+  `PLAN_IMPORT_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
 
 ## Google Sign-In
 

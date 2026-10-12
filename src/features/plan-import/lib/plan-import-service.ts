@@ -1,7 +1,10 @@
-import type { PlanDayDraft, PlanDraft, PlanExerciseDraft } from '@/shared/data/templates';
-import { wait } from '@/shared/lib/async';
+import { FunctionsFetchError, FunctionsHttpError } from '@supabase/supabase-js';
+import { File } from 'expo-file-system';
+import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 
-import { MOCK_IMPORT_DAYS } from './mock-import-data';
+import type { CustomExercise } from '@/shared/data/exercises';
+import { supabase } from '@/shared/data/supabase';
+import type { PlanDayDraft, PlanDraft, PlanExerciseDraft } from '@/shared/data/templates';
 
 export interface ImportPhoto {
   uri: string;
@@ -35,6 +38,8 @@ export interface ImportedDay extends PlanDayDraft {
 /** A detected plan; still a valid `PlanDraft`, plus review hints for uncertain lines. */
 export interface ImportedPlan extends PlanDraft {
   days: ImportedDay[];
+  /** Exercises the plan uses that the catalog doesn't have; created with the account. */
+  newExercises: CustomExercise[];
 }
 
 export interface AnalyzePlanInput {
@@ -43,28 +48,83 @@ export interface AnalyzePlanInput {
   language: string;
 }
 
-const MOCK_LATENCY_MS = 2400;
+export type ImportFailure = 'offline' | 'limit' | 'notAPlan' | 'tooLarge' | 'failed';
 
-/**
- * Reads a training plan from photos or a document.
- * MOCK: returns a fixed sample plan. Replace the body with
- * `supabase.functions.invoke('analyze-plan', …)` once the Edge Function exists.
- */
-export async function analyzePlan({ source }: AnalyzePlanInput): Promise<ImportedPlan> {
-  await wait(MOCK_LATENCY_MS);
-  return {
-    name: source.kind === 'file' ? titleFromFileName(source.file.name) : 'Push Pull Legs',
-    days: JSON.parse(JSON.stringify(MOCK_IMPORT_DAYS)) as ImportedDay[],
-  };
+export class ImportError extends Error {
+  constructor(readonly reason: ImportFailure) {
+    super(`Plan import failed: ${reason}`);
+  }
 }
 
-/** "Trainingsplan_Herbst.pdf" → "Trainingsplan Herbst" (max 30 chars). */
-function titleFromFileName(name: string) {
-  const base = name
-    .replace(/\.[^.]+$/, '')
-    .replace(/[_-]+/g, ' ')
-    .trim();
-  return (base || 'Plan').slice(0, 30);
+const SERVER_ERRORS: Record<string, ImportFailure> = {
+  limit: 'limit',
+  not_a_plan: 'notAPlan',
+  too_large: 'tooLarge',
+};
+
+/** Longest side photos are shrunk to: plenty for handwriting, small enough to send quickly. */
+const MAX_SIDE = 2000;
+
+/** The image as a JPEG in base64, shrunk to MAX_SIDE (also turns HEIC into something readable). */
+async function jpegBase64(uri: string) {
+  const context = ImageManipulator.manipulate(uri);
+  const original = await context.renderAsync();
+  const { width, height } = original;
+  original.release();
+  if (Math.max(width, height) > MAX_SIDE) {
+    context.resize(width >= height ? { width: MAX_SIDE } : { height: MAX_SIDE });
+  }
+  const image = await context.renderAsync();
+  try {
+    const saved = await image.saveAsync({ compress: 0.75, format: SaveFormat.JPEG, base64: true });
+    return saved.base64 ?? '';
+  } finally {
+    image.release();
+    context.release();
+  }
+}
+
+async function requestBody(source: ImportSource) {
+  if (source.kind === 'photos') {
+    return { photos: await Promise.all(source.photos.map((p) => jpegBase64(p.uri))) };
+  }
+  const { file } = source;
+  if (file.mimeType?.startsWith('image/')) {
+    return { file: { name: file.name, mimeType: 'image/jpeg', data: await jpegBase64(file.uri) } };
+  }
+  const data = await new File(file.uri).base64();
+  return { file: { name: file.name, mimeType: file.mimeType ?? '', data } };
+}
+
+async function failureOf(error: unknown): Promise<ImportFailure> {
+  if (error instanceof FunctionsFetchError) return 'offline';
+  if (error instanceof FunctionsHttpError) {
+    const response = error.context as Response;
+    const text = await response.text().catch(() => '');
+    console.warn(`analyze-plan answered ${response.status}: ${text.slice(0, 300)}`);
+    try {
+      return SERVER_ERRORS[JSON.parse(text)?.error] ?? 'failed';
+    } catch {
+      return 'failed';
+    }
+  }
+  console.warn('analyze-plan could not be called', error);
+  return 'failed';
+}
+
+/**
+ * Reads a training plan from photos or a file with the analyze-plan Edge Function. Throws an
+ * ImportError with the reason when there is no plan to show.
+ */
+export async function analyzePlan({ source, language }: AnalyzePlanInput): Promise<ImportedPlan> {
+  const { data, error } = await supabase.functions.invoke<{
+    plan: Omit<ImportedPlan, 'newExercises'> & {
+      newExercises: Omit<CustomExercise, 'archived'>[];
+    };
+  }>('analyze-plan', { body: { ...(await requestBody(source)), language } });
+  if (error || !data?.plan) throw new ImportError(error ? await failureOf(error) : 'failed');
+  const { plan } = data;
+  return { ...plan, newExercises: plan.newExercises.map((e) => ({ ...e, archived: false })) };
 }
 
 /** Drops review hints and empty days so the plan can be stored. */

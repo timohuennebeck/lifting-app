@@ -6,6 +6,7 @@
 import { encodeBase64 } from 'jsr:@std/encoding@1/base64';
 
 import { admin, reply, requestUser } from '../_shared/common.ts';
+import { askStructured, openAiConfigured } from '../_shared/openai.ts';
 import {
   ageFrom,
   type AnalysisProfile,
@@ -16,7 +17,6 @@ import {
   type Photos,
   POSES,
   type PreviousCheck,
-  readResponse,
   SCHEMA,
   toAnalysis,
 } from './analysis.ts';
@@ -26,13 +26,9 @@ const BUCKET = 'body-checks';
 const MIN_AGE = 18;
 /** Analyses per user in 24 hours, retakes included; each one is an OpenAI call. */
 const DAILY_LIMIT = 5;
-const OPENAI_URL = 'https://api.openai.com/v1/responses';
 const OPENAI_TIMEOUT_MS = 120_000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
-const OPENAI_MODEL = Deno.env.get('OPENAI_MODEL') ?? 'gpt-6.1-sol';
-const OPENAI_REASONING_EFFORT = Deno.env.get('OPENAI_REASONING_EFFORT');
 const REVENUECAT_SECRET_KEY = Deno.env.get('REVENUECAT_SECRET_KEY');
 /** RevenueCat entitlement that unlocks Traqa Pro (same as the app). */
 const PRO_ENTITLEMENT = 'pro';
@@ -80,31 +76,18 @@ async function hasPro(userId: string) {
   }
 }
 
-async function askModel(content: ReturnType<typeof modelInput>) {
-  const response = await fetch(OPENAI_URL, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: OPENAI_MODEL,
-      instructions: INSTRUCTIONS,
-      input: [{ role: 'user', content }],
-      text: { format: { type: 'json_schema', name: 'body_check', strict: true, schema: SCHEMA } },
-      ...(OPENAI_REASONING_EFFORT ? { reasoning: { effort: OPENAI_REASONING_EFFORT } } : {}),
-      // Nothing about the photos is kept for later retrieval.
-      store: false,
-    }),
-    signal: AbortSignal.timeout(OPENAI_TIMEOUT_MS),
+const askModel = (content: ReturnType<typeof modelInput>) =>
+  askStructured({
+    instructions: INSTRUCTIONS,
+    content,
+    name: 'body_check',
+    schema: SCHEMA,
+    timeoutMs: OPENAI_TIMEOUT_MS,
   });
-  if (!response.ok) {
-    console.error('OpenAI request failed', response.status, await response.text());
-    return { upstream: response.status };
-  }
-  return readResponse(await response.json());
-}
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return reply(405, { error: 'method_not_allowed' });
-  if (!OPENAI_API_KEY) {
+  if (!openAiConfigured()) {
     console.error('OPENAI_API_KEY is not set (supabase/functions/.env)');
     return reply(500, { error: 'not_configured' });
   }

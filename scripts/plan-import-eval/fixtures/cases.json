@@ -1,0 +1,1370 @@
+[
+  {
+    "id": "01-typed-ppl-de",
+    "title": "Typed PDF table, German PPL with weekdays, RIR, rest and weights",
+    "files": ["01-typed-ppl-de.pdf"],
+    "as": "file",
+    "language": "de",
+    "expect": {
+      "days": [
+        {
+          "weekday": 0,
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [6, 8],
+              "rir": 2,
+              "rest": 180
+            },
+            {
+              "ex": ["incline-dumbbell-press"],
+              "sets": 3,
+              "reps": [8, 10],
+              "rir": 2,
+              "rest": 120
+            },
+            {
+              "ex": ["dumbbell-shoulder-press"],
+              "sets": 3,
+              "reps": [10, 10],
+              "rir": 1,
+              "rest": 120
+            },
+            {
+              "ex": ["lateral-raise"],
+              "sets": 4,
+              "reps": [12, 15],
+              "rir": 1,
+              "rest": 60
+            },
+            {
+              "ex": ["rope-pushdown"],
+              "sets": 3,
+              "reps": [12, 12],
+              "rir": 1,
+              "rest": 60
+            }
+          ]
+        },
+        {
+          "weekday": 2,
+          "exercises": [
+            {
+              "ex": ["pull-up"],
+              "sets": 4,
+              "reps": [6, 10],
+              "rir": 2
+            },
+            {
+              "ex": ["barbell-row"],
+              "sets": 4,
+              "reps": [8, 8],
+              "rir": 2
+            },
+            {
+              "ex": ["seated-cable-row"],
+              "sets": 3,
+              "reps": [10, 12]
+            },
+            {
+              "ex": ["face-pull"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["ez-bar-curl"],
+              "sets": 3,
+              "reps": [10, 10]
+            }
+          ]
+        },
+        {
+          "weekday": 4,
+          "exercises": [
+            {
+              "ex": ["squat"],
+              "sets": 4,
+              "reps": [5, 5],
+              "rir": 2,
+              "rest": 180
+            },
+            {
+              "ex": ["romanian-deadlift"],
+              "sets": 3,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["leg-press"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["seated-leg-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["calf-raise"],
+              "sets": 4,
+              "reps": [15, 15]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "02-upper-lower-en",
+    "title": "Spreadsheet, English upper/lower with RPE and abbreviations, no weekdays",
+    "files": ["02-upper-lower-en.xlsx"],
+    "as": "file",
+    "language": "en",
+    "expect": {
+      "days": [
+        {
+          "weekday": null,
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [5, 5],
+              "rir": 2,
+              "rest": 180
+            },
+            {
+              "ex": ["pull-up"],
+              "sets": 4,
+              "reps": [6, 6],
+              "rir": 2
+            },
+            {
+              "ex": ["dumbbell-shoulder-press"],
+              "sets": 3,
+              "reps": [8, 10],
+              "rir": 2
+            },
+            {
+              "ex": ["chest-supported-dumbbell-row", "chest-supported-t-bar-row", "machine-row"],
+              "sets": 3,
+              "reps": [10, 12],
+              "rir": 1
+            },
+            {
+              "ex": ["cable-lateral-raise"],
+              "sets": 3,
+              "reps": [15, 15],
+              "rir": 1
+            }
+          ]
+        },
+        {
+          "weekday": null,
+          "exercises": [
+            {
+              "ex": ["squat"],
+              "sets": 4,
+              "reps": [5, 5],
+              "rir": 2
+            },
+            {
+              "ex": ["romanian-deadlift"],
+              "sets": 3,
+              "reps": [8, 8],
+              "rir": 2
+            },
+            {
+              "ex": ["walking-lunge"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["lying-leg-curl"],
+              "sets": 3,
+              "reps": [10, 12],
+              "rir": 1
+            },
+            {
+              "ex": ["calf-raise"],
+              "sets": 4,
+              "reps": [10, 10]
+            }
+          ]
+        },
+        {
+          "weekday": null,
+          "exercises": [
+            {
+              "ex": ["incline-dumbbell-press"],
+              "sets": 4,
+              "reps": [8, 10]
+            },
+            {
+              "ex": ["lat-pulldown"],
+              "sets": 4,
+              "reps": [10, 12]
+            },
+            {
+              "ex": ["pec-deck"],
+              "sets": 3,
+              "reps": [12, 15]
+            },
+            {
+              "ex": ["one-arm-dumbbell-row"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["ez-bar-curl"],
+              "sets": 3,
+              "reps": [10, 12]
+            },
+            {
+              "ex": ["overhead-cable-extension"],
+              "sets": 3,
+              "reps": [12, 12]
+            }
+          ]
+        },
+        {
+          "weekday": null,
+          "exercises": [
+            {
+              "ex": ["deadlift"],
+              "sets": 3,
+              "reps": [3, 5],
+              "rir": 3
+            },
+            {
+              "ex": ["hack-squat"],
+              "sets": 3,
+              "reps": [8, 10]
+            },
+            {
+              "ex": ["leg-extension"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["hip-thrust"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["hanging-leg-raise"],
+              "sets": 3,
+              "reps": [12, 12]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "03-fullbody-en",
+    "title": "CSV, English full body with holds, carries and AMRAP",
+    "files": ["03-fullbody-en.csv"],
+    "as": "file",
+    "language": "en",
+    "expect": {
+      "days": [
+        {
+          "weekday": 0,
+          "exercises": [
+            {
+              "ex": ["squat"],
+              "sets": 3,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["bench-press"],
+              "sets": 3,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["barbell-row"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["plank"],
+              "sets": 3,
+              "seconds": 45
+            }
+          ]
+        },
+        {
+          "weekday": 2,
+          "exercises": [
+            {
+              "ex": ["deadlift"],
+              "sets": 3,
+              "reps": [5, 5]
+            },
+            {
+              "ex": ["overhead-press"],
+              "sets": 3,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["chin-up"],
+              "sets": 3,
+              "reps": "none"
+            },
+            {
+              "ex": ["side-plank"],
+              "sets": 3,
+              "seconds": 30
+            }
+          ]
+        },
+        {
+          "weekday": 4,
+          "exercises": [
+            {
+              "ex": ["front-squat"],
+              "sets": 3,
+              "reps": [6, 6]
+            },
+            {
+              "ex": ["dip"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["seated-cable-row", "wide-grip-cable-row"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["farmers-walk"],
+              "sets": 3,
+              "seconds": 40
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "04-phone-notes-en",
+    "title": "Phone notes, English gym slang, RPE notation and a superset",
+    "files": ["04-phone-notes-en.txt"],
+    "as": "file",
+    "language": "en",
+    "expect": {
+      "days": [
+        {
+          "weekday": 0,
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [6, 8],
+              "rir": 2
+            },
+            {
+              "ex": ["incline-dumbbell-press"],
+              "sets": 3,
+              "reps": [8, 10]
+            },
+            {
+              "ex": ["overhead-press"],
+              "sets": 3,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["lateral-raise"],
+              "sets": 4,
+              "reps": [12, 15]
+            },
+            {
+              "ex": ["rope-pushdown"],
+              "sets": 4,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["french-press"],
+              "sets": 3,
+              "reps": [10, 10]
+            }
+          ]
+        },
+        {
+          "weekday": 1,
+          "exercises": [
+            {
+              "ex": ["rack-pull"],
+              "sets": 3,
+              "reps": [5, 5]
+            },
+            {
+              "ex": ["lat-pulldown"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["one-arm-dumbbell-row", "bent-over-dumbbell-row"],
+              "sets": 2,
+              "reps": [15, 20]
+            },
+            {
+              "ex": ["cable-rear-delt-fly"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["bayesian-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["hammer-curl"],
+              "sets": 3,
+              "reps": [10, 10]
+            }
+          ]
+        },
+        {
+          "weekday": 3,
+          "exercises": [
+            {
+              "ex": ["squat"],
+              "sets": 5,
+              "reps": [5, 5]
+            },
+            {
+              "ex": ["bulgarian-split-squat"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["leg-extension"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["stiff-leg-deadlift"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["seated-calf-raise"],
+              "sets": 4,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["hanging-leg-raise"],
+              "sets": 3,
+              "reps": "none"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "05-notebook-de",
+    "title": "Handwritten notebook page, German abbreviations (BD, KH, LH, SZ)",
+    "files": ["05-notebook-de.jpg"],
+    "as": "photos",
+    "language": "de",
+    "expect": {
+      "days": [
+        {
+          "weekday": 0,
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["incline-dumbbell-press"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["pec-deck", "cable-crossover"],
+              "sets": 3,
+              "reps": [12, 15]
+            },
+            {
+              "ex": ["dumbbell-shoulder-press"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["lateral-raise"],
+              "sets": 4,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["dip"],
+              "sets": 3,
+              "reps": "none"
+            }
+          ]
+        },
+        {
+          "weekday": 1,
+          "exercises": [
+            {
+              "ex": ["pull-up"],
+              "sets": 4,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["barbell-row"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["close-grip-lat-pulldown"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["reverse-pec-deck"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["ez-bar-curl"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["hammer-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            }
+          ]
+        },
+        {
+          "weekday": 3,
+          "exercises": [
+            {
+              "ex": ["squat"],
+              "sets": 4,
+              "reps": [6, 6]
+            },
+            {
+              "ex": ["leg-press"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["leg-extension"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["lying-leg-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["seated-calf-raise"],
+              "sets": 4,
+              "reps": [15, 15]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "06-whiteboard-de",
+    "title": "Gym whiteboard in marker, supersets (A1/A2), glare and wiped leftovers",
+    "files": ["06-whiteboard-de.jpg"],
+    "as": "photos",
+    "language": "de",
+    "expect": {
+      "days": [
+        {
+          "weekday": 4,
+          "exercises": [
+            {
+              "ex": ["ez-bar-curl"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["rope-pushdown"],
+              "sets": 4,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["dumbbell-preacher-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["french-press", "dumbbell-skull-crusher"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["rope-hammer-curl"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["wrist-curl"],
+              "sets": 2,
+              "reps": [20, 20]
+            },
+            {
+              "ex": ["ab-crunch-machine"],
+              "sets": 3,
+              "reps": [15, 15]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "07-caderno-pt-br",
+    "title": "Brazilian ABC split in pencil on squared paper",
+    "files": ["07-caderno-pt-br.jpg"],
+    "as": "photos",
+    "language": "pt-BR",
+    "expect": {
+      "days": [
+        {
+          "weekday": null,
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["incline-dumbbell-press"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["pec-deck"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["rope-pushdown"],
+              "sets": 4,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["french-press", "dumbbell-skull-crusher"],
+              "sets": 3,
+              "reps": [10, 10]
+            }
+          ]
+        },
+        {
+          "weekday": null,
+          "exercises": [
+            {
+              "ex": ["lat-pulldown"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["barbell-row"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["seated-cable-row", "wide-grip-cable-row"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["barbell-curl", "ez-bar-curl"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["hammer-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            }
+          ]
+        },
+        {
+          "weekday": null,
+          "exercises": [
+            {
+              "ex": ["squat"],
+              "sets": 4,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["leg-press"],
+              "sets": 4,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["leg-extension"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["lying-leg-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["calf-raise"],
+              "sets": 4,
+              "reps": [15, 15]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "08-printed-angled-en",
+    "title": "Printed English bro split, photographed tilted and blurry; app language German",
+    "files": ["08-printed-angled-en.jpg"],
+    "as": "photos",
+    "language": "de",
+    "expect": {
+      "days": [
+        {
+          "weekday": 0,
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [8, 10]
+            },
+            {
+              "ex": ["smith-incline-bench-press"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["cable-crossover"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["chest-press-machine"],
+              "sets": 3,
+              "reps": [12, 12]
+            }
+          ]
+        },
+        {
+          "weekday": 1,
+          "exercises": [
+            {
+              "ex": ["deadlift"],
+              "sets": 3,
+              "reps": [5, 5]
+            },
+            {
+              "ex": ["t-bar-row", "chest-supported-t-bar-row"],
+              "sets": 4,
+              "reps": [8, 10]
+            },
+            {
+              "ex": ["lat-pulldown"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["straight-arm-pulldown"],
+              "sets": 3,
+              "reps": [15, 15]
+            }
+          ]
+        },
+        {
+          "weekday": 2,
+          "exercises": [
+            {
+              "ex": ["dumbbell-shoulder-press"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["lateral-raise"],
+              "sets": 4,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["reverse-pec-deck"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["barbell-shrug"],
+              "sets": 3,
+              "reps": [12, 12]
+            }
+          ]
+        },
+        {
+          "weekday": 3,
+          "exercises": [
+            {
+              "ex": ["squat"],
+              "sets": 4,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["leg-press"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["lying-leg-curl", "seated-leg-curl", "standing-leg-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["calf-raise", "seated-calf-raise", "leg-press-calf-raise", "smith-calf-raise"],
+              "sets": 4,
+              "reps": [15, 15]
+            }
+          ]
+        },
+        {
+          "weekday": 4,
+          "exercises": [
+            {
+              "ex": ["barbell-curl"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["close-grip-bench-press"],
+              "sets": 3,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["incline-dumbbell-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["triceps-pushdown", "rope-pushdown"],
+              "sets": 3,
+              "reps": [12, 12]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "09-two-pages-de",
+    "title": "Two photos of one handwritten plan (days 1–2, then 3–4)",
+    "files": ["09-two-pages-de-1.jpg", "09-two-pages-de-2.jpg"],
+    "as": "photos",
+    "language": "de",
+    "expect": {
+      "days": [
+        {
+          "weekday": null,
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 5,
+              "reps": [5, 5]
+            },
+            {
+              "ex": ["barbell-row", "pendlay-row"],
+              "sets": 5,
+              "reps": [5, 5]
+            },
+            {
+              "ex": ["overhead-press"],
+              "sets": 3,
+              "reps": [6, 6]
+            },
+            {
+              "ex": ["pull-up"],
+              "sets": 3,
+              "reps": [8, 8]
+            }
+          ]
+        },
+        {
+          "weekday": null,
+          "exercises": [
+            {
+              "ex": ["squat"],
+              "sets": 5,
+              "reps": [5, 5]
+            },
+            {
+              "ex": ["deadlift"],
+              "sets": 3,
+              "reps": [3, 3]
+            },
+            {
+              "ex": ["leg-press"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["seated-calf-raise"],
+              "sets": 4,
+              "reps": [12, 12]
+            }
+          ]
+        },
+        {
+          "weekday": null,
+          "exercises": [
+            {
+              "ex": ["incline-dumbbell-press"],
+              "sets": 4,
+              "reps": [10, 12]
+            },
+            {
+              "ex": ["lat-pulldown"],
+              "sets": 4,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["cable-lateral-raise"],
+              "sets": 4,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["cable-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["overhead-cable-extension"],
+              "sets": 3,
+              "reps": [12, 12]
+            }
+          ]
+        },
+        {
+          "weekday": null,
+          "exercises": [
+            {
+              "ex": ["hack-squat"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["dumbbell-romanian-deadlift"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["leg-extension"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["lying-leg-curl", "seated-leg-curl", "standing-leg-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["bulgarian-split-squat"],
+              "sets": 3,
+              "reps": [10, 10]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "10-app-screenshot-en",
+    "title": "Screenshot of another workout app, dark mode; app language German",
+    "files": ["10-app-screenshot-en.jpg"],
+    "as": "photos",
+    "language": "de",
+    "expect": {
+      "days": [
+        {
+          "weekday": null,
+          "exercises": [
+            {
+              "ex": ["hip-thrust"],
+              "sets": 4,
+              "reps": [8, 12],
+              "rest": 120
+            },
+            {
+              "ex": ["hack-squat"],
+              "sets": 3,
+              "reps": [10, 10],
+              "rest": 120
+            },
+            {
+              "ex": ["dumbbell-romanian-deadlift"],
+              "sets": 3,
+              "reps": [10, 10],
+              "rest": 90
+            },
+            {
+              "ex": ["hip-abduction-machine"],
+              "sets": 3,
+              "reps": [15, 15],
+              "rest": 60
+            },
+            {
+              "ex": ["seated-leg-curl"],
+              "sets": 3,
+              "reps": [12, 12],
+              "rest": 60
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "11-new-exercises-de",
+    "title": "Exercises the catalog lacks (created as custom; Jefferson Curl twice = one exercise)",
+    "files": ["11-new-exercises-de.txt"],
+    "as": "file",
+    "language": "de",
+    "expect": {
+      "days": [
+        {
+          "weekday": 0,
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [8, 8]
+            },
+            {
+              "new": "Cuban Press",
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "new": "Svend Press",
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "new": "Tate Press",
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "new": "Jefferson Curl",
+              "sets": 3,
+              "reps": [8, 8]
+            }
+          ]
+        },
+        {
+          "weekday": 3,
+          "exercises": [
+            {
+              "ex": ["squat"],
+              "sets": 4,
+              "reps": [6, 6]
+            },
+            {
+              "new": "Reverse Nordic",
+              "sets": 3,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["copenhagen-plank"],
+              "sets": 3,
+              "seconds": 20
+            },
+            {
+              "new": "Suitcase Carry",
+              "ex": ["farmers-walk"],
+              "sets": 3,
+              "seconds": 40
+            },
+            {
+              "new": "Jefferson Curl",
+              "sets": 3,
+              "reps": [8, 8]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "12-not-a-plan-de",
+    "title": "Handwritten shopping list (fitness food), not a plan",
+    "files": ["12-not-a-plan-de.jpg"],
+    "as": "photos",
+    "language": "de",
+    "expect": {
+      "notAPlan": true
+    }
+  },
+  {
+    "id": "13-scan-pt-pt",
+    "title": "Scanned PDF without text layer, European Portuguese (\"Elevações\" = pull-ups)",
+    "files": ["13-scan-pt-pt.pdf"],
+    "as": "file",
+    "language": "pt-PT",
+    "expect": {
+      "days": [
+        {
+          "weekday": 0,
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["incline-dumbbell-press"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["pec-deck"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["overhead-press"],
+              "sets": 3,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["lateral-raise"],
+              "sets": 4,
+              "reps": [15, 15]
+            }
+          ]
+        },
+        {
+          "weekday": 2,
+          "exercises": [
+            {
+              "ex": ["pull-up"],
+              "sets": 4,
+              "reps": [6, 6]
+            },
+            {
+              "ex": ["barbell-row"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["lat-pulldown"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["seated-cable-row", "wide-grip-cable-row"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["barbell-curl", "ez-bar-curl"],
+              "sets": 3,
+              "reps": [10, 10]
+            }
+          ]
+        },
+        {
+          "weekday": 4,
+          "exercises": [
+            {
+              "ex": ["squat"],
+              "sets": 4,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["leg-press"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["leg-extension"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["lying-leg-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["calf-raise"],
+              "sets": 4,
+              "reps": [15, 15]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "14-messy-mixed-de",
+    "title": "Messy German/English notes: crossed-out line, pyramid reps, RPE/RIR, rest, cardio to leave out",
+    "files": ["14-messy-mixed-de.jpg"],
+    "as": "photos",
+    "language": "de",
+    "expect": {
+      "days": [
+        {
+          "weekday": 0,
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 3,
+              "reps": [8, 12],
+              "rir": 1
+            },
+            {
+              "ex": ["cable-crossover", "high-to-low-cable-fly", "low-to-high-cable-fly"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["seated-shoulder-press"],
+              "sets": 3,
+              "reps": [10, 10],
+              "rir": 2,
+              "rest": 90
+            },
+            {
+              "ex": ["lateral-raise", "cable-lateral-raise"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["triceps-pushdown", "rope-pushdown"],
+              "sets": 3,
+              "reps": [12, 15]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "15-week-grid-de",
+    "title": "Week grid PDF (columns Mo–So) with rest days to leave out",
+    "files": ["15-week-grid-de.pdf"],
+    "as": "file",
+    "language": "de",
+    "expect": {
+      "days": [
+        {
+          "weekday": 0,
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["pec-deck"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["dip"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["rope-pushdown"],
+              "sets": 3,
+              "reps": [12, 12]
+            }
+          ]
+        },
+        {
+          "weekday": 1,
+          "exercises": [
+            {
+              "ex": ["lat-pulldown"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["one-arm-dumbbell-row"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["seated-cable-row", "wide-grip-cable-row"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["dumbbell-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            }
+          ]
+        },
+        {
+          "weekday": 3,
+          "exercises": [
+            {
+              "ex": ["squat"],
+              "sets": 4,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["leg-press"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["lying-leg-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["leg-press-calf-raise"],
+              "sets": 4,
+              "reps": [15, 15]
+            }
+          ]
+        },
+        {
+          "weekday": 4,
+          "exercises": [
+            {
+              "ex": ["smith-shoulder-press"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["lateral-raise"],
+              "sets": 4,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["reverse-pec-deck"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["dumbbell-shrug"],
+              "sets": 3,
+              "reps": [12, 12]
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

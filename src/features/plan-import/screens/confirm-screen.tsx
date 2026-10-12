@@ -63,6 +63,7 @@ export function ConfirmScreen() {
   const items = exerciseItems(exercises);
   const weekdays = t('common:weekdays.long', { returnObjects: true });
   const empty = exercises.length === 0;
+  const newIds = new Set(plan.newExercises.map((e) => e.id));
 
   function editDay(edit: (day: ImportedDay) => ImportedDay) {
     editPlan((p) => editDayAt(p, index, edit));
@@ -186,6 +187,11 @@ export function ConfirmScreen() {
                       router.push({ pathname: '/exercise/[id]', params: { id: e.exerciseId } })
                     }
                   >
+                    {newIds.has(e.exerciseId) ? (
+                      <Text variant="caption" tone="accent" className="pt-1.5 font-inter">
+                        {t('planImport:confirm.newExercise')}
+                      </Text>
+                    ) : null}
                     {e.raw ? (
                       <ReviewPrompt
                         message={t('planImport:confirm.readAs', { raw: e.raw })}

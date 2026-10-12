@@ -48,9 +48,15 @@
       "Lese Handschrift …",
       "Erkenne Übungen …",
       "Ordne Wochentage zu …",
-      "Übernehme Gewichte …"
+      "Übernehme Sätze und Wiederholungen …"
     ],
-    "error": "Wir konnten den Plan nicht lesen. Bitte versuch es noch einmal."
+    "errors": {
+      "failed": "Wir konnten den Plan nicht lesen. Bitte versuch es noch einmal.",
+      "offline": "Keine Verbindung. Prüf dein Internet und versuch es noch einmal.",
+      "limit": "Heute sind keine weiteren Importe möglich. Versuch es morgen wieder oder erstell dir einen Plan.",
+      "notAPlan": "Das sieht nicht nach einem Trainingsplan aus. Versuch ein anderes Foto oder eine andere Datei.",
+      "tooLarge": "Die Datei ist zu groß. Bitte nimm eine kleinere (bis 15 MB)."
+    }
   },
   "confirm": {
     "planName": "Planname",
@@ -64,7 +70,8 @@
     "check_other": "Noch {{count}} Punkte prüfen",
     "empty": "Noch keine Übungen. Füg eine mit + hinzu.",
     "newDay": "Training {{number}}",
-    "renamePlan": "Plan umbenennen"
+    "renamePlan": "Plan umbenennen",
+    "newExercise": "Neu · wird als eigene Übung angelegt"
   },
   "errors": {
     "file": "Die Datei konnte nicht geöffnet werden.",

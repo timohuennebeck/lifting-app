@@ -2,6 +2,7 @@ import { getLocales } from 'expo-localization';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+import { type CustomExercise, useCustomExerciseStore } from '@/shared/data/exercises';
 import type { EquipmentAccess, Experience, Goal, Sex } from '@/shared/data/profile';
 import type { PlanDraft } from '@/shared/data/templates';
 import type { UnitSystem } from '@/shared/lib/format';
@@ -26,6 +27,8 @@ export interface OnboardingDraft {
   sessionMinutes: number;
   /** Plan built by the generator or detected by the import. */
   plan: PlanDraft | null;
+  /** Exercises an imported plan uses that the catalog doesn't have; created with the account. */
+  customExercises: CustomExercise[];
 }
 
 const IMPERIAL_REGIONS = ['US', 'LR', 'MM'];
@@ -45,6 +48,7 @@ const initialDraft = (): OnboardingDraft => ({
   trainingDays: [0, 2, 4],
   sessionMinutes: 60,
   plan: null,
+  customExercises: [],
 });
 
 interface OnboardingState {
@@ -71,6 +75,16 @@ export const useOnboardingStore = create<OnboardingState>()(
     },
   ),
 );
+
+// The draft's own exercises resolve like saved ones, also after a restart (MMKV hydrates on create).
+const showDraftExercises = ({ draft }: OnboardingState) =>
+  useCustomExerciseStore.setState({
+    drafts: Object.fromEntries((draft.customExercises ?? []).map((e) => [e.id, e])),
+  });
+showDraftExercises(useOnboardingStore.getState());
+useOnboardingStore.subscribe((state, previous) => {
+  if (state.draft.customExercises !== previous.draft.customExercises) showDraftExercises(state);
+});
 
 export const useDraft = () => useOnboardingStore((s) => s.draft);
 export const useUpdateDraft = () => useOnboardingStore((s) => s.update);

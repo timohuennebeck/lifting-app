@@ -1,0 +1,309 @@
+// What the model is asked about a training plan and how its answer becomes the plan the app
+// reviews. Plain TypeScript without Deno APIs, so it can be tested outside the Edge runtime.
+
+/** The muscles of `public.muscle`, which custom exercises are tagged with. */
+export const MUSCLES = [
+  'abs',
+  'adductors',
+  'biceps',
+  'calves',
+  'chest',
+  'forearms',
+  'front_delts',
+  'glutes',
+  'hamstrings',
+  'lats',
+  'lower_back',
+  'neck',
+  'obliques',
+  'quads',
+  'rear_delts',
+  'side_delts',
+  'tibialis',
+  'traps',
+  'triceps',
+  'upper_back',
+] as const;
+type Muscle = (typeof MUSCLES)[number];
+
+/** An active row of `public.exercises`, as much as the model needs. */
+export interface CatalogExercise {
+  id: string;
+  name: Record<string, string>;
+  equipment: string;
+  measures: string[];
+}
+
+const MAX_SETS = 10;
+const DEFAULT_SETS = 3;
+const DEFAULT_REST_SECONDS = 90;
+
+export const INSTRUCTIONS = `You read training plans for a strength and bodybuilding app from photos, scans, documents or spreadsheets: printed, typed, handwritten or on a whiteboard, in German, English, Portuguese or a mix, with gym abbreviations.
+
+Return the plan's days in order, and every exercise of a day in order (supersets and circuits one after another). Leave out warm-up notes, cardio blocks and comments that are not exercises.
+
+For each exercise:
+- raw: the line as written, abbreviations included.
+- catalog_id: the catalog exercise that is the same movement with the same equipment. Read abbreviations and slang: KH = Kurzhantel = dumbbell, LH = Langhantel = barbell, SZ = EZ bar, BD = Bankdrücken, KB = kettlebell, "Lat ziehen" = lat pulldown, "Beinstrecker" = leg extension, "Multipresse" / Smith = Smith machine. A variation that has its own catalog entry (incline, close grip, single arm, seated) is that entry.
+- certain: false when the text is hard to read or could be more than one catalog exercise; then give up to 2 alternatives from the catalog, most likely first.
+- new_exercise: only when no catalog exercise is the same movement. Give it a clean name in the plan's language (as a lifter would call it, no sets or reps), its primary and secondary muscles, whether it is timed (holds, carries) and whether a weight is logged. Never create one for something the catalog has under another name. The same new exercise on several days gets exactly the same name each time.
+- sets, reps_min, reps_max: "3x10" = 3 sets of 10 to 10; "4x8-12" = 8 to 12; "3x12/10/8" = 3 sets of 8 to 12; "AMRAP" or "to failure" = no reps. Missing values are null.
+- seconds: for holds and timed sets ("3x30s", "60 Sek."), else null.
+- rir: reps in reserve if written, from RPE as 10 minus RPE; else null.
+- rest_seconds: rest if written ("90s", "2 min"), else null. Ignore weights in kg or lb.
+
+Each day:
+- heading: the day's heading as written ("Tag 1 – Push", "Montag", "Upper A").
+- name: a short day name (at most 24 characters) in the plan's language, e.g. "Push", "Oberkörper A", "Beine".
+- weekday: 0 for Monday to 6 for Sunday, only if the plan names the weekday; else null.
+
+name: the plan's title if it has one, else a short name for the split ("Push Pull Legs", "Ganzkörper"), at most 30 characters.
+
+If the input is not a training plan or cannot be read at all, set is_plan to false and return no days.`;
+
+/** The catalog as the model reads it: one line per exercise with its names in a few languages. */
+export function catalogText(catalog: CatalogExercise[], language: string) {
+  const languages = [...new Set([language, 'de', 'en'])];
+  return catalog
+    .map((e) => {
+      const names = [...new Set(languages.map((l) => e.name[l]).filter(Boolean))].join(' / ');
+      const logs = e.measures.includes('seconds') ? 'timed' : 'reps';
+      return `${e.id} | ${names} | ${e.equipment} | ${logs}`;
+    })
+    .join('\n');
+}
+
+export function contextText(catalog: CatalogExercise[], language: string) {
+  return `App language: ${language}.\n\nCatalog (id | names | equipment | logs):\n${catalogText(catalog, language)}`;
+}
+
+const nullable = (schema: object) => ({ anyOf: [schema, { type: 'null' }] });
+const integer = nullable({ type: 'integer' });
+
+/**
+ * The answer's shape. Catalog ids and muscles are listed, so the model can only pick existing
+ * ones (OpenAI allows 1,000 listed values per schema: enough for twice the catalog for now).
+ */
+export function buildSchema(ids: string[]) {
+  const id = { type: 'string', enum: ids };
+  const muscles = { type: 'array', items: { type: 'string', enum: [...MUSCLES] } };
+  const newExercise = {
+    type: 'object',
+    additionalProperties: false,
+    required: ['name', 'primary', 'secondary', 'timed', 'weighted'],
+    properties: {
+      name: { type: 'string' },
+      primary: muscles,
+      secondary: muscles,
+      timed: { type: 'boolean' },
+      weighted: { type: 'boolean' },
+    },
+  };
+  const exercise = {
+    type: 'object',
+    additionalProperties: false,
+    required: [
+      'raw',
+      'catalog_id',
+      'certain',
+      'alternatives',
+      'new_exercise',
+      'sets',
+      'reps_min',
+      'reps_max',
+      'seconds',
+      'rir',
+      'rest_seconds',
+    ],
+    properties: {
+      raw: { type: 'string' },
+      catalog_id: nullable(id),
+      certain: { type: 'boolean' },
+      alternatives: { type: 'array', items: id },
+      new_exercise: nullable(newExercise),
+      sets: integer,
+      reps_min: integer,
+      reps_max: integer,
+      seconds: integer,
+      rir: integer,
+      rest_seconds: integer,
+    },
+  };
+  return {
+    type: 'object',
+    additionalProperties: false,
+    required: ['is_plan', 'name', 'days'],
+    properties: {
+      is_plan: { type: 'boolean' },
+      name: { type: 'string' },
+      days: {
+        type: 'array',
+        items: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['heading', 'name', 'weekday', 'exercises'],
+          properties: {
+            heading: { type: 'string' },
+            name: { type: 'string' },
+            weekday: integer,
+            exercises: { type: 'array', items: exercise },
+          },
+        },
+      },
+    },
+  };
+}
+
+interface ModelExercise {
+  raw: string;
+  catalog_id: string | null;
+  certain: boolean;
+  alternatives: string[];
+  new_exercise: {
+    name: string;
+    primary: string[];
+    secondary: string[];
+    timed: boolean;
+    weighted: boolean;
+  } | null;
+  sets: number | null;
+  reps_min: number | null;
+  reps_max: number | null;
+  seconds: number | null;
+  rir: number | null;
+  rest_seconds: number | null;
+}
+
+/** The model's answer, forced by `buildSchema`. */
+export interface ModelOutput {
+  is_plan: boolean;
+  name: string;
+  days: { heading: string; name: string; weekday: number | null; exercises: ModelExercise[] }[];
+}
+
+// What the app receives; the same shapes as its ImportedPlan and CustomExercise.
+interface SetTarget {
+  targetMin: number | null;
+  targetMax: number | null;
+  rir: number | null;
+}
+
+export interface ImportedExercise {
+  exerciseId: string;
+  sets: SetTarget[];
+  restSeconds: number | null;
+  /** Set on lines to review: the text as read, and other likely catalog exercises. */
+  raw?: string;
+  alternatives?: string[];
+}
+
+export interface NewExercise {
+  id: string;
+  name: string;
+  primary: Muscle[];
+  secondary: Muscle[];
+  measures: string[];
+  restSeconds: number;
+}
+
+export interface ImportedPlan {
+  name: string;
+  days: { name: string; weekday: number | null; rawDay?: string; exercises: ImportedExercise[] }[];
+  /** Exercises the catalog doesn't have, referenced by id; created for the user with the plan. */
+  newExercises: NewExercise[];
+}
+
+const clampInt = (value: number | null, min: number, max: number) =>
+  value == null || !Number.isFinite(value) ? null : Math.min(max, Math.max(min, Math.round(value)));
+
+const cut = (text: string, max: number) => text.trim().replace(/\s+/g, ' ').slice(0, max).trim();
+
+/** Targets of one set: seconds for timed exercises, else the rep range; RIR is about reps. */
+function setTarget(line: ModelExercise, timed: boolean): SetTarget {
+  if (timed) {
+    // "3x30" on a plank means seconds.
+    const seconds = clampInt(line.seconds ?? line.reps_max ?? line.reps_min, 1, 3600);
+    return { targetMin: seconds, targetMax: seconds, rir: null };
+  }
+  let min = clampInt(line.reps_min ?? line.reps_max, 1, 100);
+  let max = clampInt(line.reps_max ?? line.reps_min, 1, 100);
+  if (min != null && max != null && min > max) [min, max] = [max, min];
+  return { targetMin: min, targetMax: max, rir: clampInt(line.rir, 0, 5) };
+}
+
+/**
+ * The model's answer in the shape the app stores: each set as a row, and every new exercise once
+ * with an id (`newId()`) the plan references. Numbers are kept in the ranges the database
+ * accepts. Null when there is no plan.
+ */
+export function toImportedPlan(
+  output: ModelOutput,
+  catalog: CatalogExercise[],
+  newId: () => string,
+): ImportedPlan | null {
+  if (!output.is_plan) return null;
+  const timedIds = new Set(catalog.filter((e) => e.measures.includes('seconds')).map((e) => e.id));
+  // The same new exercise on two days is one exercise.
+  const created = new Map<string, NewExercise>();
+
+  const newExercise = ({
+    name,
+    primary,
+    secondary,
+    timed,
+    weighted,
+  }: NonNullable<ModelExercise['new_exercise']>) => {
+    const key = cut(name, 60).toLocaleLowerCase();
+    let fresh = created.get(key);
+    if (!fresh && primary.length) {
+      fresh = {
+        id: newId(),
+        name: cut(name, 60),
+        primary: primary as Muscle[],
+        secondary: secondary.filter((m) => !primary.includes(m)) as Muscle[],
+        measures: [...(weighted ? ['weight'] : []), timed ? 'seconds' : 'reps'],
+        restSeconds: DEFAULT_REST_SECONDS,
+      };
+      created.set(key, fresh);
+    }
+    return fresh;
+  };
+
+  const exerciseOf = (line: ModelExercise): ImportedExercise | null => {
+    const fresh = line.catalog_id ? undefined : line.new_exercise && newExercise(line.new_exercise);
+    const id = line.catalog_id ?? fresh?.id;
+    if (!id) return null;
+    const timed = fresh ? fresh.measures.includes('seconds') : timedIds.has(id);
+    const target = setTarget(line, timed);
+    return {
+      exerciseId: id,
+      sets: Array.from({ length: clampInt(line.sets, 1, MAX_SETS) ?? DEFAULT_SETS }, () => ({
+        ...target,
+      })),
+      restSeconds: clampInt(line.rest_seconds, 0, 600),
+      ...(line.certain
+        ? {}
+        : {
+            raw: cut(line.raw, 80),
+            alternatives: line.alternatives.filter((a) => a !== id).slice(0, 2),
+          }),
+    };
+  };
+
+  const days = output.days
+    .map((day) => {
+      const weekday = clampInt(day.weekday, 0, 6);
+      const name = cut(day.name, 24) || cut(day.heading, 24);
+      return {
+        name,
+        weekday,
+        // Without a weekday the user picks one on review; the heading tells them which day it is.
+        ...(weekday == null ? { rawDay: cut(day.heading, 40) || name } : {}),
+        exercises: day.exercises.map(exerciseOf).filter((e) => e !== null),
+      };
+    })
+    .filter((d) => d.exercises.length);
+  if (!days.length) return null;
+
+  return { name: cut(output.name, 30) || 'Plan', days, newExercises: [...created.values()] };
+}

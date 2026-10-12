@@ -48,9 +48,15 @@
       "Reading handwriting …",
       "Detecting exercises …",
       "Matching weekdays …",
-      "Applying weights …"
+      "Applying sets and reps …"
     ],
-    "error": "We couldn't read this plan. Please try again."
+    "errors": {
+      "failed": "We couldn't read this plan. Please try again.",
+      "offline": "No connection. Check your internet and try again.",
+      "limit": "No more imports today. Try again tomorrow or create a plan instead.",
+      "notAPlan": "This doesn't look like a training plan. Try another photo or file.",
+      "tooLarge": "This file is too large. Please use a smaller one (up to 15 MB)."
+    }
   },
   "confirm": {
     "planName": "Plan name",
@@ -64,7 +70,8 @@
     "check_other": "Check {{count}} items",
     "empty": "No exercises yet. Add one with +.",
     "newDay": "Workout {{number}}",
-    "renamePlan": "Rename plan"
+    "renamePlan": "Rename plan",
+    "newExercise": "New · added as your own exercise"
   },
   "errors": {
     "file": "Couldn't open that file.",

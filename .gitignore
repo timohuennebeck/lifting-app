@@ -45,3 +45,6 @@ example
 # env
 .env
 supabase/signing_key.json
+
+# plan import test reports
+scripts/plan-import-eval/out/

@@ -417,6 +417,10 @@ verify_jwt = false
 # Same as above: the function checks the user's token itself.
 verify_jwt = false
 
+[functions.analyze-plan]
+# Called during onboarding, before there is an account; the function limits imports itself.
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 55327

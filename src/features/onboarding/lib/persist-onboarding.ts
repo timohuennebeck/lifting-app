@@ -1,6 +1,7 @@
 import type { User } from '@supabase/supabase-js';
 import { eq } from 'drizzle-orm';
 
+import { insertCustomExercises } from '@/shared/data/custom-exercises';
 import { nowIso } from '@/shared/data/json';
 import { db, drizzle } from '@/shared/data/powersync/database';
 import { profiles } from '@/shared/data/powersync/schema';
@@ -25,6 +26,13 @@ export async function persistOnboarding(userId: string, draft: OnboardingDraft) 
       .get();
     let activeCollectionId = existing?.active_collection_id ?? null;
     if (!activeCollectionId && draft.plan?.days.length) {
+      // Exercises an imported plan found that the catalog doesn't have, as far as it still uses them.
+      const used = new Set(draft.plan.days.flatMap((d) => d.exercises.map((e) => e.exerciseId)));
+      await insertCustomExercises(
+        tx,
+        userId,
+        (draft.customExercises ?? []).filter((e) => used.has(e.id)),
+      );
       activeCollectionId = await insertPlan(tx, userId, draft.plan);
     }
     await saveProfile(
