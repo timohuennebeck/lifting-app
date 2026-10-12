@@ -31,7 +31,7 @@ export function SexScreen() {
           <Button
             label={tc('actions.continue')}
             disabled={!sex}
-            onPress={() => router.push('/age')}
+            onPress={() => router.push('/birth-date')}
           />
           {/* Skipping the question: saves "not specified" and moves on. */}
           <TextButton
@@ -41,7 +41,7 @@ export function SexScreen() {
             textClassName="text-sm"
             onPress={() => {
               update({ sex: 'unspecified' });
-              router.push('/age');
+              router.push('/birth-date');
             }}
             className="min-h-11 self-center"
           />

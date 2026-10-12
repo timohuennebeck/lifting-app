@@ -33,7 +33,7 @@ const STRIP_STYLE = { flexGrow: 0, flexShrink: 0 };
 interface CheckThumbProps {
   check: BodyCheck;
   pose: BodyPose;
-  storagePath?: string | null;
+  storagePath?: string;
   /** The side this check is compared on, if any. */
   side: Side | null;
   onPress: () => void;

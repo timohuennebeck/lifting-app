@@ -57,14 +57,6 @@ export async function saveBodyCheck({ checkId, userId, result, photos }: SaveBod
   deleteDrafts(checkId);
 }
 
-/** Marks a photo as uploaded; PowerSync then syncs the path. */
-export async function setPhotoStoragePath(photoId: string, storagePath: string) {
-  await drizzle
-    .update(bodyCheckPhotos)
-    .set({ storage_path: storagePath })
-    .where(eq(bodyCheckPhotos.id, photoId));
-}
-
 /**
  * Deletes a check with its photos: the rows (synced; local tables have no cascades), the files
  * on this device and, best effort, in storage (offline they stay there).

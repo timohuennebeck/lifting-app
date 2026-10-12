@@ -20,7 +20,7 @@ const SIGNED_URL_STALE_MS = 50 * MINUTE_MS;
 export function usePhotoSource(
   checkId: string,
   pose: BodyPose,
-  storagePath: string | null | undefined,
+  storagePath: string | undefined,
 ): ImageSource | null {
   const localUri = useMemo(() => {
     const file = photoFile(checkId, pose);
@@ -36,6 +36,6 @@ export function usePhotoSource(
   });
   if (localUri) return { uri: localUri };
   // The signed URL changes per request; cache the image under its stable path.
-  if (remote && url) return { uri: url, cacheKey: storagePath ?? undefined };
+  if (remote && url) return { uri: url, cacheKey: storagePath };
   return null;
 }

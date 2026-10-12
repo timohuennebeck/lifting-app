@@ -28,12 +28,6 @@ export interface OnboardingDraft {
   plan: PlanDraft | null;
 }
 
-/** Set targets as drafts stored them before v1 of the persisted state. */
-interface LegacyTargets {
-  repsMin?: number;
-  repsMax?: number;
-}
-
 const IMPERIAL_REGIONS = ['US', 'LR', 'MM'];
 
 const initialDraft = (): OnboardingDraft => ({
@@ -74,31 +68,6 @@ export const useOnboardingStore = create<OnboardingState>()(
     {
       name: 'onboarding',
       storage: createJSONStorage(() => mmkvStorage),
-      version: 2,
-      migrate: (persisted, version) => {
-        const state = persisted as OnboardingState;
-        // v1 renamed plan set targets from repsMin/repsMax to targetMin/targetMax.
-        if (version < 1) {
-          for (const day of state.draft?.plan?.days ?? []) {
-            for (const exercise of day.exercises) {
-              exercise.sets = exercise.sets.map((set) => {
-                const { repsMin, repsMax, ...rest } = set as typeof set & LegacyTargets;
-                return {
-                  ...rest,
-                  targetMin: repsMin ?? set.targetMin,
-                  targetMax: repsMax ?? set.targetMax,
-                };
-              });
-            }
-          }
-        }
-        // v2 asks for the birth date instead of the age.
-        if (version < 2 && state.draft) {
-          delete (state.draft as { age?: number }).age;
-          state.draft.birthDate = null;
-        }
-        return state;
-      },
     },
   ),
 );

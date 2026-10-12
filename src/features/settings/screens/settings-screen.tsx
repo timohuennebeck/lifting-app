@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { countLocalPendingPhotos } from '@/features/body-check/data/body-checks';
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { useUploadQueueStore } from '@/features/support/stores/upload-queue-store';
 import { LanguageSheet } from '@/shared/components/language-sheet';
@@ -59,14 +58,11 @@ export function SettingsScreen() {
     void supabase.auth.signOut();
   };
 
-  // Signing out clears the local database and photo files, including anything not uploaded
-  // yet (queued changes, body-check photos, support screenshots): the sheet warns about those.
+  // Signing out clears the local database and files, including anything not uploaded yet
+  // (queued changes, support screenshots): the sheet warns about those.
   const requestSignOut = async () => {
-    const [{ count: changes }, photos] = await Promise.all([
-      db.getUploadQueueStats(),
-      countLocalPendingPhotos(requireUserId()),
-    ]);
-    setUnsynced(changes + photos + useUploadQueueStore.getState().pending.length);
+    const { count: changes } = await db.getUploadQueueStats();
+    setUnsynced(changes + useUploadQueueStore.getState().pending.length);
     setSheet('signOut');
   };
 

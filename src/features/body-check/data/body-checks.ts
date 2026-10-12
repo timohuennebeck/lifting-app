@@ -19,11 +19,8 @@ export interface BodyCheck {
   createdAt: string;
 }
 
-/**
- * Storage path of each pose's photo in the bucket. New checks are saved with them (the analysis
- * uploads the photos first); an older photo has null until the upload queue has caught up.
- */
-export type CheckPhotos = Partial<Record<BodyPose, string | null>>;
+/** Storage path of each pose's photo in the bucket (the analysis uploads them before the save). */
+export type CheckPhotos = Partial<Record<BodyPose, string>>;
 
 const toChecks = (rows: BodyCheckRecord[]): BodyCheck[] =>
   rows.map((r) => ({
@@ -55,6 +52,7 @@ const photoListQuery = () =>
 function byCheck(rows: RowOf<typeof photoListQuery>[]) {
   const out: Record<string, CheckPhotos> = {};
   for (const r of rows) {
+    if (!r.storage_path) continue;
     out[r.body_check_id] ??= {};
     out[r.body_check_id][r.pose as BodyPose] = r.storage_path;
   }
@@ -69,44 +67,3 @@ export function useBodyCheckPhotos() {
     map: byCheck,
   });
 }
-
-/** Where-clause for the user's photos still waiting for their upload. */
-const awaitingUpload = (userId: string) =>
-  and(isNull(bodyCheckPhotos.storage_path), eq(bodyCheckPhotos.user_id, userId));
-
-/** Number of the user's photos that still wait for their upload. */
-export function usePendingPhotoCount(userId: string | null) {
-  return useDrizzleQuery({
-    queryKey: bodyCheckPhotoKeys.pendingCount(userId ?? '').queryKey,
-    query: drizzle
-      .select({ count: count() })
-      .from(bodyCheckPhotos)
-      .where(awaitingUpload(userId ?? '')),
-    enabled: !!userId,
-    map: firstCount,
-  });
-}
-
-interface PendingPhotoRow {
-  id: string;
-  body_check_id: string;
-  pose: BodyPose;
-}
-
-/** The user's photos that wait for their upload and whose file is on this device. */
-export async function localPendingPhotos(userId: string) {
-  const rows = (await drizzle
-    .select({
-      id: bodyCheckPhotos.id,
-      body_check_id: bodyCheckPhotos.body_check_id,
-      pose: bodyCheckPhotos.pose,
-    })
-    .from(bodyCheckPhotos)
-    .where(awaitingUpload(userId))) as PendingPhotoRow[];
-  // Photos taken on another device that has not uploaded them yet are skipped.
-  return rows.filter((row) => photoFile(row.body_check_id, row.pose).exists);
-}
-
-/** Number of photos only this device can still upload (lost on sign-out). */
-export const countLocalPendingPhotos = async (userId: string) =>
-  (await localPendingPhotos(userId)).length;

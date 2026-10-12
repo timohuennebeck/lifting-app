@@ -15,7 +15,7 @@ import { Text } from '@/shared/ui/text';
 export interface BodyPhotoCardProps {
   checkId: string;
   pose: BodyPose;
-  storagePath?: string | null;
+  storagePath?: string;
   label: string;
   score: number;
   /** The "after" check: accent score. */

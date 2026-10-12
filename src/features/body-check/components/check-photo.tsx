@@ -8,7 +8,7 @@ import type { BodyPose } from '../lib/poses';
 export interface CheckPhotoProps {
   checkId: string;
   pose: BodyPose;
-  storagePath?: string | null;
+  storagePath?: string;
   /** A draft photo that is not saved yet; shown instead of the saved one. */
   uri?: string;
   /** Rendered while no image is available (not uploaded yet, offline, …). */
