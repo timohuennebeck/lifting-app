@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { isCardio } from '@/shared/data/exercises';
 import { MUSCLE_REGION, type MuscleShare, muscleShares } from '@/shared/data/muscles';
 import { useMuscleVolume } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
@@ -61,7 +62,10 @@ export function MusclesView() {
   const rangeStart = sinceIso(range);
 
   const { upper, lower, untrained, totalSets, trainedIds } = useMemo(() => {
-    const items = (volume ?? []).filter((v) => v.startedAt >= rangeStart);
+    // Cardio sets aren't muscle work.
+    const items = (volume ?? []).filter(
+      (v) => v.startedAt >= rangeStart && !isCardio(v.exerciseId),
+    );
     const shares = muscleShares(items);
     const trainedSet = new Set(shares.map((s) => s.muscle));
     return {

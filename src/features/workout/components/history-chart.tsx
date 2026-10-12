@@ -15,7 +15,7 @@ import { buildLineChart, type ChartInput, nearestPoint } from '../lib/chart';
 const HEIGHT = 120;
 const CHIP_WIDTH = 84;
 
-export type HistoryMetric = 'topWeight' | 'topReps' | 'topSeconds';
+export type HistoryMetric = 'topWeight' | 'leastAssistance' | 'topReps' | 'topSeconds';
 
 export interface HistoryChartProps {
   /** Best value per session (weight in display units, reps or seconds), oldest first. */

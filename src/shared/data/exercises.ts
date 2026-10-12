@@ -33,6 +33,10 @@ export interface ExerciseRow {
   rest_seconds: number;
   image_path: string | null;
   video_path: string | null;
+  /** Left out of the muscle stats. */
+  cardio: boolean;
+  /** The weight is assistance: less is harder. */
+  assisted: boolean;
   is_active: boolean;
   updated_at: string;
 }
@@ -165,6 +169,16 @@ export const bodyweightExerciseIds = () => idsWhere((r) => r.equipment === 'body
 
 export const isBodyweight = (exerciseId: string) =>
   getExercise(exerciseId)?.equipment === 'bodyweight';
+
+/** Catalog exercises whose weight helps (assisted pull-up machine): less weight is harder. */
+export const assistedExerciseIds = () => idsWhere((r) => r.assisted);
+
+export const isAssisted = (exerciseId: string) =>
+  !!useCatalogStore.getState().rows[exerciseId]?.assisted;
+
+/** Cardio, which the muscle stats leave out. */
+export const isCardio = (exerciseId: string) =>
+  !!useCatalogStore.getState().rows[exerciseId]?.cardio;
 
 /** Whether sets of the exercise are counted in seconds instead of reps. */
 export const isTimed = (exerciseId: string) => hasMeasure(exerciseId, 'seconds');

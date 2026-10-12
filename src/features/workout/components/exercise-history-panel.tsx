@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { SectionList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { hasMeasure, isBodyweight, isTimed } from '@/shared/data/exercises';
+import { hasMeasure, isAssisted, isBodyweight, isTimed } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { type ExerciseHistoryEntry, useExerciseHistory } from '@/shared/data/workouts';
 import { useNow } from '@/shared/hooks/use-now';
@@ -60,20 +60,27 @@ export function ExerciseHistoryPanel({ exerciseId }: ExerciseHistoryPanelProps) 
   // Bodyweight exercises never done with added weight would chart a flat 0 kg.
   const unweighted =
     isBodyweight(exerciseId) && sessions.every((s) => s.sets.every((set) => !set.weightKg));
-  // Weighted exercises chart the top weight, the others most reps or the longest hold.
-  const metric: HistoryMetric =
-    hasMeasure(exerciseId, 'weight') && !unweighted
+  // Weighted exercises chart the top weight (assisted machines the least assistance), the others
+  // most reps or the longest hold.
+  const metric: HistoryMetric = isAssisted(exerciseId)
+    ? 'leastAssistance'
+    : hasMeasure(exerciseId, 'weight') && !unweighted
       ? 'topWeight'
       : isTimed(exerciseId)
         ? 'topSeconds'
         : 'topReps';
+  const weighted = metric === 'topWeight' || metric === 'leastAssistance';
   // The top set is the best by score; the weight chart wants the heaviest set instead.
-  const chartValue = ({ sets, topSet }: ExerciseHistoryEntry) =>
-    metric === 'topWeight'
-      ? toDisplayWeight(Math.max(...sets.map((s) => s.weightKg ?? 0)), units)
-      : ((metric === 'topSeconds' ? topSet.seconds : topSet.reps) ?? 0);
+  const chartValue = ({ sets, topSet }: ExerciseHistoryEntry) => {
+    if (!weighted) return (metric === 'topSeconds' ? topSet.seconds : topSet.reps) ?? 0;
+    const weights = sets.map((s) => s.weightKg ?? 0);
+    return toDisplayWeight(
+      metric === 'topWeight' ? Math.max(...weights) : Math.min(...weights),
+      units,
+    );
+  };
   const formatValue = (value: number) =>
-    metric === 'topWeight'
+    weighted
       ? formatWeight(fromDisplayWeight(value, units), units)
       : metric === 'topSeconds'
         ? formatSeconds(value)

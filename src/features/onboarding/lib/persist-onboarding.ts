@@ -5,6 +5,7 @@ import { nowIso } from '@/shared/data/json';
 import { db, drizzle } from '@/shared/data/powersync/database';
 import { profiles } from '@/shared/data/powersync/schema';
 import { saveProfile } from '@/shared/data/profile';
+import { supabase } from '@/shared/data/supabase';
 import { insertPlan } from '@/shared/data/templates';
 import { type AppLanguage, i18n } from '@/shared/i18n';
 
@@ -51,26 +52,33 @@ export async function persistOnboarding(userId: string, draft: OnboardingDraft) 
   });
 }
 
-/** How long a sign-in waits for the first download before it goes by the local data. */
+/** How long an onboarded account waits for its data before the app opens without it. */
 const FIRST_SYNC_TIMEOUT_MS = 8000;
 
-/** Waits (bounded) for the first PowerSync download, then tells whether onboarding is done. */
+/**
+ * Tells whether the account finished onboarding, asking the server: right after sign-in the local
+ * database may not hold the profile yet. Throws when the server can't be reached, so a slow
+ * connection never passes for a new account (onboarding again would overwrite its profile).
+ * An onboarded account then waits (bounded) for its first download, so the app opens with its data.
+ */
 export async function isOnboardedAfterSync(userId: string) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('onboarded_at')
+    .eq('id', userId)
+    .maybeSingle();
+  if (error) throw error;
+  if (!data?.onboarded_at) return false;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FIRST_SYNC_TIMEOUT_MS);
   try {
     await db.waitForFirstSync(controller.signal);
   } catch {
-    // Offline or slow: fall back to whatever is already local.
+    // Slow: the rest arrives in the background.
   } finally {
     clearTimeout(timer);
   }
-  const row = await drizzle
-    .select({ onboarded_at: profiles.onboarded_at })
-    .from(profiles)
-    .where(eq(profiles.id, userId))
-    .get();
-  return !!row?.onboarded_at;
+  return true;
 }
 
 /** Signed in, onboarding goes on: a draft without a name takes the one given at sign-up. */

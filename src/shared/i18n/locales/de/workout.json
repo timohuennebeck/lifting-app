@@ -54,6 +54,8 @@
   "history": {
     "topWeight": "Höchstes Gewicht pro Training",
     "topWeightShort": "Höchstes Gewicht",
+    "leastAssistance": "Geringste Unterstützung pro Training",
+    "leastAssistanceShort": "Geringste Unterstützung",
     "topReps": "Meiste Wiederholungen pro Training",
     "topRepsShort": "Meiste Wdh.",
     "topSeconds": "Längstes Halten pro Training",

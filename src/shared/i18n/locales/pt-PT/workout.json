@@ -54,6 +54,8 @@
   "history": {
     "topWeight": "Peso máximo por treino",
     "topWeightShort": "Peso máximo",
+    "leastAssistance": "Menor assistência por treino",
+    "leastAssistanceShort": "Menor assistência",
     "topReps": "Mais repetições por treino",
     "topRepsShort": "Mais repetições",
     "topSeconds": "Maior tempo por treino",

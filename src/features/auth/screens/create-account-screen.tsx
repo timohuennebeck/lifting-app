@@ -76,6 +76,13 @@ export function CreateAccountScreen() {
 
   /** Saves the onboarding answers to the new account with the accepted documents, then goes on. */
   const finish = async (userId: string, documents: LegalDocument[]) => {
+    // An account that is already set up (e.g. signed in with Google or Apple) keeps its own
+    // profile and plan.
+    if (await isOnboardedAfterSync(userId)) {
+      haptics.success();
+      useOnboardingStore.getState().complete();
+      return;
+    }
     const { draft } = useOnboardingStore.getState();
     await persistOnboarding(userId, draft);
     await acceptDocuments(userId, documents);
@@ -122,14 +129,7 @@ export function CreateAccountScreen() {
       // Loaded first for the same reason as with email: the provider creates the account at once.
       const documents = await fetchCurrentDocuments(i18n.language);
       const user = await signInWith(provider);
-      if (!user) return;
-      // An account that is already set up keeps its own profile and plan.
-      if (await isOnboardedAfterSync(user.id)) {
-        haptics.success();
-        useOnboardingStore.getState().complete();
-        return;
-      }
-      await finish(user.id, documents);
+      if (user) await finish(user.id, documents);
     } catch {
       fail('generic');
     } finally {

@@ -1,6 +1,7 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { and, eq, isNotNull, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull, sql } from 'drizzle-orm';
 
+import { assistedExerciseIds } from '@/shared/data/exercises';
 import { drizzle } from '@/shared/data/powersync/database';
 import { workoutExercises, workouts, workoutSets } from '@/shared/data/powersync/schema';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
@@ -10,15 +11,16 @@ import type { SetValues } from '@/shared/lib/format';
 const searchKeys = createQueryKeys('search', { records: null });
 
 export interface ExerciseRecord {
-  /** The heaviest set: most weight, then most reps, then most seconds. */
+  /** The heaviest set (the least assisted one), then most reps, then most seconds. */
   best: SetValues;
   /** Start of the last finished workout with this exercise. */
   lastAt: string;
 }
 
-// Sets of finished workouts, ranked per exercise by weight, then reps, then seconds (a missing
-// value counts as -1, so exercises without weight start at reps); ties keep any one of them.
-// Built per call: hasKnownWeight reads the current exercise catalog.
+// Sets of finished workouts, ranked per exercise by weight (on an assisted machine less is
+// better), then reps, then seconds (a missing value counts as -1, so exercises without weight
+// start at reps); ties keep any one of them. Built per call: the conditions read the current
+// exercise catalog.
 const rankedSets = () =>
   drizzle
     .select({
@@ -31,8 +33,9 @@ const rankedSets = () =>
     )`.as('last_at'),
       rank: sql<number>`row_number() over (
       partition by ${workoutExercises.exercise_id}
-      order by coalesce(${workoutSets.weight_kg}, -1) desc, coalesce(${workoutSets.reps}, -1) desc,
-        coalesce(${workoutSets.seconds}, -1) desc
+      order by case when ${inArray(workoutExercises.exercise_id, assistedExerciseIds())}
+        then -${workoutSets.weight_kg} else coalesce(${workoutSets.weight_kg}, -1) end desc,
+        coalesce(${workoutSets.reps}, -1) desc, coalesce(${workoutSets.seconds}, -1) desc
     )`.as('rank'),
     })
     .from(workoutSets)

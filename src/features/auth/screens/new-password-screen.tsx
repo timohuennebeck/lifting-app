@@ -1,3 +1,4 @@
+import type { User } from '@supabase/supabase-js';
 import { router, Stack } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -31,6 +32,9 @@ export function NewPasswordScreen() {
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<AuthErrorKey | null>(null);
+  // Set once the password is saved: a retry after a failed account check only repeats the check
+  // (saving the same password again would be refused).
+  const [savedFor, setSavedFor] = useState<User | null>(null);
   const valid = password.length >= MIN_PASSWORD_LENGTH;
   // The code is used up: there is no way back, only forward (Android back does nothing).
   useHardwareBack(() => {});
@@ -40,23 +44,28 @@ export function NewPasswordScreen() {
     setBusy(true);
     setError(null);
     try {
-      const { data, error: updateError } = await supabase.auth.updateUser({ password });
-      if (updateError || !data.user) {
-        haptics.error();
-        setError(updateError ? authErrorKey(updateError) : 'generic');
-        setBusy(false);
-        return;
+      let user = savedFor;
+      if (!user) {
+        const { data, error: updateError } = await supabase.auth.updateUser({ password });
+        if (updateError || !data.user) {
+          haptics.error();
+          setError(updateError ? authErrorKey(updateError) : 'generic');
+          setBusy(false);
+          return;
+        }
+        user = data.user;
+        setSavedFor(user);
       }
-      haptics.success();
       // Signed in now, as after "Sign in": the app opens, or onboarding goes on.
       const store = useOnboardingStore.getState();
-      const onboarded = await isOnboardedAfterSync(data.user.id);
+      const onboarded = await isOnboardedAfterSync(user.id);
+      haptics.success();
       useSessionStore.getState().setRecovering(false);
       if (onboarded) {
         store.complete();
         return;
       }
-      adoptSignUpName(data.user);
+      adoptSignUpName(user);
       router.replace('/name');
     } catch {
       haptics.error();

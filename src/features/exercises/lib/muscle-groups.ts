@@ -1,5 +1,5 @@
-import { getExercise } from '@/shared/data/exercises';
-import { type MuscleShare, muscleShares } from '@/shared/data/muscles';
+import { isCardio } from '@/shared/data/exercises';
+import { type MuscleShare, muscleShares, muscleWeights } from '@/shared/data/muscles';
 import type { BodyPartId, MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 export const MUSCLE_GROUP_IDS = [
@@ -37,14 +37,11 @@ export function groupOfMuscle(muscle: MuscleId): MuscleGroupId {
 }
 
 /** Muscles of an exercise with their weights, highest share first. */
-function muscleWeights(exerciseId: string) {
-  const muscles = getExercise(exerciseId)?.muscles ?? {};
-  return (Object.entries(muscles) as [MuscleId, number][]).sort((a, b) => b[1] - a[1]);
-}
+const sortedWeights = (exerciseId: string) => muscleWeights(exerciseId).sort((a, b) => b[1] - a[1]);
 
 /** Splits an exercise's muscles into primary (≥ 30 % or the top one) and secondary. */
 export function splitMuscles(exerciseId: string) {
-  const entries = muscleWeights(exerciseId);
+  const entries = sortedWeights(exerciseId);
   return {
     primary: entries.filter(([, w], i) => i === 0 || w >= 0.3).map(([m]) => m),
     secondary: entries.filter(([, w], i) => i > 0 && w < 0.3).map(([m]) => m),
@@ -61,7 +58,9 @@ const WORKOUT_PRIMARY_MIN_PERCENT = 10;
  */
 export function workoutMuscleSplit(items: { exerciseId: string; sets: number }[]) {
   const targeted = new Set(
-    items.filter((i) => i.sets > 0).flatMap((i) => splitMuscles(i.exerciseId).primary),
+    items
+      .filter((i) => i.sets > 0 && !isCardio(i.exerciseId))
+      .flatMap((i) => splitMuscles(i.exerciseId).primary),
   );
   const isPrimary = (s: MuscleShare) =>
     targeted.has(s.muscle) && s.percent >= WORKOUT_PRIMARY_MIN_PERCENT;
@@ -71,6 +70,6 @@ export function workoutMuscleSplit(items: { exerciseId: string; sets: number }[]
 
 /** Group of the exercise's main muscle; core for an exercise without muscles. */
 export function primaryGroup(exerciseId: string): MuscleGroupId {
-  const muscle = muscleWeights(exerciseId)[0]?.[0];
+  const muscle = sortedWeights(exerciseId)[0]?.[0];
   return muscle ? groupOfMuscle(muscle) : 'core';
 }

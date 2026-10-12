@@ -20,9 +20,10 @@ import type { SetValues } from '@/shared/lib/format';
 import { getOrInsert } from '@/shared/lib/map';
 
 import {
+  assistedExerciseIds,
   bodyweightExerciseIds,
   exerciseIdsWithout,
-  isBodyweight,
+  isAssisted,
   newExerciseDraft,
   type SetTargets,
 } from './exercises';
@@ -30,6 +31,7 @@ import { newId, nowIso } from './json';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
 import {
+  profiles,
   templateExercises,
   templateSets,
   workoutExercises,
@@ -40,26 +42,15 @@ import { queryKeys } from './query-keys';
 import type { PlanExerciseDraft } from './templates';
 import { firstCount, type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
-/** Epley estimated one-rep max. */
-const estimateOneRepMax = (kg: number, reps: number) => kg * (1 + reps / 30);
+/** Body weight assumed until the profile has one. */
+const DEFAULT_BODYWEIGHT_KG = 75;
 
 /**
- * Body weight assumed for bodyweight exercises logged with weight, where the logged weight is
- * only the added load: without it a pull-up at 0 kg would score 0 whatever the reps.
+ * The user's body weight, for bodyweight and assisted sets where the logged weight is only the
+ * added load or the assistance: without it a pull-up at 0 kg would score 0 whatever the reps.
+ * The device only holds the user's own profile.
  */
-const BODYWEIGHT_KG = 75;
-
-/**
- * How good a set is, for PRs and top sets: estimated 1RM for weight × reps, most reps without
- * weight, longest hold for seconds (times the weight for weighted holds). An exercise logs the
- * same measures in every set, so scores of one exercise compare like with like.
- */
-export function setScore({ weightKg, reps, seconds }: SetValues, exerciseId: string) {
-  if (seconds != null) return weightKg != null ? weightKg * seconds : seconds;
-  if (reps == null) return 0;
-  if (weightKg == null) return reps;
-  return estimateOneRepMax(weightKg + (isBodyweight(exerciseId) ? BODYWEIGHT_KG : 0), reps);
-}
+const bodyweightSql = sql<number>`coalesce((select ${profiles.weight_kg} from ${profiles}), ${DEFAULT_BODYWEIGHT_KG})`;
 
 /**
  * Whether a completed set counts for history and records. "Mark as done" completes the sets of
@@ -70,17 +61,29 @@ export const hasKnownWeight = (
   exercise: { exercise_id: AnySQLiteColumn },
 ) => or(isNotNull(set.weight_kg), inArray(exercise.exercise_id, exerciseIdsWithout('weight')));
 
-/** `setScore` as SQL over `workout_sets` and `workout_exercises`, or aliases of them. */
-export const setScoreSql = (
-  set: Record<'weight_kg' | 'reps' | 'seconds', AnySQLiteColumn>,
-  exercise: { exercise_id: AnySQLiteColumn },
-) =>
-  sql<number>`case
+type Operand = AnySQLiteColumn | SQL;
+
+/**
+ * How good a set is, for PRs and top sets, over `workout_sets` and `workout_exercises` (or
+ * aliases of them, or values): the Epley estimated 1RM of the load for weight × reps (the body
+ * weight plus the added weight, or minus the assistance), most reps without weight, the longest
+ * hold for seconds (times the weight for weighted holds). An exercise logs the same measures in
+ * every set, so scores of one exercise compare like with like.
+ */
+export function setScoreSql(
+  set: Record<'weight_kg' | 'reps' | 'seconds', Operand>,
+  exercise: { exercise_id: Operand },
+) {
+  const exerciseId = sql`${exercise.exercise_id}`;
+  return sql<number>`case
   when ${set.seconds} is not null then coalesce(${set.weight_kg}, 1) * ${set.seconds}
   when ${set.reps} is null then 0
   when ${set.weight_kg} is null then ${set.reps}
-  else (${set.weight_kg} + case when ${inArray(exercise.exercise_id, bodyweightExerciseIds())}
-    then ${BODYWEIGHT_KG} else 0 end) * (1 + ${set.reps} / 30.0) end`;
+  else (case
+    when ${inArray(exerciseId, bodyweightExerciseIds())} then ${bodyweightSql} + ${set.weight_kg}
+    when ${inArray(exerciseId, assistedExerciseIds())} then max(${bodyweightSql} - ${set.weight_kg}, 0)
+    else ${set.weight_kg} end) * (1 + ${set.reps} / 30.0) end`;
+}
 
 /** Aliases for correlated subqueries over the sets of other workouts. */
 export const previousSet = alias(workoutSets, 'previous_set');
@@ -226,10 +229,18 @@ export async function addWorkoutExercise(userId: string, workoutId: string, exer
   );
 }
 
-/** Best set score for an exercise across all completed sets, excluding one set. */
-async function bestScore(exerciseId: string, excludeSetId: string) {
+/** Whether `values` beat every other completed set of the exercise; the first set never does. */
+async function isRecord(setId: string, exerciseId: string, values: SetValues) {
+  const logged = {
+    weight_kg: sql`${values.weightKg}`,
+    reps: sql`${values.reps}`,
+    seconds: sql`${values.seconds}`,
+  };
   const [row] = await drizzle
-    .select({ best: sql<number | null>`max(${setScoreSql(workoutSets, workoutExercises)})` })
+    .select({
+      best: sql<number | null>`max(${setScoreSql(workoutSets, workoutExercises)})`,
+      score: setScoreSql(logged, { exercise_id: sql`${exerciseId}` }),
+    })
     .from(workoutSets)
     .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
     .where(
@@ -237,16 +248,15 @@ async function bestScore(exerciseId: string, excludeSetId: string) {
         eq(workoutExercises.exercise_id, exerciseId),
         isNotNull(workoutSets.completed_at),
         hasKnownWeight(workoutSets, workoutExercises),
-        ne(workoutSets.id, excludeSetId),
+        ne(workoutSets.id, setId),
       ),
     );
-  return row?.best ?? 0;
+  return !!row?.best && row.score > row.best + 0.01;
 }
 
 /** Completes (or re-edits) a set. Returns true when it is a new personal record. */
 export async function logSet(setId: string, exerciseId: string, values: SetValues) {
-  const best = await bestScore(exerciseId, setId);
-  const isPr = best > 0 && setScore(values, exerciseId) > best + 0.01;
+  const isPr = await isRecord(setId, exerciseId, values);
   await drizzle
     .update(workoutSets)
     .set({
@@ -451,7 +461,8 @@ function toSummaries(rows: RowOf<typeof workoutSummaryQuery>[]): WorkoutSummary[
     }));
     if (!r.exercise_id) continue;
     w.items.push({ exerciseId: r.exercise_id, sets: r.sets });
-    w.volumeKg += r.volume;
+    // The weight on an assisted machine helps; nothing of it is lifted.
+    if (!isAssisted(r.exercise_id)) w.volumeKg += r.volume;
     w.setCount += r.sets;
     w.prCount += r.prs;
   }
@@ -506,7 +517,7 @@ export interface ExerciseHistoryEntry {
   startedAt: string;
   finishedAt: string | null;
   sets: ExerciseHistorySet[];
-  /** Best set by `setScore`. */
+  /** Best set by `setScoreSql`. */
   topSet: ExerciseHistorySet;
   volumeKg: number;
   hasPr: boolean;
@@ -534,6 +545,7 @@ const exerciseHistoryQuery = (exerciseId: string, where?: SQL) =>
       seconds: workoutSets.seconds,
       target_rir: workoutSets.target_rir,
       is_pr: workoutSets.is_pr,
+      score: setScoreSql(workoutSets, workoutExercises),
     })
     .from(workoutSets)
     .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
@@ -542,30 +554,38 @@ const exerciseHistoryQuery = (exerciseId: string, where?: SQL) =>
     .orderBy(desc(workouts.started_at), workoutExercises.position, workoutSets.position);
 
 function toExerciseHistory(rows: RowOf<typeof exerciseHistoryQuery>[]): ExerciseHistoryEntry[] {
-  const map = new Map<string, Omit<ExerciseHistoryEntry, 'topSet' | 'volumeKg' | 'hasPr'>>();
+  const map = new Map<string, Omit<ExerciseHistoryEntry, 'volumeKg' | 'hasPr'>>();
+  const topScores = new Map<string, number>();
   for (const r of rows) {
-    getOrInsert(map, r.workout_id, () => ({
-      workoutId: r.workout_id,
-      name: r.name,
-      startedAt: r.started_at,
-      finishedAt: r.finished_at,
-      sets: [],
-    })).sets.push({
+    const set: ExerciseHistorySet = {
       weightKg: r.weight_kg,
       reps: r.reps,
       seconds: r.seconds,
       rir: r.target_rir,
       isPr: r.is_pr,
-    });
+    };
+    const entry = getOrInsert(map, r.workout_id, () => ({
+      workoutId: r.workout_id,
+      name: r.name,
+      startedAt: r.started_at,
+      finishedAt: r.finished_at,
+      sets: [],
+      topSet: set,
+    }));
+    entry.sets.push(set);
+    // Sets come in order: of equal scores the first stays the top set.
+    if (r.score > (topScores.get(r.workout_id) ?? -Infinity)) {
+      entry.topSet = set;
+      topScores.set(r.workout_id, r.score);
+    }
   }
-  // All rows are sets of the same exercise.
-  const exerciseId = rows[0]?.exercise_id ?? '';
+  // All rows are sets of the same exercise; the weight on an assisted machine isn't lifted.
+  const lifted = !isAssisted(rows[0]?.exercise_id ?? '');
   return [...map.values()].map((entry) => ({
     ...entry,
-    topSet: entry.sets.reduce((top, set) =>
-      setScore(set, exerciseId) > setScore(top, exerciseId) ? set : top,
-    ),
-    volumeKg: entry.sets.reduce((sum, s) => sum + (s.weightKg ?? 0) * (s.reps ?? 0), 0),
+    volumeKg: lifted
+      ? entry.sets.reduce((sum, s) => sum + (s.weightKg ?? 0) * (s.reps ?? 0), 0)
+      : 0,
     hasPr: entry.sets.some((s) => s.isPr),
   }));
 }

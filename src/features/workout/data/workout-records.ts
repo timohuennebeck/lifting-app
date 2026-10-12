@@ -6,13 +6,7 @@ import { parseJson } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import { workoutExercises, workouts, workoutSets } from '@/shared/data/powersync/schema';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
-import {
-  hasKnownWeight,
-  previousExercise,
-  previousSet,
-  setScore,
-  setScoreSql,
-} from '@/shared/data/workouts';
+import { hasKnownWeight, previousExercise, previousSet, setScoreSql } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 
 const recordKeys = createQueryKeys('workoutRecords', {
@@ -28,7 +22,7 @@ export interface WorkoutRecord {
 const previousWorkout = alias(workouts, 'previous_workout');
 
 /**
- * Best completed set (by `setScore`) of the same exercise from an earlier workout. Built per
+ * Best completed set (by `setScoreSql`) of the same exercise from an earlier workout. Built per
  * query because hasKnownWeight/setScoreSql read the current exercise catalog.
  */
 const previousBest = () =>
@@ -58,6 +52,7 @@ const recordsQuery = (workoutId: string) =>
       weight_kg: workoutSets.weight_kg,
       reps: workoutSets.reps,
       seconds: workoutSets.seconds,
+      score: setScoreSql(workoutSets, workoutExercises),
       previous: sql<string | null>`${previousBest()}`,
     })
     .from(workoutSets)
@@ -74,16 +69,16 @@ const recordsQuery = (workoutId: string) =>
 
 /** Best PR set per exercise; only exercises with an earlier best are kept. */
 function toRecords(rows: RowOf<typeof recordsQuery>[]): WorkoutRecord[] {
-  const best = new Map<string, WorkoutRecord>();
+  const best = new Map<string, WorkoutRecord & { score: number }>();
   for (const r of rows) {
     const previous = parseJson<SetValues | null>(r.previous, null);
     if (!previous) continue;
-    const set = { weightKg: r.weight_kg, reps: r.reps, seconds: r.seconds };
     const current = best.get(r.exercise_id);
-    if (current && setScore(current.set, r.exercise_id) >= setScore(set, r.exercise_id)) continue;
-    best.set(r.exercise_id, { exerciseId: r.exercise_id, set, previous });
+    if (current && current.score >= r.score) continue;
+    const set = { weightKg: r.weight_kg, reps: r.reps, seconds: r.seconds };
+    best.set(r.exercise_id, { exerciseId: r.exercise_id, set, previous, score: r.score });
   }
-  return [...best.values()];
+  return [...best.values()].map(({ exerciseId, set, previous }) => ({ exerciseId, set, previous }));
 }
 
 /** New personal records of a workout with the best set from before it. */
