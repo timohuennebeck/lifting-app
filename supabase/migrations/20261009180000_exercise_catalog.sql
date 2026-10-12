@@ -90,7 +90,7 @@ alter table public.template_sets rename column reps_max to target_max;
 alter table public.profiles add constraint profiles_focus_check
   check (private.is_muscle_list(focus));
 
--- Catalog as of the app's bundled snapshot (src/shared/data/exercise-catalog.json).
+-- The first exercises; later migrations add the launch catalog.
 insert into public.exercises
   (id, name, instructions, equipment, measures, muscles, rest_seconds, image_path, updated_at)
 values

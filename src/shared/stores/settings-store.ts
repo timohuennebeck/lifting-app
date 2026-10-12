@@ -23,8 +23,6 @@ export const useSettingsStore = create<SettingsState>()(
     {
       name: 'settings',
       storage: createJSONStorage(() => mmkvStorage),
-      // Keeps only what is still a setting (an old accent choice is dropped).
-      partialize: (s) => ({ language: s.language, restSound: s.restSound }),
     },
   ),
 );

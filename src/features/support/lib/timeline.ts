@@ -1,5 +1,4 @@
 import {
-  isTicketActive,
   type Ticket,
   type TicketEvent,
   type TicketMessage,
@@ -34,8 +33,7 @@ const dayKey = (at: number) => new Date(at).toDateString();
 /**
  * Chat timeline: messages, the "Ticket created" line, the local auto reply after the
  * first user message (until the team answers), status changes and reopens from the
- * ticket's history, and day dividers. Tickets without a status event yet (changed before
- * the history existed) show their current status instead.
+ * ticket's history, and day dividers.
  */
 export function buildTimeline(
   ticket: Ticket,
@@ -77,22 +75,6 @@ export function buildTimeline(
           };
     timed.push({ at, order: last + i, item });
   });
-  if (ticket.status !== 'open' && !events.some((e) => e.kind === 'status')) {
-    const closed = !isTicketActive(ticket.status);
-    const at = Math.max(
-      ms(closed ? (ticket.closedAt ?? ticket.updatedAt) : ticket.updatedAt),
-      start,
-    );
-    const item: TimelineItem = {
-      type: 'status',
-      key: 'status',
-      status: ticket.status,
-      version: null,
-      note: null,
-    };
-    timed.push({ at, order: last + events.length, item });
-  }
-
   timed.sort((a, b) => a.at - b.at || a.order - b.order);
   const items: TimelineItem[] = [];
   let day = '';

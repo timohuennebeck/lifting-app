@@ -28,7 +28,7 @@ export function useSyncAccountLanguage() {
   useEffect(() => {
     if (!profile) return;
     const key = syncedLanguageKey(profile.id);
-    if (profile.language !== null && storage.getString(key) === language) return;
+    if (storage.getString(key) === language) return;
     storage.set(key, language);
     if (profile.language !== language) saveProfile(profile.id, { language });
   }, [profile, language]);

@@ -1,13 +1,10 @@
-import { and, count, eq, isNull } from 'drizzle-orm';
-
 import { parseJson } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import { bodyCheckPhotos, bodyChecks, type BodyCheckRecord } from '@/shared/data/powersync/schema';
 import { queryKeys } from '@/shared/data/query-keys';
-import { firstCount, type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
+import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 
 import type { BodyCheckMetrics, GroupScores } from '../lib/body-check-service';
-import { photoFile } from '../lib/photo-files';
 import type { BodyPose } from '../lib/poses';
 import { bodyCheckPhotoKeys } from './body-check-keys';
 
@@ -52,7 +49,6 @@ const photoListQuery = () =>
 function byCheck(rows: RowOf<typeof photoListQuery>[]) {
   const out: Record<string, CheckPhotos> = {};
   for (const r of rows) {
-    if (!r.storage_path) continue;
     out[r.body_check_id] ??= {};
     out[r.body_check_id][r.pose as BodyPose] = r.storage_path;
   }

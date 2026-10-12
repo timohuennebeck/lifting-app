@@ -26,7 +26,7 @@ export interface PlanSetDraft {
 export interface PlanExerciseDraft {
   exerciseId: string;
   sets: PlanSetDraft[];
-  restSeconds?: number | null;
+  restSeconds: number | null;
 }
 
 export interface PlanDayDraft {

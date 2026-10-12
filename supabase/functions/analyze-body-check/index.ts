@@ -138,8 +138,8 @@ Deno.serve(async (req) => {
   if (age < MIN_AGE) return reply(403, { error: 'not_adult' });
   if (!(await hasPro(userId))) return reply(403, { error: 'not_pro' });
 
-  // The previous check's photos let the model compare pose by pose; any it lacks (a check from
-  // another device not uploaded yet, the four-pose days) are left out.
+  // The previous check's photos let the model compare pose by pose; one that fails to download
+  // is left out.
   const [photos, previousPhotos] = await Promise.all([
     checkPhotos(userId, checkId),
     previous ? checkPhotos(userId, previous.id) : {},

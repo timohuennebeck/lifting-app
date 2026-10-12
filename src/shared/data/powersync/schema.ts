@@ -156,7 +156,7 @@ export const bodyCheckPhotos = sqliteTable(
     user_id: text().notNull(),
     body_check_id: text().notNull(),
     pose: text().notNull(),
-    storage_path: text(),
+    storage_path: text().notNull(),
     created_at: text().notNull(),
   },
   (t) => [index('check').on(t.body_check_id)],
