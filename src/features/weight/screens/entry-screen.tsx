@@ -29,7 +29,7 @@ import { useDayLabel } from '../components/entry-row';
 import { formatChange, inUnits } from '../lib/format';
 import { pickDate } from '../lib/pick-date';
 
-/** Ruler steps: 0.1 kg or 0.2 lb, a whole kg or lb between labels. */
+/** Ruler steps: 0.1 kg or 0.2 lb, a long tick at every whole kg or lb. */
 const SCALES = {
   metric: { step: 0.1, majorEvery: 10, midEvery: 5, span: 30 },
   imperial: { step: 0.2, majorEvery: 5, midEvery: 5, span: 60 },
@@ -189,7 +189,6 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
         </Text>
 
         <RulerPicker
-          look="lines"
           value={value}
           onChange={set}
           min={range.min}
@@ -197,10 +196,9 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
           step={scale.step}
           majorEvery={scale.majorEvery}
           midEvery={scale.midEvery}
-          label={(v) => formatNumber(v, 0)}
-          className="mt-10"
+          className="mt-8"
         />
-        <View className="mt-6.5 flex-row gap-4">
+        <View className="mt-5 flex-row gap-4">
           <IconButton
             icon="minus"
             size={56}

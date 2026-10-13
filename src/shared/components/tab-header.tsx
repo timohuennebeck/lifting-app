@@ -5,7 +5,7 @@ import { View } from 'react-native';
 
 import { useProfile } from '@/shared/data/profile';
 import { useNow } from '@/shared/hooks/use-now';
-import { MINUTE_MS } from '@/shared/lib/date';
+import { MINUTE_MS, toIsoDate } from '@/shared/lib/date';
 import { formatDate } from '@/shared/lib/format';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -23,8 +23,8 @@ export interface TabHeaderProps {
 }
 
 /**
- * Header shared by all tabs: avatar, today's date, greeting, optional actions, then the weight
- * history and search (exercises and their records), always in the same place.
+ * Header shared by all tabs: avatar, today's date, greeting, optional actions, then today's
+ * weigh-in and search (exercises and their records), always in the same place.
  */
 export function TabHeader({ actions, greeting = true, settings = false }: TabHeaderProps) {
   const { t } = useTranslation(['common', 'weight']);
@@ -59,7 +59,13 @@ export function TabHeader({ actions, greeting = true, settings = false }: TabHea
           icon="scale"
           iconSize={19}
           accessibilityLabel={t('weight:open')}
-          onPress={() => router.push('/body-weight')}
+          // Straight to today's weigh-in; its "Historie" button leads on to the history.
+          onPress={() =>
+            router.push({
+              pathname: '/body-weight/[date]',
+              params: { date: toIsoDate(new Date()) },
+            })
+          }
         />
         <IconButton
           icon="search"

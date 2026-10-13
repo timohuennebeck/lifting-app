@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -19,11 +19,19 @@ interface Month {
   month: number;
 }
 
-/** Months from this one back to the first weigh-in's, newest first. */
-function monthsBack(today: string, first: string | undefined): Month[] {
+/** Months shown at first, and added each time the list nears its end. */
+const MONTH_BATCH = 12;
+
+/** Months from this one back to the first weigh-in's month, counting both. */
+function monthsSince(today: string, first: string | undefined) {
   const [year, month] = today.split('-').map(Number);
   const [firstYear, firstMonth] = (first ?? today).split('-').map(Number);
-  const count = Math.max(1, (year - firstYear) * 12 + month - firstMonth + 1);
+  return (year - firstYear) * 12 + month - firstMonth + 1;
+}
+
+/** `count` months from this one back, newest first. */
+function monthsBack(today: string, count: number): Month[] {
+  const [year, month] = today.split('-').map(Number);
   return Array.from({ length: count }, (_, i) => {
     const index = year * 12 + month - 1 - i;
     return { year: Math.floor(index / 12), month: (index % 12) + 1 };
@@ -31,8 +39,9 @@ function monthsBack(today: string, first: string | undefined): Month[] {
 }
 
 /**
- * Weight calendar (GW·3B): every month with the days' weights. A day opens its entry, or, when
- * the entry screen's date chip opened the calendar (`pick`), goes back there with that day.
+ * Weight calendar (GW·3B): the months back from this one, more as you scroll, with the days'
+ * weights. A day opens its entry, or, when the entry screen's date chip opened the calendar
+ * (`pick`), goes back there with that day.
  */
 export function WeightCalendarScreen() {
   const { pick } = useLocalSearchParams<{ pick?: string }>();
@@ -43,7 +52,10 @@ export function WeightCalendarScreen() {
   const today = toIsoDate(new Date(useNow(MINUTE_MS)));
   const weekdays = t('common:weekdays.short', { returnObjects: true }) as string[];
   const weights = useMemo(() => new Map(entries.map((e) => [e.date, e.weightKg])), [entries]);
-  const months = useMemo(() => monthsBack(today, entries[0]?.date), [today, entries]);
+  // Endless into the past, so older weights can be added too; never into the future.
+  const [shown, setShown] = useState(MONTH_BATCH);
+  const count = Math.max(shown, monthsSince(today, entries[0]?.date));
+  const months = monthsBack(today, count);
   const onPick = useCallback(
     (date: string) =>
       pick
@@ -55,7 +67,7 @@ export function WeightCalendarScreen() {
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
       <ScreenHeader title={t('calendar.title')} />
-      <View className="mt-3.25 flex-row border-b border-chip px-3.5 pb-1.75">
+      <View className="mt-3.25 flex-row px-3.5 pb-1.75">
         {weekdays.map((day) => (
           <Text
             key={day}
@@ -79,6 +91,8 @@ export function WeightCalendarScreen() {
             onPick={onPick}
           />
         )}
+        onEndReached={() => setShown(count + MONTH_BATCH)}
+        onEndReachedThreshold={1}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
       />
