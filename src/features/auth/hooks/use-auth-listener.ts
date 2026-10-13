@@ -20,19 +20,32 @@ import { useSessionStore } from '@/shared/stores/session-store';
 
 import { signOutOfGoogle } from '../lib/google-sign-in';
 
-/** Mirrors Supabase auth into the session store and (dis)connects PowerSync. */
+/** The account PowerSync is connected for, so token refreshes don't reconnect it. */
+let connectedUserId: string | null = null;
+
+/** Starts syncing and checks the subscription, once per signed-in account. */
+function connectAccount(userId: string) {
+  if (connectedUserId === userId) return;
+  connectedUserId = userId;
+  // The connector fetches fresh tokens itself; offline, PowerSync keeps retrying.
+  db.connect(connector);
+  refreshSubscription(userId);
+}
+
+/**
+ * Mirrors Supabase auth into the session store and (dis)connects PowerSync. The store starts with
+ * the session saved on the device, so a signed-in app opens right away, offline too.
+ */
 export function useAuthListener() {
   const setSession = useSessionStore((s) => s.setSession);
 
   useEffect(() => {
+    const saved = useSessionStore.getState().session;
+    if (saved) connectAccount(saved.user.id);
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
-      setSession(session);
-      // connect() tears down and reopens the stream, so skip token refreshes and
-      // profile updates; the connector fetches fresh tokens on its own.
-      if (session && (event === 'INITIAL_SESSION' || event === 'SIGNED_IN')) {
-        db.connect(connector);
-        refreshSubscription(session.user.id);
-      } else if (event === 'SIGNED_OUT') {
+      if (event === 'SIGNED_OUT') {
+        connectedUserId = null;
+        setSession(null);
         db.disconnectAndClear();
         queryClient.clear();
         // A later sign-in must check the new account's onboarding state again.
@@ -54,7 +67,13 @@ export function useAuthListener() {
         useCompareStore.getState().reset();
         // The next Google sign-in asks for the account again instead of reusing this one.
         signOutOfGoogle();
+        return;
       }
+      // Without a session only when it couldn't be confirmed yet (offline at launch): the saved
+      // one stays until supabase-js signs out.
+      if (!session) return;
+      setSession(session);
+      connectAccount(session.user.id);
     });
     return () => data.subscription.unsubscribe();
   }, [setSession]);

@@ -19,6 +19,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { Uniwind } from 'uniwind';
 
 import { useAuthListener } from '@/features/auth/hooks/use-auth-listener';
+import { legalUpdateWasPending } from '@/features/legal/data/legal-acceptances';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { CatalogOffline } from '@/shared/components/catalog-offline';
 import { CustomExerciseGate } from '@/shared/components/custom-exercise-gate';
@@ -48,7 +49,6 @@ export default function RootLayout() {
   useAuthListener();
   // Also before login: onboarding builds the first plan from the catalog.
   const catalog = useCatalogRefresh();
-  const ready = useSessionStore((s) => s.ready);
   const signedIn = useSessionStore((s) => !!s.session);
   // A password reset signs in with its code; the app opens once the new password is set.
   const recovering = useSessionStore((s) => s.recovering);
@@ -57,18 +57,19 @@ export default function RootLayout() {
   // On first launch the splash stays up until the exercises are downloaded or that failed.
   const catalogSettled = catalog.ready || catalog.failed;
   useEffect(() => {
-    if (!fontsLoaded || !ready || !catalogSettled) return;
-    if (!inApp) {
+    if (!fontsLoaded || !catalogSettled) return;
+    if (!inApp || !legalUpdateWasPending()) {
       SplashScreen.hide();
       return;
     }
-    // In the app it waits for the legal check, which hides it (LegalUpdateGate); a slow or
-    // missing connection never keeps it up longer than this.
+    // While a new terms or privacy version waits for consent, the legal check hides it
+    // (LegalUpdateGate), so the app doesn't show first with the gate over it; a slow or missing
+    // connection never keeps it up longer than this.
     const timer = setTimeout(SplashScreen.hide, LEGAL_CHECK_WAIT_MS);
     return () => clearTimeout(timer);
-  }, [fontsLoaded, ready, catalogSettled, inApp]);
+  }, [fontsLoaded, catalogSettled, inApp]);
 
-  if (!fontsLoaded || !ready) return null;
+  if (!fontsLoaded) return null;
 
   return (
     <GestureHandlerRootView className="flex-1 bg-bg">

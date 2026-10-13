@@ -10,6 +10,7 @@ import { legalAcceptances } from '@/shared/data/powersync/schema';
 import { supabase } from '@/shared/data/supabase';
 import { useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 import { HOUR_MS } from '@/shared/lib/date';
+import { storage } from '@/shared/lib/storage';
 
 import {
   fetchCurrentDocuments,
@@ -96,6 +97,14 @@ async function fetchAcceptedVersions(ids: string[]) {
   return data ?? [];
 }
 
+const PENDING_KEY = 'legal-update-pending';
+
+/**
+ * Whether the last check found a version to accept. Only then does a launch keep the splash
+ * screen up for the check; otherwise the app opens at once and the check runs behind it.
+ */
+export const legalUpdateWasPending = () => storage.getBoolean(PENDING_KEY) === true;
+
 /**
  * New versions to accept before the app can be used. Checked online on start, hourly and when
  * the app comes back to the foreground; offline nothing is pending, so nothing ever blocks.
@@ -126,5 +135,9 @@ export function usePendingLegalDocuments(language: string) {
     });
     return () => sub.remove();
   }, [refetch]);
+  const found = data.length > 0;
+  useEffect(() => {
+    if (status === 'success') storage.set(PENDING_KEY, found);
+  }, [status, found]);
   return { pending: data, settled: status !== 'pending' };
 }
