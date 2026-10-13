@@ -179,7 +179,7 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
             {unit}
           </Text>
         </View>
-        <Text tone="muted" className="mt-0.75 font-inter-medium text-sm leading-5">
+        <Text tone="muted" className="mt-0.75 font-inter-medium text-sm leading-5 tabular-nums">
           {previous
             ? t('entry.since', {
                 value: `${formatChange(kg - previous.weightKg, units)} ${unit}`,
