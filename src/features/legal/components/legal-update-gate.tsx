@@ -91,9 +91,8 @@ export function LegalUpdateGate() {
     } catch (error) {
       console.warn('Recording the legal acceptance failed', error);
       haptics.error();
-    } finally {
-      setBusy(false);
     }
+    setBusy(false);
   }
 
   const sectionLabel = ({ change, pending: p }: ChangeRow) => {

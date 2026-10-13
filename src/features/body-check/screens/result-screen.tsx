@@ -121,9 +121,8 @@ export function ResultScreen() {
       console.warn('Saving the body check failed', error);
       haptics.error();
       Alert.alert(t('common:errors.generic'));
-    } finally {
-      setSaving(false);
     }
+    setSaving(false);
   }
 
   return (

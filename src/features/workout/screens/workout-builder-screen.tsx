@@ -38,7 +38,9 @@ export function WorkoutBuilderScreen() {
   const insets = useSafeAreaInsets();
   const name = useWorkoutDraftStore((s) => s.name);
   const exercises = useWorkoutDraftStore((s) => s.exercises);
-  const { rename, remove, move } = useWorkoutDraftStore.getState();
+  const rename = useWorkoutDraftStore((s) => s.rename);
+  const remove = useWorkoutDraftStore((s) => s.remove);
+  const move = useWorkoutDraftStore((s) => s.move);
   const [menuFor, setMenuFor] = useState<number | null>(null);
   const menuShown = useLastDefined(menuFor);
   const [starting, setStarting] = useState(false);
@@ -72,17 +74,17 @@ export function WorkoutBuilderScreen() {
     setStarting(true);
     try {
       // Only one workout runs at a time; a second one would be orphaned unfinished.
-      const workoutId =
-        (await getActiveWorkoutId()) ?? (await startDraftWorkout(requireUserId(), name, exercises));
+      let workoutId = await getActiveWorkoutId();
+      // Not `??`, which the React Compiler can't compile inside a try.
+      if (workoutId === null) workoutId = await startDraftWorkout(requireUserId(), name, exercises);
       haptics.success();
       router.replace(`/workout/${workoutId}`);
     } catch (error) {
       haptics.error();
       console.error(error);
-    } finally {
-      startingRef.current = false;
-      setStarting(false);
     }
+    startingRef.current = false;
+    setStarting(false);
   }
 
   return (

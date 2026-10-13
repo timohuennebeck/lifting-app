@@ -13,6 +13,7 @@ export function NotificationsSection() {
   const { t } = useTranslation('profile');
   const [reminder, setReminder] = useState(true);
   const restSound = useSettingsStore((s) => s.restSound);
+  const setRestSound = useSettingsStore((s) => s.setRestSound);
   return (
     <SettingsSection title={t('settings.notifications.title')}>
       <SettingsToggleRow
@@ -23,7 +24,7 @@ export function NotificationsSection() {
       <SettingsToggleRow
         label={t('settings.notifications.restSound')}
         value={restSound}
-        onChange={useSettingsStore.getState().setRestSound}
+        onChange={setRestSound}
       />
     </SettingsSection>
   );

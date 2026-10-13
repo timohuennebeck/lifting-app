@@ -150,8 +150,8 @@ export function CameraScreen() {
     setBusy(true);
     haptics.heavy();
     flash.fire();
-    try {
-      const pic = await camera.current.takePictureAsync({ quality: 0.9, shutterSound: !timed });
+    const take = async (view: CameraView) => {
+      const pic = await view.takePictureAsync({ quality: 0.9, shutterSound: !timed });
       const stored = await storeShot(pic, id, target);
       const issue = await assessPhoto(stored);
       const current = useBodyCheckStore.getState();
@@ -166,12 +166,15 @@ export function CameraScreen() {
       if (next.auto && next.timer && !complete && !wasRetaking && focusedRef.current) {
         setTurning(true);
       }
-    } catch (error) {
-      console.warn('Body-check photo failed', error);
-      Alert.alert(t('camera.error'));
-    } finally {
-      setBusy(false);
-    }
+    };
+    // A promise chain, not try/finally: the React Compiler can't compile a component with that, nor
+    // with a condition like Auto's inside a try.
+    await take(camera.current)
+      .catch((error) => {
+        console.warn('Body-check photo failed', error);
+        Alert.alert(t('camera.error'));
+      })
+      .finally(() => setBusy(false));
   }
 
   const tick = useEffectEvent(() => {

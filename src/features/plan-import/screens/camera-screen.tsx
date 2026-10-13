@@ -1,7 +1,7 @@
 import { CameraView } from 'expo-camera';
 import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { type RefObject, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -36,6 +36,52 @@ const SHOT_RETRY_MS = 80;
 const SHOT_RETRIES = 30;
 /** A refused shot fails at once; one still running after this long has been taken. */
 const SHOT_REFUSED_MS = 150;
+
+/**
+ * Takes a photo once the shot before it in `line` is under way, retrying while the camera is busy
+ * with the `running` ones. Outside the screen: the React Compiler can't compile a component with
+ * its try/finally.
+ */
+async function capture(
+  camera: RefObject<CameraView | null>,
+  line: RefObject<Promise<void>>,
+  running: RefObject<number>,
+  closed: RefObject<boolean>,
+): Promise<ImportPhoto> {
+  const before = line.current;
+  let underway = () => {};
+  line.current = new Promise((resolve) => (underway = resolve));
+  await before;
+  try {
+    for (let attempt = 0; ; attempt++) {
+      if (closed.current || !camera.current) throw new Error('Camera closed');
+      const shot = camera.current.takePictureAsync({ quality: 0.7 });
+      const refusal = await Promise.race([
+        shot.then(
+          () => null,
+          (error: unknown) => ({ error }),
+        ),
+        wait(SHOT_REFUSED_MS).then(() => null),
+      ]);
+      if (!refusal) {
+        // The next tap may start trying.
+        underway();
+        running.current++;
+        try {
+          const pic = await shot;
+          return { uri: pic.uri, width: pic.width, height: pic.height };
+        } finally {
+          running.current--;
+        }
+      }
+      // Retried for as long as earlier shots keep the camera busy.
+      if (!running.current && attempt >= SHOT_RETRIES) throw refusal.error;
+      await wait(SHOT_RETRY_MS);
+    }
+  } finally {
+    underway();
+  }
+}
 
 /** 05a: photograph the plan page by page. `?retake=<index>` replaces one page. */
 export function CameraScreen() {
@@ -74,42 +120,6 @@ export function CameraScreen() {
     router.back();
   }
 
-  async function capture(): Promise<ImportPhoto> {
-    const before = line.current;
-    let underway = () => {};
-    line.current = new Promise((resolve) => (underway = resolve));
-    await before;
-    try {
-      for (let attempt = 0; ; attempt++) {
-        if (closed.current || !camera.current) throw new Error('Camera closed');
-        const shot = camera.current.takePictureAsync({ quality: 0.7 });
-        const refusal = await Promise.race([
-          shot.then(
-            () => null,
-            (error: unknown) => ({ error }),
-          ),
-          wait(SHOT_REFUSED_MS).then(() => null),
-        ]);
-        if (!refusal) {
-          // The next tap may start trying.
-          underway();
-          running.current++;
-          try {
-            const pic = await shot;
-            return { uri: pic.uri, width: pic.width, height: pic.height };
-          } finally {
-            running.current--;
-          }
-        }
-        // Retried for as long as earlier shots keep the camera busy.
-        if (!running.current && attempt >= SHOT_RETRIES) throw refusal.error;
-        await wait(SHOT_RETRY_MS);
-      }
-    } finally {
-      underway();
-    }
-  }
-
   /** Adds the pages of shot or library pick `seq` once all earlier ones are in. */
   function settle(seq: number, picked: ImportPhoto[]) {
     const q = queue.current;
@@ -130,25 +140,23 @@ export function CameraScreen() {
       // A retake replaces one page and leaves the camera, so it waits for its photo.
       setBusy(true);
       try {
-        const photo = await capture();
+        const photo = await capture(camera, line, running, closed);
         if (!closed.current) replace(photo);
       } catch {
         if (!closed.current) Alert.alert(t('planImport:errors.camera'));
-      } finally {
-        setBusy(false);
       }
+      setBusy(false);
       return;
     }
     const seq = queue.current.next++;
     setPending((n) => n + 1);
     try {
-      settle(seq, [await capture()]);
+      settle(seq, [await capture(camera, line, running, closed)]);
     } catch {
       settle(seq, []);
       if (!closed.current) Alert.alert(t('planImport:errors.camera'));
-    } finally {
-      setPending((n) => n - 1);
     }
+    setPending((n) => n - 1);
   }
 
   // "Done" waits for shots that are still being saved.

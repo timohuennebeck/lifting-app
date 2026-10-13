@@ -92,33 +92,34 @@ export function CreateAccountScreen() {
     else useOnboardingStore.getState().complete();
   };
 
+  /** Signs up with the email (unless already signed in), then saves the answers to the account. */
+  const createAccount = async () => {
+    // Creating the account accepts the documents linked below the button: the versions in
+    // effect now, loaded first so that no account exists without a record of them.
+    const documents = await fetchCurrentDocuments(i18n.language);
+    const { draft } = useOnboardingStore.getState();
+    let userId = session?.user.id;
+    if (!userId) {
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        // The language lets Supabase send its account emails in the app language.
+        options: { data: { first_name: draft.firstName.trim(), language: i18n.language } },
+      });
+      if (signUpError) return fail(authErrorKey(signUpError));
+      if (!data.session) return fail('confirmEmail');
+      userId = data.session.user.id;
+    }
+    await finish(userId, documents);
+  };
+
   const submit = async () => {
     if (!valid || busy) return;
     setBusy('email');
     setError(null);
-    try {
-      // Creating the account accepts the documents linked below the button: the versions in
-      // effect now, loaded first so that no account exists without a record of them.
-      const documents = await fetchCurrentDocuments(i18n.language);
-      const { draft } = useOnboardingStore.getState();
-      let userId = session?.user.id;
-      if (!userId) {
-        const { data, error: signUpError } = await supabase.auth.signUp({
-          email,
-          password,
-          // The language lets Supabase send its account emails in the app language.
-          options: { data: { first_name: draft.firstName.trim(), language: i18n.language } },
-        });
-        if (signUpError) return fail(authErrorKey(signUpError));
-        if (!data.session) return fail('confirmEmail');
-        userId = data.session.user.id;
-      }
-      await finish(userId, documents);
-    } catch {
-      fail('generic');
-    } finally {
-      setBusy(null);
-    }
+    await createAccount()
+      .catch(() => fail('generic'))
+      .finally(() => setBusy(null));
   };
 
   const social = async (provider: SocialProvider) => {
@@ -132,9 +133,8 @@ export function CreateAccountScreen() {
       if (user) await finish(user.id, documents);
     } catch {
       fail('generic');
-    } finally {
-      setBusy(null);
     }
+    setBusy(null);
   };
 
   return (

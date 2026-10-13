@@ -72,9 +72,8 @@ export function SignInScreen() {
         email,
         password,
       });
-      if (signInError || !data.user) {
-        return fail(signInError ? authErrorKey(signInError) : 'generic');
-      }
+      if (signInError) return fail(authErrorKey(signInError));
+      if (!data.user) return fail('generic');
       await continueAs(data.user);
     } catch {
       fail('generic');

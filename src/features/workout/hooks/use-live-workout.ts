@@ -106,11 +106,13 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     useWorkoutSessionStore.getState().goTo(index);
   };
 
-  const selectSet = (index: number, field: SetField = measures[0]) => {
+  /** Opens the keypad on row `index`, at `field` (by default its first box). */
+  const selectSet = (index: number, field?: SetField) => {
     const set = exercise?.sets[index];
     if (!set) return;
     if (index !== selectedIndex) keepTyped();
-    useWorkoutSessionStore.getState().select(set.id, inputFor(index), field);
+    // Defaulted here: the React Compiler can't compile `field = measures[0]` as a parameter.
+    useWorkoutSessionStore.getState().select(set.id, inputFor(index), field ?? measures[0]);
   };
 
   /** Logs set `index` with values in kg. */

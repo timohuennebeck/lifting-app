@@ -121,15 +121,20 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
   const save = async () => {
     if (!userId || saving) return;
     setSaving(true);
+    // Moving the entry this screen opened on to an empty day; a day with its own is edited.
+    const moved = own ? null : original;
+    // No `finally`, and nothing conditional inside the try: the React Compiler can't compile a
+    // component with either.
     try {
-      // Moving the entry this screen opened on to an empty day; a day with its own is edited.
-      await saveWeightEntryMoved(userId, date, kg, own ? null : original);
+      await saveWeightEntryMoved(userId, date, kg, moved);
       // The button's own tap is the only haptic: the save is instant, and a success pattern
       // right after it merged into one long buzz.
       router.back();
-    } finally {
+    } catch (error) {
       setSaving(false);
+      throw error;
     }
+    setSaving(false);
   };
 
   const remove = async () => {

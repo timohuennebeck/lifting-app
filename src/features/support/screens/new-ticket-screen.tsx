@@ -55,9 +55,8 @@ export function NewTicketScreen() {
       console.error('Creating ticket failed', e);
       haptics.error();
       setError(true);
-    } finally {
-      setSending(false);
     }
+    setSending(false);
   }
 
   return (

@@ -146,11 +146,14 @@ export function SetTargetsForm({
       return;
     }
     setSaving(true);
+    // No `finally`: the React Compiler can't compile a component with one.
     try {
       await onSave(final, rest);
-    } finally {
+    } catch (error) {
       setSaving(false);
+      throw error;
     }
+    setSaving(false);
   };
 
   const shown = withBuffer();

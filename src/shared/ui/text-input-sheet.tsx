@@ -40,11 +40,14 @@ export function TextInputSheet({
   const submit = async () => {
     if (!valid || busy) return;
     setBusy(true);
+    // No `finally`: the React Compiler can't compile a component with one.
     try {
       await onSubmit(value.trim());
-    } finally {
+    } catch (error) {
       setBusy(false);
+      throw error;
     }
+    setBusy(false);
   };
 
   return (

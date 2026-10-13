@@ -36,9 +36,8 @@ export function NewTemplateScreen() {
     } catch (error) {
       console.warn('Creating the template failed', error);
       haptics.error();
-    } finally {
-      setSaving(false);
     }
+    setSaving(false);
   };
 
   return (

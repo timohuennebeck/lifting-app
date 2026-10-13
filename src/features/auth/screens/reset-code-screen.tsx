@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
@@ -32,13 +32,6 @@ export function ResetCodeScreen() {
   const wait = Math.max(0, Math.ceil(RESEND_SECONDS - (now - sentAt) / 1000));
   const complete = code.length === CODE_LENGTH;
 
-  // A full code is checked straight away (e.g. filled in from the email).
-  useEffect(() => {
-    if (complete) void confirm();
-    // Only when the last digit arrives.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [complete]);
-
   async function confirm() {
     if (!complete || busy) return;
     setBusy(true);
@@ -56,18 +49,28 @@ export function ResetCodeScreen() {
         setRecovering(false);
         haptics.error();
         setError(authErrorKey(verifyError));
-        return;
+      } else {
+        haptics.success();
+        router.replace('/forgot-password/new');
       }
-      haptics.success();
-      router.replace('/forgot-password/new');
     } catch {
       setRecovering(false);
       haptics.error();
       setError('generic');
-    } finally {
-      setBusy(false);
     }
+    setBusy(false);
   }
+
+  // A full code is checked straight away (e.g. filled in from the email), only when the last
+  // digit arrives: the effect event sees the current code without being a dependency.
+  const confirmFull = useEffectEvent(() => {
+    void confirm();
+  });
+  useEffect(() => {
+    // Starting the check sets its busy state: one extra render, once per full code.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (complete) confirmFull();
+  }, [complete]);
 
   async function resend() {
     setError(null);

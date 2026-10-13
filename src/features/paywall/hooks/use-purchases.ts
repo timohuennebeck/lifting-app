@@ -23,21 +23,22 @@ export function usePurchase() {
   const buy = async (planId: PlanId) => {
     if (busy) return false;
     setBusy(true);
+    let bought = false;
     try {
       useSubscriptionStore.getState().apply(await purchases.purchase(planId));
       queryClient.invalidateQueries({ queryKey: paywallKeys.offering.queryKey });
       haptics.success();
-      return true;
+      bought = true;
     } catch (error) {
       // Closing the store's sheet isn't an error.
-      if (error instanceof PurchaseCancelledError) return false;
-      console.warn('Purchase failed', error);
-      haptics.error();
-      Alert.alert(t('errors.generic'));
-      return false;
-    } finally {
-      setBusy(false);
+      if (!(error instanceof PurchaseCancelledError)) {
+        console.warn('Purchase failed', error);
+        haptics.error();
+        Alert.alert(t('errors.generic'));
+      }
     }
+    setBusy(false);
+    return bought;
   };
 
   return { buy, busy };
@@ -53,12 +54,13 @@ export function useRestorePurchases() {
   const restore = async () => {
     if (restoring) return false;
     setRestoring(true);
+    let restored = false;
     try {
       useSubscriptionStore.getState().apply(await purchases.restore());
       queryClient.invalidateQueries({ queryKey: paywallKeys.offering.queryKey });
       haptics.success();
       Alert.alert(t('restoreResult.successTitle'), t('restoreResult.successBody'));
-      return true;
+      restored = true;
     } catch (error) {
       if (error instanceof NothingToRestoreError) {
         haptics.warning();
@@ -67,10 +69,9 @@ export function useRestorePurchases() {
         haptics.error();
         Alert.alert(tc('errors.generic'));
       }
-      return false;
-    } finally {
-      setRestoring(false);
     }
+    setRestoring(false);
+    return restored;
   };
 
   return { restore, restoring };

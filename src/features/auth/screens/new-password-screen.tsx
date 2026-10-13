@@ -39,6 +39,12 @@ export function NewPasswordScreen() {
   // The code is used up: there is no way back, only forward (Android back does nothing).
   useHardwareBack(() => {});
 
+  const fail = (key: AuthErrorKey) => {
+    haptics.error();
+    setError(key);
+    setBusy(false);
+  };
+
   async function save() {
     if (!valid || busy) return;
     setBusy(true);
@@ -47,12 +53,8 @@ export function NewPasswordScreen() {
       let user = savedFor;
       if (!user) {
         const { data, error: updateError } = await supabase.auth.updateUser({ password });
-        if (updateError || !data.user) {
-          haptics.error();
-          setError(updateError ? authErrorKey(updateError) : 'generic');
-          setBusy(false);
-          return;
-        }
+        if (updateError) return fail(authErrorKey(updateError));
+        if (!data.user) return fail('generic');
         user = data.user;
         setSavedFor(user);
       }
@@ -68,9 +70,7 @@ export function NewPasswordScreen() {
       adoptSignUpName(user);
       router.replace('/name');
     } catch {
-      haptics.error();
-      setError('generic');
-      setBusy(false);
+      fail('generic');
     }
   }
 

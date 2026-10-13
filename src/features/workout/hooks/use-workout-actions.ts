@@ -21,9 +21,8 @@ export function useWorkoutActions(workoutId: string) {
       // The workout stays open; the user can try again.
       console.error(error);
       haptics.error();
-    } finally {
-      setFinishing(false);
     }
+    setFinishing(false);
   }
 
   /** Deletes the workout and leaves (the menu's "Discard" is its confirmation). */

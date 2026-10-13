@@ -20,18 +20,19 @@ export function useStartTemplate() {
     setStartingId(template.id);
     try {
       // Only one workout runs at a time; a second one would be orphaned unfinished.
-      const activeId = await getActiveWorkoutId();
-      const workoutId =
-        activeId ?? (await startWorkout(requireUserId(), template.name, template.id));
+      let workoutId = await getActiveWorkoutId();
+      // Not `??`, which the React Compiler can't compile inside a try.
+      if (workoutId === null) {
+        workoutId = await startWorkout(requireUserId(), template.name, template.id);
+      }
       haptics.success();
       router.push(`/workout/${workoutId}`);
     } catch (error) {
       haptics.error();
       console.error(error);
-    } finally {
-      starting.current = false;
-      setStartingId(null);
     }
+    starting.current = false;
+    setStartingId(null);
   };
 
   return { start, startingId };

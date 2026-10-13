@@ -29,9 +29,8 @@ export function ClosedBanner({ ticketId, onNewTicket }: ClosedBannerProps) {
     } catch (e) {
       console.error('Reopening ticket failed', e);
       haptics.error();
-    } finally {
-      setReopening(false);
     }
+    setReopening(false);
   }
 
   return (

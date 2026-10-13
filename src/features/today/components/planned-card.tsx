@@ -46,6 +46,7 @@ export function PlannedCard({
   const markDone = async () => {
     if (busy || starting) return;
     setBusy(true);
+    // No `finally`: the React Compiler can't compile a component with one.
     try {
       await markTemplateDone(
         requireUserId(),
@@ -55,9 +56,11 @@ export function PlannedCard({
         template.estimatedMinutes,
       );
       haptics.success();
-    } finally {
+    } catch (error) {
       setBusy(false);
+      throw error;
     }
+    setBusy(false);
   };
 
   return (

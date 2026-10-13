@@ -47,7 +47,8 @@ powersync/             self-hosted service config, sync streams, docker compose
 ## Scripts
 
 `npm run typecheck`, `npm run lint`, `npm run format`, `npm run supabase:reset`, `npm run plan:eval`
-(plan import test, see below).
+(plan import test, see below), `npm run compiler:check` (lists components and hooks the React
+Compiler skips; ESLint's compiler rules catch most of these, not all).
 
 ## Support tickets (team side)
 

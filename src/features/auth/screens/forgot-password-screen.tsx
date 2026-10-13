@@ -31,16 +31,15 @@ export function ForgotPasswordScreen() {
       if (sendError) {
         haptics.error();
         setError(authErrorKey(sendError));
-        return;
+      } else {
+        haptics.success();
+        router.push({ pathname: '/forgot-password/code', params: { email } });
       }
-      haptics.success();
-      router.push({ pathname: '/forgot-password/code', params: { email } });
     } catch {
       haptics.error();
       setError('generic');
-    } finally {
-      setBusy(false);
     }
+    setBusy(false);
   }
 
   return (

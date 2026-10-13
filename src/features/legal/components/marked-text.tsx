@@ -65,10 +65,12 @@ function useLines() {
     if (measured.current[word] === y) return;
     measured.current[word] = y;
     // One update for all the words of a block.
-    frame.current ??= requestAnimationFrame(() => {
-      frame.current = null;
-      setLines([...measured.current]);
-    });
+    if (frame.current == null) {
+      frame.current = requestAnimationFrame(() => {
+        frame.current = null;
+        setLines([...measured.current]);
+      });
+    }
   };
   return [lines, report] as const;
 }

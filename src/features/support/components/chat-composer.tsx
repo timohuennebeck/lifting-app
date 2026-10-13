@@ -48,9 +48,8 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
     } catch (e) {
       console.error('Sending message failed', e);
       haptics.error();
-    } finally {
-      setSending(false);
     }
+    setSending(false);
   }
 
   return (
