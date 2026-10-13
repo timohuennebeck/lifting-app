@@ -68,6 +68,7 @@
     "add": "Add exercise",
     "swap": "Swap exercise",
     "cta": "Use this plan",
+    "reading": "Reading your plan …",
     "check_one": "Check {{count}} item",
     "check_other": "Check {{count}} items",
     "empty": "No exercises yet. Add one with +.",

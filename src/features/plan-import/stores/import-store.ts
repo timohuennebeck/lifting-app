@@ -1,25 +1,45 @@
 import { create } from 'zustand';
 
+import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
+
 import {
   type ImportedPlan,
+  ImportError,
+  type ImportFailure,
   type ImportFile,
   type ImportPhoto,
   type ImportSource,
   MAX_PHOTOS,
+  type PlanEvent,
+  streamPlan,
 } from '../lib/plan-import-service';
 
 interface ImportState {
   source: ImportSource | null;
-  /** Detected plan being reviewed on the confirm screen. */
+  /** Detected plan being reviewed on the confirm screen; it fills in while `reading`. */
   plan: ImportedPlan | null;
   /** Selected day tab on the confirm screen. */
   dayIndex: number;
+  /** Counts the analyses, so a screen only reacts to the one it started or shows. */
+  run: number;
+  /** The analysis is still sending the plan. */
+  reading: boolean;
+  /** Why an analysis stopped without a plan. */
+  failure: { run: number; reason: ImportFailure } | null;
+  /** The day the exercises being read go to. */
+  readingDay: number;
+  /** The confirm screen shows the day being read until the user picks one. */
+  following: boolean;
   setFile: (file: ImportFile) => void;
   addPhotos: (photos: ImportPhoto[]) => void;
   replacePhoto: (index: number, photo: ImportPhoto) => void;
   removePhoto: (index: number) => void;
   /** Drops photos beyond `count`, e.g. when the camera is closed without finishing. */
   truncatePhotos: (count: number) => void;
+  /** Starts reading the plan from `source`, replacing the plan; returns the run. */
+  analyze: (language: string) => number;
+  /** Stops that analysis if it is still running (the user left it). */
+  stop: (run: number) => void;
   setPlan: (plan: ImportedPlan) => void;
   editPlan: (edit: (plan: ImportedPlan) => ImportedPlan) => void;
   selectDay: (index: number) => void;
@@ -31,11 +51,45 @@ const NO_PHOTOS: ImportPhoto[] = [];
 const photosOf = (source: ImportSource | null) =>
   source?.kind === 'photos' ? source.photos : NO_PHOTOS;
 
-const EMPTY = { source: null, plan: null, dayIndex: 0 } as const;
+const EMPTY = {
+  source: null,
+  plan: null,
+  dayIndex: 0,
+  reading: false,
+  failure: null,
+  readingDay: 0,
+  following: true,
+} as const;
+
+/** The running analysis, stopped when another one starts or the user leaves. */
+let analysis: AbortController | null = null;
+
+/** The plan with what the analysis just sent. */
+function receive(s: ImportState, event: PlanEvent): Partial<ImportState> {
+  if (event.type === 'plan') return { plan: { name: event.name, days: [], newExercises: [] } };
+  const { plan } = s;
+  if (!plan) return {};
+  if (event.type === 'day') {
+    const days = [...plan.days, { ...event.day, exercises: [] }];
+    const at = days.length - 1;
+    return { plan: { ...plan, days }, readingDay: at, ...(s.following ? { dayIndex: at } : {}) };
+  }
+  const days = plan.days.map((d, i) =>
+    i === s.readingDay ? { ...d, exercises: [...d.exercises, event.exercise] } : d,
+  );
+  if (!event.newExercise) return { plan: { ...plan, days } };
+  const created = { ...event.newExercise, archived: false };
+  // Exercises the catalog doesn't have show by name once in the draft, and are created at sign-up
+  // (those the plan still uses). Kept from earlier imports too: their plan may still be the draft.
+  const { draft, update } = useOnboardingStore.getState();
+  update({ customExercises: [...draft.customExercises, created] });
+  return { plan: { ...plan, days, newExercises: [...plan.newExercises, created] } };
+}
 
 /** In-memory state of one plan import session (source, detected plan, review position). */
-export const useImportStore = create<ImportState>()((set) => ({
+export const useImportStore = create<ImportState>()((set, get) => ({
   ...EMPTY,
+  run: 0,
   setFile: (file) => set({ source: { kind: 'file', file } }),
   addPhotos: (photos) =>
     set((s) => ({
@@ -57,10 +111,42 @@ export const useImportStore = create<ImportState>()((set) => ({
     set((s) => ({
       source: { kind: 'photos', photos: photosOf(s.source).filter((_, i) => i !== index) },
     })),
-  setPlan: (plan) => set({ plan, dayIndex: 0 }),
+  analyze: (language) => {
+    analysis?.abort();
+    const controller = new AbortController();
+    analysis = controller;
+    const { source, run: last } = get();
+    const run = last + 1;
+    set({ run, plan: null, dayIndex: 0, reading: !!source, failure: null, following: true });
+    if (!source) return run;
+    streamPlan(
+      { source, language },
+      (event) => !controller.signal.aborted && set((s) => receive(s, event)),
+      controller.signal,
+    )
+      .then(() => set({ reading: false }))
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return;
+        const reason = error instanceof ImportError ? error.reason : 'failed';
+        set({ reading: false, failure: { run, reason } });
+      });
+    return run;
+  },
+  stop: (run) => {
+    if (get().run !== run || !get().reading) return;
+    analysis?.abort();
+    set({ reading: false });
+  },
+  setPlan: (plan) => {
+    analysis?.abort();
+    set({ plan, dayIndex: 0, reading: false, failure: null });
+  },
   editPlan: (edit) => set((s) => (s.plan ? { plan: edit(s.plan) } : {})),
-  selectDay: (dayIndex) => set({ dayIndex }),
-  reset: () => set(EMPTY),
+  selectDay: (dayIndex) => set({ dayIndex, following: false }),
+  reset: () => {
+    analysis?.abort();
+    set(EMPTY);
+  },
 }));
 
 export const usePhotos = () => useImportStore((s) => photosOf(s.source));

@@ -1,20 +1,24 @@
 // Reads a training plan from photos or a file for the onboarding import. The app sends the photos
 // (shrunk JPEGs) or the file as base64; the model gets them with the exercise catalog and answers
-// in a fixed shape, which becomes the plan the user reviews. It runs before there is an account,
-// so imports are limited per network and in total per day (start_plan_import).
+// in a fixed shape, which becomes the plan the user reviews. The answer is streamed: each exercise
+// goes to the app as soon as the model has written it (see `PlanEvent`). It runs before there is
+// an account, so imports are limited per network and in total per day (start_plan_import).
 import { decodeBase64 } from 'jsr:@std/encoding@1/base64';
 import { encodeHex } from 'jsr:@std/encoding@1/hex';
 
 import { admin, reply } from '../_shared/common.ts';
-import { askStructured, openAiConfigured } from '../_shared/openai.ts';
+import { openAiConfigured, type StreamedAnswer, streamStructured } from '../_shared/openai.ts';
 import {
   buildSchema,
   type CatalogExercise,
   contextText,
+  type ImportedDay,
+  type ImportedExercise,
   INSTRUCTIONS,
-  type ModelOutput,
-  toImportedPlan,
+  type NewExercise,
+  planReader,
 } from './plan.ts';
+import { PlanStream } from './stream.ts';
 
 const OPENAI_TIMEOUT_MS = 120_000;
 /** A whole number from the environment; the default when unset or not a number. */
@@ -34,6 +38,19 @@ const MAX_FILE_BYTES = 15 * 1024 * 1024;
 const MAX_TEXT = 60_000;
 const CATALOG_TTL_MS = 10 * 60_000;
 const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR'];
+
+/**
+ * What the app receives once the analysis runs, as server-sent events: the plan's name, then each
+ * day with its exercises as they are read, and lastly `done`, or `error` when the analysis broke
+ * off or found no plan. A day comes with its first exercise, so days without any never show;
+ * exercises belong to the day before them. A new exercise comes with the first line using it.
+ */
+type PlanEvent =
+  | { type: 'plan'; name: string }
+  | { type: 'day'; day: ImportedDay }
+  | { type: 'exercise'; exercise: ImportedExercise; newExercise?: NewExercise }
+  | { type: 'done' }
+  | { type: 'error'; error: 'not_a_plan' | 'analysis_failed' };
 
 interface PlanFile {
   name: string;
@@ -199,42 +216,100 @@ Deno.serve(async (req) => {
     return reply(400, { error: 'unreadable' });
   }
 
-  let answer: Awaited<ReturnType<typeof askStructured>>;
+  // Stops the model when the app goes away (the stream below is cancelled), so the rest of the
+  // answer isn't paid for. Not req.signal: Deno also aborts that once a response is delivered.
+  const stop = new AbortController();
+  let started: Awaited<ReturnType<typeof streamStructured>>;
   try {
-    answer = await askStructured({
-      instructions: INSTRUCTIONS,
-      content,
-      name: 'training_plan',
-      schema: buildSchema(catalog.map((e) => e.id)),
-      timeoutMs: OPENAI_TIMEOUT_MS,
-    });
+    started = await streamStructured(
+      {
+        instructions: INSTRUCTIONS,
+        content,
+        name: 'training_plan',
+        schema: buildSchema(catalog.map((e) => e.id)),
+        timeoutMs: OPENAI_TIMEOUT_MS,
+      },
+      stop.signal,
+    );
   } catch (error) {
     // A timeout may still have been billed, so the import stays counted.
     console.error('OpenAI request failed', error);
     return reply(502, { error: 'analysis_failed' });
   }
-  if ('upstream' in answer) {
+  if ('upstream' in started) {
     await giveBack();
-    return reply(502, { error: 'analysis_failed', upstream: answer.upstream });
-  }
-  if ('refusal' in answer) {
-    console.warn('The model refused the plan', answer.refusal);
-    return reply(422, { error: 'not_a_plan' });
-  }
-  if ('incomplete' in answer) {
-    console.error('The import did not complete', answer.incomplete);
-    return reply(502, { error: 'analysis_failed' });
+    return reply(502, { error: 'analysis_failed', upstream: started.upstream });
   }
 
-  let plan: ReturnType<typeof toImportedPlan>;
-  try {
-    plan = toImportedPlan(JSON.parse(answer.text) as ModelOutput, catalog, () =>
-      crypto.randomUUID(),
-    );
-  } catch (error) {
-    console.error('The import answer could not be read', error);
-    return reply(502, { error: 'analysis_failed' });
-  }
-  if (!plan) return reply(422, { error: 'not_a_plan' });
-  return reply(200, { plan });
+  const encoder = new TextEncoder();
+  const events = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const send = (event: PlanEvent) =>
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
+      void sendPlan(started.answer, catalog, send)
+        .catch((error) => {
+          if (stop.signal.aborted) return;
+          console.error('The import broke off', error);
+          send({ type: 'error', error: 'analysis_failed' });
+        })
+        .finally(() => {
+          try {
+            controller.close();
+          } catch {
+            // Already closed because the app went away.
+          }
+        });
+    },
+    cancel: () => stop.abort(),
+  });
+  return new Response(events, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      // Proxies pass each event on right away instead of collecting the answer.
+      'X-Accel-Buffering': 'no',
+    },
+  });
 });
+
+/** Reads the streamed answer into the app's events (see PlanEvent) and sends them. */
+async function sendPlan(
+  answer: AsyncGenerator<StreamedAnswer>,
+  catalog: CatalogExercise[],
+  send: (event: PlanEvent) => void,
+) {
+  const reader = planReader(catalog, () => crypto.randomUUID());
+  const stream = new PlanStream();
+  // A day waits for its first exercise.
+  let day: ImportedDay | null = null;
+  let exercises = 0;
+  for await (const step of answer) {
+    if ('refusal' in step) {
+      console.warn('The model refused the plan');
+      return send({ type: 'error', error: 'not_a_plan' });
+    }
+    if ('incomplete' in step) {
+      console.error('The import did not complete', step.incomplete);
+      return send({ type: 'error', error: 'analysis_failed' });
+    }
+    if ('done' in step) {
+      return send(exercises ? { type: 'done' } : { type: 'error', error: 'not_a_plan' });
+    }
+    for (const piece of stream.push(step.text)) {
+      if (piece.kind === 'start') {
+        // Leaving the loop also stops the model.
+        if (!piece.isPlan) return send({ type: 'error', error: 'not_a_plan' });
+        send({ type: 'plan', name: reader.planName(piece.name) });
+      } else if (piece.kind === 'day') {
+        day = reader.day(piece.day);
+      } else {
+        const read = reader.exercise(piece.exercise);
+        if (!read) continue;
+        if (day) send({ type: 'day', day });
+        day = null;
+        send({ type: 'exercise', ...read });
+        exercises++;
+      }
+    }
+  }
+}

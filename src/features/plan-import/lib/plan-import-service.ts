@@ -1,9 +1,9 @@
-import { FunctionsFetchError, FunctionsHttpError } from '@supabase/supabase-js';
+import { fetch } from 'expo/fetch';
 import { File } from 'expo-file-system';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 
+import { env } from '@/shared/config/env';
 import type { CustomExercise } from '@/shared/data/exercises';
-import { supabase } from '@/shared/data/supabase';
 import type { PlanDayDraft, PlanDraft, PlanExerciseDraft } from '@/shared/data/templates';
 
 export interface ImportPhoto {
@@ -103,35 +103,86 @@ async function requestBody(source: ImportSource) {
   return { file: { name: file.name, mimeType: file.mimeType ?? '', data } };
 }
 
-async function failureOf(error: unknown): Promise<ImportFailure> {
-  if (error instanceof FunctionsFetchError) return 'offline';
-  if (error instanceof FunctionsHttpError) {
-    const response = error.context as Response;
-    const text = await response.text().catch(() => '');
-    console.warn(`analyze-plan answered ${response.status}: ${text.slice(0, 300)}`);
-    try {
-      return SERVER_ERRORS[JSON.parse(text)?.error] ?? 'failed';
-    } catch {
-      return 'failed';
-    }
+/** The reason in the function's `{ error }` answer, or 'failed'. */
+function serverFailure(text: string): ImportFailure {
+  try {
+    return SERVER_ERRORS[JSON.parse(text)?.error] ?? 'failed';
+  } catch {
+    return 'failed';
   }
-  console.warn('analyze-plan could not be called', error);
-  return 'failed';
 }
 
-/**
- * Reads a training plan from photos or a file with the analyze-plan Edge Function. Throws an
- * ImportError with the reason when there is no plan to show.
- */
-export async function analyzePlan({ source, language }: AnalyzePlanInput): Promise<ImportedPlan> {
-  const { data, error } = await supabase.functions.invoke<{
-    plan: Omit<ImportedPlan, 'newExercises'> & {
-      newExercises: Omit<CustomExercise, 'archived'>[];
+/** What the analysis sends while it reads (the analyze-plan function's PlanEvent). */
+export type PlanEvent =
+  | { type: 'plan'; name: string }
+  | { type: 'day'; day: Omit<ImportedDay, 'exercises'> }
+  | {
+      type: 'exercise';
+      exercise: ImportedExercise;
+      /** Set the first time the plan uses an exercise the catalog doesn't have. */
+      newExercise?: Omit<CustomExercise, 'archived'>;
     };
-  }>('analyze-plan', { body: { ...(await requestBody(source)), language } });
-  if (error || !data?.plan) throw new ImportError(error ? await failureOf(error) : 'failed');
-  const { plan } = data;
-  return { ...plan, newExercises: plan.newExercises.map((e) => ({ ...e, archived: false })) };
+
+/**
+ * Reads a training plan from photos or a file with the analyze-plan Edge Function, which streams
+ * it: `onEvent` gets the plan's name, then each day and exercise as soon as it is read (an
+ * exercise belongs to the day before it). Resolves once the plan is complete. Throws an
+ * ImportError with the reason when there is no plan to show, also when the stream breaks off,
+ * and the abort reason once `signal` stops it.
+ */
+export async function streamPlan(
+  { source, language }: AnalyzePlanInput,
+  onEvent: (event: PlanEvent) => void,
+  signal: AbortSignal,
+) {
+  const body = JSON.stringify({ ...(await requestBody(source)), language });
+  signal.throwIfAborted();
+  // expo/fetch, unlike React Native's own fetch, hands over the answer while it arrives.
+  const response = await fetch(`${env.supabaseUrl}/functions/v1/analyze-plan`, {
+    method: 'POST',
+    headers: { apikey: env.supabasePublishableKey, 'Content-Type': 'application/json' },
+    body,
+    signal,
+  }).catch((error: unknown) => {
+    signal.throwIfAborted();
+    console.warn('analyze-plan could not be called', error);
+    throw new ImportError('offline');
+  });
+  if (!response.ok || !response.body) {
+    const text = await response.text().catch(() => '');
+    console.warn(`analyze-plan answered ${response.status}: ${text.slice(0, 300)}`);
+    throw new ImportError(serverFailure(text));
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  for (;;) {
+    const { value, done } = await reader.read().catch((error: unknown) => {
+      signal.throwIfAborted();
+      console.warn('The plan import broke off', error);
+      throw new ImportError('offline');
+    });
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    // Server-sent events: one `data:` line each, separated by a blank line.
+    let end: number;
+    while ((end = buffer.indexOf('\n\n')) >= 0) {
+      const line = buffer.slice(0, end);
+      buffer = buffer.slice(end + 2);
+      if (!line.startsWith('data:')) continue;
+      const event = JSON.parse(line.slice(5)) as
+        PlanEvent | { type: 'done' } | { type: 'error'; error: string };
+      if (event.type === 'done') return;
+      if (event.type === 'error') {
+        console.warn(`analyze-plan stopped: ${event.error}`);
+        throw new ImportError(SERVER_ERRORS[event.error] ?? 'failed');
+      }
+      onEvent(event);
+    }
+  }
+  // Ended without "done": the function stopped halfway.
+  throw new ImportError('failed');
 }
 
 /** Drops review hints and empty days so the plan can be stored. */

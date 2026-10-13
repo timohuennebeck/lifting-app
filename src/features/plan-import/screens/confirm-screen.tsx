@@ -1,7 +1,8 @@
 import { Redirect, router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
+import { Alert, ScrollView, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
@@ -27,6 +28,7 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
+import { ReadingGhost } from '../components/reading-ghost';
 import { ReviewPrompt } from '../components/review-prompt';
 import { editDayAt, editExerciseAt, settle } from '../lib/edit-plan';
 import {
@@ -40,8 +42,10 @@ import { useImportStore } from '../stores/import-store';
 
 /**
  * 06c: the detected plan in the training overview layout (03·0b). Days sit in the plan strip;
- * amber dots mark what the import wasn't sure about until the user checks it. "Selbst erstellen"
- * opens it with an empty plan to build day by day.
+ * amber dots mark what the import wasn't sure about until the user checks it. It opens with the
+ * first exercise read and fills in while the analysis sends the rest, following the day being
+ * read until the user picks one. "Selbst erstellen" opens it with an empty plan to build day by
+ * day.
  */
 export function ConfirmScreen() {
   const { t } = useTranslation(['planImport', 'training', 'common']);
@@ -50,11 +54,33 @@ export function ConfirmScreen() {
   const dayIndex = useImportStore((s) => s.dayIndex);
   const editPlan = useImportStore((s) => s.editPlan);
   const selectDay = useImportStore((s) => s.selectDay);
+  const reading = useImportStore((s) => s.reading);
+  const readingDay = useImportStore((s) => s.readingDay);
+  const failure = useImportStore((s) => s.failure);
+  // The analysis this screen shows; leaving the screen stops it.
+  const [run] = useState(() => useImportStore.getState().run);
+  const wasReading = useRef(reading);
   const updateDraft = useUpdateDraft();
   // The menu keeps its content while it animates out.
   const [menuFor, setMenuFor] = useState<number | null>(null);
   const menuShown = useLastDefined(menuFor);
   const [renameOpen, setRenameOpen] = useState(false);
+  useEffect(() => () => useImportStore.getState().stop(run), [run]);
+
+  useEffect(() => {
+    if (wasReading.current && !reading && !failure) haptics.success();
+    wasReading.current = reading;
+  }, [reading, failure]);
+
+  // Broken off halfway: a partial plan isn't taken over; read it again or go back.
+  useEffect(() => {
+    if (failure?.run !== run) return;
+    Alert.alert(t(`planImport:analysis.errors.${failure.reason}`), undefined, [
+      { text: t('common:actions.cancel'), style: 'cancel', onPress: () => router.back() },
+      { text: t('common:actions.retry'), onPress: () => router.replace('/import/analysis') },
+    ]);
+  }, [failure, run, t]);
+
   if (!plan) return <Redirect href="/import" />;
 
   const index = Math.min(dayIndex, plan.days.length - 1);
@@ -147,7 +173,8 @@ export function ConfirmScreen() {
           items={plan.days.map((d) => ({ name: d.name, review: needsReview(d) }))}
           currentIndex={index}
           onSelect={selectDay}
-          onAdd={addDay}
+          // Days the user adds go after the read ones.
+          onAdd={reading ? undefined : addDay}
         />
         {day ? (
           <>
@@ -180,34 +207,39 @@ export function ConfirmScreen() {
                 <EmptyExercises hint={t('planImport:confirm.empty')} />
               ) : (
                 exercises.map((e, i) => (
-                  <TemplateExerciseCard
+                  <Animated.View
                     key={`${e.exerciseId}-${i}`}
-                    exerciseId={e.exerciseId}
-                    sets={e.sets}
-                    review={!!e.raw}
-                    onMenu={() => setMenuFor(i)}
-                    onPress={() =>
-                      router.push({ pathname: '/exercise/[id]', params: { id: e.exerciseId } })
-                    }
+                    entering={reading ? FadeInDown.duration(300) : undefined}
                   >
-                    {newIds.has(e.exerciseId) ? (
-                      <Text variant="caption" tone="accent" className="pt-1.5 font-inter">
-                        {t('planImport:confirm.newExercise')}
-                      </Text>
-                    ) : null}
-                    {e.raw ? (
-                      <ReviewPrompt
-                        message={t('planImport:confirm.readAs', { raw: e.raw })}
-                        alternatives={e.alternatives}
-                        onConfirm={() => editExercise(i, settle)}
-                        onPickAlternative={(exerciseId) =>
-                          editExercise(i, (x) => settle({ ...x, exerciseId }))
-                        }
-                      />
-                    ) : null}
-                  </TemplateExerciseCard>
+                    <TemplateExerciseCard
+                      exerciseId={e.exerciseId}
+                      sets={e.sets}
+                      review={!!e.raw}
+                      onMenu={() => setMenuFor(i)}
+                      onPress={() =>
+                        router.push({ pathname: '/exercise/[id]', params: { id: e.exerciseId } })
+                      }
+                    >
+                      {newIds.has(e.exerciseId) ? (
+                        <Text variant="caption" tone="accent" className="pt-1.5 font-inter">
+                          {t('planImport:confirm.newExercise')}
+                        </Text>
+                      ) : null}
+                      {e.raw ? (
+                        <ReviewPrompt
+                          message={t('planImport:confirm.readAs', { raw: e.raw })}
+                          alternatives={e.alternatives}
+                          onConfirm={() => editExercise(i, settle)}
+                          onPickAlternative={(exerciseId) =>
+                            editExercise(i, (x) => settle({ ...x, exerciseId }))
+                          }
+                        />
+                      ) : null}
+                    </TemplateExerciseCard>
+                  </Animated.View>
                 ))
               )}
+              {reading && index === readingDay ? <ReadingGhost /> : null}
             </View>
           </>
         ) : null}
@@ -216,12 +248,15 @@ export function ConfirmScreen() {
       <BottomFade>
         <Button
           label={
-            pending
-              ? t('planImport:confirm.check', { count: pending })
-              : t('planImport:confirm.cta')
+            reading
+              ? t('planImport:confirm.reading')
+              : pending
+                ? t('planImport:confirm.check', { count: pending })
+                : t('planImport:confirm.cta')
           }
-          variant={pending ? 'secondary' : 'primary'}
-          disabled={!hasExercises}
+          variant={pending || reading ? 'secondary' : 'primary'}
+          // Nor after it broke off: a partial plan isn't taken over.
+          disabled={!hasExercises || reading || failure?.run === run}
           onPress={submit}
         />
       </BottomFade>

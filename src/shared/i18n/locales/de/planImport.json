@@ -68,6 +68,7 @@
     "add": "Übung hinzufügen",
     "swap": "Übung tauschen",
     "cta": "Plan übernehmen",
+    "reading": "Plan wird gelesen …",
     "check_one": "Noch {{count}} Punkt prüfen",
     "check_other": "Noch {{count}} Punkte prüfen",
     "empty": "Noch keine Übungen. Füg eine mit + hinzu.",

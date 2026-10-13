@@ -126,15 +126,21 @@ them to OpenAI together with the exercise catalog and returns the plan in the ap
 matched to a catalog exercise, or a new exercise the app creates for the user at sign-up. Lines it
 isn't sure about come with alternatives for the user to review.
 
+- **Streaming:** the function passes each exercise on as soon as the model has written it, as
+  server-sent events (`PlanEvent` in its `index.ts`); the app reads them with `expo/fetch`. The
+  review opens with the first exercise and fills in day by day; "Plan übernehmen" waits for the
+  whole plan. Leaving the review stops the model. Limits and bad requests still answer with an
+  HTTP status before the stream starts.
 - **Secrets:** the same `OPENAI_API_KEY` and `OPENAI_MODEL` as the body check.
 - **Rules (server-side):** it runs before there is an account, so imports are limited per network
   (`PLAN_IMPORT_IP_LIMIT`, default 10) and in total (`PLAN_IMPORT_DAILY_LIMIT`, default 1,000) per
   24 hours. `plan_import_requests` keeps a keyed hash of the IP, never the IP itself.
 - **Testing:** `npm run plan:eval` sends the 15 test plans in `scripts/plan-import-eval/fixtures`
   (typed, spreadsheet, handwritten, whiteboard, screenshot; German, English, Portuguese) to the
-  function and scores what it read against `cases.json`. `npm run plan:eval -- --dir <folder>` reads
-  your own photos and files and prints what it found. One run is 15 imports, so set
-  `PLAN_IMPORT_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
+  function and scores what it read against `cases.json`, with the time to the first exercise and
+  to the whole plan. `npm run plan:eval -- --dir <folder>` reads your own photos and files and
+  prints what it found. One run is 15 imports, so set `PLAN_IMPORT_IP_LIMIT=1000` in
+  `supabase/functions/.env` locally first.
 
 ## Google Sign-In
 

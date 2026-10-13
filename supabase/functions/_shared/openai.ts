@@ -44,19 +44,9 @@ export interface StructuredRequest {
   timeoutMs: number;
 }
 
-/**
- * Asks the model for an answer matching `schema`. Resolves with its text, a refusal, why it is
- * incomplete, or OpenAI's HTTP status when the request failed; throws on timeouts and network
- * errors. Logs the token usage so costs can be followed in the function logs.
- */
-export async function askStructured({
-  instructions,
-  content,
-  name,
-  schema,
-  timeoutMs,
-}: StructuredRequest) {
-  const response = await fetch(OPENAI_URL, {
+/** The Responses API request for an answer forced into `schema`. */
+function request({ instructions, content, name, schema }: StructuredRequest, stream: boolean) {
+  return {
     method: 'POST',
     headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -66,16 +56,100 @@ export async function askStructured({
       text: { format: { type: 'json_schema', name, strict: true, schema } },
       ...(OPENAI_REASONING_EFFORT ? { reasoning: { effort: OPENAI_REASONING_EFFORT } } : {}),
       store: false,
+      ...(stream ? { stream: true } : {}),
     }),
-    signal: AbortSignal.timeout(timeoutMs),
+  };
+}
+
+const logUsage = (name: string, usage: ResponsesApiResult['usage']) =>
+  console.log(`${name}: ${usage?.input_tokens ?? '?'} in, ${usage?.output_tokens ?? '?'} out`);
+
+/**
+ * Asks the model for an answer matching `schema`. Resolves with its text, a refusal, why it is
+ * incomplete, or OpenAI's HTTP status when the request failed; throws on timeouts and network
+ * errors. Logs the token usage so costs can be followed in the function logs.
+ */
+export async function askStructured(req: StructuredRequest) {
+  const response = await fetch(OPENAI_URL, {
+    ...request(req, false),
+    signal: AbortSignal.timeout(req.timeoutMs),
   });
   if (!response.ok) {
     console.error('OpenAI request failed', response.status, await response.text());
     return { upstream: response.status };
   }
   const body = (await response.json()) as ResponsesApiResult;
-  console.log(
-    `${name}: ${body.usage?.input_tokens ?? '?'} in, ${body.usage?.output_tokens ?? '?'} out`,
-  );
+  logUsage(req.name, body.usage);
   return readResponse(body);
+}
+
+/** A step of a streamed answer: more of its text, or how it ended. */
+export type StreamedAnswer =
+  | { text: string }
+  | { refusal: true }
+  | { done: true }
+  | { incomplete: string };
+
+/**
+ * Like askStructured, but the answer arrives as it is written: resolves once OpenAI accepted the
+ * request (or with its HTTP status), then `answer` yields the text piece by piece and lastly how
+ * it ended. Stops with `signal` (e.g. the app went away) or after `timeoutMs`, throwing in
+ * `answer`.
+ */
+export async function streamStructured(req: StructuredRequest, signal: AbortSignal) {
+  const response = await fetch(OPENAI_URL, {
+    ...request(req, true),
+    signal: AbortSignal.any([signal, AbortSignal.timeout(req.timeoutMs)]),
+  });
+  if (!response.ok || !response.body) {
+    console.error('OpenAI request failed', response.status, await response.text());
+    return { upstream: response.status };
+  }
+  return { answer: streamedAnswer(response.body, req.name) };
+}
+
+/** The Responses API's server-sent events, read into the steps of the answer. */
+async function* streamedAnswer(
+  body: ReadableStream<Uint8Array>,
+  name: string,
+): AsyncGenerator<StreamedAnswer> {
+  let buffer = '';
+  for await (const chunk of body.pipeThrough(new TextDecoderStream())) {
+    buffer += chunk;
+    let end: number;
+    // Events are separated by a blank line; only their `data:` lines matter.
+    while ((end = buffer.indexOf('\n\n')) >= 0) {
+      const lines = buffer.slice(0, end).split('\n');
+      buffer = buffer.slice(end + 2);
+      const data = lines
+        .filter((line) => line.startsWith('data:'))
+        .map((line) => line.slice(5).trimStart())
+        .join('\n');
+      if (!data || data === '[DONE]') continue;
+      const event = JSON.parse(data) as {
+        type: string;
+        delta?: string;
+        response?: ResponsesApiResult;
+      };
+      if (event.type === 'response.output_text.delta' && event.delta) {
+        yield { text: event.delta };
+      } else if (event.type === 'response.refusal.delta') {
+        yield { refusal: true };
+        return;
+      } else if (event.type === 'response.completed') {
+        logUsage(name, event.response?.usage);
+        yield { done: true };
+        return;
+      } else if (
+        event.type === 'response.incomplete' ||
+        event.type === 'response.failed' ||
+        event.type === 'error'
+      ) {
+        console.error('OpenAI stream ended early', data.slice(0, 500));
+        yield { incomplete: event.response?.status ?? event.type };
+        return;
+      }
+    }
+  }
+  yield { incomplete: 'cut_off' };
 }

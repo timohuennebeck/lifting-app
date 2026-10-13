@@ -113,6 +113,10 @@ function requestBody({ files, as, language }, shrink) {
   };
 }
 
+/**
+ * One import. The function streams the plan as server-sent events (see its PlanEvent); they are
+ * put together like the app does. `first` is when the first exercise arrived, `seconds` the end.
+ */
 async function analyze(body) {
   const started = performance.now();
   const seconds = () => (performance.now() - started) / 1000;
@@ -126,10 +130,41 @@ async function analyze(body) {
   } catch (error) {
     return { status: 0, seconds: seconds(), plan: null, error: error.cause?.code ?? error.message };
   }
-  const answer = await response.json().catch(() => ({}));
-  // The function answers { error }; the runtime and gateway { code, message } or { message }.
-  const error = answer.error ?? [answer.code, answer.message].filter(Boolean).join(': ');
-  return { status: response.status, seconds: seconds(), plan: answer.plan ?? null, error };
+  if (!response.ok) {
+    const answer = await response.json().catch(() => ({}));
+    // The function answers { error }; the runtime and gateway { code, message } or { message }.
+    const error = answer.error ?? [answer.code, answer.message].filter(Boolean).join(': ');
+    return { status: response.status, seconds: seconds(), plan: null, error };
+  }
+  let plan = null;
+  let first = null;
+  let error = 'cut_off';
+  let buffer = '';
+  try {
+    read: for await (const chunk of response.body.pipeThrough(new TextDecoderStream())) {
+      buffer += chunk;
+      let end;
+      while ((end = buffer.indexOf('\n\n')) >= 0) {
+        const line = buffer.slice(0, end);
+        buffer = buffer.slice(end + 2);
+        if (!line.startsWith('data:')) continue;
+        const event = JSON.parse(line.slice(5));
+        if (event.type === 'plan') plan = { name: event.name, days: [], newExercises: [] };
+        else if (event.type === 'day') plan.days.push({ ...event.day, exercises: [] });
+        else if (event.type === 'exercise') {
+          first ??= seconds();
+          plan.days.at(-1).exercises.push(event.exercise);
+          if (event.newExercise) plan.newExercises.push(event.newExercise);
+        } else {
+          error = event.type === 'error' ? event.error : null;
+          break read;
+        }
+      }
+    }
+  } catch (cause) {
+    error = cause.message;
+  }
+  return { status: 200, first, seconds: seconds(), plan: error ? null : plan, error };
 }
 
 /** Catalog exercises by id, for readable output (ids when the catalog can't be read). */
@@ -241,7 +276,7 @@ function score(expect, result, names, language) {
   };
   const { plan } = result;
   if (expect.notAPlan) {
-    tally(s.days, result.status === 422 && result.error === 'not_a_plan');
+    tally(s.days, result.error === 'not_a_plan');
     if (!s.days.ok)
       s.issues.push(`expected "not a plan", got ${result.status} ${result.error ?? ''}`);
     return s;
@@ -381,6 +416,10 @@ function reportStop(skipped) {
   return text;
 }
 
+/** When the first exercise arrived and when the plan was complete. */
+const timing = ({ first, seconds }) =>
+  `${first == null ? '–' : `${first.toFixed(1)} s`} / ${seconds.toFixed(1)} s`;
+
 function writeReport(name, text, results) {
   const out = join(HERE, 'out', new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19));
   mkdirSync(out, { recursive: true });
@@ -399,7 +438,7 @@ async function runFixtures() {
     const result = await send(requestBody({ ...c, files }, false));
     if (!result) return null;
     const s = score(c.expect, result, names, c.language);
-    console.log(`${passed(s) ? 'PASS' : 'FAIL'}  ${c.id}  ${result.seconds.toFixed(1)} s`);
+    console.log(`${passed(s) ? 'PASS' : 'FAIL'}  ${c.id}  ${timing(result)}`);
     return { case: c, result, score: s };
   });
   const stopNote = reportStop(
@@ -408,18 +447,22 @@ async function runFixtures() {
   if (!results.length) process.exit(1);
 
   const header =
-    '| case | time | days | weekdays | exercises | sets | reps | RIR/rest | extra | to review | |';
+    '| case | first exercise / all | days | weekdays | exercises | sets | reps | RIR/rest | extra | to review | |';
   const rows = results.map(
     ({ case: c, result, score: s }) =>
-      `| ${c.id} | ${result.seconds.toFixed(1)} s | ${ratio(s.days)} | ${ratio(s.weekdays)} | ${ratio(s.exercises)} | ${ratio(s.sets)} | ${ratio(s.reps)} | ${ratio(s.details)} | ${s.extra} | ${s.review} | ${passed(s) ? 'PASS' : 'FAIL'} |`,
+      `| ${c.id} | ${timing(result)} | ${ratio(s.days)} | ${ratio(s.weekdays)} | ${ratio(s.exercises)} | ${ratio(s.sets)} | ${ratio(s.reps)} | ${ratio(s.details)} | ${s.extra} | ${s.review} | ${passed(s) ? 'PASS' : 'FAIL'} |`,
   );
   const sum = (key) =>
     results.reduce(
       (c, { score: s }) => ({ ok: c.ok + s[key].ok, total: c.total + s[key].total }),
       counter(),
     );
-  const times = results.map((r) => r.result.seconds).sort((a, b) => a - b);
-  const totals = `| **all** | median ${times[Math.floor(times.length / 2)].toFixed(1)} s, max ${times.at(-1).toFixed(1)} s | ${percent(sum('days'))} | ${percent(sum('weekdays'))} | ${percent(sum('exercises'))} | ${percent(sum('sets'))} | ${percent(sum('reps'))} | ${percent(sum('details'))} | ${results.reduce((n, r) => n + r.score.extra, 0)} | ${results.reduce((n, r) => n + r.score.review, 0)} | ${results.filter((r) => passed(r.score)).length}/${results.length} |`;
+  const median = (values) => {
+    const sorted = values.filter((v) => v != null).sort((a, b) => a - b);
+    return sorted.length ? `${sorted[Math.floor(sorted.length / 2)].toFixed(1)} s` : '–';
+  };
+  const firsts = median(results.map((r) => r.result.first));
+  const totals = `| **all** | median first ${firsts}, all ${median(results.map((r) => r.result.seconds))} | ${percent(sum('days'))} | ${percent(sum('weekdays'))} | ${percent(sum('exercises'))} | ${percent(sum('sets'))} | ${percent(sum('reps'))} | ${percent(sum('details'))} | ${results.reduce((n, r) => n + r.score.extra, 0)} | ${results.reduce((n, r) => n + r.score.review, 0)} | ${results.filter((r) => passed(r.score)).length}/${results.length} |`;
   const table = [header, `|${' --- |'.repeat(11)}`, ...rows, totals].join('\n');
   const details = results
     .map(({ case: c, result, score: s }) => {
@@ -469,14 +512,14 @@ async function runDir() {
     const text = result.plan
       ? describePlan(result.plan, names, dirLanguage)
       : `(${result.status} ${result.error ?? ''})`;
-    console.log(`\n== ${item.id}  ${result.seconds.toFixed(1)} s\n${text}`);
+    console.log(`\n== ${item.id}  ${timing(result)}\n${text}`);
     return { import: item, result, text };
   });
   reportStop(imports.filter((i) => !results.some((r) => r.import === i)).map((i) => i.id));
   if (!results.length) process.exit(1);
   writeReport(
     'read',
-    `# Plan import: ${dir}\n\n${results.map((r) => `## ${r.import.id} (${r.result.seconds.toFixed(1)} s)\n\n\`\`\`\n${r.text}\n\`\`\``).join('\n\n')}\n`,
+    `# Plan import: ${dir}\n\n${results.map((r) => `## ${r.import.id} (${timing(r.result)})\n\n\`\`\`\n${r.text}\n\`\`\``).join('\n\n')}\n`,
     results,
   );
 }

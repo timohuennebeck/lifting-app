@@ -68,6 +68,7 @@
     "add": "Adicionar exercício",
     "swap": "Trocar exercício",
     "cta": "Usar este plano",
+    "reading": "Lendo o plano …",
     "check_one": "Revisar {{count}} item",
     "check_other": "Revisar {{count}} itens",
     "empty": "Ainda sem exercícios. Adicione um com +.",

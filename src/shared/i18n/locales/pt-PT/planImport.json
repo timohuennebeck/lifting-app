@@ -68,6 +68,7 @@
     "add": "Adicionar exercício",
     "swap": "Trocar exercício",
     "cta": "Usar este plano",
+    "reading": "A ler o plano …",
     "check_one": "Rever {{count}} ponto",
     "check_other": "Rever {{count}} pontos",
     "empty": "Ainda sem exercícios. Adiciona um com +.",

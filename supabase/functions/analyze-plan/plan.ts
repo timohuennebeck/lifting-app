@@ -154,7 +154,7 @@ export function buildSchema(ids: string[]) {
   };
 }
 
-interface ModelExercise {
+export interface ModelExercise {
   raw: string;
   catalog_id: string | null;
   certain: boolean;
@@ -174,18 +174,26 @@ interface ModelExercise {
   rest_seconds: number | null;
 }
 
-/** The model's answer, forced by `buildSchema`. */
-export interface ModelOutput {
-  is_plan: boolean;
+/** A day of the model's answer, forced by `buildSchema`. */
+export interface ModelDay {
+  heading: string;
   name: string;
-  days: { heading: string; name: string; weekday: number | null; exercises: ModelExercise[] }[];
+  weekday: number | null;
+  exercises: ModelExercise[];
 }
 
-// What the app receives; the same shapes as its ImportedPlan and CustomExercise.
+// What the app receives; the same shapes as its ImportedDay, ImportedExercise and CustomExercise.
 interface SetTarget {
   targetMin: number | null;
   targetMax: number | null;
   rir: number | null;
+}
+
+export interface ImportedDay {
+  name: string;
+  weekday: number | null;
+  /** The heading as read, when there is no weekday. */
+  rawDay?: string;
 }
 
 export interface ImportedExercise {
@@ -197,6 +205,7 @@ export interface ImportedExercise {
   alternatives?: string[];
 }
 
+/** An exercise the catalog doesn't have, created for the user with the plan. */
 export interface NewExercise {
   id: string;
   name: string;
@@ -204,13 +213,6 @@ export interface NewExercise {
   secondary: Muscle[];
   measures: string[];
   restSeconds: number;
-}
-
-export interface ImportedPlan {
-  name: string;
-  days: { name: string; weekday: number | null; rawDay?: string; exercises: ImportedExercise[] }[];
-  /** Exercises the catalog doesn't have, referenced by id; created for the user with the plan. */
-  newExercises: NewExercise[];
 }
 
 const clampInt = (value: number | null, min: number, max: number) =>
@@ -232,16 +234,11 @@ function setTarget(line: ModelExercise, timed: boolean): SetTarget {
 }
 
 /**
- * The model's answer in the shape the app stores: each set as a row, and every new exercise once
- * with an id (`newId()`) the plan references. Numbers are kept in the ranges the database
- * accepts. Null when there is no plan.
+ * Turns the model's answer into the shapes the app stores, part by part as it streams in: each
+ * set as a row, and every new exercise once with an id (`newId()`) the plan references. Numbers
+ * are kept in the ranges the database accepts.
  */
-export function toImportedPlan(
-  output: ModelOutput,
-  catalog: CatalogExercise[],
-  newId: () => string,
-): ImportedPlan | null {
-  if (!output.is_plan) return null;
+export function planReader(catalog: CatalogExercise[], newId: () => string) {
   const timedIds = new Set(catalog.filter((e) => e.measures.includes('seconds')).map((e) => e.id));
   // The same new exercise on two days is one exercise.
   const created = new Map<string, NewExercise>();
@@ -253,46 +250,24 @@ export function toImportedPlan(
     // A name the database accepts (1–60 characters): the line as written if the model gave none.
     const clean = cut(name, 60) || cut(raw, 60);
     const key = clean.toLocaleLowerCase();
-    let fresh = created.get(key);
-    if (!fresh && clean && primary.length) {
-      fresh = {
-        id: newId(),
-        name: clean,
-        primary: [...new Set(primary)] as Muscle[],
-        secondary: [...new Set(secondary)].filter((m) => !primary.includes(m)) as Muscle[],
-        measures: [...(weighted ? ['weight'] : []), timed ? 'seconds' : 'reps'],
-        restSeconds: DEFAULT_REST_SECONDS,
-      };
-      created.set(key, fresh);
-    }
-    return fresh;
-  };
-
-  const exerciseOf = (line: ModelExercise): ImportedExercise | null => {
-    const fresh = line.catalog_id
-      ? undefined
-      : line.new_exercise && newExercise(line.new_exercise, line.raw);
-    const id = line.catalog_id ?? fresh?.id;
-    if (!id) return null;
-    const timed = fresh ? fresh.measures.includes('seconds') : timedIds.has(id);
-    const target = setTarget(line, timed);
-    return {
-      exerciseId: id,
-      sets: Array.from({ length: clampInt(line.sets, 1, MAX_SETS) ?? DEFAULT_SETS }, () => ({
-        ...target,
-      })),
-      restSeconds: clampInt(line.rest_seconds, 0, 600),
-      ...(line.certain
-        ? {}
-        : {
-            raw: cut(line.raw, 80),
-            alternatives: line.alternatives.filter((a) => a !== id).slice(0, 2),
-          }),
+    const known = created.get(key);
+    if (known || !clean || !primary.length) return { fresh: known, first: false };
+    const fresh: NewExercise = {
+      id: newId(),
+      name: clean,
+      primary: [...new Set(primary)] as Muscle[],
+      secondary: [...new Set(secondary)].filter((m) => !primary.includes(m)) as Muscle[],
+      measures: [...(weighted ? ['weight'] : []), timed ? 'seconds' : 'reps'],
+      restSeconds: DEFAULT_REST_SECONDS,
     };
+    created.set(key, fresh);
+    return { fresh, first: true };
   };
 
-  const days = output.days
-    .map((day) => {
+  return {
+    planName: (name: string) => cut(name, 30) || 'Plan',
+
+    day: (day: Omit<ModelDay, 'exercises'>): ImportedDay => {
       const weekday = clampInt(day.weekday, 0, 6);
       const name = cut(day.name, 24) || cut(day.heading, 24);
       return {
@@ -300,11 +275,36 @@ export function toImportedPlan(
         weekday,
         // Without a weekday the user picks one on review; the heading tells them which day it is.
         ...(weekday == null ? { rawDay: cut(day.heading, 40) || name } : {}),
-        exercises: day.exercises.map(exerciseOf).filter((e) => e !== null),
       };
-    })
-    .filter((d) => d.exercises.length);
-  if (!days.length) return null;
+    },
 
-  return { name: cut(output.name, 30) || 'Plan', days, newExercises: [...created.values()] };
+    /**
+     * The exercise, with the new exercise it introduces the first time one is used; null for a
+     * line with neither a catalog exercise nor a usable new one.
+     */
+    exercise: (line: ModelExercise) => {
+      const { fresh, first } =
+        !line.catalog_id && line.new_exercise
+          ? newExercise(line.new_exercise, line.raw)
+          : { fresh: undefined, first: false };
+      const id = line.catalog_id ?? fresh?.id;
+      if (!id) return null;
+      const timed = fresh ? fresh.measures.includes('seconds') : timedIds.has(id);
+      const target = setTarget(line, timed);
+      const exercise: ImportedExercise = {
+        exerciseId: id,
+        sets: Array.from({ length: clampInt(line.sets, 1, MAX_SETS) ?? DEFAULT_SETS }, () => ({
+          ...target,
+        })),
+        restSeconds: clampInt(line.rest_seconds, 0, 600),
+        ...(line.certain
+          ? {}
+          : {
+              raw: cut(line.raw, 80),
+              alternatives: line.alternatives.filter((a) => a !== id).slice(0, 2),
+            }),
+      };
+      return { exercise, newExercise: first ? fresh : undefined };
+    },
+  };
 }

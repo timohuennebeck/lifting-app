@@ -20,7 +20,8 @@ export interface PlanBarProps {
   items: PlanBarItem[];
   currentIndex: number;
   onSelect: (index: number) => void;
-  onAdd: () => void;
+  /** Adds a day; without it there is no "+". */
+  onAdd?: () => void;
 }
 
 /** Plan strip of the plan's days, numbered, with a "+" to add a day (03·0b). */
@@ -67,18 +68,20 @@ export function PlanBar({ items, currentIndex, onSelect, onAdd }: PlanBarProps) 
           </PressableScale>
         );
       })}
-      <View className="justify-end" style={{ width: SLOT }}>
-        <PressableScale
-          haptic="tap"
-          accessibilityLabel={t('overview.addTraining')}
-          onPress={onAdd}
-          className="items-center justify-center self-center rounded-full bg-elevated"
-          // Centred on the slots: their ring hangs 3pt below the 32pt slot.
-          style={{ width: PLAN_ADD_SIZE, height: PLAN_ADD_SIZE, marginBottom: -3 }}
-        >
-          <Icon name="plus" size={13} />
-        </PressableScale>
-      </View>
+      {onAdd ? (
+        <View className="justify-end" style={{ width: SLOT }}>
+          <PressableScale
+            haptic="tap"
+            accessibilityLabel={t('overview.addTraining')}
+            onPress={onAdd}
+            className="items-center justify-center self-center rounded-full bg-elevated"
+            // Centred on the slots: their ring hangs 3pt below the 32pt slot.
+            style={{ width: PLAN_ADD_SIZE, height: PLAN_ADD_SIZE, marginBottom: -3 }}
+          >
+            <Icon name="plus" size={13} />
+          </PressableScale>
+        </View>
+      ) : null}
     </ScrollView>
   );
 }
