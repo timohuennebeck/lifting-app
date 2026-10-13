@@ -103,7 +103,12 @@ export function NewPasswordScreen() {
         />
         <PasswordStrength password={password} />
         {error ? (
-          <Text variant="caption" tone="danger" className="px-1 pt-1">
+          <Text
+            variant="caption"
+            tone="danger"
+            className="px-1 pt-1"
+            accessibilityLiveRegion="assertive"
+          >
             {t(`errors.${error}`)}
           </Text>
         ) : null}

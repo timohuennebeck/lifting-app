@@ -5,6 +5,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { type CustomExercise, useCustomExerciseStore } from '@/shared/data/exercises';
 import type { EquipmentAccess, Experience, Goal, Sex } from '@/shared/data/profile';
 import type { PlanDraft } from '@/shared/data/templates';
+import { DEFAULT_BODY_WEIGHT_KG } from '@/shared/lib/body-weight';
 import type { UnitSystem } from '@/shared/lib/format';
 import { mmkvStorage } from '@/shared/lib/storage';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
@@ -38,7 +39,7 @@ const initialDraft = (): OnboardingDraft => ({
   sex: null,
   birthDate: null,
   unitSystem: IMPERIAL_REGIONS.includes(getLocales()[0]?.regionCode ?? '') ? 'imperial' : 'metric',
-  weightKg: 78,
+  weightKg: DEFAULT_BODY_WEIGHT_KG,
   heightCm: 178,
   experience: null,
   complaints: [],

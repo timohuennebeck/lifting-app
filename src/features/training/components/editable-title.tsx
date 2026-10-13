@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { TextInput } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
+import { TRAINING_NAME_MAX } from '@/shared/lib/limits';
 
 export interface EditableTitleProps {
   value: string;
@@ -35,7 +36,7 @@ export function EditableTitle({ value, onSubmit }: EditableTitleProps) {
       onFocus={() => setDraft(value)}
       onBlur={finish}
       accessibilityLabel={t('options.rename')}
-      maxLength={40}
+      maxLength={TRAINING_NAME_MAX}
       multiline
       scrollEnabled={false}
       submitBehavior="blurAndSubmit"

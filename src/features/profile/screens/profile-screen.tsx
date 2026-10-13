@@ -18,6 +18,7 @@ import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
+import { FIRST_NAME_MAX } from '@/shared/lib/limits';
 
 import { ActivityHeatmap } from '../components/activity-heatmap';
 import { type AvatarAction, AvatarSheet } from '../components/avatar-sheet';
@@ -28,7 +29,6 @@ import { pickAvatar, removeAvatar, saveAvatar } from '../lib/avatar';
 const PAGE = 10;
 /** Matches the check on profiles.bio. */
 const BIO_MAX = 150;
-const NAME_MAX = 40;
 
 interface LocalPhoto {
   uri: string;
@@ -218,7 +218,7 @@ export function ProfileScreen() {
         label={t(`${editingField}.label`)}
         placeholder={t(`${editingField}.placeholder`)}
         initialValue={(editingAbout ? profile?.bio : profile?.firstName) ?? ''}
-        maxLength={editingAbout ? BIO_MAX : NAME_MAX}
+        maxLength={editingAbout ? BIO_MAX : FIRST_NAME_MAX}
         multiline={editingAbout}
         optional={editingAbout}
         onSave={saveText}

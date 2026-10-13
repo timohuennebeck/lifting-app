@@ -1,4 +1,4 @@
-import { CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraView } from 'expo-camera';
 import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
@@ -12,6 +12,7 @@ import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { CameraPermission } from '@/shared/ui/camera/camera-permission';
+import { useCameraScreenPermission } from '@/shared/ui/camera/use-camera-screen-permission';
 import {
   CameraSideButton,
   CaptureRow,
@@ -42,7 +43,7 @@ export function CameraScreen() {
   const insets = useSafeAreaInsets();
   const { retake } = useLocalSearchParams<{ retake?: string }>();
   const retakeIndex = retake !== undefined ? Number(retake) : null;
-  const [permission, requestPermission] = useCameraPermissions();
+  const [permission, requestPermission] = useCameraScreenPermission();
   const camera = useRef<CameraView>(null);
   const [torch, setTorch] = useState(false);
   const [busy, setBusy] = useState(false);

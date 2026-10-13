@@ -10,8 +10,19 @@ module.exports = defineConfig([
   },
   {
     rules: {
-      '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
+  },
+  {
+    // The TypeScript plugin only applies to TypeScript files, so plain JS (scripts) lints too.
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
+    },
+  },
+  {
+    // Node scripts print their results and read their settings from the environment.
+    files: ['scripts/**'],
+    rules: { 'no-console': 'off', 'expo/no-env-var-destructuring': 'off' },
   },
 ]);

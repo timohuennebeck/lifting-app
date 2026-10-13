@@ -209,6 +209,15 @@ function summarize(rows: RowOf<typeof templateListQuery>[]): TemplateSummary[] {
   }));
 }
 
+/**
+ * The plan Today follows and Training opens on: the one marked active, else the first plan with
+ * a training. Templates without a plan sort first (NULL position), so they are skipped.
+ */
+export const currentCollectionId = (
+  activeId: string | null | undefined,
+  templates: TemplateSummary[],
+) => activeId ?? templates.find((t) => t.collectionId)?.collectionId ?? null;
+
 /** All templates with collection info and size stats, ordered for display. */
 export function useTemplates() {
   return useDrizzleQuery({

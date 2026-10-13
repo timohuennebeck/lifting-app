@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
 
 import type { AppLanguage } from '@/shared/i18n/resources';
-import { CM_PER_INCH, kgToLb, lbToKg, type UnitSystem } from '@/shared/lib/format';
-import { clamp, roundTenth } from '@/shared/lib/math';
+import { CM_PER_INCH, type UnitSystem } from '@/shared/lib/format';
+import { clamp } from '@/shared/lib/math';
 import { useUserId } from '@/shared/stores/session-store';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
@@ -19,31 +19,11 @@ export type EquipmentAccess = 'gym' | 'home' | 'bodyweight';
 
 /** Limits of the body measurements, in onboarding and in Settings. Ages in whole years. */
 export const AGE_RANGE = { min: 14, max: 99 } as const;
-const WEIGHT_KG = { min: 30, max: 250, step: 0.5 } as const;
-const WEIGHT_LB = { min: 66, max: 550, step: 1 } as const;
 const HEIGHT_CM = { min: 120, max: 230 } as const;
 const HEIGHT_IN = { min: 47, max: 91 } as const;
-export const FIRST_NAME_MAX = 24;
-
-/** Body-weight range in the user's unit (kg or lb). */
-export const bodyWeightRange = (units: UnitSystem) =>
-  units === 'imperial' ? WEIGHT_LB : WEIGHT_KG;
 
 /** Height range in the user's unit (cm or inches). */
 export const heightRange = (units: UnitSystem) => (units === 'imperial' ? HEIGHT_IN : HEIGHT_CM);
-
-/** Stored kg → value edited in the user's unit (whole lb), clamped to the range. */
-export function bodyWeightToDisplay(kg: number, units: UnitSystem) {
-  const { min, max } = bodyWeightRange(units);
-  return clamp(units === 'imperial' ? Math.round(kgToLb(kg)) : kg, min, max);
-}
-
-/** Edited value → kg as the profile stores it (one decimal). */
-export function bodyWeightFromDisplay(value: number, units: UnitSystem) {
-  const { min, max } = bodyWeightRange(units);
-  const v = clamp(value, min, max);
-  return roundTenth(units === 'imperial' ? lbToKg(v) : v);
-}
 
 /** Stored cm → value edited in the user's unit (whole inches), clamped to the range. */
 export function heightToDisplay(cm: number, units: UnitSystem) {

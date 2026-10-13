@@ -8,8 +8,8 @@ import { formatNumber, formatShortDate, type UnitSystem } from '@/shared/lib/for
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
+import { toUnits } from '@/shared/lib/body-weight';
 
-import { inUnits } from '../lib/format';
 import type { WeightPoint } from '../lib/trend';
 
 const HEIGHT = 210;
@@ -61,12 +61,12 @@ export function WeightChart({ points, from, to, units, selected, onSelect }: Wei
   const right = width - LABELS;
   const x = (date: string) => LEFT + (daysBetween(from, date) / span) * (right - LEFT);
 
-  const values = points.flatMap((p) => [inUnits(p.weightKg, units), inUnits(p.trendKg, units)]);
+  const values = points.flatMap((p) => [toUnits(p.weightKg, units), toUnits(p.trendKg, units)]);
   const scale = values.length ? valueScale(values) : null;
   const shown = points[selected ?? points.length - 1];
   const trendLine = scale
     ? points
-        .map((p, i) => `${i ? 'L' : 'M'}${x(p.date)} ${scale.y(inUnits(p.trendKg, units))}`)
+        .map((p, i) => `${i ? 'L' : 'M'}${x(p.date)} ${scale.y(toUnits(p.trendKg, units))}`)
         .join('')
     : '';
 
@@ -133,7 +133,7 @@ export function WeightChart({ points, from, to, units, selected, onSelect }: Wei
                       <Circle
                         key={p.id}
                         cx={x(p.date)}
-                        cy={scale.y(inUnits(p.weightKg, units))}
+                        cy={scale.y(toUnits(p.weightKg, units))}
                         r={i === selected ? 4 : 2.25}
                         fill={colors.dim}
                       />
@@ -151,13 +151,13 @@ export function WeightChart({ points, from, to, units, selected, onSelect }: Wei
                     <>
                       <Circle
                         cx={x(shown.date)}
-                        cy={scale.y(inUnits(shown.weightKg, units))}
+                        cy={scale.y(toUnits(shown.weightKg, units))}
                         r={4}
                         fill={colors.fg}
                       />
                       <Circle
                         cx={x(shown.date)}
-                        cy={scale.y(inUnits(shown.trendKg, units))}
+                        cy={scale.y(toUnits(shown.trendKg, units))}
                         r={4.5}
                         fill={colors.accent}
                       />

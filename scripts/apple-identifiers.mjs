@@ -3,6 +3,7 @@
 //   ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_PATH (path to the AuthKey_….p8 file)
 // Usage: npm run apple:ids                    lists them
 //        npm run apple:ids -- delete <id> …   deletes those App IDs after asking
+import { Buffer } from 'node:buffer';
 import { sign } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { homedir } from 'node:os';

@@ -77,7 +77,12 @@ export function ForgotPasswordScreen() {
           autoFocus
         />
         {error ? (
-          <Text variant="caption" tone="danger" className="px-1 pt-3">
+          <Text
+            variant="caption"
+            tone="danger"
+            className="px-1 pt-3"
+            accessibilityLiveRegion="assertive"
+          >
             {t(`errors.${error}`)}
           </Text>
         ) : null}

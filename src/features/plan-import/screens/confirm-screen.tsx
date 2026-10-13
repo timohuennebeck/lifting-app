@@ -27,6 +27,7 @@ import { ScreenHeader } from '@/shared/ui/screen-header';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
+import { PLAN_NAME_MAX } from '@/shared/lib/limits';
 
 import { ReadingGhost } from '../components/reading-ghost';
 import { ReviewPrompt } from '../components/review-prompt';
@@ -286,6 +287,7 @@ export function ConfirmScreen() {
         onClose={() => setRenameOpen(false)}
         title={t('planImport:confirm.renamePlan')}
         initialValue={plan.name}
+        maxLength={PLAN_NAME_MAX}
         placeholder={t('planImport:confirm.planName')}
         ctaLabel={t('common:actions.save')}
         onSubmit={(name) => {

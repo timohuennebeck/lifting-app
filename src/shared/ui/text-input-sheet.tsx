@@ -8,6 +8,8 @@ import { Sheet } from './sheet';
 import { TextField } from './text-field';
 
 export interface TextInputSheetProps {
+  /** The longest name it accepts (see shared/lib/limits). */
+  maxLength: number;
   visible: boolean;
   onClose: () => void;
   title: string;
@@ -28,6 +30,7 @@ export function TextInputSheet({
   initialValue = '',
   placeholder,
   ctaLabel,
+  maxLength,
   onSubmit,
 }: TextInputSheetProps) {
   const [value, setValue] = useResetOnOpen(visible, initialValue);
@@ -52,7 +55,7 @@ export function TextInputSheet({
           onChangeText={setValue}
           placeholder={placeholder}
           clearable
-          maxLength={40}
+          maxLength={maxLength}
           returnKeyType="done"
           onSubmitEditing={submit}
           // The sheet is there to type a name: the keyboard comes up with it.

@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { FIRST_NAME_MAX } from '@/shared/data/profile';
+import { FIRST_NAME_MAX } from '@/shared/lib/limits';
 import { Button } from '@/shared/ui/button';
 import { TextField } from '@/shared/ui/text-field';
 import { StepScreen } from '@/shared/ui/step-screen';

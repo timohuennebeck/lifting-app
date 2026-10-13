@@ -1,8 +1,8 @@
-import { CameraView, PermissionStatus, useCameraPermissions } from 'expo-camera';
+import { CameraView } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, AppState, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -19,6 +19,7 @@ import {
   ShutterButton,
 } from '@/shared/ui/camera/capture-controls';
 import { ShutterFlash, useShutterFlash } from '@/shared/ui/camera/shutter-flash';
+import { useCameraScreenPermission } from '@/shared/ui/camera/use-camera-screen-permission';
 import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -71,7 +72,7 @@ export function CameraScreen() {
   // Android back closes a shown photo; on the flow's first screen it would otherwise drop the
   // modal without asking.
   useHardwareBack(() => (viewShot ? useBodyCheckStore.getState().view(null) : close()));
-  const [permission, requestPermission, getPermission] = useCameraPermissions();
+  const [permission, requestPermission] = useCameraScreenPermission();
   const camera = useRef<CameraView>(null);
   const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -138,20 +139,6 @@ export function CameraScreen() {
     const id = setTimeout(endTurn, TURN_MS);
     return () => clearTimeout(id);
   }, [turning]);
-
-  // The user asked for the camera by starting the check, so ask the system right away.
-  const permissionStatus = permission?.status;
-  useEffect(() => {
-    if (permissionStatus === PermissionStatus.UNDETERMINED) requestPermission();
-  }, [permissionStatus, requestPermission]);
-
-  // Coming back from the system settings may have granted the permission.
-  useEffect(() => {
-    const sub = AppState.addEventListener('change', (state) => {
-      if (state === 'active') getPermission();
-    });
-    return () => sub.remove();
-  }, [getPermission]);
 
   /** `timed`: the timer sound already clicked, so the camera's own shutter sound stays off. */
   async function capture(timed: boolean) {

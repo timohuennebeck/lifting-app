@@ -1,5 +1,5 @@
 import { useProfile } from '@/shared/data/profile';
-import { type TemplateSummary, useTemplates } from '@/shared/data/templates';
+import { currentCollectionId, type TemplateSummary, useTemplates } from '@/shared/data/templates';
 import { type WorkoutSummary, useWorkoutsInRange } from '@/shared/data/workouts';
 import { addDays, mondayIndex, startOfWeek } from '@/shared/lib/date';
 
@@ -20,10 +20,7 @@ export function useWeekPlan(today: Date) {
   const { data: workouts = [] } = useWorkoutsInRange(fromIso, toIso);
   const { data: templates = [] } = useTemplates();
 
-  // Fall back to the first collection when no plan is marked active.
-  // Templates without a collection sort first (NULL position), so skip them here.
-  const collectionId =
-    profile?.activeCollectionId ?? templates.find((t) => t.collectionId)?.collectionId ?? null;
+  const collectionId = currentCollectionId(profile?.activeCollectionId, templates);
   const plan = templates.filter((t) => t.collectionId === collectionId);
   const planTemplates = plan.filter((t) => t.weekday !== null);
 

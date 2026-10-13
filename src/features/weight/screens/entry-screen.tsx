@@ -13,7 +13,7 @@ import {
 } from '@/shared/data/weight-entries';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { addDays, fromIsoDate, toIsoDate } from '@/shared/lib/date';
-import { formatDate, formatNumber, lbToKg, type UnitSystem } from '@/shared/lib/format';
+import { formatNumber, formatShortDate, type UnitSystem } from '@/shared/lib/format';
 import { clamp } from '@/shared/lib/math';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
@@ -23,9 +23,16 @@ import { RulerPicker } from '@/shared/ui/ruler-picker';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
+import {
+  BODY_WEIGHT_LIMITS_KG,
+  DEFAULT_BODY_WEIGHT_KG,
+  snapTo,
+  toStoredKg,
+  toUnits,
+} from '@/shared/lib/body-weight';
 
 import { useDayLabel } from '../components/entry-row';
-import { formatChange, inUnits } from '../lib/format';
+import { formatChange } from '../lib/format';
 import { pickDate } from '../lib/pick-date';
 
 /** Ruler steps: 0.1 kg or 0.2 lb, a long tick at every whole kg or lb. */
@@ -33,15 +40,12 @@ const SCALES = {
   metric: { step: 0.1, majorEvery: 10, midEvery: 5, span: 30 },
   imperial: { step: 0.2, majorEvery: 5, midEvery: 5, span: 60 },
 } as const;
-const LIMITS_KG = { min: 20, max: 400 };
-/** Shown when there is no weigh-in yet to start from. */
-const DEFAULT_KG = 75;
 
 /** The weight the ruler starts at: the day's own entry, else the last one before it. */
 function startingKg(entries: WeightEntry[], date: string) {
   const own = entries.find((e) => e.date === date);
   const before = entries.filter((e) => e.date < date).at(-1);
-  return (own ?? before ?? entries.at(-1))?.weightKg ?? DEFAULT_KG;
+  return (own ?? before ?? entries.at(-1))?.weightKg ?? DEFAULT_BODY_WEIGHT_KG;
 }
 
 /** Log or edit the weight of a day (GW·1): ruler, −/+ and the change since the last entry. */
@@ -78,17 +82,19 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
   const [saving, setSaving] = useState(false);
 
   // The ruler works in the display unit, on its steps, around where it started.
-  const round = (v: number) => Math.round(v / scale.step) * scale.step;
   const [range] = useState(() => {
-    const start = Math.round(inUnits(initialKg, units));
-    const min = Math.max(Math.ceil(inUnits(LIMITS_KG.min, units)), start - scale.span);
-    return { min, max: Math.min(Math.floor(inUnits(LIMITS_KG.max, units)), start + scale.span) };
+    const start = Math.round(toUnits(initialKg, units));
+    const { min, max } = BODY_WEIGHT_LIMITS_KG;
+    return {
+      min: Math.max(Math.ceil(toUnits(min, units)), start - scale.span),
+      max: Math.min(Math.floor(toUnits(max, units)), start + scale.span),
+    };
   });
   const [value, setValue] = useState(() =>
-    clamp(round(inUnits(initialKg, units)), range.min, range.max),
+    clamp(snapTo(toUnits(initialKg, units), scale.step), range.min, range.max),
   );
-  const set = (next: number) => setValue(clamp(+round(next).toFixed(1), range.min, range.max));
-  const kg = units === 'imperial' ? lbToKg(value) : value;
+  const set = (next: number) => setValue(clamp(snapTo(next, scale.step), range.min, range.max));
+  const kg = toStoredKg(value, units);
 
   const original = entries.find((e) => e.date === initialDate) ?? null;
   // The shown day's own entry: picking a day that has one edits it.
@@ -99,12 +105,12 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
   const choose = (next: string) => {
     const picked = entries.find((e) => e.date === next);
     setDate(next);
-    if (picked) set(inUnits(picked.weightKg, units));
+    if (picked) set(toUnits(picked.weightKg, units));
   };
   const unit = t(`common:units.${units === 'imperial' ? 'lb' : 'kg'}`);
   const today = toIsoDate(new Date());
-  const shortDate = (iso: string) =>
-    formatDate(fromIsoDate(iso), { day: 'numeric', month: 'short' });
+  // With the year when it isn't this one, as in "seit 28. Dez. 2025".
+  const shortDate = (iso: string) => formatShortDate(fromIsoDate(iso));
   const dateLabel =
     date === today
       ? t('entry.today', { date: shortDate(date) })

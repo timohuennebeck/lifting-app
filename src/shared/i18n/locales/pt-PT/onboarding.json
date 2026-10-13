@@ -27,7 +27,6 @@
   "birthDate": {
     "title": "QUANDO\nFAZES ANOS?",
     "age_one": "{{count}} ano",
-    "age_many": "{{count}} anos",
     "age_other": "{{count}} anos",
     "tooYoung": "O Traqa é a partir dos {{min}} anos."
   },
@@ -71,7 +70,6 @@
       "ankles": "Tornozelos"
     },
     "continueMarked_one": "Continuar · {{count}} zona marcada",
-    "continueMarked_many": "Continuar · {{count}} zonas marcadas",
     "continueMarked_other": "Continuar · {{count}} zonas marcadas"
   },
   "hasPlan": {

@@ -25,6 +25,7 @@ import { ScreenHeader } from '@/shared/ui/screen-header';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
+import { TRAINING_NAME_MAX } from '@/shared/lib/limits';
 
 import { ExerciseListHeader } from '../components/exercise-list-header';
 import { type ExerciseMenuAction, ExerciseMenuSheet } from '../components/exercise-menu-sheet';
@@ -196,6 +197,7 @@ export function TemplateScreen() {
         onClose={() => setRenameOpen(false)}
         title={t('options.renameTitle')}
         initialValue={template.name}
+        maxLength={TRAINING_NAME_MAX}
         placeholder={t('options.namePlaceholder')}
         ctaLabel={t('common:actions.save')}
         onSubmit={async (name) => {

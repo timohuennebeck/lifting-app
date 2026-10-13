@@ -12,6 +12,7 @@ import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
+import { TRAINING_NAME_MAX } from '@/shared/lib/limits';
 
 import { createTemplate } from '../data/template-mutations';
 
@@ -63,7 +64,7 @@ export function NewTemplateScreen() {
         onChangeText={setName}
         placeholder={t('newTemplate.namePlaceholder')}
         clearable
-        maxLength={40}
+        maxLength={TRAINING_NAME_MAX}
         returnKeyType="done"
         onSubmitEditing={create}
       />

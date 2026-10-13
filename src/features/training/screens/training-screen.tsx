@@ -9,6 +9,7 @@ import { TabScreen } from '@/shared/components/tab-screen';
 import { useProfile } from '@/shared/data/profile';
 import {
   type CollectionSummary,
+  currentCollectionId,
   type TemplateSummary,
   useCollections,
   useTemplates,
@@ -21,6 +22,7 @@ import { IconButton } from '@/shared/ui/icon-button';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
+import { PLAN_NAME_MAX, TRAINING_NAME_MAX } from '@/shared/lib/limits';
 
 import { CollectionOptionsSheet } from '../components/collection-options-sheet';
 import { type CollectionTab, CollectionTabs } from '../components/collection-tabs';
@@ -82,8 +84,9 @@ export function TrainingScreen() {
     })),
     ...(looseCount ? [{ key: NONE, name: t('list.noCollection'), count: looseCount }] : []),
   ];
-  const fallbackKey =
-    tabs.find((tab) => tab.key === profile?.activeCollectionId)?.key ?? tabs[0]?.key ?? null;
+  // The same plan Today follows, else the first tab.
+  const current = currentCollectionId(profile?.activeCollectionId, templates);
+  const fallbackKey = tabs.find((tab) => tab.key === current)?.key ?? tabs[0]?.key ?? null;
   const selected = tabs.some((tab) => tab.key === selectedKey) ? selectedKey : fallbackKey;
   const rows = templates.filter((tpl) => (tpl.collectionId ?? NONE) === selected);
   const selectedCollectionId = selected && selected !== NONE ? selected : undefined;
@@ -198,6 +201,7 @@ export function TrainingScreen() {
         onClose={() => setRenaming(null)}
         title={t('options.renameTitle')}
         initialValue={renameShown?.name}
+        maxLength={TRAINING_NAME_MAX}
         placeholder={t('options.namePlaceholder')}
         ctaLabel={t('common:actions.save')}
         onSubmit={async (name) => {
@@ -225,6 +229,7 @@ export function TrainingScreen() {
         visible={!!renamingCollection}
         onClose={() => setRenamingCollection(null)}
         title={t('collections.renameTitle')}
+        maxLength={PLAN_NAME_MAX}
         subtitle={t('collections.templateCount', {
           count: renamingCollectionShown?.templateCount ?? 0,
         })}

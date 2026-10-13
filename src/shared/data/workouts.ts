@@ -18,6 +18,7 @@ import { alias, type AnySQLiteColumn } from 'drizzle-orm/sqlite-core';
 
 import type { SetValues } from '@/shared/lib/format';
 import { getOrInsert } from '@/shared/lib/map';
+import { DEFAULT_BODY_WEIGHT_KG } from '@/shared/lib/body-weight';
 
 import {
   assistedExerciseIds,
@@ -42,15 +43,12 @@ import { queryKeys } from './query-keys';
 import type { PlanExerciseDraft } from './templates';
 import { firstCount, type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
-/** Body weight assumed until the user logged one. */
-const DEFAULT_BODYWEIGHT_KG = 75;
-
 /**
  * The user's latest body weight, for bodyweight and assisted sets where the logged weight is
  * only the added load or the assistance: without it a pull-up at 0 kg would score 0 whatever the
  * reps. The device only holds the user's own weight entries.
  */
-const bodyweightSql = sql<number>`coalesce((select ${weightEntries.weight_kg} from ${weightEntries} order by ${weightEntries.date} desc limit 1), ${DEFAULT_BODYWEIGHT_KG})`;
+const bodyweightSql = sql<number>`coalesce((select ${weightEntries.weight_kg} from ${weightEntries} order by ${weightEntries.date} desc limit 1), ${DEFAULT_BODY_WEIGHT_KG})`;
 
 /**
  * Whether a completed set counts for history and records. "Mark as done" completes the sets of

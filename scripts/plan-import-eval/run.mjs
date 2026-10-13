@@ -285,7 +285,7 @@ function score(expect, result, names, language) {
     s.issues.push(`no plan: ${result.status} ${result.error ?? ''}`);
     for (const d of expect.days) {
       tally(s.days, false);
-      for (const e of d.exercises) tally(s.exercises, false);
+      d.exercises.forEach(() => tally(s.exercises, false));
     }
     return s;
   }

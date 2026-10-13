@@ -9,9 +9,10 @@ import { Chip } from '@/shared/ui/chip';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
+import { PLAN_NAME_MAX } from '@/shared/lib/limits';
 
 import { usePlanGenerator } from '../hooks/use-plan-generator';
-import { CREATE_STEPS, PLAN_NAME_MAX } from '../lib/flow';
+import { CREATE_STEPS } from '../lib/flow';
 
 export function PlanNameScreen() {
   const { t } = useTranslation(['planCreate', 'common']);

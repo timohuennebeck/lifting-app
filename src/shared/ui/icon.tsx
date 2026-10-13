@@ -363,11 +363,6 @@ const ICONS = {
     ),
   },
   pencil: { viewBox: '0 0 16 16', render: stroke('M11 2l3 3-8.5 8.5L2 14l.5-3.5z', 1.6) },
-  // Bin: lid with handle, tapered body, two grooves.
-  trash: {
-    viewBox: '0 0 16 16',
-    render: stroke('M2.5 4h11M6 4V2.5h4V4M3.8 4l.7 9.5h7l.7-9.5M6.6 7v3.6M9.4 7v3.6', 1.6),
-  },
   // Padlock: shackle on top of a rounded body.
   lock: {
     viewBox: '0 0 18 20',

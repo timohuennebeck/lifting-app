@@ -54,7 +54,7 @@
     ],
     "errors": {
       "failed": "Não conseguimos ler este plano. Tenta novamente.",
-      "offline": "Sem ligação. Verifica a internet e tenta novamente.",
+      "offline": "Sem ligação. Verifica a tua internet e tenta novamente.",
       "limit": "Hoje já não são possíveis mais importações. Tenta amanhã ou cria um plano.",
       "notAPlan": "Isto não parece um plano de treino. Tenta outra foto ou outro ficheiro.",
       "tooLarge": "O ficheiro é demasiado grande. Usa um mais pequeno (até 15 MB)."

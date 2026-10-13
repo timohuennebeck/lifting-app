@@ -15,7 +15,7 @@
   },
   "name": {
     "title": "QUAL É O SEU NOME?",
-    "placeholder": "Nome"
+    "placeholder": "Primeiro nome"
   },
   "sex": {
     "title": "QUAL É O SEU\nSEXO\nBIOLÓGICO?",
@@ -27,7 +27,6 @@
   "birthDate": {
     "title": "QUANDO É SEU\nANIVERSÁRIO?",
     "age_one": "{{count}} ano",
-    "age_many": "{{count}} anos",
     "age_other": "{{count}} anos",
     "tooYoung": "O Traqa é a partir de {{min}} anos."
   },
@@ -71,7 +70,6 @@
       "ankles": "Tornozelos"
     },
     "continueMarked_one": "Continuar · {{count}} região marcada",
-    "continueMarked_many": "Continuar · {{count}} regiões marcadas",
     "continueMarked_other": "Continuar · {{count}} regiões marcadas"
   },
   "hasPlan": {

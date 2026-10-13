@@ -6,7 +6,6 @@ export const colors = {
   track: '#3A3A38',
   chip: '#1A1A1A',
   fg: '#F4F4F0',
-  fgSoft: '#E6E6E1',
   fgMid: '#D6D6D1',
   fg2: '#C9C9C4',
   muted: '#A3A39E',
@@ -17,8 +16,6 @@ export const colors = {
   accent: '#DFFF1F',
   onAccent: '#0A0A0A',
   red: '#ED4042',
-  /** Soft red for destructive actions (mirrors --color-danger). */
-  danger: '#E08A7A',
   /** Amber for things the plan import wasn't sure about (design 05b). */
   review: '#FFB547',
   /** iOS' text selection highlight (system blue). */

@@ -13,18 +13,19 @@ const FADE: GradientStop[] = [
 
 export interface PhotoBackdropProps {
   source: ImageSource | number;
-  /** Share of the screen height the photo covers. */
-  share?: number;
 }
+
+/** Share of the screen height the photo covers. */
+const SHARE = 0.66;
 
 /**
  * A borderless photo over the top of a full-screen page (welcome 00, body check offer 08·0A):
  * darkened under the status bar and fading into the page where the text starts.
  */
-export function PhotoBackdrop({ source, share = 0.66 }: PhotoBackdropProps) {
+export function PhotoBackdrop({ source }: PhotoBackdropProps) {
   const insets = useSafeAreaInsets();
   const { height: screenHeight } = useWindowDimensions();
-  const height = screenHeight * share;
+  const height = screenHeight * SHARE;
   return (
     <View pointerEvents="none" className="absolute inset-x-0 top-0" style={{ height }}>
       <Image source={source} contentFit="cover" style={StyleSheet.absoluteFill} />

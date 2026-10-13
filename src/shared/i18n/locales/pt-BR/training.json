@@ -54,7 +54,7 @@
     "musclesInfo": "Detalhamento dos músculos",
     "exercises_one": "{{count}} exercício",
     "exercises_other": "{{count}} exercícios",
-    "noExercises": "Nenhum exercício",
+    "noExercises": "Sem exercícios",
     "duration": "Duração estimada: {{minutes}} min.",
     "emptyHint": "Toque em + para adicionar seu primeiro exercício.",
     "start": "Iniciar treino",

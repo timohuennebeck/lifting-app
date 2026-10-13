@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { fromIsoDate, mondayIndex } from '@/shared/lib/date';
-import { formatDate, type UnitSystem } from '@/shared/lib/format';
+import { formatShortDate, type UnitSystem } from '@/shared/lib/format';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { SwipeToDelete } from '@/shared/ui/swipe-to-delete';
 import { Text } from '@/shared/ui/text';
@@ -16,7 +16,7 @@ export function useDayLabel() {
   const weekdays = t('weekdays.short', { returnObjects: true }) as string[];
   return (iso: string) => {
     const date = fromIsoDate(iso);
-    return `${weekdays[mondayIndex(date)]}, ${formatDate(date, { day: 'numeric', month: 'short' })}`;
+    return `${weekdays[mondayIndex(date)]}, ${formatShortDate(date)}`;
   };
 }
 

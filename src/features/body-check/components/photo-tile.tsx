@@ -24,22 +24,18 @@ export interface PhotoTileProps {
   label: string;
   /** Right of the label, e.g. a check badge. */
   trailing?: ReactNode;
-  /** Off while a ring around the tile takes its place. */
-  border?: boolean;
 }
 
 /** A pose photo in the row of three, named at the bottom (analysis and result, design 08c-H). */
-export function PhotoTile({ children, label, trailing, border = true }: PhotoTileProps) {
+export function PhotoTile({ children, label, trailing }: PhotoTileProps) {
   return (
     <View className="flex-1 overflow-hidden rounded-[22px] bg-surface">
       {children}
       <Gradient from="bottom" size={70} color="black" opacity={0.75} />
-      {border ? (
-        <View
-          pointerEvents="none"
-          className="absolute inset-0 rounded-[22px] border border-white/10"
-        />
-      ) : null}
+      <View
+        pointerEvents="none"
+        className="absolute inset-0 rounded-[22px] border border-white/10"
+      />
       <View className="absolute right-3 bottom-3 left-3 flex-row items-center justify-between">
         <Text variant="label" className="text-sm">
           {label}
