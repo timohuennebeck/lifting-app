@@ -132,6 +132,9 @@ isn't sure about come with alternatives for the user to review.
   whole plan. Leaving the review stops the model. Limits and bad requests still answer with an
   HTTP status before the stream starts.
 - **Secrets:** the same `OPENAI_API_KEY` and `OPENAI_MODEL` as the body check.
+- **Speed:** the import runs on OpenAI's Fast mode (`service_tier: "fast"`), up to 2.5× faster
+  output at twice the token price. `PLAN_IMPORT_FAST=false` turns it off. OpenAI may serve a
+  request at standard speed when it is busy; the function log shows the tier it got.
 - **Rules (server-side):** it runs before there is an account, so imports are limited per network
   (`PLAN_IMPORT_IP_LIMIT`, default 10) and in total (`PLAN_IMPORT_DAILY_LIMIT`, default 1,000) per
   24 hours. `plan_import_requests` keeps a keyed hash of the IP, never the IP itself.

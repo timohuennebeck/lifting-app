@@ -30,6 +30,8 @@ function envLimit(name: string, fallback: number) {
 /** Imports per network (hashed IP) and in total in 24 hours; each one is a paid model call. */
 const IP_LIMIT = envLimit('PLAN_IMPORT_IP_LIMIT', 10);
 const DAILY_LIMIT = envLimit('PLAN_IMPORT_DAILY_LIMIT', 1000);
+/** OpenAI's Fast mode for the import (twice the token price); PLAN_IMPORT_FAST=false turns it off. */
+const FAST = Deno.env.get('PLAN_IMPORT_FAST') !== 'false';
 const MAX_PHOTOS = 10;
 /** Decoded sizes; the app shrinks photos to well below this. */
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
@@ -228,6 +230,7 @@ Deno.serve(async (req) => {
         name: 'training_plan',
         schema: buildSchema(catalog.map((e) => e.id)),
         timeoutMs: OPENAI_TIMEOUT_MS,
+        fast: FAST,
       },
       stop.signal,
     );

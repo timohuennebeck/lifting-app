@@ -16,9 +16,12 @@ export function ReadingGhost() {
     opacity.set(withRepeat(withTiming(0.35, { duration: 700 }), -1, true));
   }, [opacity]);
   const style = useAnimatedStyle(() => ({ opacity: opacity.get() }));
+  // Fading in and breathing on separate views: both animate the opacity.
   return (
-    <Animated.View entering={FadeIn.duration(250)} style={style}>
-      <GhostExercise widths={['82%', '52%']} />
+    <Animated.View entering={FadeIn.duration(250)}>
+      <Animated.View style={style}>
+        <GhostExercise widths={['82%', '52%']} />
+      </Animated.View>
     </Animated.View>
   );
 }

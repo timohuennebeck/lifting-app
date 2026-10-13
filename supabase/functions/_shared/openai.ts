@@ -15,6 +15,7 @@ interface ResponseContent {
 
 interface ResponsesApiResult {
   status?: string;
+  service_tier?: string;
   output?: { type: string; content?: ResponseContent[] }[];
   usage?: { input_tokens?: number; output_tokens?: number };
 }
@@ -42,10 +43,15 @@ export interface StructuredRequest {
   name: string;
   schema: unknown;
   timeoutMs: number;
+  /** OpenAI's Fast mode: up to 2.5× faster output at twice the token price. */
+  fast?: boolean;
 }
 
 /** The Responses API request for an answer forced into `schema`. */
-function request({ instructions, content, name, schema }: StructuredRequest, stream: boolean) {
+function request(
+  { instructions, content, name, schema, fast }: StructuredRequest,
+  stream: boolean,
+) {
   return {
     method: 'POST',
     headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
@@ -56,13 +62,17 @@ function request({ instructions, content, name, schema }: StructuredRequest, str
       text: { format: { type: 'json_schema', name, strict: true, schema } },
       ...(OPENAI_REASONING_EFFORT ? { reasoning: { effort: OPENAI_REASONING_EFFORT } } : {}),
       store: false,
+      ...(fast ? { service_tier: 'fast' } : {}),
       ...(stream ? { stream: true } : {}),
     }),
   };
 }
 
-const logUsage = (name: string, usage: ResponsesApiResult['usage']) =>
-  console.log(`${name}: ${usage?.input_tokens ?? '?'} in, ${usage?.output_tokens ?? '?'} out`);
+/** Token usage, and the tier OpenAI used (Fast mode may fall back to standard when busy). */
+const logUsage = (name: string, { usage, service_tier }: ResponsesApiResult) =>
+  console.log(
+    `${name}: ${usage?.input_tokens ?? '?'} in, ${usage?.output_tokens ?? '?'} out, ${service_tier ?? '?'}`,
+  );
 
 /**
  * Asks the model for an answer matching `schema`. Resolves with its text, a refusal, why it is
@@ -79,16 +89,13 @@ export async function askStructured(req: StructuredRequest) {
     return { upstream: response.status };
   }
   const body = (await response.json()) as ResponsesApiResult;
-  logUsage(req.name, body.usage);
+  logUsage(req.name, body);
   return readResponse(body);
 }
 
 /** A step of a streamed answer: more of its text, or how it ended. */
 export type StreamedAnswer =
-  | { text: string }
-  | { refusal: true }
-  | { done: true }
-  | { incomplete: string };
+  { text: string } | { refusal: true } | { done: true } | { incomplete: string };
 
 /**
  * Like askStructured, but the answer arrives as it is written: resolves once OpenAI accepted the
@@ -137,7 +144,7 @@ async function* streamedAnswer(
         yield { refusal: true };
         return;
       } else if (event.type === 'response.completed') {
-        logUsage(name, event.response?.usage);
+        logUsage(name, event.response ?? {});
         yield { done: true };
         return;
       } else if (
