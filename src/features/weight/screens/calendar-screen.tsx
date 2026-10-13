@@ -78,7 +78,8 @@ export function WeightCalendarScreen() {
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
       <ScreenHeader title={t('calendar.title')} />
-      <View className="mt-3.25 flex-row px-3.5 pb-1.75">
+      {/* The same columns as the days (CalendarMonth's px-3), so each letter sits over its day. */}
+      <View className="mt-3.25 flex-row px-3 pb-1.75">
         {weekdays.map((day) => (
           <Text
             key={day}

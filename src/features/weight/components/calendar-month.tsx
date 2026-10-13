@@ -16,7 +16,7 @@ export interface CalendarMonthProps {
   month: number;
   /** kg per ISO date, for the days of this month that have an entry. */
   weights: ReadonlyMap<string, number>;
-  /** Today's ISO date: outlined, and the days after it can't be picked. */
+  /** Today's ISO date: outlined in grey, and the days after it can't be picked. */
   today: string;
   units: UnitSystem;
   onPick: (date: string) => void;
@@ -94,17 +94,15 @@ export const CalendarMonth = memo(function CalendarMonth({
                   className="h-15 flex-1 items-center"
                 >
                   <View
+                    // Today stays grey with an entry too, so it's easy to find.
                     className={cn(
                       'size-10 items-center justify-center rounded-full',
-                      kg !== undefined
-                        ? 'border-2 border-accent'
-                        : date === today && 'border-2 border-fg/35',
+                      date === today
+                        ? 'border-2 border-fg/35'
+                        : kg !== undefined && 'border-2 border-accent',
                     )}
                   >
-                    <Text
-                      variant="label"
-                      className={cn('relative top-px tabular-nums', future && 'text-fg/25')}
-                    >
+                    <Text variant="label" className={cn('tabular-nums', future && 'text-fg/25')}>
                       {Number(date.slice(8))}
                     </Text>
                   </View>
