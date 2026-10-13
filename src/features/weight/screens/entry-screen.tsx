@@ -18,17 +18,16 @@ import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
-import { DateWheel } from '@/shared/ui/date-wheel';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { RulerPicker } from '@/shared/ui/ruler-picker';
 import { ScreenHeader } from '@/shared/ui/screen-header';
-import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
 import { useDayLabel } from '../components/entry-row';
 import { formatChange, inUnits } from '../lib/format';
+import { pickDate } from '../lib/pick-date';
 
 /** Ruler steps: 0.1 kg or 0.2 lb, a whole kg or lb between labels. */
 const SCALES = {
@@ -77,7 +76,6 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
   const dayLabel = useDayLabel();
   const scale = SCALES[units];
   const [date, setDate] = useState(initialDate);
-  const [draftDate, setDraftDate] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   // The ruler works in the display unit, on its steps, around where it started.
@@ -94,7 +92,16 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
   const kg = units === 'imperial' ? lbToKg(value) : value;
 
   const original = entries.find((e) => e.date === initialDate) ?? null;
+  // The shown day's own entry: picking a day that has one edits it.
+  const own = entries.find((e) => e.date === date) ?? null;
   const previous = entries.filter((e) => e.date < date).at(-1);
+
+  // A day picked in the calendar keeps the weight set here, unless it has an entry of its own.
+  const choose = (next: string) => {
+    const picked = entries.find((e) => e.date === next);
+    setDate(next);
+    if (picked) set(inUnits(picked.weightKg, units));
+  };
   const unit = t(`common:units.${units === 'imperial' ? 'lb' : 'kg'}`);
   const today = toIsoDate(new Date());
   const shortDate = (iso: string) =>
@@ -110,7 +117,8 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
     if (!userId || saving) return;
     setSaving(true);
     try {
-      await saveWeightEntryMoved(userId, date, kg, original);
+      // Moving the entry this screen opened on to an empty day; a day with its own is edited.
+      await saveWeightEntryMoved(userId, date, kg, own ? null : original);
       haptics.success();
       router.back();
     } finally {
@@ -119,8 +127,8 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
   };
 
   const remove = async () => {
-    if (!original) return;
-    await deleteWeightEntry(original.id);
+    if (!own) return;
+    await deleteWeightEntry(own.id);
     router.back();
   };
 
@@ -154,7 +162,7 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
         <PressableScale
           haptic="tap"
           accessibilityLabel={t('entry.date')}
-          onPress={() => setDraftDate(date)}
+          onPress={() => pickDate(choose)}
           className="mt-5.5 h-9 justify-center rounded-full border border-[#333333] px-3"
         >
           <Text className="relative top-px font-inter-semibold text-sm">{dateLabel}</Text>
@@ -210,37 +218,13 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
             onPress={() => set(value + scale.step)}
           />
         </View>
-        {original ? (
+        {own ? (
           <TextButton label={t('entry.delete')} tone="danger" className="mt-4" onPress={remove} />
         ) : null}
       </View>
       <View className="px-4" style={{ paddingBottom: footerInset }}>
         <Button label={t('common:actions.save')} loading={saving} onPress={save} />
       </View>
-
-      <Sheet
-        visible={draftDate !== null}
-        onClose={() => setDraftDate(null)}
-        title={t('entry.date')}
-      >
-        {draftDate ? (
-          <DateWheel
-            value={draftDate}
-            onChange={setDraftDate}
-            minYear={Number(today.slice(0, 4)) - 5}
-            maxYear={Number(today.slice(0, 4))}
-          />
-        ) : null}
-        <Button
-          label={t('common:actions.done')}
-          className="mt-4"
-          onPress={() => {
-            // No weigh-ins in the future.
-            if (draftDate) setDate(draftDate > today ? today : draftDate);
-            setDraftDate(null);
-          }}
-        />
-      </Sheet>
     </View>
   );
 }

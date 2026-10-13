@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, View } from 'react-native';
@@ -12,6 +12,7 @@ import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 import { CalendarMonth } from '../components/calendar-month';
+import { returnPickedDate } from '../lib/pick-date';
 
 interface Month {
   year: number;
@@ -29,8 +30,12 @@ function monthsBack(today: string, first: string | undefined): Month[] {
   });
 }
 
-/** Weight calendar (GW·3B): every month with the days' weights; a day opens its entry. */
+/**
+ * Weight calendar (GW·3B): every month with the days' weights. A day opens its entry, or, when
+ * the entry screen's date chip opened the calendar (`pick`), goes back there with that day.
+ */
 export function WeightCalendarScreen() {
+  const { pick } = useLocalSearchParams<{ pick?: string }>();
   const { t } = useTranslation(['weight', 'common']);
   const insets = useSafeAreaInsets();
   const units = useUnits();
@@ -39,9 +44,12 @@ export function WeightCalendarScreen() {
   const weekdays = t('common:weekdays.short', { returnObjects: true }) as string[];
   const weights = useMemo(() => new Map(entries.map((e) => [e.date, e.weightKg])), [entries]);
   const months = useMemo(() => monthsBack(today, entries[0]?.date), [today, entries]);
-  const pick = useCallback(
-    (date: string) => router.push({ pathname: '/body-weight/[date]', params: { date } }),
-    [],
+  const onPick = useCallback(
+    (date: string) =>
+      pick
+        ? returnPickedDate(date)
+        : router.push({ pathname: '/body-weight/[date]', params: { date } }),
+    [pick],
   );
 
   return (
@@ -68,7 +76,7 @@ export function WeightCalendarScreen() {
             weights={weights}
             today={today}
             units={units}
-            onPick={pick}
+            onPick={onPick}
           />
         )}
         showsVerticalScrollIndicator={false}
