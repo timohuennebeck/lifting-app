@@ -6,6 +6,8 @@ import { useMemo } from 'react';
 
 import { getOrInsert } from '@/shared/lib/map';
 
+import { useQueryFocus } from './query-focus';
+
 /** A Drizzle select or relational query that has not been awaited yet. */
 export interface DrizzleQuery<TRow> {
   execute: () => Promise<TRow[]>;
@@ -54,6 +56,8 @@ export function useDrizzleQuery<TRow, TResult>({
     query: compilable(queryKey, query),
     enabled,
     placeholderData: keepPrevious ? keepPreviousData : undefined,
+    // Paused while a tab is hidden (QueryFocus): it keeps its data and catches up when shown.
+    subscribed: useQueryFocus(),
   });
   const rows = result.data;
   const data = useMemo(() => (rows ? map(rows) : undefined), [rows, map]);

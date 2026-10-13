@@ -53,15 +53,14 @@ export function ExercisePickerPage({ title, mode, exerciseIds, onDone }: Exercis
     [],
   );
 
-  async function done() {
+  function done() {
     if (saving) return;
     if (!picked.length) return router.back();
     setSaving(true);
-    try {
-      await onDone(picked);
-    } finally {
-      setSaving(false);
-    }
+    // A promise chain, not try/finally: the React Compiler can't compile a component with that.
+    void Promise.resolve()
+      .then(() => onDone(picked))
+      .finally(() => setSaving(false));
   }
 
   return (

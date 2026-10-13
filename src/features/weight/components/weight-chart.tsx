@@ -64,19 +64,23 @@ export function WeightChart({ points, from, to, units, selected, onSelect }: Wei
   const values = points.flatMap((p) => [toUnits(p.weightKg, units), toUnits(p.trendKg, units)]);
   const scale = values.length ? valueScale(values) : null;
   const shown = points[selected ?? points.length - 1];
+  // Each weigh-in's x once, not again (with its date parsed) on every finger move.
+  const xs = points.map((p) => x(p.date));
   const trendLine = scale
     ? points
-        .map((p, i) => `${i ? 'L' : 'M'}${x(p.date)} ${scale.y(toUnits(p.trendKg, units))}`)
+        .map((p, i) => `${i ? 'L' : 'M'}${xs[i]} ${scale.y(toUnits(p.trendKg, units))}`)
         .join('')
     : '';
 
   const pick = (touchX: number) => {
     if (!points.length) return;
     let best = 0;
-    points.forEach((p, i) => {
-      if (Math.abs(x(p.date) - touchX) < Math.abs(x(points[best].date) - touchX)) best = i;
+    xs.forEach((px, i) => {
+      if (Math.abs(px - touchX) < Math.abs(xs[best] - touchX)) best = i;
     });
-    if (best !== selected) haptics.select();
+    // Only a new weigh-in updates the screen around the chart.
+    if (best === selected) return;
+    haptics.select();
     onSelect(best);
   };
   const scrub = Gesture.Pan()
@@ -132,7 +136,7 @@ export function WeightChart({ points, from, to, units, selected, onSelect }: Wei
                     p === shown ? null : (
                       <Circle
                         key={p.id}
-                        cx={x(p.date)}
+                        cx={xs[i]}
                         cy={scale.y(toUnits(p.weightKg, units))}
                         r={i === selected ? 4 : 2.25}
                         fill={colors.dim}

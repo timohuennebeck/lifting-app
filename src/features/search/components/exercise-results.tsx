@@ -112,6 +112,10 @@ export function ExerciseResults({ query, bottomInset }: ExerciseResultsProps) {
           showsVerticalScrollIndicator={false}
           getItemLayout={getItemLayout}
           onViewableItemsChanged={onViewableItemsChanged}
+          // About 300 rows: a few screens' worth mounted, not the default 21.
+          initialNumToRender={12}
+          maxToRenderPerBatch={8}
+          windowSize={7}
           ListEmptyComponent={
             <Text variant="label" tone="subtle" className="py-10 text-center font-inter">
               {t('picker.empty')}

@@ -14,6 +14,27 @@ type IndexedRow<T extends ExerciseOption> = T & {
   pinned: boolean;
 };
 
+/**
+ * Rows by their exercise option (stable while the language and exercises are) and placement, so
+ * a row keeps its object and the list only re-renders the rows a keystroke changed.
+ */
+const rowCache = new WeakMap<ExerciseOption, Map<string, IndexedRow<ExerciseOption>>>();
+
+function rowOf<T extends ExerciseOption>(option: T, pinned: boolean, heading: string | null) {
+  let rows = rowCache.get(option);
+  if (!rows) {
+    rows = new Map();
+    rowCache.set(option, rows);
+  }
+  const key = `${pinned}:${heading ?? ''}`;
+  let row = rows.get(key);
+  if (!row) {
+    row = { ...option, pinned, heading };
+    rows.set(key, row);
+  }
+  return row as IndexedRow<T>;
+}
+
 const rowHeight = (row: IndexedRow<ExerciseOption> | undefined) =>
   ROW_HEIGHT + (row?.heading ? HEADING_HEIGHT : 0);
 
@@ -27,12 +48,10 @@ export function useLetterIndex<T extends ExerciseOption>(pinned: T[], title: str
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
 
   const rows: IndexedRow<T>[] = [
-    ...pinned.map((o, i) => ({ ...o, pinned: true, heading: i === 0 ? title : null })),
-    ...rest.map((o, i) => ({
-      ...o,
-      pinned: false,
-      heading: i === 0 || rest[i - 1].letter !== o.letter ? o.letter : null,
-    })),
+    ...pinned.map((o, i) => rowOf(o, true, i === 0 ? title : null)),
+    ...rest.map((o, i) =>
+      rowOf(o, false, i === 0 || rest[i - 1].letter !== o.letter ? o.letter : null),
+    ),
   ];
   const offsets = rows.reduce<number[]>((acc, _, i) => {
     acc.push(i ? acc[i - 1] + rowHeight(rows[i - 1]) : 0);

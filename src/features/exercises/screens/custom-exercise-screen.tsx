@@ -123,18 +123,19 @@ export function CustomExerciseScreen() {
   const [saving, setSaving] = useState(false);
 
   const trimmed = name.trim();
-  // Two exercises of one name couldn't be told apart in the picker.
-  const taken = useMemo(() => {
-    const key = trimmed.toLocaleLowerCase(i18n.language);
-    return (
-      !!key &&
-      activeExerciseIds().some(
-        (other) =>
-          other !== existing?.id &&
-          exerciseName(other, i18n.language).toLocaleLowerCase(i18n.language) === key,
-      )
-    );
-  }, [trimmed, existing?.id, i18n.language]);
+  // Two exercises of one name couldn't be told apart in the picker. The names are lowered once,
+  // not on every keystroke.
+  const otherNames = useMemo(
+    () =>
+      new Set(
+        activeExerciseIds()
+          .filter((other) => other !== existing?.id)
+          .map((other) => exerciseName(other, i18n.language).toLocaleLowerCase(i18n.language)),
+      ),
+    [existing?.id, i18n.language],
+  );
+  const key = trimmed.toLocaleLowerCase(i18n.language);
+  const taken = !!key && otherNames.has(key);
   const { primary, secondary } = muscles;
   const valid = !!trimmed && !taken && primary.length > 0;
   const selected = useMemo(() => [...primary, ...secondary], [primary, secondary]);

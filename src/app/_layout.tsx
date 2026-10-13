@@ -1,15 +1,14 @@
 import '@/global.css';
 import '@/shared/i18n';
 
-import {
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-  Inter_700Bold,
-  useFonts,
-} from '@expo-google-fonts/inter';
+// One import per weight: the package's index requires all 18 weights (6 MB in the bundle).
+import { Inter_400Regular } from '@expo-google-fonts/inter/400Regular';
+import { Inter_500Medium } from '@expo-google-fonts/inter/500Medium';
+import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
+import { Inter_700Bold } from '@expo-google-fonts/inter/700Bold';
 import { PowerSyncContext } from '@powersync/react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { useFonts } from 'expo-font';
 import { DarkTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -23,6 +22,7 @@ import { legalUpdateWasPending } from '@/features/legal/data/legal-acceptances';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { CatalogOffline } from '@/shared/components/catalog-offline';
 import { CustomExerciseGate } from '@/shared/components/custom-exercise-gate';
+import { useCustomExerciseStore } from '@/shared/data/exercises';
 import { db } from '@/shared/data/powersync/database';
 import { queryClient } from '@/shared/data/query-client';
 import { useCatalogRefresh } from '@/shared/hooks/use-catalog-refresh';
@@ -54,8 +54,10 @@ export default function RootLayout() {
   const recovering = useSessionStore((s) => s.recovering);
   const onboarded = useOnboardingStore((s) => s.completed);
   const inApp = signedIn && onboarded && !recovering;
-  // On first launch the splash stays up until the exercises are downloaded or that failed.
-  const catalogSettled = catalog.ready || catalog.failed;
+  // On first launch the splash stays up until the exercises are downloaded or that failed, and
+  // always until the user's own are read (CustomExerciseGate), so no empty frame shows first.
+  const customLoaded = useCustomExerciseStore((s) => s.loaded);
+  const catalogSettled = catalog.failed || (catalog.ready && customLoaded);
   useEffect(() => {
     if (!fontsLoaded || !catalogSettled) return;
     if (!inApp || !legalUpdateWasPending()) {

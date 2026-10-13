@@ -102,6 +102,12 @@ Deno.serve(async (req) => {
     return reply(400, { error: 'bad_request' });
   }
 
+  // Started together: the Pro check (RevenueCat) and the photos don't depend on the rows. The
+  // answers are still checked in order (age, Pro, photos).
+  const pro = hasPro(userId);
+  const ownPhotos = checkPhotos(userId, checkId);
+  // Awaited below; until then a failed download mustn't count as an unhandled rejection.
+  ownPhotos.catch(() => {});
   const [{ data: profile }, { data: weights }, { data: previous }] = await Promise.all([
     admin
       .from('profiles')
@@ -127,12 +133,12 @@ Deno.serve(async (req) => {
   // no for those first hours (the app goes by the local date).
   const age = profile?.birth_date ? ageFrom(profile.birth_date, new Date()) : 0;
   if (age < MIN_AGE) return reply(403, { error: 'not_adult' });
-  if (!(await hasPro(userId))) return reply(403, { error: 'not_pro' });
+  if (!(await pro)) return reply(403, { error: 'not_pro' });
 
   // The previous check's photos let the model compare pose by pose; one that fails to download
   // is left out.
   const [photos, previousPhotos] = await Promise.all([
-    checkPhotos(userId, checkId),
+    ownPhotos,
     previous ? checkPhotos(userId, previous.id) : {},
   ]);
   if (POSES.some((pose) => !photos[pose])) return reply(400, { error: 'photos_missing' });

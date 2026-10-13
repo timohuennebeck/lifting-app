@@ -106,8 +106,12 @@ export function RulerPicker({
     if (size === extent) return;
     setExtent(size);
     const offset = lastIndex.current * PITCH;
+    // Not a computed key ({ [axis]: offset }): the React Compiler can't compile that, and the
+    // ruler's 400+ ticks would re-render on every value while dragging.
     requestAnimationFrame(() =>
-      scrollRef.current?.scrollTo({ [vertical ? 'y' : 'x']: offset, animated: false }),
+      scrollRef.current?.scrollTo(
+        vertical ? { y: offset, animated: false } : { x: offset, animated: false },
+      ),
     );
   };
 

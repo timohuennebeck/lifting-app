@@ -3,6 +3,8 @@ import { View } from 'react-native';
 import Animated, { type AnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { QueryFocus } from '@/shared/data/query-focus';
+
 import { PagerPage } from './pager-page';
 import { TabHeader } from './tab-header';
 
@@ -31,10 +33,12 @@ export function TabScreen({
 }: TabScreenProps) {
   const insets = useSafeAreaInsets();
   return (
-    <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-      <TabHeader actions={headerActions} greeting={greeting} settings={settings} />
-      {pinned}
-      <PagerPage scrollRef={scrollRef}>{children}</PagerPage>
-    </View>
+    <QueryFocus>
+      <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
+        <TabHeader actions={headerActions} greeting={greeting} settings={settings} />
+        {pinned}
+        <PagerPage scrollRef={scrollRef}>{children}</PagerPage>
+      </View>
+    </QueryFocus>
   );
 }
