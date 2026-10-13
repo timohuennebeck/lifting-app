@@ -120,26 +120,34 @@ const ICONS = {
       </>
     ),
   },
+  // A calendar with today's date (top bar, weight history). Drawn 0.3 below the box's middle so
+  // it sits centred in a round button: the rings make it taller on top. The date is centred in
+  // the space under the rings.
   calendar: {
-    viewBox: '0 0 16 16',
+    viewBox: '0 0 20 20',
     render: (c) => (
       <>
         <Rect
-          x={1.4}
-          y={3}
-          width={13.2}
-          height={11}
-          rx={2.6}
+          x={2.4}
+          y={3.9}
+          width={15.2}
+          height={14}
+          rx={3.6}
           stroke={c}
-          strokeWidth={1.7}
+          strokeWidth={1.8}
           fill="none"
         />
-        <Path
-          d="M1.4 6.6h13.2M5 1.3v3.2M11 1.3v3.2"
-          stroke={c}
-          strokeWidth={1.7}
-          strokeLinecap="round"
-        />
+        <Path d="M6.6 2.1v3.4M13.4 2.1v3.4" stroke={c} strokeWidth={1.8} strokeLinecap="round" />
+        <Text
+          x={10}
+          y={14.3}
+          fill={c}
+          fontSize={7.6}
+          fontFamily="Inter_700Bold"
+          textAnchor="middle"
+        >
+          {new Date().getDate()}
+        </Text>
       </>
     ),
   },

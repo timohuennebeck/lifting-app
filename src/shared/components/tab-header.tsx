@@ -14,7 +14,7 @@ import { Text } from '@/shared/ui/text';
 import { ProfileAvatar } from './user-avatar';
 
 export interface TabHeaderProps {
-  /** Extra round buttons placed before weight and search. */
+  /** Extra round buttons placed before the calendar, weight and search. */
   actions?: ReactNode;
   /** Avatar, date and greeting on the left; the profile tab hides them (01b-2). */
   greeting?: boolean;
@@ -23,14 +23,14 @@ export interface TabHeaderProps {
 }
 
 /**
- * Header shared by all tabs: avatar, today's date, greeting, optional actions, then today's
- * weigh-in and search (exercises and their records), always in the same place.
+ * Header shared by all tabs: avatar, today's date, greeting, optional actions, then the weight
+ * calendar, today's weigh-in and search (exercises and their records), always in the same place.
  */
 export function TabHeader({ actions, greeting = true, settings = false }: TabHeaderProps) {
   const { t } = useTranslation(['common', 'weight']);
   const { profile } = useProfile();
-  // Ticks every minute so the date turns over at midnight.
-  const now = useNow(MINUTE_MS, greeting);
+  // Ticks every minute so the date (also the one in the calendar icon) turns over at midnight.
+  const now = useNow(MINUTE_MS);
   const name = profile?.firstName ?? '';
   return (
     <View className="flex-row items-center justify-between gap-3 px-5 pt-2.5 pb-1.5">
@@ -55,6 +55,14 @@ export function TabHeader({ actions, greeting = true, settings = false }: TabHea
       )}
       <View className="flex-row gap-2">
         {actions}
+        <IconButton
+          // A new day draws the icon again, with its date.
+          key={toIsoDate(new Date(now))}
+          icon="calendar"
+          iconSize={19}
+          accessibilityLabel={t('weight:history.calendar')}
+          onPress={() => router.push('/body-weight/calendar')}
+        />
         <IconButton
           icon="scale"
           iconSize={19}

@@ -154,8 +154,9 @@ export function WeightHistoryScreen() {
         action={
           <View className="flex-row gap-2">
             <IconButton
+              key={today}
               icon="calendar"
-              iconSize={16}
+              iconSize={19}
               accessibilityLabel={t('history.calendar')}
               onPress={() => router.push('/body-weight/calendar')}
             />
