@@ -50,8 +50,8 @@ const TURN_MS = 5000;
 /**
  * 08a: full-screen camera that walks through the three poses, with self-timer. The timer sound
  * ticks the countdown and clicks when the photo is taken; with Auto on, one tap takes them all.
- * A taken photo's thumbnail shows it full screen to check or retake; "Fertig" (all three)
- * starts the analysis, which sends photos it can't judge back here.
+ * A taken photo's thumbnail shows it full screen to check or retake; "Fertig" (all three, there
+ * or next to the shutter) starts the analysis, which sends photos it can't judge back here.
  */
 export function CameraScreen() {
   const { t } = useTranslation(['bodyCheck', 'common']);
@@ -92,6 +92,8 @@ export function CameraScreen() {
   const taken = POSES.filter((p) => shots[p]).length;
   // Every pose taken and none the analysis sent back: "Fertig" starts the analysis.
   const finished = hasAllShots(shots) && !POSES.some((p) => shots[p]?.rejected);
+
+  const analyze = () => router.push('/body-check/analysis');
 
   // A thumbnail with a photo shows it; an empty one is the pose to shoot next.
   const selectPose = (p: (typeof POSES)[number]) => {
@@ -382,7 +384,7 @@ export function CameraScreen() {
                     label={t('common:actions.done')}
                     count={taken}
                     disabled={busy}
-                    onPress={() => router.push('/body-check/analysis')}
+                    onPress={analyze}
                   />
                 ) : null
               }
@@ -405,6 +407,8 @@ export function CameraScreen() {
           strip={<PoseStrip shots={shots} active={viewPose} onSelect={selectPose} viewing />}
           onClose={() => useBodyCheckStore.getState().view(null)}
           onRetake={() => useBodyCheckStore.getState().retake(viewPose)}
+          canFinish={finished && !busy}
+          onFinish={analyze}
         />
       ) : null}
 

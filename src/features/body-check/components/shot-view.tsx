@@ -53,13 +53,24 @@ export interface ShotViewProps {
   strip: ReactNode;
   onClose: () => void;
   onRetake: () => void;
+  /** Every pose taken and none sent back: "Fertig" can start the analysis. */
+  canFinish: boolean;
+  onFinish: () => void;
 }
 
 /**
  * A taken photo full screen over the camera (08a): the pose and whether the photo works, the
- * thumbnails, and "Foto neu aufnehmen".
+ * thumbnails, a retake button and "Fertig".
  */
-export function ShotView({ pose, shot, strip, onClose, onRetake }: ShotViewProps) {
+export function ShotView({
+  pose,
+  shot,
+  strip,
+  onClose,
+  onRetake,
+  canFinish,
+  onFinish,
+}: ShotViewProps) {
   const { t } = useTranslation(['bodyCheck', 'common']);
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
@@ -82,8 +93,20 @@ export function ShotView({ pose, shot, strip, onClose, onRetake }: ShotViewProps
       </View>
       <View className="absolute inset-x-0 gap-5.5" style={{ bottom: footerInset }}>
         {strip}
-        <View className="px-4">
-          <Button label={t('photo.retake')} icon="refresh" onPress={onRetake} />
+        <View className="flex-row gap-3 px-4">
+          <IconButton
+            icon="refresh"
+            size={60}
+            iconSize={16}
+            accessibilityLabel={t('photo.retake')}
+            onPress={onRetake}
+          />
+          <Button
+            label={t('common:actions.done')}
+            disabled={!canFinish}
+            onPress={onFinish}
+            className="flex-1"
+          />
         </View>
       </View>
     </View>
