@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
 import { exerciseName } from '@/shared/data/exercises';
+import { haptics } from '@/shared/lib/haptics';
 import { PaperStack } from '@/shared/ui/paper-sheet';
 import { type ScanChip, ScanStage, useTimedProgress } from '@/shared/ui/scan-stage';
 
@@ -41,11 +42,14 @@ export function AnalysisScreen() {
   useEffect(() => {
     if (!started || !animated || opened.current) return;
     opened.current = true;
+    // Already complete: the review won't see it finish.
+    if (!useImportStore.getState().reading) haptics.success();
     router.replace('/import/confirm');
   }, [started, animated]);
 
   useEffect(() => {
     if (failure?.run !== run.current || opened.current) return;
+    opened.current = true;
     Alert.alert(t(`planImport:analysis.errors.${failure.reason}`));
     router.back();
   }, [failure, t]);

@@ -112,6 +112,14 @@ function serverFailure(text: string): ImportFailure {
   }
 }
 
+/**
+ * Throws once the import was stopped. Not `signal.throwIfAborted()`: React Native's AbortSignal
+ * (the abort-controller polyfill) doesn't have it.
+ */
+function stopIfAborted(signal: AbortSignal) {
+  if (signal.aborted) throw new Error('The plan import was stopped');
+}
+
 /** What the analysis sends while it reads (the analyze-plan function's PlanEvent). */
 export type PlanEvent =
   | { type: 'plan'; name: string }
@@ -127,8 +135,8 @@ export type PlanEvent =
  * Reads a training plan from photos or a file with the analyze-plan Edge Function, which streams
  * it: `onEvent` gets the plan's name, then each day and exercise as soon as it is read (an
  * exercise belongs to the day before it). Resolves once the plan is complete. Throws an
- * ImportError with the reason when there is no plan to show, also when the stream breaks off,
- * and the abort reason once `signal` stops it.
+ * ImportError with the reason when there is no plan to show, also when the stream breaks off;
+ * once `signal` stops it, the error doesn't matter.
  */
 export async function streamPlan(
   { source, language }: AnalyzePlanInput,
@@ -136,7 +144,7 @@ export async function streamPlan(
   signal: AbortSignal,
 ) {
   const body = JSON.stringify({ ...(await requestBody(source)), language });
-  signal.throwIfAborted();
+  stopIfAborted(signal);
   // expo/fetch, unlike React Native's own fetch, hands over the answer while it arrives.
   const response = await fetch(`${env.supabaseUrl}/functions/v1/analyze-plan`, {
     method: 'POST',
@@ -144,7 +152,7 @@ export async function streamPlan(
     body,
     signal,
   }).catch((error: unknown) => {
-    signal.throwIfAborted();
+    stopIfAborted(signal);
     console.warn('analyze-plan could not be called', error);
     throw new ImportError('offline');
   });
@@ -159,7 +167,7 @@ export async function streamPlan(
   let buffer = '';
   for (;;) {
     const { value, done } = await reader.read().catch((error: unknown) => {
-      signal.throwIfAborted();
+      stopIfAborted(signal);
       console.warn('The plan import broke off', error);
       throw new ImportError('offline');
     });

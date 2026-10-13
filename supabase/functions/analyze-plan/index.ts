@@ -246,7 +246,7 @@ Deno.serve(async (req) => {
     start(controller) {
       const send = (event: PlanEvent) =>
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
-      void sendPlan(started.answer, catalog, send)
+      void sendPlan(started.answer, catalog, send, giveBack)
         .catch((error) => {
           if (stop.signal.aborted) return;
           console.error('The import broke off', error);
@@ -272,17 +272,22 @@ Deno.serve(async (req) => {
   });
 });
 
-/** Reads the streamed answer into the app's events (see PlanEvent) and sends them. */
+/**
+ * Reads the streamed answer into the app's events (see PlanEvent) and sends them. An answer that
+ * fails before its first word gives the import back, as a failed request does.
+ */
 async function sendPlan(
   answer: AsyncGenerator<StreamedAnswer>,
   catalog: CatalogExercise[],
   send: (event: PlanEvent) => void,
+  giveBack: () => PromiseLike<unknown>,
 ) {
   const reader = planReader(catalog, () => crypto.randomUUID());
   const stream = new PlanStream();
   // A day waits for its first exercise.
   let day: ImportedDay | null = null;
   let exercises = 0;
+  let written = false;
   for await (const step of answer) {
     if ('refusal' in step) {
       console.warn('The model refused the plan');
@@ -290,11 +295,13 @@ async function sendPlan(
     }
     if ('incomplete' in step) {
       console.error('The import did not complete', step.incomplete);
+      if (!written) await giveBack();
       return send({ type: 'error', error: 'analysis_failed' });
     }
     if ('done' in step) {
       return send(exercises ? { type: 'done' } : { type: 'error', error: 'not_a_plan' });
     }
+    written = true;
     for (const piece of stream.push(step.text)) {
       if (piece.kind === 'start') {
         // Leaving the loop also stops the model.

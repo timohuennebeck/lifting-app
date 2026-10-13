@@ -1,4 +1,4 @@
-import { Redirect, router } from 'expo-router';
+import { Redirect, router, useIsFocused, useNavigation } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, ScrollView, View } from 'react-native';
@@ -57,29 +57,39 @@ export function ConfirmScreen() {
   const reading = useImportStore((s) => s.reading);
   const readingDay = useImportStore((s) => s.readingDay);
   const failure = useImportStore((s) => s.failure);
+  const holdDay = useImportStore((s) => s.holdDay);
   // The analysis this screen shows; leaving the screen stops it.
   const [run] = useState(() => useImportStore.getState().run);
   const wasReading = useRef(reading);
+  const alerted = useRef(false);
+  const navigation = useNavigation();
+  const focused = useIsFocused();
   const updateDraft = useUpdateDraft();
   // The menu keeps its content while it animates out.
   const [menuFor, setMenuFor] = useState<number | null>(null);
   const menuShown = useLastDefined(menuFor);
   const [renameOpen, setRenameOpen] = useState(false);
-  useEffect(() => () => useImportStore.getState().stop(run), [run]);
+  // On leaving, not on unmount: Fast Refresh remounts without the user going anywhere.
+  useEffect(
+    () => navigation.addListener('beforeRemove', () => useImportStore.getState().stop(run)),
+    [navigation, run],
+  );
 
   useEffect(() => {
     if (wasReading.current && !reading && !failure) haptics.success();
     wasReading.current = reading;
   }, [reading, failure]);
 
-  // Broken off halfway: a partial plan isn't taken over; read it again or go back.
+  // Broken off halfway: a partial plan isn't taken over; read it again or go back. Asked once
+  // this screen is on top again, if the user had opened an exercise or the picker meanwhile.
   useEffect(() => {
-    if (failure?.run !== run) return;
+    if (failure?.run !== run || !focused || alerted.current) return;
+    alerted.current = true;
     Alert.alert(t(`planImport:analysis.errors.${failure.reason}`), undefined, [
       { text: t('common:actions.cancel'), style: 'cancel', onPress: () => router.back() },
       { text: t('common:actions.retry'), onPress: () => router.replace('/import/analysis') },
     ]);
-  }, [failure, run, t]);
+  }, [failure, run, focused, t]);
 
   if (!plan) return <Redirect href="/import" />;
 
@@ -166,6 +176,8 @@ export function ConfirmScreen() {
       }
     >
       <ScrollView
+        // Any touch ends following the day being read, so an edit stays on the day it began on.
+        onTouchStart={holdDay}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 130 }}
       >

@@ -43,6 +43,8 @@ interface ImportState {
   setPlan: (plan: ImportedPlan) => void;
   editPlan: (edit: (plan: ImportedPlan) => ImportedPlan) => void;
   selectDay: (index: number) => void;
+  /** Stops following the day being read (the user started doing something on the current one). */
+  holdDay: () => void;
   /** Forgets the session, e.g. on sign-out. */
   reset: () => void;
 }
@@ -143,6 +145,7 @@ export const useImportStore = create<ImportState>()((set, get) => ({
   },
   editPlan: (edit) => set((s) => (s.plan ? { plan: edit(s.plan) } : {})),
   selectDay: (dayIndex) => set({ dayIndex, following: false }),
+  holdDay: () => get().following && set({ following: false }),
   reset: () => {
     analysis?.abort();
     set(EMPTY);
