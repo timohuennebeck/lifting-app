@@ -14,7 +14,6 @@ import {
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { addDays, fromIsoDate, toIsoDate } from '@/shared/lib/date';
 import { formatDate, formatNumber, lbToKg, type UnitSystem } from '@/shared/lib/format';
-import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
@@ -119,7 +118,8 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
     try {
       // Moving the entry this screen opened on to an empty day; a day with its own is edited.
       await saveWeightEntryMoved(userId, date, kg, own ? null : original);
-      haptics.success();
+      // The button's own tap is the only haptic: the save is instant, and a success pattern
+      // right after it merged into one long buzz.
       router.back();
     } finally {
       setSaving(false);
