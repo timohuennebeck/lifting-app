@@ -28,7 +28,7 @@
     "today": "Today, {{date}}",
     "yesterday": "Yesterday, {{date}}",
     "since": "{{value}} since {{date}}",
-    "first": "Your first entry",
+    "none": "No entry yet",
     "delete": "Delete entry",
     "date": "Date"
   }

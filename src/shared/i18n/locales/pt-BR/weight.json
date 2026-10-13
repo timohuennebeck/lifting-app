@@ -28,7 +28,7 @@
     "today": "Hoje, {{date}}",
     "yesterday": "Ontem, {{date}}",
     "since": "{{value}} desde {{date}}",
-    "first": "Seu primeiro registro",
+    "none": "Nenhum registro",
     "delete": "Excluir registro",
     "date": "Data"
   }

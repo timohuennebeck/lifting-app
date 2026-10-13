@@ -1,11 +1,11 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 
 import { daysInMonth, isoDate, mondayIndex } from '@/shared/lib/date';
 import { formatDate, type UnitSystem } from '@/shared/lib/format';
 import { cn } from '@/shared/lib/cn';
-import { PressableScale } from '@/shared/ui/pressable-scale';
+import { haptics } from '@/shared/lib/haptics';
 import { Text } from '@/shared/ui/text';
 
 import { formatKg } from '../lib/format';
@@ -64,15 +64,21 @@ export const CalendarMonth = memo(function CalendarMonth({
               const kg = weights.get(date);
               const future = date > today;
               return (
-                <PressableScale
+                // A plain touchable: a month has up to 31 of these, and an animated one each was
+                // what made the calendar slow to open.
+                <TouchableOpacity
                   key={c}
-                  haptic="tap"
+                  activeOpacity={0.6}
                   disabled={future}
+                  accessibilityRole="button"
                   accessibilityLabel={formatDate(new Date(`${date}T12:00`), {
                     day: 'numeric',
                     month: 'long',
                   })}
-                  onPress={() => onPick(date)}
+                  onPress={() => {
+                    haptics.tap();
+                    onPick(date);
+                  }}
                   className="h-15 flex-1 items-center"
                 >
                   <View
@@ -98,7 +104,7 @@ export const CalendarMonth = memo(function CalendarMonth({
                       {formatKg(kg, units)}
                     </Text>
                   ) : null}
-                </PressableScale>
+                </TouchableOpacity>
               );
             })}
           </View>

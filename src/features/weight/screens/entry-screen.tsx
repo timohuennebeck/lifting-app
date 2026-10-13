@@ -185,7 +185,7 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
                 value: `${formatChange(kg - previous.weightKg, units)} ${unit}`,
                 date: shortDate(previous.date),
               })
-            : t('entry.first')}
+            : t('entry.none')}
         </Text>
 
         <RulerPicker

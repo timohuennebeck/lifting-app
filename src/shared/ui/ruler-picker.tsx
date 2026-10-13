@@ -59,15 +59,19 @@ export function RulerPicker({
   const scrollRef = useRef<ScrollView>(null);
   const [extent, setExtent] = useState(0);
   const lastIndex = useRef(Math.round((value - min) / step));
-  // Only user drags change the value; programmatic scrolls must not.
+  // From touch-down until a fling settles the scale sets the value; programmatic scrolls don't.
   const dragging = useRef(false);
+  const settle = useRef<ReturnType<typeof setTimeout>>(undefined);
   const count = Math.round((max - min) / step) + 1;
   const pad = extent / 2 - TICK / 2;
 
-  // Follow external value changes (e.g. −/+ buttons) without fighting user drags.
+  useEffect(() => () => clearTimeout(settle.current), []);
+
+  // Follow external value changes (e.g. −/+ buttons). Not while dragging: the drag's own values
+  // arrive here a render late, and scrolling back to them made the scale jump.
   useEffect(() => {
     const index = Math.round((value - min) / step);
-    if (!extent || index === lastIndex.current) return;
+    if (!extent || dragging.current || index === lastIndex.current) return;
     lastIndex.current = index;
     const offset = index * PITCH;
     scrollRef.current?.scrollTo(vertical ? { y: offset } : { x: offset });
@@ -83,8 +87,23 @@ export function RulerPicker({
     onChange(+(min + index * step).toFixed(2));
   };
 
+  const startDrag = () => {
+    clearTimeout(settle.current);
+    dragging.current = true;
+  };
+  // A release without a fling has no momentum events, so the drag ends shortly after it.
+  const endDrag = () => {
+    settle.current = setTimeout(() => (dragging.current = false), 100);
+  };
+  const endMomentum = () => {
+    clearTimeout(settle.current);
+    dragging.current = false;
+  };
+
   const onLayout = (e: LayoutChangeEvent) => {
     const size = vertical ? e.nativeEvent.layout.height : e.nativeEvent.layout.width;
+    // Only a new size re-centres the scale; a layout pass mid-drag must not snap it back.
+    if (size === extent) return;
     setExtent(size);
     const offset = lastIndex.current * PITCH;
     requestAnimationFrame(() =>
@@ -105,8 +124,10 @@ export function RulerPicker({
         decelerationRate="fast"
         scrollEventThrottle={16}
         onScroll={onScroll}
-        onScrollBeginDrag={() => (dragging.current = true)}
-        onMomentumScrollEnd={() => (dragging.current = false)}
+        onScrollBeginDrag={startDrag}
+        onScrollEndDrag={endDrag}
+        onMomentumScrollBegin={() => clearTimeout(settle.current)}
+        onMomentumScrollEnd={endMomentum}
         contentContainerStyle={
           vertical ? { paddingVertical: pad } : { paddingHorizontal: pad, alignItems: 'flex-end' }
         }

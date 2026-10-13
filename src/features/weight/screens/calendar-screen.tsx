@@ -19,8 +19,9 @@ interface Month {
   month: number;
 }
 
-/** Months shown at first, and added each time the list nears its end. */
-const MONTH_BATCH = 12;
+/** Months loaded at first, and added whenever about three months are left below. */
+const FIRST_MONTHS = 6;
+const MORE_MONTHS = 3;
 
 /** Months from this one back to the first weigh-in's month, counting both. */
 function monthsSince(today: string, first: string | undefined) {
@@ -53,7 +54,7 @@ export function WeightCalendarScreen() {
   const weekdays = t('common:weekdays.short', { returnObjects: true }) as string[];
   const weights = useMemo(() => new Map(entries.map((e) => [e.date, e.weightKg])), [entries]);
   // Endless into the past, so older weights can be added too; never into the future.
-  const [shown, setShown] = useState(MONTH_BATCH);
+  const [shown, setShown] = useState(FIRST_MONTHS);
   const count = Math.max(shown, monthsSince(today, entries[0]?.date));
   const months = monthsBack(today, count);
   const onPick = useCallback(
@@ -91,8 +92,13 @@ export function WeightCalendarScreen() {
             onPick={onPick}
           />
         )}
-        onEndReached={() => setShown(count + MONTH_BATCH)}
-        onEndReachedThreshold={1}
+        onEndReached={() => setShown(count + MORE_MONTHS)}
+        // About three months (~1,100pt) before the end.
+        onEndReachedThreshold={1.5}
+        // Only what's on screen first, so the page opens without waiting for months below.
+        initialNumToRender={2}
+        maxToRenderPerBatch={2}
+        windowSize={5}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
       />
