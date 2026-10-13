@@ -11,7 +11,7 @@ import { MINUTE_MS, toIsoDate } from '@/shared/lib/date';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
-import { CalendarMonth } from '../components/calendar-month';
+import { CalendarMonth, monthHeight } from '../components/calendar-month';
 import { returnPickedDate } from '../lib/pick-date';
 
 interface Month {
@@ -19,44 +19,54 @@ interface Month {
   month: number;
 }
 
-/** Months loaded at first, and added whenever about three months are left below. */
+/** Months on each side of this one at first, and added whenever about three are left. */
 const FIRST_MONTHS = 6;
 const MORE_MONTHS = 3;
+/** How far the list grows: a safety stop should adding months on top ever run away. */
+const MAX_PAST = 120;
+const MAX_FUTURE = 60;
 
-/** Months from this one back to the first weigh-in's month, counting both. */
+/** Months from the first weigh-in's month up to this one, not counting this one. */
 function monthsSince(today: string, first: string | undefined) {
   const [year, month] = today.split('-').map(Number);
   const [firstYear, firstMonth] = (first ?? today).split('-').map(Number);
-  return (year - firstYear) * 12 + month - firstMonth + 1;
+  return (year - firstYear) * 12 + month - firstMonth;
 }
 
-/** `count` months from this one back, newest first. */
-function monthsBack(today: string, count: number): Month[] {
-  const [year, month] = today.split('-').map(Number);
-  return Array.from({ length: count }, (_, i) => {
-    const index = year * 12 + month - 1 - i;
-    return { year: Math.floor(index / 12), month: (index % 12) + 1 };
-  });
+/** The month `offset` months away from (year, month). */
+function shiftMonth(year: number, month: number, offset: number): Month {
+  const index = year * 12 + month - 1 + offset;
+  return { year: Math.floor(index / 12), month: (index % 12) + 1 };
 }
 
 /**
- * Weight calendar (GW·3B): the months back from this one, more as you scroll, with the days'
- * weights. A day opens its entry, or, when the entry screen's date chip opened the calendar
- * (`pick`), goes back there with that day.
+ * Weight calendar (GW·3B), oldest month on top as in Apple's Calendar. It opens on this month
+ * and loads further months both ways while scrolling. A day opens its entry, or, when the entry
+ * screen's date chip opened the calendar (`pick`), goes back there with that day.
  */
 export function WeightCalendarScreen() {
   const { pick } = useLocalSearchParams<{ pick?: string }>();
   const { t } = useTranslation(['weight', 'common']);
   const insets = useSafeAreaInsets();
   const units = useUnits();
-  const { entries } = useWeightEntries();
+  const { entries, isLoading } = useWeightEntries();
   const today = toIsoDate(new Date(useNow(MINUTE_MS)));
   const weekdays = t('common:weekdays.short', { returnObjects: true }) as string[];
   const weights = useMemo(() => new Map(entries.map((e) => [e.date, e.weightKg])), [entries]);
-  // Endless into the past, so older weights can be added too; never into the future.
-  const [shown, setShown] = useState(FIRST_MONTHS);
-  const count = Math.max(shown, monthsSince(today, entries[0]?.date));
-  const months = monthsBack(today, count);
+
+  // Back to the first weigh-in at least, so its month is there without loading more.
+  const [past, setPast] = useState(FIRST_MONTHS);
+  const [future, setFuture] = useState(FIRST_MONTHS);
+  const before = Math.max(past, monthsSince(today, entries[0]?.date));
+  const [year, month] = today.split('-').map(Number);
+  const months = Array.from({ length: before + 1 + future }, (_, i) =>
+    shiftMonth(year, month, i - before),
+  );
+  // Fixed heights (see monthHeight) let the list start on this month without measuring.
+  const heights = months.map((m) => monthHeight(m.year, m.month));
+  let total = 0;
+  const offsets = heights.map((height) => (total += height) - height);
+
   const onPick = useCallback(
     (date: string) =>
       pick
@@ -79,29 +89,38 @@ export function WeightCalendarScreen() {
           </Text>
         ))}
       </View>
-      <FlatList
-        data={months}
-        keyExtractor={(m) => `${m.year}-${m.month}`}
-        renderItem={({ item }) => (
-          <CalendarMonth
-            year={item.year}
-            month={item.month}
-            weights={weights}
-            today={today}
-            units={units}
-            onPick={onPick}
-          />
-        )}
-        onEndReached={() => setShown(count + MORE_MONTHS)}
-        // About three months (~1,100pt) before the end.
-        onEndReachedThreshold={1.5}
-        // Only what's on screen first, so the page opens without waiting for months below.
-        initialNumToRender={2}
-        maxToRenderPerBatch={2}
-        windowSize={5}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
-      />
+      {/* Waits for the entries, so it opens on this month even when they reach far back. */}
+      {isLoading ? null : (
+        <FlatList
+          data={months}
+          keyExtractor={(m) => `${m.year}-${m.month}`}
+          renderItem={({ item }) => (
+            <CalendarMonth
+              year={item.year}
+              month={item.month}
+              weights={weights}
+              today={today}
+              units={units}
+              onPick={onPick}
+            />
+          )}
+          getItemLayout={(_, index) => ({ length: heights[index], offset: offsets[index], index })}
+          initialScrollIndex={before}
+          // Months added on top keep what's on screen in place.
+          maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
+          // About three months (~1,100pt) before either end.
+          onStartReached={() => setPast(Math.min(before + MORE_MONTHS, MAX_PAST))}
+          onStartReachedThreshold={1.5}
+          onEndReached={() => setFuture(Math.min(future + MORE_MONTHS, MAX_FUTURE))}
+          onEndReachedThreshold={1.5}
+          // Only what's on screen first, so the page opens without waiting for other months.
+          initialNumToRender={3}
+          maxToRenderPerBatch={2}
+          windowSize={5}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
+        />
+      )}
     </View>
   );
 }

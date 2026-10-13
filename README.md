@@ -101,7 +101,7 @@ Documents are readable without an account (onboarding runs logged out) and writt
   (`private.weight_entry_id`, in the app `weightEntryId`: the first 32 hex digits of SHA-256 of
   `<user id>:<date>`), so two devices saving the same day write one row and the last save wins.
 - **In the app:** the scale button in the top bar opens today's entry, which leads on to the
-  history and its calendar (endless into the past). The trend is computed on the device: each weigh-in moves it 10 % toward the scale value.
+  history and its calendar (oldest month on top, loading more months both ways). The trend is computed on the device: each weigh-in moves it 10 % toward the scale value.
   The onboarding weight becomes the first entry; bodyweight exercise scores and the body check
   analysis use the latest one. `profiles.weight_kg` was moved into the table and dropped.
 

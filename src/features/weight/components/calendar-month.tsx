@@ -22,6 +22,18 @@ export interface CalendarMonthProps {
   onPick: (date: string) => void;
 }
 
+/** The title block with its padding, and one 60pt row per calendar week (`h-15` cells). */
+const MONTH_CHROME = 60;
+const WEEK_ROW = 60;
+
+/** A month's height, fixed so the calendar can open on a month without measuring those above. */
+export function monthHeight(year: number, month: number) {
+  const weeks = Math.ceil(
+    (mondayIndex(new Date(year, month - 1, 1)) + daysInMonth(year, month)) / 7,
+  );
+  return MONTH_CHROME + WEEK_ROW * weeks;
+}
+
 /** A month of the weight calendar: a ring and the weight on days with an entry (GW·3B). */
 export const CalendarMonth = memo(function CalendarMonth({
   year,
@@ -44,7 +56,7 @@ export const CalendarMonth = memo(function CalendarMonth({
   const count = cells.filter((d) => d && weights.has(d)).length;
 
   return (
-    <View className="pt-4.75 pb-1">
+    <View className="pt-4.75 pb-1" style={{ height: monthHeight(year, month) }}>
       <View className="flex-row items-baseline justify-between px-5">
         <Text className="font-inter-semibold text-xl leading-6.5">
           {formatDate(new Date(year, month - 1, 1), { month: 'long', year: 'numeric' })}
