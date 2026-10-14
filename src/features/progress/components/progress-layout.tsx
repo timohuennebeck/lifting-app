@@ -8,7 +8,7 @@ import { QueryFocus } from '@/shared/data/query-focus';
 import { SwipeTabs } from '@/shared/components/swipe-tabs';
 
 /**
- * Progress tab: trained muscles and body checks as swipeable top tabs. Both stay mounted, so
+ * Progress tab: trained muscles and progress checks as swipeable top tabs. Both stay mounted, so
  * switching never reloads (records are in the search).
  */
 export function ProgressLayout() {

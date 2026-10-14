@@ -1,0 +1,25 @@
+import { Stack } from 'expo-router';
+
+import { colors } from '@/shared/lib/theme';
+
+export default function ProgressCheckLayout() {
+  return (
+    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
+      <Stack.Screen
+        name="camera"
+        options={{ animation: 'fade', contentStyle: { backgroundColor: 'black' } }}
+      />
+      <Stack.Screen name="analysis" options={{ animation: 'fade', gestureEnabled: false }} />
+      <Stack.Screen name="result/[id]" options={{ animation: 'fade', gestureEnabled: false }} />
+      {/* A tapped photo fades in; it closes by dragging, not the edge swipe. */}
+      <Stack.Screen
+        name="photo/[id]"
+        options={{
+          animation: 'fade',
+          gestureEnabled: false,
+          contentStyle: { backgroundColor: 'black' },
+        }}
+      />
+    </Stack>
+  );
+}

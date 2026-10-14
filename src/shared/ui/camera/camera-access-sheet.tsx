@@ -15,7 +15,7 @@ export interface CameraAccessSheetProps {
   visible: boolean;
   onClose: () => void;
   onContinue: () => void;
-  /** Why the camera is needed, e.g. "For your body check photos." */
+  /** Why the camera is needed, e.g. "For your progress check photos." */
   body: string;
 }
 

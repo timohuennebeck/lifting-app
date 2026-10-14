@@ -23,7 +23,7 @@ const workoutKeys = createQueryKeys('workouts', {
   muscleVolume: (sinceIso: string) => [sinceIso],
 });
 
-const bodyCheckKeys = createQueryKeys('bodyChecks', {
+const progressCheckKeys = createQueryKeys('progressChecks', {
   list: null,
 });
 
@@ -44,7 +44,7 @@ export const queryKeys = mergeQueryKeys(
   profileKeys,
   templateKeys,
   workoutKeys,
-  bodyCheckKeys,
+  progressCheckKeys,
   exerciseCatalogKeys,
   customExerciseKeys,
   weightKeys,

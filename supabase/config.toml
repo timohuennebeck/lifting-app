@@ -409,7 +409,7 @@ deno_version = 2
 # secret_key = "env(SECRET_VALUE)"
 
 # Secrets (OPENAI_API_KEY, …) come from supabase/functions/.env; see its .env.example.
-[functions.analyze-body-check]
+[functions.assess-progress]
 # The function checks the user's token itself, which works with the asymmetric signing keys.
 verify_jwt = false
 

@@ -24,7 +24,7 @@ cp .env.example .env
 npm run supabase:keys           # writes supabase/signing_key.json (gitignored)
 npm run supabase:start          # copy the publishable key into .env
 
-# Body check analysis: the Edge Function needs an OpenAI key (see the file)
+# Progress check analysis: the Edge Function needs an OpenAI key (see the file)
 cp supabase/functions/.env.example supabase/functions/.env
 
 # PowerSync service, joined to the Supabase docker network
@@ -117,21 +117,22 @@ Documents are readable without an account (onboarding runs logged out) and writt
   `<user id>:<date>`), so two devices saving the same day write one row and the last save wins.
 - **In the app:** the scale button in the top bar opens today's entry, which leads on to the
   history and its calendar (oldest month on top, loading more months both ways). The trend is computed on the device: each weigh-in moves it 10 % toward the scale value.
-  The onboarding weight becomes the first entry; bodyweight exercise scores and the body check
+  The onboarding weight becomes the first entry; bodyweight exercise scores and the progress check
   analysis use the latest one. `profiles.weight_kg` was moved into the table and dropped.
 
-## Body check analysis
+## Progress check analysis
 
-The app uploads the three photos (front, side, back) to the private `body-checks` bucket and calls the
-`analyze-body-check` Edge Function, which sends them to OpenAI (`gpt-6.1-sol` by default, via the
-standard API at `api.openai.com`) and returns the check's values, or the photos to retake.
+The app uploads the three photos (front, side, back) to the private `progress-photos` bucket and
+calls the `assess-progress` Edge Function, which sends them to OpenAI (`gpt-6.1-sol` by default, via
+the standard API at `api.openai.com`) and returns the check's values, or the photos to retake.
 
 - **Secrets:** `supabase/functions/.env` locally (loaded by `supabase start`); in production
   `npx supabase secrets set --env-file supabase/functions/.env`. `OPENAI_API_KEY` is an OpenAI API
   key; `OPENAI_MODEL` overrides the default model.
 - **Rules (server-side):** adults only (18+ by the profile's birth date), at most 5 analyses per user in 24 hours.
-- **`body_check_analyses`:** one row per analysis, server-only. Saving a check takes its score, values
-  and time from the analysis; a check without one is rejected.
+- **`progress_check_runs`:** one row per analysis (a run of the function), server-only. Saving a
+  check (`progress_checks`, with its photos in `progress_check_photos`) takes its score, values and
+  time from the run; a check without one is rejected.
 
 ## Plan import
 
@@ -146,7 +147,7 @@ isn't sure about come with alternatives for the user to review.
   review opens with the first exercise and fills in day by day; "Plan übernehmen" waits for the
   whole plan. Leaving the review stops the model. Limits and bad requests still answer with an
   HTTP status before the stream starts.
-- **Secrets:** the same `OPENAI_API_KEY` and `OPENAI_MODEL` as the body check.
+- **Secrets:** the same `OPENAI_API_KEY` and `OPENAI_MODEL` as the progress check.
 - **Speed:** the import runs on OpenAI's Fast mode (`service_tier: "fast"`), up to 2.5× faster
   output at twice the token price. `PLAN_IMPORT_FAST=false` turns it off. OpenAI may serve a
   request at standard speed when it is busy; the function log shows the tier it got.
@@ -247,7 +248,7 @@ What the code expects:
 - **RevenueCat:** entitlement `pro` with both products; offering `default` (current) with the
   packages `$rc_monthly` → `traqa_pro_monthly` and `$rc_annual` → `traqa_pro_yearly`.
 - **Server check:** with `REVENUECAT_SECRET_KEY` (a v1 secret key, `sk_…`) in
-  `supabase/functions/.env`, the body check analysis only runs for accounts with an active `pro`
+  `supabase/functions/.env`, the progress check analysis only runs for accounts with an active `pro`
   entitlement. Without the key, or when RevenueCat can't be reached, it isn't checked.
 - **Testing:** a development build on an iPhone, signed in to a sandbox tester under Settings →
   App Store → Sandbox Account.

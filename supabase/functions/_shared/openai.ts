@@ -39,7 +39,7 @@ export interface StructuredRequest {
   instructions: string;
   /** The user message's content parts (input_text, input_image, input_file). */
   content: unknown[];
-  /** Name of the answer format, e.g. "body_check". */
+  /** Name of the answer format, e.g. "progress_check". */
   name: string;
   schema: unknown;
   timeoutMs: number;

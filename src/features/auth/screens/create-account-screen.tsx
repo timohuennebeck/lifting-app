@@ -3,7 +3,7 @@ import { type ReactNode, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { isBodyCheckAge } from '@/features/body-check/lib/eligibility';
+import { isProgressCheckAge } from '@/features/progress-check/lib/eligibility';
 import { acceptDocuments } from '@/features/legal/data/legal-acceptances';
 import {
   fetchCurrentDocuments,
@@ -87,8 +87,8 @@ export function CreateAccountScreen() {
     await persistOnboarding(userId, draft);
     await acceptDocuments(userId, documents);
     haptics.success();
-    // The body check is for adults only; younger users go straight to the app.
-    if (isBodyCheckAge(draft.birthDate)) router.push('/body-check');
+    // The progress check is for adults only; younger users go straight to the app.
+    if (isProgressCheckAge(draft.birthDate)) router.push('/progress-check');
     else useOnboardingStore.getState().complete();
   };
 

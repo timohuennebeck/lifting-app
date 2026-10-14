@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { CheckPhoto } from '@/features/body-check/components/check-photo';
-import { PoseChips } from '@/features/body-check/components/pose-chips';
+import { CheckPhoto } from '@/features/progress-check/components/check-photo';
+import { PoseChips } from '@/features/progress-check/components/pose-chips';
 import {
-  type BodyCheck,
-  useBodyCheckPhotos,
-  useBodyChecks,
-} from '@/features/body-check/data/body-checks';
-import type { BodyPose } from '@/features/body-check/lib/poses';
+  type ProgressCheck,
+  useProgressCheckPhotos,
+  useProgressChecks,
+} from '@/features/progress-check/data/progress-checks';
+import type { Pose } from '@/features/progress-check/lib/poses';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { cn } from '@/shared/lib/cn';
 import { DAY_MS } from '@/shared/lib/date';
@@ -31,8 +31,8 @@ type Side = 'A' | 'B';
 const STRIP_STYLE = { flexGrow: 0, flexShrink: 0 };
 
 interface CheckThumbProps {
-  check: BodyCheck;
-  pose: BodyPose;
+  check: ProgressCheck;
+  pose: Pose;
   storagePath?: string;
   /** The side this check is compared on, if any. */
   side: Side | null;
@@ -88,11 +88,11 @@ export function CompareScreen() {
   const { t } = useTranslation(['body', 'common']);
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
-  const { data: checks = [] } = useBodyChecks();
-  const { data: photos = {} } = useBodyCheckPhotos();
+  const { data: checks = [] } = useProgressChecks();
+  const { data: photos = {} } = useProgressCheckPhotos();
   const saved = useCompareStore();
   const [active, setActive] = useState<Side>(side === 'b' ? 'B' : 'A');
-  const [pose, setPose] = useState<BodyPose>('front');
+  const [pose, setPose] = useState<Pose>('front');
   const [picked, setPicked] = useState<{ beforeId: string; afterId: string } | null>(null);
 
   const byId = (id: string | undefined) => checks.find((c) => c.id === id);
@@ -108,12 +108,12 @@ export function CompareScreen() {
     );
   }
 
-  const numberOf = (check: BodyCheck) => checks.indexOf(check) + 1;
-  const sideOf = (check: BodyCheck): Side | null =>
+  const numberOf = (check: ProgressCheck) => checks.indexOf(check) + 1;
+  const sideOf = (check: ProgressCheck): Side | null =>
     check.id === before.id ? 'A' : check.id === after.id ? 'B' : null;
   const days = Math.round((Date.parse(after.createdAt) - Date.parse(before.createdAt)) / DAY_MS);
 
-  const choose = (check: BodyCheck) => {
+  const choose = (check: ProgressCheck) => {
     if (sideOf(check)) return;
     // Before always comes first in time: picking past the other side swaps them.
     const pair = active === 'A' ? inOrder(check, after) : inOrder(before, check);
@@ -125,7 +125,7 @@ export function CompareScreen() {
     router.back();
   };
 
-  const card = (check: BodyCheck, cardSide: Side) => (
+  const card = (check: ProgressCheck, cardSide: Side) => (
     <BodyPhotoCard
       checkId={check.id}
       pose={pose}

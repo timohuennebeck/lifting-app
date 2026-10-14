@@ -140,7 +140,7 @@ export const workoutSets = sqliteTable(
   (t) => [index('exercise').on(t.workout_exercise_id)],
 );
 
-export const bodyChecks = sqliteTable('body_checks', {
+export const progressChecks = sqliteTable('progress_checks', {
   id: text().primaryKey(),
   user_id: text().notNull(),
   score: integer().notNull(),
@@ -149,17 +149,17 @@ export const bodyChecks = sqliteTable('body_checks', {
   created_at: text().notNull(),
 });
 
-export const bodyCheckPhotos = sqliteTable(
-  'body_check_photos',
+export const progressCheckPhotos = sqliteTable(
+  'progress_check_photos',
   {
     id: text().primaryKey(),
     user_id: text().notNull(),
-    body_check_id: text().notNull(),
+    check_id: text().notNull(),
     pose: text().notNull(),
     storage_path: text().notNull(),
     created_at: text().notNull(),
   },
-  (t) => [index('check').on(t.body_check_id)],
+  (t) => [index('check').on(t.check_id)],
 );
 
 export const tickets = sqliteTable(
@@ -295,8 +295,8 @@ export const drizzleSchema = {
   workouts,
   workoutExercises,
   workoutSets,
-  bodyChecks,
-  bodyCheckPhotos,
+  progressChecks,
+  progressCheckPhotos,
   tickets,
   ticketMessages,
   ticketEvents,
@@ -314,7 +314,7 @@ export const drizzleSchema = {
 export const AppSchema = new DrizzleAppSchema(drizzleSchema);
 
 export type ProfileRecord = typeof profiles.$inferSelect;
-export type BodyCheckRecord = typeof bodyChecks.$inferSelect;
+export type ProgressCheckRecord = typeof progressChecks.$inferSelect;
 export type CustomExerciseRecord = typeof customExercises.$inferSelect;
 export type WeightEntryRecord = typeof weightEntries.$inferSelect;
 export type TicketRecord = typeof tickets.$inferSelect;

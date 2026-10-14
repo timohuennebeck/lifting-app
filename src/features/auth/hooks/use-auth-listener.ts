@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
-import { clearLocalPhotos } from '@/features/body-check/lib/photo-files';
-import { useBodyCheckStore } from '@/features/body-check/stores/body-check-store';
+import { clearLocalPhotos } from '@/features/progress-check/lib/photo-files';
+import { useProgressCheckStore } from '@/features/progress-check/stores/progress-check-store';
 import { useCompareStore } from '@/features/body/stores/compare-store';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { purchases } from '@/features/paywall/lib/purchases-service';
@@ -58,8 +58,8 @@ export function useAuthListener() {
         // Screenshot copies are private to the account (and would sit in device backups).
         useUploadQueueStore.getState().reset();
         clearLocalAttachments();
-        // Body-check photos are just as private; clearLocalPhotos also removes the drafts.
-        useBodyCheckStore.getState().clear();
+        // Progress-check photos are just as private; clearLocalPhotos also removes the drafts.
+        useProgressCheckStore.getState().clear();
         clearLocalPhotos();
         // So is a plan import in progress (its photos and the detected plan).
         useImportStore.getState().reset();

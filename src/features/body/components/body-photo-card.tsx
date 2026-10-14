@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 
-import { CheckPhoto } from '@/features/body-check/components/check-photo';
-import type { BodyPose } from '@/features/body-check/lib/poses';
+import { CheckPhoto } from '@/features/progress-check/components/check-photo';
+import type { Pose } from '@/features/progress-check/lib/poses';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { CheckBadge } from '@/shared/ui/check-item';
@@ -14,7 +14,7 @@ import { Text } from '@/shared/ui/text';
 
 export interface BodyPhotoCardProps {
   checkId: string;
-  pose: BodyPose;
+  pose: Pose;
   storagePath?: string;
   label: string;
   score: number;

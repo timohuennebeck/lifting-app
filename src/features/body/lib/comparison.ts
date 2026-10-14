@@ -1,4 +1,4 @@
-import type { BodyCheck } from '@/features/body-check/data/body-checks';
+import type { ProgressCheck } from '@/features/progress-check/data/progress-checks';
 
 export interface SavedPair {
   beforeId: string | null;
@@ -7,12 +7,12 @@ export interface SavedPair {
 }
 
 export interface ComparedPair {
-  before: BodyCheck;
-  after: BodyCheck;
+  before: ProgressCheck;
+  after: ProgressCheck;
 }
 
 /** Orders two checks so the earlier one is "before". */
-export const inOrder = (a: BodyCheck, b: BodyCheck): ComparedPair =>
+export const inOrder = (a: ProgressCheck, b: ProgressCheck): ComparedPair =>
   a.createdAt <= b.createdAt ? { before: a, after: b } : { before: b, after: a };
 
 /**
@@ -20,7 +20,7 @@ export const inOrder = (a: BodyCheck, b: BodyCheck): ComparedPair =>
  * and the newest. A check newer than the saved pair becomes "after", and a deleted check falls
  * back to its default. Null with fewer than two checks.
  */
-export function comparedPair(checks: BodyCheck[], saved: SavedPair): ComparedPair | null {
+export function comparedPair(checks: ProgressCheck[], saved: SavedPair): ComparedPair | null {
   if (checks.length < 2) return null;
   const first = checks[0];
   const newest = checks[checks.length - 1];

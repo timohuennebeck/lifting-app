@@ -1,6 +1,6 @@
 import deAuth from './locales/de/auth.json';
 import deBody from './locales/de/body.json';
-import deBodyCheck from './locales/de/bodyCheck.json';
+import deProgressCheck from './locales/de/progressCheck.json';
 import deCommon from './locales/de/common.json';
 import deExercises from './locales/de/exercises.json';
 import deMuscles from './locales/de/muscles.json';
@@ -16,7 +16,7 @@ import deWeight from './locales/de/weight.json';
 import deWorkout from './locales/de/workout.json';
 import enAuth from './locales/en/auth.json';
 import enBody from './locales/en/body.json';
-import enBodyCheck from './locales/en/bodyCheck.json';
+import enProgressCheck from './locales/en/progressCheck.json';
 import enCommon from './locales/en/common.json';
 import enExercises from './locales/en/exercises.json';
 import enMuscles from './locales/en/muscles.json';
@@ -32,7 +32,7 @@ import enWeight from './locales/en/weight.json';
 import enWorkout from './locales/en/workout.json';
 import ptBRAuth from './locales/pt-BR/auth.json';
 import ptBRBody from './locales/pt-BR/body.json';
-import ptBRBodyCheck from './locales/pt-BR/bodyCheck.json';
+import ptBRProgressCheck from './locales/pt-BR/progressCheck.json';
 import ptBRCommon from './locales/pt-BR/common.json';
 import ptBRExercises from './locales/pt-BR/exercises.json';
 import ptBRMuscles from './locales/pt-BR/muscles.json';
@@ -48,7 +48,7 @@ import ptBRWeight from './locales/pt-BR/weight.json';
 import ptBRWorkout from './locales/pt-BR/workout.json';
 import ptPTAuth from './locales/pt-PT/auth.json';
 import ptPTBody from './locales/pt-PT/body.json';
-import ptPTBodyCheck from './locales/pt-PT/bodyCheck.json';
+import ptPTProgressCheck from './locales/pt-PT/progressCheck.json';
 import ptPTCommon from './locales/pt-PT/common.json';
 import ptPTExercises from './locales/pt-PT/exercises.json';
 import ptPTMuscles from './locales/pt-PT/muscles.json';
@@ -69,7 +69,7 @@ export const resources = {
     common: enCommon,
     paywall: enPaywall,
     support: enSupport,
-    bodyCheck: enBodyCheck,
+    progressCheck: enProgressCheck,
     planCreate: enPlanCreate,
     planImport: enPlanImport,
     auth: enAuth,
@@ -87,7 +87,7 @@ export const resources = {
     common: deCommon,
     paywall: dePaywall,
     support: deSupport,
-    bodyCheck: deBodyCheck,
+    progressCheck: deProgressCheck,
     planCreate: dePlanCreate,
     planImport: dePlanImport,
     auth: deAuth,
@@ -105,7 +105,7 @@ export const resources = {
     common: ptPTCommon,
     paywall: ptPTPaywall,
     support: ptPTSupport,
-    bodyCheck: ptPTBodyCheck,
+    progressCheck: ptPTProgressCheck,
     planCreate: ptPTPlanCreate,
     planImport: ptPTPlanImport,
     auth: ptPTAuth,
@@ -123,7 +123,7 @@ export const resources = {
     common: ptBRCommon,
     paywall: ptBRPaywall,
     support: ptBRSupport,
-    bodyCheck: ptBRBodyCheck,
+    progressCheck: ptBRProgressCheck,
     planCreate: ptBRPlanCreate,
     planImport: ptBRPlanImport,
     auth: ptBRAuth,

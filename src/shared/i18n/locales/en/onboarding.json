@@ -70,7 +70,7 @@
     "sealed": "Sealed.",
     "holdLabel": "Hold to commit"
   },
-  "bodyCheck": {
+  "progressCheck": {
     "title": "DO A BODY CHECK?",
     "subtitle": "Based on your photos we adapt the plan to your weak spots.",
     "lightStrong": "Bright light",

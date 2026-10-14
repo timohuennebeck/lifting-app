@@ -4,15 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-import { PoseChips } from '@/features/body-check/components/pose-chips';
+import { PoseChips } from '@/features/progress-check/components/pose-chips';
 import {
-  type BodyCheck,
-  useBodyCheckPhotos,
-  useBodyChecks,
-} from '@/features/body-check/data/body-checks';
-import { bodyCheckUnlockDate, isBodyCheckAge } from '@/features/body-check/lib/eligibility';
-import type { BodyPose } from '@/features/body-check/lib/poses';
-import { startBodyCheck } from '@/features/body-check/stores/body-check-store';
+  type ProgressCheck,
+  useProgressCheckPhotos,
+  useProgressChecks,
+} from '@/features/progress-check/data/progress-checks';
+import {
+  progressCheckUnlockDate,
+  isProgressCheckAge,
+} from '@/features/progress-check/lib/eligibility';
+import type { Pose } from '@/features/progress-check/lib/poses';
+import { startProgressCheck } from '@/features/progress-check/stores/progress-check-store';
 import { type Profile, useProfile } from '@/shared/data/profile';
 import { cn } from '@/shared/lib/cn';
 import { formatLongDate, formatShortDate } from '@/shared/lib/format';
@@ -28,11 +31,11 @@ import { BodyPhotoCard, CompareArrow, NextCheckCard } from './body-photo-card';
 import { CheckHistoryRow } from './check-history-row';
 
 function openCamera() {
-  startBodyCheck();
-  router.push('/body-check/camera');
+  startProgressCheck();
+  router.push('/progress-check/camera');
 }
 
-const openCheck = (id: string) => router.push(`/body-check/result/${id}`);
+const openCheck = (id: string) => router.push(`/progress-check/result/${id}`);
 const openCompare = (side: 'a' | 'b') =>
   router.push({ pathname: '/body-compare', params: { side } });
 
@@ -101,7 +104,7 @@ function CardGap({ className, children }: { className: string; children: ReactNo
 }
 
 interface NoChecksProps {
-  /** Old enough for body checks; under-18s get a locked state instead. */
+  /** Old enough for progress checks; under-18s get a locked state instead. */
   allowed: boolean;
   /** Says on which day the lock lifts; unknown leaves that out. */
   birthDate: Profile['birthDate'] | undefined;
@@ -139,7 +142,7 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
         <Text variant="paragraph" tone="subtle" className="mt-2 text-center">
           {t('adultsOnly.body')}
           {birthDate
-            ? ` ${t('adultsOnly.unlocksOn', { date: formatLongDate(bodyCheckUnlockDate(birthDate)) })}`
+            ? ` ${t('adultsOnly.unlocksOn', { date: formatLongDate(progressCheckUnlockDate(birthDate)) })}`
             : null}
         </Text>
       </View>
@@ -171,13 +174,13 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
 
 /** Progress tab, "Körper": the body score, before/after photos and the check history. */
 export function BodyView() {
-  const { t } = useTranslation(['body', 'bodyCheck']);
+  const { t } = useTranslation(['body', 'progressCheck']);
   const camera = useCameraAccess(openCamera);
   const { profile } = useProfile();
-  const { data: checks = [] } = useBodyChecks();
-  const { data: photos = {} } = useBodyCheckPhotos();
-  const [pose, setPose] = useState<BodyPose>('front');
-  const allowed = isBodyCheckAge(profile?.birthDate);
+  const { data: checks = [] } = useProgressChecks();
+  const { data: photos = {} } = useProgressCheckPhotos();
+  const [pose, setPose] = useState<Pose>('front');
+  const allowed = isProgressCheckAge(profile?.birthDate);
 
   const saved = useCompareStore();
   const first = checks[0];
@@ -185,7 +188,7 @@ export function BodyView() {
   // With two checks or more, two are compared side by side: first and latest, or the user's pick.
   const pair = comparedPair(checks, saved);
   const compared = !!pair;
-  const labelOf = (check: BodyCheck) =>
+  const labelOf = (check: ProgressCheck) =>
     t('checkLabel', { n: checks.indexOf(check) + 1, date: formatShortDate(check.createdAt) });
   const delta = latest && first ? latest.score - first.score : 0;
   const nextTitle = t('check', { n: checks.length + 1 });
@@ -312,7 +315,7 @@ export function BodyView() {
           </View>
         </>
       )}
-      <CameraAccessSheet {...camera.sheet} body={t('bodyCheck:camera.access')} />
+      <CameraAccessSheet {...camera.sheet} body={t('progressCheck:camera.access')} />
     </>
   );
 }

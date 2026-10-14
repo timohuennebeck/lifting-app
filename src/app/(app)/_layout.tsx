@@ -19,7 +19,7 @@ export default function AppLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="workout/[id]" options={{ gestureEnabled: false }} />
         <Stack.Screen name="workout/summary/[id]" options={{ gestureEnabled: false }} />
-        <Stack.Screen name="body-check" options={{ gestureEnabled: false }} />
+        <Stack.Screen name="progress-check" options={{ gestureEnabled: false }} />
         <Stack.Screen name="pro" options={{ gestureEnabled: false, animation: 'fade' }} />
         <Stack.Screen name="support" />
         <Stack.Screen name="search" options={{ animation: 'slide_from_right' }} />

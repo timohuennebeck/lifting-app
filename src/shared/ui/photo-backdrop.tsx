@@ -19,7 +19,7 @@ export interface PhotoBackdropProps {
 const SHARE = 0.66;
 
 /**
- * A borderless photo over the top of a full-screen page (welcome 00, body check offer 08·0A):
+ * A borderless photo over the top of a full-screen page (welcome 00, progress check offer 08·0A):
  * darkened under the status bar and fading into the page where the text starts.
  */
 export function PhotoBackdrop({ source }: PhotoBackdropProps) {

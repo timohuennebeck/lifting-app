@@ -27,7 +27,7 @@ export function WelcomeScreen() {
 
   // A signed-in user who already finished onboarding (e.g. app killed on the last step).
   // Only while focused: this screen stays mounted under the flow, and Create Account
-  // sets onboarded_at before the body-check prompt, which must still be shown.
+  // sets onboarded_at before the progress-check prompt, which must still be shown.
   const { profile } = useProfile();
   const focused = useIsFocused();
   useEffect(() => {

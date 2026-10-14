@@ -1,7 +1,7 @@
 import { revokeAppleSignIn } from '@/features/auth/lib/apple-sign-in';
 import { appleSignInAvailable } from '@/features/auth/lib/social-sign-in';
 import { ATTACHMENT_BUCKET } from '@/features/support/data/attachments';
-import { PHOTO_BUCKET } from '@/features/body-check/lib/photo-files';
+import { PHOTO_BUCKET } from '@/features/progress-check/lib/photo-files';
 import { AVATAR_BUCKET } from '@/shared/data/avatar';
 import { supabase } from '@/shared/data/supabase';
 
@@ -32,7 +32,7 @@ async function usesApple() {
 }
 
 /**
- * Deletes the signed-in user's account for good: their files (profile photo, body-check photos,
+ * Deletes the signed-in user's account for good: their files (profile photo, progress-check photos,
  * support screenshots), then the user, which removes all their rows; then signs out on this device.
  * An Apple account first lets Apple revoke the app's access; closing Apple's sheet cancels, and
  * then this resolves false with nothing deleted.

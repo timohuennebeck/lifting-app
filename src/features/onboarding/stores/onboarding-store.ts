@@ -57,7 +57,7 @@ const initialDraft = (): OnboardingDraft => ({
 
 interface OnboardingState {
   draft: OnboardingDraft;
-  /** Set once the whole flow (incl. optional body check prompt) is done. */
+  /** Set once the whole flow (incl. optional progress check prompt) is done. */
   completed: boolean;
   update: (patch: Partial<OnboardingDraft>) => void;
   complete: () => void;

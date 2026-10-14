@@ -10,7 +10,7 @@ export interface ScaleBarProps {
   muted?: boolean;
 }
 
-/** Four-segment scale with a round marker (body-check metrics and history). */
+/** Four-segment scale with a round marker (progress-check metrics and history). */
 export function ScaleBar({ position, muted }: ScaleBarProps) {
   return (
     <View className="h-2 flex-row gap-0.75">

@@ -16,7 +16,7 @@ const FATAL_RESPONSE_CODES = [/^22...$/, /^23...$/, /^42501$/, /^PGRST20[45]$/];
 // Postgres stores a jsonb *string* that syncs back double-encoded.
 const JSON_COLUMNS: Record<string, readonly string[]> = {
   profiles: ['focus', 'home_equipment', 'training_days'],
-  body_checks: ['group_scores', 'metrics'],
+  progress_checks: ['group_scores', 'metrics'],
   ticket_messages: ['attachments'],
   custom_exercises: ['primary_muscles', 'secondary_muscles', 'measures'],
 };
