@@ -13,7 +13,7 @@ Hier erfährst du, welche personenbezogenen Daten wir verarbeiten, wenn du die A
 - Traqa speichert deine Pläne und Trainings zuerst auf deinem Gerät und gleicht sie mit deinem Konto ab, sobald du online bist.
 - Andere Nutzer können dein Profil, deine Trainings und deine Fotos nicht sehen.
 - Deine Körpermaße und deine Körpercheck-Fotos behandeln wir als Gesundheitsdaten. Wir verarbeiten sie nur mit deiner ausdrücklichen Einwilligung.
-- Für den Körpercheck und den Plan-Import wertet ein KI-Modell von OpenAI deine Fotos und Dateien aus. Dafür übermitteln wir sie an OpenAI in den USA.
+- Für den Körpercheck und den Plan-Import wertet ein KI-Modell von OpenAI deine Fotos und Dateien aus, und es erstellt deinen Plan aus deinen Antworten, wenn du dir einen erstellen lässt. Dafür übermitteln wir diese Daten an OpenAI in den USA.
 - Die App enthält derzeit keine Werbung und keine Werbe- oder Analyse-Tracker.
 - Du kannst dein Konto jederzeit in der App löschen. Damit löschen wir auch deine Fotos und alle Daten deines Kontos.
 
@@ -46,7 +46,7 @@ Alle Daten in unserer Datenbank sind deinem Konto zugeordnet. Technische Zugriff
 
 Die ersten Schritte der Einrichtung kannst du ohne Konto durchlaufen. Dabei lädt die App den Übungskatalog (Namen, Anleitungen, Bilder und Videos der Übungen) und diese Rechtstexte von unseren Servern. Den Übungskatalog prüft sie beim Start und danach stündlich auf Änderungen. Dabei fallen nur technisch notwendige Verbindungsdaten an (Abschnitt 4.11).
 
-Deine Antworten in der Einrichtung (zum Beispiel Vorname, Geburtsdatum, Gewicht, Größe, Ziel und der erstellte oder importierte Plan) speichert die App zunächst nur auf deinem Gerät. Den Plan erstellt die App ebenfalls auf deinem Gerät. An uns gehen diese Angaben erst, wenn du ein Konto erstellst (Abschnitte 4.3 und 4.4). Ausnahme: Fotos und Dateien, aus denen du einen Plan importierst, überträgt die App schon vorher, damit der Plan erkannt werden kann (Abschnitt 4.7).
+Deine Antworten in der Einrichtung (zum Beispiel Vorname, Geburtsdatum, Gewicht, Größe, Ziel und der erstellte oder importierte Plan) speichert die App zunächst nur auf deinem Gerät. An uns gehen diese Angaben erst, wenn du ein Konto erstellst (Abschnitte 4.3 und 4.4). Ausnahmen: Lässt du dir einen Plan erstellen, überträgt die App schon vorher deine Antworten zu Ziel, Fokus, Ausstattung, Trainingstagen, Trainingsdauer und Erfahrung, damit der Plan erstellt werden kann; Fotos und Dateien, aus denen du einen Plan importierst, überträgt sie, damit der Plan erkannt werden kann (beides Abschnitt 4.7).
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der App, die du nutzen möchtest).
 
@@ -78,7 +78,7 @@ Wenn du ein Konto erstellst, speichern wir deine Angaben aus der Einrichtung als
 - deine App-Sprache, damit unser Support dir in deiner Sprache antworten kann
 - freiwillig: ein Profilfoto (die App speichert es als quadratisches Bild mit 512 × 512 Pixeln) und einen kurzen Text „Über dich“ mit bis zu 150 Zeichen
 
-Wofür: Aus diesen Angaben erstellt die App auf deinem Gerät deinen Trainingsplan, und sie nutzt sie für den Körpercheck (Abschnitt 4.6). Profilfoto und „Über dich“ werden nur dir in deinem Profil angezeigt.
+Wofür: Aus Trainingsziel, Fokus, Ausstattung, Trainingstagen, Trainingsdauer und Erfahrung erstellt ein KI-Modell von OpenAI deinen Trainingsplan, wenn du dir einen erstellen lässt (Abschnitt 4.7). Außerdem nutzt die App deine Angaben für den Körpercheck (Abschnitt 4.6). Profilfoto und „Über dich“ werden nur dir in deinem Profil angezeigt.
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO. Körpergewicht und Körpergröße können Rückschlüsse auf deine Gesundheit zulassen. Wir behandeln sie deshalb wie Gesundheitsdaten (Abschnitt 4.4).
 
@@ -130,17 +130,19 @@ Du kannst einzelne Checks in der App löschen. Dann löschen wir die Fotos auf d
 
 Rechtsgrundlage: deine ausdrückliche Einwilligung (Abschnitt 4.4), auch für die Übermittlung an OpenAI in die USA. [[PLATZHALTER: Prüfen, ob für die Übermittlung zusätzlich Art. 49 Abs. 1 lit. a DSGVO genannt werden soll, falls OpenAI nicht unter dem EU-US Data Privacy Framework zertifiziert ist]]
 
-### 4.7 Plan-Import
+### 4.7 Plan-Import und Planerstellung
 
 Du kannst einen vorhandenen Trainingsplan importieren: per Foto mit der Kamera (zum Beispiel von Papier, Whiteboard oder Bildschirm), als bis zu zehn Bilder aus deiner Mediathek oder als Datei (PDF, Excel, CSV, Text oder Bild). Bitte achte darauf, dass auf den Bildern und in den Dateien keine Daten anderer Personen zu sehen sind.
 
-**Erkennung durch ein KI-Modell von OpenAI:** Die App verkleinert Fotos auf höchstens 2000 Pixel an der längsten Seite, speichert sie als JPEG und überträgt sie oder deine Datei an unseren Server. Der gibt sie zusammen mit unserem Übungskatalog an ein KI-Modell von OpenAI weiter, das Trainingstage, Übungen, Sätze, Wiederholungen und Pausen ausliest. Weitere Daten übermitteln wir dabei nicht; der Import läuft vor der Registrierung, also ohne Konto. OpenAI verarbeitet die Daten in den USA (Abschnitt 8). Wir haben eingestellt, dass OpenAI die Anfrage nicht für einen späteren Abruf speichert. Nach eigenen Angaben nutzt OpenAI Daten aus seiner API nicht zum Training seiner Modelle und bewahrt sie bis zu 30 Tage auf, um Missbrauch zu erkennen. [[PLATZHALTER: Aufbewahrungsdauer und Ausschluss vom Training laut aktuellem Vertrag mit OpenAI bestätigen]]
+**Erkennung durch ein KI-Modell von OpenAI:** Die App verkleinert Fotos auf höchstens 2000 Pixel an der längsten Seite, speichert sie als JPEG und überträgt sie oder deine Datei an unseren Server. Der gibt sie zusammen mit unserem Übungskatalog an ein KI-Modell von OpenAI weiter, das Trainingstage, Übungen, Sätze, Wiederholungen und Pausen ausliest. Weitere Daten übermitteln wir dabei nicht, auch nicht, wenn du den Import später in der App startest: Die Anfrage enthält weder dein Konto noch deinen Namen. OpenAI verarbeitet die Daten in den USA (Abschnitt 8). Wir haben eingestellt, dass OpenAI die Anfrage nicht für einen späteren Abruf speichert. Nach eigenen Angaben nutzt OpenAI Daten aus seiner API nicht zum Training seiner Modelle und bewahrt sie bis zu 30 Tage auf, um Missbrauch zu erkennen. [[PLATZHALTER: Aufbewahrungsdauer und Ausschluss vom Training laut aktuellem Vertrag mit OpenAI bestätigen]]
 
 Unser Server speichert deine Fotos und Dateien nicht; er gibt nur den erkannten Plan an die App zurück. Gespeichert wird erst der Plan, den du am Ende bestätigst (Abschnitt 4.5). Übungen aus deinem Plan, die unser Katalog nicht kennt, legt die App dabei als eigene Übungen in deinem Konto an.
 
-**Begrenzung der Importe:** Damit der Import nicht missbraucht wird, begrenzen wir, wie oft er pro Netzwerk und insgesamt am Tag genutzt werden kann. Dafür speichert unser Server zu jedem Import den Zeitpunkt und einen Hashwert deiner IP-Adresse, den er mit einem geheimen Schlüssel bildet; die IP-Adresse selbst speichern wir nicht. Einträge, die älter als zwei Tage sind, löschen wir bei jedem neuen Import.
+**Planerstellung durch ein KI-Modell von OpenAI:** Lässt du dir einen Plan erstellen, überträgt die App deine Antworten zu Trainingsziel, Muskelgruppen mit Fokus, Ausstattung, Trainingstagen, Trainingsdauer und Trainingserfahrung sowie deine App-Sprache an unseren Server. Der gibt sie zusammen mit den Übungen unseres Katalogs, die zu deiner Ausstattung passen, an ein KI-Modell von OpenAI weiter, das daraus deinen Plan zusammenstellt. Deinen Namen, dein Geburtsdatum, Geschlecht, Gewicht und deine Größe übermitteln wir dabei nicht, und die Anfrage enthält dein Konto nicht. Für die Verarbeitung bei OpenAI gilt dasselbe wie beim Import. Unser Server speichert deine Antworten dabei nicht; er gibt nur den Plan an die App zurück, wo du ihn ändern kannst. Gespeichert wird erst der Plan, den du am Ende bestätigst (Abschnitt 4.5).
 
-Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO für den Import, den du startest, auch für die Übermittlung an OpenAI in die USA. Für die Begrenzung der Importe Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist es, Missbrauch und unnötige Kosten zu verhindern. [[PLATZHALTER: Prüfen, ob für die Übermittlung an OpenAI zusätzlich Art. 49 Abs. 1 DSGVO genannt werden soll, falls OpenAI nicht unter dem EU-US Data Privacy Framework zertifiziert ist]]
+**Begrenzung der Anfragen:** Damit Import und Planerstellung nicht missbraucht werden, begrenzen wir, wie oft sie pro Netzwerk und insgesamt am Tag genutzt werden können. Dafür speichert unser Server zu jeder Anfrage den Zeitpunkt, ob es ein Import oder eine Planerstellung war, und einen Hashwert deiner IP-Adresse, den er mit einem geheimen Schlüssel bildet; die IP-Adresse selbst speichern wir nicht. Einträge, die älter als zwei Tage sind, löschen wir bei jeder neuen Anfrage.
+
+Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO für den Import und die Planerstellung, die du startest, auch für die Übermittlung an OpenAI in die USA. Für die Begrenzung der Anfragen Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist es, Missbrauch und unnötige Kosten zu verhindern. [[PLATZHALTER: Prüfen, ob für die Übermittlung an OpenAI zusätzlich Art. 49 Abs. 1 DSGVO genannt werden soll, falls OpenAI nicht unter dem EU-US Data Privacy Framework zertifiziert ist]]
 
 ### 4.8 Support
 
@@ -240,7 +242,7 @@ Wir geben deine Daten nur weiter, wenn das für die genannten Zwecke nötig ist,
 - **Supabase** (Datenbank, Anmeldung, Dateispeicher): [[PLATZHALTER: Vertragspartner und Anschrift von Supabase laut Auftragsverarbeitungsvertrag]]; Serverstandort: [[PLATZHALTER: Supabase-Region des Produktivprojekts]]
 - **PowerSync** (Synchronisation zwischen App und Datenbank; der Dienst hält dafür eine Kopie deiner synchronisierten Daten vor): [[PLATZHALTER: PowerSync Cloud oder selbst betrieben; Vertragspartner bzw. Hosting-Anbieter mit Anschrift]]; Serverstandort: [[PLATZHALTER: Region des PowerSync-Dienstes]]
 - **E-Mail-Versand:** [[PLATZHALTER: E-Mail-Versanddienst]]
-- **OpenAI** (KI-Auswertung der Körpercheck-Fotos und Erkennung importierter Pläne, Abschnitte 4.6 und 4.7): [[PLATZHALTER: Vertragspartner und Anschrift laut Auftragsverarbeitungsvertrag (Data Processing Addendum) mit OpenAI]]; Verarbeitung in den USA
+- **OpenAI** (KI-Auswertung der Körpercheck-Fotos, Erkennung importierter Pläne und Erstellung von Plänen, Abschnitte 4.6 und 4.7): [[PLATZHALTER: Vertragspartner und Anschrift laut Auftragsverarbeitungsvertrag (Data Processing Addendum) mit OpenAI]]; Verarbeitung in den USA
 - **RevenueCat** (Abo-Verwaltung, Abschnitt 4.13): siehe dort
 - geplant: PostHog (Abschnitt 4.12)
 
@@ -252,7 +254,7 @@ Behörden und Gerichten geben wir Daten nur, wenn wir gesetzlich dazu verpflicht
 
 ## 8. Übermittlung in Drittländer
 
-Dein Konto, deine Trainings und deine Fotos möchten wir in Rechenzentren in der EU speichern. [[PLATZHALTER: Für jeden Dienst bestätigen, dass die Daten in der EU gespeichert werden]] Einige der Dienstleister, die wir nutzen oder planen, haben ihren Sitz in den USA. Deshalb können Daten auch in ein Land außerhalb der EU und des EWR übermittelt werden, etwa bei Wartung oder Support durch den Dienstleister. Für die Auswertung des Körperchecks und für den Plan-Import übermitteln wir Daten bei jeder Auswertung und jedem Import an OpenAI in den USA (Abschnitte 4.6 und 4.7).
+Dein Konto, deine Trainings und deine Fotos möchten wir in Rechenzentren in der EU speichern. [[PLATZHALTER: Für jeden Dienst bestätigen, dass die Daten in der EU gespeichert werden]] Einige der Dienstleister, die wir nutzen oder planen, haben ihren Sitz in den USA. Deshalb können Daten auch in ein Land außerhalb der EU und des EWR übermittelt werden, etwa bei Wartung oder Support durch den Dienstleister. Für die Auswertung des Körperchecks, den Plan-Import und die Planerstellung übermitteln wir Daten bei jeder Auswertung, jedem Import und jeder Planerstellung an OpenAI in den USA (Abschnitte 4.6 und 4.7).
 
 Wenn wir Daten in ein Drittland übermitteln, stützen wir das auf einen Angemessenheitsbeschluss der EU-Kommission (für die USA das EU-US Data Privacy Framework, soweit der Empfänger zertifiziert ist) oder auf Standardvertragsklauseln der EU-Kommission (Art. 46 Abs. 2 lit. c DSGVO).
 
@@ -323,7 +325,7 @@ Für ein Konto brauchen wir deine E-Mail-Adresse und ein Passwort oder dein Goog
 
 ## 15. Keine automatisierten Entscheidungen
 
-Die App erstellt Pläne, Vorschläge und Körpercheck-Werte automatisch; die Körpercheck-Werte ermittelt ein KI-Modell von OpenAI (Abschnitt 4.6). Das sind Empfehlungen und Schätzungen für dein Training. Entscheidungen, die dir gegenüber rechtliche Wirkung entfalten oder dich in ähnlicher Weise erheblich beeinträchtigen (Art. 22 DSGVO), treffen wir nicht.
+Die App erstellt Pläne, Vorschläge und Körpercheck-Werte automatisch; Pläne, die du dir erstellen lässt, und die Körpercheck-Werte ermittelt ein KI-Modell von OpenAI (Abschnitte 4.6 und 4.7). Das sind Empfehlungen und Schätzungen für dein Training. Entscheidungen, die dir gegenüber rechtliche Wirkung entfalten oder dich in ähnlicher Weise erheblich beeinträchtigen (Art. 22 DSGVO), treffen wir nicht.
 
 ## 16. Kinder und Jugendliche
 

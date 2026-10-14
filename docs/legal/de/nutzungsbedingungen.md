@@ -35,7 +35,7 @@ Du musst mindestens [[PLATZHALTER: Mindestalter]] Jahre alt sein, um Traqa zu nu
 
 Traqa unterstützt dich beim Krafttraining. Je nach Version und Abo gehören dazu insbesondere:
 
-- ein Trainingsplan, den die App aus deinen Angaben erstellt, zum Beispiel aus Ziel, Erfahrung, Ausstattung und Trainingstagen
+- ein Trainingsplan, den ein KI-Modell aus deinen Angaben erstellt, zum Beispiel aus Ziel, Erfahrung, Ausstattung und Trainingstagen
 - der Import eines vorhandenen Plans per Foto oder Datei
 - das Protokollieren deiner Trainings mit Gewichten, Wiederholungen und Zeiten, deine Historie, Bestwerte und Vorschläge für deine Sätze
 - der Körpercheck mit Fotos und geschätzten Werten
@@ -44,7 +44,7 @@ Traqa unterstützt dich beim Krafttraining. Je nach Version und Abo gehören daz
 
 Welche Funktionen kostenlos sind und welche Traqa Pro erfordern, siehst du in der App. [[PLATZHALTER: Abgrenzung zwischen kostenlosen Funktionen und Traqa Pro festlegen]]
 
-Die Erkennung beim Plan-Import kann Fehler machen. Prüfe den erkannten Plan deshalb, bevor du ihn übernimmst; unsichere Stellen markiert die App zur Prüfung.
+Die Erkennung beim Plan-Import kann Fehler machen. Prüfe den erkannten Plan deshalb, bevor du ihn übernimmst; unsichere Stellen markiert die App zur Prüfung. Auch ein Plan, den die App für dich erstellt, ist ein Vorschlag: Sieh ihn dir an und pass ihn bei Bedarf an. Für Planerstellung und Plan-Import braucht die App eine Internetverbindung.
 
 Traqa funktioniert auch ohne Internetverbindung. Deine Daten werden synchronisiert, sobald du online bist. Änderungen, die bei einer Abmeldung noch nicht synchronisiert sind, gehen verloren; die App warnt dich vorher.
 

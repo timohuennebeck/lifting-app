@@ -48,7 +48,8 @@ powersync/             self-hosted service config, sync streams, docker compose
 ## Scripts
 
 `npm run typecheck`, `npm run lint`, `npm run format`, `npm run supabase:reset`, `npm run plan:eval`
-(plan import test, see below), `npm run compiler:check` (lists components and hooks the React
+(plan import test, see below), `npm run plan:generate-eval` (plan generation test, see below),
+`npm run compiler:check` (lists components and hooks the React
 Compiler skips; ESLint's compiler rules catch most of these, not all).
 
 ## Support tickets (team side)
@@ -139,13 +140,38 @@ isn't sure about come with alternatives for the user to review.
   request at standard speed when it is busy; the function log shows the tier it got.
 - **Rules (server-side):** it runs before there is an account, so imports are limited per network
   (`PLAN_IMPORT_IP_LIMIT`, default 10) and in total (`PLAN_IMPORT_DAILY_LIMIT`, default 1,000) per
-  24 hours. `plan_import_requests` keeps a keyed hash of the IP, never the IP itself.
+  24 hours. `plan_requests` keeps a keyed hash of the IP, never the IP itself.
 - **Testing:** `npm run plan:eval` sends the 15 test plans in `scripts/plan-import-eval/fixtures`
   (typed, spreadsheet, handwritten, whiteboard, screenshot; German, English, Portuguese) to the
   function and scores what it read against `cases.json`, with the time to the first exercise and
   to the whole plan. `npm run plan:eval -- --dir <folder>` reads your own photos and files and
   prints what it found. One run is 15 imports, so set `PLAN_IMPORT_IP_LIMIT=1000` in
   `supabase/functions/.env` locally first.
+
+## Plan generation
+
+"Erstell mir einen Plan" (in onboarding and from Training) sends the flow's answers to the
+`generate-plan` Edge Function: goal, focus muscles, equipment, training days, session length and
+experience; no name, no body data. The function gives OpenAI the catalog exercises the equipment
+allows, and the model writes the plan in a fixed shape (exercise ids from that list only). The
+plan streams to the app like an import and opens in the same editor; the name step comes after.
+There is no plan made on the device: without a connection, past the limit or when the model fails,
+the app says so and the user goes back a step.
+
+- **Checked server-side** (`planBuilder` in `generate.ts`), as the plan streams: one day per
+  training day on those weekdays, no exercise twice a day, at most 10 a day, each day within the
+  session length (the app's estimate, plus 10 %), sets 1–6, reps 1–30 or 10–300 seconds for
+  timed exercises, RIR 0–4, rest 30–300 s.
+- **Secrets and speed:** as the plan import; `PLAN_GENERATE_FAST=false` turns Fast mode off.
+- **Rules (server-side):** limited on their own, like imports: per network
+  (`PLAN_GENERATE_IP_LIMIT`, default 10) and in total (`PLAN_GENERATE_DAILY_LIMIT`, default 1,000)
+  per 24 hours, in `plan_requests` with `kind = 'generate'`.
+- **Testing:** `npm run plan:generate-eval` asks for 15 plans (goals, equipment, 1–7 days,
+  20–120 minutes, every experience level, with and without focus; German, English, Portuguese) and
+  checks each: days, time, equipment, repeats, every major muscle group trained, push/pull
+  balance, focus volume, reps for the goal, limits for beginners. The checks are rules of thumb;
+  the report in `scripts/plan-generate-eval/out/` has every plan to read. Set
+  `PLAN_GENERATE_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
 
 ## Google Sign-In
 

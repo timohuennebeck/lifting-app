@@ -25,6 +25,8 @@ import {
 import { homedir, tmpdir } from 'node:os';
 import { basename, extname, join } from 'node:path';
 
+import { loadCatalog, pool, streamPlan } from '../plan-functions.mjs';
+
 const HERE = import.meta.dirname;
 const FIXTURES = join(HERE, 'fixtures');
 const PARALLEL = 3;
@@ -113,88 +115,8 @@ function requestBody({ files, as, language }, shrink) {
   };
 }
 
-/**
- * One import. The function streams the plan as server-sent events (see its PlanEvent); they are
- * put together like the app does. `first` is when the first exercise arrived, `seconds` the end.
- */
-async function analyze(body) {
-  const started = performance.now();
-  const seconds = () => (performance.now() - started) / 1000;
-  let response;
-  try {
-    response = await fetch(`${SUPABASE_URL}/functions/v1/analyze-plan`, {
-      method: 'POST',
-      headers: { apikey: KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-  } catch (error) {
-    return { status: 0, seconds: seconds(), plan: null, error: error.cause?.code ?? error.message };
-  }
-  if (!response.ok) {
-    const answer = await response.json().catch(() => ({}));
-    // The function answers { error }; the runtime and gateway { code, message } or { message }.
-    const error = answer.error ?? [answer.code, answer.message].filter(Boolean).join(': ');
-    return { status: response.status, seconds: seconds(), plan: null, error };
-  }
-  let plan = null;
-  let first = null;
-  let error = 'cut_off';
-  let buffer = '';
-  try {
-    read: for await (const chunk of response.body.pipeThrough(new TextDecoderStream())) {
-      buffer += chunk;
-      let end;
-      while ((end = buffer.indexOf('\n\n')) >= 0) {
-        const line = buffer.slice(0, end);
-        buffer = buffer.slice(end + 2);
-        if (!line.startsWith('data:')) continue;
-        const event = JSON.parse(line.slice(5));
-        if (event.type === 'plan') plan = { name: event.name, days: [], newExercises: [] };
-        else if (event.type === 'day') plan.days.push({ ...event.day, exercises: [] });
-        else if (event.type === 'exercise') {
-          first ??= seconds();
-          plan.days.at(-1).exercises.push(event.exercise);
-          if (event.newExercise) plan.newExercises.push(event.newExercise);
-        } else {
-          error = event.type === 'error' ? event.error : null;
-          break read;
-        }
-      }
-    }
-  } catch (cause) {
-    error = cause.message;
-  }
-  return { status: 200, first, seconds: seconds(), plan: error ? null : plan, error };
-}
-
-/** Catalog exercises by id, for readable output (ids when the catalog can't be read). */
-async function loadNames() {
-  try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/exercises?select=id,name,measures`, {
-      headers: { apikey: KEY },
-    });
-    if (!response.ok) throw new Error(String(response.status));
-    return new Map((await response.json()).map((e) => [e.id, e]));
-  } catch (error) {
-    console.warn(`The catalog could not be read (${error.message}); showing ids.`);
-    return new Map();
-  }
-}
-
-/** Runs `run` over the items, a few at a time; stops taking new ones once the limit is hit. */
-async function pool(items, run) {
-  const results = new Array(items.length);
-  let next = 0;
-  await Promise.all(
-    Array.from({ length: Math.min(PARALLEL, items.length) }, async () => {
-      while (next < items.length && !stopped) {
-        const i = next++;
-        results[i] = await run(items[i]);
-      }
-    }),
-  );
-  return results.filter(Boolean);
-}
+/** One import, put together from the streamed events (see streamPlan). */
+const analyze = (body) => streamPlan(`${SUPABASE_URL}/functions/v1/analyze-plan`, KEY, body);
 
 // ---------- reading a plan ----------
 
@@ -406,8 +328,8 @@ function reportStop(skipped) {
   const text = stopped.limit
     ? `The import limit was reached${notRun}. For a local run set PLAN_IMPORT_IP_LIMIT=1000 in ` +
       'supabase/functions/.env and restart Supabase (npx supabase stop, then npx supabase ' +
-      'start). To reset the count right away, run `delete from public.plan_import_requests;` ' +
-      'in Supabase Studio.'
+      'start). To reset the count right away, run `delete from public.plan_requests where kind = ' +
+      "'import';` in Supabase Studio."
     : `analyze-plan didn't answer (${stopped.down})${notRun}. Locally, npx supabase start ` +
       'serves the functions; stopping `npx supabase functions serve` takes them down until you ' +
       'run npx supabase stop and npx supabase start again. A BOOT_ERROR means the function ' +
@@ -429,18 +351,23 @@ function writeReport(name, text, results) {
 }
 
 async function runFixtures() {
-  const names = await loadNames();
+  const names = await loadCatalog(SUPABASE_URL, KEY, 'id,name,measures');
   const all = JSON.parse(readFileSync(join(FIXTURES, 'cases.json'), 'utf8'));
   const cases = args.length ? all.filter((c) => args.some((a) => c.id.startsWith(a))) : all;
   console.log(`${cases.length} cases against ${SUPABASE_URL}, ${PARALLEL} at a time …\n`);
-  const results = await pool(cases, async (c) => {
-    const files = c.files.map((f) => join(FIXTURES, f));
-    const result = await send(requestBody({ ...c, files }, false));
-    if (!result) return null;
-    const s = score(c.expect, result, names, c.language);
-    console.log(`${passed(s) ? 'PASS' : 'FAIL'}  ${c.id}  ${timing(result)}`);
-    return { case: c, result, score: s };
-  });
+  const results = await pool(
+    cases,
+    async (c) => {
+      const files = c.files.map((f) => join(FIXTURES, f));
+      const result = await send(requestBody({ ...c, files }, false));
+      if (!result) return null;
+      const s = score(c.expect, result, names, c.language);
+      console.log(`${passed(s) ? 'PASS' : 'FAIL'}  ${c.id}  ${timing(result)}`);
+      return { case: c, result, score: s };
+    },
+    PARALLEL,
+    () => !!stopped,
+  );
   const stopNote = reportStop(
     cases.filter((c) => !results.some((r) => r.case === c)).map((c) => c.id),
   );
@@ -485,7 +412,7 @@ async function runFixtures() {
 }
 
 async function runDir() {
-  const names = await loadNames();
+  const names = await loadCatalog(SUPABASE_URL, KEY, 'id,name,measures');
   const entries = readdirSync(dir)
     .filter((f) => !f.startsWith('.'))
     .sort();
@@ -506,15 +433,20 @@ async function runDir() {
     process.exit(1);
   }
   console.log(`${imports.length} imports from ${dir} (app language ${dirLanguage}) …`);
-  const results = await pool(imports, async (item) => {
-    const result = await send(requestBody({ ...item, language: dirLanguage }, true));
-    if (!result) return null;
-    const text = result.plan
-      ? describePlan(result.plan, names, dirLanguage)
-      : `(${result.status} ${result.error ?? ''})`;
-    console.log(`\n== ${item.id}  ${timing(result)}\n${text}`);
-    return { import: item, result, text };
-  });
+  const results = await pool(
+    imports,
+    async (item) => {
+      const result = await send(requestBody({ ...item, language: dirLanguage }, true));
+      if (!result) return null;
+      const text = result.plan
+        ? describePlan(result.plan, names, dirLanguage)
+        : `(${result.status} ${result.error ?? ''})`;
+      console.log(`\n== ${item.id}  ${timing(result)}\n${text}`);
+      return { import: item, result, text };
+    },
+    PARALLEL,
+    () => !!stopped,
+  );
   reportStop(imports.filter((i) => !results.some((r) => r.import === i)).map((i) => i.id));
   if (!results.length) process.exit(1);
   writeReport(

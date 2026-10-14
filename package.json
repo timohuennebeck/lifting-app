@@ -90,6 +90,7 @@
     "supabase:reset": "supabase db reset",
     "apple:ids": "node --env-file=.env scripts/apple-identifiers.mjs",
     "plan:eval": "node --env-file=.env scripts/plan-import-eval/run.mjs",
+    "plan:generate-eval": "node --env-file=.env scripts/plan-generate-eval/run.mjs",
     "powersync:up": "docker compose -f powersync/docker-compose.yml up -d",
     "powersync:down": "docker compose -f powersync/docker-compose.yml down",
     "postinstall": "uniwind generate-artifacts --css ./src/global.css --dts ./src/uniwind-types.d.ts"
