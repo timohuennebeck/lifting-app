@@ -35,7 +35,7 @@ export function SearchScreen() {
         />
       }
     >
-      <View className="flex-1 pt-2">
+      <View className="flex-1 px-4 pt-2">
         <ExerciseResults query={query} bottomInset={barHeight} />
       </View>
       <ExerciseSearchBar query={query} onChangeQuery={setQuery} onHeight={setBarHeight} />

@@ -7,7 +7,7 @@ import type { ExerciseOption } from './use-exercise-search';
 const ROW_HEIGHT = 78;
 const HEADING_HEIGHT = 41;
 
-type IndexedRow<T extends ExerciseOption> = T & {
+export type IndexedRow<T extends ExerciseOption> = T & {
   /** Heading above the row: the pinned rows' title, its letter, or none. */
   heading: string | null;
   /** Listed first under the title, outside the A–Z index. */
