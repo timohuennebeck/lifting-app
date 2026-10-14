@@ -39,11 +39,11 @@
         "title": "No equipment",
         "description": "Bodyweight only"
       }
-    },
-    "home": {
-      "title": "YOUR EQUIPMENT",
-      "hint": "Tap everything you can train with."
     }
+  },
+  "homeEquipment": {
+    "title": "WHAT DO YOU\nHAVE AT HOME?",
+    "subtitle": "Tap everything you can train with."
   },
   "days": {
     "title": "HOW OFTEN DO YOU\nWANT TO TRAIN?",

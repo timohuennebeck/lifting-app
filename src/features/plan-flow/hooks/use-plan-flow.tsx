@@ -24,6 +24,7 @@ type PlanStep =
   | '/create/goal'
   | '/create/focus'
   | '/create/equipment'
+  | '/create/home-equipment'
   | '/create/days'
   | '/create/duration'
   | '/create/building'

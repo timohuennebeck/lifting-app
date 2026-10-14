@@ -4,49 +4,35 @@ import { View } from 'react-native';
 
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
-import { useHomeEquipment } from '@/shared/data/exercises';
 import type { EquipmentAccess } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
-import { Chip } from '@/shared/ui/chip';
 import { OptionCard } from '@/shared/ui/option-card';
 import { StepScreen } from '@/shared/ui/step-screen';
-import { Text } from '@/shared/ui/text';
 
-import { CREATE_STEPS } from '../lib/flow';
+import { useCreateStep } from '../hooks/use-create-step';
 
 const OPTIONS: EquipmentAccess[] = ['gym', 'home', 'bodyweight'];
 
-/** Where the user trains; "Eigene Geräte" asks what they have (public.equipment). */
+/** Where the user trains; "Eigene Geräte" goes on to what they have (HomeEquipmentScreen). */
 export function EquipmentScreen() {
-  const { t, i18n } = useTranslation(['planCreate', 'common']);
+  const { t } = useTranslation(['planCreate', 'common']);
+  const counter = useCreateStep('equipment');
   const { step } = usePlanFlow();
   const draft = useDraft();
   const update = useUpdateDraft();
-  const offered = useHomeEquipment(i18n.language);
   const equipment = draft.equipment ?? 'gym';
-  // What was ticked stays when another answer is picked, in case the user comes back to it.
-  const owned = draft.homeEquipment.filter((id) => offered.some((e) => e.id === id));
-  const atHome = equipment === 'home';
-
-  const toggle = (id: string) =>
-    update({
-      homeEquipment: owned.includes(id) ? owned.filter((e) => e !== id) : [...owned, id],
-    });
 
   return (
     <StepScreen
-      step={3}
-      total={CREATE_STEPS}
+      {...counter}
       title={t('planCreate:equipment.title')}
       scroll
       footer={
         <Button
           label={t('common:actions.continue')}
-          // Without anything ticked, "Keine Geräte" is the answer.
-          disabled={atHome && !owned.length}
           onPress={() => {
             update({ equipment });
-            router.push(step('/create/days'));
+            router.push(step(equipment === 'home' ? '/create/home-equipment' : '/create/days'));
           }}
         />
       }
@@ -63,28 +49,6 @@ export function EquipmentScreen() {
           />
         ))}
       </View>
-      {atHome ? (
-        <View className="gap-3 px-5 pt-6 pb-4">
-          <Text variant="overline" tone="subtle" className="text-xs tracking-[1.7px]">
-            {t('planCreate:equipment.home.title')}
-          </Text>
-          <Text variant="paragraph" tone="subtle">
-            {t('planCreate:equipment.home.hint')}
-          </Text>
-          <View className="flex-row flex-wrap gap-2">
-            {offered.map((e) => (
-              <Chip
-                key={e.id}
-                label={e.name}
-                selected={owned.includes(e.id)}
-                showCheck
-                onPress={() => toggle(e.id)}
-                className="h-11 px-4"
-              />
-            ))}
-          </View>
-        </View>
-      ) : null}
     </StepScreen>
   );
 }

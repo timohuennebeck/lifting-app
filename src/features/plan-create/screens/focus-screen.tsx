@@ -15,13 +15,14 @@ import { Chip } from '@/shared/ui/chip';
 import { BodyMaps, type BodyPartId } from '@/shared/ui/muscle-map';
 import { StepScreen } from '@/shared/ui/step-screen';
 
-import { CREATE_STEPS } from '../lib/flow';
+import { useCreateStep } from '../hooks/use-create-step';
 
 /** Joints (knees, hands, feet) and the neck belong to no focus group. */
 const hasGroup = (part: BodyPartId) => groupOfPart(part) !== null;
 
 export function FocusScreen() {
   const { t } = useTranslation(['planCreate', 'exercises', 'common']);
+  const counter = useCreateStep('focus');
   const { step } = usePlanFlow();
   const { focus } = useDraft();
   const update = useUpdateDraft();
@@ -38,8 +39,7 @@ export function FocusScreen() {
 
   return (
     <StepScreen
-      step={2}
-      total={CREATE_STEPS}
+      {...counter}
       title={t('planCreate:focus.title')}
       subtitle={t('planCreate:focus.subtitle')}
       subtitleTone="subtle"

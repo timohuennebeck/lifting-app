@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui/button';
 import { NumberStepper } from '@/shared/ui/number-stepper';
 import { StepScreen } from '@/shared/ui/step-screen';
 
-import { CREATE_STEPS } from '../lib/flow';
+import { useCreateStep } from '../hooks/use-create-step';
 
 /** Default weekdays for a given number of sessions (Mon-based). */
 const PRESET_DAYS: Record<number, number[]> = {
@@ -22,6 +22,7 @@ const PRESET_DAYS: Record<number, number[]> = {
 
 export function DaysScreen() {
   const { t } = useTranslation(['planCreate', 'common']);
+  const counter = useCreateStep('days');
   const { step } = usePlanFlow();
   const { trainingDays } = useDraft();
   const update = useUpdateDraft();
@@ -29,8 +30,7 @@ export function DaysScreen() {
 
   return (
     <StepScreen
-      step={4}
-      total={CREATE_STEPS}
+      {...counter}
       title={t('planCreate:days.title')}
       footer={
         <Button

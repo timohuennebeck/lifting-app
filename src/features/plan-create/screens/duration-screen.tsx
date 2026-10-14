@@ -11,10 +11,12 @@ import { DialRing } from '@/shared/ui/dial-ring';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
-import { CREATE_STEPS, DURATION } from '../lib/flow';
+import { useCreateStep } from '../hooks/use-create-step';
+import { DURATION } from '../lib/flow';
 
 export function DurationScreen() {
   const { t } = useTranslation(['planCreate', 'common']);
+  const counter = useCreateStep('duration');
   const { step } = usePlanFlow();
   const { sessionMinutes } = useDraft();
   const update = useUpdateDraft();
@@ -35,8 +37,7 @@ export function DurationScreen() {
 
   return (
     <StepScreen
-      step={5}
-      total={CREATE_STEPS}
+      {...counter}
       title={t('planCreate:duration.title')}
       footer={
         <Button

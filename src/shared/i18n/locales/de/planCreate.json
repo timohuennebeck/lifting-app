@@ -39,11 +39,11 @@
         "title": "Keine Geräte",
         "description": "Nur mit Körpergewicht"
       }
-    },
-    "home": {
-      "title": "DEINE GERÄTE",
-      "hint": "Tipp an, womit du trainieren kannst."
     }
+  },
+  "homeEquipment": {
+    "title": "WAS HAST DU\nZUHAUSE?",
+    "subtitle": "Tipp alles an, womit du trainieren kannst."
   },
   "days": {
     "title": "WIE OFT PRO WOCHE\nWILLST DU TRAINIEREN?",

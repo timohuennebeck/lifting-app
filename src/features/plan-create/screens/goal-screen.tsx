@@ -8,11 +8,12 @@ import { Button } from '@/shared/ui/button';
 import { OptionCard } from '@/shared/ui/option-card';
 import { StepScreen } from '@/shared/ui/step-screen';
 
-import { CREATE_STEPS } from '../lib/flow';
+import { useCreateStep } from '../hooks/use-create-step';
 import { GOALS } from '../lib/goals';
 
 export function GoalScreen() {
   const { t } = useTranslation(['planCreate', 'common']);
+  const counter = useCreateStep('goal');
   const { step } = usePlanFlow();
   const draft = useDraft();
   const update = useUpdateDraft();
@@ -20,8 +21,7 @@ export function GoalScreen() {
 
   return (
     <StepScreen
-      step={1}
-      total={CREATE_STEPS}
+      {...counter}
       title={t('planCreate:goal.title')}
       scroll
       footer={

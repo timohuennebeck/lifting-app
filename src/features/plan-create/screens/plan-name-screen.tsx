@@ -12,11 +12,12 @@ import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 import { PLAN_NAME_MAX } from '@/shared/lib/limits';
 
-import { CREATE_STEPS } from '../lib/flow';
+import { useCreateStep } from '../hooks/use-create-step';
 import { profileAnswers } from '../lib/plan-answers';
 
 export function PlanNameScreen() {
   const { t } = useTranslation(['planCreate', 'common', 'training']);
+  const counter = useCreateStep('planName');
   const draft = useDraft();
   const { plan } = draft;
   const { inApp, step, finish } = usePlanFlow();
@@ -36,8 +37,7 @@ export function PlanNameScreen() {
 
   return (
     <StepScreen
-      step={6}
-      total={CREATE_STEPS}
+      {...counter}
       title={t('planCreate:planName.title')}
       scroll
       footer={
