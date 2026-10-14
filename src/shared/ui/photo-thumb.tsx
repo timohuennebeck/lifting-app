@@ -19,6 +19,8 @@ export interface PhotoThumbProps {
   ringColor?: string;
   /** In the photo's bottom-right corner, e.g. a check. */
   badge?: ReactNode;
+  /** An X in the photo's top-right corner that removes it. */
+  remove?: { accessibilityLabel: string; onPress: () => void };
   onPress: () => void;
 }
 
@@ -37,38 +39,54 @@ export function PhotoThumb({
   viewing = false,
   ringColor,
   badge,
+  remove,
   onPress,
 }: PhotoThumbProps) {
   return (
-    <PressableScale
-      haptic="select"
-      accessibilityLabel={accessibilityLabel}
-      accessibilityState={{ selected }}
-      onPress={onPress}
-      className="items-center gap-2"
-    >
-      <View
-        className="h-18.5 w-14 rounded-xl bg-surface p-1.5"
-        style={{ boxShadow: ringOf(selected, viewing, ringColor) }}
+    <View>
+      <PressableScale
+        haptic="select"
+        accessibilityLabel={accessibilityLabel}
+        accessibilityState={{ selected }}
+        onPress={onPress}
+        className="items-center gap-2"
       >
-        <View className="flex-1 items-center justify-center overflow-hidden rounded-md bg-raised">
-          {uri ? (
-            <>
-              <Image source={{ uri }} contentFit="cover" style={StyleSheet.absoluteFill} />
-              {badge ? <View className="absolute right-0.75 bottom-0.75">{badge}</View> : null}
-            </>
-          ) : (
-            <Icon name="plus" size={12} color={colors.subtle} />
-          )}
+        <View
+          className="h-18.5 w-14 rounded-xl bg-surface p-1.5"
+          style={{ boxShadow: ringOf(selected, viewing, ringColor) }}
+        >
+          <View className="flex-1 items-center justify-center overflow-hidden rounded-md bg-raised">
+            {uri ? (
+              <>
+                <Image source={{ uri }} contentFit="cover" style={StyleSheet.absoluteFill} />
+                {badge ? <View className="absolute right-0.75 bottom-0.75">{badge}</View> : null}
+              </>
+            ) : (
+              <Icon name="plus" size={12} color={colors.subtle} />
+            )}
+          </View>
         </View>
-      </View>
-      <Text
-        variant="caption"
-        tone={selected ? (viewing ? 'default' : 'accent') : 'muted'}
-        className="tracking-[0.5px] uppercase"
-      >
-        {label}
-      </Text>
-    </PressableScale>
+        <Text
+          variant="caption"
+          tone={selected ? (viewing ? 'default' : 'accent') : 'muted'}
+          className="tracking-[0.5px] uppercase"
+        >
+          {label}
+        </Text>
+      </PressableScale>
+      {remove ? (
+        // Beside the thumbnail's button, not inside it: one button can't hold another.
+        <PressableScale
+          haptic="select"
+          accessibilityRole="button"
+          accessibilityLabel={remove.accessibilityLabel}
+          hitSlop={12}
+          onPress={remove.onPress}
+          className="absolute top-2.5 right-2.5 size-5 items-center justify-center rounded-full bg-black/70"
+        >
+          <Icon name="close" size={8} color={colors.fg} />
+        </PressableScale>
+      ) : null}
+    </View>
   );
 }

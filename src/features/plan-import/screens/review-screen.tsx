@@ -16,8 +16,8 @@ import { useImportStore, usePhotos } from '../stores/import-store';
 const THUMB_STEP = 56 + 18;
 
 /**
- * 05a-2: the captured pages full screen, like a progress check photo: switch, retake or remove
- * pages, add one, then read the plan.
+ * 05a-2: the captured pages full screen, like a progress check photo: switch pages, retake one,
+ * remove one with the X on its thumbnail, add one, then read the plan.
  */
 export function ReviewScreen() {
   const { t } = useTranslation('planImport');
@@ -35,9 +35,10 @@ export function ReviewScreen() {
     strip.current?.scrollTo({ x: Math.max(0, (index - 1) * THUMB_STEP), animated: true });
   }
 
-  function remove() {
-    removePhoto(current);
-    show(Math.max(0, current - 1));
+  function remove(index: number) {
+    removePhoto(index);
+    // The shown page stays shown; if it was the one removed, the one before it.
+    if (index <= current) show(Math.max(0, current - 1));
   }
 
   return (
@@ -64,6 +65,10 @@ export function ReviewScreen() {
                 accessibilityLabel={t('camera.page', { count: i + 1 })}
                 selected={i === current}
                 viewing
+                remove={{
+                  accessibilityLabel: t('review.remove', { count: i + 1 }),
+                  onPress: () => remove(i),
+                }}
                 onPress={() => show(i)}
               />
             ))}
@@ -87,13 +92,6 @@ export function ReviewScreen() {
           onPress={() =>
             router.push({ pathname: step('/import/camera'), params: { retake: current } })
           }
-        />
-        <IconButton
-          icon="trash"
-          size={60}
-          iconSize={16}
-          accessibilityLabel={t('review.remove')}
-          onPress={remove}
         />
         <Button
           label={t('read')}

@@ -57,7 +57,7 @@
   "review": {
     "retake": "Refazer foto",
     "addPage": "Adicionar página",
-    "remove": "Remover foto"
+    "remove": "Remover página {{count}}"
   },
   "reading": {
     "stages": [

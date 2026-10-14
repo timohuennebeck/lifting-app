@@ -57,7 +57,7 @@
   "review": {
     "retake": "Foto neu aufnehmen",
     "addPage": "Seite hinzufügen",
-    "remove": "Foto entfernen"
+    "remove": "Seite {{count}} entfernen"
   },
   "reading": {
     "stages": [
