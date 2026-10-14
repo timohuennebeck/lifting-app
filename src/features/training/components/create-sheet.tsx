@@ -4,30 +4,23 @@ import { useTranslation } from 'react-i18next';
 import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
 
-import { CollectionsGlyph, ProgramGlyph, TemplateGlyph } from './glyphs';
+import { PlanGlyph, RoutineGlyph } from './glyphs';
 
-type CreateKind = 'collection' | 'template' | 'program';
+type CreateKind = 'routine' | 'plan';
 
 export interface CreateSheetProps {
   visible: boolean;
   onClose: () => void;
-  onCreateCollection: () => void;
-  onCreateTemplate: () => void;
-  onCreateProgram: () => void;
+  onCreateRoutine: () => void;
+  onCreatePlan: () => void;
 }
 
 const glyphColor = (active: boolean) => (active ? colors.onAccent : colors.fgMid);
 
-/** "+" sheet: new collection, template or program (01·V·A·6); a program is imported or made. */
-export function CreateSheet({
-  visible,
-  onClose,
-  onCreateCollection,
-  onCreateTemplate,
-  onCreateProgram,
-}: CreateSheetProps) {
+/** "+" sheet: a new routine, or a plan, which is made, imported or built (01·V·A·6). */
+export function CreateSheet({ visible, onClose, onCreateRoutine, onCreatePlan }: CreateSheetProps) {
   const { t } = useTranslation('training');
-  const [kind, setKind] = useState<CreateKind>('template');
+  const [kind, setKind] = useState<CreateKind>('routine');
 
   return (
     <ChoiceSheet
@@ -35,32 +28,21 @@ export function CreateSheet({
       onClose={onClose}
       value={kind}
       onChange={setKind}
-      onConfirm={(value) => {
-        if (value === 'collection') onCreateCollection();
-        else if (value === 'template') onCreateTemplate();
-        else onCreateProgram();
-      }}
+      onConfirm={(value) => (value === 'routine' ? onCreateRoutine() : onCreatePlan())}
       options={[
         {
-          value: 'collection',
-          title: t('create.collection'),
-          description: t('create.collectionHint'),
-          cta: t('create.createCollection'),
-          renderIcon: (active) => <CollectionsGlyph color={glyphColor(active)} />,
+          value: 'routine',
+          title: t('create.routine'),
+          description: t('create.routineHint'),
+          cta: t('create.createRoutine'),
+          renderIcon: (active) => <RoutineGlyph color={glyphColor(active)} />,
         },
         {
-          value: 'template',
-          title: t('create.template'),
-          description: t('create.templateHint'),
-          cta: t('create.createTemplate'),
-          renderIcon: (active) => <TemplateGlyph color={glyphColor(active)} />,
-        },
-        {
-          value: 'program',
-          title: t('create.program'),
-          description: t('create.programHint'),
-          cta: t('create.createProgram'),
-          renderIcon: (active) => <ProgramGlyph color={glyphColor(active)} />,
+          value: 'plan',
+          title: t('create.plan'),
+          description: t('create.planHint'),
+          cta: t('create.createPlan'),
+          renderIcon: (active) => <PlanGlyph color={glyphColor(active)} />,
         },
       ]}
     />

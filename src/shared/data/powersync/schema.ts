@@ -23,9 +23,8 @@ export const profiles = sqliteTable('profiles', {
   equipment: text(),
   // JSON list of equipment ids, used with equipment = 'home'.
   home_equipment: text(),
-  training_days: text(),
   session_minutes: integer(),
-  active_collection_id: text(),
+  active_plan_id: text(),
   language: text(),
   // Path in the private "avatars" bucket; null shows the initials.
   avatar_path: text(),
@@ -36,96 +35,108 @@ export const profiles = sqliteTable('profiles', {
   updated_at: text().notNull(),
 });
 
-export const collections = sqliteTable(
-  'collections',
+// A plan's routines come in order (`position`); `sessions_per_week` of its workouts make a plan
+// week. With `block_weeks` (deload included) the plan runs in blocks; `block_start_week` is the
+// plan week the current block started in.
+export const plans = sqliteTable(
+  'plans',
   {
     id: text().primaryKey(),
     user_id: text().notNull(),
     name: text().notNull(),
     position: integer().notNull(),
+    sessions_per_week: integer().notNull(),
+    block_weeks: integer(),
+    block_start_week: integer().notNull(),
     created_at: text().notNull(),
   },
   (t) => [index('user').on(t.user_id)],
 );
 
-export const templates = sqliteTable(
-  'templates',
+// Saved workouts: in a plan, or in the user's library without one.
+export const routines = sqliteTable(
+  'routines',
   {
     id: text().primaryKey(),
     user_id: text().notNull(),
-    collection_id: text(),
+    plan_id: text(),
     name: text().notNull(),
-    weekday: integer(),
     position: integer().notNull(),
     created_at: text().notNull(),
     updated_at: text().notNull(),
   },
-  (t) => [index('collection').on(t.collection_id)],
+  (t) => [index('plan').on(t.plan_id)],
 );
 
-export const templateExercises = sqliteTable(
-  'template_exercises',
+export const routineExercises = sqliteTable(
+  'routine_exercises',
   {
     id: text().primaryKey(),
     user_id: text().notNull(),
-    template_id: text().notNull(),
+    routine_id: text().notNull(),
     exercise_id: text().notNull(),
     position: integer().notNull(),
     rest_seconds: integer(),
   },
-  (t) => [index('template').on(t.template_id)],
+  (t) => [index('routine').on(t.routine_id)],
 );
 
-export const templateSets = sqliteTable(
-  'template_sets',
+export const routineSets = sqliteTable(
+  'routine_sets',
   {
     id: text().primaryKey(),
     user_id: text().notNull(),
-    template_exercise_id: text().notNull(),
+    routine_exercise_id: text().notNull(),
     position: integer().notNull(),
     // Reps, or seconds for timed exercises.
     // Both optional: a target can be a range, only a minimum or maximum, or none.
     target_min: integer(),
     target_max: integer(),
+    // Reps in reserve in the first week of a block.
     rir: integer(),
   },
-  (t) => [index('exercise').on(t.template_exercise_id)],
+  (t) => [index('exercise').on(t.routine_exercise_id)],
 );
 
-export const workouts = sqliteTable(
-  'workouts',
+// Workouts done or running. One started from a plan's routine records the plan and the plan
+// week it counts for.
+export const workoutEntries = sqliteTable(
+  'workout_entries',
   {
     id: text().primaryKey(),
     user_id: text().notNull(),
-    template_id: text(),
+    routine_id: text(),
+    plan_id: text(),
+    plan_week: integer(),
     name: text().notNull(),
     started_at: text().notNull(),
     finished_at: text(),
     created_at: text().notNull(),
   },
-  (t) => [index('started').on(t.started_at)],
+  (t) => [index('started').on(t.started_at), index('plan').on(t.plan_id)],
 );
 
-export const workoutExercises = sqliteTable(
-  'workout_exercises',
+export const workoutEntriesExercises = sqliteTable(
+  'workout_entries_exercises',
   {
     id: text().primaryKey(),
     user_id: text().notNull(),
-    workout_id: text().notNull(),
+    workout_entries_id: text().notNull(),
     exercise_id: text().notNull(),
     position: integer().notNull(),
     rest_seconds: integer(),
   },
-  (t) => [index('workout').on(t.workout_id), index('exercise').on(t.exercise_id)],
+  (t) => [index('workout').on(t.workout_entries_id), index('exercise').on(t.exercise_id)],
 );
 
-export const workoutSets = sqliteTable(
-  'workout_sets',
+export const workoutEntriesSets = sqliteTable(
+  'workout_entries_sets',
   {
     id: text().primaryKey(),
     user_id: text().notNull(),
-    workout_exercise_id: text().notNull(),
+    workout_entries_exercise_id: text().notNull(),
     position: integer().notNull(),
+    // The targets of the plan week the workout counts for.
     target_min: integer(),
     target_max: integer(),
     target_rir: integer(),
@@ -137,7 +148,7 @@ export const workoutSets = sqliteTable(
     // Postgres boolean, synced as 0/1.
     is_pr: integer({ mode: 'boolean' }).notNull(),
   },
-  (t) => [index('exercise').on(t.workout_exercise_id)],
+  (t) => [index('exercise').on(t.workout_entries_exercise_id)],
 );
 
 export const progressChecks = sqliteTable('progress_checks', {
@@ -223,7 +234,7 @@ export const legalAcceptances = sqliteTable('legal_acceptances', {
   platform: text(),
 });
 
-// Exercises the user added; template and workout exercise_ids point at them like at the catalog.
+// Exercises the user added; routine and workout exercise_ids point at them like at the catalog.
 export const customExercises = sqliteTable('custom_exercises', {
   id: text().primaryKey(),
   user_id: text().notNull(),
@@ -252,49 +263,52 @@ export const weightEntries = sqliteTable(
   (t) => [index('date').on(t.date)],
 );
 
-// Relations power nested reads such as `drizzle.query.templates.findMany({ with: … })`; Drizzle
+// Relations power nested reads such as `drizzle.query.routines.findMany({ with: … })`; Drizzle
 // finds them through `drizzleSchema`. Each `many` needs the `one` pointing back.
-const templatesRelations = relations(templates, ({ many }) => ({
-  exercises: many(templateExercises),
+const routinesRelations = relations(routines, ({ many }) => ({
+  exercises: many(routineExercises),
 }));
 
-const templateExercisesRelations = relations(templateExercises, ({ one, many }) => ({
-  template: one(templates, { fields: [templateExercises.template_id], references: [templates.id] }),
-  sets: many(templateSets),
+const routineExercisesRelations = relations(routineExercises, ({ one, many }) => ({
+  routine: one(routines, { fields: [routineExercises.routine_id], references: [routines.id] }),
+  sets: many(routineSets),
 }));
 
-const templateSetsRelations = relations(templateSets, ({ one }) => ({
-  exercise: one(templateExercises, {
-    fields: [templateSets.template_exercise_id],
-    references: [templateExercises.id],
+const routineSetsRelations = relations(routineSets, ({ one }) => ({
+  exercise: one(routineExercises, {
+    fields: [routineSets.routine_exercise_id],
+    references: [routineExercises.id],
   }),
 }));
 
-const workoutsRelations = relations(workouts, ({ many }) => ({
-  exercises: many(workoutExercises),
+const workoutEntriesRelations = relations(workoutEntries, ({ many }) => ({
+  exercises: many(workoutEntriesExercises),
 }));
 
-const workoutExercisesRelations = relations(workoutExercises, ({ one, many }) => ({
-  workout: one(workouts, { fields: [workoutExercises.workout_id], references: [workouts.id] }),
-  sets: many(workoutSets),
+const workoutEntriesExercisesRelations = relations(workoutEntriesExercises, ({ one, many }) => ({
+  workout: one(workoutEntries, {
+    fields: [workoutEntriesExercises.workout_entries_id],
+    references: [workoutEntries.id],
+  }),
+  sets: many(workoutEntriesSets),
 }));
 
-const workoutSetsRelations = relations(workoutSets, ({ one }) => ({
-  exercise: one(workoutExercises, {
-    fields: [workoutSets.workout_exercise_id],
-    references: [workoutExercises.id],
+const workoutEntriesSetsRelations = relations(workoutEntriesSets, ({ one }) => ({
+  exercise: one(workoutEntriesExercises, {
+    fields: [workoutEntriesSets.workout_entries_exercise_id],
+    references: [workoutEntriesExercises.id],
   }),
 }));
 
 export const drizzleSchema = {
   profiles,
-  collections,
-  templates,
-  templateExercises,
-  templateSets,
-  workouts,
-  workoutExercises,
-  workoutSets,
+  plans,
+  routines,
+  routineExercises,
+  routineSets,
+  workoutEntries,
+  workoutEntriesExercises,
+  workoutEntriesSets,
   progressChecks,
   progressCheckPhotos,
   tickets,
@@ -303,12 +317,12 @@ export const drizzleSchema = {
   legalAcceptances,
   customExercises,
   weightEntries,
-  templatesRelations,
-  templateExercisesRelations,
-  templateSetsRelations,
-  workoutsRelations,
-  workoutExercisesRelations,
-  workoutSetsRelations,
+  routinesRelations,
+  routineExercisesRelations,
+  routineSetsRelations,
+  workoutEntriesRelations,
+  workoutEntriesExercisesRelations,
+  workoutEntriesSetsRelations,
 };
 
 export const AppSchema = new DrizzleAppSchema(drizzleSchema);

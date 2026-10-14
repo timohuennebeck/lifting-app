@@ -17,8 +17,8 @@ import { ScreenHeader } from '@/shared/ui/screen-header';
 import { useWorkoutDraftStore } from '../stores/workout-draft-store';
 
 /**
- * An empty workout put together like a template (exercises, target sets) before it starts;
- * "Start workout" creates it and opens live logging. One-off: nothing is saved as a template.
+ * An empty workout put together like a routine (exercises, target sets) before it starts;
+ * "Start workout" creates it and opens live logging. One-off: nothing is saved as a routine.
  */
 export function WorkoutBuilderScreen() {
   const { t } = useTranslation(['workout', 'training', 'common']);

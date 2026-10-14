@@ -4,7 +4,11 @@ import { alias } from 'drizzle-orm/sqlite-core';
 
 import { parseJson } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
-import { workoutExercises, workouts, workoutSets } from '@/shared/data/powersync/schema';
+import {
+  workoutEntriesExercises,
+  workoutEntries,
+  workoutEntriesSets,
+} from '@/shared/data/powersync/schema';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 import { hasKnownWeight, previousExercise, previousSet, setScoreSql } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
@@ -19,7 +23,7 @@ export interface WorkoutRecord {
   previous: SetValues;
 }
 
-const previousWorkout = alias(workouts, 'previous_workout');
+const previousWorkout = alias(workoutEntries, 'previous_workout');
 
 /**
  * Best completed set (by `setScoreSql`) of the same exercise from an earlier workout. Built per
@@ -31,14 +35,14 @@ const previousBest = () =>
       best: sql`json_object('weightKg', ${previousSet.weight_kg}, 'reps', ${previousSet.reps}, 'seconds', ${previousSet.seconds})`,
     })
     .from(previousSet)
-    .innerJoin(previousExercise, eq(previousExercise.id, previousSet.workout_exercise_id))
-    .innerJoin(previousWorkout, eq(previousWorkout.id, previousExercise.workout_id))
+    .innerJoin(previousExercise, eq(previousExercise.id, previousSet.workout_entries_exercise_id))
+    .innerJoin(previousWorkout, eq(previousWorkout.id, previousExercise.workout_entries_id))
     .where(
       and(
-        eq(previousExercise.exercise_id, workoutExercises.exercise_id),
+        eq(previousExercise.exercise_id, workoutEntriesExercises.exercise_id),
         isNotNull(previousSet.completed_at),
         hasKnownWeight(previousSet, previousExercise),
-        lt(previousWorkout.started_at, workouts.started_at),
+        lt(previousWorkout.started_at, workoutEntries.started_at),
       ),
     )
     .orderBy(desc(setScoreSql(previousSet, previousExercise)))
@@ -48,24 +52,27 @@ const previousBest = () =>
 const recordsQuery = (workoutId: string) =>
   drizzle
     .select({
-      exercise_id: workoutExercises.exercise_id,
-      weight_kg: workoutSets.weight_kg,
-      reps: workoutSets.reps,
-      seconds: workoutSets.seconds,
-      score: setScoreSql(workoutSets, workoutExercises),
+      exercise_id: workoutEntriesExercises.exercise_id,
+      weight_kg: workoutEntriesSets.weight_kg,
+      reps: workoutEntriesSets.reps,
+      seconds: workoutEntriesSets.seconds,
+      score: setScoreSql(workoutEntriesSets, workoutEntriesExercises),
       previous: sql<string | null>`${previousBest()}`,
     })
-    .from(workoutSets)
-    .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
-    .innerJoin(workouts, eq(workouts.id, workoutExercises.workout_id))
+    .from(workoutEntriesSets)
+    .innerJoin(
+      workoutEntriesExercises,
+      eq(workoutEntriesExercises.id, workoutEntriesSets.workout_entries_exercise_id),
+    )
+    .innerJoin(workoutEntries, eq(workoutEntries.id, workoutEntriesExercises.workout_entries_id))
     .where(
       and(
-        eq(workouts.id, workoutId),
-        eq(workoutSets.is_pr, true),
-        isNotNull(workoutSets.completed_at),
+        eq(workoutEntries.id, workoutId),
+        eq(workoutEntriesSets.is_pr, true),
+        isNotNull(workoutEntriesSets.completed_at),
       ),
     )
-    .orderBy(asc(workoutExercises.position), asc(workoutSets.position));
+    .orderBy(asc(workoutEntriesExercises.position), asc(workoutEntriesSets.position));
 
 /** Best PR set per exercise; only exercises with an earlier best are kept. */
 function toRecords(rows: RowOf<typeof recordsQuery>[]): WorkoutRecord[] {

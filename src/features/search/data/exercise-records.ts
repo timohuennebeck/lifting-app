@@ -3,7 +3,11 @@ import { and, eq, inArray, isNotNull, sql } from 'drizzle-orm';
 
 import { assistedExerciseIds } from '@/shared/data/exercises';
 import { drizzle } from '@/shared/data/powersync/database';
-import { workoutExercises, workouts, workoutSets } from '@/shared/data/powersync/schema';
+import {
+  workoutEntriesExercises,
+  workoutEntries,
+  workoutEntriesSets,
+} from '@/shared/data/powersync/schema';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 import { hasKnownWeight } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
@@ -24,29 +28,32 @@ export interface ExerciseRecord {
 const rankedSets = () =>
   drizzle
     .select({
-      exercise_id: workoutExercises.exercise_id,
-      weight_kg: workoutSets.weight_kg,
-      reps: workoutSets.reps,
-      seconds: workoutSets.seconds,
-      last_at: sql<string>`max(${workouts.started_at}) over (
-      partition by ${workoutExercises.exercise_id}
+      exercise_id: workoutEntriesExercises.exercise_id,
+      weight_kg: workoutEntriesSets.weight_kg,
+      reps: workoutEntriesSets.reps,
+      seconds: workoutEntriesSets.seconds,
+      last_at: sql<string>`max(${workoutEntries.started_at}) over (
+      partition by ${workoutEntriesExercises.exercise_id}
     )`.as('last_at'),
       rank: sql<number>`row_number() over (
-      partition by ${workoutExercises.exercise_id}
-      order by case when ${inArray(workoutExercises.exercise_id, assistedExerciseIds())}
-        then -${workoutSets.weight_kg} else coalesce(${workoutSets.weight_kg}, -1) end desc,
-        coalesce(${workoutSets.reps}, -1) desc, coalesce(${workoutSets.seconds}, -1) desc
+      partition by ${workoutEntriesExercises.exercise_id}
+      order by case when ${inArray(workoutEntriesExercises.exercise_id, assistedExerciseIds())}
+        then -${workoutEntriesSets.weight_kg} else coalesce(${workoutEntriesSets.weight_kg}, -1) end desc,
+        coalesce(${workoutEntriesSets.reps}, -1) desc, coalesce(${workoutEntriesSets.seconds}, -1) desc
     )`.as('rank'),
     })
-    .from(workoutSets)
-    .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
-    .innerJoin(workouts, eq(workouts.id, workoutExercises.workout_id))
+    .from(workoutEntriesSets)
+    .innerJoin(
+      workoutEntriesExercises,
+      eq(workoutEntriesExercises.id, workoutEntriesSets.workout_entries_exercise_id),
+    )
+    .innerJoin(workoutEntries, eq(workoutEntries.id, workoutEntriesExercises.workout_entries_id))
     // The same sets as an exercise's history: a weighted exercise's set without a weight doesn't count.
     .where(
       and(
-        isNotNull(workoutSets.completed_at),
-        isNotNull(workouts.finished_at),
-        hasKnownWeight(workoutSets, workoutExercises),
+        isNotNull(workoutEntriesSets.completed_at),
+        isNotNull(workoutEntries.finished_at),
+        hasKnownWeight(workoutEntriesSets, workoutEntriesExercises),
       ),
     )
     .as('ranked_sets');

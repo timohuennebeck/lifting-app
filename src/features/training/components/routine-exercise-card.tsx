@@ -6,14 +6,14 @@ import { View } from 'react-native';
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { splitMuscles } from '@/features/exercises/lib/muscle-groups';
 import { isTimed, useExercise, useExerciseName } from '@/shared/data/exercises';
-import type { PlanSetDraft } from '@/shared/data/templates';
+import type { PlanSetDraft } from '@/shared/data/routines';
 import { formatTargetLabel } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
 
-export interface TemplateExerciseCardProps {
+export interface RoutineExerciseCardProps {
   exerciseId: string;
   /** Target sets: rep (or second) range and RIR. */
   sets: PlanSetDraft[];
@@ -26,14 +26,14 @@ export interface TemplateExerciseCardProps {
 }
 
 /** Exercise row of the training overview: photo, name, target sets with RIR, muscles (03·0b). */
-export function TemplateExerciseCard({
+export function RoutineExerciseCard({
   exerciseId,
   sets,
   onMenu,
   onPress,
   review,
   children,
-}: TemplateExerciseCardProps) {
+}: RoutineExerciseCardProps) {
   const { t, i18n } = useTranslation(['muscles', 'training']);
   const exercise = useExercise(exerciseId);
   const name = useExerciseName(exerciseId, i18n.language);

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { isBodyweight, measuresOf } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
-import { restSecondsFor } from '@/shared/data/templates';
+import { restSecondsFor } from '@/shared/data/routines';
 import { logSet, useLastExerciseSession, type WorkoutDetail } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';

@@ -7,7 +7,7 @@ import { decodeBase64 } from 'jsr:@std/encoding@1/base64';
 
 import { reply } from '../_shared/common.ts';
 import { openAiConfigured, type StreamedAnswer, streamStructured } from '../_shared/openai.ts';
-import type { ImportedDay, PlanEvent } from '../_shared/plan-events.ts';
+import type { ImportedRoutine, PlanEvent } from '../_shared/plan-events.ts';
 import { PlanStream } from '../_shared/plan-stream.ts';
 import { envLimit, loadCatalog, planEventResponse, takePlanRequest } from '../_shared/plans.ts';
 import {
@@ -15,8 +15,8 @@ import {
   type CatalogExercise,
   contextText,
   INSTRUCTIONS,
-  type ModelDay,
   type ModelExercise,
+  type ModelRoutine,
   planReader,
 } from './plan.ts';
 
@@ -194,9 +194,9 @@ async function sendPlan(
   giveBack: () => PromiseLike<unknown>,
 ) {
   const reader = planReader(catalog, () => crypto.randomUUID());
-  const stream = new PlanStream<ModelDay, ModelExercise>();
-  // A day waits for its first exercise.
-  let day: ImportedDay | null = null;
+  const stream = new PlanStream<ModelRoutine, ModelExercise>();
+  // A routine waits for its first exercise.
+  let routine: ImportedRoutine | null = null;
   let exercises = 0;
   let written = false;
   for await (const step of answer) {
@@ -218,13 +218,13 @@ async function sendPlan(
         // Leaving the loop also stops the model.
         if (!piece.isPlan) return send({ type: 'error', error: 'not_a_plan' });
         send({ type: 'plan', name: reader.planName(piece.name) });
-      } else if (piece.kind === 'day') {
-        day = reader.day(piece.day);
+      } else if (piece.kind === 'routine') {
+        routine = reader.routine(piece.routine);
       } else {
         const read = reader.exercise(piece.exercise);
         if (!read) continue;
-        if (day) send({ type: 'day', day });
-        day = null;
+        if (routine) send({ type: 'routine', routine });
+        routine = null;
         send({ type: 'exercise', ...read });
         exercises++;
       }

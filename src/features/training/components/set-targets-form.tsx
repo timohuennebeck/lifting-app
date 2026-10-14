@@ -4,7 +4,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 
 import { defaultSetDrafts, isTimed } from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
-import { restSecondsFor } from '@/shared/data/templates';
+import { restSecondsFor } from '@/shared/data/routines';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { cn } from '@/shared/lib/cn';
@@ -51,7 +51,7 @@ export interface SetTargetsFormProps {
 
 /**
  * Edit target sets: min/max reps (or seconds) typed with the app's number pad, RIR and a rest
- * override (00·P2 C·S). Shared by plan templates, the workout builder and the running workout.
+ * override (00·P2 C·S). Shared by plan routines, the workout builder and the running workout.
  */
 export function SetTargetsForm({
   exerciseId,

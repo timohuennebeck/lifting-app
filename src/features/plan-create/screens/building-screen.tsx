@@ -28,7 +28,7 @@ export function BuildingScreen() {
   const draft = useDraft();
   // The answers as the screen opened; a new draft object doesn't start another plan.
   const [input] = useState(() => answersFromDraft(draft));
-  const started = useImportStore((s) => !!s.plan?.days[0]?.exercises.length);
+  const started = useImportStore((s) => !!s.plan?.routines[0]?.exercises.length);
   const failure = useImportStore((s) => s.failure);
   const progress = useTimedProgress(EXPECTED_MS);
   const animated = progress * EXPECTED_MS >= MIN_MS;
@@ -62,13 +62,15 @@ export function BuildingScreen() {
 
   const stages = t('planCreate:building.stages', { returnObjects: true });
   const areas = [...new Set(input.focus.map(groupOfMuscle))].map((g) => t(`exercises:groups.${g}`));
-  const days = new Set(input.trainingDays).size;
   const shown = started ? 1 : Math.min(0.95, progress);
 
   const chips: ScanChip[] = [
     { label: t(`planCreate:goalShort.${input.goal}`), x: 14, y: 176, duration: 3 },
     {
-      label: t('planCreate:building.frequency', { count: days, minutes: input.sessionMinutes }),
+      label: t('planCreate:building.frequency', {
+        count: input.sessionsPerWeek,
+        minutes: input.sessionMinutes,
+      }),
       x: 278,
       y: 150,
       accent: true,

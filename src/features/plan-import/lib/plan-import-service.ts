@@ -5,7 +5,8 @@ import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import type { PlanAnswers } from '@/features/plan-create/lib/plan-answers';
 import { env } from '@/shared/config/env';
 import type { CustomExercise } from '@/shared/data/exercises';
-import type { PlanDayDraft, PlanDraft, PlanExerciseDraft } from '@/shared/data/templates';
+import { clampSessions, type PlanDraft, type PlanRoutineDraft } from '@/shared/data/plans';
+import type { PlanExerciseDraft } from '@/shared/data/routines';
 
 export interface ImportPhoto {
   uri: string;
@@ -41,22 +42,21 @@ export interface ImportedExercise extends PlanExerciseDraft {
   alternatives?: string[];
 }
 
-export interface ImportedDay extends PlanDayDraft {
+export interface ImportedRoutine extends PlanRoutineDraft {
   exercises: ImportedExercise[];
-  /** Day heading as read when no weekday could be detected. */
-  rawDay?: string;
 }
 
-/** A detected plan; still a valid `PlanDraft`, plus review hints for uncertain lines. */
-export interface ImportedPlan extends PlanDraft {
-  days: ImportedDay[];
+/** A detected plan: its routines in order, plus review hints for uncertain lines. */
+export interface ImportedPlan {
+  name: string;
+  routines: ImportedRoutine[];
   /** Exercises the plan uses that the catalog doesn't have; created with the account. */
   newExercises: CustomExercise[];
 }
 
 export interface StreamPlanInput {
   source: ImportSource;
-  /** UI language, so exercise names and day headings can be matched in context. */
+  /** UI language, so exercise names and routine headings can be matched in context. */
   language: string;
 }
 
@@ -135,7 +135,7 @@ function stopIfAborted(signal: AbortSignal) {
 /** What the plan functions send while they read or make it (their PlanEvent). */
 export type PlanEvent =
   | { type: 'plan'; name: string }
-  | { type: 'day'; day: Omit<ImportedDay, 'exercises'> }
+  | { type: 'routine'; routine: Omit<ImportedRoutine, 'exercises'> }
   | {
       type: 'exercise';
       exercise: Omit<ImportedExercise, 'key'>;
@@ -146,8 +146,8 @@ export type PlanEvent =
 /**
  * Gets a training plan from the Edge Functions, which stream it: reads it from photos or a file
  * (read-plan) or makes it from the onboarding answers (generate-plan). `onEvent` gets the
- * plan's name, then each day and exercise as soon as it is there (an exercise belongs to the day
- * before it). Resolves once the plan is complete. Throws an ImportError with the reason when
+ * plan's name, then each routine and exercise as soon as it is there (an exercise belongs to the
+ * routine before it). Resolves once the plan is complete. Throws an ImportError with the reason when
  * there is no plan to show, also when the stream breaks off; once `signal` stops it, the error
  * doesn't matter.
  */
@@ -209,31 +209,36 @@ export async function streamPlan(
   throw new ImportError('failed');
 }
 
-/** Drops review hints and empty days so the plan can be stored. */
-export function toPlanDraft(plan: ImportedPlan): PlanDraft {
+/**
+ * Drops review hints and empty routines so the plan can be stored. `settings` are the plan's
+ * weekly goal and block; without them the goal is its number of routines and it has no blocks.
+ */
+export function toPlanDraft(
+  plan: ImportedPlan,
+  settings?: Pick<PlanDraft, 'sessionsPerWeek' | 'blockWeeks'>,
+): PlanDraft {
+  const routines = plan.routines
+    .filter((r) => r.exercises.length)
+    .map((r) => ({
+      name: r.name,
+      exercises: r.exercises.map((e) => ({
+        exerciseId: e.exerciseId,
+        sets: e.sets,
+        restSeconds: e.restSeconds ?? null,
+      })),
+    }));
   return {
     name: plan.name.trim(),
-    days: plan.days
-      .filter((d) => d.exercises.length)
-      .map((d) => ({
-        name: d.name,
-        weekday: d.weekday,
-        exercises: d.exercises.map((e) => ({
-          exerciseId: e.exerciseId,
-          sets: e.sets,
-          restSeconds: e.restSeconds ?? null,
-        })),
-      })),
+    routines,
+    sessionsPerWeek: settings?.sessionsPerWeek ?? clampSessions(routines.length),
+    blockWeeks: settings ? settings.blockWeeks : null,
   };
 }
 
-/** True while the day has an unknown weekday or an uncertain exercise. */
-export const needsReview = (day: ImportedDay) => !!day.rawDay || day.exercises.some((e) => e.raw);
+/** True while the routine has an uncertain exercise. */
+export const needsReview = (routine: ImportedRoutine) => routine.exercises.some((e) => e.raw);
 
-/** Number of uncertain exercises and unknown weekdays still to review. */
+/** Number of uncertain exercises still to review. */
 export function pendingReviews(plan: ImportedPlan) {
-  return plan.days.reduce(
-    (sum, d) => sum + (d.rawDay ? 1 : 0) + d.exercises.filter((e) => e.raw).length,
-    0,
-  );
+  return plan.routines.reduce((sum, r) => sum + r.exercises.filter((e) => e.raw).length, 0);
 }

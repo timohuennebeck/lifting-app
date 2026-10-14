@@ -2,19 +2,19 @@
 // each exercise can go to the app as soon as it is complete. Plain TypeScript without Deno APIs.
 
 /** A finished part of the answer, in the order the model writes them. */
-export type PlanPiece<Day, Exercise> =
-  /** Everything before "days": whether it is a plan (when the answer says), and its name. */
+export type PlanPiece<Routine, Exercise> =
+  /** Everything before "routines": whether it is a plan (when the answer says), and its name. */
   | { kind: 'start'; isPlan: boolean; name: string }
-  /** A day's fields before its "exercises" (e.g. heading, name, weekday). */
-  | { kind: 'day'; day: Omit<Day, 'exercises'> }
+  /** A routine's fields before its "exercises" (e.g. heading, name). */
+  | { kind: 'routine'; routine: Omit<Routine, 'exercises'> }
   | { kind: 'exercise'; exercise: Exercise };
 
 interface Frame {
   type: 'object' | 'array';
   /** Where the object or array starts in the text. */
   start: number;
-  /** `days` → day → `exercises` → exercise; deeper levels are only skipped through. */
-  depth: 'root' | 'days' | 'day' | 'exercises' | 'exercise' | 'other';
+  /** `routines` → routine → `exercises` → exercise; deeper levels are only skipped through. */
+  depth: 'root' | 'routines' | 'routine' | 'exercises' | 'exercise' | 'other';
   /** Objects: the key whose value comes next, and whether a key is expected. */
   key?: string;
   expectKey?: boolean;
@@ -26,9 +26,10 @@ const closePrefix = (text: string) => JSON.parse(`${text.replace(/,\s*$/, '')}}`
 /**
  * Reads the answer as it grows: `push` takes the next piece of text and returns the parts it
  * completed. It relies on the strict schema writing keys in its order, which OpenAI's structured
- * output does: the plan's own fields before "days", and each day's before its "exercises".
+ * output does: the plan's own fields before "routines", and each routine's before its
+ * "exercises".
  */
-export class PlanStream<Day extends { exercises: unknown[] }, Exercise> {
+export class PlanStream<Routine extends { exercises: unknown[] }, Exercise> {
   private text = '';
   private at = 0;
   private stack: Frame[] = [];
@@ -37,9 +38,9 @@ export class PlanStream<Day extends { exercises: unknown[] }, Exercise> {
   /** Where the string being read started, when it is an object key. */
   private keyStart = -1;
 
-  push(chunk: string): PlanPiece<Day, Exercise>[] {
+  push(chunk: string): PlanPiece<Routine, Exercise>[] {
     this.text += chunk;
-    const pieces: PlanPiece<Day, Exercise>[] = [];
+    const pieces: PlanPiece<Routine, Exercise>[] = [];
     for (; this.at < this.text.length; this.at++) {
       const char = this.text[this.at];
       const top = this.stack.at(-1);
@@ -84,17 +85,17 @@ export class PlanStream<Day extends { exercises: unknown[] }, Exercise> {
   /** What an object or array opened inside `parent` holds. */
   private childDepth(parent: Frame | undefined): Frame['depth'] {
     if (!parent) return 'root';
-    if (parent.depth === 'root' && parent.key === 'days') return 'days';
-    if (parent.depth === 'days') return 'day';
-    if (parent.depth === 'day' && parent.key === 'exercises') return 'exercises';
+    if (parent.depth === 'root' && parent.key === 'routines') return 'routines';
+    if (parent.depth === 'routines') return 'routine';
+    if (parent.depth === 'routine' && parent.key === 'exercises') return 'exercises';
     if (parent.depth === 'exercises') return 'exercise';
     return 'other';
   }
 
   /** The keys after which everything before them is known. */
-  private keyReached(frame: Frame): PlanPiece<Day, Exercise> | null {
+  private keyReached(frame: Frame): PlanPiece<Routine, Exercise> | null {
     const before = () => this.text.slice(frame.start, this.keyStart);
-    if (frame.depth === 'root' && frame.key === 'days') {
+    if (frame.depth === 'root' && frame.key === 'routines') {
       const { is_plan, name } = closePrefix(before());
       return {
         kind: 'start',
@@ -102,8 +103,8 @@ export class PlanStream<Day extends { exercises: unknown[] }, Exercise> {
         name: typeof name === 'string' ? name : '',
       };
     }
-    if (frame.depth === 'day' && frame.key === 'exercises') {
-      return { kind: 'day', day: closePrefix(before()) };
+    if (frame.depth === 'routine' && frame.key === 'exercises') {
+      return { kind: 'routine', routine: closePrefix(before()) };
     }
     return null;
   }

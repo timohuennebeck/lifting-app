@@ -6,24 +6,24 @@ import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 
 /**
- * Starts a workout from a template and opens live logging; resumes a running one instead.
+ * Starts a workout from a routine and opens live logging; resumes a running one instead.
  * (An empty workout is put together in the builder first.)
  */
-export function useStartTemplate() {
+export function useStartRoutine() {
   const [startingId, setStartingId] = useState<string | null>(null);
   // State isn't updated yet on a double tap, which would start two workouts.
   const starting = useRef(false);
 
-  const start = async (template: { id: string; name: string }) => {
+  const start = async (routine: { id: string; name: string }) => {
     if (starting.current) return;
     starting.current = true;
-    setStartingId(template.id);
+    setStartingId(routine.id);
     try {
       // Only one workout runs at a time; a second one would be orphaned unfinished.
       let workoutId = await getActiveWorkoutId();
       // Not `??`, which the React Compiler can't compile inside a try.
       if (workoutId === null) {
-        workoutId = await startWorkout(requireUserId(), template.name, template.id);
+        workoutId = await startWorkout(requireUserId(), routine.name, routine.id);
       }
       haptics.success();
       router.push(`/workout/${workoutId}`);

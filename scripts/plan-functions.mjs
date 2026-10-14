@@ -38,11 +38,11 @@ export async function streamPlan(url, key, body) {
         buffer = buffer.slice(end + 2);
         if (!line.startsWith('data:')) continue;
         const event = JSON.parse(line.slice(5));
-        if (event.type === 'plan') plan = { name: event.name, days: [], newExercises: [] };
-        else if (event.type === 'day') plan.days.push({ ...event.day, exercises: [] });
+        if (event.type === 'plan') plan = { name: event.name, routines: [], newExercises: [] };
+        else if (event.type === 'routine') plan.routines.push({ ...event.routine, exercises: [] });
         else if (event.type === 'exercise') {
           first ??= seconds();
-          plan.days.at(-1).exercises.push(event.exercise);
+          plan.routines.at(-1).exercises.push(event.exercise);
           if (event.newExercise) plan.newExercises.push(event.newExercise);
         } else {
           error = event.type === 'error' ? event.error : null;

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 import { newExerciseDraft, swapExerciseDraft } from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
-import type { PlanExerciseDraft, PlanSetDraft } from '@/shared/data/templates';
+import type { PlanExerciseDraft, PlanSetDraft } from '@/shared/data/routines';
 
 /** A draft exercise; `key` stays with it when it is dragged to another place. */
 export type DraftExercise = PlanExerciseDraft & { key: string };
@@ -24,7 +24,7 @@ interface WorkoutDraftState {
 
 /**
  * An empty workout being put together before it starts: exercises and target sets like a
- * template, but one-off (never saved as one). Starting it creates the workout.
+ * routine, but one-off (never saved as one). Starting it creates the workout.
  */
 export const useWorkoutDraftStore = create<WorkoutDraftState>()((set) => {
   const editAt = (at: number, edit: (e: DraftExercise) => DraftExercise) =>

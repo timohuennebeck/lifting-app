@@ -3,9 +3,13 @@ import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
+import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
+import { usePlanWeekLabel } from '@/features/training/hooks/use-plan-week-label';
 import { useWorkoutDraftStore } from '@/features/workout/stores/workout-draft-store';
 import { TabScreen } from '@/shared/components/tab-screen';
-import { useUnits } from '@/shared/data/profile';
+import { currentPlanId, usePlanStatus, usePlans } from '@/shared/data/plans';
+import { useProfile, useUnits } from '@/shared/data/profile';
+import { useRoutines } from '@/shared/data/routines';
 import { useActiveWorkout } from '@/shared/data/workouts';
 import { useToday } from '@/shared/hooks/use-today';
 import { mondayIndex } from '@/shared/lib/date';
@@ -15,28 +19,43 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { DoneCard } from '../components/done-card';
-import { PlanDaySheet } from '../components/plan-day-sheet';
-import { PlannedCard } from '../components/planned-card';
-import { RescheduleSheet } from '../components/reschedule-sheet';
+import { NextCard } from '../components/next-card';
+import { OtherRoutineSheet } from '../components/other-routine-sheet';
 import { UnplannedDay } from '../components/unplanned-day';
 import { WeekStrip } from '../components/week-strip';
-import { useWeekPlan } from '../hooks/use-week-plan';
+import { useWeekWorkouts } from '../hooks/use-week-workouts';
 
 export function TodayScreen() {
   const { t } = useTranslation('today');
   // The tab stays mounted: the day comes from a clock so it moves on overnight, and a picked
-  // weekday only counts on the day it was picked.
+  // weekday (or routine) only counts on the day it was picked.
   const dayKey = useToday();
   const today = new Date(dayKey);
   const [pick, setPick] = useState<{ day: number; index: number } | null>(null);
   const selected = pick?.day === dayKey ? pick.index : mondayIndex(today);
   const select = (index: number) => setPick({ day: dayKey, index });
-  const [rescheduling, setRescheduling] = useState(false);
-  const [planning, setPlanning] = useState(false);
+  // "Anderes Training": a routine picked instead of the next one, for that day only.
+  const [other, setOther] = useState<{ day: number; index: number; routineId: string } | null>(
+    null,
+  );
+  const [otherOpen, setOtherOpen] = useState(false);
   const units = useUnits();
   const { data: active } = useActiveWorkout();
-  const { days, plan, planTemplates } = useWeekPlan(today);
+  const days = useWeekWorkouts(today);
   const day = days[selected];
+  const { profile } = useProfile();
+  const { data: plans = [], isLoading: plansLoading } = usePlans();
+  const plan = plans.find((p) => p.id === currentPlanId(profile?.activePlanId, plans));
+  const status = usePlanStatus(plan);
+  const weekLabel = usePlanWeekLabel();
+  const { data: routines = [], isLoading: routinesLoading } = useRoutines();
+  const planRoutines = plan ? routines.filter((r) => r.planId === plan.id) : [];
+  const nextId = status?.nextRoutineId ?? null;
+  const picked =
+    other?.day === dayKey && other.index === selected
+      ? planRoutines.find((r) => r.id === other.routineId)
+      : undefined;
+  const routine = picked ?? planRoutines.find((r) => r.id === nextId);
 
   const pills = (
     <ScrollView
@@ -75,25 +94,38 @@ export function TodayScreen() {
     </ScrollView>
   );
 
-  // A finished workout wins over the plan; a day with neither gets one picked from the plan, or
-  // without a plan yet from the Training tab.
-  let card: ReactNode;
+  // A finished workout wins; a day without one shows what's next in the plan (or the routine
+  // picked instead), and without a plan, or with an empty one, a way to fill it.
+  let card: ReactNode = null;
   if (day.workout) {
     card = <DoneCard workout={day.workout} date={day.date} today={today} units={units} />;
-  } else if (day.planned) {
+  } else if (plan && status && routine) {
+    const week = weekLabel(plan, status);
     card = (
-      <PlannedCard
-        template={day.planned}
+      <NextCard
+        routine={routine}
+        label={picked ? week : `${t('status.next')} · ${week}`}
+        deload={status.deload}
         date={day.date}
         today={today}
         activeWorkoutId={active?.id ?? null}
-        onReschedule={() => setRescheduling(true)}
+        onOther={planRoutines.length > 1 ? () => setOtherOpen(true) : undefined}
       />
     );
-  } else {
+  } else if (plan && status && !routinesLoading) {
     card = (
       <UnplannedDay
-        onPress={() => (plan.length ? setPlanning(true) : router.navigate('/training'))}
+        title={t('emptyPlan.title')}
+        body={t('emptyPlan.body')}
+        onPress={() => router.push(`/plan/${plan.id}`)}
+      />
+    );
+  } else if (!plan && !plansLoading) {
+    card = (
+      <UnplannedDay
+        title={t('unplanned.title')}
+        body={t('unplanned.body')}
+        onPress={() => openPlanFlow(profile)}
       />
     );
   }
@@ -108,18 +140,17 @@ export function TodayScreen() {
       }
     >
       {card}
-      <RescheduleSheet
-        visible={rescheduling}
-        template={day.planned}
-        planTemplates={planTemplates}
-        onClose={() => setRescheduling(false)}
-        onMoved={select}
-      />
-      <PlanDaySheet
-        visible={planning}
-        weekday={selected}
-        templates={plan}
-        onClose={() => setPlanning(false)}
+      <OtherRoutineSheet
+        visible={otherOpen}
+        planName={plan?.name ?? ''}
+        routines={planRoutines}
+        shownId={routine?.id ?? null}
+        nextId={nextId}
+        onPick={(routineId) => {
+          setOther({ day: dayKey, index: selected, routineId });
+          setOtherOpen(false);
+        }}
+        onClose={() => setOtherOpen(false)}
       />
     </TabScreen>
   );

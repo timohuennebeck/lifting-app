@@ -1,11 +1,11 @@
-// Builds a training plan from the onboarding answers (goal, focus, equipment, training days,
+// Builds a training plan from the onboarding answers (goal, focus, equipment, workouts a week,
 // session length, experience; no name or body data). The model picks from the exercises the user's
 // equipment allows and answers in a fixed shape; the plan streams to the app as the import's does
 // (see PlanEvent), checked part by part (planBuilder). It runs before there is an account, so
 // plans are limited per network and in total per day (start_plan_request, kind "generate").
 import { reply } from '../_shared/common.ts';
 import { openAiConfigured, type StreamedAnswer, streamStructured } from '../_shared/openai.ts';
-import type { ImportedDay, PlanEvent } from '../_shared/plan-events.ts';
+import type { ImportedRoutine, PlanEvent } from '../_shared/plan-events.ts';
 import { PlanStream } from '../_shared/plan-stream.ts';
 import {
   envLimit,
@@ -19,8 +19,8 @@ import {
   contextText,
   equipmentOf,
   INSTRUCTIONS,
-  type ModelDay,
   type ModelExercise,
+  type ModelRoutine,
   parseAnswers,
   planBuilder,
   usableExercises,
@@ -105,9 +105,9 @@ async function sendPlan(
   send: (event: PlanEvent) => void,
   giveBack: () => PromiseLike<unknown>,
 ) {
-  const stream = new PlanStream<ModelDay, ModelExercise>();
-  // A day waits for its first exercise.
-  let day: ImportedDay | null = null;
+  const stream = new PlanStream<ModelRoutine, ModelExercise>();
+  // A routine waits for its first exercise.
+  let routine: ImportedRoutine | null = null;
   let exercises = 0;
   let written = false;
   for await (const step of answer) {
@@ -127,17 +127,17 @@ async function sendPlan(
     for (const piece of stream.push(step.text)) {
       if (piece.kind === 'start') {
         send({ type: 'plan', name: builder.planName(piece.name) });
-      } else if (piece.kind === 'day') {
-        day = builder.day(piece.day);
-        // A day past the training days: the plan is complete, and leaving stops the model.
-        if (!day) {
+      } else if (piece.kind === 'routine') {
+        routine = builder.routine(piece.routine);
+        // A routine past the workouts a week: the plan is complete, and leaving stops the model.
+        if (!routine) {
           return send(exercises ? { type: 'done' } : { type: 'error', error: 'failed' });
         }
       } else {
         const exercise = builder.exercise(piece.exercise);
         if (!exercise) continue;
-        if (day) send({ type: 'day', day });
-        day = null;
+        if (routine) send({ type: 'routine', routine });
+        routine = null;
         send({ type: 'exercise', exercise });
         exercises++;
       }

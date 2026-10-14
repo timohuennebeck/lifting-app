@@ -5,8 +5,7 @@
   "status": {
     "doneToday": "Feito hoje",
     "done": "Feito · {{date}}",
-    "plannedToday": "Planejado · hoje",
-    "planned": "Planejado · {{date}}"
+    "next": "A seguir"
   },
   "stats": {
     "minutes": "{{count}} min",
@@ -21,21 +20,19 @@
   "overview": "Resumo",
   "start": "Iniciar",
   "resume": "Retomar",
-  "reschedule": "Reagendar",
   "markDone": "Marcar como feito",
+  "other": "Outro treino",
+  "deloadHint": "Semana de deload: metade das séries e um pouco mais leve, para você se recuperar.",
   "unplanned": {
-    "title": "Nenhum treino planejado",
-    "body": "Push, pull ou pernas? Toque para escolher."
+    "title": "Ainda sem plano",
+    "body": "Toque para pedir um plano ou importar o seu."
   },
-  "planSheet": {
-    "title": "Escolher treino",
-    "subtitle": "Planejar para {{day}}.",
-    "current": "Atualmente: {{day}}",
-    "noDay": "Ainda sem dia"
+  "emptyPlan": {
+    "title": "Plano sem treinos",
+    "body": "Toque para adicionar treinos ao seu plano."
   },
-  "rescheduleSheet": {
-    "title": "Reagendar",
-    "subtitle": "Escolha um novo dia para {{name}}.",
-    "taken": "{{name}} planejado"
+  "otherSheet": {
+    "title": "Outro treino",
+    "subtitle": "Escolha um treino de {{plan}}."
   }
 }

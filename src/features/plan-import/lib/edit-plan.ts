@@ -1,7 +1,7 @@
 import { newExerciseDraft, swapExerciseDraft } from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
 
-import type { ImportedDay, ImportedExercise, ImportedPlan } from './plan-import-service';
+import type { ImportedExercise, ImportedPlan, ImportedRoutine } from './plan-import-service';
 
 /** Drops the import's doubts about an exercise once the user has settled it. */
 export const settle = ({
@@ -10,29 +10,38 @@ export const settle = ({
   ...e
 }: ImportedExercise): ImportedExercise => e;
 
-/** The plan with day `index` changed by `edit`. */
-export const editDayAt = (
+/** The plan with routine `index` changed by `edit`. */
+export const editRoutineAt = (
   plan: ImportedPlan,
   index: number,
-  edit: (day: ImportedDay) => ImportedDay,
-): ImportedPlan => ({ ...plan, days: plan.days.map((d, i) => (i === index ? edit(d) : d)) });
+  edit: (routine: ImportedRoutine) => ImportedRoutine,
+): ImportedPlan => ({
+  ...plan,
+  routines: plan.routines.map((r, i) => (i === index ? edit(r) : r)),
+});
 
-/** The day with exercise `at` changed by `edit`. */
+/** The routine with exercise `at` changed by `edit`. */
 export const editExerciseAt = (
-  day: ImportedDay,
+  routine: ImportedRoutine,
   at: number,
   edit: (e: ImportedExercise) => ImportedExercise,
-): ImportedDay => ({ ...day, exercises: day.exercises.map((e, i) => (i === at ? edit(e) : e)) });
+): ImportedRoutine => ({
+  ...routine,
+  exercises: routine.exercises.map((e, i) => (i === at ? edit(e) : e)),
+});
 
 /** Appends exercises with default target sets. */
-export const addExercises = (day: ImportedDay, exerciseIds: string[]): ImportedDay => ({
-  ...day,
+export const addExercises = (routine: ImportedRoutine, exerciseIds: string[]): ImportedRoutine => ({
+  ...routine,
   exercises: [
-    ...day.exercises,
+    ...routine.exercises,
     ...exerciseIds.map((id) => ({ ...newExerciseDraft(id), key: newId() })),
   ],
 });
 
 /** Replaces exercise `at`; its sets get new defaults when the measures differ. */
-export const swapExercise = (day: ImportedDay, at: number, exerciseId: string): ImportedDay =>
-  editExerciseAt(day, at, (e) => settle(swapExerciseDraft(e, exerciseId)));
+export const swapExercise = (
+  routine: ImportedRoutine,
+  at: number,
+  exerciseId: string,
+): ImportedRoutine => editExerciseAt(routine, at, (e) => settle(swapExerciseDraft(e, exerciseId)));

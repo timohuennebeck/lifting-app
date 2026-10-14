@@ -1,21 +1,21 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
-import { useTemplateDetail } from '@/shared/data/templates';
+import { useRoutineDetail } from '@/shared/data/routines';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 
 import { SetTargetsForm } from '../components/set-targets-form';
-import { saveTemplateSets } from '../data/template-mutations';
+import { saveRoutineSets } from '../data/routine-mutations';
 
-/** Edit target sets of one template exercise: reps range, RIR, rest override (00·P2 C·S). */
+/** Edit target sets of one routine exercise: reps range, RIR, rest override (00·P2 C·S). */
 export function EditSetsScreen() {
   const { id, exerciseId } = useLocalSearchParams<{ id: string; exerciseId: string }>();
   const { t } = useTranslation('training');
-  const { data: template } = useTemplateDetail(id);
-  const exercise = template?.exercises.find((e) => e.id === exerciseId);
+  const { data: routine } = useRoutineDetail(id);
+  const exercise = routine?.exercises.find((e) => e.id === exerciseId);
 
   return (
     // Title only, as in 00·P2 C·S; the exercise is known from the previous screen.
@@ -27,7 +27,7 @@ export function EditSetsScreen() {
           initialSets={exercise.sets.map(({ id, ...set }) => ({ ...set, key: id }))}
           initialRest={exercise.restSeconds}
           onSave={async (sets, rest) => {
-            await saveTemplateSets(requireUserId(), exercise.id, sets, rest);
+            await saveRoutineSets(requireUserId(), exercise.id, sets, rest);
             haptics.success();
             router.back();
           }}

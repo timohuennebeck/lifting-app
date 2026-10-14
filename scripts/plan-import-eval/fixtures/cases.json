@@ -6,9 +6,8 @@
     "as": "file",
     "language": "de",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": 0,
           "exercises": [
             {
               "ex": ["bench-press"],
@@ -48,7 +47,6 @@
           ]
         },
         {
-          "weekday": 2,
           "exercises": [
             {
               "ex": ["pull-up"],
@@ -80,7 +78,6 @@
           ]
         },
         {
-          "weekday": 4,
           "exercises": [
             {
               "ex": ["squat"],
@@ -121,9 +118,8 @@
     "as": "file",
     "language": "en",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": null,
           "exercises": [
             {
               "ex": ["paused-bench-press", "bench-press"],
@@ -159,7 +155,6 @@
           ]
         },
         {
-          "weekday": null,
           "exercises": [
             {
               "ex": ["squat"],
@@ -192,7 +187,6 @@
           ]
         },
         {
-          "weekday": null,
           "exercises": [
             {
               "ex": ["incline-dumbbell-press"],
@@ -227,7 +221,6 @@
           ]
         },
         {
-          "weekday": null,
           "exercises": [
             {
               "ex": ["deadlift"],
@@ -267,9 +260,8 @@
     "as": "file",
     "language": "en",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": 0,
           "exercises": [
             {
               "ex": ["squat"],
@@ -294,7 +286,6 @@
           ]
         },
         {
-          "weekday": 2,
           "exercises": [
             {
               "ex": ["deadlift"],
@@ -319,7 +310,6 @@
           ]
         },
         {
-          "weekday": 4,
           "exercises": [
             {
               "ex": ["front-squat"],
@@ -353,9 +343,8 @@
     "as": "file",
     "language": "en",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": 0,
           "exercises": [
             {
               "ex": ["bench-press"],
@@ -391,7 +380,6 @@
           ]
         },
         {
-          "weekday": 1,
           "exercises": [
             {
               "ex": ["rack-pull"],
@@ -426,7 +414,6 @@
           ]
         },
         {
-          "weekday": 3,
           "exercises": [
             {
               "ex": ["squat"],
@@ -470,9 +457,8 @@
     "as": "photos",
     "language": "de",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": 0,
           "exercises": [
             {
               "ex": ["bench-press"],
@@ -507,7 +493,6 @@
           ]
         },
         {
-          "weekday": 1,
           "exercises": [
             {
               "ex": ["pull-up"],
@@ -542,7 +527,6 @@
           ]
         },
         {
-          "weekday": 3,
           "exercises": [
             {
               "ex": ["squat"],
@@ -581,9 +565,8 @@
     "as": "photos",
     "language": "de",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": 4,
           "exercises": [
             {
               "ex": ["ez-bar-curl"],
@@ -632,9 +615,8 @@
     "as": "photos",
     "language": "pt-BR",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": null,
           "exercises": [
             {
               "ex": ["bench-press"],
@@ -664,7 +646,6 @@
           ]
         },
         {
-          "weekday": null,
           "exercises": [
             {
               "ex": ["lat-pulldown"],
@@ -694,7 +675,6 @@
           ]
         },
         {
-          "weekday": null,
           "exercises": [
             {
               "ex": ["squat"],
@@ -733,9 +713,8 @@
     "as": "photos",
     "language": "de",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": 0,
           "exercises": [
             {
               "ex": ["bench-press"],
@@ -760,7 +739,6 @@
           ]
         },
         {
-          "weekday": 1,
           "exercises": [
             {
               "ex": ["deadlift"],
@@ -785,7 +763,6 @@
           ]
         },
         {
-          "weekday": 2,
           "exercises": [
             {
               "ex": ["dumbbell-shoulder-press"],
@@ -810,7 +787,6 @@
           ]
         },
         {
-          "weekday": 3,
           "exercises": [
             {
               "ex": ["squat"],
@@ -835,7 +811,6 @@
           ]
         },
         {
-          "weekday": 4,
           "exercises": [
             {
               "ex": ["barbell-curl"],
@@ -869,9 +844,8 @@
     "as": "photos",
     "language": "de",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": null,
           "exercises": [
             {
               "ex": ["bench-press"],
@@ -896,7 +870,6 @@
           ]
         },
         {
-          "weekday": null,
           "exercises": [
             {
               "ex": ["squat"],
@@ -921,7 +894,6 @@
           ]
         },
         {
-          "weekday": null,
           "exercises": [
             {
               "ex": ["incline-dumbbell-press"],
@@ -951,7 +923,6 @@
           ]
         },
         {
-          "weekday": null,
           "exercises": [
             {
               "ex": ["hack-squat"],
@@ -990,9 +961,8 @@
     "as": "photos",
     "language": "de",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": null,
           "exercises": [
             {
               "ex": ["hip-thrust"],
@@ -1036,9 +1006,8 @@
     "as": "file",
     "language": "de",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": 0,
           "exercises": [
             {
               "ex": ["bench-press"],
@@ -1068,7 +1037,6 @@
           ]
         },
         {
-          "weekday": 3,
           "exercises": [
             {
               "ex": ["squat"],
@@ -1118,9 +1086,8 @@
     "as": "file",
     "language": "pt-PT",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": 0,
           "exercises": [
             {
               "ex": ["bench-press"],
@@ -1150,7 +1117,6 @@
           ]
         },
         {
-          "weekday": 2,
           "exercises": [
             {
               "ex": ["pull-up"],
@@ -1180,7 +1146,6 @@
           ]
         },
         {
-          "weekday": 4,
           "exercises": [
             {
               "ex": ["squat"],
@@ -1219,9 +1184,8 @@
     "as": "photos",
     "language": "de",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": 0,
           "exercises": [
             {
               "ex": ["bench-press"],
@@ -1263,9 +1227,8 @@
     "as": "file",
     "language": "de",
     "expect": {
-      "days": [
+      "routines": [
         {
-          "weekday": 0,
           "exercises": [
             {
               "ex": ["bench-press"],
@@ -1290,7 +1253,6 @@
           ]
         },
         {
-          "weekday": 1,
           "exercises": [
             {
               "ex": ["lat-pulldown"],
@@ -1315,7 +1277,6 @@
           ]
         },
         {
-          "weekday": 3,
           "exercises": [
             {
               "ex": ["squat"],
@@ -1340,7 +1301,6 @@
           ]
         },
         {
-          "weekday": 4,
           "exercises": [
             {
               "ex": ["smith-shoulder-press"],

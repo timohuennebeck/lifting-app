@@ -5,8 +5,7 @@
   "status": {
     "doneToday": "Heute erledigt",
     "done": "Erledigt · {{date}}",
-    "plannedToday": "Geplant · heute",
-    "planned": "Geplant · {{date}}"
+    "next": "Als Nächstes"
   },
   "stats": {
     "minutes": "{{count}} Min",
@@ -21,21 +20,19 @@
   "overview": "Übersicht",
   "start": "Starten",
   "resume": "Fortsetzen",
-  "reschedule": "Umplanen",
   "markDone": "Als erledigt markieren",
+  "other": "Anderes Training",
+  "deloadHint": "Deload-Woche: halb so viele Sätze und etwas leichter, damit du dich erholst.",
   "unplanned": {
-    "title": "Kein Training geplant",
-    "body": "Push, Pull oder Legs? Tippe zum Auswählen."
+    "title": "Noch kein Plan",
+    "body": "Tippe, um dir einen Plan erstellen zu lassen oder deinen einzulesen."
   },
-  "planSheet": {
-    "title": "Training auswählen",
-    "subtitle": "Für {{day}} einplanen.",
-    "current": "Bisher {{day}}",
-    "noDay": "Noch ohne Tag"
+  "emptyPlan": {
+    "title": "Plan ohne Trainings",
+    "body": "Tippe, um deinem Plan Trainings hinzuzufügen."
   },
-  "rescheduleSheet": {
-    "title": "Umplanen",
-    "subtitle": "Wähle einen neuen Tag für {{name}}.",
-    "taken": "{{name}} geplant"
+  "otherSheet": {
+    "title": "Anderes Training",
+    "subtitle": "Wähle ein Training aus {{plan}}."
   }
 }

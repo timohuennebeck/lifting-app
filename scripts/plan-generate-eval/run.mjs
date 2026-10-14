@@ -1,6 +1,6 @@
 // Tests the plan generation (the generate-plan Edge Function) with 15 sets of onboarding answers
-// and checks each plan it makes: a day per training day, sessions that fit the chosen length,
-// only exercises the equipment allows, no exercise twice a day, every major muscle group trained,
+// and checks each plan it makes: a routine per workout a week, sessions that fit the chosen length,
+// only exercises the equipment allows, no exercise twice a routine, every major muscle group trained,
 // pushing and pulling about even, focus muscles trained more, sets and reps that suit the goal and
 // the experience. The checks are rules of thumb; read the plans in the report as well.
 //
@@ -26,14 +26,6 @@ if (!SUPABASE_URL || !KEY) {
   process.exit(1);
 }
 
-const MON = 0;
-const TUE = 1;
-const WED = 2;
-const THU = 3;
-const FRI = 4;
-const SAT = 5;
-const SUN = 6;
-
 /** What the home profiles ticked: a small corner, a home gym, a kettlebell and a bar. */
 const HOME_EQUIPMENT = {
   '05': ['dumbbell', 'bench'],
@@ -41,60 +33,24 @@ const HOME_EQUIPMENT = {
   14: ['kettlebell', 'pull-up-bar'],
 };
 
-/** Answers as the app sends them, across goals, equipment, days, lengths and experience. */
+/** Answers as the app sends them, across goals, equipment, workouts a week, lengths and experience. */
 const PROFILES = [
-  ['01', 'de', 'hypertrophy', 'gym', [MON, WED, FRI], 60, 'beginner', []],
-  ['02', 'de', 'strength', 'gym', [MON, TUE, THU, FRI], 75, 'intermediate', []],
-  [
-    '03',
-    'de',
-    'strength_hypertrophy',
-    'gym',
-    [MON, TUE, WED, THU, FRI],
-    60,
-    'advanced',
-    ['chest', 'side_delts'],
-  ],
-  [
-    '04',
-    'en',
-    'hypertrophy',
-    'gym',
-    [MON, TUE, WED, THU, FRI, SAT],
-    45,
-    'advanced',
-    ['glutes', 'hamstrings'],
-  ],
-  ['05', 'en', 'hypertrophy', 'home', [TUE, THU, SAT], 45, 'beginner', []],
-  ['06', 'de', 'strength', 'home', [SAT, SUN], 90, 'intermediate', []],
-  ['07', 'de', 'hypertrophy', 'bodyweight', [MON, WED, FRI], 30, 'none', []],
-  ['08', 'pt-PT', 'strength_hypertrophy', 'bodyweight', [MON, TUE, THU, FRI], 40, 'beginner', []],
-  ['09', 'pt-BR', 'hypertrophy', 'gym', [WED], 90, 'intermediate', []],
-  ['10', 'de', 'hypertrophy', 'gym', [TUE, FRI], 30, 'none', ['biceps', 'triceps']],
-  ['11', 'en', 'strength', 'gym', [MON, TUE, WED], 60, 'advanced', []],
-  ['12', 'de', 'hypertrophy', 'gym', [MON, TUE, WED, THU, FRI, SAT, SUN], 30, 'advanced', []],
-  [
-    '13',
-    'de',
-    'hypertrophy',
-    'gym',
-    [MON, TUE, THU, FRI],
-    120,
-    'intermediate',
-    ['lats', 'upper_back'],
-  ],
-  [
-    '14',
-    'pt-BR',
-    'strength_hypertrophy',
-    'home',
-    [MON, TUE, WED, THU, FRI],
-    20,
-    'intermediate',
-    ['abs'],
-  ],
-  ['15', 'de', 'hypertrophy', 'gym', [MON, WED, FRI], 60, null, ['quads']],
-].map(([id, language, goal, equipment, trainingDays, sessionMinutes, experience, focus]) => ({
+  ['01', 'de', 'hypertrophy', 'gym', 3, 60, 'beginner', []],
+  ['02', 'de', 'strength', 'gym', 4, 75, 'intermediate', []],
+  ['03', 'de', 'strength_hypertrophy', 'gym', 5, 60, 'advanced', ['chest', 'side_delts']],
+  ['04', 'en', 'hypertrophy', 'gym', 6, 45, 'advanced', ['glutes', 'hamstrings']],
+  ['05', 'en', 'hypertrophy', 'home', 3, 45, 'beginner', []],
+  ['06', 'de', 'strength', 'home', 2, 90, 'intermediate', []],
+  ['07', 'de', 'hypertrophy', 'bodyweight', 3, 30, 'none', []],
+  ['08', 'pt-PT', 'strength_hypertrophy', 'bodyweight', 4, 40, 'beginner', []],
+  ['09', 'pt-BR', 'hypertrophy', 'gym', 1, 90, 'intermediate', []],
+  ['10', 'de', 'hypertrophy', 'gym', 2, 30, 'none', ['biceps', 'triceps']],
+  ['11', 'en', 'strength', 'gym', 3, 60, 'advanced', []],
+  ['12', 'de', 'hypertrophy', 'gym', 7, 30, 'advanced', []],
+  ['13', 'de', 'hypertrophy', 'gym', 4, 120, 'intermediate', ['lats', 'upper_back']],
+  ['14', 'pt-BR', 'strength_hypertrophy', 'home', 5, 20, 'intermediate', ['abs']],
+  ['15', 'de', 'hypertrophy', 'gym', 3, 60, null, ['quads']],
+].map(([id, language, goal, equipment, sessionsPerWeek, sessionMinutes, experience, focus]) => ({
   id,
   language,
   answers: {
@@ -102,7 +58,7 @@ const PROFILES = [
     focus,
     equipment,
     homeEquipment: HOME_EQUIPMENT[id] ?? [],
-    trainingDays,
+    sessionsPerWeek,
     sessionMinutes,
     experience,
   },
@@ -122,10 +78,11 @@ const equipmentOf = ({ equipment, homeEquipment }) =>
 const fits = (needs, have) => needs.every((items) => items.some((id) => have.has(id)));
 
 /** The app's session estimate (estimateMinutes): set-up per exercise, per set its work and rest. */
-const minutesOf = (day) =>
-  day.exercises.reduce((s, e) => s + 150 + e.sets.length * (45 + (e.restSeconds ?? 90)), 0) / 60;
+const minutesOf = (routine) =>
+  routine.exercises.reduce((s, e) => s + 150 + e.sets.length * (45 + (e.restSeconds ?? 90)), 0) /
+  60;
 
-/** Each is trained at least once a week, on two days with three or more. */
+/** Each is trained at least once a week, in two routines with three or more. */
 const GROUPS = {
   chest: ['chest'],
   back: ['lats', 'upper_back'],
@@ -147,8 +104,8 @@ const isTimed = (row) => row?.measures?.includes('seconds');
 /** Weekly sets per muscle, each set counted by the muscle's share in it. */
 function weeklySets(plan, catalog) {
   const sets = {};
-  for (const day of plan.days) {
-    for (const e of day.exercises) {
+  for (const routine of plan.routines) {
+    for (const e of routine.exercises) {
       for (const [muscle, share] of Object.entries(catalog.get(e.exerciseId)?.muscles ?? {})) {
         sets[muscle] = (sets[muscle] ?? 0) + e.sets.length * share;
       }
@@ -165,51 +122,48 @@ const median = (values) => {
 
 /** Each check: null when it doesn't apply, else the problems found (none: passed). */
 const CHECKS = {
-  days: ({ answers }, plan) => {
-    const got = plan.days.map((d) => d.weekday);
-    return got.join() === answers.trainingDays.join()
+  routines: ({ answers }, plan) =>
+    plan.routines.length === answers.sessionsPerWeek
       ? []
-      : [`days on ${got.join(', ')} instead of ${answers.trainingDays.join(', ')}`];
-  },
+      : [`${plan.routines.length} routines for ${answers.sessionsPerWeek} workouts a week`],
   time: ({ answers }, plan) =>
-    plan.days.flatMap((d) => {
-      const minutes = minutesOf(d);
+    plan.routines.flatMap((r) => {
+      const minutes = minutesOf(r);
       if (minutes > answers.sessionMinutes * 1.1)
-        return [`${d.name}: ${Math.round(minutes)} min, more than ${answers.sessionMinutes}`];
-      // A day that leaves a third of the time unused, unless it is already full.
-      if (minutes < answers.sessionMinutes * 0.67 && d.exercises.length < 10)
-        return [`${d.name}: only ${Math.round(minutes)} of ${answers.sessionMinutes} min`];
+        return [`${r.name}: ${Math.round(minutes)} min, more than ${answers.sessionMinutes}`];
+      // A routine that leaves a third of the time unused, unless it is already full.
+      if (minutes < answers.sessionMinutes * 0.67 && r.exercises.length < 10)
+        return [`${r.name}: only ${Math.round(minutes)} of ${answers.sessionMinutes} min`];
       return [];
     }),
   equipment: ({ answers }, plan, catalog) => {
     const have = equipmentOf(answers);
-    return plan.days.flatMap((d) =>
-      d.exercises
+    return plan.routines.flatMap((r) =>
+      r.exercises
         .filter((e) => {
           const row = catalog.get(e.exerciseId);
           return !row || row.cardio || !fits(row.needs, have);
         })
         .map(
           (e) =>
-            `${d.name}: ${e.exerciseId} (needs ${JSON.stringify(catalog.get(e.exerciseId)?.needs)})`,
+            `${r.name}: ${e.exerciseId} (needs ${JSON.stringify(catalog.get(e.exerciseId)?.needs)})`,
         ),
     );
   },
   unique: (_, plan) =>
-    plan.days.flatMap((d) => {
-      const ids = d.exercises.map((e) => e.exerciseId);
-      return ids.filter((id, i) => ids.indexOf(id) !== i).map((id) => `${d.name}: ${id} twice`);
+    plan.routines.flatMap((r) => {
+      const ids = r.exercises.map((e) => e.exerciseId);
+      return ids.filter((id, i) => ids.indexOf(id) !== i).map((id) => `${r.name}: ${id} twice`);
     }),
   muscles: ({ answers }, plan, catalog) => {
-    const days = answers.trainingDays.length;
-    const want = days >= 3 ? 2 : 1;
+    const want = answers.sessionsPerWeek >= 3 ? 2 : 1;
     return Object.entries(GROUPS).flatMap(([group, muscles]) => {
-      const on = plan.days.filter((d) =>
-        d.exercises.some((e) =>
+      const on = plan.routines.filter((r) =>
+        r.exercises.some((e) =>
           muscles.some((m) => (catalog.get(e.exerciseId)?.muscles?.[m] ?? 0) >= MAIN_SHARE),
         ),
       ).length;
-      return on >= want ? [] : [`${group} on ${on} day(s), want ${want}`];
+      return on >= want ? [] : [`${group} in ${on} routine(s), want ${want}`];
     });
   },
   balance: (_, plan, catalog) => {
@@ -230,41 +184,39 @@ const CHECKS = {
       .map((m) => `${m}: ${(sets[m] ?? 0).toFixed(1)} sets a week, others ${rest.toFixed(1)}`);
   },
   reps: ({ answers }, plan, catalog) =>
-    plan.days.flatMap((d) => {
-      const lifts = d.exercises.filter((e) => !isTimed(catalog.get(e.exerciseId)));
+    plan.routines.flatMap((r) => {
+      const lifts = r.exercises.filter((e) => !isTimed(catalog.get(e.exerciseId)));
       const problems = [];
       const [first] = lifts;
-      // The day's first lift is the heavy one.
+      // The routine's first lift is the heavy one.
       const heavy = { strength: 6, strength_hypertrophy: 8 }[answers.goal];
       if (heavy && first && first.sets[0].targetMax > heavy)
-        problems.push(`${d.name}: starts with ${first.sets[0].targetMax} reps`);
+        problems.push(`${r.name}: starts with ${first.sets[0].targetMax} reps`);
       for (const e of lifts) {
         const { targetMin: min, targetMax: max, rir } = e.sets[0];
-        if (min < 3 || max > 20) problems.push(`${d.name}: ${e.exerciseId} ${min}–${max} reps`);
-        if (rir == null) problems.push(`${d.name}: ${e.exerciseId} without RIR`);
+        if (min < 3 || max > 20) problems.push(`${r.name}: ${e.exerciseId} ${min}–${max} reps`);
+        if (rir == null) problems.push(`${r.name}: ${e.exerciseId} without RIR`);
       }
       return problems;
     }),
   experience: ({ answers }, plan) => {
     if (answers.experience && !['none', 'beginner'].includes(answers.experience)) return null;
-    return plan.days.flatMap((d) => [
-      ...(d.exercises.length > 6 ? [`${d.name}: ${d.exercises.length} exercises`] : []),
-      ...d.exercises
+    return plan.routines.flatMap((r) => [
+      ...(r.exercises.length > 6 ? [`${r.name}: ${r.exercises.length} exercises`] : []),
+      ...r.exercises
         .filter((e) => e.sets.length > 3)
-        .map((e) => `${d.name}: ${e.exerciseId} ${e.sets.length} sets`),
+        .map((e) => `${r.name}: ${e.exerciseId} ${e.sets.length} sets`),
     ]);
   },
 };
 
 // ---------- runs ----------
 
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
 function describePlan(plan, catalog, language) {
   const lines = [plan.name];
-  for (const day of plan.days) {
-    lines.push(`  ${day.name} · ${WEEKDAYS[day.weekday]} · ~${Math.round(minutesOf(day))} min`);
-    for (const e of day.exercises) {
+  for (const routine of plan.routines) {
+    lines.push(`  ${routine.name} · ~${Math.round(minutesOf(routine))} min`);
+    for (const e of routine.exercises) {
       const row = catalog.get(e.exerciseId);
       const { targetMin: min, targetMax: max, rir } = e.sets[0];
       const target = (min === max ? `${min}` : `${min}–${max}`) + (isTimed(row) ? ' s' : '');
@@ -281,12 +233,12 @@ const describeAnswers = ({
   goal,
   equipment,
   homeEquipment,
-  trainingDays,
+  sessionsPerWeek,
   sessionMinutes,
   experience,
   focus,
 }) =>
-  `${goal}, ${equipment}${homeEquipment.length ? ` (${homeEquipment.join(', ')})` : ''}, ${trainingDays.map((d) => WEEKDAYS[d]).join('/')}, ${sessionMinutes} min, ` +
+  `${goal}, ${equipment}${homeEquipment.length ? ` (${homeEquipment.join(', ')})` : ''}, ${sessionsPerWeek}× a week, ${sessionMinutes} min, ` +
   `${experience ?? 'experience unknown'}${focus.length ? `, focus ${focus.join(' + ')}` : ''}`;
 
 /** One plan; null once the limit is reached or the function doesn't answer. */

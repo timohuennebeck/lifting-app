@@ -6,10 +6,15 @@ const profileKeys = createQueryKeys('profile', {
   avatarUrl: (path: string) => [path],
 });
 
-const templateKeys = createQueryKeys('templates', {
+const planKeys = createQueryKeys('plans', {
   list: null,
-  collections: null,
-  detail: (templateId: string) => [templateId],
+  latestWeek: (planId: string) => [planId],
+  nextRoutine: (planId: string) => [planId],
+});
+
+const routineKeys = createQueryKeys('routines', {
+  list: null,
+  detail: (routineId: string) => [routineId],
 });
 
 const workoutKeys = createQueryKeys('workouts', {
@@ -42,7 +47,8 @@ const weightKeys = createQueryKeys('weight', {
 
 export const queryKeys = mergeQueryKeys(
   profileKeys,
-  templateKeys,
+  planKeys,
+  routineKeys,
   workoutKeys,
   progressCheckKeys,
   exerciseCatalogKeys,

@@ -5,7 +5,7 @@ import type { AnimatedRef } from 'react-native-reanimated';
 import Sortable, { type SortableGridProps } from 'react-native-sortables';
 
 import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
-import { estimateMinutes, exerciseItems, type PlanExerciseDraft } from '@/shared/data/templates';
+import { estimateMinutes, exerciseItems, type PlanExerciseDraft } from '@/shared/data/routines';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
 import { EmptyExercises } from '@/shared/ui/empty-exercises';
@@ -13,7 +13,7 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 
 import { ExerciseListHeader } from './exercise-list-header';
 import { type ExerciseMenuAction, ExerciseMenuSheet } from './exercise-menu-sheet';
-import { TemplateExerciseCard } from './template-exercise-card';
+import { RoutineExerciseCard } from './routine-exercise-card';
 
 export interface PlanExerciseListProps<T extends PlanExerciseDraft> {
   /** The training's name, over its muscles. */
@@ -47,7 +47,7 @@ export interface PlanExerciseListProps<T extends PlanExerciseDraft> {
 }
 
 /**
- * The exercises of a training as the template, the import and the workout builder edit them
+ * The exercises of a training as the routine, the import and the workout builder edit them
  * (03·0b): the muscles they work, the count with the time and "add", then a card per exercise.
  * Hold a card to drag it to another place; its "⋯" edits its sets, swaps, moves or removes it.
  */
@@ -108,7 +108,7 @@ export function PlanExerciseList<T extends PlanExerciseDraft>({
             {...(itemEntering !== undefined ? { itemEntering } : {})}
             {...drag.gridProps}
             renderItem={({ item, index }) => (
-              <TemplateExerciseCard
+              <RoutineExerciseCard
                 exerciseId={item.exerciseId}
                 sets={item.sets}
                 review={review?.(item)}
@@ -116,7 +116,7 @@ export function PlanExerciseList<T extends PlanExerciseDraft>({
                 onPress={drag.unlessDragging(() => onOpen(index))}
               >
                 {renderExtra?.(item, index)}
-              </TemplateExerciseCard>
+              </RoutineExerciseCard>
             )}
           />
         ) : (

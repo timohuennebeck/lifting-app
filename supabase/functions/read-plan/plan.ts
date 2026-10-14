@@ -2,8 +2,8 @@
 // reviews. Plain TypeScript without Deno APIs, so it can be tested outside the Edge runtime.
 
 import type {
-  ImportedDay,
   ImportedExercise,
+  ImportedRoutine,
   NewExercise,
   SetTarget,
 } from '../_shared/plan-events.ts';
@@ -47,26 +47,25 @@ const DEFAULT_REST_SECONDS = 90;
 
 export const INSTRUCTIONS = `You read training plans for a strength and bodybuilding app from photos, scans, documents or spreadsheets: printed, typed, handwritten or on a whiteboard, in German, English, Portuguese or a mix, with gym abbreviations.
 
-Return the plan's days in order, and every exercise of a day in order (supersets and circuits one after another). Leave out warm-up notes, cardio blocks and comments that are not exercises.
+Return the plan's training days as routines in the order the plan lists them, and every exercise of a routine in order (supersets and circuits one after another). Leave out warm-up notes, cardio blocks and comments that are not exercises.
 
 For each exercise:
 - raw: the line as written, abbreviations included.
 - catalog_id: the catalog exercise that is the same movement with the same equipment. Read abbreviations and slang: KH = Kurzhantel = dumbbell, LH = Langhantel = barbell, SZ = EZ bar, BD = Bankdrücken, KB = kettlebell, "Lat ziehen" = lat pulldown, "Beinstrecker" = leg extension, "Multipresse" / Smith = Smith machine. A variation that has its own catalog entry (incline, close grip, single arm, seated) is that entry.
 - certain: false when the text is hard to read or could be more than one catalog exercise; then give up to 2 alternatives from the catalog, most likely first.
-- new_exercise: only when no catalog exercise is the same movement. Give it a clean name in the plan's language (as a lifter would call it, no sets or reps), its primary and secondary muscles, whether it is timed (holds, carries) and whether a weight is logged. Never create one for something the catalog has under another name. The same new exercise on several days gets exactly the same name each time.
+- new_exercise: only when no catalog exercise is the same movement. Give it a clean name in the plan's language (as a lifter would call it, no sets or reps), its primary and secondary muscles, whether it is timed (holds, carries) and whether a weight is logged. Never create one for something the catalog has under another name. The same new exercise in several routines gets exactly the same name each time.
 - sets, reps_min, reps_max: "3x10" = 3 sets of 10 to 10; "4x8-12" = 8 to 12; "3x12/10/8" = 3 sets of 8 to 12; "AMRAP" or "to failure" = no reps. Missing values are null.
 - seconds: for holds and timed sets ("3x30s", "60 Sek."), else null.
 - rir: reps in reserve if written, from RPE as 10 minus RPE; else null.
 - rest_seconds: rest if written ("90s", "2 min"), else null. Ignore weights in kg or lb.
 
-Each day:
-- heading: the day's heading as written ("Tag 1 – Push", "Montag", "Upper A").
-- name: a short day name (at most 24 characters) in the plan's language, e.g. "Push", "Oberkörper A", "Beine".
-- weekday: 0 for Monday to 6 for Sunday, only if the plan names the weekday; else null.
+Each routine:
+- heading: its heading as written ("Tag 1 – Push", "Montag", "Upper A").
+- name: a short name for what it trains (at most 24 characters) in the plan's language, e.g. "Push", "Oberkörper A", "Beine"; not a weekday.
 
 name: the plan's title if it has one, else a short name for the split ("Push Pull Legs", "Ganzkörper"), at most 30 characters.
 
-If the input is not a training plan or cannot be read at all, set is_plan to false and return no days.`;
+If the input is not a training plan or cannot be read at all, set is_plan to false and return no routines.`;
 
 /** The catalog as the model reads it: one line per exercise with its names in a few languages. */
 export function catalogText(catalog: CatalogExercise[], language: string) {
@@ -139,20 +138,19 @@ export function buildSchema(ids: string[]) {
   return {
     type: 'object',
     additionalProperties: false,
-    required: ['is_plan', 'name', 'days'],
+    required: ['is_plan', 'name', 'routines'],
     properties: {
       is_plan: { type: 'boolean' },
       name: { type: 'string' },
-      days: {
+      routines: {
         type: 'array',
         items: {
           type: 'object',
           additionalProperties: false,
-          required: ['heading', 'name', 'weekday', 'exercises'],
+          required: ['heading', 'name', 'exercises'],
           properties: {
             heading: { type: 'string' },
             name: { type: 'string' },
-            weekday: integer,
             exercises: { type: 'array', items: exercise },
           },
         },
@@ -181,11 +179,10 @@ export interface ModelExercise {
   rest_seconds: number | null;
 }
 
-/** A day of the model's answer, forced by `buildSchema`. */
-export interface ModelDay {
+/** A routine of the model's answer, forced by `buildSchema`. */
+export interface ModelRoutine {
   heading: string;
   name: string;
-  weekday: number | null;
   exercises: ModelExercise[];
 }
 
@@ -218,7 +215,7 @@ function setTarget(line: ModelExercise, timed: boolean): SetTarget {
  */
 export function planReader(catalog: CatalogExercise[], newId: () => string) {
   const timedIds = new Set(catalog.filter((e) => e.measures.includes('seconds')).map((e) => e.id));
-  // The same new exercise on two days is one exercise.
+  // The same new exercise in two routines is one exercise.
   const created = new Map<string, NewExercise>();
 
   const newExercise = (
@@ -245,16 +242,9 @@ export function planReader(catalog: CatalogExercise[], newId: () => string) {
   return {
     planName: (name: string) => cut(name, 30) || 'Plan',
 
-    day: (day: Omit<ModelDay, 'exercises'>): ImportedDay => {
-      const weekday = clampInt(day.weekday, 0, 6);
-      const name = cut(day.name, 24) || cut(day.heading, 24);
-      return {
-        name,
-        weekday,
-        // Without a weekday the user picks one on review; the heading tells them which day it is.
-        ...(weekday == null ? { rawDay: cut(day.heading, 40) || name } : {}),
-      };
-    },
+    routine: (routine: Omit<ModelRoutine, 'exercises'>): ImportedRoutine => ({
+      name: cut(routine.name, 24) || cut(routine.heading, 24),
+    }),
 
     /**
      * The exercise, with the new exercise it introduces the first time one is used; null for a

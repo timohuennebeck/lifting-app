@@ -7,7 +7,7 @@ interface WorkoutItem {
 
 /**
  * The muscle breakdown of a workout. Its exercises travel in the link ("bench-press:3,dips:2"),
- * so it works for saved templates, the empty workout builder and the plan import alike.
+ * so it works for saved routines, the empty workout builder and the plan import alike.
  */
 export const workoutMusclesHref = (title: string, items: WorkoutItem[]): Href => ({
   pathname: '/workout-muscles',

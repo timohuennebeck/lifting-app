@@ -89,7 +89,7 @@ export interface MuscleTileProps {
   muscle: MuscleId;
   /** Share 0–100; hidden when undefined. */
   percent?: number;
-  /** In neon: the muscle worked most, as on the template cards. */
+  /** In neon: the muscle worked most, as on the routine cards. */
   highlight?: boolean;
 }
 

@@ -3,30 +3,20 @@ import { useTranslation } from 'react-i18next';
 
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
+import { MAX_SESSIONS_PER_WEEK } from '@/shared/data/plans';
 import { Button } from '@/shared/ui/button';
 import { NumberStepper } from '@/shared/ui/number-stepper';
 import { StepScreen } from '@/shared/ui/step-screen';
 
 import { useCreateStep } from '../hooks/use-create-step';
 
-/** Default weekdays for a given number of sessions (Mon-based). */
-const PRESET_DAYS: Record<number, number[]> = {
-  1: [0],
-  2: [0, 3],
-  3: [0, 2, 4],
-  4: [0, 1, 3, 4],
-  5: [0, 1, 2, 3, 4],
-  6: [0, 1, 2, 3, 4, 5],
-  7: [0, 1, 2, 3, 4, 5, 6],
-};
-
+/** How many workouts a week the plan is for (on whichever days suit the user). */
 export function DaysScreen() {
   const { t } = useTranslation(['planCreate', 'common']);
   const counter = useCreateStep('days');
   const { step } = usePlanFlow();
-  const { trainingDays } = useDraft();
+  const { sessionsPerWeek } = useDraft();
   const update = useUpdateDraft();
-  const count = Math.max(1, trainingDays.length);
 
   return (
     <StepScreen
@@ -40,10 +30,10 @@ export function DaysScreen() {
       }
     >
       <NumberStepper
-        value={count}
+        value={sessionsPerWeek}
         min={1}
-        max={7}
-        onChange={(next) => update({ trainingDays: PRESET_DAYS[next] })}
+        max={MAX_SESSIONS_PER_WEEK}
+        onChange={(next) => update({ sessionsPerWeek: next })}
         format={(n) => t('planCreate:days.times', { count: n })}
         unit={t('planCreate:days.perWeek')}
       />

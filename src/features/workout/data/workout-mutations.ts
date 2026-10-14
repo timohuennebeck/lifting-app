@@ -2,17 +2,17 @@ import { and, asc, desc, eq, inArray, isNull } from 'drizzle-orm';
 
 import { defaultTargets, swapTargets } from '@/shared/data/exercises';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
-import { workoutExercises, workoutSets } from '@/shared/data/powersync/schema';
-import type { PlanSetDraft } from '@/shared/data/templates';
+import { workoutEntriesExercises, workoutEntriesSets } from '@/shared/data/powersync/schema';
+import type { PlanSetDraft } from '@/shared/data/routines';
 import { insertWorkoutSet } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 import { clamp } from '@/shared/lib/math';
 
 async function exerciseOf(tx: Tx, workoutExerciseId: string) {
   const row = await tx
-    .select({ exercise_id: workoutExercises.exercise_id })
-    .from(workoutExercises)
-    .where(eq(workoutExercises.id, workoutExerciseId))
+    .select({ exercise_id: workoutEntriesExercises.exercise_id })
+    .from(workoutEntriesExercises)
+    .where(eq(workoutEntriesExercises.id, workoutExerciseId))
     .get();
   return row?.exercise_id ?? '';
 }
@@ -22,12 +22,12 @@ export async function swapWorkoutExercise(workoutExerciseId: string, exerciseId:
   await drizzle.transaction(async (tx) => {
     const previous = await exerciseOf(tx, workoutExerciseId);
     await tx
-      .update(workoutExercises)
+      .update(workoutEntriesExercises)
       .set({ exercise_id: exerciseId })
-      .where(eq(workoutExercises.id, workoutExerciseId));
+      .where(eq(workoutEntriesExercises.id, workoutExerciseId));
     const targets = swapTargets(previous, exerciseId);
     await tx
-      .update(workoutSets)
+      .update(workoutEntriesSets)
       .set({
         weight_kg: null,
         reps: null,
@@ -40,7 +40,7 @@ export async function swapWorkoutExercise(workoutExerciseId: string, exerciseId:
           target_rir: targets.rir,
         }),
       })
-      .where(eq(workoutSets.workout_exercise_id, workoutExerciseId));
+      .where(eq(workoutEntriesSets.workout_entries_exercise_id, workoutExerciseId));
   });
 }
 
@@ -50,14 +50,14 @@ export async function addWorkoutSet(userId: string, workoutExerciseId: string) {
   await drizzle.transaction(async (tx) => {
     const last = await tx
       .select({
-        position: workoutSets.position,
-        target_min: workoutSets.target_min,
-        target_max: workoutSets.target_max,
-        target_rir: workoutSets.target_rir,
+        position: workoutEntriesSets.position,
+        target_min: workoutEntriesSets.target_min,
+        target_max: workoutEntriesSets.target_max,
+        target_rir: workoutEntriesSets.target_rir,
       })
-      .from(workoutSets)
-      .where(eq(workoutSets.workout_exercise_id, workoutExerciseId))
-      .orderBy(desc(workoutSets.position))
+      .from(workoutEntriesSets)
+      .where(eq(workoutEntriesSets.workout_entries_exercise_id, workoutExerciseId))
+      .orderBy(desc(workoutEntriesSets.position))
       .limit(1)
       .get();
     const targets = last
@@ -70,21 +70,21 @@ export async function addWorkoutSet(userId: string, workoutExerciseId: string) {
 /** Keeps values typed into an open set without logging it (the keypad closed before the check). */
 export async function saveOpenSetValues(setId: string, values: Partial<SetValues>) {
   await drizzle
-    .update(workoutSets)
+    .update(workoutEntriesSets)
     .set({
       ...('weightKg' in values ? { weight_kg: values.weightKg } : {}),
       ...('reps' in values ? { reps: values.reps } : {}),
       ...('seconds' in values ? { seconds: values.seconds } : {}),
     })
-    .where(and(eq(workoutSets.id, setId), isNull(workoutSets.completed_at)));
+    .where(and(eq(workoutEntriesSets.id, setId), isNull(workoutEntriesSets.completed_at)));
 }
 
 /** Marks a logged set as open again; its values stay as the prefill. */
 export async function unlogSet(setId: string) {
   await drizzle
-    .update(workoutSets)
+    .update(workoutEntriesSets)
     .set({ completed_at: null, is_pr: false })
-    .where(eq(workoutSets.id, setId));
+    .where(eq(workoutEntriesSets.id, setId));
 }
 
 /** A target row of the running workout; `key` is the set's id for rows that already exist. */
@@ -104,41 +104,46 @@ export async function saveWorkoutTargets(
 ) {
   await drizzle.transaction(async (tx) => {
     const rows = await tx
-      .select({ id: workoutSets.id })
-      .from(workoutSets)
-      .where(eq(workoutSets.workout_exercise_id, workoutExerciseId));
+      .select({ id: workoutEntriesSets.id })
+      .from(workoutEntriesSets)
+      .where(eq(workoutEntriesSets.workout_entries_exercise_id, workoutExerciseId));
     const existing = new Set(rows.map((r) => r.id));
     const kept = new Set(drafts.map((d) => d.key));
     const removed = [...existing].filter((id) => !kept.has(id));
-    if (removed.length) await tx.delete(workoutSets).where(inArray(workoutSets.id, removed));
+    if (removed.length)
+      await tx.delete(workoutEntriesSets).where(inArray(workoutEntriesSets.id, removed));
     for (const [position, d] of drafts.entries()) {
       const target = { min: d.targetMin, max: d.targetMax, rir: d.rir };
       if (existing.has(d.key)) {
         await tx
-          .update(workoutSets)
+          .update(workoutEntriesSets)
           .set({ position, target_min: target.min, target_max: target.max, target_rir: target.rir })
-          .where(eq(workoutSets.id, d.key));
+          .where(eq(workoutEntriesSets.id, d.key));
       } else {
         await insertWorkoutSet(tx, userId, workoutExerciseId, position, target);
       }
     }
     await tx
-      .update(workoutExercises)
+      .update(workoutEntriesExercises)
       .set({ rest_seconds: restSeconds })
-      .where(eq(workoutExercises.id, workoutExerciseId));
+      .where(eq(workoutEntriesExercises.id, workoutExerciseId));
   });
 }
 
 /** Deletes one set of a running workout (swiped away). */
 export async function removeWorkoutSet(setId: string) {
-  await drizzle.delete(workoutSets).where(eq(workoutSets.id, setId));
+  await drizzle.delete(workoutEntriesSets).where(eq(workoutEntriesSets.id, setId));
 }
 
 /** Takes an exercise out of a running workout, with its sets (logged or not). */
 export async function removeWorkoutExercise(workoutExerciseId: string) {
   await drizzle.transaction(async (tx) => {
-    await tx.delete(workoutSets).where(eq(workoutSets.workout_exercise_id, workoutExerciseId));
-    await tx.delete(workoutExercises).where(eq(workoutExercises.id, workoutExerciseId));
+    await tx
+      .delete(workoutEntriesSets)
+      .where(eq(workoutEntriesSets.workout_entries_exercise_id, workoutExerciseId));
+    await tx
+      .delete(workoutEntriesExercises)
+      .where(eq(workoutEntriesExercises.id, workoutExerciseId));
   });
 }
 
@@ -150,10 +155,10 @@ export async function reorderWorkoutExercise(
 ) {
   await drizzle.transaction(async (tx) => {
     const rows = await tx
-      .select({ id: workoutExercises.id, position: workoutExercises.position })
-      .from(workoutExercises)
-      .where(eq(workoutExercises.workout_id, workoutId))
-      .orderBy(asc(workoutExercises.position));
+      .select({ id: workoutEntriesExercises.id, position: workoutEntriesExercises.position })
+      .from(workoutEntriesExercises)
+      .where(eq(workoutEntriesExercises.workout_entries_id, workoutId))
+      .orderBy(asc(workoutEntriesExercises.position));
     const ids = rows.map((r) => r.id);
     if (!ids.includes(workoutExerciseId)) return;
     const order = ids.filter((id) => id !== workoutExerciseId);
@@ -162,7 +167,10 @@ export async function reorderWorkoutExercise(
     const stored = new Map(rows.map((r) => [r.id, r.position]));
     for (const [position, id] of order.entries()) {
       if (stored.get(id) === position) continue;
-      await tx.update(workoutExercises).set({ position }).where(eq(workoutExercises.id, id));
+      await tx
+        .update(workoutEntriesExercises)
+        .set({ position })
+        .where(eq(workoutEntriesExercises.id, id));
     }
   });
 }

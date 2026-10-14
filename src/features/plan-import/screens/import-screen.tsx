@@ -22,11 +22,11 @@ export function ImportScreen() {
   const setFile = useImportStore((s) => s.setFile);
   const setPlan = useImportStore((s) => s.setPlan);
 
-  // No plan at hand: the same editor an import ends in, starting with one empty training day.
+  // No plan at hand: the same editor an import ends in, starting with one empty routine.
   function buildOwn() {
     setPlan({
       name: t('index.ownPlan'),
-      days: [{ name: t('confirm.newDay', { number: 1 }), weekday: null, exercises: [] }],
+      routines: [{ name: t('confirm.newRoutine', { number: 1 }), exercises: [] }],
       newExercises: [],
     });
     router.push(step('/import/confirm'));

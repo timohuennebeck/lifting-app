@@ -15,7 +15,7 @@ import {
   type Measure,
   useCustomExerciseStore,
 } from '@/shared/data/exercises';
-import { DEFAULT_REST } from '@/shared/data/templates';
+import { DEFAULT_REST } from '@/shared/data/routines';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { CUSTOM_EXERCISE_NAME_MAX } from '@/shared/lib/limits';

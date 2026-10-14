@@ -31,16 +31,19 @@ import {
 import { newId, nowIso } from './json';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
+import { blockWeekOf, currentPlanWeek, setsForWeek } from './plans';
 import {
-  templateExercises,
-  templateSets,
+  plans,
+  routineExercises,
+  routines,
+  routineSets,
   weightEntries,
-  workoutExercises,
-  workouts,
-  workoutSets,
+  workoutEntries,
+  workoutEntriesExercises,
+  workoutEntriesSets,
 } from './powersync/schema';
 import { queryKeys } from './query-keys';
-import type { PlanExerciseDraft } from './templates';
+import type { PlanExerciseDraft } from './routines';
 import { firstCount, type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /**
@@ -62,7 +65,7 @@ export const hasKnownWeight = (
 type Operand = AnySQLiteColumn | SQL;
 
 /**
- * How good a set is, for PRs and top sets, over `workout_sets` and `workout_exercises` (or
+ * How good a set is, for PRs and top sets, over `workout_entries_sets` and `workout_entries_exercises` (or
  * aliases of them, or values): the Epley estimated 1RM of the load for weight × reps (the body
  * weight plus the added weight, or minus the assistance), most reps without weight, the longest
  * hold for seconds (times the weight for weighted holds). An exercise logs the same measures in
@@ -84,24 +87,24 @@ export function setScoreSql(
 }
 
 /** Aliases for correlated subqueries over the sets of other workouts. */
-export const previousSet = alias(workoutSets, 'previous_set');
-export const previousExercise = alias(workoutExercises, 'previous_exercise');
+export const previousSet = alias(workoutEntriesSets, 'previous_set');
+export const previousExercise = alias(workoutEntriesExercises, 'previous_exercise');
 
 /** Subquery with the ids of a workout's exercises, for `inArray(…)`. */
 const workoutExerciseIds = (workoutId: string) =>
   drizzle
-    .select({ id: workoutExercises.id })
-    .from(workoutExercises)
-    .where(eq(workoutExercises.workout_id, workoutId));
+    .select({ id: workoutEntriesExercises.id })
+    .from(workoutEntriesExercises)
+    .where(eq(workoutEntriesExercises.workout_entries_id, workoutId));
 
-/** Copies a template (or nothing, for an empty workout) into a new running workout. */
-export async function startWorkout(userId: string, name: string, templateId: string | null) {
-  return drizzle.transaction((tx) => insertWorkout(tx, userId, name, templateId));
+/** Copies a routine (or nothing, for an empty workout) into a new running workout. */
+export async function startWorkout(userId: string, name: string, routineId: string | null) {
+  return drizzle.transaction((tx) => insertWorkout(tx, userId, name, routineId));
 }
 
 /**
  * Starts a workout with exercises and target sets put together beforehand (an empty workout,
- * which isn't a template). Returns the new workout id.
+ * which isn't a routine). Returns the new workout id.
  */
 export async function startDraftWorkout(
   userId: string,
@@ -117,46 +120,72 @@ export async function startDraftWorkout(
   });
 }
 
-/** `startWorkout` inside an existing transaction. Returns the new workout id. */
+/** The plan of a routine, if it has one, with its week and block settings. */
+async function planOf(tx: Tx, routineId: string) {
+  const row = await tx
+    .select({
+      id: plans.id,
+      sessionsPerWeek: plans.sessions_per_week,
+      blockWeeks: plans.block_weeks,
+      blockStartWeek: plans.block_start_week,
+    })
+    .from(routines)
+    .innerJoin(plans, eq(plans.id, routines.plan_id))
+    .where(eq(routines.id, routineId))
+    .get();
+  return row ?? null;
+}
+
+/**
+ * `startWorkout` inside an existing transaction. Returns the new workout id. A routine of a plan
+ * counts for the plan's current week, and its sets get that week's targets (see `setsForWeek`).
+ */
 export async function insertWorkout(
   tx: Tx,
   userId: string,
   name: string,
-  templateId: string | null,
+  routineId: string | null,
 ) {
   const workoutId = newId();
   const now = nowIso();
-  await tx.insert(workouts).values({
+  const plan = routineId ? await planOf(tx, routineId) : null;
+  // Before the insert, which would count itself.
+  const planWeek = plan ? await currentPlanWeek(tx, plan.id, plan.sessionsPerWeek) : null;
+  await tx.insert(workoutEntries).values({
     id: workoutId,
     user_id: userId,
-    template_id: templateId,
+    routine_id: routineId,
+    plan_id: plan?.id ?? null,
+    plan_week: planWeek,
     name,
     started_at: now,
     created_at: now,
   });
-  if (!templateId) return workoutId;
-  const exercises = await tx.query.templateExercises.findMany({
-    where: eq(templateExercises.template_id, templateId),
-    orderBy: asc(templateExercises.position),
-    with: { sets: { orderBy: asc(templateSets.position) } },
+  if (!routineId) return workoutId;
+  const blockWeek = plan && planWeek ? blockWeekOf(planWeek, plan) : null;
+  const exercises = await tx.query.routineExercises.findMany({
+    where: eq(routineExercises.routine_id, routineId),
+    orderBy: asc(routineExercises.position),
+    with: { sets: { orderBy: asc(routineSets.position) } },
   });
   for (const te of exercises) {
     const workoutExerciseId = newId();
-    await tx.insert(workoutExercises).values({
+    await tx.insert(workoutEntriesExercises).values({
       id: workoutExerciseId,
       user_id: userId,
-      workout_id: workoutId,
+      workout_entries_id: workoutId,
       exercise_id: te.exercise_id,
       position: te.position,
       rest_seconds: te.rest_seconds,
     });
-    if (!te.sets.length) continue;
-    // Template targets become the workout's empty sets.
-    await tx.insert(workoutSets).values(
-      te.sets.map((set) => ({
+    const sets = setsForWeek(te.sets, blockWeek, { blockWeeks: plan?.blockWeeks ?? null });
+    if (!sets.length) continue;
+    // The routine's targets for this week become the workout's empty sets.
+    await tx.insert(workoutEntriesSets).values(
+      sets.map((set) => ({
         id: newId(),
         user_id: userId,
-        workout_exercise_id: workoutExerciseId,
+        workout_entries_exercise_id: workoutExerciseId,
         position: set.position,
         target_min: set.target_min,
         target_max: set.target_max,
@@ -176,10 +205,10 @@ export async function insertWorkoutSet(
   position: number,
   target: SetTargets,
 ) {
-  await executor.insert(workoutSets).values({
+  await executor.insert(workoutEntriesSets).values({
     id: newId(),
     user_id: userId,
-    workout_exercise_id: workoutExerciseId,
+    workout_entries_exercise_id: workoutExerciseId,
     position,
     target_min: target.min,
     target_max: target.max,
@@ -197,10 +226,10 @@ async function insertWorkoutExercise(
   exercise: PlanExerciseDraft,
 ) {
   const id = newId();
-  await tx.insert(workoutExercises).values({
+  await tx.insert(workoutEntriesExercises).values({
     id,
     user_id: userId,
-    workout_id: workoutId,
+    workout_entries_id: workoutId,
     exercise_id: exercise.exerciseId,
     position,
     rest_seconds: exercise.restSeconds ?? null,
@@ -221,7 +250,10 @@ export async function addWorkoutExercise(userId: string, workoutId: string, exer
       tx,
       userId,
       workoutId,
-      nextPosition(workoutExercises.position, eq(workoutExercises.workout_id, workoutId)),
+      nextPosition(
+        workoutEntriesExercises.position,
+        eq(workoutEntriesExercises.workout_entries_id, workoutId),
+      ),
       newExerciseDraft(exerciseId),
     ),
   );
@@ -236,17 +268,20 @@ async function isRecord(setId: string, exerciseId: string, values: SetValues) {
   };
   const [row] = await drizzle
     .select({
-      best: sql<number | null>`max(${setScoreSql(workoutSets, workoutExercises)})`,
+      best: sql<number | null>`max(${setScoreSql(workoutEntriesSets, workoutEntriesExercises)})`,
       score: setScoreSql(logged, { exercise_id: sql`${exerciseId}` }),
     })
-    .from(workoutSets)
-    .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
+    .from(workoutEntriesSets)
+    .innerJoin(
+      workoutEntriesExercises,
+      eq(workoutEntriesExercises.id, workoutEntriesSets.workout_entries_exercise_id),
+    )
     .where(
       and(
-        eq(workoutExercises.exercise_id, exerciseId),
-        isNotNull(workoutSets.completed_at),
-        hasKnownWeight(workoutSets, workoutExercises),
-        ne(workoutSets.id, setId),
+        eq(workoutEntriesExercises.exercise_id, exerciseId),
+        isNotNull(workoutEntriesSets.completed_at),
+        hasKnownWeight(workoutEntriesSets, workoutEntriesExercises),
+        ne(workoutEntriesSets.id, setId),
       ),
     );
   return !!row?.best && row.score > row.best + 0.01;
@@ -256,16 +291,16 @@ async function isRecord(setId: string, exerciseId: string, values: SetValues) {
 export async function logSet(setId: string, exerciseId: string, values: SetValues) {
   const isPr = await isRecord(setId, exerciseId, values);
   await drizzle
-    .update(workoutSets)
+    .update(workoutEntriesSets)
     .set({
       weight_kg: values.weightKg,
       reps: values.reps,
       seconds: values.seconds,
       is_pr: isPr,
       // A re-edit keeps the original completion time.
-      completed_at: sql`coalesce(${workoutSets.completed_at}, ${nowIso()})`,
+      completed_at: sql`coalesce(${workoutEntriesSets.completed_at}, ${nowIso()})`,
     })
-    .where(eq(workoutSets.id, setId));
+    .where(eq(workoutEntriesSets.id, setId));
   return isPr;
 }
 
@@ -273,14 +308,17 @@ export async function finishWorkout(workoutId: string) {
   await drizzle.transaction(async (tx) => {
     // Unlogged sets are dropped so history only holds real work.
     await tx
-      .delete(workoutSets)
+      .delete(workoutEntriesSets)
       .where(
         and(
-          isNull(workoutSets.completed_at),
-          inArray(workoutSets.workout_exercise_id, workoutExerciseIds(workoutId)),
+          isNull(workoutEntriesSets.completed_at),
+          inArray(workoutEntriesSets.workout_entries_exercise_id, workoutExerciseIds(workoutId)),
         ),
       );
-    await tx.update(workouts).set({ finished_at: nowIso() }).where(eq(workouts.id, workoutId));
+    await tx
+      .update(workoutEntries)
+      .set({ finished_at: nowIso() })
+      .where(eq(workoutEntries.id, workoutId));
   });
 }
 
@@ -288,10 +326,14 @@ export async function finishWorkout(workoutId: string) {
 export async function discardWorkout(workoutId: string) {
   await drizzle.transaction(async (tx) => {
     await tx
-      .delete(workoutSets)
-      .where(inArray(workoutSets.workout_exercise_id, workoutExerciseIds(workoutId)));
-    await tx.delete(workoutExercises).where(eq(workoutExercises.workout_id, workoutId));
-    await tx.delete(workouts).where(eq(workouts.id, workoutId));
+      .delete(workoutEntriesSets)
+      .where(
+        inArray(workoutEntriesSets.workout_entries_exercise_id, workoutExerciseIds(workoutId)),
+      );
+    await tx
+      .delete(workoutEntriesExercises)
+      .where(eq(workoutEntriesExercises.workout_entries_id, workoutId));
+    await tx.delete(workoutEntries).where(eq(workoutEntries.id, workoutId));
   });
 }
 
@@ -323,17 +365,17 @@ export interface WorkoutDetail {
 
 /** One workout with its exercises and their sets, each ordered by position. */
 const workoutDetailQuery = (workoutId: string) =>
-  drizzle.query.workouts.findMany({
+  drizzle.query.workoutEntries.findMany({
     columns: { id: true, name: true, started_at: true, finished_at: true },
-    where: eq(workouts.id, workoutId),
+    where: eq(workoutEntries.id, workoutId),
     with: {
       exercises: {
         columns: { id: true, exercise_id: true, rest_seconds: true },
-        orderBy: asc(workoutExercises.position),
+        orderBy: asc(workoutEntriesExercises.position),
         with: {
           sets: {
-            columns: { user_id: false, workout_exercise_id: false },
-            orderBy: asc(workoutSets.position),
+            columns: { user_id: false, workout_entries_exercise_id: false },
+            orderBy: asc(workoutEntriesSets.position),
           },
         },
       },
@@ -382,10 +424,14 @@ export function useWorkout(workoutId: string | undefined) {
 
 const activeWorkoutQuery = () =>
   drizzle
-    .select({ id: workouts.id, name: workouts.name, started_at: workouts.started_at })
-    .from(workouts)
-    .where(isNull(workouts.finished_at))
-    .orderBy(desc(workouts.started_at))
+    .select({
+      id: workoutEntries.id,
+      name: workoutEntries.name,
+      started_at: workoutEntries.started_at,
+    })
+    .from(workoutEntries)
+    .where(isNull(workoutEntries.finished_at))
+    .orderBy(desc(workoutEntries.started_at))
     .limit(1);
 
 const firstActive = (rows: RowOf<typeof activeWorkoutQuery>[]) => rows[0] ?? null;
@@ -421,27 +467,30 @@ export interface WorkoutSummary {
 const workoutSummaryQuery = (where?: SQL) =>
   drizzle
     .select({
-      id: workouts.id,
-      name: workouts.name,
-      started_at: workouts.started_at,
-      finished_at: workouts.finished_at,
-      exercise_id: workoutExercises.exercise_id,
-      sets: count(workoutSets.id),
-      volume: sql<number>`coalesce(sum(${workoutSets.weight_kg} * ${workoutSets.reps}), 0)`,
-      prs: sql<number>`coalesce(sum(${workoutSets.is_pr}), 0)`,
+      id: workoutEntries.id,
+      name: workoutEntries.name,
+      started_at: workoutEntries.started_at,
+      finished_at: workoutEntries.finished_at,
+      exercise_id: workoutEntriesExercises.exercise_id,
+      sets: count(workoutEntriesSets.id),
+      volume: sql<number>`coalesce(sum(${workoutEntriesSets.weight_kg} * ${workoutEntriesSets.reps}), 0)`,
+      prs: sql<number>`coalesce(sum(${workoutEntriesSets.is_pr}), 0)`,
     })
-    .from(workouts)
-    .leftJoin(workoutExercises, eq(workoutExercises.workout_id, workouts.id))
+    .from(workoutEntries)
     .leftJoin(
-      workoutSets,
+      workoutEntriesExercises,
+      eq(workoutEntriesExercises.workout_entries_id, workoutEntries.id),
+    )
+    .leftJoin(
+      workoutEntriesSets,
       and(
-        eq(workoutSets.workout_exercise_id, workoutExercises.id),
-        isNotNull(workoutSets.completed_at),
+        eq(workoutEntriesSets.workout_entries_exercise_id, workoutEntriesExercises.id),
+        isNotNull(workoutEntriesSets.completed_at),
       ),
     )
-    .where(and(isNotNull(workouts.finished_at), where))
-    .groupBy(workouts.id, workoutExercises.id)
-    .orderBy(desc(workouts.started_at), workoutExercises.position);
+    .where(and(isNotNull(workoutEntries.finished_at), where))
+    .groupBy(workoutEntries.id, workoutEntriesExercises.id)
+    .orderBy(desc(workoutEntries.started_at), workoutEntriesExercises.position);
 
 function toSummaries(rows: RowOf<typeof workoutSummaryQuery>[]): WorkoutSummary[] {
   const map = new Map<string, WorkoutSummary>();
@@ -472,7 +521,7 @@ export function useWorkoutsInRange(fromIso: string, toIso: string) {
   return useDrizzleQuery({
     queryKey: queryKeys.workouts.range(fromIso, toIso).queryKey,
     query: workoutSummaryQuery(
-      and(gte(workouts.started_at, fromIso), lt(workouts.started_at, toIso)),
+      and(gte(workoutEntries.started_at, fromIso), lt(workoutEntries.started_at, toIso)),
     ),
     map: toSummaries,
   });
@@ -481,14 +530,14 @@ export function useWorkoutsInRange(fromIso: string, toIso: string) {
 /** The latest `limit` finished workouts, newest first; a larger limit keeps the list shown. */
 export function useWorkoutHistory(limit: number) {
   const latest = drizzle
-    .select({ id: workouts.id })
-    .from(workouts)
-    .where(isNotNull(workouts.finished_at))
-    .orderBy(desc(workouts.started_at))
+    .select({ id: workoutEntries.id })
+    .from(workoutEntries)
+    .where(isNotNull(workoutEntries.finished_at))
+    .orderBy(desc(workoutEntries.started_at))
     .limit(limit);
   return useDrizzleQuery({
     queryKey: queryKeys.workouts.history(limit).queryKey,
-    query: workoutSummaryQuery(inArray(workouts.id, latest)),
+    query: workoutSummaryQuery(inArray(workoutEntries.id, latest)),
     map: toSummaries,
     keepPrevious: true,
   });
@@ -498,7 +547,10 @@ export function useWorkoutHistory(limit: number) {
 export function useWorkoutCount() {
   return useDrizzleQuery({
     queryKey: queryKeys.workouts.count.queryKey,
-    query: drizzle.select({ count: count() }).from(workouts).where(isNotNull(workouts.finished_at)),
+    query: drizzle
+      .select({ count: count() })
+      .from(workoutEntries)
+      .where(isNotNull(workoutEntries.finished_at)),
     map: firstCount,
   });
 }
@@ -524,32 +576,39 @@ export interface ExerciseHistoryEntry {
 /** Sets that count for an exercise's history: completed (see hasKnownWeight), workout finished. */
 const historySetsOf = (exerciseId: string) =>
   and(
-    eq(workoutExercises.exercise_id, exerciseId),
-    isNotNull(workoutSets.completed_at),
-    isNotNull(workouts.finished_at),
-    hasKnownWeight(workoutSets, workoutExercises),
+    eq(workoutEntriesExercises.exercise_id, exerciseId),
+    isNotNull(workoutEntriesSets.completed_at),
+    isNotNull(workoutEntries.finished_at),
+    hasKnownWeight(workoutEntriesSets, workoutEntriesExercises),
   );
 
 const exerciseHistoryQuery = (exerciseId: string, where?: SQL) =>
   drizzle
     .select({
-      workout_id: workouts.id,
-      name: workouts.name,
-      started_at: workouts.started_at,
-      finished_at: workouts.finished_at,
-      exercise_id: workoutExercises.exercise_id,
-      weight_kg: workoutSets.weight_kg,
-      reps: workoutSets.reps,
-      seconds: workoutSets.seconds,
-      target_rir: workoutSets.target_rir,
-      is_pr: workoutSets.is_pr,
-      score: setScoreSql(workoutSets, workoutExercises),
+      workout_entries_id: workoutEntries.id,
+      name: workoutEntries.name,
+      started_at: workoutEntries.started_at,
+      finished_at: workoutEntries.finished_at,
+      exercise_id: workoutEntriesExercises.exercise_id,
+      weight_kg: workoutEntriesSets.weight_kg,
+      reps: workoutEntriesSets.reps,
+      seconds: workoutEntriesSets.seconds,
+      target_rir: workoutEntriesSets.target_rir,
+      is_pr: workoutEntriesSets.is_pr,
+      score: setScoreSql(workoutEntriesSets, workoutEntriesExercises),
     })
-    .from(workoutSets)
-    .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
-    .innerJoin(workouts, eq(workouts.id, workoutExercises.workout_id))
+    .from(workoutEntriesSets)
+    .innerJoin(
+      workoutEntriesExercises,
+      eq(workoutEntriesExercises.id, workoutEntriesSets.workout_entries_exercise_id),
+    )
+    .innerJoin(workoutEntries, eq(workoutEntries.id, workoutEntriesExercises.workout_entries_id))
     .where(and(historySetsOf(exerciseId), where))
-    .orderBy(desc(workouts.started_at), workoutExercises.position, workoutSets.position);
+    .orderBy(
+      desc(workoutEntries.started_at),
+      workoutEntriesExercises.position,
+      workoutEntriesSets.position,
+    );
 
 function toExerciseHistory(rows: RowOf<typeof exerciseHistoryQuery>[]): ExerciseHistoryEntry[] {
   const map = new Map<string, Omit<ExerciseHistoryEntry, 'volumeKg' | 'hasPr'>>();
@@ -562,8 +621,8 @@ function toExerciseHistory(rows: RowOf<typeof exerciseHistoryQuery>[]): Exercise
       rir: r.target_rir,
       isPr: r.is_pr,
     };
-    const entry = getOrInsert(map, r.workout_id, () => ({
-      workoutId: r.workout_id,
+    const entry = getOrInsert(map, r.workout_entries_id, () => ({
+      workoutId: r.workout_entries_id,
       name: r.name,
       startedAt: r.started_at,
       finishedAt: r.finished_at,
@@ -572,9 +631,9 @@ function toExerciseHistory(rows: RowOf<typeof exerciseHistoryQuery>[]): Exercise
     }));
     entry.sets.push(set);
     // Sets come in order: of equal scores the first stays the top set.
-    if (r.score > (topScores.get(r.workout_id) ?? -Infinity)) {
+    if (r.score > (topScores.get(r.workout_entries_id) ?? -Infinity)) {
       entry.topSet = set;
-      topScores.set(r.workout_id, r.score);
+      topScores.set(r.workout_entries_id, r.score);
     }
   }
   // All rows are sets of the same exercise; the weight on an assisted machine isn't lifted.
@@ -603,17 +662,20 @@ const toLastSession = (rows: RowOf<typeof exerciseHistoryQuery>[]) => toExercise
 /** The newest session of `useExerciseHistory` alone ("last time"), without loading the rest. */
 export function useLastExerciseSession(exerciseId: string | undefined) {
   const latest = drizzle
-    .select({ id: workouts.id })
-    .from(workoutSets)
-    .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
-    .innerJoin(workouts, eq(workouts.id, workoutExercises.workout_id))
+    .select({ id: workoutEntries.id })
+    .from(workoutEntriesSets)
+    .innerJoin(
+      workoutEntriesExercises,
+      eq(workoutEntriesExercises.id, workoutEntriesSets.workout_entries_exercise_id),
+    )
+    .innerJoin(workoutEntries, eq(workoutEntries.id, workoutEntriesExercises.workout_entries_id))
     .where(historySetsOf(exerciseId ?? ''))
-    .orderBy(desc(workouts.started_at))
+    .orderBy(desc(workoutEntries.started_at))
     .limit(1);
   return useDrizzleQuery({
     queryKey: queryKeys.workouts.lastExerciseSession(exerciseId ?? '').queryKey,
     enabled: !!exerciseId,
-    query: exerciseHistoryQuery(exerciseId ?? '', inArray(workouts.id, latest)),
+    query: exerciseHistoryQuery(exerciseId ?? '', inArray(workoutEntries.id, latest)),
     map: toLastSession,
   });
 }
@@ -621,15 +683,20 @@ export function useLastExerciseSession(exerciseId: string | undefined) {
 const muscleVolumeQuery = (sinceIso: string) =>
   drizzle
     .select({
-      exercise_id: workoutExercises.exercise_id,
-      started_at: workouts.started_at,
-      sets: count(workoutSets.id),
+      exercise_id: workoutEntriesExercises.exercise_id,
+      started_at: workoutEntries.started_at,
+      sets: count(workoutEntriesSets.id),
     })
-    .from(workoutSets)
-    .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
-    .innerJoin(workouts, eq(workouts.id, workoutExercises.workout_id))
-    .where(and(isNotNull(workoutSets.completed_at), gte(workouts.started_at, sinceIso)))
-    .groupBy(workouts.id, workoutExercises.exercise_id);
+    .from(workoutEntriesSets)
+    .innerJoin(
+      workoutEntriesExercises,
+      eq(workoutEntriesExercises.id, workoutEntriesSets.workout_entries_exercise_id),
+    )
+    .innerJoin(workoutEntries, eq(workoutEntries.id, workoutEntriesExercises.workout_entries_id))
+    .where(
+      and(isNotNull(workoutEntriesSets.completed_at), gte(workoutEntries.started_at, sinceIso)),
+    )
+    .groupBy(workoutEntries.id, workoutEntriesExercises.exercise_id);
 
 const toMuscleVolume = (rows: RowOf<typeof muscleVolumeQuery>[]) =>
   rows.map((r) => ({ exerciseId: r.exercise_id, startedAt: r.started_at, sets: r.sets }));

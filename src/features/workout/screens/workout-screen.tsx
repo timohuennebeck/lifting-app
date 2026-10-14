@@ -14,7 +14,7 @@ import { scheduleOnRN } from 'react-native-worklets';
 import { useTranslation } from 'react-i18next';
 
 import { useExerciseName } from '@/shared/data/exercises';
-import { restSecondsFor } from '@/shared/data/templates';
+import { restSecondsFor } from '@/shared/data/routines';
 import { useWorkout, type WorkoutDetail } from '@/shared/data/workouts';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { haptics } from '@/shared/lib/haptics';

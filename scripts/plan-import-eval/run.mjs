@@ -1,6 +1,6 @@
 // Tests the plan import (the read-plan Edge Function) with the plans in fixtures/ and scores
-// what it read against cases.json: days, weekdays, exercises (catalog match or new), sets, reps,
-// RIR and rest. With --dir it reads your own photos and files and prints what it found instead.
+// what it read against cases.json: routines, exercises (catalog match or new), sets, reps, RIR
+// and rest. With --dir it reads your own photos and files and prints what it found instead.
 // The fixtures are made up: typed and spreadsheet plans, and handwriting, whiteboard and screenshot
 // photos drawn with handwriting fonts, then tilted, shaded and blurred like phone photos.
 //
@@ -120,8 +120,6 @@ const read = (body) => streamPlan(`${SUPABASE_URL}/functions/v1/read-plan`, KEY,
 
 // ---------- reading a plan ----------
 
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
 function nameOf(id, plan, names, language) {
   const created = plan?.newExercises?.find((e) => e.id === id);
   if (created) return `${created.name} (new)`;
@@ -151,10 +149,11 @@ function describeExercise(e, plan, names, language) {
 
 function describePlan(plan, names, language) {
   const lines = [plan.name];
-  for (const day of plan.days) {
-    const when = day.weekday != null ? WEEKDAYS[day.weekday] : `no weekday ("${day.rawDay}")`;
-    lines.push(`  ${day.name} · ${when}`);
-    for (const e of day.exercises) lines.push(`    ${describeExercise(e, plan, names, language)}`);
+  for (const routine of plan.routines) {
+    lines.push(`  ${routine.name}`);
+    for (const e of routine.exercises) {
+      lines.push(`    ${describeExercise(e, plan, names, language)}`);
+    }
   }
   return lines.join('\n');
 }
@@ -186,8 +185,7 @@ const sameName = (a, b) => letters(a).slice(0, 5) === letters(b).slice(0, 5);
 
 function score(expect, result, names, language) {
   const s = {
-    days: counter(),
-    weekdays: counter(),
+    routines: counter(),
     exercises: counter(),
     sets: counter(),
     reps: counter(),
@@ -198,38 +196,34 @@ function score(expect, result, names, language) {
   };
   const { plan } = result;
   if (expect.notAPlan) {
-    tally(s.days, result.error === 'not_a_plan');
-    if (!s.days.ok)
+    tally(s.routines, result.error === 'not_a_plan');
+    if (!s.routines.ok)
       s.issues.push(`expected "not a plan", got ${result.status} ${result.error ?? ''}`);
     return s;
   }
   if (!plan) {
     s.issues.push(`no plan: ${result.status} ${result.error ?? ''}`);
-    for (const d of expect.days) {
-      tally(s.days, false);
-      d.exercises.forEach(() => tally(s.exercises, false));
+    for (const r of expect.routines) {
+      tally(s.routines, false);
+      r.exercises.forEach(() => tally(s.exercises, false));
     }
     return s;
   }
   const newIds = new Set(plan.newExercises.map((e) => e.id));
   const createdAs = new Map();
   const label = (e) => e.new ?? e.ex.join(' | ');
-  if (plan.days.length !== expect.days.length) {
-    s.issues.push(`${plan.days.length} days instead of ${expect.days.length}`);
+  if (plan.routines.length !== expect.routines.length) {
+    s.issues.push(`${plan.routines.length} routines instead of ${expect.routines.length}`);
   }
-  plan.days.slice(expect.days.length).forEach((d) => (s.extra += d.exercises.length));
+  plan.routines.slice(expect.routines.length).forEach((r) => (s.extra += r.exercises.length));
 
-  expect.days.forEach((want, i) => {
-    const got = plan.days[i];
-    tally(s.days, !!got);
+  expect.routines.forEach((want, i) => {
+    const got = plan.routines[i];
+    tally(s.routines, !!got);
     if (!got) {
       want.exercises.forEach(() => tally(s.exercises, false));
-      s.issues.push(`day ${i + 1} missing`);
+      s.issues.push(`routine ${i + 1} missing`);
       return;
-    }
-    tally(s.weekdays, (got.weekday ?? null) === want.weekday);
-    if ((got.weekday ?? null) !== want.weekday) {
-      s.issues.push(`day ${i + 1}: weekday ${got.weekday} instead of ${want.weekday}`);
     }
     const used = new Set();
     const missed = [];
@@ -256,7 +250,7 @@ function score(expect, result, names, language) {
         if (earlier && earlier !== a.exerciseId) s.issues.push(`"${e.new}" was created twice`);
         createdAs.set(e.new, a.exerciseId);
       }
-      const where = `day ${i + 1}, ${label(e)}`;
+      const where = `routine ${i + 1}, ${label(e)}`;
       tally(s.sets, a.sets.length === e.sets);
       if (a.sets.length !== e.sets)
         s.issues.push(`${where}: ${a.sets.length} sets instead of ${e.sets}`);
@@ -285,20 +279,20 @@ function score(expect, result, names, language) {
       const instead = left[k]
         ? `got ${describeExercise(left[k], plan, names, language)}`
         : 'not found';
-      s.issues.push(`day ${i + 1}: expected ${label(e)}, ${instead}`);
+      s.issues.push(`routine ${i + 1}: expected ${label(e)}, ${instead}`);
     });
     left
       .slice(missed.length)
       .forEach((a) =>
-        s.issues.push(`day ${i + 1}: extra ${describeExercise(a, plan, names, language)}`),
+        s.issues.push(`routine ${i + 1}: extra ${describeExercise(a, plan, names, language)}`),
       );
   });
-  s.review = plan.days.reduce((n, d) => n + d.exercises.filter((e) => e.raw).length, 0);
+  s.review = plan.routines.reduce((n, r) => n + r.exercises.filter((e) => e.raw).length, 0);
   return s;
 }
 
 const passed = (s) =>
-  [s.days, s.weekdays, s.exercises, s.sets, s.reps, s.details].every((c) => c.ok === c.total) &&
+  [s.routines, s.exercises, s.sets, s.reps, s.details].every((c) => c.ok === c.total) &&
   s.extra === 0 &&
   s.issues.length === 0;
 
@@ -374,10 +368,10 @@ async function runFixtures() {
   if (!results.length) process.exit(1);
 
   const header =
-    '| case | first exercise / all | days | weekdays | exercises | sets | reps | RIR/rest | extra | to review | |';
+    '| case | first exercise / all | routines | exercises | sets | reps | RIR/rest | extra | to review | |';
   const rows = results.map(
     ({ case: c, result, score: s }) =>
-      `| ${c.id} | ${timing(result)} | ${ratio(s.days)} | ${ratio(s.weekdays)} | ${ratio(s.exercises)} | ${ratio(s.sets)} | ${ratio(s.reps)} | ${ratio(s.details)} | ${s.extra} | ${s.review} | ${passed(s) ? 'PASS' : 'FAIL'} |`,
+      `| ${c.id} | ${timing(result)} | ${ratio(s.routines)} | ${ratio(s.exercises)} | ${ratio(s.sets)} | ${ratio(s.reps)} | ${ratio(s.details)} | ${s.extra} | ${s.review} | ${passed(s) ? 'PASS' : 'FAIL'} |`,
   );
   const sum = (key) =>
     results.reduce(
@@ -389,7 +383,7 @@ async function runFixtures() {
     return sorted.length ? `${sorted[Math.floor(sorted.length / 2)].toFixed(1)} s` : '–';
   };
   const firsts = median(results.map((r) => r.result.first));
-  const totals = `| **all** | median first ${firsts}, all ${median(results.map((r) => r.result.seconds))} | ${percent(sum('days'))} | ${percent(sum('weekdays'))} | ${percent(sum('exercises'))} | ${percent(sum('sets'))} | ${percent(sum('reps'))} | ${percent(sum('details'))} | ${results.reduce((n, r) => n + r.score.extra, 0)} | ${results.reduce((n, r) => n + r.score.review, 0)} | ${results.filter((r) => passed(r.score)).length}/${results.length} |`;
+  const totals = `| **all** | median first ${firsts}, all ${median(results.map((r) => r.result.seconds))} | ${percent(sum('routines'))} | ${percent(sum('exercises'))} | ${percent(sum('sets'))} | ${percent(sum('reps'))} | ${percent(sum('details'))} | ${results.reduce((n, r) => n + r.score.extra, 0)} | ${results.reduce((n, r) => n + r.score.review, 0)} | ${results.filter((r) => passed(r.score)).length}/${results.length} |`;
   const table = [header, `|${' --- |'.repeat(11)}`, ...rows, totals].join('\n');
   const details = results
     .map(({ case: c, result, score: s }) => {

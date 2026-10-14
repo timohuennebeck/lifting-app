@@ -43,7 +43,7 @@ export function PlanNameScreen() {
       footer={
         <Button
           // In the app the plan is saved here; onboarding goes on.
-          label={inApp ? t('training:create.createProgram') : t('common:actions.continue')}
+          label={inApp ? t('training:create.createPlan') : t('common:actions.continue')}
           disabled={!trimmed}
           onPress={submit}
         />

@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
@@ -28,20 +27,21 @@ function MuscleCircle({ muscle, left }: { muscle: MuscleId; left: number }) {
 }
 
 export interface UnplannedDayProps {
-  /** Picks a workout for the day. */
+  title: string;
+  body: string;
+  /** Makes a plan, or fills the empty one. */
   onPress: () => void;
 }
 
-/** Shown when the selected day has neither a finished nor a planned workout. */
-export function UnplannedDay({ onPress }: UnplannedDayProps) {
-  const { t } = useTranslation('today');
+/** Shown on a day without a workout when there is nothing to do next: no plan, or an empty one. */
+export function UnplannedDay({ title, body, onPress }: UnplannedDayProps) {
   return (
     <View className="flex-1 items-center justify-center px-8 pb-12">
       <PressableScale
         haptic="tap"
         activeScale={0.97}
         accessibilityRole="button"
-        accessibilityLabel={`${t('unplanned.title')}. ${t('unplanned.body')}`}
+        accessibilityLabel={`${title}. ${body}`}
         onPress={onPress}
         className="items-center"
       >
@@ -60,10 +60,10 @@ export function UnplannedDay({ onPress }: UnplannedDayProps) {
           </View>
         </View>
         <Text variant="headline" className="mt-6 text-center">
-          {t('unplanned.title')}
+          {title}
         </Text>
         <Text variant="paragraph" tone="subtle" className="mt-2 text-center">
-          {t('unplanned.body')}
+          {body}
         </Text>
       </PressableScale>
     </View>

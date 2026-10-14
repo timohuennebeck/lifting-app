@@ -76,7 +76,6 @@
   },
   "confirm": {
     "planName": "Nome do plano",
-    "dayUnknown": "Não conseguimos ler o dia “{{raw}}” – este treino fica sem dia fixo.",
     "readAs": "Lido como “{{raw}}”",
     "correct": "Está certo",
     "add": "Adicionar exercício",
@@ -86,7 +85,7 @@
     "check_one": "Rever {{count}} ponto",
     "check_other": "Rever {{count}} pontos",
     "empty": "Ainda sem exercícios. Adiciona um com +.",
-    "newDay": "Dia {{number}}",
+    "newRoutine": "Treino {{number}}",
     "renamePlan": "Mudar o nome do plano",
     "newExercise": "Novo · criado como exercício próprio"
   },

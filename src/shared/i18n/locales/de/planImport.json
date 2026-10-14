@@ -76,7 +76,6 @@
   },
   "confirm": {
     "planName": "Planname",
-    "dayUnknown": "Den Tag „{{raw}}“ konnten wir nicht lesen – das Training bleibt ohne festen Tag.",
     "readAs": "Gelesen als „{{raw}}“",
     "correct": "Stimmt",
     "add": "Übung hinzufügen",
@@ -86,7 +85,7 @@
     "check_one": "Noch {{count}} Punkt prüfen",
     "check_other": "Noch {{count}} Punkte prüfen",
     "empty": "Noch keine Übungen. Füg eine mit + hinzu.",
-    "newDay": "Tag {{number}}",
+    "newRoutine": "Training {{number}}",
     "renamePlan": "Plan umbenennen",
     "newExercise": "Neu · wird als eigene Übung angelegt"
   },

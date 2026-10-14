@@ -3,52 +3,62 @@
     "create": "Neu erstellen"
   },
   "list": {
-    "title": "Templates",
-    "noCollection": "Ohne Sammlung",
+    "title": "Training",
+    "myPlan": "Mein Plan",
+    "otherPlans": "Weitere Pläne",
+    "library": "Meine Trainings",
     "meta_one": "{{minutes}} Min · {{count}} Übung",
     "meta_other": "{{minutes}} Min · {{count}} Übungen",
     "start": "{{name}} starten",
     "more": "Optionen für {{name}}",
-    "empty": "Noch keine Templates",
-    "emptyCollection": "Hier gibt es noch keine Templates",
-    "emptyHint": "Erstelle ein Template, um Übungen und Sätze zu planen."
+    "next": "Als Nächstes",
+    "addRoutine": "Training hinzufügen",
+    "noPlan": "Noch kein Plan",
+    "noPlanHint": "Lass dir einen erstellen, lies deinen ein oder bau ihn selbst.",
+    "libraryEmpty": "Trainings ohne Plan, z. B. fürs Hotel oder einen Arm-Tag, landen hier."
+  },
+  "plan": {
+    "routineCount_one": "{{count}} Training",
+    "routineCount_other": "{{count}} Trainings",
+    "perWeekShort": "{{count}}× pro Woche",
+    "week": "Woche {{week}}",
+    "blockWeek": "Woche {{week}} von {{weeks}}",
+    "deload": "Deload-Woche",
+    "sessions": "{{done}} von {{total}} Einheiten",
+    "active": "Aktiver Plan",
+    "activate": "Diesen Plan nutzen",
+    "perWeek": "Einheiten pro Woche",
+    "perWeekHint": "So viele Trainings ergeben eine Planwoche, egal an welchen Tagen.",
+    "blocks": "Blöcke",
+    "blocksHint": "Jede Woche 1 Wiederholung weniger in Reserve, die letzte Woche ist ein Deload.",
+    "blockOff": "Aus",
+    "blockOption": "{{build}} + 1",
+    "deloadNow": "Deload jetzt",
+    "restartBlock": "Block neu starten",
+    "routines": "Trainings",
+    "more": "Optionen für {{name}}",
+    "rename": "Umbenennen",
+    "renameHint": "Neuen Namen für {{name}} vergeben",
+    "renameTitle": "Plan umbenennen",
+    "namePlaceholder": "Name des Plans",
+    "delete": "Plan löschen",
+    "deleteHint": "Löscht {{name}} mit seinen Trainings. Geloggte Trainings bleiben erhalten.",
+    "notFound": "Diesen Plan gibt es nicht mehr."
   },
   "create": {
-    "collection": "Sammlung",
-    "collectionHint": "Templates gruppieren",
-    "template": "Template",
-    "templateHint": "Übungen und Sätze festlegen",
-    "program": "Programm",
-    "programHint": "Plan einlesen oder erstellen lassen",
-    "createCollection": "Sammlung erstellen",
-    "createTemplate": "Template erstellen",
-    "createProgram": "Programm erstellen"
+    "routine": "Training",
+    "routineHint": "Übungen und Sätze festlegen",
+    "plan": "Plan",
+    "planHint": "Erstellen lassen, einlesen oder selbst bauen",
+    "createRoutine": "Training erstellen",
+    "createPlan": "Plan erstellen"
   },
-  "collections": {
-    "templateCount_one": "{{count}} Template",
-    "templateCount_other": "{{count}} Templates",
-    "renameTitle": "Sammlung umbenennen",
-    "newTitle": "Neue Sammlung",
-    "namePlaceholder": "Name der Sammlung",
-    "deleteTitle": "{{name}} löschen?",
-    "deleteSubtitle_one": "{{count}} Template in dieser Sammlung",
-    "deleteSubtitle_other": "{{count}} Templates in dieser Sammlung",
-    "deleteKeep": "Sammlung löschen",
-    "deleteKeepHint": "Templates landen in „Ohne Sammlung“",
-    "deleteAll": "Sammlung und Templates löschen",
-    "deleteAllHint": "Geloggte Trainings bleiben erhalten",
-    "deleteHint": "Danach wählst du, was mit den Templates passiert",
-    "moreA11y": "Optionen für {{name}}"
-  },
-  "newTemplate": {
-    "title": "Neues Template",
+  "newRoutine": {
+    "title": "Neues Training",
     "name": "Name",
-    "namePlaceholder": "z. B. Push",
-    "collection": "Sammlung"
+    "namePlaceholder": "z. B. Push"
   },
   "overview": {
-    "noFixedDay": "Kein fester Tag – trainiere, wann es dir passt.",
-    "fixedDay": "Geplant für {{day}}.",
     "musclesWorked": "Beanspruchte Muskeln",
     "musclesInfo": "Muskeln aufgeschlüsselt",
     "exercises_one": "{{count}} Übung",
@@ -63,7 +73,8 @@
     "exerciseMenu": "Optionen für {{name}}",
     "exerciseInfo": "Infos zu {{name}}",
     "notFound": "Dieses Training gibt es nicht mehr.",
-    "swapTitle": "Übung tauschen"
+    "swapTitle": "Übung tauschen",
+    "partOf": "Teil von {{plan}}"
   },
   "exerciseMenu": {
     "editSets": "Sätze bearbeiten",
@@ -78,9 +89,14 @@
     "rename": "Umbenennen",
     "renameHint": "Neuen Namen für {{name}} vergeben",
     "delete": "Training löschen",
-    "deleteHint": "Entfernt {{name}} aus deinem Plan",
+    "deleteHint": "Löscht {{name}}. Geloggte Trainings bleiben erhalten.",
     "renameTitle": "Training umbenennen",
-    "namePlaceholder": "Name des Trainings"
+    "namePlaceholder": "Name des Trainings",
+    "copy": "Kopieren",
+    "copyToPlan": "Zu {{plan}} hinzufügen",
+    "copyToPlanHint": "Kopiert das Training in deinen Plan; das Original bleibt hier.",
+    "copyToLibrary": "In Meine Trainings kopieren",
+    "copyToLibraryHint": "Eine Kopie ohne Plan; das Original bleibt im Plan."
   },
   "sets": {
     "title": "Überarbeiten",

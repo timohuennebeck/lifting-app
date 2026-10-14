@@ -6,11 +6,11 @@ import { CheckBadge } from '@/shared/ui/check-item';
 import { Text } from '@/shared/ui/text';
 
 export interface DayStatusProps {
-  kind: 'done' | 'planned';
+  kind: 'done' | 'next';
   label: string;
 }
 
-/** Accent status line of a Today card: check badge (done) or clock ring (planned). */
+/** Accent status line of a Today card: check badge (done) or clock ring (up next). */
 export function DayStatus({ kind, label }: DayStatusProps) {
   return (
     <View className="flex-row items-center gap-2">

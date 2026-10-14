@@ -3,52 +3,62 @@
     "create": "Create new"
   },
   "list": {
-    "title": "Templates",
-    "noCollection": "No collection",
+    "title": "Training",
+    "myPlan": "My plan",
+    "otherPlans": "Other plans",
+    "library": "My workouts",
     "meta_one": "{{minutes}} min · {{count}} exercise",
     "meta_other": "{{minutes}} min · {{count}} exercises",
     "start": "Start {{name}}",
     "more": "Options for {{name}}",
-    "empty": "No templates yet",
-    "emptyCollection": "No templates here yet",
-    "emptyHint": "Create a template to plan your exercises and sets."
+    "next": "Up next",
+    "addRoutine": "Add workout",
+    "noPlan": "No plan yet",
+    "noPlanHint": "Have one made, import yours or build it yourself.",
+    "libraryEmpty": "Workouts outside a plan, e.g. for a hotel gym or an arm day, go here."
+  },
+  "plan": {
+    "routineCount_one": "{{count}} workout",
+    "routineCount_other": "{{count}} workouts",
+    "perWeekShort": "{{count}}× a week",
+    "week": "Week {{week}}",
+    "blockWeek": "Week {{week}} of {{weeks}}",
+    "deload": "Deload week",
+    "sessions": "{{done}} of {{total}} sessions",
+    "active": "Active plan",
+    "activate": "Use this plan",
+    "perWeek": "Sessions per week",
+    "perWeekHint": "This many workouts make a plan week, on whichever days.",
+    "blocks": "Blocks",
+    "blocksHint": "One rep less in reserve each week; the last week is a deload.",
+    "blockOff": "Off",
+    "blockOption": "{{build}} + 1",
+    "deloadNow": "Deload now",
+    "restartBlock": "Restart block",
+    "routines": "Workouts",
+    "more": "Options for {{name}}",
+    "rename": "Rename",
+    "renameHint": "Give {{name}} a new name",
+    "renameTitle": "Rename plan",
+    "namePlaceholder": "Plan name",
+    "delete": "Delete plan",
+    "deleteHint": "Deletes {{name}} with its workouts. Logged workouts stay.",
+    "notFound": "This plan no longer exists."
   },
   "create": {
-    "collection": "Collection",
-    "collectionHint": "Group templates",
-    "template": "Template",
-    "templateHint": "Set exercises and sets",
-    "program": "Program",
-    "programHint": "Import your plan or have one made",
-    "createCollection": "Create collection",
-    "createTemplate": "Create template",
-    "createProgram": "Create program"
+    "routine": "Workout",
+    "routineHint": "Set exercises and sets",
+    "plan": "Plan",
+    "planHint": "Have one made, import it or build it yourself",
+    "createRoutine": "Create workout",
+    "createPlan": "Create plan"
   },
-  "collections": {
-    "templateCount_one": "{{count}} template",
-    "templateCount_other": "{{count}} templates",
-    "renameTitle": "Rename collection",
-    "newTitle": "New collection",
-    "namePlaceholder": "Collection name",
-    "deleteTitle": "Delete {{name}}?",
-    "deleteSubtitle_one": "{{count}} template in this collection",
-    "deleteSubtitle_other": "{{count}} templates in this collection",
-    "deleteKeep": "Delete collection",
-    "deleteKeepHint": "Templates move to “No collection”",
-    "deleteAll": "Delete collection and templates",
-    "deleteAllHint": "Logged workouts are kept",
-    "deleteHint": "Next you choose what happens to its templates",
-    "moreA11y": "Options for {{name}}"
-  },
-  "newTemplate": {
-    "title": "New template",
+  "newRoutine": {
+    "title": "New workout",
     "name": "Name",
-    "namePlaceholder": "e.g. Push",
-    "collection": "Collection"
+    "namePlaceholder": "e.g. Push"
   },
   "overview": {
-    "noFixedDay": "No fixed day – train whenever it suits you.",
-    "fixedDay": "Planned for {{day}}.",
     "musclesWorked": "Muscles worked",
     "musclesInfo": "Muscle breakdown",
     "exercises_one": "{{count}} exercise",
@@ -63,7 +73,8 @@
     "exerciseMenu": "Options for {{name}}",
     "exerciseInfo": "About {{name}}",
     "notFound": "This training no longer exists.",
-    "swapTitle": "Swap exercise"
+    "swapTitle": "Swap exercise",
+    "partOf": "Part of {{plan}}"
   },
   "exerciseMenu": {
     "editSets": "Edit sets",
@@ -78,9 +89,14 @@
     "rename": "Rename",
     "renameHint": "Give {{name}} a new name",
     "delete": "Delete training",
-    "deleteHint": "Removes {{name}} from your plan",
+    "deleteHint": "Deletes {{name}}. Logged workouts stay.",
     "renameTitle": "Rename training",
-    "namePlaceholder": "Training name"
+    "namePlaceholder": "Training name",
+    "copy": "Copy",
+    "copyToPlan": "Add to {{plan}}",
+    "copyToPlanHint": "Copies the workout into your plan; the original stays here.",
+    "copyToLibrary": "Copy to My workouts",
+    "copyToLibraryHint": "A copy outside the plan; the original stays in it."
   },
   "sets": {
     "title": "Edit sets",

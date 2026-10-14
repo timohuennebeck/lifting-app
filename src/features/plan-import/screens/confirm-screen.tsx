@@ -1,12 +1,13 @@
 import { Redirect, router, useIsFocused, useNavigation } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, View } from 'react-native';
+import { Alert } from 'react-native';
 import Animated, { FadeInDown, useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { generateFailure } from '@/features/plan-create/lib/plan-answers';
+import { AI_BLOCK_WEEKS } from '@/shared/data/plans';
 import { EditableTitle } from '@/features/training/components/editable-title';
 import { PlanBar } from '@/features/training/components/plan-bar';
 import { PlanExerciseList } from '@/features/training/components/plan-exercise-list';
@@ -23,10 +24,10 @@ import { PLAN_NAME_MAX } from '@/shared/lib/limits';
 
 import { ReadingGhost } from '../components/reading-ghost';
 import { ReviewPrompt } from '../components/review-prompt';
-import { editDayAt, editExerciseAt, settle } from '../lib/edit-plan';
+import { editExerciseAt, editRoutineAt, settle } from '../lib/edit-plan';
 import {
-  type ImportedDay,
   type ImportedExercise,
+  type ImportedRoutine,
   needsReview,
   pendingReviews,
   toPlanDraft,
@@ -34,11 +35,12 @@ import {
 import { useImportStore } from '../stores/import-store';
 
 /**
- * 06c: the detected plan in the training overview layout (03·0b). Days sit in the plan strip;
- * amber dots mark what the import wasn't sure about until the user checks it. It opens with the
- * first exercise read and fills in while the function sends the rest, following the day being
- * read until the user picks one. "Selbst erstellen" opens it with an empty plan to build day by
- * day. A plan the AI makes (BuildingScreen) opens here the same way and goes on to its name.
+ * 06c: the detected plan in the training overview layout (03·0b). Its routines sit in the plan
+ * strip, in the order they are trained; amber dots mark what the import wasn't sure about until
+ * the user checks it. It opens with the first exercise read and fills in while the function sends
+ * the rest, following the routine being read until the user picks one. "Selbst erstellen" opens
+ * it with an empty plan to build routine by routine. A plan the AI makes (BuildingScreen) opens
+ * here the same way and goes on to its name.
  */
 export function ConfirmScreen() {
   const { t } = useTranslation(['planImport', 'planCreate', 'training', 'common']);
@@ -46,16 +48,17 @@ export function ConfirmScreen() {
   const updateDraft = useUpdateDraft();
   const insets = useSafeAreaInsets();
   const plan = useImportStore((s) => s.plan);
-  const dayIndex = useImportStore((s) => s.dayIndex);
+  const routineIndex = useImportStore((s) => s.routineIndex);
   const editPlan = useImportStore((s) => s.editPlan);
-  const selectDay = useImportStore((s) => s.selectDay);
+  const selectRoutine = useImportStore((s) => s.selectRoutine);
   const reading = useImportStore((s) => s.reading);
-  const readingDay = useImportStore((s) => s.readingDay);
+  const readingRoutine = useImportStore((s) => s.readingRoutine);
   const failure = useImportStore((s) => s.failure);
-  const holdDay = useImportStore((s) => s.holdDay);
+  const holdRoutine = useImportStore((s) => s.holdRoutine);
   const following = useImportStore((s) => s.following);
   // Made from the answers, not read: it goes on to its name, and is made again on a retry.
-  const made = useImportStore((s) => s.source?.kind === 'answers');
+  const answers = useImportStore((s) => (s.source?.kind === 'answers' ? s.source.answers : null));
+  const made = !!answers;
   const scroller = useAnimatedRef<Animated.ScrollView>();
   // The run this screen shows; leaving the screen stops it.
   const [run] = useState(() => useImportStore.getState().run);
@@ -92,45 +95,44 @@ export function ConfirmScreen() {
 
   if (!plan) return <Redirect href={step('/import')} />;
 
-  const index = Math.min(dayIndex, plan.days.length - 1);
-  const day = plan.days[index];
-  const exercises = day?.exercises ?? [];
+  const index = Math.min(routineIndex, plan.routines.length - 1);
+  const routine = plan.routines[index];
+  const exercises = routine?.exercises ?? [];
   const pending = pendingReviews(plan);
-  const weekdays = t('common:weekdays.long', { returnObjects: true });
   // A plan built here starts empty; it needs an exercise before it can be taken over.
-  const hasExercises = plan.days.some((d) => d.exercises.length > 0);
+  const hasExercises = plan.routines.some((r) => r.exercises.length > 0);
   const newIds = new Set(plan.newExercises.map((e) => e.id));
 
-  function editDay(edit: (day: ImportedDay) => ImportedDay) {
-    editPlan((p) => editDayAt(p, index, edit));
+  function editRoutine(edit: (routine: ImportedRoutine) => ImportedRoutine) {
+    editPlan((p) => editRoutineAt(p, index, edit));
   }
 
   function editExercise(at: number, edit: (e: ImportedExercise) => ImportedExercise) {
-    editDay((d) => editExerciseAt(d, at, edit));
+    editRoutine((r) => editExerciseAt(r, at, edit));
   }
 
   // Adding and swapping happen on the library page; picks apply when it closes with "Done".
   const openPicker = (params: { mode: 'add' } | { mode: 'swap'; index: string }) =>
     router.push({ pathname: step('/import/picker'), params });
 
-  function addDay() {
+  function addRoutine() {
     if (!plan) return;
-    const number = plan.days.length + 1;
+    const number = plan.routines.length + 1;
     editPlan((p) => ({
       ...p,
-      days: [
-        ...p.days,
-        { name: t('planImport:confirm.newDay', { number }), weekday: null, exercises: [] },
+      routines: [
+        ...p.routines,
+        { name: t('planImport:confirm.newRoutine', { number }), exercises: [] },
       ],
     }));
-    selectDay(plan.days.length);
+    selectRoutine(plan.routines.length);
   }
 
   function moveExercise(from: number, to: number) {
-    editDay((d) => {
-      const next = d.exercises.filter((_, k) => k !== from);
-      next.splice(to, 0, d.exercises[from]);
-      return { ...d, exercises: next };
+    editRoutine((r) => {
+      const next = r.exercises.filter((_, k) => k !== from);
+      next.splice(to, 0, r.exercises[from]);
+      return { ...r, exercises: next };
     });
   }
 
@@ -138,12 +140,18 @@ export function ConfirmScreen() {
     if (!plan) return;
     if (pending) {
       haptics.warning();
-      const next = plan.days.findIndex(needsReview);
-      if (next >= 0) selectDay(next);
+      const next = plan.routines.findIndex(needsReview);
+      if (next >= 0) selectRoutine(next);
       return;
     }
-    if (made) {
-      updateDraft({ plan: toPlanDraft(plan) });
+    if (answers) {
+      // The AI's plan trains as often as asked and runs in blocks with a deload.
+      updateDraft({
+        plan: toPlanDraft(plan, {
+          sessionsPerWeek: answers.sessionsPerWeek,
+          blockWeeks: AI_BLOCK_WEEKS,
+        }),
+      });
       router.push(step('/create/plan-name'));
       return;
     }
@@ -169,8 +177,8 @@ export function ConfirmScreen() {
     >
       <Animated.ScrollView
         ref={scroller}
-        // Any touch ends following the day being read, so an edit stays on the day it began on.
-        onTouchStart={holdDay}
+        // Any touch ends following the routine being read, so an edit stays where it began.
+        onTouchStart={holdRoutine}
         // Until then each exercise read scrolls into view, with the row still to come below it.
         onContentSizeChange={() => {
           if (reading && following) scroller.current?.scrollToEnd({ animated: true });
@@ -179,31 +187,20 @@ export function ConfirmScreen() {
         contentContainerStyle={{ paddingBottom: insets.bottom + 130 }}
       >
         <PlanBar
-          items={plan.days.map((d) => ({ name: d.name, review: needsReview(d) }))}
+          items={plan.routines.map((r) => ({ name: r.name, review: needsReview(r) }))}
           currentIndex={index}
-          onSelect={selectDay}
-          // Days the user adds go after the read ones.
-          onAdd={reading ? undefined : addDay}
+          onSelect={selectRoutine}
+          // Routines the user adds go after the read ones.
+          onAdd={reading ? undefined : addRoutine}
         />
-        {day ? (
+        {routine ? (
           <>
-            <EditableTitle value={day.name} onSubmit={(name) => editDay((d) => ({ ...d, name }))} />
-            <Text variant="paragraph" tone="subtle" className="px-5 pt-2">
-              {day.weekday !== null && weekdays[day.weekday]
-                ? t('training:overview.fixedDay', { day: weekdays[day.weekday] })
-                : t('training:overview.noFixedDay')}
-            </Text>
-            {day.rawDay ? (
-              <View className="px-5 pt-3">
-                <ReviewPrompt
-                  message={t('planImport:confirm.dayUnknown', { raw: day.rawDay })}
-                  onConfirm={() => editDay(({ rawDay: _raw, ...d }) => d)}
-                />
-              </View>
-            ) : null}
-
+            <EditableTitle
+              value={routine.name}
+              onSubmit={(name) => editRoutine((r) => ({ ...r, name }))}
+            />
             <PlanExerciseList
-              title={day.name}
+              title={routine.name}
               exercises={exercises}
               keyOf={(e) => e.key}
               addLabel={t('planImport:confirm.add')}
@@ -215,7 +212,7 @@ export function ConfirmScreen() {
               }
               onSwap={(i) => openPicker({ mode: 'swap', index: String(i) })}
               onRemove={(i) =>
-                editDay((d) => ({ ...d, exercises: d.exercises.filter((_, k) => k !== i) }))
+                editRoutine((r) => ({ ...r, exercises: r.exercises.filter((_, k) => k !== i) }))
               }
               onMove={moveExercise}
               review={(e) => !!e.raw}
@@ -238,7 +235,7 @@ export function ConfirmScreen() {
                   ) : null}
                 </>
               )}
-              footer={reading && index === readingDay ? <ReadingGhost /> : null}
+              footer={reading && index === readingRoutine ? <ReadingGhost /> : null}
               // While the plan is read, its cards slide in and stay put.
               sortEnabled={!reading}
               itemEntering={reading ? FadeInDown.duration(300) : undefined}

@@ -4,7 +4,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { type CustomExercise, useCustomExerciseStore } from '@/shared/data/exercises';
 import type { EquipmentAccess, Experience, Goal, Sex } from '@/shared/data/profile';
-import type { PlanDraft } from '@/shared/data/templates';
+import { DEFAULT_SESSIONS_PER_WEEK, type PlanDraft } from '@/shared/data/plans';
 import { DEFAULT_BODY_WEIGHT_KG } from '@/shared/lib/body-weight';
 import type { UnitSystem } from '@/shared/lib/format';
 import { mmkvStorage } from '@/shared/lib/storage';
@@ -24,10 +24,10 @@ export interface OnboardingDraft {
   equipment: EquipmentAccess | null;
   /** With `equipment` 'home': the ticked equipment ids. */
   homeEquipment: string[];
-  /** Monday-based weekday indexes. */
-  trainingDays: number[];
+  /** Workouts per week the AI plans for. */
+  sessionsPerWeek: number;
   sessionMinutes: number;
-  /** Plan built by the generator or detected by the import. */
+  /** Plan made by the AI, read by the import or built in the editor. */
   plan: PlanDraft | null;
   /** Exercises an imported plan uses that the catalog doesn't have; created with the account. */
   customExercises: CustomExercise[];
@@ -49,7 +49,7 @@ const initialDraft = (): OnboardingDraft => ({
   focus: [],
   equipment: null,
   homeEquipment: [],
-  trainingDays: [0, 2, 4],
+  sessionsPerWeek: DEFAULT_SESSIONS_PER_WEEK,
   sessionMinutes: 60,
   plan: null,
   customExercises: [],
@@ -76,10 +76,13 @@ export const useOnboardingStore = create<OnboardingState>()(
     {
       name: 'onboarding',
       storage: createJSONStorage(() => mmkvStorage),
-      // A draft saved by an earlier version gets the fields added since from the defaults.
+      // A draft saved by an earlier version gets the fields added since from the defaults; a plan
+      // of the shape before routines (weekdays) is made again.
       merge: (persisted, current) => {
         const saved = persisted as Partial<OnboardingState> | undefined;
-        return { ...current, ...saved, draft: { ...current.draft, ...saved?.draft } };
+        const draft = { ...current.draft, ...saved?.draft };
+        if (draft.plan && !Array.isArray(draft.plan.routines)) draft.plan = null;
+        return { ...current, ...saved, draft };
       },
     },
   ),

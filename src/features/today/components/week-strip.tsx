@@ -5,11 +5,10 @@ import { cn } from '@/shared/lib/cn';
 import { isSameDay } from '@/shared/lib/date';
 import { colors } from '@/shared/lib/theme';
 import { CheckBadge } from '@/shared/ui/check-item';
-import { DashedRing } from '@/shared/ui/plan-slot';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-import type { WeekDay } from '../hooks/use-week-plan';
+import type { WeekDay } from '../hooks/use-week-workouts';
 
 export interface WeekStripProps {
   days: WeekDay[];
@@ -18,7 +17,7 @@ export interface WeekStripProps {
   onSelect: (index: number) => void;
 }
 
-/** Mon–Sun strip: accent check for done days, dashed ring for planned days. */
+/** Mon–Sun strip: an accent check on each day with a workout. */
 export function WeekStrip({ days, today, selected, onSelect }: WeekStripProps) {
   const { t } = useTranslation();
   const narrow = t('weekdays.narrow', { returnObjects: true });
@@ -58,14 +57,13 @@ export function WeekStrip({ days, today, selected, onSelect }: WeekStripProps) {
               </View>
             ) : (
               <View className="size-10.25 items-center justify-center">
-                {day.planned ? <DashedRing color={isSelected ? colors.accent : '#4A4A47'} /> : null}
-                {isSelected && !day.planned ? (
+                {isSelected ? (
                   <View className="absolute size-8.5 rounded-full bg-elevated" />
                 ) : null}
                 <Text
                   variant="label"
-                  tone={isSelected || day.planned ? 'default' : 'subtle'}
-                  className={cn('text-sm', !isSelected && !day.planned && 'font-inter')}
+                  tone={isSelected ? 'default' : 'subtle'}
+                  className={cn('text-sm', !isSelected && 'font-inter')}
                 >
                   {day.date.getDate()}
                 </Text>

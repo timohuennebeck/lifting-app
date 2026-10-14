@@ -3,7 +3,10 @@ import { Stack } from 'expo-router';
 import { InAppPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { colors } from '@/shared/lib/theme';
 
-/** Training → "Programm erstellen": onboarding's plan flow, ending back on Training. */
+/**
+ * A plan's page, and Training → "Plan erstellen": onboarding's plan flow, ending back on
+ * Training.
+ */
 export default function PlanLayout() {
   return (
     <InAppPlanFlow>

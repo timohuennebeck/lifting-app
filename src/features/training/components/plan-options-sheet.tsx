@@ -7,53 +7,51 @@ import { deleteIcon } from '@/shared/ui/minus-glyph';
 
 import { RenameGlyph } from './glyphs';
 
-export type TemplateOption = 'rename' | 'delete';
+type PlanOption = 'rename' | 'delete';
 
-export interface TemplateOptionsSheetProps {
+export interface PlanOptionsSheetProps {
   visible: boolean;
   onClose: () => void;
   name: string;
-  exerciseCount: number;
-  minutes: number;
+  routineCount: number;
   onRename: () => void;
   onDelete: () => void;
 }
 
-/** "⋯" options of a training: rename or delete (03·0b·M). */
-export function TemplateOptionsSheet({
+/** "⋯" of a plan: rename, or delete it with its routines. */
+export function PlanOptionsSheet({
   visible,
   onClose,
   name,
-  exerciseCount,
-  minutes,
+  routineCount,
   onRename,
   onDelete,
-}: TemplateOptionsSheetProps) {
+}: PlanOptionsSheetProps) {
   const { t } = useTranslation(['training', 'common']);
-  const [option, setOption] = useResetOnOpen<TemplateOption>(visible, 'rename');
+  const [option, setOption] = useResetOnOpen<PlanOption>(visible, 'rename');
 
   return (
     <ChoiceSheet
       visible={visible}
       onClose={onClose}
       title={name}
-      subtitle={t('options.meta', { count: exerciseCount, minutes })}
+      subtitle={t('plan.routineCount', { count: routineCount })}
       value={option}
       onChange={setOption}
       onConfirm={(value) => (value === 'rename' ? onRename() : onDelete())}
       options={[
         {
           value: 'rename',
-          title: t('options.rename'),
-          description: t('options.renameHint', { name }),
+          title: t('plan.rename'),
+          description: t('plan.renameHint', { name }),
           cta: t('common:actions.rename'),
           renderIcon: (active) => <RenameGlyph color={active ? colors.onAccent : colors.fgMid} />,
         },
         {
           value: 'delete',
           tone: 'danger',
-          title: t('options.delete'),
-          description: t('options.deleteHint', { name }),
+          title: t('plan.delete'),
+          description: t('plan.deleteHint', { name }),
           cta: t('common:actions.delete'),
           renderIcon: deleteIcon,
         },

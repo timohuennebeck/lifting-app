@@ -8,7 +8,7 @@ import { formatSeconds, formatWeight, type SetValues, type UnitSystem } from '@/
 import { mmkvStorage } from '@/shared/lib/storage';
 import { MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
-import type { PlanExerciseDraft, PlanSetDraft } from './templates';
+import type { PlanExerciseDraft, PlanSetDraft } from './routines';
 
 // The catalog lives in Supabase (`public.exercises`, `public.equipment`). The app downloads all
 // of it on first launch and keeps it on the device for offline use; `useCatalogRefresh` then
@@ -362,7 +362,7 @@ export function defaultSetDrafts(exerciseId: string, count: number): PlanSetDraf
 export const swapTargets = (fromId: string, toId: string): SetTargets | null =>
   isTimed(fromId) !== isTimed(toId) ? defaultTargets(toId) : null;
 
-/** Sets of an exercise added to a plan, template or workout. */
+/** Sets of an exercise added to a plan, routine or workout. */
 const NEW_EXERCISE_SETS = 3;
 
 /** An exercise as the library adds it: three sets at its default targets, its default rest. */

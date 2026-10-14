@@ -6,7 +6,7 @@ import { db, drizzle } from '@/shared/data/powersync/database';
 import { profiles } from '@/shared/data/powersync/schema';
 import { saveProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
-import { insertPlan } from '@/shared/data/templates';
+import { insertPlan } from '@/shared/data/plans';
 import { saveWeightEntry } from '@/shared/data/weight-entries';
 import { type AppLanguage, i18n } from '@/shared/i18n';
 import { toIsoDate } from '@/shared/lib/date';
@@ -16,20 +16,20 @@ import { type OnboardingDraft, useOnboardingStore } from '../stores/onboarding-s
 
 /**
  * Writes the onboarding answers as the user's profile, the weight as their first weight entry,
- * and stores the drafted plan as their active collection. Safe to call again: the plan is only
+ * and stores the drafted plan as their active plan. Safe to call again: the plan is only
  * inserted once, and the weight replaces the day's entry.
  */
 export async function persistOnboarding(userId: string, draft: OnboardingDraft) {
   // One transaction: a failed profile write must not leave a plan behind that a retry duplicates.
   await drizzle.transaction(async (tx) => {
     const existing = await tx
-      .select({ active_collection_id: profiles.active_collection_id })
+      .select({ active_plan_id: profiles.active_plan_id })
       .from(profiles)
       .where(eq(profiles.id, userId))
       .get();
-    let activeCollectionId = existing?.active_collection_id ?? null;
-    if (!activeCollectionId && draft.plan?.days.length) {
-      activeCollectionId = await insertPlan(tx, userId, draft.plan, draft.customExercises);
+    let activePlanId = existing?.active_plan_id ?? null;
+    if (!activePlanId && draft.plan?.routines.length) {
+      activePlanId = await insertPlan(tx, userId, draft.plan, draft.customExercises);
     }
     await saveProfile(
       userId,
@@ -44,9 +44,8 @@ export async function persistOnboarding(userId: string, draft: OnboardingDraft) 
         focus: draft.focus,
         equipment: draft.equipment,
         homeEquipment: draft.homeEquipment,
-        trainingDays: draft.trainingDays,
         sessionMinutes: draft.sessionMinutes,
-        activeCollectionId,
+        activePlanId,
         language: i18n.language as AppLanguage,
         onboardedAt: nowIso(),
       },

@@ -24,7 +24,7 @@ export function ReadingScreen() {
   const { t, i18n } = useTranslation(['planImport', 'common']);
   const { step } = usePlanFlow();
   const source = useImportStore((s) => s.source);
-  const started = useImportStore((s) => !!s.plan?.days[0]?.exercises.length);
+  const started = useImportStore((s) => !!s.plan?.routines[0]?.exercises.length);
   const failure = useImportStore((s) => s.failure);
   const progress = useTimedProgress(EXPECTED_MS);
   const animated = progress * EXPECTED_MS >= MIN_MS;

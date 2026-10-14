@@ -76,7 +76,6 @@
   },
   "confirm": {
     "planName": "Plan name",
-    "dayUnknown": "We couldn’t read the day “{{raw}}” – this training stays without a fixed day.",
     "readAs": "Read as “{{raw}}”",
     "correct": "Correct",
     "add": "Add exercise",
@@ -86,7 +85,7 @@
     "check_one": "Check {{count}} item",
     "check_other": "Check {{count}} items",
     "empty": "No exercises yet. Add one with +.",
-    "newDay": "Day {{number}}",
+    "newRoutine": "Workout {{number}}",
     "renamePlan": "Rename plan",
     "newExercise": "New · added as your own exercise"
   },

@@ -9,10 +9,10 @@ import { drizzle, type Executor } from './powersync/database';
 import {
   type CustomExerciseRecord,
   customExercises,
-  templateExercises,
-  templateSets,
-  workoutExercises,
-  workoutSets,
+  routineExercises,
+  routineSets,
+  workoutEntriesExercises,
+  workoutEntriesSets,
 } from './powersync/schema';
 import { queryKeys } from './query-keys';
 import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
@@ -94,22 +94,25 @@ export async function updateCustomExercise(
     if (timed === previous.measures.includes('seconds')) return;
     const { min, max, rir } = targetsFor(timed);
     const planned = tx
-      .select({ id: templateExercises.id })
-      .from(templateExercises)
-      .where(eq(templateExercises.exercise_id, id));
+      .select({ id: routineExercises.id })
+      .from(routineExercises)
+      .where(eq(routineExercises.exercise_id, id));
     await tx
-      .update(templateSets)
+      .update(routineSets)
       .set({ target_min: min, target_max: max, rir })
-      .where(inArray(templateSets.template_exercise_id, planned));
+      .where(inArray(routineSets.routine_exercise_id, planned));
     const inWorkouts = tx
-      .select({ id: workoutExercises.id })
-      .from(workoutExercises)
-      .where(eq(workoutExercises.exercise_id, id));
+      .select({ id: workoutEntriesExercises.id })
+      .from(workoutEntriesExercises)
+      .where(eq(workoutEntriesExercises.exercise_id, id));
     await tx
-      .update(workoutSets)
+      .update(workoutEntriesSets)
       .set({ target_min: min, target_max: max, target_rir: rir })
       .where(
-        and(inArray(workoutSets.workout_exercise_id, inWorkouts), isNull(workoutSets.completed_at)),
+        and(
+          inArray(workoutEntriesSets.workout_entries_exercise_id, inWorkouts),
+          isNull(workoutEntriesSets.completed_at),
+        ),
       );
   });
 }
@@ -124,10 +127,18 @@ export async function archiveCustomExercise(id: string) {
 
 const loggedSetQuery = (exerciseId: string) =>
   drizzle
-    .select({ id: workoutSets.id })
-    .from(workoutSets)
-    .innerJoin(workoutExercises, eq(workoutExercises.id, workoutSets.workout_exercise_id))
-    .where(and(eq(workoutExercises.exercise_id, exerciseId), isNotNull(workoutSets.completed_at)))
+    .select({ id: workoutEntriesSets.id })
+    .from(workoutEntriesSets)
+    .innerJoin(
+      workoutEntriesExercises,
+      eq(workoutEntriesExercises.id, workoutEntriesSets.workout_entries_exercise_id),
+    )
+    .where(
+      and(
+        eq(workoutEntriesExercises.exercise_id, exerciseId),
+        isNotNull(workoutEntriesSets.completed_at),
+      ),
+    )
     .limit(1);
 
 const hasRows = (rows: RowOf<typeof loggedSetQuery>[]) => rows.length > 0;

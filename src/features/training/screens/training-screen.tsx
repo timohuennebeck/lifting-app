@@ -3,107 +3,110 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated, { useAnimatedRef } from 'react-native-reanimated';
-import Sortable from 'react-native-sortables';
 
 import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { TabScreen } from '@/shared/components/tab-screen';
+import { currentPlanId, type PlanSummary, usePlanStatus, usePlans } from '@/shared/data/plans';
 import { useProfile } from '@/shared/data/profile';
-import {
-  type CollectionSummary,
-  currentCollectionId,
-  type TemplateSummary,
-  useCollections,
-  useTemplates,
-} from '@/shared/data/templates';
-import { useLastDefined } from '@/shared/hooks/use-last-defined';
-import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
-import { haptics } from '@/shared/lib/haptics';
+import { type RoutineSummary, useRoutines } from '@/shared/data/routines';
+import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
+import { Card } from '@/shared/ui/card';
+import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
+import { PressableScale } from '@/shared/ui/pressable-scale';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
-import { TextInputSheet } from '@/shared/ui/text-input-sheet';
-import { PLAN_NAME_MAX, TRAINING_NAME_MAX } from '@/shared/lib/limits';
 
-import { CollectionOptionsSheet } from '../components/collection-options-sheet';
-import { type CollectionTab, CollectionTabs } from '../components/collection-tabs';
 import { CreateSheet } from '../components/create-sheet';
-import { DeleteCollectionSheet } from '../components/delete-collection-sheet';
-import { NewCollectionSheet } from '../components/new-collection-sheet';
-import { TemplateOptionsSheet } from '../components/template-options-sheet';
-import { TemplateRow } from '../components/template-row';
-import {
-  deleteTemplate,
-  renameCollection,
-  renameTemplate,
-  reorderTemplates,
-} from '../data/template-mutations';
-import { useStartTemplate } from '../hooks/use-start-template';
+import { RoutineList } from '../components/routine-list';
+import { RoutineMenu } from '../components/routine-menu';
+import { SectionTitle } from '../components/section-title';
+import { SessionProgress } from '../components/session-progress';
+import { usePlanWeekLabel } from '../hooks/use-plan-week-label';
+import { useStartRoutine } from '../hooks/use-start-routine';
 
-const NONE = 'none';
+/** The plan Today follows: its week and how much of it is done; opens the plan. */
+function PlanCard({ plan }: { plan: PlanSummary }) {
+  const { t } = useTranslation('training');
+  const status = usePlanStatus(plan);
+  const weekLabel = usePlanWeekLabel();
+  const progress = status
+    ? `${weekLabel(plan, status)} · ${t('plan.sessions', { done: status.done, total: plan.sessionsPerWeek })}`
+    : '';
+  return (
+    <PressableScale
+      haptic="tap"
+      activeScale={0.98}
+      accessibilityRole="button"
+      accessibilityLabel={`${plan.name}, ${progress}`}
+      onPress={() => router.push(`/plan/${plan.id}`)}
+      className="mx-4 mb-2 gap-3.5 rounded-[22px] bg-surface p-4"
+    >
+      <View className="flex-row items-center gap-3">
+        <View className="min-w-0 flex-1 gap-1">
+          <Text variant="headline" numberOfLines={1}>
+            {plan.name}
+          </Text>
+          <Text variant="caption" tone="subtle" className="font-inter-medium">
+            {progress}
+          </Text>
+        </View>
+        <Icon name="chevron-right" size={7} color={colors.dim} />
+      </View>
+      <SessionProgress done={status?.done ?? 0} total={plan.sessionsPerWeek} />
+    </PressableScale>
+  );
+}
+
+/** One of the plans Today doesn't follow, opening its page. */
+function OtherPlanRow({ plan }: { plan: PlanSummary }) {
+  const { t } = useTranslation('training');
+  const meta = `${t('plan.routineCount', { count: plan.routineCount })} · ${t('plan.perWeekShort', { count: plan.sessionsPerWeek })}`;
+  return (
+    <PressableScale
+      haptic="tap"
+      activeScale={0.98}
+      accessibilityRole="button"
+      accessibilityLabel={`${plan.name}, ${meta}`}
+      onPress={() => router.push(`/plan/${plan.id}`)}
+      className="h-17 flex-row items-center gap-3 rounded-[22px] bg-surface px-4"
+    >
+      <View className="min-w-0 flex-1 gap-1">
+        <Text variant="bodyStrong" numberOfLines={1}>
+          {plan.name}
+        </Text>
+        <Text variant="caption" tone="subtle" className="font-inter-medium">
+          {meta}
+        </Text>
+      </View>
+      <Icon name="chevron-right" size={7} color={colors.dim} />
+    </PressableScale>
+  );
+}
 
 /**
- * Training tab: templates grouped by collection (01·V·A) with create flows (01·V·A·6/7). Holding a
- * collection renames or deletes it (01·V·A·4, 01·V·A·5).
+ * Training tab (01·V·A): the plan Today follows with its routines in order and what's next, the
+ * other plans, and Meine Trainings, the routines outside a plan. "+" makes a routine or a plan.
  */
 export function TrainingScreen() {
-  const { t } = useTranslation(['training', 'common']);
+  const { t } = useTranslation('training');
   const { profile } = useProfile();
-  const { data: templates = [], isLoading } = useTemplates();
-  const { data: collections = [] } = useCollections();
-  const { start, startingId } = useStartTemplate();
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  // A new active plan (e.g. one just made with "Programm erstellen") shows instead of the pick.
-  const active = profile?.activeCollectionId;
-  const [shownActive, setShownActive] = useState(active);
-  if (active !== shownActive) {
-    setShownActive(active);
-    setSelectedKey(null);
-  }
+  const { data: routines = [], isLoading: routinesLoading } = useRoutines();
+  const { data: plans = [], isLoading: plansLoading } = usePlans();
+  const plan = plans.find((p) => p.id === currentPlanId(profile?.activePlanId, plans));
+  const status = usePlanStatus(plan);
+  const { start, startingId } = useStartRoutine();
   const [createOpen, setCreateOpen] = useState(false);
-  const [newCollectionOpen, setNewCollectionOpen] = useState(false);
-  const [options, setOptions] = useState<TemplateSummary | null>(null);
-  const optionsShown = useLastDefined(options);
+  const [menuFor, setMenuFor] = useState<RoutineSummary | null>(null);
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  const drag = useSortableDrag<TemplateSummary>(
-    ({ data }) => void reorderTemplates(data.map((tpl) => tpl.id)),
-  );
-  const [renaming, setRenaming] = useState<TemplateSummary | null>(null);
-  const renameShown = useLastDefined(renaming);
-  const [collectionOptions, setCollectionOptions] = useState<CollectionSummary | null>(null);
-  const collectionOptionsShown = useLastDefined(collectionOptions);
-  const [renamingCollection, setRenamingCollection] = useState<CollectionSummary | null>(null);
-  const renamingCollectionShown = useLastDefined(renamingCollection);
-  const [deletingCollection, setDeletingCollection] = useState<CollectionSummary | null>(null);
-  // Collection options → rename or delete: the next sheet opens once this one has gone.
-  const thenFromCollection = (next: (c: CollectionSummary) => void) => {
-    const collection = collectionOptions;
-    setCollectionOptions(null);
-    if (collection) afterSheetClose(() => next(collection));
-  };
 
-  const looseCount = templates.filter((tpl) => !tpl.collectionId).length;
-  const tabs: CollectionTab[] = [
-    ...collections.map((c) => ({
-      key: c.id,
-      name: c.name,
-      count: c.templateCount,
-      editable: true,
-    })),
-    ...(looseCount ? [{ key: NONE, name: t('list.noCollection'), count: looseCount }] : []),
-  ];
-  // The same plan Today follows, else the first tab.
-  const current = currentCollectionId(profile?.activeCollectionId, templates);
-  const fallbackKey = tabs.find((tab) => tab.key === current)?.key ?? tabs[0]?.key ?? null;
-  const selected = tabs.some((tab) => tab.key === selectedKey) ? selectedKey : fallbackKey;
-  const rows = templates.filter((tpl) => (tpl.collectionId ?? NONE) === selected);
-  const selectedCollectionId = selected && selected !== NONE ? selected : undefined;
-
-  const openNewTemplate = () =>
-    router.push({
-      pathname: '/template/new',
-      params: selectedCollectionId ? { collectionId: selectedCollectionId } : {},
-    });
+  const planRoutines = plan ? routines.filter((r) => r.planId === plan.id) : [];
+  const library = routines.filter((r) => r.planId === null);
+  const otherPlans = plans.filter((p) => p.id !== plan?.id);
+  const createPlan = () => openPlanFlow(profile, plan?.sessionsPerWeek);
+  const newRoutine = (planId?: string) =>
+    router.push({ pathname: '/routine/new', params: planId ? { planId } : {} });
 
   return (
     <TabScreen
@@ -120,55 +123,76 @@ export function TrainingScreen() {
       <Text variant="title" className="px-5 pt-8 normal-case">
         {t('list.title')}
       </Text>
-      {tabs.length ? (
-        <CollectionTabs
-          tabs={tabs}
-          selected={selected}
-          onSelect={setSelectedKey}
-          onOptions={(key) => setCollectionOptions(collections.find((c) => c.id === key) ?? null)}
-        />
-      ) : null}
-      <View className="px-4 pt-3">
-        {/* Hold a training to drag it to another place in its collection. */}
-        <Sortable.Grid
-          data={rows}
-          keyExtractor={(tpl) => tpl.id}
-          columns={1}
-          rowGap={8}
-          scrollableRef={scrollRef}
-          {...drag.gridProps}
-          renderItem={({ item: tpl }) => (
-            <TemplateRow
-              name={tpl.name}
-              minutes={tpl.estimatedMinutes}
-              exerciseCount={tpl.exerciseCount}
-              items={tpl.items}
-              starting={startingId === tpl.id}
-              onPress={drag.unlessDragging(() => router.push(`/template/${tpl.id}`))}
-              onStart={drag.unlessDragging(() => start(tpl))}
-              onMore={drag.unlessDragging(() => setOptions(tpl))}
+
+      <SectionTitle>{t('list.myPlan')}</SectionTitle>
+      {plan ? (
+        <>
+          <PlanCard plan={plan} />
+          <View className="px-4">
+            <RoutineList
+              routines={planRoutines}
+              scrollRef={scrollRef}
+              nextId={status?.nextRoutineId}
+              startingId={startingId}
+              onStart={start}
+              onMore={setMenuFor}
             />
-          )}
-        />
-      </View>
-      {!isLoading && !rows.length ? (
-        <View className="items-center gap-4 px-8 pt-12">
+          </View>
+          <Button
+            label={t('list.addRoutine')}
+            icon="plus"
+            size="sm"
+            variant="secondary"
+            className="mx-4 mt-3 self-start"
+            onPress={() => newRoutine(plan.id)}
+          />
+        </>
+      ) : !plansLoading ? (
+        <Card className="mx-4 items-center gap-4 py-7">
           <View className="items-center gap-2">
             <Text variant="headline" className="text-center">
-              {tabs.length ? t('list.emptyCollection') : t('list.empty')}
+              {t('list.noPlan')}
             </Text>
             <Text variant="paragraph" tone="subtle" className="text-center">
-              {t('list.emptyHint')}
+              {t('list.noPlanHint')}
             </Text>
           </View>
           <Button
-            label={t('create.createTemplate')}
+            label={t('create.createPlan')}
             icon="plus"
             size="md"
             variant="secondary"
-            onPress={openNewTemplate}
+            onPress={createPlan}
+          />
+        </Card>
+      ) : null}
+
+      {otherPlans.length ? (
+        <>
+          <SectionTitle>{t('list.otherPlans')}</SectionTitle>
+          <View className="gap-2 px-4">
+            {otherPlans.map((p) => (
+              <OtherPlanRow key={p.id} plan={p} />
+            ))}
+          </View>
+        </>
+      ) : null}
+
+      <SectionTitle>{t('list.library')}</SectionTitle>
+      {library.length ? (
+        <View className="px-4">
+          <RoutineList
+            routines={library}
+            scrollRef={scrollRef}
+            startingId={startingId}
+            onStart={start}
+            onMore={setMenuFor}
           />
         </View>
+      ) : !routinesLoading ? (
+        <Text variant="paragraph" tone="subtle" className="px-5">
+          {t('list.libraryEmpty')}
+        </Text>
       ) : null}
       {/* The list ends 40pt above the tab bar inset; TabScreen adds 24. */}
       <View className="h-4" />
@@ -176,87 +200,16 @@ export function TrainingScreen() {
       <CreateSheet
         visible={createOpen}
         onClose={() => setCreateOpen(false)}
-        onCreateCollection={() => {
+        onCreateRoutine={() => {
           setCreateOpen(false);
-          afterSheetClose(() => setNewCollectionOpen(true));
+          afterSheetClose(() => newRoutine());
         }}
-        onCreateTemplate={() => {
+        onCreatePlan={() => {
           setCreateOpen(false);
-          afterSheetClose(openNewTemplate);
-        }}
-        onCreateProgram={() => {
-          setCreateOpen(false);
-          afterSheetClose(() => openPlanFlow(profile));
+          afterSheetClose(createPlan);
         }}
       />
-      <TemplateOptionsSheet
-        visible={!!options}
-        onClose={() => setOptions(null)}
-        name={optionsShown?.name ?? ''}
-        exerciseCount={optionsShown?.exerciseCount ?? 0}
-        minutes={optionsShown?.estimatedMinutes ?? 0}
-        onRename={() => {
-          const tpl = options;
-          setOptions(null);
-          afterSheetClose(() => setRenaming(tpl));
-        }}
-        onDelete={async () => {
-          const tpl = options;
-          setOptions(null);
-          if (!tpl) return;
-          await deleteTemplate(tpl.id);
-          haptics.success();
-        }}
-      />
-      <TextInputSheet
-        visible={!!renaming}
-        onClose={() => setRenaming(null)}
-        title={t('options.renameTitle')}
-        initialValue={renameShown?.name}
-        maxLength={TRAINING_NAME_MAX}
-        placeholder={t('options.namePlaceholder')}
-        ctaLabel={t('common:actions.save')}
-        onSubmit={async (name) => {
-          if (renaming) await renameTemplate(renaming.id, name);
-          setRenaming(null);
-        }}
-      />
-      <NewCollectionSheet
-        visible={newCollectionOpen}
-        onClose={() => setNewCollectionOpen(false)}
-        onCreated={(id) => {
-          setSelectedKey(id);
-          setNewCollectionOpen(false);
-        }}
-      />
-      <CollectionOptionsSheet
-        visible={!!collectionOptions}
-        onClose={() => setCollectionOptions(null)}
-        name={collectionOptionsShown?.name ?? ''}
-        templateCount={collectionOptionsShown?.templateCount ?? 0}
-        onRename={() => thenFromCollection(setRenamingCollection)}
-        onDelete={() => thenFromCollection(setDeletingCollection)}
-      />
-      <TextInputSheet
-        visible={!!renamingCollection}
-        onClose={() => setRenamingCollection(null)}
-        title={t('collections.renameTitle')}
-        maxLength={PLAN_NAME_MAX}
-        subtitle={t('collections.templateCount', {
-          count: renamingCollectionShown?.templateCount ?? 0,
-        })}
-        initialValue={renamingCollectionShown?.name}
-        placeholder={t('collections.namePlaceholder')}
-        ctaLabel={t('common:actions.save')}
-        onSubmit={async (name) => {
-          if (renamingCollection) await renameCollection(renamingCollection.id, name);
-          setRenamingCollection(null);
-        }}
-      />
-      <DeleteCollectionSheet
-        collection={deletingCollection}
-        onClose={() => setDeletingCollection(null)}
-      />
+      <RoutineMenu routine={menuFor} onClose={() => setMenuFor(null)} />
     </TabScreen>
   );
 }

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { TextInput, View } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
-import { TRAINING_NAME_MAX } from '@/shared/lib/limits';
+import { ROUTINE_NAME_MAX } from '@/shared/lib/limits';
 import { CharCount } from '@/shared/ui/char-count';
 
 export interface EditableTitleProps {
@@ -38,7 +38,7 @@ export function EditableTitle({ value, onSubmit }: EditableTitleProps) {
         onFocus={() => setDraft(value)}
         onBlur={finish}
         accessibilityLabel={t('options.rename')}
-        maxLength={TRAINING_NAME_MAX}
+        maxLength={ROUTINE_NAME_MAX}
         multiline
         scrollEnabled={false}
         submitBehavior="blurAndSubmit"
@@ -49,7 +49,7 @@ export function EditableTitle({ value, onSubmit }: EditableTitleProps) {
       />
       {/* While renaming: how much of the limit is left. */}
       {draft !== null ? (
-        <CharCount length={draft.length} max={TRAINING_NAME_MAX} className="px-5" />
+        <CharCount length={draft.length} max={ROUTINE_NAME_MAX} className="px-5" />
       ) : null}
     </View>
   );

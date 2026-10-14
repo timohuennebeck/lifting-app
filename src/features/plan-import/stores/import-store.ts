@@ -24,17 +24,17 @@ interface ImportState {
   workbook: SheetSummary[] | null;
   /** Detected plan being reviewed on the confirm screen; it fills in while `reading`. */
   plan: ImportedPlan | null;
-  /** Selected day tab on the confirm screen. */
-  dayIndex: number;
+  /** Selected routine tab on the confirm screen. */
+  routineIndex: number;
   /** Counts the runs, so a screen only reacts to the one it started or shows. */
   run: number;
   /** The plan is still coming in. */
   reading: boolean;
   /** Why a run stopped without a plan. */
   failure: { run: number; reason: ImportFailure } | null;
-  /** The day the exercises being read go to. */
-  readingDay: number;
-  /** The confirm screen shows the day being read until the user picks one. */
+  /** The routine the exercises being read go to. */
+  readingRoutine: number;
+  /** The confirm screen shows the routine being read until the user picks one. */
   following: boolean;
   setFile: (file: ImportFile) => void;
   /** The plan is to be made from these answers (by the AI), not read. */
@@ -53,9 +53,9 @@ interface ImportState {
   stop: (run: number) => void;
   setPlan: (plan: ImportedPlan) => void;
   editPlan: (edit: (plan: ImportedPlan) => ImportedPlan) => void;
-  selectDay: (index: number) => void;
-  /** Stops following the day being read (the user started doing something on the current one). */
-  holdDay: () => void;
+  selectRoutine: (index: number) => void;
+  /** Stops following the routine being read (the user started on the one shown). */
+  holdRoutine: () => void;
   /** Forgets the session, e.g. on sign-out. */
   reset: () => void;
 }
@@ -68,10 +68,10 @@ const EMPTY = {
   source: null,
   workbook: null,
   plan: null,
-  dayIndex: 0,
+  routineIndex: 0,
   reading: false,
   failure: null,
-  readingDay: 0,
+  readingRoutine: 0,
   following: true,
 } as const;
 
@@ -80,25 +80,29 @@ let running: AbortController | null = null;
 
 /** The plan with what the function just sent. */
 function receive(s: ImportState, event: PlanEvent): Partial<ImportState> {
-  if (event.type === 'plan') return { plan: { name: event.name, days: [], newExercises: [] } };
+  if (event.type === 'plan') return { plan: { name: event.name, routines: [], newExercises: [] } };
   const { plan } = s;
   if (!plan) return {};
-  if (event.type === 'day') {
-    const days = [...plan.days, { ...event.day, exercises: [] }];
-    const at = days.length - 1;
-    return { plan: { ...plan, days }, readingDay: at, ...(s.following ? { dayIndex: at } : {}) };
+  if (event.type === 'routine') {
+    const routines = [...plan.routines, { ...event.routine, exercises: [] }];
+    const at = routines.length - 1;
+    return {
+      plan: { ...plan, routines },
+      readingRoutine: at,
+      ...(s.following ? { routineIndex: at } : {}),
+    };
   }
   const exercise = { ...event.exercise, key: newId() };
-  const days = plan.days.map((d, i) =>
-    i === s.readingDay ? { ...d, exercises: [...d.exercises, exercise] } : d,
+  const routines = plan.routines.map((r, i) =>
+    i === s.readingRoutine ? { ...r, exercises: [...r.exercises, exercise] } : r,
   );
-  if (!event.newExercise) return { plan: { ...plan, days } };
+  if (!event.newExercise) return { plan: { ...plan, routines } };
   const created = { ...event.newExercise, archived: false };
   // Exercises the catalog doesn't have show by name once in the draft, and are created at sign-up
   // (those the plan still uses). Kept from earlier imports too: their plan may still be the draft.
   const { draft, update } = useOnboardingStore.getState();
   update({ customExercises: [...draft.customExercises, created] });
-  return { plan: { ...plan, days, newExercises: [...plan.newExercises, created] } };
+  return { plan: { ...plan, routines, newExercises: [...plan.newExercises, created] } };
 }
 
 /**
@@ -143,7 +147,7 @@ export const useImportStore = create<ImportState>()((set, get) => ({
     running = controller;
     const { source, run: last } = get();
     const run = last + 1;
-    set({ run, plan: null, dayIndex: 0, reading: !!source, failure: null, following: true });
+    set({ run, plan: null, routineIndex: 0, reading: !!source, failure: null, following: true });
     if (!source) return run;
     streamPlan(
       { source, language },
@@ -165,11 +169,11 @@ export const useImportStore = create<ImportState>()((set, get) => ({
   },
   setPlan: (plan) => {
     running?.abort();
-    set({ plan, dayIndex: 0, reading: false, failure: null });
+    set({ plan, routineIndex: 0, reading: false, failure: null });
   },
   editPlan: (edit) => set((s) => (s.plan ? { plan: edit(s.plan) } : {})),
-  selectDay: (dayIndex) => set({ dayIndex, following: false }),
-  holdDay: () => get().following && set({ following: false }),
+  selectRoutine: (routineIndex) => set({ routineIndex, following: false }),
+  holdRoutine: () => get().following && set({ following: false }),
   reset: () => {
     running?.abort();
     set(EMPTY);

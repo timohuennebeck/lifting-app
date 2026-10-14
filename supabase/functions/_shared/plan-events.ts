@@ -1,5 +1,5 @@
 // What the app receives from the plan functions (read-plan, generate-plan): the shapes of its
-// ImportedDay, ImportedExercise and CustomExercise, and the server-sent events that carry them.
+// ImportedRoutine, ImportedExercise and CustomExercise, and the server-sent events that carry them.
 // Plain TypeScript without Deno APIs.
 
 export interface SetTarget {
@@ -8,11 +8,8 @@ export interface SetTarget {
   rir: number | null;
 }
 
-export interface ImportedDay {
+export interface ImportedRoutine {
   name: string;
-  weekday: number | null;
-  /** The heading as read, when there is no weekday. */
-  rawDay?: string;
 }
 
 export interface ImportedExercise {
@@ -35,14 +32,14 @@ export interface NewExercise {
 }
 
 /**
- * The plan as server-sent events: its name, then each day with its exercises as they are written,
- * and lastly `done`, or `error` when it broke off or there is no plan. A day comes with its first
- * exercise, so days without any never show; exercises belong to the day before them. A new
- * exercise comes with the first line using it.
+ * The plan as server-sent events: its name, then each routine with its exercises as they are
+ * written, and lastly `done`, or `error` when it broke off or there is no plan. A routine comes
+ * with its first exercise, so routines without any never show; exercises belong to the routine
+ * before them. A new exercise comes with the first line using it.
  */
 export type PlanEvent =
   | { type: 'plan'; name: string }
-  | { type: 'day'; day: ImportedDay }
+  | { type: 'routine'; routine: ImportedRoutine }
   | { type: 'exercise'; exercise: ImportedExercise; newExercise?: NewExercise }
   | { type: 'done' }
   | { type: 'error'; error: 'not_a_plan' | 'failed' };

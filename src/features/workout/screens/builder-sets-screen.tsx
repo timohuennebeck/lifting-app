@@ -8,7 +8,7 @@ import { ScreenHeader } from '@/shared/ui/screen-header';
 
 import { useWorkoutDraftStore } from '../stores/workout-draft-store';
 
-/** Target sets of an exercise in the empty workout being put together (as for templates). */
+/** Target sets of an exercise in the empty workout being put together (as for routines). */
 export function BuilderSetsScreen() {
   const { index } = useLocalSearchParams<{ index: string }>();
   const at = Number(index);

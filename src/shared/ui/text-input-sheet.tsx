@@ -21,7 +21,7 @@ export interface TextInputSheetProps {
   onSubmit: (value: string) => void | Promise<void>;
 }
 
-/** Sheet with one clearable text field and a CTA (rename, new collection). Rides above the keyboard. */
+/** Sheet with one clearable text field and a CTA (rename, new routine). Rides above the keyboard. */
 export function TextInputSheet({
   visible,
   onClose,

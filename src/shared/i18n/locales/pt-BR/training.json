@@ -3,52 +3,62 @@
     "create": "Criar novo"
   },
   "list": {
-    "title": "Modelos",
-    "noCollection": "Sem coleção",
+    "title": "Treino",
+    "myPlan": "Meu plano",
+    "otherPlans": "Outros planos",
+    "library": "Meus treinos",
     "meta_one": "{{minutes}} min · {{count}} exercício",
     "meta_other": "{{minutes}} min · {{count}} exercícios",
     "start": "Iniciar {{name}}",
     "more": "Opções para {{name}}",
-    "empty": "Você ainda não tem modelos",
-    "emptyCollection": "Ainda não há modelos aqui",
-    "emptyHint": "Crie um modelo para planejar seus exercícios e séries."
+    "next": "A seguir",
+    "addRoutine": "Adicionar treino",
+    "noPlan": "Ainda sem plano",
+    "noPlanHint": "Peça um, importe o seu ou monte você mesmo.",
+    "libraryEmpty": "Treinos fora de um plano, ex.: para o hotel ou um dia de braço, ficam aqui."
+  },
+  "plan": {
+    "routineCount_one": "{{count}} treino",
+    "routineCount_other": "{{count}} treinos",
+    "perWeekShort": "{{count}}× por semana",
+    "week": "Semana {{week}}",
+    "blockWeek": "Semana {{week}} de {{weeks}}",
+    "deload": "Semana de deload",
+    "sessions": "{{done}} de {{total}} sessões",
+    "active": "Plano ativo",
+    "activate": "Usar este plano",
+    "perWeek": "Sessões por semana",
+    "perWeekHint": "Essa quantidade de treinos forma uma semana do plano, nos dias que você quiser.",
+    "blocks": "Blocos",
+    "blocksHint": "A cada semana 1 repetição a menos em reserva; a última semana é de deload.",
+    "blockOff": "Desligado",
+    "blockOption": "{{build}} + 1",
+    "deloadNow": "Deload agora",
+    "restartBlock": "Reiniciar bloco",
+    "routines": "Treinos",
+    "more": "Opções para {{name}}",
+    "rename": "Renomear",
+    "renameHint": "Dê um novo nome para {{name}}",
+    "renameTitle": "Renomear plano",
+    "namePlaceholder": "Nome do plano",
+    "delete": "Excluir plano",
+    "deleteHint": "Exclui {{name}} com seus treinos. Os treinos registrados ficam.",
+    "notFound": "Este plano não existe mais."
   },
   "create": {
-    "collection": "Coleção",
-    "collectionHint": "Agrupar modelos",
-    "template": "Modelo",
-    "templateHint": "Definir exercícios e séries",
-    "program": "Programa",
-    "programHint": "Importe seu plano ou gere um novo",
-    "createCollection": "Criar coleção",
-    "createTemplate": "Criar modelo",
-    "createProgram": "Criar programa"
+    "routine": "Treino",
+    "routineHint": "Definir exercícios e séries",
+    "plan": "Plano",
+    "planHint": "Peça um, importe ou monte você mesmo",
+    "createRoutine": "Criar treino",
+    "createPlan": "Criar plano"
   },
-  "collections": {
-    "templateCount_one": "{{count}} modelo",
-    "templateCount_other": "{{count}} modelos",
-    "renameTitle": "Renomear coleção",
-    "newTitle": "Nova coleção",
-    "namePlaceholder": "Nome da coleção",
-    "deleteTitle": "Excluir {{name}}?",
-    "deleteSubtitle_one": "{{count}} modelo nesta coleção",
-    "deleteSubtitle_other": "{{count}} modelos nesta coleção",
-    "deleteKeep": "Excluir coleção",
-    "deleteKeepHint": "Os modelos vão para “Sem coleção”",
-    "deleteAll": "Excluir coleção e modelos",
-    "deleteAllHint": "Os treinos registrados são mantidos",
-    "deleteHint": "Depois você escolhe o que acontece com os templates",
-    "moreA11y": "Opções para {{name}}"
-  },
-  "newTemplate": {
-    "title": "Novo modelo",
+  "newRoutine": {
+    "title": "Novo treino",
     "name": "Nome",
-    "namePlaceholder": "ex.: Push",
-    "collection": "Coleção"
+    "namePlaceholder": "ex.: Push"
   },
   "overview": {
-    "noFixedDay": "Sem dia fixo – treine quando for melhor para você.",
-    "fixedDay": "Planejado para {{day}}.",
     "musclesWorked": "Músculos trabalhados",
     "musclesInfo": "Detalhamento dos músculos",
     "exercises_one": "{{count}} exercício",
@@ -63,7 +73,8 @@
     "exerciseMenu": "Opções de {{name}}",
     "exerciseInfo": "Sobre {{name}}",
     "notFound": "Este treino não existe mais.",
-    "swapTitle": "Trocar exercício"
+    "swapTitle": "Trocar exercício",
+    "partOf": "Parte de {{plan}}"
   },
   "exerciseMenu": {
     "editSets": "Editar séries",
@@ -78,9 +89,14 @@
     "rename": "Renomear",
     "renameHint": "Dê um novo nome para {{name}}",
     "delete": "Excluir treino",
-    "deleteHint": "Remove {{name}} do seu plano",
+    "deleteHint": "Exclui {{name}}. Os treinos registrados ficam.",
     "renameTitle": "Renomear treino",
-    "namePlaceholder": "Nome do treino"
+    "namePlaceholder": "Nome do treino",
+    "copy": "Copiar",
+    "copyToPlan": "Adicionar a {{plan}}",
+    "copyToPlanHint": "Copia o treino para o seu plano; o original fica aqui.",
+    "copyToLibrary": "Copiar para Meus treinos",
+    "copyToLibraryHint": "Uma cópia fora do plano; o original fica no plano."
   },
   "sets": {
     "title": "Editar séries",

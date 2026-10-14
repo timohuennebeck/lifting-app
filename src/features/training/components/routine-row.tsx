@@ -66,7 +66,7 @@ function MuscleStack({ shares }: { shares: MuscleShare[] }) {
   );
 }
 
-export interface TemplateRowProps {
+export interface RoutineRowProps {
   name: string;
   minutes: number;
   exerciseCount: number;
@@ -74,16 +74,18 @@ export interface TemplateRowProps {
   items: { exerciseId: string; sets: number }[];
   onPress: () => void;
   onStart: () => void;
-  /** "⋯": rename or delete. */
+  /** "⋯": rename, copy or delete. */
   onMore: () => void;
   starting?: boolean;
+  /** Small accent tag over the name, e.g. "Als Nächstes". */
+  tag?: string;
 }
 
 /**
- * Template card: its top muscles as circles, the name, the muscle worked most with its share,
- * duration and exercise count; "⋯" (rename, delete) and a quick-start play button.
+ * Routine card: its top muscles as circles, the name, the muscle worked most with its share,
+ * duration and exercise count; "⋯" (rename, copy, delete) and a quick-start play button.
  */
-export function TemplateRow({
+export function RoutineRow({
   name,
   minutes,
   exerciseCount,
@@ -92,7 +94,8 @@ export function TemplateRow({
   onStart,
   onMore,
   starting,
-}: TemplateRowProps) {
+  tag,
+}: RoutineRowProps) {
   const { t } = useTranslation(['training', 'muscles']);
   const shares = muscleShares(items);
   const top = shares[0];
@@ -104,12 +107,19 @@ export function TemplateRow({
       haptic="none"
       activeScale={0.98}
       accessibilityRole="button"
-      accessibilityLabel={[name, focus, meta].filter(Boolean).join(', ')}
+      accessibilityLabel={[tag, name, focus, meta].filter(Boolean).join(', ')}
       onPress={onPress}
       className="flex-row items-center gap-3.5 rounded-[22px] bg-surface py-3.5 pr-3 pl-2.5"
     >
       <MuscleStack shares={shares} />
       <View className="min-w-0 flex-1">
+        {tag ? (
+          <View className="mb-1 self-start rounded-full bg-accent px-2 py-0.5">
+            <Text variant="caption" tone="onAccent" className="text-[11px] leading-3.5">
+              {tag}
+            </Text>
+          </View>
+        ) : null}
         <Text variant="bodyStrong" numberOfLines={1}>
           {name}
         </Text>

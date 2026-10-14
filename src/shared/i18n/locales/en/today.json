@@ -5,8 +5,7 @@
   "status": {
     "doneToday": "Done today",
     "done": "Done · {{date}}",
-    "plannedToday": "Planned · today",
-    "planned": "Planned · {{date}}"
+    "next": "Up next"
   },
   "stats": {
     "minutes": "{{count}} min",
@@ -21,21 +20,19 @@
   "overview": "Overview",
   "start": "Start",
   "resume": "Resume",
-  "reschedule": "Reschedule",
   "markDone": "Mark as done",
+  "other": "Other workout",
+  "deloadHint": "Deload week: half the sets and a bit lighter, so you recover.",
   "unplanned": {
-    "title": "No workout planned",
-    "body": "Push, pull or legs? Tap to choose."
+    "title": "No plan yet",
+    "body": "Tap to have one made or import yours."
   },
-  "planSheet": {
-    "title": "Choose a workout",
-    "subtitle": "Plan it for {{day}}.",
-    "current": "Currently {{day}}",
-    "noDay": "No day yet"
+  "emptyPlan": {
+    "title": "Plan without workouts",
+    "body": "Tap to add workouts to your plan."
   },
-  "rescheduleSheet": {
-    "title": "Reschedule",
-    "subtitle": "Pick a new day for {{name}}.",
-    "taken": "{{name}} planned"
+  "otherSheet": {
+    "title": "Other workout",
+    "subtitle": "Pick a workout from {{plan}}."
   }
 }

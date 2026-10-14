@@ -63,10 +63,8 @@ export interface Profile {
   equipment: EquipmentAccess | null;
   /** With `equipment` 'home': the equipment ids the user has. */
   homeEquipment: string[];
-  /** Monday-based weekday indexes. */
-  trainingDays: number[];
   sessionMinutes: number | null;
-  activeCollectionId: string | null;
+  activePlanId: string | null;
   /** App language, mirrored for the team and server-side messages. */
   language: AppLanguage | null;
   /** Profile photo in the "avatars" bucket; null shows the initials. */
@@ -90,9 +88,8 @@ function toProfile(r: ProfileRecord): Profile {
     focus: parseJson(r.focus, []),
     equipment: r.equipment as EquipmentAccess | null,
     homeEquipment: parseJson(r.home_equipment, []),
-    trainingDays: parseJson(r.training_days, []),
     sessionMinutes: r.session_minutes,
-    activeCollectionId: r.active_collection_id,
+    activePlanId: r.active_plan_id,
     language: r.language as AppLanguage | null,
     avatarPath: r.avatar_path,
     bio: r.bio,
@@ -138,9 +135,8 @@ const toColumns = (p: ProfilePatch) => ({
   focus: toJson(p.focus),
   equipment: p.equipment,
   home_equipment: toJson(p.homeEquipment),
-  training_days: toJson(p.trainingDays),
   session_minutes: p.sessionMinutes,
-  active_collection_id: p.activeCollectionId,
+  active_plan_id: p.activePlanId,
   language: p.language,
   avatar_path: p.avatarPath,
   bio: p.bio,

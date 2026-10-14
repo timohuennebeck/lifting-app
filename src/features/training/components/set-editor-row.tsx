@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import type { PlanSetDraft } from '@/shared/data/templates';
+import type { PlanSetDraft } from '@/shared/data/routines';
 import { formatRir } from '@/shared/lib/rir';
 import { colors } from '@/shared/lib/theme';
 import { InputCell } from '@/shared/ui/input-cell';

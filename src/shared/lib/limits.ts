@@ -3,10 +3,10 @@
 
 /** First name: onboarding and the profile. */
 export const FIRST_NAME_MAX = 24;
-/** A plan (collection): creating, renaming, the import review. The plan import cuts to it too. */
+/** A plan: creating, renaming, the import review. The plan import cuts to it too. */
 export const PLAN_NAME_MAX = 30;
-/** A training (day of a plan): creating, renaming, its title. */
-export const TRAINING_NAME_MAX = 40;
+/** A routine: creating, renaming, its title. */
+export const ROUTINE_NAME_MAX = 40;
 /** A custom exercise's name. */
 export const CUSTOM_EXERCISE_NAME_MAX = 60;
 /** A support message; a ticket's subject is its first line, cut to TICKET_SUBJECT_MAX. */

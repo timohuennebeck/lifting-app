@@ -10,8 +10,8 @@ export interface PlanAnswers {
   equipment: EquipmentAccess;
   /** With `equipment` 'home': the ticked equipment ids. */
   homeEquipment: string[];
-  /** Monday-based weekday indexes. */
-  trainingDays: number[];
+  /** Workouts per week. */
+  sessionsPerWeek: number;
   sessionMinutes: number;
   experience: Experience | null;
 }
@@ -23,26 +23,20 @@ export function answersFromDraft(draft: OnboardingDraft): PlanAnswers {
     focus: draft.focus,
     equipment: draft.equipment ?? 'gym',
     homeEquipment: draft.equipment === 'home' ? draft.homeEquipment : [],
-    trainingDays: draft.trainingDays.length ? draft.trainingDays : [0, 2, 4],
+    sessionsPerWeek: draft.sessionsPerWeek,
     sessionMinutes: draft.sessionMinutes,
     experience: draft.experience,
   };
 }
 
 /**
- * The answers the "create" steps ask, as the profile keeps them. The ticked home equipment stays
- * also with another answer, for the next time "Eigene Geräte" is picked.
+ * The answers the "create" steps ask, as the profile keeps them (workouts per week go into the
+ * plan). The ticked home equipment stays also with another answer, for the next time "Eigene
+ * Geräte" is picked.
  */
 export function profileAnswers(draft: OnboardingDraft): ProfilePatch {
-  const { goal, focus, equipment, trainingDays, sessionMinutes } = answersFromDraft(draft);
-  return {
-    goal,
-    focus,
-    equipment,
-    homeEquipment: draft.homeEquipment,
-    trainingDays,
-    sessionMinutes,
-  };
+  const { goal, focus, equipment, sessionMinutes } = answersFromDraft(draft);
+  return { goal, focus, equipment, homeEquipment: draft.homeEquipment, sessionMinutes };
 }
 
 /** Why the AI made no plan, as the user is told (planCreate:generate.errors). */

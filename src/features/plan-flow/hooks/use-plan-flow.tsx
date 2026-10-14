@@ -4,7 +4,7 @@ import { createContext, type ReactNode, useContext, useRef } from 'react';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { useImportStore } from '@/features/plan-import/stores/import-store';
 import type { Profile, ProfilePatch } from '@/shared/data/profile';
-import type { PlanDraft } from '@/shared/data/templates';
+import type { PlanDraft } from '@/shared/data/plans';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 
@@ -32,16 +32,17 @@ type PlanStep =
 
 const InAppContext = createContext(false);
 
-/** Marks the plan flow's screens as opened from the app (Training → "Programm erstellen"). */
+/** Marks the plan flow's screens as opened from the app (Training → "Plan erstellen"). */
 export function InAppPlanFlow({ children }: { children: ReactNode }) {
   return <InAppContext value>{children}</InAppContext>;
 }
 
 /**
- * Opens the plan flow from the app: a fresh import, and the profile's answers as the generator's
- * starting point (the onboarding draft holds the flow's answers, as in onboarding).
+ * Opens the plan flow from the app: a fresh import, and the profile's answers (with the current
+ * plan's workouts per week) as the AI's starting point. The onboarding draft holds the flow's
+ * answers, as in onboarding.
  */
-export function openPlanFlow(profile: Profile | null | undefined) {
+export function openPlanFlow(profile: Profile | null | undefined, sessionsPerWeek?: number) {
   useImportStore.getState().reset();
   useOnboardingStore.getState().update({
     plan: null,
@@ -52,9 +53,9 @@ export function openPlanFlow(profile: Profile | null | undefined) {
       focus: profile.focus,
       equipment: profile.equipment,
       homeEquipment: profile.homeEquipment,
-      trainingDays: profile.trainingDays,
       ...(profile.sessionMinutes ? { sessionMinutes: profile.sessionMinutes } : {}),
     }),
+    ...(sessionsPerWeek ? { sessionsPerWeek } : {}),
   });
   router.push('/plan/has-plan');
 }
