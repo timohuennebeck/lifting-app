@@ -421,6 +421,10 @@ verify_jwt = false
 # Called during onboarding, before there is an account; the function limits imports itself.
 verify_jwt = false
 
+[functions.generate-plan]
+# Same as analyze-plan: onboarding, before there is an account; it limits the plans itself.
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 55327

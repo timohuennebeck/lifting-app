@@ -1,15 +1,13 @@
-// Picks the parts of the model's answer out of the JSON while it is still being written, so each
-// exercise can go to the app as soon as it is complete. Plain TypeScript, like plan.ts.
-
-import type { ModelDay, ModelExercise } from './plan.ts';
+// Picks the parts of a model's training plan out of its JSON while it is still being written, so
+// each exercise can go to the app as soon as it is complete. Plain TypeScript without Deno APIs.
 
 /** A finished part of the answer, in the order the model writes them. */
-export type PlanPiece =
-  /** Everything before "days": whether it is a plan, and its name. */
+export type PlanPiece<Day, Exercise> =
+  /** Everything before "days": whether it is a plan (when the answer says), and its name. */
   | { kind: 'start'; isPlan: boolean; name: string }
-  /** A day's heading, name and weekday: everything before its "exercises". */
-  | { kind: 'day'; day: Omit<ModelDay, 'exercises'> }
-  | { kind: 'exercise'; exercise: ModelExercise };
+  /** A day's fields before its "exercises" (e.g. heading, name, weekday). */
+  | { kind: 'day'; day: Omit<Day, 'exercises'> }
+  | { kind: 'exercise'; exercise: Exercise };
 
 interface Frame {
   type: 'object' | 'array';
@@ -27,10 +25,10 @@ const closePrefix = (text: string) => JSON.parse(`${text.replace(/,\s*$/, '')}}`
 
 /**
  * Reads the answer as it grows: `push` takes the next piece of text and returns the parts it
- * completed. It relies on the strict schema writing keys in its order (is_plan, name, days; per
- * day heading, name, weekday, exercises), which OpenAI's structured output does.
+ * completed. It relies on the strict schema writing keys in its order, which OpenAI's structured
+ * output does: the plan's own fields before "days", and each day's before its "exercises".
  */
-export class PlanStream {
+export class PlanStream<Day extends { exercises: unknown[] }, Exercise> {
   private text = '';
   private at = 0;
   private stack: Frame[] = [];
@@ -39,9 +37,9 @@ export class PlanStream {
   /** Where the string being read started, when it is an object key. */
   private keyStart = -1;
 
-  push(chunk: string): PlanPiece[] {
+  push(chunk: string): PlanPiece<Day, Exercise>[] {
     this.text += chunk;
-    const pieces: PlanPiece[] = [];
+    const pieces: PlanPiece<Day, Exercise>[] = [];
     for (; this.at < this.text.length; this.at++) {
       const char = this.text[this.at];
       const top = this.stack.at(-1);
@@ -73,7 +71,7 @@ export class PlanStream {
       } else if (char === '}' || char === ']') {
         const frame = this.stack.pop();
         if (frame?.depth === 'exercise') {
-          const exercise = JSON.parse(this.text.slice(frame.start, this.at + 1)) as ModelExercise;
+          const exercise = JSON.parse(this.text.slice(frame.start, this.at + 1)) as Exercise;
           pieces.push({ kind: 'exercise', exercise });
         }
       } else if (char === ',' && top?.type === 'object') {
@@ -94,11 +92,15 @@ export class PlanStream {
   }
 
   /** The keys after which everything before them is known. */
-  private keyReached(frame: Frame): PlanPiece | null {
+  private keyReached(frame: Frame): PlanPiece<Day, Exercise> | null {
     const before = () => this.text.slice(frame.start, this.keyStart);
     if (frame.depth === 'root' && frame.key === 'days') {
       const { is_plan, name } = closePrefix(before());
-      return { kind: 'start', isPlan: is_plan !== false, name: typeof name === 'string' ? name : '' };
+      return {
+        kind: 'start',
+        isPlan: is_plan !== false,
+        name: typeof name === 'string' ? name : '',
+      };
     }
     if (frame.depth === 'day' && frame.key === 'exercises') {
       return { kind: 'day', day: closePrefix(before()) };

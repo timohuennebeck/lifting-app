@@ -1,6 +1,13 @@
 // What the model is asked about a training plan and how its answer becomes the plan the app
 // reviews. Plain TypeScript without Deno APIs, so it can be tested outside the Edge runtime.
 
+import type {
+  ImportedDay,
+  ImportedExercise,
+  NewExercise,
+  SetTarget,
+} from '../_shared/plan-events.ts';
+
 /** The muscles of `public.muscle`, which custom exercises are tagged with. */
 export const MUSCLES = [
   'abs',
@@ -180,39 +187,6 @@ export interface ModelDay {
   name: string;
   weekday: number | null;
   exercises: ModelExercise[];
-}
-
-// What the app receives; the same shapes as its ImportedDay, ImportedExercise and CustomExercise.
-interface SetTarget {
-  targetMin: number | null;
-  targetMax: number | null;
-  rir: number | null;
-}
-
-export interface ImportedDay {
-  name: string;
-  weekday: number | null;
-  /** The heading as read, when there is no weekday. */
-  rawDay?: string;
-}
-
-export interface ImportedExercise {
-  exerciseId: string;
-  sets: SetTarget[];
-  restSeconds: number | null;
-  /** Set on lines to review: the text as read, and other likely catalog exercises. */
-  raw?: string;
-  alternatives?: string[];
-}
-
-/** An exercise the catalog doesn't have, created for the user with the plan. */
-export interface NewExercise {
-  id: string;
-  name: string;
-  primary: Muscle[];
-  secondary: Muscle[];
-  measures: string[];
-  restSeconds: number;
 }
 
 const clampInt = (value: number | null, min: number, max: number) =>
