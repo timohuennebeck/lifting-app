@@ -54,24 +54,6 @@
     "advanced": "Avançado",
     "advancedHint": "Mais de 2 anos, técnica segura"
   },
-  "complaints": {
-    "title": "TENS DORES OU\nLESÕES?",
-    "subtitle": "Evitamos exercícios que sobrecarreguem essas zonas.",
-    "none": "Sem queixas",
-    "areas": {
-      "neck": "Pescoço",
-      "shoulders": "Ombros",
-      "elbows": "Cotovelos",
-      "wrists": "Pulsos",
-      "upper_back": "Parte superior das costas",
-      "lower_back": "Lombar",
-      "hips": "Anca",
-      "knees": "Joelhos",
-      "ankles": "Tornozelos"
-    },
-    "continueMarked_one": "Continuar · {{count}} zona marcada",
-    "continueMarked_other": "Continuar · {{count}} zonas marcadas"
-  },
   "hasPlan": {
     "title": "ESTÁS A SEGUIR\nUM PLANO?",
     "formats": "Foto, PDF ou folha de cálculo",

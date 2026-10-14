@@ -14,7 +14,6 @@ function inputFromDraft(draft: OnboardingDraft): GeneratePlanInput {
     trainingDays: draft.trainingDays.length ? draft.trainingDays : [0, 2, 4],
     sessionMinutes: draft.sessionMinutes,
     experience: draft.experience,
-    complaints: draft.complaints,
   };
 }
 

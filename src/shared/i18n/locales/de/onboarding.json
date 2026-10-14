@@ -54,24 +54,6 @@
     "advanced": "Erfahren",
     "advancedHint": "Über 2 Jahre, sichere Technik"
   },
-  "complaints": {
-    "title": "HAST DU\nBESCHWERDEN?",
-    "subtitle": "Wir meiden Übungen, die dort belasten.",
-    "none": "Keine Beschwerden",
-    "areas": {
-      "neck": "Nacken",
-      "shoulders": "Schultern",
-      "elbows": "Ellbogen",
-      "wrists": "Handgelenke",
-      "upper_back": "Oberer Rücken",
-      "lower_back": "Unterer Rücken",
-      "hips": "Hüfte",
-      "knees": "Knie",
-      "ankles": "Sprunggelenke"
-    },
-    "continueMarked_one": "Weiter · {{count}} Stelle markiert",
-    "continueMarked_other": "Weiter · {{count}} Stellen markiert"
-  },
   "hasPlan": {
     "title": "FOLGST DU AKTUELL\nEINEM PLAN?",
     "formats": "Foto, PDF oder Tabelle",

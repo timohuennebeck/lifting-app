@@ -22,8 +22,6 @@ export interface GeneratePlanInput {
   trainingDays: number[];
   sessionMinutes: number;
   experience: Experience | null;
-  /** Complaint area ids from onboarding (knees, shoulders, …). */
-  complaints: string[];
 }
 
 export interface PlanLabels {
@@ -112,19 +110,6 @@ const ALSO_AT: Partial<Record<EquipmentAccess, readonly string[]>> = {
   bodyweight: ['lunge', 'calf-raise'],
 };
 
-/** Exercises that load a complaint area and are left out when it hurts. */
-const COMPLAINT_AVOID: Record<string, readonly string[]> = {
-  neck: ['upright-row', 'deadlift'],
-  shoulders: ['upright-row', 'dip', 'front-raise', 'arnold-press'],
-  elbows: ['french-press', 'close-grip-bench-press', 'smith-close-grip-bench-press', 'chin-up'],
-  wrists: ['push-up', 'french-press', 'front-raise'],
-  upper_back: ['t-bar-row', 'deadlift'],
-  lower_back: ['deadlift', 'romanian-deadlift', 'squat', 't-bar-row'],
-  hips: ['lunge', 'deadlift'],
-  knees: ['lunge', 'leg-extension', 'hack-squat', 'squat'],
-  ankles: ['lunge', 'calf-raise'],
-};
-
 const MIN_EXERCISES = 2;
 const MAX_EXERCISES = 8;
 const MAX_SETS = 5;
@@ -181,12 +166,11 @@ export function generatePlan(input: GeneratePlanInput, labels: PlanLabels): Plan
   return { name: labels.name, days: planDays };
 }
 
-function allowedExercises({ equipment, complaints }: GeneratePlanInput) {
-  const avoid = new Set(complaints.flatMap((c) => COMPLAINT_AVOID[c] ?? []));
+function allowedExercises({ equipment }: GeneratePlanInput) {
   const also = ALSO_AT[equipment] ?? [];
   return (id: string) => {
     const ex = getExercise(id);
-    if (!ex?.isActive || avoid.has(id)) return false;
+    if (!ex?.isActive) return false;
     return (!!ex.equipment && EQUIPMENT[equipment].includes(ex.equipment)) || also.includes(id);
   };
 }

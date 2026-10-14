@@ -35,7 +35,7 @@ Du musst mindestens [[PLATZHALTER: Mindestalter]] Jahre alt sein, um Traqa zu nu
 
 Traqa unterstützt dich beim Krafttraining. Je nach Version und Abo gehören dazu insbesondere:
 
-- ein Trainingsplan, den die App aus deinen Angaben erstellt, zum Beispiel aus Ziel, Erfahrung, Ausstattung, Trainingstagen und Beschwerden
+- ein Trainingsplan, den die App aus deinen Angaben erstellt, zum Beispiel aus Ziel, Erfahrung, Ausstattung und Trainingstagen
 - der Import eines vorhandenen Plans per Foto oder Datei
 - das Protokollieren deiner Trainings mit Gewichten, Wiederholungen und Zeiten, deine Historie, Bestwerte und Vorschläge für deine Sätze
 - der Körpercheck mit Fotos und geschätzten Werten
@@ -56,7 +56,6 @@ Traqa ist ein Hilfsmittel für dein Training. Einen bestimmten Trainingserfolg s
 
 - Traqa gibt allgemeine Trainingsempfehlungen. Die App bietet keine medizinische, physiotherapeutische oder ernährungsbezogene Beratung. Traqa ist kein Medizinprodukt. [[PLATZHALTER: Bestätigen, dass Traqa nach seiner Zweckbestimmung kein Medizinprodukt ist]]
 - Lass dich vor Beginn eines Trainingsprogramms ärztlich beraten, besonders bei Vorerkrankungen (zum Beispiel des Herz-Kreislauf-Systems), bei Beschwerden oder Verletzungen, nach Operationen, in der Schwangerschaft oder Stillzeit und wenn du lange nicht trainiert hast.
-- Wenn du Beschwerden angibst, meidet die App Übungen, die diese Körperstellen belasten. Das ersetzt keine Diagnose und keine Therapie.
 - Die Werte des Körperchecks, zum Beispiel der geschätzte Körperfettanteil, sind grobe Schätzungen. Sie sind keine medizinische Messung und keine Diagnose.
 - Pläne und Vorschläge sind eine Orientierung. Wähle Gewichte und Wiederholungen so, dass du sie mit sauberer Technik sicher schaffst. Nutze bei schweren Gewichten Sicherungen oder eine Hilfestellung.
 - Hör sofort auf, wenn du Schmerzen, Schwindel, Atemnot oder Druck in der Brust spürst, und hol bei Bedarf ärztliche Hilfe.

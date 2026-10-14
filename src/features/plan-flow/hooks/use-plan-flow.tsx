@@ -47,7 +47,6 @@ export function openPlanFlow(profile: Profile | null | undefined) {
     customExercises: [],
     ...(profile && {
       experience: profile.experience,
-      complaints: profile.complaints,
       goal: profile.goal,
       focus: profile.focus,
       equipment: profile.equipment,

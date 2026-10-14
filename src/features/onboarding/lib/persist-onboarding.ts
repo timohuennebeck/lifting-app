@@ -39,7 +39,6 @@ export async function persistOnboarding(userId: string, draft: OnboardingDraft) 
         unitSystem: draft.unitSystem,
         heightCm: draft.heightCm,
         experience: draft.experience,
-        complaints: draft.complaints,
         goal: draft.goal,
         focus: draft.focus,
         equipment: draft.equipment,

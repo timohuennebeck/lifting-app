@@ -61,7 +61,6 @@
     "frequency": "{{count}} × {{minutes}} Min.",
     "focus": "Fokus: {{areas}}",
     "balanced": "Alle Muskelgruppen",
-    "complaints": "Gelenkschonend",
     "dayTag": "T{{n}}",
     "skip": "Tippen zum Überspringen"
   },

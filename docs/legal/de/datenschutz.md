@@ -12,7 +12,7 @@ Hier erfährst du, welche personenbezogenen Daten wir verarbeiten, wenn du die A
 
 - Traqa speichert deine Pläne und Trainings zuerst auf deinem Gerät und gleicht sie mit deinem Konto ab, sobald du online bist.
 - Andere Nutzer können dein Profil, deine Trainings und deine Fotos nicht sehen.
-- Angaben zu Beschwerden, deine Körpermaße und deine Körpercheck-Fotos behandeln wir als Gesundheitsdaten. Wir verarbeiten sie nur mit deiner ausdrücklichen Einwilligung.
+- Deine Körpermaße und deine Körpercheck-Fotos behandeln wir als Gesundheitsdaten. Wir verarbeiten sie nur mit deiner ausdrücklichen Einwilligung.
 - Für den Körpercheck und den Plan-Import wertet ein KI-Modell von OpenAI deine Fotos und Dateien aus. Dafür übermitteln wir sie an OpenAI in den USA.
 - Die App enthält derzeit keine Werbung und keine Werbe- oder Analyse-Tracker.
 - Du kannst dein Konto jederzeit in der App löschen. Damit löschen wir auch deine Fotos und alle Daten deines Kontos.
@@ -46,7 +46,7 @@ Alle Daten in unserer Datenbank sind deinem Konto zugeordnet. Technische Zugriff
 
 Die ersten Schritte der Einrichtung kannst du ohne Konto durchlaufen. Dabei lädt die App den Übungskatalog (Namen, Anleitungen, Bilder und Videos der Übungen) und diese Rechtstexte von unseren Servern. Den Übungskatalog prüft sie beim Start und danach stündlich auf Änderungen. Dabei fallen nur technisch notwendige Verbindungsdaten an (Abschnitt 4.11).
 
-Deine Antworten in der Einrichtung (zum Beispiel Vorname, Geburtsdatum, Gewicht, Größe, Ziel, Beschwerden und der erstellte oder importierte Plan) speichert die App zunächst nur auf deinem Gerät. Den Plan erstellt die App ebenfalls auf deinem Gerät. An uns gehen diese Angaben erst, wenn du ein Konto erstellst (Abschnitte 4.3 und 4.4). Ausnahme: Fotos und Dateien, aus denen du einen Plan importierst, überträgt die App schon vorher, damit der Plan erkannt werden kann (Abschnitt 4.7).
+Deine Antworten in der Einrichtung (zum Beispiel Vorname, Geburtsdatum, Gewicht, Größe, Ziel und der erstellte oder importierte Plan) speichert die App zunächst nur auf deinem Gerät. Den Plan erstellt die App ebenfalls auf deinem Gerät. An uns gehen diese Angaben erst, wenn du ein Konto erstellst (Abschnitte 4.3 und 4.4). Ausnahme: Fotos und Dateien, aus denen du einen Plan importierst, überträgt die App schon vorher, damit der Plan erkannt werden kann (Abschnitt 4.7).
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der App, die du nutzen möchtest).
 
@@ -86,13 +86,12 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO. Körpergewicht und Körpergröße k
 
 Einige Angaben sind Gesundheitsdaten im Sinne von Art. 9 DSGVO und damit besonders geschützt:
 
-- **Beschwerden:** die Körperstellen, an denen du Beschwerden hast (Nacken, Schultern, Ellbogen, Handgelenke, oberer Rücken, unterer Rücken, Hüfte, Knie, Sprunggelenke). Die App meidet beim Erstellen deines Plans Übungen, die diese Stellen belasten.
 - **Körpermaße:** dein Körpergewicht und deine Körpergröße (Abschnitt 4.3).
 - **Körpercheck:** deine Körpercheck-Fotos und die Werte, die daraus entstehen, zum Beispiel ein geschätzter Körperfettanteil (Abschnitt 4.6).
 
-Diese Daten verarbeiten wir nur mit deiner ausdrücklichen Einwilligung (Art. 9 Abs. 2 lit. a in Verbindung mit Art. 6 Abs. 1 lit. a DSGVO). Für den Körpercheck fragen wir vor deinem ersten Check in einem eigenen Schritt nach deiner Einwilligung und nennen dabei auch die Auswertung durch OpenAI in den USA. [[PLATZHALTER: Beschreibung, wie und an welcher Stelle der App die Einwilligung für Beschwerden und Körpermaße eingeholt wird; den Satz zum Körpercheck erst veröffentlichen, wenn der Einwilligungsschritt in der App live ist]]
+Diese Daten verarbeiten wir nur mit deiner ausdrücklichen Einwilligung (Art. 9 Abs. 2 lit. a in Verbindung mit Art. 6 Abs. 1 lit. a DSGVO). Für den Körpercheck fragen wir vor deinem ersten Check in einem eigenen Schritt nach deiner Einwilligung und nennen dabei auch die Auswertung durch OpenAI in den USA. [[PLATZHALTER: Beschreibung, wie und an welcher Stelle der App die Einwilligung für die Körpermaße eingeholt wird; den Satz zum Körpercheck erst veröffentlichen, wenn der Einwilligungsschritt in der App live ist]]
 
-Angaben zu Beschwerden und der Körpercheck sind freiwillig: Du kannst „Keine Beschwerden“ wählen und den Körpercheck überspringen. Deine Einwilligung kannst du jederzeit mit Wirkung für die Zukunft widerrufen (Abschnitt 12).
+Der Körpercheck ist freiwillig: Du kannst ihn überspringen. Deine Einwilligung kannst du jederzeit mit Wirkung für die Zukunft widerrufen (Abschnitt 12).
 
 ### 4.5 Trainingsdaten
 
@@ -320,7 +319,7 @@ Du kannst dich bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77 DSGVO
 
 ## 14. Musst du uns Daten geben?
 
-Für ein Konto brauchen wir deine E-Mail-Adresse und ein Passwort oder dein Google-Konto bzw. deinen Apple Account. Ohne Konto kannst du Traqa nach der Einrichtung nicht nutzen und deine Daten nicht sichern. Die Angaben in der Einrichtung braucht die App, um deinen Plan zu erstellen. Freiwillig sind insbesondere Angaben zu Beschwerden, dein Geschlecht (du kannst „Keine Angabe“ wählen), der Körpercheck, ein Profilfoto und der Text „Über dich“.
+Für ein Konto brauchen wir deine E-Mail-Adresse und ein Passwort oder dein Google-Konto bzw. deinen Apple Account. Ohne Konto kannst du Traqa nach der Einrichtung nicht nutzen und deine Daten nicht sichern. Die Angaben in der Einrichtung braucht die App, um deinen Plan zu erstellen. Freiwillig sind insbesondere dein Geschlecht (du kannst „Keine Angabe“ wählen), der Körpercheck, ein Profilfoto und der Text „Über dich“.
 
 ## 15. Keine automatisierten Entscheidungen
 

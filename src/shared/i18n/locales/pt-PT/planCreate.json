@@ -61,7 +61,6 @@
     "frequency": "{{count}} × {{minutes}} min",
     "focus": "Foco: {{areas}}",
     "balanced": "Todos os grupos musculares",
-    "complaints": "Poupa as articulações",
     "dayTag": "D{{n}}",
     "skip": "Toca para saltar"
   },

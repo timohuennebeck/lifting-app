@@ -60,9 +60,6 @@ export function BuildingScreen() {
       duration: 3.3,
       delay: 0.3,
     },
-    ...(input.complaints.length
-      ? [{ label: t('planCreate:building.complaints'), x: 236, y: 520, duration: 3.9, delay: 0.9 }]
-      : []),
   ];
 
   return (

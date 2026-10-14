@@ -18,7 +18,6 @@ export const profiles = sqliteTable('profiles', {
   unit_system: text(),
   height_cm: integer(),
   experience: text(),
-  complaints: text(),
   goal: text(),
   focus: text(),
   equipment: text(),

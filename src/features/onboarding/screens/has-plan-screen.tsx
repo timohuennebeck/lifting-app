@@ -18,7 +18,7 @@ export function HasPlanScreen() {
   return (
     <StepScreen
       // The last question about the user in onboarding; in the app the flow starts here.
-      {...(!inApp && { step: 9, total: ABOUT_STEPS })}
+      {...(!inApp && { step: 8, total: ABOUT_STEPS })}
       title={t('hasPlan.title')}
       contentClassName="pb-2"
       footer={

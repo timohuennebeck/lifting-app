@@ -19,7 +19,6 @@ export interface OnboardingDraft {
   weightKg: number;
   heightCm: number;
   experience: Experience | null;
-  complaints: string[];
   goal: Goal | null;
   focus: MuscleId[];
   equipment: EquipmentAccess | null;
@@ -42,7 +41,6 @@ const initialDraft = (): OnboardingDraft => ({
   weightKg: DEFAULT_BODY_WEIGHT_KG,
   heightCm: 178,
   experience: null,
-  complaints: [],
   goal: null,
   focus: [],
   equipment: null,

@@ -58,7 +58,6 @@ export interface Profile {
   unitSystem: UnitSystem;
   heightCm: number | null;
   experience: Experience | null;
-  complaints: string[];
   goal: Goal | null;
   focus: MuscleId[];
   equipment: EquipmentAccess | null;
@@ -85,7 +84,6 @@ function toProfile(r: ProfileRecord): Profile {
     unitSystem: (r.unit_system as UnitSystem | null) ?? 'metric',
     heightCm: r.height_cm,
     experience: r.experience as Experience | null,
-    complaints: parseJson(r.complaints, []),
     goal: r.goal as Goal | null,
     focus: parseJson(r.focus, []),
     equipment: r.equipment as EquipmentAccess | null,
@@ -133,7 +131,6 @@ const toColumns = (p: ProfilePatch) => ({
   unit_system: p.unitSystem,
   height_cm: p.heightCm,
   experience: p.experience,
-  complaints: toJson(p.complaints),
   goal: p.goal,
   focus: toJson(p.focus),
   equipment: p.equipment,
