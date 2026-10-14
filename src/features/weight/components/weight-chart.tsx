@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Svg, { Circle, Defs, G, LinearGradient, Path, Stop } from 'react-native-svg';
+import Svg, { Circle, Path } from 'react-native-svg';
 
 import { daysBetween, fromIsoDate } from '@/shared/lib/date';
 import { formatNumber, formatShortDate, type UnitSystem } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
+import { ChartGrid } from '@/shared/ui/chart-grid';
 import { Text } from '@/shared/ui/text';
 import { toUnits } from '@/shared/lib/body-weight';
 
@@ -15,7 +16,6 @@ import type { WeightPoint } from '../lib/trend';
 const HEIGHT = 210;
 /** Room between the chart's edge and the highest and lowest label. */
 const PAD_Y = 15;
-const GRID = 14;
 /** The first day's x, and the room on the right for the value labels. */
 const LEFT = 16;
 const LABELS = 58;
@@ -106,30 +106,7 @@ export function WeightChart({ points, from, to, units, selected, onSelect }: Wei
         <View style={{ height: HEIGHT }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
           {width > 0 ? (
             <Svg width={width} height={HEIGHT}>
-              <Defs>
-                {/* The grid fades out towards the screen edges; the data doesn't. */}
-                <LinearGradient
-                  id="weight-grid"
-                  gradientUnits="userSpaceOnUse"
-                  x1={12}
-                  y1={0}
-                  x2={width - 12}
-                  y2={0}
-                >
-                  <Stop offset={0} stopColor={colors.chip} stopOpacity={0} />
-                  <Stop offset={0.18} stopColor={colors.chip} stopOpacity={1} />
-                  <Stop offset={0.82} stopColor={colors.chip} stopOpacity={1} />
-                  <Stop offset={1} stopColor={colors.chip} stopOpacity={0} />
-                </LinearGradient>
-              </Defs>
-              <G stroke="url(#weight-grid)" strokeWidth={1}>
-                {Array.from({ length: HEIGHT / GRID + 1 }, (_, i) => (
-                  <Path key={`h${i}`} d={`M12 ${i * GRID + 0.5}H${width - 12}`} />
-                ))}
-                {Array.from({ length: Math.floor((width - 40) / GRID) + 1 }, (_, i) => (
-                  <Path key={`v${i}`} d={`M${20 + i * GRID + 0.5} 0V${HEIGHT}`} />
-                ))}
-              </G>
+              <ChartGrid id="weight-grid" width={width} height={HEIGHT} />
               {scale ? (
                 <>
                   {points.map((p, i) =>

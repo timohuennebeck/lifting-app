@@ -8,11 +8,13 @@ import { formatShortDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
 import { colors } from '@/shared/lib/theme';
+import { ChartGrid } from '@/shared/ui/chart-grid';
 import { Text } from '@/shared/ui/text';
 
 import { buildLineChart, type ChartInput, nearestPoint } from '../lib/chart';
 
-const HEIGHT = 120;
+/** Nine grid squares. */
+const HEIGHT = 126;
 const CHIP_WIDTH = 84;
 
 export type HistoryMetric = 'topWeight' | 'leastAssistance' | 'topReps' | 'topSeconds';
@@ -82,28 +84,28 @@ export function HistoryChart({ data, metric, format }: HistoryChartProps) {
           onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
           accessibilityLabel={t('history.chartLabel')}
         >
-          <View className="absolute inset-0 justify-between">
-            {[0, 1, 2].map((k) => (
-              <View key={k} className="h-px bg-pill" />
-            ))}
-          </View>
-          {width > 0 && points.length ? (
+          {width > 0 ? (
             <Svg width={width} height={HEIGHT} style={{ overflow: 'visible' }}>
+              <ChartGrid id="history-grid" width={width} height={HEIGHT} />
               <Defs>
                 <LinearGradient id="history-fill" x1="0" y1="0" x2="0" y2="1">
                   <Stop offset="0" stopColor={colors.accent} stopOpacity={0.22} />
                   <Stop offset="1" stopColor={colors.accent} stopOpacity={0} />
                 </LinearGradient>
               </Defs>
-              <Path d={area} fill="url(#history-fill)" />
-              <Path
-                d={line}
-                fill="none"
-                stroke={colors.accent}
-                strokeWidth={2.5}
-                strokeLinejoin="round"
-                strokeLinecap="round"
-              />
+              {points.length ? (
+                <>
+                  <Path d={area} fill="url(#history-fill)" />
+                  <Path
+                    d={line}
+                    fill="none"
+                    stroke={colors.accent}
+                    strokeWidth={2.5}
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                  />
+                </>
+              ) : null}
               {active ? (
                 <Path d={`M${active.x} 0 V${HEIGHT}`} stroke={colors.track} strokeWidth={1} />
               ) : null}
