@@ -17,7 +17,7 @@ import { Text } from '@/shared/ui/text';
 import { IMPORT_STEPS } from '../lib/format';
 import { useImportStore, usePhotos } from '../stores/import-store';
 
-/** 05a-2: page through the captured photos, retake or remove pages, then analyze. */
+/** 05a-2: page through the captured photos, retake or remove pages, then read the plan. */
 export function ReviewScreen() {
   const { t } = useTranslation('planImport');
   const { step } = usePlanFlow();
@@ -49,7 +49,7 @@ export function ReviewScreen() {
       scroll
       footer={
         <View className="gap-1.5">
-          <Button label={t('review.cta')} onPress={() => router.push(step('/import/analysis'))} />
+          <Button label={t('read')} onPress={() => router.push(step('/import/reading'))} />
           <Button
             label={t('review.addPage')}
             variant="ghost"

@@ -1,6 +1,6 @@
 import { ageFrom, type Profile } from '@/shared/data/profile';
 
-/** The progress check is for adults only; the analysis function checks it too. */
+/** The progress check is for adults only; the assessment function checks it too. */
 const PROGRESS_CHECK_MIN_AGE = 18;
 
 /** Whether the profile's birth date allows progress checks (an unknown one does not). */

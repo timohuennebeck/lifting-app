@@ -19,7 +19,7 @@ const PHOTO_ISSUES = [
 ] as const;
 type PhotoIssue = Exclude<(typeof PHOTO_ISSUES)[number], 'none'>;
 
-export interface AnalysisProfile {
+export interface AssessmentProfile {
   sex: string | null;
   /** ISO date (YYYY-MM-DD). */
   birth_date: string | null;
@@ -53,7 +53,7 @@ interface CheckResult {
   metrics: Metrics;
 }
 
-type Analysis =
+type Assessment =
   | { status: 'ok'; result: CheckResult }
   | { status: 'retake'; issues: { pose: Pose; issue: PhotoIssue }[] };
 
@@ -167,7 +167,7 @@ export function weightText(entries: WeightEntryRow[], now: Date) {
 
 /** The text before the photos: who is in them and what the last check found. */
 export function contextText(
-  profile: AnalysisProfile | null,
+  profile: AssessmentProfile | null,
   weights: WeightEntryRow[],
   previous: PreviousCheck | null,
   now: Date,
@@ -226,7 +226,7 @@ function overallScore(groups: Record<Group, number>, proportions: number, defini
 }
 
 /** Photos the model could not judge ask for a retake; otherwise the clamped values and score. */
-export function toAnalysis(output: ModelOutput): Analysis {
+export function toAssessment(output: ModelOutput): Assessment {
   const issues = output.photos.flatMap((p) =>
     p.issue !== 'none' && POSES.includes(p.pose) ? [{ pose: p.pose, issue: p.issue }] : [],
   );

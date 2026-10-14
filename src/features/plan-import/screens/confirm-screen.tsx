@@ -36,7 +36,7 @@ import { useImportStore } from '../stores/import-store';
 /**
  * 06c: the detected plan in the training overview layout (03·0b). Days sit in the plan strip;
  * amber dots mark what the import wasn't sure about until the user checks it. It opens with the
- * first exercise read and fills in while the analysis sends the rest, following the day being
+ * first exercise read and fills in while the function sends the rest, following the day being
  * read until the user picks one. "Selbst erstellen" opens it with an empty plan to build day by
  * day. A plan the AI makes (BuildingScreen) opens here the same way and goes on to its name.
  */
@@ -57,7 +57,7 @@ export function ConfirmScreen() {
   // Made from the answers, not read: it goes on to its name, and is made again on a retry.
   const made = useImportStore((s) => s.source?.kind === 'answers');
   const scroller = useAnimatedRef<Animated.ScrollView>();
-  // The analysis this screen shows; leaving the screen stops it.
+  // The run this screen shows; leaving the screen stops it.
   const [run] = useState(() => useImportStore.getState().run);
   const wasReading = useRef(reading);
   const alerted = useRef(false);
@@ -82,8 +82,8 @@ export function ConfirmScreen() {
     alerted.current = true;
     const message = made
       ? t(`planCreate:generate.errors.${generateFailure(failure.reason)}`)
-      : t(`planImport:analysis.errors.${failure.reason}`);
-    const again = made ? step('/create/building') : step('/import/analysis');
+      : t(`planImport:reading.errors.${failure.reason}`);
+    const again = made ? step('/create/building') : step('/import/reading');
     Alert.alert(message, undefined, [
       { text: t('common:actions.cancel'), style: 'cancel', onPress: () => router.back() },
       { text: t('common:actions.retry'), onPress: () => router.replace(again) },

@@ -24,7 +24,7 @@ cp .env.example .env
 npm run supabase:keys           # writes supabase/signing_key.json (gitignored)
 npm run supabase:start          # copy the publishable key into .env
 
-# Progress check analysis: the Edge Function needs an OpenAI key (see the file)
+# Progress check assessment: the Edge Function needs an OpenAI key (see the file)
 cp supabase/functions/.env.example supabase/functions/.env
 
 # PowerSync service, joined to the Supabase docker network
@@ -118,9 +118,9 @@ Documents are readable without an account (onboarding runs logged out) and writt
 - **In the app:** the scale button in the top bar opens today's entry, which leads on to the
   history and its calendar (oldest month on top, loading more months both ways). The trend is computed on the device: each weigh-in moves it 10 % toward the scale value.
   The onboarding weight becomes the first entry; bodyweight exercise scores and the progress check
-  analysis use the latest one. `profiles.weight_kg` was moved into the table and dropped.
+  assessment use the latest one. `profiles.weight_kg` was moved into the table and dropped.
 
-## Progress check analysis
+## Progress check assessment
 
 The app uploads the three photos (front, side, back) to the private `progress-photos` bucket and
 calls the `assess-progress` Edge Function, which sends them to OpenAI (`gpt-6.1-sol` by default, via
@@ -129,15 +129,15 @@ the standard API at `api.openai.com`) and returns the check's values, or the pho
 - **Secrets:** `supabase/functions/.env` locally (loaded by `supabase start`); in production
   `npx supabase secrets set --env-file supabase/functions/.env`. `OPENAI_API_KEY` is an OpenAI API
   key; `OPENAI_MODEL` overrides the default model.
-- **Rules (server-side):** adults only (18+ by the profile's birth date), at most 5 analyses per user in 24 hours.
-- **`progress_check_runs`:** one row per analysis (a run of the function), server-only. Saving a
+- **Rules (server-side):** adults only (18+ by the profile's birth date), at most 5 assessments per user in 24 hours.
+- **`progress_check_runs`:** one row per assessment (a run of the function), server-only. Saving a
   check (`progress_checks`, with its photos in `progress_check_photos`) takes its score, values and
   time from the run; a check without one is rejected.
 
 ## Plan import
 
 In onboarding, users can import their plan from photos or a file (PDF, Excel, CSV, text) instead of
-creating one. The app shrinks photos to JPEGs and calls the `analyze-plan` Edge Function, which sends
+creating one. The app shrinks photos to JPEGs and calls the `read-plan` Edge Function, which sends
 them to OpenAI together with the exercise catalog and returns the plan in the app's shape: each line
 matched to a catalog exercise, or a new exercise the app creates for the user at sign-up. Lines it
 isn't sure about come with alternatives for the user to review.
@@ -248,7 +248,7 @@ What the code expects:
 - **RevenueCat:** entitlement `pro` with both products; offering `default` (current) with the
   packages `$rc_monthly` → `traqa_pro_monthly` and `$rc_annual` → `traqa_pro_yearly`.
 - **Server check:** with `REVENUECAT_SECRET_KEY` (a v1 secret key, `sk_…`) in
-  `supabase/functions/.env`, the progress check analysis only runs for accounts with an active `pro`
+  `supabase/functions/.env`, the progress check assessment only runs for accounts with an active `pro`
   entitlement. Without the key, or when RevenueCat can't be reached, it isn't checked.
 - **Testing:** a development build on an iPhone, signed in to a sandbox tester under Settings →
   App Store → Sandbox Account.

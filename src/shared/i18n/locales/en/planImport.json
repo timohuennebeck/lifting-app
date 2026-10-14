@@ -14,10 +14,10 @@
     "createOwn": "Create it myself",
     "ownPlan": "My plan"
   },
+  "read": "Read plan",
   "options": {
     "title": "LOOKS GOOD?",
     "swap": "Swap",
-    "cta": "Read plan",
     "preview": "File preview"
   },
   "sheets": {
@@ -58,11 +58,10 @@
     "title": "LOOKS GOOD?",
     "retake": "Retake photo",
     "counter": "{{current}} / {{total}}",
-    "cta": "Recognize plan",
     "addPage": "Add page",
     "remove": "Remove photo"
   },
-  "analysis": {
+  "reading": {
     "stages": [
       "Reading handwriting …",
       "Detecting exercises …",

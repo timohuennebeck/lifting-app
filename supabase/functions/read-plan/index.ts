@@ -172,11 +172,11 @@ Deno.serve(async (req) => {
   } catch (error) {
     // A timeout may still have been billed, so the import stays counted.
     console.error('OpenAI request failed', error);
-    return reply(502, { error: 'analysis_failed' });
+    return reply(502, { error: 'failed' });
   }
   if ('upstream' in started) {
     await giveBack();
-    return reply(502, { error: 'analysis_failed', upstream: started.upstream });
+    return reply(502, { error: 'failed', upstream: started.upstream });
   }
 
   const { answer } = started;
@@ -207,7 +207,7 @@ async function sendPlan(
     if ('incomplete' in step) {
       console.error('The import did not complete', step.incomplete);
       if (!written) await giveBack();
-      return send({ type: 'error', error: 'analysis_failed' });
+      return send({ type: 'error', error: 'failed' });
     }
     if ('done' in step) {
       return send(exercises ? { type: 'done' } : { type: 'error', error: 'not_a_plan' });

@@ -1,4 +1,4 @@
-// What the plan functions (analyze-plan, generate-plan) share: the exercise catalog, the limits
+// What the plan functions (read-plan, generate-plan) share: the exercise catalog, the limits
 // per network and per day (they run before there is an account, and each is a paid model call),
 // and the response that streams the plan to the app.
 import { encodeHex } from 'jsr:@std/encoding@1/hex';
@@ -114,7 +114,7 @@ export async function takePlanRequest(
   });
   if (error) {
     console.error(`Starting the ${kind} failed`, error);
-    return { refused: reply(500, { error: 'analysis_failed' }) };
+    return { refused: reply(500, { error: 'failed' }) };
   }
   if (!slot) return { refused: reply(429, { error: 'limit' }) };
   return { giveBack: () => admin.from('plan_requests').delete().eq('id', slot) };
@@ -138,7 +138,7 @@ export function planEventResponse(
         .catch((error) => {
           if (stop.signal.aborted) return;
           console.error(`The ${label} broke off`, error);
-          send({ type: 'error', error: 'analysis_failed' });
+          send({ type: 'error', error: 'failed' });
         })
         .finally(() => {
           try {

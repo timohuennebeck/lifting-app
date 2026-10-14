@@ -12,7 +12,7 @@ const LOOP_SECONDS = 3.75;
 
 export interface MarqueeChip {
   label: string;
-  /** Lit chips turn accent with a check (the group is analysed). */
+  /** Lit chips turn accent with a check (the group is assessed). */
   on: boolean;
 }
 
@@ -20,7 +20,7 @@ export interface GroupMarqueeProps {
   chips: MarqueeChip[];
 }
 
-/** Endless row of muscle-group chips that light up as the analysis advances. */
+/** Endless row of muscle-group chips that light up as the assessment advances. */
 export function GroupMarquee({ chips }: GroupMarqueeProps) {
   const [rowWidth, setRowWidth] = useState(0);
   // The row holds the chips twice; shifting by one copy loops seamlessly.

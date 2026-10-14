@@ -65,7 +65,7 @@
       "clothing": "Roupa cobre o corpo"
     }
   },
-  "analysis": {
+  "assessment": {
     "title": "Check corporal",
     "stages": ["Alinhando as fotos", "Capturando a forma do corpo", "Calculando valores"],
     "finalStage": {

@@ -121,7 +121,7 @@ export function SheetsScreen() {
 
   function read() {
     pickSheets(workbook?.filter((s) => picked.has(s.name)).map((s) => s.name) ?? []);
-    router.push(step('/import/analysis'));
+    router.push(step('/import/reading'));
   }
 
   return (

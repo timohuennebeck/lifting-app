@@ -1,4 +1,4 @@
-// What the app receives from the plan functions (analyze-plan, generate-plan): the shapes of its
+// What the app receives from the plan functions (read-plan, generate-plan): the shapes of its
 // ImportedDay, ImportedExercise and CustomExercise, and the server-sent events that carry them.
 // Plain TypeScript without Deno APIs.
 
@@ -45,4 +45,4 @@ export type PlanEvent =
   | { type: 'day'; day: ImportedDay }
   | { type: 'exercise'; exercise: ImportedExercise; newExercise?: NewExercise }
   | { type: 'done' }
-  | { type: 'error'; error: 'not_a_plan' | 'analysis_failed' };
+  | { type: 'error'; error: 'not_a_plan' | 'failed' };

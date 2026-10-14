@@ -22,9 +22,9 @@ export interface SaveProgressCheckInput {
 }
 
 /**
- * Saves an analysed check: the photos move to their final files on this device, then the check
- * and its photo rows are inserted in one transaction. The analysis already uploaded the photos,
- * and the server takes the values from the analysis, not from here. PowerSync syncs the rows.
+ * Saves an assessed check: the photos move to their final files on this device, then the check
+ * and its photo rows are inserted in one transaction. The assessment already uploaded the photos,
+ * and the server takes the values from the assessment, not from here. PowerSync syncs the rows.
  */
 export async function saveProgressCheck({
   checkId,

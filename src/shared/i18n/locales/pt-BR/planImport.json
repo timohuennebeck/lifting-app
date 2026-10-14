@@ -14,10 +14,10 @@
     "createOwn": "Criar eu mesmo",
     "ownPlan": "Meu plano"
   },
+  "read": "Ler plano",
   "options": {
     "title": "ESTÁ CERTO ASSIM?",
     "swap": "Trocar",
-    "cta": "Ler plano",
     "preview": "Prévia do arquivo"
   },
   "sheets": {
@@ -58,11 +58,10 @@
     "title": "ESTÁ CERTO ASSIM?",
     "retake": "Refazer foto",
     "counter": "{{current}} / {{total}}",
-    "cta": "Reconhecer plano",
     "addPage": "Adicionar página",
     "remove": "Remover foto"
   },
-  "analysis": {
+  "reading": {
     "stages": [
       "Lendo a letra …",
       "Detectando exercícios …",

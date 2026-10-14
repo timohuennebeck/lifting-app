@@ -7,23 +7,23 @@ import { colors } from '@/shared/lib/theme';
 import { CheckBadge } from '@/shared/ui/check-item';
 import { Text } from '@/shared/ui/text';
 
-export type AnalysisRowState = 'waiting' | 'active' | 'done';
+export type AssessmentRowState = 'waiting' | 'active' | 'done';
 
-export interface AnalysisRowProps {
+export interface AssessmentRowProps {
   uri: string;
   label: string;
-  /** 0–1 share of this photo that is analysed. */
+  /** 0–1 share of this photo that is assessed. */
   progress: number;
-  state: AnalysisRowState;
+  state: AssessmentRowState;
   /** Photo height; it is 3:4. */
   height: number;
 }
 
 /**
- * One pose of the analysis (08c-H): its photo, name, a progress bar (white while it is measured,
+ * One pose of the assessment (08c-H): its photo, name, a progress bar (white while it is measured,
  * accent once done) and what is happening to it.
  */
-export function AnalysisRow({ uri, label, progress, state, height }: AnalysisRowProps) {
+export function AssessmentRow({ uri, label, progress, state, height }: AssessmentRowProps) {
   const { t } = useTranslation('progressCheck');
   const done = state === 'done';
   const active = state === 'active';
@@ -61,7 +61,7 @@ export function AnalysisRow({ uri, label, progress, state, height }: AnalysisRow
           />
         </View>
         <Text variant="caption" tone={done ? 'accent' : active ? 'default' : 'subtle'}>
-          {t(`analysis.row.${state}`)}
+          {t(`assessment.row.${state}`)}
         </Text>
       </View>
     </View>

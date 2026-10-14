@@ -21,7 +21,7 @@ import { nextMissingPose, POSES, TIMER_STEPS, type Pose, type TimerSeconds } fro
 
 export interface Shot extends StoredPhoto {
   issue: PhotoIssue | null;
-  /** The analysis could not judge this photo: it has to be retaken. */
+  /** The assessment could not judge this photo: it has to be retaken. */
   rejected?: boolean;
 }
 
@@ -42,7 +42,7 @@ interface ProgressCheckState {
   viewPose: Pose | null;
   /** Retaking one photo: once taken, the camera shows it instead of moving on. */
   retaking: boolean;
-  /** The photos were uploaded for an analysis (and are removed if the check is discarded). */
+  /** The photos were uploaded for an assessment (and are removed if the check is discarded). */
   uploaded: boolean;
   result: ProgressCheckResult | null;
   /** Persisted camera preferences. */
@@ -57,7 +57,7 @@ interface ProgressCheckState {
   view: (pose: Pose | null) => void;
   retake: (pose: Pose) => void;
   setUploaded: () => void;
-  /** Marks the photos the analysis rejected and shows the first of them. */
+  /** Marks the photos the assessment rejected and shows the first of them. */
   rejectShots: (rejections: PhotoRejection[]) => void;
   setResult: (result: ProgressCheckResult) => void;
   cycleTimer: () => void;

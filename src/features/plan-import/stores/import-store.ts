@@ -26,11 +26,11 @@ interface ImportState {
   plan: ImportedPlan | null;
   /** Selected day tab on the confirm screen. */
   dayIndex: number;
-  /** Counts the analyses, so a screen only reacts to the one it started or shows. */
+  /** Counts the runs, so a screen only reacts to the one it started or shows. */
   run: number;
-  /** The analysis is still sending the plan. */
+  /** The plan is still coming in. */
   reading: boolean;
-  /** Why an analysis stopped without a plan. */
+  /** Why a run stopped without a plan. */
   failure: { run: number; reason: ImportFailure } | null;
   /** The day the exercises being read go to. */
   readingDay: number;
@@ -48,8 +48,8 @@ interface ImportState {
   /** Drops photos beyond `count`, e.g. when the camera is closed without finishing. */
   truncatePhotos: (count: number) => void;
   /** Starts reading the plan from `source`, replacing the plan; returns the run. */
-  analyze: (language: string) => number;
-  /** Stops that analysis if it is still running (the user left it). */
+  start: (language: string) => number;
+  /** Stops that run if it is still going (the user left it). */
   stop: (run: number) => void;
   setPlan: (plan: ImportedPlan) => void;
   editPlan: (edit: (plan: ImportedPlan) => ImportedPlan) => void;
@@ -75,10 +75,10 @@ const EMPTY = {
   following: true,
 } as const;
 
-/** The running analysis, stopped when another one starts or the user leaves. */
-let analysis: AbortController | null = null;
+/** The run in progress, stopped when another one starts or the user leaves. */
+let running: AbortController | null = null;
 
-/** The plan with what the analysis just sent. */
+/** The plan with what the function just sent. */
 function receive(s: ImportState, event: PlanEvent): Partial<ImportState> {
   if (event.type === 'plan') return { plan: { name: event.name, days: [], newExercises: [] } };
   const { plan } = s;
@@ -137,10 +137,10 @@ export const useImportStore = create<ImportState>()((set, get) => ({
     set((s) => ({
       source: { kind: 'photos', photos: photosOf(s.source).filter((_, i) => i !== index) },
     })),
-  analyze: (language) => {
-    analysis?.abort();
+  start: (language) => {
+    running?.abort();
     const controller = new AbortController();
-    analysis = controller;
+    running = controller;
     const { source, run: last } = get();
     const run = last + 1;
     set({ run, plan: null, dayIndex: 0, reading: !!source, failure: null, following: true });
@@ -160,18 +160,18 @@ export const useImportStore = create<ImportState>()((set, get) => ({
   },
   stop: (run) => {
     if (get().run !== run || !get().reading) return;
-    analysis?.abort();
+    running?.abort();
     set({ reading: false });
   },
   setPlan: (plan) => {
-    analysis?.abort();
+    running?.abort();
     set({ plan, dayIndex: 0, reading: false, failure: null });
   },
   editPlan: (edit) => set((s) => (s.plan ? { plan: edit(s.plan) } : {})),
   selectDay: (dayIndex) => set({ dayIndex, following: false }),
   holdDay: () => get().following && set({ following: false }),
   reset: () => {
-    analysis?.abort();
+    running?.abort();
     set(EMPTY);
   },
 }));

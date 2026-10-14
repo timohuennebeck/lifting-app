@@ -1,6 +1,7 @@
 // Reads the sheets of an Excel (.xlsx) or OpenDocument (.ods) workbook well enough to tell what
-// each one holds: its cells as text, numbers and dates. The analysis itself reads the file on the
-// server, with its formats; this only lets the user pick the sheets that belong to the plan.
+// each one holds: its cells as text, numbers and dates. The read-plan function itself reads the
+// file on the server, with its formats; this only lets the user pick the sheets that belong to the
+// plan.
 
 import { strFromU8, unzipSync } from 'fflate';
 
@@ -183,7 +184,7 @@ const EXCEL_PARTS =
 
 /**
  * The visible sheets of an .xlsx or .ods file, or null for anything else (a CSV, an old .xls, a
- * damaged file): those go to the analysis whole.
+ * damaged file): those go to read-plan whole.
  */
 export function readWorkbook(bytes: Uint8Array): WorkbookSheet[] | null {
   // Zip files start with "PK".

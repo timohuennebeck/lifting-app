@@ -1,4 +1,4 @@
-// Tests the plan import (the analyze-plan Edge Function) with the plans in fixtures/ and scores
+// Tests the plan import (the read-plan Edge Function) with the plans in fixtures/ and scores
 // what it read against cases.json: days, weekdays, exercises (catalog match or new), sets, reps,
 // RIR and rest. With --dir it reads your own photos and files and prints what it found instead.
 // The fixtures are made up: typed and spreadsheet plans, and handwriting, whiteboard and screenshot
@@ -116,7 +116,7 @@ function requestBody({ files, as, language }, shrink) {
 }
 
 /** One import, put together from the streamed events (see streamPlan). */
-const analyze = (body) => streamPlan(`${SUPABASE_URL}/functions/v1/analyze-plan`, KEY, body);
+const read = (body) => streamPlan(`${SUPABASE_URL}/functions/v1/read-plan`, KEY, body);
 
 // ---------- reading a plan ----------
 
@@ -313,7 +313,7 @@ const percent = (c) => (c.total ? `${Math.round((c.ok / c.total) * 100)} %` : 'â
  */
 async function send(body) {
   if (stopped) return null;
-  const result = await analyze(body);
+  const result = await read(body);
   if (result.status === 429) stopped = { limit: true };
   else if (result.status === 503 || result.status === 0) {
     stopped = { down: `${result.status || 'no connection'} ${result.error}`.trim() };
@@ -330,7 +330,7 @@ function reportStop(skipped) {
       'supabase/functions/.env and restart Supabase (npx supabase stop, then npx supabase ' +
       'start). To reset the count right away, run `delete from public.plan_requests where kind = ' +
       "'import';` in Supabase Studio."
-    : `analyze-plan didn't answer (${stopped.down})${notRun}. Locally, npx supabase start ` +
+    : `read-plan didn't answer (${stopped.down})${notRun}. Locally, npx supabase start ` +
       'serves the functions; stopping `npx supabase functions serve` takes them down until you ' +
       'run npx supabase stop and npx supabase start again. A BOOT_ERROR means the function ' +
       "didn't start: keep `npx supabase functions serve` running in another terminal to see why.";

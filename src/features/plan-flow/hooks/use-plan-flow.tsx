@@ -18,7 +18,7 @@ type PlanStep =
   | '/import/sheets'
   | '/import/camera'
   | '/import/review'
-  | '/import/analysis'
+  | '/import/reading'
   | '/import/confirm'
   | '/import/picker'
   | '/create/goal'

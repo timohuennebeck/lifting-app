@@ -3,7 +3,7 @@ import { addDays, daysBetween, fromIsoDate, toIsoDate } from '@/shared/lib/date'
 
 /**
  * How far each weigh-in moves the trend toward the scale value; a gap of n days counts n times.
- * The progress check analysis (assess-progress) computes the same trend.
+ * The progress check assessment (assess-progress) computes the same trend.
  */
 const SMOOTHING = 0.1;
 

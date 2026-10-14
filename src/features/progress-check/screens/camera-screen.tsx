@@ -56,7 +56,7 @@ const TURN_MS = 5000;
  * 08a: full-screen camera that walks through the three poses, with self-timer. The timer sound
  * ticks the countdown and clicks when the photo is taken; with Auto on, one tap takes them all.
  * A taken photo's thumbnail shows it full screen to check or retake; "Fertig" (all three, there
- * or next to the shutter) starts the analysis, which sends photos it can't judge back here.
+ * or next to the shutter) starts the assessment, which sends photos it can't judge back here.
  */
 export function CameraScreen() {
   const { t } = useTranslation(['progressCheck', 'common']);
@@ -95,10 +95,10 @@ export function CameraScreen() {
   const stopTimerSound = useRef<(() => void) | null>(null);
   const flash = useShutterFlash();
   const taken = POSES.filter((p) => shots[p]).length;
-  // Every pose taken and none the analysis sent back: "Fertig" starts the analysis.
+  // Every pose taken and none the assessment sent back: "Fertig" starts the assessment.
   const finished = hasAllShots(shots) && !POSES.some((p) => shots[p]?.rejected);
 
-  const analyze = () => router.push('/progress-check/analysis');
+  const assess = () => router.push('/progress-check/assessment');
 
   // A thumbnail with a photo shows it; an empty one is the pose to shoot next.
   const selectPose = (p: (typeof POSES)[number]) => {
@@ -182,7 +182,7 @@ export function CameraScreen() {
   }
 
   const tick = useEffectEvent(() => {
-    // Leaving the screen (the analysis opened on top) cancels the countdown.
+    // Leaving the screen (the assessment opened on top) cancels the countdown.
     if (!focused) return cancelCountdown();
     if (count > 1) {
       haptics.tap();
@@ -378,7 +378,7 @@ export function CameraScreen() {
                     label={t('common:actions.done')}
                     count={taken}
                     disabled={busy}
-                    onPress={analyze}
+                    onPress={assess}
                   />
                 ) : null
               }
@@ -402,7 +402,7 @@ export function CameraScreen() {
           onClose={() => useProgressCheckStore.getState().view(null)}
           onRetake={() => useProgressCheckStore.getState().retake(viewPose)}
           canFinish={finished && !busy}
-          onFinish={analyze}
+          onFinish={assess}
         />
       ) : null}
 

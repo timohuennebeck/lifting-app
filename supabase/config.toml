@@ -417,12 +417,12 @@ verify_jwt = false
 # Same as above: the function checks the user's token itself.
 verify_jwt = false
 
-[functions.analyze-plan]
+[functions.read-plan]
 # Called during onboarding, before there is an account; the function limits imports itself.
 verify_jwt = false
 
 [functions.generate-plan]
-# Same as analyze-plan: onboarding, before there is an account; it limits the plans itself.
+# Same as read-plan: onboarding, before there is an account; it limits the plans itself.
 verify_jwt = false
 
 [analytics]

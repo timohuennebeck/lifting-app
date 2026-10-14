@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Loading the catalog failed', error);
     await giveBack();
-    return reply(500, { error: 'analysis_failed' });
+    return reply(500, { error: 'failed' });
   }
 
   // Stops the model when the app goes away (the stream below is cancelled), so the rest of the
@@ -83,11 +83,11 @@ Deno.serve(async (req) => {
   } catch (error) {
     // A timeout may still have been billed, so the plan stays counted.
     console.error('OpenAI request failed', error);
-    return reply(502, { error: 'analysis_failed' });
+    return reply(502, { error: 'failed' });
   }
   if ('upstream' in started) {
     await giveBack();
-    return reply(502, { error: 'analysis_failed', upstream: started.upstream });
+    return reply(502, { error: 'failed', upstream: started.upstream });
   }
 
   const { answer } = started;
@@ -113,15 +113,15 @@ async function sendPlan(
   for await (const step of answer) {
     if ('refusal' in step) {
       console.warn('The model refused the plan');
-      return send({ type: 'error', error: 'analysis_failed' });
+      return send({ type: 'error', error: 'failed' });
     }
     if ('incomplete' in step) {
       console.error('The plan did not complete', step.incomplete);
       if (!written) await giveBack();
-      return send({ type: 'error', error: 'analysis_failed' });
+      return send({ type: 'error', error: 'failed' });
     }
     if ('done' in step) {
-      return send(exercises ? { type: 'done' } : { type: 'error', error: 'analysis_failed' });
+      return send(exercises ? { type: 'done' } : { type: 'error', error: 'failed' });
     }
     written = true;
     for (const piece of stream.push(step.text)) {
@@ -131,7 +131,7 @@ async function sendPlan(
         day = builder.day(piece.day);
         // A day past the training days: the plan is complete, and leaving stops the model.
         if (!day) {
-          return send(exercises ? { type: 'done' } : { type: 'error', error: 'analysis_failed' });
+          return send(exercises ? { type: 'done' } : { type: 'error', error: 'failed' });
         }
       } else {
         const exercise = builder.exercise(piece.exercise);

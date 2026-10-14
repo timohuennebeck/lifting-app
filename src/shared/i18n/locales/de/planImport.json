@@ -14,10 +14,10 @@
     "createOwn": "Selbst erstellen",
     "ownPlan": "Mein Plan"
   },
+  "read": "Plan einlesen",
   "options": {
     "title": "PASST SO?",
     "swap": "Tauschen",
-    "cta": "Plan einlesen",
     "preview": "Dateivorschau"
   },
   "sheets": {
@@ -58,11 +58,10 @@
     "title": "PASST SO?",
     "retake": "Foto neu aufnehmen",
     "counter": "{{current}} / {{total}}",
-    "cta": "Plan erkennen",
     "addPage": "Seite hinzufügen",
     "remove": "Foto entfernen"
   },
-  "analysis": {
+  "reading": {
     "stages": [
       "Lese Handschrift …",
       "Erkenne Übungen …",

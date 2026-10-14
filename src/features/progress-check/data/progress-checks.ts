@@ -20,7 +20,7 @@ export interface ProgressCheck {
   createdAt: string;
 }
 
-/** Storage path of each pose's photo in the bucket (the analysis uploads them before the save). */
+/** Storage path of each pose's photo in the bucket (uploaded for the assessment, before saving). */
 export type CheckPhotos = Partial<Record<Pose, string>>;
 
 const toChecks = (rows: ProgressCheckRecord[]): ProgressCheck[] =>

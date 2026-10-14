@@ -17,10 +17,10 @@ const MIN_MS = 3600;
 const EXPECTED_MS = 15_000;
 
 /**
- * 05b: starts the plan analysis behind an animation and opens the review with the first exercise
+ * 05b: starts reading the plan behind an animation and opens the review with the first exercise
  * it reads; the rest of the plan fills in there (ConfirmScreen).
  */
-export function AnalysisScreen() {
+export function ReadingScreen() {
   const { t, i18n } = useTranslation(['planImport', 'common']);
   const { step } = usePlanFlow();
   const source = useImportStore((s) => s.source);
@@ -34,7 +34,7 @@ export function AnalysisScreen() {
   useEffect(() => {
     if (!source) return;
     const store = useImportStore.getState();
-    run.current = store.analyze(i18n.language);
+    run.current = store.start(i18n.language);
     // Leaving before the review opened (Android back) stops it; after that the review owns it.
     return () => {
       if (!opened.current) store.stop(run.current);
@@ -52,13 +52,13 @@ export function AnalysisScreen() {
   useEffect(() => {
     if (failure?.run !== run.current || opened.current) return;
     opened.current = true;
-    Alert.alert(t(`planImport:analysis.errors.${failure.reason}`));
+    Alert.alert(t(`planImport:reading.errors.${failure.reason}`));
     router.back();
   }, [failure, t]);
 
   if (!source) return <Redirect href={step('/import')} />;
 
-  const stages = t('planImport:analysis.stages', { returnObjects: true });
+  const stages = t('planImport:reading.stages', { returnObjects: true });
   const short = t('common:weekdays.short', { returnObjects: true });
   const shown = started ? 1 : Math.min(0.95, progress);
   const chips: ScanChip[] = [

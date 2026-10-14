@@ -27,7 +27,7 @@ export interface ProgressCheckResult {
   metrics: ProgressCheckMetrics;
 }
 
-/** Why a photo can't be used: the on-device check finds darkness and blur, the analysis the rest. */
+/** Why a photo can't be used: the device finds darkness and blur, the assessment the rest. */
 export type PhotoIssue = 'blurry' | 'dark' | 'notFullBody' | 'wrongPose' | 'noPerson' | 'clothing';
 
 export interface PhotoRejection {
@@ -35,16 +35,16 @@ export interface PhotoRejection {
   issue: PhotoIssue;
 }
 
-export type AnalysisOutcome =
+export type AssessmentOutcome =
   | { status: 'ok'; result: ProgressCheckResult }
-  /** The analysis could not judge these photos; nothing was scored. */
+  /** The assessment could not judge these photos; nothing was scored. */
   | { status: 'retake'; issues: PhotoRejection[] };
 
-export type AnalysisFailure = 'offline' | 'limit' | 'notAdult' | 'notPro' | 'refused' | 'failed';
+export type AssessmentFailure = 'offline' | 'limit' | 'notAdult' | 'notPro' | 'refused' | 'failed';
 
-export class AnalysisError extends Error {
-  constructor(readonly reason: AnalysisFailure) {
-    super(`Progress-check analysis failed: ${reason}`);
+export class AssessmentError extends Error {
+  constructor(readonly reason: AssessmentFailure) {
+    super(`Progress-check assessment failed: ${reason}`);
   }
 }
 
@@ -57,14 +57,14 @@ const SERVER_ISSUES: Record<string, PhotoIssue> = {
   clothing: 'clothing',
 };
 
-const SERVER_ERRORS: Record<string, AnalysisFailure> = {
+const SERVER_ERRORS: Record<string, AssessmentFailure> = {
   limit: 'limit',
   not_adult: 'notAdult',
   not_pro: 'notPro',
   refused: 'refused',
 };
 
-interface ServerAnalysis {
+interface ServerAssessment {
   status: 'ok' | 'retake';
   result?: ProgressCheckResult;
   issues?: { pose: Pose; issue: string }[];
@@ -78,7 +78,7 @@ function errorCode(text: string): string | undefined {
   }
 }
 
-async function failureOf(error: unknown): Promise<AnalysisFailure> {
+async function failureOf(error: unknown): Promise<AssessmentFailure> {
   if (error instanceof FunctionsFetchError) return 'offline';
   if (error instanceof FunctionsHttpError) {
     const response = error.context as Response;
@@ -91,7 +91,7 @@ async function failureOf(error: unknown): Promise<AnalysisFailure> {
   return 'failed';
 }
 
-/** Puts the photos where the analysis reads them (and where the saved check keeps them). */
+/** Puts the photos where the assessment reads them (and where the saved check keeps them). */
 async function uploadPhotos(checkId: string, userId: string, photos: Record<Pose, StoredPhoto>) {
   try {
     await Promise.all(
@@ -101,7 +101,7 @@ async function uploadPhotos(checkId: string, userId: string, photos: Record<Pose
     );
   } catch (error) {
     console.warn('Uploading the progress-check photos failed', error);
-    throw new AnalysisError('offline');
+    throw new AssessmentError('offline');
   }
 }
 
@@ -116,11 +116,11 @@ export function removeUploadedPhotos(checkId: string, userId: string) {
     .catch((error) => console.warn('Removing progress-check photos failed', error));
 }
 
-/** How long the analysis waits for a profile change to reach the server. */
+/** How long the assessment waits for a profile change to reach the server. */
 const PROFILE_UPLOAD_TIMEOUT_MS = 30_000;
 
 /**
- * Waits (bounded) until no profile change is left in PowerSync's upload queue, since the analysis
+ * Waits (bounded) until no profile change is left in PowerSync's upload queue, since the assessment
  * checks the birth date on the server: right after sign-up the profile is still on its way there,
  * behind the onboarding plan. False when one is still waiting.
  */
@@ -143,22 +143,22 @@ async function profileUploaded() {
 
 /**
  * Uploads the three photos and has the assess-progress Edge Function score them. Needs a
- * connection; throws an AnalysisError with the reason otherwise.
+ * connection; throws an AssessmentError with the reason otherwise.
  */
 export async function assessProgress(
   checkId: string,
   userId: string,
   photos: Record<Pose, StoredPhoto>,
-): Promise<AnalysisOutcome> {
+): Promise<AssessmentOutcome> {
   await uploadPhotos(checkId, userId, photos);
   const profileSynced = await profileUploaded();
-  const { data, error } = await supabase.functions.invoke<ServerAnalysis>('assess-progress', {
+  const { data, error } = await supabase.functions.invoke<ServerAssessment>('assess-progress', {
     body: { checkId },
   });
   if (error) {
     const reason = await failureOf(error);
     // The server may not have the birth date yet: worth another try, not the 18+ message.
-    throw new AnalysisError(reason === 'notAdult' && !profileSynced ? 'failed' : reason);
+    throw new AssessmentError(reason === 'notAdult' && !profileSynced ? 'failed' : reason);
   }
   if (data?.status === 'ok' && data.result) return { status: 'ok', result: data.result };
   if (data?.status === 'retake' && data.issues?.length) {
@@ -167,13 +167,13 @@ export async function assessProgress(
       issues: data.issues.map((i) => ({ pose: i.pose, issue: SERVER_ISSUES[i.issue] ?? 'blurry' })),
     };
   }
-  throw new AnalysisError('failed');
+  throw new AssessmentError('failed');
 }
 
 // Average brightness (0–255) of the whole shot below which it's too dark. Measured on the
 // whole frame, not the person: the camera exposes for the whole frame, so it only stays this
 // dark when there isn't enough light, whatever the skin tone or clothes. Backlight is left to
-// the analysis.
+// the assessment.
 const MIN_BRIGHTNESS = 45;
 // JPEG bytes per pixel below this mean little detail (usually blur) at our quality.
 const MIN_BYTES_PER_PIXEL = 0.035;
@@ -197,7 +197,7 @@ function isBlurry(photo: StoredPhoto) {
 
 /**
  * Quick on-device check of a stored shot before anything is uploaded: too dark, or so little
- * detail that it's probably blurry. The analysis judges the photos properly.
+ * detail that it's probably blurry. The assessment judges the photos properly.
  */
 export async function assessPhoto(photo: StoredPhoto): Promise<PhotoIssue | null> {
   if (await isDark(photo)) return 'dark';

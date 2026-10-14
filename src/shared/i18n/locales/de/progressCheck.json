@@ -65,7 +65,7 @@
       "clothing": "Kleidung verdeckt Körper"
     }
   },
-  "analysis": {
+  "assessment": {
     "title": "Körpercheck",
     "stages": ["Fotos ausrichten", "Körperform erfassen", "Werte berechnen"],
     "finalStage": {

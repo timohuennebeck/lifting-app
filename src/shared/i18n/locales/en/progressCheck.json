@@ -65,7 +65,7 @@
       "clothing": "Clothes hide body"
     }
   },
-  "analysis": {
+  "assessment": {
     "title": "Body check",
     "stages": ["Aligning photos", "Capturing body shape", "Calculating values"],
     "finalStage": {

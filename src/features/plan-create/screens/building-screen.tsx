@@ -38,7 +38,7 @@ export function BuildingScreen() {
   useEffect(() => {
     const store = useImportStore.getState();
     store.setAnswers(input);
-    run.current = store.analyze(i18n.language);
+    run.current = store.start(i18n.language);
     // Leaving before the editor opened (Android back) stops it; after that the editor owns it.
     return () => {
       if (!opened.current) store.stop(run.current);

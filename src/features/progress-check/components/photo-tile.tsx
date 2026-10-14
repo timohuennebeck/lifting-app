@@ -26,7 +26,7 @@ export interface PhotoTileProps {
   trailing?: ReactNode;
 }
 
-/** A pose photo in the row of three, named at the bottom (analysis and result, design 08c-H). */
+/** A pose photo in the row of three, named at the bottom (assessment and result, design 08c-H). */
 export function PhotoTile({ children, label, trailing }: PhotoTileProps) {
   return (
     <View className="flex-1 overflow-hidden rounded-[22px] bg-surface">

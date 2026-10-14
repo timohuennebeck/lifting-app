@@ -2,7 +2,7 @@
 // app does, the catalog, and running a few requests at a time.
 
 /**
- * One request to a plan function (analyze-plan, generate-plan). It streams the plan as server-sent
+ * One request to a plan function (read-plan, generate-plan). It streams the plan as server-sent
  * events (PlanEvent in supabase/functions/_shared/plan-events.ts); they are put together like the
  * app does. `first` is when the first exercise arrived, `seconds` the end.
  */

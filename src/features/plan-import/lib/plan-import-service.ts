@@ -52,7 +52,7 @@ export interface ImportedPlan extends PlanDraft {
   newExercises: CustomExercise[];
 }
 
-export interface AnalyzePlanInput {
+export interface StreamPlanInput {
   source: ImportSource;
   /** UI language, so exercise names and day headings can be matched in context. */
   language: string;
@@ -72,7 +72,7 @@ const SERVER_ERRORS: Record<string, ImportFailure> = {
   too_large: 'tooLarge',
 };
 
-/** Photos per import; the analyze-plan function accepts no more. */
+/** Photos per import; the read-plan function accepts no more. */
 export const MAX_PHOTOS = 10;
 
 /** Longest side photos are shrunk to: plenty for handwriting, small enough to send quickly. */
@@ -143,18 +143,18 @@ export type PlanEvent =
 
 /**
  * Gets a training plan from the Edge Functions, which stream it: reads it from photos or a file
- * (analyze-plan) or makes it from the onboarding answers (generate-plan). `onEvent` gets the
+ * (read-plan) or makes it from the onboarding answers (generate-plan). `onEvent` gets the
  * plan's name, then each day and exercise as soon as it is there (an exercise belongs to the day
  * before it). Resolves once the plan is complete. Throws an ImportError with the reason when
  * there is no plan to show, also when the stream breaks off; once `signal` stops it, the error
  * doesn't matter.
  */
 export async function streamPlan(
-  { source, language }: AnalyzePlanInput,
+  { source, language }: StreamPlanInput,
   onEvent: (event: PlanEvent) => void,
   signal: AbortSignal,
 ) {
-  const fn = source.kind === 'answers' ? 'generate-plan' : 'analyze-plan';
+  const fn = source.kind === 'answers' ? 'generate-plan' : 'read-plan';
   const request =
     source.kind === 'answers' ? { answers: source.answers } : await requestBody(source);
   const body = JSON.stringify({ ...request, language });

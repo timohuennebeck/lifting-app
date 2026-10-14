@@ -1,7 +1,7 @@
-// Analyses a progress check: the app uploads the three photos to
+// Assesses a progress check: the app uploads the three photos to
 // progress-photos/<user id>/<check id>/<pose>.jpg, then calls this function with the check id.
 // The photos go to OpenAI's Responses API; the answer is either the check's values or
-// the photos to retake. Every analysis takes a row in progress_check_runs first, which limits how
+// the photos to retake. Every assessment takes a row in progress_check_runs first, which limits how
 // often a user can run one and is the only source the saved check's values are taken from.
 import { encodeBase64 } from 'jsr:@std/encoding@1/base64';
 
@@ -9,7 +9,7 @@ import { admin, reply, requestUser } from '../_shared/common.ts';
 import { askStructured, openAiConfigured } from '../_shared/openai.ts';
 import {
   ageFrom,
-  type AnalysisProfile,
+  type AssessmentProfile,
   contextText,
   INSTRUCTIONS,
   modelInput,
@@ -18,15 +18,15 @@ import {
   POSES,
   type PreviousCheck,
   SCHEMA,
-  toAnalysis,
+  toAssessment,
   type WeightEntryRow,
   weightHistorySince,
-} from './analysis.ts';
+} from './assessment.ts';
 
 const BUCKET = 'progress-photos';
 /** Same rule as the app (features/progress-check/lib/eligibility.ts). */
 const MIN_AGE = 18;
-/** Analyses per user in 24 hours, retakes included; each one is an OpenAI call. */
+/** Assessments per user in 24 hours, retakes included; each one is an OpenAI call. */
 const DAILY_LIMIT = 5;
 const OPENAI_TIMEOUT_MS = 120_000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -51,7 +51,7 @@ async function checkPhotos(userId: string, checkId: string): Promise<Partial<Pho
 
 /**
  * Whether RevenueCat lists an active Pro entitlement for the user. Without a key (local
- * development) or when RevenueCat can't be reached it lets the analysis through: the app shows
+ * development) or when RevenueCat can't be reached it lets the assessment through: the app shows
  * the paywall itself, this only keeps the OpenAI cost to paying users.
  */
 async function hasPro(userId: string) {
@@ -113,7 +113,7 @@ Deno.serve(async (req) => {
       .from('profiles')
       .select('sex, birth_date, height_cm, experience')
       .eq('id', userId)
-      .maybeSingle<AnalysisProfile>(),
+      .maybeSingle<AssessmentProfile>(),
     admin
       .from('weight_entries')
       .select('date, weight_kg')
@@ -143,7 +143,7 @@ Deno.serve(async (req) => {
   ]);
   if (POSES.some((pose) => !photos[pose])) return reply(400, { error: 'photos_missing' });
 
-  // The analysis takes one of the day's slots before OpenAI is called (in one locked step, so
+  // The assessment takes one of the day's slots before OpenAI is called (in one locked step, so
   // parallel requests can't share the last one); a call OpenAI rejected gives it back.
   const { data: slot, error: slotError } = await admin.rpc('start_progress_check_run', {
     p_user_id: userId,
@@ -151,8 +151,8 @@ Deno.serve(async (req) => {
     p_daily_limit: DAILY_LIMIT,
   });
   if (slotError) {
-    console.error('Starting the analysis failed', slotError);
-    return reply(500, { error: 'analysis_failed' });
+    console.error('Starting the assessment failed', slotError);
+    return reply(500, { error: 'failed' });
   }
   if (!slot) return reply(429, { error: 'limit' });
 
@@ -168,12 +168,12 @@ Deno.serve(async (req) => {
     // A timeout may still have been billed, so the slot stays used.
     console.error('OpenAI request failed', error);
     await finish('failed');
-    return reply(502, { error: 'analysis_failed' });
+    return reply(502, { error: 'failed' });
   }
   // OpenAI's status (wrong key, unknown model, …) helps tell what went wrong in the app's log.
   if ('upstream' in answer) {
     await giveBack();
-    return reply(502, { error: 'analysis_failed', upstream: answer.upstream });
+    return reply(502, { error: 'failed', upstream: answer.upstream });
   }
   if ('refusal' in answer) {
     console.warn('The model refused the photos', answer.refusal);
@@ -181,27 +181,27 @@ Deno.serve(async (req) => {
     return reply(422, { error: 'refused' });
   }
   if ('incomplete' in answer) {
-    console.error('The analysis did not complete', answer.incomplete);
+    console.error('The assessment did not complete', answer.incomplete);
     await finish('failed');
-    return reply(502, { error: 'analysis_failed' });
+    return reply(502, { error: 'failed' });
   }
 
-  let analysis: ReturnType<typeof toAnalysis>;
+  let assessment: ReturnType<typeof toAssessment>;
   try {
-    analysis = toAnalysis(JSON.parse(answer.text) as ModelOutput);
+    assessment = toAssessment(JSON.parse(answer.text) as ModelOutput);
   } catch (error) {
-    console.error('The analysis answer could not be read', error);
+    console.error('The assessment answer could not be read', error);
     await finish('failed');
-    return reply(502, { error: 'analysis_failed' });
+    return reply(502, { error: 'failed' });
   }
 
   const { error } = await finish(
-    analysis.status,
-    analysis.status === 'ok' ? analysis.result : { issues: analysis.issues },
+    assessment.status,
+    assessment.status === 'ok' ? assessment.result : { issues: assessment.issues },
   );
   if (error) {
-    console.error('Saving the analysis failed', error);
-    return reply(500, { error: 'analysis_failed' });
+    console.error('Saving the assessment failed', error);
+    return reply(500, { error: 'failed' });
   }
-  return reply(200, analysis);
+  return reply(200, assessment);
 });

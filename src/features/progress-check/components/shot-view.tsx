@@ -53,7 +53,7 @@ export interface ShotViewProps {
   strip: ReactNode;
   onClose: () => void;
   onRetake: () => void;
-  /** Every pose taken and none sent back: "Fertig" can start the analysis. */
+  /** Every pose taken and none sent back: "Fertig" can start the assessment. */
   canFinish: boolean;
   onFinish: () => void;
 }

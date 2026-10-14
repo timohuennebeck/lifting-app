@@ -41,7 +41,7 @@ export function OptionsScreen() {
   // A workbook with several sheets first asks which ones hold the plan.
   async function read() {
     const sheets = await loadSheets(file);
-    if (!sheets) return router.push(step('/import/analysis'));
+    if (!sheets) return router.push(step('/import/reading'));
     offerSheets(sheets);
     router.push(step('/import/sheets'));
   }
@@ -61,7 +61,7 @@ export function OptionsScreen() {
       step={2}
       total={IMPORT_STEPS}
       title={t('options.title')}
-      footer={<Button label={t('options.cta')} onPress={read} />}
+      footer={<Button label={t('read')} onPress={read} />}
     >
       <View className="flex-1 items-center justify-center gap-5.5 px-5">
         <View

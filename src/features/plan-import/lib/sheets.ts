@@ -6,7 +6,7 @@ import type { ImportFile } from './plan-import-service';
 import { exerciseMatcher, type SheetSummary, summarizeSheet } from './sheet-summary';
 import { readWorkbook } from './workbook';
 
-/** Workbooks the app reads the sheets of; old .xls files go to the analysis whole. */
+/** Workbooks the app reads the sheets of; old .xls files go to read-plan whole. */
 const isWorkbook = (file: ImportFile) =>
   /\.(xlsx|xlsm|ods)$/i.test(file.name) ||
   /spreadsheetml|opendocument\.spreadsheet/.test(file.mimeType ?? '');
@@ -37,7 +37,7 @@ let last: { uri: string; sheets: Promise<SheetSummary[] | null> } | null = null;
 
 /**
  * The file's sheets and what each seems to hold, when there are several to choose from: else
- * null, and the analysis reads the file whole. Read once per file.
+ * null, and read-plan reads the file whole. Read once per file.
  */
 export function loadSheets(file: ImportFile) {
   if (last?.uri !== file.uri) last = { uri: file.uri, sheets: read(file) };
@@ -47,6 +47,6 @@ export function loadSheets(file: ImportFile) {
 /** Sheets that look like the plan; the picker recommends and preselects them. */
 export const recommendedSheets = (sheets: SheetSummary[]) => {
   const plans = sheets.filter((s) => s.kind === 'plan');
-  // Nothing reads as a plan: all with content, and the analysis looks.
+  // Nothing reads as a plan: all with content, and read-plan looks.
   return (plans.length ? plans : sheets.filter((s) => s.kind !== 'empty')).map((s) => s.name);
 };

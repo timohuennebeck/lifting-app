@@ -1,4 +1,4 @@
-// The OpenAI Responses API call the analyses share: an answer forced into a JSON schema, nothing
+// The OpenAI Responses API call the functions share: an answer forced into a JSON schema, nothing
 // stored on OpenAI's side. OPENAI_MODEL and OPENAI_REASONING_EFFORT override the defaults.
 const OPENAI_URL = 'https://api.openai.com/v1/responses';
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
