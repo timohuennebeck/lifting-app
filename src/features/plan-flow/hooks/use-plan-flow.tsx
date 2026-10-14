@@ -50,6 +50,7 @@ export function openPlanFlow(profile: Profile | null | undefined) {
       goal: profile.goal,
       focus: profile.focus,
       equipment: profile.equipment,
+      homeEquipment: profile.homeEquipment,
       trainingDays: profile.trainingDays,
       ...(profile.sessionMinutes ? { sessionMinutes: profile.sessionMinutes } : {}),
     }),

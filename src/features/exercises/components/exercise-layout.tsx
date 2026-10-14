@@ -8,7 +8,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SwipeTabs } from '@/shared/components/swipe-tabs';
 import { archiveCustomExercise } from '@/shared/data/custom-exercises';
-import { useCustomExerciseStore, useExercise, useExerciseName } from '@/shared/data/exercises';
+import {
+  useCustomExerciseStore,
+  useEquipmentName,
+  useExercise,
+  useExerciseName,
+} from '@/shared/data/exercises';
 import { haptics } from '@/shared/lib/haptics';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { ActionSheet } from '@/shared/ui/action-sheet';
@@ -45,6 +50,7 @@ export function ExerciseLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const exercise = useExercise(exerciseId);
   const name = useExerciseName(exerciseId, i18n.language);
+  const equipment = useEquipmentName(exercise?.equipment ?? '', i18n.language);
   // An imported plan's new exercise isn't saved before sign-up: nothing to edit yet.
   const saved = useCustomExerciseStore((s) => !!s.exercises[exerciseId]);
   const back = (
@@ -108,7 +114,7 @@ export function ExerciseLayout() {
             {name}
           </Text>
           <Text variant="label" tone="muted" className="mt-2 font-inter">
-            {`${exercise.equipment ? t(`exercises:equipment.${exercise.equipment}`) : t('exercises:custom.label')} · ${t(`exercises:groups.${primaryGroup(exercise)}`)}`}
+            {`${exercise.equipment ? equipment : t('exercises:custom.label')} · ${t(`exercises:groups.${primaryGroup(exercise)}`)}`}
           </Text>
         </View>
       </View>

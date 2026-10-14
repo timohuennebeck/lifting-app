@@ -4,7 +4,7 @@
 // Edge runtime.
 
 import type { ImportedDay, ImportedExercise } from '../_shared/plan-events.ts';
-import type { CatalogRow } from '../_shared/plans.ts';
+import type { CatalogRow, EquipmentRow } from '../_shared/plans.ts';
 
 export const GOALS = ['hypertrophy', 'strength', 'strength_hypertrophy'] as const;
 export const EQUIPMENT_ACCESS = ['gym', 'home', 'bodyweight'] as const;
@@ -38,6 +38,8 @@ export interface PlanAnswers {
   goal: (typeof GOALS)[number];
   focus: string[];
   equipment: (typeof EQUIPMENT_ACCESS)[number];
+  /** With equipment "home": the equipment ids the user has (public.equipment). */
+  homeEquipment: string[];
   /** Monday-based weekday indexes, in order. */
   trainingDays: number[];
   sessionMinutes: number;
@@ -47,12 +49,18 @@ export interface PlanAnswers {
 const oneOf = <T extends string>(list: readonly T[], value: unknown): value is T =>
   typeof value === 'string' && (list as readonly string[]).includes(value);
 
+const MAX_HOME_EQUIPMENT = 50;
+const isSlug = (value: unknown) =>
+  typeof value === 'string' && /^[a-z0-9]+(-[a-z0-9]+)*$/.test(value);
+
 /** The answers from the request body, or null when they aren't valid. */
 export function parseAnswers(value: unknown): PlanAnswers | null {
   if (!value || typeof value !== 'object') return null;
   const a = value as Record<string, unknown>;
   const days = a.trainingDays;
   const minutes = a.sessionMinutes;
+  // Left out by app versions without the home checklist.
+  const home = a.homeEquipment ?? [];
   if (
     !oneOf(GOALS, a.goal) ||
     !oneOf(EQUIPMENT_ACCESS, a.equipment) ||
@@ -67,7 +75,10 @@ export function parseAnswers(value: unknown): PlanAnswers | null {
     typeof minutes !== 'number' ||
     !Number.isInteger(minutes) ||
     minutes < 10 ||
-    minutes > 180
+    minutes > 180 ||
+    !Array.isArray(home) ||
+    home.length > MAX_HOME_EQUIPMENT ||
+    !home.every(isSlug)
   ) {
     return null;
   }
@@ -75,31 +86,32 @@ export function parseAnswers(value: unknown): PlanAnswers | null {
     goal: a.goal,
     focus: [...new Set(a.focus as string[])],
     equipment: a.equipment,
+    homeEquipment: a.equipment === 'home' ? [...new Set(home as string[])] : [],
     trainingDays: [...(days as number[])].sort((x, y) => x - y),
     sessionMinutes: minutes,
     experience: a.experience as PlanAnswers['experience'],
   };
 }
 
-/** Equipment each answer allows. */
-const EQUIPMENT: Record<PlanAnswers['equipment'], readonly string[]> = {
-  gym: ['barbell', 'dumbbell', 'kettlebell', 'machine', 'cable', 'bodyweight'],
-  home: ['barbell', 'dumbbell', 'kettlebell', 'bodyweight'],
-  bodyweight: ['bodyweight'],
-};
-/** Catalog exercises that also work without their listed equipment. */
-const ALSO_AT: Partial<Record<PlanAnswers['equipment'], readonly string[]>> = {
-  home: ['calf-raise'],
-  bodyweight: ['lunge', 'calf-raise'],
-};
+/**
+ * The equipment the user has, of the active catalog's: what a full gym has, the ticked items at
+ * home, nothing for "bodyweight".
+ */
+export function equipmentOf(answers: PlanAnswers, equipment: EquipmentRow[]) {
+  if (answers.equipment === 'gym') {
+    return new Set(equipment.filter((e) => e.in_gym).map((e) => e.id));
+  }
+  const active = new Set(equipment.map((e) => e.id));
+  return new Set(answers.homeEquipment.filter((id) => active.has(id)));
+}
 
-/** The catalog exercises the plan may use: the user's equipment, no cardio. */
-export const usableExercises = (catalog: CatalogRow[], equipment: PlanAnswers['equipment']) =>
-  catalog.filter(
-    (e) =>
-      !e.cardio &&
-      (EQUIPMENT[equipment].includes(e.equipment) || !!ALSO_AT[equipment]?.includes(e.id)),
-  );
+/** Whether the user can do an exercise: each of its needs met by one of their items. */
+export const fits = (needs: string[][], have: Set<string>) =>
+  needs.every((items) => items.some((id) => have.has(id)));
+
+/** The catalog exercises the plan may use: what the user's equipment allows, no cardio. */
+export const usableExercises = (catalog: CatalogRow[], have: Set<string>) =>
+  catalog.filter((e) => !e.cardio && fits(e.needs, have));
 
 const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -147,8 +159,16 @@ const mainMuscles = (muscles: Record<string, number>) =>
     .map(([muscle]) => muscle)
     .join(', ');
 
-/** The answers and the usable catalog as the model reads them. */
-export function contextText(answers: PlanAnswers, catalog: CatalogRow[], language: string) {
+/**
+ * The answers and the usable catalog as the model reads them; `have` is the user's equipment
+ * (equipmentOf).
+ */
+export function contextText(
+  answers: PlanAnswers,
+  have: Set<string>,
+  catalog: CatalogRow[],
+  language: string,
+) {
   const languages = [...new Set([language, 'de', 'en'])];
   const lines = catalog.map((e) => {
     const names = [...new Set(languages.map((l) => e.name[l]).filter(Boolean))].join(' / ');
@@ -163,7 +183,9 @@ export function contextText(answers: PlanAnswers, catalog: CatalogRow[], languag
     `Training days: ${days} (${answers.trainingDays.length} days).`,
     `Session length: ${answers.sessionMinutes} minutes.`,
     `Focus: ${answers.focus.length ? answers.focus.join(', ') : 'none'}.`,
-    `Equipment: ${answers.equipment}.`,
+    answers.equipment === 'gym'
+      ? 'Equipment: a full gym.'
+      : `Equipment: ${have.size ? [...have].join(', ') : 'none, only the floor'} (training at home).`,
     '',
     'Catalog (id | names | equipment | main muscles | logs):',
     ...lines,

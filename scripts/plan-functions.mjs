@@ -56,16 +56,16 @@ export async function streamPlan(url, key, body) {
   return { status: 200, first, seconds: seconds(), plan: error ? null : plan, error };
 }
 
-/** The catalog's exercises by id, with these columns; empty when it can't be read. */
-export async function loadCatalog(supabaseUrl, key, columns) {
+/** A catalog table's rows (exercises, equipment) by id, with these columns; empty on failure. */
+export async function loadCatalog(supabaseUrl, key, table, columns) {
   try {
-    const response = await fetch(`${supabaseUrl}/rest/v1/exercises?select=${columns}`, {
+    const response = await fetch(`${supabaseUrl}/rest/v1/${table}?select=${columns}`, {
       headers: { apikey: key },
     });
     if (!response.ok) throw new Error(String(response.status));
     return new Map((await response.json()).map((e) => [e.id, e]));
   } catch (error) {
-    console.warn(`The catalog could not be read (${error.message}).`);
+    console.warn(`The ${table} could not be read (${error.message}).`);
     return new Map();
   }
 }

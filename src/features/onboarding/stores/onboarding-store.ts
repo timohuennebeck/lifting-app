@@ -22,6 +22,8 @@ export interface OnboardingDraft {
   goal: Goal | null;
   focus: MuscleId[];
   equipment: EquipmentAccess | null;
+  /** With `equipment` 'home': the ticked equipment ids. */
+  homeEquipment: string[];
   /** Monday-based weekday indexes. */
   trainingDays: number[];
   sessionMinutes: number;
@@ -44,6 +46,7 @@ const initialDraft = (): OnboardingDraft => ({
   goal: null,
   focus: [],
   equipment: null,
+  homeEquipment: [],
   trainingDays: [0, 2, 4],
   sessionMinutes: 60,
   plan: null,
@@ -71,6 +74,11 @@ export const useOnboardingStore = create<OnboardingState>()(
     {
       name: 'onboarding',
       storage: createJSONStorage(() => mmkvStorage),
+      // A draft saved by an earlier version gets the fields added since from the defaults.
+      merge: (persisted, current) => {
+        const saved = persisted as Partial<OnboardingState> | undefined;
+        return { ...current, ...saved, draft: { ...current.draft, ...saved?.draft } };
+      },
     },
   ),
 );
@@ -78,7 +86,7 @@ export const useOnboardingStore = create<OnboardingState>()(
 // The draft's own exercises resolve like saved ones, also after a restart (MMKV hydrates on create).
 const showDraftExercises = ({ draft }: OnboardingState) =>
   useCustomExerciseStore.setState({
-    drafts: Object.fromEntries((draft.customExercises ?? []).map((e) => [e.id, e])),
+    drafts: Object.fromEntries(draft.customExercises.map((e) => [e.id, e])),
   });
 showDraftExercises(useOnboardingStore.getState());
 useOnboardingStore.subscribe((state, previous) => {

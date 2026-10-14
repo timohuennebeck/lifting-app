@@ -10,7 +10,10 @@ import type { PlanEvent } from './plan-events.ts';
 export interface CatalogRow {
   id: string;
   name: Record<string, string>;
+  /** What the app shows with it; `needs` says what the user must have. */
   equipment: string;
+  /** Equipment ids: every list needs one of its items (public.exercises.needs). */
+  needs: string[][];
   measures: string[];
   /** Share of the training stimulus per muscle; values sum to 1. */
   muscles: Record<string, number>;
@@ -18,21 +21,37 @@ export interface CatalogRow {
   cardio: boolean;
 }
 
-const CATALOG_TTL_MS = 10 * 60_000;
-let catalogCache: { at: number; rows: CatalogRow[] } | null = null;
-
-/** The active catalog, read at most every 10 minutes per function instance. */
-export async function loadCatalog() {
-  if (catalogCache && Date.now() - catalogCache.at < CATALOG_TTL_MS) return catalogCache.rows;
-  const { data, error } = await admin
-    .from('exercises')
-    .select('id, name, equipment, measures, muscles, rest_seconds, cardio')
-    .eq('is_active', true)
-    .order('id');
-  if (error) throw error;
-  catalogCache = { at: Date.now(), rows: data as CatalogRow[] };
-  return catalogCache.rows;
+/** A row of `public.equipment`, as much as the plan functions need. */
+export interface EquipmentRow {
+  id: string;
+  /** A full gym has it. */
+  in_gym: boolean;
 }
+
+const CATALOG_TTL_MS = 10 * 60_000;
+
+/** The active rows of a catalog table, read at most every 10 minutes per function instance. */
+function cachedTable<T>(table: string, columns: string) {
+  let cache: { at: number; rows: T[] } | null = null;
+  return async () => {
+    if (cache && Date.now() - cache.at < CATALOG_TTL_MS) return cache.rows;
+    const { data, error } = await admin
+      .from(table)
+      .select(columns)
+      .eq('is_active', true)
+      .order('id');
+    if (error) throw error;
+    cache = { at: Date.now(), rows: data as T[] };
+    return cache.rows;
+  };
+}
+
+export const loadCatalog = cachedTable<CatalogRow>(
+  'exercises',
+  'id, name, equipment, needs, measures, muscles, rest_seconds, cardio',
+);
+
+export const loadEquipment = cachedTable<EquipmentRow>('equipment', 'id, in_gym');
 
 /** A whole number from the environment; the default when unset or not a number. */
 export function envLimit(name: string, fallback: number) {

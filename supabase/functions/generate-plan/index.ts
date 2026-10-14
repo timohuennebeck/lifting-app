@@ -7,10 +7,17 @@ import { reply } from '../_shared/common.ts';
 import { openAiConfigured, type StreamedAnswer, streamStructured } from '../_shared/openai.ts';
 import type { ImportedDay, PlanEvent } from '../_shared/plan-events.ts';
 import { PlanStream } from '../_shared/plan-stream.ts';
-import { envLimit, loadCatalog, planEventResponse, takePlanRequest } from '../_shared/plans.ts';
+import {
+  envLimit,
+  loadCatalog,
+  loadEquipment,
+  planEventResponse,
+  takePlanRequest,
+} from '../_shared/plans.ts';
 import {
   buildSchema,
   contextText,
+  equipmentOf,
   INSTRUCTIONS,
   type ModelDay,
   type ModelExercise,
@@ -47,8 +54,10 @@ Deno.serve(async (req) => {
   const { giveBack } = taken;
 
   let catalog;
+  let have;
   try {
-    catalog = usableExercises(await loadCatalog(), answers.equipment);
+    have = equipmentOf(answers, await loadEquipment());
+    catalog = usableExercises(await loadCatalog(), have);
   } catch (error) {
     console.error('Loading the catalog failed', error);
     await giveBack();
@@ -63,7 +72,7 @@ Deno.serve(async (req) => {
     started = await streamStructured(
       {
         instructions: INSTRUCTIONS,
-        content: [{ type: 'input_text', text: contextText(answers, catalog, language) }],
+        content: [{ type: 'input_text', text: contextText(answers, have, catalog, language) }],
         name: 'training_plan',
         schema: buildSchema(catalog.map((e) => e.id)),
         timeoutMs: OPENAI_TIMEOUT_MS,

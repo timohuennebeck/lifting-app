@@ -21,6 +21,8 @@ export const profiles = sqliteTable('profiles', {
   goal: text(),
   focus: text(),
   equipment: text(),
+  // JSON list of equipment ids, used with equipment = 'home'.
+  home_equipment: text(),
   training_days: text(),
   session_minutes: integer(),
   active_collection_id: text(),

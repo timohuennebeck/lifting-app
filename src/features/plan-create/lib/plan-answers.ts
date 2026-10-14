@@ -8,6 +8,8 @@ export interface PlanAnswers {
   goal: Goal;
   focus: MuscleId[];
   equipment: EquipmentAccess;
+  /** With `equipment` 'home': the ticked equipment ids. */
+  homeEquipment: string[];
   /** Monday-based weekday indexes. */
   trainingDays: number[];
   sessionMinutes: number;
@@ -20,6 +22,7 @@ export function answersFromDraft(draft: OnboardingDraft): PlanAnswers {
     goal: draft.goal ?? 'hypertrophy',
     focus: draft.focus,
     equipment: draft.equipment ?? 'gym',
+    homeEquipment: draft.equipment === 'home' ? draft.homeEquipment : [],
     trainingDays: draft.trainingDays.length ? draft.trainingDays : [0, 2, 4],
     sessionMinutes: draft.sessionMinutes,
     experience: draft.experience,

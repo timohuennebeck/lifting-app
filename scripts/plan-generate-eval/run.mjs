@@ -34,6 +34,13 @@ const FRI = 4;
 const SAT = 5;
 const SUN = 6;
 
+/** What the home profiles ticked: a small corner, a home gym, a kettlebell and a bar. */
+const HOME_EQUIPMENT = {
+  '05': ['dumbbell', 'bench'],
+  '06': ['barbell', 'rack', 'bench', 'dumbbell', 'pull-up-bar'],
+  14: ['kettlebell', 'pull-up-bar'],
+};
+
 /** Answers as the app sends them, across goals, equipment, days, lengths and experience. */
 const PROFILES = [
   ['01', 'de', 'hypertrophy', 'gym', [MON, WED, FRI], 60, 'beginner', []],
@@ -90,18 +97,29 @@ const PROFILES = [
 ].map(([id, language, goal, equipment, trainingDays, sessionMinutes, experience, focus]) => ({
   id,
   language,
-  answers: { goal, focus, equipment, trainingDays, sessionMinutes, experience },
+  answers: {
+    goal,
+    focus,
+    equipment,
+    homeEquipment: HOME_EQUIPMENT[id] ?? [],
+    trainingDays,
+    sessionMinutes,
+    experience,
+  },
 }));
 
 // ---------- the rules ----------
 
-/** Equipment each answer allows, and exercises that work without theirs (as generate.ts). */
-const EQUIPMENT = {
-  gym: ['barbell', 'dumbbell', 'kettlebell', 'machine', 'cable', 'bodyweight'],
-  home: ['barbell', 'dumbbell', 'kettlebell', 'bodyweight'],
-  bodyweight: ['bodyweight'],
-};
-const ALSO_AT = { home: ['calf-raise'], bodyweight: ['lunge', 'calf-raise'] };
+/** The user's equipment: a full gym's, the ticked items at home, none on the floor. */
+const equipmentOf = ({ equipment, homeEquipment }) =>
+  new Set(
+    equipment === 'gym'
+      ? [...EQUIPMENT.values()].filter((e) => e.in_gym).map((e) => e.id)
+      : homeEquipment.filter((id) => EQUIPMENT.has(id)),
+  );
+
+/** An exercise fits when each of its needs is met by one of the user's items. */
+const fits = (needs, have) => needs.every((items) => items.some((id) => have.has(id)));
 
 /** The app's session estimate (estimateMinutes): set-up per exercise, per set its work and rest. */
 const minutesOf = (day) =>
@@ -163,22 +181,20 @@ const CHECKS = {
         return [`${d.name}: only ${Math.round(minutes)} of ${answers.sessionMinutes} min`];
       return [];
     }),
-  equipment: ({ answers }, plan, catalog) =>
-    plan.days.flatMap((d) =>
+  equipment: ({ answers }, plan, catalog) => {
+    const have = equipmentOf(answers);
+    return plan.days.flatMap((d) =>
       d.exercises
         .filter((e) => {
           const row = catalog.get(e.exerciseId);
-          return (
-            !row ||
-            row.cardio ||
-            !(
-              EQUIPMENT[answers.equipment].includes(row.equipment) ||
-              ALSO_AT[answers.equipment]?.includes(row.id)
-            )
-          );
+          return !row || row.cardio || !fits(row.needs, have);
         })
-        .map((e) => `${d.name}: ${e.exerciseId} (${catalog.get(e.exerciseId)?.equipment})`),
-    ),
+        .map(
+          (e) =>
+            `${d.name}: ${e.exerciseId} (needs ${JSON.stringify(catalog.get(e.exerciseId)?.needs)})`,
+        ),
+    );
+  },
   unique: (_, plan) =>
     plan.days.flatMap((d) => {
       const ids = d.exercises.map((e) => e.exerciseId);
@@ -261,8 +277,16 @@ function describePlan(plan, catalog, language) {
   return lines.join('\n');
 }
 
-const describeAnswers = ({ goal, equipment, trainingDays, sessionMinutes, experience, focus }) =>
-  `${goal}, ${equipment}, ${trainingDays.map((d) => WEEKDAYS[d]).join('/')}, ${sessionMinutes} min, ` +
+const describeAnswers = ({
+  goal,
+  equipment,
+  homeEquipment,
+  trainingDays,
+  sessionMinutes,
+  experience,
+  focus,
+}) =>
+  `${goal}, ${equipment}${homeEquipment.length ? ` (${homeEquipment.join(', ')})` : ''}, ${trainingDays.map((d) => WEEKDAYS[d]).join('/')}, ${sessionMinutes} min, ` +
   `${experience ?? 'experience unknown'}${focus.length ? `, focus ${focus.join(' + ')}` : ''}`;
 
 /** One plan; null once the limit is reached or the function doesn't answer. */
@@ -298,8 +322,15 @@ function reportStop(skipped) {
 const timing = ({ first, seconds }) =>
   `${first == null ? '–' : `${first.toFixed(1)} s`} / ${seconds.toFixed(1)} s`;
 
-const catalog = await loadCatalog(SUPABASE_URL, KEY, 'id,name,measures,equipment,muscles,cardio');
-if (!catalog.size) process.exit(1);
+const catalog = await loadCatalog(
+  SUPABASE_URL,
+  KEY,
+  'exercises',
+  'id,name,measures,needs,muscles,cardio',
+);
+const EQUIPMENT = await loadCatalog(SUPABASE_URL, KEY, 'equipment', 'id,in_gym,is_active');
+for (const [id, e] of EQUIPMENT) if (!e.is_active) EQUIPMENT.delete(id);
+if (!catalog.size || !EQUIPMENT.size) process.exit(1);
 const args = process.argv.slice(2);
 const profiles = args.length ? PROFILES.filter((p) => args.includes(p.id)) : PROFILES;
 const names = Object.keys(CHECKS);

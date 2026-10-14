@@ -15,14 +15,6 @@
     "glutes": "Po",
     "legs": "Beine"
   },
-  "equipment": {
-    "barbell": "Langhantel",
-    "dumbbell": "Kurzhanteln",
-    "kettlebell": "Kettlebell",
-    "machine": "Maschine",
-    "cable": "Kabelzug",
-    "bodyweight": "Körpergewicht"
-  },
   "detail": {
     "tabs": {
       "exercise": "Übung",

@@ -61,6 +61,8 @@ export interface Profile {
   goal: Goal | null;
   focus: MuscleId[];
   equipment: EquipmentAccess | null;
+  /** With `equipment` 'home': the equipment ids the user has. */
+  homeEquipment: string[];
   /** Monday-based weekday indexes. */
   trainingDays: number[];
   sessionMinutes: number | null;
@@ -87,6 +89,7 @@ function toProfile(r: ProfileRecord): Profile {
     goal: r.goal as Goal | null,
     focus: parseJson(r.focus, []),
     equipment: r.equipment as EquipmentAccess | null,
+    homeEquipment: parseJson(r.home_equipment, []),
     trainingDays: parseJson(r.training_days, []),
     sessionMinutes: r.session_minutes,
     activeCollectionId: r.active_collection_id,
@@ -134,6 +137,7 @@ const toColumns = (p: ProfilePatch) => ({
   goal: p.goal,
   focus: toJson(p.focus),
   equipment: p.equipment,
+  home_equipment: toJson(p.homeEquipment),
   training_days: toJson(p.trainingDays),
   session_minutes: p.sessionMinutes,
   active_collection_id: p.activeCollectionId,

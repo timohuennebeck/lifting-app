@@ -39,6 +39,10 @@
         "title": "No equipment",
         "description": "Bodyweight only"
       }
+    },
+    "home": {
+      "title": "YOUR EQUIPMENT",
+      "hint": "Tap everything you can train with."
     }
   },
   "days": {

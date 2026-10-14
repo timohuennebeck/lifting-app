@@ -15,14 +15,6 @@
     "glutes": "Glutes",
     "legs": "Legs"
   },
-  "equipment": {
-    "barbell": "Barbell",
-    "dumbbell": "Dumbbells",
-    "kettlebell": "Kettlebell",
-    "machine": "Machine",
-    "cable": "Cable",
-    "bodyweight": "Bodyweight"
-  },
   "detail": {
     "tabs": {
       "exercise": "Exercise",

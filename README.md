@@ -72,12 +72,23 @@ changes hourly, so new exercises ship without a release. Edit them with the serv
   `is_active = false` to hide it from the picker while history keeps its name.
 - **`name` / `instructions`:** per language (`en`, `de`, `pt-PT`, `pt-BR`); English is required and
   the fallback. Instructions are a list of `{ "title", "text" }` steps.
-- **`equipment`, `muscles`:** codes the app translates. `muscles` maps body map regions to their
-  share of the work, e.g. `{"chest": 0.6, "triceps": 0.25, "front_delts": 0.15}`.
+- **`equipment`:** what the app shows with the exercise ("Langhantel · Brust"), an id in
+  `public.equipment`.
+- **`needs`:** what the user must have for it, as a list of lists of equipment ids: every inner
+  list needs one of its items. `[["barbell"], ["rack"], ["bench"]]` is a bench press,
+  `[["dumbbell", "kettlebell"]]` a goblet squat, `[]` needs nothing (push-ups, lunges). The plan
+  generation only offers exercises whose needs the user's equipment meets.
+- **`muscles`:** body map regions and their share of the work, e.g.
+  `{"chest": 0.6, "triceps": 0.25, "front_delts": 0.15}`.
 - **`measures`:** what one set records, and so which boxes the workout screen shows:
   `{weight,reps}` (kg × reps, also bodyweight moves with added weight), `{reps}` (push-ups),
   `{seconds}` (planks) or `{weight,seconds}` (weighted holds).
 - **`image_path`:** a file in the public `exercise-media` bucket.
+- **Equipment (`public.equipment`):** one row per piece of equipment with its `name` per language
+  (English required), `in_gym` (a full gym has it: "Komplettes Studio" includes it), `at_home`
+  (offered in the "Eigene Geräte" checklist) and `position` (its order there). `bodyweight` only
+  labels exercises without equipment and can't be a need. Never delete a row; set
+  `is_active = false`. New equipment is a row plus the needs of the exercises that use it.
 - **In the app:** downloaded in full on first launch (the app needs a connection once), kept on the
   device, then refreshed with the rows changed since, on launch and hourly. A change here reaches
   every install without an app release.
@@ -157,6 +168,10 @@ allows, and the model writes the plan in a fixed shape (exercise ids from that l
 plan streams to the app like an import and opens in the same editor; the name step comes after.
 There is no plan made on the device: without a connection, past the limit or when the model fails,
 the app says so and the user goes back a step.
+
+- **Equipment:** the model only sees the exercises the user can do: "Komplettes Studio" has every
+  item a gym has (`in_gym`), "Eigene Geräte" the ticked ones (`profiles.home_equipment`), "Keine
+  Geräte" none, and an exercise fits when each of its `needs` is met (see Exercise catalog).
 
 - **Checked server-side** (`planBuilder` in `generate.ts`), as the plan streams: one day per
   training day on those weekdays, no exercise twice a day, at most 10 a day, each day within the

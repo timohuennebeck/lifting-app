@@ -28,7 +28,7 @@ export async function persistOnboarding(userId: string, draft: OnboardingDraft) 
       .get();
     let activeCollectionId = existing?.active_collection_id ?? null;
     if (!activeCollectionId && draft.plan?.days.length) {
-      activeCollectionId = await insertPlan(tx, userId, draft.plan, draft.customExercises ?? []);
+      activeCollectionId = await insertPlan(tx, userId, draft.plan, draft.customExercises);
     }
     await saveProfile(
       userId,
@@ -42,6 +42,7 @@ export async function persistOnboarding(userId: string, draft: OnboardingDraft) 
         goal: draft.goal,
         focus: draft.focus,
         equipment: draft.equipment,
+        homeEquipment: draft.homeEquipment,
         trainingDays: draft.trainingDays,
         sessionMinutes: draft.sessionMinutes,
         activeCollectionId,

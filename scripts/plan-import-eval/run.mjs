@@ -351,7 +351,7 @@ function writeReport(name, text, results) {
 }
 
 async function runFixtures() {
-  const names = await loadCatalog(SUPABASE_URL, KEY, 'id,name,measures');
+  const names = await loadCatalog(SUPABASE_URL, KEY, 'exercises', 'id,name,measures');
   const all = JSON.parse(readFileSync(join(FIXTURES, 'cases.json'), 'utf8'));
   const cases = args.length ? all.filter((c) => args.some((a) => c.id.startsWith(a))) : all;
   console.log(`${cases.length} cases against ${SUPABASE_URL}, ${PARALLEL} at a time …\n`);
@@ -412,7 +412,7 @@ async function runFixtures() {
 }
 
 async function runDir() {
-  const names = await loadCatalog(SUPABASE_URL, KEY, 'id,name,measures');
+  const names = await loadCatalog(SUPABASE_URL, KEY, 'exercises', 'id,name,measures');
   const entries = readdirSync(dir)
     .filter((f) => !f.startsWith('.'))
     .sort();

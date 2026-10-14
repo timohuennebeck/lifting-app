@@ -15,14 +15,6 @@
     "glutes": "Glúteos",
     "legs": "Pernas"
   },
-  "equipment": {
-    "barbell": "Barra",
-    "dumbbell": "Halteres",
-    "kettlebell": "Kettlebell",
-    "machine": "Máquina",
-    "cable": "Polia",
-    "bodyweight": "Peso corporal"
-  },
   "detail": {
     "tabs": {
       "exercise": "Exercício",

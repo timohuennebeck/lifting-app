@@ -10,12 +10,10 @@ import { MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 import type { PlanExerciseDraft, PlanSetDraft } from './templates';
 
-// The catalog lives in Supabase (`public.exercises`). The app downloads all of it on first launch
-// and keeps it on the device for offline use; `useCatalogRefresh` then fetches what changed.
-// The user's own exercises (`custom_exercises`, synced by PowerSync) are mirrored next to it, so
-// every lookup below finds both.
-
-export type Equipment = 'barbell' | 'dumbbell' | 'kettlebell' | 'machine' | 'cable' | 'bodyweight';
+// The catalog lives in Supabase (`public.exercises`, `public.equipment`). The app downloads all
+// of it on first launch and keeps it on the device for offline use; `useCatalogRefresh` then
+// fetches what changed. The user's own exercises (`custom_exercises`, synced by PowerSync) are
+// mirrored next to it, so every lookup below finds both.
 
 /** What one set records; the workout screen shows one box per measure. */
 export type Measure = 'weight' | 'reps' | 'seconds';
@@ -30,7 +28,8 @@ export interface ExerciseRow {
   id: string;
   name: Record<string, string>;
   instructions: Record<string, TechniqueStep[]>;
-  equipment: Equipment;
+  /** What the app shows with it: an id in `equipment`. */
+  equipment: string;
   measures: Measure[];
   muscles: Record<string, number>;
   rest_seconds: number;
@@ -44,10 +43,22 @@ export interface ExerciseRow {
   updated_at: string;
 }
 
+/** A row of `public.equipment` as the API returns it. */
+export interface EquipmentRow {
+  id: string;
+  name: Record<string, string>;
+  /** "Komplettes Studio" includes it. */
+  in_gym: boolean;
+  /** Offered in the "Eigene Geräte" checklist. */
+  at_home: boolean;
+  position: number;
+  is_active: boolean;
+}
+
 export interface Exercise {
   id: string;
-  /** Null for the user's own exercises. */
-  equipment: Equipment | null;
+  /** Equipment shown with it; null for the user's own exercises. */
+  equipment: string | null;
   /** {weight, reps}, {reps}, {seconds} or {weight, seconds}, in display order. */
   measures: Measure[];
   image: ImageSourcePropType | null;
@@ -111,10 +122,11 @@ export const latestUpdate = (rows: Record<string, ExerciseRow>) =>
 
 interface CatalogState {
   rows: Record<string, ExerciseRow>;
+  equipment: Record<string, EquipmentRow>;
 }
 
 export const useCatalogStore = create<CatalogState>()(
-  persist(() => ({ rows: {} }), {
+  persist(() => ({ rows: {}, equipment: {} }), {
     name: 'exercise-catalog',
     storage: createJSONStorage(() => mmkvStorage),
   }),
@@ -245,6 +257,21 @@ const nameOf = (
  */
 export const exerciseName = (id: string, language = i18n.language, custom = customExercises()) =>
   nameOf(useCatalogStore.getState().rows[id], custom[id] ?? draftExercise(id), language) ?? id;
+
+/** Localized name of a piece of equipment; the id until the catalog has it. */
+export function useEquipmentName(id: string, language: string) {
+  const row = useCatalogStore((s) => s.equipment[id]);
+  return localized(row?.name, language) ?? id;
+}
+
+/** The equipment "Eigene Geräte" offers to tick, in its order, with localized names. */
+export function useHomeEquipment(language: string) {
+  const equipment = useCatalogStore((s) => s.equipment);
+  return Object.values(equipment)
+    .filter((e) => e.at_home && e.is_active)
+    .sort((a, b) => a.position - b.position)
+    .map((e) => ({ id: e.id, name: localized(e.name, language) ?? e.id }));
+}
 
 export function exerciseInstructions(id: string, language = i18n.language): TechniqueStep[] {
   return localized(useCatalogStore.getState().rows[id]?.instructions, language) ?? [];

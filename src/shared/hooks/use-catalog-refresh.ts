@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import {
+  type EquipmentRow,
   type ExerciseRow,
   latestUpdate,
   mergeRows,
@@ -15,10 +16,19 @@ import { HOUR_MS } from '@/shared/lib/date';
 const PAGE_SIZE = 1000;
 
 /**
- * Fetches exercises changed since the newest one the app knows: all of them on first launch.
- * Works logged out.
+ * Fetches the equipment, a few rows, and the exercises changed since the newest one the app
+ * knows: all of them on first launch. Works logged out.
  */
 async function fetchCatalogChanges() {
+  const equipment = await supabase.from('equipment').select('*');
+  if (equipment.error) throw equipment.error;
+  // Merged like the exercises: equipment is never deleted, only deactivated.
+  useCatalogStore.setState((s) => ({
+    equipment: {
+      ...s.equipment,
+      ...Object.fromEntries((equipment.data as EquipmentRow[]).map((e) => [e.id, e])),
+    },
+  }));
   const since = latestUpdate(useCatalogStore.getState().rows);
   const rows: ExerciseRow[] = [];
   // Pages until one comes back empty, so a lower cap on the server only means more requests.

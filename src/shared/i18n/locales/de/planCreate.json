@@ -39,6 +39,10 @@
         "title": "Keine Geräte",
         "description": "Nur mit Körpergewicht"
       }
+    },
+    "home": {
+      "title": "DEINE GERÄTE",
+      "hint": "Tipp an, womit du trainieren kannst."
     }
   },
   "days": {

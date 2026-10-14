@@ -39,6 +39,10 @@
         "title": "Sem equipamento",
         "description": "Só com o peso corporal"
       }
+    },
+    "home": {
+      "title": "O TEU EQUIPAMENTO",
+      "hint": "Toca em tudo o que tens para treinar."
     }
   },
   "days": {
