@@ -144,7 +144,7 @@ isn't sure about come with alternatives for the user to review.
 
 - **Streaming:** the function passes each exercise on as soon as the model has written it, as
   server-sent events (`PlanEvent` in its `index.ts`); the app reads them with `expo/fetch`. The
-  review opens with the first exercise and fills in day by day; "Plan übernehmen" waits for the
+  review opens with the first exercise and fills in routine by routine; "Plan übernehmen" waits for the
   whole plan. Leaving the review stops the model. Limits and bad requests still answer with an
   HTTP status before the stream starts.
 - **Secrets:** the same `OPENAI_API_KEY` and `OPENAI_MODEL` as the progress check.
@@ -161,10 +161,31 @@ isn't sure about come with alternatives for the user to review.
   prints what it found. One run is 15 imports, so set `PLAN_IMPORT_IP_LIMIT=1000` in
   `supabase/functions/.env` locally first.
 
+## Plans, routines and workout entries
+
+What the user trains from, and what they logged:
+
+- **`plans`:** a plan holds routines in order (`routines.position`). `sessions_per_week` of its
+  workouts make one plan week, on whichever days; a week ends when it has that many, however long
+  it took. The plan Today follows is `profiles.active_plan_id`, else the first plan.
+- **`routines`** (with `routine_exercises` and `routine_sets`): in a plan (`plan_id`) or in "Meine
+  Trainings" (`plan_id` null), e.g. for a hotel gym. Copying one between the two makes a copy.
+- **`workout_entries`** (with `workout_entries_exercises` and `workout_entries_sets`): logged or
+  running workouts. One started from a plan's routine gets `plan_id` and `plan_week`, the week the
+  plan is in then; free workouts and routines from Meine Trainings have neither and don't count.
+- **Next routine:** the plan's routine logged longest ago (`created_at`), never-done ones first in
+  plan order; routines without exercises are skipped. "Anderes Training" picks another for a day.
+- **Blocks (optional):** `block_weeks` is 4, 5 or 6 (3, 4 or 5 build weeks plus a deload), null
+  for none; `block_start_week` is a plan week a block started in. Each build week takes one rep off
+  every set's saved RIR (never below 0); the deload keeps the first half of the sets (rounded up)
+  at RIR 4. Sets without RIR keep none. "Deload jetzt" and "Block neu starten" move the start, and
+  a new length keeps the week the block is in. AI plans start with 4 + 1; imported and self-built
+  plans without blocks, with a weekly goal of their routine count.
+
 ## Plan generation
 
 "Erstell mir einen Plan" (in onboarding and from Training) sends the flow's answers to the
-`generate-plan` Edge Function: goal, focus muscles, equipment, training days, session length and
+`generate-plan` Edge Function: goal, focus muscles, equipment, workouts a week, session length and
 experience; no name, no body data. The function gives OpenAI the catalog exercises the equipment
 allows, and the model writes the plan in a fixed shape (exercise ids from that list only). The
 plan streams to the app like an import and opens in the same editor; the name step comes after.
@@ -175,17 +196,17 @@ the app says so and the user goes back a step.
   item a gym has (`in_gym`), "Eigene Geräte" the ticked ones (`profiles.home_equipment`), "Keine
   Geräte" none, and an exercise fits when each of its `needs` is met (see Exercise catalog).
 
-- **Checked server-side** (`planBuilder` in `generate.ts`), as the plan streams: one day per
-  training day on those weekdays, no exercise twice a day, at most 10 a day, each day within the
-  session length (the app's estimate, plus 10 %), sets 1–6, reps 1–30 or 10–300 seconds for
-  timed exercises, RIR 0–4, rest 30–300 s.
+- **Checked server-side** (`planBuilder` in `generate.ts`), as the plan streams: one routine per
+  workout a week, in the order they are done, no exercise twice in a routine, at most 10 a
+  routine, each within the session length (the app's estimate, plus 10 %), sets 1–6, reps 1–30 or
+  10–300 seconds for timed exercises, RIR 0–4 (the first week of a block), rest 30–300 s.
 - **Secrets and speed:** as the plan import; `PLAN_GENERATE_FAST=false` turns Fast mode off.
 - **Rules (server-side):** limited on their own, like imports: per network
   (`PLAN_GENERATE_IP_LIMIT`, default 10) and in total (`PLAN_GENERATE_DAILY_LIMIT`, default 1,000)
   per 24 hours, in `plan_requests` with `kind = 'generate'`.
-- **Testing:** `npm run plan:generate-eval` asks for 15 plans (goals, equipment, 1–7 days,
-  20–120 minutes, every experience level, with and without focus; German, English, Portuguese) and
-  checks each: days, time, equipment, repeats, every major muscle group trained, push/pull
+- **Testing:** `npm run plan:generate-eval` asks for 15 plans (goals, equipment, 1–7 workouts a
+  week, 20–120 minutes, every experience level, with and without focus; German, English,
+  Portuguese) and checks each: routines, time, equipment, repeats, every major muscle group trained, push/pull
   balance, focus volume, reps for the goal, limits for beginners. The checks are rules of thumb;
   the report in `scripts/plan-generate-eval/out/` has every plan to read. Set
   `PLAN_GENERATE_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
