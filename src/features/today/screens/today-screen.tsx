@@ -7,7 +7,7 @@ import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { usePlanWeekLabel } from '@/features/training/hooks/use-plan-week-label';
 import { useWorkoutDraftStore } from '@/features/workout/stores/workout-draft-store';
 import { TabScreen } from '@/shared/components/tab-screen';
-import { currentPlanId, usePlanStatus, usePlans } from '@/shared/data/plans';
+import { useCurrentPlan, usePlanStatus } from '@/shared/data/plans';
 import { useProfile, useUnits } from '@/shared/data/profile';
 import { useRoutines } from '@/shared/data/routines';
 import { useActiveWorkout } from '@/shared/data/workouts';
@@ -26,27 +26,34 @@ import { UnplannedDay } from '../components/unplanned-day';
 import { WeekStrip } from '../components/week-strip';
 import { useWeekWorkouts } from '../hooks/use-week-workouts';
 
+/** Day `index` of the week strip, picked on `day` (the `useToday` key). */
+interface DayPick {
+  day: number;
+  index: number;
+}
+
+/** "Anderes Training": a routine picked for a day of the strip instead of the next one. */
+interface RoutinePick extends DayPick {
+  routineId: string;
+}
+
 export function TodayScreen() {
   const { t } = useTranslation('today');
   // The tab stays mounted: the day comes from a clock so it moves on overnight, and a picked
   // day (or routine) only counts on the day it was picked.
   const dayKey = useToday();
   const today = new Date(dayKey);
-  const [pick, setPick] = useState<{ day: number; index: number } | null>(null);
+  const [pick, setPick] = useState<DayPick | null>(null);
   const selected = pick?.day === dayKey ? pick.index : mondayIndex(today);
   const select = (index: number) => setPick({ day: dayKey, index });
-  // "Anderes Training": a routine picked instead of the next one, for that day only.
-  const [other, setOther] = useState<{ day: number; index: number; routineId: string } | null>(
-    null,
-  );
+  const [other, setOther] = useState<RoutinePick | null>(null);
   const [otherOpen, setOtherOpen] = useState(false);
   const units = useUnits();
   const { data: active } = useActiveWorkout();
   const { days, isLoading: weekLoading } = useWeekWorkouts(today);
   const day = days[selected];
-  const { profile, isLoading: profileLoading } = useProfile();
-  const { data: plans = [], isLoading: plansLoading } = usePlans();
-  const plan = plans.find((p) => p.id === currentPlanId(profile?.activePlanId, plans));
+  const { profile } = useProfile();
+  const { plan, isLoading: planLoading } = useCurrentPlan();
   const status = usePlanStatus(plan);
   const weekLabel = usePlanWeekLabel();
   const { data: routines = [], isLoading: routinesLoading } = useRoutines();
@@ -59,8 +66,7 @@ export function TodayScreen() {
   // Without a next one (every routine still empty) the first, to fill it.
   const routine = picked ?? planRoutines.find((r) => r.id === nextId) ?? planRoutines[0];
   // Nothing shows until the day and the plan are known, so no card flashes in the wrong state.
-  const loading =
-    weekLoading || profileLoading || plansLoading || routinesLoading || (!!plan && !status);
+  const loading = weekLoading || planLoading || routinesLoading || (!!plan && !status);
 
   const pills = (
     <ScrollView

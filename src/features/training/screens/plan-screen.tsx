@@ -7,14 +7,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   BLOCK_OPTIONS,
-  currentPlanId,
   MAX_SESSIONS_PER_WEEK,
+  useCurrentPlan,
   usePlanStatus,
-  usePlans,
 } from '@/shared/data/plans';
-import { useProfile } from '@/shared/data/profile';
 import { type RoutineSummary, useRoutines } from '@/shared/data/routines';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
+import { attempt } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { PLAN_NAME_MAX } from '@/shared/lib/limits';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -44,7 +43,7 @@ import {
   setBlockWeeks,
   setSessionsPerWeek,
 } from '../data/plan-mutations';
-import { usePlanWeekLabel } from '../hooks/use-plan-week-label';
+import { usePlanProgressLabels } from '../hooks/use-plan-week-label';
 import { useStartRoutine } from '../hooks/use-start-routine';
 
 interface SettingProps {
@@ -67,16 +66,7 @@ function Setting({ title, hint, children }: SettingProps) {
 }
 
 /** Runs a change to the plan; a failure is logged and felt instead of thrown. True when saved. */
-async function save(change: () => Promise<unknown>) {
-  try {
-    await change();
-    return true;
-  } catch (error) {
-    console.warn('Saving the plan failed', error);
-    haptics.error();
-    return false;
-  }
-}
+const save = (change: () => Promise<unknown>) => attempt('Saving the plan failed', change);
 
 interface GoalStepperProps {
   planId: string;
@@ -114,8 +104,7 @@ export function PlanScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation(['training', 'common']);
   const insets = useSafeAreaInsets();
-  const { profile } = useProfile();
-  const { data: plans = [], isLoading } = usePlans();
+  const { plan: activePlan, plans, isLoading } = useCurrentPlan();
   const { data: routines = [] } = useRoutines();
   // Deleted on the way out, it still shows while the screen leaves.
   const [leaving, setLeaving] = useState(false);
@@ -123,7 +112,7 @@ export function PlanScreen() {
   const lastPlan = useLastDefined(found);
   const plan = found ?? (leaving ? (lastPlan ?? undefined) : undefined);
   const status = usePlanStatus(plan);
-  const weekLabel = usePlanWeekLabel();
+  const labels = usePlanProgressLabels(plan, status);
   const { start, startingId } = useStartRoutine();
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const [optionsOpen, setOptionsOpen] = useState(false);
@@ -157,9 +146,12 @@ export function PlanScreen() {
     );
   }
 
-  const active = plan.id === currentPlanId(profile?.activePlanId, plans);
+  const active = plan.id === activePlan?.id;
   // Block settings count from the week the plan is in now, so they wait until it is known.
   const week = status?.week;
+  const changeBlocks = (change: (planWeek: number) => Promise<unknown>) => {
+    if (week !== undefined) void save(() => change(week));
+  };
   const planRoutines = routines.filter((r) => r.planId === plan.id);
   const blockOptions = [
     { value: 0, label: t('plan.blockOff') },
@@ -190,7 +182,7 @@ export function PlanScreen() {
         <Card className="mx-4 mt-5 gap-4">
           <View className="flex-row items-center gap-3">
             <Text variant="headline" className="min-w-0 flex-1" numberOfLines={1}>
-              {status ? weekLabel(plan, status) : ''}
+              {labels.week}
             </Text>
             {active ? (
               <View className="rounded-full bg-accent/15 px-2.5 py-1">
@@ -202,7 +194,7 @@ export function PlanScreen() {
           </View>
           <View className="gap-2.5">
             <Text variant="caption" tone="subtle" className="font-inter-medium">
-              {t('plan.sessions', { done: status?.done ?? 0, count: plan.sessionsPerWeek })}
+              {labels.sessions}
             </Text>
             <SessionProgress done={status?.done ?? 0} total={plan.sessionsPerWeek} />
           </View>
@@ -226,9 +218,9 @@ export function PlanScreen() {
             options={blockOptions}
             value={plan.blockWeeks ?? 0}
             disabled={week === undefined}
-            onChange={(weeks) => {
-              if (week !== undefined) void save(() => setBlockWeeks(plan, weeks || null, week));
-            }}
+            onChange={(weeks) =>
+              changeBlocks((planWeek) => setBlockWeeks(plan, weeks || null, planWeek))
+            }
           />
           {plan.blockWeeks ? (
             <View className="flex-row gap-2 pt-3">
@@ -239,9 +231,7 @@ export function PlanScreen() {
                   size="sm"
                   className="flex-1"
                   disabled={week === undefined}
-                  onPress={() => {
-                    if (week !== undefined) void save(() => deloadNow(plan, week));
-                  }}
+                  onPress={() => changeBlocks((planWeek) => deloadNow(plan, planWeek))}
                 />
               ) : null}
               <Button
@@ -250,9 +240,7 @@ export function PlanScreen() {
                 size="sm"
                 className="flex-1"
                 disabled={week === undefined}
-                onPress={() => {
-                  if (week !== undefined) void save(() => restartBlock(plan, week));
-                }}
+                onPress={() => changeBlocks((planWeek) => restartBlock(plan, planWeek))}
               />
             </View>
           ) : null}

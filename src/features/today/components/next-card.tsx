@@ -5,9 +5,11 @@ import { View } from 'react-native';
 
 import { useStartRoutine } from '@/features/training/hooks/use-start-routine';
 import { muscleShares } from '@/shared/data/muscles';
+import { deloadSetCount } from '@/shared/data/plans';
 import { estimateMinutes, type RoutineSummary } from '@/shared/data/routines';
 import { cn } from '@/shared/lib/cn';
 import { startOfDay } from '@/shared/lib/date';
+import { attempt } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
@@ -51,7 +53,7 @@ export function NextCard({
   const isFuture = startOfDay(date) > startOfDay(today);
   // A deload keeps the first half of each exercise's sets (see `setsForWeek`).
   const items = deload
-    ? routine.items.map((item) => ({ ...item, sets: Math.ceil(item.sets / 2) }))
+    ? routine.items.map((item) => ({ ...item, sets: deloadSetCount(item.sets) }))
     : routine.items;
   const sets = items.reduce((sum, item) => sum + item.sets, 0);
   const minutes = deload ? estimateMinutes(items) : routine.estimatedMinutes;
@@ -59,14 +61,10 @@ export function NextCard({
   const markDone = async () => {
     if (busy || starting) return;
     setBusy(true);
-    // No `finally`: the React Compiler can't compile a component with one.
-    try {
-      await markRoutineDone(requireUserId(), routine.id, routine.name, date, minutes);
-      haptics.success();
-    } catch (error) {
-      setBusy(false);
-      throw error;
-    }
+    const done = await attempt('Logging the routine as done failed', () =>
+      markRoutineDone(requireUserId(), routine.id, routine.name, date, minutes),
+    );
+    if (done) haptics.success();
     setBusy(false);
   };
 

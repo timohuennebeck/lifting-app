@@ -18,7 +18,12 @@ const FRONT_SIZE = 56;
 /** Width of three circles, kept for fewer too so the titles line up. */
 const STACK_WIDTH = 116;
 
-function MuscleCircle({ muscle, front }: { muscle: MuscleId | null; front: boolean }) {
+interface MuscleCircleProps {
+  muscle: MuscleId | null;
+  front: boolean;
+}
+
+function MuscleCircle({ muscle, front }: MuscleCircleProps) {
   return (
     <View
       className={cn(
@@ -36,8 +41,12 @@ function MuscleCircle({ muscle, front }: { muscle: MuscleId | null; front: boole
   );
 }
 
+interface MuscleStackProps {
+  shares: MuscleShare[];
+}
+
 /** The three muscles worked most as overlapping circles, the biggest share in front. */
-function MuscleStack({ shares }: { shares: MuscleShare[] }) {
+function MuscleStack({ shares }: MuscleStackProps) {
   const [first, ...rest] = shares.slice(0, 3);
   return (
     <View

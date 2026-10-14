@@ -9,7 +9,12 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
-function RoutineMuscle({ routine }: { routine: RoutineSummary }) {
+interface RoutineMuscleProps {
+  routine: RoutineSummary;
+}
+
+/** The muscle a routine works most, on a round crop of the body map. */
+function RoutineMuscle({ routine }: RoutineMuscleProps) {
   const top = muscleShares(routine.items)[0]?.muscle;
   return (
     <View className="size-11 overflow-hidden rounded-full bg-elevated">

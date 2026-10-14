@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { currentPlanId, usePlans } from '@/shared/data/plans';
-import { useProfile } from '@/shared/data/profile';
+import { useCurrentPlan } from '@/shared/data/plans';
 import type { RoutineSummary } from '@/shared/data/routines';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
+import { attempt } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { ROUTINE_NAME_MAX } from '@/shared/lib/limits';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -36,20 +36,15 @@ export function RoutineMenu({ routine, onClose, onDelete }: RoutineMenuProps) {
   const shown = useLastDefined(routine);
   const [renaming, setRenaming] = useState<RoutineMenuTarget | null>(null);
   const renameShown = useLastDefined(renaming);
-  const { profile } = useProfile();
-  const { data: plans = [] } = usePlans();
-  const plan = plans.find((p) => p.id === currentPlanId(profile?.activePlanId, plans));
+  const { plan } = useCurrentPlan();
 
   const copyTo = async (planId: string | null) => {
     onClose();
     if (!routine) return;
-    try {
-      await copyRoutine(requireUserId(), routine.id, planId);
-      haptics.success();
-    } catch (error) {
-      console.warn('Copying the routine failed', error);
-      haptics.error();
-    }
+    const copied = await attempt('Copying the routine failed', () =>
+      copyRoutine(requireUserId(), routine.id, planId),
+    );
+    if (copied) haptics.success();
   };
 
   let copy;
@@ -84,12 +79,8 @@ export function RoutineMenu({ routine, onClose, onDelete }: RoutineMenuProps) {
           onClose();
           if (!routine) return;
           onDelete?.();
-          try {
-            await deleteRoutine(routine.id);
+          if (await attempt('Deleting the routine failed', () => deleteRoutine(routine.id))) {
             haptics.success();
-          } catch (error) {
-            console.warn('Deleting the routine failed', error);
-            haptics.error();
           }
         }}
       />
@@ -102,7 +93,9 @@ export function RoutineMenu({ routine, onClose, onDelete }: RoutineMenuProps) {
         placeholder={t('options.namePlaceholder')}
         ctaLabel={t('common:actions.save')}
         onSubmit={async (name) => {
-          if (renaming) await renameRoutine(renaming.id, name);
+          const target = renaming;
+          if (target)
+            await attempt('Renaming the routine failed', () => renameRoutine(target.id, name));
           setRenaming(null);
         }}
       />

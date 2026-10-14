@@ -1,10 +1,11 @@
-import { asc, count, eq, isNull, type SQL } from 'drizzle-orm';
+import { and, asc, count, eq, isNull, type SQL } from 'drizzle-orm';
 
 import { getOrInsert } from '@/shared/lib/map';
 
 import { getExercise } from './exercises';
-import { newId } from './json';
-import { drizzle, type Tx } from './powersync/database';
+import { newId, nowIso } from './json';
+import { nextPosition } from './positions';
+import { drizzle, type Executor, type Tx } from './powersync/database';
 import { plans, routineExercises, routines, routineSets } from './powersync/schema';
 import { queryKeys } from './query-keys';
 import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
@@ -70,8 +71,34 @@ export async function insertRoutineExercise(
 }
 
 /** Routines in a plan, or the library's (without a plan) for `null` (SQL `IS`). */
-export const inPlan = (planId: string | null) =>
+const inPlan = (planId: string | null) =>
   planId === null ? isNull(routines.plan_id) : eq(routines.plan_id, planId);
+
+/**
+ * Inserts an empty routine (`drizzle` or a transaction) at `position`, by default after the last
+ * one of its plan, or of the library for `null`. Returns its id.
+ */
+export async function insertRoutine(
+  executor: Executor,
+  userId: string,
+  planId: string | null,
+  name: string,
+  position?: number,
+) {
+  const id = newId();
+  await executor.insert(routines).values({
+    id,
+    user_id: userId,
+    plan_id: planId,
+    name,
+    position:
+      position ??
+      nextPosition(routines.position, and(eq(routines.user_id, userId), inPlan(planId))),
+    created_at: nowIso(),
+    updated_at: nowIso(),
+  });
+  return id;
+}
 
 export function restSecondsFor(exerciseId: string, override: number | null | undefined) {
   return override ?? getExercise(exerciseId)?.restSeconds ?? DEFAULT_REST;

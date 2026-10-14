@@ -6,8 +6,14 @@ import { newId, nowIso } from './json';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
 import { plans, routineExercises, routines, workoutEntries } from './powersync/schema';
+import { useProfile } from './profile';
 import { queryKeys } from './query-keys';
-import { insertRoutineExercise, type PlanSetDraft, type PlanExerciseDraft } from './routines';
+import {
+  insertRoutine,
+  insertRoutineExercise,
+  type PlanExerciseDraft,
+  type PlanSetDraft,
+} from './routines';
 import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /** A plan's weekly goal when nothing says otherwise. */
@@ -18,7 +24,7 @@ export const BLOCK_OPTIONS = [4, 5, 6] as const;
 /** A plan the AI makes: 4 weeks building up, then a deload. */
 export const AI_BLOCK_WEEKS = 5;
 /** Reps in reserve of every set in a deload week. */
-export const DELOAD_RIR = 4;
+const DELOAD_RIR = 4;
 
 export interface PlanRoutineDraft {
   name: string;
@@ -54,34 +60,10 @@ export async function insertPlan(
     userId,
     newExercises.filter((e) => used.has(e.id)),
   );
-  const planId = await insertPlanRow(tx, userId, plan);
-  for (const [index, routine] of plan.routines.entries()) {
-    const routineId = newId();
-    await tx.insert(routines).values({
-      id: routineId,
-      user_id: userId,
-      plan_id: planId,
-      name: routine.name,
-      position: index,
-      created_at: nowIso(),
-      updated_at: nowIso(),
-    });
-    for (const [position, exercise] of routine.exercises.entries()) {
-      await insertRoutineExercise(tx, userId, routineId, position, exercise);
-    }
-  }
-  return planId;
-}
-
-/** Appends a plan after the user's last one (`drizzle` or a transaction). Returns its id. */
-async function insertPlanRow(
-  executor: Executor,
-  userId: string,
-  plan: Pick<PlanDraft, 'name' | 'sessionsPerWeek' | 'blockWeeks'>,
-) {
-  const id = newId();
-  await executor.insert(plans).values({
-    id,
+  const planId = newId();
+  // After the user's last plan.
+  await tx.insert(plans).values({
+    id: planId,
     user_id: userId,
     name: plan.name,
     position: nextPosition(plans.position, eq(plans.user_id, userId)),
@@ -90,7 +72,13 @@ async function insertPlanRow(
     block_start_week: 1,
     created_at: nowIso(),
   });
-  return id;
+  for (const [index, routine] of plan.routines.entries()) {
+    const routineId = await insertRoutine(tx, userId, planId, routine.name, index);
+    for (const [position, exercise] of routine.exercises.entries()) {
+      await insertRoutineExercise(tx, userId, routineId, position, exercise);
+    }
+  }
+  return planId;
 }
 
 export interface PlanSummary {
@@ -136,25 +124,35 @@ export function usePlans() {
   });
 }
 
-/** The plan Today follows and Training shows first: the one marked active, else the first. */
-export const currentPlanId = (activeId: string | null | undefined, list: PlanSummary[]) =>
-  list.find((p) => p.id === activeId)?.id ?? list[0]?.id ?? null;
+/**
+ * The plan Today follows and Training shows first: the one marked active, else the first; with
+ * all plans. Loading until the profile and the plans are known.
+ */
+export function useCurrentPlan() {
+  const { profile, isLoading: profileLoading } = useProfile();
+  const { data: plans = [], isLoading: plansLoading } = usePlans();
+  const plan = plans.find((p) => p.id === profile?.activePlanId) ?? plans[0];
+  return { plan, plans, isLoading: profileLoading || plansLoading };
+}
 
-export interface PlanWeek {
+interface PlanWeek {
   /** Plan week now: 1 at the start, one more each time a week's workouts are done. */
   week: number;
   /** Workouts of it done. */
   done: number;
 }
 
+/** A plan's latest plan week with how many workouts it has. */
+interface LatestWeek {
+  week: number;
+  count: number;
+}
+
 /**
  * The plan week a plan is in, from its latest week and how many workouts that week has: it is
  * over once it has the weekly goal, however long that took.
  */
-export function planWeekFrom(
-  latest: { week: number; count: number } | undefined,
-  sessionsPerWeek: number,
-): PlanWeek {
+function planWeekFrom(latest: LatestWeek | undefined, sessionsPerWeek: number): PlanWeek {
   if (!latest) return { week: 1, done: 0 };
   if (latest.count >= sessionsPerWeek) return { week: latest.week + 1, done: 0 };
   return { week: latest.week, done: latest.count };
@@ -177,6 +175,9 @@ export function blockWeekOf(
 export const isDeloadWeek = (blockWeek: number | null, plan: Pick<PlanSummary, 'blockWeeks'>) =>
   blockWeek !== null && blockWeek === plan.blockWeeks;
 
+/** How many of an exercise's sets a deload week keeps: the first half, rounded up. */
+export const deloadSetCount = (sets: number) => Math.ceil(sets / 2);
+
 /**
  * A routine's sets for a block week: one rep less in reserve each week after the first (never
  * below 0), and in the deload only the first half of the sets, with DELOAD_RIR in reserve.
@@ -190,7 +191,7 @@ export function setsForWeek<TSet extends Pick<PlanSetDraft, 'rir'>>(
   if (blockWeek === null) return sets;
   if (isDeloadWeek(blockWeek, plan)) {
     return sets
-      .slice(0, Math.ceil(sets.length / 2))
+      .slice(0, deloadSetCount(sets.length))
       .map((set) => (set.rir === null ? set : { ...set, rir: DELOAD_RIR }));
   }
   return sets.map((set) =>
@@ -216,7 +217,7 @@ const latestWeekQuery = (executor: Executor, planId: string, finishedOnly: boole
     .orderBy(desc(workoutEntries.plan_week))
     .limit(1);
 
-const toLatest = (rows: RowOf<typeof latestWeekQuery>[]) => {
+const toLatest = (rows: RowOf<typeof latestWeekQuery>[]): LatestWeek | undefined => {
   const row = rows[0];
   return row?.week ? { week: row.week, count: row.count } : undefined;
 };

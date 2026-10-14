@@ -1,7 +1,7 @@
-import { and, asc, eq, inArray } from 'drizzle-orm';
+import { asc, eq, inArray } from 'drizzle-orm';
 
 import { newExerciseDraft, swapTargets } from '@/shared/data/exercises';
-import { newId, nowIso } from '@/shared/data/json';
+import { nowIso } from '@/shared/data/json';
 import { nextPosition } from '@/shared/data/positions';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
 import {
@@ -11,7 +11,7 @@ import {
   workoutEntries,
 } from '@/shared/data/powersync/schema';
 import {
-  inPlan,
+  insertRoutine,
   insertRoutineExercise,
   insertRoutineSets,
   type PlanSetDraft,
@@ -69,17 +69,7 @@ async function renumberExercises(tx: Tx, routineId: string) {
 
 /** A new empty routine at the end of a plan, or of the library for `null`. */
 export async function createRoutine(userId: string, name: string, planId: string | null) {
-  const id = newId();
-  await drizzle.insert(routines).values({
-    id,
-    user_id: userId,
-    plan_id: planId,
-    name: name.trim(),
-    position: nextPosition(routines.position, and(eq(routines.user_id, userId), inPlan(planId))),
-    created_at: nowIso(),
-    updated_at: nowIso(),
-  });
-  return id;
+  return insertRoutine(drizzle, userId, planId, name.trim());
 }
 
 export async function renameRoutine(routineId: string, name: string) {
@@ -125,16 +115,7 @@ export async function copyRoutine(userId: string, routineId: string, planId: str
       },
     });
     if (!source) throw new Error(`Routine ${routineId} not found`);
-    const id = newId();
-    await tx.insert(routines).values({
-      id,
-      user_id: userId,
-      plan_id: planId,
-      name: source.name,
-      position: nextPosition(routines.position, and(eq(routines.user_id, userId), inPlan(planId))),
-      created_at: nowIso(),
-      updated_at: nowIso(),
-    });
+    const id = await insertRoutine(tx, userId, planId, source.name);
     for (const [position, exercise] of source.exercises.entries()) {
       await insertRoutineExercise(tx, userId, id, position, {
         exerciseId: exercise.exercise_id,

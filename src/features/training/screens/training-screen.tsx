@@ -7,11 +7,10 @@ import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { TabScreen } from '@/shared/components/tab-screen';
 import {
-  currentPlanId,
   type PlanStatus,
   type PlanSummary,
+  useCurrentPlan,
   usePlanStatus,
-  usePlans,
 } from '@/shared/data/plans';
 import { useProfile } from '@/shared/data/profile';
 import { type RoutineSummary, useRoutines } from '@/shared/data/routines';
@@ -30,7 +29,7 @@ import { RoutineList } from '../components/routine-list';
 import { RoutineMenu } from '../components/routine-menu';
 import { SectionTitle } from '../components/section-title';
 import { SessionProgress } from '../components/session-progress';
-import { usePlanWeekLabel } from '../hooks/use-plan-week-label';
+import { usePlanProgressLabels } from '../hooks/use-plan-week-label';
 import { useStartRoutine } from '../hooks/use-start-routine';
 
 interface PlanCardProps {
@@ -40,11 +39,8 @@ interface PlanCardProps {
 
 /** The plan Today follows: its week and how much of it is done; opens the plan. */
 function PlanCard({ plan, status }: PlanCardProps) {
-  const { t } = useTranslation('training');
-  const weekLabel = usePlanWeekLabel();
-  const progress = status
-    ? `${weekLabel(plan, status)} · ${t('plan.sessions', { done: status.done, count: plan.sessionsPerWeek })}`
-    : '';
+  const { week, sessions } = usePlanProgressLabels(plan, status);
+  const progress = status ? `${week} · ${sessions}` : '';
   return (
     <PressableScale
       haptic="tap"
@@ -108,8 +104,7 @@ export function TrainingScreen() {
   const { t } = useTranslation('training');
   const { profile } = useProfile();
   const { data: routines = [], isLoading: routinesLoading } = useRoutines();
-  const { data: plans = [], isLoading: plansLoading } = usePlans();
-  const plan = plans.find((p) => p.id === currentPlanId(profile?.activePlanId, plans));
+  const { plan, plans, isLoading: planLoading } = useCurrentPlan();
   const status = usePlanStatus(plan);
   const { start, startingId } = useStartRoutine();
   const [createOpen, setCreateOpen] = useState(false);
@@ -153,7 +148,7 @@ export function TrainingScreen() {
           </View>
           <AddRoutineButton planId={plan.id} />
         </>
-      ) : !plansLoading ? (
+      ) : !planLoading ? (
         <Card className="mx-4 items-center gap-4 py-7">
           <View className="items-center gap-2">
             <Text variant="headline" className="text-center">

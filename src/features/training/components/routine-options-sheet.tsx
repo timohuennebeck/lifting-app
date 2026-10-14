@@ -1,13 +1,10 @@
 import { useTranslation } from 'react-i18next';
 
 import { useResetOnOpen } from '@/shared/hooks/use-reset-on-open';
-import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
 import { deleteIcon } from '@/shared/ui/minus-glyph';
 
-import { RenameGlyph, RoutineGlyph } from './glyphs';
-
-const glyphColor = (active: boolean) => (active ? colors.onAccent : colors.fgMid);
+import { glyphColor, RenameGlyph, RoutineGlyph } from './glyphs';
 
 type RoutineOption = 'rename' | 'copy' | 'delete';
 

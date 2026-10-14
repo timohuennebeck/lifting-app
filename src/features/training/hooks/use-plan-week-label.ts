@@ -13,3 +13,24 @@ export function usePlanWeekLabel() {
     return t('plan.week', { week: status.week });
   };
 }
+
+export interface PlanProgressLabels {
+  /** The plan week (see `usePlanWeekLabel`); empty while the status loads. */
+  week: string;
+  /** Workouts done this plan week of the weekly goal, e.g. "1 von 3 Einheiten". */
+  sessions: string;
+}
+
+/** A plan's week and workouts done, as its card on the Training tab and its page show them. */
+export function usePlanProgressLabels(
+  plan: PlanSummary | undefined,
+  status: PlanStatus | undefined,
+): PlanProgressLabels {
+  const { t } = useTranslation('training');
+  const weekLabel = usePlanWeekLabel();
+  if (!plan) return { week: '', sessions: '' };
+  return {
+    week: status ? weekLabel(plan, status) : '',
+    sessions: t('plan.sessions', { done: status?.done ?? 0, count: plan.sessionsPerWeek }),
+  };
+}

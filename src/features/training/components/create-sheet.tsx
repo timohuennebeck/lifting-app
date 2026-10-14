@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
 
-import { PlanGlyph, RoutineGlyph } from './glyphs';
+import { glyphColor, PlanGlyph, RoutineGlyph } from './glyphs';
 
 type CreateKind = 'routine' | 'plan';
 
@@ -14,8 +13,6 @@ export interface CreateSheetProps {
   onCreateRoutine: () => void;
   onCreatePlan: () => void;
 }
-
-const glyphColor = (active: boolean) => (active ? colors.onAccent : colors.fgMid);
 
 /** "+" sheet: a new routine, or a plan, which is made, imported or built (01·V·A·6). */
 export function CreateSheet({ visible, onClose, onCreateRoutine, onCreatePlan }: CreateSheetProps) {

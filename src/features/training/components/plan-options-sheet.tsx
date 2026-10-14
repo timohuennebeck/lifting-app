@@ -1,11 +1,10 @@
 import { useTranslation } from 'react-i18next';
 
 import { useResetOnOpen } from '@/shared/hooks/use-reset-on-open';
-import { colors } from '@/shared/lib/theme';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
 import { deleteIcon } from '@/shared/ui/minus-glyph';
 
-import { RenameGlyph } from './glyphs';
+import { glyphColor, RenameGlyph } from './glyphs';
 
 type PlanOption = 'rename' | 'delete';
 
@@ -45,7 +44,7 @@ export function PlanOptionsSheet({
           title: t('plan.rename'),
           description: t('plan.renameHint', { name }),
           cta: t('common:actions.rename'),
-          renderIcon: (active) => <RenameGlyph color={active ? colors.onAccent : colors.fgMid} />,
+          renderIcon: (active) => <RenameGlyph color={glyphColor(active)} />,
         },
         {
           value: 'delete',

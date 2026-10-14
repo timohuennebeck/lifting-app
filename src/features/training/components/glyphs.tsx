@@ -1,8 +1,13 @@
 import { Text as RNText, View } from 'react-native';
 
+import { colors } from '@/shared/lib/theme';
+
 interface GlyphProps {
   color: string;
 }
+
+/** A glyph's colour in an option's circle: dark on the accent when selected, grey otherwise. */
+export const glyphColor = (active: boolean) => (active ? colors.onAccent : colors.fgMid);
 
 /** Three text lines: a routine. */
 export function RoutineGlyph({ color }: GlyphProps) {
