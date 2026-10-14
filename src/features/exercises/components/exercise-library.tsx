@@ -13,7 +13,7 @@ export interface ExerciseLibraryProps {
   selectedIds: string[];
   /** Selected rows the user picked here: tapping one unpicks it. The others can't be tapped. */
   removableIds: string[];
-  /** Row icon: plus when adding, arrows when swapping an exercise. */
+  /** Row icon: plus when adding, the swap cards when swapping an exercise. */
   mode: 'add' | 'swap';
   onPick: (exerciseId: string) => void;
   onUnpick: (exerciseId: string) => void;

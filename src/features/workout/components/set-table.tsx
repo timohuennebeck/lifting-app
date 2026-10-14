@@ -99,7 +99,7 @@ export function SetTable({
             <Text className={`${HEADER} text-fg`}>
               {column === 'targets' ? t('table.targets') : t('table.last')}
             </Text>
-            <Icon name="swap" size={12} color={colors.fg} />
+            <Icon name="arrows-left-right" size={12} color={colors.fg} />
           </PressableScale>
         </View>
         {measures.map((m) => (

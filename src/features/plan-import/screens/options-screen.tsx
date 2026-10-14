@@ -5,6 +5,7 @@ import { Alert, View } from 'react-native';
 
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { Button } from '@/shared/ui/button';
+import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
@@ -108,8 +109,9 @@ export function OptionsScreen() {
         <PressableScale
           haptic="select"
           onPress={swap}
-          className="h-9 justify-center rounded-full bg-elevated px-4"
+          className="h-9 flex-row items-center gap-1.75 rounded-full bg-elevated px-4"
         >
+          <Icon name="swap" size={13} />
           <Text variant="caption" className="text-sm">
             {t('options.swap')}
           </Text>
