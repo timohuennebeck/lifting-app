@@ -13,10 +13,12 @@ import { TextField } from '@/shared/ui/text-field';
 import { PLAN_NAME_MAX } from '@/shared/lib/limits';
 
 import { CREATE_STEPS } from '../lib/flow';
+import { profileAnswers } from '../lib/plan-answers';
 
 export function PlanNameScreen() {
   const { t } = useTranslation(['planCreate', 'common', 'training']);
-  const { plan } = useDraft();
+  const draft = useDraft();
+  const { plan } = draft;
   const { inApp, step, finish } = usePlanFlow();
   // The plan's own name (the AI's, or one given in the editor) and a neutral one.
   const suggestions = [...new Set([plan?.name, t('planCreate:planName.myPlan')])].filter(
@@ -29,7 +31,7 @@ export function PlanNameScreen() {
   if (!plan) return <Redirect href={step('/create/building')} />;
 
   function submit() {
-    if (trimmed && plan) void finish({ ...plan, name: trimmed });
+    if (trimmed && plan) void finish({ ...plan, name: trimmed }, profileAnswers(draft));
   }
 
   return (

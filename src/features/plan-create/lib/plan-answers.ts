@@ -1,6 +1,6 @@
 import type { OnboardingDraft } from '@/features/onboarding/stores/onboarding-store';
 import type { ImportFailure } from '@/features/plan-import/lib/plan-import-service';
-import type { EquipmentAccess, Experience, Goal } from '@/shared/data/profile';
+import type { EquipmentAccess, Experience, Goal, ProfilePatch } from '@/shared/data/profile';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 /** What the AI makes the plan from (generate-plan); no name, no body data. */
@@ -26,6 +26,22 @@ export function answersFromDraft(draft: OnboardingDraft): PlanAnswers {
     trainingDays: draft.trainingDays.length ? draft.trainingDays : [0, 2, 4],
     sessionMinutes: draft.sessionMinutes,
     experience: draft.experience,
+  };
+}
+
+/**
+ * The answers the "create" steps ask, as the profile keeps them. The ticked home equipment stays
+ * also with another answer, for the next time "Eigene Geräte" is picked.
+ */
+export function profileAnswers(draft: OnboardingDraft): ProfilePatch {
+  const { goal, focus, equipment, trainingDays, sessionMinutes } = answersFromDraft(draft);
+  return {
+    goal,
+    focus,
+    equipment,
+    homeEquipment: draft.homeEquipment,
+    trainingDays,
+    sessionMinutes,
   };
 }
 

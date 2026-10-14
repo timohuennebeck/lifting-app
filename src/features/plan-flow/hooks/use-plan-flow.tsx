@@ -3,7 +3,7 @@ import { createContext, type ReactNode, useContext, useRef } from 'react';
 
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { useImportStore } from '@/features/plan-import/stores/import-store';
-import type { Profile } from '@/shared/data/profile';
+import type { Profile, ProfilePatch } from '@/shared/data/profile';
 import type { PlanDraft } from '@/shared/data/templates';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -61,7 +61,9 @@ export function openPlanFlow(profile: Profile | null | undefined) {
 /**
  * The plan flow (has a plan? → import or create) runs in onboarding and in the app. Its screens
  * go to the next step with `step`, and hand over the plan with `finish`: onboarding goes on to
- * its promise, the app saves it as the plan Today follows and returns to Training.
+ * its promise, the app saves it as the plan Today follows and returns to Training. A plan made
+ * from the answers hands them over too: the app keeps them in the profile, so the next plan
+ * starts from them (onboarding saves the whole draft at sign-up).
  */
 export function usePlanFlow() {
   const inApp = useContext(InAppContext);
@@ -69,7 +71,7 @@ export function usePlanFlow() {
 
   const step = <S extends PlanStep>(path: S) => (inApp ? (`/plan${path}` as const) : path);
 
-  async function finish(plan: PlanDraft) {
+  async function finish(plan: PlanDraft, answers?: ProfilePatch) {
     const { draft, update } = useOnboardingStore.getState();
     if (!inApp) {
       update({ plan });
@@ -79,7 +81,7 @@ export function usePlanFlow() {
     if (saving.current) return;
     saving.current = true;
     try {
-      await saveActivePlan(requireUserId(), plan, draft.customExercises);
+      await saveActivePlan(requireUserId(), plan, draft.customExercises, answers);
       haptics.success();
       router.dismissTo('/training');
     } catch (error) {
