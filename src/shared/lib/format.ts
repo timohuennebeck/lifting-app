@@ -4,6 +4,9 @@ import { getOrInsert } from '@/shared/lib/map';
 export type UnitSystem = 'metric' | 'imperial';
 
 const KG_PER_LB = 0.45359237;
+
+/** Between a number and its unit, so a line never breaks between them. */
+const NBSP = '\u00a0';
 export const CM_PER_INCH = 2.54;
 
 /** Unit key for weights: `units.kg` or `units.lb` in the common namespace. */
@@ -39,13 +42,13 @@ export const formatWeightValue = (kg: number, units: UnitSystem) =>
 
 /** Formats a kg value in the user's unit system, e.g. "82,5 kg" or "182,5 lb". */
 export const formatWeight = (kg: number, units: UnitSystem) =>
-  `${formatWeightValue(kg, units)} ${weightUnit(units)}`;
+  `${formatWeightValue(kg, units)}${NBSP}${weightUnit(units)}`;
 
 /** A volume total (weight × reps), whole, in the user's unit: "4,250 kg" or "9,370 lb". */
 export const formatVolume = (kg: number, units: UnitSystem) =>
   `${formatNumber(units === 'imperial' ? kgToLb(kg) : kg, 0)} ${weightUnit(units)}`;
 
-/** What a set holds; measures the exercise doesn't use are null. */
+/** What a set holds; measures the exercise doesn't use are null. Shown with `formatSet`. */
 export interface SetValues {
   weightKg: number | null;
   reps: number | null;
@@ -53,19 +56,7 @@ export interface SetValues {
 }
 
 export const formatSeconds = (seconds: number) =>
-  `${formatNumber(seconds, 0)} ${i18n.t('common:units.sec')}`;
-
-/** A logged set: "60 kg × 8", "12 reps", "45 s" or "20 kg × 45 s". */
-export function formatSet({ weightKg, reps, seconds }: SetValues, units: UnitSystem) {
-  if (seconds != null) {
-    return weightKg != null
-      ? `${formatWeight(weightKg, units)} × ${formatSeconds(seconds)}`
-      : formatSeconds(seconds);
-  }
-  return weightKg != null
-    ? `${formatWeight(weightKg, units)} × ${reps ?? 0}`
-    : i18n.t('common:units.reps', { count: reps ?? 0 });
-}
+  `${formatNumber(seconds, 0)}${NBSP}${i18n.t('common:units.sec')}`;
 
 /** "8 Wdh.", "8–10 Wdh." or "8+ Wdh." (a count or range with the unit), or "30–45 s". */
 const withUnit = (range: string, timed: boolean, count?: number) =>

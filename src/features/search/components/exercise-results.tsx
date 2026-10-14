@@ -12,9 +12,9 @@ import {
 } from '@/features/exercises/hooks/use-exercise-search';
 import { useLetterIndex } from '@/features/exercises/hooks/use-letter-index';
 import type { MuscleGroupId } from '@/features/exercises/lib/muscle-groups';
-import { isAssisted, isBodyweight } from '@/shared/data/exercises';
+import { formatSet } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
-import { formatSet, formatShortDate, type SetValues, type UnitSystem } from '@/shared/lib/format';
+import { formatShortDate, type UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
@@ -26,17 +26,6 @@ interface ResultOption extends ExerciseOption {
   record?: ExerciseRecord;
 }
 
-/**
- * "100 kg × 5"; bodyweight exercises show added weight as "+10 kg × 8", none as "12 Wdh.";
- * assisted machines the assistance as "−30 kg × 8".
- */
-function formatRecord(exerciseId: string, best: SetValues, units: UnitSystem) {
-  if (isAssisted(exerciseId) && best.weightKg) return `−${formatSet(best, units)}`;
-  if (!isBodyweight(exerciseId) || best.weightKg == null) return formatSet(best, units);
-  if (best.weightKg === 0) return formatSet({ ...best, weightKg: null }, units);
-  return `+${formatSet(best, units)}`;
-}
-
 interface RecordSummaryProps {
   exerciseId: string;
   record: ExerciseRecord;
@@ -46,7 +35,7 @@ interface RecordSummaryProps {
 /** A trained exercise's heaviest set and when it was last done, at the end of its row. */
 function RecordSummary({ exerciseId, record, units }: RecordSummaryProps) {
   const { t } = useTranslation('common');
-  const value = formatRecord(exerciseId, record.best, units);
+  const value = formatSet(exerciseId, record.best, units);
   const date = formatShortDate(record.lastAt);
   return (
     <View

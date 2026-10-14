@@ -130,11 +130,11 @@ export function ExerciseHistoryPanel({ exerciseId }: ExerciseHistoryPanelProps) 
       )}
       renderItem={({ item }) => (
         <HistorySessionRow
+          exerciseId={exerciseId}
           session={item}
           latest={item.workoutId === sessions[0]?.workoutId}
           open={item.workoutId === expanded}
           units={units}
-          minLabel={t('common:units.minShort')}
           onToggle={() => setOpenId(item.workoutId === expanded ? null : item.workoutId)}
         />
       )}

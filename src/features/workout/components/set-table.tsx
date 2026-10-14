@@ -2,15 +2,9 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useUserId } from '@/shared/stores/session-store';
-import type { Measure } from '@/shared/data/exercises';
+import { formatSet, type Measure } from '@/shared/data/exercises';
 import type { ExerciseHistoryEntry, WorkoutExercise } from '@/shared/data/workouts';
-import {
-  formatNumber,
-  formatSet,
-  formatWeightValue,
-  type UnitSystem,
-  weightUnit,
-} from '@/shared/lib/format';
+import { formatNumber, formatWeightValue, type UnitSystem, weightUnit } from '@/shared/lib/format';
 import { decimalSeparator, displayInput } from '@/shared/lib/keypad';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -88,7 +82,7 @@ export function SetTable({
   const middleLabel = (index: number) => {
     if (column === 'targets') return targetLabel(exercise.sets[index], exercise.exerciseId);
     const previous = last?.sets[index];
-    return previous ? formatSet(previous, units) : null;
+    return previous ? formatSet(exercise.exerciseId, previous, units) : null;
   };
 
   return (

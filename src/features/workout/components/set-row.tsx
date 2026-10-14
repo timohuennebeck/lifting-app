@@ -74,10 +74,11 @@ export function SetRow({
         </Text>
       </View>
       <View className="flex-1 items-center">
+        {/* Last time's set takes two lines where the column is narrow ("61,5 kg" over "× 9"). */}
         <Text
           variant="label"
-          numberOfLines={1}
-          className={cn('font-inter tabular-nums', !middle && 'text-dim')}
+          numberOfLines={2}
+          className={cn('text-center font-inter tabular-nums', !middle && 'text-dim')}
         >
           {middle ?? '–'}
         </Text>

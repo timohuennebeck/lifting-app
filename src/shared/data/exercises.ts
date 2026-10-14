@@ -4,6 +4,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { env } from '@/shared/config/env';
 import { i18n } from '@/shared/i18n';
+import { formatSeconds, formatWeight, type SetValues, type UnitSystem } from '@/shared/lib/format';
 import { mmkvStorage } from '@/shared/lib/storage';
 import { MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
@@ -284,6 +285,29 @@ export const isCardio = (exerciseId: string) =>
 
 /** Whether sets of the exercise are counted in seconds instead of reps. */
 export const isTimed = (exerciseId: string) => hasMeasure(exerciseId, 'seconds');
+
+/**
+ * A logged set, shown the same everywhere: "100 kg × 5", "12 Wdh.", "45 s" or "20 kg × 45 s".
+ * Bodyweight exercises show added weight as "+10 kg × 8" (none as just the reps), assisted
+ * machines their assistance as "−30 kg × 8".
+ */
+export function formatSet(
+  exerciseId: string,
+  { weightKg, reps, seconds }: SetValues,
+  units: UnitSystem,
+) {
+  const sign = isAssisted(exerciseId) ? '−' : isBodyweight(exerciseId) ? '+' : '';
+  const weight =
+    weightKg == null || (sign && weightKg === 0) ? null : `${sign}${formatWeight(weightKg, units)}`;
+  const amount =
+    seconds != null
+      ? formatSeconds(seconds)
+      : weight
+        ? String(reps ?? 0)
+        : i18n.t('common:units.reps', { count: reps ?? 0 });
+  // A narrow column breaks it before the "×": "61,5 kg" over "× 9".
+  return weight ? `${weight} ×\u00a0${amount}` : amount;
+}
 
 export interface SetTargets {
   /** Reps, or seconds for timed exercises; either may be left out. */

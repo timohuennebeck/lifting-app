@@ -2,8 +2,8 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
-import { useExerciseName } from '@/shared/data/exercises';
-import { formatSet, type UnitSystem } from '@/shared/lib/format';
+import { formatSet, useExerciseName } from '@/shared/data/exercises';
+import type { UnitSystem } from '@/shared/lib/format';
 import { Text } from '@/shared/ui/text';
 
 import type { WorkoutRecord } from '../data/workout-records';
@@ -32,10 +32,10 @@ export function RecordCard({ record, units }: RecordCardProps) {
           {name}
         </Text>
         <View className="flex-row flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
-          <Text variant="headline">{formatSet(record.set, units)}</Text>
+          <Text variant="headline">{formatSet(record.exerciseId, record.set, units)}</Text>
           <Text tone="subtle" className="text-sm leading-4.5">
             {t('summary.previously', {
-              value: formatSet(record.previous, units),
+              value: formatSet(record.exerciseId, record.previous, units),
             })}
           </Text>
         </View>
