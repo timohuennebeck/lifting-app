@@ -1,7 +1,8 @@
 import { eq } from 'drizzle-orm';
 
-import { blockWeekOf, isDeloadWeek, type PlanSummary } from '@/shared/data/plans';
+import { blockWeekOf, isDeloadWeek } from '@/shared/data/plans';
 import { drizzle } from '@/shared/data/powersync/database';
+import { saveProfile } from '@/shared/data/profile';
 import { plans, profiles, routines, workoutEntries } from '@/shared/data/powersync/schema';
 
 import { deleteRoutineTx } from './routine-mutations';
@@ -10,9 +11,9 @@ export async function renamePlan(planId: string, name: string) {
   await drizzle.update(plans).set({ name: name.trim() }).where(eq(plans.id, planId));
 }
 
-/** Makes the plan the one Today follows. */
+/** Makes the plan the one Today follows (also before the profile has synced to the phone). */
 export async function activatePlan(userId: string, planId: string) {
-  await drizzle.update(profiles).set({ active_plan_id: planId }).where(eq(profiles.id, userId));
+  await saveProfile(userId, { activePlanId: planId });
 }
 
 export async function setSessionsPerWeek(planId: string, sessionsPerWeek: number) {
@@ -21,8 +22,6 @@ export async function setSessionsPerWeek(planId: string, sessionsPerWeek: number
     .set({ sessions_per_week: sessionsPerWeek })
     .where(eq(plans.id, planId));
 }
-
-type BlockPlan = Pick<PlanSummary, 'id' | 'blockWeeks' | 'blockStartWeek'>;
 
 /**
  * The block start that puts plan week `planWeek` in week `blockWeek` of a block. Starts a whole
@@ -34,41 +33,63 @@ function blockStart(planWeek: number, blockWeek: number, blockWeeks: number) {
   return start >= 1 ? start : start + Math.ceil((1 - start) / blockWeeks) * blockWeeks;
 }
 
-async function setBlockStart(planId: string, start: number) {
-  await drizzle.update(plans).set({ block_start_week: start }).where(eq(plans.id, planId));
+interface Blocks {
+  blockWeeks: number | null;
+  blockStartWeek: number;
+}
+
+/**
+ * Changes the plan's blocks from what is stored (not what a screen showed, so quick taps build
+ * on each other): `change` gets them and returns the new ones, or null to leave them.
+ */
+async function changeBlocks(planId: string, change: (blocks: Blocks) => Blocks | null) {
+  await drizzle.transaction(async (tx) => {
+    const row = await tx
+      .select({ blockWeeks: plans.block_weeks, blockStartWeek: plans.block_start_week })
+      .from(plans)
+      .where(eq(plans.id, planId))
+      .get();
+    const next = row && change(row);
+    if (!next) return;
+    await tx
+      .update(plans)
+      .set({ block_weeks: next.blockWeeks, block_start_week: next.blockStartWeek })
+      .where(eq(plans.id, planId));
+  });
 }
 
 /**
  * Turns blocks on (`blockWeeks` with the deload), changes their length, or turns them off (null).
- * Turned on, a block starts with the plan week now; a new length keeps the week the block is in
- * (a deload stays one).
+ * Turned on, a block starts with the plan week now. A new length keeps the week the block is in:
+ * a deload stays one, and a build week stays a build week (at most the new last one).
  */
-export async function setBlockWeeks(plan: BlockPlan, blockWeeks: number | null, planWeek: number) {
-  if (blockWeeks === plan.blockWeeks) return;
-  const current = blockWeekOf(planWeek, plan);
-  let week = 1;
-  if (current !== null && blockWeeks !== null) {
-    week = isDeloadWeek(current, plan) ? blockWeeks : Math.min(current, blockWeeks);
-  }
-  await drizzle
-    .update(plans)
-    .set({
-      block_weeks: blockWeeks,
-      ...(blockWeeks ? { block_start_week: blockStart(planWeek, week, blockWeeks) } : {}),
-    })
-    .where(eq(plans.id, plan.id));
+export async function setBlockWeeks(planId: string, blockWeeks: number | null, planWeek: number) {
+  await changeBlocks(planId, (block) => {
+    if (blockWeeks === block.blockWeeks) return null;
+    if (blockWeeks === null) return { ...block, blockWeeks };
+    const current = blockWeekOf(planWeek, block);
+    let week = 1;
+    if (current !== null) {
+      week = isDeloadWeek(current, block) ? blockWeeks : Math.min(current, blockWeeks - 1);
+    }
+    return { blockWeeks, blockStartWeek: blockStart(planWeek, week, blockWeeks) };
+  });
 }
 
 /** Starts the plan's block over with the plan week now as its first week. */
-export async function restartBlock(plan: BlockPlan, planWeek: number) {
-  if (plan.blockWeeks) await setBlockStart(plan.id, blockStart(planWeek, 1, plan.blockWeeks));
+export async function restartBlock(planId: string, planWeek: number) {
+  await changeBlocks(planId, ({ blockWeeks }) =>
+    blockWeeks ? { blockWeeks, blockStartWeek: blockStart(planWeek, 1, blockWeeks) } : null,
+  );
 }
 
 /** Makes the plan week now the deload, the last week of its block. */
-export async function deloadNow(plan: BlockPlan, planWeek: number) {
-  if (plan.blockWeeks) {
-    await setBlockStart(plan.id, blockStart(planWeek, plan.blockWeeks, plan.blockWeeks));
-  }
+export async function deloadNow(planId: string, planWeek: number) {
+  await changeBlocks(planId, ({ blockWeeks }) =>
+    blockWeeks
+      ? { blockWeeks, blockStartWeek: blockStart(planWeek, blockWeeks, blockWeeks) }
+      : null,
+  );
 }
 
 /** Deletes the plan with its routines; logged workouts stay in the history, without the plan. */

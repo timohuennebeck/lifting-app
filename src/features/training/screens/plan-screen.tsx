@@ -73,14 +73,21 @@ interface GoalStepperProps {
   value: number;
 }
 
-/** The weekly goal; it counts on from what was tapped, so quick taps add up before it is saved. */
+/**
+ * The weekly goal. It counts on from what was tapped, so quick taps add up before they are
+ * saved: saved values on the way back don't reset it until the last one tapped arrives.
+ */
 function GoalStepper({ planId, value }: GoalStepperProps) {
   const { t } = useTranslation('training');
   const [goal, setGoal] = useState(value);
   const [stored, setStored] = useState(value);
+  const [sent, setSent] = useState<number | null>(null);
   if (value !== stored) {
     setStored(value);
-    setGoal(value);
+    if (sent === null || value === sent) {
+      setGoal(value);
+      setSent(null);
+    }
   }
   return (
     <CompactStepper
@@ -88,9 +95,13 @@ function GoalStepper({ planId, value }: GoalStepperProps) {
       min={1}
       max={MAX_SESSIONS_PER_WEEK}
       label={t('plan.perWeek')}
-      onChange={(count) => {
+      onChange={async (count) => {
         setGoal(count);
-        void save(() => setSessionsPerWeek(planId, count));
+        setSent(count);
+        if (!(await save(() => setSessionsPerWeek(planId, count)))) {
+          setGoal(value);
+          setSent(null);
+        }
       }}
     />
   );
@@ -219,7 +230,7 @@ export function PlanScreen() {
             value={plan.blockWeeks ?? 0}
             disabled={week === undefined}
             onChange={(weeks) =>
-              changeBlocks((planWeek) => setBlockWeeks(plan, weeks || null, planWeek))
+              changeBlocks((planWeek) => setBlockWeeks(plan.id, weeks || null, planWeek))
             }
           />
           {plan.blockWeeks ? (
@@ -231,7 +242,7 @@ export function PlanScreen() {
                   size="sm"
                   className="flex-1"
                   disabled={week === undefined}
-                  onPress={() => changeBlocks((planWeek) => deloadNow(plan, planWeek))}
+                  onPress={() => changeBlocks((planWeek) => deloadNow(plan.id, planWeek))}
                 />
               ) : null}
               <Button
@@ -240,7 +251,7 @@ export function PlanScreen() {
                 size="sm"
                 className="flex-1"
                 disabled={week === undefined}
-                onPress={() => changeBlocks((planWeek) => restartBlock(plan, planWeek))}
+                onPress={() => changeBlocks((planWeek) => restartBlock(plan.id, planWeek))}
               />
             </View>
           ) : null}
@@ -280,8 +291,8 @@ export function PlanScreen() {
         placeholder={t('plan.namePlaceholder')}
         ctaLabel={t('common:actions.save')}
         onSubmit={async (name) => {
-          await save(() => renamePlan(plan.id, name));
-          setRenameOpen(false);
+          // A failed rename keeps the sheet open with what was typed.
+          if (await save(() => renamePlan(plan.id, name))) setRenameOpen(false);
         }}
       />
       <RoutineMenu routine={menuFor} onClose={() => setMenuFor(null)} />

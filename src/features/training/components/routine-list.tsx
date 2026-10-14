@@ -52,7 +52,10 @@ export function RoutineList({
           tag={item.id === nextId ? t('list.next') : undefined}
           starting={startingId === item.id}
           onPress={drag.unlessDragging(() => router.push(`/routine/${item.id}`))}
-          onStart={drag.unlessDragging(() => onStart(item))}
+          // An empty routine has nothing to start: play opens it to add exercises.
+          onStart={drag.unlessDragging(() =>
+            item.exerciseCount ? onStart(item) : router.push(`/routine/${item.id}`),
+          )}
           onMore={drag.unlessDragging(() => onMore(item))}
         />
       )}

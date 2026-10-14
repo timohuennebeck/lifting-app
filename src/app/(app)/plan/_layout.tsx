@@ -4,8 +4,8 @@ import { InAppPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { colors } from '@/shared/lib/theme';
 
 /**
- * A plan's page, and Training → "Plan erstellen": onboarding's plan flow, ending back on
- * Training.
+ * A plan's page, and "Plan erstellen" from Today or Training: onboarding's plan flow, ending
+ * back on the tab it was opened from.
  */
 export default function PlanLayout() {
   return (

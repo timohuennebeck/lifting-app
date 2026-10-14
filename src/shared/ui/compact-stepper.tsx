@@ -31,7 +31,11 @@ export function CompactStepper({
   label,
 }: CompactStepperProps) {
   const { t } = useTranslation();
-  const set = (next: number) => onChange(clamp(next, min, max));
+  // At the ends a step changes nothing, so nothing is reported.
+  const set = (next: number) => {
+    const clamped = clamp(next, min, max);
+    if (clamped !== value) onChange(clamped);
+  };
   return (
     <View
       className="h-16 flex-row items-center justify-between"

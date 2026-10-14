@@ -105,9 +105,10 @@ export function NextCard({
                 size={48}
                 iconSize={16}
                 haptic="none"
-                disabled={isFuture || busy || starting}
+                // While a workout runs it would take a later place in the plan.
+                disabled={isFuture || busy || starting || !!activeWorkoutId}
                 accessibilityLabel={t('markDone')}
-                className={cn('bg-control', isFuture && 'opacity-35')}
+                className={cn('bg-control', (isFuture || activeWorkoutId) && 'opacity-35')}
                 onPress={markDone}
               />
             </View>

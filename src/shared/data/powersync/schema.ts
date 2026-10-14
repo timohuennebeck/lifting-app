@@ -36,8 +36,8 @@ export const profiles = sqliteTable('profiles', {
 });
 
 // A plan's routines come in order (`position`); `sessions_per_week` of its workouts make a plan
-// week. With `block_weeks` (deload included) the plan runs in blocks; `block_start_week` is the
-// plan week the current block started in.
+// week. With `block_weeks` (deload included) the plan runs in blocks; `block_start_week` is a
+// plan week a block started in (any one: blocks repeat, see `blockWeekOf`).
 export const plans = sqliteTable(
   'plans',
   {

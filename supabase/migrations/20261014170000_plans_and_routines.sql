@@ -114,8 +114,8 @@ create trigger unlink_missing_routine before insert or update on public.workout_
   execute function private.unlink_missing_parent('routine_id', 'routines');
 
 -- A plan's week: how many workouts make one, and the block it runs in. `block_weeks` counts the
--- deload, the block's last week (empty: no blocks, every week the same). `block_start_week` is
--- the plan week the current block started in; "Deload now" and "restart block" move it.
+-- deload, the block's last week (empty: no blocks, every week the same). `block_start_week` is a
+-- plan week a block started in (blocks repeat from it); "Deload now" and "restart block" move it.
 alter table public.plans
   add column sessions_per_week int not null default 3,
   add column block_weeks int,

@@ -28,9 +28,10 @@ export function usePlanProgressLabels(
 ): PlanProgressLabels {
   const { t } = useTranslation('training');
   const weekLabel = usePlanWeekLabel();
-  if (!plan) return { week: '', sessions: '' };
+  // Empty while loading, so no count shows before it is known.
+  if (!plan || !status) return { week: '', sessions: '' };
   return {
-    week: status ? weekLabel(plan, status) : '',
-    sessions: t('plan.sessions', { done: status?.done ?? 0, count: plan.sessionsPerWeek }),
+    week: weekLabel(plan, status),
+    sessions: t('plan.sessions', { done: status.done, count: plan.sessionsPerWeek }),
   };
 }

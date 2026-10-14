@@ -94,9 +94,11 @@ export function RoutineMenu({ routine, onClose, onDelete }: RoutineMenuProps) {
         ctaLabel={t('common:actions.save')}
         onSubmit={async (name) => {
           const target = renaming;
-          if (target)
-            await attempt('Renaming the routine failed', () => renameRoutine(target.id, name));
-          setRenaming(null);
+          if (!target) return;
+          // A failed rename keeps the sheet open with what was typed.
+          if (await attempt('Renaming the routine failed', () => renameRoutine(target.id, name))) {
+            setRenaming(null);
+          }
         }}
       />
     </>

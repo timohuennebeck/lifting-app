@@ -1,3 +1,4 @@
+import { useStatus } from '@powersync/react-native';
 import { and, count, desc, eq, isNotNull, max, sql } from 'drizzle-orm';
 
 import { insertCustomExercises } from './custom-exercises';
@@ -126,13 +127,15 @@ export function usePlans() {
 
 /**
  * The plan Today follows and Training shows first: the one marked active, else the first; with
- * all plans. Loading until the profile and the plans are known.
+ * all plans and the profile. Loading until those are known, the first sync included: before it,
+ * a returning user's plans aren't on the phone yet.
  */
 export function useCurrentPlan() {
+  const { hasSynced } = useStatus();
   const { profile, isLoading: profileLoading } = useProfile();
   const { data: plans = [], isLoading: plansLoading } = usePlans();
   const plan = plans.find((p) => p.id === profile?.activePlanId) ?? plans[0];
-  return { plan, plans, isLoading: profileLoading || plansLoading };
+  return { plan, plans, profile, isLoading: !hasSynced || profileLoading || plansLoading };
 }
 
 interface PlanWeek {

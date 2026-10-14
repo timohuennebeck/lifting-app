@@ -8,7 +8,7 @@ import { usePlanWeekLabel } from '@/features/training/hooks/use-plan-week-label'
 import { useWorkoutDraftStore } from '@/features/workout/stores/workout-draft-store';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useCurrentPlan, usePlanStatus } from '@/shared/data/plans';
-import { useProfile, useUnits } from '@/shared/data/profile';
+import { useUnits } from '@/shared/data/profile';
 import { useRoutines } from '@/shared/data/routines';
 import { useActiveWorkout } from '@/shared/data/workouts';
 import { useToday } from '@/shared/hooks/use-today';
@@ -52,8 +52,7 @@ export function TodayScreen() {
   const { data: active } = useActiveWorkout();
   const { days, isLoading: weekLoading } = useWeekWorkouts(today);
   const day = days[selected];
-  const { profile } = useProfile();
-  const { plan, isLoading: planLoading } = useCurrentPlan();
+  const { plan, profile, isLoading: planLoading } = useCurrentPlan();
   const status = usePlanStatus(plan);
   const weekLabel = usePlanWeekLabel();
   const { data: routines = [], isLoading: routinesLoading } = useRoutines();

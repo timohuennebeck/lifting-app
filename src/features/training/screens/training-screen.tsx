@@ -12,7 +12,6 @@ import {
   useCurrentPlan,
   usePlanStatus,
 } from '@/shared/data/plans';
-import { useProfile } from '@/shared/data/profile';
 import { type RoutineSummary, useRoutines } from '@/shared/data/routines';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -102,9 +101,8 @@ function OtherPlanRow({ plan }: OtherPlanRowProps) {
  */
 export function TrainingScreen() {
   const { t } = useTranslation('training');
-  const { profile } = useProfile();
   const { data: routines = [], isLoading: routinesLoading } = useRoutines();
-  const { plan, plans, isLoading: planLoading } = useCurrentPlan();
+  const { plan, plans, profile, isLoading: planLoading } = useCurrentPlan();
   const status = usePlanStatus(plan);
   const { start, startingId } = useStartRoutine();
   const [createOpen, setCreateOpen] = useState(false);
