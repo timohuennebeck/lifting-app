@@ -100,6 +100,8 @@ export function CameraScreen() {
 
   const assess = () => router.push('/progress-check/assessment');
 
+  const removeShot = (p: (typeof POSES)[number]) => useProgressCheckStore.getState().removeShot(p);
+
   // A thumbnail with a photo shows it; an empty one is the pose to shoot next.
   const selectPose = (p: (typeof POSES)[number]) => {
     const store = useProgressCheckStore.getState();
@@ -361,7 +363,7 @@ export function CameraScreen() {
           </View>
 
           <View className="absolute inset-x-0 items-center gap-5.5" style={{ bottom: footerInset }}>
-            <PoseStrip shots={shots} active={pose} onSelect={selectPose} />
+            <PoseStrip shots={shots} active={pose} onSelect={selectPose} onRemove={removeShot} />
             <CaptureRow
               start={
                 <CameraSideButton
@@ -398,7 +400,15 @@ export function CameraScreen() {
         <ShotView
           pose={viewPose}
           shot={viewShot}
-          strip={<PoseStrip shots={shots} active={viewPose} onSelect={selectPose} viewing />}
+          strip={
+            <PoseStrip
+              shots={shots}
+              active={viewPose}
+              onSelect={selectPose}
+              onRemove={removeShot}
+              viewing
+            />
+          }
           onClose={() => useProgressCheckStore.getState().view(null)}
           onRetake={() => useProgressCheckStore.getState().retake(viewPose)}
           canFinish={finished && !busy}

@@ -13,6 +13,8 @@ export interface PoseStripProps {
   shots: Shots;
   active: Pose;
   onSelect: (pose: Pose) => void;
+  /** The X on a taken photo. */
+  onRemove: (pose: Pose) => void;
   /** Under a photo shown full screen: the shown one is marked white, not in the accent. */
   viewing?: boolean;
 }
@@ -38,7 +40,7 @@ function ShotBadge({ warn }: ShotBadgeProps) {
 }
 
 /** Row of the pose thumbnails with labels (camera 08a, live and over a taken photo). */
-export function PoseStrip({ shots, active, onSelect, viewing = false }: PoseStripProps) {
+export function PoseStrip({ shots, active, onSelect, onRemove, viewing = false }: PoseStripProps) {
   const { t } = useTranslation('progressCheck');
   return (
     <View className="flex-row items-start justify-center gap-4.5">
@@ -55,6 +57,14 @@ export function PoseStrip({ shots, active, onSelect, viewing = false }: PoseStri
             viewing={viewing}
             ringColor={warn ? WARN_COLOR : undefined}
             badge={<ShotBadge warn={warn} />}
+            remove={
+              shot
+                ? {
+                    accessibilityLabel: t('photo.remove', { pose: t(`poses.${pose}.name`) }),
+                    onPress: () => onRemove(pose),
+                  }
+                : undefined
+            }
             onPress={() => onSelect(pose)}
           />
         );

@@ -56,6 +56,7 @@
   "photo": {
     "ok": "Photo looks good",
     "retake": "Retake photo",
+    "remove": "Remove {{pose}} photo",
     "issues": {
       "blurry": "Blurry",
       "dark": "Too dark",

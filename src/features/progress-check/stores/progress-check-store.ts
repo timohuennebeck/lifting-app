@@ -56,6 +56,8 @@ interface ProgressCheckState {
   /** Shows a taken photo full screen, or (null) goes back to shooting. */
   view: (pose: Pose | null) => void;
   retake: (pose: Pose) => void;
+  /** Drops a taken photo; the camera shoots that pose next. */
+  removeShot: (pose: Pose) => void;
   setUploaded: () => void;
   /** Marks the photos the assessment rejected and shows the first of them. */
   rejectShots: (rejections: PhotoRejection[]) => void;
@@ -116,6 +118,22 @@ export const useProgressCheckStore = create<ProgressCheckState>()(
       },
       view: (viewPose) => set({ viewPose }),
       retake: (pose) => set({ pose, retaking: true, viewPose: null }),
+      removeShot: (pose) => {
+        const s = get();
+        const removed = s.shots[pose];
+        if (!removed) return;
+        deleteFile(removed.uri);
+        const shots = { ...s.shots };
+        delete shots[pose];
+        // Another photo shown full screen stays; the removed one goes back to the camera.
+        set({
+          shots,
+          result: null,
+          retaking: false,
+          pose,
+          viewPose: s.viewPose === pose ? null : s.viewPose,
+        });
+      },
       setUploaded: () => set({ uploaded: true }),
       rejectShots: (rejections) => {
         const shots = { ...get().shots };
