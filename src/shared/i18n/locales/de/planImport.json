@@ -55,9 +55,7 @@
     "access": "Damit du deinen Plan abfotografieren kannst. Die Fotos bleiben auf deinem Gerät, bis du sie importierst."
   },
   "review": {
-    "title": "PASST SO?",
     "retake": "Foto neu aufnehmen",
-    "counter": "{{current}} / {{total}}",
     "addPage": "Seite hinzufügen",
     "remove": "Foto entfernen"
   },

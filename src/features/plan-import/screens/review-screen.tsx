@@ -1,38 +1,38 @@
-import { Image } from 'expo-image';
-import { Redirect, router } from 'expo-router';
+import { Redirect, router, Stack } from 'expo-router';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatList, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
-import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
-import { Card } from '@/shared/ui/card';
-import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
-import { PressableScale } from '@/shared/ui/pressable-scale';
-import { StepScreen } from '@/shared/ui/step-screen';
-import { Text } from '@/shared/ui/text';
+import { PhotoReview } from '@/shared/ui/photo-review';
+import { PhotoThumb } from '@/shared/ui/photo-thumb';
 
-import { IMPORT_STEPS } from '../lib/format';
+import { MAX_PHOTOS } from '../lib/plan-import-service';
 import { useImportStore, usePhotos } from '../stores/import-store';
 
-/** 05a-2: page through the captured photos, retake or remove pages, then read the plan. */
+/** Width of a thumbnail with the gap after it, to scroll the shown page into view. */
+const THUMB_STEP = 56 + 18;
+
+/**
+ * 05a-2: the captured pages full screen, like a progress check photo: switch, retake or remove
+ * pages, add one, then read the plan.
+ */
 export function ReviewScreen() {
   const { t } = useTranslation('planImport');
   const { step } = usePlanFlow();
   const photos = usePhotos();
   const removePhoto = useImportStore((s) => s.removePhoto);
   const [page, setPage] = useState(0);
-  // Pages get the card's exact size; a horizontal list does not stretch them on every platform.
-  const [{ width, height }, setSize] = useState({ width: 0, height: 0 });
-  const pager = useRef<FlatList>(null);
+  const strip = useRef<ScrollView>(null);
   if (!photos.length) return <Redirect href={step('/import/camera')} />;
   const current = Math.min(page, photos.length - 1);
+  const addPage = () => router.push(step('/import/camera'));
 
   function show(index: number) {
     setPage(index);
-    pager.current?.scrollToOffset({ offset: index * width, animated: true });
+    strip.current?.scrollTo({ x: Math.max(0, (index - 1) * THUMB_STEP), animated: true });
   }
 
   function remove() {
@@ -41,104 +41,66 @@ export function ReviewScreen() {
   }
 
   return (
-    <StepScreen
-      step={2}
-      total={IMPORT_STEPS}
-      title={t('review.title')}
-      titleClassName="pt-3.5"
-      scroll
-      footer={
-        <View className="gap-1.5">
-          <Button label={t('read')} onPress={() => router.push(step('/import/reading'))} />
-          <Button
-            label={t('review.addPage')}
-            variant="ghost"
-            icon="plus"
-            className="h-11 self-center"
-            onPress={() => router.push(step('/import/camera'))}
-          />
-        </View>
-      }
-    >
-      <Card
-        className="mx-4 mt-5.5 h-80 overflow-hidden p-0"
-        onLayout={(e) => setSize(e.nativeEvent.layout)}
-      >
-        {width ? (
-          <FlatList
-            ref={pager}
-            data={photos}
+    <View className="flex-1 bg-black">
+      <Stack.Screen options={{ animation: 'fade' }} />
+      <PhotoReview
+        uri={photos[current].uri}
+        // A camera photo fills the screen as its preview did; a picked one shows whole.
+        fit={photos[current].fromCamera ? 'cover' : 'contain'}
+        title={t('camera.page', { count: current + 1 })}
+        onClose={() => router.back()}
+        strip={
+          <ScrollView
+            ref={strip}
             horizontal
-            pagingEnabled
             showsHorizontalScrollIndicator={false}
-            keyExtractor={(p) => p.uri}
-            getItemLayout={(_, index) => ({ length: width, offset: width * index, index })}
-            onMomentumScrollEnd={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / width))}
-            renderItem={({ item, index }) => (
-              <View style={{ width, height }} className="items-center px-5 pt-5.5 pb-16">
-                <Image
-                  source={{ uri: item.uri }}
-                  contentFit="contain"
-                  accessibilityLabel={t('camera.page', { count: index + 1 })}
-                  style={{ flex: 1, width: '100%', borderRadius: 6 }}
-                />
-              </View>
-            )}
-          />
-        ) : null}
+            contentContainerClassName="grow items-start justify-center gap-4.5 px-4"
+          >
+            {photos.map((p, i) => (
+              <PhotoThumb
+                key={p.uri}
+                uri={p.uri}
+                label={String(i + 1)}
+                accessibilityLabel={t('camera.page', { count: i + 1 })}
+                selected={i === current}
+                viewing
+                onPress={() => show(i)}
+              />
+            ))}
+            {photos.length < MAX_PHOTOS ? (
+              <PhotoThumb
+                label={String(photos.length + 1)}
+                accessibilityLabel={t('review.addPage')}
+                selected={false}
+                viewing
+                onPress={addPage}
+              />
+            ) : null}
+          </ScrollView>
+        }
+      >
         <IconButton
-          icon="close"
-          size={38}
-          iconSize={11}
-          accessibilityLabel={t('review.remove')}
-          onPress={remove}
-          className="absolute top-3.5 right-3.5"
-        />
-        <View className="absolute bottom-3.5 left-3.5 h-9.5 justify-center rounded-full bg-elevated px-3.5">
-          <Text variant="caption">
-            {t('review.counter', { current: current + 1, total: photos.length })}
-          </Text>
-        </View>
-        <PressableScale
-          haptic="select"
+          icon="refresh"
+          size={60}
+          iconSize={16}
+          accessibilityLabel={t('review.retake')}
           onPress={() =>
             router.push({ pathname: step('/import/camera'), params: { retake: current } })
           }
-          className="absolute right-3.5 bottom-3.5 h-9.5 flex-row items-center gap-1.5 rounded-full bg-elevated px-3.5"
-        >
-          <Icon name="refresh" size={14} />
-          <Text variant="caption">{t('review.retake')}</Text>
-        </PressableScale>
-      </Card>
-      <View className="flex-row flex-wrap gap-2.5 px-4 pt-4">
-        {photos.map((p, i) => (
-          <PressableScale
-            key={p.uri}
-            haptic="select"
-            accessibilityLabel={t('camera.page', { count: i + 1 })}
-            accessibilityState={{ selected: i === current }}
-            onPress={() => show(i)}
-            className={cn(
-              'h-21 w-16 rounded-xl bg-surface p-2',
-              i === current ? 'border-2 border-accent' : 'border border-white/8',
-            )}
-          >
-            <Image
-              source={{ uri: p.uri }}
-              contentFit="cover"
-              style={{ flex: 1, borderRadius: 6 }}
-            />
-          </PressableScale>
-        ))}
-        <PressableScale
-          haptic="select"
-          accessibilityLabel={t('review.addPage')}
-          onPress={() => router.push(step('/import/camera'))}
-          className="h-21 w-16 items-center justify-center rounded-xl bg-elevated"
-        >
-          <Icon name="plus" size={16} />
-        </PressableScale>
-      </View>
-    </StepScreen>
+        />
+        <IconButton
+          icon="trash"
+          size={60}
+          iconSize={16}
+          accessibilityLabel={t('review.remove')}
+          onPress={remove}
+        />
+        <Button
+          label={t('read')}
+          onPress={() => router.push(step('/import/reading'))}
+          className="flex-1"
+        />
+      </PhotoReview>
+    </View>
   );
 }

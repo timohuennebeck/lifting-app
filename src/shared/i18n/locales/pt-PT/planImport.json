@@ -55,9 +55,7 @@
     "access": "Para tirares fotos do teu plano. As fotos ficam no teu dispositivo até as importares."
   },
   "review": {
-    "title": "ESTÁ BEM ASSIM?",
     "retake": "Repetir foto",
-    "counter": "{{current}} / {{total}}",
     "addPage": "Adicionar página",
     "remove": "Remover foto"
   },

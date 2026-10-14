@@ -11,6 +11,8 @@ export interface ImportPhoto {
   uri: string;
   width: number;
   height: number;
+  /** Taken with the import camera: framed as its full-screen preview showed it. */
+  fromCamera?: boolean;
 }
 
 export interface ImportFile {

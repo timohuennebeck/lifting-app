@@ -55,9 +55,7 @@
     "access": "Para você fotografar seu plano. As fotos ficam no seu dispositivo até você importá-las."
   },
   "review": {
-    "title": "ESTÁ CERTO ASSIM?",
     "retake": "Refazer foto",
-    "counter": "{{current}} / {{total}}",
     "addPage": "Adicionar página",
     "remove": "Remover foto"
   },

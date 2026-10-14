@@ -70,7 +70,7 @@ async function capture(
         running.current += 1;
         try {
           const pic = await shot;
-          return { uri: pic.uri, width: pic.width, height: pic.height };
+          return { uri: pic.uri, width: pic.width, height: pic.height, fromCamera: true };
         } finally {
           running.current -= 1;
         }

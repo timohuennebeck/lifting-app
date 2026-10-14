@@ -55,9 +55,7 @@
     "access": "So you can take photos of your plan. They stay on your device until you import them."
   },
   "review": {
-    "title": "LOOKS GOOD?",
     "retake": "Retake photo",
-    "counter": "{{current}} / {{total}}",
     "addPage": "Add page",
     "remove": "Remove photo"
   },
