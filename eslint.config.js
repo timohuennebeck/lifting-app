@@ -32,6 +32,16 @@ module.exports = defineConfig([
       'react-hooks/unsupported-syntax': 'error',
       'react-hooks/syntax': 'error',
       'react-hooks/invariant': 'error',
+      // The React Compiler (1.0) compiles `obj.count++` like `++obj.count`: a value read from it
+      // is one off (this lost every page the plan import camera took). Write it out instead.
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'UpdateExpression[argument.type="MemberExpression"]',
+          message:
+            'The React Compiler mis-compiles ++/-- on a property; write `x.y = x.y + 1` instead.',
+        },
+      ],
     },
   },
   {

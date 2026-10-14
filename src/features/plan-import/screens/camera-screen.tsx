@@ -66,12 +66,12 @@ async function capture(
       if (!refusal) {
         // The next tap may start trying.
         underway();
-        running.current++;
+        running.current += 1;
         try {
           const pic = await shot;
           return { uri: pic.uri, width: pic.width, height: pic.height };
         } finally {
-          running.current--;
+          running.current -= 1;
         }
       }
       // Retried for as long as earlier shots keep the camera busy.
@@ -120,14 +120,26 @@ export function CameraScreen() {
     router.back();
   }
 
+  // No `x.y++` here: the React Compiler (1.0) compiles a postfix increment on a property like a
+  // prefix one, which numbered the first shot 1 and so never added any page.
+  /** The place of the next shot or library pick in the order. */
+  function nextSeq() {
+    const q = queue.current;
+    const seq = q.next;
+    q.next = seq + 1;
+    return seq;
+  }
+
   /** Adds the pages of shot or library pick `seq` once all earlier ones are in. */
   function settle(seq: number, picked: ImportPhoto[]) {
     const q = queue.current;
     q.done.set(seq, picked);
     const ready: ImportPhoto[] = [];
     while (q.done.has(q.flushed)) {
-      ready.push(...q.done.get(q.flushed)!);
-      q.done.delete(q.flushed++);
+      const index = q.flushed;
+      ready.push(...q.done.get(index)!);
+      q.done.delete(index);
+      q.flushed = index + 1;
     }
     if (ready.length && !closed.current) addPhotos(ready);
   }
@@ -148,7 +160,7 @@ export function CameraScreen() {
       setBusy(false);
       return;
     }
-    const seq = queue.current.next++;
+    const seq = nextSeq();
     setPending((n) => n + 1);
     try {
       settle(seq, [await capture(camera, line, running, closed)]);
@@ -178,7 +190,7 @@ export function CameraScreen() {
     if (!picked.length || closed.current) return;
     if (retakeIndex !== null) return replace(picked[0]);
     // After the shots taken before, then on to the review once those are saved, like "Done".
-    settle(queue.current.next++, picked);
+    settle(nextSeq(), picked);
     setFinishing(true);
   }
 
