@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
+import { newId } from '@/shared/data/json';
 
 import {
   type ImportedPlan,
@@ -84,8 +85,9 @@ function receive(s: ImportState, event: PlanEvent): Partial<ImportState> {
     const at = days.length - 1;
     return { plan: { ...plan, days }, readingDay: at, ...(s.following ? { dayIndex: at } : {}) };
   }
+  const exercise = { ...event.exercise, key: newId() };
   const days = plan.days.map((d, i) =>
-    i === s.readingDay ? { ...d, exercises: [...d.exercises, event.exercise] } : d,
+    i === s.readingDay ? { ...d, exercises: [...d.exercises, exercise] } : d,
   );
   if (!event.newExercise) return { plan: { ...plan, days } };
   const created = { ...event.newExercise, archived: false };

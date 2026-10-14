@@ -192,13 +192,15 @@ export async function removeTemplateExercise(templateExerciseId: string) {
   });
 }
 
-/** Puts an exercise at slot `to(from)` of its template; the others close up around it. */
-async function placeExercise(templateExerciseId: string, to: (from: number) => number) {
+/**
+ * Puts an exercise at slot `target` of its template (dragged there, or moved up or down); the
+ * others close up around it.
+ */
+export async function reorderTemplateExercise(templateExerciseId: string, target: number) {
   await drizzle.transaction(async (tx) => {
     const templateId = await templateOf(tx, templateExerciseId);
     const ids = await renumberExercises(tx, templateId);
     const from = ids.indexOf(templateExerciseId);
-    const target = to(from);
     if (from < 0 || target === from || target < 0 || target >= ids.length) return;
     const order = ids.filter((id) => id !== templateExerciseId);
     order.splice(target, 0, templateExerciseId);
@@ -208,14 +210,6 @@ async function placeExercise(templateExerciseId: string, to: (from: number) => n
     await touchTemplate(tx, templateId);
   });
 }
-
-/** Moves an exercise one slot up (-1) or down (+1). */
-export const moveTemplateExercise = (templateExerciseId: string, direction: -1 | 1) =>
-  placeExercise(templateExerciseId, (from) => from + direction);
-
-/** Drops an exercise at `toIndex` (drag and drop). */
-export const reorderTemplateExercise = (templateExerciseId: string, toIndex: number) =>
-  placeExercise(templateExerciseId, () => toIndex);
 
 /** Replaces all target sets of one template exercise and its rest override. */
 export async function saveTemplateSets(

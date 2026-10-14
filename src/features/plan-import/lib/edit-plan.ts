@@ -1,4 +1,5 @@
 import { newExerciseDraft, swapExerciseDraft } from '@/shared/data/exercises';
+import { newId } from '@/shared/data/json';
 
 import type { ImportedDay, ImportedExercise, ImportedPlan } from './plan-import-service';
 
@@ -26,7 +27,10 @@ export const editExerciseAt = (
 /** Appends exercises with default target sets. */
 export const addExercises = (day: ImportedDay, exerciseIds: string[]): ImportedDay => ({
   ...day,
-  exercises: [...day.exercises, ...exerciseIds.map((id) => newExerciseDraft(id))],
+  exercises: [
+    ...day.exercises,
+    ...exerciseIds.map((id) => ({ ...newExerciseDraft(id), key: newId() })),
+  ],
 });
 
 /** Replaces exercise `at`; its sets get new defaults when the measures differ. */

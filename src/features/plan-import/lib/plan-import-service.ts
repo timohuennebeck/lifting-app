@@ -25,6 +25,8 @@ export type ImportSource =
   | { kind: 'file'; file: ImportFile; sheets?: string[] };
 
 export interface ImportedExercise extends PlanExerciseDraft {
+  /** Stays with the exercise while it is edited or dragged to another place. */
+  key: string;
   /** Text as read from the source when the match is uncertain; cleared once confirmed. */
   raw?: string;
   /** Other plausible catalog exercise ids for an uncertain line. */
@@ -128,7 +130,7 @@ export type PlanEvent =
   | { type: 'day'; day: Omit<ImportedDay, 'exercises'> }
   | {
       type: 'exercise';
-      exercise: ImportedExercise;
+      exercise: Omit<ImportedExercise, 'key'>;
       /** Set the first time the plan uses an exercise the catalog doesn't have. */
       newExercise?: Omit<CustomExercise, 'archived'>;
     };

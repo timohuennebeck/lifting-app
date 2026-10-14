@@ -1,31 +1,18 @@
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
 import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Sortable from 'react-native-sortables';
 
 import { EditableTitle } from '@/features/training/components/editable-title';
-import { ExerciseListHeader } from '@/features/training/components/exercise-list-header';
-import {
-  type ExerciseMenuAction,
-  ExerciseMenuSheet,
-} from '@/features/training/components/exercise-menu-sheet';
-import { TemplateExerciseCard } from '@/features/training/components/template-exercise-card';
-import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
-import { estimateMinutes, exerciseItems } from '@/shared/data/templates';
+import { PlanExerciseList } from '@/features/training/components/plan-exercise-list';
 import { getActiveWorkoutId, startDraftWorkout } from '@/shared/data/workouts';
-import { useLastDefined } from '@/shared/hooks/use-last-defined';
-import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
-import { EmptyExercises } from '@/shared/ui/empty-exercises';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
-import { afterSheetClose } from '@/shared/ui/sheet';
 
 import { useWorkoutDraftStore } from '../stores/workout-draft-store';
 
@@ -41,32 +28,16 @@ export function WorkoutBuilderScreen() {
   const rename = useWorkoutDraftStore((s) => s.rename);
   const remove = useWorkoutDraftStore((s) => s.remove);
   const move = useWorkoutDraftStore((s) => s.move);
-  const [menuFor, setMenuFor] = useState<number | null>(null);
-  const menuShown = useLastDefined(menuFor);
   const [starting, setStarting] = useState(false);
   // State isn't updated yet on a double tap, which would start two workouts.
   const startingRef = useRef(false);
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  const drag = useSortableDrag(({ fromIndex, toIndex }) => move(fromIndex, toIndex));
-
-  const items = exerciseItems(exercises);
   const empty = exercises.length === 0;
 
   const openPicker = (params: { mode: 'add' } | { mode: 'swap'; index: string }) =>
     router.push({ pathname: '/workout/new/picker', params });
   const openSets = (index: number) =>
     router.push({ pathname: '/workout/new/sets/[index]', params: { index: String(index) } });
-
-  function onMenuAction(action: ExerciseMenuAction) {
-    const at = menuFor;
-    setMenuFor(null);
-    if (at === null) return;
-    if (action === 'editSets') afterSheetClose(() => openSets(at));
-    else if (action === 'swap')
-      afterSheetClose(() => openPicker({ mode: 'swap', index: String(at) }));
-    else if (action === 'remove') remove(at);
-    else move(at, at + (action === 'moveUp' ? -1 : 1));
-  }
 
   async function start() {
     if (startingRef.current || empty) return;
@@ -96,37 +67,20 @@ export function WorkoutBuilderScreen() {
       >
         <EditableTitle value={name} onSubmit={rename} />
 
-        <WorkedMuscles title={name} items={items} />
-
-        <ExerciseListHeader
-          count={exercises.length}
-          minutes={estimateMinutes(items)}
+        <PlanExerciseList
+          title={name}
+          exercises={exercises}
+          keyOf={(e) => e.key}
           addLabel={t('training:overview.addExercise')}
+          emptyHint={t('training:overview.emptyHint')}
+          scrollRef={scrollRef}
           onAdd={() => openPicker({ mode: 'add' })}
+          onOpen={openSets}
+          onEditSets={openSets}
+          onSwap={(i) => openPicker({ mode: 'swap', index: String(i) })}
+          onRemove={remove}
+          onMove={move}
         />
-
-        <View className="px-5 pt-2">
-          {empty ? (
-            <EmptyExercises hint={t('training:overview.emptyHint')} />
-          ) : (
-            // Hold an exercise to drag it to another place, as in a template.
-            <Sortable.Grid
-              data={exercises}
-              keyExtractor={(e) => e.key}
-              columns={1}
-              scrollableRef={scrollRef}
-              {...drag.gridProps}
-              renderItem={({ item: e, index }) => (
-                <TemplateExerciseCard
-                  exerciseId={e.exerciseId}
-                  sets={e.sets}
-                  onMenu={drag.unlessDragging(() => setMenuFor(index))}
-                  onPress={drag.unlessDragging(() => openSets(index))}
-                />
-              )}
-            />
-          )}
-        </View>
       </Animated.ScrollView>
 
       <BottomFade>
@@ -137,14 +91,6 @@ export function WorkoutBuilderScreen() {
           onPress={start}
         />
       </BottomFade>
-
-      <ExerciseMenuSheet
-        visible={menuFor !== null}
-        onClose={() => setMenuFor(null)}
-        canMoveUp={(menuShown ?? 0) > 0}
-        canMoveDown={menuShown !== null && menuShown < exercises.length - 1}
-        onAction={onMenuAction}
-      />
     </Screen>
   );
 }
