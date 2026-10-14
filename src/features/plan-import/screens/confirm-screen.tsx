@@ -59,6 +59,8 @@ export function ConfirmScreen() {
   const readingDay = useImportStore((s) => s.readingDay);
   const failure = useImportStore((s) => s.failure);
   const holdDay = useImportStore((s) => s.holdDay);
+  const following = useImportStore((s) => s.following);
+  const scroller = useRef<ScrollView>(null);
   // The analysis this screen shows; leaving the screen stops it.
   const [run] = useState(() => useImportStore.getState().run);
   const wasReading = useRef(reading);
@@ -177,8 +179,13 @@ export function ConfirmScreen() {
       }
     >
       <ScrollView
+        ref={scroller}
         // Any touch ends following the day being read, so an edit stays on the day it began on.
         onTouchStart={holdDay}
+        // Until then each exercise read scrolls into view, with the row still to come below it.
+        onContentSizeChange={() => {
+          if (reading && following) scroller.current?.scrollToEnd({ animated: true });
+        }}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 130 }}
       >
