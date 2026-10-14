@@ -33,7 +33,7 @@ export function WeekStrip({ days, today, selected, onSelect }: WeekStripProps) {
             key={i}
             haptic="select"
             accessibilityRole="tab"
-            accessibilityLabel={long[i]}
+            accessibilityLabel={day.workout ? `${long[i]}, ${day.workout.name}` : long[i]}
             accessibilityState={{ selected: isSelected }}
             onPress={() => onSelect(i)}
             className="flex-1 items-center gap-2"

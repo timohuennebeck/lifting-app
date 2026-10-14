@@ -5,13 +5,13 @@ import { colors } from '@/shared/lib/theme';
 
 import { Text } from './text';
 
-export interface DashedRingProps {
+interface DashedRingProps {
   color: string;
   style?: StyleProp<ViewStyle>;
 }
 
 /** 38pt dashed ring marking a planned training; positioned absolutely by the caller. */
-export function DashedRing({ color, style }: DashedRingProps) {
+function DashedRing({ color, style }: DashedRingProps) {
   return (
     <Svg
       width={38}

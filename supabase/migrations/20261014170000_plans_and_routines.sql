@@ -121,7 +121,7 @@ alter table public.plans
   add column block_weeks int,
   add column block_start_week int not null default 1,
   add constraint plans_sessions_per_week_range check (sessions_per_week between 1 and 7),
-  add constraint plans_block_weeks_range check (block_weeks between 2 and 8),
+  add constraint plans_block_weeks_range check (block_weeks in (4, 5, 6)),
   add constraint plans_block_start_week_range check (block_start_week >= 1);
 
 -- Each plan's goal is the number of its routines that had a weekday, else of all its routines

@@ -10,12 +10,13 @@ export interface WeekDay {
 /** Each day of the week containing `today` with the workout done on it. */
 export function useWeekWorkouts(today: Date) {
   const monday = startOfWeek(today);
-  const { data: workouts = [] } = useWorkoutsInRange(
+  const { data: workouts = [], isLoading } = useWorkoutsInRange(
     monday.toISOString(),
     addDays(monday, 7).toISOString(),
   );
-  return Array.from({ length: 7 }, (_, i): WeekDay => ({
+  const days = Array.from({ length: 7 }, (_, i): WeekDay => ({
     date: addDays(monday, i),
     workout: workouts.find((w) => mondayIndex(new Date(w.startedAt)) === i) ?? null,
   }));
+  return { days, isLoading };
 }

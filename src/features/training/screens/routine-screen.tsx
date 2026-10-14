@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { usePlans } from '@/shared/data/plans';
 import { estimateMinutes, exerciseItems, useRoutineDetail } from '@/shared/data/routines';
+import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -27,7 +28,11 @@ export function RoutineScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation(['training', 'common']);
   const insets = useSafeAreaInsets();
-  const { data: routine, isLoading } = useRoutineDetail(id);
+  const { data: found, isLoading } = useRoutineDetail(id);
+  // Deleted on the way out, it still shows while the screen leaves.
+  const [leaving, setLeaving] = useState(false);
+  const lastRoutine = useLastDefined(found);
+  const routine = found ?? (leaving ? lastRoutine : null);
   const { data: plans = [] } = usePlans();
   const planName = plans.find((p) => p.id === routine?.planId)?.name;
   const { start, startingId } = useStartRoutine();
@@ -123,7 +128,10 @@ export function RoutineScreen() {
       <RoutineMenu
         routine={menuFor}
         onClose={() => setMenuFor(null)}
-        onDelete={() => router.back()}
+        onDelete={() => {
+          setLeaving(true);
+          router.back();
+        }}
       />
     </Screen>
   );

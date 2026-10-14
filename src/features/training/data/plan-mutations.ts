@@ -1,7 +1,8 @@
 import { eq } from 'drizzle-orm';
 
+import { blockWeekOf, isDeloadWeek, type PlanSummary } from '@/shared/data/plans';
 import { drizzle } from '@/shared/data/powersync/database';
-import { plans, profiles, routines } from '@/shared/data/powersync/schema';
+import { plans, profiles, routines, workoutEntries } from '@/shared/data/powersync/schema';
 
 import { deleteRoutineTx } from './routine-mutations';
 
@@ -21,34 +22,56 @@ export async function setSessionsPerWeek(planId: string, sessionsPerWeek: number
     .where(eq(plans.id, planId));
 }
 
+type BlockPlan = Pick<PlanSummary, 'id' | 'blockWeeks' | 'blockStartWeek'>;
+
 /**
- * Turns blocks on (`blockWeeks` with the deload) or off (null). A new block starts with the
- * plan week now, so turning them on never lands in a deload.
+ * The block start that puts plan week `planWeek` in week `blockWeek` of a block. Starts a whole
+ * block apart mean the same (see `blockWeekOf`), so it is moved up to 1 at least, as the database
+ * requires.
  */
-export async function setBlockWeeks(planId: string, blockWeeks: number | null, planWeek: number) {
+function blockStart(planWeek: number, blockWeek: number, blockWeeks: number) {
+  const start = planWeek - blockWeek + 1;
+  return start >= 1 ? start : start + Math.ceil((1 - start) / blockWeeks) * blockWeeks;
+}
+
+async function setBlockStart(planId: string, start: number) {
+  await drizzle.update(plans).set({ block_start_week: start }).where(eq(plans.id, planId));
+}
+
+/**
+ * Turns blocks on (`blockWeeks` with the deload), changes their length, or turns them off (null).
+ * Turned on, a block starts with the plan week now; a new length keeps the week the block is in
+ * (a deload stays one).
+ */
+export async function setBlockWeeks(plan: BlockPlan, blockWeeks: number | null, planWeek: number) {
+  if (blockWeeks === plan.blockWeeks) return;
+  const current = blockWeekOf(planWeek, plan);
+  let week = 1;
+  if (current !== null && blockWeeks !== null) {
+    week = isDeloadWeek(current, plan) ? blockWeeks : Math.min(current, blockWeeks);
+  }
   await drizzle
     .update(plans)
-    .set({ block_weeks: blockWeeks, block_start_week: planWeek })
-    .where(eq(plans.id, planId));
+    .set({
+      block_weeks: blockWeeks,
+      ...(blockWeeks ? { block_start_week: blockStart(planWeek, week, blockWeeks) } : {}),
+    })
+    .where(eq(plans.id, plan.id));
 }
 
 /** Starts the plan's block over with the plan week now as its first week. */
-export async function restartBlock(planId: string, planWeek: number) {
-  await drizzle.update(plans).set({ block_start_week: planWeek }).where(eq(plans.id, planId));
+export async function restartBlock(plan: BlockPlan, planWeek: number) {
+  if (plan.blockWeeks) await setBlockStart(plan.id, blockStart(planWeek, 1, plan.blockWeeks));
 }
 
-/**
- * Makes the plan week now the deload: the next block starts with the week after it, so this
- * one is the last week of the block before (see `blockWeekOf`).
- */
-export async function deloadNow(planId: string, planWeek: number) {
-  await drizzle
-    .update(plans)
-    .set({ block_start_week: planWeek + 1 })
-    .where(eq(plans.id, planId));
+/** Makes the plan week now the deload, the last week of its block. */
+export async function deloadNow(plan: BlockPlan, planWeek: number) {
+  if (plan.blockWeeks) {
+    await setBlockStart(plan.id, blockStart(planWeek, plan.blockWeeks, plan.blockWeeks));
+  }
 }
 
-/** Deletes the plan with its routines; logged workouts stay in the history. */
+/** Deletes the plan with its routines; logged workouts stay in the history, without the plan. */
 export async function deletePlan(planId: string) {
   await drizzle.transaction(async (tx) => {
     const inside = await tx
@@ -56,6 +79,11 @@ export async function deletePlan(planId: string) {
       .from(routines)
       .where(eq(routines.plan_id, planId));
     for (const routine of inside) await deleteRoutineTx(tx, routine.id);
+    // As the server's ON DELETE SET NULL does; they keep their plan week.
+    await tx
+      .update(workoutEntries)
+      .set({ plan_id: null })
+      .where(eq(workoutEntries.plan_id, planId));
     await tx
       .update(profiles)
       .set({ active_plan_id: null })

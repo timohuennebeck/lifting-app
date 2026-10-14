@@ -14,6 +14,8 @@ export interface SegmentedControlProps<T extends string | number> {
   options: SegmentedOption<T>[];
   value: T;
   onChange: (value: T) => void;
+  /** Shown but not pressable, e.g. while what a change depends on is loading. */
+  disabled?: boolean;
   className?: string;
 }
 
@@ -21,10 +23,13 @@ export function SegmentedControl<T extends string | number>({
   options,
   value,
   onChange,
+  disabled,
   className,
 }: SegmentedControlProps<T>) {
   return (
-    <View className={cn('flex-row rounded-full bg-elevated p-1', className)}>
+    <View
+      className={cn('flex-row rounded-full bg-elevated p-1', disabled && 'opacity-50', className)}
+    >
       {options.map((option) => {
         const active = option.value === value;
         return (
@@ -32,7 +37,8 @@ export function SegmentedControl<T extends string | number>({
             key={option.value}
             haptic="select"
             accessibilityRole="tab"
-            accessibilityState={{ selected: active }}
+            accessibilityState={{ selected: active, disabled: !!disabled }}
+            disabled={disabled}
             onPress={() => onChange(option.value)}
             className={cn(
               'h-9 flex-1 items-center justify-center rounded-full px-3',

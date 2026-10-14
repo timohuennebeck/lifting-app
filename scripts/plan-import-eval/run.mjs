@@ -384,7 +384,7 @@ async function runFixtures() {
   };
   const firsts = median(results.map((r) => r.result.first));
   const totals = `| **all** | median first ${firsts}, all ${median(results.map((r) => r.result.seconds))} | ${percent(sum('routines'))} | ${percent(sum('exercises'))} | ${percent(sum('sets'))} | ${percent(sum('reps'))} | ${percent(sum('details'))} | ${results.reduce((n, r) => n + r.score.extra, 0)} | ${results.reduce((n, r) => n + r.score.review, 0)} | ${results.filter((r) => passed(r.score)).length}/${results.length} |`;
-  const table = [header, `|${' --- |'.repeat(11)}`, ...rows, totals].join('\n');
+  const table = [header, `|${' --- |'.repeat(10)}`, ...rows, totals].join('\n');
   const details = results
     .map(({ case: c, result, score: s }) => {
       const read = result.plan

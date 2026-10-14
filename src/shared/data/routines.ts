@@ -124,12 +124,12 @@ export interface RoutineSummary {
   exerciseCount: number;
   setCount: number;
   estimatedMinutes: number;
-  /** Exercise ids with their set counts, for muscle shares. */
-  items: { exerciseId: string; sets: number }[];
+  /** Exercise ids with their set counts and rest overrides, for muscle shares and the time. */
+  items: { exerciseId: string; sets: number; restSeconds: number | null }[];
 }
 
 function summarize(rows: RowOf<typeof routineListQuery>[]): RoutineSummary[] {
-  const byId = new Map<string, RoutineSummary & { rest: (number | null)[] }>();
+  const byId = new Map<string, RoutineSummary>();
   for (const r of rows) {
     const t = getOrInsert(byId, r.id, () => ({
       id: r.id,
@@ -139,18 +139,13 @@ function summarize(rows: RowOf<typeof routineListQuery>[]): RoutineSummary[] {
       setCount: 0,
       estimatedMinutes: 0,
       items: [],
-      rest: [],
     }));
     if (!r.exercise_id) continue;
-    t.items.push({ exerciseId: r.exercise_id, sets: r.set_count });
-    t.rest.push(r.rest_seconds);
+    t.items.push({ exerciseId: r.exercise_id, sets: r.set_count, restSeconds: r.rest_seconds });
     t.exerciseCount += 1;
     t.setCount += r.set_count;
   }
-  return [...byId.values()].map(({ rest, ...t }) => ({
-    ...t,
-    estimatedMinutes: estimateMinutes(t.items.map((i, k) => ({ ...i, restSeconds: rest[k] }))),
-  }));
+  return [...byId.values()].map((t) => ({ ...t, estimatedMinutes: estimateMinutes(t.items) }));
 }
 
 /** All routines with their plan and size stats: the library's first, then each plan's in order. */

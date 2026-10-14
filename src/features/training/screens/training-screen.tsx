@@ -6,7 +6,13 @@ import Animated, { useAnimatedRef } from 'react-native-reanimated';
 
 import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { TabScreen } from '@/shared/components/tab-screen';
-import { currentPlanId, type PlanSummary, usePlanStatus, usePlans } from '@/shared/data/plans';
+import {
+  currentPlanId,
+  type PlanStatus,
+  type PlanSummary,
+  usePlanStatus,
+  usePlans,
+} from '@/shared/data/plans';
 import { useProfile } from '@/shared/data/profile';
 import { type RoutineSummary, useRoutines } from '@/shared/data/routines';
 import { colors } from '@/shared/lib/theme';
@@ -18,6 +24,7 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
+import { AddRoutineButton } from '../components/add-routine-button';
 import { CreateSheet } from '../components/create-sheet';
 import { RoutineList } from '../components/routine-list';
 import { RoutineMenu } from '../components/routine-menu';
@@ -26,13 +33,17 @@ import { SessionProgress } from '../components/session-progress';
 import { usePlanWeekLabel } from '../hooks/use-plan-week-label';
 import { useStartRoutine } from '../hooks/use-start-routine';
 
+interface PlanCardProps {
+  plan: PlanSummary;
+  status: PlanStatus | undefined;
+}
+
 /** The plan Today follows: its week and how much of it is done; opens the plan. */
-function PlanCard({ plan }: { plan: PlanSummary }) {
+function PlanCard({ plan, status }: PlanCardProps) {
   const { t } = useTranslation('training');
-  const status = usePlanStatus(plan);
   const weekLabel = usePlanWeekLabel();
   const progress = status
-    ? `${weekLabel(plan, status)} · ${t('plan.sessions', { done: status.done, total: plan.sessionsPerWeek })}`
+    ? `${weekLabel(plan, status)} · ${t('plan.sessions', { done: status.done, count: plan.sessionsPerWeek })}`
     : '';
   return (
     <PressableScale
@@ -59,8 +70,12 @@ function PlanCard({ plan }: { plan: PlanSummary }) {
   );
 }
 
+interface OtherPlanRowProps {
+  plan: PlanSummary;
+}
+
 /** One of the plans Today doesn't follow, opening its page. */
-function OtherPlanRow({ plan }: { plan: PlanSummary }) {
+function OtherPlanRow({ plan }: OtherPlanRowProps) {
   const { t } = useTranslation('training');
   const meta = `${t('plan.routineCount', { count: plan.routineCount })} · ${t('plan.perWeekShort', { count: plan.sessionsPerWeek })}`;
   return (
@@ -104,9 +119,7 @@ export function TrainingScreen() {
   const planRoutines = plan ? routines.filter((r) => r.planId === plan.id) : [];
   const library = routines.filter((r) => r.planId === null);
   const otherPlans = plans.filter((p) => p.id !== plan?.id);
-  const createPlan = () => openPlanFlow(profile, plan?.sessionsPerWeek);
-  const newRoutine = (planId?: string) =>
-    router.push({ pathname: '/routine/new', params: planId ? { planId } : {} });
+  const createPlan = () => openPlanFlow(profile, '/training', plan?.sessionsPerWeek);
 
   return (
     <TabScreen
@@ -127,7 +140,7 @@ export function TrainingScreen() {
       <SectionTitle>{t('list.myPlan')}</SectionTitle>
       {plan ? (
         <>
-          <PlanCard plan={plan} />
+          <PlanCard plan={plan} status={status} />
           <View className="px-4">
             <RoutineList
               routines={planRoutines}
@@ -138,14 +151,7 @@ export function TrainingScreen() {
               onMore={setMenuFor}
             />
           </View>
-          <Button
-            label={t('list.addRoutine')}
-            icon="plus"
-            size="sm"
-            variant="secondary"
-            className="mx-4 mt-3 self-start"
-            onPress={() => newRoutine(plan.id)}
-          />
+          <AddRoutineButton planId={plan.id} />
         </>
       ) : !plansLoading ? (
         <Card className="mx-4 items-center gap-4 py-7">
@@ -202,7 +208,7 @@ export function TrainingScreen() {
         onClose={() => setCreateOpen(false)}
         onCreateRoutine={() => {
           setCreateOpen(false);
-          afterSheetClose(() => newRoutine());
+          afterSheetClose(() => router.push('/routine/new'));
         }}
         onCreatePlan={() => {
           setCreateOpen(false);

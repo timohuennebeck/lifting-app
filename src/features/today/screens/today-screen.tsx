@@ -12,7 +12,8 @@ import { useProfile, useUnits } from '@/shared/data/profile';
 import { useRoutines } from '@/shared/data/routines';
 import { useActiveWorkout } from '@/shared/data/workouts';
 import { useToday } from '@/shared/hooks/use-today';
-import { mondayIndex } from '@/shared/lib/date';
+import { isSameDay, mondayIndex } from '@/shared/lib/date';
+import { formatWeekdayDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -28,7 +29,7 @@ import { useWeekWorkouts } from '../hooks/use-week-workouts';
 export function TodayScreen() {
   const { t } = useTranslation('today');
   // The tab stays mounted: the day comes from a clock so it moves on overnight, and a picked
-  // weekday (or routine) only counts on the day it was picked.
+  // day (or routine) only counts on the day it was picked.
   const dayKey = useToday();
   const today = new Date(dayKey);
   const [pick, setPick] = useState<{ day: number; index: number } | null>(null);
@@ -41,9 +42,9 @@ export function TodayScreen() {
   const [otherOpen, setOtherOpen] = useState(false);
   const units = useUnits();
   const { data: active } = useActiveWorkout();
-  const days = useWeekWorkouts(today);
+  const { days, isLoading: weekLoading } = useWeekWorkouts(today);
   const day = days[selected];
-  const { profile } = useProfile();
+  const { profile, isLoading: profileLoading } = useProfile();
   const { data: plans = [], isLoading: plansLoading } = usePlans();
   const plan = plans.find((p) => p.id === currentPlanId(profile?.activePlanId, plans));
   const status = usePlanStatus(plan);
@@ -55,7 +56,11 @@ export function TodayScreen() {
     other?.day === dayKey && other.index === selected
       ? planRoutines.find((r) => r.id === other.routineId)
       : undefined;
-  const routine = picked ?? planRoutines.find((r) => r.id === nextId);
+  // Without a next one (every routine still empty) the first, to fill it.
+  const routine = picked ?? planRoutines.find((r) => r.id === nextId) ?? planRoutines[0];
+  // Nothing shows until the day and the plan are known, so no card flashes in the wrong state.
+  const loading =
+    weekLoading || profileLoading || plansLoading || routinesLoading || (!!plan && !status);
 
   const pills = (
     <ScrollView
@@ -96,36 +101,41 @@ export function TodayScreen() {
 
   // A finished workout wins; a day without one shows what's next in the plan (or the routine
   // picked instead), and without a plan, or with an empty one, a way to fill it.
-  let card: ReactNode = null;
-  if (day.workout) {
-    card = <DoneCard workout={day.workout} date={day.date} today={today} units={units} />;
-  } else if (plan && status && routine) {
-    const week = weekLabel(plan, status);
-    card = (
-      <NextCard
-        routine={routine}
-        label={picked ? week : `${t('status.next')} · ${week}`}
-        deload={status.deload}
-        date={day.date}
-        today={today}
-        activeWorkoutId={active?.id ?? null}
-        onOther={planRoutines.length > 1 ? () => setOtherOpen(true) : undefined}
-      />
-    );
-  } else if (plan && status && !routinesLoading) {
-    card = (
-      <UnplannedDay
-        title={t('emptyPlan.title')}
-        body={t('emptyPlan.body')}
-        onPress={() => router.push(`/plan/${plan.id}`)}
-      />
-    );
-  } else if (!plan && !plansLoading) {
-    card = (
+  function dayCard(): ReactNode {
+    if (day.workout) {
+      return <DoneCard workout={day.workout} date={day.date} today={today} units={units} />;
+    }
+    if (plan && status && routine) {
+      // Today the plan week; another day its date.
+      const when = isSameDay(day.date, today)
+        ? weekLabel(plan, status)
+        : formatWeekdayDate(day.date);
+      return (
+        <NextCard
+          routine={routine}
+          label={routine.id === nextId ? `${t('status.next')} · ${when}` : when}
+          deload={status.deload}
+          date={day.date}
+          today={today}
+          activeWorkoutId={active?.id ?? null}
+          onOther={planRoutines.length > 1 ? () => setOtherOpen(true) : undefined}
+        />
+      );
+    }
+    if (plan) {
+      return (
+        <UnplannedDay
+          title={t('emptyPlan.title')}
+          body={t('emptyPlan.body')}
+          onPress={() => router.push(`/plan/${plan.id}`)}
+        />
+      );
+    }
+    return (
       <UnplannedDay
         title={t('unplanned.title')}
         body={t('unplanned.body')}
-        onPress={() => openPlanFlow(profile)}
+        onPress={() => openPlanFlow(profile, '/')}
       />
     );
   }
@@ -139,7 +149,7 @@ export function TodayScreen() {
         </View>
       }
     >
-      {card}
+      {loading ? null : dayCard()}
       <OtherRoutineSheet
         visible={otherOpen}
         planName={plan?.name ?? ''}

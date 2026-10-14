@@ -9,7 +9,7 @@ import { RenameGlyph, RoutineGlyph } from './glyphs';
 
 const glyphColor = (active: boolean) => (active ? colors.onAccent : colors.fgMid);
 
-export type RoutineOption = 'rename' | 'copy' | 'delete';
+type RoutineOption = 'rename' | 'copy' | 'delete';
 
 export interface RoutineOptionsSheetProps {
   visible: boolean;

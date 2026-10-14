@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { type AccessibilityActionEvent, View } from 'react-native';
 
 import { clamp } from '@/shared/lib/math';
 
@@ -15,6 +15,8 @@ export interface CompactStepperProps {
   format?: (value: number) => string;
   /** Small text after the number, e.g. "Min.". */
   unit?: string;
+  /** What the number is; screen readers then get one adjustable control instead of 2 buttons. */
+  label?: string;
 }
 
 /** A number between round minus and plus buttons, one row high (rest time, workouts a week). */
@@ -26,11 +28,25 @@ export function CompactStepper({
   step = 1,
   format = String,
   unit,
+  label,
 }: CompactStepperProps) {
   const { t } = useTranslation();
   const set = (next: number) => onChange(clamp(next, min, max));
   return (
-    <View className="h-16 flex-row items-center justify-between">
+    <View
+      className="h-16 flex-row items-center justify-between"
+      {...(label
+        ? {
+            accessible: true,
+            accessibilityRole: 'adjustable' as const,
+            accessibilityLabel: label,
+            accessibilityValue: { text: [format(value), unit].filter(Boolean).join(' ') },
+            accessibilityActions: [{ name: 'increment' }, { name: 'decrement' }],
+            onAccessibilityAction: (e: AccessibilityActionEvent) =>
+              set(value + (e.nativeEvent.actionName === 'increment' ? step : -step)),
+          }
+        : {})}
+    >
       <IconButton
         icon="minus"
         size={48}

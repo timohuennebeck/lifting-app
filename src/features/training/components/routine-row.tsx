@@ -108,6 +108,15 @@ export function RoutineRow({
       activeScale={0.98}
       accessibilityRole="button"
       accessibilityLabel={[tag, name, focus, meta].filter(Boolean).join(', ')}
+      // The card hides its buttons from screen readers; these stand in for them.
+      accessibilityActions={[
+        { name: 'start', label: t('training:list.start', { name }) },
+        { name: 'more', label: t('training:list.more', { name }) },
+      ]}
+      onAccessibilityAction={(e) => {
+        if (e.nativeEvent.actionName === 'start') onStart();
+        else if (e.nativeEvent.actionName === 'more') onMore();
+      }}
       onPress={onPress}
       className="flex-row items-center gap-3.5 rounded-[22px] bg-surface py-3.5 pr-3 pl-2.5"
     >

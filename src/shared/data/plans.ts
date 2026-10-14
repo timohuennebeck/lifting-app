@@ -1,11 +1,11 @@
-import { and, count, desc, eq, isNotNull, max } from 'drizzle-orm';
+import { and, count, desc, eq, isNotNull, max, sql } from 'drizzle-orm';
 
 import { insertCustomExercises } from './custom-exercises';
 import type { CustomExercise } from './exercises';
 import { newId, nowIso } from './json';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
-import { plans, routines, workoutEntries } from './powersync/schema';
+import { plans, routineExercises, routines, workoutEntries } from './powersync/schema';
 import { queryKeys } from './query-keys';
 import { insertRoutineExercise, type PlanSetDraft, type PlanExerciseDraft } from './routines';
 import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
@@ -143,7 +143,7 @@ export const currentPlanId = (activeId: string | null | undefined, list: PlanSum
 export interface PlanWeek {
   /** Plan week now: 1 at the start, one more each time a week's workouts are done. */
   week: number;
-  /** Workouts of it done (or running). */
+  /** Workouts of it done. */
   done: number;
 }
 
@@ -180,7 +180,7 @@ export const isDeloadWeek = (blockWeek: number | null, plan: Pick<PlanSummary, '
 /**
  * A routine's sets for a block week: one rep less in reserve each week after the first (never
  * below 0), and in the deload only the first half of the sets, with DELOAD_RIR in reserve.
- * Sets without reps in reserve keep their targets.
+ * Sets without reps in reserve (e.g. timed holds) keep none.
  */
 export function setsForWeek<TSet extends Pick<PlanSetDraft, 'rir'>>(
   sets: TSet[],
@@ -189,19 +189,29 @@ export function setsForWeek<TSet extends Pick<PlanSetDraft, 'rir'>>(
 ): TSet[] {
   if (blockWeek === null) return sets;
   if (isDeloadWeek(blockWeek, plan)) {
-    return sets.slice(0, Math.ceil(sets.length / 2)).map((set) => ({ ...set, rir: DELOAD_RIR }));
+    return sets
+      .slice(0, Math.ceil(sets.length / 2))
+      .map((set) => (set.rir === null ? set : { ...set, rir: DELOAD_RIR }));
   }
   return sets.map((set) =>
     set.rir === null ? set : { ...set, rir: Math.max(0, set.rir - (blockWeek - 1)) },
   );
 }
 
-/** The latest plan week a plan's workouts counted for, with how many it has. */
-const latestWeekQuery = (executor: Executor, planId: string) =>
+/**
+ * The latest plan week a plan's workouts counted for, with how many it has: all of them for
+ * the week a new one takes, the finished ones for what the plan shows.
+ */
+const latestWeekQuery = (executor: Executor, planId: string, finishedOnly: boolean) =>
   executor
     .select({ week: workoutEntries.plan_week, count: count() })
     .from(workoutEntries)
-    .where(eq(workoutEntries.plan_id, planId))
+    .where(
+      and(
+        eq(workoutEntries.plan_id, planId),
+        finishedOnly ? isNotNull(workoutEntries.finished_at) : undefined,
+      ),
+    )
     .groupBy(workoutEntries.plan_week)
     .orderBy(desc(workoutEntries.plan_week))
     .limit(1);
@@ -213,16 +223,20 @@ const toLatest = (rows: RowOf<typeof latestWeekQuery>[]) => {
 
 /** The plan week a workout started now counts for (inside `tx`, so two can't take one place). */
 export async function currentPlanWeek(tx: Tx, planId: string, sessionsPerWeek: number) {
-  return planWeekFrom(toLatest(await latestWeekQuery(tx, planId)), sessionsPerWeek).week;
+  return planWeekFrom(toLatest(await latestWeekQuery(tx, planId, false)), sessionsPerWeek).week;
 }
 
-/** Routines of a plan with when each was last done (finished), for the order. */
+/**
+ * Routines of a plan with when each was last done (finished), for the order: when it was logged,
+ * so one logged later for an earlier day counts as the latest. Empty ones can't be done.
+ */
 const lastDoneQuery = (planId: string) =>
   drizzle
     .select({
       id: routines.id,
       position: routines.position,
-      last_done: max(workoutEntries.started_at),
+      last_done: max(workoutEntries.created_at),
+      has_exercises: sql<number>`exists (select 1 from ${routineExercises} where ${routineExercises.routine_id} = ${routines.id})`,
     })
     .from(routines)
     .leftJoin(
@@ -234,15 +248,17 @@ const lastDoneQuery = (planId: string) =>
 
 /**
  * The routine to do next: the one done longest ago, never-done ones first, ties in the plan's
- * order. Doing one out of order is fine: the others come next.
+ * order; null while none has exercises. Doing one out of order is fine: the others come next.
  */
 function toNextRoutineId(rows: RowOf<typeof lastDoneQuery>[]) {
-  const sorted = [...rows].sort((a, b) => {
-    if (a.last_done === b.last_done) return a.position - b.position;
-    if (a.last_done === null) return -1;
-    if (b.last_done === null) return 1;
-    return a.last_done < b.last_done ? -1 : 1;
-  });
+  const sorted = rows
+    .filter((r) => r.has_exercises)
+    .sort((a, b) => {
+      if (a.last_done === b.last_done) return a.position - b.position;
+      if (a.last_done === null) return -1;
+      if (b.last_done === null) return 1;
+      return a.last_done < b.last_done ? -1 : 1;
+    });
   return sorted[0]?.id ?? null;
 }
 
@@ -256,19 +272,19 @@ export interface PlanStatus extends PlanWeek {
 /** Where a plan stands: its week, the block week, what's next. Undefined while loading. */
 export function usePlanStatus(plan: PlanSummary | undefined): PlanStatus | undefined {
   const planId = plan?.id ?? '';
-  const { data: latest, isLoading } = useDrizzleQuery({
+  const { data: latest, isLoading: weekLoading } = useDrizzleQuery({
     queryKey: queryKeys.plans.latestWeek(planId).queryKey,
     enabled: !!plan,
-    query: latestWeekQuery(drizzle, planId),
+    query: latestWeekQuery(drizzle, planId, true),
     map: toLatest,
   });
-  const { data: nextRoutineId = null } = useDrizzleQuery({
+  const { data: nextRoutineId = null, isLoading: nextLoading } = useDrizzleQuery({
     queryKey: queryKeys.plans.nextRoutine(planId).queryKey,
     enabled: !!plan,
     query: lastDoneQuery(planId),
     map: toNextRoutineId,
   });
-  if (!plan || isLoading) return undefined;
+  if (!plan || weekLoading || nextLoading) return undefined;
   const { week, done } = planWeekFrom(latest, plan.sessionsPerWeek);
   const blockWeek = blockWeekOf(week, plan);
   return { week, done, blockWeek, deload: isDeloadWeek(blockWeek, plan), nextRoutineId };

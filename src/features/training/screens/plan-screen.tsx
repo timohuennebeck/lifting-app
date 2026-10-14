@@ -14,6 +14,7 @@ import {
 } from '@/shared/data/plans';
 import { useProfile } from '@/shared/data/profile';
 import { type RoutineSummary, useRoutines } from '@/shared/data/routines';
+import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { haptics } from '@/shared/lib/haptics';
 import { PLAN_NAME_MAX } from '@/shared/lib/limits';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -28,6 +29,7 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
+import { AddRoutineButton } from '../components/add-routine-button';
 import { PlanOptionsSheet } from '../components/plan-options-sheet';
 import { RoutineList } from '../components/routine-list';
 import { RoutineMenu } from '../components/routine-menu';
@@ -45,8 +47,14 @@ import {
 import { usePlanWeekLabel } from '../hooks/use-plan-week-label';
 import { useStartRoutine } from '../hooks/use-start-routine';
 
+interface SettingProps {
+  title: string;
+  hint: string;
+  children: ReactNode;
+}
+
 /** A setting of the plan: overline, the control on a card, a line on what it does. */
-function Setting({ title, hint, children }: { title: string; hint: string; children: ReactNode }) {
+function Setting({ title, hint, children }: SettingProps) {
   return (
     <>
       <SectionTitle>{title}</SectionTitle>
@@ -55,6 +63,46 @@ function Setting({ title, hint, children }: { title: string; hint: string; child
         {hint}
       </Text>
     </>
+  );
+}
+
+/** Runs a change to the plan; a failure is logged and felt instead of thrown. True when saved. */
+async function save(change: () => Promise<unknown>) {
+  try {
+    await change();
+    return true;
+  } catch (error) {
+    console.warn('Saving the plan failed', error);
+    haptics.error();
+    return false;
+  }
+}
+
+interface GoalStepperProps {
+  planId: string;
+  value: number;
+}
+
+/** The weekly goal; it counts on from what was tapped, so quick taps add up before it is saved. */
+function GoalStepper({ planId, value }: GoalStepperProps) {
+  const { t } = useTranslation('training');
+  const [goal, setGoal] = useState(value);
+  const [stored, setStored] = useState(value);
+  if (value !== stored) {
+    setStored(value);
+    setGoal(value);
+  }
+  return (
+    <CompactStepper
+      value={goal}
+      min={1}
+      max={MAX_SESSIONS_PER_WEEK}
+      label={t('plan.perWeek')}
+      onChange={(count) => {
+        setGoal(count);
+        void save(() => setSessionsPerWeek(planId, count));
+      }}
+    />
   );
 }
 
@@ -69,7 +117,11 @@ export function PlanScreen() {
   const { profile } = useProfile();
   const { data: plans = [], isLoading } = usePlans();
   const { data: routines = [] } = useRoutines();
-  const plan = plans.find((p) => p.id === id);
+  // Deleted on the way out, it still shows while the screen leaves.
+  const [leaving, setLeaving] = useState(false);
+  const found = plans.find((p) => p.id === id);
+  const lastPlan = useLastDefined(found);
+  const plan = found ?? (leaving ? (lastPlan ?? undefined) : undefined);
   const status = usePlanStatus(plan);
   const weekLabel = usePlanWeekLabel();
   const { start, startingId } = useStartRoutine();
@@ -106,8 +158,8 @@ export function PlanScreen() {
   }
 
   const active = plan.id === currentPlanId(profile?.activePlanId, plans);
-  // Settings that start a block count from the week the plan is in now.
-  const week = status?.week ?? 1;
+  // Block settings count from the week the plan is in now, so they wait until it is known.
+  const week = status?.week;
   const planRoutines = routines.filter((r) => r.planId === plan.id);
   const blockOptions = [
     { value: 0, label: t('plan.blockOff') },
@@ -119,13 +171,9 @@ export function PlanScreen() {
 
   const onDelete = async () => {
     setOptionsOpen(false);
+    setLeaving(true);
     router.back();
-    try {
-      await deletePlan(plan.id);
-    } catch (error) {
-      console.warn('Deleting the plan failed', error);
-      haptics.error();
-    }
+    if (await save(() => deletePlan(plan.id))) haptics.success();
   };
 
   return (
@@ -154,7 +202,7 @@ export function PlanScreen() {
           </View>
           <View className="gap-2.5">
             <Text variant="caption" tone="subtle" className="font-inter-medium">
-              {t('plan.sessions', { done: status?.done ?? 0, total: plan.sessionsPerWeek })}
+              {t('plan.sessions', { done: status?.done ?? 0, count: plan.sessionsPerWeek })}
             </Text>
             <SessionProgress done={status?.done ?? 0} total={plan.sessionsPerWeek} />
           </View>
@@ -163,27 +211,24 @@ export function PlanScreen() {
               label={t('plan.activate')}
               size="md"
               onPress={async () => {
-                await activatePlan(requireUserId(), plan.id);
-                haptics.success();
+                if (await save(() => activatePlan(requireUserId(), plan.id))) haptics.success();
               }}
             />
           ) : null}
         </Card>
 
         <Setting title={t('plan.perWeek')} hint={t('plan.perWeekHint')}>
-          <CompactStepper
-            value={plan.sessionsPerWeek}
-            min={1}
-            max={MAX_SESSIONS_PER_WEEK}
-            onChange={(count) => void setSessionsPerWeek(plan.id, count)}
-          />
+          <GoalStepper planId={plan.id} value={plan.sessionsPerWeek} />
         </Setting>
 
         <Setting title={t('plan.blocks')} hint={t('plan.blocksHint')}>
           <SegmentedControl
             options={blockOptions}
             value={plan.blockWeeks ?? 0}
-            onChange={(weeks) => void setBlockWeeks(plan.id, weeks || null, week)}
+            disabled={week === undefined}
+            onChange={(weeks) => {
+              if (week !== undefined) void save(() => setBlockWeeks(plan, weeks || null, week));
+            }}
           />
           {plan.blockWeeks ? (
             <View className="flex-row gap-2 pt-3">
@@ -193,7 +238,10 @@ export function PlanScreen() {
                   variant="secondary"
                   size="sm"
                   className="flex-1"
-                  onPress={() => void deloadNow(plan.id, week)}
+                  disabled={week === undefined}
+                  onPress={() => {
+                    if (week !== undefined) void save(() => deloadNow(plan, week));
+                  }}
                 />
               ) : null}
               <Button
@@ -201,7 +249,10 @@ export function PlanScreen() {
                 variant="secondary"
                 size="sm"
                 className="flex-1"
-                onPress={() => void restartBlock(plan.id, week)}
+                disabled={week === undefined}
+                onPress={() => {
+                  if (week !== undefined) void save(() => restartBlock(plan, week));
+                }}
               />
             </View>
           ) : null}
@@ -218,14 +269,7 @@ export function PlanScreen() {
             onMore={setMenuFor}
           />
         </View>
-        <Button
-          label={t('list.addRoutine')}
-          icon="plus"
-          size="sm"
-          variant="secondary"
-          className="mx-4 mt-3 self-start"
-          onPress={() => router.push({ pathname: '/routine/new', params: { planId: plan.id } })}
-        />
+        <AddRoutineButton planId={plan.id} />
       </Animated.ScrollView>
 
       <PlanOptionsSheet
@@ -248,7 +292,7 @@ export function PlanScreen() {
         placeholder={t('plan.namePlaceholder')}
         ctaLabel={t('common:actions.save')}
         onSubmit={async (name) => {
-          await renamePlan(plan.id, name);
+          await save(() => renamePlan(plan.id, name));
           setRenameOpen(false);
         }}
       />
