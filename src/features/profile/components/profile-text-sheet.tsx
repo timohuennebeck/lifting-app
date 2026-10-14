@@ -79,11 +79,6 @@ export function ProfileTextSheet({
           returnKeyType={multiline ? 'default' : 'done'}
           onSubmitEditing={multiline ? undefined : save}
         />
-        {multiline ? (
-          <Text variant="caption" tone="subtle" className="self-end px-1 font-inter text-xs">
-            {`${value.length} / ${maxLength}`}
-          </Text>
-        ) : null}
       </View>
       <View className="gap-2.5 pt-5">
         <Button label={t('actions.save')} disabled={!valid} loading={busy} onPress={save} />

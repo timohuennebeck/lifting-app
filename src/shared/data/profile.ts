@@ -55,7 +55,7 @@ export interface Profile {
   sex: Sex | null;
   /** ISO date (YYYY-MM-DD); see `ageFrom`. */
   birthDate: string | null;
-  unitSystem: UnitSystem;
+  unitPreference: UnitSystem;
   heightCm: number | null;
   experience: Experience | null;
   goal: Goal | null;
@@ -83,7 +83,7 @@ function toProfile(r: ProfileRecord): Profile {
     firstName: r.first_name ?? '',
     sex: r.sex as Sex | null,
     birthDate: r.birth_date,
-    unitSystem: (r.unit_system as UnitSystem | null) ?? 'metric',
+    unitPreference: (r.unit_preference as UnitSystem | null) ?? 'metric',
     heightCm: r.height_cm,
     experience: r.experience as Experience | null,
     goal: r.goal as Goal | null,
@@ -119,7 +119,7 @@ export function useProfile() {
 
 /** The signed-in user's unit system (metric until the profile loaded). */
 export function useUnits(): UnitSystem {
-  return useProfile().profile?.unitSystem ?? 'metric';
+  return useProfile().profile?.unitPreference ?? 'metric';
 }
 
 export type ProfilePatch = Partial<Omit<Profile, 'id' | 'createdAt'>>;
@@ -131,7 +131,7 @@ const toColumns = (p: ProfilePatch) => ({
   first_name: p.firstName,
   sex: p.sex,
   birth_date: p.birthDate,
-  unit_system: p.unitSystem,
+  unit_preference: p.unitPreference,
   height_cm: p.heightCm,
   experience: p.experience,
   goal: p.goal,

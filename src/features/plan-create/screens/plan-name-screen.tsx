@@ -62,9 +62,6 @@ export function PlanNameScreen() {
           returnKeyType="done"
           onSubmitEditing={submit}
         />
-        <Text variant="caption" tone="subtle" className="self-end px-2">
-          {t('planCreate:planName.counter', { count: name.length, max: PLAN_NAME_MAX })}
-        </Text>
       </View>
       <View className="gap-3 px-5 pt-3.5">
         <Text variant="overline" tone="subtle" className="text-xs tracking-[1.7px]">

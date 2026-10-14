@@ -15,14 +15,14 @@ import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 export function HeightScreen() {
   const { t } = useTranslation('onboarding');
   const { t: tc } = useTranslation();
-  const { heightCm, unitSystem } = useDraft();
+  const { heightCm, unitPreference } = useDraft();
   const update = useUpdateDraft();
-  const imperial = unitSystem === 'imperial';
+  const imperial = unitPreference === 'imperial';
 
   // Imperial users scroll in inches; the draft always stores whole centimetres.
-  const range = heightRange(unitSystem);
-  const value = heightToDisplay(heightCm, unitSystem);
-  const setValue = (next: number) => update({ heightCm: heightFromDisplay(next, unitSystem) });
+  const range = heightRange(unitPreference);
+  const value = heightToDisplay(heightCm, unitPreference);
+  const setValue = (next: number) => update({ heightCm: heightFromDisplay(next, unitPreference) });
 
   return (
     <StepScreen

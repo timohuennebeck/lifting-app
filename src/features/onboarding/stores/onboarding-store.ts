@@ -15,7 +15,7 @@ export interface OnboardingDraft {
   sex: Sex | null;
   /** ISO date (YYYY-MM-DD); null until an allowed one is picked. */
   birthDate: string | null;
-  unitSystem: UnitSystem;
+  unitPreference: UnitSystem;
   weightKg: number;
   heightCm: number;
   experience: Experience | null;
@@ -39,7 +39,9 @@ const initialDraft = (): OnboardingDraft => ({
   firstName: '',
   sex: null,
   birthDate: null,
-  unitSystem: IMPERIAL_REGIONS.includes(getLocales()[0]?.regionCode ?? '') ? 'imperial' : 'metric',
+  unitPreference: IMPERIAL_REGIONS.includes(getLocales()[0]?.regionCode ?? '')
+    ? 'imperial'
+    : 'metric',
   weightKg: DEFAULT_BODY_WEIGHT_KG,
   heightCm: 178,
   experience: null,

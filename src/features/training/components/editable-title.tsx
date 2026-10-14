@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextInput } from 'react-native';
+import { TextInput, View } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
 import { TRAINING_NAME_MAX } from '@/shared/lib/limits';
+import { CharCount } from '@/shared/ui/char-count';
 
 export interface EditableTitleProps {
   value: string;
@@ -29,21 +30,27 @@ export function EditableTitle({ value, onSubmit }: EditableTitleProps) {
   };
 
   return (
-    <TextInput
-      value={draft ?? submitted?.name ?? value}
-      // Multi-line only so long names wrap; a return never ends up in the name.
-      onChangeText={(text) => setDraft(text.replace(/\n/g, ''))}
-      onFocus={() => setDraft(value)}
-      onBlur={finish}
-      accessibilityLabel={t('options.rename')}
-      maxLength={TRAINING_NAME_MAX}
-      multiline
-      scrollEnabled={false}
-      submitBehavior="blurAndSubmit"
-      returnKeyType="done"
-      keyboardAppearance="dark"
-      cursorColor={colors.fg}
-      className="px-5 pt-7.5 pb-0 font-inter-semibold text-title text-fg"
-    />
+    <View>
+      <TextInput
+        value={draft ?? submitted?.name ?? value}
+        // Multi-line only so long names wrap; a return never ends up in the name.
+        onChangeText={(text) => setDraft(text.replace(/\n/g, ''))}
+        onFocus={() => setDraft(value)}
+        onBlur={finish}
+        accessibilityLabel={t('options.rename')}
+        maxLength={TRAINING_NAME_MAX}
+        multiline
+        scrollEnabled={false}
+        submitBehavior="blurAndSubmit"
+        returnKeyType="done"
+        keyboardAppearance="dark"
+        cursorColor={colors.fg}
+        className="px-5 pt-7.5 pb-0 font-inter-semibold text-title text-fg"
+      />
+      {/* While renaming: how much of the limit is left. */}
+      {draft !== null ? (
+        <CharCount length={draft.length} max={TRAINING_NAME_MAX} className="px-5" />
+      ) : null}
+    </View>
   );
 }

@@ -19,7 +19,7 @@ const OPTIONS = [
 export function UnitsScreen() {
   const { t } = useTranslation('onboarding');
   const { t: tc } = useTranslation();
-  const { unitSystem } = useDraft();
+  const { unitPreference } = useDraft();
   const update = useUpdateDraft();
 
   return (
@@ -32,14 +32,14 @@ export function UnitsScreen() {
     >
       <View className="gap-2.5 px-4 pt-8">
         {OPTIONS.map(({ value, badge }) => {
-          const selected = unitSystem === value;
+          const selected = unitPreference === value;
           return (
             <OptionCard
               key={value}
               title={t(`units.${value}`)}
               description={t(`units.${value}Hint`)}
               selected={selected}
-              onPress={() => update({ unitSystem: value })}
+              onPress={() => update({ unitPreference: value })}
               icon={
                 <Text
                   variant="label"

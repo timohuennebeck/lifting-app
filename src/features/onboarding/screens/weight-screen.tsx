@@ -19,14 +19,14 @@ import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 export function WeightScreen() {
   const { t } = useTranslation('onboarding');
   const { t: tc } = useTranslation();
-  const { weightKg, unitSystem } = useDraft();
+  const { weightKg, unitPreference } = useDraft();
   const update = useUpdateDraft();
-  const imperial = unitSystem === 'imperial';
+  const imperial = unitPreference === 'imperial';
 
   // The ruler works in the display unit; the draft always stores kg.
-  const range = onboardingWeightRange(unitSystem);
-  const value = onboardingWeightValue(weightKg, unitSystem);
-  const setValue = (next: number) => update({ weightKg: onboardingWeightKg(next, unitSystem) });
+  const range = onboardingWeightRange(unitPreference);
+  const value = onboardingWeightValue(weightKg, unitPreference);
+  const setValue = (next: number) => update({ weightKg: onboardingWeightKg(next, unitPreference) });
 
   return (
     <StepScreen
@@ -39,7 +39,7 @@ export function WeightScreen() {
         <MeasureValue
           value={imperial ? String(value) : formatNumber(value, 1)}
           amount={value}
-          unit={tc(`units.${weightUnit(unitSystem)}`)}
+          unit={tc(`units.${weightUnit(unitPreference)}`)}
         />
         <RulerPicker
           value={value}

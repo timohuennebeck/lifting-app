@@ -9,7 +9,7 @@ import { TeamAvatar } from './team-avatar';
 
 export interface ChatMessageProps {
   author: 'user' | 'team';
-  body: string;
+  content: string;
   attachments?: string[];
   /** Importance of a feature request, shown under its first message. */
   priority?: number | null;
@@ -38,13 +38,13 @@ function Attachments({ paths, onOpen = noop, alignEnd }: AttachmentsProps) {
 /** User bubble (accent, right) or team bubble with the "F" avatar (left), as in 01f-3e. */
 export function ChatMessage({
   author,
-  body,
+  content,
   attachments = [],
   priority,
   onOpenAttachment,
 }: ChatMessageProps) {
   const { t } = useTranslation('support');
-  const text = body.trim();
+  const text = content.trim();
 
   if (author === 'team') {
     return (

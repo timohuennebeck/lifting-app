@@ -39,7 +39,7 @@ export interface TicketMessage {
   id: string;
   ticketId: string;
   author: MessageAuthor;
-  body: string;
+  content: string;
   /** Storage paths in the ticket-attachments bucket. */
   attachments: string[];
   createdAt: string;
@@ -59,7 +59,7 @@ export interface TicketEvent {
 }
 
 export interface TicketSummary extends Ticket {
-  lastMessage: Pick<TicketMessage, 'author' | 'body' | 'attachments' | 'createdAt'> | null;
+  lastMessage: Pick<TicketMessage, 'author' | 'content' | 'attachments' | 'createdAt'> | null;
   lastTeamAt: string | null;
   /** Latest message time (or the ticket's update), for sorting and the row date. */
   activityAt: string;
@@ -76,7 +76,7 @@ const ticketListQuery = () =>
     .select({
       ...getTableColumns(tickets),
       last_author: lastMessage.author,
-      last_body: lastMessage.body,
+      last_content: lastMessage.content,
       last_attachments: lastMessage.attachments,
       last_at: lastMessage.created_at,
       last_team_at: sql<string | null>`${drizzle
@@ -119,7 +119,7 @@ const toSummaries = (rows: RowOf<typeof ticketListQuery>[]): TicketSummary[] =>
       lastMessage: r.last_at
         ? {
             author: r.last_author === 'team' ? 'team' : 'user',
-            body: r.last_body ?? '',
+            content: r.last_content ?? '',
             attachments: parseJson<string[]>(r.last_attachments, []),
             createdAt: r.last_at,
           }
@@ -136,7 +136,7 @@ const toMessages = (rows: TicketMessageRecord[]): TicketMessage[] =>
     id: r.id,
     ticketId: r.ticket_id,
     author: r.author === 'team' ? 'team' : 'user',
-    body: r.body,
+    content: r.content,
     attachments: parseJson<string[]>(r.attachments, []),
     createdAt: r.created_at,
   }));

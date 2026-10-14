@@ -4,8 +4,10 @@ import { ActivityIndicator, TextInput, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
+import { TICKET_MESSAGE_MAX } from '@/shared/lib/limits';
 import { colors } from '@/shared/lib/theme';
 import { useUserId } from '@/shared/stores/session-store';
+import { CharCount } from '@/shared/ui/char-count';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -33,16 +35,16 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
 
   async function send() {
     if (!canSend || !userId) return;
-    const body = text;
+    const content = text;
     setSending(true);
     try {
       // Saved locally first (works offline); screenshots upload in the background.
       await draft.save(userId, ticketId, (attachments) =>
-        sendTicketMessage({ userId, ticketId, body, attachments }),
+        sendTicketMessage({ userId, ticketId, content, attachments }),
       );
       // Keep anything typed while the message was being saved.
       setText((current) =>
-        current.startsWith(body) ? current.slice(body.length).trimStart() : current,
+        current.startsWith(content) ? current.slice(content.length).trimStart() : current,
       );
       draft.reset();
     } catch (e) {
@@ -67,6 +69,7 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
           value={text}
           onChangeText={setText}
           multiline
+          maxLength={TICKET_MESSAGE_MAX}
           placeholder={t('chat.placeholder')}
           placeholderTextColor={colors.dim}
           selectionColor={colors.fg}
@@ -86,6 +89,7 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
             onPress={draft.add}
             className={cn(!draft.canAdd && 'opacity-35')}
           />
+          <CharCount length={text.length} max={TICKET_MESSAGE_MAX} className="self-center" />
           <PressableScale
             haptic="press"
             accessibilityLabel={t('chat.send')}

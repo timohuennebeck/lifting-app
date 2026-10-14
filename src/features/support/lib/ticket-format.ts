@@ -1,3 +1,5 @@
+import { TICKET_SUBJECT_MAX } from '@/shared/lib/limits';
+
 /** Epoch ms of a local ISO string or a synced Postgres timestamp (any fraction length). */
 export function toMs(iso: string) {
   const ms = Date.parse(iso);
@@ -6,4 +8,5 @@ export function toMs(iso: string) {
 }
 
 /** First line of a message, used as the ticket subject. */
-export const firstLine = (text: string) => text.trim().split('\n')[0]?.trim().slice(0, 120) ?? '';
+export const firstLine = (text: string) =>
+  text.trim().split('\n')[0]?.trim().slice(0, TICKET_SUBJECT_MAX) ?? '';

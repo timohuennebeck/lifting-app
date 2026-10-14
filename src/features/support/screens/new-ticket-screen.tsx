@@ -5,6 +5,7 @@ import { View } from 'react-native';
 
 import { newId } from '@/shared/data/json';
 import { haptics } from '@/shared/lib/haptics';
+import { TICKET_MESSAGE_MAX } from '@/shared/lib/limits';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
@@ -45,7 +46,7 @@ export function NewTicketScreen() {
           userId,
           kind,
           priority: kind === 'idea' ? importance : null,
-          body: text,
+          content: text,
           attachments,
         }),
       );
@@ -78,6 +79,7 @@ export function NewTicketScreen() {
         value={text}
         onChangeText={setText}
         multiline
+        maxLength={TICKET_MESSAGE_MAX}
         placeholder={t(kind === 'bug' ? 'form.bugPlaceholder' : 'form.ideaPlaceholder')}
         className="mx-5 mt-5"
       />

@@ -194,15 +194,19 @@ const clampInt = (value: number | null, min: number, max: number) =>
 
 const cut = (text: string, max: number) => text.trim().replace(/\s+/g, ' ').slice(0, max).trim();
 
+/** The app's target editor (and the database) take up to 60 reps or 600 seconds. */
+const MAX_REPS = 60;
+const MAX_SECONDS = 600;
+
 /** Targets of one set: seconds for timed exercises, else the rep range; RIR is about reps. */
 function setTarget(line: ModelExercise, timed: boolean): SetTarget {
   if (timed) {
     // "3x30" on a plank means seconds.
-    const seconds = clampInt(line.seconds ?? line.reps_max ?? line.reps_min, 1, 3600);
+    const seconds = clampInt(line.seconds ?? line.reps_max ?? line.reps_min, 1, MAX_SECONDS);
     return { targetMin: seconds, targetMax: seconds, rir: null };
   }
-  let min = clampInt(line.reps_min ?? line.reps_max, 1, 100);
-  let max = clampInt(line.reps_max ?? line.reps_min, 1, 100);
+  let min = clampInt(line.reps_min ?? line.reps_max, 1, MAX_REPS);
+  let max = clampInt(line.reps_max ?? line.reps_min, 1, MAX_REPS);
   if (min != null && max != null && min > max) [min, max] = [max, min];
   return { targetMin: min, targetMax: max, rir: clampInt(line.rir, 0, 5) };
 }

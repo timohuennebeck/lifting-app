@@ -18,9 +18,11 @@ import {
 import { DEFAULT_REST } from '@/shared/data/templates';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
+import { CUSTOM_EXERCISE_NAME_MAX } from '@/shared/lib/limits';
 import { colors } from '@/shared/lib/theme';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
+import { CharCount } from '@/shared/ui/char-count';
 import { IconButton } from '@/shared/ui/icon-button';
 import {
   type BodyPartId,
@@ -39,8 +41,6 @@ import { Text } from '@/shared/ui/text';
 import { ToggleSwitch } from '@/shared/ui/toggle-switch';
 
 import { useCreatedExerciseStore } from '../stores/created-exercise-store';
-
-const NAME_MAX = 60;
 
 const isMuscle = (part: BodyPartId) => (MUSCLE_IDS as readonly BodyPartId[]).includes(part);
 
@@ -210,12 +210,13 @@ export function CustomExerciseScreen() {
           placeholder={t('custom.namePlaceholder')}
           placeholderTextColor={colors.dim}
           selectionColor={colors.fg}
-          maxLength={NAME_MAX}
+          maxLength={CUSTOM_EXERCISE_NAME_MAX}
           autoFocus={!existing}
           returnKeyType="done"
           // Font size only: a line height on a single-line input cuts the placeholder on iOS.
           className="py-0 font-inter-semibold text-[30px] text-fg"
         />
+        <CharCount length={name.length} max={CUSTOM_EXERCISE_NAME_MAX} />
         {taken ? (
           <Text variant="caption" tone="danger" className="pt-1">
             {t('custom.nameTaken')}

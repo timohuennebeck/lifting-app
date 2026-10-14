@@ -15,7 +15,7 @@ export const profiles = sqliteTable('profiles', {
   sex: text(),
   // Postgres date, synced as an ISO date (YYYY-MM-DD).
   birth_date: text(),
-  unit_system: text(),
+  unit_preference: text(),
   height_cm: integer(),
   experience: text(),
   goal: text(),
@@ -187,7 +187,7 @@ export const ticketMessages = sqliteTable(
     user_id: text().notNull(),
     ticket_id: text().notNull(),
     author: text().notNull(),
-    body: text().notNull(),
+    content: text().notNull(),
     attachments: text().notNull(),
     created_at: text().notNull(),
   },

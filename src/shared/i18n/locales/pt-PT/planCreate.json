@@ -80,7 +80,6 @@
     "label": "Nome do plano",
     "placeholder": "p. ex. O meu plano de corpo inteiro",
     "suggestions": "Sugestões",
-    "counter": "{{count}} / {{max}}",
     "myPlan": "O meu plano"
   },
   "goalShort": {

@@ -80,7 +80,6 @@
     "label": "Planname",
     "placeholder": "z. B. Mein Ganzkörperplan",
     "suggestions": "Vorschläge",
-    "counter": "{{count}} / {{max}}",
     "myPlan": "Mein Plan"
   },
   "goalShort": {

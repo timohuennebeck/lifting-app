@@ -10,6 +10,7 @@ import { insertPlan } from '@/shared/data/templates';
 import { saveWeightEntry } from '@/shared/data/weight-entries';
 import { type AppLanguage, i18n } from '@/shared/i18n';
 import { toIsoDate } from '@/shared/lib/date';
+import { FIRST_NAME_MAX } from '@/shared/lib/limits';
 
 import { type OnboardingDraft, useOnboardingStore } from '../stores/onboarding-store';
 
@@ -36,7 +37,7 @@ export async function persistOnboarding(userId: string, draft: OnboardingDraft) 
         firstName: draft.firstName.trim(),
         sex: draft.sex,
         birthDate: draft.birthDate,
-        unitSystem: draft.unitSystem,
+        unitPreference: draft.unitPreference,
         heightCm: draft.heightCm,
         experience: draft.experience,
         goal: draft.goal,
@@ -97,5 +98,6 @@ export function adoptSignUpName(user: User) {
       : typeof fullName === 'string'
         ? fullName.split(' ')[0]
         : undefined;
-  if (!draft.firstName && name) update({ firstName: name });
+  // Cut to the name step's limit, which the profile keeps to.
+  if (!draft.firstName && name) update({ firstName: name.trim().slice(0, FIRST_NAME_MAX) });
 }

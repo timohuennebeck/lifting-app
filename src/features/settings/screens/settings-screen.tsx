@@ -50,7 +50,7 @@ export function SettingsScreen() {
   const [unsynced, setUnsynced] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
-  const units = profile?.unitSystem ?? 'metric';
+  const units = profile?.unitPreference ?? 'metric';
   const close = () => setSheet(null);
 
   const signOut = () => {
@@ -113,7 +113,7 @@ export function SettingsScreen() {
             // Two options: a tap switches to the other one.
             onPress={() =>
               void saveProfile(requireUserId(), {
-                unitSystem: units === 'metric' ? 'imperial' : 'metric',
+                unitPreference: units === 'metric' ? 'imperial' : 'metric',
               })
             }
           />

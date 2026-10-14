@@ -71,7 +71,7 @@ export function TicketChatScreen() {
           <ChatMessage
             key={item.key}
             author={item.message.author}
-            body={item.message.body}
+            content={item.message.content}
             attachments={item.message.attachments}
             priority={item.priority}
             onOpenAttachment={(path) =>
@@ -99,7 +99,7 @@ export function TicketChatScreen() {
           <ChatMessage
             key={item.key}
             author="team"
-            body={
+            content={
               profile?.firstName
                 ? t('chat.autoReply', { name: profile.firstName })
                 : t('chat.autoReplyNoName')

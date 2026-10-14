@@ -11,7 +11,7 @@ export function useTicketRow(ticket: TicketSummary) {
   const format = useTicketFormat();
   const unread = useHasUnread(ticket.id, ticket.lastTeamAt);
   const last = ticket.lastMessage;
-  const body = last?.body.replace(/\s+/g, ' ').trim();
+  const body = last?.content.replace(/\s+/g, ' ').trim();
   const text = last
     ? body || t('preview.screenshots', { count: last.attachments.length })
     : ticket.subject;

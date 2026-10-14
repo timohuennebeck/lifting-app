@@ -56,8 +56,9 @@ Compiler skips; ESLint's compiler rules catch most of these, not all).
 
 Users write `tickets` and `ticket_messages` from the app. The team works with the service role:
 
-- **Reply:** insert into `ticket_messages` with `author = 'team'` and the ticket owner's `user_id`, written in
-  the owner's `profiles.language`.
+- **Reply:** insert into `ticket_messages` with `author = 'team'`, the ticket owner's `user_id` and the
+  text in `content` (up to 5,000 characters), written in the owner's `profiles.language`. Screenshots in
+  `attachments` must lie under `<user_id>/<ticket_id>/` in the `ticket-attachments` bucket (at most 5).
 - **Change status:** insert into `ticket_events` with `kind = 'status'` and the new `status`. A trigger mirrors it
   onto `tickets.status`. Optional: `version` (e.g. `'1.4.3'`), which the app shows translated ("Erscheint mit
   Update 1.4.3" / "Coming in update 1.4.3"), or `note` for custom text, shown as written (not translated).

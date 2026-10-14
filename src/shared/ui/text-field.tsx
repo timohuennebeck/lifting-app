@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 
+import { CharCount } from './char-count';
 import { Icon, type IconName } from './icon';
 import { PressableScale } from './pressable-scale';
 import { Text } from './text';
@@ -41,6 +42,7 @@ export function TextField({
   onBlur,
   secureTextEntry,
   multiline,
+  maxLength,
   ref,
   ...props
 }: TextFieldProps) {
@@ -106,6 +108,7 @@ export function TextField({
             onBlur?.(e);
           }}
           multiline={multiline}
+          maxLength={maxLength}
           // Font size only: a line height on a single-line input pushes the text off-centre on iOS.
           // A single line is only as tall as its text and the row centres it: filling the field's
           // height, the text sat low on iOS once focused.
@@ -145,6 +148,7 @@ export function TextField({
           {error}
         </Text>
       ) : null}
+      {maxLength ? <CharCount length={value?.length ?? 0} max={maxLength} /> : null}
     </View>
   );
 }

@@ -1,5 +1,5 @@
-// Longest names the app lets people type, one value per kind of name wherever it is entered or
-// renamed. The database has no limit on these; custom exercise names are limited there (60).
+// Longest texts the app lets people type, one value per kind wherever it is entered or renamed.
+// The database checks the same limits (supabase/migrations), and the fields show how much is left.
 
 /** First name: onboarding and the profile. */
 export const FIRST_NAME_MAX = 24;
@@ -7,3 +7,8 @@ export const FIRST_NAME_MAX = 24;
 export const PLAN_NAME_MAX = 30;
 /** A training (day of a plan): creating, renaming, its title. */
 export const TRAINING_NAME_MAX = 40;
+/** A custom exercise's name. */
+export const CUSTOM_EXERCISE_NAME_MAX = 60;
+/** A support message; a ticket's subject is its first line, cut to TICKET_SUBJECT_MAX. */
+export const TICKET_MESSAGE_MAX = 5000;
+export const TICKET_SUBJECT_MAX = 120;

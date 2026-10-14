@@ -10,7 +10,7 @@ import type { TicketKind } from './tickets';
 export interface NewMessage {
   userId: string;
   ticketId: string;
-  body: string;
+  content: string;
   /** Storage paths of the screenshots (uploaded in the background). */
   attachments: string[];
 }
@@ -27,7 +27,7 @@ async function insertMessage(executor: Executor, message: NewMessage, createdAt:
     user_id: message.userId,
     ticket_id: message.ticketId,
     author: 'user',
-    body: message.body.trim(),
+    content: message.content.trim(),
     attachments: JSON.stringify(message.attachments),
     created_at: createdAt,
   });
@@ -46,7 +46,7 @@ export async function createTicket(input: NewTicket) {
       kind: input.kind,
       status: 'open',
       priority: input.priority,
-      subject: firstLine(input.body),
+      subject: firstLine(input.content),
       created_at: now,
       updated_at: now,
     });
