@@ -5,6 +5,8 @@ import { Alert, View } from 'react-native';
 import Animated, { FadeInDown, useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
+import { generateFailure } from '@/features/plan-create/lib/plan-answers';
 import { EditableTitle } from '@/features/training/components/editable-title';
 import { PlanBar } from '@/features/training/components/plan-bar';
 import { PlanExerciseList } from '@/features/training/components/plan-exercise-list';
@@ -36,11 +38,12 @@ import { useImportStore } from '../stores/import-store';
  * amber dots mark what the import wasn't sure about until the user checks it. It opens with the
  * first exercise read and fills in while the analysis sends the rest, following the day being
  * read until the user picks one. "Selbst erstellen" opens it with an empty plan to build day by
- * day.
+ * day. A plan the AI makes (BuildingScreen) opens here the same way and goes on to its name.
  */
 export function ConfirmScreen() {
-  const { t } = useTranslation(['planImport', 'training', 'common']);
+  const { t } = useTranslation(['planImport', 'planCreate', 'training', 'common']);
   const { step, finish } = usePlanFlow();
+  const updateDraft = useUpdateDraft();
   const insets = useSafeAreaInsets();
   const plan = useImportStore((s) => s.plan);
   const dayIndex = useImportStore((s) => s.dayIndex);
@@ -51,6 +54,8 @@ export function ConfirmScreen() {
   const failure = useImportStore((s) => s.failure);
   const holdDay = useImportStore((s) => s.holdDay);
   const following = useImportStore((s) => s.following);
+  // Made from the answers, not read: it goes on to its name, and is made again on a retry.
+  const made = useImportStore((s) => s.source?.kind === 'answers');
   const scroller = useAnimatedRef<Animated.ScrollView>();
   // The analysis this screen shows; leaving the screen stops it.
   const [run] = useState(() => useImportStore.getState().run);
@@ -75,11 +80,15 @@ export function ConfirmScreen() {
   useEffect(() => {
     if (failure?.run !== run || !focused || alerted.current) return;
     alerted.current = true;
-    Alert.alert(t(`planImport:analysis.errors.${failure.reason}`), undefined, [
+    const message = made
+      ? t(`planCreate:generate.errors.${generateFailure(failure.reason)}`)
+      : t(`planImport:analysis.errors.${failure.reason}`);
+    const again = made ? step('/create/building') : step('/import/analysis');
+    Alert.alert(message, undefined, [
       { text: t('common:actions.cancel'), style: 'cancel', onPress: () => router.back() },
-      { text: t('common:actions.retry'), onPress: () => router.replace(step('/import/analysis')) },
+      { text: t('common:actions.retry'), onPress: () => router.replace(again) },
     ]);
-  }, [failure, run, focused, t, step]);
+  }, [failure, run, focused, made, t, step]);
 
   if (!plan) return <Redirect href={step('/import')} />;
 
@@ -131,6 +140,11 @@ export function ConfirmScreen() {
       haptics.warning();
       const next = plan.days.findIndex(needsReview);
       if (next >= 0) selectDay(next);
+      return;
+    }
+    if (made) {
+      updateDraft({ plan: toPlanDraft(plan) });
+      router.push(step('/create/plan-name'));
       return;
     }
     void finish(toPlanDraft(plan));
@@ -237,10 +251,14 @@ export function ConfirmScreen() {
         <Button
           label={
             reading
-              ? t('planImport:confirm.reading')
+              ? made
+                ? t('planCreate:generate.making')
+                : t('planImport:confirm.reading')
               : pending
                 ? t('planImport:confirm.check', { count: pending })
-                : t('planImport:confirm.cta')
+                : made
+                  ? t('common:actions.continue')
+                  : t('planImport:confirm.cta')
           }
           variant={pending || reading ? 'secondary' : 'primary'}
           // Nor after it broke off: a partial plan isn't taken over.

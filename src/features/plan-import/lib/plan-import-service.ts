@@ -2,6 +2,7 @@ import { fetch } from 'expo/fetch';
 import { File } from 'expo-file-system';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 
+import type { PlanAnswers } from '@/features/plan-create/lib/plan-answers';
 import { env } from '@/shared/config/env';
 import type { CustomExercise } from '@/shared/data/exercises';
 import type { PlanDayDraft, PlanDraft, PlanExerciseDraft } from '@/shared/data/templates';
@@ -22,7 +23,12 @@ export interface ImportFile {
 export type ImportSource =
   | { kind: 'photos'; photos: ImportPhoto[] }
   /** `sheets`: of a workbook, the ones to read (picked by the user); all when left out. */
-  | { kind: 'file'; file: ImportFile; sheets?: string[] };
+  | { kind: 'file'; file: ImportFile; sheets?: string[] }
+  /** Not read but made: the AI plan from the onboarding answers (generate-plan). */
+  | { kind: 'answers'; answers: PlanAnswers };
+
+/** What the plan functions read the plan from. */
+type ReadSource = Exclude<ImportSource, { kind: 'answers' }>;
 
 export interface ImportedExercise extends PlanExerciseDraft {
   /** Stays with the exercise while it is edited or dragged to another place. */
@@ -91,7 +97,7 @@ async function jpegBase64(uri: string) {
   }
 }
 
-async function requestBody(source: ImportSource) {
+async function requestBody(source: ReadSource) {
   if (source.kind === 'photos') {
     // One at a time: a full-size camera photo takes tens of MB while it is decoded.
     const photos: string[] = [];
@@ -124,7 +130,7 @@ function stopIfAborted(signal: AbortSignal) {
   if (signal.aborted) throw new Error('The plan import was stopped');
 }
 
-/** What the analysis sends while it reads (the analyze-plan function's PlanEvent). */
+/** What the plan functions send while they read or make it (their PlanEvent). */
 export type PlanEvent =
   | { type: 'plan'; name: string }
   | { type: 'day'; day: Omit<ImportedDay, 'exercises'> }
@@ -136,33 +142,37 @@ export type PlanEvent =
     };
 
 /**
- * Reads a training plan from photos or a file with the analyze-plan Edge Function, which streams
- * it: `onEvent` gets the plan's name, then each day and exercise as soon as it is read (an
- * exercise belongs to the day before it). Resolves once the plan is complete. Throws an
- * ImportError with the reason when there is no plan to show, also when the stream breaks off;
- * once `signal` stops it, the error doesn't matter.
+ * Gets a training plan from the Edge Functions, which stream it: reads it from photos or a file
+ * (analyze-plan) or makes it from the onboarding answers (generate-plan). `onEvent` gets the
+ * plan's name, then each day and exercise as soon as it is there (an exercise belongs to the day
+ * before it). Resolves once the plan is complete. Throws an ImportError with the reason when
+ * there is no plan to show, also when the stream breaks off; once `signal` stops it, the error
+ * doesn't matter.
  */
 export async function streamPlan(
   { source, language }: AnalyzePlanInput,
   onEvent: (event: PlanEvent) => void,
   signal: AbortSignal,
 ) {
-  const body = JSON.stringify({ ...(await requestBody(source)), language });
+  const fn = source.kind === 'answers' ? 'generate-plan' : 'analyze-plan';
+  const request =
+    source.kind === 'answers' ? { answers: source.answers } : await requestBody(source);
+  const body = JSON.stringify({ ...request, language });
   stopIfAborted(signal);
   // expo/fetch, unlike React Native's own fetch, hands over the answer while it arrives.
-  const response = await fetch(`${env.supabaseUrl}/functions/v1/analyze-plan`, {
+  const response = await fetch(`${env.supabaseUrl}/functions/v1/${fn}`, {
     method: 'POST',
     headers: { apikey: env.supabasePublishableKey, 'Content-Type': 'application/json' },
     body,
     signal,
   }).catch((error: unknown) => {
     stopIfAborted(signal);
-    console.warn('analyze-plan could not be called', error);
+    console.warn(`${fn} could not be called`, error);
     throw new ImportError('offline');
   });
   if (!response.ok || !response.body) {
     const text = await response.text().catch(() => '');
-    console.warn(`analyze-plan answered ${response.status}: ${text.slice(0, 300)}`);
+    console.warn(`${fn} answered ${response.status}: ${text.slice(0, 300)}`);
     throw new ImportError(serverFailure(text));
   }
 
@@ -172,7 +182,7 @@ export async function streamPlan(
   for (;;) {
     const { value, done } = await reader.read().catch((error: unknown) => {
       stopIfAborted(signal);
-      console.warn('The plan import broke off', error);
+      console.warn(`${fn} broke off`, error);
       throw new ImportError('offline');
     });
     if (done) break;
@@ -187,7 +197,7 @@ export async function streamPlan(
         PlanEvent | { type: 'done' } | { type: 'error'; error: string };
       if (event.type === 'done') return;
       if (event.type === 'error') {
-        console.warn(`analyze-plan stopped: ${event.error}`);
+        console.warn(`${fn} stopped: ${event.error}`);
         throw new ImportError(SERVER_ERRORS[event.error] ?? 'failed');
       }
       onEvent(event);

@@ -1,3 +1,4 @@
+import { Redirect } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -11,19 +12,24 @@ import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 import { PLAN_NAME_MAX } from '@/shared/lib/limits';
 
-import { usePlanGenerator } from '../hooks/use-plan-generator';
 import { CREATE_STEPS } from '../lib/flow';
 
 export function PlanNameScreen() {
   const { t } = useTranslation(['planCreate', 'common', 'training']);
   const { plan } = useDraft();
-  const { inApp, finish } = usePlanFlow();
-  const { suggestions, generate } = usePlanGenerator();
-  const [name, setName] = useState(plan?.name ?? suggestions[0]);
+  const { inApp, step, finish } = usePlanFlow();
+  // The plan's own name (the AI's, or one given in the editor) and a neutral one.
+  const suggestions = [...new Set([plan?.name, t('planCreate:planName.myPlan')])].filter(
+    (s): s is string => !!s,
+  );
+  const [name, setName] = useState(suggestions[0]);
   const trimmed = name.trim();
 
+  // The plan comes from the editor before (ConfirmScreen).
+  if (!plan) return <Redirect href={step('/create/building')} />;
+
   function submit() {
-    if (trimmed) void finish({ ...(plan ?? generate()), name: trimmed });
+    if (trimmed && plan) void finish({ ...plan, name: trimmed });
   }
 
   return (

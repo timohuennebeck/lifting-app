@@ -81,7 +81,7 @@ export function parseAnswers(value: unknown): PlanAnswers | null {
   };
 }
 
-/** Equipment each answer allows, as the app's own generator has it. */
+/** Equipment each answer allows. */
 const EQUIPMENT: Record<PlanAnswers['equipment'], readonly string[]> = {
   gym: ['barbell', 'dumbbell', 'kettlebell', 'machine', 'cable', 'bodyweight'],
   home: ['barbell', 'dumbbell', 'kettlebell', 'bodyweight'],

@@ -61,8 +61,15 @@
     "frequency": "{{count}} × {{minutes}} min",
     "focus": "Foco: {{areas}}",
     "balanced": "Todos os grupos musculares",
-    "dayTag": "D{{n}}",
-    "skip": "Toque para pular"
+    "dayTag": "D{{n}}"
+  },
+  "generate": {
+    "making": "Criando o plano …",
+    "errors": {
+      "failed": "Não conseguimos criar seu plano. Tente novamente.",
+      "offline": "Sem conexão. Verifique sua internet e tente novamente.",
+      "limit": "Hoje não é possível criar mais planos. Tente amanhã ou importe seu plano."
+    }
   },
   "planName": {
     "title": "QUAL VAI SER O\nNOME DO PLANO?",
@@ -81,19 +88,5 @@
     "gym": "Academia",
     "home": "Em casa",
     "bodyweight": "Peso corporal"
-  },
-  "splits": {
-    "full": "Corpo inteiro",
-    "upperLower": "Superiores / Inferiores",
-    "ppl": "Push · Pull · Pernas",
-    "pplUpperLower": "PPL + Superiores / Inferiores"
-  },
-  "dayNames": {
-    "full": "Corpo inteiro",
-    "upper": "Superiores",
-    "lower": "Inferiores",
-    "push": "Push",
-    "pull": "Pull",
-    "legs": "Pernas"
   }
 }

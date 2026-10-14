@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
+import type { PlanAnswers } from '@/features/plan-create/lib/plan-answers';
 import { newId } from '@/shared/data/json';
 
 import {
@@ -36,6 +37,8 @@ interface ImportState {
   /** The confirm screen shows the day being read until the user picks one. */
   following: boolean;
   setFile: (file: ImportFile) => void;
+  /** The plan is to be made from these answers (by the AI), not read. */
+  setAnswers: (answers: PlanAnswers) => void;
   offerSheets: (workbook: SheetSummary[]) => void;
   /** Of the file's sheets, the ones to read. */
   pickSheets: (sheets: string[]) => void;
@@ -98,7 +101,10 @@ function receive(s: ImportState, event: PlanEvent): Partial<ImportState> {
   return { plan: { ...plan, days, newExercises: [...plan.newExercises, created] } };
 }
 
-/** In-memory state of one plan import session (source, detected plan, review position). */
+/**
+ * In-memory state of one plan import or AI plan session (source, the plan as it comes in, review
+ * position).
+ */
 export const useImportStore = create<ImportState>()((set, get) => ({
   ...EMPTY,
   run: 0,
@@ -108,6 +114,7 @@ export const useImportStore = create<ImportState>()((set, get) => ({
     void loadSheets(file);
   },
   offerSheets: (workbook) => set({ workbook }),
+  setAnswers: (answers) => set({ source: { kind: 'answers', answers }, workbook: null }),
   pickSheets: (sheets) =>
     set((s) => (s.source?.kind === 'file' ? { source: { ...s.source, sheets } } : {})),
   addPhotos: (photos) =>

@@ -9,7 +9,7 @@ import { OptionCard } from '@/shared/ui/option-card';
 import { StepScreen } from '@/shared/ui/step-screen';
 
 import { CREATE_STEPS } from '../lib/flow';
-import { GOALS } from '../lib/goal-ranges';
+import { GOALS } from '../lib/goals';
 
 export function GoalScreen() {
   const { t } = useTranslation(['planCreate', 'common']);

@@ -1,5 +1,5 @@
-import { type ReactNode, useEffect, useEffectEvent, useState } from 'react';
-import { Pressable, useWindowDimensions, View } from 'react-native';
+import { type ReactNode, useEffect, useState } from 'react';
+import { useWindowDimensions, View } from 'react-native';
 import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Defs, Ellipse, RadialGradient, Stop } from 'react-native-svg';
@@ -47,21 +47,10 @@ export interface ScanStageProps {
   chips?: ScanChip[];
   /** Artwork in the middle of the ripples (the paper stack). */
   children: ReactNode;
-  /** Tapping anywhere, e.g. to skip the animation. */
-  onPress?: () => void;
-  /** Screen-reader label for `onPress`. */
-  pressLabel?: string;
 }
 
 /** Animated "working on it" stage: glow, ripples, floating chips and a segmented progress. */
-export function ScanStage({
-  progress,
-  stages,
-  chips = [],
-  children,
-  onPress,
-  pressLabel,
-}: ScanStageProps) {
+export function ScanStage({ progress, stages, chips = [], children }: ScanStageProps) {
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
   // Vertical centre of the artwork, at the same share of the screen height as in the design.
@@ -77,13 +66,7 @@ export function ScanStage({
   });
 
   return (
-    <Pressable
-      accessibilityRole={onPress ? 'button' : undefined}
-      accessibilityLabel={pressLabel}
-      onPress={onPress}
-      disabled={!onPress}
-      className="flex-1 overflow-hidden bg-[#050505]"
-    >
+    <View className="flex-1 overflow-hidden bg-[#050505]">
       <Animated.View
         style={[
           around(560),
@@ -196,28 +179,19 @@ export function ScanStage({
           ))}
         </View>
       </View>
-    </Pressable>
+    </View>
   );
 }
 
-/**
- * Elapsed share (0–1) of a fixed-length animation, updated ~16×/s.
- * Calls `onDone` once when the time is up.
- */
-export function useTimedProgress(durationMs: number, onDone?: () => void) {
+/** Elapsed share (0–1) of a fixed-length animation, updated ~16×/s. */
+export function useTimedProgress(durationMs: number) {
   const [progress, setProgress] = useState(0);
-  const done = useEffectEvent(() => onDone?.());
   useEffect(() => {
     const start = Date.now();
-    let finished = false;
     const id = setInterval(() => {
       const next = Math.min(1, (Date.now() - start) / durationMs);
       setProgress(next);
-      if (next >= 1 && !finished) {
-        finished = true;
-        clearInterval(id);
-        done();
-      }
+      if (next >= 1) clearInterval(id);
     }, 60);
     return () => clearInterval(id);
   }, [durationMs]);

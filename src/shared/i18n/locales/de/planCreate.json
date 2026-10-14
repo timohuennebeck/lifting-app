@@ -61,8 +61,15 @@
     "frequency": "{{count}} × {{minutes}} Min.",
     "focus": "Fokus: {{areas}}",
     "balanced": "Alle Muskelgruppen",
-    "dayTag": "T{{n}}",
-    "skip": "Tippen zum Überspringen"
+    "dayTag": "T{{n}}"
+  },
+  "generate": {
+    "making": "Plan wird erstellt …",
+    "errors": {
+      "failed": "Wir konnten deinen Plan nicht erstellen. Bitte versuch es noch einmal.",
+      "offline": "Keine Verbindung. Prüfe dein Internet und versuche es erneut.",
+      "limit": "Heute können keine weiteren Pläne erstellt werden. Versuch es morgen wieder oder importier deinen Plan."
+    }
   },
   "planName": {
     "title": "WIE SOLL DEIN\nPLAN HEISSEN?",
@@ -81,19 +88,5 @@
     "gym": "Studio",
     "home": "Eigene Geräte",
     "bodyweight": "Körpergewicht"
-  },
-  "splits": {
-    "full": "Ganzkörper",
-    "upperLower": "Ober- / Unterkörper",
-    "ppl": "Push · Pull · Beine",
-    "pplUpperLower": "PPL + Ober- / Unterkörper"
-  },
-  "dayNames": {
-    "full": "Ganzkörper",
-    "upper": "Oberkörper",
-    "lower": "Unterkörper",
-    "push": "Push",
-    "pull": "Pull",
-    "legs": "Beine"
   }
 }

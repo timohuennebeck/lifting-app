@@ -61,8 +61,15 @@
     "frequency": "{{count}} × {{minutes}} min",
     "focus": "Focus: {{areas}}",
     "balanced": "All muscle groups",
-    "dayTag": "D{{n}}",
-    "skip": "Tap to skip"
+    "dayTag": "D{{n}}"
+  },
+  "generate": {
+    "making": "Creating your plan …",
+    "errors": {
+      "failed": "We couldn't create your plan. Please try again.",
+      "offline": "No connection. Check your internet and try again.",
+      "limit": "No more plans can be created today. Try again tomorrow or import your plan."
+    }
   },
   "planName": {
     "title": "WHAT SHOULD YOUR\nPLAN BE CALLED?",
@@ -81,19 +88,5 @@
     "gym": "Full gym",
     "home": "Home gym",
     "bodyweight": "Bodyweight"
-  },
-  "splits": {
-    "full": "Full body",
-    "upperLower": "Upper / Lower",
-    "ppl": "Push · Pull · Legs",
-    "pplUpperLower": "PPL + Upper / Lower"
-  },
-  "dayNames": {
-    "full": "Full body",
-    "upper": "Upper body",
-    "lower": "Lower body",
-    "push": "Push",
-    "pull": "Pull",
-    "legs": "Legs"
   }
 }
