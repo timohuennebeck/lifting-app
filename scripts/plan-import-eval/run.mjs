@@ -25,19 +25,19 @@ import {
 import { homedir, tmpdir } from 'node:os';
 import { basename, extname, join } from 'node:path';
 
-import { loadCatalog, pool, streamPlan } from '../plan-functions.mjs';
+import {
+  loadCatalog,
+  pool,
+  streamPlan,
+  supabaseEnv,
+  timing,
+  untilStopped,
+} from '../plan-functions.mjs';
 
 const HERE = import.meta.dirname;
 const FIXTURES = join(HERE, 'fixtures');
 const PARALLEL = 3;
-/** Why no further imports are sent: the limit was reached, or the function doesn't answer. */
-let stopped = null;
-const { EXPO_PUBLIC_SUPABASE_URL: SUPABASE_URL, EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: KEY } =
-  process.env;
-if (!SUPABASE_URL || !KEY) {
-  console.error('Set EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY in .env.');
-  process.exit(1);
-}
+const { url: SUPABASE_URL, key: KEY } = supabaseEnv();
 
 const MIME = {
   '.pdf': 'application/pdf',
@@ -115,8 +115,13 @@ function requestBody({ files, as, language }, shrink) {
   };
 }
 
-/** One import, put together from the streamed events (see streamPlan). */
-const read = (body) => streamPlan(`${SUPABASE_URL}/functions/v1/read-plan`, KEY, body);
+/**
+ * One import, put together from the streamed events (see streamPlan); null once the limit is
+ * reached or the function doesn't answer.
+ */
+const requests = untilStopped((body) =>
+  streamPlan(`${SUPABASE_URL}/functions/v1/read-plan`, KEY, body),
+);
 
 // ---------- reading a plan ----------
 
@@ -301,22 +306,9 @@ const percent = (c) => (c.total ? `${Math.round((c.ok / c.total) * 100)} %` : 'â
 
 // ---------- runs ----------
 
-/**
- * One import; null once the limit is reached or the function doesn't answer (503 or no
- * connection), so the rest is skipped instead of scored as failures.
- */
-async function send(body) {
-  if (stopped) return null;
-  const result = await read(body);
-  if (result.status === 429) stopped = { limit: true };
-  else if (result.status === 503 || result.status === 0) {
-    stopped = { down: `${result.status || 'no connection'} ${result.error}`.trim() };
-  } else return result;
-  return null;
-}
-
 /** After a run: what wasn't sent and why, and what to do about it. */
 function reportStop(skipped) {
+  const stopped = requests.stopped();
   if (!stopped) return '';
   const notRun = skipped.length ? `; not run: ${skipped.join(', ')}` : '';
   const text = stopped.limit
@@ -331,10 +323,6 @@ function reportStop(skipped) {
   console.error(`\n${text}`);
   return text;
 }
-
-/** When the first exercise arrived and when the plan was complete. */
-const timing = ({ first, seconds }) =>
-  `${first == null ? 'â€“' : `${first.toFixed(1)} s`} / ${seconds.toFixed(1)} s`;
 
 function writeReport(name, text, results) {
   const out = join(HERE, 'out', new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19));
@@ -353,14 +341,14 @@ async function runFixtures() {
     cases,
     async (c) => {
       const files = c.files.map((f) => join(FIXTURES, f));
-      const result = await send(requestBody({ ...c, files }, false));
+      const result = await requests.send(requestBody({ ...c, files }, false));
       if (!result) return null;
       const s = score(c.expect, result, names, c.language);
       console.log(`${passed(s) ? 'PASS' : 'FAIL'}  ${c.id}  ${timing(result)}`);
       return { case: c, result, score: s };
     },
     PARALLEL,
-    () => !!stopped,
+    () => !!requests.stopped(),
   );
   const stopNote = reportStop(
     cases.filter((c) => !results.some((r) => r.case === c)).map((c) => c.id),
@@ -430,7 +418,7 @@ async function runDir() {
   const results = await pool(
     imports,
     async (item) => {
-      const result = await send(requestBody({ ...item, language: dirLanguage }, true));
+      const result = await requests.send(requestBody({ ...item, language: dirLanguage }, true));
       if (!result) return null;
       const text = result.plan
         ? describePlan(result.plan, names, dirLanguage)
@@ -439,7 +427,7 @@ async function runDir() {
       return { import: item, result, text };
     },
     PARALLEL,
-    () => !!stopped,
+    () => !!requests.stopped(),
   );
   reportStop(imports.filter((i) => !results.some((r) => r.import === i)).map((i) => i.id));
   if (!results.length) process.exit(1);

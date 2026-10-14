@@ -1,6 +1,6 @@
 // What the app receives from the plan functions (read-plan, generate-plan): the shapes of its
-// ImportedRoutine, ImportedExercise and CustomExercise, and the server-sent events that carry them.
-// Plain TypeScript without Deno APIs.
+// ImportedRoutine, ImportedExercise and CustomExercise, the server-sent events that carry them, and
+// how the names in them are tidied. Plain TypeScript without Deno APIs.
 
 export interface SetTarget {
   targetMin: number | null;
@@ -31,6 +31,12 @@ export interface NewExercise {
   restSeconds: number;
 }
 
+/** An exercise of the plan, with the new exercise it introduces when it is the first to use one. */
+export interface PlanExercise {
+  exercise: ImportedExercise;
+  newExercise?: NewExercise;
+}
+
 /**
  * The plan as server-sent events: its name, then each routine with its exercises as they are
  * written, and lastly `done`, or `error` when it broke off or there is no plan. A routine comes
@@ -40,6 +46,13 @@ export interface NewExercise {
 export type PlanEvent =
   | { type: 'plan'; name: string }
   | { type: 'routine'; routine: ImportedRoutine }
-  | { type: 'exercise'; exercise: ImportedExercise; newExercise?: NewExercise }
+  | ({ type: 'exercise' } & PlanExercise)
   | { type: 'done' }
   | { type: 'error'; error: 'not_a_plan' | 'failed' };
+
+/** Text on one line, trimmed, at most `max` characters. */
+export const cut = (text: string, max: number) =>
+  text.trim().replace(/\s+/g, ' ').slice(0, max).trim();
+
+/** The plan's name as the app gets it: at most 30 characters, "Plan" when the model gave none. */
+export const planName = (name: string) => cut(name, 30) || 'Plan';

@@ -4,7 +4,14 @@
 import { encodeHex } from 'jsr:@std/encoding@1/hex';
 
 import { admin, reply } from './common.ts';
-import type { PlanEvent } from './plan-events.ts';
+import type { StreamedAnswer } from './openai.ts';
+import {
+  type ImportedRoutine,
+  type PlanEvent,
+  type PlanExercise,
+  planName,
+} from './plan-events.ts';
+import { PlanStream } from './plan-stream.ts';
 
 /** An active row of `public.exercises`, as much as the models need. */
 export interface CatalogRow {
@@ -120,24 +127,90 @@ export async function takePlanRequest(
   return { giveBack: () => admin.from('plan_requests').delete().eq('id', slot) };
 }
 
+/** How a plan function turns the model's routines and exercises (see PlanStream) into the app's. */
+export interface PlanReader<Routine extends { exercises: unknown[] }, Exercise> {
+  /** The next routine, or null when the plan is complete without it. */
+  routine: (routine: Omit<Routine, 'exercises'>) => ImportedRoutine | null;
+  /** The exercise for the current routine, or null to leave the line out. */
+  exercise: (line: Exercise) => PlanExercise | null;
+}
+
+/** The model's streamed plan and what the function does with it. */
+export interface PlanAnswer<Routine extends { exercises: unknown[] }, Exercise> {
+  answer: AsyncGenerator<StreamedAnswer>;
+  reader: PlanReader<Routine, Exercise>;
+  /** Hands the request back (see takePlanRequest). */
+  giveBack: () => PromiseLike<unknown>;
+  /** The error for a refusal, and for an answer without exercises. */
+  noPlan: 'failed' | 'not_a_plan';
+  /** What the function makes, for the logs: "plan" or "import". */
+  label: string;
+}
+
 /**
- * The plan as server-sent events: `run` sends them; when it throws, the app gets an `error`
+ * Reads the streamed answer into the app's events (see PlanEvent) and sends them. An answer that
+ * fails before its first word gives the request back, as a failed request does.
+ */
+async function sendPlan<Routine extends { exercises: unknown[] }, Exercise>(
+  { answer, reader, giveBack, noPlan, label }: PlanAnswer<Routine, Exercise>,
+  send: (event: PlanEvent) => void,
+) {
+  const stream = new PlanStream<Routine, Exercise>();
+  // A routine waits for its first exercise.
+  let routine: ImportedRoutine | null = null;
+  let exercises = 0;
+  let written = false;
+  const end = () => send(exercises ? { type: 'done' } : { type: 'error', error: noPlan });
+  for await (const step of answer) {
+    if ('refusal' in step) {
+      console.warn('The model refused the plan');
+      return send({ type: 'error', error: noPlan });
+    }
+    if ('incomplete' in step) {
+      console.error(`The ${label} did not complete`, step.incomplete);
+      if (!written) await giveBack();
+      return send({ type: 'error', error: 'failed' });
+    }
+    if ('done' in step) return end();
+    written = true;
+    for (const piece of stream.push(step.text)) {
+      if (piece.kind === 'start') {
+        // Leaving the loop also stops the model.
+        if (!piece.isPlan) return send({ type: 'error', error: 'not_a_plan' });
+        send({ type: 'plan', name: planName(piece.name) });
+      } else if (piece.kind === 'routine') {
+        routine = reader.routine(piece.routine);
+        // E.g. a routine past the workouts a week: the plan is complete.
+        if (!routine) return end();
+      } else {
+        const read = reader.exercise(piece.exercise);
+        if (!read) continue;
+        if (routine) send({ type: 'routine', routine });
+        routine = null;
+        send({ type: 'exercise', ...read });
+        exercises++;
+      }
+    }
+  }
+}
+
+/**
+ * The plan as server-sent events (see sendPlan); when sending throws, the app gets an `error`
  * event. Cancelling (the app went away) aborts `stop`, which should stop the model too.
  */
-export function planEventResponse(
-  run: (send: (event: PlanEvent) => void) => Promise<void>,
+export function planEventResponse<Routine extends { exercises: unknown[] }, Exercise>(
+  plan: PlanAnswer<Routine, Exercise>,
   stop: AbortController,
-  label: string,
 ) {
   const encoder = new TextEncoder();
   const events = new ReadableStream<Uint8Array>({
     start(controller) {
       const send = (event: PlanEvent) =>
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
-      void run(send)
+      void sendPlan(plan, send)
         .catch((error) => {
           if (stop.signal.aborted) return;
-          console.error(`The ${label} broke off`, error);
+          console.error(`The ${plan.label} broke off`, error);
           send({ type: 'error', error: 'failed' });
         })
         .finally(() => {

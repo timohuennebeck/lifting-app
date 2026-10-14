@@ -8,6 +8,13 @@ import { glyphColor, RenameGlyph, RoutineGlyph } from './glyphs';
 
 type RoutineOption = 'rename' | 'copy' | 'delete';
 
+/** Where a copy goes: into the plan from the library, or out of a plan into the library. */
+export interface RoutineCopy {
+  title: string;
+  description: string;
+  onCopy: () => void;
+}
+
 export interface RoutineOptionsSheetProps {
   visible: boolean;
   onClose: () => void;
@@ -15,8 +22,8 @@ export interface RoutineOptionsSheetProps {
   exerciseCount: number;
   minutes: number;
   onRename: () => void;
-  /** Where a copy goes: into the plan from the library, or out of a plan into the library. */
-  copy?: { title: string; description: string; onCopy: () => void };
+  /** Left out when there is nowhere to copy to. */
+  copy?: RoutineCopy;
   onDelete: () => void;
 }
 

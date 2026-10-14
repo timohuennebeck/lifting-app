@@ -1,5 +1,6 @@
 import { type Exercise, getExercise, isCardio } from '@/shared/data/exercises';
 import { type MuscleShare, muscleShares, muscleWeights } from '@/shared/data/muscles';
+import type { ExerciseItem } from '@/shared/data/routines';
 import type { BodyPartId, MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 export const MUSCLE_GROUP_IDS = [
@@ -62,7 +63,7 @@ const WORKOUT_PRIMARY_MIN_PERCENT = 10;
  * targets them directly and they get a real part of the work, secondary otherwise. Only the
  * grouping; the shares are the same as everywhere else.
  */
-export function workoutMuscleSplit(items: { exerciseId: string; sets: number }[]) {
+export function workoutMuscleSplit(items: ExerciseItem[]) {
   const targeted = new Set(
     items
       .filter((i) => i.sets > 0 && !isCardio(i.exerciseId))

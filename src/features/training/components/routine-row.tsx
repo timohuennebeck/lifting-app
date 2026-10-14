@@ -2,10 +2,11 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
 
 import { type MuscleShare, muscleShares } from '@/shared/data/muscles';
+import type { ExerciseItem } from '@/shared/data/routines';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
-import { MuscleCrop, type MuscleId } from '@/shared/ui/muscle-map';
+import { MuscleCircle } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
@@ -17,29 +18,6 @@ const BEHIND = [
 const FRONT_SIZE = 56;
 /** Width of three circles, kept for fewer too so the titles line up. */
 const STACK_WIDTH = 116;
-
-interface MuscleCircleProps {
-  muscle: MuscleId | null;
-  front: boolean;
-}
-
-function MuscleCircle({ muscle, front }: MuscleCircleProps) {
-  return (
-    <View
-      className={cn(
-        'size-full overflow-hidden rounded-full bg-elevated',
-        // The front circle is ringed in neon; the others are cut out of the card behind it.
-        front ? 'border-[1.5px] border-accent' : 'border-2 border-surface',
-      )}
-    >
-      <MuscleCrop
-        muscle={muscle ?? 'chest'}
-        selected={muscle ? [muscle] : []}
-        accent={front ? colors.accent : colors.fg2}
-      />
-    </View>
-  );
-}
 
 interface MuscleStackProps {
   shares: MuscleShare[];
@@ -64,12 +42,24 @@ function MuscleStack({ shares }: MuscleStackProps) {
             className="absolute"
             style={{ left, top: (FRONT_SIZE - size) / 2, width: size, height: size }}
           >
-            <MuscleCircle muscle={share.muscle} front={false} />
+            <MuscleCircle
+              muscle={share.muscle}
+              accent={colors.fg2}
+              className="size-full border-2 border-surface"
+            />
           </View>
         ))}
       {/* Without exercises yet: one empty circle. */}
       <View className="absolute top-0 left-0" style={{ width: FRONT_SIZE, height: FRONT_SIZE }}>
-        <MuscleCircle muscle={first?.muscle ?? null} front={!!first} />
+        <MuscleCircle
+          muscle={first?.muscle ?? null}
+          accent={first ? colors.accent : colors.fg2}
+          // The front circle is ringed in neon; the others are cut out of the card behind it.
+          className={cn(
+            'size-full',
+            first ? 'border-[1.5px] border-accent' : 'border-2 border-surface',
+          )}
+        />
       </View>
     </View>
   );
@@ -80,7 +70,7 @@ export interface RoutineRowProps {
   minutes: number;
   exerciseCount: number;
   /** Exercise ids with their set counts, for the muscles. */
-  items: { exerciseId: string; sets: number }[];
+  items: ExerciseItem[];
   onPress: () => void;
   onStart: () => void;
   /** "⋯": rename, copy or delete. */

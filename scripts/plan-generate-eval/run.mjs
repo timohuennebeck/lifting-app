@@ -13,18 +13,22 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { loadCatalog, pool, streamPlan } from '../plan-functions.mjs';
+import {
+  loadCatalog,
+  pool,
+  streamPlan,
+  supabaseEnv,
+  timing,
+  untilStopped,
+} from '../plan-functions.mjs';
 
 const HERE = import.meta.dirname;
 const PARALLEL = 3;
-/** Why no further plans are asked for: the limit was reached, or the function doesn't answer. */
-let stopped = null;
-const { EXPO_PUBLIC_SUPABASE_URL: SUPABASE_URL, EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: KEY } =
-  process.env;
-if (!SUPABASE_URL || !KEY) {
-  console.error('Set EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY in .env.');
-  process.exit(1);
-}
+const { url: SUPABASE_URL, key: KEY } = supabaseEnv();
+/** One plan; null once the limit is reached or the function doesn't answer. */
+const requests = untilStopped((body) =>
+  streamPlan(`${SUPABASE_URL}/functions/v1/generate-plan`, KEY, body),
+);
 
 /** What the home profiles ticked: a small corner, a home gym, a kettlebell and a bar. */
 const HOME_EQUIPMENT = {
@@ -241,22 +245,9 @@ const describeAnswers = ({
   `${goal}, ${equipment}${homeEquipment.length ? ` (${homeEquipment.join(', ')})` : ''}, ${sessionsPerWeek}× a week, ${sessionMinutes} min, ` +
   `${experience ?? 'experience unknown'}${focus.length ? `, focus ${focus.join(' + ')}` : ''}`;
 
-/** One plan; null once the limit is reached or the function doesn't answer. */
-async function generate(profile) {
-  if (stopped) return null;
-  const result = await streamPlan(`${SUPABASE_URL}/functions/v1/generate-plan`, KEY, {
-    answers: profile.answers,
-    language: profile.language,
-  });
-  if (result.status === 429) stopped = { limit: true };
-  else if (result.status === 503 || result.status === 0) {
-    stopped = { down: `${result.status || 'no connection'} ${result.error}`.trim() };
-  } else return result;
-  return null;
-}
-
 /** After a run: what wasn't sent and why, and what to do about it. */
 function reportStop(skipped) {
+  const stopped = requests.stopped();
   if (!stopped) return '';
   const notRun = skipped.length ? `; not run: ${skipped.join(', ')}` : '';
   const text = stopped.limit
@@ -270,9 +261,6 @@ function reportStop(skipped) {
   console.error(`\n${text}`);
   return text;
 }
-
-const timing = ({ first, seconds }) =>
-  `${first == null ? '–' : `${first.toFixed(1)} s`} / ${seconds.toFixed(1)} s`;
 
 const catalog = await loadCatalog(
   SUPABASE_URL,
@@ -291,7 +279,7 @@ console.log(`${profiles.length} plans from ${SUPABASE_URL}, ${PARALLEL} at a tim
 const results = await pool(
   profiles,
   async (profile) => {
-    const result = await generate(profile);
+    const result = await requests.send({ answers: profile.answers, language: profile.language });
     if (!result) return null;
     const checks = result.plan
       ? Object.fromEntries(names.map((n) => [n, CHECKS[n](profile, result.plan, catalog)]))
@@ -301,7 +289,7 @@ const results = await pool(
     return { profile, result, checks, passed };
   },
   PARALLEL,
-  () => !!stopped,
+  () => !!requests.stopped(),
 );
 const stopNote = reportStop(
   profiles.filter((p) => !results.some((r) => r.profile === p)).map((p) => p.id),

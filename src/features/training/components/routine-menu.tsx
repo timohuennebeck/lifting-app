@@ -12,7 +12,7 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
 import { copyRoutine, deleteRoutine, renameRoutine } from '../data/routine-mutations';
-import { RoutineOptionsSheet } from './routine-options-sheet';
+import { type RoutineCopy, RoutineOptionsSheet } from './routine-options-sheet';
 
 export type RoutineMenuTarget = Pick<
   RoutineSummary,
@@ -47,7 +47,7 @@ export function RoutineMenu({ routine, onClose, onDelete }: RoutineMenuProps) {
     if (copied) haptics.success();
   };
 
-  let copy;
+  let copy: RoutineCopy | undefined;
   if (shown?.planId) {
     copy = {
       title: t('options.copyToLibrary'),

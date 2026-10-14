@@ -1,16 +1,12 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { type ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import {
-  BLOCK_OPTIONS,
-  MAX_SESSIONS_PER_WEEK,
-  useCurrentPlan,
-  usePlanStatus,
-} from '@/shared/data/plans';
+import { useCurrentPlan, usePlanStatus } from '@/shared/data/plans';
+import { saveProfile } from '@/shared/data/profile';
 import { type RoutineSummary, useRoutines } from '@/shared/data/routines';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { attempt } from '@/shared/lib/async';
@@ -19,93 +15,23 @@ import { PLAN_NAME_MAX } from '@/shared/lib/limits';
 import { requireUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
 import { Card } from '@/shared/ui/card';
-import { CompactStepper } from '@/shared/ui/compact-stepper';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
-import { SegmentedControl } from '@/shared/ui/segmented-control';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
 import { AddRoutineButton } from '../components/add-routine-button';
 import { PlanOptionsSheet } from '../components/plan-options-sheet';
+import { PlanSettings } from '../components/plan-settings';
 import { RoutineList } from '../components/routine-list';
 import { RoutineMenu } from '../components/routine-menu';
 import { SectionTitle } from '../components/section-title';
 import { SessionProgress } from '../components/session-progress';
-import {
-  activatePlan,
-  deletePlan,
-  deloadNow,
-  renamePlan,
-  restartBlock,
-  setBlockWeeks,
-  setSessionsPerWeek,
-} from '../data/plan-mutations';
+import { deletePlan, renamePlan } from '../data/plan-mutations';
 import { usePlanProgressLabels } from '../hooks/use-plan-week-label';
 import { useStartRoutine } from '../hooks/use-start-routine';
-
-interface SettingProps {
-  title: string;
-  hint: string;
-  children: ReactNode;
-}
-
-/** A setting of the plan: overline, the control on a card, a line on what it does. */
-function Setting({ title, hint, children }: SettingProps) {
-  return (
-    <>
-      <SectionTitle>{title}</SectionTitle>
-      <View className="mx-4 rounded-[22px] bg-surface px-4 py-3">{children}</View>
-      <Text variant="caption" tone="subtle" className="px-5 pt-2 font-inter">
-        {hint}
-      </Text>
-    </>
-  );
-}
-
-/** Runs a change to the plan; a failure is logged and felt instead of thrown. True when saved. */
-const save = (change: () => Promise<unknown>) => attempt('Saving the plan failed', change);
-
-interface GoalStepperProps {
-  planId: string;
-  value: number;
-}
-
-/**
- * The weekly goal. It counts on from what was tapped, so quick taps add up before they are
- * saved: saved values on the way back don't reset it until the last one tapped arrives.
- */
-function GoalStepper({ planId, value }: GoalStepperProps) {
-  const { t } = useTranslation('training');
-  const [goal, setGoal] = useState(value);
-  const [stored, setStored] = useState(value);
-  const [sent, setSent] = useState<number | null>(null);
-  if (value !== stored) {
-    setStored(value);
-    if (sent === null || value === sent) {
-      setGoal(value);
-      setSent(null);
-    }
-  }
-  return (
-    <CompactStepper
-      value={goal}
-      min={1}
-      max={MAX_SESSIONS_PER_WEEK}
-      label={t('plan.perWeek')}
-      onChange={async (count) => {
-        setGoal(count);
-        setSent(count);
-        if (!(await save(() => setSessionsPerWeek(planId, count)))) {
-          setGoal(value);
-          setSent(null);
-        }
-      }}
-    />
-  );
-}
 
 /**
  * A plan's page: where it stands (week, block, workouts done), whether Today follows it, its
@@ -158,25 +84,21 @@ export function PlanScreen() {
   }
 
   const active = plan.id === activePlan?.id;
-  // Block settings count from the week the plan is in now, so they wait until it is known.
-  const week = status?.week;
-  const changeBlocks = (change: (planWeek: number) => Promise<unknown>) => {
-    if (week !== undefined) void save(() => change(week));
-  };
   const planRoutines = routines.filter((r) => r.planId === plan.id);
-  const blockOptions = [
-    { value: 0, label: t('plan.blockOff') },
-    ...BLOCK_OPTIONS.map((weeks) => ({
-      value: weeks,
-      label: t('plan.blockOption', { build: weeks - 1 }),
-    })),
-  ];
 
   const onDelete = async () => {
     setOptionsOpen(false);
     setLeaving(true);
     router.back();
-    if (await save(() => deletePlan(plan.id))) haptics.success();
+    if (await attempt('Deleting the plan failed', () => deletePlan(plan.id))) haptics.success();
+  };
+
+  // Today follows it from now on (also before the profile has synced to the phone).
+  const activate = async () => {
+    const activated = await attempt('Activating the plan failed', () =>
+      saveProfile(requireUserId(), { activePlanId: plan.id }),
+    );
+    if (activated) haptics.success();
   };
 
   return (
@@ -209,53 +131,10 @@ export function PlanScreen() {
             </Text>
             <SessionProgress done={status?.done ?? 0} total={plan.sessionsPerWeek} />
           </View>
-          {!active ? (
-            <Button
-              label={t('plan.activate')}
-              size="md"
-              onPress={async () => {
-                if (await save(() => activatePlan(requireUserId(), plan.id))) haptics.success();
-              }}
-            />
-          ) : null}
+          {!active ? <Button label={t('plan.activate')} size="md" onPress={activate} /> : null}
         </Card>
 
-        <Setting title={t('plan.perWeek')} hint={t('plan.perWeekHint')}>
-          <GoalStepper planId={plan.id} value={plan.sessionsPerWeek} />
-        </Setting>
-
-        <Setting title={t('plan.blocks')} hint={t('plan.blocksHint')}>
-          <SegmentedControl
-            options={blockOptions}
-            value={plan.blockWeeks ?? 0}
-            disabled={week === undefined}
-            onChange={(weeks) =>
-              changeBlocks((planWeek) => setBlockWeeks(plan.id, weeks || null, planWeek))
-            }
-          />
-          {plan.blockWeeks ? (
-            <View className="flex-row gap-2 pt-3">
-              {!status?.deload ? (
-                <Button
-                  label={t('plan.deloadNow')}
-                  variant="secondary"
-                  size="sm"
-                  className="flex-1"
-                  disabled={week === undefined}
-                  onPress={() => changeBlocks((planWeek) => deloadNow(plan.id, planWeek))}
-                />
-              ) : null}
-              <Button
-                label={t('plan.restartBlock')}
-                variant="secondary"
-                size="sm"
-                className="flex-1"
-                disabled={week === undefined}
-                onPress={() => changeBlocks((planWeek) => restartBlock(plan.id, planWeek))}
-              />
-            </View>
-          ) : null}
-        </Setting>
+        <PlanSettings plan={plan} status={status} />
 
         <SectionTitle>{t('plan.routines')}</SectionTitle>
         <View className="px-4">
@@ -292,7 +171,9 @@ export function PlanScreen() {
         ctaLabel={t('common:actions.save')}
         onSubmit={async (name) => {
           // A failed rename keeps the sheet open with what was typed.
-          if (await save(() => renamePlan(plan.id, name))) setRenameOpen(false);
+          if (await attempt('Renaming the plan failed', () => renamePlan(plan.id, name))) {
+            setRenameOpen(false);
+          }
         }}
       />
       <RoutineMenu routine={menuFor} onClose={() => setMenuFor(null)} />

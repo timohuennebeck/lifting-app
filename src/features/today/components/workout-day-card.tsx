@@ -16,7 +16,7 @@ export interface DayStat {
 }
 
 export interface WorkoutDayCardProps {
-  /** Status row at the top (badge + label, optional trailing). */
+  /** Status at the top (see DayStatus). */
   status: ReactNode;
   name: string;
   shares: MuscleShare[];
@@ -24,7 +24,7 @@ export interface WorkoutDayCardProps {
   actions: ReactNode;
 }
 
-/** Card layout shared by the done and planned states of the Today tab. */
+/** Card layout shared by the Today tab's done and next cards. */
 export function WorkoutDayCard({ status, name, shares, stats, actions }: WorkoutDayCardProps) {
   const { t } = useTranslation('muscles');
   // Map and summary name the same main muscles.

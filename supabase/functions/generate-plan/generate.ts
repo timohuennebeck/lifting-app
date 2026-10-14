@@ -3,7 +3,7 @@
 // sets and reps in sensible ranges. Plain TypeScript without Deno APIs, so it can be tested outside the
 // Edge runtime.
 
-import type { ImportedExercise, ImportedRoutine } from '../_shared/plan-events.ts';
+import { cut, type ImportedRoutine, type PlanExercise } from '../_shared/plan-events.ts';
 import type { CatalogRow, EquipmentRow } from '../_shared/plans.ts';
 
 export const GOALS = ['hypertrophy', 'strength', 'strength_hypertrophy'] as const;
@@ -256,8 +256,6 @@ const TIME_SLACK = 1.1;
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, Math.round(Number.isFinite(value) ? value : min)));
 
-const cut = (text: string, max: number) => text.trim().replace(/\s+/g, ' ').slice(0, max).trim();
-
 /**
  * Turns the model's answer into the app's plan, part by part as it streams in. Routines past the
  * workouts a week are dropped. A routine leaves out repeated exercises and, once it has its
@@ -272,8 +270,6 @@ export function planBuilder(answers: PlanAnswers, catalog: CatalogRow[]) {
   let seconds = 0;
 
   return {
-    planName: (name: string) => cut(name, 30) || 'Plan',
-
     /** The next routine, or null once there is one for every workout a week. */
     routine: (routine: Omit<ModelRoutine, 'exercises'>): ImportedRoutine | null => {
       routineIndex++;
@@ -284,7 +280,7 @@ export function planBuilder(answers: PlanAnswers, catalog: CatalogRow[]) {
     },
 
     /** The exercise for the current routine, or null when the routine leaves it out. */
-    exercise: (line: ModelExercise): ImportedExercise | null => {
+    exercise: (line: ModelExercise): PlanExercise | null => {
       const row = byId.get(line.exercise_id);
       if (!row || routineIndex >= answers.sessionsPerWeek || used.has(row.id)) return null;
       if (used.size >= MAX_EXERCISES) return null;
@@ -300,9 +296,11 @@ export function planBuilder(answers: PlanAnswers, catalog: CatalogRow[]) {
       if (min > max) [min, max] = [max, min];
       const rir = timed || line.rir == null ? null : clamp(line.rir, 0, 4);
       return {
-        exerciseId: row.id,
-        sets: Array.from({ length: sets }, () => ({ targetMin: min, targetMax: max, rir })),
-        restSeconds: rest,
+        exercise: {
+          exerciseId: row.id,
+          sets: Array.from({ length: sets }, () => ({ targetMin: min, targetMax: max, rir })),
+          restSeconds: rest,
+        },
       };
     },
   };

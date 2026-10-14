@@ -104,10 +104,16 @@ export function restSecondsFor(exerciseId: string, override: number | null | und
   return override ?? getExercise(exerciseId)?.restSeconds ?? DEFAULT_REST;
 }
 
+/** An exercise of a routine or workout with its set count, for the muscle shares and the time. */
+export interface ExerciseItem {
+  exerciseId: string;
+  sets: number;
+  /** The rest override; the exercise's own rest when null or left out. */
+  restSeconds?: number | null;
+}
+
 /** Exercises as `estimateMinutes` and the muscle shares take them: set count and rest. */
-export const exerciseItems = (
-  exercises: { exerciseId: string; sets: readonly unknown[]; restSeconds?: number | null }[],
-) =>
+export const exerciseItems = (exercises: PlanExerciseDraft[]): ExerciseItem[] =>
   exercises.map((e) => ({
     exerciseId: e.exerciseId,
     sets: e.sets.length,
@@ -115,9 +121,7 @@ export const exerciseItems = (
   }));
 
 /** Rough session length in minutes from sets and rest times. */
-export function estimateMinutes(
-  items: { exerciseId: string; sets: number; restSeconds?: number | null }[],
-) {
+export function estimateMinutes(items: ExerciseItem[]) {
   const seconds = items.reduce(
     (sum, i) =>
       sum + EXERCISE_SECONDS + i.sets * (SET_SECONDS + restSecondsFor(i.exerciseId, i.restSeconds)),
@@ -152,7 +156,7 @@ export interface RoutineSummary {
   setCount: number;
   estimatedMinutes: number;
   /** Exercise ids with their set counts and rest overrides, for muscle shares and the time. */
-  items: { exerciseId: string; sets: number; restSeconds: number | null }[];
+  items: ExerciseItem[];
 }
 
 function summarize(rows: RowOf<typeof routineListQuery>[]): RoutineSummary[] {

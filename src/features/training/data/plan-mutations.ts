@@ -2,18 +2,12 @@ import { eq } from 'drizzle-orm';
 
 import { blockWeekOf, isDeloadWeek } from '@/shared/data/plans';
 import { drizzle } from '@/shared/data/powersync/database';
-import { saveProfile } from '@/shared/data/profile';
 import { plans, profiles, routines, workoutEntries } from '@/shared/data/powersync/schema';
 
 import { deleteRoutineTx } from './routine-mutations';
 
 export async function renamePlan(planId: string, name: string) {
   await drizzle.update(plans).set({ name: name.trim() }).where(eq(plans.id, planId));
-}
-
-/** Makes the plan the one Today follows (also before the profile has synced to the phone). */
-export async function activatePlan(userId: string, planId: string) {
-  await saveProfile(userId, { activePlanId: planId });
 }
 
 export async function setSessionsPerWeek(planId: string, sessionsPerWeek: number) {

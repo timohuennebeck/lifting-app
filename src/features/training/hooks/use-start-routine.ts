@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 
+import type { RoutineSummary } from '@/shared/data/routines';
 import { getActiveWorkoutId, startWorkout } from '@/shared/data/workouts';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -14,7 +15,7 @@ export function useStartRoutine() {
   // State isn't updated yet on a double tap, which would start two workouts.
   const starting = useRef(false);
 
-  const start = async (routine: { id: string; name: string }) => {
+  const start = async (routine: Pick<RoutineSummary, 'id' | 'name'>) => {
     if (starting.current) return;
     starting.current = true;
     setStartingId(routine.id);

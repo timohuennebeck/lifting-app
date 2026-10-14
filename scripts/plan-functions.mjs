@@ -1,6 +1,16 @@
 // What the plan tests (plan-import-eval, plan-generate-eval) share: calling a plan function as the
 // app does, the catalog, and running a few requests at a time.
 
+/** The Supabase project from .env: its URL and publishable key. Exits without them. */
+export function supabaseEnv() {
+  const { EXPO_PUBLIC_SUPABASE_URL: url, EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: key } = process.env;
+  if (!url || !key) {
+    console.error('Set EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY in .env.');
+    process.exit(1);
+  }
+  return { url, key };
+}
+
 /**
  * One request to a plan function (read-plan, generate-plan). It streams the plan as server-sent
  * events (PlanEvent in supabase/functions/_shared/plan-events.ts); they are put together like the
@@ -55,6 +65,31 @@ export async function streamPlan(url, key, body) {
   }
   return { status: 200, first, seconds: seconds(), plan: error ? null : plan, error };
 }
+
+/**
+ * Sends requests with `call` (e.g. streamPlan) until the limit is reached or the function doesn't
+ * answer (503 or no connection): from then on `send` resolves to null, so the rest is skipped
+ * instead of scored as failures. `stopped()` says why: { limit: true } or { down }.
+ */
+export function untilStopped(call) {
+  let stopped = null;
+  return {
+    stopped: () => stopped,
+    async send(body) {
+      if (stopped) return null;
+      const result = await call(body);
+      if (result.status === 429) stopped = { limit: true };
+      else if (result.status === 503 || result.status === 0) {
+        stopped = { down: `${result.status || 'no connection'} ${result.error}`.trim() };
+      } else return result;
+      return null;
+    },
+  };
+}
+
+/** When the first exercise arrived and when the plan was complete. */
+export const timing = ({ first, seconds }) =>
+  `${first == null ? '–' : `${first.toFixed(1)} s`} / ${seconds.toFixed(1)} s`;
 
 /** A catalog table's rows (exercises, equipment) by id, with these columns; empty on failure. */
 export async function loadCatalog(supabaseUrl, key, table, columns) {

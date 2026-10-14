@@ -4,24 +4,10 @@ import { View } from 'react-native';
 import { muscleShares } from '@/shared/data/muscles';
 import type { RoutineSummary } from '@/shared/data/routines';
 import { CheckBadge } from '@/shared/ui/check-item';
-import { MuscleCrop } from '@/shared/ui/muscle-map';
+import { MuscleCircle } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
-
-interface RoutineMuscleProps {
-  routine: RoutineSummary;
-}
-
-/** The muscle a routine works most, on a round crop of the body map. */
-function RoutineMuscle({ routine }: RoutineMuscleProps) {
-  const top = muscleShares(routine.items)[0]?.muscle;
-  return (
-    <View className="size-11 overflow-hidden rounded-full bg-elevated">
-      <MuscleCrop muscle={top ?? 'chest'} selected={top ? [top] : []} />
-    </View>
-  );
-}
 
 export interface OtherRoutineSheetProps {
   visible: boolean;
@@ -70,7 +56,11 @@ export function OtherRoutineSheet({
               onPress={() => onPick(routine.id)}
               className="flex-row items-center gap-3 rounded-2xl py-2 pr-4 pl-2"
             >
-              <RoutineMuscle routine={routine} />
+              {/* The muscle it works most. */}
+              <MuscleCircle
+                muscle={muscleShares(routine.items)[0]?.muscle ?? null}
+                className="size-11"
+              />
               <View className="min-w-0 flex-1 gap-0.5">
                 <Text variant="label" numberOfLines={1}>
                   {routine.name}

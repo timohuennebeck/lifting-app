@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { workoutMuscleSplit } from '@/features/exercises/lib/muscle-groups';
+import type { ExerciseItem } from '@/shared/data/routines';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { MuscleTileRow } from '@/shared/ui/muscle-map';
@@ -14,7 +15,7 @@ import { workoutMusclesHref } from '../lib/workout-muscles-link';
 export interface WorkedMusclesProps {
   /** The workout's name, the title of the breakdown. */
   title: string;
-  items: { exerciseId: string; sets: number }[];
+  items: ExerciseItem[];
 }
 
 /**

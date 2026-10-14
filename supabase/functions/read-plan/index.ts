@@ -6,17 +6,13 @@
 import { decodeBase64 } from 'jsr:@std/encoding@1/base64';
 
 import { reply } from '../_shared/common.ts';
-import { openAiConfigured, type StreamedAnswer, streamStructured } from '../_shared/openai.ts';
-import type { ImportedRoutine, PlanEvent } from '../_shared/plan-events.ts';
-import { PlanStream } from '../_shared/plan-stream.ts';
+import { openAiConfigured, streamStructured } from '../_shared/openai.ts';
 import { envLimit, loadCatalog, planEventResponse, takePlanRequest } from '../_shared/plans.ts';
 import {
   buildSchema,
   type CatalogExercise,
   contextText,
   INSTRUCTIONS,
-  type ModelExercise,
-  type ModelRoutine,
   planReader,
 } from './plan.ts';
 
@@ -180,54 +176,9 @@ Deno.serve(async (req) => {
   }
 
   const { answer } = started;
-  return planEventResponse((send) => sendPlan(answer, catalog, send, giveBack), stop, 'import');
-});
-
-/**
- * Reads the streamed answer into the app's events (see PlanEvent) and sends them. An answer that
- * fails before its first word gives the import back, as a failed request does.
- */
-async function sendPlan(
-  answer: AsyncGenerator<StreamedAnswer>,
-  catalog: CatalogExercise[],
-  send: (event: PlanEvent) => void,
-  giveBack: () => PromiseLike<unknown>,
-) {
   const reader = planReader(catalog, () => crypto.randomUUID());
-  const stream = new PlanStream<ModelRoutine, ModelExercise>();
-  // A routine waits for its first exercise.
-  let routine: ImportedRoutine | null = null;
-  let exercises = 0;
-  let written = false;
-  for await (const step of answer) {
-    if ('refusal' in step) {
-      console.warn('The model refused the plan');
-      return send({ type: 'error', error: 'not_a_plan' });
-    }
-    if ('incomplete' in step) {
-      console.error('The import did not complete', step.incomplete);
-      if (!written) await giveBack();
-      return send({ type: 'error', error: 'failed' });
-    }
-    if ('done' in step) {
-      return send(exercises ? { type: 'done' } : { type: 'error', error: 'not_a_plan' });
-    }
-    written = true;
-    for (const piece of stream.push(step.text)) {
-      if (piece.kind === 'start') {
-        // Leaving the loop also stops the model.
-        if (!piece.isPlan) return send({ type: 'error', error: 'not_a_plan' });
-        send({ type: 'plan', name: reader.planName(piece.name) });
-      } else if (piece.kind === 'routine') {
-        routine = reader.routine(piece.routine);
-      } else {
-        const read = reader.exercise(piece.exercise);
-        if (!read) continue;
-        if (routine) send({ type: 'routine', routine });
-        routine = null;
-        send({ type: 'exercise', ...read });
-        exercises++;
-      }
-    }
-  }
-}
+  return planEventResponse(
+    { answer, reader, giveBack, noPlan: 'not_a_plan', label: 'import' },
+    stop,
+  );
+});

@@ -1,6 +1,7 @@
 import { type MuscleId, MUSCLE_IDS } from '@/shared/ui/muscle-map/body-paths';
 
 import { type Exercise, getExercise, isCardio } from './exercises';
+import type { ExerciseItem } from './routines';
 
 export type MuscleRegion = 'upper' | 'lower';
 
@@ -50,7 +51,7 @@ export const muscleWeights = (exercise: Exercise | undefined) =>
  * Distributes set counts over muscles using each exercise's muscle weights, highest share
  * first. Cardio is left out: a treadmill run isn't leg training.
  */
-export function muscleShares(items: { exerciseId: string; sets: number }[]): MuscleShare[] {
+export function muscleShares(items: ExerciseItem[]): MuscleShare[] {
   const load = new Map<MuscleId, number>();
   for (const { exerciseId, sets } of items) {
     // Exercises without sets (e.g. skipped in a finished workout) trained nothing.

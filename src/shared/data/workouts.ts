@@ -43,7 +43,7 @@ import {
   workoutEntriesSets,
 } from './powersync/schema';
 import { queryKeys } from './query-keys';
-import type { PlanExerciseDraft } from './routines';
+import type { ExerciseItem, PlanExerciseDraft } from './routines';
 import { firstCount, type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /**
@@ -65,11 +65,11 @@ export const hasKnownWeight = (
 type Operand = AnySQLiteColumn | SQL;
 
 /**
- * How good a set is, for PRs and top sets, over `workout_entries_sets` and `workout_entries_exercises` (or
- * aliases of them, or values): the Epley estimated 1RM of the load for weight × reps (the body
- * weight plus the added weight, or minus the assistance), most reps without weight, the longest
- * hold for seconds (times the weight for weighted holds). An exercise logs the same measures in
- * every set, so scores of one exercise compare like with like.
+ * How good a set is, for PRs and top sets, over `workout_entries_sets` and
+ * `workout_entries_exercises` (or aliases of them, or values): the Epley estimated 1RM of the load
+ * for weight × reps (the body weight plus the added weight, or minus the assistance), most reps
+ * without weight, the longest hold for seconds (times the weight for weighted holds). An exercise
+ * logs the same measures in every set, so scores of one exercise compare like with like.
  */
 export function setScoreSql(
   set: Record<'weight_kg' | 'reps' | 'seconds', Operand>,
@@ -97,8 +97,8 @@ const workoutExerciseIds = (workoutId: string) =>
     .from(workoutEntriesExercises)
     .where(eq(workoutEntriesExercises.workout_entries_id, workoutId));
 
-/** Copies a routine (or nothing, for an empty workout) into a new running workout. */
-export async function startWorkout(userId: string, name: string, routineId: string | null) {
+/** Copies a routine into a new running workout (an empty one starts with `startDraftWorkout`). */
+export async function startWorkout(userId: string, name: string, routineId: string) {
   return drizzle.transaction((tx) => insertWorkout(tx, userId, name, routineId));
 }
 
@@ -460,7 +460,7 @@ export interface WorkoutSummary {
   setCount: number;
   prCount: number;
   /** Exercise ids with completed set counts, for muscle shares. */
-  items: { exerciseId: string; sets: number }[];
+  items: ExerciseItem[];
 }
 
 /** Finished workouts matching `where`, one row per exercise with its completed-set stats. */

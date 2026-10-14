@@ -1,11 +1,13 @@
 // What the model is asked about a training plan and how its answer becomes the plan the app
 // reviews. Plain TypeScript without Deno APIs, so it can be tested outside the Edge runtime.
 
-import type {
-  ImportedExercise,
-  ImportedRoutine,
-  NewExercise,
-  SetTarget,
+import {
+  cut,
+  type ImportedExercise,
+  type ImportedRoutine,
+  type NewExercise,
+  type PlanExercise,
+  type SetTarget,
 } from '../_shared/plan-events.ts';
 
 /** The muscles of `public.muscle`, which custom exercises are tagged with. */
@@ -189,8 +191,6 @@ export interface ModelRoutine {
 const clampInt = (value: number | null, min: number, max: number) =>
   value == null || !Number.isFinite(value) ? null : Math.min(max, Math.max(min, Math.round(value)));
 
-const cut = (text: string, max: number) => text.trim().replace(/\s+/g, ' ').slice(0, max).trim();
-
 /** The app's target editor (and the database) take up to 60 reps or 600 seconds. */
 const MAX_REPS = 60;
 const MAX_SECONDS = 600;
@@ -240,8 +240,6 @@ export function planReader(catalog: CatalogExercise[], newId: () => string) {
   };
 
   return {
-    planName: (name: string) => cut(name, 30) || 'Plan',
-
     routine: (routine: Omit<ModelRoutine, 'exercises'>): ImportedRoutine => ({
       name: cut(routine.name, 24) || cut(routine.heading, 24),
     }),
@@ -250,7 +248,7 @@ export function planReader(catalog: CatalogExercise[], newId: () => string) {
      * The exercise, with the new exercise it introduces the first time one is used; null for a
      * line with neither a catalog exercise nor a usable new one.
      */
-    exercise: (line: ModelExercise) => {
+    exercise: (line: ModelExercise): PlanExercise | null => {
       const { fresh, first } =
         !line.catalog_id && line.new_exercise
           ? newExercise(line.new_exercise, line.raw)

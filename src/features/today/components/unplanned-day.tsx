@@ -2,7 +2,7 @@ import { View } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
-import { MuscleCrop, type MuscleId } from '@/shared/ui/muscle-map';
+import { MuscleCircle, type MuscleId } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
@@ -14,17 +14,6 @@ const RING = 3;
 const OUTER = CIRCLE + 2 * RING;
 const STEP = 44;
 const STACK_WIDTH = STEP * MUSCLES.length + OUTER;
-
-function MuscleCircle({ muscle, left }: { muscle: MuscleId; left: number }) {
-  return (
-    <View
-      className="absolute top-0 overflow-hidden rounded-full border-bg bg-elevated"
-      style={{ left, width: OUTER, height: OUTER, borderWidth: RING }}
-    >
-      <MuscleCrop muscle={muscle} selected={[muscle]} accent={colors.dim} />
-    </View>
-  );
-}
 
 export interface UnplannedDayProps {
   title: string;
@@ -50,7 +39,13 @@ export function UnplannedDay({ title, body, onPress }: UnplannedDayProps) {
           {MUSCLES.map((muscle, i) => ({ muscle, left: i * STEP }))
             .reverse()
             .map(({ muscle, left }) => (
-              <MuscleCircle key={muscle} muscle={muscle} left={left} />
+              <MuscleCircle
+                key={muscle}
+                muscle={muscle}
+                accent={colors.dim}
+                className="absolute top-0 border-bg"
+                style={{ left, width: OUTER, height: OUTER, borderWidth: RING }}
+              />
             ))}
           <View
             className="absolute top-0 items-center justify-center rounded-full border-bg bg-accent"

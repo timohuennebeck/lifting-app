@@ -4,9 +4,7 @@
 // (see PlanEvent), checked part by part (planBuilder). It runs before there is an account, so
 // plans are limited per network and in total per day (start_plan_request, kind "generate").
 import { reply } from '../_shared/common.ts';
-import { openAiConfigured, type StreamedAnswer, streamStructured } from '../_shared/openai.ts';
-import type { ImportedRoutine, PlanEvent } from '../_shared/plan-events.ts';
-import { PlanStream } from '../_shared/plan-stream.ts';
+import { openAiConfigured, streamStructured } from '../_shared/openai.ts';
 import {
   envLimit,
   loadCatalog,
@@ -19,8 +17,6 @@ import {
   contextText,
   equipmentOf,
   INSTRUCTIONS,
-  type ModelExercise,
-  type ModelRoutine,
   parseAnswers,
   planBuilder,
   usableExercises,
@@ -91,56 +87,8 @@ Deno.serve(async (req) => {
   }
 
   const { answer } = started;
-  const builder = planBuilder(answers, catalog);
-  return planEventResponse((send) => sendPlan(answer, builder, send, giveBack), stop, 'plan');
+  return planEventResponse(
+    { answer, reader: planBuilder(answers, catalog), giveBack, noPlan: 'failed', label: 'plan' },
+    stop,
+  );
 });
-
-/**
- * Reads the streamed answer into the app's events (see PlanEvent) and sends them. An answer that
- * fails before its first word gives the request back, as a failed request does.
- */
-async function sendPlan(
-  answer: AsyncGenerator<StreamedAnswer>,
-  builder: ReturnType<typeof planBuilder>,
-  send: (event: PlanEvent) => void,
-  giveBack: () => PromiseLike<unknown>,
-) {
-  const stream = new PlanStream<ModelRoutine, ModelExercise>();
-  // A routine waits for its first exercise.
-  let routine: ImportedRoutine | null = null;
-  let exercises = 0;
-  let written = false;
-  for await (const step of answer) {
-    if ('refusal' in step) {
-      console.warn('The model refused the plan');
-      return send({ type: 'error', error: 'failed' });
-    }
-    if ('incomplete' in step) {
-      console.error('The plan did not complete', step.incomplete);
-      if (!written) await giveBack();
-      return send({ type: 'error', error: 'failed' });
-    }
-    if ('done' in step) {
-      return send(exercises ? { type: 'done' } : { type: 'error', error: 'failed' });
-    }
-    written = true;
-    for (const piece of stream.push(step.text)) {
-      if (piece.kind === 'start') {
-        send({ type: 'plan', name: builder.planName(piece.name) });
-      } else if (piece.kind === 'routine') {
-        routine = builder.routine(piece.routine);
-        // A routine past the workouts a week: the plan is complete, and leaving stops the model.
-        if (!routine) {
-          return send(exercises ? { type: 'done' } : { type: 'error', error: 'failed' });
-        }
-      } else {
-        const exercise = builder.exercise(piece.exercise);
-        if (!exercise) continue;
-        if (routine) send({ type: 'routine', routine });
-        routine = null;
-        send({ type: 'exercise', exercise });
-        exercises++;
-      }
-    }
-  }
-}
