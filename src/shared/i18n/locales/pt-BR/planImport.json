@@ -20,6 +20,23 @@
     "cta": "Ler plano",
     "preview": "Prévia do arquivo"
   },
+  "sheets": {
+    "title": "QUAIS ABAS?",
+    "subtitle": "{{name}} tem {{count}} abas. Escolha o que faz parte do seu plano.",
+    "recommended": "Recomendada",
+    "days_one": "{{count}} dia",
+    "days_other": "{{count}} dias",
+    "exercises_one": "{{count}} exercício",
+    "exercises_other": "{{count}} exercícios",
+    "log_one": "{{count}} registro com peso",
+    "log_other": "{{count}} registros com pesos",
+    "other": "Nenhum exercício reconhecido",
+    "text": "Só texto",
+    "empty": "Vazia",
+    "cta_one": "Ler {{count}} aba",
+    "cta_other": "Ler {{count}} abas",
+    "none": "Escolha uma aba"
+  },
   "camera": {
     "page": "Página {{count}}",
     "hint": "Fotografe página por página e toque em Concluído",

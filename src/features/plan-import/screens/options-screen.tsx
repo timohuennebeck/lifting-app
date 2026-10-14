@@ -11,6 +11,7 @@ import { Text } from '@/shared/ui/text';
 
 import { fileExtension, formatFileSize, IMPORT_STEPS } from '../lib/format';
 import { pickPlanFile } from '../lib/pick-source';
+import { loadSheets } from '../lib/sheets';
 import { useImportStore } from '../stores/import-store';
 
 const LINES = [
@@ -32,8 +33,17 @@ export function OptionsScreen() {
   const { step } = usePlanFlow();
   const source = useImportStore((s) => s.source);
   const setFile = useImportStore((s) => s.setFile);
+  const offerSheets = useImportStore((s) => s.offerSheets);
   if (source?.kind !== 'file') return <Redirect href={step('/import')} />;
   const { file } = source;
+
+  // A workbook with several sheets first asks which ones hold the plan.
+  async function read() {
+    const sheets = await loadSheets(file);
+    if (!sheets) return router.push(step('/import/analysis'));
+    offerSheets(sheets);
+    router.push(step('/import/sheets'));
+  }
   const isImage = file.mimeType?.startsWith('image/');
 
   async function swap() {
@@ -50,9 +60,7 @@ export function OptionsScreen() {
       step={2}
       total={IMPORT_STEPS}
       title={t('options.title')}
-      footer={
-        <Button label={t('options.cta')} onPress={() => router.push(step('/import/analysis'))} />
-      }
+      footer={<Button label={t('options.cta')} onPress={read} />}
     >
       <View className="flex-1 items-center justify-center gap-5.5 px-5">
         <View

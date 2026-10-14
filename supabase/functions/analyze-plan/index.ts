@@ -59,7 +59,12 @@ interface PlanFile {
   mimeType: string;
   /** Base64. */
   data: string;
+  /** Of a workbook, the sheets the user picked; all when left out. */
+  sheets?: string[];
 }
+
+/** Sheet names a request may pick. */
+const MAX_SHEETS = 100;
 
 let catalogCache: { at: number; rows: CatalogExercise[] } | null = null;
 
@@ -116,16 +121,25 @@ async function networkHash(req: Request) {
 const isBase64 = (value: unknown): value is string =>
   typeof value === 'string' && value.length > 0 && /^[A-Za-z0-9+/=\s]+$/.test(value);
 
+/** Left out, or a list of sheet names. */
+const isSheetList = (value: unknown) =>
+  value === undefined ||
+  (Array.isArray(value) &&
+    value.length <= MAX_SHEETS &&
+    value.every((name) => typeof name === 'string'));
+
 /** Approximate decoded size of base64 text. */
 const byteSize = (base64: string) => Math.floor((base64.replace(/\s/g, '').length * 3) / 4);
 
-/** A spreadsheet as CSV text, one block per sheet. */
-async function spreadsheetText(bytes: Uint8Array) {
+/** A spreadsheet as CSV text, one block per picked sheet (all, if none of those is there). */
+async function spreadsheetText(bytes: Uint8Array, sheets: string[] | undefined) {
   const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs');
   const book = XLSX.read(bytes, { type: 'array' });
-  return book.SheetNames.map(
-    (name: string) => `Sheet "${name}":\n${XLSX.utils.sheet_to_csv(book.Sheets[name])}`,
-  ).join('\n\n');
+  const names: string[] = book.SheetNames;
+  const picked = names.filter((name) => sheets?.includes(name));
+  return (picked.length ? picked : names)
+    .map((name) => `Sheet "${name}":\n${XLSX.utils.sheet_to_csv(book.Sheets[name])}`)
+    .join('\n\n');
 }
 
 /** Text in UTF-8, else Windows-1252 (what Excel on Windows saves CSV files as by default). */
@@ -153,8 +167,8 @@ async function fileContent(file: PlanFile) {
   }
   const bytes = decodeBase64(file.data);
   const text =
-    /\.(xlsx|xls)$/.test(name) || type.includes('spreadsheet') || type.includes('excel')
-      ? await spreadsheetText(bytes)
+    /\.(xlsx|xlsm|xls|ods)$/.test(name) || type.includes('spreadsheet') || type.includes('excel')
+      ? await spreadsheetText(bytes, file.sheets)
       : decodeText(bytes);
   return { type: 'input_text', text: `File "${file.name}":\n${text.slice(0, MAX_TEXT)}` };
 }
@@ -181,7 +195,8 @@ Deno.serve(async (req) => {
   } else if (
     typeof file?.name !== 'string' ||
     typeof file.mimeType !== 'string' ||
-    !isBase64(file.data)
+    !isBase64(file.data) ||
+    !isSheetList(file.sheets)
   ) {
     return reply(400, { error: 'bad_request' });
   } else if (byteSize(file.data) > MAX_FILE_BYTES) {

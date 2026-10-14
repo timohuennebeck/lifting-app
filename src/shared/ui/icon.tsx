@@ -253,6 +253,25 @@ const ICONS = {
     ),
   },
   // An open book: the exercise's technique and history.
+  // A spreadsheet: a header row over two columns.
+  table: {
+    viewBox: '0 0 18 18',
+    render: (c) => (
+      <>
+        <Rect
+          x={1.5}
+          y={1.5}
+          width={15}
+          height={15}
+          rx={3}
+          stroke={c}
+          strokeWidth={1.6}
+          fill="none"
+        />
+        <Path d="M1.5 6.5h15M1.5 11.5h15M7 6.5v10" stroke={c} strokeWidth={1.6} fill="none" />
+      </>
+    ),
+  },
   book: {
     viewBox: '0 0 14 14',
     render: stroke(

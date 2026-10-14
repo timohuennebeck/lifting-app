@@ -10,6 +10,8 @@ const PLAN_FILE_TYPES = [
   'text/plain',
   'application/vnd.ms-excel',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-excel.sheet.macroEnabled.12',
+  'application/vnd.oasis.opendocument.spreadsheet',
   'image/*',
 ];
 

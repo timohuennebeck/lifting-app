@@ -15,6 +15,7 @@ type PlanStep =
   | '/has-plan'
   | '/import'
   | '/import/options'
+  | '/import/sheets'
   | '/import/camera'
   | '/import/review'
   | '/import/analysis'

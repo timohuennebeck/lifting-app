@@ -13,9 +13,13 @@ import {
   type PlanEvent,
   streamPlan,
 } from '../lib/plan-import-service';
+import type { SheetSummary } from '../lib/sheet-summary';
+import { loadSheets } from '../lib/sheets';
 
 interface ImportState {
   source: ImportSource | null;
+  /** The file's sheets, offered to pick from once it is to be read (see `loadSheets`). */
+  workbook: SheetSummary[] | null;
   /** Detected plan being reviewed on the confirm screen; it fills in while `reading`. */
   plan: ImportedPlan | null;
   /** Selected day tab on the confirm screen. */
@@ -31,6 +35,9 @@ interface ImportState {
   /** The confirm screen shows the day being read until the user picks one. */
   following: boolean;
   setFile: (file: ImportFile) => void;
+  offerSheets: (workbook: SheetSummary[]) => void;
+  /** Of the file's sheets, the ones to read. */
+  pickSheets: (sheets: string[]) => void;
   addPhotos: (photos: ImportPhoto[]) => void;
   replacePhoto: (index: number, photo: ImportPhoto) => void;
   removePhoto: (index: number) => void;
@@ -55,6 +62,7 @@ const photosOf = (source: ImportSource | null) =>
 
 const EMPTY = {
   source: null,
+  workbook: null,
   plan: null,
   dayIndex: 0,
   reading: false,
@@ -92,7 +100,14 @@ function receive(s: ImportState, event: PlanEvent): Partial<ImportState> {
 export const useImportStore = create<ImportState>()((set, get) => ({
   ...EMPTY,
   run: 0,
-  setFile: (file) => set({ source: { kind: 'file', file } }),
+  setFile: (file) => {
+    set({ source: { kind: 'file', file }, workbook: null });
+    // Read ahead: its sheets are ready by the time the user goes on.
+    void loadSheets(file);
+  },
+  offerSheets: (workbook) => set({ workbook }),
+  pickSheets: (sheets) =>
+    set((s) => (s.source?.kind === 'file' ? { source: { ...s.source, sheets } } : {})),
   addPhotos: (photos) =>
     set((s) => ({
       source: { kind: 'photos', photos: [...photosOf(s.source), ...photos].slice(0, MAX_PHOTOS) },

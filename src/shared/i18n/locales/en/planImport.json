@@ -20,6 +20,23 @@
     "cta": "Read plan",
     "preview": "File preview"
   },
+  "sheets": {
+    "title": "WHICH SHEETS?",
+    "subtitle": "{{name}} has {{count}} sheets. Choose what belongs to your plan.",
+    "recommended": "Recommended",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "exercises_one": "{{count}} exercise",
+    "exercises_other": "{{count}} exercises",
+    "log_one": "{{count}} entry with weights",
+    "log_other": "{{count}} entries with weights",
+    "other": "No exercises found",
+    "text": "Text only",
+    "empty": "Empty",
+    "cta_one": "Read {{count}} sheet",
+    "cta_other": "Read {{count}} sheets",
+    "none": "Choose a sheet"
+  },
   "camera": {
     "page": "Page {{count}}",
     "hint": "Photograph page by page, then tap Done",

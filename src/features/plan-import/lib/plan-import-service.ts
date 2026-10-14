@@ -20,7 +20,9 @@ export interface ImportFile {
 }
 
 export type ImportSource =
-  { kind: 'photos'; photos: ImportPhoto[] } | { kind: 'file'; file: ImportFile };
+  | { kind: 'photos'; photos: ImportPhoto[] }
+  /** `sheets`: of a workbook, the ones to read (picked by the user); all when left out. */
+  | { kind: 'file'; file: ImportFile; sheets?: string[] };
 
 export interface ImportedExercise extends PlanExerciseDraft {
   /** Text as read from the source when the match is uncertain; cleared once confirmed. */
@@ -94,13 +96,13 @@ async function requestBody(source: ImportSource) {
     for (const p of source.photos) photos.push(await jpegBase64(p.uri));
     return { photos };
   }
-  const { file } = source;
+  const { file, sheets } = source;
   // Some file providers leave the type out; the name still tells an image.
   if (file.mimeType?.startsWith('image/') || /\.(jpe?g|png|heic|heif|webp)$/i.test(file.name)) {
     return { file: { name: file.name, mimeType: 'image/jpeg', data: await jpegBase64(file.uri) } };
   }
   const data = await new File(file.uri).base64();
-  return { file: { name: file.name, mimeType: file.mimeType ?? '', data } };
+  return { file: { name: file.name, mimeType: file.mimeType ?? '', data, sheets } };
 }
 
 /** The reason in the function's `{ error }` answer, or 'failed'. */
