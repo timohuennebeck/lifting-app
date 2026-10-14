@@ -37,7 +37,7 @@ const SUN = 6;
 /** What the home profiles ticked: a small corner, a home gym, a kettlebell and a bar. */
 const HOME_EQUIPMENT = {
   '05': ['dumbbell', 'bench'],
-  '06': ['barbell', 'rack', 'bench', 'dumbbell', 'pull-up-bar'],
+  '06': ['barbell', 'rack', 'bench', 'dumbbell', 'pull-up-bar', 'cable'],
   14: ['kettlebell', 'pull-up-bar'],
 };
 
