@@ -1,7 +1,8 @@
 # Traqa
 
-Workout logger built with Expo Router, Supabase, PowerSync and Uniwind. The original
-Claude Design handoff (prototype, chat transcript, assets) lives in [`design/`](design/README.md).
+Workout logger built with Expo Router, Supabase, PowerSync and Uniwind. The original Claude
+Design handoff (prototype, chat transcript, assets) was removed from the tree; it is in git
+history under `design/` (`git show 48b667e:design/README.md`).
 
 ## Stack
 

@@ -1,5 +1,5 @@
-// Fingerprint ridges as vectors, traced from design/assets/fingerprint-order.png, in the order the
-// design lights them. Vectors stay sharp when the print zooms into the screen.
+// Fingerprint ridges as vectors, traced from the design's fingerprint-order.png (in git history,
+// under design/assets), in the order the design lights them. Vectors stay sharp when the print zooms into the screen.
 export const FINGERPRINT_VIEWBOX = '0 0 280 392';
 
 export const RIDGE_PATHS: string[] = [
