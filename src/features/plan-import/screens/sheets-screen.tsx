@@ -32,7 +32,7 @@ function SheetRow({ sheet, picked, recommended, dimmed, onPress }: SheetRowProps
   const contents =
     sheet.kind === 'plan'
       ? [
-          ...(sheet.days ? [t('sheets.days', { count: sheet.days })] : []),
+          ...(sheet.routines ? [t('sheets.routines', { count: sheet.routines })] : []),
           t('sheets.exercises', { count: sheet.exercises }),
         ].join(' · ')
       : sheet.kind === 'log'

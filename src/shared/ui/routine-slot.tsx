@@ -33,7 +33,7 @@ function DashedRing({ color, style }: DashedRingProps) {
   );
 }
 
-export interface PlanSlotProps {
+export interface RoutineSlotProps {
   number: number;
   /** The slot being shown: only it gets the accent ring. */
   selected?: boolean;
@@ -42,7 +42,7 @@ export interface PlanSlotProps {
 }
 
 /** Plan strip slot: the slot number in a dashed ring. */
-export function PlanSlot({ number, selected, review }: PlanSlotProps) {
+export function RoutineSlot({ number, selected, review }: RoutineSlotProps) {
   return (
     <View className="size-8 items-center justify-center">
       <DashedRing color={selected ? colors.accent : '#4A4A48'} style={{ left: -3, top: -3 }} />
@@ -60,4 +60,4 @@ export function PlanSlot({ number, selected, review }: PlanSlotProps) {
 }
 
 /** Size of the "+" at the end of a plan strip: the slots' outer ring. */
-export const PLAN_ADD_SIZE = 38;
+export const ROUTINE_ADD_SIZE = 38;

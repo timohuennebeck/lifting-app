@@ -14,7 +14,7 @@ import {
   insertRoutine,
   insertRoutineExercise,
   insertRoutineSets,
-  type PlanSetDraft,
+  type SetTarget,
 } from '@/shared/data/routines';
 
 async function touchRoutine(tx: Tx, routineId: string) {
@@ -198,7 +198,7 @@ export async function reorderRoutineExercise(routineExerciseId: string, target: 
 export async function saveRoutineSets(
   userId: string,
   routineExerciseId: string,
-  sets: PlanSetDraft[],
+  sets: SetTarget[],
   restSeconds: number | null,
 ) {
   await drizzle.transaction(async (tx) => {

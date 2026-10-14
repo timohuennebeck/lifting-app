@@ -2,10 +2,10 @@ import { create } from 'zustand';
 
 import { newExerciseDraft, swapExerciseDraft } from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
-import type { PlanExerciseDraft, PlanSetDraft } from '@/shared/data/routines';
+import type { ExerciseDraft, SetTarget } from '@/shared/data/routines';
 
 /** A draft exercise; `key` stays with it when it is dragged to another place. */
-export type DraftExercise = PlanExerciseDraft & { key: string };
+export type DraftExercise = ExerciseDraft & { key: string };
 
 interface WorkoutDraftState {
   name: string;
@@ -19,7 +19,7 @@ interface WorkoutDraftState {
   remove: (at: number) => void;
   /** Puts exercise `at` at slot `to`; the others close up around it. */
   move: (at: number, to: number) => void;
-  setSets: (at: number, sets: PlanSetDraft[], restSeconds: number | null) => void;
+  setSets: (at: number, sets: SetTarget[], restSeconds: number | null) => void;
 }
 
 /**

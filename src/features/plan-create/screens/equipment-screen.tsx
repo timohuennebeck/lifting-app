@@ -32,7 +32,7 @@ export function EquipmentScreen() {
           label={t('common:actions.continue')}
           onPress={() => {
             update({ equipment });
-            router.push(step(equipment === 'home' ? '/create/home-equipment' : '/create/days'));
+            router.push(step(equipment === 'home' ? '/create/home-equipment' : '/create/sessions'));
           }}
         />
       }

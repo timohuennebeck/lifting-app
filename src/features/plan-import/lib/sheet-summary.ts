@@ -1,10 +1,10 @@
-// What a spreadsheet's sheet seems to hold, from its cells: a plan (days and exercises), a log of
+// What a spreadsheet's sheet seems to hold, from its cells: a plan (routines and exercises), a log of
 // lifts, other numbers, text or nothing. Plain TypeScript, like workbook.ts.
 
 import type { SheetCell, WorkbookSheet } from './workbook';
 
 export type SheetKind =
-  | { kind: 'plan'; days: number; exercises: number }
+  | { kind: 'plan'; routines: number; exercises: number }
   | { kind: 'log'; entries: number }
   /** Numbers, but nothing that reads as an exercise (e.g. nutrition). */
   | { kind: 'other' }
@@ -36,8 +36,11 @@ const STEMS = [
 /** Short ones only count as whole words ("row", not "throw"). */
 const WORDS = new Set('row rows fly flys flyes dip dips pull pulls'.split(' '));
 
-/** Training day headings: "Tag 1", "Day A: Push", "Montag", or a split's name on its own. */
-const DAY_PREFIX =
+/**
+ * A routine's heading as plans write it: "Tag 1", "Day A: Push", a weekday ("Montag"), or a
+ * split's name on its own.
+ */
+const ROUTINE_PREFIX =
   /^(tag|day|dia|training|trainingstag|workout|einheit|session|treino)( ?[0-9]{1,2}| [a-f])\b/;
 const WEEKDAY =
   /^(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag|monday|tuesday|wednesday|thursday|friday|saturday|sunday|segunda|terca|quarta|quinta|sexta|sabado|domingo)\b/;
@@ -49,8 +52,8 @@ const SPLITS = new Set(
   ].flatMap((line) => line.split('|')),
 );
 
-const isDayHeading = (folded: string) =>
-  DAY_PREFIX.test(folded) ||
+const isRoutineHeading = (folded: string) =>
+  ROUTINE_PREFIX.test(folded) ||
   WEEKDAY.test(folded) ||
   SPLITS.has(folded.replace(/ (day|tag|[a-d1-9])$/, ''));
 
@@ -67,7 +70,7 @@ export function exerciseMatcher(names: Iterable<string>) {
   return (text: string) => {
     if (text.length < 3 || text.length > 80) return false;
     const folded = fold(text);
-    if (!/[a-z]{3}/.test(folded) || isDayHeading(folded)) return false;
+    if (!/[a-z]{3}/.test(folded) || isRoutineHeading(folded)) return false;
     const padded = ` ${folded} `;
     return (
       folded.split(' ').some((w) => WORDS.has(w)) ||
@@ -88,13 +91,13 @@ export function summarizeSheet(
   if (!cells.length) return { name, kind: 'empty' };
   const texts = cells.filter((c) => c.type === 'text');
   const exercises = texts.filter((c) => isExercise(c.text)).length;
-  const days = new Set(texts.map((c) => fold(c.text)).filter(isDayHeading)).size;
+  const routines = new Set(texts.map((c) => fold(c.text)).filter(isRoutineHeading)).size;
   const dated = rows.filter((row) => row.some(isDate)).length;
   const withNumbers = rows.filter((row) => row.some((c) => c.type === 'number')).length;
   // A log has a date on most lines; a plan at most on a few (its weeks, say).
   if (dated >= 3 && withNumbers >= 3 && dated * 2 > exercises) {
     return { name, kind: 'log', entries: withNumbers };
   }
-  if (exercises) return { name, kind: 'plan', days, exercises };
+  if (exercises) return { name, kind: 'plan', routines, exercises };
   return { name, kind: texts.length === cells.length ? 'text' : 'other' };
 }

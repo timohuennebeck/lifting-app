@@ -4,20 +4,20 @@ import { ScrollView, useWindowDimensions, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { Icon } from '@/shared/ui/icon';
-import { PLAN_ADD_SIZE, PlanSlot } from '@/shared/ui/plan-slot';
+import { ROUTINE_ADD_SIZE, RoutineSlot } from '@/shared/ui/routine-slot';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 /** A strip entry; `review` adds the plan import's amber dot. */
-export interface PlanBarItem {
+export interface RoutineBarItem {
   name: string;
   review?: boolean;
 }
 
 const SLOT = 52;
 
-export interface PlanBarProps {
-  items: PlanBarItem[];
+export interface RoutineBarProps {
+  items: RoutineBarItem[];
   currentIndex: number;
   onSelect: (index: number) => void;
   /** Adds a routine; without it there is no "+". */
@@ -25,7 +25,7 @@ export interface PlanBarProps {
 }
 
 /** Plan strip of the plan's routines, numbered, with a "+" to add one (03·0b). */
-export function PlanBar({ items, currentIndex, onSelect, onAdd }: PlanBarProps) {
+export function RoutineBar({ items, currentIndex, onSelect, onAdd }: RoutineBarProps) {
   const { t } = useTranslation('training');
   const { width } = useWindowDimensions();
   const scroller = useRef<ScrollView>(null);
@@ -64,7 +64,7 @@ export function PlanBar({ items, currentIndex, onSelect, onAdd }: PlanBarProps) 
             >
               {item.name}
             </Text>
-            <PlanSlot number={index + 1} selected={current} review={item.review} />
+            <RoutineSlot number={index + 1} selected={current} review={item.review} />
           </PressableScale>
         );
       })}
@@ -76,7 +76,7 @@ export function PlanBar({ items, currentIndex, onSelect, onAdd }: PlanBarProps) 
             onPress={onAdd}
             className="items-center justify-center self-center rounded-full bg-elevated"
             // Centred on the slots: their ring hangs 3pt below the 32pt slot.
-            style={{ width: PLAN_ADD_SIZE, height: PLAN_ADD_SIZE, marginBottom: -3 }}
+            style={{ width: ROUTINE_ADD_SIZE, height: ROUTINE_ADD_SIZE, marginBottom: -3 }}
           >
             <Icon name="plus" size={13} />
           </PressableScale>

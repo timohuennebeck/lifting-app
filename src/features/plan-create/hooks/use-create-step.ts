@@ -6,7 +6,7 @@ const STEPS = [
   'focus',
   'equipment',
   'homeEquipment',
-  'days',
+  'sessions',
   'duration',
   'planName',
 ] as const;

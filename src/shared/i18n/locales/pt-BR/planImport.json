@@ -24,8 +24,8 @@
     "title": "QUAIS ABAS?",
     "subtitle": "{{name}} tem {{count}} abas. Escolha o que faz parte do seu plano.",
     "recommended": "Recomendada",
-    "days_one": "{{count}} dia",
-    "days_other": "{{count}} dias",
+    "routines_one": "{{count}} treino",
+    "routines_other": "{{count}} treinos",
     "exercises_one": "{{count}} exercício",
     "exercises_other": "{{count}} exercícios",
     "log_one": "{{count}} registro com peso",
@@ -63,7 +63,7 @@
     "stages": [
       "Lendo a letra …",
       "Detectando exercícios …",
-      "Associando dias da semana …",
+      "Ordenando os treinos …",
       "Aplicando séries e repetições …"
     ],
     "errors": {

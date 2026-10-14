@@ -7,11 +7,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { generateFailure } from '@/features/plan-create/lib/plan-answers';
-import { AI_BLOCK_WEEKS } from '@/shared/data/plans';
-import { EditableTitle } from '@/features/training/components/editable-title';
-import { PlanBar } from '@/features/training/components/plan-bar';
-import { PlanExerciseList } from '@/features/training/components/plan-exercise-list';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
+import { EditableExerciseList } from '@/features/training/components/editable-exercise-list';
+import { EditableTitle } from '@/features/training/components/editable-title';
+import { AI_BLOCK_WEEKS } from '@/shared/data/plans';
 import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
@@ -24,6 +23,7 @@ import { PLAN_NAME_MAX } from '@/shared/lib/limits';
 
 import { ReadingGhost } from '../components/reading-ghost';
 import { ReviewPrompt } from '../components/review-prompt';
+import { RoutineBar } from '../components/routine-bar';
 import { editExerciseAt, editRoutineAt, settle } from '../lib/edit-plan';
 import {
   type ImportedExercise,
@@ -186,7 +186,7 @@ export function ConfirmScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 130 }}
       >
-        <PlanBar
+        <RoutineBar
           items={plan.routines.map((r) => ({ name: r.name, review: needsReview(r) }))}
           currentIndex={index}
           onSelect={selectRoutine}
@@ -199,7 +199,7 @@ export function ConfirmScreen() {
               value={routine.name}
               onSubmit={(name) => editRoutine((r) => ({ ...r, name }))}
             />
-            <PlanExerciseList
+            <EditableExerciseList
               title={routine.name}
               exercises={exercises}
               keyOf={(e) => e.key}

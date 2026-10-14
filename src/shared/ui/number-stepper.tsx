@@ -17,7 +17,7 @@ export interface NumberStepperProps {
   format?: (value: number) => string;
 }
 
-/** Big number with round −/+ buttons (training days per week). */
+/** Big number with round −/+ buttons (workouts per week). */
 export function NumberStepper({
   value,
   onChange,

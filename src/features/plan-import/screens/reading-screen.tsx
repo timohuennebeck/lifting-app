@@ -21,7 +21,7 @@ const EXPECTED_MS = 15_000;
  * it reads; the rest of the plan fills in there (ConfirmScreen).
  */
 export function ReadingScreen() {
-  const { t, i18n } = useTranslation(['planImport', 'common']);
+  const { t, i18n } = useTranslation(['planImport', 'planCreate']);
   const { step } = usePlanFlow();
   const source = useImportStore((s) => s.source);
   const started = useImportStore((s) => !!s.plan?.routines[0]?.exercises.length);
@@ -59,13 +59,14 @@ export function ReadingScreen() {
   if (!source) return <Redirect href={step('/import')} />;
 
   const stages = t('planImport:reading.stages', { returnObjects: true });
-  const short = t('common:weekdays.short', { returnObjects: true });
+  // Paper tags for the routines being read: "T1", "T2", "T3".
+  const tag = (n: number) => t('planCreate:building.routineTag', { n });
   const shown = started ? 1 : Math.min(0.95, progress);
   const chips: ScanChip[] = [
     { label: exerciseName('bench-press', i18n.language), x: 14, y: 176, duration: 3 },
     { label: '4 × 8', x: 278, y: 150, accent: true, duration: 3.6, delay: 0.6 },
     { label: '3 × 12', x: 292, y: 300, duration: 4.1, delay: 1.1 },
-    { label: `${short[2]} · Pull`, x: 8, y: 452, duration: 3.3, delay: 0.3 },
+    { label: `${tag(2)} · Pull`, x: 8, y: 452, duration: 3.3, delay: 0.3 },
     { label: exerciseName('pull-up', i18n.language), x: 236, y: 520, duration: 3.9, delay: 0.9 },
   ];
 
@@ -73,7 +74,7 @@ export function ReadingScreen() {
     <>
       <Stack.Screen options={{ gestureEnabled: false, animation: 'fade' }} />
       <ScanStage progress={shown} stages={stages} chips={chips}>
-        <PaperStack tags={[short[4], short[2], short[0]]} />
+        <PaperStack tags={[tag(3), tag(2), tag(1)]} />
       </ScanStage>
     </>
   );

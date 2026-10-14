@@ -46,7 +46,7 @@ Alle Daten in unserer Datenbank sind deinem Konto zugeordnet. Technische Zugriff
 
 Die ersten Schritte der Einrichtung kannst du ohne Konto durchlaufen. Dabei lädt die App den Übungskatalog (Namen, Anleitungen, Bilder und Videos der Übungen) und diese Rechtstexte von unseren Servern. Den Übungskatalog prüft sie beim Start und danach stündlich auf Änderungen. Dabei fallen nur technisch notwendige Verbindungsdaten an (Abschnitt 4.11).
 
-Deine Antworten in der Einrichtung (zum Beispiel Vorname, Geburtsdatum, Gewicht, Größe, Ziel und der erstellte oder importierte Plan) speichert die App zunächst nur auf deinem Gerät. An uns gehen diese Angaben erst, wenn du ein Konto erstellst (Abschnitte 4.3 und 4.4). Ausnahmen: Lässt du dir einen Plan erstellen, überträgt die App schon vorher deine Antworten zu Ziel, Fokus, Ausstattung, Trainingstagen, Trainingsdauer und Erfahrung, damit der Plan erstellt werden kann; Fotos und Dateien, aus denen du einen Plan importierst, überträgt sie, damit der Plan erkannt werden kann (beides Abschnitt 4.7).
+Deine Antworten in der Einrichtung (zum Beispiel Vorname, Geburtsdatum, Gewicht, Größe, Ziel und der erstellte oder importierte Plan) speichert die App zunächst nur auf deinem Gerät. An uns gehen diese Angaben erst, wenn du ein Konto erstellst (Abschnitte 4.3 und 4.4). Ausnahmen: Lässt du dir einen Plan erstellen, überträgt die App schon vorher deine Antworten zu Ziel, Fokus, Ausstattung, Trainings pro Woche, Trainingsdauer und Erfahrung, damit der Plan erstellt werden kann; Fotos und Dateien, aus denen du einen Plan importierst, überträgt sie, damit der Plan erkannt werden kann (beides Abschnitt 4.7).
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der App, die du nutzen möchtest).
 
@@ -74,11 +74,11 @@ Wenn du ein Konto erstellst, speichern wir deine Angaben aus der Einrichtung als
 
 - Vorname, biologisches Geschlecht (auch „Keine Angabe“ ist möglich) und Geburtsdatum
 - Körpergewicht, Körpergröße und deine bevorzugten Einheiten (metrisch oder imperial)
-- Trainingserfahrung, Trainingsziel, Muskelgruppen mit Fokus, verfügbare Ausstattung, Trainingstage und gewünschte Trainingsdauer
+- Trainingserfahrung, Trainingsziel, Muskelgruppen mit Fokus, verfügbare Ausstattung und gewünschte Trainingsdauer
 - deine App-Sprache, damit unser Support dir in deiner Sprache antworten kann
 - freiwillig: ein Profilfoto (die App speichert es als quadratisches Bild mit 512 × 512 Pixeln) und einen kurzen Text „Über dich“ mit bis zu 150 Zeichen
 
-Wofür: Aus Trainingsziel, Fokus, Ausstattung, Trainingstagen, Trainingsdauer und Erfahrung erstellt ein KI-Modell von OpenAI deinen Trainingsplan, wenn du dir einen erstellen lässt (Abschnitt 4.7). Außerdem nutzt die App deine Angaben für den Körpercheck (Abschnitt 4.6). Profilfoto und „Über dich“ werden nur dir in deinem Profil angezeigt.
+Wofür: Aus Trainingsziel, Fokus, Ausstattung, Trainings pro Woche, Trainingsdauer und Erfahrung erstellt ein KI-Modell von OpenAI deinen Trainingsplan, wenn du dir einen erstellen lässt (Abschnitt 4.7). Außerdem nutzt die App deine Angaben für den Körpercheck (Abschnitt 4.6). Profilfoto und „Über dich“ werden nur dir in deinem Profil angezeigt.
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO. Körpergewicht und Körpergröße können Rückschlüsse auf deine Gesundheit zulassen. Wir behandeln sie deshalb wie Gesundheitsdaten (Abschnitt 4.4).
 
@@ -97,8 +97,8 @@ Der Körpercheck ist freiwillig: Du kannst ihn überspringen. Deine Einwilligung
 
 Wenn du Traqa nutzt, speichern wir deine Trainingsdaten:
 
-- **Pläne:** Sammlungen, Trainingstage mit Wochentag, Übungen, Sätze mit Zielwerten (Wiederholungen oder Sekunden), Wiederholungen in Reserve (RIR) und Pausenzeiten
-- **Trainings:** Beginn und Ende, Übungen, Gewicht und Wiederholungen oder Sekunden je Satz, der Zeitpunkt jedes erledigten Satzes und persönliche Bestleistungen
+- **Pläne:** Name, Trainings pro Woche, Blöcke mit Deload-Woche, Trainings in ihrer Reihenfolge (auch Trainings ohne Plan), Übungen, Sätze mit Zielwerten (Wiederholungen oder Sekunden), Wiederholungen in Reserve (RIR) und Pausenzeiten
+- **Absolvierte Trainings:** Beginn und Ende, zu welchem Plan und welcher Planwoche sie zählen, Übungen, Gewicht und Wiederholungen oder Sekunden je Satz, der Zeitpunkt jedes erledigten Satzes und persönliche Bestleistungen
 
 Wofür: damit du deine Trainings protokollieren und deine Historie, Bestwerte und Aktivität sehen kannst. Vorschläge für deine Sätze berechnet die App auf deinem Gerät.
 
@@ -134,11 +134,11 @@ Rechtsgrundlage: deine ausdrückliche Einwilligung (Abschnitt 4.4), auch für di
 
 Du kannst einen vorhandenen Trainingsplan importieren: per Foto mit der Kamera (zum Beispiel von Papier, Whiteboard oder Bildschirm), als bis zu zehn Bilder aus deiner Mediathek oder als Datei (PDF, Excel, CSV, Text oder Bild). Bitte achte darauf, dass auf den Bildern und in den Dateien keine Daten anderer Personen zu sehen sind.
 
-**Erkennung durch ein KI-Modell von OpenAI:** Die App verkleinert Fotos auf höchstens 2000 Pixel an der längsten Seite, speichert sie als JPEG und überträgt sie oder deine Datei an unseren Server. Der gibt sie zusammen mit unserem Übungskatalog an ein KI-Modell von OpenAI weiter, das Trainingstage, Übungen, Sätze, Wiederholungen und Pausen ausliest. Weitere Daten übermitteln wir dabei nicht, auch nicht, wenn du den Import später in der App startest: Die Anfrage enthält weder dein Konto noch deinen Namen. OpenAI verarbeitet die Daten in den USA (Abschnitt 8). Wir haben eingestellt, dass OpenAI die Anfrage nicht für einen späteren Abruf speichert. Nach eigenen Angaben nutzt OpenAI Daten aus seiner API nicht zum Training seiner Modelle und bewahrt sie bis zu 30 Tage auf, um Missbrauch zu erkennen. [[PLATZHALTER: Aufbewahrungsdauer und Ausschluss vom Training laut aktuellem Vertrag mit OpenAI bestätigen]]
+**Erkennung durch ein KI-Modell von OpenAI:** Die App verkleinert Fotos auf höchstens 2000 Pixel an der längsten Seite, speichert sie als JPEG und überträgt sie oder deine Datei an unseren Server. Der gibt sie zusammen mit unserem Übungskatalog an ein KI-Modell von OpenAI weiter, das Trainings, Übungen, Sätze, Wiederholungen und Pausen ausliest. Weitere Daten übermitteln wir dabei nicht, auch nicht, wenn du den Import später in der App startest: Die Anfrage enthält weder dein Konto noch deinen Namen. OpenAI verarbeitet die Daten in den USA (Abschnitt 8). Wir haben eingestellt, dass OpenAI die Anfrage nicht für einen späteren Abruf speichert. Nach eigenen Angaben nutzt OpenAI Daten aus seiner API nicht zum Training seiner Modelle und bewahrt sie bis zu 30 Tage auf, um Missbrauch zu erkennen. [[PLATZHALTER: Aufbewahrungsdauer und Ausschluss vom Training laut aktuellem Vertrag mit OpenAI bestätigen]]
 
 Unser Server speichert deine Fotos und Dateien nicht; er gibt nur den erkannten Plan an die App zurück. Gespeichert wird erst der Plan, den du am Ende bestätigst (Abschnitt 4.5). Übungen aus deinem Plan, die unser Katalog nicht kennt, legt die App dabei als eigene Übungen in deinem Konto an.
 
-**Planerstellung durch ein KI-Modell von OpenAI:** Lässt du dir einen Plan erstellen, überträgt die App deine Antworten zu Trainingsziel, Muskelgruppen mit Fokus, Ausstattung, Trainingstagen, Trainingsdauer und Trainingserfahrung sowie deine App-Sprache an unseren Server. Der gibt sie zusammen mit den Übungen unseres Katalogs, die zu deiner Ausstattung passen, an ein KI-Modell von OpenAI weiter, das daraus deinen Plan zusammenstellt. Deinen Namen, dein Geburtsdatum, Geschlecht, Gewicht und deine Größe übermitteln wir dabei nicht, und die Anfrage enthält dein Konto nicht. Für die Verarbeitung bei OpenAI gilt dasselbe wie beim Import. Unser Server speichert deine Antworten dabei nicht; er gibt nur den Plan an die App zurück, wo du ihn ändern kannst. Gespeichert wird erst der Plan, den du am Ende bestätigst (Abschnitt 4.5).
+**Planerstellung durch ein KI-Modell von OpenAI:** Lässt du dir einen Plan erstellen, überträgt die App deine Antworten zu Trainingsziel, Muskelgruppen mit Fokus, Ausstattung, Trainings pro Woche, Trainingsdauer und Trainingserfahrung sowie deine App-Sprache an unseren Server. Der gibt sie zusammen mit den Übungen unseres Katalogs, die zu deiner Ausstattung passen, an ein KI-Modell von OpenAI weiter, das daraus deinen Plan zusammenstellt. Deinen Namen, dein Geburtsdatum, Geschlecht, Gewicht und deine Größe übermitteln wir dabei nicht, und die Anfrage enthält dein Konto nicht. Für die Verarbeitung bei OpenAI gilt dasselbe wie beim Import. Unser Server speichert deine Antworten dabei nicht; er gibt nur den Plan an die App zurück, wo du ihn ändern kannst. Gespeichert wird erst der Plan, den du am Ende bestätigst (Abschnitt 4.5).
 
 **Begrenzung der Anfragen:** Damit Import und Planerstellung nicht missbraucht werden, begrenzen wir, wie oft sie pro Netzwerk und insgesamt am Tag genutzt werden können. Dafür speichert unser Server zu jeder Anfrage den Zeitpunkt, ob es ein Import oder eine Planerstellung war, und einen Hashwert deiner IP-Adresse, den er mit einem geheimen Schlüssel bildet; die IP-Adresse selbst speichern wir nicht. Einträge, die älter als zwei Tage sind, löschen wir bei jeder neuen Anfrage.
 

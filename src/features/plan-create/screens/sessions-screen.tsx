@@ -11,9 +11,9 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { useCreateStep } from '../hooks/use-create-step';
 
 /** How many workouts a week the plan is for (on whichever days suit the user). */
-export function DaysScreen() {
+export function SessionsScreen() {
   const { t } = useTranslation(['planCreate', 'common']);
-  const counter = useCreateStep('days');
+  const counter = useCreateStep('sessions');
   const { step } = usePlanFlow();
   const { sessionsPerWeek } = useDraft();
   const update = useUpdateDraft();
@@ -21,7 +21,7 @@ export function DaysScreen() {
   return (
     <StepScreen
       {...counter}
-      title={t('planCreate:days.title')}
+      title={t('planCreate:sessions.title')}
       footer={
         <Button
           label={t('common:actions.continue')}
@@ -34,8 +34,8 @@ export function DaysScreen() {
         min={1}
         max={MAX_SESSIONS_PER_WEEK}
         onChange={(next) => update({ sessionsPerWeek: next })}
-        format={(n) => t('planCreate:days.times', { count: n })}
-        unit={t('planCreate:days.perWeek')}
+        format={(n) => t('planCreate:sessions.times', { count: n })}
+        unit={t('planCreate:sessions.perWeek')}
       />
     </StepScreen>
   );

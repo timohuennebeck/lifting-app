@@ -5,7 +5,7 @@ import type { AnimatedRef } from 'react-native-reanimated';
 import Sortable, { type SortableGridProps } from 'react-native-sortables';
 
 import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
-import { estimateMinutes, exerciseItems, type PlanExerciseDraft } from '@/shared/data/routines';
+import { estimateMinutes, exerciseItems, type ExerciseDraft } from '@/shared/data/routines';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
 import { EmptyExercises } from '@/shared/ui/empty-exercises';
@@ -15,7 +15,7 @@ import { ExerciseListHeader } from './exercise-list-header';
 import { type ExerciseMenuAction, ExerciseMenuSheet } from './exercise-menu-sheet';
 import { RoutineExerciseCard } from './routine-exercise-card';
 
-export interface PlanExerciseListProps<T extends PlanExerciseDraft> {
+export interface EditableExerciseListProps<T extends ExerciseDraft> {
   /** The training's name, over its muscles. */
   title: string;
   exercises: T[];
@@ -51,7 +51,7 @@ export interface PlanExerciseListProps<T extends PlanExerciseDraft> {
  * (03·0b): the muscles they work, the count with the time and "add", then a card per exercise.
  * Hold a card to drag it to another place; its "⋯" edits its sets, swaps, moves or removes it.
  */
-export function PlanExerciseList<T extends PlanExerciseDraft>({
+export function EditableExerciseList<T extends ExerciseDraft>({
   title,
   exercises,
   keyOf,
@@ -69,7 +69,7 @@ export function PlanExerciseList<T extends PlanExerciseDraft>({
   footer,
   sortEnabled,
   itemEntering,
-}: PlanExerciseListProps<T>) {
+}: EditableExerciseListProps<T>) {
   const [menuFor, setMenuFor] = useState<number | null>(null);
   // The menu keeps its content while it animates out.
   const menuShown = useLastDefined(menuFor);

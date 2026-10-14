@@ -9,7 +9,7 @@ const LINE_WIDTHS = ['84%', '66%', '76%', '58%', '70%', '62%'] as const;
 const PENCIL = '#BDB7A9';
 
 interface PaperSheetProps {
-  /** Day badge in the header, e.g. "Mo" or "D1". */
+  /** Routine badge in the header, e.g. "T1". */
   tag: string;
   /** Lines light up one after another, like being read. */
   scanning: boolean;

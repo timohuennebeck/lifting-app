@@ -12,8 +12,8 @@ import { queryKeys } from './query-keys';
 import {
   insertRoutine,
   insertRoutineExercise,
-  type PlanExerciseDraft,
-  type PlanSetDraft,
+  type ExerciseDraft,
+  type SetTarget,
 } from './routines';
 import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
@@ -27,15 +27,15 @@ export const AI_BLOCK_WEEKS = 5;
 /** Reps in reserve of every set in a deload week. */
 const DELOAD_RIR = 4;
 
-export interface PlanRoutineDraft {
+export interface RoutineDraft {
   name: string;
-  exercises: PlanExerciseDraft[];
+  exercises: ExerciseDraft[];
 }
 
 export interface PlanDraft {
   name: string;
   /** In the order they are trained. */
-  routines: PlanRoutineDraft[];
+  routines: RoutineDraft[];
   sessionsPerWeek: number;
   /** Weeks of a block with its deload; null: every week the same. */
   blockWeeks: number | null;
@@ -186,7 +186,7 @@ export const deloadSetCount = (sets: number) => Math.ceil(sets / 2);
  * below 0), and in the deload only the first half of the sets, with DELOAD_RIR in reserve.
  * Sets without reps in reserve (e.g. timed holds) keep none.
  */
-export function setsForWeek<TSet extends Pick<PlanSetDraft, 'rir'>>(
+export function setsForWeek<TSet extends Pick<SetTarget, 'rir'>>(
   sets: TSet[],
   blockWeek: number | null,
   plan: Pick<PlanSummary, 'blockWeeks'>,

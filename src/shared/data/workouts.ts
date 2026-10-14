@@ -43,7 +43,7 @@ import {
   workoutEntriesSets,
 } from './powersync/schema';
 import { queryKeys } from './query-keys';
-import type { ExerciseItem, PlanExerciseDraft } from './routines';
+import type { ExerciseItem, ExerciseDraft } from './routines';
 import { firstCount, type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /**
@@ -106,11 +106,7 @@ export async function startWorkout(userId: string, name: string, routineId: stri
  * Starts a workout with exercises and target sets put together beforehand (an empty workout,
  * which isn't a routine). Returns the new workout id.
  */
-export async function startDraftWorkout(
-  userId: string,
-  name: string,
-  exercises: PlanExerciseDraft[],
-) {
+export async function startDraftWorkout(userId: string, name: string, exercises: ExerciseDraft[]) {
   return drizzle.transaction(async (tx) => {
     const workoutId = await insertWorkout(tx, userId, name, null);
     for (const [position, exercise] of exercises.entries()) {
@@ -223,7 +219,7 @@ async function insertWorkoutExercise(
   userId: string,
   workoutId: string,
   position: number | SQL<number>,
-  exercise: PlanExerciseDraft,
+  exercise: ExerciseDraft,
 ) {
   const id = newId();
   await tx.insert(workoutEntriesExercises).values({

@@ -26,7 +26,7 @@ type PlanStep =
   | '/create/focus'
   | '/create/equipment'
   | '/create/home-equipment'
-  | '/create/days'
+  | '/create/sessions'
   | '/create/duration'
   | '/create/building'
   | '/create/plan-name';

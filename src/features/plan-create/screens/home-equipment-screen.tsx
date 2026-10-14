@@ -41,7 +41,7 @@ export function HomeEquipmentScreen() {
           disabled={!owned.length}
           onPress={() => {
             update({ homeEquipment: owned });
-            router.push(step('/create/days'));
+            router.push(step('/create/sessions'));
           }}
         />
       }

@@ -16,16 +16,16 @@ const SET_SECONDS = 45;
 const EXERCISE_SECONDS = 150;
 export const DEFAULT_REST = 90;
 
-export interface PlanSetDraft {
+export interface SetTarget {
   /** Reps, or seconds for timed exercises; either may be left out. */
   targetMin: number | null;
   targetMax: number | null;
   rir: number | null;
 }
 
-export interface PlanExerciseDraft {
+export interface ExerciseDraft {
   exerciseId: string;
-  sets: PlanSetDraft[];
+  sets: SetTarget[];
   restSeconds: number | null;
 }
 
@@ -33,7 +33,7 @@ export async function insertRoutineSets(
   tx: Tx,
   userId: string,
   routineExerciseId: string,
-  sets: PlanSetDraft[],
+  sets: SetTarget[],
 ) {
   if (!sets.length) return;
   await tx.insert(routineSets).values(
@@ -55,7 +55,7 @@ export async function insertRoutineExercise(
   userId: string,
   routineId: string,
   position: number | SQL<number>,
-  exercise: PlanExerciseDraft,
+  exercise: ExerciseDraft,
 ) {
   const id = newId();
   await tx.insert(routineExercises).values({
@@ -113,7 +113,7 @@ export interface ExerciseItem {
 }
 
 /** Exercises as `estimateMinutes` and the muscle shares take them: set count and rest. */
-export const exerciseItems = (exercises: PlanExerciseDraft[]): ExerciseItem[] =>
+export const exerciseItems = (exercises: ExerciseDraft[]): ExerciseItem[] =>
   exercises.map((e) => ({
     exerciseId: e.exerciseId,
     sets: e.sets.length,
@@ -188,7 +188,7 @@ export function useRoutines() {
   });
 }
 
-export interface RoutineSetDetail extends PlanSetDraft {
+export interface RoutineSetDetail extends SetTarget {
   id: string;
 }
 

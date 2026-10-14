@@ -45,7 +45,7 @@
     "title": "WHAT DO YOU\nHAVE AT HOME?",
     "subtitle": "Tap everything you can train with."
   },
-  "days": {
+  "sessions": {
     "title": "HOW OFTEN DO YOU\nWANT TO TRAIN?",
     "perWeek": "PER WEEK",
     "times": "{{count}}×"
@@ -59,13 +59,13 @@
     "stages": [
       "Weighing your goal & experience …",
       "Picking exercises for your equipment …",
-      "Spreading across your training days …",
+      "Splitting into workouts …",
       "Setting sets and reps …"
     ],
     "frequency": "{{count}} × {{minutes}} min",
     "focus": "Focus: {{areas}}",
     "balanced": "All muscle groups",
-    "dayTag": "D{{n}}"
+    "routineTag": "W{{n}}"
   },
   "generate": {
     "making": "Creating your plan …",

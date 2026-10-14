@@ -23,7 +23,7 @@
   "markDone": "Als erledigt markieren",
   "other": "Anderes Training",
   "deloadHint": "Deload-Woche: halb so viele Sätze und etwas leichter, damit du dich erholst.",
-  "unplanned": {
+  "noPlan": {
     "title": "Noch kein Plan",
     "body": "Tippe, um dir einen Plan erstellen zu lassen oder deinen einzulesen."
   },

@@ -24,8 +24,8 @@
     "title": "WELCHE BLÄTTER?",
     "subtitle": "{{name}} hat {{count}} Blätter. Wähle aus, was zu deinem Plan gehört.",
     "recommended": "Empfohlen",
-    "days_one": "{{count}} Tag",
-    "days_other": "{{count}} Tage",
+    "routines_one": "{{count}} Training",
+    "routines_other": "{{count}} Trainings",
     "exercises_one": "{{count}} Übung",
     "exercises_other": "{{count}} Übungen",
     "log_one": "{{count}} Eintrag mit Gewicht",
@@ -63,7 +63,7 @@
     "stages": [
       "Lese Handschrift …",
       "Erkenne Übungen …",
-      "Ordne Wochentage zu …",
+      "Ordne die Trainings …",
       "Übernehme Sätze und Wiederholungen …"
     ],
     "errors": {

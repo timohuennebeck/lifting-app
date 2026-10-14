@@ -22,7 +22,7 @@ import { Text } from '@/shared/ui/text';
 import { DoneCard } from '../components/done-card';
 import { NextCard } from '../components/next-card';
 import { OtherRoutineSheet } from '../components/other-routine-sheet';
-import { UnplannedDay } from '../components/unplanned-day';
+import { PlanPrompt } from '../components/plan-prompt';
 import { WeekStrip } from '../components/week-strip';
 import { useWeekWorkouts } from '../hooks/use-week-workouts';
 
@@ -129,7 +129,7 @@ export function TodayScreen() {
     }
     if (plan) {
       return (
-        <UnplannedDay
+        <PlanPrompt
           title={t('emptyPlan.title')}
           body={t('emptyPlan.body')}
           onPress={() => router.push(`/plan/${plan.id}`)}
@@ -137,9 +137,9 @@ export function TodayScreen() {
       );
     }
     return (
-      <UnplannedDay
-        title={t('unplanned.title')}
-        body={t('unplanned.body')}
+      <PlanPrompt
+        title={t('noPlan.title')}
+        body={t('noPlan.body')}
         onPress={() => openPlanFlow(profile, '/')}
       />
     );

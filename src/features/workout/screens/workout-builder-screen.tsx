@@ -5,7 +5,7 @@ import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { EditableTitle } from '@/features/training/components/editable-title';
-import { PlanExerciseList } from '@/features/training/components/plan-exercise-list';
+import { EditableExerciseList } from '@/features/training/components/editable-exercise-list';
 import { getActiveWorkoutId, startDraftWorkout } from '@/shared/data/workouts';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -67,7 +67,7 @@ export function WorkoutBuilderScreen() {
       >
         <EditableTitle value={name} onSubmit={rename} />
 
-        <PlanExerciseList
+        <EditableExerciseList
           title={name}
           exercises={exercises}
           keyOf={(e) => e.key}

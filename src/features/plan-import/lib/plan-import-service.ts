@@ -5,8 +5,8 @@ import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import type { PlanAnswers } from '@/features/plan-create/lib/plan-answers';
 import { env } from '@/shared/config/env';
 import type { CustomExercise } from '@/shared/data/exercises';
-import { clampSessions, type PlanDraft, type PlanRoutineDraft } from '@/shared/data/plans';
-import type { PlanExerciseDraft } from '@/shared/data/routines';
+import { clampSessions, type PlanDraft, type RoutineDraft } from '@/shared/data/plans';
+import type { ExerciseDraft } from '@/shared/data/routines';
 
 export interface ImportPhoto {
   uri: string;
@@ -33,7 +33,7 @@ export type ImportSource =
 /** What the plan functions read the plan from. */
 type ReadSource = Exclude<ImportSource, { kind: 'answers' }>;
 
-export interface ImportedExercise extends PlanExerciseDraft {
+export interface ImportedExercise extends ExerciseDraft {
   /** Stays with the exercise while it is edited or dragged to another place. */
   key: string;
   /** Text as read from the source when the match is uncertain; cleared once confirmed. */
@@ -42,7 +42,7 @@ export interface ImportedExercise extends PlanExerciseDraft {
   alternatives?: string[];
 }
 
-export interface ImportedRoutine extends PlanRoutineDraft {
+export interface ImportedRoutine extends RoutineDraft {
   exercises: ImportedExercise[];
 }
 

@@ -24,8 +24,8 @@
     "title": "WHICH SHEETS?",
     "subtitle": "{{name}} has {{count}} sheets. Choose what belongs to your plan.",
     "recommended": "Recommended",
-    "days_one": "{{count}} day",
-    "days_other": "{{count}} days",
+    "routines_one": "{{count}} workout",
+    "routines_other": "{{count}} workouts",
     "exercises_one": "{{count}} exercise",
     "exercises_other": "{{count}} exercises",
     "log_one": "{{count}} entry with weights",
@@ -63,7 +63,7 @@
     "stages": [
       "Reading handwriting …",
       "Detecting exercises …",
-      "Matching weekdays …",
+      "Putting workouts in order …",
       "Applying sets and reps …"
     ],
     "errors": {

@@ -9,7 +9,7 @@ import Animated, {
 
 import { GhostExercise } from '@/shared/ui/ghost-exercise';
 
-/** A breathing skeleton row under the day being read: more exercises are on their way. */
+/** A breathing skeleton row under the routine being read: more exercises are on their way. */
 export function ReadingGhost() {
   const opacity = useSharedValue(1);
   useEffect(() => {

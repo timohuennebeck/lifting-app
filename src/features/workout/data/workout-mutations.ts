@@ -3,7 +3,7 @@ import { and, asc, desc, eq, inArray, isNull } from 'drizzle-orm';
 import { defaultTargets, swapTargets } from '@/shared/data/exercises';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
 import { workoutEntriesExercises, workoutEntriesSets } from '@/shared/data/powersync/schema';
-import type { PlanSetDraft } from '@/shared/data/routines';
+import type { SetTarget } from '@/shared/data/routines';
 import { insertWorkoutSet } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 import { clamp } from '@/shared/lib/math';
@@ -88,7 +88,7 @@ export async function unlogSet(setId: string) {
 }
 
 /** A target row of the running workout; `key` is the set's id for rows that already exist. */
-export interface WorkoutTargetDraft extends PlanSetDraft {
+export interface WorkoutTargetDraft extends SetTarget {
   key: string;
 }
 

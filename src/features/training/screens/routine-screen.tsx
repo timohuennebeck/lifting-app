@@ -15,7 +15,7 @@ import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
-import { PlanExerciseList } from '../components/plan-exercise-list';
+import { EditableExerciseList } from '../components/editable-exercise-list';
 import { RoutineMenu, type RoutineMenuTarget } from '../components/routine-menu';
 import { removeRoutineExercise, reorderRoutineExercise } from '../data/routine-mutations';
 import { useStartRoutine } from '../hooks/use-start-routine';
@@ -99,7 +99,7 @@ export function RoutineScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + (empty ? 40 : 130) }}
       >
-        <PlanExerciseList
+        <EditableExerciseList
           title={routine.name}
           exercises={exercises}
           keyOf={(e) => e.id}

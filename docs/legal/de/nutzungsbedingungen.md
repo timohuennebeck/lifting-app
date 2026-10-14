@@ -35,7 +35,7 @@ Du musst mindestens [[PLATZHALTER: Mindestalter]] Jahre alt sein, um Traqa zu nu
 
 Traqa unterstützt dich beim Krafttraining. Je nach Version und Abo gehören dazu insbesondere:
 
-- ein Trainingsplan, den ein KI-Modell aus deinen Angaben erstellt, zum Beispiel aus Ziel, Erfahrung, Ausstattung und Trainingstagen
+- ein Trainingsplan, den ein KI-Modell aus deinen Angaben erstellt, zum Beispiel aus Ziel, Erfahrung, Ausstattung und Trainings pro Woche
 - der Import eines vorhandenen Plans per Foto oder Datei
 - das Protokollieren deiner Trainings mit Gewichten, Wiederholungen und Zeiten, deine Historie, Bestwerte und Vorschläge für deine Sätze
 - der Körpercheck mit Fotos und geschätzten Werten

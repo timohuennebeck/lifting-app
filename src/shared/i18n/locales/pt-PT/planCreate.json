@@ -45,7 +45,7 @@
     "title": "O QUE TENS\nEM CASA?",
     "subtitle": "Toca em tudo o que tens para treinar."
   },
-  "days": {
+  "sessions": {
     "title": "QUANTAS VEZES\nQUERES TREINAR?",
     "perWeek": "POR SEMANA",
     "times": "{{count}}×"
@@ -59,13 +59,13 @@
     "stages": [
       "A analisar objetivo e experiência …",
       "A escolher exercícios para o teu equipamento …",
-      "A distribuir pelos teus dias de treino …",
+      "A dividir em treinos …",
       "A definir séries e repetições …"
     ],
     "frequency": "{{count}} × {{minutes}} min",
     "focus": "Foco: {{areas}}",
     "balanced": "Todos os grupos musculares",
-    "dayTag": "D{{n}}"
+    "routineTag": "T{{n}}"
   },
   "generate": {
     "making": "A criar o plano …",

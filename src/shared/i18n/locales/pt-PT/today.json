@@ -23,7 +23,7 @@
   "markDone": "Marcar como feito",
   "other": "Outro treino",
   "deloadHint": "Semana de deload: metade das séries e um pouco mais leve, para recuperares.",
-  "unplanned": {
+  "noPlan": {
     "title": "Ainda sem plano",
     "body": "Toca para pedir um plano ou importar o teu."
   },

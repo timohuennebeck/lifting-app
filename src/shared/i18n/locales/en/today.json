@@ -23,7 +23,7 @@
   "markDone": "Mark as done",
   "other": "Other workout",
   "deloadHint": "Deload week: half the sets and a bit lighter, so you recover.",
-  "unplanned": {
+  "noPlan": {
     "title": "No plan yet",
     "body": "Tap to have one made or import yours."
   },

@@ -6,7 +6,7 @@ import { View } from 'react-native';
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { splitMuscles } from '@/features/exercises/lib/muscle-groups';
 import { isTimed, useExercise, useExerciseName } from '@/shared/data/exercises';
-import type { PlanSetDraft } from '@/shared/data/routines';
+import type { SetTarget } from '@/shared/data/routines';
 import { formatTargetLabel } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -16,7 +16,7 @@ import { Text } from '@/shared/ui/text';
 export interface RoutineExerciseCardProps {
   exerciseId: string;
   /** Target sets: rep (or second) range and RIR. */
-  sets: PlanSetDraft[];
+  sets: SetTarget[];
   onMenu: () => void;
   onPress: () => void;
   /** Amber dot after the name: the plan import isn't sure about this match. */

@@ -8,7 +8,7 @@ import { formatSeconds, formatWeight, type SetValues, type UnitSystem } from '@/
 import { mmkvStorage } from '@/shared/lib/storage';
 import { MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
-import type { PlanExerciseDraft, PlanSetDraft } from './routines';
+import type { ExerciseDraft, SetTarget } from './routines';
 
 // The catalog lives in Supabase (`public.exercises`, `public.equipment`). The app downloads all
 // of it on first launch and keeps it on the device for offline use; `useCatalogRefresh` then
@@ -350,7 +350,7 @@ export const targetsFor = (timed: boolean): SetTargets =>
 export const defaultTargets = (exerciseId: string): SetTargets => targetsFor(isTimed(exerciseId));
 
 /** `count` new plan sets at the exercise's default targets. */
-export function defaultSetDrafts(exerciseId: string, count: number): PlanSetDraft[] {
+export function defaultSetDrafts(exerciseId: string, count: number): SetTarget[] {
   const { min, max, rir } = defaultTargets(exerciseId);
   return Array.from({ length: count }, () => ({ targetMin: min, targetMax: max, rir }));
 }
@@ -366,17 +366,14 @@ export const swapTargets = (fromId: string, toId: string): SetTargets | null =>
 const NEW_EXERCISE_SETS = 3;
 
 /** An exercise as the library adds it: three sets at its default targets, its default rest. */
-export const newExerciseDraft = (exerciseId: string): PlanExerciseDraft => ({
+export const newExerciseDraft = (exerciseId: string): ExerciseDraft => ({
   exerciseId,
   sets: defaultSetDrafts(exerciseId, NEW_EXERCISE_SETS),
   restSeconds: null,
 });
 
 /** `draft` with another exercise; its sets get new defaults where `swapTargets` resets them. */
-export const swapExerciseDraft = <T extends PlanExerciseDraft>(
-  draft: T,
-  exerciseId: string,
-): T => ({
+export const swapExerciseDraft = <T extends ExerciseDraft>(draft: T, exerciseId: string): T => ({
   ...draft,
   exerciseId,
   sets: swapTargets(draft.exerciseId, exerciseId)

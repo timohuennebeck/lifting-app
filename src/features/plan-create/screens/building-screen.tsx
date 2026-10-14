@@ -101,9 +101,9 @@ export function BuildingScreen() {
       <ScanStage progress={shown} stages={stages} chips={chips}>
         <PaperStack
           tags={[
-            t('planCreate:building.dayTag', { n: 3 }),
-            t('planCreate:building.dayTag', { n: 2 }),
-            t('planCreate:building.dayTag', { n: 1 }),
+            t('planCreate:building.routineTag', { n: 3 }),
+            t('planCreate:building.routineTag', { n: 2 }),
+            t('planCreate:building.routineTag', { n: 1 }),
           ]}
         />
       </ScanStage>

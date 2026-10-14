@@ -15,7 +15,7 @@ const OUTER = CIRCLE + 2 * RING;
 const STEP = 44;
 const STACK_WIDTH = STEP * MUSCLES.length + OUTER;
 
-export interface UnplannedDayProps {
+export interface PlanPromptProps {
   title: string;
   body: string;
   /** Makes a plan, or fills the empty one. */
@@ -23,7 +23,7 @@ export interface UnplannedDayProps {
 }
 
 /** Shown on a day without a workout when there is nothing to do next: no plan, or an empty one. */
-export function UnplannedDay({ title, body, onPress }: UnplannedDayProps) {
+export function PlanPrompt({ title, body, onPress }: PlanPromptProps) {
   return (
     <View className="flex-1 items-center justify-center px-8 pb-12">
       <PressableScale

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import type { PlanSetDraft } from '@/shared/data/routines';
+import type { SetTarget } from '@/shared/data/routines';
 import { formatRir } from '@/shared/lib/rir';
 import { colors } from '@/shared/lib/theme';
 import { InputCell } from '@/shared/ui/input-cell';
@@ -11,7 +11,7 @@ import { Text } from '@/shared/ui/text';
 
 import { editorRirStyle } from '../lib/training-ui';
 
-export interface SetDraft extends PlanSetDraft {
+export interface SetDraft extends SetTarget {
   key: string;
 }
 

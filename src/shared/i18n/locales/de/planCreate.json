@@ -45,7 +45,7 @@
     "title": "WAS HAST DU\nZUHAUSE?",
     "subtitle": "Tipp alles an, womit du trainieren kannst."
   },
-  "days": {
+  "sessions": {
     "title": "WIE OFT PRO WOCHE\nWILLST DU TRAINIEREN?",
     "perWeek": "PRO WOCHE",
     "times": "{{count}}×"
@@ -59,13 +59,13 @@
     "stages": [
       "Werte Ziel & Erfahrung aus …",
       "Wähle Übungen für deine Geräte …",
-      "Verteile auf deine Trainingstage …",
+      "Teile in Trainings auf …",
       "Lege Sätze und Wiederholungen fest …"
     ],
     "frequency": "{{count}} × {{minutes}} Min.",
     "focus": "Fokus: {{areas}}",
     "balanced": "Alle Muskelgruppen",
-    "dayTag": "T{{n}}"
+    "routineTag": "T{{n}}"
   },
   "generate": {
     "making": "Plan wird erstellt …",
