@@ -2,7 +2,8 @@ import { asc, count, eq, isNull, type SQL } from 'drizzle-orm';
 
 import { getOrInsert } from '@/shared/lib/map';
 
-import { getExercise } from './exercises';
+import { insertCustomExercises } from './custom-exercises';
+import { type CustomExercise, getExercise } from './exercises';
 import { newId, nowIso } from './json';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
@@ -42,10 +43,22 @@ export interface PlanDraft {
 }
 
 /**
- * Writes a plan as one collection with one template per day inside `tx`.
+ * Writes a plan as one collection with one template per day inside `tx`, with the exercises of
+ * `newExercises` it uses (an imported plan's, which the catalog doesn't have).
  * Returns the collection id.
  */
-export async function insertPlan(tx: Tx, userId: string, plan: PlanDraft): Promise<string> {
+export async function insertPlan(
+  tx: Tx,
+  userId: string,
+  plan: PlanDraft,
+  newExercises: CustomExercise[] = [],
+): Promise<string> {
+  const used = new Set(plan.days.flatMap((d) => d.exercises.map((e) => e.exerciseId)));
+  await insertCustomExercises(
+    tx,
+    userId,
+    newExercises.filter((e) => used.has(e.id)),
+  );
   const collectionId = await insertCollection(tx, userId, plan.name);
   for (const [dayIndex, day] of plan.days.entries()) {
     const templateId = newId();

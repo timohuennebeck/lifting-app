@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { Button } from '@/shared/ui/button';
 import { OptionCard } from '@/shared/ui/option-card';
 import { StepScreen } from '@/shared/ui/step-screen';
@@ -12,6 +13,7 @@ import { GOALS } from '../lib/goal-ranges';
 
 export function GoalScreen() {
   const { t } = useTranslation(['planCreate', 'common']);
+  const { step } = usePlanFlow();
   const draft = useDraft();
   const update = useUpdateDraft();
   const goal = draft.goal ?? 'hypertrophy';
@@ -27,7 +29,7 @@ export function GoalScreen() {
           label={t('common:actions.continue')}
           onPress={() => {
             update({ goal });
-            router.push('/create/focus');
+            router.push(step('/create/focus'));
           }}
         />
       }

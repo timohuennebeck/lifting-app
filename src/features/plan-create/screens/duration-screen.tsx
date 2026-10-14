@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
@@ -14,6 +15,7 @@ import { CREATE_STEPS, DURATION } from '../lib/flow';
 
 export function DurationScreen() {
   const { t } = useTranslation(['planCreate', 'common']);
+  const { step } = usePlanFlow();
   const { sessionMinutes } = useDraft();
   const update = useUpdateDraft();
 
@@ -39,7 +41,7 @@ export function DurationScreen() {
       footer={
         <Button
           label={t('common:actions.continue')}
-          onPress={() => router.push('/create/building')}
+          onPress={() => router.push(step('/create/building'))}
         />
       }
     >

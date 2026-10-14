@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { exerciseName } from '@/shared/data/exercises';
 import { haptics } from '@/shared/lib/haptics';
 import { PaperStack } from '@/shared/ui/paper-sheet';
@@ -21,6 +22,7 @@ const EXPECTED_MS = 15_000;
  */
 export function AnalysisScreen() {
   const { t, i18n } = useTranslation(['planImport', 'common']);
+  const { step } = usePlanFlow();
   const source = useImportStore((s) => s.source);
   const started = useImportStore((s) => !!s.plan?.days[0]?.exercises.length);
   const failure = useImportStore((s) => s.failure);
@@ -44,8 +46,8 @@ export function AnalysisScreen() {
     opened.current = true;
     // Already complete: the review won't see it finish.
     if (!useImportStore.getState().reading) haptics.success();
-    router.replace('/import/confirm');
-  }, [started, animated]);
+    router.replace(step('/import/confirm'));
+  }, [started, animated, step]);
 
   useEffect(() => {
     if (failure?.run !== run.current || opened.current) return;
@@ -54,7 +56,7 @@ export function AnalysisScreen() {
     router.back();
   }, [failure, t]);
 
-  if (!source) return <Redirect href="/import" />;
+  if (!source) return <Redirect href={step('/import')} />;
 
   const stages = t('planImport:analysis.stages', { returnObjects: true });
   const short = t('common:weekdays.short', { returnObjects: true });

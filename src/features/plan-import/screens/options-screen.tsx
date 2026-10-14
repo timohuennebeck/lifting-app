@@ -3,6 +3,7 @@ import { Redirect, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { Button } from '@/shared/ui/button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { StepScreen } from '@/shared/ui/step-screen';
@@ -28,9 +29,10 @@ const LINES = [
 /** 05 · OK D2: preview of the uploaded file with "Swap" before reading it. */
 export function OptionsScreen() {
   const { t } = useTranslation('planImport');
+  const { step } = usePlanFlow();
   const source = useImportStore((s) => s.source);
   const setFile = useImportStore((s) => s.setFile);
-  if (source?.kind !== 'file') return <Redirect href="/import" />;
+  if (source?.kind !== 'file') return <Redirect href={step('/import')} />;
   const { file } = source;
   const isImage = file.mimeType?.startsWith('image/');
 
@@ -48,7 +50,9 @@ export function OptionsScreen() {
       step={2}
       total={IMPORT_STEPS}
       title={t('options.title')}
-      footer={<Button label={t('options.cta')} onPress={() => router.push('/import/analysis')} />}
+      footer={
+        <Button label={t('options.cta')} onPress={() => router.push(step('/import/analysis'))} />
+      }
     >
       <View className="flex-1 items-center justify-center gap-5.5 px-5">
         <View

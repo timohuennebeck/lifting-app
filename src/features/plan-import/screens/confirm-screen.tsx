@@ -5,7 +5,6 @@ import { Alert, ScrollView, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { EditableTitle } from '@/features/training/components/editable-title';
 import { ExerciseListHeader } from '@/features/training/components/exercise-list-header';
 import {
@@ -15,6 +14,7 @@ import {
 import { PlanBar } from '@/features/training/components/plan-bar';
 import { TemplateExerciseCard } from '@/features/training/components/template-exercise-card';
 import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { estimateMinutes, exerciseItems } from '@/shared/data/templates';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { haptics } from '@/shared/lib/haptics';
@@ -50,6 +50,7 @@ import { useImportStore } from '../stores/import-store';
  */
 export function ConfirmScreen() {
   const { t } = useTranslation(['planImport', 'training', 'common']);
+  const { step, finish } = usePlanFlow();
   const insets = useSafeAreaInsets();
   const plan = useImportStore((s) => s.plan);
   const dayIndex = useImportStore((s) => s.dayIndex);
@@ -67,7 +68,6 @@ export function ConfirmScreen() {
   const alerted = useRef(false);
   const navigation = useNavigation();
   const focused = useIsFocused();
-  const updateDraft = useUpdateDraft();
   // The menu keeps its content while it animates out.
   const [menuFor, setMenuFor] = useState<number | null>(null);
   const menuShown = useLastDefined(menuFor);
@@ -90,11 +90,11 @@ export function ConfirmScreen() {
     alerted.current = true;
     Alert.alert(t(`planImport:analysis.errors.${failure.reason}`), undefined, [
       { text: t('common:actions.cancel'), style: 'cancel', onPress: () => router.back() },
-      { text: t('common:actions.retry'), onPress: () => router.replace('/import/analysis') },
+      { text: t('common:actions.retry'), onPress: () => router.replace(step('/import/analysis')) },
     ]);
-  }, [failure, run, focused, t]);
+  }, [failure, run, focused, t, step]);
 
-  if (!plan) return <Redirect href="/import" />;
+  if (!plan) return <Redirect href={step('/import')} />;
 
   const index = Math.min(dayIndex, plan.days.length - 1);
   const day = plan.days[index];
@@ -117,7 +117,7 @@ export function ConfirmScreen() {
 
   // Adding and swapping happen on the library page; picks apply when it closes with "Done".
   const openPicker = (params: { mode: 'add' } | { mode: 'swap'; index: string }) =>
-    router.push({ pathname: '/import/picker', params });
+    router.push({ pathname: step('/import/picker'), params });
 
   function addDay() {
     if (!plan) return;
@@ -157,8 +157,7 @@ export function ConfirmScreen() {
       if (next >= 0) selectDay(next);
       return;
     }
-    updateDraft({ plan: toPlanDraft(plan) });
-    router.push('/promise');
+    void finish(toPlanDraft(plan));
   }
 
   return (

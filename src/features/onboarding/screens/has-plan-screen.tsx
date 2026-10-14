@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { Button } from '@/shared/ui/button';
 import { FormatCards } from '@/shared/ui/format-cards';
 import { Text } from '@/shared/ui/text';
@@ -12,21 +13,22 @@ import { ABOUT_STEPS } from '../lib/flow';
 
 export function HasPlanScreen() {
   const { t } = useTranslation('onboarding');
+  const { inApp, step } = usePlanFlow();
 
   return (
     <StepScreen
-      step={9}
-      total={ABOUT_STEPS}
+      // The last question about the user in onboarding; in the app the flow starts here.
+      {...(!inApp && { step: 9, total: ABOUT_STEPS })}
       title={t('hasPlan.title')}
       contentClassName="pb-2"
       footer={
         <View className="items-center gap-1">
           <Button
             label={t('hasPlan.yes')}
-            onPress={() => router.push('/import')}
+            onPress={() => router.push(step('/import'))}
             className="self-stretch"
           />
-          <TextButton label={t('hasPlan.no')} onPress={() => router.push('/create/goal')} />
+          <TextButton label={t('hasPlan.no')} onPress={() => router.push(step('/create/goal'))} />
         </View>
       }
     >

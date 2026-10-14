@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Alert, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { wait } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
@@ -86,6 +87,7 @@ async function capture(
 /** 05a: photograph the plan page by page. `?retake=<index>` replaces one page. */
 export function CameraScreen() {
   const { t } = useTranslation(['planImport', 'common']);
+  const { step } = usePlanFlow();
   const insets = useSafeAreaInsets();
   const { retake } = useLocalSearchParams<{ retake?: string }>();
   const retakeIndex = retake !== undefined ? Number(retake) : null;
@@ -173,8 +175,8 @@ export function CameraScreen() {
 
   // "Done" waits for shots that are still being saved.
   useEffect(() => {
-    if (finishing && pending === 0) router.dismissTo('/import/review');
-  }, [finishing, pending]);
+    if (finishing && pending === 0) router.dismissTo(step('/import/review'));
+  }, [finishing, pending, step]);
 
   function close() {
     closed.current = true;

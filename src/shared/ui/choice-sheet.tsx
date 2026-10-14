@@ -30,7 +30,7 @@ export interface ChoiceSheetProps<T extends string> {
   value: T;
   onChange: (value: T) => void;
   onConfirm: (value: T) => void;
-  /** Shown between the options and the CTA, e.g. a "coming soon" note. */
+  /** Shown between the options and the CTA, e.g. why the CTA is disabled. */
   note?: string;
   loading?: boolean;
 }

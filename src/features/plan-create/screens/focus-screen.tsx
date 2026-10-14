@@ -9,6 +9,7 @@ import {
   type MuscleGroupId,
 } from '@/features/exercises/lib/muscle-groups';
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import { BodyMaps, type BodyPartId } from '@/shared/ui/muscle-map';
@@ -21,6 +22,7 @@ const hasGroup = (part: BodyPartId) => groupOfPart(part) !== null;
 
 export function FocusScreen() {
   const { t } = useTranslation(['planCreate', 'exercises', 'common']);
+  const { step } = usePlanFlow();
   const { focus } = useDraft();
   const update = useUpdateDraft();
   const groups = MUSCLE_GROUP_IDS.filter((g) => MUSCLE_GROUPS[g].some((m) => focus.includes(m)));
@@ -49,7 +51,7 @@ export function FocusScreen() {
               ? t('planCreate:focus.cta', { count: groups.length })
               : t('common:actions.continue')
           }
-          onPress={() => router.push('/create/equipment')}
+          onPress={() => router.push(step('/create/equipment'))}
         />
       }
     >

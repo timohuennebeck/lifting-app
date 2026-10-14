@@ -7,8 +7,9 @@ import { ProgressBar } from './progress-bar';
 import { Text } from './text';
 
 export interface StepHeaderProps {
-  step: number;
-  total: number;
+  /** Left out where the screen opens on its own, outside the flow it is a step of. */
+  step?: number;
+  total?: number;
   /** Hides the back button, e.g. on the first step of a phase. */
   hideBack?: boolean;
 }
@@ -27,10 +28,14 @@ export function StepHeader({ step, total, hideBack }: StepHeaderProps) {
           onPress={() => router.back()}
         />
       )}
-      <ProgressBar value={step / total} />
-      <Text variant="caption" tone="subtle">
-        {t('progress.stepOf', { current: step, total })}
-      </Text>
+      {step && total ? (
+        <>
+          <ProgressBar value={step / total} />
+          <Text variant="caption" tone="subtle">
+            {t('progress.stepOf', { current: step, total })}
+          </Text>
+        </>
+      ) : null}
     </View>
   );
 }

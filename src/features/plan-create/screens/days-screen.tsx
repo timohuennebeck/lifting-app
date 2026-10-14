@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { Button } from '@/shared/ui/button';
 import { NumberStepper } from '@/shared/ui/number-stepper';
 import { StepScreen } from '@/shared/ui/step-screen';
@@ -21,6 +22,7 @@ const PRESET_DAYS: Record<number, number[]> = {
 
 export function DaysScreen() {
   const { t } = useTranslation(['planCreate', 'common']);
+  const { step } = usePlanFlow();
   const { trainingDays } = useDraft();
   const update = useUpdateDraft();
   const count = Math.max(1, trainingDays.length);
@@ -33,7 +35,7 @@ export function DaysScreen() {
       footer={
         <Button
           label={t('common:actions.continue')}
-          onPress={() => router.push('/create/duration')}
+          onPress={() => router.push(step('/create/duration'))}
         />
       }
     >

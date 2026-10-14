@@ -31,8 +31,9 @@ export function StepTitle({ title, subtitle, subtitleTone = 'muted', className }
 }
 
 export interface StepScreenProps extends Omit<StepTitleProps, 'className'> {
-  step: number;
-  total: number;
+  /** Left out where the screen opens on its own, outside the flow it is a step of. */
+  step?: number;
+  total?: number;
   children?: ReactNode;
   /** Pinned bottom area, usually the CTA. */
   footer?: ReactNode;

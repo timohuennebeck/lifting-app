@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { FormatCards } from '@/shared/ui/format-cards';
 import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -16,7 +17,8 @@ import { useImportStore } from '../stores/import-store';
 /** 05: choose how to import a plan (photo or file), or build one exercise by exercise. */
 export function ImportScreen() {
   const { t } = useTranslation('planImport');
-  const camera = useCameraAccess(() => router.push('/import/camera'));
+  const { step } = usePlanFlow();
+  const camera = useCameraAccess(() => router.push(step('/import/camera')));
   const setFile = useImportStore((s) => s.setFile);
   const setPlan = useImportStore((s) => s.setPlan);
 
@@ -27,7 +29,7 @@ export function ImportScreen() {
       days: [{ name: t('confirm.newDay', { number: 1 }), weekday: null, exercises: [] }],
       newExercises: [],
     });
-    router.push('/import/confirm');
+    router.push(step('/import/confirm'));
   }
 
   async function uploadFile() {
@@ -35,7 +37,7 @@ export function ImportScreen() {
       const file = await pickPlanFile();
       if (!file) return;
       setFile(file);
-      router.push('/import/options');
+      router.push(step('/import/options'));
     } catch {
       Alert.alert(t('errors.file'));
     }

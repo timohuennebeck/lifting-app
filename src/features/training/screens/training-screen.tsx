@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import Sortable from 'react-native-sortables';
 
+import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useProfile } from '@/shared/data/profile';
 import {
@@ -52,6 +53,13 @@ export function TrainingScreen() {
   const { data: collections = [] } = useCollections();
   const { start, startingId } = useStartTemplate();
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  // A new active plan (e.g. one just made with "Programm erstellen") shows instead of the pick.
+  const active = profile?.activeCollectionId;
+  const [shownActive, setShownActive] = useState(active);
+  if (active !== shownActive) {
+    setShownActive(active);
+    setSelectedKey(null);
+  }
   const [createOpen, setCreateOpen] = useState(false);
   const [newCollectionOpen, setNewCollectionOpen] = useState(false);
   const [options, setOptions] = useState<TemplateSummary | null>(null);
@@ -175,6 +183,10 @@ export function TrainingScreen() {
         onCreateTemplate={() => {
           setCreateOpen(false);
           afterSheetClose(openNewTemplate);
+        }}
+        onCreateProgram={() => {
+          setCreateOpen(false);
+          afterSheetClose(() => openPlanFlow(profile));
         }}
       />
       <TemplateOptionsSheet

@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, View } from 'react-native';
 
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 import { Card } from '@/shared/ui/card';
@@ -19,13 +20,14 @@ import { useImportStore, usePhotos } from '../stores/import-store';
 /** 05a-2: page through the captured photos, retake or remove pages, then analyze. */
 export function ReviewScreen() {
   const { t } = useTranslation('planImport');
+  const { step } = usePlanFlow();
   const photos = usePhotos();
   const removePhoto = useImportStore((s) => s.removePhoto);
   const [page, setPage] = useState(0);
   // Pages get the card's exact size; a horizontal list does not stretch them on every platform.
   const [{ width, height }, setSize] = useState({ width: 0, height: 0 });
   const pager = useRef<FlatList>(null);
-  if (!photos.length) return <Redirect href="/import/camera" />;
+  if (!photos.length) return <Redirect href={step('/import/camera')} />;
   const current = Math.min(page, photos.length - 1);
 
   function show(index: number) {
@@ -47,13 +49,13 @@ export function ReviewScreen() {
       scroll
       footer={
         <View className="gap-1.5">
-          <Button label={t('review.cta')} onPress={() => router.push('/import/analysis')} />
+          <Button label={t('review.cta')} onPress={() => router.push(step('/import/analysis'))} />
           <Button
             label={t('review.addPage')}
             variant="ghost"
             icon="plus"
             className="h-11 self-center"
-            onPress={() => router.push('/import/camera')}
+            onPress={() => router.push(step('/import/camera'))}
           />
         </View>
       }
@@ -99,7 +101,9 @@ export function ReviewScreen() {
         </View>
         <PressableScale
           haptic="select"
-          onPress={() => router.push({ pathname: '/import/camera', params: { retake: current } })}
+          onPress={() =>
+            router.push({ pathname: step('/import/camera'), params: { retake: current } })
+          }
           className="absolute right-3.5 bottom-3.5 h-9.5 flex-row items-center gap-1.5 rounded-full bg-elevated px-3.5"
         >
           <Icon name="refresh" size={14} />
@@ -129,7 +133,7 @@ export function ReviewScreen() {
         <PressableScale
           haptic="select"
           accessibilityLabel={t('review.addPage')}
-          onPress={() => router.push('/import/camera')}
+          onPress={() => router.push(step('/import/camera'))}
           className="h-21 w-16 items-center justify-center rounded-xl bg-elevated"
         >
           <Icon name="plus" size={16} />

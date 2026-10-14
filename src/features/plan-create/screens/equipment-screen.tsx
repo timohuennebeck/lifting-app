@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import type { EquipmentAccess } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
 import { OptionCard } from '@/shared/ui/option-card';
@@ -14,6 +15,7 @@ const OPTIONS: EquipmentAccess[] = ['gym', 'home', 'bodyweight'];
 
 export function EquipmentScreen() {
   const { t } = useTranslation(['planCreate', 'common']);
+  const { step } = usePlanFlow();
   const draft = useDraft();
   const update = useUpdateDraft();
   const equipment = draft.equipment ?? 'gym';
@@ -29,7 +31,7 @@ export function EquipmentScreen() {
           label={t('common:actions.continue')}
           onPress={() => {
             update({ equipment });
-            router.push('/create/days');
+            router.push(step('/create/days'));
           }}
         />
       }

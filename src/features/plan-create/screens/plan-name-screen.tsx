@@ -1,9 +1,9 @@
-import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
+import { useDraft } from '@/features/onboarding/stores/onboarding-store';
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import { StepScreen } from '@/shared/ui/step-screen';
@@ -15,17 +15,15 @@ import { usePlanGenerator } from '../hooks/use-plan-generator';
 import { CREATE_STEPS } from '../lib/flow';
 
 export function PlanNameScreen() {
-  const { t } = useTranslation(['planCreate', 'common']);
+  const { t } = useTranslation(['planCreate', 'common', 'training']);
   const { plan } = useDraft();
-  const update = useUpdateDraft();
+  const { inApp, finish } = usePlanFlow();
   const { suggestions, generate } = usePlanGenerator();
   const [name, setName] = useState(plan?.name ?? suggestions[0]);
   const trimmed = name.trim();
 
   function submit() {
-    if (!trimmed) return;
-    update({ plan: { ...(plan ?? generate()), name: trimmed } });
-    router.push('/promise');
+    if (trimmed) void finish({ ...(plan ?? generate()), name: trimmed });
   }
 
   return (
@@ -34,7 +32,14 @@ export function PlanNameScreen() {
       total={CREATE_STEPS}
       title={t('planCreate:planName.title')}
       scroll
-      footer={<Button label={t('common:actions.continue')} disabled={!trimmed} onPress={submit} />}
+      footer={
+        <Button
+          // In the app the plan is saved here; onboarding goes on.
+          label={inApp ? t('training:create.createProgram') : t('common:actions.continue')}
+          disabled={!trimmed}
+          onPress={submit}
+        />
+      }
     >
       <View className="gap-2.5 px-4 pt-7">
         <TextField

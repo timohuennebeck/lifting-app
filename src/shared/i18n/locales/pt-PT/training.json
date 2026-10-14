@@ -19,11 +19,10 @@
     "template": "Modelo",
     "templateHint": "Definir exercícios e séries",
     "program": "Programa",
-    "programHint": "Criar um plano gerado por IA",
+    "programHint": "Importa o teu plano ou gera um novo",
     "createCollection": "Criar coleção",
     "createTemplate": "Criar modelo",
-    "comingSoon": "Em breve",
-    "programNote": "Os programas gerados por IA chegam em breve. Até lá, monta o teu plano a partir de modelos."
+    "createProgram": "Criar programa"
   },
   "collections": {
     "templateCount_one": "{{count}} modelo",

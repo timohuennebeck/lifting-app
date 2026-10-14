@@ -13,16 +13,18 @@ export interface CreateSheetProps {
   onClose: () => void;
   onCreateCollection: () => void;
   onCreateTemplate: () => void;
+  onCreateProgram: () => void;
 }
 
 const glyphColor = (active: boolean) => (active ? colors.onAccent : colors.fgMid);
 
-/** "+" sheet: new collection, template or (coming soon) AI program (01·V·A·6). */
+/** "+" sheet: new collection, template or program (01·V·A·6); a program is imported or made. */
 export function CreateSheet({
   visible,
   onClose,
   onCreateCollection,
   onCreateTemplate,
+  onCreateProgram,
 }: CreateSheetProps) {
   const { t } = useTranslation('training');
   const [kind, setKind] = useState<CreateKind>('template');
@@ -33,11 +35,10 @@ export function CreateSheet({
       onClose={onClose}
       value={kind}
       onChange={setKind}
-      note={kind === 'program' ? t('create.programNote') : undefined}
       onConfirm={(value) => {
-        // "program" is coming soon: its CTA is disabled.
         if (value === 'collection') onCreateCollection();
         else if (value === 'template') onCreateTemplate();
+        else onCreateProgram();
       }}
       options={[
         {
@@ -58,8 +59,7 @@ export function CreateSheet({
           value: 'program',
           title: t('create.program'),
           description: t('create.programHint'),
-          cta: t('create.comingSoon'),
-          ctaDisabled: true,
+          cta: t('create.createProgram'),
           renderIcon: (active) => <ProgramGlyph color={glyphColor(active)} />,
         },
       ]}

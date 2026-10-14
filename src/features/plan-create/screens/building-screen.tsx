@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { groupOfMuscle } from '@/features/exercises/lib/muscle-groups';
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { haptics } from '@/shared/lib/haptics';
 import { PaperStack } from '@/shared/ui/paper-sheet';
 import { type ScanChip, ScanStage, useTimedProgress } from '@/shared/ui/scan-stage';
@@ -15,6 +16,7 @@ const DURATION_MS = 3600;
 /** 00·P1: builds the plan while an animation plays, then asks for its name. */
 export function BuildingScreen() {
   const { t } = useTranslation(['planCreate', 'exercises']);
+  const { step } = usePlanFlow();
   const update = useUpdateDraft();
   const { input, generate } = usePlanGenerator();
   const done = useRef(false);
@@ -24,7 +26,7 @@ export function BuildingScreen() {
     done.current = true;
     update({ plan: generate() });
     haptics.success();
-    router.replace('/create/plan-name');
+    router.replace(step('/create/plan-name'));
   }
 
   const progress = useTimedProgress(DURATION_MS, finish);

@@ -19,11 +19,10 @@
     "template": "Template",
     "templateHint": "Übungen und Sätze festlegen",
     "program": "Programm",
-    "programHint": "KI-generierten Plan erstellen",
+    "programHint": "Plan einlesen oder erstellen lassen",
     "createCollection": "Sammlung erstellen",
     "createTemplate": "Template erstellen",
-    "comingSoon": "Demnächst",
-    "programNote": "KI-generierte Programme kommen bald. Bis dahin stellst du deinen Plan aus Templates zusammen."
+    "createProgram": "Programm erstellen"
   },
   "collections": {
     "templateCount_one": "{{count}} Template",
