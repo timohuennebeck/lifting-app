@@ -26,12 +26,8 @@ export const useSeenStore = create<SeenState>()(
   ),
 );
 
-/** True when the team replied after the user last saw the chat (or never opened it). */
-export const isUnread = (lastTeamAt: string | null, seenAt: string | undefined) =>
-  !!lastTeamAt && (!seenAt || toMs(lastTeamAt) > toMs(seenAt));
-
 /** True when the team has replied since the user last opened the chat. */
 export function useHasUnread(ticketId: string, lastTeamAt: string | null) {
   const seenAt = useSeenStore((s) => s.seen[ticketId]);
-  return isUnread(lastTeamAt, seenAt);
+  return !!lastTeamAt && (!seenAt || toMs(lastTeamAt) > toMs(seenAt));
 }

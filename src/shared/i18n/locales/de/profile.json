@@ -16,7 +16,14 @@
   },
   "activity": "Aktivität",
   "lastMonths": "Letzte 3 Monate",
-  "openHistory": "Öffnet deinen Verlauf",
+  "history": "Historie",
+  "historyEntry": "<b>{{name}}</b> hat <b>{{workout}}</b> in {{duration}} abgeschlossen",
+  "historyEmpty": "Deine abgeschlossenen Trainings erscheinen hier.",
+  "showMore": "Mehr anzeigen",
+  "when": {
+    "today": "Heute, {{time}}",
+    "yesterday": "Gestern, {{time}}"
+  },
   "settings": {
     "language": "Sprache",
     "units": "Einheiten",
@@ -28,6 +35,7 @@
       "restSound": "Ton bei Pausenende"
     },
     "links": {
+      "help": "Hilfe",
       "privacy": "Datenschutz",
       "terms": "AGB"
     },

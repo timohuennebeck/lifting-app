@@ -16,8 +16,6 @@ export interface TabScreenProps {
   greeting?: boolean;
   /** Shows settings after search in the header (profile tab). */
   settings?: boolean;
-  /** A dot on settings, e.g. for a reply from support. */
-  settingsBadge?: boolean;
   /** Rendered under the header, outside the scroll area. */
   pinned?: ReactNode;
   /** For drag and drop lists that scroll the page while dragging. */
@@ -30,7 +28,6 @@ export function TabScreen({
   headerActions,
   greeting,
   settings,
-  settingsBadge,
   pinned,
   scrollRef,
 }: TabScreenProps) {
@@ -38,12 +35,7 @@ export function TabScreen({
   return (
     <QueryFocus>
       <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-        <TabHeader
-          actions={headerActions}
-          greeting={greeting}
-          settings={settings}
-          settingsBadge={settingsBadge}
-        />
+        <TabHeader actions={headerActions} greeting={greeting} settings={settings} />
         {pinned}
         <PagerPage scrollRef={scrollRef}>{children}</PagerPage>
       </View>

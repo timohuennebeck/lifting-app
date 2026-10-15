@@ -95,7 +95,7 @@ function byWeek(workouts: WorkoutSummary[]): Week[] {
 }
 
 /**
- * Fortschritt → Verlauf: every finished workout, newest first, by week, each week with how many
+ * Fortschritt → Historie: every finished workout, newest first, by week, each week with how many
  * workouts and how much volume; a workout opens its summary.
  */
 export function HistoryPage() {

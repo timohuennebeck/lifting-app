@@ -75,7 +75,7 @@
     "profile": "Profil"
   },
   "progressTab": {
-    "history": "Verlauf",
+    "history": "Historie",
     "muscles": "Muskeln",
     "body": "Körper"
   },
@@ -95,7 +95,6 @@
     "recordA11y": "Bestleistung: {{value}}, zuletzt am {{date}}"
   },
   "settings": "Einstellungen",
-  "settingsNews": "Einstellungen, neue Antwort vom Support",
   "legal": {
     "terms": "Nutzungsbedingungen",
     "privacy": "Datenschutzerklärung",

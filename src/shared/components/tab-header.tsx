@@ -20,8 +20,6 @@ export interface TabHeaderProps {
   greeting?: boolean;
   /** Settings after search: only the profile tab, which the avatar on the others leads to. */
   settings?: boolean;
-  /** A neon dot on settings, e.g. for a reply from support. */
-  settingsBadge?: boolean;
 }
 
 /**
@@ -29,12 +27,7 @@ export interface TabHeaderProps {
  * weigh-in and search (exercises and their records), always in the same place. The weight
  * history and calendar are in Fortschritt → Körper.
  */
-export function TabHeader({
-  actions,
-  greeting = true,
-  settings = false,
-  settingsBadge = false,
-}: TabHeaderProps) {
+export function TabHeader({ actions, greeting = true, settings = false }: TabHeaderProps) {
   const { t } = useTranslation(['common', 'weight']);
   const { profile } = useProfile();
   // Ticks every minute so the date turns over at midnight.
@@ -82,20 +75,12 @@ export function TabHeader({
           onPress={() => router.push('/search')}
         />
         {settings ? (
-          <View>
-            <IconButton
-              icon="settings"
-              iconSize={20}
-              accessibilityLabel={settingsBadge ? t('settingsNews') : t('settings')}
-              onPress={() => router.navigate('/settings')}
-            />
-            {settingsBadge ? (
-              <View
-                pointerEvents="none"
-                className="absolute top-0.5 right-0.5 size-2.5 rounded-full border-2 border-bg bg-accent"
-              />
-            ) : null}
-          </View>
+          <IconButton
+            icon="settings"
+            iconSize={20}
+            accessibilityLabel={t('settings')}
+            onPress={() => router.navigate('/settings')}
+          />
         ) : null}
       </View>
     </View>

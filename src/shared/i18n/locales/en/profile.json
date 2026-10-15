@@ -16,7 +16,14 @@
   },
   "activity": "Activity",
   "lastMonths": "Last 3 months",
-  "openHistory": "Opens your history",
+  "history": "History",
+  "historyEntry": "<b>{{name}}</b> finished <b>{{workout}}</b> in {{duration}}",
+  "historyEmpty": "Your finished workouts will show up here.",
+  "showMore": "Show more",
+  "when": {
+    "today": "Today, {{time}}",
+    "yesterday": "Yesterday, {{time}}"
+  },
   "settings": {
     "language": "Language",
     "units": "Units",
@@ -28,6 +35,7 @@
       "restSound": "Sound when rest ends"
     },
     "links": {
+      "help": "Help",
       "privacy": "Privacy",
       "terms": "Terms"
     },
