@@ -48,7 +48,7 @@ export function CreateSheet({
           title: t('create.workout'),
           description: t('create.workoutHint'),
           cta: t('create.startWorkout'),
-          renderIcon: (active) => <Icon name="play" size={14} color={glyphColor(active)} />,
+          renderIcon: (active) => <Icon name="bolt" size={16} color={glyphColor(active)} />,
         },
         {
           value: 'routine',
