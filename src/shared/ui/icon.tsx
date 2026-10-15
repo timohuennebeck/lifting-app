@@ -69,37 +69,10 @@ const ICONS = {
   'arrow-up': { viewBox: '0 0 16 16', render: stroke('M8 13V3M3.5 7.5L8 3l4.5 4.5', 2.2) },
   // Opens something outside the app (e.g. the store's subscription page).
   'arrow-up-right': { viewBox: '0 0 16 16', render: stroke('M4.5 11.5l7-7M6 4.5h5.5V10', 1.8) },
-  // Swapping an exercise (or a file) for another: two cards, each going to the other's place.
+  // Swapping an exercise (or a file) for another: an arrow up beside an arrow down.
   swap: {
     viewBox: '0 0 14 14',
-    render: (c) => (
-      <>
-        <Rect
-          x={1.5}
-          y={1.5}
-          width={5}
-          height={5}
-          rx={1.3}
-          stroke={c}
-          strokeWidth={1.6}
-          fill="none"
-        />
-        <Rect
-          x={7.5}
-          y={7.5}
-          width={5}
-          height={5}
-          rx={1.3}
-          stroke={c}
-          strokeWidth={1.6}
-          fill="none"
-        />
-        {stroke(
-          'M8.5 3H10a2 2 0 0 1 2 2v.6M10.7 4.4 12 5.7l1.3-1.3M5.5 11H4a2 2 0 0 1-2-2v-.6M3.3 9.6 2 8.3.7 9.6',
-          1.6,
-        )(c)}
-      </>
-    ),
+    render: stroke('M4.5 12.5v-10M2 5l2.5-2.5L7 5M9.5 1.5v10M7 9l2.5 2.5L12 9', 1.6),
   },
   // Switching between two views, e.g. the set table's targets and last time.
   'arrows-left-right': {
