@@ -19,6 +19,7 @@ export function ProgressLayout() {
       <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
         <TabHeader />
         <SwipeTabs>
+          <TopTabs.Screen name="history" options={{ title: t('progressTab.history') }} />
           <TopTabs.Screen name="index" options={{ title: t('progressTab.muscles') }} />
           <TopTabs.Screen name="body" options={{ title: t('progressTab.body') }} />
         </SwipeTabs>

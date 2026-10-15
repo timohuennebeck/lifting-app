@@ -30,9 +30,33 @@
     "minShort": "Min"
   },
   "weekdays": {
-    "short": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    "narrow": ["M", "T", "W", "T", "F", "S", "S"],
-    "long": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    "short": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ],
+    "narrow": [
+      "M",
+      "T",
+      "W",
+      "T",
+      "F",
+      "S",
+      "S"
+    ],
+    "long": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ]
   },
   "greeting": "Hi {{name}}",
   "languages": {
@@ -51,8 +75,18 @@
     "profile": "Profile"
   },
   "progressTab": {
+    "history": "History",
     "muscles": "Muscles",
     "body": "Body"
+  },
+  "history": {
+    "thisWeek": "This week",
+    "lastWeek": "Last week",
+    "count_one": "{{count}} workout",
+    "count_other": "{{count}} workouts",
+    "more": "Load more",
+    "empty": "No workouts yet",
+    "emptyHint": "Every workout you finish shows up here, by week."
   },
   "search": {
     "open": "Search exercises",
