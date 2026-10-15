@@ -74,7 +74,7 @@ function NoRoutines() {
 }
 
 /**
- * Training → Alle Trainings: the routines outside a plan, the ones done most recently first
+ * Training → Einzeltrainings: the routines outside a plan, the ones done most recently first
  * (once there are more than three), then all of them A–Z.
  */
 export function AllRoutinesPage() {

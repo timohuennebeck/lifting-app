@@ -39,7 +39,7 @@ const openCheck = (id: string) => router.push(`/progress-check/result/${id}`);
 const openCompare = (side: 'a' | 'b') =>
   router.push({ pathname: '/body-compare', params: { side } });
 
-// Faint stripes over a locked card as one path, each bottom-left to top-right, 13pt apart along
+// Faint stripes over a locked or empty card as one path, each bottom-left to top-right, 13pt apart along
 // the edges (about 9pt across), enough to cover the card; the card clips them to its corners.
 const HATCH = Array.from({ length: 16 }, (_, k) => `M${(k + 1) * 13} 0L0 ${(k + 1) * 13}`).join('');
 
@@ -49,21 +49,23 @@ interface PlaceholderCardProps {
   lit: boolean;
   /** Hatched, with a padlock instead of the question mark (under 18). */
   locked?: boolean;
+  /** Hatched, keeping the question mark (no check yet). */
+  hatched?: boolean;
   tilt: number;
 }
 
 /** An empty photo card of the comparison, tilted, with a question mark or a padlock. */
-function PlaceholderCard({ letter, lit, locked, tilt }: PlaceholderCardProps) {
+function PlaceholderCard({ letter, lit, locked, hatched = locked, tilt }: PlaceholderCardProps) {
   return (
     <View
       className={cn(
         'h-30 w-23 items-center justify-center rounded-[18px] bg-surface',
         lit ? 'border-2 border-accent' : 'border border-line',
-        locked && 'overflow-hidden',
+        hatched && 'overflow-hidden',
       )}
       style={{ transform: [{ rotate: `${tilt}deg` }] }}
     >
-      {locked ? (
+      {hatched ? (
         <Svg width="100%" height="100%" style={StyleSheet.absoluteFill}>
           <Path d={HATCH} stroke={colors.fg} strokeOpacity={0.05} strokeWidth={1.5} />
         </Svg>
@@ -155,11 +157,11 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
       >
-        <PlaceholderCard letter="A" lit={false} tilt={-7} />
+        <PlaceholderCard letter="A" lit={false} hatched tilt={-7} />
         <CardGap className="w-14">
           <CompareArrow inline muted />
         </CardGap>
-        <PlaceholderCard letter="B" lit={false} tilt={7} />
+        <PlaceholderCard letter="B" lit={false} hatched tilt={7} />
       </View>
       <Text variant="headline" className="mt-9 text-center">
         {t('empty.title')}

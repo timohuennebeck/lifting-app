@@ -3,8 +3,8 @@
     "create": "Create new"
   },
   "tabs": {
-    "myPlan": "My plan",
-    "all": "All workouts"
+    "myPlan": "Plans",
+    "all": "Single workouts"
   },
   "list": {
     "start": "Start {{name}}",

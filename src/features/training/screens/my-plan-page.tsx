@@ -139,7 +139,7 @@ function NoPlan({ onCreate }: { onCreate: () => void }) {
 }
 
 /**
- * Training → Mein Plan: the user's plans as cards, the one Today follows first; before the first
+ * Training → Pläne: the user's plans as cards, the one Today follows first; before the first
  * one, a way to make it.
  */
 export function MyPlanPage() {

@@ -16,7 +16,7 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { CreateSheet } from './create-sheet';
 
 /**
- * Training tab: "Mein Plan" (the user's plans) and "Alle Trainings"
+ * Training tab: "Pläne" (the user's plans) and "Einzeltrainings"
  * (their routines outside a plan) as swipeable top tabs. "+" makes a routine or a plan.
  */
 export function TrainingLayout() {
