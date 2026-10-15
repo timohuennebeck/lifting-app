@@ -127,8 +127,7 @@ export function TodayScreen() {
       const when = onToday ? weekLabel(plan, status) : formatWeekdayDate(day.date);
       let label = when;
       if (routine.id === nextId) {
-        label =
-          onToday && block ? t('status.recommended') : `${t('status.recommended')} · ${when}`;
+        label = onToday && block ? t('status.recommended') : `${t('status.recommended')} · ${when}`;
       }
       return (
         <>
