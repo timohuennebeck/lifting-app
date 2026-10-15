@@ -2,17 +2,16 @@
   "header": {
     "create": "Neu erstellen"
   },
+  "tabs": {
+    "myPlan": "Mein Plan",
+    "all": "Alle Trainings"
+  },
   "list": {
-    "plans": "Pläne",
-    "library": "Meine Trainings",
     "start": "{{name}} starten",
     "more": "Optionen für {{name}}",
     "minutes": "{{count}} Min",
     "recommended": "Coach empfiehlt",
-    "addRoutine": "Training hinzufügen",
-    "noPlan": "Noch kein Plan",
-    "noPlanHint": "Lass dir einen erstellen, lies deinen ein oder bau ihn selbst.",
-    "libraryEmpty": "Trainings ohne Plan, z. B. fürs Hotel oder einen Arm-Tag, landen hier."
+    "addRoutine": "Training hinzufügen"
   },
   "myPlan": {
     "rest": "Weitere Trainings",
@@ -31,7 +30,8 @@
   },
   "all": {
     "recent": "Zuletzt trainiert",
-    "lastDone": "Zuletzt {{date}}"
+    "lastDone": "Zuletzt {{date}}",
+    "all": "Alle"
   },
   "plan": {
     "routineCount_one": "{{count}} Training",
@@ -129,5 +129,13 @@
     "customRestHint": "Überschreibt die Standard-Pause dieser Übung",
     "minutes": "Min.",
     "rirOption": "{{value}} Wiederholungen in Reserve"
+  },
+  "empty": {
+    "workouts": "Trainings",
+    "block": "Block {{n}}",
+    "planTitle": "Kein Plan vorhanden",
+    "planBody": "Ein Plan reiht deine Trainings in Blöcken. Danach zeigen wir dir hier immer, was dran ist.",
+    "routinesTitle": "Keine Trainings vorhanden",
+    "routinesBody": "Stell dir aus Übungen ein Training zusammen. Danach findest du es hier und kannst es in Pläne einbauen."
   }
 }

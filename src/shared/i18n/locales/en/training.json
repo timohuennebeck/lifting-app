@@ -2,17 +2,16 @@
   "header": {
     "create": "Create new"
   },
+  "tabs": {
+    "myPlan": "My plan",
+    "all": "All workouts"
+  },
   "list": {
-    "plans": "Plans",
-    "library": "My workouts",
     "start": "Start {{name}}",
     "more": "Options for {{name}}",
     "minutes": "{{count}} min",
     "recommended": "Coach recommends",
-    "addRoutine": "Add workout",
-    "noPlan": "No plan yet",
-    "noPlanHint": "Have one made, import yours or build it yourself.",
-    "libraryEmpty": "Workouts outside a plan, e.g. for a hotel gym or an arm day, go here."
+    "addRoutine": "Add workout"
   },
   "myPlan": {
     "rest": "More workouts",
@@ -31,7 +30,8 @@
   },
   "all": {
     "recent": "Recently done",
-    "lastDone": "Last {{date}}"
+    "lastDone": "Last {{date}}",
+    "all": "All"
   },
   "plan": {
     "routineCount_one": "{{count}} workout",
@@ -129,5 +129,13 @@
     "customRestHint": "Overrides this exercise's default rest",
     "minutes": "min",
     "rirOption": "{{value}} reps in reserve"
+  },
+  "empty": {
+    "workouts": "workouts",
+    "block": "Block {{n}}",
+    "planTitle": "No plan yet",
+    "planBody": "A plan lines up your workouts in blocks. Then we always show you here what comes next.",
+    "routinesTitle": "No workouts yet",
+    "routinesBody": "Put a workout together from exercises. You’ll find it here and can add it to plans."
   }
 }

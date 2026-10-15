@@ -2,17 +2,16 @@
   "header": {
     "create": "Criar novo"
   },
+  "tabs": {
+    "myPlan": "O meu plano",
+    "all": "Todos os treinos"
+  },
   "list": {
-    "plans": "Planos",
-    "library": "Os meus treinos",
     "start": "Iniciar {{name}}",
     "more": "Opções para {{name}}",
     "minutes": "{{count}} min",
     "recommended": "O coach recomenda",
-    "addRoutine": "Adicionar treino",
-    "noPlan": "Ainda sem plano",
-    "noPlanHint": "Pede um, importa o teu ou cria-o tu.",
-    "libraryEmpty": "Treinos fora de um plano, p. ex. para o hotel ou um dia de braços, ficam aqui."
+    "addRoutine": "Adicionar treino"
   },
   "myPlan": {
     "rest": "Mais treinos",
@@ -31,7 +30,8 @@
   },
   "all": {
     "recent": "Feitos recentemente",
-    "lastDone": "Último: {{date}}"
+    "lastDone": "Último: {{date}}",
+    "all": "Todos"
   },
   "plan": {
     "routineCount_one": "{{count}} treino",
@@ -129,5 +129,13 @@
     "customRestHint": "Substitui o descanso padrão deste exercício",
     "minutes": "min",
     "rirOption": "{{value}} repetições em reserva"
+  },
+  "empty": {
+    "workouts": "treinos",
+    "block": "Bloco {{n}}",
+    "planTitle": "Ainda sem plano",
+    "planBody": "Um plano organiza os teus treinos em blocos. Depois mostramos-te sempre aqui o que vem a seguir.",
+    "routinesTitle": "Ainda sem treinos",
+    "routinesBody": "Monta um treino a partir de exercícios. Depois encontras-o aqui e podes juntá-lo a planos."
   }
 }
