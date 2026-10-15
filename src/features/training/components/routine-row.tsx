@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
 
-import { type MuscleShare, muscleShares } from '@/shared/data/muscles';
-import type { ExerciseItem } from '@/shared/data/routines';
+import { mainShares, type MuscleShare, muscleShares } from '@/shared/data/muscles';
+import type { ExerciseItem, RoutineSummary } from '@/shared/data/routines';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -21,10 +21,12 @@ const STACK_WIDTH = 116;
 
 interface MuscleStackProps {
   shares: MuscleShare[];
+  /** The front muscle in neon, ringed: the routine that's next. */
+  highlight?: boolean;
 }
 
 /** The three muscles worked most as overlapping circles, the biggest share in front. */
-function MuscleStack({ shares }: MuscleStackProps) {
+export function MuscleStack({ shares, highlight }: MuscleStackProps) {
   const [first, ...rest] = shares.slice(0, 3);
   return (
     <View
@@ -53,11 +55,11 @@ function MuscleStack({ shares }: MuscleStackProps) {
       <View className="absolute top-0 left-0" style={{ width: FRONT_SIZE, height: FRONT_SIZE }}>
         <MuscleCircle
           muscle={first?.muscle ?? null}
-          accent={first ? colors.accent : colors.fg2}
-          // The front circle is ringed in neon; the others are cut out of the card behind it.
+          accent={first && highlight ? colors.accent : colors.fg2}
+          // The next one's front circle is ringed in neon; the others are cut out of the card.
           className={cn(
             'size-full',
-            first ? 'border-[1.5px] border-accent' : 'border-2 border-surface',
+            first && highlight ? 'border-[1.5px] border-accent' : 'border-2 border-surface',
           )}
         />
       </View>
@@ -65,110 +67,130 @@ function MuscleStack({ shares }: MuscleStackProps) {
   );
 }
 
+/**
+ * A routine's line under its name: its time and the two muscles it works most, e.g. "48 Min ·
+ * Rücken · Bizeps" (the time first, so a long muscle name can't cut it off); for one without
+ * exercises, that it has none.
+ */
+export function useRoutineMeta() {
+  const { t } = useTranslation(['training', 'muscles']);
+  return (routine: Pick<RoutineSummary, 'items' | 'exerciseCount' | 'estimatedMinutes'>) => {
+    if (!routine.exerciseCount) return t('training:overview.noExercises');
+    const muscles = mainShares(muscleShares(routine.items))
+      .slice(0, 2)
+      .map((s) => t(`muscles:names.${s.muscle}`));
+    return [t('training:list.minutes', { count: routine.estimatedMinutes }), ...muscles].join(
+      ' · ',
+    );
+  };
+}
+
 export interface RoutineRowProps {
   name: string;
-  minutes: number;
-  exerciseCount: number;
   /** Exercise ids with their set counts, for the muscles. */
   items: ExerciseItem[];
+  /** The line under the name (see `useRoutineMeta`). */
+  meta: string;
   onPress: () => void;
   onStart: () => void;
-  /** "⋯": rename, copy or delete. */
-  onMore: () => void;
+  /** "⋯": rename, copy or delete; left out where the routine's page has it. */
+  onMore?: () => void;
   starting?: boolean;
-  /** Small accent tag over the name, e.g. "Als Nächstes". */
+  /** The plan's next routine: its top muscle in neon. */
+  next?: boolean;
+  /** Small accent tag over the name, e.g. "Coach empfiehlt". */
   tag?: string;
+  /** Done this plan week: dimmed, with a check where play would be. */
+  done?: boolean;
 }
 
 /**
- * Routine card: its top muscles as circles, the name, the muscle worked most with its share,
- * duration and exercise count; "⋯" (rename, copy, delete) and a quick-start play button.
+ * Routine card: its top muscles as circles, the name and a line under it; "⋯" (rename, copy,
+ * delete) where given, and a quick-start play button, or a check once it's done this week.
  */
 export function RoutineRow({
   name,
-  minutes,
-  exerciseCount,
   items,
+  meta,
   onPress,
   onStart,
   onMore,
   starting,
+  next,
   tag,
+  done,
 }: RoutineRowProps) {
-  const { t } = useTranslation(['training', 'muscles']);
+  const { t } = useTranslation('training');
   const shares = muscleShares(items);
-  const top = shares[0];
-  const focus = top ? `${t(`muscles:names.${top.muscle}`)} ${top.percent} %` : null;
-  const meta = t('training:list.meta', { count: exerciseCount, minutes });
 
   return (
     <PressableScale
       haptic="none"
       activeScale={0.98}
       accessibilityRole="button"
-      accessibilityLabel={[tag, name, focus, meta].filter(Boolean).join(', ')}
+      accessibilityLabel={[tag, name, meta].filter(Boolean).join(', ')}
       // The card hides its buttons from screen readers; these stand in for them.
       accessibilityActions={[
-        { name: 'start', label: t('training:list.start', { name }) },
-        { name: 'more', label: t('training:list.more', { name }) },
+        { name: 'start', label: t('list.start', { name }) },
+        ...(onMore ? [{ name: 'more', label: t('list.more', { name }) }] : []),
       ]}
       onAccessibilityAction={(e) => {
         if (e.nativeEvent.actionName === 'start') onStart();
-        else if (e.nativeEvent.actionName === 'more') onMore();
+        else if (e.nativeEvent.actionName === 'more') onMore?.();
       }}
       onPress={onPress}
       className="flex-row items-center gap-3.5 rounded-[22px] bg-surface py-3.5 pr-3 pl-2.5"
     >
-      <MuscleStack shares={shares} />
-      <View className="min-w-0 flex-1">
+      <View className={cn(done && 'opacity-60')}>
+        <MuscleStack shares={shares} highlight={next} />
+      </View>
+      <View className="min-w-0 flex-1 gap-0.5">
         {tag ? (
-          <View className="mb-1 self-start rounded-full bg-accent px-2 py-0.5">
+          <View className="mb-0.5 self-start rounded-full bg-accent px-2 py-0.5">
             <Text variant="caption" tone="onAccent" className="text-[11px] leading-3.5">
               {tag}
             </Text>
           </View>
         ) : null}
-        <Text variant="bodyStrong" numberOfLines={1}>
+        <Text variant="bodyStrong" tone={done ? 'subtle' : undefined} numberOfLines={1}>
           {name}
         </Text>
-        {focus ? (
-          <Text variant="caption" tone="accent" numberOfLines={1} className="mt-0.5">
-            {focus}
-          </Text>
-        ) : null}
-        <Text
-          variant="caption"
-          tone="subtle"
-          numberOfLines={1}
-          className="mt-0.5 font-inter-medium"
-        >
+        <Text variant="caption" tone="subtle" numberOfLines={1} className="font-inter-medium">
           {meta}
         </Text>
       </View>
       <View className="flex-row items-center gap-0.5">
-        <PressableScale
-          haptic="tap"
-          hitSlop={8}
-          accessibilityLabel={t('training:list.more', { name })}
-          onPress={onMore}
-          className="h-10 w-6 items-center justify-center"
-        >
-          <Icon name="more" size={14} color={colors.subtle} />
-        </PressableScale>
-        <PressableScale
-          haptic="press"
-          hitSlop={4}
-          accessibilityLabel={t('training:list.start', { name })}
-          onPress={onStart}
-          disabled={starting}
-          className="size-10 items-center justify-center rounded-full bg-elevated"
-        >
-          {starting ? (
-            <ActivityIndicator size="small" color={colors.fg} />
-          ) : (
-            <Icon name="play" size={12} />
-          )}
-        </PressableScale>
+        {onMore ? (
+          <PressableScale
+            haptic="tap"
+            hitSlop={8}
+            accessibilityLabel={t('list.more', { name })}
+            onPress={onMore}
+            className="h-10 w-6 items-center justify-center"
+          >
+            <Icon name="more" size={14} color={colors.subtle} />
+          </PressableScale>
+        ) : null}
+        {done ? (
+          <View className="size-10 items-center justify-center rounded-full bg-elevated">
+            <Icon name="check" size={13} color={colors.accent} />
+          </View>
+        ) : (
+          <PressableScale
+            haptic="press"
+            hitSlop={4}
+            accessibilityLabel={t('list.start', { name })}
+            onPress={onStart}
+            disabled={starting}
+            className="size-10 items-center justify-center rounded-full bg-elevated"
+          >
+            {starting ? (
+              <ActivityIndicator size="small" color={colors.fg} />
+            ) : (
+              <Icon name="play" size={12} />
+            )}
+          </PressableScale>
+        )}
       </View>
     </PressableScale>
   );

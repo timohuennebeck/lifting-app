@@ -2,20 +2,45 @@
   "header": {
     "create": "Create new"
   },
-  "list": {
-    "title": "Training",
+  "tabs": {
     "myPlan": "My plan",
+    "all": "All workouts"
+  },
+  "list": {
     "otherPlans": "Other plans",
-    "library": "My workouts",
     "meta_one": "{{minutes}} min · {{count}} exercise",
     "meta_other": "{{minutes}} min · {{count}} exercises",
     "start": "Start {{name}}",
     "more": "Options for {{name}}",
-    "next": "Up next",
+    "minutes": "{{count}} min",
+    "recommended": "Coach recommends",
     "addRoutine": "Add workout",
     "noPlan": "No plan yet",
     "noPlanHint": "Have one made, import yours or build it yourself.",
     "libraryEmpty": "Workouts outside a plan, e.g. for a hotel gym or an arm day, go here."
+  },
+  "myPlan": {
+    "active": "Active plan",
+    "rest": "More workouts",
+    "doneOn": "Done · {{day}}",
+    "openPlan": "Open plan",
+    "openPlanNamed": "Open {{name}}"
+  },
+  "card": {
+    "perWeek_one": "{{count}} workout a week",
+    "perWeek_other": "{{count}} workouts a week",
+    "block": "{{build}} + 1-week blocks",
+    "empty": "Add exercises to your plan's workouts to get going."
+  },
+  "progress": {
+    "session": "Workout {{n}} of {{total}}",
+    "done": "{{done}} / {{total}} done"
+  },
+  "all": {
+    "recent": "Recently done",
+    "all": "All",
+    "lastDone": "Last {{date}}",
+    "emptyTitle": "No workouts of your own yet"
   },
   "plan": {
     "routineCount_one": "{{count}} workout",
@@ -24,8 +49,6 @@
     "week": "Week {{week}}",
     "blockWeek": "Week {{week}} of {{weeks}}",
     "deload": "Deload week",
-    "sessions_one": "{{done}} of {{count}} session",
-    "sessions_other": "{{done}} of {{count}} sessions",
     "active": "Active plan",
     "activate": "Use this plan",
     "perWeek": "Sessions per week",

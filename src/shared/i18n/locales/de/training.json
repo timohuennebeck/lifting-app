@@ -2,20 +2,45 @@
   "header": {
     "create": "Neu erstellen"
   },
-  "list": {
-    "title": "Training",
+  "tabs": {
     "myPlan": "Mein Plan",
+    "all": "Alle Trainings"
+  },
+  "list": {
     "otherPlans": "Weitere Pläne",
-    "library": "Meine Trainings",
     "meta_one": "{{minutes}} Min · {{count}} Übung",
     "meta_other": "{{minutes}} Min · {{count}} Übungen",
     "start": "{{name}} starten",
     "more": "Optionen für {{name}}",
-    "next": "Als Nächstes",
+    "minutes": "{{count}} Min",
+    "recommended": "Coach empfiehlt",
     "addRoutine": "Training hinzufügen",
     "noPlan": "Noch kein Plan",
     "noPlanHint": "Lass dir einen erstellen, lies deinen ein oder bau ihn selbst.",
     "libraryEmpty": "Trainings ohne Plan, z. B. fürs Hotel oder einen Arm-Tag, landen hier."
+  },
+  "myPlan": {
+    "active": "Aktiver Plan",
+    "rest": "Weitere Trainings",
+    "doneOn": "Erledigt · {{day}}",
+    "openPlan": "Plan öffnen",
+    "openPlanNamed": "{{name}} öffnen"
+  },
+  "card": {
+    "perWeek_one": "{{count}} Training pro Woche",
+    "perWeek_other": "{{count}} Trainings pro Woche",
+    "block": "Blöcke à {{build}} + 1 Wochen",
+    "empty": "Füg den Trainings deines Plans Übungen hinzu, dann geht's los."
+  },
+  "progress": {
+    "session": "Training {{n}} von {{total}}",
+    "done": "{{done}} / {{total}} erledigt"
+  },
+  "all": {
+    "recent": "Zuletzt trainiert",
+    "all": "Alle",
+    "lastDone": "Zuletzt {{date}}",
+    "emptyTitle": "Noch keine eigenen Trainings"
   },
   "plan": {
     "routineCount_one": "{{count}} Training",
@@ -24,8 +49,6 @@
     "week": "Woche {{week}}",
     "blockWeek": "Woche {{week}} von {{weeks}}",
     "deload": "Deload-Woche",
-    "sessions_one": "{{done}} von {{count}} Einheit",
-    "sessions_other": "{{done}} von {{count}} Einheiten",
     "active": "Aktiver Plan",
     "activate": "Diesen Plan nutzen",
     "perWeek": "Einheiten pro Woche",

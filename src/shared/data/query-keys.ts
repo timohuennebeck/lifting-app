@@ -15,6 +15,8 @@ const planKeys = createQueryKeys('plans', {
 const routineKeys = createQueryKeys('routines', {
   list: null,
   detail: (routineId: string) => [routineId],
+  lastDone: null,
+  weekDone: (planId: string, week: number) => [planId, week],
 });
 
 const workoutKeys = createQueryKeys('workouts', {

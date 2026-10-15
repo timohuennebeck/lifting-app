@@ -2,20 +2,45 @@
   "header": {
     "create": "Criar novo"
   },
-  "list": {
-    "title": "Treino",
+  "tabs": {
     "myPlan": "Meu plano",
+    "all": "Todos os treinos"
+  },
+  "list": {
     "otherPlans": "Outros planos",
-    "library": "Meus treinos",
     "meta_one": "{{minutes}} min · {{count}} exercício",
     "meta_other": "{{minutes}} min · {{count}} exercícios",
     "start": "Iniciar {{name}}",
     "more": "Opções para {{name}}",
-    "next": "A seguir",
+    "minutes": "{{count}} min",
+    "recommended": "O coach recomenda",
     "addRoutine": "Adicionar treino",
     "noPlan": "Ainda sem plano",
     "noPlanHint": "Peça um, importe o seu ou monte você mesmo.",
     "libraryEmpty": "Treinos fora de um plano, ex.: para o hotel ou um dia de braço, ficam aqui."
+  },
+  "myPlan": {
+    "active": "Plano ativo",
+    "rest": "Mais treinos",
+    "doneOn": "Feito · {{day}}",
+    "openPlan": "Abrir plano",
+    "openPlanNamed": "Abrir {{name}}"
+  },
+  "card": {
+    "perWeek_one": "{{count}} treino por semana",
+    "perWeek_other": "{{count}} treinos por semana",
+    "block": "Blocos de {{build}} + 1 semanas",
+    "empty": "Adicione exercícios aos treinos do seu plano para começar."
+  },
+  "progress": {
+    "session": "Treino {{n}} de {{total}}",
+    "done": "{{done}} / {{total}} feitos"
+  },
+  "all": {
+    "recent": "Feitos recentemente",
+    "all": "Todos",
+    "lastDone": "Último: {{date}}",
+    "emptyTitle": "Ainda sem treinos seus"
   },
   "plan": {
     "routineCount_one": "{{count}} treino",
@@ -24,8 +49,6 @@
     "week": "Semana {{week}}",
     "blockWeek": "Semana {{week}} de {{weeks}}",
     "deload": "Semana de deload",
-    "sessions_one": "{{done}} de {{count}} sessão",
-    "sessions_other": "{{done}} de {{count}} sessões",
     "active": "Plano ativo",
     "activate": "Usar este plano",
     "perWeek": "Sessões por semana",

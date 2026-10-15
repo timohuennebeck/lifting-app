@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useCurrentPlan, usePlanStatus } from '@/shared/data/plans';
 import { saveProfile } from '@/shared/data/profile';
-import { type RoutineSummary, useRoutines } from '@/shared/data/routines';
+import { type RoutineSummary, useRoutines, useWeekDone } from '@/shared/data/routines';
 import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { attempt } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
@@ -24,18 +24,18 @@ import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
 import { AddRoutineButton } from '../components/add-routine-button';
 import { PlanOptionsSheet } from '../components/plan-options-sheet';
+import { PlanProgress } from '../components/plan-progress';
 import { PlanSettings } from '../components/plan-settings';
 import { RoutineList } from '../components/routine-list';
 import { RoutineMenu } from '../components/routine-menu';
 import { SectionTitle } from '../components/section-title';
-import { SessionProgress } from '../components/session-progress';
 import { deletePlan, renamePlan } from '../data/plan-mutations';
-import { usePlanProgressLabels } from '../hooks/use-plan-week-label';
 import { useStartRoutine } from '../hooks/use-start-routine';
 
 /**
- * A plan's page: where it stands (week, block, workouts done), whether Today follows it, its
- * weekly goal and blocks, and its routines in order. "⋯" renames or deletes it.
+ * A plan's page, what's needed most first: where it stands (block, week, workouts done) and
+ * whether Today follows it; its routines in order with the next one and those done this week;
+ * then its weekly goal and blocks, set up once. "⋯" renames or deletes it.
  */
 export function PlanScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -49,7 +49,7 @@ export function PlanScreen() {
   const lastPlan = useLastDefined(found);
   const plan = found ?? (leaving ? (lastPlan ?? undefined) : undefined);
   const status = usePlanStatus(plan);
-  const labels = usePlanProgressLabels(plan, status);
+  const { data: doneThisWeek = {} } = useWeekDone(plan?.id, status?.week);
   const { start, startingId } = useStartRoutine();
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const [optionsOpen, setOptionsOpen] = useState(false);
@@ -85,6 +85,12 @@ export function PlanScreen() {
 
   const active = plan.id === activePlan?.id;
   const planRoutines = routines.filter((r) => r.planId === plan.id);
+  const goal = [
+    t('card.perWeek', { count: plan.sessionsPerWeek }),
+    plan.blockWeeks ? t('card.block', { build: plan.blockWeeks - 1 }) : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
   const onDelete = async () => {
     setOptionsOpen(false);
@@ -114,8 +120,8 @@ export function PlanScreen() {
 
         <Card className="mx-4 mt-5 gap-4">
           <View className="flex-row items-center gap-3">
-            <Text variant="headline" className="min-w-0 flex-1" numberOfLines={1}>
-              {labels.week}
+            <Text variant="caption" tone="subtle" className="min-w-0 flex-1 font-inter-medium">
+              {goal}
             </Text>
             {active ? (
               <View className="rounded-full bg-accent/15 px-2.5 py-1">
@@ -125,16 +131,9 @@ export function PlanScreen() {
               </View>
             ) : null}
           </View>
-          <View className="gap-2.5">
-            <Text variant="caption" tone="subtle" className="font-inter-medium">
-              {labels.sessions}
-            </Text>
-            <SessionProgress done={status?.done ?? 0} total={plan.sessionsPerWeek} />
-          </View>
+          {status ? <PlanProgress plan={plan} status={status} /> : null}
           {!active ? <Button label={t('plan.activate')} size="md" onPress={activate} /> : null}
         </Card>
-
-        <PlanSettings plan={plan} status={status} />
 
         <SectionTitle>{t('plan.routines')}</SectionTitle>
         <View className="px-4">
@@ -142,12 +141,15 @@ export function PlanScreen() {
             routines={planRoutines}
             scrollRef={scrollRef}
             nextId={status?.nextRoutineId}
+            done={doneThisWeek}
             startingId={startingId}
             onStart={start}
             onMore={setMenuFor}
           />
         </View>
         <AddRoutineButton planId={plan.id} />
+
+        <PlanSettings plan={plan} status={status} />
       </Animated.ScrollView>
 
       <PlanOptionsSheet

@@ -1,4 +1,4 @@
-import { and, asc, count, eq, isNull, type SQL } from 'drizzle-orm';
+import { and, asc, count, eq, isNotNull, isNull, max, type SQL } from 'drizzle-orm';
 
 import { getOrInsert } from '@/shared/lib/map';
 
@@ -6,7 +6,7 @@ import { getExercise } from './exercises';
 import { newId, nowIso } from './json';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
-import { plans, routineExercises, routines, routineSets } from './powersync/schema';
+import { plans, routineExercises, routines, routineSets, workoutEntries } from './powersync/schema';
 import { queryKeys } from './query-keys';
 import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
@@ -185,6 +185,53 @@ export function useRoutines() {
     queryKey: queryKeys.routines.list.queryKey,
     query: routineListQuery(),
     map: summarize,
+  });
+}
+
+/**
+ * When routines were done: the start of each one's latest finished workout, by routine id; with
+ * `week`, only the workouts that counted for that plan week.
+ */
+const doneDatesQuery = (week?: { planId: string; week: number }) =>
+  drizzle
+    .select({ routine_id: workoutEntries.routine_id, started_at: max(workoutEntries.started_at) })
+    .from(workoutEntries)
+    .where(
+      and(
+        isNotNull(workoutEntries.routine_id),
+        isNotNull(workoutEntries.finished_at),
+        week
+          ? and(eq(workoutEntries.plan_id, week.planId), eq(workoutEntries.plan_week, week.week))
+          : undefined,
+      ),
+    )
+    .groupBy(workoutEntries.routine_id);
+
+/** ISO start of the latest finished workout of each routine done, by routine id. */
+export type DoneDates = Record<string, string>;
+
+const toDoneDates = (rows: RowOf<typeof doneDatesQuery>[]): DoneDates =>
+  Object.fromEntries(
+    rows.flatMap((r) => (r.routine_id && r.started_at ? [[r.routine_id, r.started_at]] : [])),
+  );
+
+/** When each routine was last done. */
+export function useLastDone() {
+  return useDrizzleQuery({
+    queryKey: queryKeys.routines.lastDone.queryKey,
+    query: doneDatesQuery(),
+    map: toDoneDates,
+  });
+}
+
+/** The routines done in a plan week, with when; empty until the plan and its week are known. */
+export function useWeekDone(planId: string | undefined, week: number | undefined) {
+  const key = { planId: planId ?? '', week: week ?? 0 };
+  return useDrizzleQuery({
+    queryKey: queryKeys.routines.weekDone(key.planId, key.week).queryKey,
+    enabled: !!planId && week !== undefined,
+    query: doneDatesQuery(key),
+    map: toDoneDates,
   });
 }
 
