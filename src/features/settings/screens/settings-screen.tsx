@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { OpenTicketsSection } from '@/features/support/components/open-tickets-section';
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { useUploadQueueStore } from '@/features/support/stores/upload-queue-store';
 import { LanguageSheet } from '@/shared/components/language-sheet';
@@ -33,8 +34,7 @@ import { deleteAccount } from '../lib/delete-account';
 
 type OpenSheet = 'language' | 'signOut' | 'delete';
 
-const LINKS: { key: 'help' | 'privacy' | 'terms'; href: Href }[] = [
-  { key: 'help', href: '/support' },
+const LINKS: { key: 'privacy' | 'terms'; href: Href }[] = [
   { key: 'privacy', href: '/legal/privacy' },
   { key: 'terms', href: '/legal/terms' },
 ];
@@ -123,6 +123,9 @@ export function SettingsScreen() {
       <NotificationsSection />
 
       <ProSection />
+
+      {/* Help and feedback: the open tickets, all of them, a new one. */}
+      <OpenTicketsSection />
 
       <View className="flex-row flex-wrap gap-2 px-4 pt-7">
         {LINKS.map((link) => (

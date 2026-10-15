@@ -5,15 +5,13 @@ import { ActivityIndicator, Alert, Linking, View } from 'react-native';
 
 import { ProBadge } from '@/features/paywall/components/pro-badge';
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
-import { OpenTicketsSection } from '@/features/support/components/open-tickets-section';
+import { useHasUnreadTicket } from '@/features/support/hooks/use-has-unread-ticket';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { ProfileAvatar } from '@/shared/components/user-avatar';
 import { saveProfile, useProfile } from '@/shared/data/profile';
-import { useWorkoutCount, useWorkoutHistory } from '@/shared/data/workouts';
 import { formatDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
-import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { afterSheetClose } from '@/shared/ui/sheet';
@@ -21,11 +19,8 @@ import { Text } from '@/shared/ui/text';
 
 import { ActivityHeatmap } from '../components/activity-heatmap';
 import { type AvatarAction, AvatarSheet } from '../components/avatar-sheet';
-import { HistoryEntry } from '../components/history-entry';
 import { NameSheet } from '../components/name-sheet';
 import { pickAvatar, removeAvatar, saveAvatar } from '../lib/avatar';
-
-const PAGE = 10;
 
 interface LocalPhoto {
   uri: string;
@@ -46,9 +41,7 @@ export function ProfileScreen() {
   const avatarPath = profile?.avatarPath ?? null;
   if (local?.path && avatarPath !== local.path && avatarPath !== local.replaces) setLocal(null);
   const uploading = !!local && !local.path;
-  const [visible, setVisible] = useState(PAGE);
-  const { data: history = [] } = useWorkoutHistory(visible);
-  const { data: workoutCount = 0 } = useWorkoutCount();
+  const unread = useHasUnreadTicket();
   const name = profile?.firstName ?? '';
   const [nameOpen, setNameOpen] = useState(false);
 
@@ -101,7 +94,7 @@ export function ProfileScreen() {
   }
 
   return (
-    <TabScreen greeting={false} settings>
+    <TabScreen greeting={false} settings settingsBadge={unread}>
       <View className="items-start px-5 pt-4">
         <PressableScale
           haptic="tap"
@@ -160,41 +153,29 @@ export function ProfileScreen() {
         </PressableScale>
       </View>
 
-      <OpenTicketsSection />
-
-      <View className="mx-5 mt-7.5">
-        <View className="flex-row items-baseline justify-between">
+      {/* The workouts behind the grid are in Fortschritt → Verlauf. */}
+      <PressableScale
+        haptic="tap"
+        activeScale={0.98}
+        accessibilityRole="button"
+        accessibilityLabel={t('activity')}
+        accessibilityHint={t('openHistory')}
+        onPress={() => router.navigate('/progress')}
+        className="mx-5 mt-8.5"
+      >
+        <View className="flex-row items-center justify-between">
           <Text variant="overline" tone="subtle" className="text-[11px]">
             {t('activity')}
           </Text>
-          <Text tone="subtle" className="text-xs">
-            {t('lastMonths')}
-          </Text>
+          <View className="flex-row items-center gap-1.5">
+            <Text tone="subtle" className="text-xs">
+              {t('lastMonths')}
+            </Text>
+            <Icon name="chevron-right" size={6} color={colors.dim} />
+          </View>
         </View>
         <ActivityHeatmap />
-      </View>
-
-      <Text variant="overline" tone="subtle" className="mx-5 mt-7 mb-3 text-[11px]">
-        {t('history')}
-      </Text>
-      <View className="mx-5">
-        {history.length ? (
-          history.map((w) => <HistoryEntry key={w.id} workout={w} profile={profile} />)
-        ) : (
-          <Text variant="paragraph" tone="subtle">
-            {t('historyEmpty')}
-          </Text>
-        )}
-      </View>
-      {workoutCount > visible ? (
-        <Button
-          label={t('showMore')}
-          variant="secondary"
-          size="md"
-          className="mx-5 mt-2"
-          onPress={() => setVisible((v) => v + PAGE)}
-        />
-      ) : null}
+      </PressableScale>
       <AvatarSheet
         visible={avatarOpen}
         onClose={() => setAvatarOpen(false)}

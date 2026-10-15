@@ -1,31 +1,40 @@
 import { router } from 'expo-router';
-import { type ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
 import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
-import { usePlanWeekLabel } from '@/features/training/hooks/use-plan-week-label';
+import { RoutineRow, useRoutineMeta } from '@/features/training/components/routine-row';
+import { SectionTitle } from '@/features/training/components/section-title';
+import { useStartRoutine } from '@/features/training/hooks/use-start-routine';
 import { useWorkoutDraftStore } from '@/features/workout/stores/workout-draft-store';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useCurrentPlan, usePlanStatus } from '@/shared/data/plans';
 import { useUnits } from '@/shared/data/profile';
-import { useRoutines } from '@/shared/data/routines';
+import {
+  type DoneDates,
+  type RoutineSummary,
+  useLastDone,
+  useRoutines,
+  useWeekDone,
+} from '@/shared/data/routines';
 import { useActiveWorkout } from '@/shared/data/workouts';
 import { useToday } from '@/shared/hooks/use-today';
-import { isSameDay, mondayIndex } from '@/shared/lib/date';
-import { formatWeekdayDate } from '@/shared/lib/format';
+import { mondayIndex } from '@/shared/lib/date';
+import { formatDate, formatWeekdayDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-import { BlockProgress } from '../components/block-progress';
 import { DoneCard } from '../components/done-card';
-import { NextCard } from '../components/next-card';
-import { OtherRoutineSheet } from '../components/other-routine-sheet';
+import { PlanCard } from '../components/plan-card';
 import { PlanPrompt } from '../components/plan-prompt';
 import { WeekStrip } from '../components/week-strip';
 import { useWeekWorkouts } from '../hooks/use-week-workouts';
+
+/** Routines outside a plan shown without one, the ones done most recently first. */
+const RECENT = 3;
 
 /** Day `index` of the week strip, picked on `day` (the `useToday` key). */
 interface DayPick {
@@ -33,38 +42,73 @@ interface DayPick {
   index: number;
 }
 
-/** "Anderes Training": a routine picked for a day of the strip instead of the next one. */
-interface RoutinePick extends DayPick {
-  routineId: string;
+interface RoutineRowsProps {
+  routines: RoutineSummary[];
+  /** When each was done; a done one says so (`doneLabel`) and shows a check. */
+  done?: DoneDates;
+  doneLabel?: (at: string) => string;
+  /** The line under the name of the others, e.g. when they were done last. */
+  meta: (routine: RoutineSummary) => string;
 }
 
+/** Routine cards with quick start; an empty routine opens instead, to add exercises. */
+function RoutineRows({ routines, done = {}, doneLabel, meta }: RoutineRowsProps) {
+  const { start, startingId } = useStartRoutine();
+  return (
+    <View className="gap-2 px-4">
+      {routines.map((routine) => {
+        const doneAt = doneLabel ? done[routine.id] : undefined;
+        return (
+          <RoutineRow
+            key={routine.id}
+            name={routine.name}
+            items={routine.items}
+            meta={doneAt && doneLabel ? doneLabel(doneAt) : meta(routine)}
+            done={!!doneAt}
+            starting={startingId === routine.id}
+            onPress={() => router.push(`/routine/${routine.id}`)}
+            onStart={() =>
+              routine.exerciseCount ? start(routine) : router.push(`/routine/${routine.id}`)
+            }
+          />
+        );
+      })}
+    </View>
+  );
+}
+
+/**
+ * Heute: the week with its workouts, the picked day's workout once done, then the plan Today
+ * follows with where it stands, the routine the coach recommends and its other routines. Without
+ * a plan, the routines done most recently and a way to get one.
+ */
 export function TodayScreen() {
-  const { t } = useTranslation('today');
+  const { t } = useTranslation(['today', 'training']);
   // The tab stays mounted: the day comes from a clock so it moves on overnight, and a picked
-  // day (or routine) only counts on the day it was picked.
+  // day only counts on the day it was picked.
   const dayKey = useToday();
   const today = new Date(dayKey);
   const [pick, setPick] = useState<DayPick | null>(null);
   const selected = pick?.day === dayKey ? pick.index : mondayIndex(today);
   const select = (index: number) => setPick({ day: dayKey, index });
-  const [other, setOther] = useState<RoutinePick | null>(null);
-  const [otherOpen, setOtherOpen] = useState(false);
   const units = useUnits();
   const { data: active } = useActiveWorkout();
   const { days, isLoading: weekLoading } = useWeekWorkouts(today);
   const day = days[selected];
   const { plan, profile, isLoading: planLoading } = useCurrentPlan();
   const status = usePlanStatus(plan);
-  const weekLabel = usePlanWeekLabel();
   const { data: routines = [], isLoading: routinesLoading } = useRoutines();
+  const { data: doneThisWeek = {} } = useWeekDone(plan?.id, status?.week);
+  const { data: lastDone = {} } = useLastDone();
+  const meta = useRoutineMeta();
+
   const planRoutines = plan ? routines.filter((r) => r.planId === plan.id) : [];
-  const nextId = status?.nextRoutineId ?? null;
-  const picked =
-    other?.day === dayKey && other.index === selected
-      ? planRoutines.find((r) => r.id === other.routineId)
-      : undefined;
-  // Without a next one (every routine still empty) the first, to fill it.
-  const routine = picked ?? planRoutines.find((r) => r.id === nextId) ?? planRoutines[0];
+  const next = planRoutines.find((r) => r.id === status?.nextRoutineId);
+  const rest = planRoutines.filter((r) => r !== next);
+  const recent = routines
+    .filter((r) => r.planId === null && lastDone[r.id])
+    .sort((a, b) => lastDone[b.id].localeCompare(lastDone[a.id]))
+    .slice(0, RECENT);
   // Nothing shows until the day and the plan are known, so no card flashes in the wrong state.
   const loading = weekLoading || planLoading || routinesLoading || (!!plan && !status);
 
@@ -105,42 +149,36 @@ export function TodayScreen() {
     </ScrollView>
   );
 
-  // A finished workout wins; a day without one shows the plan's block and what's next in the
-  // plan (or the routine picked instead), and without a plan, or with an empty one, a way to
-  // fill it.
-  function dayCard(): ReactNode {
-    if (day.workout) {
-      return <DoneCard workout={day.workout} date={day.date} today={today} units={units} />;
-    }
-    if (plan && status && routine) {
-      const block =
-        plan.blockWeeks && status.blockWeek !== null ? (
-          <BlockProgress
-            planName={plan.name}
-            blockWeek={status.blockWeek}
-            blockWeeks={plan.blockWeeks}
-          />
-        ) : null;
-      const onToday = isSameDay(day.date, today);
-      // Today the plan week; another day its date. The next routine today leaves the week to
-      // the block row above, when it shows.
-      const when = onToday ? weekLabel(plan, status) : formatWeekdayDate(day.date);
-      let label = when;
-      if (routine.id === nextId) {
-        label = onToday && block ? t('status.recommended') : `${t('status.recommended')} · ${when}`;
-      }
+  // The plan with its routines; an empty plan, a way to fill it; without a plan, the routines
+  // done most recently and a way to get one.
+  function planPart() {
+    if (plan && status && planRoutines.length) {
       return (
         <>
-          {block}
-          <NextCard
-            routine={routine}
-            label={label}
-            deload={status.deload}
+          <PlanCard
+            plan={plan}
+            status={status}
+            next={next}
             date={day.date}
             today={today}
+            canMarkDone={!day.workout}
             activeWorkoutId={active?.id ?? null}
-            onOther={planRoutines.length > 1 ? () => setOtherOpen(true) : undefined}
           />
+          {rest.length ? (
+            <>
+              <SectionTitle>{t('training:myPlan.rest')}</SectionTitle>
+              <RoutineRows
+                routines={rest}
+                done={doneThisWeek}
+                doneLabel={(at) =>
+                  t('training:myPlan.doneOn', {
+                    day: formatDate(new Date(at), { weekday: 'short' }),
+                  })
+                }
+                meta={meta}
+              />
+            </>
+          ) : null}
         </>
       );
     }
@@ -154,11 +192,25 @@ export function TodayScreen() {
       );
     }
     return (
-      <PlanPrompt
-        title={t('noPlan.title')}
-        body={t('noPlan.body')}
-        onPress={() => openPlanFlow(profile, '/')}
-      />
+      <>
+        {recent.length ? (
+          <>
+            <SectionTitle>{t('training:all.recent')}</SectionTitle>
+            <RoutineRows
+              routines={recent}
+              meta={(r) =>
+                t('training:all.lastDone', { date: formatWeekdayDate(new Date(lastDone[r.id])) })
+              }
+            />
+            <View className="h-4" />
+          </>
+        ) : null}
+        <PlanPrompt
+          title={t('noPlan.title')}
+          body={t('noPlan.body')}
+          onPress={() => openPlanFlow(profile, '/')}
+        />
+      </>
     );
   }
 
@@ -171,19 +223,18 @@ export function TodayScreen() {
         </View>
       }
     >
-      {loading ? null : dayCard()}
-      <OtherRoutineSheet
-        visible={otherOpen}
-        planName={plan?.name ?? ''}
-        routines={planRoutines}
-        shownId={routine?.id ?? null}
-        nextId={nextId}
-        onPick={(routineId) => {
-          setOther({ day: dayKey, index: selected, routineId });
-          setOtherOpen(false);
-        }}
-        onClose={() => setOtherOpen(false)}
-      />
+      {loading ? null : (
+        <>
+          {day.workout ? (
+            <View className="mb-3">
+              <DoneCard workout={day.workout} date={day.date} today={today} units={units} />
+            </View>
+          ) : null}
+          {planPart()}
+          {/* The list ends 40pt above the tab bar inset; TabScreen adds 24. */}
+          <View className="h-4" />
+        </>
+      )}
     </TabScreen>
   );
 }

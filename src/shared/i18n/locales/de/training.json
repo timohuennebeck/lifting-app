@@ -2,14 +2,9 @@
   "header": {
     "create": "Neu erstellen"
   },
-  "tabs": {
-    "myPlan": "Mein Plan",
-    "all": "Alle Trainings"
-  },
   "list": {
-    "otherPlans": "Weitere Pläne",
-    "meta_one": "{{minutes}} Min · {{count}} Übung",
-    "meta_other": "{{minutes}} Min · {{count}} Übungen",
+    "plans": "Pläne",
+    "library": "Meine Trainings",
     "start": "{{name}} starten",
     "more": "Optionen für {{name}}",
     "minutes": "{{count}} Min",
@@ -20,11 +15,9 @@
     "libraryEmpty": "Trainings ohne Plan, z. B. fürs Hotel oder einen Arm-Tag, landen hier."
   },
   "myPlan": {
-    "active": "Aktiver Plan",
     "rest": "Weitere Trainings",
     "doneOn": "Erledigt · {{day}}",
-    "openPlan": "Plan öffnen",
-    "openPlanNamed": "{{name}} öffnen"
+    "openPlan": "Plan öffnen"
   },
   "card": {
     "perWeek_one": "{{count}} Training pro Woche",
@@ -38,9 +31,7 @@
   },
   "all": {
     "recent": "Zuletzt trainiert",
-    "all": "Alle",
-    "lastDone": "Zuletzt {{date}}",
-    "emptyTitle": "Noch keine eigenen Trainings"
+    "lastDone": "Zuletzt {{date}}"
   },
   "plan": {
     "routineCount_one": "{{count}} Training",

@@ -30,8 +30,24 @@
     "minShort": "min"
   },
   "weekdays": {
-    "short": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
-    "narrow": ["S", "T", "Q", "Q", "S", "S", "D"],
+    "short": [
+      "Seg",
+      "Ter",
+      "Qua",
+      "Qui",
+      "Sex",
+      "Sáb",
+      "Dom"
+    ],
+    "narrow": [
+      "S",
+      "T",
+      "Q",
+      "Q",
+      "S",
+      "S",
+      "D"
+    ],
     "long": [
       "Segunda-feira",
       "Terça-feira",
@@ -59,8 +75,18 @@
     "profile": "Perfil"
   },
   "progressTab": {
+    "history": "Histórico",
     "muscles": "Músculos",
     "body": "Corpo"
+  },
+  "history": {
+    "thisWeek": "Esta semana",
+    "lastWeek": "Semana passada",
+    "count_one": "{{count}} treino",
+    "count_other": "{{count}} treinos",
+    "more": "Carregar mais",
+    "empty": "Ainda sem treinos",
+    "emptyHint": "Cada treino que terminas aparece aqui, por semana."
   },
   "search": {
     "open": "Pesquisar exercícios",
@@ -69,6 +95,7 @@
     "recordA11y": "Recorde pessoal: {{value}}, último a {{date}}"
   },
   "settings": "Definições",
+  "settingsNews": "Definições, nova resposta do suporte",
   "legal": {
     "terms": "Termos de Utilização",
     "privacy": "Política de Privacidade",

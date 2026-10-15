@@ -31,5 +31,8 @@
     "none": "Kein Eintrag vorhanden",
     "delete": "Eintrag löschen",
     "date": "Datum"
+  },
+  "card": {
+    "add": "Eintragen"
   }
 }

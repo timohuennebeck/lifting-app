@@ -9,24 +9,12 @@
   },
   "stats": {
     "minutes": "{{count}} Min",
-    "approxMinutes": "~{{count}} Min",
     "prs_one": "{{count}} PR",
-    "prs_other": "{{count}} PRs",
-    "exercises_one": "{{count}} Übung",
-    "exercises_other": "{{count}} Übungen",
-    "sets_one": "{{count}} Satz",
-    "sets_other": "{{count}} Sätze"
+    "prs_other": "{{count}} PRs"
   },
   "overview": "Übersicht",
-  "start": "Starten",
   "resume": "Fortsetzen",
   "markDone": "Als erledigt markieren",
-  "other": "Anderes Training",
-  "block": {
-    "week": "Woche {{week}} / {{weeks}}",
-    "deload": "{{plan}} · Deload",
-    "a11y": "{{plan}}: Woche {{week}} von {{weeks}} des Blocks"
-  },
   "deloadHint": "Deload-Woche: halb so viele Sätze und etwas leichter, damit du dich erholst.",
   "noPlan": {
     "title": "Noch kein Plan",
@@ -35,9 +23,5 @@
   "emptyPlan": {
     "title": "Plan ohne Trainings",
     "body": "Tippe, um deinem Plan Trainings hinzuzufügen."
-  },
-  "otherSheet": {
-    "title": "Anderes Training",
-    "subtitle": "Wähle ein Training aus {{plan}}."
   }
 }

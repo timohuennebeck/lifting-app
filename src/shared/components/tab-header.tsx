@@ -14,22 +14,30 @@ import { Text } from '@/shared/ui/text';
 import { ProfileAvatar } from './user-avatar';
 
 export interface TabHeaderProps {
-  /** Extra round buttons placed before the calendar, weight and search. */
+  /** Extra round buttons placed before weight and search. */
   actions?: ReactNode;
   /** Avatar, date and greeting on the left; the profile tab hides them (01b-2). */
   greeting?: boolean;
   /** Settings after search: only the profile tab, which the avatar on the others leads to. */
   settings?: boolean;
+  /** A neon dot on settings, e.g. for a reply from support. */
+  settingsBadge?: boolean;
 }
 
 /**
- * Header shared by all tabs: avatar, today's date, greeting, optional actions, then the weight
- * calendar, today's weigh-in and search (exercises and their records), always in the same place.
+ * Header shared by all tabs: avatar, today's date, greeting, optional actions, then today's
+ * weigh-in and search (exercises and their records), always in the same place. The weight
+ * history and calendar are in Fortschritt → Körper.
  */
-export function TabHeader({ actions, greeting = true, settings = false }: TabHeaderProps) {
+export function TabHeader({
+  actions,
+  greeting = true,
+  settings = false,
+  settingsBadge = false,
+}: TabHeaderProps) {
   const { t } = useTranslation(['common', 'weight']);
   const { profile } = useProfile();
-  // Ticks every minute so the date (also the one in the calendar icon) turns over at midnight.
+  // Ticks every minute so the date turns over at midnight.
   const now = useNow(MINUTE_MS);
   const name = profile?.firstName ?? '';
   return (
@@ -56,14 +64,6 @@ export function TabHeader({ actions, greeting = true, settings = false }: TabHea
       <View className="flex-row gap-2">
         {actions}
         <IconButton
-          // A new day draws the icon again, with its date.
-          key={toIsoDate(new Date(now))}
-          icon="calendar"
-          iconSize={19}
-          accessibilityLabel={t('weight:history.calendar')}
-          onPress={() => router.push('/body-weight/calendar')}
-        />
-        <IconButton
           icon="scale"
           iconSize={19}
           accessibilityLabel={t('weight:open')}
@@ -82,12 +82,20 @@ export function TabHeader({ actions, greeting = true, settings = false }: TabHea
           onPress={() => router.push('/search')}
         />
         {settings ? (
-          <IconButton
-            icon="settings"
-            iconSize={20}
-            accessibilityLabel={t('settings')}
-            onPress={() => router.navigate('/settings')}
-          />
+          <View>
+            <IconButton
+              icon="settings"
+              iconSize={20}
+              accessibilityLabel={settingsBadge ? t('settingsNews') : t('settings')}
+              onPress={() => router.navigate('/settings')}
+            />
+            {settingsBadge ? (
+              <View
+                pointerEvents="none"
+                className="absolute top-0.5 right-0.5 size-2.5 rounded-full border-2 border-bg bg-accent"
+              />
+            ) : null}
+          </View>
         ) : null}
       </View>
     </View>

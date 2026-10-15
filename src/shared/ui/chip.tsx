@@ -7,8 +7,6 @@ import { Text } from './text';
 
 export interface ChipProps {
   label: string;
-  /** A number after the label, dimmer, e.g. how many routines a plan has. */
-  count?: number;
   selected?: boolean;
   onPress?: () => void;
   /** Shows a leading check when selected (multi-select chips). */
@@ -20,7 +18,6 @@ export interface ChipProps {
 
 export function Chip({
   label,
-  count,
   selected,
   onPress,
   showCheck,
@@ -48,15 +45,6 @@ export function Chip({
       >
         {label}
       </Text>
-      {count !== undefined ? (
-        <Text
-          variant="caption"
-          tone={selected && tone === 'accent' ? 'onAccent' : 'subtle'}
-          className={cn('text-sm tabular-nums', selected && 'opacity-60')}
-        >
-          {count}
-        </Text>
-      ) : null}
     </PressableScale>
   );
 }

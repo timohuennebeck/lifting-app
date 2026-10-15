@@ -31,5 +31,8 @@
     "none": "Nenhum registo",
     "delete": "Apagar registo",
     "date": "Data"
+  },
+  "card": {
+    "add": "Registar"
   }
 }

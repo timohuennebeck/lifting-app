@@ -31,5 +31,8 @@
     "none": "No entry yet",
     "delete": "Delete entry",
     "date": "Date"
+  },
+  "card": {
+    "add": "Log"
   }
 }

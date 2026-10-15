@@ -8,8 +8,8 @@ import { QueryFocus } from '@/shared/data/query-focus';
 import { SwipeTabs } from '@/shared/components/swipe-tabs';
 
 /**
- * Progress tab: trained muscles and progress checks as swipeable top tabs. Both stay mounted, so
- * switching never reloads (records are in the search).
+ * Progress tab: the workouts done, the muscles trained, and the body (weight and progress checks)
+ * as swipeable top tabs. They stay mounted, so switching never reloads (records are in the search).
  */
 export function ProgressLayout() {
   const { t } = useTranslation();
@@ -19,7 +19,8 @@ export function ProgressLayout() {
       <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
         <TabHeader />
         <SwipeTabs>
-          <TopTabs.Screen name="index" options={{ title: t('progressTab.muscles') }} />
+          <TopTabs.Screen name="index" options={{ title: t('progressTab.history') }} />
+          <TopTabs.Screen name="muscles" options={{ title: t('progressTab.muscles') }} />
           <TopTabs.Screen name="body" options={{ title: t('progressTab.body') }} />
         </SwipeTabs>
       </View>

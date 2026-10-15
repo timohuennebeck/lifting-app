@@ -16,14 +16,7 @@
   },
   "activity": "Atividade",
   "lastMonths": "Últimos 3 meses",
-  "history": "Histórico",
-  "historyEntry": "<b>{{name}}</b> concluiu <b>{{workout}}</b> em {{duration}}",
-  "historyEmpty": "Seus treinos concluídos vão aparecer aqui.",
-  "showMore": "Mostrar mais",
-  "when": {
-    "today": "Hoje, {{time}}",
-    "yesterday": "Ontem, {{time}}"
-  },
+  "openHistory": "Abre seu histórico",
   "settings": {
     "language": "Idioma",
     "units": "Unidades",
@@ -35,7 +28,6 @@
       "restSound": "Som no fim do descanso"
     },
     "links": {
-      "help": "Ajuda",
       "privacy": "Privacidade",
       "terms": "Termos"
     },

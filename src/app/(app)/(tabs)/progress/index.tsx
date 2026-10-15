@@ -1,1 +1,1 @@
-export { MusclesPage as default } from '@/features/progress/screens/muscles-page';
+export { HistoryPage as default } from '@/features/progress/screens/history-page';

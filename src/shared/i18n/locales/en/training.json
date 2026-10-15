@@ -2,14 +2,9 @@
   "header": {
     "create": "Create new"
   },
-  "tabs": {
-    "myPlan": "My plan",
-    "all": "All workouts"
-  },
   "list": {
-    "otherPlans": "Other plans",
-    "meta_one": "{{minutes}} min · {{count}} exercise",
-    "meta_other": "{{minutes}} min · {{count}} exercises",
+    "plans": "Plans",
+    "library": "My workouts",
     "start": "Start {{name}}",
     "more": "Options for {{name}}",
     "minutes": "{{count}} min",
@@ -20,11 +15,9 @@
     "libraryEmpty": "Workouts outside a plan, e.g. for a hotel gym or an arm day, go here."
   },
   "myPlan": {
-    "active": "Active plan",
     "rest": "More workouts",
     "doneOn": "Done · {{day}}",
-    "openPlan": "Open plan",
-    "openPlanNamed": "Open {{name}}"
+    "openPlan": "Open plan"
   },
   "card": {
     "perWeek_one": "{{count}} workout a week",
@@ -38,9 +31,7 @@
   },
   "all": {
     "recent": "Recently done",
-    "all": "All",
-    "lastDone": "Last {{date}}",
-    "emptyTitle": "No workouts of your own yet"
+    "lastDone": "Last {{date}}"
   },
   "plan": {
     "routineCount_one": "{{count}} workout",

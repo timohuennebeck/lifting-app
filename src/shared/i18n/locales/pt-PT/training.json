@@ -2,14 +2,9 @@
   "header": {
     "create": "Criar novo"
   },
-  "tabs": {
-    "myPlan": "O meu plano",
-    "all": "Todos os treinos"
-  },
   "list": {
-    "otherPlans": "Outros planos",
-    "meta_one": "{{minutes}} min · {{count}} exercício",
-    "meta_other": "{{minutes}} min · {{count}} exercícios",
+    "plans": "Planos",
+    "library": "Os meus treinos",
     "start": "Iniciar {{name}}",
     "more": "Opções para {{name}}",
     "minutes": "{{count}} min",
@@ -20,11 +15,9 @@
     "libraryEmpty": "Treinos fora de um plano, p. ex. para o hotel ou um dia de braços, ficam aqui."
   },
   "myPlan": {
-    "active": "Plano ativo",
     "rest": "Mais treinos",
     "doneOn": "Feito · {{day}}",
-    "openPlan": "Abrir plano",
-    "openPlanNamed": "Abrir {{name}}"
+    "openPlan": "Abrir plano"
   },
   "card": {
     "perWeek_one": "{{count}} treino por semana",
@@ -38,9 +31,7 @@
   },
   "all": {
     "recent": "Feitos recentemente",
-    "all": "Todos",
-    "lastDone": "Último: {{date}}",
-    "emptyTitle": "Ainda sem treinos teus"
+    "lastDone": "Último: {{date}}"
   },
   "plan": {
     "routineCount_one": "{{count}} treino",
