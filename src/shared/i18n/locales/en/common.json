@@ -30,33 +30,9 @@
     "minShort": "Min"
   },
   "weekdays": {
-    "short": [
-      "Mon",
-      "Tue",
-      "Wed",
-      "Thu",
-      "Fri",
-      "Sat",
-      "Sun"
-    ],
-    "narrow": [
-      "M",
-      "T",
-      "W",
-      "T",
-      "F",
-      "S",
-      "S"
-    ],
-    "long": [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday"
-    ]
+    "short": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    "narrow": ["M", "T", "W", "T", "F", "S", "S"],
+    "long": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
   },
   "greeting": "Hi {{name}}",
   "languages": {
@@ -72,7 +48,8 @@
     "today": "Today",
     "training": "Training",
     "progress": "Progress",
-    "profile": "Profile"
+    "profile": "Profile",
+    "create": "New"
   },
   "progressTab": {
     "history": "History",
@@ -81,14 +58,12 @@
   },
   "rangeDays": "{{count}} D",
   "history": {
-    "thisWeek": "This week",
-    "lastWeek": "Last week",
-    "count_one": "{{count}} workout",
-    "count_other": "{{count}} workouts",
     "more": "Load more",
     "empty": "No finished workouts",
     "emptyHint": "Every workout you finish shows up here, with its duration and records.",
-    "start": "Start a workout"
+    "start": "Start a workout",
+    "sets_one": "{{count}} set",
+    "sets_other": "{{count}} sets"
   },
   "search": {
     "open": "Search exercises",

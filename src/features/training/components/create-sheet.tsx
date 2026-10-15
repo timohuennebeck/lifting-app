@@ -2,22 +2,34 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
+import { Icon } from '@/shared/ui/icon';
 
 import { glyphColor, PlanGlyph, RoutineGlyph } from './glyphs';
 
-type CreateKind = 'routine' | 'plan';
+type CreateKind = 'workout' | 'routine' | 'plan';
 
 export interface CreateSheetProps {
   visible: boolean;
   onClose: () => void;
   onCreateRoutine: () => void;
   onCreatePlan: () => void;
+  /** Adds "Leeres Training" first: an empty workout started now (the tab bar's "+"). */
+  onStartWorkout?: () => void;
 }
 
-/** "+" sheet: a new routine, or a plan, which is made, imported or built (01·V·A·6). */
-export function CreateSheet({ visible, onClose, onCreateRoutine, onCreatePlan }: CreateSheetProps) {
+/**
+ * "+" sheet: an empty workout when offered, a new routine, or a plan, which is made, imported or
+ * built (01·V·A·6).
+ */
+export function CreateSheet({
+  visible,
+  onClose,
+  onCreateRoutine,
+  onCreatePlan,
+  onStartWorkout,
+}: CreateSheetProps) {
   const { t } = useTranslation('training');
-  const [kind, setKind] = useState<CreateKind>('routine');
+  const [kind, setKind] = useState<CreateKind>(onStartWorkout ? 'workout' : 'routine');
 
   return (
     <ChoiceSheet
@@ -25,8 +37,25 @@ export function CreateSheet({ visible, onClose, onCreateRoutine, onCreatePlan }:
       onClose={onClose}
       value={kind}
       onChange={setKind}
-      onConfirm={(value) => (value === 'routine' ? onCreateRoutine() : onCreatePlan())}
+      onConfirm={(value) => {
+        if (value === 'workout') onStartWorkout?.();
+        else if (value === 'routine') onCreateRoutine();
+        else onCreatePlan();
+      }}
       options={[
+        ...(onStartWorkout
+          ? [
+              {
+                value: 'workout' as const,
+                title: t('create.workout'),
+                description: t('create.workoutHint'),
+                cta: t('create.startWorkout'),
+                renderIcon: (active: boolean) => (
+                  <Icon name="play" size={14} color={glyphColor(active)} />
+                ),
+              },
+            ]
+          : []),
         {
           value: 'routine',
           title: t('create.routine'),

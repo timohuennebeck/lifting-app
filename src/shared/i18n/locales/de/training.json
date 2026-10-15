@@ -61,6 +61,9 @@
     "notFound": "Diesen Plan gibt es nicht mehr."
   },
   "create": {
+    "workout": "Leeres Training",
+    "workoutHint": "Übungen wählen und gleich loslegen",
+    "startWorkout": "Leeres Training starten",
     "routine": "Training",
     "routineHint": "Übungen und Sätze festlegen",
     "plan": "Plan",

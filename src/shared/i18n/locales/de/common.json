@@ -30,33 +30,9 @@
     "minShort": "Min"
   },
   "weekdays": {
-    "short": [
-      "Mo",
-      "Di",
-      "Mi",
-      "Do",
-      "Fr",
-      "Sa",
-      "So"
-    ],
-    "narrow": [
-      "M",
-      "D",
-      "M",
-      "D",
-      "F",
-      "S",
-      "S"
-    ],
-    "long": [
-      "Montag",
-      "Dienstag",
-      "Mittwoch",
-      "Donnerstag",
-      "Freitag",
-      "Samstag",
-      "Sonntag"
-    ]
+    "short": ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
+    "narrow": ["M", "D", "M", "D", "F", "S", "S"],
+    "long": ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
   },
   "greeting": "Hallo {{name}}",
   "languages": {
@@ -72,7 +48,8 @@
     "today": "Heute",
     "training": "Training",
     "progress": "Fortschritt",
-    "profile": "Profil"
+    "profile": "Profil",
+    "create": "Neu"
   },
   "progressTab": {
     "history": "Historie",
@@ -81,14 +58,12 @@
   },
   "rangeDays": "{{count}} T",
   "history": {
-    "thisWeek": "Diese Woche",
-    "lastWeek": "Letzte Woche",
-    "count_one": "{{count}} Training",
-    "count_other": "{{count}} Trainings",
     "more": "Mehr laden",
     "empty": "Keine abgeschlossenen Trainings",
     "emptyHint": "Hier siehst du jedes Training, das du abgeschlossen hast, mit Dauer und Rekorden.",
-    "start": "Training starten"
+    "start": "Training starten",
+    "sets_one": "{{count}} Satz",
+    "sets_other": "{{count}} Sätze"
   },
   "search": {
     "open": "Übungen suchen",

@@ -9,32 +9,17 @@ import { type ExerciseHistoryEntry, useExerciseHistory } from '@/shared/data/wor
 import { useNow } from '@/shared/hooks/use-now';
 import { DAY_MS, DAY_RANGES, type DayRange, MINUTE_MS } from '@/shared/lib/date';
 import {
-  formatDate,
   formatSeconds,
   formatWeight,
   fromDisplayWeight,
   toDisplayWeight,
 } from '@/shared/lib/format';
+import { monthSections } from '@/shared/lib/month-sections';
 import { SegmentedControl } from '@/shared/ui/segmented-control';
 import { Text } from '@/shared/ui/text';
 
 import { HistoryChart, type HistoryMetric } from './history-chart';
 import { HistorySessionRow } from './history-session-row';
-
-function monthSections(sessions: ExerciseHistoryEntry[], currentYear: number) {
-  const sections: { key: string; title: string; data: ExerciseHistoryEntry[] }[] = [];
-  for (const session of sessions) {
-    const date = new Date(session.startedAt);
-    const title = formatDate(date, {
-      month: 'long',
-      ...(date.getFullYear() !== currentYear && { year: 'numeric' }),
-    }).toUpperCase();
-    const section = sections.at(-1);
-    if (section?.title === title) section.data.push(session);
-    else sections.push({ key: title, title, data: [session] });
-  }
-  return sections;
-}
 
 export interface ExerciseHistoryPanelProps {
   exerciseId: string;

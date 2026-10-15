@@ -30,24 +30,8 @@
     "minShort": "min"
   },
   "weekdays": {
-    "short": [
-      "Seg",
-      "Ter",
-      "Qua",
-      "Qui",
-      "Sex",
-      "Sáb",
-      "Dom"
-    ],
-    "narrow": [
-      "S",
-      "T",
-      "Q",
-      "Q",
-      "S",
-      "S",
-      "D"
-    ],
+    "short": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+    "narrow": ["S", "T", "Q", "Q", "S", "S", "D"],
     "long": [
       "Segunda-feira",
       "Terça-feira",
@@ -72,7 +56,8 @@
     "today": "Hoje",
     "training": "Treino",
     "progress": "Progresso",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "create": "Novo"
   },
   "progressTab": {
     "history": "Histórico",
@@ -81,14 +66,12 @@
   },
   "rangeDays": "{{count}} D",
   "history": {
-    "thisWeek": "Esta semana",
-    "lastWeek": "Semana passada",
-    "count_one": "{{count}} treino",
-    "count_other": "{{count}} treinos",
     "more": "Carregar mais",
     "empty": "Ainda sem treinos concluídos",
     "emptyHint": "Aqui você vê cada treino que concluiu, com a duração e os recordes.",
-    "start": "Iniciar treino"
+    "start": "Iniciar treino",
+    "sets_one": "{{count}} série",
+    "sets_other": "{{count}} séries"
   },
   "search": {
     "open": "Buscar exercícios",

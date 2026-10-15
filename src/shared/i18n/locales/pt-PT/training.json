@@ -61,6 +61,9 @@
     "notFound": "Este plano já não existe."
   },
   "create": {
+    "workout": "Treino vazio",
+    "workoutHint": "Escolhe exercícios e começa já",
+    "startWorkout": "Iniciar treino vazio",
     "routine": "Treino",
     "routineHint": "Definir exercícios e séries",
     "plan": "Plano",

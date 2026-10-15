@@ -1,13 +1,12 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 
 import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { RoutineRow, useRoutineMeta } from '@/features/training/components/routine-row';
 import { SectionTitle } from '@/features/training/components/section-title';
 import { useStartRoutine } from '@/features/training/hooks/use-start-routine';
-import { useWorkoutDraftStore } from '@/features/workout/stores/workout-draft-store';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useCurrentPlan, usePlanStatus } from '@/shared/data/plans';
 import { useUnits } from '@/shared/data/profile';
@@ -127,42 +126,19 @@ export function TodayScreen() {
     routinesLoading ||
     (plan ? !status || doneLoading : lastDoneLoading);
 
-  const pills = (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerClassName="gap-2 px-4 pt-2 pb-0.5"
-      className="grow-0"
+  // A running workout is one tap away; new ones start from the tab bar's "+".
+  const resume = active ? (
+    <PressableScale
+      haptic="press"
+      onPress={() => router.push(`/workout/${active.id}`)}
+      className="mx-4 mt-2 mb-0.5 h-10 flex-row items-center gap-1.75 self-start rounded-full bg-accent px-3.75"
     >
-      {active ? (
-        <PressableScale
-          haptic="press"
-          onPress={() => router.push(`/workout/${active.id}`)}
-          className="h-10 flex-row items-center gap-1.75 rounded-full bg-accent px-3.75"
-        >
-          <Icon name="play" size={12} color={colors.onAccent} />
-          <Text variant="caption" tone="onAccent" className="text-sm">
-            {t('resumeActive', { name: active.name })}
-          </Text>
-        </PressableScale>
-      ) : (
-        <PressableScale
-          haptic="press"
-          onPress={() => {
-            // Put together first, started from the builder.
-            useWorkoutDraftStore.getState().begin(t('emptyWorkoutName'));
-            router.push('/workout/new');
-          }}
-          className="h-10 flex-row items-center gap-1.75 rounded-full bg-elevated px-3.75"
-        >
-          <Icon name="plus" size={12} />
-          <Text variant="caption" className="text-sm">
-            {t('startEmpty')}
-          </Text>
-        </PressableScale>
-      )}
-    </ScrollView>
-  );
+      <Icon name="play" size={12} color={colors.onAccent} />
+      <Text variant="caption" tone="onAccent" className="text-sm">
+        {t('resumeActive', { name: active.name })}
+      </Text>
+    </PressableScale>
+  ) : null;
 
   // The plan with its routines; an empty plan, a way to fill it; without a plan, the routines
   // done most recently and a way to get one.
@@ -239,7 +215,7 @@ export function TodayScreen() {
     <TabScreen
       pinned={
         <View>
-          {pills}
+          {resume}
           <WeekStrip days={days} today={today} selected={selected} onSelect={select} />
         </View>
       }

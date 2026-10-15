@@ -1,5 +1,4 @@
 {
-  "startEmpty": "Start empty workout",
   "emptyWorkoutName": "Workout",
   "resumeActive": "Resume {{name}}",
   "status": {

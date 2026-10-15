@@ -16,7 +16,8 @@ interface StatProps {
   color?: string;
 }
 
-function Stat({ icon, value, color = colors.subtle }: StatProps) {
+/** A stat under a history row's title: icon and value (exercise and workout history). */
+export function HistoryStat({ icon, value, color = colors.subtle }: StatProps) {
   return (
     <View className="flex-row items-center gap-1.5">
       <Icon name={icon} size={icon === 'dumbbell' ? 18 : 13} color={color} />
@@ -68,9 +69,9 @@ export function HistorySessionRow({
           <View className="flex-row items-center gap-3.5">
             {/* Volume only exists for weighted sets. */}
             {session.volumeKg > 0 ? (
-              <Stat icon="dumbbell" value={formatVolume(session.volumeKg, units)} />
+              <HistoryStat icon="dumbbell" value={formatVolume(session.volumeKg, units)} />
             ) : null}
-            <Stat
+            <HistoryStat
               icon="star"
               color={session.hasPr ? colors.accent : colors.dim}
               value={formatSet(exerciseId, top, units)}

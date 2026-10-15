@@ -2,82 +2,126 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
+import Animated, { FadeIn, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
-import { MuscleStack } from '@/features/training/components/routine-row';
+import { HistoryStat } from '@/features/workout/components/history-session-row';
 import { PagerPage } from '@/shared/components/pager-page';
-import { muscleShares } from '@/shared/data/muscles';
+import { useExerciseName } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
+import type { ExerciseItem } from '@/shared/data/routines';
 import { useWorkoutCount, useWorkoutHistory, type WorkoutSummary } from '@/shared/data/workouts';
 import { useToday } from '@/shared/hooks/use-today';
-import { addDays, minutesBetween, startOfWeek, toIsoDate } from '@/shared/lib/date';
-import { formatShortDate, formatVolume, formatWeekdayDate } from '@/shared/lib/format';
 import { cn } from '@/shared/lib/cn';
-import { getOrInsert } from '@/shared/lib/map';
+import { minutesBetween } from '@/shared/lib/date';
+import { formatDate, formatVolume } from '@/shared/lib/format';
+import { monthSections } from '@/shared/lib/month-sections';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
-import { Icon, type IconName } from '@/shared/ui/icon';
-import { PressableScale } from '@/shared/ui/pressable-scale';
+import { Icon } from '@/shared/ui/icon';
+import { ListRow } from '@/shared/ui/list-row';
 import { Text } from '@/shared/ui/text';
-
 /** Workouts loaded at a time. */
 const PAGE = 30;
 
-interface StatProps {
-  icon: IconName;
-  label: string;
-  accent?: boolean;
+interface ExerciseLineProps {
+  index: number;
+  item: ExerciseItem;
 }
 
-function Stat({ icon, label, accent }: StatProps) {
+/** One exercise of an opened workout: its number, name and how many sets were done. */
+function ExerciseLine({ index, item }: ExerciseLineProps) {
+  const { t, i18n } = useTranslation('common');
+  const name = useExerciseName(item.exerciseId, i18n.language);
   return (
-    <View className="flex-row items-center gap-1.25">
-      <Icon name={icon} size={12} color={accent ? colors.accent : colors.subtle} />
-      <Text variant="caption" tone={accent ? 'accent' : 'subtle'} className="font-inter-medium">
-        {label}
+    <View className="h-11 flex-row items-center gap-3">
+      <View className="size-7 items-center justify-center rounded-full bg-elevated">
+        <Text variant="caption" className="tabular-nums">
+          {index + 1}
+        </Text>
+      </View>
+      <Text variant="bodyStrong" numberOfLines={1} className="min-w-0 flex-1">
+        {name}
+      </Text>
+      <Text variant="caption" tone="subtle" className="font-inter-medium tabular-nums">
+        {t('history.sets', { count: item.sets })}
       </Text>
     </View>
   );
 }
 
-interface HistoryCardProps {
+interface WorkoutRowProps {
   workout: WorkoutSummary;
+  /** The newest workout: its day in neon. */
+  latest: boolean;
+  open: boolean;
+  onToggle: () => void;
 }
 
-/** A finished workout: the muscles it trained, when, its time, volume and records. */
-function HistoryCard({ workout }: HistoryCardProps) {
-  const { t } = useTranslation(['common', 'today']);
+/**
+ * A finished workout, laid out like an exercise's past session: its day, name, time, volume and
+ * records; it opens to its exercises and a way to its summary.
+ */
+function WorkoutRow({ workout, latest, open, onToggle }: WorkoutRowProps) {
+  const { t } = useTranslation(['today', 'common']);
   const units = useUnits();
-  const minutes = minutesBetween(workout.startedAt, workout.finishedAt);
+  const chevron = useAnimatedStyle(() => ({
+    transform: [{ rotate: withTiming(open ? '180deg' : '0deg', { duration: 200 }) }],
+  }));
   return (
-    <PressableScale
-      haptic="tap"
-      activeScale={0.98}
-      accessibilityRole="button"
-      onPress={() => router.push(`/workout/summary/${workout.id}`)}
-      className="flex-row items-center gap-3.5 rounded-[22px] bg-surface py-3.5 pr-4 pl-2.5"
-    >
-      <MuscleStack shares={muscleShares(workout.items)} highlight />
-      <View className="min-w-0 flex-1 gap-1">
-        <View className="gap-0.5">
-          <Text variant="caption" tone="subtle" className="font-inter-medium">
-            {formatWeekdayDate(new Date(workout.startedAt))}
-          </Text>
-          <Text variant="bodyStrong" numberOfLines={1}>
-            {workout.name}
-          </Text>
-        </View>
-        <View className="flex-row flex-wrap gap-x-3 gap-y-1">
-          <Stat icon="timer" label={t('today:stats.minutes', { count: minutes })} />
-          {/* Reps-only and timed workouts have no volume. */}
-          {workout.volumeKg > 0 ? (
-            <Stat icon="dumbbell" label={formatVolume(workout.volumeKg, units)} />
-          ) : null}
-          {workout.prCount > 0 ? (
-            <Stat icon="star" label={t('today:stats.prs', { count: workout.prCount })} accent />
-          ) : null}
-        </View>
-      </View>
-    </PressableScale>
+    <View className="px-2">
+      <ListRow
+        haptic="select"
+        activeScale={0.99}
+        accessibilityState={{ expanded: open }}
+        onPress={onToggle}
+        badge={formatDate(new Date(workout.startedAt), { day: 'numeric' })}
+        highlight={latest}
+        title={workout.name}
+        subtitle={
+          <View className="flex-row items-center gap-3.5">
+            <HistoryStat
+              icon="timer"
+              value={t('stats.minutes', {
+                count: minutesBetween(workout.startedAt, workout.finishedAt),
+              })}
+            />
+            {/* Reps-only and timed workouts have no volume. */}
+            {workout.volumeKg > 0 ? (
+              <HistoryStat icon="dumbbell" value={formatVolume(workout.volumeKg, units)} />
+            ) : null}
+            {workout.prCount > 0 ? (
+              <HistoryStat
+                icon="star"
+                color={colors.accent}
+                value={t('stats.prs', { count: workout.prCount })}
+              />
+            ) : null}
+          </View>
+        }
+        trailing={
+          <Animated.View
+            className="size-7 items-center justify-center rounded-full bg-chip"
+            style={chevron}
+          >
+            <Icon name="chevron-down" size={12} color={colors.subtle} />
+          </Animated.View>
+        }
+      />
+      {open ? (
+        <Animated.View entering={FadeIn.duration(180)} className="gap-0.5 px-1 pb-3">
+          {workout.items.map((item, i) => (
+            <ExerciseLine key={`${item.exerciseId}-${i}`} index={i} item={item} />
+          ))}
+          <Button
+            label={t('overview')}
+            variant="secondary"
+            size="sm"
+            className="mt-2 self-start"
+            onPress={() => router.push(`/workout/summary/${workout.id}`)}
+          />
+        </Animated.View>
+      ) : null}
+    </View>
   );
 }
 
@@ -130,78 +174,49 @@ function NoWorkouts() {
   );
 }
 
-interface Week {
-  start: Date;
-  workouts: WorkoutSummary[];
-}
-
-/** Workouts by the week (Monday to Sunday) they were done in, newest first. */
-function byWeek(workouts: WorkoutSummary[]): Week[] {
-  const weeks = new Map<string, Week>();
-  for (const w of workouts) {
-    const start = startOfWeek(new Date(w.startedAt));
-    getOrInsert(weeks, toIsoDate(start), () => ({ start, workouts: [] })).workouts.push(w);
-  }
-  return [...weeks.values()];
-}
-
 /**
- * Fortschritt → Historie: every finished workout, newest first, by week, each week with how many
- * workouts and how much volume; a workout opens its summary.
+ * Fortschritt → Historie: every finished workout, newest first, by month, each like an exercise's
+ * past session; one opens to its exercises.
  */
 export function HistoryPage() {
   const { t } = useTranslation('common');
-  const units = useUnits();
   const [limit, setLimit] = useState(PAGE);
+  const [openId, setOpenId] = useState<string | null>(null);
   const { data: workouts = [], isLoading } = useWorkoutHistory(limit);
   const { data: total = 0 } = useWorkoutCount();
   // From the day, which moves on overnight while the tab stays mounted.
-  const monday = startOfWeek(new Date(useToday()));
-  const thisWeek = toIsoDate(monday);
-  const lastWeek = toIsoDate(addDays(monday, -7));
-
-  const weekTitle = (start: Date) => {
-    const key = toIsoDate(start);
-    if (key === thisWeek) return t('history.thisWeek');
-    if (key === lastWeek) return t('history.lastWeek');
-    return `${formatShortDate(start)} – ${formatShortDate(addDays(start, 6))}`;
-  };
+  const year = new Date(useToday()).getFullYear();
 
   return (
     <PagerPage>
       {workouts.length ? (
-        <>
-          {byWeek(workouts).map((week) => {
-            const volume = week.workouts.reduce((sum, w) => sum + w.volumeKg, 0);
-            const count = t('history.count', { count: week.workouts.length });
-            return (
-              <View key={toIsoDate(week.start)}>
-                <View className="flex-row items-baseline justify-between gap-3 px-5 pt-7 pb-2.5">
-                  <Text variant="overline" tone="subtle" className="text-[11px]">
-                    {weekTitle(week.start)}
-                  </Text>
-                  <Text variant="caption" tone="subtle" className="font-inter-medium">
-                    {volume > 0 ? `${count} · ${formatVolume(volume, units)}` : count}
-                  </Text>
-                </View>
-                <View className="gap-2 px-4">
-                  {week.workouts.map((w) => (
-                    <HistoryCard key={w.id} workout={w} />
-                  ))}
-                </View>
-              </View>
-            );
-          })}
+        <View className="px-2 pt-2.5">
+          {monthSections(workouts, year).map((section) => (
+            <View key={section.key}>
+              <Text className="px-3 pt-4.5 pb-1.5 font-inter-semibold text-[11px] leading-3.5 tracking-[1.1px] text-dim">
+                {section.title}
+              </Text>
+              {section.data.map((w) => (
+                <WorkoutRow
+                  key={w.id}
+                  workout={w}
+                  latest={w.id === workouts[0]?.id}
+                  open={w.id === openId}
+                  onToggle={() => setOpenId(w.id === openId ? null : w.id)}
+                />
+              ))}
+            </View>
+          ))}
           {total > workouts.length ? (
             <Button
               label={t('history.more')}
               variant="secondary"
               size="md"
-              className="mx-4 mt-4"
+              className="mx-2 mt-4"
               onPress={() => setLimit((l) => l + PAGE)}
             />
           ) : null}
-        </>
+        </View>
       ) : !isLoading ? (
         <NoWorkouts />
       ) : null}
