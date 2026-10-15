@@ -1,7 +1,4 @@
 {
-  "header": {
-    "create": "Create new"
-  },
   "tabs": {
     "myPlan": "Plans",
     "all": "Single workouts"

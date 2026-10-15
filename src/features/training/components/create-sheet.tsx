@@ -13,12 +13,12 @@ export interface CreateSheetProps {
   onClose: () => void;
   onCreateRoutine: () => void;
   onCreatePlan: () => void;
-  /** Adds "Leeres Training" first: an empty workout started now (the tab bar's "+"). */
-  onStartWorkout?: () => void;
+  /** "Leeres Training": an empty workout, started now. */
+  onStartWorkout: () => void;
 }
 
 /**
- * "+" sheet: an empty workout when offered, a new routine, or a plan, which is made, imported or
+ * The tab bar's "+" sheet: an empty workout, a new routine, or a plan, which is made, imported or
  * built (01·V·A·6).
  */
 export function CreateSheet({
@@ -29,7 +29,7 @@ export function CreateSheet({
   onStartWorkout,
 }: CreateSheetProps) {
   const { t } = useTranslation('training');
-  const [kind, setKind] = useState<CreateKind>(onStartWorkout ? 'workout' : 'routine');
+  const [kind, setKind] = useState<CreateKind>('workout');
 
   return (
     <ChoiceSheet
@@ -38,24 +38,18 @@ export function CreateSheet({
       value={kind}
       onChange={setKind}
       onConfirm={(value) => {
-        if (value === 'workout') onStartWorkout?.();
+        if (value === 'workout') onStartWorkout();
         else if (value === 'routine') onCreateRoutine();
         else onCreatePlan();
       }}
       options={[
-        ...(onStartWorkout
-          ? [
-              {
-                value: 'workout' as const,
-                title: t('create.workout'),
-                description: t('create.workoutHint'),
-                cta: t('create.startWorkout'),
-                renderIcon: (active: boolean) => (
-                  <Icon name="play" size={14} color={glyphColor(active)} />
-                ),
-              },
-            ]
-          : []),
+        {
+          value: 'workout',
+          title: t('create.workout'),
+          description: t('create.workoutHint'),
+          cta: t('create.startWorkout'),
+          renderIcon: (active) => <Icon name="play" size={14} color={glyphColor(active)} />,
+        },
         {
           value: 'routine',
           title: t('create.routine'),
