@@ -8,6 +8,7 @@ import { PagerPage } from '@/shared/components/pager-page';
 import { muscleShares } from '@/shared/data/muscles';
 import { useUnits } from '@/shared/data/profile';
 import { useWorkoutCount, useWorkoutHistory, type WorkoutSummary } from '@/shared/data/workouts';
+import { useToday } from '@/shared/hooks/use-today';
 import { addDays, minutesBetween, startOfWeek, toIsoDate } from '@/shared/lib/date';
 import { formatShortDate, formatVolume, formatWeekdayDate } from '@/shared/lib/format';
 import { getOrInsert } from '@/shared/lib/map';
@@ -104,8 +105,10 @@ export function HistoryPage() {
   const [limit, setLimit] = useState(PAGE);
   const { data: workouts = [], isLoading } = useWorkoutHistory(limit);
   const { data: total = 0 } = useWorkoutCount();
-  const thisWeek = toIsoDate(startOfWeek(new Date()));
-  const lastWeek = toIsoDate(addDays(startOfWeek(new Date()), -7));
+  // From the day, which moves on overnight while the tab stays mounted.
+  const monday = startOfWeek(new Date(useToday()));
+  const thisWeek = toIsoDate(monday);
+  const lastWeek = toIsoDate(addDays(monday, -7));
 
   const weekTitle = (start: Date) => {
     const key = toIsoDate(start);

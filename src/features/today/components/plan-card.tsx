@@ -5,7 +5,6 @@ import { View } from 'react-native';
 
 import { PlanProgress } from '@/features/training/components/plan-progress';
 import { MuscleStack, useRoutineMeta } from '@/features/training/components/routine-row';
-import { useStartRoutine } from '@/features/training/hooks/use-start-routine';
 import { muscleShares } from '@/shared/data/muscles';
 import { deloadSetCount, type PlanStatus, type PlanSummary } from '@/shared/data/plans';
 import { estimateMinutes, type RoutineSummary } from '@/shared/data/routines';
@@ -36,6 +35,9 @@ export interface PlanCardProps {
   canMarkDone: boolean;
   /** Running workout; starting is replaced by resuming it. */
   activeWorkoutId: string | null;
+  /** The screen's one starter, so two starts can't race (see `useStartRoutine`). */
+  startingId: string | null;
+  onStart: (routine: RoutineSummary) => void;
 }
 
 /**
@@ -50,10 +52,11 @@ export function PlanCard({
   today,
   canMarkDone,
   activeWorkoutId,
+  startingId,
+  onStart,
 }: PlanCardProps) {
   const { t } = useTranslation(['today', 'training']);
   const meta = useRoutineMeta();
-  const { start, startingId } = useStartRoutine();
   const [busy, setBusy] = useState(false);
   const starting = !!next && startingId === next.id;
   const isFuture = startOfDay(date) > startOfDay(today);
@@ -139,7 +142,7 @@ export function PlanCard({
               icon={activeWorkoutId ? undefined : 'play'}
               className="flex-1"
               loading={starting || busy}
-              onPress={() => start(next)}
+              onPress={() => onStart(next)}
             />
             {canMarkDone ? (
               <IconButton

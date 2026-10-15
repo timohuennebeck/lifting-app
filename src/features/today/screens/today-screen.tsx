@@ -49,11 +49,19 @@ interface RoutineRowsProps {
   doneLabel?: (at: string) => string;
   /** The line under the name of the others, e.g. when they were done last. */
   meta: (routine: RoutineSummary) => string;
+  startingId: string | null;
+  onStart: (routine: RoutineSummary) => void;
 }
 
 /** Routine cards with quick start; an empty routine opens instead, to add exercises. */
-function RoutineRows({ routines, done = {}, doneLabel, meta }: RoutineRowsProps) {
-  const { start, startingId } = useStartRoutine();
+function RoutineRows({
+  routines,
+  done = {},
+  doneLabel,
+  meta,
+  startingId,
+  onStart,
+}: RoutineRowsProps) {
   return (
     <View className="gap-2 px-4">
       {routines.map((routine) => {
@@ -68,7 +76,7 @@ function RoutineRows({ routines, done = {}, doneLabel, meta }: RoutineRowsProps)
             starting={startingId === routine.id}
             onPress={() => router.push(`/routine/${routine.id}`)}
             onStart={() =>
-              routine.exerciseCount ? start(routine) : router.push(`/routine/${routine.id}`)
+              routine.exerciseCount ? onStart(routine) : router.push(`/routine/${routine.id}`)
             }
           />
         );
@@ -98,9 +106,11 @@ export function TodayScreen() {
   const { plan, profile, isLoading: planLoading } = useCurrentPlan();
   const status = usePlanStatus(plan);
   const { data: routines = [], isLoading: routinesLoading } = useRoutines();
-  const { data: doneThisWeek = {} } = useWeekDone(plan?.id, status?.week);
-  const { data: lastDone = {} } = useLastDone();
+  const { data: doneThisWeek = {}, isLoading: doneLoading } = useWeekDone(plan?.id, status?.week);
+  const { data: lastDone = {}, isLoading: lastDoneLoading } = useLastDone();
   const meta = useRoutineMeta();
+  // One starter for the whole screen, so two starts can't race.
+  const { start, startingId } = useStartRoutine();
 
   const planRoutines = plan ? routines.filter((r) => r.planId === plan.id) : [];
   const next = planRoutines.find((r) => r.id === status?.nextRoutineId);
@@ -109,8 +119,13 @@ export function TodayScreen() {
     .filter((r) => r.planId === null && lastDone[r.id])
     .sort((a, b) => lastDone[b.id].localeCompare(lastDone[a.id]))
     .slice(0, RECENT);
-  // Nothing shows until the day and the plan are known, so no card flashes in the wrong state.
-  const loading = weekLoading || planLoading || routinesLoading || (!!plan && !status);
+  // Nothing shows until the day, the plan and what was done are known, so no card flashes in
+  // the wrong state or moves down once the rows above it arrive.
+  const loading =
+    weekLoading ||
+    planLoading ||
+    routinesLoading ||
+    (plan ? !status || doneLoading : lastDoneLoading);
 
   const pills = (
     <ScrollView
@@ -163,6 +178,8 @@ export function TodayScreen() {
             today={today}
             canMarkDone={!day.workout}
             activeWorkoutId={active?.id ?? null}
+            startingId={startingId}
+            onStart={start}
           />
           {rest.length ? (
             <>
@@ -176,6 +193,8 @@ export function TodayScreen() {
                   })
                 }
                 meta={meta}
+                startingId={startingId}
+                onStart={start}
               />
             </>
           ) : null}
@@ -201,6 +220,8 @@ export function TodayScreen() {
               meta={(r) =>
                 t('training:all.lastDone', { date: formatWeekdayDate(new Date(lastDone[r.id])) })
               }
+              startingId={startingId}
+              onStart={start}
             />
             <View className="h-4" />
           </>
