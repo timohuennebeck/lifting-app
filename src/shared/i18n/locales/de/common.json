@@ -30,9 +30,33 @@
     "minShort": "Min"
   },
   "weekdays": {
-    "short": ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
-    "narrow": ["M", "D", "M", "D", "F", "S", "S"],
-    "long": ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
+    "short": [
+      "Mo",
+      "Di",
+      "Mi",
+      "Do",
+      "Fr",
+      "Sa",
+      "So"
+    ],
+    "narrow": [
+      "M",
+      "D",
+      "M",
+      "D",
+      "F",
+      "S",
+      "S"
+    ],
+    "long": [
+      "Montag",
+      "Dienstag",
+      "Mittwoch",
+      "Donnerstag",
+      "Freitag",
+      "Samstag",
+      "Sonntag"
+    ]
   },
   "greeting": "Hallo {{name}}",
   "languages": {
@@ -62,8 +86,9 @@
     "count_one": "{{count}} Training",
     "count_other": "{{count}} Trainings",
     "more": "Mehr laden",
-    "empty": "Noch keine Trainings",
-    "emptyHint": "Hier siehst du jedes Training, das du abschließt, nach Wochen sortiert."
+    "empty": "Keine abgeschlossenen Trainings",
+    "emptyHint": "Hier siehst du jedes Training, das du abgeschlossen hast, mit Dauer und Rekorden.",
+    "start": "Training starten"
   },
   "search": {
     "open": "Übungen suchen",

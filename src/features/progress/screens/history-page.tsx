@@ -11,6 +11,7 @@ import { useWorkoutCount, useWorkoutHistory, type WorkoutSummary } from '@/share
 import { useToday } from '@/shared/hooks/use-today';
 import { addDays, minutesBetween, startOfWeek, toIsoDate } from '@/shared/lib/date';
 import { formatShortDate, formatVolume, formatWeekdayDate } from '@/shared/lib/format';
+import { cn } from '@/shared/lib/cn';
 import { getOrInsert } from '@/shared/lib/map';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -77,6 +78,55 @@ function HistoryCard({ workout }: HistoryCardProps) {
         </View>
       </View>
     </PressableScale>
+  );
+}
+
+/** A faint sketch of the list: a week title and two workouts. */
+function HistorySketch() {
+  return (
+    <View
+      className="w-full gap-6"
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+    >
+      <View className="h-2.5 w-19 rounded-full bg-surface" />
+      {[0, 1].map((row) => (
+        <View key={row} className="flex-row items-center gap-4">
+          <View className="size-12 rounded-full bg-surface" />
+          <View className="flex-1 gap-2.5">
+            <View className={cn('h-2.5 rounded-full bg-surface', row ? 'w-36' : 'w-28')} />
+            <View className="flex-row gap-4">
+              <View className="h-2 w-13 rounded-full bg-surface" />
+              <View className="h-2 w-15 rounded-full bg-surface" />
+              <View className="h-2 w-10.5 rounded-full bg-surface" />
+            </View>
+          </View>
+          <View className="size-8 rounded-full bg-surface" />
+        </View>
+      ))}
+    </View>
+  );
+}
+
+/** Before the first finished workout: a sketch of the list and a way to train. */
+function NoWorkouts() {
+  const { t } = useTranslation('common');
+  return (
+    <View className="flex-1 items-center justify-center px-8 pb-12">
+      <HistorySketch />
+      <Text variant="headline" className="mt-10 text-center">
+        {t('history.empty')}
+      </Text>
+      <Text variant="paragraph" tone="subtle" className="mt-2 text-center">
+        {t('history.emptyHint')}
+      </Text>
+      {/* Heute has the plan's next workout and the empty one. */}
+      <Button
+        label={t('history.start')}
+        className="mt-6 h-12 px-7"
+        onPress={() => router.navigate('/')}
+      />
+    </View>
   );
 }
 
@@ -153,14 +203,7 @@ export function HistoryPage() {
           ) : null}
         </>
       ) : !isLoading ? (
-        <View className="items-center gap-2 px-8 pt-16">
-          <Text variant="headline" className="text-center">
-            {t('history.empty')}
-          </Text>
-          <Text variant="paragraph" tone="subtle" className="text-center">
-            {t('history.emptyHint')}
-          </Text>
-        </View>
+        <NoWorkouts />
       ) : null}
       {/* The list ends 40pt above the tab bar inset; PagerPage adds 24. */}
       <View className="h-4" />

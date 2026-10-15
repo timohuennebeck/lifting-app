@@ -30,8 +30,24 @@
     "minShort": "min"
   },
   "weekdays": {
-    "short": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
-    "narrow": ["S", "T", "Q", "Q", "S", "S", "D"],
+    "short": [
+      "Seg",
+      "Ter",
+      "Qua",
+      "Qui",
+      "Sex",
+      "Sáb",
+      "Dom"
+    ],
+    "narrow": [
+      "S",
+      "T",
+      "Q",
+      "Q",
+      "S",
+      "S",
+      "D"
+    ],
     "long": [
       "Segunda-feira",
       "Terça-feira",
@@ -70,8 +86,9 @@
     "count_one": "{{count}} treino",
     "count_other": "{{count}} treinos",
     "more": "Carregar mais",
-    "empty": "Ainda sem treinos",
-    "emptyHint": "Cada treino que terminas aparece aqui, por semana."
+    "empty": "Ainda sem treinos terminados",
+    "emptyHint": "Aqui vês cada treino que terminaste, com a duração e os recordes.",
+    "start": "Iniciar treino"
   },
   "search": {
     "open": "Pesquisar exercícios",
