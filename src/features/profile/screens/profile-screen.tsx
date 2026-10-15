@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Alert, Linking, View } from 'react-native';
@@ -8,7 +9,6 @@ import { OpenTicketsSection } from '@/features/support/components/open-tickets-s
 import { TabScreen } from '@/shared/components/tab-screen';
 import { ProfileAvatar } from '@/shared/components/user-avatar';
 import { saveProfile, useProfile } from '@/shared/data/profile';
-import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { useWorkoutCount, useWorkoutHistory } from '@/shared/data/workouts';
 import { formatDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
@@ -18,17 +18,14 @@ import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
-import { FIRST_NAME_MAX } from '@/shared/lib/limits';
 
 import { ActivityHeatmap } from '../components/activity-heatmap';
 import { type AvatarAction, AvatarSheet } from '../components/avatar-sheet';
 import { HistoryEntry } from '../components/history-entry';
-import { ProfileTextSheet } from '../components/profile-text-sheet';
+import { NameSheet } from '../components/name-sheet';
 import { pickAvatar, removeAvatar, saveAvatar } from '../lib/avatar';
 
 const PAGE = 10;
-/** Matches the check on profiles.bio. */
-const BIO_MAX = 150;
 
 interface LocalPhoto {
   uri: string;
@@ -53,10 +50,7 @@ export function ProfileScreen() {
   const { data: history = [] } = useWorkoutHistory(visible);
   const { data: workoutCount = 0 } = useWorkoutCount();
   const name = profile?.firstName ?? '';
-  const [editing, setEditing] = useState<'name' | 'about' | null>(null);
-  // The sheet keeps its copy while it animates out.
-  const editingField = useLastDefined(editing) ?? 'name';
-  const editingAbout = editingField === 'about';
+  const [nameOpen, setNameOpen] = useState(false);
 
   async function onAvatarAction(action: AvatarAction) {
     setAvatarOpen(false);
@@ -99,14 +93,11 @@ export function ProfileScreen() {
     });
   }
 
-  async function saveText(value: string) {
+  async function saveName(firstName: string) {
     if (!profile) return;
-    await saveProfile(
-      profile.id,
-      editing === 'name' ? { firstName: value } : { bio: value || null },
-    );
+    await saveProfile(profile.id, { firstName });
     haptics.success();
-    setEditing(null);
+    setNameOpen(false);
   }
 
   return (
@@ -138,7 +129,7 @@ export function ProfileScreen() {
           haptic="tap"
           activeScale={0.98}
           accessibilityLabel={t('name.edit')}
-          onPress={() => setEditing('name')}
+          onPress={() => setNameOpen(true)}
           className="mt-4.5"
         >
           <Text className="font-inter-semibold text-[34px] leading-10 tracking-[-0.7px]">
@@ -155,12 +146,12 @@ export function ProfileScreen() {
             </Text>
           ) : null}
         </View>
-        {/* The user's own description; tapping it edits it (01b-3). */}
+        {/* The user's own description; tapping it opens "Über dich" to edit it. */}
         <PressableScale
           haptic="tap"
           activeScale={0.98}
           accessibilityLabel={t(profile?.bio ? 'about.edit' : 'about.add')}
-          onPress={() => setEditing('about')}
+          onPress={() => router.push('/about')}
           className="mt-4.5 self-stretch"
         >
           <Text variant="paragraph" className={profile?.bio ? 'text-fg-mid' : 'text-dim'}>
@@ -210,18 +201,11 @@ export function ProfileScreen() {
         hasPhoto={!!profile?.avatarPath}
         onAction={onAvatarAction}
       />
-      <ProfileTextSheet
-        visible={!!editing}
-        onClose={() => setEditing(null)}
-        title={t(`${editingField}.title`)}
-        subtitle={t(`${editingField}.subtitle`)}
-        label={t(`${editingField}.label`)}
-        placeholder={t(`${editingField}.placeholder`)}
-        initialValue={(editingAbout ? profile?.bio : profile?.firstName) ?? ''}
-        maxLength={editingAbout ? BIO_MAX : FIRST_NAME_MAX}
-        multiline={editingAbout}
-        optional={editingAbout}
-        onSave={saveText}
+      <NameSheet
+        visible={nameOpen}
+        onClose={() => setNameOpen(false)}
+        initialValue={profile?.firstName ?? ''}
+        onSave={saveName}
       />
     </TabScreen>
   );

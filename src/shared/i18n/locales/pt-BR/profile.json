@@ -9,7 +9,6 @@
   },
   "about": {
     "title": "Sobre você",
-    "subtitle": "Aparece no seu perfil.",
     "label": "Descrição",
     "placeholder": "Conte algo sobre você…",
     "add": "Adicionar descrição",

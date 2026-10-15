@@ -9,7 +9,6 @@
   },
   "about": {
     "title": "About you",
-    "subtitle": "Shown on your profile.",
     "label": "Description",
     "placeholder": "Tell people a bit about yourself…",
     "add": "Add a description",

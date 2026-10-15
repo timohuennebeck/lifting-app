@@ -3,6 +3,8 @@
 
 /** First name: onboarding and the profile. */
 export const FIRST_NAME_MAX = 24;
+/** The description on the profile ("Über dich"). */
+export const BIO_MAX = 150;
 /** A plan: creating, renaming, the import review. The plan import cuts to it too. */
 export const PLAN_NAME_MAX = 30;
 /** A routine: creating, renaming, its title. */
