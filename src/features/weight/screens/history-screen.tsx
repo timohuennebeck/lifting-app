@@ -11,11 +11,11 @@ import { MINUTE_MS, toIsoDate } from '@/shared/lib/date';
 import { formatShortDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { IconButton } from '@/shared/ui/icon-button';
+import { RangeTabs } from '@/shared/ui/range-tabs';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 import { EntryRow, useDayLabel } from '../components/entry-row';
-import { type ChartRange, RangeTabs } from '../components/range-tabs';
 import { TrendChangeRow } from '../components/trend-change-row';
 import { WeightChart } from '../components/weight-chart';
 import { formatChange, formatKg } from '../lib/format';
@@ -26,6 +26,10 @@ const OVERLINE = 'relative top-px text-xs leading-4 tracking-[1.65px]';
 
 /** Spans of the "Veränderung · Trend" rows, in days. */
 const CHANGE_DAYS = [3, 7, 14, 30, 90];
+
+/** The chart's ranges in days (GW·2). */
+const CHART_RANGES = [7, 14, 30, 90, 180] as const;
+type ChartRange = (typeof CHART_RANGES)[number];
 
 const openEntry = (date: string) =>
   router.push({ pathname: '/body-weight/[date]', params: { date } });
@@ -116,7 +120,7 @@ export function WeightHistoryScreen() {
           onSelect={setSelected}
         />
       </View>
-      <RangeTabs value={range} onChange={changeRange} className="mx-4 mt-5" />
+      <RangeTabs ranges={CHART_RANGES} value={range} onChange={changeRange} className="mx-4 mt-5" />
 
       {changes.length ? (
         <>

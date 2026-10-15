@@ -172,16 +172,18 @@ export function NextCheckCard({ title, note, onPress }: NextCheckCardProps) {
  * The accent arrow from the before to the after card, centred over their row (which must be as
  * wide as its parent: the centring is a percentage of it), or `inline` in the row's flow.
  */
-export function CompareArrow({ inline }: { inline?: boolean }) {
+export function CompareArrow({ inline, muted }: { inline?: boolean; muted?: boolean }) {
   return (
     <View
       pointerEvents="none"
       className={cn(
-        'size-10 items-center justify-center rounded-full bg-accent',
+        'size-10 items-center justify-center rounded-full',
+        // Grey in the empty state, where there is nothing to compare yet.
+        muted ? 'bg-control' : 'bg-accent',
         !inline && 'absolute top-1/2 left-1/2 -mt-5 -ml-5',
       )}
     >
-      <Icon name="arrow-right" size={16} color={colors.onAccent} />
+      <Icon name="arrow-right" size={16} color={muted ? colors.subtle : colors.onAccent} />
     </View>
   );
 }

@@ -23,5 +23,6 @@
   "emptyPlan": {
     "title": "Plano sem treinos",
     "body": "Toque para adicionar treinos ao seu plano."
-  }
+  },
+  "startWorkout": "Iniciar treino"
 }

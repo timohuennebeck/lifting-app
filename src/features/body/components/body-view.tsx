@@ -155,9 +155,9 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
       >
-        <PlaceholderCard letter="A" lit tilt={-7} />
+        <PlaceholderCard letter="A" lit={false} tilt={-7} />
         <CardGap className="w-14">
-          <CompareArrow inline />
+          <CompareArrow inline muted />
         </CardGap>
         <PlaceholderCard letter="B" lit={false} tilt={7} />
       </View>

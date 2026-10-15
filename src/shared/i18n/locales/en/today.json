@@ -23,5 +23,6 @@
   "emptyPlan": {
     "title": "Plan without workouts",
     "body": "Tap to add workouts to your plan."
-  }
+  },
+  "startWorkout": "Start workout"
 }

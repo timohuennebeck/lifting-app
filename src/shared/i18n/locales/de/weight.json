@@ -6,7 +6,6 @@
     "add": "Gewicht eintragen",
     "trend": "Trend",
     "difference": "Unterschied",
-    "range": "{{count}} T",
     "changes": "Veränderung · Trend",
     "days_one": "{{count}} Tag",
     "days_other": "{{count}} Tage",
@@ -31,8 +30,5 @@
     "none": "Kein Eintrag vorhanden",
     "delete": "Eintrag löschen",
     "date": "Datum"
-  },
-  "card": {
-    "add": "Eintragen"
   }
 }

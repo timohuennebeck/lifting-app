@@ -6,7 +6,6 @@
     "add": "Log weight",
     "trend": "Trend",
     "difference": "Difference",
-    "range": "{{count}} D",
     "changes": "Change · Trend",
     "days_one": "{{count}} day",
     "days_other": "{{count}} days",
@@ -31,8 +30,5 @@
     "none": "No entry yet",
     "delete": "Delete entry",
     "date": "Date"
-  },
-  "card": {
-    "add": "Log"
   }
 }

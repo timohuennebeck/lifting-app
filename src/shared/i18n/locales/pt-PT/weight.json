@@ -6,7 +6,6 @@
     "add": "Registar peso",
     "trend": "Tendência",
     "difference": "Diferença",
-    "range": "{{count}} D",
     "changes": "Variação · Tendência",
     "days_one": "{{count}} dia",
     "days_other": "{{count}} dias",
@@ -31,8 +30,5 @@
     "none": "Nenhum registo",
     "delete": "Apagar registo",
     "date": "Data"
-  },
-  "card": {
-    "add": "Registar"
   }
 }

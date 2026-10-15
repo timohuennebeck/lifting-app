@@ -8,7 +8,7 @@ import { useMuscleVolume } from '@/shared/data/workouts';
 import { cn } from '@/shared/lib/cn';
 import { addDays, DAY_RANGES, type DayRange, startOfDay } from '@/shared/lib/date';
 import { BodyMaps, MUSCLE_IDS } from '@/shared/ui/muscle-map';
-import { PressableScale } from '@/shared/ui/pressable-scale';
+import { RangeTabs } from '@/shared/ui/range-tabs';
 import { Text } from '@/shared/ui/text';
 
 import { MuscleShareTile } from './muscle-share-tile';
@@ -85,25 +85,7 @@ export function MusclesView() {
       <Text variant="paragraph" tone="subtle" className="px-5 pt-4">
         {t('subtitle', { days: range, count: totalSets })}
       </Text>
-      <View className="flex-row gap-1.5 px-5 pt-4" accessibilityRole="tablist">
-        {DAY_RANGES.map((r) => (
-          <PressableScale
-            key={r}
-            haptic="select"
-            accessibilityRole="tab"
-            accessibilityState={{ selected: r === range }}
-            onPress={() => setRange(r)}
-            className={cn(
-              'h-9 flex-1 items-center justify-center rounded-[18px]',
-              r === range ? 'bg-accent' : 'bg-elevated',
-            )}
-          >
-            <Text variant="caption" tone={r === range ? 'onAccent' : 'default'} className="text-sm">
-              {t('range', { count: r })}
-            </Text>
-          </PressableScale>
-        ))}
-      </View>
+      <RangeTabs ranges={DAY_RANGES} value={range} onChange={setRange} className="mx-4 mt-4" />
       <BodyMaps selected={trainedIds} />
       {upper.length ? (
         <>

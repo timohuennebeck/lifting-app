@@ -138,7 +138,7 @@ export function PlanCard({
           </PressableScale>
           <View className="flex-row gap-2">
             <Button
-              label={activeWorkoutId ? t('resume') : t('training:list.start', { name: next.name })}
+              label={activeWorkoutId ? t('resume') : t('startWorkout')}
               icon={activeWorkoutId ? undefined : 'play'}
               className="flex-1"
               loading={starting || busy}

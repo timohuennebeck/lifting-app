@@ -30,33 +30,9 @@
     "minShort": "Min"
   },
   "weekdays": {
-    "short": [
-      "Mo",
-      "Di",
-      "Mi",
-      "Do",
-      "Fr",
-      "Sa",
-      "So"
-    ],
-    "narrow": [
-      "M",
-      "D",
-      "M",
-      "D",
-      "F",
-      "S",
-      "S"
-    ],
-    "long": [
-      "Montag",
-      "Dienstag",
-      "Mittwoch",
-      "Donnerstag",
-      "Freitag",
-      "Samstag",
-      "Sonntag"
-    ]
+    "short": ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
+    "narrow": ["M", "D", "M", "D", "F", "S", "S"],
+    "long": ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
   },
   "greeting": "Hallo {{name}}",
   "languages": {
@@ -76,9 +52,10 @@
   },
   "progressTab": {
     "history": "Historie",
-    "muscles": "Muskeln",
+    "muscles": "Level",
     "body": "Körper"
   },
+  "rangeDays": "{{count}} T",
   "history": {
     "thisWeek": "Diese Woche",
     "lastWeek": "Letzte Woche",
