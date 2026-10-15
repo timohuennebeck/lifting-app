@@ -251,25 +251,28 @@ const lastDoneQuery = (planId: string) =>
     .groupBy(routines.id);
 
 /**
- * The routine to do next: the one done longest ago, never-done ones first, ties in the plan's
- * order; null while none has exercises. Doing one out of order is fine: the others come next.
+ * The routines in the order they come up: the one done longest ago first, never-done ones before
+ * all others, ties in the plan's order; empty ones left out. Doing one out of order is fine: the
+ * others come next.
  */
-function toNextRoutineId(rows: RowOf<typeof lastDoneQuery>[]) {
-  const sorted = rows
+function toRoutineOrder(rows: RowOf<typeof lastDoneQuery>[]) {
+  return rows
     .filter((r) => r.has_exercises)
     .sort((a, b) => {
       if (a.last_done === b.last_done) return a.position - b.position;
       if (a.last_done === null) return -1;
       if (b.last_done === null) return 1;
       return a.last_done < b.last_done ? -1 : 1;
-    });
-  return sorted[0]?.id ?? null;
+    })
+    .map((r) => r.id);
 }
 
 export interface PlanStatus extends PlanWeek {
   /** Week of the block (1 to `blockWeeks`), or null without blocks. */
   blockWeek: number | null;
   deload: boolean;
+  /** The routines with exercises in the order they come up, the next one first. */
+  routineOrder: string[];
   nextRoutineId: string | null;
 }
 
@@ -282,14 +285,21 @@ export function usePlanStatus(plan: PlanSummary | undefined): PlanStatus | undef
     query: latestWeekQuery(drizzle, planId, true),
     map: toLatest,
   });
-  const { data: nextRoutineId = null, isLoading: nextLoading } = useDrizzleQuery({
-    queryKey: queryKeys.plans.nextRoutine(planId).queryKey,
+  const { data: routineOrder = [], isLoading: orderLoading } = useDrizzleQuery({
+    queryKey: queryKeys.plans.routineOrder(planId).queryKey,
     enabled: !!plan,
     query: lastDoneQuery(planId),
-    map: toNextRoutineId,
+    map: toRoutineOrder,
   });
-  if (!plan || weekLoading || nextLoading) return undefined;
+  if (!plan || weekLoading || orderLoading) return undefined;
   const { week, done } = planWeekFrom(latest, plan.sessionsPerWeek);
   const blockWeek = blockWeekOf(week, plan);
-  return { week, done, blockWeek, deload: isDeloadWeek(blockWeek, plan), nextRoutineId };
+  return {
+    week,
+    done,
+    blockWeek,
+    deload: isDeloadWeek(blockWeek, plan),
+    routineOrder,
+    nextRoutineId: routineOrder[0] ?? null,
+  };
 }

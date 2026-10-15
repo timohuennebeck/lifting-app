@@ -5,15 +5,13 @@
   "status": {
     "doneToday": "Feito hoje",
     "done": "Feito · {{date}}",
-    "next": "A seguir"
+    "recommended": "O coach recomenda",
+    "after": "Depois"
   },
   "stats": {
     "minutes": "{{count}} min",
-    "approxMinutes": "~{{count}} min",
     "prs_one": "{{count}} recorde",
     "prs_other": "{{count}} recordes",
-    "exercises_one": "{{count}} exercício",
-    "exercises_other": "{{count}} exercícios",
     "sets_one": "{{count}} série",
     "sets_other": "{{count}} séries"
   },
@@ -21,7 +19,17 @@
   "start": "Iniciar",
   "resume": "Retomar",
   "markDone": "Marcar como feito",
-  "other": "Outro treino",
+  "session": "Treino {{n}} de {{total}}",
+  "nextWeek": "Próxima semana · {{session}}",
+  "inWeeks_one": "Daqui a {{count}} semana · {{session}}",
+  "inWeeks_other": "Daqui a {{count}} semanas · {{session}}",
+  "moreExercises_one": "Mais {{count}} exercício",
+  "moreExercises_other": "Mais {{count}} exercícios",
+  "block": {
+    "week": "Semana {{week}} / {{weeks}}",
+    "deload": "{{plan}} · Deload",
+    "a11y": "{{plan}}: semana {{week}} de {{weeks}} do bloco"
+  },
   "deloadHint": "Semana de deload: metade das séries e um pouco mais leve, para você se recuperar.",
   "noPlan": {
     "title": "Ainda sem plano",
@@ -30,9 +38,5 @@
   "emptyPlan": {
     "title": "Plano sem treinos",
     "body": "Toque para adicionar treinos ao seu plano."
-  },
-  "otherSheet": {
-    "title": "Outro treino",
-    "subtitle": "Escolha um treino de {{plan}}."
   }
 }

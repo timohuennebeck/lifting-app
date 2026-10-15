@@ -5,15 +5,13 @@
   "status": {
     "doneToday": "Done today",
     "done": "Done · {{date}}",
-    "next": "Up next"
+    "recommended": "Coach recommends",
+    "after": "After that"
   },
   "stats": {
     "minutes": "{{count}} min",
-    "approxMinutes": "~{{count}} min",
     "prs_one": "{{count}} PR",
     "prs_other": "{{count}} PRs",
-    "exercises_one": "{{count}} exercise",
-    "exercises_other": "{{count}} exercises",
     "sets_one": "{{count}} set",
     "sets_other": "{{count}} sets"
   },
@@ -21,7 +19,17 @@
   "start": "Start",
   "resume": "Resume",
   "markDone": "Mark as done",
-  "other": "Other workout",
+  "session": "Workout {{n}} of {{total}}",
+  "nextWeek": "Next week · {{session}}",
+  "inWeeks_one": "In {{count}} week · {{session}}",
+  "inWeeks_other": "In {{count}} weeks · {{session}}",
+  "moreExercises_one": "{{count}} more exercise",
+  "moreExercises_other": "{{count}} more exercises",
+  "block": {
+    "week": "Week {{week}} / {{weeks}}",
+    "deload": "{{plan}} · Deload",
+    "a11y": "{{plan}}: week {{week}} of {{weeks}} of the block"
+  },
   "deloadHint": "Deload week: half the sets and a bit lighter, so you recover.",
   "noPlan": {
     "title": "No plan yet",
@@ -30,9 +38,5 @@
   "emptyPlan": {
     "title": "Plan without workouts",
     "body": "Tap to add workouts to your plan."
-  },
-  "otherSheet": {
-    "title": "Other workout",
-    "subtitle": "Pick a workout from {{plan}}."
   }
 }
