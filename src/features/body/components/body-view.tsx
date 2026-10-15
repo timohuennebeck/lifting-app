@@ -197,8 +197,8 @@ export function BodyView() {
     // A check starts from the next check's card or row whenever the user wants; the first from
     // the empty state. Under-18s get no new checks.
     <>
-      {/* The locked state explains itself. */}
-      {latest || allowed ? (
+      {/* Only over a score: the empty and the locked state explain themselves. */}
+      {latest ? (
         <Text variant="paragraph" tone="subtle" className="px-5 pt-4">
           {t('subtitle')}
         </Text>
