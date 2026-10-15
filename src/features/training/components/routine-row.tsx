@@ -21,13 +21,14 @@ const STACK_WIDTH = 116;
 
 interface MuscleStackProps {
   shares: MuscleShare[];
-  /** The front muscle in neon, ringed: the routine that's next. */
+  /** The muscles in neon: the routine that's next. */
   highlight?: boolean;
 }
 
 /** The three muscles worked most as overlapping circles, the biggest share in front. */
 export function MuscleStack({ shares, highlight }: MuscleStackProps) {
   const [first, ...rest] = shares.slice(0, 3);
+  const accent = highlight ? colors.accent : colors.fg2;
   return (
     <View
       style={{ width: STACK_WIDTH, height: FRONT_SIZE }}
@@ -46,21 +47,17 @@ export function MuscleStack({ shares, highlight }: MuscleStackProps) {
           >
             <MuscleCircle
               muscle={share.muscle}
-              accent={colors.fg2}
+              accent={accent}
               className="size-full border-2 border-surface"
             />
           </View>
         ))}
-      {/* Without exercises yet: one empty circle. */}
+      {/* Without exercises yet: one empty circle. Each is cut out of the card behind it. */}
       <View className="absolute top-0 left-0" style={{ width: FRONT_SIZE, height: FRONT_SIZE }}>
         <MuscleCircle
           muscle={first?.muscle ?? null}
-          accent={first && highlight ? colors.accent : colors.fg2}
-          // The next one's front circle is ringed in neon; the others are cut out of the card.
-          className={cn(
-            'size-full',
-            first && highlight ? 'border-[1.5px] border-accent' : 'border-2 border-surface',
-          )}
+          accent={accent}
+          className="size-full border-2 border-surface"
         />
       </View>
     </View>
@@ -96,7 +93,7 @@ export interface RoutineRowProps {
   /** "⋯": rename, copy or delete; left out where the routine's page has it. */
   onMore?: () => void;
   starting?: boolean;
-  /** The plan's next routine: its top muscle in neon. */
+  /** The plan's next routine: its muscles in neon. */
   next?: boolean;
   /** Small accent tag over the name, e.g. "Coach empfiehlt". */
   tag?: string;
