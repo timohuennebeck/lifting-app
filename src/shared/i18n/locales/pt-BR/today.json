@@ -5,13 +5,15 @@
   "status": {
     "doneToday": "Feito hoje",
     "done": "Feito · {{date}}",
-    "recommended": "O coach recomenda",
-    "after": "Depois"
+    "recommended": "O coach recomenda"
   },
   "stats": {
     "minutes": "{{count}} min",
+    "approxMinutes": "~{{count}} min",
     "prs_one": "{{count}} recorde",
     "prs_other": "{{count}} recordes",
+    "exercises_one": "{{count}} exercício",
+    "exercises_other": "{{count}} exercícios",
     "sets_one": "{{count}} série",
     "sets_other": "{{count}} séries"
   },
@@ -19,12 +21,7 @@
   "start": "Iniciar",
   "resume": "Retomar",
   "markDone": "Marcar como feito",
-  "session": "Treino {{n}} de {{total}}",
-  "nextWeek": "Próxima semana · {{session}}",
-  "inWeeks_one": "Daqui a {{count}} semana · {{session}}",
-  "inWeeks_other": "Daqui a {{count}} semanas · {{session}}",
-  "moreExercises_one": "Mais {{count}} exercício",
-  "moreExercises_other": "Mais {{count}} exercícios",
+  "other": "Outro treino",
   "block": {
     "week": "Semana {{week}} / {{weeks}}",
     "deload": "{{plan}} · Deload",
@@ -38,5 +35,9 @@
   "emptyPlan": {
     "title": "Plano sem treinos",
     "body": "Toque para adicionar treinos ao seu plano."
+  },
+  "otherSheet": {
+    "title": "Outro treino",
+    "subtitle": "Escolha um treino de {{plan}}."
   }
 }
