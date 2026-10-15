@@ -10,14 +10,11 @@ import { MuscleCircle } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-/** Where the circles behind the front one sit: further right, each a size smaller. */
-const BEHIND = [
-  { left: 39, size: 46 },
-  { left: 70, size: 46 },
-] as const;
-const FRONT_SIZE = 56;
+/** The circles are all one size, each further right overlapping the one before. */
+const CIRCLE = 50;
+const STEP = 33;
 /** Width of three circles, kept for fewer too so the titles line up. */
-const STACK_WIDTH = 116;
+const STACK_WIDTH = CIRCLE + 2 * STEP;
 
 interface MuscleStackProps {
   shares: MuscleShare[];
@@ -25,41 +22,33 @@ interface MuscleStackProps {
   highlight?: boolean;
 }
 
-/** The three muscles worked most as overlapping circles, the biggest share in front. */
+/** The three muscles worked most as overlapping circles of one size, the biggest share in front. */
 export function MuscleStack({ shares, highlight }: MuscleStackProps) {
-  const [first, ...rest] = shares.slice(0, 3);
   const accent = highlight ? colors.accent : colors.fg2;
   return (
     <View
-      style={{ width: STACK_WIDTH, height: FRONT_SIZE }}
+      style={{ width: STACK_WIDTH, height: CIRCLE }}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
     >
-      {/* Drawn back to front. */}
-      {rest
-        .map((share, i) => ({ share, ...BEHIND[i] }))
+      {/* Drawn back to front, the biggest share in front; without exercises, one empty circle. */}
+      {(shares.length ? shares.slice(0, 3) : [null])
+        .map((share, i) => ({ share, left: i * STEP }))
         .reverse()
-        .map(({ share, left, size }) => (
+        .map(({ share, left }) => (
           <View
-            key={share.muscle}
-            className="absolute"
-            style={{ left, top: (FRONT_SIZE - size) / 2, width: size, height: size }}
+            key={share?.muscle ?? 'empty'}
+            className="absolute top-0"
+            style={{ left, width: CIRCLE, height: CIRCLE }}
           >
+            {/* Each is cut out of the card behind it. */}
             <MuscleCircle
-              muscle={share.muscle}
+              muscle={share?.muscle ?? null}
               accent={accent}
               className="size-full border-2 border-surface"
             />
           </View>
         ))}
-      {/* Without exercises yet: one empty circle. Each is cut out of the card behind it. */}
-      <View className="absolute top-0 left-0" style={{ width: FRONT_SIZE, height: FRONT_SIZE }}>
-        <MuscleCircle
-          muscle={first?.muscle ?? null}
-          accent={accent}
-          className="size-full border-2 border-surface"
-        />
-      </View>
     </View>
   );
 }
