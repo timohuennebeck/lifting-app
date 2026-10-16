@@ -1,0 +1,101 @@
+{
+  "badge": "TRAQA PRO",
+  "restore": "구매 복원",
+  "restoring": "복원 중 …",
+  "paywall": {
+    "before": "변화 전",
+    "after": "변화 후",
+    "brand": "TRAQA",
+    "pro": "PRO",
+    "subtitle": "플랜은 가져오고, 모든 세트는 기록하고, 성장은 한눈에.",
+    "benefits": {
+      "import": {
+        "title": "플랜 가져오기",
+        "detail": "사진 또는 파일로"
+      },
+      "history": {
+        "title": "운동 기록과 PR",
+        "detail": "모든 운동 종목별로"
+      },
+      "suggestions": {
+        "title": "무게 추천",
+        "detail": "모든 세트마다"
+      }
+    },
+    "continue": "계속",
+    "fine": {
+      "year": "이후 연 {{price}} (월 {{perMonth}}) · 언제든 해지 가능",
+      "month": "이후 월 {{price}} · 언제든 해지 가능"
+    },
+    "fineNoTrial": {
+      "year": "연 {{price}} (월 {{perMonth}}) · 언제든 해지 가능",
+      "month": "월 {{price}} · 언제든 해지 가능"
+    }
+  },
+  "plans": {
+    "yearly": {
+      "label": "연간",
+      "price": "{{price}} / 년",
+      "note": "매년 결제",
+      "savings": "{{percent}}% 할인"
+    },
+    "monthly": {
+      "label": "월간",
+      "price": "{{price}} / 월",
+      "note": "매월 해지 가능"
+    }
+  },
+  "trial": {
+    "badge_one": "일 무료",
+    "badge_other": "일 무료",
+    "title": "무료 체험은 이렇게 진행돼요",
+    "subtitle": "깜짝 놀랄 일은 없어요. 끝나기 전에 미리 알려 드려요.",
+    "today": "오늘",
+    "todayBody": "모든 Pro 기능을 바로 이용할 수 있어요.",
+    "day": "{{day}}일 차",
+    "reminderBody": "무료 체험이 곧 끝난다는 알림을 보내 드려요.",
+    "startBody": {
+      "year": "연간 구독이 시작돼요. 그 전에는 언제든 해지할 수 있어요.",
+      "month": "월간 구독이 시작돼요. 그 전에는 언제든 해지할 수 있어요."
+    },
+    "cta": "무료 체험 시작",
+    "fine": {
+      "year": "이후 연 {{price}}",
+      "month": "이후 월 {{price}}"
+    }
+  },
+  "welcome": {
+    "header": "코치가 보낸 메시지",
+    "role": "Traqa 헤드 코치",
+    "cta": "시작해요",
+    "captions": {
+      "hello": "{{name}}님, 안녕하세요! Traqa 헤드 코치 Max예요.",
+      "helloAnon": "안녕하세요! Traqa 헤드 코치 Max예요.",
+      "thanks": "함께해 주셔서 고마워요. 저희에게 정말 큰 의미가 있어요.",
+      "plan": "플랜이 준비됐어요. 이제부터 모든 세트가 중요해요.",
+      "seeYou": "첫 운동에서 만나요!"
+    },
+    "a11y": {
+      "subtitles": "자막",
+      "mute": "음소거",
+      "unmute": "음소거 해제",
+      "play": "재생",
+      "pause": "일시정지"
+    }
+  },
+  "restoreResult": {
+    "successTitle": "구매 복원 완료",
+    "successBody": "Traqa Pro가 다시 활성화되었어요.",
+    "emptyTitle": "복원할 구매 내역이 없어요",
+    "emptyBody": "이 계정에서 활성화된 구독을 찾지 못했어요."
+  },
+  "settings": {
+    "section": "구독",
+    "title": "Traqa Pro",
+    "upgrade": "업그레이드",
+    "trialUntil": "{{date}}까지 무료 체험",
+    "manage": "구독 관리",
+    "planMonthly": "Pro · 월간",
+    "planYearly": "Pro · 연간"
+  }
+}

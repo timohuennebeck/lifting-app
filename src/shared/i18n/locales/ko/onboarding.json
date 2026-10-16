@@ -1,0 +1,84 @@
+{
+  "welcome": {
+    "headline": "플랜부터,",
+    "headlineAccent": "성장까지.",
+    "subtitle": "플랜을 가져오거나 새로 만들어 보세요.\n타이핑은 필요 없어요.",
+    "start": "시작해요",
+    "haveAccount": "이미 계정이 있어요 · ",
+    "signIn": "로그인",
+    "language": "언어",
+    "features": {
+      "import": "사진으로 플랜 가져오기",
+      "create": "플랜 만들기",
+      "progress": "성장 기록하기"
+    }
+  },
+  "name": {
+    "title": "이름이 뭐예요?",
+    "placeholder": "이름"
+  },
+  "sex": {
+    "title": "생물학적 성별을\n알려 주세요",
+    "subtitle": "현실적인 시작 무게와 회복 기간을 예측하는 데 도움이 돼요.",
+    "male": "남성",
+    "female": "여성",
+    "unspecified": "밝히지 않음"
+  },
+  "birthDate": {
+    "title": "생일이\n언제예요?",
+    "age_one": "{{count}}세",
+    "age_other": "{{count}}세",
+    "tooYoung": "Traqa는 {{min}}세 이상부터 이용할 수 있어요."
+  },
+  "units": {
+    "title": "어떤 단위를\n사용하나요?",
+    "metric": "킬로그램",
+    "metricHint": "미터법 · km, cm",
+    "imperial": "파운드",
+    "imperialHint": "야드파운드법 · mi, in"
+  },
+  "weight": {
+    "title": "체중이\n어떻게 되나요?"
+  },
+  "height": {
+    "title": "키가\n어떻게 되나요?"
+  },
+  "experience": {
+    "title": "운동 경험이\n얼마나 되나요?",
+    "none": "없음",
+    "noneHint": "운동해 본 적 없음",
+    "beginner": "초급",
+    "beginnerHint": "운동 경력 6개월 미만",
+    "intermediate": "중급",
+    "intermediateHint": "6개월~2년",
+    "advanced": "상급",
+    "advancedHint": "2년 이상, 안정적인 자세"
+  },
+  "hasPlan": {
+    "title": "지금 따르는\n플랜이 있나요?",
+    "formats": "사진, PDF 또는 스프레드시트",
+    "yes": "있어요",
+    "no": "플랜을 만들어 주세요"
+  },
+  "promise": {
+    "title": "스스로에게\n약속해요.",
+    "titleNamed": "{{name}}님, 스스로에게\n약속해요.",
+    "stick": "힘들 때도 포기하지 않을게요.",
+    "track": "모든 세트를 기록할게요.",
+    "hold": "엄지를 꾹 누르고 있어 주세요",
+    "holding": "계속 눌러 주세요 …",
+    "sealed": "약속 완료.",
+    "holdLabel": "길게 눌러 약속하기"
+  },
+  "progressCheck": {
+    "title": "바디 체크를 할까요?",
+    "subtitle": "사진을 바탕으로 약한 부위에 맞춰 플랜을 조정해요.",
+    "lightStrong": "밝은 조명",
+    "clothesStrong": "속옷 차림",
+    "framingStrong": "전신이 화면에 들어오게",
+    "sameStrong": "같은 장소, 같은 조명",
+    "privacyStrong": "사진은 비공개로 유지",
+    "now": "지금 사진 찍기",
+    "later": "나중에"
+  }
+}

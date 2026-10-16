@@ -1,0 +1,13 @@
+{
+  "emptyWorkoutName": "운동",
+  "resumeActive": "{{name}} 계속하기",
+  "noPlan": {
+    "title": "아직 플랜이 없어요",
+    "body": "탭해서 플랜을 만들거나 가져와 보세요."
+  },
+  "emptyPlan": {
+    "title": "루틴 없는 플랜",
+    "body": "탭해서 플랜에 루틴을 추가해 보세요."
+  },
+  "startWorkout": "운동 시작"
+}

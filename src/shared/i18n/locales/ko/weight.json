@@ -1,0 +1,34 @@
+{
+  "open": "체중",
+  "history": {
+    "title": "기록",
+    "calendar": "캘린더",
+    "add": "체중 기록",
+    "trend": "추세",
+    "difference": "차이",
+    "changes": "변화 · 추세",
+    "days_one": "{{count}}일",
+    "days_other": "{{count}}일",
+    "entries": "기록",
+    "belowTrend": "추세보다 {{value}} 낮음",
+    "aboveTrend": "추세보다 {{value}} 높음",
+    "onTrend": "추세와 일치",
+    "delete": "삭제",
+    "empty": "체중을 기록하면 추세를 볼 수 있어요."
+  },
+  "calendar": {
+    "title": "캘린더",
+    "entries_one": "기록 {{count}}개",
+    "entries_other": "기록 {{count}}개"
+  },
+  "entry": {
+    "title": "체중",
+    "history": "기록",
+    "today": "오늘, {{date}}",
+    "yesterday": "어제, {{date}}",
+    "since": "{{date}} 이후 {{value}}",
+    "none": "아직 기록 없음",
+    "delete": "기록 삭제",
+    "date": "날짜"
+  }
+}

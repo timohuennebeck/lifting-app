@@ -30,6 +30,22 @@ import enToday from './locales/en/today.json';
 import enTraining from './locales/en/training.json';
 import enWeight from './locales/en/weight.json';
 import enWorkout from './locales/en/workout.json';
+import koAuth from './locales/ko/auth.json';
+import koBody from './locales/ko/body.json';
+import koProgressCheck from './locales/ko/progressCheck.json';
+import koCommon from './locales/ko/common.json';
+import koExercises from './locales/ko/exercises.json';
+import koMuscles from './locales/ko/muscles.json';
+import koOnboarding from './locales/ko/onboarding.json';
+import koPaywall from './locales/ko/paywall.json';
+import koPlanCreate from './locales/ko/planCreate.json';
+import koPlanImport from './locales/ko/planImport.json';
+import koProfile from './locales/ko/profile.json';
+import koSupport from './locales/ko/support.json';
+import koToday from './locales/ko/today.json';
+import koTraining from './locales/ko/training.json';
+import koWeight from './locales/ko/weight.json';
+import koWorkout from './locales/ko/workout.json';
 import ptBRAuth from './locales/pt-BR/auth.json';
 import ptBRBody from './locales/pt-BR/body.json';
 import ptBRProgressCheck from './locales/pt-BR/progressCheck.json';
@@ -136,6 +152,24 @@ export const resources = {
     profile: ptBRProfile,
     exercises: ptBRExercises,
     weight: ptBRWeight,
+  },
+  ko: {
+    common: koCommon,
+    paywall: koPaywall,
+    support: koSupport,
+    progressCheck: koProgressCheck,
+    planCreate: koPlanCreate,
+    planImport: koPlanImport,
+    auth: koAuth,
+    onboarding: koOnboarding,
+    today: koToday,
+    training: koTraining,
+    workout: koWorkout,
+    muscles: koMuscles,
+    body: koBody,
+    profile: koProfile,
+    exercises: koExercises,
+    weight: koWeight,
   },
 } as const;
 

@@ -1,0 +1,87 @@
+{
+  "addExercise": "운동 추가",
+  "setOf": "세트 {{current}}/{{total}}",
+  "noSets": "아직 세트가 없어요",
+  "missing": "이 운동은 더 이상 이용할 수 없어요.",
+  "actions": {
+    "info": "정보",
+    "targets": "목표",
+    "swap": "바꾸기",
+    "more": "더 보기"
+  },
+  "table": {
+    "set": "세트",
+    "targets": "목표",
+    "last": "지난번",
+    "reps": "반복",
+    "seconds": "초",
+    "toggleColumn": "목표와 지난번 기록 사이 전환",
+    "setLabel": "{{n}}세트",
+    "weightCell": "무게",
+    "repsCell": "반복 수",
+    "secondsCell": "초",
+    "done": "세트 완료",
+    "addSet": "세트 추가",
+    "removeSet": "세트 삭제"
+  },
+  "rest": {
+    "title": "휴식",
+    "minus": "−{{seconds}}초",
+    "plus": "+{{seconds}}초",
+    "restart": "타이머 다시 시작",
+    "stop": "타이머 정지",
+    "restartDefault": "기본 휴식 시간으로 다시 시작",
+    "restartWith": "{{time}} 휴식으로 다시 시작"
+  },
+  "menu": {
+    "open": "운동 옵션",
+    "progress": "{{total}}세트 중 {{done}}세트 기록됨",
+    "finish": "운동 완료",
+    "finishHint": "완료하려면 세트를 하나 이상 기록해 주세요.",
+    "finishDescription": "운동을 기록에 저장해요",
+    "discard": "운동 취소",
+    "discardDescription": "운동과 기록한 세트를 모두 삭제해요"
+  },
+  "swap": {
+    "title": "운동 바꾸기",
+    "confirmTitle": "운동을 바꿀까요?",
+    "confirmMessage": "이 운동에 이미 기록한 세트가 지워져요.",
+    "confirm": "바꾸기"
+  },
+  "remove": {
+    "confirmTitle": "운동을 삭제할까요?",
+    "confirmMessage": "이 운동에 이미 기록한 세트가 삭제돼요.",
+    "confirm": "삭제"
+  },
+  "empty": {
+    "title": "운동 없음",
+    "duration": "예상 시간: {{minutes}}분",
+    "hint": "+를 탭해 첫 운동을 추가해 보세요."
+  },
+  "history": {
+    "topWeight": "회차별 최고 무게",
+    "topWeightShort": "최고 무게",
+    "leastAssistance": "회차별 최소 보조 무게",
+    "leastAssistanceShort": "최소 보조",
+    "topReps": "회차별 최다 반복",
+    "topRepsShort": "최다 반복",
+    "topSeconds": "회차별 최장 유지 시간",
+    "topSecondsShort": "최장 유지",
+    "chartLabel": "최고 무게 차트, 길게 누른 채 드래그하면 회차별 값을 볼 수 있어요",
+    "emptyRange": "이 기간에는 기록이 없어요.",
+    "days_one": "{{count}}일",
+    "days_other": "{{count}}일",
+    "empty": "아직 기록이 없어요. 이 종목이 포함된 운동을 완료하면 진행 상황을 볼 수 있어요."
+  },
+  "summary": {
+    "title": "{{name}} 완료.",
+    "records_one": "새 기록 {{count}}개",
+    "records_other": "새 기록 {{count}}개",
+    "noRecords": "잘했어요",
+    "newRecord": "신기록",
+    "previously": "이전 {{value}}"
+  },
+  "builder": {
+    "title": "빈 운동"
+  }
+}

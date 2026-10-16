@@ -28,7 +28,7 @@ const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const MAX_FILE_BYTES = 15 * 1024 * 1024;
 /** Characters of a text or spreadsheet file the model reads. */
 const MAX_TEXT = 60_000;
-const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR'];
+const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR', 'ko'];
 
 interface PlanFile {
   name: string;

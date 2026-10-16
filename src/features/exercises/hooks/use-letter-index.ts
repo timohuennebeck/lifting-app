@@ -1,5 +1,8 @@
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { FlatList, ViewToken } from 'react-native';
+
+import { indexLetters } from '../lib/index-letters';
 
 import type { ExerciseOption } from './use-exercise-search';
 
@@ -10,7 +13,7 @@ const HEADING_HEIGHT = 41;
 export type IndexedRow<T extends ExerciseOption> = T & {
   /** Heading above the row: the pinned rows' title, its letter, or none. */
   heading: string | null;
-  /** Listed first under the title, outside the A–Z index. */
+  /** Listed first under the title, outside the index. */
   pinned: boolean;
 };
 
@@ -39,11 +42,12 @@ const rowHeight = (row: IndexedRow<ExerciseOption> | undefined) =>
   ROW_HEIGHT + (row?.heading ? HEADING_HEIGHT : 0);
 
 /**
- * Rows and scroll wiring of an exercise list with the A–Z index: `pinned` first under `title`,
- * then `rest` under their letters. The rows have fixed heights, so the index jumps straight to
- * any of them.
+ * Rows and scroll wiring of an exercise list with the letter index: `pinned` first under
+ * `title`, then `rest` under their letters. The rows have fixed heights, so the index jumps
+ * straight to any of them.
  */
 export function useLetterIndex<T extends ExerciseOption>(pinned: T[], title: string, rest: T[]) {
+  const { i18n } = useTranslation();
   const listRef = useRef<FlatList<IndexedRow<T>>>(null);
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
 
@@ -67,9 +71,15 @@ export function useLetterIndex<T extends ExerciseOption>(pinned: T[], title: str
       },
   );
 
+  // The letter's first row, or the next letter's down the index that has rows. Follows the
+  // index's order, not the characters': Korean sorts Latin names after Hangul.
   function jump(letter: string) {
-    const index = rows.findIndex((r) => !r.pinned && r.letter >= letter);
-    const target = index < 0 ? rows.length - 1 : index;
+    const order = indexLetters(i18n.language);
+    const index = order
+      .slice(order.indexOf(letter))
+      .map((l) => rows.findIndex((r) => !r.pinned && r.letter === l))
+      .find((i) => i >= 0);
+    const target = index ?? rows.length - 1;
     if (target < 0) return;
     setActiveLetter(rows[target].pinned ? null : rows[target].letter);
     listRef.current?.scrollToIndex({ index: target, animated: false });

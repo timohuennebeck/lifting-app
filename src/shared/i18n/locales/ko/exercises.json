@@ -1,0 +1,50 @@
+{
+  "picker": {
+    "search": "운동 검색",
+    "done": "완료",
+    "empty": "운동을 찾지 못했어요",
+    "index": "알파벳 색인",
+    "selected": "선택됨"
+  },
+  "groups": {
+    "chest": "가슴",
+    "back": "등",
+    "shoulders": "어깨",
+    "arms": "팔",
+    "core": "코어",
+    "glutes": "둔근",
+    "legs": "다리"
+  },
+  "detail": {
+    "tabs": {
+      "exercise": "운동",
+      "history": "기록"
+    },
+    "technique": "자세"
+  },
+  "custom": {
+    "label": "나만의 운동",
+    "create": "나만의 운동 만들기",
+    "title": "나만의 운동",
+    "editTitle": "운동 편집",
+    "menu": "운동 옵션",
+    "edit": "편집",
+    "delete": "삭제",
+    "save": "저장",
+    "namePlaceholder": "운동 이름",
+    "nameTaken": "이미 있는 운동이에요.",
+    "tapMuscle": "근육을 탭하세요",
+    "showBack": "뒷면 보기",
+    "showFront": "앞면 보기",
+    "primary": "주동근",
+    "secondary": "보조근",
+    "roleHint": "근육을 탭하면 주동근과 보조근이 전환돼요.",
+    "noMuscles": "이 운동으로 단련되는 근육을 그림에서 탭하세요.",
+    "logs": "무엇을 기록할까요?",
+    "reps": "반복 수",
+    "time": "시간",
+    "weight": "무게 포함",
+    "locked": "이미 기록된 운동이라 기록 항목은 바꿀 수 없어요.",
+    "rest": "세트 간 휴식"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "names": {
+    "abs": "복근",
+    "adductors": "내전근",
+    "biceps": "이두근",
+    "calves": "종아리",
+    "chest": "가슴",
+    "forearms": "전완근",
+    "front_delts": "전면 삼각근",
+    "glutes": "둔근",
+    "hamstrings": "햄스트링",
+    "lats": "광배근",
+    "lower_back": "허리",
+    "neck": "목",
+    "obliques": "복사근",
+    "quads": "대퇴사두근",
+    "rear_delts": "후면 삼각근",
+    "side_delts": "측면 삼각근",
+    "tibialis": "전경골근",
+    "traps": "승모근",
+    "triceps": "삼두근",
+    "upper_back": "등 상부"
+  },
+  "regions": {
+    "upper": "상체",
+    "lower": "하체"
+  },
+  "subtitle": "최근 {{days}}일 · 총 {{count}}세트",
+  "notTrained": "운동 안 함",
+  "breakdown": {
+    "primary": "주동근",
+    "secondary": "보조근"
+  }
+}

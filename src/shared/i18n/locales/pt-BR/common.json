@@ -47,20 +47,18 @@
     "en": "English",
     "de": "Deutsch",
     "pt-PT": "Português",
-    "pt-BR": "Português (Brasil)"
+    "pt-BR": "Português (Brasil)",
+    "ko": "한국어"
   },
   "errors": {
     "generic": "Algo deu errado. Tente novamente."
   },
   "tabs": {
     "training": "Treino",
-    "progress": "Progresso",
+    "level": "Nível",
+    "body": "Corpo",
     "profile": "Perfil",
     "create": "Novo"
-  },
-  "progressTab": {
-    "muscles": "Nível",
-    "body": "Corpo"
   },
   "rangeDays": "{{count}} D",
   "search": {

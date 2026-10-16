@@ -28,7 +28,7 @@ const IP_LIMIT = envLimit('PLAN_GENERATE_IP_LIMIT', 10);
 const DAILY_LIMIT = envLimit('PLAN_GENERATE_DAILY_LIMIT', 1000);
 /** OpenAI's Fast mode (twice the token price); PLAN_GENERATE_FAST=false turns it off. */
 const FAST = Deno.env.get('PLAN_GENERATE_FAST') !== 'false';
-const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR'];
+const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR', 'ko'];
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return reply(405, { error: 'method_not_allowed' });

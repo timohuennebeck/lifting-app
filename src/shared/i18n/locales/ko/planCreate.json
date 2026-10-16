@@ -1,0 +1,95 @@
+{
+  "goal": {
+    "title": "목표는\n무엇인가요?",
+    "options": {
+      "hypertrophy": {
+        "title": "근비대",
+        "description": "근육량 늘리기, 보통 8–12회"
+      },
+      "strength": {
+        "title": "최대 근력",
+        "description": "더 무겁게 들기, 보통 3–6회"
+      },
+      "strength_hypertrophy": {
+        "title": "근력 & 근비대",
+        "description": "두 가지를 함께, 4–10회"
+      }
+    }
+  },
+  "focus": {
+    "title": "어디에\n집중할까요?",
+    "subtitle": "부위를 하나 이상 골라 주세요.",
+    "none": "집중 부위 없음",
+    "cta_one": "다음 · 부위 {{count}}개",
+    "cta_other": "다음 · 부위 {{count}}개",
+    "mapA11y": "신체 지도. 근육을 탭하면 해당 부위를 선택하거나 해제해요."
+  },
+  "equipment": {
+    "title": "어떤 장비로\n운동하나요?",
+    "options": {
+      "gym": {
+        "title": "헬스장",
+        "description": "머신, 케이블, 프리 웨이트"
+      },
+      "home": {
+        "title": "보유 장비",
+        "description": "집에서, 덤벨이나 벤치 등"
+      },
+      "bodyweight": {
+        "title": "장비 없음",
+        "description": "맨몸으로만"
+      }
+    }
+  },
+  "homeEquipment": {
+    "title": "집에 어떤 장비가\n있나요?",
+    "subtitle": "운동에 쓸 수 있는 건 모두 탭해 주세요."
+  },
+  "sessions": {
+    "title": "얼마나 자주\n운동할까요?",
+    "perWeek": "주당",
+    "times": "{{count}}회"
+  },
+  "duration": {
+    "title": "운동 한 번에\n몇 분이 좋을까요?",
+    "minutes": "분",
+    "hint": "링을 드래그하거나 값을 탭하세요"
+  },
+  "building": {
+    "stages": [
+      "목표와 경험을 분석하는 중 …",
+      "장비에 맞는 운동을 고르는 중 …",
+      "루틴으로 나누는 중 …",
+      "세트와 반복 수를 정하는 중 …"
+    ],
+    "frequency": "{{count}}회 × {{minutes}}분",
+    "focus": "집중 부위: {{areas}}",
+    "balanced": "모든 근육군",
+    "routineTag": "루틴 {{n}}"
+  },
+  "generate": {
+    "making": "플랜을 만드는 중 …",
+    "errors": {
+      "failed": "플랜을 만들지 못했어요. 다시 시도해 주세요.",
+      "offline": "인터넷에 연결되어 있지 않아요. 연결을 확인하고 다시 시도해 주세요.",
+      "limit": "오늘은 플랜을 더 만들 수 없어요. 내일 다시 시도하거나 플랜을 가져와 보세요."
+    }
+  },
+  "planName": {
+    "title": "플랜 이름을\n뭐라고 할까요?",
+    "label": "플랜 이름",
+    "placeholder": "예: 나의 전신 플랜",
+    "suggestions": "추천",
+    "myPlan": "내 플랜"
+  },
+  "goalShort": {
+    "hypertrophy": "근육 성장",
+    "strength": "근력",
+    "strength_hypertrophy": "파워빌딩"
+  },
+  "equipmentShort": {
+    "gym": "헬스장",
+    "home": "홈짐",
+    "bodyweight": "맨몸"
+  }
+}

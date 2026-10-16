@@ -1,0 +1,114 @@
+{
+  "actions": {
+    "continue": "계속",
+    "back": "뒤로",
+    "done": "완료",
+    "save": "저장",
+    "cancel": "취소",
+    "delete": "삭제",
+    "rename": "이름 변경",
+    "clear": "지우기",
+    "decrease": "줄이기",
+    "increase": "늘리기",
+    "togglePassword": "비밀번호 표시 또는 숨기기",
+    "close": "닫기",
+    "retry": "다시 시도",
+    "notNow": "나중에"
+  },
+  "progress": {
+    "stepOf": "{{current}}/{{total}}"
+  },
+  "units": {
+    "kg": "kg",
+    "lb": "lb",
+    "cm": "cm",
+    "sec": "초",
+    "reps_one": "{{count}}회",
+    "reps_other": "{{count}}회",
+    "repRange": "{{range}}회",
+    "atMost": "최대 {{value}}",
+    "minShort": "분"
+  },
+  "weekdays": {
+    "short": ["월", "화", "수", "목", "금", "토", "일"],
+    "narrow": ["월", "화", "수", "목", "금", "토", "일"],
+    "long": ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"]
+  },
+  "greeting": "안녕하세요, {{name}}님",
+  "languages": {
+    "en": "English",
+    "de": "Deutsch",
+    "pt-PT": "Português",
+    "pt-BR": "Português (Brasil)",
+    "ko": "한국어"
+  },
+  "errors": {
+    "generic": "문제가 발생했어요. 다시 시도해 주세요."
+  },
+  "tabs": {
+    "training": "운동",
+    "level": "레벨",
+    "body": "바디",
+    "profile": "프로필",
+    "create": "만들기"
+  },
+  "rangeDays": "{{count}}일",
+  "search": {
+    "open": "운동 검색",
+    "title": "운동",
+    "recent": "최근에 한 운동",
+    "recordA11y": "개인 기록: {{value}}, 마지막 운동일 {{date}}"
+  },
+  "settings": "설정",
+  "legal": {
+    "terms": "이용약관",
+    "privacy": "개인정보 처리방침",
+    "meta": "버전 {{version}} · {{date}}부터 시행",
+    "unavailable": "이 문서는 아직 제공되지 않아요.",
+    "loadFailed": "문서를 불러오지 못했어요. 연결 상태를 확인하고 다시 시도해 주세요.",
+    "update": {
+      "titleTerms": "이용약관이 업데이트되었어요",
+      "titlePrivacy": "개인정보 처리방침이 업데이트되었어요",
+      "titleBoth": "약관 및 정책이 업데이트되었어요",
+      "changes_one": "마지막으로 동의한 이후 {{count}}개 부분이 변경되었어요.",
+      "changes_other": "마지막으로 동의한 이후 {{count}}개 부분이 변경되었어요.",
+      "subtitle": "약관 및 정책을 업데이트했어요. Traqa를 계속 이용하려면 새 버전을 읽고 동의해 주세요.",
+      "accept": "동의해요",
+      "signOut": "로그아웃",
+      "intro": "서문",
+      "section": "§ {{number}}",
+      "docSection": "{{doc}} § {{number}}",
+      "docShort": {
+        "terms": "약관",
+        "privacy": "개인정보"
+      },
+      "kinds": {
+        "added": "신규",
+        "changed": "변경",
+        "removed": "삭제"
+      }
+    },
+    "compare": {
+      "a11yNew": "신규: {{text}}",
+      "a11yRemoved": "삭제됨: {{text}}"
+    }
+  },
+  "keypad": {
+    "close": "키패드 숨기기",
+    "decimal": "소수점",
+    "backspace": "삭제",
+    "confirm": "확인"
+  },
+  "dateWheel": {
+    "day": "일",
+    "month": "월",
+    "year": "연도"
+  },
+  "cameraAccess": {
+    "title": "카메라 허용"
+  },
+  "catalogOffline": {
+    "title": "인터넷 연결 없음",
+    "body": "처음 실행할 때 Traqa가 운동 목록을 다운로드해요. 인터넷 연결을 확인하고 다시 시도해 주세요."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "subtitle": "사진으로 측정한 바디 점수",
+  "sinceStart": "시작 대비 {{delta}}",
+  "checkLabel": "체크 {{n}} · {{date}}",
+  "check": "체크 {{n}}",
+  "baseline": "기준",
+  "startNow": "지금 시작",
+  "startShort": "시작",
+  "history": "기록",
+  "start": "바디 체크 시작",
+  "empty": {
+    "title": "아직 바디 체크가 없어요",
+    "body": "첫 체크를 하고 나중에 비교해 보세요."
+  },
+  "adultsOnly": {
+    "title": "지금은 잠겨 있어요",
+    "body": "바디 체크 사진은 만 18세부터 이용할 수 있어요.",
+    "unlocksOn": "{{date}}에 잠금 해제돼요."
+  },
+  "compare": {
+    "title": "비교",
+    "edit": "비교 대상 변경",
+    "pickFor": "{{side}} 체크 선택",
+    "daysBetween_one": "{{count}}일 간격",
+    "daysBetween_other": "{{count}}일 간격"
+  }
+}

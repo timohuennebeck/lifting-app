@@ -10,6 +10,7 @@ export function detectLanguage(): AppLanguage {
   const { languageCode, regionCode } = getLocales()[0] ?? {};
   if (languageCode === 'pt') return regionCode === 'BR' ? 'pt-BR' : 'pt-PT';
   if (languageCode === 'de') return 'de';
+  if (languageCode === 'ko') return 'ko';
   return 'en';
 }
 

@@ -8,20 +8,18 @@ import {
   useCustomExerciseStore,
 } from '@/shared/data/exercises';
 
+import { indexLetterOf } from '../lib/index-letters';
 import { type MuscleGroupId, primaryGroup } from '../lib/muscle-groups';
 
 export interface ExerciseOption {
   id: string;
   name: string;
   group: MuscleGroupId;
-  /** Upper-case first letter without accents, for the A–Z index. */
+  /** Its entry in the index (see `indexLetterOf`). */
   letter: string;
   /** The name in lower case, compared with what is typed. */
   searchKey: string;
 }
-
-// NFD splits "Ü" into "U" + combining mark, so the first char is the bare letter.
-const letterOf = (name: string) => name.normalize('NFD').charAt(0).toUpperCase();
 
 /** One collator per language: `localeCompare` with a locale sets one up on every call. */
 const collators = new Map<string, Intl.Collator>();
@@ -50,7 +48,7 @@ export function useExerciseSearch(query: string, group?: MuscleGroupId | null) {
           id,
           name,
           group: primaryGroup(id),
-          letter: letterOf(name),
+          letter: indexLetterOf(name, i18n.language),
           searchKey: name.toLocaleLowerCase(i18n.language),
         };
       })

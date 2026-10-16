@@ -39,20 +39,18 @@
     "en": "English",
     "de": "Deutsch",
     "pt-PT": "Português",
-    "pt-BR": "Português (Brasil)"
+    "pt-BR": "Português (Brasil)",
+    "ko": "한국어"
   },
   "errors": {
     "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
   },
   "tabs": {
     "training": "Training",
-    "progress": "Fortschritt",
+    "level": "Level",
+    "body": "Körper",
     "profile": "Profil",
     "create": "Neu"
-  },
-  "progressTab": {
-    "muscles": "Level",
-    "body": "Körper"
   },
   "rangeDays": "{{count}} T",
   "search": {

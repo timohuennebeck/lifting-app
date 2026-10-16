@@ -1,0 +1,96 @@
+{
+  "index": {
+    "title": "플랜 가져오기",
+    "subtitle": "손글씨도 인식해요. 확실히 읽지 못한 부분은 확인할 수 있게 표시해 드려요.",
+    "photo": {
+      "title": "사진 찍기",
+      "description": "종이, 화이트보드 또는 화면"
+    },
+    "file": {
+      "title": "파일 업로드",
+      "description": "PDF, Excel, CSV 또는 스크린샷"
+    },
+    "noPlan": "지금 플랜이 없나요?",
+    "createOwn": "직접 만들기",
+    "ownPlan": "내 플랜"
+  },
+  "read": "플랜 읽기",
+  "options": {
+    "title": "이대로 괜찮나요?",
+    "swap": "바꾸기",
+    "preview": "파일 미리보기"
+  },
+  "sheets": {
+    "title": "어떤 시트를 읽을까요?",
+    "subtitle": "{{name}}에 시트가 {{count}}개 있어요. 플랜에 해당하는 시트를 골라 주세요.",
+    "recommended": "추천",
+    "routines_one": "루틴 {{count}}개",
+    "routines_other": "루틴 {{count}}개",
+    "exercises_one": "운동 {{count}}개",
+    "exercises_other": "운동 {{count}}개",
+    "log_one": "무게 기록 {{count}}개",
+    "log_other": "무게 기록 {{count}}개",
+    "other": "인식된 운동 없음",
+    "text": "텍스트만",
+    "empty": "비어 있음",
+    "cta_one": "시트 {{count}}개 읽기",
+    "cta_other": "시트 {{count}}개 읽기",
+    "none": "시트 선택"
+  },
+  "camera": {
+    "page": "{{count}}페이지",
+    "hint": "한 페이지씩 찍은 다음 완료를 탭하세요",
+    "done": "완료",
+    "torch": "플래시",
+    "shutter": "사진 찍기",
+    "library": "앨범에서 선택",
+    "retake": "{{count}}페이지 다시 찍기",
+    "full": "한 번에 최대 {{count}}페이지까지 가져올 수 있어요",
+    "permission": {
+      "title": "카메라 권한",
+      "body": "플랜을 촬영하려면 Traqa에 카메라 접근 권한이 필요해요. 사진은 가져오기 전까지 기기에만 저장돼요.",
+      "allow": "카메라 허용",
+      "settings": "설정 열기"
+    },
+    "access": "플랜을 사진으로 찍는 데 사용해요. 사진은 가져오기 전까지 기기에만 저장돼요."
+  },
+  "review": {
+    "retake": "사진 다시 찍기",
+    "addPage": "페이지 추가",
+    "remove": "{{count}}페이지 삭제"
+  },
+  "reading": {
+    "stages": [
+      "손글씨를 읽는 중 …",
+      "운동을 인식하는 중 …",
+      "루틴 순서를 정리하는 중 …",
+      "세트와 반복 수를 적용하는 중 …"
+    ],
+    "errors": {
+      "failed": "플랜을 읽지 못했어요. 다시 시도해 주세요.",
+      "offline": "인터넷에 연결되어 있지 않아요. 연결을 확인하고 다시 시도해 주세요.",
+      "limit": "오늘은 더 가져올 수 없어요. 내일 다시 시도하거나 대신 플랜을 만들어 보세요.",
+      "notAPlan": "운동 플랜이 아닌 것 같아요. 다른 사진이나 파일로 시도해 보세요.",
+      "tooLarge": "파일이 너무 커요. 더 작은 파일을 사용해 주세요(최대 15MB)."
+    }
+  },
+  "confirm": {
+    "planName": "플랜 이름",
+    "readAs": "인식된 내용: “{{raw}}”",
+    "correct": "맞아요",
+    "add": "운동 추가",
+    "swap": "운동 바꾸기",
+    "cta": "이 플랜 사용",
+    "reading": "플랜을 읽는 중 …",
+    "check_one": "항목 {{count}}개 확인",
+    "check_other": "항목 {{count}}개 확인",
+    "empty": "아직 운동이 없어요. +로 추가해 보세요.",
+    "newRoutine": "루틴 {{number}}",
+    "renamePlan": "플랜 이름 변경",
+    "newExercise": "신규 · 나만의 운동으로 추가돼요"
+  },
+  "errors": {
+    "file": "파일을 열 수 없어요.",
+    "camera": "사진을 찍지 못했어요."
+  }
+}
