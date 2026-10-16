@@ -1,5 +1,5 @@
 import { useStatus } from '@powersync/react-native';
-import { and, count, desc, eq, isNotNull } from 'drizzle-orm';
+import { and, count, desc, eq, isNotNull, max } from 'drizzle-orm';
 
 import { insertCustomExercises } from './custom-exercises';
 import type { CustomExercise } from './exercises';
@@ -231,7 +231,7 @@ export interface PlanStatus extends PlanWeek {
 
 const weekDoneQuery = (planId: string, week: number) =>
   drizzle
-    .selectDistinct({ routineId: workoutEntries.routine_id })
+    .select({ routineId: workoutEntries.routine_id, finishedAt: max(workoutEntries.finished_at) })
     .from(workoutEntries)
     .where(
       and(
@@ -239,18 +239,26 @@ const weekDoneQuery = (planId: string, week: number) =>
         eq(workoutEntries.plan_week, week),
         isNotNull(workoutEntries.finished_at),
       ),
-    );
+    )
+    .groupBy(workoutEntries.routine_id);
 
-const toRoutineIds = (rows: RowOf<typeof weekDoneQuery>[]) =>
-  new Set(rows.flatMap((r) => (r.routineId ? [r.routineId] : [])));
+const toFinishedAt = (rows: RowOf<typeof weekDoneQuery>[]) =>
+  new Map(
+    rows.flatMap((r) =>
+      r.routineId && r.finishedAt ? [[r.routineId, r.finishedAt] as const] : [],
+    ),
+  );
 
-/** The plan's routines with a finished workout in plan week `week`: done for that week. */
+/**
+ * The plan's routines with a finished workout in plan week `week` (done for that week), each with
+ * when it was finished (the last time, if twice).
+ */
 export function usePlanWeekDone(planId: string | undefined, week: number | undefined) {
   return useDrizzleQuery({
     queryKey: queryKeys.plans.weekDone(planId ?? '', week ?? 0).queryKey,
     enabled: !!planId && !!week,
     query: weekDoneQuery(planId ?? '', week ?? 0),
-    map: toRoutineIds,
+    map: toFinishedAt,
   });
 }
 

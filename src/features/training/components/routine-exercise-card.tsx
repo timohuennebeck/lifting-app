@@ -86,11 +86,12 @@ export function RoutineExerciseCard({
           {review ? (
             <View className="mt-3 size-2 rounded-full" style={{ backgroundColor: colors.review }} />
           ) : null}
+          {/* As wide as an RIR badge, so the dots line up over the badges below. */}
           <PressableScale
-            hitSlop={8}
+            hitSlop={{ top: 8, bottom: 8, left: 13, right: 13 }}
             accessibilityLabel={t('overview.exerciseMenu', { name })}
             onPress={onMenu}
-            className="size-8 items-center justify-center gap-0.75"
+            className="h-8 w-5.5 items-center justify-center gap-0.75"
           >
             {[0, 1, 2].map((i) => (
               <View key={i} className="size-[3.5px] rounded-full bg-fg-soft" />

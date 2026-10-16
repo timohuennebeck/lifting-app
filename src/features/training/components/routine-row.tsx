@@ -6,6 +6,7 @@ import { type MuscleShare, muscleShares } from '@/shared/data/muscles';
 import type { ExerciseItem, RoutineSummary } from '@/shared/data/routines';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
+import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { MuscleCircle } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -95,11 +96,13 @@ export interface RoutineRowProps {
   focus?: string;
   /** Done this plan week: dimmed, with a neon check for the play button (which still starts it). */
   done?: boolean;
+  /** The plan's next routine: neon muscles, a bigger name and a full-width start button. */
+  next?: boolean;
 }
 
 /**
  * Routine card: its top muscles as circles, the name and a line under it, and a play button; done
- * this plan week, dimmed with a check.
+ * this plan week, dimmed with a check; the plan's next, with a start button across the card.
  */
 function RoutineRow({
   name,
@@ -110,28 +113,41 @@ function RoutineRow({
   starting,
   focus,
   done,
+  next,
 }: RoutineRowProps) {
   const { t } = useTranslation('training');
   const shares = muscleShares(items);
 
   return (
     <PressableScale
-      haptic="none"
       activeScale={0.98}
       accessibilityRole="button"
-      accessibilityLabel={[name, done ? t('list.done') : focus, meta].filter(Boolean).join(', ')}
+      accessibilityLabel={[name, focus, meta].filter(Boolean).join(', ')}
       // The card hides its play button from screen readers; this stands in for it.
       accessibilityActions={[{ name: 'start', label: t('list.start', { name }) }]}
       onAccessibilityAction={(e) => {
         if (e.nativeEvent.actionName === 'start') onStart();
       }}
       onPress={onPress}
-      className="flex-row items-center gap-3.5 rounded-[18px] bg-surface py-3.5 pr-3 pl-2.5"
+      className={cn(
+        'gap-3.5 rounded-[18px] bg-surface py-3.5 pl-2.5',
+        next ? 'pr-3.5' : 'flex-row items-center pr-3',
+      )}
     >
-      <View className={cn('min-w-0 flex-1 flex-row items-center gap-3.5', done && 'opacity-45')}>
-        <MuscleStack shares={shares} />
+      <View
+        className={cn(
+          'min-w-0 flex-row items-center gap-3.5',
+          !next && 'flex-1',
+          done && 'opacity-45',
+        )}
+      >
+        <MuscleStack shares={shares} highlight={next} />
         <View className="min-w-0 flex-1 gap-0.5">
-          <Text variant="bodyStrong" numberOfLines={1}>
+          <Text
+            variant="bodyStrong"
+            numberOfLines={1}
+            className={cn(next && 'text-[19px] leading-6')}
+          >
             {name}
           </Text>
           {focus ? (
@@ -144,22 +160,34 @@ function RoutineRow({
           </Text>
         </View>
       </View>
-      <PressableScale
-        haptic="press"
-        hitSlop={4}
-        accessibilityLabel={t('list.start', { name })}
-        onPress={onStart}
-        disabled={starting}
-        className="size-10 items-center justify-center rounded-full bg-elevated"
-      >
-        {starting ? (
-          <ActivityIndicator size="small" color={colors.fg} />
-        ) : done ? (
-          <Icon name="check" size={15} color={colors.accent} />
-        ) : (
-          <Icon name="play" size={12} />
-        )}
-      </PressableScale>
+      {next ? (
+        <Button
+          label={t('overview.start')}
+          icon="play"
+          size="md"
+          loading={starting}
+          accessibilityLabel={t('list.start', { name })}
+          onPress={onStart}
+          className="ml-1"
+        />
+      ) : (
+        <PressableScale
+          haptic="press"
+          hitSlop={4}
+          accessibilityLabel={t('list.start', { name })}
+          onPress={onStart}
+          disabled={starting}
+          className="size-10 items-center justify-center rounded-full bg-elevated"
+        >
+          {starting ? (
+            <ActivityIndicator size="small" color={colors.fg} />
+          ) : done ? (
+            <Icon name="check" size={15} color={colors.accent} />
+          ) : (
+            <Icon name="play" size={12} />
+          )}
+        </PressableScale>
+      )}
     </PressableScale>
   );
 }
@@ -172,6 +200,8 @@ interface RoutineRowsProps {
   focus?: (routine: RoutineSummary) => string | undefined;
   /** Done this plan week (a plan's routines). */
   done?: (routine: RoutineSummary) => boolean;
+  /** The plan's next routine, shown bigger with a start button. */
+  nextId?: string;
   startingId: string | null;
   onStart: (routine: RoutineSummary) => void;
 }
@@ -182,6 +212,7 @@ export function RoutineRows({
   meta,
   focus,
   done,
+  nextId,
   startingId,
   onStart,
 }: RoutineRowsProps) {
@@ -194,6 +225,7 @@ export function RoutineRows({
           items={routine.items}
           focus={focus?.(routine)}
           done={done?.(routine)}
+          next={routine.id === nextId}
           meta={meta(routine)}
           starting={startingId === routine.id}
           onPress={() => router.push(`/routine/${routine.id}`)}

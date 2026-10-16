@@ -20,7 +20,7 @@ export interface PhotoThumbProps {
   ringColor?: string;
   /** In the photo's bottom-right corner, e.g. a check. */
   badge?: ReactNode;
-  /** An X in the photo's top-right corner that removes it. */
+  /** An X on the thumbnail's top-right corner that removes it. */
   remove?: { accessibilityLabel: string; onPress: () => void };
   onPress: () => void;
 }
@@ -83,7 +83,7 @@ export function PhotoThumb({
           accessibilityLabel={remove.accessibilityLabel}
           hitSlop={12}
           onPress={remove.onPress}
-          className="absolute top-2.5 right-2.5 size-5 items-center justify-center rounded-full bg-black/70"
+          className="absolute -top-1.5 -right-1.5 size-5.5 items-center justify-center rounded-full border-2 border-black bg-elevated"
         >
           <Icon name="close" size={8} color={colors.fg} />
         </PressableScale>

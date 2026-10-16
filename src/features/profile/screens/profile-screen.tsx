@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Alert, Linking, View } from 'react-native';
 
-import { ProBadge } from '@/features/paywall/components/pro-badge';
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { OpenTicketsSection } from '@/features/support/components/open-tickets-section';
 import { ProfileAvatar } from '@/shared/components/profile-avatar';
@@ -36,7 +35,7 @@ interface LocalPhoto {
 }
 
 export function ProfileScreen() {
-  const { t } = useTranslation(['profile', 'common']);
+  const { t } = useTranslation(['profile', 'common', 'paywall']);
   const { profile } = useProfile();
   const isPro = useIsPro();
   const [avatarOpen, setAvatarOpen] = useState(false);
@@ -130,22 +129,28 @@ export function ProfileScreen() {
           activeScale={0.98}
           accessibilityLabel={t('name.edit')}
           onPress={() => setNameOpen(true)}
-          className="mt-4.5"
+          className="mt-4.5 max-w-full flex-row items-center gap-2"
         >
-          <Text className="font-inter-semibold text-[34px] leading-10 tracking-[-0.7px]">
+          <Text
+            numberOfLines={1}
+            className="shrink font-inter-semibold text-[34px] leading-10 tracking-[-0.7px]"
+          >
             {name}
           </Text>
-        </PressableScale>
-        <View className="mt-3 flex-row items-center gap-2.5">
-          {isPro ? <ProBadge className="self-center" /> : null}
-          {profile?.createdAt ? (
-            <Text tone="muted" className="text-sm">
-              {t('memberSince', {
-                date: formatDate(new Date(profile.createdAt), { month: 'long', year: 'numeric' }),
-              })}
-            </Text>
+          {/* Traqa Pro: a neon check by the name. */}
+          {isPro ? (
+            <View accessible accessibilityLabel={t('paywall:settings.title')}>
+              <Icon name="verified" size={26} color={colors.accent} />
+            </View>
           ) : null}
-        </View>
+        </PressableScale>
+        {profile?.createdAt ? (
+          <Text tone="muted" className="mt-3 text-sm">
+            {t('memberSince', {
+              date: formatDate(new Date(profile.createdAt), { month: 'long', year: 'numeric' }),
+            })}
+          </Text>
+        ) : null}
         {/* The user's own description; tapping it opens "Über dich" to edit it. */}
         <PressableScale
           haptic="tap"

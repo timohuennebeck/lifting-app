@@ -21,7 +21,7 @@ import {
 import { useActiveWorkout } from '@/shared/data/workouts';
 import { useToday } from '@/shared/hooks/use-today';
 import { cn } from '@/shared/lib/cn';
-import { formatWeekdayDate } from '@/shared/lib/format';
+import { formatShortDate, formatTime, formatWeekdayDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -57,7 +57,7 @@ export function TrainingScreen() {
   const { days, isLoading: weekLoading } = useWeekWorkouts(today);
   const { plan, profile, isLoading: planLoading } = useCurrentPlan();
   const status = usePlanStatus(plan);
-  const { data: doneThisWeek } = usePlanWeekDone(plan?.id, status?.week);
+  const { data: finishedThisWeek } = usePlanWeekDone(plan?.id, status?.week);
   const { data: routines = [], isLoading: routinesLoading } = useRoutines();
   const { data: lastDone = {}, isLoading: lastDoneLoading } = useLastDone();
   const meta = useRoutineMeta();
@@ -71,12 +71,22 @@ export function TrainingScreen() {
   // once the rows above it arrive.
   const loading =
     weekLoading || planLoading || routinesLoading || lastDoneLoading || (!!plan && !status);
-  // A plan routine's time and exercises, with the muscle it works most in neon above.
-  const planMeta = (r: RoutineSummary) =>
-    r.exerciseCount
+  // The first routine with exercises not done this plan week comes next.
+  const nextId = planRoutines.find((r) => r.exerciseCount && !finishedThisWeek?.has(r.id))?.id;
+  // A plan routine's time and exercises, with the muscle it works most in neon above; done this
+  // week, "Erledigt" in neon and when.
+  const planMeta = (r: RoutineSummary) => {
+    const finishedAt = finishedThisWeek?.get(r.id);
+    if (finishedAt) {
+      const date = new Date(finishedAt);
+      return t('list.doneAt', { date: formatShortDate(date), time: formatTime(date) });
+    }
+    return r.exerciseCount
       ? `${t('list.minutes', { count: r.estimatedMinutes })} · ${t('overview.exercises', { count: r.exerciseCount })}`
       : t('overview.noExercises');
+  };
   const planFocus = (r: RoutineSummary) => {
+    if (finishedThisWeek?.has(r.id)) return t('list.done');
     const top = muscleShares(r.items)[0];
     return top ? `${t(`muscles:names.${top.muscle}`)} ${top.percent} %` : undefined;
   };
@@ -142,7 +152,8 @@ export function TrainingScreen() {
                 routines={planRoutines}
                 meta={planMeta}
                 focus={planFocus}
-                done={(r) => !!doneThisWeek?.has(r.id)}
+                done={(r) => !!finishedThisWeek?.has(r.id)}
+                nextId={nextId}
                 startingId={startingId}
                 onStart={start}
               />

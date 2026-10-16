@@ -64,7 +64,9 @@ export function ReviewScreen() {
             ref={strip}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerClassName="grow items-start justify-center gap-4.5 px-4"
+            // Room above for the X that sits on each thumbnail's corner; the scroll view clips.
+            className="-mt-2"
+            contentContainerClassName="grow items-start justify-center gap-4.5 px-4 pt-2"
           >
             {photos.map((p, i) => (
               <PhotoThumb

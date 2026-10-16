@@ -17,7 +17,8 @@
     "start": "{{name}} starten",
     "minutes": "{{count}} Min",
     "addRoutine": "Training hinzufügen",
-    "done": "Erledigt"
+    "done": "Erledigt",
+    "doneAt": "{{date}} um {{time}}"
   },
   "card": {
     "perBlock_one": "{{count}} Training pro Block",

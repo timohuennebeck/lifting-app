@@ -404,6 +404,32 @@ const ICONS = {
       </>
     ),
   },
+  // Scalloped seal with a check cut out of it, as in "verified" badges.
+  verified: {
+    viewBox: '0 0 24 24',
+    render: (c) => (
+      <>
+        <Circle cx={12} cy={12} r={9} fill={c} />
+        {Array.from({ length: 8 }, (_, i) => (
+          <Circle
+            key={i}
+            cx={12 + 7.8 * Math.cos((i * Math.PI) / 4)}
+            cy={12 + 7.8 * Math.sin((i * Math.PI) / 4)}
+            r={3.6}
+            fill={c}
+          />
+        ))}
+        <Path
+          d="M7.9 12.3l2.8 2.8 5.5-5.7"
+          stroke={colors.bg}
+          strokeWidth={2.3}
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </>
+    ),
+  },
   bolt: {
     viewBox: '0 0 256 256',
     render: (c) => (
