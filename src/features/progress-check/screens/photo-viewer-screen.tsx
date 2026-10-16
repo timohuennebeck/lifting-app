@@ -53,7 +53,7 @@ export function PhotoViewerScreen() {
         <IconButton icon="close" accessibilityLabel={t('common:actions.close')} onPress={close} />
       </View>
       <View className="absolute inset-x-0" style={{ bottom: insets.bottom + 16 }}>
-        <PoseChips pose={pose} onChange={setPose} />
+        <PoseChips pose={pose} onChange={setPose} className="px-4" />
       </View>
     </View>
   );

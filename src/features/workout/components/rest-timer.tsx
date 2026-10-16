@@ -100,20 +100,23 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
 
   return (
     <>
+      {/* The countdown and its bar are one button: either opens the sheet. */}
       <PressableScale
         haptic="select"
         hitSlop={8}
         accessibilityLabel={t('rest.title')}
         accessibilityValue={{ text: label }}
         onPress={() => setOpen(true)}
-        className="ml-auto flex-row items-center gap-1.5"
+        className="ml-auto flex-row items-center gap-3.5"
       >
-        <Icon name="timer" size={16} color={tint} />
-        <Animated.Text className="font-inter-semibold text-xl tabular-nums" style={pulse}>
-          {label}
-        </Animated.Text>
+        <View className="flex-row items-center gap-1.5">
+          <Icon name="timer" size={16} color={tint} />
+          <Animated.Text className="font-inter-semibold text-xl tabular-nums" style={pulse}>
+            {label}
+          </Animated.Text>
+        </View>
+        <ProgressBar value={progress} className="h-1.5 w-24 flex-none" />
       </PressableScale>
-      <ProgressBar value={progress} className="h-1.5 w-24 flex-none" />
       <Sheet visible={open} onClose={() => setOpen(false)} title={t('rest.title')}>
         <ProgressBar value={progress} className="h-1.5 w-full flex-none" />
         <View className="flex-row items-center justify-between py-6">
