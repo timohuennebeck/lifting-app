@@ -21,14 +21,33 @@
     "triceps": "Trizeps",
     "upper_back": "Oberer Rücken"
   },
-  "regions": {
-    "upper": "Oberkörper",
-    "lower": "Unterkörper"
-  },
-  "subtitle": "Letzte {{days}} Tage · {{count}} Sätze gesamt",
-  "notTrained": "Nicht trainiert",
   "breakdown": {
     "primary": "Primär",
     "secondary": "Sekundär"
+  },
+  "level": {
+    "overall": "Gesamtlevel",
+    "badge": "Lv.",
+    "toNext": "{{percent}} % bis Lv. {{next}}",
+    "max": "Höchstes Level",
+    "pause_one": "Pause · {{count}} Wo.",
+    "pause_other": "Pause · {{count}} Wo.",
+    "new": "Neu",
+    "locked": "Noch kein Level",
+    "find": "Übung finden",
+    "missing": "Noch ohne Level: {{muscles}} · bis zu +{{gain}} Gesamtlevel möglich",
+    "tiers": {
+      "beginner": "Anfänger",
+      "novice": "Aufsteiger",
+      "intermediate": "Fortgeschritten",
+      "advanced": "Erfahren",
+      "elite": "Elite"
+    },
+    "filters": {
+      "all": "Alle",
+      "upper": "Oberkörper",
+      "core": "Core",
+      "lower": "Unterkörper"
+    }
   }
 }

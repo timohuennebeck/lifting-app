@@ -65,6 +65,7 @@
     "open": "Pesquisar exercícios",
     "title": "Exercícios",
     "recent": "Treinados recentemente",
+    "forMuscle": "Para o nível de {{muscle}}",
     "recordA11y": "Recorde pessoal: {{value}}, último a {{date}}"
   },
   "settings": "Definições",

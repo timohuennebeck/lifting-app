@@ -5,11 +5,14 @@ import { View } from 'react-native';
 import { ExerciseIndexList } from '@/features/exercises/components/exercise-index-list';
 import { ExerciseIndexRow } from '@/features/exercises/components/exercise-index-row';
 import type { ExerciseOption } from '@/features/exercises/hooks/use-exercise-search';
-import { formatSet } from '@/shared/data/exercises';
+import { groupOfMuscle } from '@/features/exercises/lib/muscle-groups';
+import { levelShare } from '@/features/muscles/lib/levels';
+import { formatSet, useCatalogStore } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { formatShortDate, type UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
+import type { MuscleId } from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
 
 import { type ExerciseRecord, useExerciseRecords } from '../data/exercise-records';
@@ -52,30 +55,49 @@ export interface ExerciseResultsProps {
   query: string;
   /** Height of the search bar over the foot of the list, so the last rows clear it. */
   bottomInset: number;
+  /** Opened for a muscle (from a Level card): the exercises making its level first. */
+  muscle?: MuscleId | null;
 }
 
 /**
  * The exercises matching the search and the muscle chip picked above them: the trained ones
  * first, last done on top, with their heaviest set (★); then the others A–Z with the letter
- * index. A tap opens the exercise on its "Übung" tab.
+ * index. For a muscle, its exercises come first instead, those working it most on top. A tap
+ * opens the exercise on its "Übung" tab.
  */
-export function ExerciseResults({ query, bottomInset }: ExerciseResultsProps) {
-  const { t } = useTranslation('common');
+export function ExerciseResults({ query, bottomInset, muscle }: ExerciseResultsProps) {
+  const { t } = useTranslation(['common', 'muscles']);
   const units = useUnits();
   const { data: records } = useExerciseRecords();
+  const rows = useCatalogStore((s) => s.rows);
+  const withRecord = (o: ExerciseOption): ResultOption => ({ ...o, record: records?.get(o.id) });
 
   return (
     <ExerciseIndexList<ResultOption>
       query={query}
       bottomInset={bottomInset}
-      split={(options) => ({
-        first: options
-          .filter((o) => records?.has(o.id))
-          .map((o) => ({ ...o, record: records?.get(o.id) }))
-          .sort((a, b) => (b.record?.lastAt ?? '').localeCompare(a.record?.lastAt ?? '')),
-        title: t('search.recent'),
-        rest: options.filter((o) => !records?.has(o.id)),
-      })}
+      initialGroup={muscle ? groupOfMuscle(muscle) : null}
+      split={(options) => {
+        if (muscle) {
+          const share = (o: ExerciseOption) => (rows[o.id] ? levelShare(rows[o.id], muscle) : 0);
+          return {
+            first: options
+              .filter((o) => share(o) > 0)
+              .sort((a, b) => share(b) - share(a))
+              .map(withRecord),
+            title: t('search.forMuscle', { muscle: t(`muscles:names.${muscle}`) }),
+            rest: options.filter((o) => share(o) === 0),
+          };
+        }
+        return {
+          first: options
+            .filter((o) => records?.has(o.id))
+            .map(withRecord)
+            .sort((a, b) => (b.record?.lastAt ?? '').localeCompare(a.record?.lastAt ?? '')),
+          title: t('search.recent'),
+          rest: options.filter((o) => !records?.has(o.id)),
+        };
+      }}
       renderRow={(item) => (
         <ExerciseIndexRow
           item={item}

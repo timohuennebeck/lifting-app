@@ -676,12 +676,14 @@ export function useLastExerciseSession(exerciseId: string | undefined) {
   });
 }
 
-const muscleVolumeQuery = (sinceIso: string) =>
+const levelSetsQuery = (sinceIso: string) =>
   drizzle
     .select({
       exercise_id: workoutEntriesExercises.exercise_id,
       started_at: workoutEntries.started_at,
-      sets: count(workoutEntriesSets.id),
+      weight_kg: workoutEntriesSets.weight_kg,
+      reps: workoutEntriesSets.reps,
+      seconds: workoutEntriesSets.seconds,
     })
     .from(workoutEntriesSets)
     .innerJoin(
@@ -691,17 +693,22 @@ const muscleVolumeQuery = (sinceIso: string) =>
     .innerJoin(workoutEntries, eq(workoutEntries.id, workoutEntriesExercises.workout_entries_id))
     .where(
       and(isNotNull(workoutEntriesSets.completed_at), gte(workoutEntries.started_at, sinceIso)),
-    )
-    .groupBy(workoutEntries.id, workoutEntriesExercises.exercise_id);
+    );
 
-const toMuscleVolume = (rows: RowOf<typeof muscleVolumeQuery>[]) =>
-  rows.map((r) => ({ exerciseId: r.exercise_id, startedAt: r.started_at, sets: r.sets }));
+const toLevelSets = (rows: RowOf<typeof levelSetsQuery>[]) =>
+  rows.map((r) => ({
+    exerciseId: r.exercise_id,
+    startedAt: r.started_at,
+    weightKg: r.weight_kg,
+    reps: r.reps,
+    seconds: r.seconds,
+  }));
 
-/** Completed set counts per exercise and workout since a date (Muscles tab). */
-export function useMuscleVolume(sinceIso: string) {
+/** Every completed set since a date with what it logged (muscle levels). */
+export function useLevelSets(sinceIso: string) {
   return useDrizzleQuery({
-    queryKey: queryKeys.workouts.muscleVolume(sinceIso).queryKey,
-    query: muscleVolumeQuery(sinceIso),
-    map: toMuscleVolume,
+    queryKey: queryKeys.workouts.levelSets(sinceIso).queryKey,
+    query: levelSetsQuery(sinceIso),
+    map: toLevelSets,
   });
 }

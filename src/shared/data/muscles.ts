@@ -3,31 +3,6 @@ import { type MuscleId, MUSCLE_IDS } from '@/shared/ui/muscle-map/body-paths';
 import { type Exercise, getExercise, isCardio } from './exercises';
 import type { ExerciseItem } from './routines';
 
-export type MuscleRegion = 'upper' | 'lower';
-
-export const MUSCLE_REGION: Record<MuscleId, MuscleRegion> = {
-  abs: 'upper',
-  biceps: 'upper',
-  chest: 'upper',
-  forearms: 'upper',
-  front_delts: 'upper',
-  lats: 'upper',
-  lower_back: 'upper',
-  neck: 'upper',
-  obliques: 'upper',
-  rear_delts: 'upper',
-  side_delts: 'upper',
-  traps: 'upper',
-  triceps: 'upper',
-  upper_back: 'upper',
-  adductors: 'lower',
-  calves: 'lower',
-  glutes: 'lower',
-  hamstrings: 'lower',
-  quads: 'lower',
-  tibialis: 'lower',
-};
-
 export interface MuscleShare {
   muscle: MuscleId;
   /** Share of total work, 0–100, rounded. */

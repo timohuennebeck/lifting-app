@@ -8,29 +8,6 @@ import { Text } from '../text';
 import type { MuscleId } from './body-paths';
 import { MuscleCrop } from './muscle-map';
 
-export interface MusclePercentProps {
-  percent: number;
-  /** Dim grey instead of the accent, for untrained muscles. */
-  muted?: boolean;
-}
-
-/** Big muscle share, e.g. "32 %". */
-export function MusclePercent({ percent, muted }: MusclePercentProps) {
-  const tone = muted ? undefined : 'accent';
-  return (
-    <Text
-      variant="headline"
-      tone={tone}
-      className={cn('text-[28px] leading-7', muted && 'text-dim')}
-    >
-      {percent}
-      <Text variant="label" tone={tone} className={cn('text-base', muted && 'text-dim')}>
-        {' %'}
-      </Text>
-    </Text>
-  );
-}
-
 export interface MuscleChipProps {
   /** The muscle whose crop of the body map fills the circle. */
   art: MuscleId;

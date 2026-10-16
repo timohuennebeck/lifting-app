@@ -21,14 +21,33 @@
     "triceps": "Tríceps",
     "upper_back": "Parte superior das costas"
   },
-  "regions": {
-    "upper": "Parte superior",
-    "lower": "Parte inferior"
-  },
-  "subtitle": "Últimos {{days}} dias · {{count}} séries no total",
-  "notTrained": "Não treinados",
   "breakdown": {
     "primary": "Primários",
     "secondary": "Secundários"
+  },
+  "level": {
+    "overall": "Nível geral",
+    "badge": "Nv.",
+    "toNext": "{{percent}}% até Nv. {{next}}",
+    "max": "Nível máximo",
+    "pause_one": "Pausa · {{count}} sem.",
+    "pause_other": "Pausa · {{count}} sem.",
+    "new": "Novo",
+    "locked": "Ainda sem nível",
+    "find": "Encontrar exercício",
+    "missing": "Ainda sem nível: {{muscles}} · até +{{gain}} no nível geral",
+    "tiers": {
+      "beginner": "Iniciante",
+      "novice": "Em evolução",
+      "intermediate": "Intermediário",
+      "advanced": "Avançado",
+      "elite": "Elite"
+    },
+    "filters": {
+      "all": "Todos",
+      "upper": "Superiores",
+      "core": "Core",
+      "lower": "Inferiores"
+    }
   }
 }

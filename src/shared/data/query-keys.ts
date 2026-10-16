@@ -27,7 +27,7 @@ const workoutKeys = createQueryKeys('workouts', {
   range: (fromIso: string, toIso: string) => [fromIso, toIso],
   exerciseHistory: (exerciseId: string) => [exerciseId],
   lastExerciseSession: (exerciseId: string) => [exerciseId],
-  muscleVolume: (sinceIso: string) => [sinceIso],
+  levelSets: (sinceIso: string) => [sinceIso],
 });
 
 const progressCheckKeys = createQueryKeys('progressChecks', {

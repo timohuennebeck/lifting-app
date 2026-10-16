@@ -21,6 +21,8 @@ export interface ExerciseIndexListProps<T extends ExerciseOption> {
   renderRow: (row: IndexedRow<T>) => ReactElement;
   /** Height of what covers the foot of the list (the search bar), so the last rows clear it. */
   bottomInset: number;
+  /** The muscle group picked when the list opens, e.g. from a Level card. */
+  initialGroup?: MuscleGroupId | null;
 }
 
 /**
@@ -32,9 +34,10 @@ export function ExerciseIndexList<T extends ExerciseOption>({
   split,
   renderRow,
   bottomInset,
+  initialGroup = null,
 }: ExerciseIndexListProps<T>) {
   const { t } = useTranslation('exercises');
-  const [group, setGroup] = useState<MuscleGroupId | null>(null);
+  const [group, setGroup] = useState<MuscleGroupId | null>(initialGroup);
   const options = useExerciseSearch(query, group);
   const { first, title, rest } = split(options);
   const { listRef, rows, letters, activeLetter, jump, onViewableItemsChanged, getItemLayout } =

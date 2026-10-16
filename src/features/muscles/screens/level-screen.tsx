@@ -1,12 +1,188 @@
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+
 import { TabScreen } from '@/shared/components/tab-screen';
+import { cn } from '@/shared/lib/cn';
+import { colors } from '@/shared/lib/theme';
+import { Icon } from '@/shared/ui/icon';
+import { BodyMaps, MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
+import { PressableScale } from '@/shared/ui/pressable-scale';
+import { Text } from '@/shared/ui/text';
 
-import { MusclesView } from '../components/muscles-view';
+import { LevelCard } from '../components/level-card';
+import { useMuscleLevels } from '../hooks/use-muscle-levels';
+import {
+  type LevelRegion,
+  MAIN_MUSCLES,
+  missingMain,
+  type MuscleLevel,
+  overallLevel,
+  RARE_MUSCLES,
+  regionOfMuscle,
+  tierOf,
+} from '../lib/levels';
+import { useLevelSeenStore } from '../stores/level-seen-store';
 
-/** Level tab: how each muscle was trained. */
+const FILTERS: ('all' | LevelRegion)[] = ['all', 'upper', 'core', 'lower'];
+/** Muscle names spelled out in the missing-level hint; the rest as "+n". */
+const NAMED_MISSING = 3;
+const WEEK_MS = 7 * 86_400_000;
+
+const floors = (levels: ReadonlyMap<MuscleId, MuscleLevel>) =>
+  Object.fromEntries([...levels].map(([m, l]) => [m, Math.floor(l.value)]));
+
+/**
+ * Level tab: every muscle's level from the best lifts, the overall level of the main muscles,
+ * and cards with what changed (30-day gains, new levels since last time), pauses and muscles
+ * without a level yet.
+ */
 export function LevelScreen() {
+  const { t } = useTranslation('muscles');
+  const { levels, before, pauseSince, end, isLoading } = useMuscleLevels();
+  const [filter, setFilter] = useState<'all' | LevelRegion>('all');
+
+  // Levels seen when the tab was last left: higher ones now get "Neu". Saved when leaving.
+  const [seen, setSeen] = useState(() => useLevelSeenStore.getState().levels);
+  const latest = useRef(levels);
+  useEffect(() => {
+    latest.current = levels;
+  }, [levels]);
+  useFocusEffect(
+    useCallback(() => {
+      setSeen(useLevelSeenStore.getState().levels);
+      return () => {
+        if (latest.current.size) useLevelSeenStore.getState().save(floors(latest.current));
+      };
+    }, []),
+  );
+  const hasSeen = Object.keys(seen).length > 0;
+
+  const overall = overallLevel(levels);
+  const { missing, gain } = missingMain(levels);
+  const trained = [...levels.keys()];
+  const missingNames = missing.slice(0, NAMED_MISSING).map((m) => t(`names.${m}`));
+  const moreMissing = missing.length - missingNames.length;
+
+  const shown = MUSCLE_IDS.filter(
+    (m) =>
+      (levels.has(m) || !RARE_MUSCLES.has(m)) && (filter === 'all' || regionOfMuscle(m) === filter),
+  ).sort((a, b) => {
+    const la = levels.get(a)?.value;
+    const lb = levels.get(b)?.value;
+    if (la !== undefined || lb !== undefined) return (lb ?? -1) - (la ?? -1);
+    // Without a level: the main muscles first, the bigger ones before.
+    return (MAIN_MUSCLES[b] ?? 0) - (MAIN_MUSCLES[a] ?? 0);
+  });
+  const rows = Array.from({ length: Math.ceil(shown.length / 2) }, (_, i) =>
+    shown.slice(i * 2, i * 2 + 2),
+  );
+
+  const cardProps = (muscle: MuscleId) => {
+    const level = levels.get(muscle);
+    if (!level) {
+      return {
+        onFind: () => router.push({ pathname: '/search', params: { muscle } }),
+      };
+    }
+    const now = Math.floor(level.value);
+    const was = before.get(muscle);
+    const seenLevel = seen[muscle];
+    return {
+      value: level.value,
+      gain: was ? now - Math.floor(was.value) : undefined,
+      fresh:
+        hasSeen && (seenLevel === undefined || now > seenLevel)
+          ? now - (seenLevel ?? now)
+          : undefined,
+      pauseWeeks:
+        level.lastAt < pauseSince
+          ? Math.floor((end - Date.parse(level.lastAt)) / WEEK_MS)
+          : undefined,
+    };
+  };
+
   return (
     <TabScreen>
-      <MusclesView />
+      <BodyMaps selected={trained} />
+      {isLoading ? null : (
+        <>
+          <View className="gap-3 px-5 pt-1">
+            <Text variant="overline" tone="subtle" className="text-[11px]">
+              {t('level.overall')}
+            </Text>
+            <View className="flex-row items-end gap-3">
+              <Text className="font-inter-semibold text-[56px] leading-[60px] tabular-nums">
+                {Math.floor(overall)}
+              </Text>
+              <Text tone="subtle" className="mb-2 text-lg">
+                /100
+              </Text>
+              {overall >= 1 ? (
+                <View className="mb-2.5 ml-auto rounded-full bg-accent/15 px-3 py-1">
+                  <Text variant="caption" tone="accent">
+                    {t(`level.tiers.${tierOf(Math.floor(overall))}`)}
+                  </Text>
+                </View>
+              ) : null}
+            </View>
+            <View className="h-2 overflow-hidden rounded-full bg-control">
+              <View className="h-full rounded-full bg-accent" style={{ width: `${overall}%` }} />
+            </View>
+            {missing.length ? (
+              <View className="mt-1 flex-row items-center gap-2.5 rounded-2xl bg-surface px-3.5 py-3">
+                <Icon name="lock" size={13} color={colors.subtle} />
+                <Text
+                  variant="caption"
+                  tone="subtle"
+                  className="min-w-0 flex-1 text-[13px] leading-4.5"
+                >
+                  {t('level.missing', {
+                    muscles: missingNames.join(', ') + (moreMissing ? ` +${moreMissing}` : ''),
+                    gain,
+                  })}
+                </Text>
+              </View>
+            ) : null}
+          </View>
+          <View className="flex-row flex-wrap gap-2 px-4 pt-6 pb-1">
+            {FILTERS.map((f) => (
+              <PressableScale
+                key={f}
+                haptic="select"
+                accessibilityRole="tab"
+                accessibilityState={{ selected: filter === f }}
+                onPress={() => setFilter(f)}
+                className={cn(
+                  'h-9 justify-center rounded-full px-4',
+                  filter === f ? 'bg-accent' : 'bg-surface',
+                )}
+              >
+                <Text
+                  variant="caption"
+                  tone={filter === f ? 'onAccent' : 'default'}
+                  className="text-sm"
+                >
+                  {t(`level.filters.${f}`)}
+                </Text>
+              </PressableScale>
+            ))}
+          </View>
+          <View className="gap-2 px-4 pt-2.5">
+            {rows.map((row) => (
+              <View key={row[0]} className="flex-row gap-2">
+                {row.map((muscle) => (
+                  <LevelCard key={muscle} muscle={muscle} {...cardProps(muscle)} />
+                ))}
+                {row.length === 1 ? <View className="flex-1" /> : null}
+              </View>
+            ))}
+          </View>
+        </>
+      )}
+      {/* The list ends 40pt above the tab bar inset; TabScreen adds 24. */}
+      <View className="h-4" />
     </TabScreen>
   );
 }

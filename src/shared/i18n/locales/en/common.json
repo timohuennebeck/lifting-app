@@ -57,6 +57,7 @@
     "open": "Search exercises",
     "title": "Exercises",
     "recent": "Recently trained",
+    "forMuscle": "Builds your {{muscle}} level",
     "recordA11y": "Personal record: {{value}}, last on {{date}}"
   },
   "settings": "Settings",

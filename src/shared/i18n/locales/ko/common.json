@@ -57,6 +57,7 @@
     "open": "운동 검색",
     "title": "운동",
     "recent": "최근에 한 운동",
+    "forMuscle": "{{muscle}} 레벨을 올리는 운동",
     "recordA11y": "개인 기록: {{value}}, 마지막 운동일 {{date}}"
   },
   "settings": "설정",

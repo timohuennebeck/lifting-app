@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { clearLocalPhotos } from '@/features/progress-check/lib/photo-files';
 import { useProgressCheckStore } from '@/features/progress-check/stores/progress-check-store';
 import { useCompareStore } from '@/features/body/stores/compare-store';
+import { useLevelSeenStore } from '@/features/muscles/stores/level-seen-store';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { purchases } from '@/features/paywall/lib/purchases-service';
 import {
@@ -65,6 +66,8 @@ export function useAuthListener() {
         useImportStore.getState().reset();
         // The picked before/after checks belong to the account too.
         useCompareStore.getState().reset();
+        // And the muscle levels last seen on the Level tab.
+        useLevelSeenStore.getState().reset();
         // The next Google sign-in asks for the account again instead of reusing this one.
         signOutOfGoogle();
         return;

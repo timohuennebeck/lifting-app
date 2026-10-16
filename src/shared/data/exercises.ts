@@ -39,6 +39,12 @@ export interface ExerciseRow {
   cardio: boolean;
   /** The weight is assistance: less is harder. */
   assisted: boolean;
+  /**
+   * What an intermediate lifter reaches, for muscle levels: the estimated one-rep max ÷ body
+   * weight, or reps / seconds without weight; null (or missing in rows cached before it) when the
+   * exercise doesn't count.
+   */
+  strength_standard?: number | null;
   is_active: boolean;
   updated_at: string;
 }

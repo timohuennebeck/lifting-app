@@ -21,14 +21,33 @@
     "triceps": "Triceps",
     "upper_back": "Upper back"
   },
-  "regions": {
-    "upper": "Upper body",
-    "lower": "Lower body"
-  },
-  "subtitle": "Last {{days}} days · {{count}} sets total",
-  "notTrained": "Not trained",
   "breakdown": {
     "primary": "Primary",
     "secondary": "Secondary"
+  },
+  "level": {
+    "overall": "Overall level",
+    "badge": "Lv.",
+    "toNext": "{{percent}}% to Lv. {{next}}",
+    "max": "Top level",
+    "pause_one": "Paused · {{count}} wk",
+    "pause_other": "Paused · {{count}} wk",
+    "new": "New",
+    "locked": "No level yet",
+    "find": "Find an exercise",
+    "missing": "No level yet: {{muscles}} · up to +{{gain}} overall level",
+    "tiers": {
+      "beginner": "Beginner",
+      "novice": "Novice",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "elite": "Elite"
+    },
+    "filters": {
+      "all": "All",
+      "upper": "Upper body",
+      "core": "Core",
+      "lower": "Lower body"
+    }
   }
 }

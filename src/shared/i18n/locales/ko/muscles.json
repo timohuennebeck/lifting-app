@@ -21,14 +21,33 @@
     "triceps": "삼두근",
     "upper_back": "등 상부"
   },
-  "regions": {
-    "upper": "상체",
-    "lower": "하체"
-  },
-  "subtitle": "최근 {{days}}일 · 총 {{count}}세트",
-  "notTrained": "운동 안 함",
   "breakdown": {
     "primary": "주동근",
     "secondary": "보조근"
+  },
+  "level": {
+    "overall": "전체 레벨",
+    "badge": "Lv.",
+    "toNext": "Lv. {{next}}까지 {{percent}}%",
+    "max": "최고 레벨",
+    "pause_one": "휴식 중 · {{count}}주",
+    "pause_other": "휴식 중 · {{count}}주",
+    "new": "NEW",
+    "locked": "아직 레벨 없음",
+    "find": "운동 찾기",
+    "missing": "아직 레벨 없음: {{muscles}} · 전체 레벨 최대 +{{gain}}",
+    "tiers": {
+      "beginner": "입문",
+      "novice": "초급",
+      "intermediate": "중급",
+      "advanced": "상급",
+      "elite": "엘리트"
+    },
+    "filters": {
+      "all": "전체",
+      "upper": "상체",
+      "core": "코어",
+      "lower": "하체"
+    }
   }
 }
