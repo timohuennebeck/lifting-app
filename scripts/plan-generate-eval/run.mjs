@@ -125,7 +125,7 @@ const MAJOR = [...new Set(Object.values(GROUPS).flat())];
 /** A muscle counts as trained by an exercise from this share of its stimulus on. */
 const MAIN_SHARE = 0.2;
 
-/** How many times a week the split trains each muscle, as the app shows it (timesPerMuscle). */
+/** How many times a week the split trains each muscle with that many workouts. */
 const timesPerMuscle = ({ split, sessionsPerWeek: n }) =>
   ({
     full_body: n,

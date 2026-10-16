@@ -33,20 +33,3 @@ export function chosenSplit(
   const options = splitsFor(draft.sessionsPerWeek, draft.experience);
   return draft.split && options.includes(draft.split) ? draft.split : options[0];
 }
-
-/** How many times a week the split trains each muscle with `sessionsPerWeek` workouts. */
-export function timesPerMuscle(split: Split, sessionsPerWeek: number) {
-  switch (split) {
-    case 'full_body':
-      return sessionsPerWeek;
-    case 'upper_lower':
-      return Math.floor(sessionsPerWeek / 2);
-    case 'ppl':
-      return Math.floor(sessionsPerWeek / 3);
-    case 'bro':
-      return 1;
-    case 'ppl_upper_lower':
-    case 'arnold':
-      return 2;
-  }
-}

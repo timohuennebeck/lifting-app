@@ -54,38 +54,36 @@
     "title": "QUAL DIVISÃO\nVOCÊ QUER FAZER?",
     "subtitle_one": "As que combinam com {{count}} treino por semana.",
     "subtitle_other": "As que combinam com {{count}} treinos por semana.",
-    "description_one": "{{routines}} · cada músculo {{count}}× por semana",
-    "description_other": "{{routines}} · cada músculo {{count}}× por semana",
     "options": {
       "full_body": {
         "short": "FB",
         "title": "Full body",
-        "routines": "O corpo todo em cada treino"
+        "description": "O corpo todo em cada treino"
       },
       "upper_lower": {
         "short": "SI",
         "title": "Superior / Inferior",
-        "routines": "Parte superior e inferior alternadas"
+        "description": "Superior e inferior alternados"
       },
       "ppl": {
         "short": "PPL",
         "title": "Push / Pull / Pernas",
-        "routines": "Empurrar, puxar e pernas alternados"
+        "description": "Empurrar, puxar, pernas"
       },
       "ppl_upper_lower": {
         "short": "PPL+",
         "title": "Push / Pull / Pernas + Sup. / Inf.",
-        "routines": "Empurrar, puxar, pernas, depois superior e inferior"
+        "description": "PPL mais superior e inferior"
       },
       "bro": {
         "short": "BRO",
         "title": "Bro split",
-        "routines": "Peito, costas, pernas, ombros, braços"
+        "description": "Um músculo por dia"
       },
       "arnold": {
         "short": "ARN",
         "title": "Divisão Arnold",
-        "routines": "Peito e costas, ombros e braços, pernas"
+        "description": "Dois grupos musculares por dia"
       }
     }
   },

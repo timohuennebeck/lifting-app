@@ -10,7 +10,7 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
 import { useCreateStep } from '../hooks/use-create-step';
-import { chosenSplit, splitsFor, timesPerMuscle } from '../lib/splits';
+import { chosenSplit, splitsFor } from '../lib/splits';
 
 /**
  * How the routines divide the body, offering only the splits that suit the workouts a week (the
@@ -54,10 +54,7 @@ export function SplitScreen() {
               </Text>
             }
             title={t(`planCreate:split.options.${option}.title`)}
-            description={t('planCreate:split.description', {
-              routines: t(`planCreate:split.options.${option}.routines`),
-              count: timesPerMuscle(option, sessionsPerWeek),
-            })}
+            description={t(`planCreate:split.options.${option}.description`)}
             selected={split === option}
             onPress={() => update({ split: option })}
           />
