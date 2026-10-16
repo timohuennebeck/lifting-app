@@ -83,8 +83,17 @@ export type PlanEvent =
   | { type: 'error'; error: 'not_a_plan' | 'failed' };
 
 /** Text on one line, trimmed, at most `max` characters. */
-export const cut = (text: string, max: number) =>
-  text.trim().replace(/\s+/g, ' ').slice(0, max).trim();
+/**
+ * At most `max` characters, cut after a whole word where that keeps most of it, without a
+ * dangling "+", "/" or "–".
+ */
+export function cut(text: string, max: number) {
+  const clean = text.trim().replace(/\s+/g, ' ');
+  if (clean.length <= max) return clean;
+  const part = clean.slice(0, max);
+  const space = part.lastIndexOf(' ');
+  return (space > max / 2 ? part.slice(0, space) : part).replace(/[\s+/&·,;:–-]+$/u, '');
+}
 
 /** The plan's name as the app gets it: at most 30 characters, "Plan" when the model gave none. */
 export const planName = (name: string) => cut(name, 30) || 'Plan';

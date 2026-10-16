@@ -128,14 +128,15 @@ Routines:
 
 Each routine:
 - Fits the session length. A session takes about 2.5 minutes per exercise to set up, plus for every set 45 seconds of work and its rest. Rather leave out an isolation exercise than go below 2 sets.
-- Uses that length too: at least about 80% of it, within the sets and exercises the experience allows. With long sessions, add exercises and sets rather than leaving time unused.
+- Uses that length too: at least about 80% of it, within the sets and exercises the experience allows. With long sessions, first give the main exercises more sets (up to 5), then add exercises.
+- Every exercise should build muscle or strength. Low-load drills (bird dog, donkey kick, fire hydrant, tibialis raise and the like) are no filler: only when the equipment leaves nothing better for that muscle.
 - Starts with the big compound lifts, then accessories, then isolation work.
 - Core exercises (main muscles abs or obliques), when the catalog has any: at most one per routine, always last. With abs or obliques as a focus, one in most routines; else with hypertrophy, one in 1-2 routines a week. Prefer ones that can be loaded or progressed (cable crunch, hanging leg raise, ab wheel).
 - Never the same exercise twice in a routine. Across routines of the same type (e.g. upper A and upper B), vary the exercises where it makes sense.
 
 The week:
 - About as many pulling as pushing sets; chest, back, shoulders, arms, quads, hamstrings and glutes each trained at least once a week, twice with 3 or more workouts.
-- Focus muscles, if any, get about a third more weekly sets than the rest: every routine that trains a focus muscle gets an extra exercise for it, and when time is short, take the sets from other isolation work. Without focus, keep it balanced.
+- Focus muscles, if any, get about a third more weekly sets than the rest: every routine that trains a focus muscle gets an extra exercise for it, picked from its focus exercises below, and when time is short, take the sets from other isolation work. A focus muscle's main lift gets at least as many sets as the routine's other main lifts. Without focus, keep it balanced.
 
 Experience:
 - none and beginner: simple, stable exercises (machines, cables, dumbbells), 2-3 sets each, 4-6 exercises a routine, no very technical lifts (no Olympic lifts, no conventional deadlift for none).
@@ -143,14 +144,42 @@ Experience:
 - advanced: 3-5 sets, heavier compounds and more variety.
 - Unknown experience: plan as for beginner.
 
+Little equipment (bodyweight, kettlebell, bands): these can't be loaded heavily, so whatever the goal:
+- Use everything the user has: with a kettlebell, goblet squats, Romanian deadlifts, rows, presses and lunges, not only swings.
+- Harder variations over easy ones: lunges, split squats and single-leg work over air squats once the experience isn't none or beginner.
+- Bodyweight exercises 10-20 reps, rest 60-90 s.
+- Short sessions (30 minutes or less): rest 60-90 s and 2-3 sets, so that at least 3 exercises fit.
+
 Sets:
 - target_min and target_max are the rep range of every set (equal for a fixed number); rir is the reps in reserve in the first week.
 - The app runs the plan in blocks of 5 weeks: each week after the first takes one rep off the reserve (never below 0), and the fifth week is a lighter deload. So rir is where a block starts.
-- hypertrophy: compounds 6-10 reps, isolation 10-15, rir 3. strength: main lifts 3-6 reps at rir 3-4, accessories 6-10 at rir 3. strength_hypertrophy: compounds 4-8, isolation 8-12, rir 3. none and beginner: rir 4 on compounds, 3 on isolation.
+- hypertrophy: compounds 6-10 reps, isolation 10-15, rir 3. strength: main lifts 3-6 reps at rir 3-4, compound accessories 6-10 and isolation 8-15 at rir 3. strength_hypertrophy: compounds 4-8, isolation 8-12, rir 3. none and beginner: rir 4 on compounds, 3 on isolation.
 - strength: build each routine around one or two main lifts (squat, bench press, deadlift, overhead press, barbell row or pull-up; their closest variant the equipment allows), then 2-4 accessories that support them. Fewer exercises with more sets rather than many isolation exercises.
 - rest_seconds: compounds 120-180 (up to 240 for heavy strength work), isolation 60-90.
 
 Names, in the app language given below: each routine a short name (at most 24 characters), e.g. "Push", "Oberkörper A", "Beine"; the plan a short name for the split (at most 30 characters), e.g. "Push Pull Beine", "Ganzkörper 3×".`;
+
+/** The muscle an exercise works most. */
+const topMuscle = (muscles: Record<string, number>) =>
+  Object.entries(muscles).reduce((top, entry) => (entry[1] > top[1] ? entry : top))[0];
+const FOCUS_PICKS = 6;
+
+/**
+ * For each focus muscle, the usable exercises it leads: those that take weight first (they can be
+ * progressed, unlike a fire hydrant), then the ones that work it most. So the model sees rows,
+ * not pulldowns, for the upper back, and the hip thrust for the glutes.
+ */
+function focusExercises(focus: string[], catalog: CatalogRow[]) {
+  const loaded = (e: CatalogRow) => (e.measures.includes('weight') ? 1 : 0);
+  return focus.map((muscle) => {
+    const ids = catalog
+      .filter((e) => topMuscle(e.muscles) === muscle)
+      .sort((a, b) => loaded(b) - loaded(a) || b.muscles[muscle] - a.muscles[muscle])
+      .slice(0, FOCUS_PICKS)
+      .map((e) => e.id);
+    return `- ${muscle}: ${ids.join(', ') || '–'}`;
+  });
+}
 
 /** The main muscles of an exercise, most worked first. */
 const mainMuscles = (muscles: Record<string, number>) =>
@@ -185,6 +214,9 @@ export function contextText(
     answers.equipment === 'gym'
       ? 'Equipment: a full gym.'
       : `Equipment: ${have.size ? [...have].join(', ') : 'none, only the floor'} (training at home).`,
+    ...(answers.focus.length
+      ? ['', 'Focus exercises:', ...focusExercises(answers.focus, catalog)]
+      : []),
     '',
     'Catalog (id | names | equipment | main muscles):',
     ...lines,
