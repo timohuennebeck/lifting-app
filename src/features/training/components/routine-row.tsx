@@ -111,7 +111,7 @@ function RoutineRow({ name, items, meta, onPress, onStart, starting, focus }: Ro
         if (e.nativeEvent.actionName === 'start') onStart();
       }}
       onPress={onPress}
-      className="flex-row items-center gap-3.5 rounded-[22px] bg-surface py-3.5 pr-3 pl-2.5"
+      className="flex-row items-center gap-3.5 rounded-[18px] bg-surface py-3.5 pr-3 pl-2.5"
     >
       <MuscleStack shares={shares} />
       <View className="min-w-0 flex-1 gap-0.5">

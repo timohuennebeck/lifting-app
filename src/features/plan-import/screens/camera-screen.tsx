@@ -1,6 +1,6 @@
 import { CameraView } from 'expo-camera';
 import { Image } from 'expo-image';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useIsFocused, useLocalSearchParams } from 'expo-router';
 import { type RefObject, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, StyleSheet, View } from 'react-native';
@@ -22,6 +22,7 @@ import {
 } from '@/shared/ui/camera/capture-controls';
 import { ShutterFlash, useShutterFlash } from '@/shared/ui/camera/shutter-flash';
 import { Icon } from '@/shared/ui/icon';
+import { PressableScale } from '@/shared/ui/pressable-scale';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Text } from '@/shared/ui/text';
 
@@ -29,6 +30,8 @@ import { pickPlanPhotos } from '../lib/pick-source';
 import { type ImportPhoto, MAX_PHOTOS } from '../lib/plan-import-service';
 import { useImportStore, usePhotos } from '../stores/import-store';
 
+/** Latest pages shown above the shutter; a tap opens one full screen. */
+const THUMBS = 6;
 /** Bottom panel height from the design, home indicator area included. */
 const PANEL_HEIGHT = 194;
 /** iOS refuses a shot while the previous one is still being captured; it is retried until free. */
@@ -89,6 +92,8 @@ export function CameraScreen() {
   const { t } = useTranslation(['planImport', 'common']);
   const { step } = usePlanFlow();
   const insets = useSafeAreaInsets();
+  // One camera preview at a time: a retake opens a second camera screen over the review.
+  const focused = useIsFocused();
   const { retake } = useLocalSearchParams<{ retake?: string }>();
   const retakeIndex = retake !== undefined ? Number(retake) : null;
   const [permission, requestPermission] = useCameraScreenPermission();
@@ -173,9 +178,14 @@ export function CameraScreen() {
     setPending((n) => n - 1);
   }
 
+  /** The pages full screen, over the camera: their X comes back here. */
+  const review = (page = 0) => router.push({ pathname: step('/import/review'), params: { page } });
+
   // "Done" waits for shots that are still being saved, unless the camera was closed meanwhile.
   useEffect(() => {
-    if (finishing && pending === 0 && !closed.current) router.dismissTo(step('/import/review'));
+    if (!finishing || pending > 0 || closed.current) return;
+    setFinishing(false);
+    router.push({ pathname: step('/import/review'), params: { page: 0 } });
   }, [finishing, pending, step]);
 
   function close() {
@@ -227,13 +237,15 @@ export function CameraScreen() {
     <View className="flex-1 bg-black">
       {options}
       {/* The preview fills the whole screen; the controls float over it. */}
-      <CameraView
-        ref={camera}
-        style={StyleSheet.absoluteFill}
-        facing="back"
-        enableTorch={torch}
-        animateShutter={false}
-      />
+      {focused ? (
+        <CameraView
+          ref={camera}
+          style={StyleSheet.absoluteFill}
+          facing="back"
+          enableTorch={torch}
+          animateShutter={false}
+        />
+      ) : null}
       <View
         pointerEvents="none"
         className="absolute rounded-[28px] border border-white/8"
@@ -276,16 +288,24 @@ export function CameraScreen() {
       >
         <View className="h-11 flex-row items-center justify-center gap-1.5">
           {photos.length && retakeIndex === null ? (
-            photos
-              .slice(-6)
-              .map((p) => (
-                <Image
+            photos.slice(-THUMBS).map((p, i) => {
+              const index = Math.max(0, photos.length - THUMBS) + i;
+              return (
+                <PressableScale
                   key={p.uri}
-                  source={{ uri: p.uri }}
-                  contentFit="cover"
-                  style={{ width: 32, height: 42, borderRadius: 5 }}
-                />
-              ))
+                  haptic="select"
+                  hitSlop={4}
+                  accessibilityLabel={t('planImport:camera.page', { count: index + 1 })}
+                  onPress={() => review(index)}
+                >
+                  <Image
+                    source={{ uri: p.uri }}
+                    contentFit="cover"
+                    style={{ width: 32, height: 42, borderRadius: 5 }}
+                  />
+                </PressableScale>
+              );
+            })
           ) : (
             <Text variant="caption" tone="subtle" className="font-inter">
               {t('planImport:camera.hint')}

@@ -1,5 +1,5 @@
-import { Redirect, router, Stack } from 'expo-router';
-import { useRef, useState } from 'react';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
@@ -16,19 +16,28 @@ import { useImportStore, usePhotos } from '../stores/import-store';
 const THUMB_STEP = 56 + 18;
 
 /**
- * 05a-2: the captured pages full screen, like a progress check photo: switch pages, retake one,
- * remove one with the X on its thumbnail, add one, then read the plan.
+ * 05a-2: the captured pages full screen, like a progress check photo, always opened over the
+ * camera (`?page=` the one to show): switch pages, retake one, remove one with the X on its
+ * thumbnail, add one, then read the plan. The X and "add page" go back to the camera.
  */
 export function ReviewScreen() {
   const { t } = useTranslation('planImport');
   const { step } = usePlanFlow();
+  const params = useLocalSearchParams<{ page?: string }>();
   const photos = usePhotos();
   const removePhoto = useImportStore((s) => s.removePhoto);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(() => Number(params.page) || 0);
   const strip = useRef<ScrollView>(null);
-  if (!photos.length) return <Redirect href={step('/import/camera')} />;
+  const empty = !photos.length;
+
+  // Every page removed: back to the camera underneath.
+  useEffect(() => {
+    if (empty) router.back();
+  }, [empty]);
+
+  if (empty) return null;
   const current = Math.min(page, photos.length - 1);
-  const addPage = () => router.push(step('/import/camera'));
+  const toCamera = () => router.back();
 
   function show(index: number) {
     setPage(index);
@@ -49,7 +58,7 @@ export function ReviewScreen() {
         // A camera photo fills the screen as its preview did; a picked one shows whole.
         fit={photos[current].fromCamera ? 'cover' : 'contain'}
         title={t('camera.page', { count: current + 1 })}
-        onClose={() => router.back()}
+        onClose={toCamera}
         strip={
           <ScrollView
             ref={strip}
@@ -78,7 +87,7 @@ export function ReviewScreen() {
                 accessibilityLabel={t('review.addPage')}
                 selected={false}
                 viewing
-                onPress={addPage}
+                onPress={toCamera}
               />
             ) : null}
           </ScrollView>

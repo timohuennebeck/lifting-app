@@ -55,8 +55,6 @@ export function OptionCard({
   const tinted = selected && tint;
   return (
     <PressableScale
-      // No press shrink: a choice card should stay put while it is picked.
-      activeScale={1}
       haptic="select"
       onPress={onPress}
       accessibilityRole="radio"

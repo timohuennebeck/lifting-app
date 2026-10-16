@@ -48,15 +48,19 @@ function startingKg(entries: WeightEntry[], date: string) {
   return (own ?? before ?? entries.at(-1))?.weightKg ?? DEFAULT_BODY_WEIGHT_KG;
 }
 
-/** Log or edit the weight of a day (GW·1): ruler, −/+ and the change since the last entry. */
+/**
+ * Log or edit the weight of a day (GW·1): ruler, −/+ and the change since the last entry. Opened
+ * on an entry, picking another day moves it; with `?add=1` (the "+") it adds a new one instead.
+ */
 export function WeightEntryScreen() {
-  const { date } = useLocalSearchParams<{ date: string }>();
+  const { date, add } = useLocalSearchParams<{ date: string; add?: string }>();
   const { entries, isLoading } = useWeightEntries();
   const units = useUnits();
   if (isLoading) return <View className="flex-1 bg-bg" />;
   return (
     <EntryForm
       initialDate={date}
+      adding={add === '1'}
       entries={entries}
       units={units}
       initialKg={startingKg(entries, date)}
@@ -66,12 +70,14 @@ export function WeightEntryScreen() {
 
 interface EntryFormProps {
   initialDate: string;
+  /** A new entry: another day picked doesn't move the opening day's one. */
+  adding: boolean;
   entries: WeightEntry[];
   units: UnitSystem;
   initialKg: number;
 }
 
-function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
+function EntryForm({ initialDate, adding, entries, units, initialKg }: EntryFormProps) {
   const { t } = useTranslation(['weight', 'common']);
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
@@ -98,7 +104,7 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
   const set = (next: number) => setValue(clamp(snapTo(next, scale.step), range.min, range.max));
   const kg = toStoredKg(value, units);
 
-  const original = entries.find((e) => e.date === initialDate) ?? null;
+  const original = adding ? null : (entries.find((e) => e.date === initialDate) ?? null);
   // The shown day's own entry: picking a day that has one edits it.
   const own = entries.find((e) => e.date === date) ?? null;
   const previous = entries.filter((e) => e.date < date).at(-1);

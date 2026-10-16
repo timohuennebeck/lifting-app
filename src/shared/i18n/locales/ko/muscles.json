@@ -35,8 +35,6 @@
     "new": "NEW",
     "locked": "아직 레벨 없음",
     "find": "운동 찾기",
-    "missing": "아직 레벨 없음: {{muscles}}",
-    "missingGain": "아직 레벨 없음: {{muscles}} · 전체 레벨 최대 +{{gain}}",
     "tiers": {
       "beginner": "입문",
       "novice": "초급",

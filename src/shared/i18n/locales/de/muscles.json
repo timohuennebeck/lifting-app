@@ -35,8 +35,6 @@
     "new": "Neu",
     "locked": "Noch kein Level",
     "find": "Übung finden",
-    "missing": "Noch ohne Level: {{muscles}}",
-    "missingGain": "Noch ohne Level: {{muscles}} · bis zu +{{gain}} Gesamtlevel möglich",
     "tiers": {
       "beginner": "Anfänger",
       "novice": "Aufsteiger",

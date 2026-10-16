@@ -73,7 +73,7 @@ export function BodyPhotoCard({
         accessibilityState={{ selected }}
         onPress={onPress}
         className={cn(
-          'h-62.5 w-full overflow-hidden rounded-[22px] bg-surface',
+          'h-62.5 w-full overflow-hidden rounded-[18px] bg-surface',
           selected ? 'border-2 border-accent' : 'border border-white/8',
           faded && 'opacity-45',
         )}
@@ -152,7 +152,7 @@ export function NextCheckCard({ title, note, onPress }: NextCheckCardProps) {
         activeScale={0.98}
         accessibilityLabel={`${title} · ${note}`}
         onPress={onPress}
-        className="h-62.5 w-full items-center justify-center gap-1 rounded-[22px] bg-surface px-4"
+        className="h-62.5 w-full items-center justify-center gap-1 rounded-[18px] bg-surface px-4"
       >
         <View className="mb-3 size-12 items-center justify-center rounded-full bg-elevated">
           <Icon name="plus" size={14} color={colors.fg} />

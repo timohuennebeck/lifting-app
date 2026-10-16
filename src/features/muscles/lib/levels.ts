@@ -248,20 +248,3 @@ export function overallLevel(levels: ReadonlyMap<MuscleId, MuscleLevel>) {
   }
   return sum / total;
 }
-
-/**
- * Main muscles without a level, and how much the overall level would gain if they reached the
- * average of the others.
- */
-export function missingMain(levels: ReadonlyMap<MuscleId, MuscleLevel>) {
-  const entries = Object.entries(MAIN_MUSCLES) as [MuscleId, number][];
-  const missing = entries.filter(([m]) => !levels.has(m)).map(([m]) => m);
-  const leveled = entries.filter(([m]) => levels.has(m));
-  const total = entries.reduce((sum, [, w]) => sum + w, 0);
-  const leveledWeight = leveled.reduce((sum, [, w]) => sum + w, 0);
-  const average = leveledWeight
-    ? leveled.reduce((sum, [m, w]) => sum + w * (levels.get(m)?.value ?? 0), 0) / leveledWeight
-    : 0;
-  const missingWeight = total - leveledWeight;
-  return { missing, gain: Math.round((missingWeight * average) / total) };
-}

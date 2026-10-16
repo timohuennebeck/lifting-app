@@ -4,6 +4,7 @@ import { View } from 'react-native';
 
 import { useDraft } from '@/features/onboarding/stores/onboarding-store';
 import { useProfile } from '@/shared/data/profile';
+import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
@@ -21,11 +22,14 @@ export function ThankYouScreen() {
   const { profile } = useProfile();
   const draftName = useDraft().firstName;
   const name = (profile?.firstName || draftName).trim();
+  // Purchased: there is no way back into the paywall, only on; Android's back goes on too.
+  useHardwareBack(flow.exit);
 
   return (
     <Screen
       header={
         <ScreenHeader
+          icon="close"
           onBack={flow.exit}
           title={
             <Text
@@ -42,7 +46,6 @@ export function ThankYouScreen() {
       }
       footer={<Button label={t('welcome.cta')} onPress={flow.exit} />}
     >
-      {/* Purchased: no swiping back into the paywall. */}
       <Stack.Screen options={{ gestureEnabled: false }} />
       <View className="mx-4 mt-3 h-120 shrink">
         <CoachVideo active={focused} name={name} />

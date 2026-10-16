@@ -6,8 +6,6 @@ import { View } from 'react-native';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { cn } from '@/shared/lib/cn';
 import { DAY_MS } from '@/shared/lib/date';
-import { colors } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
 import { BodyMaps, MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
@@ -17,7 +15,6 @@ import { useMuscleLevels } from '../hooks/use-muscle-levels';
 import {
   type LevelRegion,
   MAIN_MUSCLES,
-  missingMain,
   type MuscleLevel,
   overallLevel,
   RARE_MUSCLES,
@@ -27,8 +24,6 @@ import {
 import { useLevelSeenStore } from '../stores/level-seen-store';
 
 const FILTERS: ('all' | LevelRegion)[] = ['all', 'upper', 'core', 'lower'];
-/** Muscle names spelled out in the missing-level hint; the rest as "+n". */
-const NAMED_MISSING = 3;
 const WEEK_MS = 7 * DAY_MS;
 
 const floors = (levels: ReadonlyMap<MuscleId, MuscleLevel>) =>
@@ -61,10 +56,7 @@ export function LevelScreen() {
   const hasSeen = Object.keys(seen).length > 0;
 
   const overall = overallLevel(levels);
-  const { missing, gain } = missingMain(levels);
   const trained = [...levels.keys()];
-  const missingNames = missing.slice(0, NAMED_MISSING).map((m) => t(`names.${m}`));
-  const moreMissing = missing.length - missingNames.length;
 
   const shown = MUSCLE_IDS.filter(
     (m) =>
@@ -131,22 +123,6 @@ export function LevelScreen() {
             <View className="h-2 overflow-hidden rounded-full bg-control">
               <View className="h-full rounded-full bg-accent" style={{ width: `${overall}%` }} />
             </View>
-            {missing.length ? (
-              <View className="mt-1 flex-row items-center gap-2.5 rounded-2xl bg-surface px-3.5 py-3">
-                <Icon name="lock" size={13} color={colors.subtle} />
-                <Text
-                  variant="caption"
-                  tone="subtle"
-                  className="min-w-0 flex-1 text-[13px] leading-4.5"
-                >
-                  {/* Without any main muscle levelled there is no average to gain from. */}
-                  {t(gain > 0 ? 'level.missingGain' : 'level.missing', {
-                    muscles: missingNames.join(', ') + (moreMissing ? ` +${moreMissing}` : ''),
-                    gain,
-                  })}
-                </Text>
-              </View>
-            ) : null}
           </View>
           <View className="flex-row flex-wrap gap-2 px-4 pt-6 pb-1">
             {FILTERS.map((f) => (

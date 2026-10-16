@@ -32,8 +32,9 @@ const CHANGE_DAYS = [3, 7, 14, 30, 90];
 const CHART_RANGES = [7, 14, 30, 90, 180] as const;
 type ChartRange = (typeof CHART_RANGES)[number];
 
-const openEntry = (date: string) =>
-  router.push({ pathname: '/body-weight/[date]', params: { date } });
+/** A day's entry to edit; `add`: a new entry, starting on that day (the "+"). */
+const openEntry = (date: string, add = false) =>
+  router.push({ pathname: '/body-weight/[date]', params: add ? { date, add: '1' } : { date } });
 
 /**
  * Weight history (GW·2): the trend and its change over the chosen range, the chart, how the
@@ -136,9 +137,19 @@ export function WeightHistoryScreen() {
         </>
       ) : null}
       {points.length ? (
-        <Text variant="overline" tone="subtle" className={`mt-5.5 mb-1.25 px-5 ${OVERLINE}`}>
-          {t('history.entries')}
-        </Text>
+        // Labels over the rows' columns (see EntryRow): the weight, and the trend in its colour.
+        <View className="mt-5.5 mb-1.25 flex-row px-5">
+          <Text variant="overline" tone="subtle" className={`flex-1 ${OVERLINE}`}>
+            {t('history.entries')}
+          </Text>
+          <Text variant="overline" tone="subtle" className={`w-18 text-right ${OVERLINE}`}>
+            {weightUnit(units)}
+          </Text>
+          <Text variant="overline" tone="accent" className={`w-18 text-right ${OVERLINE}`}>
+            {t('history.trend')}
+          </Text>
+          <View className="w-13.5" />
+        </View>
       ) : null}
     </View>
   );
@@ -173,7 +184,7 @@ export function WeightHistoryScreen() {
               accessibilityLabel={t('history.add')}
               color={colors.onAccent}
               className="bg-accent"
-              onPress={() => openEntry(today)}
+              onPress={() => openEntry(today, true)}
             />
           </View>
         }

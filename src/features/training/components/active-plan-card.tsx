@@ -39,7 +39,7 @@ export function ActivePlanCard({ plan, status, routines, goal }: ActivePlanCardP
     .join(' · ');
 
   return (
-    <View className="mx-4 gap-5 rounded-[24px] bg-surface p-5">
+    <View className="mx-4 gap-5 rounded-[18px] bg-surface p-5">
       <View className="flex-row items-center gap-3.5">
         <MuscleStack shares={tops} highlight />
         <View className="min-w-0 flex-1 gap-1">

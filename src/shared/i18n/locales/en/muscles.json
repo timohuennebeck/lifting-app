@@ -35,8 +35,6 @@
     "new": "New",
     "locked": "No level yet",
     "find": "Find an exercise",
-    "missing": "No level yet: {{muscles}}",
-    "missingGain": "No level yet: {{muscles}} · up to +{{gain}} overall level",
     "tiers": {
       "beginner": "Beginner",
       "novice": "Novice",
