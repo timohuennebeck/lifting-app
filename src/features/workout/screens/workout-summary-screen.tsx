@@ -22,17 +22,23 @@ import { useWorkoutRecords } from '../data/workout-records';
 
 /**
  * Workout done: its name, time and records, the muscles it worked, the exercises with the sets
- * that were done, then each new record.
+ * that were done, then each new record. Just finished (`?finished=1`) it fades in with an X back
+ * to the app; opened from the history it slides in and goes back like any page.
  */
 export function WorkoutSummaryScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, finished } = useLocalSearchParams<{ id: string; finished?: string }>();
   const { t } = useTranslation(['workout', 'common', 'training']);
   const insets = useSafeAreaInsets();
   const units = useUnits();
   const { data: workout } = useWorkout(id);
   const { data: records = [] } = useWorkoutRecords(id);
 
-  const close = () => (router.canDismiss() ? router.dismissAll() : router.replace('/'));
+  const justFinished = finished === '1';
+  const close = () => {
+    if (!justFinished) router.back();
+    else if (router.canDismiss()) router.dismissAll();
+    else router.replace('/');
+  };
 
   const name = workout?.name ?? '';
   const minutes = workout ? minutesBetween(workout.startedAt, workout.finishedAt) : 0;
@@ -50,7 +56,11 @@ export function WorkoutSummaryScreen() {
   const secondaryIds = secondary.map((s) => s.muscle);
 
   return (
-    <Screen header={<ScreenHeader icon="close" onBack={close} title={name} />}>
+    <Screen
+      header={
+        <ScreenHeader icon={justFinished ? 'close' : 'chevron-left'} onBack={close} title={name} />
+      }
+    >
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 130 + insets.bottom }}

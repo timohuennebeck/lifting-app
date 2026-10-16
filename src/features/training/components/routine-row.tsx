@@ -4,6 +4,7 @@ import { ActivityIndicator, View } from 'react-native';
 
 import { type MuscleShare, muscleShares } from '@/shared/data/muscles';
 import type { ExerciseItem, RoutineSummary } from '@/shared/data/routines';
+import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { MuscleCircle } from '@/shared/ui/muscle-map';
@@ -92,11 +93,14 @@ export interface RoutineRowProps {
   starting?: boolean;
   /** Neon line under the name, e.g. the muscle it works most: "Brust 40 %". */
   focus?: string;
-  /** Done this plan week: the neon line says so instead. */
+  /** Done this plan week: dimmed, with a neon check for the play button (which still starts it). */
   done?: boolean;
 }
 
-/** Routine card: its top muscles as circles, the name and a line under it, and a play button. */
+/**
+ * Routine card: its top muscles as circles, the name and a line under it, and a play button; done
+ * this plan week, dimmed with a check.
+ */
 function RoutineRow({
   name,
   items,
@@ -124,26 +128,21 @@ function RoutineRow({
       onPress={onPress}
       className="flex-row items-center gap-3.5 rounded-[18px] bg-surface py-3.5 pr-3 pl-2.5"
     >
-      <MuscleStack shares={shares} />
-      <View className="min-w-0 flex-1 gap-0.5">
-        <Text variant="bodyStrong" numberOfLines={1}>
-          {name}
-        </Text>
-        {done ? (
-          <View className="flex-row items-center gap-1.25">
-            <Icon name="check" size={11} color={colors.accent} />
-            <Text variant="caption" tone="accent" numberOfLines={1} className="font-inter-semibold">
-              {t('list.done')}
-            </Text>
-          </View>
-        ) : focus ? (
-          <Text variant="caption" tone="accent" numberOfLines={1} className="font-inter-semibold">
-            {focus}
+      <View className={cn('min-w-0 flex-1 flex-row items-center gap-3.5', done && 'opacity-45')}>
+        <MuscleStack shares={shares} />
+        <View className="min-w-0 flex-1 gap-0.5">
+          <Text variant="bodyStrong" numberOfLines={1}>
+            {name}
           </Text>
-        ) : null}
-        <Text variant="caption" tone="subtle" numberOfLines={1} className="font-inter-medium">
-          {meta}
-        </Text>
+          {focus ? (
+            <Text variant="caption" tone="accent" numberOfLines={1} className="font-inter-semibold">
+              {focus}
+            </Text>
+          ) : null}
+          <Text variant="caption" tone="subtle" numberOfLines={1} className="font-inter-medium">
+            {meta}
+          </Text>
+        </View>
       </View>
       <PressableScale
         haptic="press"
@@ -155,6 +154,8 @@ function RoutineRow({
       >
         {starting ? (
           <ActivityIndicator size="small" color={colors.fg} />
+        ) : done ? (
+          <Icon name="check" size={15} color={colors.accent} />
         ) : (
           <Icon name="play" size={12} />
         )}
