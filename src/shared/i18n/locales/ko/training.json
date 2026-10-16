@@ -75,7 +75,7 @@
     "copy": "복사",
     "copyToPlan": "{{plan}}에 추가",
     "copyToPlanHint": "루틴을 플랜에 복사해요. 원본은 여기에 남아요.",
-    "copyToLibrary": "내 루틴으로 복사",
+    "copyToLibrary": "단일 루틴으로 복사",
     "copyToLibraryHint": "플랜 밖에 사본을 만들어요. 원본은 플랜에 남아요."
   },
   "sets": {

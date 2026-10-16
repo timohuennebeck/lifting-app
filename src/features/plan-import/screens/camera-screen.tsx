@@ -173,9 +173,9 @@ export function CameraScreen() {
     setPending((n) => n - 1);
   }
 
-  // "Done" waits for shots that are still being saved.
+  // "Done" waits for shots that are still being saved, unless the camera was closed meanwhile.
   useEffect(() => {
-    if (finishing && pending === 0) router.dismissTo(step('/import/review'));
+    if (finishing && pending === 0 && !closed.current) router.dismissTo(step('/import/review'));
   }, [finishing, pending, step]);
 
   function close() {

@@ -138,7 +138,8 @@ export function LevelScreen() {
                   tone="subtle"
                   className="min-w-0 flex-1 text-[13px] leading-4.5"
                 >
-                  {t('level.missing', {
+                  {/* Without any main muscle levelled there is no average to gain from. */}
+                  {t(gain > 0 ? 'level.missingGain' : 'level.missing', {
                     muscles: missingNames.join(', ') + (moreMissing ? ` +${moreMissing}` : ''),
                     gain,
                   })}

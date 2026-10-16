@@ -1,15 +1,12 @@
 import { router } from 'expo-router';
-import { type ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { isProgressCheckAge } from '@/features/progress-check/lib/eligibility';
+import { LegalLink } from '@/features/legal/components/legal-link';
 import { acceptDocuments } from '@/features/legal/data/legal-acceptances';
-import {
-  fetchCurrentDocuments,
-  type LegalDocument,
-  type LegalKind,
-} from '@/features/legal/data/legal-documents';
+import { fetchCurrentDocuments, type LegalDocument } from '@/features/legal/data/legal-documents';
 import { START_STEPS } from '@/features/onboarding/lib/flow';
 import {
   isOnboardedAfterSync,
@@ -37,23 +34,6 @@ import { signInWith, type SocialProvider } from '../lib/social-sign-in';
 
 type ErrorKey = AuthErrorKey | 'confirmEmail';
 
-/** A highlighted word in the terms line that opens the document. */
-function LegalLink({ kind, children }: { kind: LegalKind; children?: ReactNode }) {
-  return (
-    <Text
-      variant="caption"
-      accessibilityRole="link"
-      onPress={() => {
-        haptics.tap();
-        router.push(`/legal/${kind}`);
-      }}
-      className="text-xs leading-4.25"
-    >
-      {children}
-    </Text>
-  );
-}
-
 export function CreateAccountScreen() {
   const { t } = useTranslation('auth');
   const { t: tc } = useTranslation();
@@ -77,8 +57,10 @@ export function CreateAccountScreen() {
   /** Saves the onboarding answers to the new account with the accepted documents, then goes on. */
   const finish = async (userId: string, documents: LegalDocument[]) => {
     // An account that is already set up (e.g. signed in with Google or Apple) keeps its own
-    // profile and plan.
+    // profile and plan. A retry after a failed save lands here too, so the acceptance is
+    // recorded here as well (only missing rows are added; the profile row exists by now).
     if (await isOnboardedAfterSync(userId)) {
+      await acceptDocuments(userId, documents);
       haptics.success();
       useOnboardingStore.getState().complete();
       return;

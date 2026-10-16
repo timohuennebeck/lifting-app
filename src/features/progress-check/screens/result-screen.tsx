@@ -5,6 +5,7 @@ import { Alert, ScrollView, Share, useWindowDimensions, View } from 'react-nativ
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useProfile } from '@/shared/data/profile';
+import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { formatDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { useUserId } from '@/shared/stores/session-store';
@@ -66,6 +67,12 @@ export function ResultScreen() {
   const saved = checks && index >= 0 ? checks[index] : null;
   const draft = !saved && draftId === id ? draftResult : null;
   const check = saved ?? (draft && { ...draft, createdAt: new Date().toISOString() });
+  // Android back closes like the header's X, so an unsaved result isn't dropped unasked.
+  useHardwareBack(() => {
+    if (justSaved) leaveSaved();
+    else if (draft) closeDraft();
+    else exitProgressCheck();
+  });
 
   if (!checks || !check) {
     return (

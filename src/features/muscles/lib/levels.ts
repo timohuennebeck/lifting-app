@@ -1,5 +1,6 @@
 import type { Measure } from '@/shared/data/exercises';
 import type { Sex } from '@/shared/data/profile';
+import { toIsoDate } from '@/shared/lib/date';
 import type { MuscleId } from '@/shared/ui/muscle-map';
 
 // Muscle levels 1–100 from the best lifts. Every catalog exercise has an intermediate standard
@@ -208,7 +209,7 @@ export function muscleLevels({ sets, exercises, bodyWeightOn, sex, now }: LevelI
         lastAt.set(muscle, set.startedAt);
       }
     }
-    const bodyWeight = bodyWeightOn(set.startedAt.slice(0, 10));
+    const bodyWeight = bodyWeightOn(toIsoDate(new Date(time)));
     const share = shareOf(set, exercise, bodyWeight, factors[regionOf(exercise)]);
     if (share === null || share > MAX_SHARE) continue;
     const faded = share * fade(ageDays);

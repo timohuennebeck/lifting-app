@@ -26,10 +26,13 @@ export function ExerciseIndexRow({ item, trailing, dimmed, ...pressable }: Exerc
   const { t } = useTranslation('exercises');
   return (
     <View>
+      {/* A fixed height, also with larger system text, keeps the index's offsets right. */}
       {item.heading ? (
-        <Text variant="overline" tone="subtle" className="pt-4.5 pb-1.5">
-          {item.heading}
-        </Text>
+        <View className="h-10.25 justify-end pb-1.5">
+          <Text variant="overline" tone="subtle">
+            {item.heading}
+          </Text>
+        </View>
       ) : null}
       <PressableScale
         haptic="select"

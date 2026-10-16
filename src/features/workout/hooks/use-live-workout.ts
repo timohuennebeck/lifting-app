@@ -124,7 +124,9 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     store.markLogged(set.id, values);
     store.clearDraft(set.id);
     store.closeKeypad();
-    const workoutDone = allSets.every((s) => s.completedAt || s.id === set.id);
+    // Sets logged a moment ago may not be in the database yet: they count as done too.
+    const { logged } = useWorkoutSessionStore.getState();
+    const workoutDone = allSets.every((s) => s.completedAt || s.id in logged);
     if (!editing && !workoutDone) {
       store.startRest(restSecondsFor(exercise.exerciseId, exercise.restSeconds));
     }

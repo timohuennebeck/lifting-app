@@ -5,6 +5,7 @@ import { Alert, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
+import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { singleFlight } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
@@ -21,6 +22,7 @@ import {
   AssessmentError,
   assessProgress,
   type ProgressCheckResult,
+  removeUploadedPhotos,
 } from '../lib/progress-check-service';
 import { GROUPS, POSES } from '../lib/poses';
 import { useCloseCheck } from '../hooks/use-close-check';
@@ -42,6 +44,8 @@ const MAX_PHOTO = 124;
 export function AssessmentScreen() {
   const { t } = useTranslation(['progressCheck', 'common']);
   const close = useCloseCheck();
+  // Android back asks before discarding, like the X.
+  useHardwareBack(close);
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
   const { height } = useWindowDimensions();
@@ -79,6 +83,12 @@ export function AssessmentScreen() {
         const reason = error instanceof AssessmentError ? error.reason : 'failed';
         Alert.alert(t(`assessment.errors.${reason}`));
         router.back();
+      })
+      // Discarded while the photos were still uploading: remove what arrived after the discard.
+      .finally(() => {
+        if (useProgressCheckStore.getState().checkId !== checkId) {
+          removeUploadedPhotos(checkId, userId);
+        }
       });
     return () => {
       active = false;

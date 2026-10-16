@@ -75,7 +75,7 @@
     "copy": "Copy",
     "copyToPlan": "Add to {{plan}}",
     "copyToPlanHint": "Copies the workout into your plan; the original stays here.",
-    "copyToLibrary": "Copy to My workouts",
+    "copyToLibrary": "Copy to Single workouts",
     "copyToLibraryHint": "A copy outside the plan; the original stays in it."
   },
   "sets": {

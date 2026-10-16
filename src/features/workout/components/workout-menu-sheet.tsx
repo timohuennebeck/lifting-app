@@ -6,17 +6,18 @@ import { ChoiceSheet } from '@/shared/ui/choice-sheet';
 import { Icon } from '@/shared/ui/icon';
 import { deleteIcon } from '@/shared/ui/minus-glyph';
 
-import { useWorkoutActions } from '../hooks/use-workout-actions';
-
 type MenuOption = 'finish' | 'discard';
 
 export interface WorkoutMenuSheetProps {
   visible: boolean;
   onClose: () => void;
-  workoutId: string;
   name: string;
   doneSets: number;
   totalSets: number;
+  /** The workout screen's actions, so finishing runs once whichever button starts it. */
+  onFinish: () => void;
+  onDiscard: () => void;
+  finishing: boolean;
 }
 
 /**
@@ -26,13 +27,14 @@ export interface WorkoutMenuSheetProps {
 export function WorkoutMenuSheet({
   visible,
   onClose,
-  workoutId,
   name,
   doneSets,
   totalSets,
+  onFinish,
+  onDiscard,
+  finishing,
 }: WorkoutMenuSheetProps) {
   const { t } = useTranslation('workout');
-  const { finish, abandon, finishing } = useWorkoutActions(workoutId);
   const canFinish = doneSets > 0;
   const initial: MenuOption = canFinish ? 'finish' : 'discard';
   const [option, setOption] = useResetOnOpen(visible, initial);
@@ -46,9 +48,9 @@ export function WorkoutMenuSheet({
       value={option}
       onChange={setOption}
       onConfirm={(value) => {
-        if (value === 'finish') return void finish();
+        if (value === 'finish') return onFinish();
         onClose();
-        void abandon();
+        onDiscard();
       }}
       loading={finishing}
       note={option === 'finish' && !canFinish ? t('menu.finishHint') : undefined}

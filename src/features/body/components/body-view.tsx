@@ -161,13 +161,15 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
 export function BodyView() {
   const { t } = useTranslation(['body', 'progressCheck']);
   const camera = useCameraAccess(openCamera);
-  const { profile } = useProfile();
-  const { data: checks = [] } = useProgressChecks();
+  const { profile, isLoading: profileLoading } = useProfile();
+  const { data: checks = [], isLoading: checksLoading } = useProgressChecks();
   const { data: photos = {} } = useProgressCheckPhotos();
   const [pose, setPose] = useState<Pose>('front');
   const allowed = isProgressCheckAge(profile?.birthDate);
 
   const saved = useCompareStore();
+  // Nothing until the local data is read, so the empty or 18+ state never flashes first.
+  if (profileLoading || checksLoading) return null;
   const first = checks[0];
   const latest = checks[checks.length - 1];
   // With two checks or more, two are compared side by side: first and latest, or the user's pick.

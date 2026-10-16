@@ -318,10 +318,12 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
       <WorkoutMenuSheet
         visible={menuOpen}
         onClose={() => setMenuOpen(false)}
-        workoutId={workout.id}
         name={workout.name}
         doneSets={live.doneSets}
         totalSets={live.totalSets}
+        onFinish={() => void finish()}
+        onDiscard={() => void abandon()}
+        finishing={finishing}
       />
     </View>
   );

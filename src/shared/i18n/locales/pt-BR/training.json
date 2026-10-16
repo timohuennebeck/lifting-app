@@ -75,7 +75,7 @@
     "copy": "Copiar",
     "copyToPlan": "Adicionar a {{plan}}",
     "copyToPlanHint": "Copia o treino para o seu plano; o original fica aqui.",
-    "copyToLibrary": "Copiar para Meus treinos",
+    "copyToLibrary": "Copiar para Treinos avulsos",
     "copyToLibraryHint": "Uma cópia fora do plano; o original fica no plano."
   },
   "sets": {

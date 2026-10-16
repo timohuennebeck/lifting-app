@@ -49,14 +49,17 @@ export function WeightHistoryScreen() {
   // Ticks every minute so "today" turns over at midnight.
   const today = toIsoDate(new Date(useNow(MINUTE_MS)));
   const [range, setRange] = useState<ChartRange>(30);
-  const [selected, setSelected] = useState<number | null>(null);
+  // The picked weigh-in by its day, so deleting another one or a new day doesn't move it.
+  const [pickedDate, setPickedDate] = useState<string | null>(null);
 
   const from = daysBefore(today, range - 1);
   const visible = useMemo(
     () => points.filter((p) => p.date >= from && p.date <= today),
     [points, from, today],
   );
-  // A picked weigh-in that was deleted falls back to the latest.
+  const pickedIndex = visible.findIndex((p) => p.date === pickedDate);
+  // A picked weigh-in that was deleted, or left the range, falls back to the latest.
+  const selected = pickedIndex >= 0 ? pickedIndex : null;
   const shown = (selected === null ? undefined : visible[selected]) ?? visible.at(-1);
   const startTrend = trendOn(points, from) ?? visible[0]?.trendKg;
   const changes = useMemo(
@@ -67,7 +70,7 @@ export function WeightHistoryScreen() {
 
   const changeRange = (next: ChartRange) => {
     setRange(next);
-    setSelected(null);
+    setPickedDate(null);
   };
 
   const header = (
@@ -117,7 +120,7 @@ export function WeightHistoryScreen() {
           to={today}
           units={units}
           selected={selected}
-          onSelect={setSelected}
+          onSelect={(index) => setPickedDate(visible[index]?.date ?? null)}
         />
       </View>
       <RangeTabs ranges={CHART_RANGES} value={range} onChange={changeRange} className="mx-4 mt-5" />

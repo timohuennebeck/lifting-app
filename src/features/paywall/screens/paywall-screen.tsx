@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { LegalLinks } from '@/features/legal/components/legal-link';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -159,6 +160,7 @@ export function PaywallScreen() {
               )
             : ' '}
         </Text>
+        <LegalLinks />
       </View>
     </View>
   );

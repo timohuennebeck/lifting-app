@@ -81,15 +81,17 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
   const [date, setDate] = useState(initialDate);
   const [saving, setSaving] = useState(false);
 
-  // The ruler works in the display unit, on its steps, around where it started.
-  const [range] = useState(() => {
-    const start = Math.round(toUnits(initialKg, units));
+  // The ruler works in the display unit, on its steps, around a weight: where it started, or the
+  // entry of a day picked in the calendar.
+  const rangeAround = (weightKg: number) => {
+    const start = Math.round(toUnits(weightKg, units));
     const { min, max } = BODY_WEIGHT_LIMITS_KG;
     return {
       min: Math.max(Math.ceil(toUnits(min, units)), start - scale.span),
       max: Math.min(Math.floor(toUnits(max, units)), start + scale.span),
     };
-  });
+  };
+  const [range, setRange] = useState(() => rangeAround(initialKg));
   const [value, setValue] = useState(() =>
     clamp(snapTo(toUnits(initialKg, units), scale.step), range.min, range.max),
   );
@@ -105,7 +107,10 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
   const choose = (next: string) => {
     const picked = entries.find((e) => e.date === next);
     setDate(next);
-    if (picked) set(toUnits(picked.weightKg, units));
+    if (!picked) return;
+    const around = rangeAround(picked.weightKg);
+    setRange(around);
+    setValue(clamp(snapTo(toUnits(picked.weightKg, units), scale.step), around.min, around.max));
   };
   const unit = t(`common:units.${units === 'imperial' ? 'lb' : 'kg'}`);
   const today = toIsoDate(new Date());
@@ -200,6 +205,8 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
         </Text>
 
         <RulerPicker
+          // A new range starts the scale over at its value.
+          key={`${range.min}:${range.max}`}
           value={value}
           onChange={set}
           min={range.min}

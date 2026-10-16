@@ -28,10 +28,17 @@ export function keepLocalCopy(path: string, sourceUri: string) {
   new File(sourceUri).copySync(localAttachment(path), { overwrite: true });
 }
 
-/** Removes every local screenshot copy, e.g. when the account signs out. */
+/**
+ * Removes every local screenshot copy, e.g. when the account signs out. Never throws, so the
+ * rest of the sign-out cleanup still runs.
+ */
 export function clearLocalAttachments() {
-  const root = new Directory(Paths.document, ATTACHMENT_BUCKET);
-  if (root.exists) root.delete();
+  try {
+    const root = new Directory(Paths.document, ATTACHMENT_BUCKET);
+    if (root.exists) root.delete();
+  } catch (error) {
+    console.warn('Could not delete local screenshots', error);
+  }
 }
 
 /** Uploads the local copy; retrying the same path overwrites a partial upload. */

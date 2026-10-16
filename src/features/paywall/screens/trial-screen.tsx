@@ -2,6 +2,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { LegalLinks } from '@/features/legal/components/legal-link';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
@@ -46,6 +47,7 @@ export function TrialScreen() {
           <Text variant="caption" tone="subtle" className="text-center font-inter text-xs">
             {price ? t(`trial.fine.${period}`, { price }) : ' '}
           </Text>
+          <LegalLinks />
         </View>
       }
     >

@@ -6,7 +6,7 @@ import { indexLetters } from '../lib/index-letters';
 
 import type { ExerciseOption } from './use-exercise-search';
 
-/** Heights of an ExerciseIndexRow (`h-19.5`) and of its heading (overline, `pt-4.5 pb-1.5`). */
+/** Heights of an ExerciseIndexRow (`h-19.5`) and of its heading (`h-10.25`). */
 const ROW_HEIGHT = 78;
 const HEADING_HEIGHT = 41;
 

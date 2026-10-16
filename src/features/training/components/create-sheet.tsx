@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useResetOnOpen } from '@/shared/hooks/use-reset-on-open';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
 import { Icon } from '@/shared/ui/icon';
 
@@ -29,7 +29,7 @@ export function CreateSheet({
   onStartWorkout,
 }: CreateSheetProps) {
   const { t } = useTranslation('training');
-  const [kind, setKind] = useState<CreateKind>('workout');
+  const [kind, setKind] = useResetOnOpen<CreateKind>(visible, 'workout');
 
   return (
     <ChoiceSheet

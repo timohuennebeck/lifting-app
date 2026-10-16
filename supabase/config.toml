@@ -245,15 +245,15 @@ otp_expiry = 3600
 
 # Account emails in the user's app language (user_metadata.language, set by the app).
 [auth.email.template.confirmation]
-subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Bestätige deine E-Mail für Traqa{{ else if eq $l "pt-PT" }}Confirma o teu email no Traqa{{ else if eq $l "pt-BR" }}Confirme seu e-mail no Traqa{{ else }}Confirm your email for Traqa{{ end }}'
+subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Bestätige deine E-Mail für Traqa{{ else if eq $l "pt-PT" }}Confirma o teu email no Traqa{{ else if eq $l "pt-BR" }}Confirme seu e-mail no Traqa{{ else if eq $l "ko" }}Traqa 이메일을 인증해 주세요{{ else }}Confirm your email for Traqa{{ end }}'
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.email.template.recovery]
-subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Passwort für Traqa zurücksetzen{{ else if eq $l "pt-PT" }}Repor a palavra-passe do Traqa{{ else if eq $l "pt-BR" }}Redefinir a senha do Traqa{{ else }}Reset your Traqa password{{ end }}'
+subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Passwort für Traqa zurücksetzen{{ else if eq $l "pt-PT" }}Repor a palavra-passe do Traqa{{ else if eq $l "pt-BR" }}Redefinir a senha do Traqa{{ else if eq $l "ko" }}Traqa 비밀번호 재설정{{ else }}Reset your Traqa password{{ end }}'
 content_path = "./supabase/templates/recovery.html"
 
 [auth.email.template.email_change]
-subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Bestätige deine neue E-Mail-Adresse{{ else if eq $l "pt-PT" }}Confirma o teu novo email{{ else if eq $l "pt-BR" }}Confirme seu novo e-mail{{ else }}Confirm your new email address{{ end }}'
+subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Bestätige deine neue E-Mail-Adresse{{ else if eq $l "pt-PT" }}Confirma o teu novo email{{ else if eq $l "pt-BR" }}Confirme seu novo e-mail{{ else if eq $l "ko" }}새 이메일 주소를 인증해 주세요{{ else }}Confirm your new email address{{ end }}'
 content_path = "./supabase/templates/email_change.html"
 
 # Uncomment to customize email template
