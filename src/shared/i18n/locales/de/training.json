@@ -1,20 +1,17 @@
 {
   "home": {
     "single": "Einzeltrainings",
-    "showAll": "Alle anzeigen",
-    "otherPlans": "Weitere Pläne"
+    "showAll": "Alle anzeigen"
   },
   "list": {
     "start": "{{name}} starten",
     "more": "Optionen für {{name}}",
     "minutes": "{{count}} Min",
-    "recommended": "Coach empfiehlt",
     "addRoutine": "Training hinzufügen"
   },
   "myPlan": {
     "rest": "Weitere Trainings",
-    "doneOn": "Erledigt · {{day}}",
-    "openPlan": "Plan öffnen"
+    "doneOn": "Erledigt · {{day}}"
   },
   "card": {
     "perWeek_one": "{{count}} Training pro Woche",
@@ -30,33 +27,6 @@
     "recent": "Zuletzt trainiert",
     "lastDone": "Zuletzt {{date}}",
     "all": "Alle"
-  },
-  "plan": {
-    "routineCount_one": "{{count}} Training",
-    "routineCount_other": "{{count}} Trainings",
-    "perWeekShort": "{{count}}× pro Woche",
-    "week": "Woche {{week}}",
-    "blockWeek": "Woche {{week}} von {{weeks}}",
-    "deload": "Deload-Woche",
-    "active": "Aktiver Plan",
-    "activate": "Diesen Plan nutzen",
-    "perWeek": "Einheiten pro Woche",
-    "perWeekHint": "So viele Trainings ergeben eine Planwoche, egal an welchen Tagen.",
-    "blocks": "Blöcke",
-    "blocksHint": "Jede Woche 1 Wiederholung weniger in Reserve, die letzte Woche ist ein Deload.",
-    "blockOff": "Aus",
-    "blockOption": "{{build}} + 1",
-    "deloadNow": "Deload jetzt",
-    "restartBlock": "Block neu starten",
-    "routines": "Trainings",
-    "more": "Optionen für {{name}}",
-    "rename": "Umbenennen",
-    "renameHint": "Neuen Namen für {{name}} vergeben",
-    "renameTitle": "Plan umbenennen",
-    "namePlaceholder": "Name des Plans",
-    "delete": "Plan löschen",
-    "deleteHint": "Löscht {{name}} mit seinen Trainings. Geloggte Trainings bleiben erhalten.",
-    "notFound": "Diesen Plan gibt es nicht mehr."
   },
   "create": {
     "workout": "Leeres Training",
@@ -134,5 +104,10 @@
   "empty": {
     "routinesTitle": "Keine Trainings vorhanden",
     "routinesBody": "Stell dir aus Übungen ein Training zusammen. Danach findest du es hier und kannst es in Pläne einbauen."
+  },
+  "plan": {
+    "week": "Woche {{week}}",
+    "blockWeek": "Woche {{week}} von {{weeks}}",
+    "deload": "Deload-Woche"
   }
 }

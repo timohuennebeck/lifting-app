@@ -175,7 +175,7 @@ export function blockWeekOf(
   return ((offset + blockWeeks) % blockWeeks) + 1;
 }
 
-export const isDeloadWeek = (blockWeek: number | null, plan: Pick<PlanSummary, 'blockWeeks'>) =>
+const isDeloadWeek = (blockWeek: number | null, plan: Pick<PlanSummary, 'blockWeeks'>) =>
   blockWeek !== null && blockWeek === plan.blockWeeks;
 
 /** How many of an exercise's sets a deload week keeps: the first half, rounded up. */

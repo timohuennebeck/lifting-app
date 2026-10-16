@@ -2,16 +2,8 @@
   "emptyWorkoutName": "Treino",
   "resumeActive": "Retomar {{name}}",
   "status": {
-    "doneToday": "Feito hoje",
-    "done": "Feito · {{date}}",
     "next": "A seguir"
   },
-  "stats": {
-    "minutes": "{{count}} min",
-    "prs_one": "{{count}} recorde",
-    "prs_other": "{{count}} recordes"
-  },
-  "overview": "Resumo",
   "resume": "Retomar",
   "markDone": "Marcar como feito",
   "deloadHint": "Semana de deload: metade das séries e um pouco mais leve, para você se recuperar.",

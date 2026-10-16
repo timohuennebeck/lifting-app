@@ -4,13 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
-import { PlanOverviewCard } from '@/features/training/components/plan-overview-card';
 import { RoutineRow, useRoutineMeta } from '@/features/training/components/routine-row';
 import { SectionTitle } from '@/features/training/components/section-title';
 import { useStartRoutine } from '@/features/training/hooks/use-start-routine';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useCurrentPlan, usePlanStatus } from '@/shared/data/plans';
-import { useUnits } from '@/shared/data/profile';
 import {
   type DoneDates,
   type RoutineSummary,
@@ -28,7 +26,6 @@ import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-import { DoneCard } from '../components/done-card';
 import { PlanCard } from '../components/plan-card';
 import { PlanPrompt } from '../components/plan-prompt';
 import { WeekStrip } from '../components/week-strip';
@@ -109,12 +106,16 @@ export function TodayScreen() {
   const today = new Date(dayKey);
   const [pick, setPick] = useState<DayPick | null>(null);
   const selected = pick?.day === dayKey ? pick.index : mondayIndex(today);
-  const select = (index: number) => setPick({ day: dayKey, index });
-  const units = useUnits();
   const { data: active } = useActiveWorkout();
   const { days, isLoading: weekLoading } = useWeekWorkouts(today);
   const day = days[selected];
-  const { plan, plans, profile, isLoading: planLoading } = useCurrentPlan();
+  // A day with a finished workout opens its summary; another picks it, for marking done.
+  const select = (index: number) => {
+    const done = days[index].workout;
+    if (done) router.push(`/workout/summary/${done.id}`);
+    else setPick({ day: dayKey, index });
+  };
+  const { plan, profile, isLoading: planLoading } = useCurrentPlan();
   const status = usePlanStatus(plan);
   const { data: routines = [], isLoading: routinesLoading } = useRoutines();
   const { data: doneThisWeek = {}, isLoading: doneLoading } = useWeekDone(plan?.id, status?.week);
@@ -128,7 +129,6 @@ export function TodayScreen() {
   const rest = planRoutines.filter((r) => r !== next);
   const library = routines.filter((r) => r.planId === null);
   const singles = recentFirst(library, lastDone, i18n.language).slice(0, RECENT);
-  const otherPlans = plans.filter((p) => p.id !== plan?.id);
   // Nothing shows until the day, the plan and what was done are known, so no card flashes in
   // the wrong state or moves down once the rows above it arrive.
   const loading =
@@ -165,7 +165,7 @@ export function TodayScreen() {
     <PlanPrompt
       title={t('emptyPlan.title')}
       body={t('emptyPlan.body')}
-      onPress={() => router.push(`/plan/${plan.id}`)}
+      onPress={() => router.push({ pathname: '/routine/new', params: { planId: plan.id } })}
     />
   ) : null;
 
@@ -180,11 +180,6 @@ export function TodayScreen() {
     >
       {loading ? null : (
         <>
-          {day.workout ? (
-            <View className="mb-3">
-              <DoneCard workout={day.workout} date={day.date} today={today} units={units} />
-            </View>
-          ) : null}
           {followed ? (
             <>
               <PlanCard
@@ -242,29 +237,8 @@ export function TodayScreen() {
               />
             </>
           ) : null}
-          {otherPlans.length ? (
-            <>
-              <SectionTitle>{t('training:home.otherPlans')}</SectionTitle>
-              <View className="gap-2.5 px-4">
-                {otherPlans.map((p) => (
-                  <PlanOverviewCard
-                    key={p.id}
-                    plan={p}
-                    routines={routines.filter((r) => r.planId === p.id)}
-                  />
-                ))}
-              </View>
-            </>
-          ) : null}
           {prompt ? (
-            <View
-              className={cn(
-                'flex-1',
-                (!!day.workout || !!singles.length || !!otherPlans.length) && 'pt-8',
-              )}
-            >
-              {prompt}
-            </View>
+            <View className={cn('flex-1', singles.length > 0 && 'pt-8')}>{prompt}</View>
           ) : null}
           {/* The list ends 40pt above the tab bar inset; TabScreen adds 24. */}
           <View className="h-4" />

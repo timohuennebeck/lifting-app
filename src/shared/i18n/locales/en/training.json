@@ -1,20 +1,17 @@
 {
   "home": {
     "single": "Single workouts",
-    "showAll": "Show all",
-    "otherPlans": "Other plans"
+    "showAll": "Show all"
   },
   "list": {
     "start": "Start {{name}}",
     "more": "Options for {{name}}",
     "minutes": "{{count}} min",
-    "recommended": "Coach recommends",
     "addRoutine": "Add workout"
   },
   "myPlan": {
     "rest": "More workouts",
-    "doneOn": "Done · {{day}}",
-    "openPlan": "Open plan"
+    "doneOn": "Done · {{day}}"
   },
   "card": {
     "perWeek_one": "{{count}} workout a week",
@@ -30,33 +27,6 @@
     "recent": "Recently done",
     "lastDone": "Last {{date}}",
     "all": "All"
-  },
-  "plan": {
-    "routineCount_one": "{{count}} workout",
-    "routineCount_other": "{{count}} workouts",
-    "perWeekShort": "{{count}}× a week",
-    "week": "Week {{week}}",
-    "blockWeek": "Week {{week}} of {{weeks}}",
-    "deload": "Deload week",
-    "active": "Active plan",
-    "activate": "Use this plan",
-    "perWeek": "Sessions per week",
-    "perWeekHint": "This many workouts make a plan week, on whichever days.",
-    "blocks": "Blocks",
-    "blocksHint": "One rep less in reserve each week; the last week is a deload.",
-    "blockOff": "Off",
-    "blockOption": "{{build}} + 1",
-    "deloadNow": "Deload now",
-    "restartBlock": "Restart block",
-    "routines": "Workouts",
-    "more": "Options for {{name}}",
-    "rename": "Rename",
-    "renameHint": "Give {{name}} a new name",
-    "renameTitle": "Rename plan",
-    "namePlaceholder": "Plan name",
-    "delete": "Delete plan",
-    "deleteHint": "Deletes {{name}} with its workouts. Logged workouts stay.",
-    "notFound": "This plan no longer exists."
   },
   "create": {
     "workout": "Empty workout",
@@ -134,5 +104,10 @@
   "empty": {
     "routinesTitle": "No workouts yet",
     "routinesBody": "Put a workout together from exercises. You’ll find it here and can add it to plans."
+  },
+  "plan": {
+    "week": "Week {{week}}",
+    "blockWeek": "Week {{week}} of {{weeks}}",
+    "deload": "Deload week"
   }
 }

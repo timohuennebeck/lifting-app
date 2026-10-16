@@ -13,10 +13,8 @@ import { cn } from '@/shared/lib/cn';
 import { isSameDay, startOfDay } from '@/shared/lib/date';
 import { formatWeekdayDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
-import { colors } from '@/shared/lib/theme';
 import { requireUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
-import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
@@ -42,7 +40,7 @@ export interface PlanCardProps {
 
 /**
  * The plan Training follows: its name, goal and block, where it stands, and the routine that
- * comes next with start and mark done. The top opens the plan, the routine its page.
+ * comes next with start and mark done. The routine opens its page.
  */
 export function PlanCard({
   plan,
@@ -85,25 +83,14 @@ export function PlanCard({
 
   return (
     <View className="mx-4 gap-5 rounded-[24px] bg-surface p-5">
-      <PressableScale
-        haptic="tap"
-        activeScale={0.98}
-        accessibilityRole="button"
-        accessibilityLabel={`${plan.name}, ${goal}`}
-        accessibilityHint={t('training:myPlan.openPlan')}
-        onPress={() => router.push(`/plan/${plan.id}`)}
-        className="gap-5"
-      >
-        <View className="flex-row items-center gap-3">
-          <View className="min-w-0 flex-1 gap-1">
-            <Text variant="headline" numberOfLines={1} className="text-[22px] leading-7">
-              {plan.name}
-            </Text>
-            <Text variant="caption" tone="subtle" className="font-inter-medium">
-              {goal}
-            </Text>
-          </View>
-          <Icon name="chevron-right" size={7} color={colors.dim} />
+      <View className="gap-5">
+        <View className="gap-1">
+          <Text variant="headline" numberOfLines={1} className="text-[22px] leading-7">
+            {plan.name}
+          </Text>
+          <Text variant="caption" tone="subtle" className="font-inter-medium">
+            {goal}
+          </Text>
         </View>
         <PlanProgress plan={plan} status={status} />
         {status.deload ? (
@@ -111,7 +98,7 @@ export function PlanCard({
             {t('deloadHint')}
           </Text>
         ) : null}
-      </PressableScale>
+      </View>
 
       {next ? (
         <>
@@ -160,18 +147,10 @@ export function PlanCard({
           </View>
         </>
       ) : (
-        // Nothing to start yet: every routine still needs its exercises.
-        <View className="gap-3">
-          <Text variant="paragraph" tone="subtle">
-            {t('training:card.empty')}
-          </Text>
-          <Button
-            label={t('training:myPlan.openPlan')}
-            variant="secondary"
-            size="md"
-            onPress={() => router.push(`/plan/${plan.id}`)}
-          />
-        </View>
+        // Nothing to start yet: every routine still needs its exercises (they're listed below).
+        <Text variant="paragraph" tone="subtle">
+          {t('training:card.empty')}
+        </Text>
       )}
     </View>
   );

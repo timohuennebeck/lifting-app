@@ -2,16 +2,8 @@
   "emptyWorkoutName": "Workout",
   "resumeActive": "Resume {{name}}",
   "status": {
-    "doneToday": "Done today",
-    "done": "Done · {{date}}",
     "next": "Up next"
   },
-  "stats": {
-    "minutes": "{{count}} min",
-    "prs_one": "{{count}} PR",
-    "prs_other": "{{count}} PRs"
-  },
-  "overview": "Overview",
   "resume": "Resume",
   "markDone": "Mark as done",
   "deloadHint": "Deload week: half the sets and a bit lighter, so you recover.",

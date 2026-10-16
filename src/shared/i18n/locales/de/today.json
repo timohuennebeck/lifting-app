@@ -2,16 +2,8 @@
   "emptyWorkoutName": "Training",
   "resumeActive": "{{name}} fortsetzen",
   "status": {
-    "doneToday": "Heute erledigt",
-    "done": "Erledigt · {{date}}",
     "next": "Als Nächstes"
   },
-  "stats": {
-    "minutes": "{{count}} Min",
-    "prs_one": "{{count}} PR",
-    "prs_other": "{{count}} PRs"
-  },
-  "overview": "Übersicht",
   "resume": "Fortsetzen",
   "markDone": "Als erledigt markieren",
   "deloadHint": "Deload-Woche: halb so viele Sätze und etwas leichter, damit du dich erholst.",

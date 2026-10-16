@@ -32,7 +32,7 @@ async function routineOf(tx: Tx, routineExerciseId: string) {
 }
 
 /** Local SQLite views have no FK cascades, so children are removed explicitly. */
-export async function deleteRoutineTx(tx: Tx, routineId: string) {
+async function deleteRoutineTx(tx: Tx, routineId: string) {
   const exerciseIds = tx
     .select({ id: routineExercises.id })
     .from(routineExercises)

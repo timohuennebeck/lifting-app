@@ -1,20 +1,17 @@
 {
   "home": {
     "single": "Treinos avulsos",
-    "showAll": "Ver todos",
-    "otherPlans": "Outros planos"
+    "showAll": "Ver todos"
   },
   "list": {
     "start": "Iniciar {{name}}",
     "more": "Opções para {{name}}",
     "minutes": "{{count}} min",
-    "recommended": "O coach recomenda",
     "addRoutine": "Adicionar treino"
   },
   "myPlan": {
     "rest": "Mais treinos",
-    "doneOn": "Feito · {{day}}",
-    "openPlan": "Abrir plano"
+    "doneOn": "Feito · {{day}}"
   },
   "card": {
     "perWeek_one": "{{count}} treino por semana",
@@ -30,33 +27,6 @@
     "recent": "Feitos recentemente",
     "lastDone": "Último: {{date}}",
     "all": "Todos"
-  },
-  "plan": {
-    "routineCount_one": "{{count}} treino",
-    "routineCount_other": "{{count}} treinos",
-    "perWeekShort": "{{count}}× por semana",
-    "week": "Semana {{week}}",
-    "blockWeek": "Semana {{week}} de {{weeks}}",
-    "deload": "Semana de deload",
-    "active": "Plano ativo",
-    "activate": "Usar este plano",
-    "perWeek": "Sessões por semana",
-    "perWeekHint": "Essa quantidade de treinos forma uma semana do plano, nos dias que você quiser.",
-    "blocks": "Blocos",
-    "blocksHint": "A cada semana 1 repetição a menos em reserva; a última semana é de deload.",
-    "blockOff": "Não",
-    "blockOption": "{{build}} + 1",
-    "deloadNow": "Deload agora",
-    "restartBlock": "Reiniciar bloco",
-    "routines": "Treinos",
-    "more": "Opções para {{name}}",
-    "rename": "Renomear",
-    "renameHint": "Dê um novo nome para {{name}}",
-    "renameTitle": "Renomear plano",
-    "namePlaceholder": "Nome do plano",
-    "delete": "Excluir plano",
-    "deleteHint": "Exclui {{name}} com seus treinos. Os treinos registrados ficam.",
-    "notFound": "Este plano não existe mais."
   },
   "create": {
     "workout": "Treino vazio",
@@ -134,5 +104,10 @@
   "empty": {
     "routinesTitle": "Ainda sem treinos",
     "routinesBody": "Monte um treino a partir de exercícios. Depois você encontra ele aqui e pode adicioná-lo a planos."
+  },
+  "plan": {
+    "week": "Semana {{week}}",
+    "blockWeek": "Semana {{week}} de {{weeks}}",
+    "deload": "Semana de deload"
   }
 }
