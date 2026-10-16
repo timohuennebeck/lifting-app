@@ -157,7 +157,7 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
   );
 }
 
-/** Progress tab, "Körper": the body score, before/after photos and the check history. */
+/** Körper tab: the body score, before/after photos and the check history. */
 export function BodyView() {
   const { t } = useTranslation(['body', 'progressCheck']);
   const camera = useCameraAccess(openCamera);

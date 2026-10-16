@@ -50,7 +50,7 @@ function SectionLabel({ label, first }: SectionLabelProps) {
   );
 }
 
-/** Progress tab, "Muskeln": sets per muscle over 7, 30 or 90 days on body maps and tiles. */
+/** Level tab: sets per muscle over 7, 30 or 90 days on body maps and tiles. */
 export function MusclesView() {
   const { t } = useTranslation('muscles');
   const [range, setRange] = useState<DayRange>(30);

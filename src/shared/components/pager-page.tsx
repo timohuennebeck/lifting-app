@@ -10,10 +10,7 @@ export interface PagerPageProps {
   scrollRef?: AnimatedRef<Animated.ScrollView>;
 }
 
-/**
- * Scrolling body of a tab, below TabScreen's header or as one page of the swipeable top tabs
- * (Fortschritt): keeps its last rows clear of the native tab bar.
- */
+/** Scrolling body of a tab, below TabScreen's header: keeps its last rows clear of the tab bar. */
 export function PagerPage({ children, scrollRef }: PagerPageProps) {
   const insets = useSafeAreaInsets();
   const [tabBarInset, setTabBarInset] = useState(insets.bottom);
