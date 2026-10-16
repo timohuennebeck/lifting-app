@@ -316,10 +316,12 @@ function reportStop(skipped) {
       'supabase/functions/.env and restart Supabase (npx supabase stop, then npx supabase ' +
       'start). To reset the count right away, run `delete from public.plan_requests where kind = ' +
       "'import';` in Supabase Studio."
-    : `read-plan didn't answer (${stopped.down})${notRun}. Locally, npx supabase start ` +
-      'serves the functions; stopping `npx supabase functions serve` takes them down until you ' +
-      'run npx supabase stop and npx supabase start again. A BOOT_ERROR means the function ' +
-      "didn't start: keep `npx supabase functions serve` running in another terminal to see why.";
+    : stopped.hint
+      ? `read-plan can't make plans (${stopped.down})${notRun}. ${stopped.hint}`
+      : `read-plan didn't answer (${stopped.down})${notRun}. Locally, npx supabase start ` +
+        'serves the functions; stopping `npx supabase functions serve` takes them down until you ' +
+        'run npx supabase stop and npx supabase start again. A BOOT_ERROR means the function ' +
+        "didn't start: keep `npx supabase functions serve` running in another terminal to see why.";
   console.error(`\n${text}`);
   return text;
 }

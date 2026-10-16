@@ -17,6 +17,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import {
+  failure,
   loadCatalog,
   pool,
   streamPlan,
@@ -282,9 +283,11 @@ function reportStop(skipped) {
       'supabase/functions/.env and restart Supabase (npx supabase stop, then npx supabase ' +
       'start). To reset the count right away, run `delete from public.plan_requests where kind = ' +
       "'generate';` in Supabase Studio."
-    : `generate-plan didn't answer (${stopped.down})${notRun}. Locally, npx supabase start ` +
-      'serves the functions. A BOOT_ERROR means the function did not start: keep ' +
-      '`npx supabase functions serve` running in another terminal to see why.';
+    : stopped.hint
+      ? `generate-plan can't make plans (${stopped.down})${notRun}. ${stopped.hint}`
+      : `generate-plan didn't answer (${stopped.down})${notRun}. Locally, npx supabase start ` +
+        'serves the functions. A BOOT_ERROR means the function did not start: keep ' +
+        '`npx supabase functions serve` running in another terminal to see why.';
   console.error(`\n${text}`);
   return text;
 }
@@ -326,7 +329,7 @@ const results = await pool(
       ? Object.fromEntries(names.map((n) => [n, CHECKS[n](profile, result.plan, catalog)]))
       : null;
     const passed = !!checks && Object.values(checks).every((c) => !c?.length);
-    console.log(`${passed ? 'PASS' : 'FAIL'}  ${label(job)}  ${timing(result)}`);
+    console.log(`${passed ? 'PASS' : 'FAIL'}  ${label(job)}  ${timing(result)}${failure(result)}`);
     return { ...job, result, checks, passed };
   },
   PARALLEL,

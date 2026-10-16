@@ -33,7 +33,13 @@ export async function streamPlan(url, key, body) {
     const answer = await response.json().catch(() => ({}));
     // The function answers { error }; the runtime and gateway { code, message } or { message }.
     const error = answer.error ?? [answer.code, answer.message].filter(Boolean).join(': ');
-    return { status: response.status, seconds: seconds(), plan: null, error };
+    return {
+      status: response.status,
+      seconds: seconds(),
+      plan: null,
+      error,
+      upstream: answer.upstream,
+    };
   }
   let plan = null;
   let first = null;
@@ -67,9 +73,31 @@ export async function streamPlan(url, key, body) {
 }
 
 /**
- * Sends requests with `call` (e.g. streamPlan) until the limit is reached or the function doesn't
- * answer (503 or no connection): from then on `send` resolves to null, so the rest is skipped
- * instead of scored as failures. `stopped()` says why: { limit: true } or { down }.
+ * Why no further request can succeed, or null: the limit, the functions not served (no
+ * connection; 502, 503 or 504 from the gateway), no OpenAI key, or OpenAI refusing the key or
+ * the quota (401, 403, 429), which would fail every plan alike.
+ */
+function stopReason({ status, error, upstream }) {
+  if (status === 429) return { limit: true };
+  if (status === 0 || status === 503 || status === 504 || (status === 502 && !upstream)) {
+    return { down: `${status || 'no connection'} ${error ?? ''}`.trim() };
+  }
+  if (error === 'not_configured') {
+    return { down: 'not_configured', hint: 'Set OPENAI_API_KEY in supabase/functions/.env.' };
+  }
+  if ([401, 403, 429].includes(upstream)) {
+    return {
+      down: `OpenAI answered ${upstream}`,
+      hint: 'Check the key, the billing and the rate limits at platform.openai.com.',
+    };
+  }
+  return null;
+}
+
+/**
+ * Sends requests with `call` (e.g. streamPlan) until one shows that the rest can't succeed (see
+ * stopReason): from then on `send` resolves to null, so the rest is skipped instead of scored as
+ * failures. `stopped()` says why: { limit: true } or { down, hint? }.
  */
 export function untilStopped(call) {
   let stopped = null;
@@ -78,14 +106,15 @@ export function untilStopped(call) {
     async send(body) {
       if (stopped) return null;
       const result = await call(body);
-      if (result.status === 429) stopped = { limit: true };
-      else if (result.status === 503 || result.status === 0) {
-        stopped = { down: `${result.status || 'no connection'} ${result.error}`.trim() };
-      } else return result;
-      return null;
+      stopped = stopReason(result);
+      return stopped ? null : result;
     },
   };
 }
+
+/** A failed request's status and error, e.g. "(500 failed)"; empty for a plan. */
+export const failure = ({ plan, status, error }) =>
+  plan ? '' : ` (${[status, error].filter(Boolean).join(' ')})`;
 
 /** When the first exercise arrived and when the plan was complete. */
 export const timing = ({ first, seconds }) =>
