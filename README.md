@@ -215,19 +215,22 @@ the app says so and the user goes back a step.
 - **Equipment:** the model only sees the exercises the user can do: "Komplettes Studio" has every
   item a gym has (`in_gym`), "Eigene Geräte" the ticked ones (`profiles.home_equipment`), "Keine
   Geräte" none, and an exercise fits when each of its `needs` is met (see Exercise catalog).
+- **Exercises left out:** cardio and timed holds (planks, wall sits). Core work (abs and obliques
+  at least half the stimulus) only for hypertrophy, or with abs or obliques as a focus: for
+  strength the main lifts already train the trunk.
 
 - **Checked server-side** (`planBuilder` in `generate.ts`), as the plan streams: one routine per
   workout a week, in the order they are done, no exercise twice in a routine, at most 10 a
-  routine, each within the session length (the app's estimate, plus 10 %), sets 1–6, reps 1–30 or
-  10–300 seconds for timed exercises, RIR 0–4 (the first week of a block), rest 30–300 s.
+  routine, each within the session length (the app's estimate, plus 10 %), sets 1–6, reps 1–30,
+  RIR 0–4 (the first week of a block), rest 30–300 s.
 - **Secrets and speed:** as the plan import; `PLAN_GENERATE_FAST=false` turns Fast mode off.
 - **Rules (server-side):** limited on their own, like imports: per network
   (`PLAN_GENERATE_IP_LIMIT`, default 10) and in total (`PLAN_GENERATE_DAILY_LIMIT`, default 1,000)
   per 24 hours, in `plan_requests` with `kind = 'generate'`.
-- **Testing:** `npm run plan:generate-eval` asks for 15 plans (goals, equipment, 1–7 workouts a
+- **Testing:** `npm run plan:generate-eval` asks for 16 plans (goals, equipment, 1–7 workouts a
   week, 20–120 minutes, every experience level, with and without focus; German, English,
   Portuguese) and checks each: routines, time, equipment, repeats, every major muscle group trained, push/pull
-  balance, focus volume, reps for the goal, limits for beginners. The checks are rules of thumb;
+  balance, focus volume, reps for the goal, core work, limits for beginners. The checks are rules of thumb;
   the report in `scripts/plan-generate-eval/out/` has every plan to read. Set
   `PLAN_GENERATE_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
 

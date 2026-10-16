@@ -92,9 +92,27 @@ export function equipmentOf(answers: PlanAnswers, equipment: EquipmentRow[]) {
 export const fits = (needs: string[][], have: Set<string>) =>
   needs.every((items) => items.some((id) => have.has(id)));
 
-/** The catalog exercises the plan may use: what the user's equipment allows, no cardio. */
-export const usableExercises = (catalog: CatalogRow[], have: Set<string>) =>
-  catalog.filter((e) => !e.cardio && fits(e.needs, have));
+const CORE_MUSCLES = ['abs', 'obliques'];
+/** Core work: abs and obliques take at least half of the exercise's stimulus. */
+const isCore = (muscles: Record<string, number>) =>
+  CORE_MUSCLES.reduce((sum, m) => sum + (muscles[m] ?? 0), 0) >= 0.5;
+
+/**
+ * The catalog exercises the plan may use: what the user's equipment allows, no cardio and no
+ * timed holds (planks, wall sits). The strength goals get core work only with abs or obliques as
+ * a focus: the main lifts already train the trunk.
+ */
+export function usableExercises(catalog: CatalogRow[], have: Set<string>, answers: PlanAnswers) {
+  const core =
+    answers.goal === 'hypertrophy' || answers.focus.some((m) => CORE_MUSCLES.includes(m));
+  return catalog.filter(
+    (e) =>
+      !e.cardio &&
+      !e.measures.includes('seconds') &&
+      fits(e.needs, have) &&
+      (core || !isCore(e.muscles)),
+  );
+}
 
 // The app's estimate (estimateMinutes in src/shared/data/routines.ts): set-up per exercise, and
 // per set its work and its rest.
@@ -110,7 +128,8 @@ Routines:
 
 Each routine:
 - Fits the session length. A session takes about 2.5 minutes per exercise to set up, plus for every set 45 seconds of work and its rest. Rather leave out an isolation exercise than go below 2 sets.
-- Starts with the big compound lifts, then accessories, then isolation work; core last.
+- Starts with the big compound lifts, then accessories, then isolation work.
+- Core exercises (main muscles abs or obliques), when the catalog has any: at most one per routine, always last. With abs or obliques as a focus, one in most routines; else with hypertrophy, one in 1-2 routines a week. Prefer ones that can be loaded or progressed (cable crunch, hanging leg raise, ab wheel).
 - Never the same exercise twice in a routine. Across routines of the same type (e.g. upper A and upper B), vary the exercises where it makes sense.
 
 The week:
@@ -127,7 +146,7 @@ Sets:
 - target_min and target_max are the rep range of every set (equal for a fixed number); rir is the reps in reserve in the first week.
 - The app runs the plan in blocks of 5 weeks: each week after the first takes one rep off the reserve (never below 0), and the fifth week is a lighter deload. So rir is where a block starts.
 - hypertrophy: compounds 6-10 reps, isolation 10-15, rir 3. strength: main lifts 3-6 reps at rir 3-4, accessories 6-10 at rir 3. strength_hypertrophy: compounds 4-8, isolation 8-12, rir 3. none and beginner: rir 4 on compounds, 3 on isolation.
-- Exercises marked "timed" are held: target_min and target_max are seconds (e.g. 30-45) and rir is null.
+- strength: build each routine around one or two main lifts (squat, bench press, deadlift, overhead press, barbell row or pull-up; their closest variant the equipment allows), then 2-4 accessories that support them. Fewer exercises with more sets rather than many isolation exercises.
 - rest_seconds: compounds 120-180 (up to 240 for heavy strength work), isolation 60-90.
 
 Names, in the app language given below: each routine a short name (at most 24 characters), e.g. "Push", "Oberkörper A", "Beine"; the plan a short name for the split (at most 30 characters), e.g. "Push Pull Beine", "Ganzkörper 3×".`;
@@ -153,8 +172,7 @@ export function contextText(
 ) {
   const lines = catalog.map((e) => {
     const names = catalogNames(e.name, language);
-    const logs = e.measures.includes('seconds') ? 'timed' : 'reps';
-    return `${e.id} | ${names} | ${e.equipment} | ${mainMuscles(e.muscles)} | ${logs}`;
+    return `${e.id} | ${names} | ${e.equipment} | ${mainMuscles(e.muscles)}`;
   });
   return [
     `App language: ${language}.`,
@@ -167,7 +185,7 @@ export function contextText(
       ? 'Equipment: a full gym.'
       : `Equipment: ${have.size ? [...have].join(', ') : 'none, only the floor'} (training at home).`,
     '',
-    'Catalog (id | names | equipment | main muscles | logs):',
+    'Catalog (id | names | equipment | main muscles):',
     ...lines,
   ].join('\n');
 }
@@ -265,17 +283,16 @@ export function planBuilder(answers: PlanAnswers, catalog: CatalogRow[]) {
       const row = byId.get(line.exercise_id);
       if (!row || routineIndex >= answers.sessionsPerWeek || used.has(row.id)) return null;
       if (used.size >= MAX_EXERCISES) return null;
-      const timed = row.measures.includes('seconds');
       const sets = clamp(line.sets, MIN_SETS, MAX_SETS);
       const rest = clamp(line.rest_seconds, 30, 300);
       const takes = EXERCISE_SECONDS + sets * (SET_SECONDS + rest);
       if (used.size >= MIN_EXERCISES && seconds + takes > budget) return null;
       used.add(row.id);
       seconds += takes;
-      let min = timed ? clamp(line.target_min, 10, 300) : clamp(line.target_min, 1, 30);
-      let max = timed ? clamp(line.target_max, 10, 300) : clamp(line.target_max, 1, 30);
+      let min = clamp(line.target_min, 1, 30);
+      let max = clamp(line.target_max, 1, 30);
       if (min > max) [min, max] = [max, min];
-      const rir = timed || line.rir == null ? null : clamp(line.rir, 0, 4);
+      const rir = line.rir == null ? null : clamp(line.rir, 0, 4);
       return {
         exercise: {
           exerciseId: row.id,

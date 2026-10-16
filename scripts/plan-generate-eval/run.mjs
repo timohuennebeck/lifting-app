@@ -1,11 +1,11 @@
-// Tests the plan generation (the generate-plan Edge Function) with 15 sets of onboarding answers
+// Tests the plan generation (the generate-plan Edge Function) with 16 sets of onboarding answers
 // and checks each plan it makes: a routine per workout a week, sessions that fit the chosen length,
 // only exercises the equipment allows, no exercise twice a routine, every major muscle group trained,
 // pushing and pulling about even, focus muscles trained more, sets and reps that suit the goal and
-// the experience. The checks are rules of thumb; read the plans in the report as well.
+// the experience, core work only where the goal or focus asks for it and no timed holds. The checks are rules of thumb; read the plans in the report as well.
 //
 // Needs the function with an OpenAI key at EXPO_PUBLIC_SUPABASE_URL from .env: locally
-// `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 15 plans, so
+// `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 16 plans, so
 // set PLAN_GENERATE_IP_LIMIT=1000 there first, then restart Supabase), or the deployed project.
 // Usage: npm run plan:generate-eval            all profiles
 //        npm run plan:generate-eval -- 03 11   only these
@@ -54,6 +54,7 @@ const PROFILES = [
   ['13', 'de', 'hypertrophy', 'gym', 4, 120, 'intermediate', ['lats', 'upper_back']],
   ['14', 'pt-BR', 'strength_hypertrophy', 'home', 5, 20, 'intermediate', ['abs']],
   ['15', 'de', 'hypertrophy', 'gym', 3, 60, null, ['quads']],
+  ['16', 'de', 'hypertrophy', 'gym', 4, 60, 'intermediate', []],
 ].map(([id, language, goal, equipment, sessionsPerWeek, sessionMinutes, experience, focus]) => ({
   id,
   language,
@@ -104,6 +105,8 @@ const MAJOR = [...new Set(Object.values(GROUPS).flat())];
 const MAIN_SHARE = 0.2;
 
 const isTimed = (row) => row?.measures?.includes('seconds');
+/** Core work, as generate.ts's isCore: abs and obliques take at least half of the stimulus. */
+const isCore = (row) => (row?.muscles?.abs ?? 0) + (row?.muscles?.obliques ?? 0) >= 0.5;
 
 /** Weekly sets per muscle, each set counted by the muscle's share in it. */
 function weeklySets(plan, catalog) {
@@ -203,6 +206,22 @@ const CHECKS = {
       }
       return problems;
     }),
+  core: ({ answers }, plan, catalog) => {
+    const allowed =
+      answers.goal === 'hypertrophy' || answers.focus.some((m) => ['abs', 'obliques'].includes(m));
+    return plan.routines.flatMap((r) => {
+      const rows = r.exercises.map((e) => catalog.get(e.exerciseId));
+      const core = rows.filter(isCore);
+      return [
+        ...r.exercises
+          .filter((e) => isTimed(catalog.get(e.exerciseId)))
+          .map((e) => `${r.name}: ${e.exerciseId} is a timed hold`),
+        ...(core.length && !allowed ? [`${r.name}: core work in a ${answers.goal} plan`] : []),
+        ...(core.length > 1 ? [`${r.name}: ${core.length} core exercises`] : []),
+        ...(core.length && !isCore(rows.at(-1)) ? [`${r.name}: core work not last`] : []),
+      ];
+    });
+  },
   experience: ({ answers }, plan) => {
     if (answers.experience && !['none', 'beginner'].includes(answers.experience)) return null;
     return plan.routines.flatMap((r) => [

@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
   let have;
   try {
     have = equipmentOf(answers, await loadEquipment());
-    catalog = usableExercises(await loadCatalog(), have);
+    catalog = usableExercises(await loadCatalog(), have, answers);
   } catch (error) {
     console.error('Loading the catalog failed', error);
     await giveBack();
