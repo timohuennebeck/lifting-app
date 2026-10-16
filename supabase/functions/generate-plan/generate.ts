@@ -128,13 +128,14 @@ Routines:
 
 Each routine:
 - Fits the session length. A session takes about 2.5 minutes per exercise to set up, plus for every set 45 seconds of work and its rest. Rather leave out an isolation exercise than go below 2 sets.
+- Uses that length too: at least about 80% of it, within the sets and exercises the experience allows. With long sessions, add exercises and sets rather than leaving time unused.
 - Starts with the big compound lifts, then accessories, then isolation work.
 - Core exercises (main muscles abs or obliques), when the catalog has any: at most one per routine, always last. With abs or obliques as a focus, one in most routines; else with hypertrophy, one in 1-2 routines a week. Prefer ones that can be loaded or progressed (cable crunch, hanging leg raise, ab wheel).
 - Never the same exercise twice in a routine. Across routines of the same type (e.g. upper A and upper B), vary the exercises where it makes sense.
 
 The week:
 - About as many pulling as pushing sets; chest, back, shoulders, arms, quads, hamstrings and glutes each trained at least once a week, twice with 3 or more workouts.
-- Focus muscles, if any, get about a third more weekly sets than the rest: an extra exercise or set in their routines. Without focus, keep it balanced.
+- Focus muscles, if any, get about a third more weekly sets than the rest: every routine that trains a focus muscle gets an extra exercise for it, and when time is short, take the sets from other isolation work. Without focus, keep it balanced.
 
 Experience:
 - none and beginner: simple, stable exercises (machines, cables, dumbbells), 2-3 sets each, 4-6 exercises a routine, no very technical lifts (no Olympic lifts, no conventional deadlift for none).

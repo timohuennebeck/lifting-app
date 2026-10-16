@@ -7,9 +7,12 @@
 // Needs the function with an OpenAI key at EXPO_PUBLIC_SUPABASE_URL from .env: locally
 // `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 16 plans, so
 // set PLAN_GENERATE_IP_LIMIT=1000 there first, then restart Supabase), or the deployed project.
-// Usage: npm run plan:generate-eval            all profiles
-//        npm run plan:generate-eval -- 03 11   only these
-// Reports and the raw answers go to scripts/plan-generate-eval/out/.
+// Usage: npm run plan:generate-eval                    all profiles
+//        npm run plan:generate-eval -- 03 11           only these
+//        npm run plan:generate-eval -- --repeat 3      each profile 3 times (the model varies)
+// Reports, the raw answers and a summary go to scripts/plan-generate-eval/out/; compare two runs
+// with npm run plan:generate-compare.
+import { execSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -105,6 +108,11 @@ const MAJOR = [...new Set(Object.values(GROUPS).flat())];
 const MAIN_SHARE = 0.2;
 
 const isTimed = (row) => row?.measures?.includes('seconds');
+/** Equipment a heavy first lift needs; with a kettlebell or the body alone higher reps are right. */
+const HEAVY_EQUIPMENT = ['barbell', 'dumbbell', 'cable', 'machine', 'smith-machine'];
+const canGoHeavy = ({ equipment, homeEquipment }) =>
+  equipment === 'gym' ||
+  (equipment === 'home' && homeEquipment.some((id) => HEAVY_EQUIPMENT.includes(id)));
 /** Core work, as generate.ts's isCore: abs and obliques take at least half of the stimulus. */
 const isCore = (row) => (row?.muscles?.abs ?? 0) + (row?.muscles?.obliques ?? 0) >= 0.5;
 
@@ -196,7 +204,7 @@ const CHECKS = {
       const problems = [];
       const [first] = lifts;
       // The routine's first lift is the heavy one.
-      const heavy = { strength: 6, strength_hypertrophy: 8 }[answers.goal];
+      const heavy = canGoHeavy(answers) && { strength: 6, strength_hypertrophy: 8 }[answers.goal];
       if (heavy && first && first.sets[0].targetMax > heavy)
         problems.push(`${r.name}: starts with ${first.sets[0].targetMax} reps`);
       for (const e of lifts) {
@@ -291,21 +299,35 @@ const EQUIPMENT = await loadCatalog(SUPABASE_URL, KEY, 'equipment', 'id,in_gym,i
 for (const [id, e] of EQUIPMENT) if (!e.is_active) EQUIPMENT.delete(id);
 if (!catalog.size || !EQUIPMENT.size) process.exit(1);
 const args = process.argv.slice(2);
-const profiles = args.length ? PROFILES.filter((p) => args.includes(p.id)) : PROFILES;
+const repeatAt = args.findIndex((a) => a.startsWith('--repeat'));
+const REPEAT =
+  repeatAt < 0
+    ? 1
+    : Math.max(1, Number(args[repeatAt].split('=')[1] ?? args.splice(repeatAt + 1, 1)[0]) || 1);
+const ids = args.filter((a) => !a.startsWith('--'));
+const profiles = ids.length ? PROFILES.filter((p) => ids.includes(p.id)) : PROFILES;
+const jobs = profiles.flatMap((profile) =>
+  Array.from({ length: REPEAT }, (_, i) => ({ profile, run: i + 1 })),
+);
 const names = Object.keys(CHECKS);
-console.log(`${profiles.length} plans from ${SUPABASE_URL}, ${PARALLEL} at a time …\n`);
+/** "01" or, with repeats, "01 #2". */
+const label = ({ profile, run }) => (REPEAT > 1 ? `${profile.id} #${run}` : profile.id);
+console.log(
+  `${jobs.length} plans (${profiles.length} profiles × ${REPEAT}) from ${SUPABASE_URL}, ${PARALLEL} at a time …\n`,
+);
 
 const results = await pool(
-  profiles,
-  async (profile) => {
+  jobs,
+  async (job) => {
+    const { profile } = job;
     const result = await requests.send({ answers: profile.answers, language: profile.language });
     if (!result) return null;
     const checks = result.plan
       ? Object.fromEntries(names.map((n) => [n, CHECKS[n](profile, result.plan, catalog)]))
       : null;
     const passed = !!checks && Object.values(checks).every((c) => !c?.length);
-    console.log(`${passed ? 'PASS' : 'FAIL'}  ${profile.id}  ${timing(result)}`);
-    return { profile, result, checks, passed };
+    console.log(`${passed ? 'PASS' : 'FAIL'}  ${label(job)}  ${timing(result)}`);
+    return { ...job, result, checks, passed };
   },
   PARALLEL,
   () => !!requests.stopped(),
@@ -315,43 +337,82 @@ const stopNote = reportStop(
 );
 if (!results.length) process.exit(1);
 
-const cell = (check) => (check == null ? '–' : check.length ? `✗ ${check.length}` : '✓');
-const header = `| profile | first exercise / all | ${names.join(' | ')} | |`;
-const rows = results.map(
-  ({ profile, result, checks, passed }) =>
-    `| ${profile.id} | ${timing(result)} | ${names.map((n) => (checks ? cell(checks[n]) : '✗')).join(' | ')} | ${passed ? 'PASS' : 'FAIL'} |`,
-);
-const passes = (n) => {
-  const applied = results.filter((r) => !r.checks || r.checks[n] != null);
-  return `${applied.filter((r) => r.checks && !r.checks[n].length).length}/${applied.length}`;
-};
-const firsts = results.map((r) => r.result.first).filter((f) => f != null);
-const totals = `| **all** | median first ${firsts.length ? `${median(firsts).toFixed(1)} s` : '–'} | ${names.map(passes).join(' | ')} | ${results.filter((r) => r.passed).length}/${results.length} |`;
+/** How often a check passed in these results, of the runs it applied to (a run without a plan fails). */
+function tally(list, name) {
+  const applied = list.filter((r) => !r.checks || r.checks[name] != null);
+  return {
+    passed: applied.filter((r) => r.checks && !r.checks[name].length).length,
+    applied: applied.length,
+  };
+}
+const fraction = ({ passed, applied }) => `${passed}/${applied}`;
+const runsOf = (profile) => results.filter((r) => r.profile === profile);
+/** One run: ✓ or the number of issues; several: ✓ when every run passed, else how many did. */
+function cell(runs, name) {
+  const t = tally(runs, name);
+  if (!t.applied) return '–';
+  if (runs.length === 1) return t.passed ? '✓' : `✗ ${runs[0].checks?.[name]?.length ?? 1}`;
+  return t.passed === t.applied ? '✓' : `✗ ${fraction(t)}`;
+}
+const firstOf = (runs) => median(runs.map((r) => r.result.first).filter((f) => f != null));
+const ran = profiles.filter((p) => runsOf(p).length);
+const header = `| profile | first exercise (median) | ${names.join(' | ')} | passed |`;
+const rows = ran.map((p) => {
+  const runs = runsOf(p);
+  const passed = runs.filter((r) => r.passed).length;
+  const verdict = runs.length === 1 ? (passed ? 'PASS' : 'FAIL') : `${passed}/${runs.length}`;
+  return `| ${p.id} | ${firstOf(runs).toFixed(1)} s | ${names.map((n) => cell(runs, n)).join(' | ')} | ${verdict} |`;
+});
+const totals = `| **all** | ${firstOf(results).toFixed(1)} s | ${names.map((n) => fraction(tally(results, n))).join(' | ')} | ${results.filter((r) => r.passed).length}/${results.length} |`;
 const table = [header, `|${' --- |'.repeat(names.length + 3)}`, ...rows, totals].join('\n');
 const details = results
-  .map(({ profile, result, checks }) => {
+  .map((r) => {
+    const { profile, result, checks } = r;
     const plan = result.plan
       ? describePlan(result.plan, catalog, profile.language)
       : `(${result.status} ${result.error ?? ''})`;
     const issues = checks
       ? Object.entries(checks).flatMap(([n, c]) => (c ?? []).map((i) => `- ${n}: ${i}`))
       : ['- no plan'];
-    return `## ${profile.id}\n\n${describeAnswers(profile.answers)}; app language ${profile.language}.\n\nIssues:\n${issues.join('\n') || '- none'}\n\n\`\`\`\n${plan}\n\`\`\``;
+    return `## ${label(r)}\n\n${describeAnswers(profile.answers)}; app language ${profile.language}; ${timing(result)}.\n\nIssues:\n${issues.join('\n') || '- none'}\n\n\`\`\`\n${plan}\n\`\`\``;
   })
   .join('\n\n');
 
 console.log(`\n${table}`);
-for (const { profile, checks } of results) {
-  const issues = Object.entries(checks ?? {}).flatMap(([n, c]) =>
+for (const r of results) {
+  const issues = Object.entries(r.checks ?? {}).flatMap(([n, c]) =>
     (c ?? []).map((i) => `${n}: ${i}`),
   );
-  if (issues.length) console.log(`\n${profile.id}\n${issues.map((i) => `  - ${i}`).join('\n')}`);
+  if (issues.length) console.log(`\n${label(r)}\n${issues.map((i) => `  - ${i}`).join('\n')}`);
 }
-const out = join(HERE, 'out', new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19));
+
+/** The commit the function code is at, and whether it has changes on top. */
+function codeVersion() {
+  try {
+    const commit = execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim();
+    const changed = execSync('git status --porcelain -- supabase/functions', { encoding: 'utf8' });
+    return { commit, changed: !!changed.trim() };
+  } catch {
+    return { commit: null, changed: null };
+  }
+}
+const summary = {
+  at: new Date().toISOString(),
+  ...codeVersion(),
+  repeat: REPEAT,
+  plans: { passed: results.filter((r) => r.passed).length, total: results.length },
+  firstSeconds: firstOf(results),
+  checks: Object.fromEntries(names.map((n) => [n, tally(results, n)])),
+  profiles: Object.fromEntries(
+    ran.map((p) => [p.id, Object.fromEntries(names.map((n) => [n, tally(runsOf(p), n)]))]),
+  ),
+};
+const out = join(HERE, 'out', summary.at.replace(/[:.]/g, '-').slice(0, 19));
 mkdirSync(out, { recursive: true });
 writeFileSync(
   join(out, 'report.md'),
   `# Plan generation test\n\n${stopNote && `${stopNote}\n\n`}${table}\n\n${details}\n`,
 );
 writeFileSync(join(out, 'results.json'), JSON.stringify(results, null, 2));
+writeFileSync(join(out, 'summary.json'), JSON.stringify(summary, null, 2));
 console.log(`\nReport: ${join(out, 'report.md')}`);

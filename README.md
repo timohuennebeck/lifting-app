@@ -233,6 +233,10 @@ the app says so and the user goes back a step.
   balance, focus volume, reps for the goal, core work, limits for beginners. The checks are rules of thumb;
   the report in `scripts/plan-generate-eval/out/` has every plan to read. Set
   `PLAN_GENERATE_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
+- **Prompt changes:** the model answers differently each time, so test a change with
+  `npm run plan:generate-eval -- --repeat 3` before and after it, then
+  `npm run plan:generate-compare`: how often each check passed in the last two runs, overall and
+  per profile.
 
 ## Google Sign-In
 
