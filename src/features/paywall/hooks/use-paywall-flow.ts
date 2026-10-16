@@ -1,4 +1,5 @@
 import { router, useNavigation, useSegments } from 'expo-router';
+import { useState } from 'react';
 
 import type { PlanId } from '../lib/purchases-service';
 import { useIsLocked } from '../stores/subscription-store';
@@ -14,7 +15,9 @@ export const parsePlanId = (value: unknown): PlanId => (value === 'monthly' ? 'm
 export function usePaywallFlow() {
   const segments = useSegments();
   const navigation = useNavigation();
-  const inApp = segments[0] === '(app)';
+  // Taken when the screen mounts: the segments are global, and a page pushed on top (Terms,
+  // Privacy) would otherwise turn this paywall into the onboarding one while it is still shown.
+  const [inApp] = useState(segments[0] === '(app)');
   const locked = useIsLocked();
 
   return {

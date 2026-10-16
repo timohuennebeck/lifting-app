@@ -33,16 +33,18 @@ export async function acceptDocuments(userId: string, documents: LegalDocument[]
   const fresh = documents.filter((d) => !accepted.has(d.id));
   if (!fresh.length) return;
   const platform = Platform.OS === 'ios' || Platform.OS === 'android' ? Platform.OS : null;
-  await drizzle.insert(legalAcceptances).values(
-    fresh.map((d) => ({
+  // One row per write: a row the server already has (local data not synced yet) is rejected
+  // and dropped on its own, without taking the others with it.
+  for (const d of fresh) {
+    await drizzle.insert(legalAcceptances).values({
       id: newId(),
       profile_id: userId,
       document_id: d.id,
       accepted_at: null,
       app_version: Constants.expoConfig?.version ?? null,
       platform,
-    })),
-  );
+    });
+  }
 }
 
 /** A version to accept, with the one this user accepted last (compared on the update page). */
