@@ -9,13 +9,18 @@ import { NumberStepper } from '@/shared/ui/number-stepper';
 import { StepScreen } from '@/shared/ui/step-screen';
 
 import { useCreateStep } from '../hooks/use-create-step';
+import { chosenSplit, splitsFor } from '../lib/splits';
 
-/** How many workouts a week the plan is for (on whichever days suit the user). */
+/**
+ * How many workouts a week the plan is for (on whichever days suit the user); then the split,
+ * when more than one suits that many.
+ */
 export function SessionsScreen() {
   const { t } = useTranslation(['planCreate', 'common']);
   const counter = useCreateStep('sessions');
   const { step } = usePlanFlow();
-  const { sessionsPerWeek } = useDraft();
+  const draft = useDraft();
+  const { sessionsPerWeek } = draft;
   const update = useUpdateDraft();
 
   return (
@@ -25,7 +30,12 @@ export function SessionsScreen() {
       footer={
         <Button
           label={t('common:actions.continue')}
-          onPress={() => router.push(step('/create/duration'))}
+          onPress={() => {
+            // Keeps the split picked before if it still suits, else the recommended one.
+            update({ split: chosenSplit(draft) });
+            const ask = splitsFor(sessionsPerWeek, draft.experience).length > 1;
+            router.push(step(ask ? '/create/split' : '/create/duration'));
+          }}
         />
       }
     >

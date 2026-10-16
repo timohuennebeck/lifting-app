@@ -50,6 +50,45 @@
     "perWeek": "PER WEEK",
     "times": "{{count}}×"
   },
+  "split": {
+    "title": "WHICH SPLIT\nDO YOU WANT?",
+    "subtitle_one": "The ones that suit {{count}} workout a week.",
+    "subtitle_other": "The ones that suit {{count}} workouts a week.",
+    "description_one": "{{routines}} · each muscle {{count}}× a week",
+    "description_other": "{{routines}} · each muscle {{count}}× a week",
+    "options": {
+      "full_body": {
+        "short": "FB",
+        "title": "Full body",
+        "routines": "The whole body every session"
+      },
+      "upper_lower": {
+        "short": "UL",
+        "title": "Upper / Lower",
+        "routines": "Upper and lower body in turn"
+      },
+      "ppl": {
+        "short": "PPL",
+        "title": "Push / Pull / Legs",
+        "routines": "Push, pull and legs in turn"
+      },
+      "ppl_upper_lower": {
+        "short": "PPL+",
+        "title": "Push / Pull / Legs + Upper / Lower",
+        "routines": "Push, pull, legs, then upper and lower"
+      },
+      "bro": {
+        "short": "BRO",
+        "title": "Bro split",
+        "routines": "Chest, back, legs, shoulders, arms"
+      },
+      "arnold": {
+        "short": "ARN",
+        "title": "Arnold split",
+        "routines": "Chest & back, shoulders & arms, legs"
+      }
+    }
+  },
   "duration": {
     "title": "HOW LONG SHOULD A\nWORKOUT TAKE?",
     "minutes": "MINUTES",

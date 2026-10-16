@@ -27,6 +27,7 @@ type PlanStep =
   | '/create/equipment'
   | '/create/home-equipment'
   | '/create/sessions'
+  | '/create/split'
   | '/create/duration'
   | '/create/building'
   | '/create/plan-name';
@@ -55,6 +56,7 @@ export function openPlanFlow(profile: Profile | null | undefined, sessionsPerWee
       equipment: profile.equipment,
       homeEquipment: profile.homeEquipment,
       ...(profile.sessionMinutes ? { sessionMinutes: profile.sessionMinutes } : {}),
+      split: profile.split,
     }),
     ...(sessionsPerWeek ? { sessionsPerWeek } : {}),
   });

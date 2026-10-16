@@ -46,6 +46,7 @@ export async function persistOnboarding(userId: string, draft: OnboardingDraft) 
         equipment: draft.equipment,
         homeEquipment: draft.homeEquipment,
         sessionMinutes: draft.sessionMinutes,
+        split: draft.split,
         activePlanId,
         language: i18n.language as AppLanguage,
         onboardedAt: nowIso(),

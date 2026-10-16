@@ -15,6 +15,11 @@ export type Sex = 'male' | 'female' | 'unspecified';
 export type Experience = 'none' | 'beginner' | 'intermediate' | 'advanced';
 export type Goal = 'hypertrophy' | 'strength' | 'strength_hypertrophy';
 export type EquipmentAccess = 'gym' | 'home' | 'bodyweight';
+/**
+ * How a plan's routines divide the body: full body, upper/lower, push/pull/legs, push/pull/legs
+ * plus upper/lower (5 a week), one area a day ("bro") or the Arnold split.
+ */
+export type Split = 'full_body' | 'upper_lower' | 'ppl' | 'ppl_upper_lower' | 'bro' | 'arnold';
 
 /**
  * Whole years someone born on `birthDate` (YYYY-MM-DD) is on `today`, counting the birthday
@@ -42,6 +47,8 @@ export interface Profile {
   /** With `equipment` 'home': the equipment ids the user has. */
   homeEquipment: string[];
   sessionMinutes: number | null;
+  /** The split the last plan made from the answers used. */
+  split: Split | null;
   activePlanId: string | null;
   /** App language, mirrored for the team and server-side messages. */
   language: AppLanguage | null;
@@ -67,6 +74,7 @@ function toProfile(r: ProfileRecord): Profile {
     equipment: r.equipment as EquipmentAccess | null,
     homeEquipment: parseJson(r.home_equipment, []),
     sessionMinutes: r.session_minutes,
+    split: r.split as Split | null,
     activePlanId: r.active_plan_id,
     language: r.language as AppLanguage | null,
     avatarPath: r.avatar_path,
@@ -114,6 +122,7 @@ const toColumns = (p: ProfilePatch) => ({
   equipment: p.equipment,
   home_equipment: toJson(p.homeEquipment),
   session_minutes: p.sessionMinutes,
+  split: p.split,
   active_plan_id: p.activePlanId,
   language: p.language,
   avatar_path: p.avatarPath,

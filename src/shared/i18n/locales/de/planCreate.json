@@ -50,6 +50,45 @@
     "perWeek": "PRO WOCHE",
     "times": "{{count}}×"
   },
+  "split": {
+    "title": "WELCHEN SPLIT\nMÖCHTEST DU?",
+    "subtitle_one": "Die passenden für {{count}} Training pro Woche.",
+    "subtitle_other": "Die passenden für {{count}} Trainings pro Woche.",
+    "description_one": "{{routines}} · jeder Muskel {{count}}× pro Woche",
+    "description_other": "{{routines}} · jeder Muskel {{count}}× pro Woche",
+    "options": {
+      "full_body": {
+        "short": "GK",
+        "title": "Ganzkörper",
+        "routines": "Alles in jeder Einheit"
+      },
+      "upper_lower": {
+        "short": "OU",
+        "title": "Oberkörper / Unterkörper",
+        "routines": "Ober- und Unterkörper im Wechsel"
+      },
+      "ppl": {
+        "short": "PPL",
+        "title": "Push / Pull / Beine",
+        "routines": "Drücken, Ziehen, Beine im Wechsel"
+      },
+      "ppl_upper_lower": {
+        "short": "PPL+",
+        "title": "Push / Pull / Beine + OK / UK",
+        "routines": "Push, Pull, Beine, dann Ober- und Unterkörper"
+      },
+      "bro": {
+        "short": "BRO",
+        "title": "Bro-Split",
+        "routines": "Brust, Rücken, Beine, Schultern, Arme"
+      },
+      "arnold": {
+        "short": "ARN",
+        "title": "Arnold-Split",
+        "routines": "Brust & Rücken, Schultern & Arme, Beine"
+      }
+    }
+  },
   "duration": {
     "title": "WIE LANG SOLL EIN\nTRAINING DAUERN?",
     "minutes": "MINUTEN",

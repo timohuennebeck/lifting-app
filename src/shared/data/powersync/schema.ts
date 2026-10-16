@@ -24,6 +24,8 @@ export const profiles = sqliteTable('profiles', {
   // JSON list of equipment ids, used with equipment = 'home'.
   home_equipment: text(),
   session_minutes: integer(),
+  // The split the last plan from the answers was made with (see Split).
+  split: text(),
   active_plan_id: text(),
   language: text(),
   // Path in the private "avatars" bucket; null shows the initials.

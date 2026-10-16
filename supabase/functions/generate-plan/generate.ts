@@ -15,6 +15,15 @@ import type { CatalogRow, EquipmentRow } from '../_shared/plans.ts';
 export const GOALS = ['hypertrophy', 'strength', 'strength_hypertrophy'] as const;
 export const EQUIPMENT_ACCESS = ['gym', 'home', 'bodyweight'] as const;
 export const EXPERIENCE_LEVELS = ['none', 'beginner', 'intermediate', 'advanced'] as const;
+/** How the routines divide the body; the app offers those that suit the workouts a week. */
+export const SPLITS = [
+  'full_body',
+  'upper_lower',
+  'ppl',
+  'ppl_upper_lower',
+  'bro',
+  'arnold',
+] as const;
 
 /** The plan flow's answers a plan is made from; no name, no body data. */
 export interface PlanAnswers {
@@ -25,6 +34,8 @@ export interface PlanAnswers {
   homeEquipment: string[];
   /** Workouts a week: the plan has one routine for each, done in turn on any days. */
   sessionsPerWeek: number;
+  /** The split the user picked; null from app versions that don't ask, then the model picks. */
+  split: (typeof SPLITS)[number] | null;
   sessionMinutes: number;
   experience: (typeof EXPERIENCE_LEVELS)[number] | null;
 }
@@ -48,6 +59,7 @@ export function parseAnswers(value: unknown): PlanAnswers | null {
     !oneOf(GOALS, a.goal) ||
     !oneOf(EQUIPMENT_ACCESS, a.equipment) ||
     !(a.experience === null || oneOf(EXPERIENCE_LEVELS, a.experience)) ||
+    !(a.split == null || oneOf(SPLITS, a.split)) ||
     !Array.isArray(a.focus) ||
     a.focus.length > MUSCLES.length ||
     !a.focus.every((m) => oneOf(MUSCLES, m)) ||
@@ -71,6 +83,7 @@ export function parseAnswers(value: unknown): PlanAnswers | null {
     equipment: a.equipment,
     homeEquipment: a.equipment === 'home' ? [...new Set(home as string[])] : [],
     sessionsPerWeek: sessions,
+    split: oneOf(SPLITS, a.split) ? a.split : null,
     sessionMinutes: minutes,
     experience: a.experience as PlanAnswers['experience'],
   };
@@ -123,7 +136,14 @@ export const INSTRUCTIONS = `You are a strength coach writing a training plan fo
 
 Routines:
 - Exactly one routine per workout a week. The user does them in the order you write them, one after another on whatever days suit them, then starts over.
-- Pick the split from the workouts a week and the experience. 1: full body. 2: full body A/B, or upper/lower for intermediate and advanced. 3: full body A/B/C for none and beginner, else push/pull/legs or full body. 4: upper/lower twice. 5: push/pull/legs plus upper/lower. 6: push/pull/legs twice. 7: like 6, with a lighter full-body routine.
+- Build the split the user picked (below):
+  - full_body: every routine trains the whole body; vary the exercises between them (A/B/C).
+  - upper_lower: upper-body and lower-body routines in turn (upper A, lower A, upper B, lower B, …).
+  - ppl: push, pull, legs in that order; with 6, twice with varied exercises; with 7, twice plus a lighter full-body routine.
+  - ppl_upper_lower: push, pull, legs, upper, lower.
+  - bro: one area a routine: chest, back, legs, shoulders, arms.
+  - arnold: chest and back, shoulders and arms, legs; twice with varied exercises.
+- Without a split, pick one from the workouts a week and the experience. 1: full body. 2: full body A/B, or upper/lower for intermediate and advanced. 3: full body A/B/C for none and beginner, else push/pull/legs or full body. 4: upper/lower twice. 5: push/pull/legs plus upper/lower. 6: push/pull/legs twice. 7: like 6, with a lighter full-body routine.
 - Routines that train the same muscles should not follow each other in the order.
 
 Each routine:
@@ -135,7 +155,7 @@ Each routine:
 - Never the same exercise twice in a routine. Across routines of the same type (e.g. upper A and upper B), vary the exercises where it makes sense.
 
 The week:
-- About as many pulling as pushing sets; chest, back, shoulders, arms, quads, hamstrings and glutes each trained at least once a week, twice with 3 or more workouts.
+- About as many pulling as pushing sets; chest, back, shoulders, arms, quads, hamstrings and glutes each trained at least once a week, and as often as the split trains that area (e.g. twice with full body 2×, upper/lower 4× or push/pull/legs 6×; once with the bro split).
 - Focus muscles, if any, get about a third more weekly sets than the rest: every routine that trains a focus muscle gets an extra exercise for it, picked from its focus exercises below, and when time is short, take the sets from other isolation work. A focus muscle's main lift gets at least as many sets as the routine's other main lifts. Without focus, keep it balanced.
 
 Experience:
@@ -209,6 +229,7 @@ export function contextText(
     `Goal: ${answers.goal}.`,
     `Experience: ${answers.experience ?? 'unknown'}.`,
     `Workouts a week: ${answers.sessionsPerWeek}.`,
+    `Split: ${answers.split ?? 'not picked'}.`,
     `Session length: ${answers.sessionMinutes} minutes.`,
     `Focus: ${answers.focus.length ? answers.focus.join(', ') : 'none'}.`,
     answers.equipment === 'gym'

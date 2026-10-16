@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { type CustomExercise, useCustomExerciseStore } from '@/shared/data/exercises';
-import type { EquipmentAccess, Experience, Goal, Sex } from '@/shared/data/profile';
+import type { EquipmentAccess, Experience, Goal, Sex, Split } from '@/shared/data/profile';
 import { DEFAULT_SESSIONS_PER_WEEK, type PlanDraft } from '@/shared/data/plans';
 import { DEFAULT_BODY_WEIGHT_KG } from '@/shared/lib/body-weight';
 import type { UnitSystem } from '@/shared/lib/format';
@@ -26,6 +26,8 @@ export interface OnboardingDraft {
   homeEquipment: string[];
   /** Workouts per week the AI plans for. */
   sessionsPerWeek: number;
+  /** Picked for the workouts a week (see chosenSplit); null until asked. */
+  split: Split | null;
   sessionMinutes: number;
   /** Plan made by the AI, read by the import or built in the editor. */
   plan: PlanDraft | null;
@@ -50,6 +52,7 @@ const initialDraft = (): OnboardingDraft => ({
   equipment: null,
   homeEquipment: [],
   sessionsPerWeek: DEFAULT_SESSIONS_PER_WEEK,
+  split: null,
   sessionMinutes: 60,
   plan: null,
   customExercises: [],

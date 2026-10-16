@@ -50,6 +50,45 @@
     "perWeek": "주당",
     "times": "{{count}}회"
   },
+  "split": {
+    "title": "어떤 분할로\n운동할까요?",
+    "subtitle_one": "주 {{count}}회에 맞는 분할이에요.",
+    "subtitle_other": "주 {{count}}회에 맞는 분할이에요.",
+    "description_one": "{{routines}} · 근육마다 주 {{count}}회",
+    "description_other": "{{routines}} · 근육마다 주 {{count}}회",
+    "options": {
+      "full_body": {
+        "short": "전신",
+        "title": "전신",
+        "routines": "매번 온몸을 운동"
+      },
+      "upper_lower": {
+        "short": "상하",
+        "title": "상체 / 하체",
+        "routines": "상체와 하체를 번갈아"
+      },
+      "ppl": {
+        "short": "PPL",
+        "title": "밀기 / 당기기 / 하체",
+        "routines": "밀기, 당기기, 하체를 번갈아"
+      },
+      "ppl_upper_lower": {
+        "short": "PPL+",
+        "title": "밀기 / 당기기 / 하체 + 상체 / 하체",
+        "routines": "밀기, 당기기, 하체 다음 상체와 하체"
+      },
+      "bro": {
+        "short": "BRO",
+        "title": "브로 분할",
+        "routines": "가슴, 등, 하체, 어깨, 팔"
+      },
+      "arnold": {
+        "short": "ARN",
+        "title": "아놀드 분할",
+        "routines": "가슴·등, 어깨·팔, 하체"
+      }
+    }
+  },
   "duration": {
     "title": "운동 한 번에\n몇 분이 좋을까요?",
     "minutes": "분",

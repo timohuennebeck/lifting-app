@@ -1,11 +1,11 @@
-// Tests the plan generation (the generate-plan Edge Function) with 16 sets of onboarding answers
+// Tests the plan generation (the generate-plan Edge Function) with 17 sets of onboarding answers
 // and checks each plan it makes: a routine per workout a week, sessions that fit the chosen length,
 // only exercises the equipment allows, no exercise twice a routine, every major muscle group trained,
 // pushing and pulling about even, focus muscles trained more, sets and reps that suit the goal and
 // the experience, core work only where the goal or focus asks for it and no timed holds. The checks are rules of thumb; read the plans in the report as well.
 //
 // Needs the function with an OpenAI key at EXPO_PUBLIC_SUPABASE_URL from .env: locally
-// `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 16 plans, so
+// `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 17 plans, so
 // set PLAN_GENERATE_IP_LIMIT=1000 there first, then restart Supabase), or the deployed project.
 // Usage: npm run plan:generate-eval                    all profiles
 //        npm run plan:generate-eval -- 03 11           only these
@@ -41,37 +41,54 @@ const HOME_EQUIPMENT = {
   14: ['kettlebell', 'pull-up-bar'],
 };
 
-/** Answers as the app sends them, across goals, equipment, workouts a week, lengths and experience. */
+/**
+ * Answers as the app sends them, across goals, equipment, workouts a week, splits (one the app
+ * offers for that many), lengths and experience.
+ */
 const PROFILES = [
-  ['01', 'de', 'hypertrophy', 'gym', 3, 60, 'beginner', []],
-  ['02', 'de', 'strength', 'gym', 4, 75, 'intermediate', []],
-  ['03', 'de', 'strength_hypertrophy', 'gym', 5, 60, 'advanced', ['chest', 'side_delts']],
-  ['04', 'en', 'hypertrophy', 'gym', 6, 45, 'advanced', ['glutes', 'hamstrings']],
-  ['05', 'en', 'hypertrophy', 'home', 3, 45, 'beginner', []],
-  ['06', 'de', 'strength', 'home', 2, 90, 'intermediate', []],
-  ['07', 'de', 'hypertrophy', 'bodyweight', 3, 30, 'none', []],
-  ['08', 'pt-PT', 'strength_hypertrophy', 'bodyweight', 4, 40, 'beginner', []],
-  ['09', 'pt-BR', 'hypertrophy', 'gym', 1, 90, 'intermediate', []],
-  ['10', 'de', 'hypertrophy', 'gym', 2, 30, 'none', ['biceps', 'triceps']],
-  ['11', 'en', 'strength', 'gym', 3, 60, 'advanced', []],
-  ['12', 'de', 'hypertrophy', 'gym', 7, 30, 'advanced', []],
-  ['13', 'de', 'hypertrophy', 'gym', 4, 120, 'intermediate', ['lats', 'upper_back']],
-  ['14', 'pt-BR', 'strength_hypertrophy', 'home', 5, 20, 'intermediate', ['abs']],
-  ['15', 'de', 'hypertrophy', 'gym', 3, 60, null, ['quads']],
-  ['16', 'de', 'hypertrophy', 'gym', 4, 60, 'intermediate', []],
-].map(([id, language, goal, equipment, sessionsPerWeek, sessionMinutes, experience, focus]) => ({
-  id,
-  language,
-  answers: {
-    goal,
-    focus,
-    equipment,
-    homeEquipment: HOME_EQUIPMENT[id] ?? [],
-    sessionsPerWeek,
-    sessionMinutes,
-    experience,
-  },
-}));
+  ['01', 'de', 'hypertrophy', 'gym', 3, 'full_body', 60, 'beginner', []],
+  ['02', 'de', 'strength', 'gym', 4, 'upper_lower', 75, 'intermediate', []],
+  [
+    '03',
+    'de',
+    'strength_hypertrophy',
+    'gym',
+    5,
+    'ppl_upper_lower',
+    60,
+    'advanced',
+    ['chest', 'side_delts'],
+  ],
+  ['04', 'en', 'hypertrophy', 'gym', 6, 'ppl', 45, 'advanced', ['glutes', 'hamstrings']],
+  ['05', 'en', 'hypertrophy', 'home', 3, 'full_body', 45, 'beginner', []],
+  ['06', 'de', 'strength', 'home', 2, 'upper_lower', 90, 'intermediate', []],
+  ['07', 'de', 'hypertrophy', 'bodyweight', 3, 'full_body', 30, 'none', []],
+  ['08', 'pt-PT', 'strength_hypertrophy', 'bodyweight', 4, 'full_body', 40, 'beginner', []],
+  ['09', 'pt-BR', 'hypertrophy', 'gym', 1, 'full_body', 90, 'intermediate', []],
+  ['10', 'de', 'hypertrophy', 'gym', 2, 'full_body', 30, 'none', ['biceps', 'triceps']],
+  ['11', 'en', 'strength', 'gym', 3, 'ppl', 60, 'advanced', []],
+  ['12', 'de', 'hypertrophy', 'gym', 7, 'ppl', 30, 'advanced', []],
+  ['13', 'de', 'hypertrophy', 'gym', 4, 'upper_lower', 120, 'intermediate', ['lats', 'upper_back']],
+  ['14', 'pt-BR', 'strength_hypertrophy', 'home', 5, 'bro', 20, 'intermediate', ['abs']],
+  ['15', 'de', 'hypertrophy', 'gym', 3, 'full_body', 60, null, ['quads']],
+  ['16', 'de', 'hypertrophy', 'gym', 4, 'upper_lower', 60, 'intermediate', []],
+  ['17', 'en', 'hypertrophy', 'gym', 6, 'arnold', 60, 'intermediate', []],
+].map(
+  ([id, language, goal, equipment, sessionsPerWeek, split, sessionMinutes, experience, focus]) => ({
+    id,
+    language,
+    answers: {
+      goal,
+      focus,
+      equipment,
+      homeEquipment: HOME_EQUIPMENT[id] ?? [],
+      sessionsPerWeek,
+      split,
+      sessionMinutes,
+      experience,
+    },
+  }),
+);
 
 // ---------- the rules ----------
 
@@ -91,7 +108,7 @@ const minutesOf = (routine) =>
   routine.exercises.reduce((s, e) => s + 150 + e.sets.length * (45 + (e.restSeconds ?? 90)), 0) /
   60;
 
-/** Each is trained at least once a week, in two routines with three or more. */
+/** Each is trained at least once a week, and in as many routines as the split trains it (up to 2). */
 const GROUPS = {
   chest: ['chest'],
   back: ['lats', 'upper_back'],
@@ -107,6 +124,17 @@ const PULL = ['lats', 'upper_back', 'rear_delts', 'biceps'];
 const MAJOR = [...new Set(Object.values(GROUPS).flat())];
 /** A muscle counts as trained by an exercise from this share of its stimulus on. */
 const MAIN_SHARE = 0.2;
+
+/** How many times a week the split trains each muscle, as the app shows it (timesPerMuscle). */
+const timesPerMuscle = ({ split, sessionsPerWeek: n }) =>
+  ({
+    full_body: n,
+    upper_lower: Math.floor(n / 2),
+    ppl: Math.floor(n / 3),
+    ppl_upper_lower: 2,
+    bro: 1,
+    arnold: 2,
+  })[split] ?? (n >= 3 ? 2 : 1);
 
 const isTimed = (row) => row?.measures?.includes('seconds');
 /** Equipment a heavy first lift needs; with a kettlebell or the body alone higher reps are right. */
@@ -172,7 +200,7 @@ const CHECKS = {
       return ids.filter((id, i) => ids.indexOf(id) !== i).map((id) => `${r.name}: ${id} twice`);
     }),
   muscles: ({ answers }, plan, catalog) => {
-    const want = answers.sessionsPerWeek >= 3 ? 2 : 1;
+    const want = Math.max(1, Math.min(2, timesPerMuscle(answers)));
     return Object.entries(GROUPS).flatMap(([group, muscles]) => {
       const on = plan.routines.filter((r) =>
         r.exercises.some((e) =>
@@ -266,11 +294,12 @@ const describeAnswers = ({
   equipment,
   homeEquipment,
   sessionsPerWeek,
+  split,
   sessionMinutes,
   experience,
   focus,
 }) =>
-  `${goal}, ${equipment}${homeEquipment.length ? ` (${homeEquipment.join(', ')})` : ''}, ${sessionsPerWeek}× a week, ${sessionMinutes} min, ` +
+  `${goal}, ${equipment}${homeEquipment.length ? ` (${homeEquipment.join(', ')})` : ''}, ${sessionsPerWeek}× a week ${split}, ${sessionMinutes} min, ` +
   `${experience ?? 'experience unknown'}${focus.length ? `, focus ${focus.join(' + ')}` : ''}`;
 
 /** After a run: what wasn't sent and why, and what to do about it. */
