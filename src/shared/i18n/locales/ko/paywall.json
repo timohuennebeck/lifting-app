@@ -5,8 +5,7 @@
   "paywall": {
     "before": "변화 전",
     "after": "변화 후",
-    "brand": "TRAQA",
-    "pro": "PRO",
+    "title": "플랜이 <accent>준비됐어요</accent>",
     "subtitle": "플랜은 가져오고, 모든 세트는 기록하고, 성장은 한눈에.",
     "benefits": {
       "import": {

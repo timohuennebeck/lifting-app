@@ -5,8 +5,7 @@
   "paywall": {
     "before": "Antes",
     "after": "Depois",
-    "brand": "TRAQA",
-    "pro": "PRO",
+    "title": "O TEU PLANO ESTÁ <accent>PRONTO</accent>",
     "subtitle": "O teu plano importado, cada série registada, todo o progresso visível.",
     "benefits": {
       "import": {

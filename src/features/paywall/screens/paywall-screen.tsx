@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -100,11 +100,16 @@ export function PaywallScreen() {
         </View>
 
         <View className="items-center px-6 pt-7">
-          <Text variant="headline" className="text-[34px] leading-9.5">
-            {t('paywall.brand')}{' '}
-            <Text variant="headline" tone="accent" className="text-[34px] leading-9.5">
-              {t('paywall.pro')}
-            </Text>
+          <Text variant="headline" className="text-center text-[34px] leading-9.5">
+            <Trans
+              t={t}
+              i18nKey="paywall.title"
+              components={{
+                accent: (
+                  <Text variant="headline" tone="accent" className="text-[34px] leading-9.5" />
+                ),
+              }}
+            />
           </Text>
           <Text tone="muted" className="mt-2.5 text-center text-[15px] leading-5.5">
             {t('paywall.subtitle')}
