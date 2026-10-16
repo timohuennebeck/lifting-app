@@ -16,13 +16,17 @@ import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
+import { DoneExerciseCard } from '../components/done-exercise-card';
 import { RecordCard } from '../components/record-card';
 import { useWorkoutRecords } from '../data/workout-records';
 
-/** Workout done: its name, time and records, the muscles it worked, then each new record. */
+/**
+ * Workout done: its name, time and records, the muscles it worked, the exercises with the sets
+ * that were done, then each new record.
+ */
 export function WorkoutSummaryScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { t } = useTranslation(['workout', 'common']);
+  const { t } = useTranslation(['workout', 'common', 'training']);
   const insets = useSafeAreaInsets();
   const units = useUnits();
   const { data: workout } = useWorkout(id);
@@ -39,6 +43,9 @@ export function WorkoutSummaryScreen() {
       sets: e.sets.filter((s) => s.completedAt).length,
     })),
   );
+  const done = (workout?.exercises ?? [])
+    .map((e) => ({ ...e, sets: e.sets.filter((s) => s.completedAt) }))
+    .filter((e) => e.sets.length);
   const primaryIds = primary.map((s) => s.muscle);
   const secondaryIds = secondary.map((s) => s.muscle);
 
@@ -77,6 +84,23 @@ export function WorkoutSummaryScreen() {
           ))}
         </View>
         <MuscleSplit primary={primary} secondary={secondary} className="px-4 pt-6" />
+        {done.length ? (
+          <View className="px-5 pt-9">
+            <Text variant="headline">
+              {t('training:overview.exercises', { count: done.length })}
+            </Text>
+            <View className="pt-1">
+              {done.map((e) => (
+                <DoneExerciseCard
+                  key={e.id}
+                  exerciseId={e.exerciseId}
+                  sets={e.sets}
+                  units={units}
+                />
+              ))}
+            </View>
+          </View>
+        ) : null}
         {records.length ? (
           <View className="gap-2.5 px-4 pt-9">
             {records.map((r) => (

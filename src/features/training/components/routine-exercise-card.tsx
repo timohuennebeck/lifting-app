@@ -25,6 +25,31 @@ export interface RoutineExerciseCardProps {
   children?: ReactNode;
 }
 
+/** An exercise's muscles as chips: the main ones filled, the others outlined. */
+export function ExerciseMuscleChips({ exerciseId }: { exerciseId: string }) {
+  const { t } = useTranslation('muscles');
+  const { primary, secondary } = splitMuscles(useExercise(exerciseId));
+  if (!primary.length) return null;
+  return (
+    <View className="flex-row flex-wrap gap-1.5">
+      {primary.map((m) => (
+        <View key={m} className="h-7 justify-center rounded-full bg-elevated px-2.5">
+          <Text variant="caption" className="text-xs">
+            {t(`names.${m}`)}
+          </Text>
+        </View>
+      ))}
+      {secondary.map((m) => (
+        <View key={m} className="h-7 justify-center rounded-full border border-[#333] px-2.5">
+          <Text variant="body" tone="muted" className="text-xs">
+            {t(`names.${m}`)}
+          </Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
 /** Exercise row of the training overview: photo, name, target sets with RIR, muscles (03·0b). */
 export function RoutineExerciseCard({
   exerciseId,
@@ -34,11 +59,9 @@ export function RoutineExerciseCard({
   review,
   children,
 }: RoutineExerciseCardProps) {
-  const { t, i18n } = useTranslation(['muscles', 'training']);
-  const exercise = useExercise(exerciseId);
+  const { t, i18n } = useTranslation('training');
   const name = useExerciseName(exerciseId, i18n.language);
   const timed = isTimed(exerciseId);
-  const { primary, secondary } = splitMuscles(exercise);
 
   return (
     <PressableScale
@@ -50,7 +73,7 @@ export function RoutineExerciseCard({
       {/* The photo opens how the exercise works and its history; the rest of the row edits it. */}
       <PressableScale
         accessibilityRole="button"
-        accessibilityLabel={t('training:overview.exerciseInfo', { name })}
+        accessibilityLabel={t('overview.exerciseInfo', { name })}
         onPress={() => router.push({ pathname: '/exercise/[id]', params: { id: exerciseId } })}
       >
         <ExerciseThumb exerciseId={exerciseId} name={name} className="h-21.5 w-16 bg-elevated" />
@@ -65,7 +88,7 @@ export function RoutineExerciseCard({
           ) : null}
           <PressableScale
             hitSlop={8}
-            accessibilityLabel={t('training:overview.exerciseMenu', { name })}
+            accessibilityLabel={t('overview.exerciseMenu', { name })}
             onPress={onMenu}
             className="size-8 items-center justify-center gap-0.75"
           >
@@ -89,24 +112,7 @@ export function RoutineExerciseCard({
             </View>
           ))}
         </View>
-        {primary.length ? (
-          <View className="flex-row flex-wrap gap-1.5">
-            {primary.map((m) => (
-              <View key={m} className="h-7 justify-center rounded-full bg-elevated px-2.5">
-                <Text variant="caption" className="text-xs">
-                  {t(`muscles:names.${m}`)}
-                </Text>
-              </View>
-            ))}
-            {secondary.map((m) => (
-              <View key={m} className="h-7 justify-center rounded-full border border-[#333] px-2.5">
-                <Text variant="body" tone="muted" className="text-xs">
-                  {t(`muscles:names.${m}`)}
-                </Text>
-              </View>
-            ))}
-          </View>
-        ) : null}
+        <ExerciseMuscleChips exerciseId={exerciseId} />
         {children}
       </View>
     </PressableScale>
