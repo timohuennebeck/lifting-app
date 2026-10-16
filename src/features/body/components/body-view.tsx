@@ -49,23 +49,21 @@ interface PlaceholderCardProps {
   lit: boolean;
   /** Hatched, with a padlock instead of the question mark (under 18). */
   locked?: boolean;
-  /** Hatched, keeping the question mark (no check yet). */
-  hatched?: boolean;
   tilt: number;
 }
 
 /** An empty photo card of the comparison, tilted, with a question mark or a padlock. */
-function PlaceholderCard({ letter, lit, locked, hatched = locked, tilt }: PlaceholderCardProps) {
+function PlaceholderCard({ letter, lit, locked, tilt }: PlaceholderCardProps) {
   return (
     <View
       className={cn(
         'h-30 w-23 items-center justify-center rounded-[18px] bg-surface',
         lit ? 'border-2 border-accent' : 'border border-line',
-        hatched && 'overflow-hidden',
+        locked && 'overflow-hidden',
       )}
       style={{ transform: [{ rotate: `${tilt}deg` }] }}
     >
-      {hatched ? (
+      {locked ? (
         <Svg width="100%" height="100%" style={StyleSheet.absoluteFill}>
           <Path d={HATCH} stroke={colors.fg} strokeOpacity={0.05} strokeWidth={1.5} />
         </Svg>
@@ -157,11 +155,11 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
       >
-        <PlaceholderCard letter="A" lit={false} hatched tilt={-7} />
+        <PlaceholderCard letter="A" lit={false} tilt={-7} />
         <CardGap className="w-14">
           <CompareArrow inline muted />
         </CardGap>
-        <PlaceholderCard letter="B" lit={false} hatched tilt={7} />
+        <PlaceholderCard letter="B" lit={false} tilt={7} />
       </View>
       <Text variant="headline" className="mt-9 text-center">
         {t('empty.title')}
