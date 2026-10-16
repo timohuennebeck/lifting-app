@@ -45,20 +45,17 @@ const HATCH = Array.from({ length: 16 }, (_, k) => `M${(k + 1) * 13} 0L0 ${(k + 
 
 interface PlaceholderCardProps {
   letter: 'A' | 'B';
-  /** Neon outline and badge: the check that comes first. */
-  lit: boolean;
   /** Hatched, with a padlock instead of the question mark (under 18). */
   locked?: boolean;
   tilt: number;
 }
 
 /** An empty photo card of the comparison, tilted, with a question mark or a padlock. */
-function PlaceholderCard({ letter, lit, locked, tilt }: PlaceholderCardProps) {
+function PlaceholderCard({ letter, locked, tilt }: PlaceholderCardProps) {
   return (
     <View
       className={cn(
         'h-30 w-23 items-center justify-center rounded-[18px] bg-surface',
-        lit ? 'border-2 border-accent' : 'border border-line',
         locked && 'overflow-hidden',
       )}
       style={{ transform: [{ rotate: `${tilt}deg` }] }}
@@ -68,27 +65,15 @@ function PlaceholderCard({ letter, lit, locked, tilt }: PlaceholderCardProps) {
           <Path d={HATCH} stroke={colors.fg} strokeOpacity={0.05} strokeWidth={1.5} />
         </Svg>
       ) : null}
-      <View
-        className={cn(
-          'absolute top-2 left-2 size-6 items-center justify-center rounded-full',
-          lit ? 'bg-accent' : 'bg-control',
-        )}
-      >
-        <Text variant="caption" tone={lit ? 'onAccent' : 'subtle'} className="text-xs">
+      <View className="absolute top-2 left-2 size-6 items-center justify-center rounded-full bg-control">
+        <Text variant="caption" tone="subtle" className="text-xs">
           {letter}
         </Text>
       </View>
       {locked ? (
         <Icon name="lock" size={26} color={colors.track} />
       ) : (
-        <Text
-          className={cn(
-            'font-inter-semibold text-[34px] leading-10',
-            lit ? 'text-dim' : 'text-track',
-          )}
-        >
-          ?
-        </Text>
+        <Text className="font-inter-semibold text-[34px] leading-10 text-track">?</Text>
       )}
     </View>
   );
@@ -123,7 +108,7 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
         >
-          <PlaceholderCard letter="A" lit={false} locked tilt={-7} />
+          <PlaceholderCard letter="A" locked tilt={-7} />
           <CardGap className="w-8">
             <View
               className="size-14.5 items-center justify-center rounded-full border-[3px] border-bg bg-accent"
@@ -134,7 +119,7 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
               </Text>
             </View>
           </CardGap>
-          <PlaceholderCard letter="B" lit={false} locked tilt={7} />
+          <PlaceholderCard letter="B" locked tilt={7} />
         </View>
         <Text variant="headline" className="mt-9 text-center">
           {t('adultsOnly.title')}
@@ -155,11 +140,11 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
       >
-        <PlaceholderCard letter="A" lit={false} tilt={-7} />
+        <PlaceholderCard letter="A" tilt={-7} />
         <CardGap className="w-14">
           <CompareArrow inline muted />
         </CardGap>
-        <PlaceholderCard letter="B" lit={false} tilt={7} />
+        <PlaceholderCard letter="B" tilt={7} />
       </View>
       <Text variant="headline" className="mt-9 text-center">
         {t('empty.title')}
