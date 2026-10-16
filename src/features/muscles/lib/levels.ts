@@ -3,9 +3,10 @@ import type { Sex } from '@/shared/data/profile';
 import type { MuscleId } from '@/shared/ui/muscle-map';
 
 // Muscle levels 1–100 from the best lifts. Every catalog exercise has an intermediate standard
-// (`strength_standard`): the estimated one-rep max ÷ body weight for a man of REFERENCE_KG, or
-// reps / seconds for exercises without weight. A lift's share of its standard places it on a
-// fixed scale (ANCHORS); a muscle's level is a weighted average of its best exercises.
+// (`strength_standard`, Strength Level's "intermediate"): the estimated one-rep max ÷ body weight
+// for a man of REFERENCE_KG, or reps / seconds for exercises without weight. A lift's share of
+// its standard places it on a fixed scale (ANCHORS); a muscle's level is a weighted average of
+// its best exercises.
 
 /** Levels and the share of the intermediate standard they take: level 50 is the standard. */
 const ANCHORS: readonly (readonly [level: number, share: number])[] = [
