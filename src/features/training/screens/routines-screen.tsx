@@ -1,11 +1,13 @@
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { PagerPage } from '@/shared/components/pager-page';
 import { type RoutineSummary, useLastDone, useRoutines } from '@/shared/data/routines';
 import { formatWeekdayDate } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
+import { Screen } from '@/shared/ui/screen';
+import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 import { AddRoutineButton } from '../components/add-routine-button';
@@ -74,11 +76,12 @@ function NoRoutines() {
 }
 
 /**
- * Training → Einzeltrainings: the routines outside a plan, the ones done most recently first
- * (once there are more than three), then all of them A–Z.
+ * Einzeltrainings, opened from Training's "Alle anzeigen": the routines outside a plan, the ones
+ * done most recently first (once there are more than three), then all of them A–Z.
  */
-export function AllRoutinesPage() {
+export function RoutinesScreen() {
   const { t, i18n } = useTranslation('training');
+  const insets = useSafeAreaInsets();
   const { data: routines = [], isLoading } = useRoutines();
   const { data: lastDone = {} } = useLastDone();
   const { start, startingId } = useStartRoutine();
@@ -109,31 +112,41 @@ export function AllRoutinesPage() {
     />
   );
 
-  if (!library.length) {
-    return <PagerPage>{isLoading ? null : <NoRoutines />}</PagerPage>;
-  }
   return (
-    <PagerPage>
-      {recent.length ? (
-        <>
-          <SectionTitle>{t('all.recent')}</SectionTitle>
-          <View className="gap-2 px-4">
-            {recent.map((routine) =>
-              row(
-                routine,
-                t('all.lastDone', { date: formatWeekdayDate(new Date(lastDone[routine.id])) }),
-              ),
+    <Screen header={<ScreenHeader icon="chevron-left-thin" title={t('home.single')} />}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 24 }}
+      >
+        {!library.length ? (
+          isLoading ? null : (
+            <NoRoutines />
+          )
+        ) : (
+          <>
+            {recent.length ? (
+              <>
+                <SectionTitle>{t('all.recent')}</SectionTitle>
+                <View className="gap-2 px-4">
+                  {recent.map((routine) =>
+                    row(
+                      routine,
+                      t('all.lastDone', {
+                        date: formatWeekdayDate(new Date(lastDone[routine.id])),
+                      }),
+                    ),
+                  )}
+                </View>
+                <SectionTitle>{t('all.all')}</SectionTitle>
+              </>
+            ) : (
+              <View className="h-3" />
             )}
-          </View>
-          <SectionTitle>{t('all.all')}</SectionTitle>
-        </>
-      ) : (
-        <View className="h-5" />
-      )}
-      <View className="gap-2 px-4">{all.map((routine) => row(routine, meta(routine)))}</View>
-      <AddRoutineButton />
-      {/* The list ends 40pt above the tab bar inset; PagerPage adds 24. */}
-      <View className="h-4" />
-    </PagerPage>
+            <View className="gap-2 px-4">{all.map((routine) => row(routine, meta(routine)))}</View>
+            <AddRoutineButton />
+          </>
+        )}
+      </ScrollView>
+    </Screen>
   );
 }

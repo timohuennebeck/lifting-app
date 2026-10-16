@@ -22,13 +22,6 @@ export default function TabsLayout() {
           screens keep clear of the tab bar themselves (TabBarInset). */}
       <NativeTabs tintColor={colors.accent} backgroundColor={colors.bg} iconColor={colors.subtle}>
         <NativeTabs.Trigger name="index" disableAutomaticContentInsets>
-          <NativeTabs.Trigger.Label>{t('tabs.today')}</NativeTabs.Trigger.Label>
-          <NativeTabs.Trigger.Icon
-            sf={{ default: 'sun.max', selected: 'sun.max.fill' }}
-            md="today"
-          />
-        </NativeTabs.Trigger>
-        <NativeTabs.Trigger name="training" disableAutomaticContentInsets>
           <NativeTabs.Trigger.Label>{t('tabs.training')}</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon sf="dumbbell.fill" md="fitness_center" />
         </NativeTabs.Trigger>

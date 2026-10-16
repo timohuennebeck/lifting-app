@@ -4,7 +4,7 @@
   "status": {
     "doneToday": "Heute erledigt",
     "done": "Erledigt · {{date}}",
-    "recommended": "Coach empfiehlt"
+    "next": "Als Nächstes"
   },
   "stats": {
     "minutes": "{{count}} Min",

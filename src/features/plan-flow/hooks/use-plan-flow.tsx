@@ -33,25 +33,17 @@ type PlanStep =
 
 const InAppContext = createContext(false);
 
-/** Marks the plan flow's screens as opened from the app (Training → "Plan erstellen"). */
+/** Marks the plan flow's screens as opened from the app (the "+" sheet or Training). */
 export function InAppPlanFlow({ children }: { children: ReactNode }) {
   return <InAppContext value>{children}</InAppContext>;
 }
 
-/** The tab the in-app flow returns to once the plan is saved: where it was opened. */
-let returnTo: '/' | '/training' = '/training';
-
 /**
- * Opens the plan flow from the app (Today or Training, `from`): a fresh import, and the profile's
- * answers (with the current plan's workouts per week) as the AI's starting point. The onboarding
- * draft holds the flow's answers, as in onboarding.
+ * Opens the plan flow from the app: a fresh import, and the profile's answers (with the current
+ * plan's workouts per week) as the AI's starting point. The onboarding draft holds the flow's
+ * answers, as in onboarding.
  */
-export function openPlanFlow(
-  profile: Profile | null | undefined,
-  from: typeof returnTo,
-  sessionsPerWeek?: number,
-) {
-  returnTo = from;
+export function openPlanFlow(profile: Profile | null | undefined, sessionsPerWeek?: number) {
   useImportStore.getState().reset();
   useOnboardingStore.getState().update({
     plan: null,
@@ -72,7 +64,7 @@ export function openPlanFlow(
 /**
  * The plan flow (has a plan? → import or create) runs in onboarding and in the app. Its screens
  * go to the next step with `step`, and hand over the plan with `finish`: onboarding goes on to
- * its promise, the app saves it as the plan Today follows and returns to the tab it came from. A
+ * its promise, the app saves it as the plan Training follows and returns to the Training tab. A
  * plan made from the answers hands them over too: the app keeps them in the profile, so the next
  * plan starts from them (onboarding saves the whole draft at sign-up).
  */
@@ -96,7 +88,7 @@ export function usePlanFlow() {
     );
     if (saved) {
       haptics.success();
-      router.dismissTo(returnTo);
+      router.dismissTo('/');
     }
     saving.current = false;
   }

@@ -1,7 +1,8 @@
 {
-  "tabs": {
-    "myPlan": "Pläne",
-    "all": "Einzeltrainings"
+  "home": {
+    "single": "Einzeltrainings",
+    "showAll": "Alle anzeigen",
+    "otherPlans": "Weitere Pläne"
   },
   "list": {
     "start": "{{name}} starten",
@@ -131,10 +132,6 @@
     "rirOption": "{{value}} Wiederholungen in Reserve"
   },
   "empty": {
-    "workouts": "Trainings",
-    "block": "Block {{n}}",
-    "planTitle": "Kein Plan vorhanden",
-    "planBody": "Ein Plan reiht deine Trainings in Blöcken. Danach zeigen wir dir hier immer, was dran ist.",
     "routinesTitle": "Keine Trainings vorhanden",
     "routinesBody": "Stell dir aus Übungen ein Training zusammen. Danach findest du es hier und kannst es in Pläne einbauen."
   }

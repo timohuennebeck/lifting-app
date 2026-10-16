@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
+import { PlanOverviewCard } from '@/features/training/components/plan-overview-card';
 import { RoutineRow, useRoutineMeta } from '@/features/training/components/routine-row';
 import { SectionTitle } from '@/features/training/components/section-title';
 import { useStartRoutine } from '@/features/training/hooks/use-start-routine';
@@ -19,6 +20,7 @@ import {
 } from '@/shared/data/routines';
 import { useActiveWorkout } from '@/shared/data/workouts';
 import { useToday } from '@/shared/hooks/use-today';
+import { cn } from '@/shared/lib/cn';
 import { mondayIndex } from '@/shared/lib/date';
 import { formatDate, formatWeekdayDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
@@ -32,8 +34,17 @@ import { PlanPrompt } from '../components/plan-prompt';
 import { WeekStrip } from '../components/week-strip';
 import { useWeekWorkouts } from '../hooks/use-week-workouts';
 
-/** Routines outside a plan shown without one, the ones done most recently first. */
+/** Einzeltrainings shown here, the ones done most recently first; "Alle anzeigen" has the rest. */
 const RECENT = 3;
+
+/** Routines done most recently first, then the others A–Z. */
+function recentFirst(routines: RoutineSummary[], lastDone: DoneDates, language: string) {
+  return [...routines].sort(
+    (a, b) =>
+      (lastDone[b.id] ?? '').localeCompare(lastDone[a.id] ?? '') ||
+      a.name.localeCompare(b.name, language),
+  );
+}
 
 /** Day `index` of the week strip, picked on `day` (the `useToday` key). */
 interface DayPick {
@@ -85,12 +96,13 @@ function RoutineRows({
 }
 
 /**
- * Heute: the week with its workouts, the picked day's workout once done, then the plan Today
- * follows with where it stands, the routine the coach recommends and its other routines. Without
- * a plan, the routines done most recently and a way to get one.
+ * Training, the first tab: the week with its workouts and the picked day's workout once done,
+ * then the plan it follows with where it stands, the routine that comes next and its other
+ * routines; then the routines outside a plan (Einzeltrainings) and the other plans. Without a
+ * plan, or with an empty one, a way to make or fill it.
  */
 export function TodayScreen() {
-  const { t } = useTranslation(['today', 'training']);
+  const { t, i18n } = useTranslation(['today', 'training']);
   // The tab stays mounted: the day comes from a clock so it moves on overnight, and a picked
   // day only counts on the day it was picked.
   const dayKey = useToday();
@@ -102,7 +114,7 @@ export function TodayScreen() {
   const { data: active } = useActiveWorkout();
   const { days, isLoading: weekLoading } = useWeekWorkouts(today);
   const day = days[selected];
-  const { plan, profile, isLoading: planLoading } = useCurrentPlan();
+  const { plan, plans, profile, isLoading: planLoading } = useCurrentPlan();
   const status = usePlanStatus(plan);
   const { data: routines = [], isLoading: routinesLoading } = useRoutines();
   const { data: doneThisWeek = {}, isLoading: doneLoading } = useWeekDone(plan?.id, status?.week);
@@ -114,17 +126,17 @@ export function TodayScreen() {
   const planRoutines = plan ? routines.filter((r) => r.planId === plan.id) : [];
   const next = planRoutines.find((r) => r.id === status?.nextRoutineId);
   const rest = planRoutines.filter((r) => r !== next);
-  const recent = routines
-    .filter((r) => r.planId === null && lastDone[r.id])
-    .sort((a, b) => lastDone[b.id].localeCompare(lastDone[a.id]))
-    .slice(0, RECENT);
+  const library = routines.filter((r) => r.planId === null);
+  const singles = recentFirst(library, lastDone, i18n.language).slice(0, RECENT);
+  const otherPlans = plans.filter((p) => p.id !== plan?.id);
   // Nothing shows until the day, the plan and what was done are known, so no card flashes in
   // the wrong state or moves down once the rows above it arrive.
   const loading =
     weekLoading ||
     planLoading ||
     routinesLoading ||
-    (plan ? !status || doneLoading : lastDoneLoading);
+    lastDoneLoading ||
+    (!!plan && (!status || doneLoading));
 
   // A running workout is one tap away; new ones start from the tab bar's "+".
   const resume = active ? (
@@ -140,76 +152,22 @@ export function TodayScreen() {
     </PressableScale>
   ) : null;
 
-  // The plan with its routines; an empty plan, a way to fill it; without a plan, the routines
-  // done most recently and a way to get one.
-  function planPart() {
-    if (plan && status && planRoutines.length) {
-      return (
-        <>
-          <PlanCard
-            plan={plan}
-            status={status}
-            next={next}
-            date={day.date}
-            today={today}
-            canMarkDone={!day.workout}
-            activeWorkoutId={active?.id ?? null}
-            startingId={startingId}
-            onStart={start}
-          />
-          {rest.length ? (
-            <>
-              <SectionTitle>{t('training:myPlan.rest')}</SectionTitle>
-              <RoutineRows
-                routines={rest}
-                done={doneThisWeek}
-                doneLabel={(at) =>
-                  t('training:myPlan.doneOn', {
-                    day: formatDate(new Date(at), { weekday: 'short' }),
-                  })
-                }
-                meta={meta}
-                startingId={startingId}
-                onStart={start}
-              />
-            </>
-          ) : null}
-        </>
-      );
-    }
-    if (plan) {
-      return (
-        <PlanPrompt
-          title={t('emptyPlan.title')}
-          body={t('emptyPlan.body')}
-          onPress={() => router.push(`/plan/${plan.id}`)}
-        />
-      );
-    }
-    return (
-      <>
-        {recent.length ? (
-          <>
-            <SectionTitle>{t('training:all.recent')}</SectionTitle>
-            <RoutineRows
-              routines={recent}
-              meta={(r) =>
-                t('training:all.lastDone', { date: formatWeekdayDate(new Date(lastDone[r.id])) })
-              }
-              startingId={startingId}
-              onStart={start}
-            />
-            <View className="h-4" />
-          </>
-        ) : null}
-        <PlanPrompt
-          title={t('noPlan.title')}
-          body={t('noPlan.body')}
-          onPress={() => openPlanFlow(profile, '/')}
-        />
-      </>
-    );
-  }
+  // The plan's status once it has routines: the plan card shows.
+  const followed = planRoutines.length ? status : undefined;
+  // Without a plan, or with an empty one, the way to make or fill it fills the rest of the page.
+  const prompt = !plan ? (
+    <PlanPrompt
+      title={t('noPlan.title')}
+      body={t('noPlan.body')}
+      onPress={() => openPlanFlow(profile)}
+    />
+  ) : !planRoutines.length ? (
+    <PlanPrompt
+      title={t('emptyPlan.title')}
+      body={t('emptyPlan.body')}
+      onPress={() => router.push(`/plan/${plan.id}`)}
+    />
+  ) : null;
 
   return (
     <TabScreen
@@ -227,7 +185,87 @@ export function TodayScreen() {
               <DoneCard workout={day.workout} date={day.date} today={today} units={units} />
             </View>
           ) : null}
-          {planPart()}
+          {followed ? (
+            <>
+              <PlanCard
+                plan={plan}
+                status={followed}
+                next={next}
+                date={day.date}
+                today={today}
+                canMarkDone={!day.workout}
+                activeWorkoutId={active?.id ?? null}
+                startingId={startingId}
+                onStart={start}
+              />
+              {rest.length ? (
+                <>
+                  <SectionTitle>{t('training:myPlan.rest')}</SectionTitle>
+                  <RoutineRows
+                    routines={rest}
+                    done={doneThisWeek}
+                    doneLabel={(at) =>
+                      t('training:myPlan.doneOn', {
+                        day: formatDate(new Date(at), { weekday: 'short' }),
+                      })
+                    }
+                    meta={meta}
+                    startingId={startingId}
+                    onStart={start}
+                  />
+                </>
+              ) : null}
+            </>
+          ) : null}
+          {singles.length ? (
+            <>
+              <SectionTitle
+                action={
+                  library.length > RECENT
+                    ? { label: t('training:home.showAll'), onPress: () => router.push('/routines') }
+                    : undefined
+                }
+              >
+                {t('training:home.single')}
+              </SectionTitle>
+              <RoutineRows
+                routines={singles}
+                meta={(r) =>
+                  lastDone[r.id]
+                    ? t('training:all.lastDone', {
+                        date: formatWeekdayDate(new Date(lastDone[r.id])),
+                      })
+                    : meta(r)
+                }
+                startingId={startingId}
+                onStart={start}
+              />
+            </>
+          ) : null}
+          {otherPlans.length ? (
+            <>
+              <SectionTitle>{t('training:home.otherPlans')}</SectionTitle>
+              <View className="gap-2.5 px-4">
+                {otherPlans.map((p) => (
+                  <PlanOverviewCard
+                    key={p.id}
+                    plan={p}
+                    routines={routines.filter((r) => r.planId === p.id)}
+                  />
+                ))}
+              </View>
+            </>
+          ) : null}
+          {prompt ? (
+            <View
+              className={cn(
+                'flex-1',
+                (!!day.workout || !!singles.length || !!otherPlans.length) && 'pt-8',
+              )}
+            >
+              {prompt}
+            </View>
+          ) : null}
           {/* The list ends 40pt above the tab bar inset; TabScreen adds 24. */}
           <View className="h-4" />
         </>

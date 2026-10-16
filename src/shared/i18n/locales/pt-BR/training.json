@@ -1,7 +1,8 @@
 {
-  "tabs": {
-    "myPlan": "Planos",
-    "all": "Treinos avulsos"
+  "home": {
+    "single": "Treinos avulsos",
+    "showAll": "Ver todos",
+    "otherPlans": "Outros planos"
   },
   "list": {
     "start": "Iniciar {{name}}",
@@ -131,10 +132,6 @@
     "rirOption": "{{value}} repetições em reserva"
   },
   "empty": {
-    "workouts": "treinos",
-    "block": "Bloco {{n}}",
-    "planTitle": "Ainda sem plano",
-    "planBody": "Um plano organiza seus treinos em blocos. Depois mostramos sempre aqui o que vem a seguir.",
     "routinesTitle": "Ainda sem treinos",
     "routinesBody": "Monte um treino a partir de exercícios. Depois você encontra ele aqui e pode adicioná-lo a planos."
   }

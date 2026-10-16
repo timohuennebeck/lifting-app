@@ -1,7 +1,8 @@
 {
-  "tabs": {
-    "myPlan": "Plans",
-    "all": "Single workouts"
+  "home": {
+    "single": "Single workouts",
+    "showAll": "Show all",
+    "otherPlans": "Other plans"
   },
   "list": {
     "start": "Start {{name}}",
@@ -131,10 +132,6 @@
     "rirOption": "{{value}} reps in reserve"
   },
   "empty": {
-    "workouts": "workouts",
-    "block": "Block {{n}}",
-    "planTitle": "No plan yet",
-    "planBody": "A plan lines up your workouts in blocks. Then we always show you here what comes next.",
     "routinesTitle": "No workouts yet",
     "routinesBody": "Put a workout together from exercises. You’ll find it here and can add it to plans."
   }

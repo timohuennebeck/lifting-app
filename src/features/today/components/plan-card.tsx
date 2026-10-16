@@ -26,7 +26,7 @@ import { markRoutineDone } from '../data/today-mutations';
 export interface PlanCardProps {
   plan: PlanSummary;
   status: PlanStatus;
-  /** The routine the coach recommends next; undefined while none has exercises. */
+  /** The routine that comes next; undefined while none has exercises. */
   next: RoutineSummary | undefined;
   /** The day picked in the week strip; marking done logs the routine on it. */
   date: Date;
@@ -41,8 +41,8 @@ export interface PlanCardProps {
 }
 
 /**
- * The plan Today follows: its name, goal and block, where it stands, and the routine the coach
- * recommends with start and mark done. The top opens the plan, the routine its page.
+ * The plan Training follows: its name, goal and block, where it stands, and the routine that
+ * comes next with start and mark done. The top opens the plan, the routine its page.
  */
 export function PlanCard({
   plan,
@@ -67,7 +67,7 @@ export function PlanCard({
     .filter(Boolean)
     .join(' · ');
   // Another day picked: its date instead, as the routine is the one for that day.
-  const recommended = isSameDay(date, today) ? t('status.recommended') : formatWeekdayDate(date);
+  const nextLabel = isSameDay(date, today) ? t('status.next') : formatWeekdayDate(date);
 
   const markDone = async () => {
     if (!next || busy || starting) return;
@@ -119,14 +119,14 @@ export function PlanCard({
             haptic="tap"
             activeScale={0.98}
             accessibilityRole="button"
-            accessibilityLabel={`${recommended}: ${next.name}, ${meta(next)}`}
+            accessibilityLabel={`${nextLabel}: ${next.name}, ${meta(next)}`}
             onPress={() => router.push(`/routine/${next.id}`)}
             className="flex-row items-center gap-3.5"
           >
             <MuscleStack shares={muscleShares(next.items)} highlight />
             <View className="min-w-0 flex-1 gap-0.5">
               <Text variant="overline" tone="accent" numberOfLines={1} className="text-[11px]">
-                {recommended}
+                {nextLabel}
               </Text>
               <Text variant="headline" numberOfLines={1}>
                 {next.name}

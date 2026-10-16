@@ -4,7 +4,7 @@
   "status": {
     "doneToday": "Done today",
     "done": "Done · {{date}}",
-    "recommended": "Coach recommends"
+    "next": "Up next"
   },
   "stats": {
     "minutes": "{{count}} min",

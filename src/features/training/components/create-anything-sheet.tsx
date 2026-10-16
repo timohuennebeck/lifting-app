@@ -44,7 +44,7 @@ export function CreateAnythingSheet({ visible, onClose }: CreateAnythingSheetPro
         })
       }
       onCreateRoutine={() => then(() => router.push('/routine/new'))}
-      onCreatePlan={() => then(() => openPlanFlow(profile, '/', plan?.sessionsPerWeek))}
+      onCreatePlan={() => then(() => openPlanFlow(profile, plan?.sessionsPerWeek))}
     />
   );
 }
