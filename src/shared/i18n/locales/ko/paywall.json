@@ -23,9 +23,12 @@
       }
     },
     "continue": "계속",
+    "startTrial": "무료 체험 시작",
+    "trialDays_one": "{{count}}일 무료",
+    "trialDays_other": "{{count}}일 무료",
     "fine": {
-      "year": "이후 연 {{price}} (월 {{perMonth}}) · 언제든 해지 가능",
-      "month": "이후 월 {{price}} · 언제든 해지 가능"
+      "year": "{{trial}}, 이후 연 {{price}} (월 {{perMonth}}) · 언제든 해지 가능",
+      "month": "{{trial}}, 이후 월 {{price}} · 언제든 해지 가능"
     },
     "fineNoTrial": {
       "year": "연 {{price}} (월 {{perMonth}}) · 언제든 해지 가능",
@@ -43,24 +46,6 @@
       "label": "월간",
       "price": "{{price}} / 월",
       "note": "매월 해지 가능"
-    }
-  },
-  "trial": {
-    "badge_one": "일 무료",
-    "badge_other": "일 무료",
-    "title": "무료 체험은 이렇게 진행돼요",
-    "subtitle": "깜짝 놀랄 일은 없어요. 끝나기 전에 언제든 해지할 수 있어요.",
-    "today": "오늘",
-    "todayBody": "모든 Pro 기능을 바로 이용할 수 있어요.",
-    "day": "{{day}}일 차",
-    "startBody": {
-      "year": "연간 구독이 시작돼요. 그 전에는 언제든 해지할 수 있어요.",
-      "month": "월간 구독이 시작돼요. 그 전에는 언제든 해지할 수 있어요."
-    },
-    "cta": "무료 체험 시작",
-    "fine": {
-      "year": "이후 연 {{price}}",
-      "month": "이후 월 {{price}}"
     }
   },
   "welcome": {

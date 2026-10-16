@@ -44,6 +44,8 @@ export function PaywallScreen() {
 
   const price = priceOf(selected);
   const period = PERIOD_OF[selected];
+  // The free trial is part of the purchase: the store starts it when the account may have one.
+  const trial = !!offering?.trialEligible;
   const yearly = plan('yearly');
   const savings = offering ? yearlySavings(offering) : null;
   // The yearly plan's price per month, for its small print.
@@ -52,7 +54,6 @@ export function PaywallScreen() {
   const onContinue = async () => {
     if (isPro) return flow.exit();
     if (!offering) return;
-    if (offering.trialEligible) return flow.toTrial(selected);
     if (await buy(selected)) flow.toThankYou();
   };
 
@@ -146,19 +147,22 @@ export function PaywallScreen() {
         <FadeEdge />
         {/* Without an offering there is nothing to buy; let the user load it again. */}
         <Button
-          label={failed ? t('common:actions.retry') : t('paywall.continue')}
+          label={
+            failed
+              ? t('common:actions.retry')
+              : t(trial ? 'paywall.startTrial' : 'paywall.continue')
+          }
           loading={busy || loading}
           disabled={restoring}
           onPress={failed ? () => refetch() : onContinue}
         />
         <Text variant="caption" tone="subtle" className="text-center font-inter text-xs">
           {price
-            ? t(
-                offering?.trialEligible
-                  ? `paywall.fine.${period}`
-                  : `paywall.fineNoTrial.${period}`,
-                { price, perMonth },
-              )
+            ? t(trial ? `paywall.fine.${period}` : `paywall.fineNoTrial.${period}`, {
+                price,
+                perMonth,
+                trial: t('paywall.trialDays', { count: offering?.trialDays ?? 0 }),
+              })
             : ' '}
         </Text>
         <LegalLinks />

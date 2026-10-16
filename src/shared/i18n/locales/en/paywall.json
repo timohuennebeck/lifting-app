@@ -23,9 +23,12 @@
       }
     },
     "continue": "Continue",
+    "startTrial": "Start free trial",
+    "trialDays_one": "{{count}} day free",
+    "trialDays_other": "{{count}} days free",
     "fine": {
-      "year": "Then {{price}} per year ({{perMonth}} / month) · cancel anytime",
-      "month": "Then {{price}} per month · cancel anytime"
+      "year": "{{trial}}, then {{price}} per year ({{perMonth}} / month) · cancel anytime",
+      "month": "{{trial}}, then {{price}} per month · cancel anytime"
     },
     "fineNoTrial": {
       "year": "{{price}} per year ({{perMonth}} / month) · cancel anytime",
@@ -43,24 +46,6 @@
       "label": "Monthly",
       "price": "{{price}} / month",
       "note": "cancel any month"
-    }
-  },
-  "trial": {
-    "badge_one": "Day free",
-    "badge_other": "Days free",
-    "title": "How your trial works",
-    "subtitle": "No surprises. Cancel anytime before it ends.",
-    "today": "Today",
-    "todayBody": "All Pro features are unlocked right away.",
-    "day": "Day {{day}}",
-    "startBody": {
-      "year": "Your yearly plan starts. Cancel anytime before then.",
-      "month": "Your monthly plan starts. Cancel anytime before then."
-    },
-    "cta": "Start free trial",
-    "fine": {
-      "year": "Then {{price}} per year",
-      "month": "Then {{price}} per month"
     }
   },
   "welcome": {

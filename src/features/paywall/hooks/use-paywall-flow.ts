@@ -1,11 +1,7 @@
 import { router, useNavigation, useSegments } from 'expo-router';
 import { useState } from 'react';
 
-import type { PlanId } from '../lib/purchases-service';
 import { useIsLocked } from '../stores/subscription-store';
-
-/** The plan travels between paywall steps as a route param. */
-export const parsePlanId = (value: unknown): PlanId => (value === 'monthly' ? 'monthly' : 'yearly');
 
 /**
  * The same screens run in onboarding (/paywall → /create-account), as the Traqa Pro modal from
@@ -25,8 +21,6 @@ export function usePaywallFlow() {
     closable: inApp && !locked,
     /** In front of the app because the subscription ran out (Settings stays reachable). */
     locked: inApp && locked,
-    toTrial: (plan: PlanId) =>
-      router.push({ pathname: inApp ? '/pro/trial' : '/paywall/trial', params: { plan } }),
     /** After a purchase: the thank-you screen replaces the paywall step. */
     toThankYou: () => router.replace(inApp ? '/pro/welcome' : '/paywall/welcome'),
     /** Leaves the flow: next onboarding step, or dismiss the whole modal. */

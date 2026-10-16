@@ -23,9 +23,12 @@
       }
     },
     "continue": "Continuar",
+    "startTrial": "Começar teste grátis",
+    "trialDays_one": "{{count}} dia grátis",
+    "trialDays_other": "{{count}} dias grátis",
     "fine": {
-      "year": "Depois {{price}} por ano ({{perMonth}} / mês) · cancela quando quiseres",
-      "month": "Depois {{price}} por mês · cancela quando quiseres"
+      "year": "{{trial}}, depois {{price}} por ano ({{perMonth}} / mês) · cancela quando quiseres",
+      "month": "{{trial}}, depois {{price}} por mês · cancela quando quiseres"
     },
     "fineNoTrial": {
       "year": "{{price}} por ano ({{perMonth}} / mês) · cancela quando quiseres",
@@ -43,24 +46,6 @@
       "label": "Mensal",
       "price": "{{price}} / mês",
       "note": "cancelável por mês"
-    }
-  },
-  "trial": {
-    "badge_one": "Dia grátis",
-    "badge_other": "Dias grátis",
-    "title": "Como funciona o teu teste",
-    "subtitle": "Sem surpresas. Podes cancelar a qualquer momento antes do fim.",
-    "today": "Hoje",
-    "todayBody": "Todas as funcionalidades Pro ficam desbloqueadas de imediato.",
-    "day": "Dia {{day}}",
-    "startBody": {
-      "year": "Começa a tua subscrição anual. Podes cancelar a qualquer momento antes.",
-      "month": "Começa a tua subscrição mensal. Podes cancelar a qualquer momento antes."
-    },
-    "cta": "Experimentar grátis",
-    "fine": {
-      "year": "Depois {{price}} por ano",
-      "month": "Depois {{price}} por mês"
     }
   },
   "welcome": {

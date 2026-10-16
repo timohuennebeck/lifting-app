@@ -122,7 +122,7 @@ Documents are readable without an account (onboarding runs logged out) and writt
   app writes them on sign-up (the versions in effect then) and when a user agrees to a version that
   requires re-acceptance; until then that version covers the app, showing what changed.
 - **In the app:** `/legal/terms` and `/legal/privacy` show the version in effect, in the app language
-  (else English, else `pt-BR`), linked from sign-up, the paywall and trial screens, and Settings.
+  (else English, else `pt-BR`), linked from sign-up, the paywall and Settings.
   Write the text as Markdown: headings, paragraphs, `>` quotes, lists, `**bold**` and
   `[links](https://…)`. Locally, `supabase/seed.sql` adds placeholder documents on
   `npm run supabase:reset`.
