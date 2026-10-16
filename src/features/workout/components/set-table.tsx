@@ -11,6 +11,7 @@ import {
   type UnitSystem,
   weightUnit,
 } from '@/shared/lib/format';
+import { cn } from '@/shared/lib/cn';
 import { decimalSeparator, displayInput } from '@/shared/lib/keypad';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -33,6 +34,8 @@ export interface SetTableProps {
   units: UnitSystem;
   onSelect: (index: number, field: SetField) => void;
   onToggleDone: (index: number) => void;
+  /** The check over the table: every set done, or all re-opened. */
+  onToggleAll: () => void;
   /** Reports each row's y offset inside the table (for scrolling it into view). */
   onRowLayout: (index: number, y: number) => void;
 }
@@ -47,6 +50,7 @@ export function SetTable({
   units,
   onSelect,
   onToggleDone,
+  onToggleAll,
   onRowLayout,
 }: SetTableProps) {
   const { t } = useTranslation('workout');
@@ -67,6 +71,8 @@ export function SetTable({
   };
 
   const selectedIndex = exercise.sets.findIndex((s) => s.id === selectedSetId);
+  const allDone =
+    exercise.sets.length > 0 && exercise.sets.every((s) => !!s.completedAt || !!logged[s.id]);
   // Rows below the one being typed in follow it as it is typed.
   const typed =
     selectedIndex >= 0 ? { index: selectedIndex, values: typedValues(input, units) } : null;
@@ -113,9 +119,24 @@ export function SetTable({
             {headers[m]}
           </Text>
         ))}
-        <View className="w-7 items-end">
-          <View className="size-6 rounded-full border-2 border-track" />
-        </View>
+        <PressableScale
+          haptic={allDone ? 'tap' : 'press'}
+          hitSlop={10}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: allDone }}
+          accessibilityLabel={t('table.doneAll')}
+          onPress={onToggleAll}
+          className="w-7 items-end"
+        >
+          <View
+            className={cn(
+              'size-6 items-center justify-center rounded-full',
+              allDone ? 'bg-accent' : 'border-2 border-track',
+            )}
+          >
+            {allDone ? <Icon name="check" size={11} color={colors.onAccent} /> : null}
+          </View>
+        </PressableScale>
       </View>
       <View className="gap-2.5 px-5">
         {exercise.sets.map((set, i) => {

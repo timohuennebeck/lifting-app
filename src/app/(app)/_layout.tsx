@@ -19,15 +19,16 @@ export default function AppLayout() {
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="workout/[id]" options={{ gestureEnabled: false }} />
-        {/* Just finished (`?finished=1`): fades in over the workout; from the history it slides. */}
+        {/*
+          Just finished (`?finished=1`): fades in over the workout and only its X leaves; from the
+          history it slides in and swipes back like any page.
+        */}
         <Stack.Screen
           name="workout/summary/[id]"
-          options={({ route }) => ({
-            gestureEnabled: false,
-            animation: (route.params as { finished?: string } | undefined)?.finished
-              ? 'fade'
-              : 'default',
-          })}
+          options={({ route }) => {
+            const finished = !!(route.params as { finished?: string } | undefined)?.finished;
+            return { gestureEnabled: !finished, animation: finished ? 'fade' : 'default' };
+          }}
         />
         <Stack.Screen name="progress-check" options={{ gestureEnabled: false }} />
         <Stack.Screen name="pro" options={{ gestureEnabled: false, animation: 'fade' }} />

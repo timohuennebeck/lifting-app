@@ -20,6 +20,7 @@ export interface ExercisePageProps {
   selectedIndex: number;
   onSelect: (index: number, field: SetField) => void;
   onToggleDone: (index: number) => void;
+  onToggleAll: () => void;
   onSwap: () => void;
   onMore: () => void;
   /** The table's and each row's y offset, to keep the edited row above the keypad. */
@@ -37,6 +38,7 @@ export function ExercisePage({
   selectedIndex,
   onSelect,
   onToggleDone,
+  onToggleAll,
   onSwap,
   onMore,
   onTableLayout,
@@ -85,6 +87,7 @@ export function ExercisePage({
           units={units}
           onSelect={onSelect}
           onToggleDone={onToggleDone}
+          onToggleAll={onToggleAll}
           onRowLayout={(i, y) => onRowLayout?.(i, y)}
         />
       </View>

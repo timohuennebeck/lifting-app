@@ -247,6 +247,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                         selectedIndex={shown ? selectedIndex : -1}
                         onSelect={onSelect}
                         onToggleDone={live.toggleDone}
+                        onToggleAll={live.toggleAll}
                         onSwap={() => openPicker('swap')}
                         onMore={() => setExerciseMenuOpen(true)}
                         onTableLayout={shown ? (y) => (layout.current.table = y) : undefined}

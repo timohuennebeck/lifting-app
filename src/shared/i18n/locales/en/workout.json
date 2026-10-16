@@ -21,6 +21,7 @@
     "repsCell": "Reps",
     "secondsCell": "Seconds",
     "done": "Set done",
+    "doneAll": "All sets done",
     "addSet": "Add set"
   },
   "rest": {

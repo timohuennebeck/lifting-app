@@ -168,6 +168,40 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     void commit(selectedIndex, values);
   }
 
+  /**
+   * The check over the table: logs every open set of the exercise with what its row shows, or
+   * re-opens them all when all are done. With a box still empty, it opens the keypad there instead.
+   */
+  function toggleAll() {
+    if (!exercise?.sets.length) return;
+    const store = useWorkoutSessionStore.getState();
+    const isDone = (index: number) => {
+      const set = exercise.sets[index];
+      return !!set.completedAt || !!logged[set.id];
+    };
+    const indexes = exercise.sets.map((_, i) => i);
+    if (indexes.every(isDone)) {
+      for (const set of exercise.sets) {
+        store.clearLogged(set.id);
+        void unlogSet(set.id);
+      }
+      return;
+    }
+    const open = indexes.filter((i) => !isDone(i));
+    const rows = open.map((i) => ({
+      index: i,
+      ...parseSetInput(inputFor(i), measures, bodyweight, units),
+    }));
+    const missing = rows.find((r) => r.missing);
+    if (missing?.missing) {
+      selectSet(missing.index, missing.missing);
+      return;
+    }
+    // All shown as done first, so the rest timer doesn't start when they finish the workout.
+    for (const row of rows) store.markLogged(exercise.sets[row.index].id, row.values);
+    for (const row of rows) void commit(row.index, row.values);
+  }
+
   /** The round check at the end of a row: logs with the prefill, or re-opens a set. */
   function toggleDone(index: number) {
     const set = exercise.sets[index];
@@ -201,5 +235,6 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     goToExercise,
     confirmInput,
     toggleDone,
+    toggleAll,
   };
 }

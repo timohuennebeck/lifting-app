@@ -21,6 +21,7 @@
     "repsCell": "반복 수",
     "secondsCell": "초",
     "done": "세트 완료",
+    "doneAll": "모든 세트 완료",
     "addSet": "세트 추가"
   },
   "rest": {
