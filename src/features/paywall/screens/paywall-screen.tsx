@@ -32,7 +32,7 @@ const BENEFITS = ['import', 'history', 'suggestions'] as const;
 
 /** Traqa Pro paywall: before/after header, benefits, plan picker. */
 export function PaywallScreen() {
-  const { t } = useTranslation(['paywall', 'common']);
+  const { t, i18n } = useTranslation(['paywall', 'common']);
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
   const flow = usePaywallFlow();
@@ -94,7 +94,8 @@ export function PaywallScreen() {
           }
         />
         <View className="px-5 pt-2.5">
-          <BeforeAfter />
+          {/* Its dates are formatted once; a language switch from Settings redraws them. */}
+          <BeforeAfter key={i18n.language} />
         </View>
 
         <View className="items-center px-6 pt-7">
