@@ -1,6 +1,7 @@
 import type { OnboardingDraft } from '@/features/onboarding/stores/onboarding-store';
 import type { ImportFailure } from '@/features/plan-import/lib/plan-import-service';
 import type { EquipmentAccess, Experience, Goal, ProfilePatch, Split } from '@/shared/data/profile';
+import { clampSessions } from '@/shared/data/plans';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 import { chosenSplit } from './splits';
@@ -14,8 +15,8 @@ export interface PlanAnswers {
   homeEquipment: string[];
   /** Workouts per week. */
   sessionsPerWeek: number;
-  /** How the routines divide the body; one that suits the workouts a week. */
-  split: Split;
+  /** How the routines divide the body, one that suits the workouts a week; null: the AI picks. */
+  split: Split | null;
   sessionMinutes: number;
   experience: Experience | null;
 }
@@ -27,7 +28,7 @@ export function answersFromDraft(draft: OnboardingDraft): PlanAnswers {
     focus: draft.focus,
     equipment: draft.equipment ?? 'gym',
     homeEquipment: draft.equipment === 'home' ? draft.homeEquipment : [],
-    sessionsPerWeek: draft.sessionsPerWeek,
+    sessionsPerWeek: clampSessions(draft.sessionsPerWeek),
     split: chosenSplit(draft),
     sessionMinutes: draft.sessionMinutes,
     experience: draft.experience,

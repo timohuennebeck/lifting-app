@@ -16,10 +16,19 @@ export type Experience = 'none' | 'beginner' | 'intermediate' | 'advanced';
 export type Goal = 'hypertrophy' | 'strength' | 'strength_hypertrophy';
 export type EquipmentAccess = 'gym' | 'home' | 'bodyweight';
 /**
- * How a plan's routines divide the body: full body, upper/lower, push/pull/legs, push/pull/legs
- * plus upper/lower (5 a week), one area a day ("bro") or the Arnold split.
+ * How a plan's routines divide the body: full body, upper/lower, upper/lower/full body (3 a week),
+ * push/pull/legs, push/pull/legs plus an arms and shoulders day (4 a week) or plus upper/lower
+ * (5 a week), one area a day ("bro") or the Arnold split.
  */
-export type Split = 'full_body' | 'upper_lower' | 'ppl' | 'ppl_upper_lower' | 'bro' | 'arnold';
+export type Split =
+  | 'full_body'
+  | 'upper_lower'
+  | 'upper_lower_full'
+  | 'ppl'
+  | 'ppl_arms'
+  | 'ppl_upper_lower'
+  | 'bro'
+  | 'arnold';
 
 /**
  * Whole years someone born on `birthDate` (YYYY-MM-DD) is on `today`, counting the birthday
@@ -47,7 +56,7 @@ export interface Profile {
   /** With `equipment` 'home': the equipment ids the user has. */
   homeEquipment: string[];
   sessionMinutes: number | null;
-  /** The split the last plan made from the answers used. */
+  /** The split the last plan made from the answers used; null: none picked (the AI chose). */
   split: Split | null;
   activePlanId: string | null;
   /** App language, mirrored for the team and server-side messages. */

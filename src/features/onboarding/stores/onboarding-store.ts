@@ -26,7 +26,7 @@ export interface OnboardingDraft {
   homeEquipment: string[];
   /** Workouts per week the AI plans for. */
   sessionsPerWeek: number;
-  /** Picked for the workouts a week (see chosenSplit); null until asked. */
+  /** Picked for the workouts a week (see chosenSplit); null: no preference, the AI picks. */
   split: Split | null;
   sessionMinutes: number;
   /** Plan made by the AI, read by the import or built in the editor. */

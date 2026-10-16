@@ -4,7 +4,7 @@ import { createContext, type ReactNode, useContext, useRef } from 'react';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { useImportStore } from '@/features/plan-import/stores/import-store';
 import type { Profile, ProfilePatch } from '@/shared/data/profile';
-import type { PlanDraft } from '@/shared/data/plans';
+import { clampSessions, type PlanDraft } from '@/shared/data/plans';
 import { attempt } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -58,7 +58,7 @@ export function openPlanFlow(profile: Profile | null | undefined, sessionsPerWee
       ...(profile.sessionMinutes ? { sessionMinutes: profile.sessionMinutes } : {}),
       split: profile.split,
     }),
-    ...(sessionsPerWeek ? { sessionsPerWeek } : {}),
+    ...(sessionsPerWeek ? { sessionsPerWeek: clampSessions(sessionsPerWeek) } : {}),
   });
   router.push('/plan/has-plan');
 }

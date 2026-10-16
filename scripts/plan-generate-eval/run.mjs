@@ -1,11 +1,11 @@
-// Tests the plan generation (the generate-plan Edge Function) with 17 sets of onboarding answers
+// Tests the plan generation (the generate-plan Edge Function) with 18 sets of onboarding answers
 // and checks each plan it makes: a routine per workout a week, sessions that fit the chosen length,
 // only exercises the equipment allows, no exercise twice a routine, every major muscle group trained,
 // pushing and pulling about even, focus muscles trained more, sets and reps that suit the goal and
 // the experience, core work only where the goal or focus asks for it and no timed holds. The checks are rules of thumb; read the plans in the report as well.
 //
 // Needs the function with an OpenAI key at EXPO_PUBLIC_SUPABASE_URL from .env: locally
-// `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 17 plans, so
+// `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 18 plans, so
 // set PLAN_GENERATE_IP_LIMIT=1000 there first, then restart Supabase), or the deployed project.
 // Usage: npm run plan:generate-eval                    all profiles
 //        npm run plan:generate-eval -- 03 11           only these
@@ -43,7 +43,7 @@ const HOME_EQUIPMENT = {
 
 /**
  * Answers as the app sends them, across goals, equipment, workouts a week, splits (one the app
- * offers for that many), lengths and experience.
+ * offers for that many, or none: no preference), lengths and experience.
  */
 const PROFILES = [
   ['01', 'de', 'hypertrophy', 'gym', 3, 'full_body', 60, 'beginner', []],
@@ -64,15 +64,16 @@ const PROFILES = [
   ['06', 'de', 'strength', 'home', 2, 'upper_lower', 90, 'intermediate', []],
   ['07', 'de', 'hypertrophy', 'bodyweight', 3, 'full_body', 30, 'none', []],
   ['08', 'pt-PT', 'strength_hypertrophy', 'bodyweight', 4, 'full_body', 40, 'beginner', []],
-  ['09', 'pt-BR', 'hypertrophy', 'gym', 1, 'full_body', 90, 'intermediate', []],
+  ['09', 'pt-BR', 'hypertrophy', 'gym', 3, 'upper_lower_full', 90, 'intermediate', []],
   ['10', 'de', 'hypertrophy', 'gym', 2, 'full_body', 30, 'none', ['biceps', 'triceps']],
   ['11', 'en', 'strength', 'gym', 3, 'ppl', 60, 'advanced', []],
-  ['12', 'de', 'hypertrophy', 'gym', 7, 'ppl', 30, 'advanced', []],
+  ['12', 'de', 'hypertrophy', 'gym', 6, 'full_body', 30, 'advanced', []],
   ['13', 'de', 'hypertrophy', 'gym', 4, 'upper_lower', 120, 'intermediate', ['lats', 'upper_back']],
   ['14', 'pt-BR', 'strength_hypertrophy', 'home', 5, 'bro', 20, 'intermediate', ['abs']],
-  ['15', 'de', 'hypertrophy', 'gym', 3, 'full_body', 60, null, ['quads']],
+  ['15', 'de', 'hypertrophy', 'gym', 3, null, 60, null, ['quads']],
   ['16', 'de', 'hypertrophy', 'gym', 4, 'upper_lower', 60, 'intermediate', []],
   ['17', 'en', 'hypertrophy', 'gym', 6, 'arnold', 60, 'intermediate', []],
+  ['18', 'de', 'hypertrophy', 'gym', 4, 'ppl_arms', 60, 'intermediate', ['biceps']],
 ].map(
   ([id, language, goal, equipment, sessionsPerWeek, split, sessionMinutes, experience, focus]) => ({
     id,
@@ -130,7 +131,9 @@ const timesPerMuscle = ({ split, sessionsPerWeek: n }) =>
   ({
     full_body: n,
     upper_lower: Math.floor(n / 2),
+    upper_lower_full: 2,
     ppl: Math.floor(n / 3),
+    ppl_arms: 1,
     ppl_upper_lower: 2,
     bro: 1,
     arnold: 2,

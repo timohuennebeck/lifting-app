@@ -55,6 +55,11 @@
     "subtitle_one": "The ones that suit {{count}} workout a week.",
     "subtitle_other": "The ones that suit {{count}} workouts a week.",
     "options": {
+      "none": {
+        "short": "AI",
+        "title": "No preference",
+        "description": "The AI picks for you"
+      },
       "full_body": {
         "short": "FB",
         "title": "Full body",
@@ -65,10 +70,20 @@
         "title": "Upper / Lower",
         "description": "Upper and lower in turn"
       },
+      "upper_lower_full": {
+        "short": "ULF",
+        "title": "Upper / Lower / Full body",
+        "description": "Upper, lower, then everything"
+      },
       "ppl": {
         "short": "PPL",
         "title": "Push / Pull / Legs",
         "description": "Push, pull, legs"
+      },
+      "ppl_arms": {
+        "short": "PPL+A",
+        "title": "Push / Pull / Legs + Arms",
+        "description": "Extra day for arms & shoulders"
       },
       "ppl_upper_lower": {
         "short": "PPL+",
@@ -78,7 +93,7 @@
       "bro": {
         "short": "BRO",
         "title": "Bro split",
-        "description": "One muscle a day"
+        "description": "One muscle a day, 1× a week"
       },
       "arnold": {
         "short": "ARN",

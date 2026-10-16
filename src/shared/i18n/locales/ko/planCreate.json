@@ -55,6 +55,11 @@
     "subtitle_one": "주 {{count}}회에 맞는 분할이에요.",
     "subtitle_other": "주 {{count}}회에 맞는 분할이에요.",
     "options": {
+      "none": {
+        "short": "AI",
+        "title": "상관없음",
+        "description": "AI가 골라 드려요"
+      },
       "full_body": {
         "short": "전신",
         "title": "전신",
@@ -65,10 +70,20 @@
         "title": "상체 / 하체",
         "description": "상체와 하체를 번갈아"
       },
+      "upper_lower_full": {
+        "short": "상하전",
+        "title": "상체 / 하체 / 전신",
+        "description": "상체, 하체, 그다음 전신"
+      },
       "ppl": {
         "short": "PPL",
         "title": "밀기 / 당기기 / 하체",
         "description": "밀기, 당기기, 하체"
+      },
+      "ppl_arms": {
+        "short": "PPL+팔",
+        "title": "밀기 / 당기기 / 하체 + 팔",
+        "description": "팔·어깨를 위한 추가일"
       },
       "ppl_upper_lower": {
         "short": "PPL+",
@@ -78,7 +93,7 @@
       "bro": {
         "short": "BRO",
         "title": "브로 분할",
-        "description": "하루에 한 부위"
+        "description": "하루에 한 부위, 주 1회"
       },
       "arnold": {
         "short": "ARN",

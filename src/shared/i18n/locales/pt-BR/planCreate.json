@@ -55,6 +55,11 @@
     "subtitle_one": "As que combinam com {{count}} treino por semana.",
     "subtitle_other": "As que combinam com {{count}} treinos por semana.",
     "options": {
+      "none": {
+        "short": "IA",
+        "title": "Sem preferência",
+        "description": "A IA escolhe por você"
+      },
       "full_body": {
         "short": "FB",
         "title": "Full body",
@@ -65,10 +70,20 @@
         "title": "Superior / Inferior",
         "description": "Superior e inferior alternados"
       },
+      "upper_lower_full": {
+        "short": "SIF",
+        "title": "Sup. / Inf. / Full body",
+        "description": "Superior, inferior, depois tudo"
+      },
       "ppl": {
         "short": "PPL",
         "title": "Push / Pull / Pernas",
         "description": "Empurrar, puxar, pernas"
+      },
+      "ppl_arms": {
+        "short": "PPL+B",
+        "title": "Push / Pull / Pernas + Braços",
+        "description": "Dia extra para braços e ombros"
       },
       "ppl_upper_lower": {
         "short": "PPL+",
@@ -78,7 +93,7 @@
       "bro": {
         "short": "BRO",
         "title": "Bro split",
-        "description": "Um músculo por dia"
+        "description": "Um músculo por dia, 1×/semana"
       },
       "arnold": {
         "short": "ARN",

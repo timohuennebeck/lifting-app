@@ -55,6 +55,11 @@
     "subtitle_one": "Die passenden für {{count}} Training pro Woche.",
     "subtitle_other": "Die passenden für {{count}} Trainings pro Woche.",
     "options": {
+      "none": {
+        "short": "KI",
+        "title": "Keine Präferenz",
+        "description": "Die KI wählt für dich"
+      },
       "full_body": {
         "short": "GK",
         "title": "Ganzkörper",
@@ -65,10 +70,20 @@
         "title": "Oberkörper / Unterkörper",
         "description": "Oben und unten im Wechsel"
       },
+      "upper_lower_full": {
+        "short": "OUG",
+        "title": "OK / UK / Ganzkörper",
+        "description": "Oben, unten, dann alles"
+      },
       "ppl": {
         "short": "PPL",
         "title": "Push / Pull / Beine",
         "description": "Drücken, Ziehen, Beine"
+      },
+      "ppl_arms": {
+        "short": "PPL+A",
+        "title": "Push / Pull / Beine + Arme",
+        "description": "Extra-Tag für Arme & Schultern"
       },
       "ppl_upper_lower": {
         "short": "PPL+",
@@ -78,7 +93,7 @@
       "bro": {
         "short": "BRO",
         "title": "Bro-Split",
-        "description": "Ein Muskel pro Tag"
+        "description": "Ein Muskel pro Tag, 1×/Woche"
       },
       "arnold": {
         "short": "ARN",

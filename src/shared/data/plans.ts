@@ -19,7 +19,9 @@ import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /** A plan's weekly goal when nothing says otherwise. */
 export const DEFAULT_SESSIONS_PER_WEEK = 3;
-export const MAX_SESSIONS_PER_WEEK = 7;
+/** Workouts a week a plan can have: fewer can't train every muscle twice, more leave no rest day. */
+export const MIN_SESSIONS_PER_WEEK = 2;
+export const MAX_SESSIONS_PER_WEEK = 6;
 /** A plan the AI makes: 4 weeks building up, then a deload. */
 export const AI_BLOCK_WEEKS = 5;
 /** Reps in reserve of every set in a deload week. */
@@ -39,9 +41,12 @@ export interface PlanDraft {
   blockWeeks: number | null;
 }
 
-/** A weekly goal between 1 and 7. */
+/** A weekly goal between 2 and 6. */
 export const clampSessions = (count: number) =>
-  Math.min(Math.max(Math.round(count) || 1, 1), MAX_SESSIONS_PER_WEEK);
+  Math.min(
+    Math.max(Math.round(count) || DEFAULT_SESSIONS_PER_WEEK, MIN_SESSIONS_PER_WEEK),
+    MAX_SESSIONS_PER_WEEK,
+  );
 
 /**
  * Writes a plan with its routines inside `tx`, with the exercises of `newExercises` it uses (an

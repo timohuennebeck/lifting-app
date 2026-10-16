@@ -215,10 +215,10 @@ the app says so and the user goes back a step.
 - **Equipment:** the model only sees the exercises the user can do: "Komplettes Studio" has every
   item a gym has (`in_gym`), "Eigene Geräte" the ticked ones (`profiles.home_equipment`), "Keine
   Geräte" none, and an exercise fits when each of its `needs` is met (see Exercise catalog).
-- **Split:** asked after the workouts a week, offering only the splits that suit that many
-  (`splitsFor` in `src/features/plan-create/lib/splits.ts`, the recommended one first and picked;
-  with only one, as for 1 and 7 a week, the question is left out). Kept in `profiles.split` for the
-  next plan. Without a split (older app versions) the model picks one.
+- **Split:** asked after the workouts a week (2–6): "Keine Präferenz", picked by default, leaves
+  it to the model; then only the splits that suit that many (`splitsFor` in
+  `src/features/plan-create/lib/splits.ts`, the recommended one first). Kept in `profiles.split`
+  (null for no preference) for the next plan.
 - **Exercises left out:** cardio and timed holds (planks, wall sits). Core work (abs and obliques
   at least half the stimulus) only for hypertrophy, or with abs or obliques as a focus: for
   strength the main lifts already train the trunk.
@@ -231,7 +231,7 @@ the app says so and the user goes back a step.
 - **Rules (server-side):** limited on their own, like imports: per network
   (`PLAN_GENERATE_IP_LIMIT`, default 10) and in total (`PLAN_GENERATE_DAILY_LIMIT`, default 1,000)
   per 24 hours, in `plan_requests` with `kind = 'generate'`.
-- **Testing:** `npm run plan:generate-eval` asks for 17 plans (goals, equipment, 1–7 workouts a
+- **Testing:** `npm run plan:generate-eval` asks for 18 plans (goals, equipment, 2–6 workouts a
   week, every split, 20–120 minutes, every experience level, with and without focus; German, English,
   Portuguese) and checks each: routines, time, equipment, repeats, every major muscle group trained, push/pull
   balance, focus volume, reps for the goal, core work, limits for beginners. The checks are rules of thumb;
