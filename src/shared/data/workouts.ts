@@ -676,9 +676,10 @@ export function useLastExerciseSession(exerciseId: string | undefined) {
   });
 }
 
-const levelSetsQuery = (sinceIso: string) =>
+// Identical sets of an exercise in a workout count once: they make the same level.
+const levelSetsQuery = () =>
   drizzle
-    .select({
+    .selectDistinct({
       exercise_id: workoutEntriesExercises.exercise_id,
       started_at: workoutEntries.started_at,
       weight_kg: workoutEntriesSets.weight_kg,
@@ -691,9 +692,7 @@ const levelSetsQuery = (sinceIso: string) =>
       eq(workoutEntriesExercises.id, workoutEntriesSets.workout_entries_exercise_id),
     )
     .innerJoin(workoutEntries, eq(workoutEntries.id, workoutEntriesExercises.workout_entries_id))
-    .where(
-      and(isNotNull(workoutEntriesSets.completed_at), gte(workoutEntries.started_at, sinceIso)),
-    );
+    .where(isNotNull(workoutEntriesSets.completed_at));
 
 const toLevelSets = (rows: RowOf<typeof levelSetsQuery>[]) =>
   rows.map((r) => ({
@@ -704,11 +703,11 @@ const toLevelSets = (rows: RowOf<typeof levelSetsQuery>[]) =>
     seconds: r.seconds,
   }));
 
-/** Every completed set since a date with what it logged (muscle levels). */
-export function useLevelSets(sinceIso: string) {
+/** Every completed set with what it logged (muscle levels). */
+export function useLevelSets() {
   return useDrizzleQuery({
-    queryKey: queryKeys.workouts.levelSets(sinceIso).queryKey,
-    query: levelSetsQuery(sinceIso),
+    queryKey: queryKeys.workouts.levelSets.queryKey,
+    query: levelSetsQuery(),
     map: toLevelSets,
   });
 }

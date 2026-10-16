@@ -76,11 +76,13 @@ export const RARE_MUSCLES: ReadonlySet<MuscleId> = new Set(['neck', 'tibialis'])
 const MAX_REPS = 12;
 /** A share this far past elite is taken as a typo (1000 kg) and left out. */
 const MAX_SHARE = 2.6;
-/** Lifts count fully for 12 weeks, then fade to 75 % over 12 more and drop out. */
+/**
+ * Lifts count fully for 12 weeks, then fade to 75 % over 12 more, as strength does without
+ * training, and stay there: a long break lowers a level but never takes it away.
+ */
 const FULL_DAYS = 84;
 const FADE_DAYS = 168;
-/** How far back sets count at all. */
-export const LEVEL_WINDOW_DAYS = FADE_DAYS;
+const FADED = 0.75;
 /** A muscle is "on pause" after this many days without a set for it. */
 export const PAUSE_DAYS = 21;
 /** Exercises count for a muscle that does at least this share of their work. */
@@ -153,7 +155,8 @@ const DAY_MS = 86_400_000;
 
 function fade(ageDays: number) {
   if (ageDays <= FULL_DAYS) return 1;
-  return 1 - (0.25 * (ageDays - FULL_DAYS)) / (FADE_DAYS - FULL_DAYS);
+  if (ageDays >= FADE_DAYS) return FADED;
+  return 1 - ((1 - FADED) * (ageDays - FULL_DAYS)) / (FADE_DAYS - FULL_DAYS);
 }
 
 /** A set's share of its exercise's standard, or null when it can't be scored. */
@@ -196,7 +199,7 @@ export function muscleLevels({ sets, exercises, bodyWeightOn, sex, now }: LevelI
   for (const set of sets) {
     const time = Date.parse(set.startedAt);
     const ageDays = (now.getTime() - time) / DAY_MS;
-    if (ageDays < 0 || ageDays > FADE_DAYS) continue;
+    if (ageDays < 0) continue;
     const exercise = exercises(set.exerciseId);
     if (!exercise) continue;
     for (const [muscle, weight] of Object.entries(exercise.muscles) as [MuscleId, number][]) {

@@ -9,7 +9,7 @@ import { useToday } from '@/shared/hooks/use-today';
 import { DEFAULT_BODY_WEIGHT_KG } from '@/shared/lib/body-weight';
 import { DAY_MS } from '@/shared/lib/date';
 
-import { LEVEL_WINDOW_DAYS, type LevelExercise, muscleLevels, PAUSE_DAYS } from '../lib/levels';
+import { type LevelExercise, muscleLevels, PAUSE_DAYS } from '../lib/levels';
 
 /** Gains are counted over this many days. */
 const GAIN_DAYS = 30;
@@ -22,8 +22,7 @@ export function useMuscleLevels() {
   const dayKey = useToday();
   // The end of today, so today's sets count; the day moves on overnight.
   const end = dayKey + DAY_MS;
-  const sinceIso = new Date(end - (LEVEL_WINDOW_DAYS + GAIN_DAYS) * DAY_MS).toISOString();
-  const { data: sets, isLoading } = useLevelSets(sinceIso);
+  const { data: sets, isLoading } = useLevelSets();
   const { entries, isLoading: weightLoading } = useWeightEntries();
   const { profile } = useProfile();
   const rows = useCatalogStore((s) => s.rows);
