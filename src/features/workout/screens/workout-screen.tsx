@@ -93,13 +93,23 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   };
 
   // The exercises sit side by side, one screen width apart; `position` scrolls the row. The
-  // shown one and its neighbours are drawn, so a swipe slides the next one in without a wait:
-  // the shown exercise only changes once it has arrived.
+  // shown one and its neighbours are drawn, so a swipe slides the next one in without a wait.
   const position = useSharedValue(-exerciseIndex * width);
-  // Shown another way (the strip, a reorder): straight there.
+  // A swipe switches the exercise as the finger lets go, so the strip changes with the page,
+  // while its slide runs on; shown another way (the strip, a reorder), it goes straight there.
+  const swipedTo = useSharedValue(-1);
   useEffect(() => {
+    if (swipedTo.get() === exerciseIndex) {
+      swipedTo.set(-1);
+      return;
+    }
     position.set(-exerciseIndex * width);
-  }, [exerciseIndex, width, position]);
+  }, [exerciseIndex, width, position, swipedTo]);
+  const swipeTo = (index: number) => {
+    if (index < 0 || index >= count || index === exerciseIndex) return;
+    swipedTo.set(index);
+    go(index);
+  };
 
   const swipe = Gesture.Pan()
     .activeOffsetX([-16, 16])
@@ -120,11 +130,8 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
         position.set(withTiming(-exerciseIndex * width, SNAP_BACK));
         return;
       }
-      position.set(
-        withTiming(-target * width, SLIDE, (done) => {
-          if (done) scheduleOnRN(go, target);
-        }),
-      );
+      position.set(withTiming(-target * width, SLIDE));
+      scheduleOnRN(swipeTo, target);
     });
   const contentStyle = useAnimatedStyle(() => ({ transform: [{ translateX: position.get() }] }));
   const pages = [exerciseIndex - 1, exerciseIndex, exerciseIndex + 1].filter(
