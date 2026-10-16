@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 
+import { cn } from '@/shared/lib/cn';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
@@ -7,12 +8,14 @@ export interface SectionTitleProps {
   children: string;
   /** A link on the right, e.g. "Alle anzeigen". */
   action?: { label: string; onPress: () => void };
+  /** First on the page: less space above. */
+  first?: boolean;
 }
 
-/** Overline over a group on the Training tab and a plan's page. */
-export function SectionTitle({ children, action }: SectionTitleProps) {
+/** Overline over a group on the Training tab and the Einzeltrainings page. */
+export function SectionTitle({ children, action, first }: SectionTitleProps) {
   return (
-    <View className="flex-row items-end justify-between px-5 pt-8 pb-2.5">
+    <View className={cn('flex-row items-end justify-between px-5 pb-2.5', first ? 'pt-2' : 'pt-8')}>
       <Text variant="overline" tone="subtle" className="text-[11px]">
         {children}
       </Text>

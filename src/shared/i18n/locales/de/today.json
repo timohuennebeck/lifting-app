@@ -1,12 +1,6 @@
 {
   "emptyWorkoutName": "Training",
   "resumeActive": "{{name}} fortsetzen",
-  "status": {
-    "next": "Als Nächstes"
-  },
-  "resume": "Fortsetzen",
-  "markDone": "Als erledigt markieren",
-  "deloadHint": "Deload-Woche: halb so viele Sätze und etwas leichter, damit du dich erholst.",
   "noPlan": {
     "title": "Noch kein Plan",
     "body": "Tippe, um dir einen Plan erstellen zu lassen oder deinen einzulesen."

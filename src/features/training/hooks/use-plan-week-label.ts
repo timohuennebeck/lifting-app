@@ -1,15 +1,13 @@
 import { useTranslation } from 'react-i18next';
 
-import type { PlanStatus, PlanSummary } from '@/shared/data/plans';
+import type { PlanStatus } from '@/shared/data/plans';
 
-/** Where a plan stands: "Woche 2 von 5" in a block, "Deload-Woche", or "Woche 3" without blocks. */
+/**
+ * Where a plan stands: "Block 2" (its round of workouts, counted within the cycle when it has
+ * one), or "Deload" for the cycle's last, lighter round.
+ */
 export function usePlanWeekLabel() {
   const { t } = useTranslation('training');
-  return (plan: Pick<PlanSummary, 'blockWeeks'>, status: PlanStatus) => {
-    if (status.deload) return t('plan.deload');
-    if (status.blockWeek !== null) {
-      return t('plan.blockWeek', { week: status.blockWeek, weeks: plan.blockWeeks });
-    }
-    return t('plan.week', { week: status.week });
-  };
+  return (status: PlanStatus) =>
+    status.deload ? t('plan.deload') : t('plan.block', { n: status.blockWeek ?? status.week });
 }

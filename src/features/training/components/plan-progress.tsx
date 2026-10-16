@@ -11,7 +11,7 @@ import { usePlanWeekLabel } from '../hooks/use-plan-week-label';
 /** Thin diagonal bands, every 5pt, wide enough for the widest segment. */
 const STRIPES = Array.from({ length: 80 }, (_, k) => `M${k * 5 - 10} 10L${k * 5} 0`).join('');
 
-/** A segment of the deload week not done yet: striped. */
+/** A segment of the deload round not done yet: striped. */
 function DeloadSegment() {
   return (
     <View className="h-2 flex-1 overflow-hidden rounded-[3px] bg-control">
@@ -28,19 +28,19 @@ export interface PlanProgressProps {
 }
 
 /**
- * Where the plan stands: one segment per workout, grouped by week of the block (or just this
- * week without blocks), done ones in neon, the next one outlined, the deload week striped; under
- * it the week with the workout that's next, and how many of the block are done.
+ * Where the plan stands: one segment per workout, grouped by block of the cycle (or just this
+ * block without a cycle), done ones in neon, the next one outlined, the deload striped; under it
+ * the block with the workout that's next, and how many of the cycle are done.
  */
 export function PlanProgress({ plan, status }: PlanProgressProps) {
   const { t } = useTranslation('training');
   const weekLabel = usePlanWeekLabel();
   const perWeek = plan.sessionsPerWeek;
   const weeks = plan.blockWeeks ?? 1;
-  // Weeks of the block before this one are over, so each had its workouts.
+  // Blocks of the cycle before this one are over, so each had its workouts.
   const done = ((status.blockWeek ?? 1) - 1) * perWeek + status.done;
   const total = weeks * perWeek;
-  const label = `${weekLabel(plan, status)} · ${t('progress.session', { n: status.done + 1, total: perWeek })}`;
+  const label = `${weekLabel(status)} · ${t('progress.session', { n: status.done + 1, total: perWeek })}`;
   const count = t('progress.done', { done, total });
 
   return (

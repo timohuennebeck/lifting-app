@@ -1,12 +1,6 @@
 {
   "emptyWorkoutName": "Treino",
   "resumeActive": "Retomar {{name}}",
-  "status": {
-    "next": "A seguir"
-  },
-  "resume": "Retomar",
-  "markDone": "Marcar como feito",
-  "deloadHint": "Semana de deload: metade das séries e um pouco mais leve, para você se recuperar.",
   "noPlan": {
     "title": "Ainda sem plano",
     "body": "Toque para pedir um plano ou importar o seu."

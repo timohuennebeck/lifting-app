@@ -1,7 +1,8 @@
 {
   "home": {
     "single": "Treinos avulsos",
-    "showAll": "Ver todos"
+    "showAll": "Ver todos",
+    "activePlan": "Plano ativo"
   },
   "list": {
     "start": "Iniciar {{name}}",
@@ -9,15 +10,9 @@
     "minutes": "{{count}} min",
     "addRoutine": "Adicionar treino"
   },
-  "myPlan": {
-    "rest": "Mais treinos",
-    "doneOn": "Feito · {{day}}"
-  },
   "card": {
-    "perWeek_one": "{{count}} treino por semana",
-    "perWeek_other": "{{count}} treinos por semana",
-    "block": "Blocos de {{build}} + 1 semanas",
-    "empty": "Adiciona exercícios aos treinos do teu plano para começares."
+    "perBlock_one": "{{count}} treino por bloco",
+    "perBlock_other": "{{count}} treinos por bloco"
   },
   "progress": {
     "session": "Treino {{n}} de {{total}}",
@@ -106,8 +101,7 @@
     "routinesBody": "Monta um treino a partir de exercícios. Depois encontras-o aqui e podes juntá-lo a planos."
   },
   "plan": {
-    "week": "Semana {{week}}",
-    "blockWeek": "Semana {{week}} de {{weeks}}",
-    "deload": "Semana de deload"
+    "block": "Bloco {{n}}",
+    "deload": "Deload"
   }
 }

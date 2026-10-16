@@ -84,8 +84,10 @@ export interface RoutineRowProps {
   starting?: boolean;
   /** The plan's next routine: its muscles in neon. */
   next?: boolean;
-  /** Small accent tag over the name, e.g. "Coach empfiehlt". */
+  /** Small accent tag over the name. */
   tag?: string;
+  /** Neon line under the name, e.g. the muscle it works most: "Brust 40 %". */
+  focus?: string;
   /** Done this plan week: dimmed, with a check where play would be. */
   done?: boolean;
 }
@@ -104,6 +106,7 @@ export function RoutineRow({
   starting,
   next,
   tag,
+  focus,
   done,
 }: RoutineRowProps) {
   const { t } = useTranslation('training');
@@ -114,7 +117,7 @@ export function RoutineRow({
       haptic="none"
       activeScale={0.98}
       accessibilityRole="button"
-      accessibilityLabel={[tag, name, meta].filter(Boolean).join(', ')}
+      accessibilityLabel={[tag, name, focus, meta].filter(Boolean).join(', ')}
       // The card hides its buttons from screen readers; these stand in for them.
       accessibilityActions={[
         { name: 'start', label: t('list.start', { name }) },
@@ -141,6 +144,11 @@ export function RoutineRow({
         <Text variant="bodyStrong" tone={done ? 'subtle' : undefined} numberOfLines={1}>
           {name}
         </Text>
+        {focus ? (
+          <Text variant="caption" tone="accent" numberOfLines={1} className="font-inter-semibold">
+            {focus}
+          </Text>
+        ) : null}
         <Text variant="caption" tone="subtle" numberOfLines={1} className="font-inter-medium">
           {meta}
         </Text>

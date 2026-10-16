@@ -179,7 +179,7 @@ const isDeloadWeek = (blockWeek: number | null, plan: Pick<PlanSummary, 'blockWe
   blockWeek !== null && blockWeek === plan.blockWeeks;
 
 /** How many of an exercise's sets a deload week keeps: the first half, rounded up. */
-export const deloadSetCount = (sets: number) => Math.ceil(sets / 2);
+const deloadSetCount = (sets: number) => Math.ceil(sets / 2);
 
 /**
  * A routine's sets for a block week: one rep less in reserve each week after the first (never

@@ -1,12 +1,6 @@
 {
   "emptyWorkoutName": "Workout",
   "resumeActive": "Resume {{name}}",
-  "status": {
-    "next": "Up next"
-  },
-  "resume": "Resume",
-  "markDone": "Mark as done",
-  "deloadHint": "Deload week: half the sets and a bit lighter, so you recover.",
   "noPlan": {
     "title": "No plan yet",
     "body": "Tap to have one made or import yours."

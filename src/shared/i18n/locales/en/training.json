@@ -1,7 +1,8 @@
 {
   "home": {
     "single": "Single workouts",
-    "showAll": "Show all"
+    "showAll": "Show all",
+    "activePlan": "Active plan"
   },
   "list": {
     "start": "Start {{name}}",
@@ -9,15 +10,9 @@
     "minutes": "{{count}} min",
     "addRoutine": "Add workout"
   },
-  "myPlan": {
-    "rest": "More workouts",
-    "doneOn": "Done · {{day}}"
-  },
   "card": {
-    "perWeek_one": "{{count}} workout a week",
-    "perWeek_other": "{{count}} workouts a week",
-    "block": "{{build}} + 1-week blocks",
-    "empty": "Add exercises to your plan's workouts to get going."
+    "perBlock_one": "{{count}} workout per block",
+    "perBlock_other": "{{count}} workouts per block"
   },
   "progress": {
     "session": "Workout {{n}} of {{total}}",
@@ -106,8 +101,7 @@
     "routinesBody": "Put a workout together from exercises. You’ll find it here and can add it to plans."
   },
   "plan": {
-    "week": "Week {{week}}",
-    "blockWeek": "Week {{week}} of {{weeks}}",
-    "deload": "Deload week"
+    "block": "Block {{n}}",
+    "deload": "Deload"
   }
 }

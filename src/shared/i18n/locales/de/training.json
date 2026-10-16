@@ -1,7 +1,8 @@
 {
   "home": {
     "single": "Einzeltrainings",
-    "showAll": "Alle anzeigen"
+    "showAll": "Alle anzeigen",
+    "activePlan": "Aktiver Plan"
   },
   "list": {
     "start": "{{name}} starten",
@@ -9,15 +10,9 @@
     "minutes": "{{count}} Min",
     "addRoutine": "Training hinzufügen"
   },
-  "myPlan": {
-    "rest": "Weitere Trainings",
-    "doneOn": "Erledigt · {{day}}"
-  },
   "card": {
-    "perWeek_one": "{{count}} Training pro Woche",
-    "perWeek_other": "{{count}} Trainings pro Woche",
-    "block": "Blöcke à {{build}} + 1 Wochen",
-    "empty": "Füg den Trainings deines Plans Übungen hinzu, dann geht's los."
+    "perBlock_one": "{{count}} Training pro Block",
+    "perBlock_other": "{{count}} Trainings pro Block"
   },
   "progress": {
     "session": "Training {{n}} von {{total}}",
@@ -106,8 +101,7 @@
     "routinesBody": "Stell dir aus Übungen ein Training zusammen. Danach findest du es hier und kannst es in Pläne einbauen."
   },
   "plan": {
-    "week": "Woche {{week}}",
-    "blockWeek": "Woche {{week}} von {{weeks}}",
-    "deload": "Deload-Woche"
+    "block": "Block {{n}}",
+    "deload": "Deload"
   }
 }
