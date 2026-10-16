@@ -15,10 +15,7 @@ import { parsePlanId, usePaywallFlow } from '../hooks/use-paywall-flow';
 import { usePurchase } from '../hooks/use-purchases';
 import { DEFAULT_TRIAL_DAYS, PERIOD_OF } from '../lib/purchases-service';
 
-/** The reminder goes out this many days before billing starts. */
-const REMINDER_DAYS_BEFORE = 2;
-
-/** Free-trial explainer: what happens today, at the reminder and when billing starts. */
+/** Free-trial explainer: what happens today and when billing starts. */
 export function TrialScreen() {
   const { t } = useTranslation(['paywall', 'common']);
   const flow = usePaywallFlow();
@@ -87,10 +84,6 @@ export function TrialScreen() {
         <TrialTimeline
           steps={[
             { title: t('trial.today'), body: t('trial.todayBody') },
-            {
-              title: t('trial.day', { day: days - REMINDER_DAYS_BEFORE }),
-              body: t('trial.reminderBody'),
-            },
             { title: t('trial.day', { day: days }), body: t(`trial.startBody.${period}`) },
           ]}
         />

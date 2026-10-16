@@ -17,9 +17,9 @@
         "title": "History and PRs",
         "detail": "for every exercise"
       },
-      "suggestions": {
-        "title": "Weight suggestions",
-        "detail": "for every set"
+      "levels": {
+        "title": "Muscle levels",
+        "detail": "for every muscle"
       }
     },
     "continue": "Continue",
@@ -49,11 +49,10 @@
     "badge_one": "Day free",
     "badge_other": "Days free",
     "title": "How your trial works",
-    "subtitle": "No surprises. We'll remind you before it ends.",
+    "subtitle": "No surprises. Cancel anytime before it ends.",
     "today": "Today",
     "todayBody": "All Pro features are unlocked right away.",
     "day": "Day {{day}}",
-    "reminderBody": "You'll get a reminder that your trial ends soon.",
     "startBody": {
       "year": "Your yearly plan starts. Cancel anytime before then.",
       "month": "Your monthly plan starts. Cancel anytime before then."

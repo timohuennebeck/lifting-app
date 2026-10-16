@@ -28,7 +28,7 @@ import {
 } from '../lib/purchases-service';
 import { useIsPro } from '../stores/subscription-store';
 
-const BENEFITS = ['import', 'history', 'suggestions'] as const;
+const BENEFITS = ['import', 'history', 'levels'] as const;
 
 /** Traqa Pro paywall: before/after header, benefits, plan picker. */
 export function PaywallScreen() {

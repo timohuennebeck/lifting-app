@@ -17,9 +17,9 @@
         "title": "Histórico e recordes",
         "detail": "para cada exercício"
       },
-      "suggestions": {
-        "title": "Sugestões de peso",
-        "detail": "para cada série"
+      "levels": {
+        "title": "Níveis musculares",
+        "detail": "para cada músculo"
       }
     },
     "continue": "Continuar",
@@ -49,11 +49,10 @@
     "badge_one": "Dia grátis",
     "badge_other": "Dias grátis",
     "title": "Como funciona o teu teste",
-    "subtitle": "Sem surpresas. Avisamos-te antes.",
+    "subtitle": "Sem surpresas. Podes cancelar a qualquer momento antes do fim.",
     "today": "Hoje",
     "todayBody": "Todas as funcionalidades Pro ficam desbloqueadas de imediato.",
     "day": "Dia {{day}}",
-    "reminderBody": "Recebes um lembrete de que o teu teste está quase a terminar.",
     "startBody": {
       "year": "Começa a tua subscrição anual. Podes cancelar a qualquer momento antes.",
       "month": "Começa a tua subscrição mensal. Podes cancelar a qualquer momento antes."

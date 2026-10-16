@@ -17,9 +17,9 @@
         "title": "Historie und Bestwerte",
         "detail": "für jede Übung"
       },
-      "suggestions": {
-        "title": "Gewichtsvorschläge",
-        "detail": "für jeden Satz"
+      "levels": {
+        "title": "Muskel-Level",
+        "detail": "für jeden Muskel"
       }
     },
     "continue": "Weiter",
@@ -36,7 +36,7 @@
     "yearly": {
       "label": "Jährlich",
       "price": "{{price}} / Jahr",
-      "note": "jährlich kündbar",
+      "note": "jährlich abgerechnet",
       "savings": "{{percent}} % sparen"
     },
     "monthly": {
@@ -49,11 +49,10 @@
     "badge_one": "Tag gratis",
     "badge_other": "Tage gratis",
     "title": "So funktioniert dein Test",
-    "subtitle": "Keine Überraschungen. Wir erinnern dich vorher.",
+    "subtitle": "Keine Überraschungen. Vor dem Ende jederzeit kündbar.",
     "today": "Heute",
     "todayBody": "Alle Pro-Funktionen sind sofort freigeschaltet.",
     "day": "Tag {{day}}",
-    "reminderBody": "Du bekommst eine Erinnerung, dass dein Test bald endet.",
     "startBody": {
       "year": "Dein Jahresabo startet. Vorher jederzeit kündbar.",
       "month": "Dein Monatsabo startet. Vorher jederzeit kündbar."
