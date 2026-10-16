@@ -58,9 +58,9 @@ export const LevelCard = memo(function LevelCard({
         accessibilityRole="button"
         accessibilityLabel={`${name}, ${t('level.locked')}. ${t('level.find')}`}
         onPress={onFind}
-        className="min-w-0 flex-1 gap-2.5 rounded-[22px] bg-tile px-2.5 pt-2.5 pb-3.5"
+        className="min-w-0 flex-1 gap-2.5 rounded-[18px] bg-tile px-2.5 pt-2.5 pb-3.5"
       >
-        <View className="aspect-square w-full overflow-hidden rounded-2xl bg-elevated">
+        <View className="aspect-square w-full overflow-hidden rounded-xl bg-elevated">
           <MuscleCrop muscle={muscle} selected={NONE} />
           <View className="absolute top-2 left-2 size-7 items-center justify-center rounded-full bg-control">
             <Icon name="lock" size={11} color={colors.subtle} />
@@ -110,11 +110,11 @@ export const LevelCard = memo(function LevelCard({
         .filter(Boolean)
         .join(', ')}
       className={cn(
-        'min-w-0 flex-1 gap-2.5 rounded-[22px] border-[1.5px] bg-tile px-2.5 pt-2.5 pb-3.5',
+        'min-w-0 flex-1 gap-2.5 rounded-[18px] border-[1.5px] bg-tile px-2.5 pt-2.5 pb-3.5',
         fresh !== undefined ? 'border-accent' : 'border-transparent',
       )}
     >
-      <View className="aspect-square w-full overflow-hidden rounded-2xl bg-elevated">
+      <View className="aspect-square w-full overflow-hidden rounded-xl bg-elevated">
         <MuscleCrop muscle={muscle} selected={paused ? NONE : ONLY[muscle]} accent={accent} />
         <View className="absolute top-2 left-2 h-7 flex-row items-center rounded-full bg-bg px-2.5">
           <Text variant="caption" className={cn('text-xs', paused && 'text-dim')}>
