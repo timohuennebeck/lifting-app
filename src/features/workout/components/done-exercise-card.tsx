@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
-import { ExerciseMuscleChips } from '@/features/training/components/routine-exercise-card';
 import { formatSet, useExerciseName } from '@/shared/data/exercises';
 import type { WorkoutSet } from '@/shared/data/workouts';
 import type { UnitSystem } from '@/shared/lib/format';
@@ -22,7 +21,7 @@ export interface DoneExerciseCardProps {
 
 /**
  * An exercise of a finished workout, laid out like the training overview's: photo, name, each
- * done set with its RIR (a record with a star), muscles. Opens the exercise's page.
+ * done set with its RIR, a record with a star. Opens the exercise's page.
  */
 export function DoneExerciseCard({ exerciseId, sets, units }: DoneExerciseCardProps) {
   const { t, i18n } = useTranslation('training');
@@ -49,15 +48,17 @@ export function DoneExerciseCard({ exerciseId, sets, units }: DoneExerciseCardPr
                   {i + 1}
                 </Text>
               </View>
-              <Text variant="body" className="flex-1 text-sm text-fg-soft tabular-nums">
-                {formatSet(exerciseId, set, units)}
-              </Text>
-              {set.isPr ? <Icon name="star" size={14} color={colors.accent} /> : null}
+              {/* A record's star right after its value. */}
+              <View className="flex-1 flex-row items-center gap-1.5">
+                <Text variant="body" className="text-sm text-fg-soft tabular-nums">
+                  {formatSet(exerciseId, set, units)}
+                </Text>
+                {set.isPr ? <Icon name="star" size={13} color={colors.accent} /> : null}
+              </View>
               {set.targetRir != null ? <RirBadge rir={set.targetRir} /> : null}
             </View>
           ))}
         </View>
-        <ExerciseMuscleChips exerciseId={exerciseId} />
       </View>
     </PressableScale>
   );

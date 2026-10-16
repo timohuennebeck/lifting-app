@@ -26,7 +26,7 @@ export interface RoutineExerciseCardProps {
 }
 
 /** An exercise's muscles as chips: the main ones filled, the others outlined. */
-export function ExerciseMuscleChips({ exerciseId }: { exerciseId: string }) {
+function ExerciseMuscleChips({ exerciseId }: { exerciseId: string }) {
   const { t } = useTranslation('muscles');
   const { primary, secondary } = splitMuscles(useExercise(exerciseId));
   if (!primary.length) return null;
