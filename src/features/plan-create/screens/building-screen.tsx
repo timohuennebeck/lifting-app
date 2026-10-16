@@ -2,9 +2,9 @@ import { Stack } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { groupOfMuscle } from '@/features/exercises/lib/muscle-groups';
 import { useDraft } from '@/features/onboarding/stores/onboarding-store';
 import { usePlanRun } from '@/features/plan-import/hooks/use-plan-run';
+import { groupOfMuscle } from '@/shared/data/muscle-groups';
 import { PaperStack } from '@/shared/ui/paper-sheet';
 import { type ScanChip, ScanStage } from '@/shared/ui/scan-stage';
 

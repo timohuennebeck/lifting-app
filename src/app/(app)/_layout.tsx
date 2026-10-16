@@ -10,7 +10,8 @@ export default function AppLayout() {
   // Background uploads of ticket screenshots, also after restarts.
   useAttachmentUploadQueue();
   useSyncAccountLanguage();
-  // The whole app is Pro: without a subscription only the paywall and the account stay open.
+  // The whole app is Pro: without a subscription only the paywall, the account and a running
+  // workout stay open (see useSubscriptionGate).
   useSubscriptionGate();
 
   return (

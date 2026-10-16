@@ -10,7 +10,7 @@ import { Text } from '@/shared/ui/text';
 
 /** Flag pill that opens a sheet to switch the app language. */
 export function LanguagePicker() {
-  const { t: to } = useTranslation('onboarding');
+  const { t } = useTranslation('onboarding');
   const language = useAppLanguage();
   const [open, setOpen] = useState(false);
 
@@ -18,7 +18,7 @@ export function LanguagePicker() {
     <>
       <PressableScale
         onPress={() => setOpen(true)}
-        accessibilityLabel={`${to('welcome.language')}: ${LANGUAGE_NAMES[language]}`}
+        accessibilityLabel={`${t('welcome.language')}: ${LANGUAGE_NAMES[language]}`}
         className="h-11 flex-row items-center gap-2.5 rounded-full bg-pill pr-3.5 pl-1.75"
       >
         <LanguageFlag language={language} />

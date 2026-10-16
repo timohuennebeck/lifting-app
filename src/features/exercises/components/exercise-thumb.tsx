@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-import { getExercise } from '@/shared/data/exercises';
+import { useExercise } from '@/shared/data/exercises';
 import { cn } from '@/shared/lib/cn';
 import { Text } from '@/shared/ui/text';
 
@@ -41,7 +41,7 @@ export function ExerciseThumb({
   className,
   initialsClassName,
 }: ExerciseThumbProps) {
-  const image = getExercise(exerciseId)?.image;
+  const image = useExercise(exerciseId)?.image;
   return (
     <View className={cn('h-14.5 w-11 overflow-hidden rounded-[5px] bg-raised', className)}>
       {image ? (

@@ -2,11 +2,11 @@ import { type ReactElement, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, View } from 'react-native';
 
+import type { MuscleGroupId } from '@/shared/data/muscle-groups';
 import { Text } from '@/shared/ui/text';
 
 import { type ExerciseOption, useExerciseSearch } from '../hooks/use-exercise-search';
 import { type IndexedRow, useLetterIndex } from '../hooks/use-letter-index';
-import type { MuscleGroupId } from '../lib/muscle-groups';
 import { AlphabetRail } from './alphabet-rail';
 import { MuscleGroupFilter } from './muscle-group-filter';
 

@@ -19,7 +19,7 @@ export interface EntryRowProps {
 
 /** A weigh-in: its day and distance to the trend, the weight, the trend and the change (GW·2). */
 export function EntryRow({ point, units, dayLabel, onPress, onDelete }: EntryRowProps) {
-  const { t } = useTranslation(['weight', 'common']);
+  const { t } = useTranslation('weight');
   const off = offTrend(point);
   const distance = `${formatBodyWeight(Math.abs(off), units)} ${weightUnit(units)}`;
   return (

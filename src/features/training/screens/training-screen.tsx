@@ -4,7 +4,12 @@ import { View } from 'react-native';
 
 import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { TabScreen } from '@/shared/components/tab-screen';
-import { useCurrentPlan, usePlanStatus } from '@/shared/data/plans';
+import {
+  type PlanStatus,
+  type PlanSummary,
+  useCurrentPlan,
+  usePlanStatus,
+} from '@/shared/data/plans';
 import { muscleShares } from '@/shared/data/muscles';
 import {
   type DoneDates,
@@ -88,8 +93,9 @@ export function TrainingScreen() {
     </PressableScale>
   ) : null;
 
-  // The plan's status once it has routines: the plan card shows.
-  const followed = planRoutines.length ? status : undefined;
+  // The plan card shows once the plan has routines.
+  let card: { plan: PlanSummary; status: PlanStatus } | undefined;
+  if (plan && status && planRoutines.length) card = { plan, status };
   // Without a plan, or with an empty one, the way to make or fill it fills the rest of the page.
   const prompt = !plan ? (
     <PlanPrompt
@@ -120,12 +126,12 @@ export function TrainingScreen() {
     >
       {loading ? null : (
         <>
-          {followed ? (
+          {card ? (
             <>
               <SectionTitle first>{t('home.activePlan')}</SectionTitle>
               <ActivePlanCard
-                plan={plan}
-                status={followed}
+                plan={card.plan}
+                status={card.status}
                 routines={planRoutines}
                 goal={profile?.goal}
               />

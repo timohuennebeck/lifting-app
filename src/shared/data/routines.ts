@@ -153,7 +153,6 @@ export interface RoutineSummary {
   name: string;
   planId: string | null;
   exerciseCount: number;
-  setCount: number;
   estimatedMinutes: number;
   /** Exercise ids with their set counts and rest overrides, for muscle shares and the time. */
   items: ExerciseItem[];
@@ -167,14 +166,12 @@ function summarize(rows: RowOf<typeof routineListQuery>[]): RoutineSummary[] {
       name: r.name,
       planId: r.plan_id,
       exerciseCount: 0,
-      setCount: 0,
       estimatedMinutes: 0,
       items: [],
     }));
     if (!r.exercise_id) continue;
     t.items.push({ exerciseId: r.exercise_id, sets: r.set_count, restSeconds: r.rest_seconds });
     t.exerciseCount += 1;
-    t.setCount += r.set_count;
   }
   return [...byId.values()].map((t) => ({ ...t, estimatedMinutes: estimateMinutes(t.items) }));
 }
@@ -213,18 +210,18 @@ export function useLastDone() {
   });
 }
 
-export interface RoutineSetDetail extends SetTarget {
+interface RoutineSetDetail extends SetTarget {
   id: string;
 }
 
-export interface RoutineExerciseDetail {
+interface RoutineExerciseDetail {
   id: string;
   exerciseId: string;
   restSeconds: number | null;
   sets: RoutineSetDetail[];
 }
 
-export interface RoutineDetail {
+interface RoutineDetail {
   id: string;
   name: string;
   planId: string | null;

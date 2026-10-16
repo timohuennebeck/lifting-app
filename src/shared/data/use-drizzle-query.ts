@@ -56,7 +56,7 @@ export function useDrizzleQuery<TRow, TResult>({
     query: compilable(queryKey, query),
     enabled,
     placeholderData: keepPrevious ? keepPreviousData : undefined,
-    // Paused while a tab is hidden (QueryFocus): it keeps its data and catches up when shown.
+    // Paused inside a hidden tab's QueryFocus: it keeps its data and catches up when shown.
     subscribed: useQueryFocus(),
   });
   const rows = result.data;

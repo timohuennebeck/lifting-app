@@ -97,7 +97,7 @@ export default function RootLayout() {
                     <Stack.Protected guard={!inApp}>
                       <Stack.Screen name="(onboarding)" />
                     </Stack.Protected>
-                    {/* Open from sign-up and from settings alike. */}
+                    {/* Open from both groups: sign-up, the paywall and Settings. */}
                     <Stack.Screen name="legal/[kind]" options={{ animation: 'slide_from_right' }} />
                     {/* Exercise info, from workouts, routines, search and the plan import. */}
                     <Stack.Screen

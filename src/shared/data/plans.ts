@@ -1,12 +1,12 @@
 import { useStatus } from '@powersync/react-native';
-import { and, count, desc, eq, isNotNull, max, sql } from 'drizzle-orm';
+import { and, count, desc, eq, isNotNull } from 'drizzle-orm';
 
 import { insertCustomExercises } from './custom-exercises';
 import type { CustomExercise } from './exercises';
 import { newId, nowIso } from './json';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
-import { plans, routineExercises, routines, workoutEntries } from './powersync/schema';
+import { plans, workoutEntries } from './powersync/schema';
 import { useProfile } from './profile';
 import { queryKeys } from './query-keys';
 import {
@@ -86,7 +86,6 @@ export interface PlanSummary {
   sessionsPerWeek: number;
   blockWeeks: number | null;
   blockStartWeek: number;
-  routineCount: number;
 }
 
 const planListQuery = () =>
@@ -97,11 +96,8 @@ const planListQuery = () =>
       sessions_per_week: plans.sessions_per_week,
       block_weeks: plans.block_weeks,
       block_start_week: plans.block_start_week,
-      routine_count: count(routines.id),
     })
     .from(plans)
-    .leftJoin(routines, eq(routines.plan_id, plans.id))
-    .groupBy(plans.id)
     .orderBy(plans.position);
 
 const toPlans = (rows: RowOf<typeof planListQuery>[]) =>
@@ -111,7 +107,6 @@ const toPlans = (rows: RowOf<typeof planListQuery>[]) =>
     sessionsPerWeek: r.sessions_per_week,
     blockWeeks: r.block_weeks,
     blockStartWeek: r.block_start_week,
-    routineCount: r.routine_count,
   }));
 
 /** All of the user's plans, in their order. */
@@ -124,16 +119,16 @@ export function usePlans() {
 }
 
 /**
- * The plan Training follows and shows first: the one marked active, else the first; with
- * all plans and the profile. Loading until those are known, the first sync included: before it,
- * a returning user's plans aren't on the phone yet.
+ * The plan Training follows and shows first (the one marked active, else the first; undefined
+ * without plans) and the profile. Loading until those are known, the first sync included: before
+ * it, a returning user's plans aren't on the phone yet.
  */
 export function useCurrentPlan() {
   const { hasSynced } = useStatus();
   const { profile, isLoading: profileLoading } = useProfile();
   const { data: plans = [], isLoading: plansLoading } = usePlans();
-  const plan = plans.find((p) => p.id === profile?.activePlanId) ?? plans[0];
-  return { plan, plans, profile, isLoading: !hasSynced || profileLoading || plansLoading };
+  const plan = plans.find((p) => p.id === profile?.activePlanId) ?? plans.at(0);
+  return { plan, profile, isLoading: !hasSynced || profileLoading || plansLoading };
 }
 
 interface PlanWeek {
@@ -228,66 +223,23 @@ export async function currentPlanWeek(tx: Tx, planId: string, sessionsPerWeek: n
   return planWeekFrom(toLatest(await latestWeekQuery(tx, planId, false)), sessionsPerWeek).week;
 }
 
-/**
- * Routines of a plan with when each was last done (its latest finished workout's `created_at`),
- * for the order. Empty ones can't be done.
- */
-const lastDoneQuery = (planId: string) =>
-  drizzle
-    .select({
-      id: routines.id,
-      position: routines.position,
-      last_done: max(workoutEntries.created_at),
-      has_exercises: sql<number>`exists (select 1 from ${routineExercises} where ${routineExercises.routine_id} = ${routines.id})`,
-    })
-    .from(routines)
-    .leftJoin(
-      workoutEntries,
-      and(eq(workoutEntries.routine_id, routines.id), isNotNull(workoutEntries.finished_at)),
-    )
-    .where(eq(routines.plan_id, planId))
-    .groupBy(routines.id);
-
-/**
- * The routine to do next: the one done longest ago, never-done ones first, ties in the plan's
- * order; null while none has exercises. Doing one out of order is fine: the others come next.
- */
-function toNextRoutineId(rows: RowOf<typeof lastDoneQuery>[]) {
-  const sorted = rows
-    .filter((r) => r.has_exercises)
-    .sort((a, b) => {
-      if (a.last_done === b.last_done) return a.position - b.position;
-      if (a.last_done === null) return -1;
-      if (b.last_done === null) return 1;
-      return a.last_done < b.last_done ? -1 : 1;
-    });
-  return sorted[0]?.id ?? null;
-}
-
 export interface PlanStatus extends PlanWeek {
   /** Week of the block (1 to `blockWeeks`), or null without blocks. */
   blockWeek: number | null;
   deload: boolean;
-  nextRoutineId: string | null;
 }
 
-/** Where a plan stands: its week, the block week, what's next. Undefined while loading. */
+/** Where a plan stands: its week and the block week. Undefined while loading. */
 export function usePlanStatus(plan: PlanSummary | undefined): PlanStatus | undefined {
   const planId = plan?.id ?? '';
-  const { data: latest, isLoading: weekLoading } = useDrizzleQuery({
+  const { data: latest, isLoading } = useDrizzleQuery({
     queryKey: queryKeys.plans.latestWeek(planId).queryKey,
     enabled: !!plan,
     query: latestWeekQuery(drizzle, planId, true),
     map: toLatest,
   });
-  const { data: nextRoutineId = null, isLoading: nextLoading } = useDrizzleQuery({
-    queryKey: queryKeys.plans.nextRoutine(planId).queryKey,
-    enabled: !!plan,
-    query: lastDoneQuery(planId),
-    map: toNextRoutineId,
-  });
-  if (!plan || weekLoading || nextLoading) return undefined;
+  if (!plan || isLoading) return undefined;
   const { week, done } = planWeekFrom(latest, plan.sessionsPerWeek);
   const blockWeek = blockWeekOf(week, plan);
-  return { week, done, blockWeek, deload: isDeloadWeek(blockWeek, plan), nextRoutineId };
+  return { week, done, blockWeek, deload: isDeloadWeek(blockWeek, plan) };
 }

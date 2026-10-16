@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { workoutMuscleSplit } from '@/features/exercises/lib/muscle-groups';
+import { workoutMuscleSplit } from '@/shared/data/muscle-groups';
 import type { ExerciseItem } from '@/shared/data/routines';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';

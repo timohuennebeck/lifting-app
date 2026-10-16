@@ -12,7 +12,6 @@ import type { SetValues } from '@/shared/lib/format';
 
 export interface WorkoutSet extends SetValues {
   id: string;
-  position: number;
   /** Reps, or seconds for timed exercises. */
   targetMin: number | null;
   targetMax: number | null;
@@ -59,7 +58,6 @@ type WorkoutDetailRow = RowOf<typeof workoutDetailQuery>;
 
 const toWorkoutSet = (s: WorkoutDetailRow['exercises'][number]['sets'][number]): WorkoutSet => ({
   id: s.id,
-  position: s.position,
   targetMin: s.target_min,
   targetMax: s.target_max,
   targetRir: s.target_rir,

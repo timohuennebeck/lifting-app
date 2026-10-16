@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useProfile } from '@/shared/data/profile';
-import { useNow } from '@/shared/hooks/use-now';
-import { MINUTE_MS } from '@/shared/lib/date';
+import { useToday } from '@/shared/hooks/use-today';
 import { formatDate } from '@/shared/lib/format';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -26,9 +25,9 @@ export interface TabHeaderProps {
 export function TabHeader({ greeting = true, settings = false }: TabHeaderProps) {
   const { t } = useTranslation(['common', 'weight']);
   const { profile } = useProfile();
-  // Ticks every minute so the date turns over at midnight and, within a minute, follows a
-  // language switch (the React Compiler keeps the formatted date until `now` changes).
-  const now = useNow(MINUTE_MS);
+  // Changes at midnight (checked every minute and when the app returns). The React Compiler puts
+  // the formatted date in the same memo block as `t()`, so a language switch re-renders it at once.
+  const today = useToday();
   const name = profile?.firstName ?? '';
   return (
     <View className="flex-row items-center justify-between gap-3 px-5 pt-2.5 pb-1.5">
@@ -41,7 +40,7 @@ export function TabHeader({ greeting = true, settings = false }: TabHeaderProps)
           <ProfileAvatar profile={profile} />
           <View className="min-w-0 flex-1 gap-0.5">
             <Text variant="caption" tone="subtle" numberOfLines={1}>
-              {formatDate(new Date(now), { weekday: 'long', day: 'numeric', month: 'short' })}
+              {formatDate(new Date(today), { weekday: 'long', day: 'numeric', month: 'short' })}
             </Text>
             <Text variant="bodyStrong" numberOfLines={1}>
               {t('greeting', { name })}

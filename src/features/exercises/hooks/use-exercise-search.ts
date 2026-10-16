@@ -7,9 +7,9 @@ import {
   useCatalogStore,
   useCustomExerciseStore,
 } from '@/shared/data/exercises';
+import { type MuscleGroupId, primaryGroup } from '@/shared/data/muscle-groups';
 
 import { indexLetterOf } from '../lib/index-letters';
-import { type MuscleGroupId, primaryGroup } from '../lib/muscle-groups';
 
 export interface ExerciseOption {
   id: string;

@@ -32,7 +32,6 @@ import {
   workoutEntriesSets,
 } from './powersync/schema';
 import { queryKeys } from './query-keys';
-import type { ExerciseItem } from './routines';
 import { firstCount, type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /**
@@ -110,14 +109,11 @@ export interface WorkoutSummary {
   name: string;
   startedAt: string;
   finishedAt: string;
-  volumeKg: number;
+  /** Completed sets. */
   setCount: number;
-  prCount: number;
-  /** Exercise ids with completed set counts, for muscle shares. */
-  items: ExerciseItem[];
 }
 
-/** Finished workouts matching `where`, one row per exercise with its completed-set stats. */
+/** Finished workouts matching `where`, newest first, with their completed set counts. */
 const workoutSummaryQuery = (where?: SQL) =>
   drizzle
     .select({
@@ -125,10 +121,7 @@ const workoutSummaryQuery = (where?: SQL) =>
       name: workoutEntries.name,
       started_at: workoutEntries.started_at,
       finished_at: workoutEntries.finished_at,
-      exercise_id: workoutEntriesExercises.exercise_id,
       sets: count(workoutEntriesSets.id),
-      volume: sql<number>`coalesce(sum(${workoutEntriesSets.weight_kg} * ${workoutEntriesSets.reps}), 0)`,
-      prs: sql<number>`coalesce(sum(${workoutEntriesSets.is_pr}), 0)`,
     })
     .from(workoutEntries)
     .leftJoin(
@@ -143,32 +136,18 @@ const workoutSummaryQuery = (where?: SQL) =>
       ),
     )
     .where(and(isNotNull(workoutEntries.finished_at), where))
-    .groupBy(workoutEntries.id, workoutEntriesExercises.id)
-    .orderBy(desc(workoutEntries.started_at), workoutEntriesExercises.position);
+    .groupBy(workoutEntries.id)
+    .orderBy(desc(workoutEntries.started_at));
 
-function toSummaries(rows: RowOf<typeof workoutSummaryQuery>[]): WorkoutSummary[] {
-  const map = new Map<string, WorkoutSummary>();
-  for (const r of rows) {
-    const w = getOrInsert(map, r.id, () => ({
-      id: r.id,
-      name: r.name,
-      startedAt: r.started_at,
-      // The query only returns finished workouts.
-      finishedAt: r.finished_at!,
-      volumeKg: 0,
-      setCount: 0,
-      prCount: 0,
-      items: [],
-    }));
-    if (!r.exercise_id) continue;
-    w.items.push({ exerciseId: r.exercise_id, sets: r.sets });
-    // The weight on an assisted machine helps; nothing of it is lifted.
-    if (!isAssisted(r.exercise_id)) w.volumeKg += r.volume;
-    w.setCount += r.sets;
-    w.prCount += r.prs;
-  }
-  return [...map.values()];
-}
+const toSummaries = (rows: RowOf<typeof workoutSummaryQuery>[]) =>
+  rows.map((r): WorkoutSummary => ({
+    id: r.id,
+    name: r.name,
+    startedAt: r.started_at,
+    // The query only returns finished workouts.
+    finishedAt: r.finished_at!,
+    setCount: r.sets,
+  }));
 
 /** Finished workouts that started within [from, to). */
 export function useWorkoutsInRange(fromIso: string, toIso: string) {
@@ -219,7 +198,6 @@ export interface ExerciseHistoryEntry {
   /** Workout name. */
   name: string;
   startedAt: string;
-  finishedAt: string | null;
   sets: ExerciseHistorySet[];
   /** Best set by `setScoreSql`. */
   topSet: ExerciseHistorySet;
@@ -242,7 +220,6 @@ const exerciseHistoryQuery = (exerciseId: string, where?: SQL) =>
       workout_entries_id: workoutEntries.id,
       name: workoutEntries.name,
       started_at: workoutEntries.started_at,
-      finished_at: workoutEntries.finished_at,
       exercise_id: workoutEntriesExercises.exercise_id,
       weight_kg: workoutEntriesSets.weight_kg,
       reps: workoutEntriesSets.reps,
@@ -279,7 +256,6 @@ function toExerciseHistory(rows: RowOf<typeof exerciseHistoryQuery>[]): Exercise
       workoutId: r.workout_entries_id,
       name: r.name,
       startedAt: r.started_at,
-      finishedAt: r.finished_at,
       sets: [],
       topSet: set,
     }));

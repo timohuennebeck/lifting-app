@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { workoutMuscleSplit } from '@/features/exercises/lib/muscle-groups';
 import { MuscleSplit } from '@/features/muscles/components/muscle-split';
+import { workoutMuscleSplit } from '@/shared/data/muscle-groups';
 import { useUnits } from '@/shared/data/profile';
 import { minutesBetween } from '@/shared/lib/date';
 import { formatNumber } from '@/shared/lib/format';

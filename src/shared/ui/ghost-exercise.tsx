@@ -6,7 +6,7 @@ export interface GhostExerciseProps {
   faded?: boolean;
 }
 
-/** Skeleton exercise row shown while a training has no exercises yet (design 03·0). */
+/** Skeleton exercise row (design 03·0): an empty routine or workout, a plan import being read. */
 export function GhostExercise({ widths, faded }: GhostExerciseProps) {
   return (
     <View className="flex-row gap-3.5 py-4.5" style={{ opacity: faded ? 0.45 : 1 }}>

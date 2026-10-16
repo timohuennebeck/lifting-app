@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
 
-import { mainShares, type MuscleShare, muscleShares } from '@/shared/data/muscles';
+import { type MuscleShare, muscleShares } from '@/shared/data/muscles';
 import type { ExerciseItem, RoutineSummary } from '@/shared/data/routines';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -59,6 +59,9 @@ export function MuscleStack({ shares, highlight }: MuscleStackProps) {
   );
 }
 
+/** Muscles below this share are side work: the line names only the main ones. */
+const MAIN_MUSCLE_MIN_PERCENT = 8;
+
 /**
  * A routine's line under its name: its time and the two muscles it works most, e.g. "48 Min ·
  * Rücken · Bizeps" (the time first, so a long muscle name can't cut it off); for one without
@@ -68,7 +71,8 @@ export function useRoutineMeta() {
   const { t } = useTranslation(['training', 'muscles']);
   return (routine: Pick<RoutineSummary, 'items' | 'exerciseCount' | 'estimatedMinutes'>) => {
     if (!routine.exerciseCount) return t('training:overview.noExercises');
-    const muscles = mainShares(muscleShares(routine.items))
+    const muscles = muscleShares(routine.items)
+      .filter((s) => s.percent >= MAIN_MUSCLE_MIN_PERCENT)
       .slice(0, 2)
       .map((s) => t(`muscles:names.${s.muscle}`));
     return [t('training:list.minutes', { count: routine.estimatedMinutes }), ...muscles].join(

@@ -10,7 +10,7 @@ git history (`git show 48b667e:design/README.md`).
 ## Stack
 
 - **Expo SDK 57** with Expo Router (typed routes), protected routes, native tabs and the React Compiler
-- **Supabase** for auth, Postgres, storage and the Edge Functions (Deno; they call OpenAI)
+- **Supabase** for auth, Postgres, storage and the Edge Functions (Deno; the plan and progress-check functions call OpenAI)
 - **PowerSync** for local-first SQLite sync, read through **TanStack Query** (`@powersync/tanstack-react-query`)
 - **Drizzle ORM** (`@powersync/drizzle-driver`) for typed queries; `src/shared/data/powersync/schema.ts` is the client schema
 - **Uniwind** (Tailwind v4) with `tailwind-merge` via `cn()`
@@ -122,9 +122,10 @@ Documents are readable without an account (onboarding runs logged out) and writt
   app writes them on sign-up (the versions in effect then) and when a user agrees to a version that
   requires re-acceptance; until then that version covers the app, showing what changed.
 - **In the app:** `/legal/terms` and `/legal/privacy` show the version in effect, in the app language
-  (else English, else `pt-BR`), linked from the sign-up screen and Settings. Write the text as Markdown:
-  headings, paragraphs, `>` quotes, lists, `**bold**` and `[links](https://…)`. Locally,
-  `supabase/seed.sql` adds placeholder documents on `npm run supabase:reset`.
+  (else English, else `pt-BR`), linked from sign-up, the paywall and trial screens, and Settings.
+  Write the text as Markdown: headings, paragraphs, `>` quotes, lists, `**bold**` and
+  `[links](https://…)`. Locally, `supabase/seed.sql` adds placeholder documents on
+  `npm run supabase:reset`.
 
 ## Weight tracking
 
@@ -195,9 +196,6 @@ What the user trains from, and what they logged:
 - **`workout_entries`** (with `workout_entries_exercises` and `workout_entries_sets`): logged or
   running workouts. One started from a plan's routine gets `plan_id` and `plan_week`, the week the
   plan is in then; free workouts and single routines have neither and don't count.
-- **Next routine:** the plan's routine logged longest ago (`created_at`), never-done ones first in
-  plan order; routines without exercises are skipped. Doing another one is fine: the others come
-  next.
 - **Blocks (optional):** `block_weeks` is the length of a block with its deload, null for none;
   blocks repeat from week 1 (`block_start_week`, always 1). Each week after a block's first takes
   one rep off every set's saved RIR (never below 0); the deload keeps the first half of the sets

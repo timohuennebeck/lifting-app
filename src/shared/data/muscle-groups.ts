@@ -1,7 +1,8 @@
-import { type Exercise, getExercise, isCardio } from '@/shared/data/exercises';
-import { type MuscleShare, muscleShares, muscleWeights } from '@/shared/data/muscles';
-import type { ExerciseItem } from '@/shared/data/routines';
 import type { BodyPartId, MuscleId } from '@/shared/ui/muscle-map/body-paths';
+
+import { type Exercise, getExercise, isCardio } from './exercises';
+import { type MuscleShare, muscleShares, muscleWeights } from './muscles';
+import type { ExerciseItem } from './routines';
 
 export const MUSCLE_GROUP_IDS = [
   'chest',

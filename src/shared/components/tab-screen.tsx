@@ -22,7 +22,8 @@ export interface TabScreenProps {
  * Tab root: shared header plus a scroll view whose last rows clear the native tab bar. The tabs
  * turn iOS's automatic scroll insets off (they also pushed content under the header out of
  * view), so an empty view padded by its own bottom safe area measures what the tab bar and the
- * home indicator cover, and the scroll view pads for that.
+ * home indicator cover, and the scroll view pads for that. Queries rendered inside it pause while
+ * the tab is hidden (QueryFocus).
  */
 export function TabScreen({ children, greeting, settings, pinned }: TabScreenProps) {
   const insets = useSafeAreaInsets();

@@ -2,14 +2,14 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
+import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import {
   groupOfPart,
   MUSCLE_GROUP_IDS,
   MUSCLE_GROUPS,
   type MuscleGroupId,
-} from '@/features/exercises/lib/muscle-groups';
-import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
-import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
+} from '@/shared/data/muscle-groups';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import { BodyMaps, type BodyPartId } from '@/shared/ui/muscle-map';

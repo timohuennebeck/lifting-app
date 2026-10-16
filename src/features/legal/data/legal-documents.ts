@@ -69,7 +69,7 @@ function firstDocument(answer: { data: unknown[] | null; error: unknown }): Lega
 
 /**
  * The version of a document in effect now, from `public.legal_documents` (readable logged out,
- * so the links on the sign-up screen work). Null when none has been published.
+ * so the links in onboarding work). Null when none has been published.
  */
 async function fetchCurrentDocument(kind: LegalKind, language: string) {
   const now = new Date().toISOString();

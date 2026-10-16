@@ -39,7 +39,7 @@ export interface TrendChangeRowProps {
 
 /** "7 Tage", the trend's sparkline and how much it moved (GW·2, Veränderung · Trend). */
 export function TrendChangeRow({ change, units }: TrendChangeRowProps) {
-  const { t } = useTranslation(['weight', 'common']);
+  const { t } = useTranslation('weight');
   const { d, end } = sparkPath(change.series);
   const value = formatChange(change.changeKg, units);
   const unit = weightUnit(units);

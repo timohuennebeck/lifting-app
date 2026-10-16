@@ -32,7 +32,6 @@ export interface Ticket {
   subject: string;
   createdAt: string;
   updatedAt: string;
-  closedAt: string | null;
 }
 
 export interface TicketMessage {
@@ -59,7 +58,7 @@ export interface TicketEvent {
 }
 
 export interface TicketSummary extends Ticket {
-  lastMessage: Pick<TicketMessage, 'author' | 'content' | 'attachments' | 'createdAt'> | null;
+  lastMessage: Pick<TicketMessage, 'author' | 'content' | 'attachments'> | null;
   lastTeamAt: string | null;
   /** Latest message time (or the ticket's update), for sorting and the row date. */
   activityAt: string;
@@ -108,7 +107,6 @@ const toTicket = (r: TicketRecord): Ticket => ({
   subject: r.subject,
   createdAt: r.created_at,
   updatedAt: r.updated_at,
-  closedAt: r.closed_at,
 });
 
 const toSummaries = (rows: RowOf<typeof ticketListQuery>[]): TicketSummary[] =>
@@ -121,7 +119,6 @@ const toSummaries = (rows: RowOf<typeof ticketListQuery>[]): TicketSummary[] =>
             author: r.last_author === 'team' ? 'team' : 'user',
             content: r.last_content ?? '',
             attachments: parseJson<string[]>(r.last_attachments, []),
-            createdAt: r.last_at,
           }
         : null,
       lastTeamAt: r.last_team_at,

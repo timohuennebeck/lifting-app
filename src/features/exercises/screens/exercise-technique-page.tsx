@@ -3,12 +3,12 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { exerciseInstructions, useExercise } from '@/shared/data/exercises';
+import { splitMuscles } from '@/shared/data/muscle-groups';
 import { exerciseShares } from '@/shared/data/muscles';
 import { MUSCLE_CARDS, MuscleMap, MuscleTile } from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
 
 import { useExerciseId } from '../components/exercise-layout';
-import { splitMuscles } from '../lib/muscle-groups';
 
 /** Exercise page, "Übung": the worked muscles as chips with their share beside a body map, then the technique. */
 export function ExerciseTechniquePage() {

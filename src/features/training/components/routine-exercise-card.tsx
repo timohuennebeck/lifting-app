@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
-import { splitMuscles } from '@/features/exercises/lib/muscle-groups';
 import { isTimed, useExercise, useExerciseName } from '@/shared/data/exercises';
+import { splitMuscles } from '@/shared/data/muscle-groups';
 import type { SetTarget } from '@/shared/data/routines';
 import { formatTargetLabel } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';

@@ -7,7 +7,7 @@ export interface EmptyExercisesProps {
   hint: string;
 }
 
-/** Ghost exercise rows with a hint, shown while a training has no exercises (03·0 leer). */
+/** Ghost exercise rows with a hint, for a routine or workout without exercises (03·0 leer). */
 export function EmptyExercises({ hint }: EmptyExercisesProps) {
   return (
     <View>

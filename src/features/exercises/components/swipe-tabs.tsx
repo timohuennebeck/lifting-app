@@ -1,10 +1,10 @@
 import { TopTabs } from 'expo-router/js-top-tabs';
-import type { ReactNode } from 'react';
-import type { Animated } from 'react-native';
+import { type ReactNode, useState } from 'react';
+import { Animated, View } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
-
-import { UnderlineTabs } from './underline-tabs';
+import { PressableScale } from '@/shared/ui/pressable-scale';
+import { Text } from '@/shared/ui/text';
 
 interface TabRoute {
   key: string;
@@ -20,39 +20,69 @@ export interface TopTabBarProps {
     };
   };
   descriptors: Record<string, { options: { title?: string } } | undefined>;
+  /** The pager's position as a tab index (fractions while swiping); the underline follows it. */
   position: Animated.AnimatedInterpolation<number>;
   /** Moves the pager to a route and updates the state with it. */
   jumpTo: (key: string) => void;
 }
 
 /**
- * The tab bar in the app's look: titles from the screens' options, an underline that follows the
- * swipe.
+ * The tab bar in the app's look: equal-width titles from the screens' options on a hairline, with
+ * an accent underline that follows the swipe.
  */
 function TopTabBar({ state, navigation, descriptors, position, jumpTo }: TopTabBarProps) {
-  const focused = state.routes[state.index]?.name ?? '';
+  const [tabWidth, setTabWidth] = useState(0);
+  const { routes } = state;
+  const last = Math.max(1, routes.length - 1);
+  const translateX = position.interpolate({
+    inputRange: [0, last],
+    outputRange: [0, last * tabWidth],
+    extrapolate: 'clamp',
+  });
+
+  const press = (route: TabRoute, focused: boolean) => {
+    const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
+    // Not navigate(): that only moves the pager when its own idea of the page differs, and
+    // after a tap iOS doesn't always tell it, so a later tap back left the page in place.
+    if (!focused && !event.defaultPrevented) jumpTo(route.key);
+  };
+
   return (
-    <UnderlineTabs
-      className="mx-4 mt-3"
-      position={position}
-      value={focused}
-      tabs={state.routes.map((route) => ({
-        key: route.name,
-        label: descriptors[route.key]?.options.title ?? route.name,
-      }))}
-      onChange={(name) => {
-        const route = state.routes.find((r) => r.name === name);
-        if (!route) return;
-        const event = navigation.emit({
-          type: 'tabPress',
-          target: route.key,
-          canPreventDefault: true,
-        });
-        // Not navigate(): that only moves the pager when its own idea of the page differs, and
-        // after a tap iOS doesn't always tell it, so a later tap back left the page in place.
-        if (name !== focused && !event.defaultPrevented) jumpTo(route.key);
-      }}
-    />
+    <View
+      className="mx-4 mt-3 flex-row border-b border-control"
+      accessibilityRole="tablist"
+      onLayout={(e) => setTabWidth(e.nativeEvent.layout.width / routes.length)}
+    >
+      {routes.map((route, i) => {
+        const focused = i === state.index;
+        return (
+          <PressableScale
+            key={route.key}
+            haptic="select"
+            accessibilityRole="tab"
+            accessibilityState={{ selected: focused }}
+            onPress={() => press(route, focused)}
+            className="h-11.5 flex-1 items-center justify-center"
+          >
+            <Text variant="label" tone={focused ? 'default' : 'subtle'}>
+              {descriptors[route.key]?.options.title ?? route.name}
+            </Text>
+          </PressableScale>
+        );
+      })}
+      <Animated.View
+        pointerEvents="none"
+        style={{
+          position: 'absolute',
+          bottom: -1,
+          left: 0,
+          height: 2,
+          width: tabWidth,
+          backgroundColor: colors.accent,
+          transform: [{ translateX }],
+        }}
+      />
+    </View>
   );
 }
 

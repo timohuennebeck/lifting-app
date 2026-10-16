@@ -1,10 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
+import { MUSCLE_GROUP_IDS, MUSCLE_GROUPS, type MuscleGroupId } from '@/shared/data/muscle-groups';
 import { MuscleChip, type MuscleId } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-
-import { MUSCLE_GROUP_IDS, MUSCLE_GROUPS, type MuscleGroupId } from '../lib/muscle-groups';
 
 /** The muscle whose crop of the body map pictures each group. */
 const GROUP_ART: Record<MuscleGroupId, MuscleId> = {

@@ -13,6 +13,7 @@ import {
   useExercise,
   useExerciseName,
 } from '@/shared/data/exercises';
+import { primaryGroup } from '@/shared/data/muscle-groups';
 import { haptics } from '@/shared/lib/haptics';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { ActionSheet } from '@/shared/ui/action-sheet';
@@ -20,7 +21,6 @@ import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Text } from '@/shared/ui/text';
 
-import { primaryGroup } from '../lib/muscle-groups';
 import { ExerciseThumb } from './exercise-thumb';
 import { SwipeTabs } from './swipe-tabs';
 

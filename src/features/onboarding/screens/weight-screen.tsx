@@ -2,12 +2,9 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import {
-  onboardingWeightKg,
-  onboardingWeightRange,
-  onboardingWeightValue,
-} from '@/shared/lib/body-weight';
-import { formatNumber, weightUnit } from '@/shared/lib/format';
+import { snapTo, toStoredKg, toUnits } from '@/shared/lib/body-weight';
+import { formatNumber, type UnitSystem, weightUnit } from '@/shared/lib/format';
+import { clamp } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { RulerPicker } from '@/shared/ui/ruler-picker';
 import { StepScreen } from '@/shared/ui/step-screen';
@@ -15,6 +12,25 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { MeasureValue, StepButtons } from '../components/measure-value';
 import { ABOUT_STEPS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
+
+/** The ruler in the user's unit: half kilos or whole pounds. */
+const WEIGHT_KG = { min: 30, max: 250, step: 0.5 } as const;
+const WEIGHT_LB = { min: 66, max: 550, step: 1 } as const;
+
+/** The ruler's range and step in the user's unit. */
+const weightRange = (units: UnitSystem) => (units === 'imperial' ? WEIGHT_LB : WEIGHT_KG);
+
+/** Stored kg → the ruler's value, on its steps and in its range. */
+function weightToDisplay(kg: number, units: UnitSystem) {
+  const { min, max, step } = weightRange(units);
+  return clamp(snapTo(toUnits(kg, units), step), min, max);
+}
+
+/** The ruler's value → kg to store. */
+function weightFromDisplay(value: number, units: UnitSystem) {
+  const { min, max } = weightRange(units);
+  return toStoredKg(clamp(value, min, max), units);
+}
 
 export function WeightScreen() {
   const { t } = useTranslation('onboarding');
@@ -24,9 +40,9 @@ export function WeightScreen() {
   const imperial = unitPreference === 'imperial';
 
   // The ruler works in the display unit; the draft always stores kg.
-  const range = onboardingWeightRange(unitPreference);
-  const value = onboardingWeightValue(weightKg, unitPreference);
-  const setValue = (next: number) => update({ weightKg: onboardingWeightKg(next, unitPreference) });
+  const range = weightRange(unitPreference);
+  const value = weightToDisplay(weightKg, unitPreference);
+  const setValue = (next: number) => update({ weightKg: weightFromDisplay(next, unitPreference) });
 
   return (
     <StepScreen

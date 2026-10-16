@@ -10,7 +10,7 @@ import {
 import { newId, nowIso } from '@/shared/data/json';
 import { blockWeekOf, currentPlanWeek, setsForWeek } from '@/shared/data/plans';
 import { nextPosition } from '@/shared/data/positions';
-import { drizzle, type Executor, type Tx } from '@/shared/data/powersync/database';
+import { drizzle, type Tx } from '@/shared/data/powersync/database';
 import {
   plans,
   routineExercises,
@@ -124,15 +124,15 @@ async function insertWorkout(tx: Tx, userId: string, name: string, routineId: st
   return workoutId;
 }
 
-/** Inserts one empty set with the given targets (`drizzle` or a transaction). */
+/** Inserts one empty set with the given targets. */
 async function insertWorkoutSet(
-  executor: Executor,
+  tx: Tx,
   userId: string,
   workoutExerciseId: string,
   position: number,
   target: SetTargets,
 ) {
-  await executor.insert(workoutEntriesSets).values({
+  await tx.insert(workoutEntriesSets).values({
     id: newId(),
     user_id: userId,
     workout_entries_exercise_id: workoutExerciseId,

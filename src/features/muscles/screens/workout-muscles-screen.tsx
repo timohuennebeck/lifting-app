@@ -2,7 +2,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { workoutMuscleSplit } from '@/features/exercises/lib/muscle-groups';
+import { workoutMuscleSplit } from '@/shared/data/muscle-groups';
 import { MuscleMap } from '@/shared/ui/muscle-map';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';

@@ -2,15 +2,16 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
+import { ABOUT_STEPS } from '@/features/onboarding/lib/flow';
 import { Button } from '@/shared/ui/button';
 import { FormatCards } from '@/shared/ui/format-cards';
 import { Text } from '@/shared/ui/text';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { TextButton } from '@/shared/ui/text-button';
 
-import { ABOUT_STEPS } from '../lib/flow';
+import { usePlanFlow } from '../hooks/use-plan-flow';
 
+/** The plan flow's first step: import the plan the user follows, or have one made. */
 export function HasPlanScreen() {
   const { t } = useTranslation('onboarding');
   const { inApp, step } = usePlanFlow();

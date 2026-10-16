@@ -9,9 +9,9 @@ Expo Go). `ios/` and `android/` are generated: configure native behaviour in `ap
 
 ## Where things go
 
-- `src/app/**`: Expo Router routes only (typed routes, NativeTabs); each file re-exports a screen
-  from `src/features/<feature>/screens/`. The plan flow is mounted twice: `(onboarding)/` and
-  `(app)/plan/`.
+- `src/app/**`: Expo Router routes only (typed routes, NativeTabs); screen files re-export a
+  screen from `src/features/<feature>/screens/`, `_layout.tsx` files set up the navigators. The
+  plan flow is mounted twice: `(onboarding)/` and `(app)/plan/`.
 - `src/features/<feature>/{components,screens,data,hooks,lib,stores}`: code one feature uses.
 - `src/shared/`: code several features use. `ui` holds presentational primitives, `components`
   app-level composed pieces, `data` the shared data layer; then `hooks`, `lib`, `stores`, `i18n`,
@@ -31,8 +31,8 @@ Expo Go). `ios/` and `android/` are generated: configure native behaviour in `ap
   key factory) and a module-level `map`; the query re-runs when its tables change.
 - The database checks mirror `src/shared/lib/limits.ts`. An upload the server rejects is dropped
   whole (`connector.ts`).
-- The exercise catalog isn't synced: `useCatalogRefresh` keeps it in MMKV. Render code reads
-  exercises with `useExercise` / `useExerciseName`, not `getExercise`.
+- The exercise catalog isn't synced: it is kept in MMKV and refreshed by `useCatalogRefresh`.
+  Render code reads exercises with `useExercise` / `useExerciseName`, not `getExercise`.
 - Client state: zustand + MMKV (`src/shared/lib/storage.ts`).
 - Edge Function, `supabase/config.toml` and template changes reach the hosted project only with a
   function deploy or `supabase config push`.

@@ -42,7 +42,7 @@ const MAX_PHOTO = 124;
  * result. Photos the assessment can't judge go back to the camera, shown with what's wrong.
  */
 export function AssessmentScreen() {
-  const { t } = useTranslation(['progressCheck', 'common']);
+  const { t } = useTranslation('progressCheck');
   const close = useCloseCheck();
   // Android back asks before discarding, like the X.
   useHardwareBack(close);
