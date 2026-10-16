@@ -17,7 +17,7 @@ interface StatProps {
 }
 
 /** A stat under a history row's title: icon and value (exercise and workout history). */
-export function HistoryStat({ icon, value, color = colors.subtle }: StatProps) {
+function HistoryStat({ icon, value, color = colors.subtle }: StatProps) {
   return (
     <View className="flex-row items-center gap-1.5">
       <Icon name={icon} size={icon === 'dumbbell' ? 18 : 13} color={color} />

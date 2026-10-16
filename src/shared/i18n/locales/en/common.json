@@ -52,19 +52,10 @@
     "create": "New"
   },
   "progressTab": {
-    "history": "History",
     "muscles": "Level",
     "body": "Body"
   },
   "rangeDays": "{{count}} D",
-  "history": {
-    "more": "Load more",
-    "empty": "No finished workouts",
-    "emptyHint": "Every workout you finish shows up here, with its duration and records.",
-    "start": "Start a workout",
-    "sets_one": "{{count}} set",
-    "sets_other": "{{count}} sets"
-  },
   "search": {
     "open": "Search exercises",
     "title": "Exercises",

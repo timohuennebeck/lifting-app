@@ -60,19 +60,10 @@
     "create": "Novo"
   },
   "progressTab": {
-    "history": "Histórico",
     "muscles": "Nível",
     "body": "Corpo"
   },
   "rangeDays": "{{count}} D",
-  "history": {
-    "more": "Carregar mais",
-    "empty": "Ainda sem treinos concluídos",
-    "emptyHint": "Aqui você vê cada treino que concluiu, com a duração e os recordes.",
-    "start": "Iniciar treino",
-    "sets_one": "{{count}} série",
-    "sets_other": "{{count}} séries"
-  },
   "search": {
     "open": "Buscar exercícios",
     "title": "Exercícios",

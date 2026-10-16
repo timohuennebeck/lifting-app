@@ -52,19 +52,10 @@
     "create": "Neu"
   },
   "progressTab": {
-    "history": "Historie",
     "muscles": "Level",
     "body": "Körper"
   },
   "rangeDays": "{{count}} T",
-  "history": {
-    "more": "Mehr laden",
-    "empty": "Keine abgeschlossenen Trainings",
-    "emptyHint": "Hier siehst du jedes Training, das du abgeschlossen hast, mit Dauer und Rekorden.",
-    "start": "Training starten",
-    "sets_one": "{{count}} Satz",
-    "sets_other": "{{count}} Sätze"
-  },
   "search": {
     "open": "Übungen suchen",
     "title": "Übungen",
