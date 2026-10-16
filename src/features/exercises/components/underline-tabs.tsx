@@ -3,11 +3,10 @@ import { Animated, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
+import { PressableScale } from '@/shared/ui/pressable-scale';
+import { Text } from '@/shared/ui/text';
 
-import { PressableScale } from './pressable-scale';
-import { Text } from './text';
-
-export interface UnderlineTab<T extends string> {
+interface UnderlineTab<T extends string> {
   key: T;
   label: string;
 }

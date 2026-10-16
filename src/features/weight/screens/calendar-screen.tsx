@@ -6,8 +6,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useUnits } from '@/shared/data/profile';
 import { useWeightEntries } from '@/shared/data/weight-entries';
-import { useNow } from '@/shared/hooks/use-now';
-import { MINUTE_MS, toIsoDate } from '@/shared/lib/date';
+import { useToday } from '@/shared/hooks/use-today';
+import { toIsoDate } from '@/shared/lib/date';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
@@ -50,7 +50,7 @@ export function WeightCalendarScreen() {
   const insets = useSafeAreaInsets();
   const units = useUnits();
   const { entries, isLoading } = useWeightEntries();
-  const today = toIsoDate(new Date(useNow(MINUTE_MS)));
+  const today = toIsoDate(new Date(useToday()));
   const weekdays = t('common:weekdays.short', { returnObjects: true }) as string[];
   const weights = useMemo(() => new Map(entries.map((e) => [e.date, e.weightKg])), [entries]);
 

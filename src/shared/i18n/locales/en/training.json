@@ -2,11 +2,19 @@
   "home": {
     "single": "Single workouts",
     "showAll": "Show all",
-    "activePlan": "Active plan"
+    "activePlan": "Active plan",
+    "resumeActive": "Resume {{name}}",
+    "noPlan": {
+      "title": "No plan yet",
+      "body": "Tap to have one made or import yours."
+    },
+    "emptyPlan": {
+      "title": "Plan without workouts",
+      "body": "Tap to add workouts to your plan."
+    }
   },
   "list": {
     "start": "Start {{name}}",
-    "more": "Options for {{name}}",
     "minutes": "{{count}} min",
     "addRoutine": "Add workout"
   },
@@ -32,7 +40,8 @@
     "plan": "Plan",
     "planHint": "Have one made, import it or build it yourself",
     "createRoutine": "Create workout",
-    "createPlan": "Create plan"
+    "createPlan": "Create plan",
+    "emptyWorkoutName": "Workout"
   },
   "newRoutine": {
     "title": "New workout",

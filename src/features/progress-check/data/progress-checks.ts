@@ -5,12 +5,11 @@ import {
   progressChecks,
   type ProgressCheckRecord,
 } from '@/shared/data/powersync/schema';
-import { queryKeys } from '@/shared/data/query-keys';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 
 import type { ProgressCheckMetrics, GroupScores } from '../lib/progress-check-service';
 import type { Pose } from '../lib/poses';
-import { progressCheckPhotoKeys } from './progress-check-keys';
+import { progressCheckKeys } from './progress-check-keys';
 
 export interface ProgressCheck {
   id: string;
@@ -21,7 +20,7 @@ export interface ProgressCheck {
 }
 
 /** Storage path of each pose's photo in the bucket (uploaded for the assessment, before saving). */
-export type CheckPhotos = Partial<Record<Pose, string>>;
+type CheckPhotos = Partial<Record<Pose, string>>;
 
 const toChecks = (rows: ProgressCheckRecord[]): ProgressCheck[] =>
   rows.map((r) => ({
@@ -35,7 +34,7 @@ const toChecks = (rows: ProgressCheckRecord[]): ProgressCheck[] =>
 /** All progress checks, oldest first (check numbers follow this order). */
 export function useProgressChecks() {
   return useDrizzleQuery({
-    queryKey: queryKeys.progressChecks.list.queryKey,
+    queryKey: progressCheckKeys.list.queryKey,
     query: drizzle.select().from(progressChecks).orderBy(progressChecks.created_at),
     map: toChecks,
   });
@@ -62,7 +61,7 @@ function byCheck(rows: RowOf<typeof photoListQuery>[]) {
 /** Storage paths of every check's photos, by check id and pose. */
 export function useProgressCheckPhotos() {
   return useDrizzleQuery({
-    queryKey: progressCheckPhotoKeys.list.queryKey,
+    queryKey: progressCheckKeys.photos.queryKey,
     query: photoListQuery(),
     map: byCheck,
   });

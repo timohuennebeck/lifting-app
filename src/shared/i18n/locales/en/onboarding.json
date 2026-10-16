@@ -73,11 +73,11 @@
   "progressCheck": {
     "title": "DO A BODY CHECK?",
     "subtitle": "Based on your photos we adapt the plan to your weak spots.",
-    "lightStrong": "Bright light",
-    "clothesStrong": "Underwear",
-    "framingStrong": "Whole body in frame",
-    "sameStrong": "Same place, same light",
-    "privacyStrong": "Photos stay private",
+    "light": "Bright light",
+    "clothes": "Underwear",
+    "framing": "Whole body in frame",
+    "same": "Same place, same light",
+    "privacy": "Photos stay private",
     "now": "Take photos now",
     "later": "Later"
   }

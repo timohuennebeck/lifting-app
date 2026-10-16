@@ -7,7 +7,7 @@ import { ticketEvents, ticketMessages, tickets } from '@/shared/data/powersync/s
 import { firstLine } from '../lib/ticket-format';
 import type { TicketKind } from './tickets';
 
-export interface NewMessage {
+interface NewMessage {
   userId: string;
   ticketId: string;
   content: string;
@@ -15,7 +15,7 @@ export interface NewMessage {
   attachments: string[];
 }
 
-export interface NewTicket extends NewMessage {
+interface NewTicket extends NewMessage {
   kind: TicketKind;
   /** Importance 1–5 of a feature request; null for bugs. */
   priority: number | null;

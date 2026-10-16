@@ -73,11 +73,11 @@
   "progressCheck": {
     "title": "바디 체크를 할까요?",
     "subtitle": "사진을 바탕으로 약한 부위에 맞춰 플랜을 조정해요.",
-    "lightStrong": "밝은 조명",
-    "clothesStrong": "속옷 차림",
-    "framingStrong": "전신이 화면에 들어오게",
-    "sameStrong": "같은 장소, 같은 조명",
-    "privacyStrong": "사진은 비공개로 유지",
+    "light": "밝은 조명",
+    "clothes": "속옷 차림",
+    "framing": "전신이 화면에 들어오게",
+    "same": "같은 장소, 같은 조명",
+    "privacy": "사진은 비공개로 유지",
     "now": "지금 사진 찍기",
     "later": "나중에"
   }

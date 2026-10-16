@@ -2,12 +2,12 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { SetTargetsForm } from '@/features/training/components/set-targets-form';
-import { useWorkout } from '@/shared/data/workouts';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 
+import { useWorkout } from '../data/workout-detail';
 import { saveWorkoutTargets } from '../data/workout-mutations';
 
 /** "Targets" of the running workout: the same editor as a plan's sets (00·P2 C·S). */

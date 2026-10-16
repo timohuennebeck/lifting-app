@@ -2,9 +2,15 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useUserId } from '@/shared/stores/session-store';
-import { formatSet, type Measure } from '@/shared/data/exercises';
-import type { ExerciseHistoryEntry, WorkoutExercise } from '@/shared/data/workouts';
-import { formatNumber, formatWeightValue, type UnitSystem, weightUnit } from '@/shared/lib/format';
+import { formatSet, isTimed, type Measure } from '@/shared/data/exercises';
+import type { ExerciseHistoryEntry } from '@/shared/data/workouts';
+import {
+  formatNumber,
+  formatTargetLabel,
+  formatWeightValue,
+  type UnitSystem,
+  weightUnit,
+} from '@/shared/lib/format';
 import { decimalSeparator, displayInput } from '@/shared/lib/keypad';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -13,9 +19,10 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { SwipeToDelete } from '@/shared/ui/swipe-to-delete';
 import { Text } from '@/shared/ui/text';
 
+import type { WorkoutExercise } from '../data/workout-detail';
 import { addWorkoutSet } from '../data/workout-mutations';
+import { rowValues } from '../lib/row-values';
 import { typedValues, valueOf } from '../lib/set-input';
-import { rowValues, targetLabel } from '../lib/suggest';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 import { cellWidth, SetRow } from './set-row';
 
@@ -30,7 +37,7 @@ export interface SetTableProps {
   /** A row swiped left and its delete mark tapped. */
   onRemove: (index: number) => void;
   /** Reports each row's y offset inside the table (for scrolling it into view). */
-  onRowLayout?: (index: number, y: number) => void;
+  onRowLayout: (index: number, y: number) => void;
 }
 
 const HEADER = 'font-inter-semibold text-[11px] leading-3.5 tracking-[0.9px] text-dim';
@@ -46,7 +53,7 @@ export function SetTable({
   onRemove,
   onRowLayout,
 }: SetTableProps) {
-  const { t } = useTranslation(['workout', 'common']);
+  const { t } = useTranslation('workout');
   const userId = useUserId();
   const selectedSetId = useWorkoutSessionStore((s) => s.selectedSetId);
   const field = useWorkoutSessionStore((s) => s.field);
@@ -58,7 +65,7 @@ export function SetTable({
   const drafts = useWorkoutSessionStore((s) => s.drafts);
   const separator = decimalSeparator();
   const headers: Record<Measure, string> = {
-    weight: t(`common:units.${weightUnit(units)}`).toUpperCase(),
+    weight: weightUnit(units).toUpperCase(),
     reps: t('table.reps'),
     seconds: t('table.seconds'),
   };
@@ -80,7 +87,10 @@ export function SetTable({
 
   /** The middle column of row `index`: its targets, or the same set last time (if there was one). */
   const middleLabel = (index: number) => {
-    if (column === 'targets') return targetLabel(exercise.sets[index], exercise.exerciseId);
+    if (column === 'targets') {
+      const { targetMin, targetMax } = exercise.sets[index];
+      return formatTargetLabel(targetMin, targetMax, isTimed(exercise.exerciseId));
+    }
     const previous = last?.sets[index];
     return previous ? formatSet(exercise.exerciseId, previous, units) : null;
   };
@@ -116,7 +126,7 @@ export function SetTable({
           const selected = set.id === selectedSetId;
           const done = !!set.completedAt || !!logged[set.id];
           return (
-            <View key={set.id} onLayout={(e) => onRowLayout?.(i, e.nativeEvent.layout.y)}>
+            <View key={set.id} onLayout={(e) => onRowLayout(i, e.nativeEvent.layout.y)}>
               {/* Swiped left: the delete mark; to the right stays the swipe between exercises.
                   The row is opaque over the mark, also when a logged set is dimmed. */}
               <SwipeToDelete leftOnly label={t('table.removeSet')} onDelete={() => onRemove(i)}>

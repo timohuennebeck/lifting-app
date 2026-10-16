@@ -1,8 +1,9 @@
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 
+import { startWorkout } from '@/features/workout/data/workout-mutations';
 import type { RoutineSummary } from '@/shared/data/routines';
-import { getActiveWorkoutId, startWorkout } from '@/shared/data/workouts';
+import { getActiveWorkoutId } from '@/shared/data/workouts';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 

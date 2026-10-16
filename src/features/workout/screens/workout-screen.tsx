@@ -13,9 +13,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { scheduleOnRN } from 'react-native-worklets';
 import { useTranslation } from 'react-i18next';
 
+import {
+  type ExerciseMenuAction,
+  ExerciseMenuSheet,
+} from '@/features/training/components/exercise-menu-sheet';
 import { useExerciseName } from '@/shared/data/exercises';
 import { restSecondsFor } from '@/shared/data/routines';
-import { useWorkout, type WorkoutDetail } from '@/shared/data/workouts';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
@@ -24,18 +27,14 @@ import { Screen } from '@/shared/ui/screen';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
-import {
-  type ExerciseMenuAction,
-  ExerciseMenuSheet,
-} from '@/features/training/components/exercise-menu-sheet';
-
 import { EmptyWorkout } from '../components/empty-workout';
 import { ExerciseActions } from '../components/exercise-actions';
 import { ExerciseStrip } from '../components/exercise-strip';
+import { SetKeypad } from '../components/set-keypad';
 import { SetTable } from '../components/set-table';
-import { WeightKeypad } from '../components/weight-keypad';
 import { WorkoutMenuSheet } from '../components/workout-menu-sheet';
 import { WorkoutTopBar } from '../components/workout-top-bar';
+import { useWorkout, type WorkoutDetail } from '../data/workout-detail';
 import {
   removeWorkoutExercise,
   removeWorkoutSet,
@@ -291,7 +290,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
             </BottomFade>
           ) : null}
           {keypadOpen ? (
-            <WeightKeypad
+            <SetKeypad
               onConfirm={live.confirmInput}
               onDismiss={live.closeInput}
               onLayout={(e) => setKeypadHeight(e.nativeEvent.layout.height)}

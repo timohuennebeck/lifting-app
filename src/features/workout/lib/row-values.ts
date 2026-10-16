@@ -1,13 +1,9 @@
-import { isTimed } from '@/shared/data/exercises';
-import type { WorkoutExercise, WorkoutSet } from '@/shared/data/workouts';
-import { formatTargetLabel, type SetValues } from '@/shared/lib/format';
+import type { SetValues } from '@/shared/lib/format';
 
-/** "7–9 Wdh.", "8+ Wdh." or "30–45 s" target label, or null without targets. */
-export const targetLabel = (set: WorkoutSet, exerciseId: string) =>
-  formatTargetLabel(set.targetMin, set.targetMax, isTimed(exerciseId));
+import type { WorkoutExercise } from '../data/workout-detail';
 
 /** The row being typed in, with what has been typed so far. */
-export interface TypedRow {
+interface TypedRow {
   index: number;
   values: SetValues;
 }

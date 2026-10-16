@@ -11,7 +11,7 @@ const STEPS = [
   'planName',
 ] as const;
 
-export type CreateStep = (typeof STEPS)[number];
+type CreateStep = (typeof STEPS)[number];
 
 /** Where a step stands in the "Create plan" branch, for the step counter. */
 export function useCreateStep(id: CreateStep) {

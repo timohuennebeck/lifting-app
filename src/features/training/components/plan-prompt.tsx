@@ -22,7 +22,7 @@ export interface PlanPromptProps {
   onPress: () => void;
 }
 
-/** Shown on a day without a workout when there is nothing to do next: no plan, or an empty one. */
+/** Shown on the Training tab without a plan, or with an empty one. */
 export function PlanPrompt({ title, body, onPress }: PlanPromptProps) {
   return (
     <View className="flex-1 items-center justify-center px-8 pb-12">

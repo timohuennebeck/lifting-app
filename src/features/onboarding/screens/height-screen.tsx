@@ -2,8 +2,8 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { heightFromDisplay, heightRange, heightToDisplay } from '@/shared/data/profile';
-import { feetInches } from '@/shared/lib/format';
+import type { UnitSystem } from '@/shared/lib/format';
+import { clamp } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { RulerPicker } from '@/shared/ui/ruler-picker';
 import { StepScreen } from '@/shared/ui/step-screen';
@@ -11,6 +11,32 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { MeasureValue, StepButtons } from '../components/measure-value';
 import { ABOUT_STEPS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
+
+const CM_PER_INCH = 2.54;
+const HEIGHT_CM = { min: 120, max: 230 } as const;
+const HEIGHT_IN = { min: 47, max: 91 } as const;
+
+/** Height range in the user's unit (cm or inches). */
+const heightRange = (units: UnitSystem) => (units === 'imperial' ? HEIGHT_IN : HEIGHT_CM);
+
+/** Stored cm → value edited in the user's unit (whole inches), clamped to the range. */
+function heightToDisplay(cm: number, units: UnitSystem) {
+  const { min, max } = heightRange(units);
+  return clamp(units === 'imperial' ? Math.round(cm / CM_PER_INCH) : cm, min, max);
+}
+
+/** Edited value → whole centimetres as the profile stores them. */
+function heightFromDisplay(value: number, units: UnitSystem) {
+  const { min, max } = heightRange(units);
+  const v = clamp(value, min, max);
+  return units === 'imperial' ? Math.round(v * CM_PER_INCH) : v;
+}
+
+/** 70 → 5′10″ */
+function feetInches(totalInches: number) {
+  const inches = Math.round(totalInches);
+  return `${Math.floor(inches / 12)}′${inches % 12}″`;
+}
 
 export function HeightScreen() {
   const { t } = useTranslation('onboarding');

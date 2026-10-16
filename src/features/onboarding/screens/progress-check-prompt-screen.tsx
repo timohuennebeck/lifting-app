@@ -8,11 +8,11 @@ import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { Button } from '@/shared/ui/button';
 import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
 import { CheckChip } from '@/shared/ui/check-item';
-import { PhotoBackdrop } from '@/shared/ui/photo-backdrop';
 import { StepHeader } from '@/shared/ui/step-header';
 import { StepTitle } from '@/shared/ui/step-screen';
 import { TextButton } from '@/shared/ui/text-button';
 
+import { PhotoBackdrop } from '../components/photo-backdrop';
 import { START_STEPS } from '../lib/flow';
 import { useOnboardingStore } from '../stores/onboarding-store';
 
@@ -47,7 +47,7 @@ export function ProgressCheckPromptScreen() {
         <StepTitle title={t('progressCheck.title')} subtitle={t('progressCheck.subtitle')} />
         <View className="flex-row flex-wrap gap-2 px-5 pt-4.5">
           {TIPS.map((tip) => (
-            <CheckChip key={tip} label={t(`progressCheck.${tip}Strong`)} />
+            <CheckChip key={tip} label={t(`progressCheck.${tip}`)} />
           ))}
         </View>
         <View className="gap-1 px-4 pt-6.5">

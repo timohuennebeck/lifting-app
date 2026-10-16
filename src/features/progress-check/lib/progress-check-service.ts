@@ -35,12 +35,12 @@ export interface PhotoRejection {
   issue: PhotoIssue;
 }
 
-export type AssessmentOutcome =
+type AssessmentOutcome =
   | { status: 'ok'; result: ProgressCheckResult }
   /** The assessment could not judge these photos; nothing was scored. */
   | { status: 'retake'; issues: PhotoRejection[] };
 
-export type AssessmentFailure = 'offline' | 'limit' | 'notAdult' | 'notPro' | 'refused' | 'failed';
+type AssessmentFailure = 'offline' | 'limit' | 'notAdult' | 'notPro' | 'refused' | 'failed';
 
 export class AssessmentError extends Error {
   constructor(readonly reason: AssessmentFailure) {

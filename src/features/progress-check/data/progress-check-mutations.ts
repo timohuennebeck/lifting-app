@@ -14,7 +14,7 @@ import {
 } from '../lib/photo-files';
 import { POSES, type Pose } from '../lib/poses';
 
-export interface SaveProgressCheckInput {
+interface SaveProgressCheckInput {
   checkId: string;
   userId: string;
   result: ProgressCheckResult;

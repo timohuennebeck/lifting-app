@@ -7,9 +7,8 @@ const KG_PER_LB = 0.45359237;
 
 /** Between a number and its unit, so a line never breaks between them. */
 const NBSP = '\u00a0';
-export const CM_PER_INCH = 2.54;
 
-/** Unit key for weights: `units.kg` or `units.lb` in the common namespace. */
+/** The weight unit's label, "kg" or "lb", the same in every app language. */
 export const weightUnit = (units: UnitSystem) => (units === 'imperial' ? 'lb' : 'kg');
 
 export const kgToLb = (kg: number) => kg / KG_PER_LB;
@@ -78,12 +77,6 @@ export function formatTargetLabel(min: number | null, max: number | null, timed:
   if (min != null) return withUnit(`${min}+`, timed);
   if (max != null) return i18n.t('common:units.atMost', { value: withUnit(`${max}`, timed, max) });
   return null;
-}
-
-/** 70 → 5′10″ */
-export function feetInches(totalInches: number) {
-  const inches = Math.round(totalInches);
-  return `${Math.floor(inches / 12)}′${inches % 12}″`;
 }
 
 /** "1:30" or "1:02:05"; `alwaysHours` makes an elapsed clock like "0:07:20". */

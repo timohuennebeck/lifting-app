@@ -1,9 +1,9 @@
+import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
 
 import { mainShares, type MuscleShare, muscleShares } from '@/shared/data/muscles';
 import type { ExerciseItem, RoutineSummary } from '@/shared/data/routines';
-import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { MuscleCircle } from '@/shared/ui/muscle-map';
@@ -16,9 +16,15 @@ const STEP = 33;
 /** Width of three circles, kept for fewer too so the titles line up. */
 const STACK_WIDTH = CIRCLE + 2 * STEP;
 
+/**
+ * Routines outside a plan listed as done most recently: Training shows this many ("Alle
+ * anzeigen" has the rest), the Einzeltrainings page this many above all of them.
+ */
+export const RECENT_ROUTINES = 3;
+
 interface MuscleStackProps {
   shares: MuscleShare[];
-  /** The muscles in neon: the routine that's next. */
+  /** The muscles in neon (the active plan's card). */
   highlight?: boolean;
 }
 
@@ -79,36 +85,13 @@ export interface RoutineRowProps {
   meta: string;
   onPress: () => void;
   onStart: () => void;
-  /** "⋯": rename, copy or delete; left out where the routine's page has it. */
-  onMore?: () => void;
   starting?: boolean;
-  /** The plan's next routine: its muscles in neon. */
-  next?: boolean;
-  /** Small accent tag over the name. */
-  tag?: string;
   /** Neon line under the name, e.g. the muscle it works most: "Brust 40 %". */
   focus?: string;
-  /** Done this plan week: dimmed, with a check where play would be. */
-  done?: boolean;
 }
 
-/**
- * Routine card: its top muscles as circles, the name and a line under it; "⋯" (rename, copy,
- * delete) where given, and a quick-start play button, or a check once it's done this week.
- */
-export function RoutineRow({
-  name,
-  items,
-  meta,
-  onPress,
-  onStart,
-  onMore,
-  starting,
-  next,
-  tag,
-  focus,
-  done,
-}: RoutineRowProps) {
+/** Routine card: its top muscles as circles, the name and a line under it, and a play button. */
+function RoutineRow({ name, items, meta, onPress, onStart, starting, focus }: RoutineRowProps) {
   const { t } = useTranslation('training');
   const shares = muscleShares(items);
 
@@ -117,31 +100,18 @@ export function RoutineRow({
       haptic="none"
       activeScale={0.98}
       accessibilityRole="button"
-      accessibilityLabel={[tag, name, focus, meta].filter(Boolean).join(', ')}
-      // The card hides its buttons from screen readers; these stand in for them.
-      accessibilityActions={[
-        { name: 'start', label: t('list.start', { name }) },
-        ...(onMore ? [{ name: 'more', label: t('list.more', { name }) }] : []),
-      ]}
+      accessibilityLabel={[name, focus, meta].filter(Boolean).join(', ')}
+      // The card hides its play button from screen readers; this stands in for it.
+      accessibilityActions={[{ name: 'start', label: t('list.start', { name }) }]}
       onAccessibilityAction={(e) => {
         if (e.nativeEvent.actionName === 'start') onStart();
-        else if (e.nativeEvent.actionName === 'more') onMore?.();
       }}
       onPress={onPress}
       className="flex-row items-center gap-3.5 rounded-[22px] bg-surface py-3.5 pr-3 pl-2.5"
     >
-      <View className={cn(done && 'opacity-60')}>
-        <MuscleStack shares={shares} highlight={next} />
-      </View>
+      <MuscleStack shares={shares} />
       <View className="min-w-0 flex-1 gap-0.5">
-        {tag ? (
-          <View className="mb-0.5 self-start rounded-full bg-accent px-2 py-0.5">
-            <Text variant="caption" tone="onAccent" className="text-[11px] leading-3.5">
-              {tag}
-            </Text>
-          </View>
-        ) : null}
-        <Text variant="bodyStrong" tone={done ? 'subtle' : undefined} numberOfLines={1}>
+        <Text variant="bodyStrong" numberOfLines={1}>
           {name}
         </Text>
         {focus ? (
@@ -153,39 +123,52 @@ export function RoutineRow({
           {meta}
         </Text>
       </View>
-      <View className="flex-row items-center gap-0.5">
-        {onMore ? (
-          <PressableScale
-            haptic="tap"
-            hitSlop={8}
-            accessibilityLabel={t('list.more', { name })}
-            onPress={onMore}
-            className="h-10 w-6 items-center justify-center"
-          >
-            <Icon name="more" size={14} color={colors.subtle} />
-          </PressableScale>
-        ) : null}
-        {done ? (
-          <View className="size-10 items-center justify-center rounded-full bg-elevated">
-            <Icon name="check" size={13} color={colors.accent} />
-          </View>
+      <PressableScale
+        haptic="press"
+        hitSlop={4}
+        accessibilityLabel={t('list.start', { name })}
+        onPress={onStart}
+        disabled={starting}
+        className="size-10 items-center justify-center rounded-full bg-elevated"
+      >
+        {starting ? (
+          <ActivityIndicator size="small" color={colors.fg} />
         ) : (
-          <PressableScale
-            haptic="press"
-            hitSlop={4}
-            accessibilityLabel={t('list.start', { name })}
-            onPress={onStart}
-            disabled={starting}
-            className="size-10 items-center justify-center rounded-full bg-elevated"
-          >
-            {starting ? (
-              <ActivityIndicator size="small" color={colors.fg} />
-            ) : (
-              <Icon name="play" size={12} />
-            )}
-          </PressableScale>
+          <Icon name="play" size={12} />
         )}
-      </View>
+      </PressableScale>
     </PressableScale>
+  );
+}
+
+interface RoutineRowsProps {
+  routines: RoutineSummary[];
+  /** The line under the name, e.g. when it was done last. */
+  meta: (routine: RoutineSummary) => string;
+  /** A neon line above it, e.g. the muscle it works most. */
+  focus?: (routine: RoutineSummary) => string | undefined;
+  startingId: string | null;
+  onStart: (routine: RoutineSummary) => void;
+}
+
+/** Routine cards with quick start; an empty routine opens instead, to add exercises. */
+export function RoutineRows({ routines, meta, focus, startingId, onStart }: RoutineRowsProps) {
+  return (
+    <View className="gap-2 px-4">
+      {routines.map((routine) => (
+        <RoutineRow
+          key={routine.id}
+          name={routine.name}
+          items={routine.items}
+          focus={focus?.(routine)}
+          meta={meta(routine)}
+          starting={startingId === routine.id}
+          onPress={() => router.push(`/routine/${routine.id}`)}
+          onStart={() =>
+            routine.exerciseCount ? onStart(routine) : router.push(`/routine/${routine.id}`)
+          }
+        />
+      ))}
+    </View>
   );
 }

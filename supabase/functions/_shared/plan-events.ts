@@ -1,6 +1,38 @@
-// What the app receives from the plan functions (read-plan, generate-plan): the shapes of its
-// ImportedRoutine, ImportedExercise and CustomExercise, the server-sent events that carry them, and
-// how the names in them are tidied. Plain TypeScript without Deno APIs.
+// What the plan functions (read-plan, generate-plan) share in plain TypeScript, without Deno APIs:
+// the app's languages and muscles, the catalog names the model reads, the shapes of the app's
+// ImportedRoutine, ImportedExercise and CustomExercise, the server-sent events that carry them,
+// and how the names in them are tidied.
+
+/** The app languages (its AppLanguage). */
+export const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR', 'ko'];
+
+/** The app's muscles (its MuscleId): focus muscles and the muscles of new exercises. */
+export const MUSCLES = [
+  'abs',
+  'adductors',
+  'biceps',
+  'calves',
+  'chest',
+  'forearms',
+  'front_delts',
+  'glutes',
+  'hamstrings',
+  'lats',
+  'lower_back',
+  'neck',
+  'obliques',
+  'quads',
+  'rear_delts',
+  'side_delts',
+  'tibialis',
+  'traps',
+  'triceps',
+  'upper_back',
+] as const;
+
+/** A catalog exercise's names as the model reads them: app language, German, English, each once. */
+export const catalogNames = (name: Record<string, string>, language: string) =>
+  [...new Set([language, 'de', 'en'].map((l) => name[l]).filter(Boolean))].join(' / ');
 
 export interface SetTarget {
   targetMin: number | null;

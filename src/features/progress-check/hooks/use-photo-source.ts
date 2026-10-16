@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { signedUrl } from '@/shared/data/supabase-storage';
 import { MINUTE_MS } from '@/shared/lib/date';
 
-import { progressCheckPhotoKeys } from '../data/progress-check-keys';
+import { progressCheckKeys } from '../data/progress-check-keys';
 import { PHOTO_BUCKET, photoFile } from '../lib/photo-files';
 import type { Pose } from '../lib/poses';
 
@@ -28,7 +28,7 @@ export function usePhotoSource(
   }, [checkId, pose]);
   const remote = !localUri && !!storagePath;
   const { data: url } = useQuery({
-    queryKey: progressCheckPhotoKeys.signedUrl(storagePath ?? '').queryKey,
+    queryKey: progressCheckKeys.signedUrl(storagePath ?? '').queryKey,
     queryFn: () => signedUrl(PHOTO_BUCKET, storagePath ?? '', SIGNED_URL_SECONDS),
     enabled: remote,
     staleTime: SIGNED_URL_STALE_MS,

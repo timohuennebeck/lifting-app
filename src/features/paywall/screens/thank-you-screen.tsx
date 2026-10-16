@@ -14,7 +14,7 @@ import { usePaywallFlow } from '../hooks/use-paywall-flow';
 import { COACH } from '../lib/coach-video';
 
 /** Thank-you after subscribing: a message from the head coach, then on to the next step. */
-export function WelcomeScreen() {
+export function ThankYouScreen() {
   const { t } = useTranslation('paywall');
   const flow = usePaywallFlow();
   const focused = useIsFocused();

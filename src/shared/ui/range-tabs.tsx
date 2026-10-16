@@ -14,7 +14,7 @@ export interface RangeTabsProps<TRange extends number> {
   className?: string;
 }
 
-/** A range of days as one pill of tabs, "7 T · 14 T · …" (weight history, muscle levels). */
+/** A range of days as one pill of tabs, "7 T · 14 T · …" (weight history). */
 export function RangeTabs<TRange extends number>({
   ranges,
   value,

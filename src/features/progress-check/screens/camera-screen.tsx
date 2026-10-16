@@ -31,7 +31,7 @@ import { ShotView } from '../components/shot-view';
 import { useCloseCheck } from '../hooks/use-close-check';
 import { assessPhoto } from '../lib/progress-check-service';
 import { deleteFile, storeShot } from '../lib/photo-files';
-import { POSES, type TimerSeconds } from '../lib/poses';
+import { POSES, type Pose, type TimerSeconds } from '../lib/poses';
 import {
   hasAllShots,
   startProgressCheck,
@@ -100,10 +100,10 @@ export function CameraScreen() {
 
   const assess = () => router.push('/progress-check/assessment');
 
-  const removeShot = (p: (typeof POSES)[number]) => useProgressCheckStore.getState().removeShot(p);
+  const removeShot = (p: Pose) => useProgressCheckStore.getState().removeShot(p);
 
   // A thumbnail with a photo shows it; an empty one is the pose to shoot next.
-  const selectPose = (p: (typeof POSES)[number]) => {
+  const selectPose = (p: Pose) => {
     const store = useProgressCheckStore.getState();
     if (store.shots[p]) store.view(p);
     else store.setPose(p);

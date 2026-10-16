@@ -73,11 +73,11 @@
   "progressCheck": {
     "title": "FAZER UM CHECK-UP CORPORAL?",
     "subtitle": "Com base nas suas fotos, adaptamos o plano aos seus pontos fracos.",
-    "lightStrong": "Luz forte",
-    "clothesStrong": "Roupa íntima",
-    "framingStrong": "Corpo inteiro na imagem",
-    "sameStrong": "Mesmo lugar, mesma luz",
-    "privacyStrong": "As fotos ficam privadas",
+    "light": "Luz forte",
+    "clothes": "Roupa íntima",
+    "framing": "Corpo inteiro na imagem",
+    "same": "Mesmo lugar, mesma luz",
+    "privacy": "As fotos ficam privadas",
     "now": "Tirar fotos agora",
     "later": "Depois"
   }

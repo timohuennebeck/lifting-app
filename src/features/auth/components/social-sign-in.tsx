@@ -9,7 +9,8 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
-import { appleSignInAvailable, providerReady, type SocialProvider } from '../lib/social-sign-in';
+import { googleSignInReady } from '../lib/google-sign-in';
+import { appleSignInAvailable, type SocialProvider } from '../lib/social-sign-in';
 
 function GoogleLogo() {
   return (
@@ -70,18 +71,22 @@ export function SocialSignIn({ onSignIn, busy, disabled }: SocialSignInProps) {
   return (
     <View>
       <View className="flex-row gap-2.5">
-        {providers.map(({ id, name, Logo }) => (
-          <PressableScale
-            key={id}
-            disabled={disabled}
-            accessibilityState={{ disabled, busy: busy === id }}
-            onPress={() => (providerReady(id) ? onSignIn(id) : setUnavailable(true))}
-            className="h-13 flex-1 flex-row items-center justify-center gap-2.5 rounded-full bg-pill"
-          >
-            {busy === id ? <ActivityIndicator size="small" color={colors.fg} /> : <Logo />}
-            <Text variant="label">{name}</Text>
-          </PressableScale>
-        ))}
+        {providers.map(({ id, name, Logo }) => {
+          // Apple's button is only shown where it works; Google's waits for its client IDs.
+          const ready = id === 'apple' || googleSignInReady;
+          return (
+            <PressableScale
+              key={id}
+              disabled={disabled}
+              accessibilityState={{ disabled, busy: busy === id }}
+              onPress={() => (ready ? onSignIn(id) : setUnavailable(true))}
+              className="h-13 flex-1 flex-row items-center justify-center gap-2.5 rounded-full bg-pill"
+            >
+              {busy === id ? <ActivityIndicator size="small" color={colors.fg} /> : <Logo />}
+              <Text variant="label">{name}</Text>
+            </PressableScale>
+          );
+        })}
       </View>
       <View className="flex-row items-center gap-3 px-1 pt-4.5">
         <View className="h-px flex-1 bg-white/10" />

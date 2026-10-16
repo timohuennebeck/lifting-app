@@ -15,8 +15,8 @@ import { TextField } from '@/shared/ui/text-field';
 import { createRoutine } from '../data/routine-mutations';
 
 /**
- * Names a new empty routine, then opens it. It goes into the plan `planId` ("Training
- * hinzufügen" under a plan), else into Meine Trainings.
+ * Names a new empty routine, then opens it. It goes into the plan `planId` (the empty plan's
+ * prompt on Training), else outside a plan (Einzeltrainings).
  */
 export function NewRoutineScreen() {
   const { planId } = useLocalSearchParams<{ planId?: string }>();

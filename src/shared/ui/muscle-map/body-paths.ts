@@ -24,7 +24,7 @@ export const MUSCLE_IDS = [
   'upper_back',
 ] as const;
 export type MuscleId = (typeof MUSCLE_IDS)[number];
-/** Joints are drawn and selectable (e.g. pain areas) but are not trained muscles. */
+/** Joints are drawn but are not trained muscles. */
 export type JointId = 'feet' | 'hands' | 'knees';
 export type BodyPartId = MuscleId | JointId;
 export type BodyView = 'front' | 'back';

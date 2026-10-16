@@ -5,6 +5,7 @@ import { View } from 'react-native';
 
 import { TabScreen } from '@/shared/components/tab-screen';
 import { cn } from '@/shared/lib/cn';
+import { DAY_MS } from '@/shared/lib/date';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { BodyMaps, MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
@@ -28,7 +29,7 @@ import { useLevelSeenStore } from '../stores/level-seen-store';
 const FILTERS: ('all' | LevelRegion)[] = ['all', 'upper', 'core', 'lower'];
 /** Muscle names spelled out in the missing-level hint; the rest as "+n". */
 const NAMED_MISSING = 3;
-const WEEK_MS = 7 * 86_400_000;
+const WEEK_MS = 7 * DAY_MS;
 
 const floors = (levels: ReadonlyMap<MuscleId, MuscleLevel>) =>
   Object.fromEntries([...levels].map(([m, l]) => [m, Math.floor(l.value)]));

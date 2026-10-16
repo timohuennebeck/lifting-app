@@ -5,9 +5,9 @@ import {
   toDisplayWeight,
   type UnitSystem,
 } from '@/shared/lib/format';
+import { parseInput, toInput } from '@/shared/lib/keypad';
 
 import type { SetField } from '../stores/workout-session-store';
-import { parseInput, toInput } from '@/shared/lib/keypad';
 
 export const valueOf = (values: SetValues, measure: Measure) =>
   measure === 'weight' ? values.weightKg : values[measure];

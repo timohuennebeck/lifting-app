@@ -12,7 +12,7 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
-import { IMPORT_STEPS } from '../lib/format';
+import { IMPORT_STEPS } from '../lib/plan-import-service';
 import type { SheetSummary } from '../lib/sheet-summary';
 import { recommendedSheets } from '../lib/sheets';
 import { useImportStore } from '../stores/import-store';

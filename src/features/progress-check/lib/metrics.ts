@@ -4,8 +4,8 @@ import { clamp } from '@/shared/lib/math';
 import type { GroupScores } from './progress-check-service';
 import { GROUPS, type CheckGroup } from './poses';
 
-export type ScoreTier = 'veryGood' | 'good' | 'average' | 'low';
-export type BodyFatTier = 'athletic' | 'fit' | 'average' | 'high';
+type ScoreTier = 'veryGood' | 'good' | 'average' | 'low';
+type BodyFatTier = 'athletic' | 'fit' | 'average' | 'high';
 export type GroupBand = 'top' | 'mid' | 'focus';
 
 export function scoreTier(value: number): ScoreTier {
@@ -30,7 +30,7 @@ export function bodyFatTier(share: number): BodyFatTier {
   return share < 0.75 ? 'average' : 'high';
 }
 
-export interface BandEntry {
+interface BandEntry {
   group: CheckGroup;
   value: number;
 }

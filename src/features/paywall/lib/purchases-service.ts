@@ -13,7 +13,7 @@ export { resetMockPurchases } from './mock-purchases';
 
 const revenueCatKey = Platform.select({ ios: env.revenueCatIosKey });
 
-/** Real purchases through RevenueCat where its key is set (iOS for now), else simulated. */
+/** Real purchases through RevenueCat where its key is set (only iOS has one), else simulated. */
 export const usesStore = !!revenueCatKey;
 export const purchases: PurchasesService = revenueCatKey
   ? createRevenueCatPurchases(revenueCatKey)

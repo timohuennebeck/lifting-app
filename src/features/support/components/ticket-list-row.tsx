@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 
-import { ProfileAvatar } from '@/shared/components/user-avatar';
+import { ProfileAvatar } from '@/shared/components/profile-avatar';
 import type { Profile } from '@/shared/data/profile';
 import { cn } from '@/shared/lib/cn';
 import { PressableScale } from '@/shared/ui/pressable-scale';

@@ -1,8 +1,14 @@
+import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
+import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
+import { useWorkoutDraftStore } from '@/features/workout/stores/workout-draft-store';
+import { useCurrentPlan } from '@/shared/data/plans';
+import { getActiveWorkoutId } from '@/shared/data/workouts';
 import { useResetOnOpen } from '@/shared/hooks/use-reset-on-open';
 import { ChoiceSheet } from '@/shared/ui/choice-sheet';
 import { Icon } from '@/shared/ui/icon';
+import { afterSheetClose } from '@/shared/ui/sheet';
 
 import { glyphColor, PlanGlyph, RoutineGlyph } from './glyphs';
 
@@ -11,25 +17,33 @@ type CreateKind = 'workout' | 'routine' | 'plan';
 export interface CreateSheetProps {
   visible: boolean;
   onClose: () => void;
-  onCreateRoutine: () => void;
-  onCreatePlan: () => void;
-  /** "Leeres Training": an empty workout, started now. */
-  onStartWorkout: () => void;
 }
 
 /**
- * The tab bar's "+" sheet: an empty workout, a new routine, or a plan, which is made, imported or
- * built (01·V·A·6).
+ * The tab bar's "+" sheet: an empty workout (or the running one, resumed), a new routine, or a
+ * plan, which is made, imported or built (01·V·A·6).
  */
-export function CreateSheet({
-  visible,
-  onClose,
-  onCreateRoutine,
-  onCreatePlan,
-  onStartWorkout,
-}: CreateSheetProps) {
+export function CreateSheet({ visible, onClose }: CreateSheetProps) {
   const { t } = useTranslation('training');
+  const { plan, profile } = useCurrentPlan();
   const [kind, setKind] = useResetOnOpen<CreateKind>(visible, 'workout');
+
+  const then = (go: () => void) => {
+    onClose();
+    afterSheetClose(go);
+  };
+
+  // An empty workout is put together first and started from the builder. Only one workout runs
+  // at a time: a running one is resumed instead.
+  const emptyWorkout = async () => {
+    const running = await getActiveWorkoutId();
+    if (running) {
+      router.push(`/workout/${running}`);
+      return;
+    }
+    useWorkoutDraftStore.getState().begin(t('create.emptyWorkoutName'));
+    router.push('/workout/new');
+  };
 
   return (
     <ChoiceSheet
@@ -38,9 +52,9 @@ export function CreateSheet({
       value={kind}
       onChange={setKind}
       onConfirm={(value) => {
-        if (value === 'workout') onStartWorkout();
-        else if (value === 'routine') onCreateRoutine();
-        else onCreatePlan();
+        if (value === 'workout') then(emptyWorkout);
+        else if (value === 'routine') then(() => router.push('/routine/new'));
+        else then(() => openPlanFlow(profile, plan?.sessionsPerWeek));
       }}
       options={[
         {

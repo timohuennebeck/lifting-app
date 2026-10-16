@@ -46,5 +46,20 @@
     "weight": "With weight",
     "locked": "Already logged: what this exercise records stays as it is.",
     "rest": "Rest between sets"
+  },
+  "history": {
+    "topWeight": "Top weight per session",
+    "topWeightShort": "Top weight",
+    "leastAssistance": "Least assistance per session",
+    "leastAssistanceShort": "Least assistance",
+    "topReps": "Most reps per session",
+    "topRepsShort": "Most reps",
+    "topSeconds": "Longest hold per session",
+    "topSecondsShort": "Longest hold",
+    "chartLabel": "Top weight chart, press and drag to read a session",
+    "emptyRange": "No sessions in this period.",
+    "days_one": "{{count}} D",
+    "days_other": "{{count}} D",
+    "empty": "No sessions yet. Finish a workout with this exercise to see your progress."
   }
 }

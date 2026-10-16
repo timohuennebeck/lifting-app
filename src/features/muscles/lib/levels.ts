@@ -1,6 +1,6 @@
 import type { Measure } from '@/shared/data/exercises';
 import type { Sex } from '@/shared/data/profile';
-import { toIsoDate } from '@/shared/lib/date';
+import { DAY_MS, toIsoDate } from '@/shared/lib/date';
 import type { MuscleId } from '@/shared/ui/muscle-map';
 
 // Muscle levels 1–100 from the best lifts. Every catalog exercise has an intermediate standard
@@ -35,7 +35,7 @@ export const tierOf = (level: number): Tier =>
   TIER_STARTS.find(([from]) => level >= from)?.[1] ?? 'beginner';
 
 /** The level (1–100, with fractions) a share of the standard reaches. */
-export function levelOf(share: number) {
+function levelOf(share: number) {
   if (share <= ANCHORS[0][1]) return 1;
   for (let i = 1; i < ANCHORS.length; i++) {
     const [l0, s0] = ANCHORS[i - 1];
@@ -128,7 +128,7 @@ export interface LevelExercise {
   muscles: Partial<Record<MuscleId, number>>;
 }
 
-export interface LevelSet {
+interface LevelSet {
   exerciseId: string;
   startedAt: string;
   weightKg: number | null;
@@ -143,7 +143,7 @@ export interface MuscleLevel {
   lastAt: string;
 }
 
-export interface LevelInput {
+interface LevelInput {
   sets: LevelSet[];
   exercises: (id: string) => LevelExercise | undefined;
   /** The body-weight trend on a day (YYYY-MM-DD). */
@@ -152,8 +152,6 @@ export interface LevelInput {
   /** Levels as of this moment; sets after it are left out. */
   now: Date;
 }
-
-const DAY_MS = 86_400_000;
 
 function fade(ageDays: number) {
   if (ageDays <= FULL_DAYS) return 1;

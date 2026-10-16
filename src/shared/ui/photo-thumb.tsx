@@ -3,9 +3,10 @@ import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
-import { PressableScale } from '@/shared/ui/pressable-scale';
-import { Text } from '@/shared/ui/text';
+
+import { Icon } from './icon';
+import { PressableScale } from './pressable-scale';
+import { Text } from './text';
 
 export interface PhotoThumbProps {
   /** None: an empty slot with a plus, for the photo still to take. */

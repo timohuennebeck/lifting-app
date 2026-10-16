@@ -188,23 +188,12 @@ export function useRoutines() {
   });
 }
 
-/**
- * When routines were done: the start of each one's latest finished workout, by routine id; with
- * `week`, only the workouts that counted for that plan week.
- */
-const doneDatesQuery = (week?: { planId: string; week: number }) =>
+/** When routines were done: the start of each one's latest finished workout, by routine id. */
+const doneDatesQuery = () =>
   drizzle
     .select({ routine_id: workoutEntries.routine_id, started_at: max(workoutEntries.started_at) })
     .from(workoutEntries)
-    .where(
-      and(
-        isNotNull(workoutEntries.routine_id),
-        isNotNull(workoutEntries.finished_at),
-        week
-          ? and(eq(workoutEntries.plan_id, week.planId), eq(workoutEntries.plan_week, week.week))
-          : undefined,
-      ),
-    )
+    .where(and(isNotNull(workoutEntries.routine_id), isNotNull(workoutEntries.finished_at)))
     .groupBy(workoutEntries.routine_id);
 
 /** ISO start of the latest finished workout of each routine done, by routine id. */
@@ -220,17 +209,6 @@ export function useLastDone() {
   return useDrizzleQuery({
     queryKey: queryKeys.routines.lastDone.queryKey,
     query: doneDatesQuery(),
-    map: toDoneDates,
-  });
-}
-
-/** The routines done in a plan week, with when; empty until the plan and its week are known. */
-export function useWeekDone(planId: string | undefined, week: number | undefined) {
-  const key = { planId: planId ?? '', week: week ?? 0 };
-  return useDrizzleQuery({
-    queryKey: queryKeys.routines.weekDone(key.planId, key.week).queryKey,
-    enabled: !!planId && week !== undefined,
-    query: doneDatesQuery(key),
     map: toDoneDates,
   });
 }

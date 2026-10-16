@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { DAY_MS } from '@/shared/lib/date';
 import { storage } from '@/shared/lib/storage';
 
 import { queryKeys } from './query-keys';
@@ -7,7 +8,7 @@ import { signedUrl } from './supabase-storage';
 
 /** Private bucket of profile photos; objects live under "<user id>/...". */
 export const AVATAR_BUCKET = 'avatars';
-const URL_TTL_MS = 24 * 60 * 60 * 1000;
+const URL_TTL_MS = DAY_MS;
 
 interface SavedUrl {
   url: string;

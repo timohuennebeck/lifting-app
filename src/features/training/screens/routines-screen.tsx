@@ -3,20 +3,16 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { type RoutineSummary, useLastDone, useRoutines } from '@/shared/data/routines';
+import { useLastDone, useRoutines } from '@/shared/data/routines';
 import { formatWeekdayDate } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
-import { AddRoutineButton } from '../components/add-routine-button';
-import { RoutineRow, useRoutineMeta } from '../components/routine-row';
+import { RECENT_ROUTINES, RoutineRows, useRoutineMeta } from '../components/routine-row';
 import { SectionTitle } from '../components/section-title';
 import { useStartRoutine } from '../hooks/use-start-routine';
-
-/** Routines done most recently, shown above the full list once it is longer than this. */
-const RECENT = 3;
 
 /** A faint sketch of a routine card: photo, name, sets, chips, menu. */
 function RoutineSketch() {
@@ -90,27 +86,12 @@ export function RoutinesScreen() {
   const library = routines.filter((r) => r.planId === null);
   const all = [...library].sort((a, b) => a.name.localeCompare(b.name, i18n.language));
   const recent =
-    library.length > RECENT
+    library.length > RECENT_ROUTINES
       ? library
           .filter((r) => lastDone[r.id])
           .sort((a, b) => lastDone[b.id].localeCompare(lastDone[a.id]))
-          .slice(0, RECENT)
+          .slice(0, RECENT_ROUTINES)
       : [];
-
-  const row = (routine: RoutineSummary, line: string) => (
-    <RoutineRow
-      key={routine.id}
-      name={routine.name}
-      items={routine.items}
-      meta={line}
-      starting={startingId === routine.id}
-      onPress={() => router.push(`/routine/${routine.id}`)}
-      // An empty routine has nothing to start: play opens it to add exercises.
-      onStart={() =>
-        routine.exerciseCount ? start(routine) : router.push(`/routine/${routine.id}`)
-      }
-    />
-  );
 
   return (
     <Screen header={<ScreenHeader icon="chevron-left-thin" title={t('home.single')} />}>
@@ -127,23 +108,28 @@ export function RoutinesScreen() {
             {recent.length ? (
               <>
                 <SectionTitle>{t('all.recent')}</SectionTitle>
-                <View className="gap-2 px-4">
-                  {recent.map((routine) =>
-                    row(
-                      routine,
-                      t('all.lastDone', {
-                        date: formatWeekdayDate(new Date(lastDone[routine.id])),
-                      }),
-                    ),
-                  )}
-                </View>
+                <RoutineRows
+                  routines={recent}
+                  meta={(r) =>
+                    t('all.lastDone', { date: formatWeekdayDate(new Date(lastDone[r.id])) })
+                  }
+                  startingId={startingId}
+                  onStart={start}
+                />
                 <SectionTitle>{t('all.all')}</SectionTitle>
               </>
             ) : (
               <View className="h-3" />
             )}
-            <View className="gap-2 px-4">{all.map((routine) => row(routine, meta(routine)))}</View>
-            <AddRoutineButton />
+            <RoutineRows routines={all} meta={meta} startingId={startingId} onStart={start} />
+            <Button
+              label={t('list.addRoutine')}
+              icon="plus"
+              size="sm"
+              variant="secondary"
+              className="mx-4 mt-3 self-start"
+              onPress={() => router.push('/routine/new')}
+            />
           </>
         )}
       </ScrollView>

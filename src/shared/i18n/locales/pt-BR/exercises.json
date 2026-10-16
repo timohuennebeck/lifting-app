@@ -46,5 +46,20 @@
     "weight": "Com peso",
     "locked": "Já registrado: o que este exercício registra fica assim.",
     "rest": "Descanso entre séries"
+  },
+  "history": {
+    "topWeight": "Peso máximo por treino",
+    "topWeightShort": "Peso máximo",
+    "leastAssistance": "Menor assistência por treino",
+    "leastAssistanceShort": "Menor assistência",
+    "topReps": "Mais repetições por treino",
+    "topRepsShort": "Mais repetições",
+    "topSeconds": "Maior tempo por treino",
+    "topSecondsShort": "Maior tempo",
+    "chartLabel": "Gráfico do peso máximo, toque e arraste",
+    "emptyRange": "Sem treinos neste período.",
+    "days_one": "{{count}} D",
+    "days_other": "{{count}} D",
+    "empty": "Ainda sem treinos. Termine um treino com este exercício para ver seu progresso."
   }
 }

@@ -16,7 +16,7 @@ interface StatProps {
   color?: string;
 }
 
-/** A stat under a history row's title: icon and value (exercise and workout history). */
+/** A stat under a history row's title: icon and value. */
 function HistoryStat({ icon, value, color = colors.subtle }: StatProps) {
   return (
     <View className="flex-row items-center gap-1.5">

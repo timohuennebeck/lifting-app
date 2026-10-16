@@ -53,7 +53,7 @@ export function PaywallScreen() {
     if (isPro) return flow.exit();
     if (!offering) return;
     if (offering.trialEligible) return flow.toTrial(selected);
-    if (await buy(selected)) flow.toWelcome();
+    if (await buy(selected)) flow.toThankYou();
   };
 
   const onRestore = async () => {

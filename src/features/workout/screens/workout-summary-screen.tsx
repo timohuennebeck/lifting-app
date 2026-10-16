@@ -6,7 +6,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { workoutMuscleSplit } from '@/features/exercises/lib/muscle-groups';
 import { MuscleSplit } from '@/features/muscles/components/muscle-split';
 import { useUnits } from '@/shared/data/profile';
-import { useWorkout } from '@/shared/data/workouts';
 import { minutesBetween } from '@/shared/lib/date';
 import { formatNumber } from '@/shared/lib/format';
 import { BottomFade } from '@/shared/ui/bottom-fade';
@@ -18,6 +17,7 @@ import { Text } from '@/shared/ui/text';
 
 import { DoneExerciseCard } from '../components/done-exercise-card';
 import { RecordCard } from '../components/record-card';
+import { useWorkout } from '../data/workout-detail';
 import { useWorkoutRecords } from '../data/workout-records';
 
 /**

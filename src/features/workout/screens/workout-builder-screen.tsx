@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { EditableTitle } from '@/features/training/components/editable-title';
 import { EditableExerciseList } from '@/features/training/components/editable-exercise-list';
-import { getActiveWorkoutId, startDraftWorkout } from '@/shared/data/workouts';
+import { getActiveWorkoutId } from '@/shared/data/workouts';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 import { BottomFade } from '@/shared/ui/bottom-fade';
@@ -14,6 +14,7 @@ import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 
+import { startDraftWorkout } from '../data/workout-mutations';
 import { useWorkoutDraftStore } from '../stores/workout-draft-store';
 
 /**

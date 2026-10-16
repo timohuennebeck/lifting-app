@@ -1,24 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { fromIsoDate, mondayIndex } from '@/shared/lib/date';
-import { formatShortDate, type UnitSystem } from '@/shared/lib/format';
+import { type UnitSystem, weightUnit } from '@/shared/lib/format';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { SwipeToDelete } from '@/shared/ui/swipe-to-delete';
 import { Text } from '@/shared/ui/text';
 
-import { formatChange, formatKg } from '../lib/format';
+import { formatBodyWeight, formatChange } from '../lib/format';
 import { offTrend, type WeightPoint } from '../lib/trend';
-
-/** "So, 11. Okt.": the app's short weekday (without Intl's dot) and the day. */
-export function useDayLabel() {
-  const { t } = useTranslation();
-  const weekdays = t('weekdays.short', { returnObjects: true }) as string[];
-  return (iso: string) => {
-    const date = fromIsoDate(iso);
-    return `${weekdays[mondayIndex(date)]}, ${formatShortDate(date)}`;
-  };
-}
 
 export interface EntryRowProps {
   point: WeightPoint;
@@ -32,7 +21,7 @@ export interface EntryRowProps {
 export function EntryRow({ point, units, dayLabel, onPress, onDelete }: EntryRowProps) {
   const { t } = useTranslation(['weight', 'common']);
   const off = offTrend(point);
-  const distance = `${formatKg(Math.abs(off), units)} ${t(`common:units.${units === 'imperial' ? 'lb' : 'kg'}`)}`;
+  const distance = `${formatBodyWeight(Math.abs(off), units)} ${weightUnit(units)}`;
   return (
     <SwipeToDelete label={t('history.delete')} onDelete={onDelete}>
       <PressableScale
@@ -54,10 +43,10 @@ export function EntryRow({ point, units, dayLabel, onPress, onDelete }: EntryRow
           </Text>
         </View>
         <Text variant="label" className="mt-1 w-18 text-right tabular-nums">
-          {formatKg(point.weightKg, units)}
+          {formatBodyWeight(point.weightKg, units)}
         </Text>
         <Text variant="label" tone="accent" className="mt-1 w-18 text-right tabular-nums">
-          {formatKg(point.trendKg, units)}
+          {formatBodyWeight(point.trendKg, units)}
         </Text>
         <Text
           tone="subtle"

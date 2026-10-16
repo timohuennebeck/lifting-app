@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { Trans, useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { ProfileAvatar } from '@/shared/components/user-avatar';
+import { ProfileAvatar } from '@/shared/components/profile-avatar';
 import type { Profile } from '@/shared/data/profile';
 import type { WorkoutSummary } from '@/shared/data/workouts';
 import { isSameDay, isYesterday, minutesBetween } from '@/shared/lib/date';

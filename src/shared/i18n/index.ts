@@ -30,4 +30,3 @@ useSettingsStore.subscribe((state, prev) => {
 });
 
 export { i18n };
-export type { AppLanguage } from './resources';

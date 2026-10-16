@@ -6,11 +6,11 @@ import Sortable, { type SortableGridProps } from 'react-native-sortables';
 
 import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
 import { estimateMinutes, exerciseItems, type ExerciseDraft } from '@/shared/data/routines';
-import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
 import { EmptyExercises } from '@/shared/ui/empty-exercises';
 import { afterSheetClose } from '@/shared/ui/sheet';
 
+import { useLastDefined } from '../hooks/use-last-defined';
 import { ExerciseListHeader } from './exercise-list-header';
 import { type ExerciseMenuAction, ExerciseMenuSheet } from './exercise-menu-sheet';
 import { RoutineExerciseCard } from './routine-exercise-card';

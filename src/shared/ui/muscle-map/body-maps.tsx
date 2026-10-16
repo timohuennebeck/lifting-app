@@ -4,7 +4,7 @@ import { MuscleMap, type MuscleMapProps } from './muscle-map';
 
 export interface BodyMapsProps extends Pick<
   MuscleMapProps,
-  'selected' | 'onToggle' | 'isSelectable' | 'accent'
+  'selected' | 'onToggle' | 'isSelectable'
 > {
   accessibilityLabel?: string;
 }

@@ -4,16 +4,32 @@ import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
+import { formatNumber } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
-import { fileExtension, formatFileSize, IMPORT_STEPS } from '../lib/format';
 import { pickPlanFile } from '../lib/pick-source';
+import { IMPORT_STEPS } from '../lib/plan-import-service';
 import { loadSheets } from '../lib/sheets';
 import { useImportStore } from '../stores/import-store';
+
+const KB = 1024;
+const MB = 1024 * KB;
+
+function formatFileSize(bytes: number) {
+  return bytes >= MB
+    ? `${formatNumber(bytes / MB, 1)} MB`
+    : `${formatNumber(Math.max(1, Math.round(bytes / KB)), 0)} KB`;
+}
+
+/** Upper-case file extension, e.g. "PDF"; falls back to the MIME subtype. */
+function fileExtension(name: string, mimeType: string | null) {
+  const ext = /\.([a-z0-9]+)$/i.exec(name)?.[1];
+  return (ext ?? mimeType?.split('/')[1] ?? 'file').slice(0, 4).toUpperCase();
+}
 
 const LINES = [
   { w: '60%', ink: true },

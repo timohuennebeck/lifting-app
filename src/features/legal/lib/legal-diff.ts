@@ -14,7 +14,7 @@ export type DiffBlock =
   | { type: 'list'; ordered: boolean; items: DiffSegment[][] }
   | { type: 'rule'; change: 'added' | 'removed' };
 
-export type SectionStatus = 'same' | 'added' | 'changed' | 'removed';
+type SectionStatus = 'same' | 'added' | 'changed' | 'removed';
 
 export interface DiffSection {
   /** Stable id for jumping to the section from the change list. */

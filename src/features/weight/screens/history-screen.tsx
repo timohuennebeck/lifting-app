@@ -6,19 +6,20 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useUnits } from '@/shared/data/profile';
 import { deleteWeightEntry, useWeightEntries } from '@/shared/data/weight-entries';
-import { useNow } from '@/shared/hooks/use-now';
-import { MINUTE_MS, toIsoDate } from '@/shared/lib/date';
-import { formatShortDate } from '@/shared/lib/format';
+import { useToday } from '@/shared/hooks/use-today';
+import { toIsoDate } from '@/shared/lib/date';
+import { formatShortDate, weightUnit } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { IconButton } from '@/shared/ui/icon-button';
 import { RangeTabs } from '@/shared/ui/range-tabs';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
-import { EntryRow, useDayLabel } from '../components/entry-row';
+import { EntryRow } from '../components/entry-row';
 import { TrendChangeRow } from '../components/trend-change-row';
 import { WeightChart } from '../components/weight-chart';
-import { formatChange, formatKg } from '../lib/format';
+import { useDayLabel } from '../hooks/use-day-label';
+import { formatBodyWeight, formatChange } from '../lib/format';
 import { daysBefore, trendChange, trendOn, withTrend } from '../lib/trend';
 
 /** Section and value labels: 12pt caps, set 1pt lower than their line box like the design's. */
@@ -42,12 +43,11 @@ export function WeightHistoryScreen() {
   const { t } = useTranslation(['weight', 'common']);
   const insets = useSafeAreaInsets();
   const units = useUnits();
-  const unit = t(`common:units.${units === 'imperial' ? 'lb' : 'kg'}`);
+  const unit = weightUnit(units);
   const dayLabel = useDayLabel();
   const { entries, isLoading } = useWeightEntries();
   const points = useMemo(() => withTrend(entries), [entries]);
-  // Ticks every minute so "today" turns over at midnight.
-  const today = toIsoDate(new Date(useNow(MINUTE_MS)));
+  const today = toIsoDate(new Date(useToday()));
   const [range, setRange] = useState<ChartRange>(30);
   // The picked weigh-in by its day, so deleting another one or a new day doesn't move it.
   const [pickedDate, setPickedDate] = useState<string | null>(null);
@@ -85,7 +85,7 @@ export function WeightHistoryScreen() {
           </View>
           <View className="mt-0.75 flex-row items-baseline gap-1">
             <Text tone="accent" className="font-inter-semibold text-[41px] leading-11 tabular-nums">
-              {shown ? formatKg(shown.trendKg, units) : '–'}
+              {shown ? formatBodyWeight(shown.trendKg, units) : '–'}
             </Text>
             <Text tone="muted" className="font-inter-semibold text-base">
               {unit}
@@ -161,6 +161,7 @@ export function WeightHistoryScreen() {
         action={
           <View className="flex-row gap-2">
             <IconButton
+              // A new day remounts it, so the date drawn on the icon turns over.
               key={today}
               icon="calendar"
               iconSize={19}

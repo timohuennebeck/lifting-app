@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform } from 'react-native';
 
-import { CreateAnythingSheet } from '@/features/training/components/create-anything-sheet';
+import { CreateSheet } from '@/features/training/components/create-sheet';
 import { colors } from '@/shared/lib/theme';
 
 /**
@@ -19,7 +19,7 @@ export default function TabsLayout() {
     <>
       {/* Automatic scroll insets are off on every tab: iOS treated each tab's scroll view, which
           starts under our header, as reaching the top of the screen and hid its first part. The
-          screens keep clear of the tab bar themselves (TabBarInset). */}
+          screens keep clear of the tab bar themselves (TabScreen). */}
       <NativeTabs tintColor={colors.accent} backgroundColor={colors.bg} iconColor={colors.subtle}>
         <NativeTabs.Trigger name="index" disableAutomaticContentInsets>
           <NativeTabs.Trigger.Label>{t('tabs.training')}</NativeTabs.Trigger.Label>
@@ -54,7 +54,7 @@ export default function TabsLayout() {
           <NativeTabs.Trigger.Icon sf="plus" md="add" />
         </NativeTabs.Trigger>
       </NativeTabs>
-      <CreateAnythingSheet visible={createOpen} onClose={() => setCreateOpen(false)} />
+      <CreateSheet visible={createOpen} onClose={() => setCreateOpen(false)} />
     </>
   );
 }

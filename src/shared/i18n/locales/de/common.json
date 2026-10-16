@@ -19,8 +19,6 @@
     "stepOf": "{{current}} von {{total}}"
   },
   "units": {
-    "kg": "kg",
-    "lb": "lb",
     "cm": "cm",
     "sec": "s",
     "reps_one": "{{count}} Wdh.",
@@ -35,13 +33,6 @@
     "long": ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
   },
   "greeting": "Hallo {{name}}",
-  "languages": {
-    "en": "English",
-    "de": "Deutsch",
-    "pt-PT": "Português",
-    "pt-BR": "Português (Brasil)",
-    "ko": "한국어"
-  },
   "errors": {
     "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
   },

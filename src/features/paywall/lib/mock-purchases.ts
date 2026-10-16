@@ -25,7 +25,7 @@ function readReceipt(): CustomerInfo | null {
 }
 
 /**
- * Stand-in for RevenueCat where it isn't set up (no API key, Android for now, the web preview):
+ * Stand-in for RevenueCat where it isn't set up (no API key, Android, the web preview):
  * every purchase succeeds and auto-renews. Only in development builds: a release build without
  * RevenueCat must not hand out Pro for free.
  */

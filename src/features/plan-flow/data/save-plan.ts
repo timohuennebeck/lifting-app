@@ -4,7 +4,7 @@ import { type ProfilePatch, saveProfile } from '@/shared/data/profile';
 import { insertPlan, type PlanDraft } from '@/shared/data/plans';
 
 /**
- * Saves a plan made in the app and makes it the plan Today follows; `answers` (the flow's, when
+ * Saves a plan made in the app and makes it the plan Training follows; `answers` (the flow's, when
  * the plan was made from them) go into the profile with it.
  */
 export async function saveActivePlan(

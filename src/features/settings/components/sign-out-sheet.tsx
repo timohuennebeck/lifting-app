@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { ProfileAvatar } from '@/shared/components/user-avatar';
+import { ProfileAvatar } from '@/shared/components/profile-avatar';
 import type { Profile } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
 import { Sheet } from '@/shared/ui/sheet';

@@ -7,7 +7,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { usePlans } from '@/shared/data/plans';
 import { estimateMinutes, exerciseItems, useRoutineDetail } from '@/shared/data/routines';
-import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -18,6 +17,7 @@ import { Text } from '@/shared/ui/text';
 import { EditableExerciseList } from '../components/editable-exercise-list';
 import { RoutineMenu, type RoutineMenuTarget } from '../components/routine-menu';
 import { removeRoutineExercise, reorderRoutineExercise } from '../data/routine-mutations';
+import { useLastDefined } from '../hooks/use-last-defined';
 import { useStartRoutine } from '../hooks/use-start-routine';
 
 /**

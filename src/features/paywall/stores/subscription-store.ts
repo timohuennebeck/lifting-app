@@ -30,8 +30,9 @@ export const useIsPro = () => useSubscriptionStore((s) => s.isPro);
 
 /**
  * The whole app is Pro: once the store has confirmed there is no subscription (never bought, or
- * expired), only the paywall and Settings stay open. An unanswered check (a new device offline)
- * locks nothing, so a subscriber is never shut out by a missing connection.
+ * expired), the app is locked behind the paywall (see useSubscriptionGate for what stays open).
+ * An unanswered check (a new device offline) locks nothing, so a subscriber is never shut out by
+ * a missing connection.
  */
 export const useIsLocked = () => useSubscriptionStore((s) => s.checked && !s.isPro);
 

@@ -2,12 +2,15 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import type { Experience } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
 import { OptionCard } from '@/shared/ui/option-card';
 import { StepScreen } from '@/shared/ui/step-screen';
 
-import { ABOUT_STEPS, EXPERIENCE_LEVELS } from '../lib/flow';
+import { ABOUT_STEPS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
+
+const LEVELS: readonly Experience[] = ['none', 'beginner', 'intermediate', 'advanced'];
 
 export function ExperienceScreen() {
   const { t } = useTranslation('onboarding');
@@ -30,7 +33,7 @@ export function ExperienceScreen() {
       }
     >
       <View className="gap-2.5 px-4 pt-7">
-        {EXPERIENCE_LEVELS.map((level, i) => (
+        {LEVELS.map((level, i) => (
           <OptionCard
             key={level}
             title={t(`experience.${level}`)}

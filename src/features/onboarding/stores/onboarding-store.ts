@@ -76,13 +76,10 @@ export const useOnboardingStore = create<OnboardingState>()(
     {
       name: 'onboarding',
       storage: createJSONStorage(() => mmkvStorage),
-      // A draft saved by an earlier version gets the fields added since from the defaults; a plan
-      // of the shape before routines (weekdays) is made again.
+      // A saved draft takes the defaults for fields it doesn't have.
       merge: (persisted, current) => {
         const saved = persisted as Partial<OnboardingState> | undefined;
-        const draft = { ...current.draft, ...saved?.draft };
-        if (draft.plan && !Array.isArray(draft.plan.routines)) draft.plan = null;
-        return { ...current, ...saved, draft };
+        return { ...current, ...saved, draft: { ...current.draft, ...saved?.draft } };
       },
     },
   ),

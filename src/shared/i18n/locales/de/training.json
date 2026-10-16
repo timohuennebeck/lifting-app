@@ -2,11 +2,19 @@
   "home": {
     "single": "Einzeltrainings",
     "showAll": "Alle anzeigen",
-    "activePlan": "Aktiver Plan"
+    "activePlan": "Aktiver Plan",
+    "resumeActive": "{{name}} fortsetzen",
+    "noPlan": {
+      "title": "Noch kein Plan",
+      "body": "Tippe, um dir einen Plan erstellen zu lassen oder deinen einzulesen."
+    },
+    "emptyPlan": {
+      "title": "Plan ohne Trainings",
+      "body": "Tippe, um deinem Plan Trainings hinzuzufügen."
+    }
   },
   "list": {
     "start": "{{name}} starten",
-    "more": "Optionen für {{name}}",
     "minutes": "{{count}} Min",
     "addRoutine": "Training hinzufügen"
   },
@@ -32,7 +40,8 @@
     "plan": "Plan",
     "planHint": "Erstellen lassen, einlesen oder selbst bauen",
     "createRoutine": "Training erstellen",
-    "createPlan": "Plan erstellen"
+    "createPlan": "Plan erstellen",
+    "emptyWorkoutName": "Training"
   },
   "newRoutine": {
     "title": "Neues Training",

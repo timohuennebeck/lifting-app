@@ -1,20 +1,22 @@
-// Reads a training plan from photos or a file for the onboarding import. The app sends the photos
-// (shrunk JPEGs) or the file as base64; the model gets them with the exercise catalog and answers
-// in a fixed shape, which becomes the plan the user reviews. The answer is streamed: each exercise
-// goes to the app as soon as the model has written it (see `PlanEvent`). It runs before there is
-// an account, so imports are limited per network and in total per day (start_plan_request).
+// Reads a training plan from photos or a file for the plan import (in onboarding and in the app).
+// The app sends the photos (shrunk JPEGs) or the file as base64; the model gets them with the
+// exercise catalog and answers in a fixed shape, which becomes the plan the user reviews. The
+// answer is streamed: each exercise goes to the app as soon as the model has written it (see
+// `PlanEvent`). It also runs before there is an account, so imports are limited per network and in
+// total per day (start_plan_request).
 import { decodeBase64 } from 'jsr:@std/encoding@1/base64';
 
 import { reply } from '../_shared/common.ts';
 import { openAiConfigured, streamStructured } from '../_shared/openai.ts';
-import { envLimit, loadCatalog, planEventResponse, takePlanRequest } from '../_shared/plans.ts';
+import { LANGUAGES } from '../_shared/plan-events.ts';
 import {
-  buildSchema,
-  type CatalogExercise,
-  contextText,
-  INSTRUCTIONS,
-  planReader,
-} from './plan.ts';
+  type CatalogRow,
+  envLimit,
+  loadCatalog,
+  planEventResponse,
+  takePlanRequest,
+} from '../_shared/plans.ts';
+import { buildSchema, contextText, INSTRUCTIONS, planReader } from './plan.ts';
 
 const OPENAI_TIMEOUT_MS = 120_000;
 /** Imports per network (hashed IP) and in total in 24 hours; each one is a paid model call. */
@@ -28,7 +30,6 @@ const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const MAX_FILE_BYTES = 15 * 1024 * 1024;
 /** Characters of a text or spreadsheet file the model reads. */
 const MAX_TEXT = 60_000;
-const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR', 'ko'];
 
 interface PlanFile {
   name: string;
@@ -131,7 +132,7 @@ Deno.serve(async (req) => {
   if ('refused' in taken) return taken.refused;
   const { giveBack } = taken;
 
-  let catalog: CatalogExercise[];
+  let catalog: CatalogRow[];
   let content: unknown[];
   try {
     catalog = await loadCatalog();

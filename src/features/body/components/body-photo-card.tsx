@@ -45,8 +45,8 @@ function CardSlot({ children }: { children: ReactNode }) {
 }
 
 /**
- * Before/after tile of the Body tab with the check's photo of the selected pose.
- * Falls back to a body silhouette while the photo is not available on this device.
+ * Before/after tile of the Körper tab and the compare page with the check's photo of the
+ * selected pose. Falls back to a body silhouette while the photo is not available on this device.
  */
 export function BodyPhotoCard({
   checkId,

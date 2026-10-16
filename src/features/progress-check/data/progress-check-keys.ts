@@ -1,7 +1,8 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
-/** Photo keys; check rows use the core `queryKeys.progressChecks`. */
-export const progressCheckPhotoKeys = createQueryKeys('progressCheckPhotos', {
+/** The check rows, their photo rows and the signed URLs of uploaded photos. */
+export const progressCheckKeys = createQueryKeys('progressChecks', {
   list: null,
+  photos: null,
   signedUrl: (storagePath: string) => [storagePath],
 });

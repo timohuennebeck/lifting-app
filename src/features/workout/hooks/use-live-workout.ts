@@ -3,13 +3,14 @@ import { useEffect } from 'react';
 import { isBodyweight, measuresOf } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { restSecondsFor } from '@/shared/data/routines';
-import { logSet, useLastExerciseSession, type WorkoutDetail } from '@/shared/data/workouts';
+import { useLastExerciseSession } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 
-import { saveOpenSetValues, unlogSet } from '../data/workout-mutations';
+import type { WorkoutDetail } from '../data/workout-detail';
+import { logSet, saveOpenSetValues, unlogSet } from '../data/workout-mutations';
+import { firstOpenSet, rowValues } from '../lib/row-values';
 import { parseSetInput, toSetInput, typedValues } from '../lib/set-input';
-import { firstOpenSet, rowValues } from '../lib/suggest';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
 /** Current exercise, progress and set logging for the live workout screen. */

@@ -7,7 +7,7 @@ export const RESET_STEPS = 3;
 
 export const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
 
-export type PasswordScore = 0 | 1 | 2 | 3 | 4;
+type PasswordScore = 0 | 1 | 2 | 3 | 4;
 
 /** 0–4: length ≥ 8, length ≥ 12, mixed case, digit or symbol (prototype rule). */
 export function passwordScore(password: string): PasswordScore {

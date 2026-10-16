@@ -2,17 +2,22 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import type { SetTarget } from '@/shared/data/routines';
-import { formatRir } from '@/shared/lib/rir';
+import { formatRir, rirColor } from '@/shared/lib/rir';
 import { colors } from '@/shared/lib/theme';
 import { InputCell } from '@/shared/ui/input-cell';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { SwipeToDelete } from '@/shared/ui/swipe-to-delete';
 import { Text } from '@/shared/ui/text';
 
-import { editorRirStyle } from '../lib/training-ui';
-
+/** A target row being edited; `key` tells it apart while rows are added and removed. */
 export interface SetDraft extends SetTarget {
   key: string;
+}
+
+/** Set editor and RIR picker: the RIR colours (red near failure, else amber); grey without. */
+export function editorRirStyle(rir: number | null) {
+  if (rir === null) return { bg: '#2E2E2C', dark: false };
+  return { bg: rirColor(rir), dark: true };
 }
 
 /** The two number boxes of a target row. */

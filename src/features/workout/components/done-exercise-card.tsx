@@ -4,13 +4,14 @@ import { View } from 'react-native';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { formatSet, useExerciseName } from '@/shared/data/exercises';
-import type { WorkoutSet } from '@/shared/data/workouts';
 import type { UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
+
+import type { WorkoutSet } from '../data/workout-detail';
 
 export interface DoneExerciseCardProps {
   exerciseId: string;

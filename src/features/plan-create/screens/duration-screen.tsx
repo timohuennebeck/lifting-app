@@ -12,7 +12,8 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
 import { useCreateStep } from '../hooks/use-create-step';
-import { DURATION } from '../lib/flow';
+
+const DURATION = { min: 10, max: 120, step: 5 } as const;
 
 export function DurationScreen() {
   const { t } = useTranslation(['planCreate', 'common']);

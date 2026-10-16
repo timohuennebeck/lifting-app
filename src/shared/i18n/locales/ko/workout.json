@@ -58,21 +58,6 @@
     "duration": "예상 시간: {{minutes}}분",
     "hint": "+를 탭해 첫 운동을 추가해 보세요."
   },
-  "history": {
-    "topWeight": "회차별 최고 무게",
-    "topWeightShort": "최고 무게",
-    "leastAssistance": "회차별 최소 보조 무게",
-    "leastAssistanceShort": "최소 보조",
-    "topReps": "회차별 최다 반복",
-    "topRepsShort": "최다 반복",
-    "topSeconds": "회차별 최장 유지 시간",
-    "topSecondsShort": "최장 유지",
-    "chartLabel": "최고 무게 차트, 길게 누른 채 드래그하면 회차별 값을 볼 수 있어요",
-    "emptyRange": "이 기간에는 기록이 없어요.",
-    "days_one": "{{count}}일",
-    "days_other": "{{count}}일",
-    "empty": "아직 기록이 없어요. 이 종목이 포함된 운동을 완료하면 진행 상황을 볼 수 있어요."
-  },
   "summary": {
     "title": "{{name}} 완료.",
     "records_one": "새 기록 {{count}}개",

@@ -3,7 +3,7 @@ export interface ChartInput {
   value: number;
 }
 
-export interface ChartPoint extends ChartInput {
+interface ChartPoint extends ChartInput {
   x: number;
   y: number;
 }

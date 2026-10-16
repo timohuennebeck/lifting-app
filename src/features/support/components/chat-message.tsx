@@ -35,7 +35,7 @@ function Attachments({ paths, onOpen = noop, alignEnd }: AttachmentsProps) {
   );
 }
 
-/** User bubble (accent, right) or team bubble with the "F" avatar (left), as in 01f-3e. */
+/** User bubble (accent, right) or team bubble with the team avatar (left), as in 01f-3e. */
 export function ChatMessage({
   author,
   content,

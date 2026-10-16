@@ -1,5 +1,6 @@
-// Shared by the Edge Functions. They check the caller's token themselves (verify_jwt = false in
-// config.toml), which works with the asymmetric signing keys.
+// Shared by the Edge Functions, which all run with verify_jwt = false (config.toml). Those that
+// need a signed-in user (assess-progress, revoke-apple-token) check the token themselves with
+// `requestUser`, which works with the asymmetric signing keys.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 export const admin = createClient(

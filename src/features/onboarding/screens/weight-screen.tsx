@@ -39,7 +39,7 @@ export function WeightScreen() {
         <MeasureValue
           value={imperial ? String(value) : formatNumber(value, 1)}
           amount={value}
-          unit={tc(`units.${weightUnit(unitPreference)}`)}
+          unit={weightUnit(unitPreference)}
         />
         <RulerPicker
           value={value}

@@ -67,12 +67,11 @@ export function ResultScreen() {
   const saved = checks && index >= 0 ? checks[index] : null;
   const draft = !saved && draftId === id ? draftResult : null;
   const check = saved ?? (draft && { ...draft, createdAt: new Date().toISOString() });
+  let close = exitProgressCheck;
+  if (justSaved) close = leaveSaved;
+  else if (draft) close = closeDraft;
   // Android back closes like the header's X, so an unsaved result isn't dropped unasked.
-  useHardwareBack(() => {
-    if (justSaved) leaveSaved();
-    else if (draft) closeDraft();
-    else exitProgressCheck();
-  });
+  useHardwareBack(close);
 
   if (!checks || !check) {
     return (
@@ -100,9 +99,6 @@ export function ResultScreen() {
   const fatRange = bodyFatRange(profile?.sex);
   const date = formatDate(new Date(check.createdAt), { day: 'numeric', month: 'long' });
   const tileHeight = photoTileHeight(width);
-  let close = exitProgressCheck;
-  if (justSaved) close = leaveSaved;
-  else if (draft) close = closeDraft;
 
   async function remove() {
     if (!saved || !userId) return;

@@ -1,12 +1,12 @@
 import type { ProgressCheck } from '@/features/progress-check/data/progress-checks';
 
-export interface SavedPair {
+interface SavedPair {
   beforeId: string | null;
   afterId: string | null;
   newestId: string | null;
 }
 
-export interface ComparedPair {
+interface ComparedPair {
   before: ProgressCheck;
   after: ProgressCheck;
 }

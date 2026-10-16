@@ -418,11 +418,11 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.read-plan]
-# Called during onboarding, before there is an account; the function limits imports itself.
+# Also called during onboarding, before there is an account; the function limits imports itself.
 verify_jwt = false
 
 [functions.generate-plan]
-# Same as read-plan: onboarding, before there is an account; it limits the plans itself.
+# Same as read-plan: also before there is an account; it limits the plans itself.
 verify_jwt = false
 
 [analytics]

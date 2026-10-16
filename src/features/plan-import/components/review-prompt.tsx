@@ -13,7 +13,7 @@ export interface ReviewPromptProps {
   onConfirm: () => void;
   /** Other catalog exercises the text could mean. */
   alternatives?: string[];
-  onPickAlternative?: (exerciseId: string) => void;
+  onPickAlternative: (exerciseId: string) => void;
 }
 
 /** Amber "please check" box for something the plan import wasn't sure about. */
@@ -38,7 +38,7 @@ export function ReviewPrompt({
           <Chip
             key={id}
             label={exerciseName(id, i18n.language)}
-            onPress={() => onPickAlternative?.(id)}
+            onPress={() => onPickAlternative(id)}
           />
         ))}
       </View>

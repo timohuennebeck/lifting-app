@@ -46,5 +46,20 @@
     "weight": "Mit Gewicht",
     "locked": "Schon geloggt: Was die Übung aufzeichnet, bleibt jetzt so.",
     "rest": "Pause zwischen Sätzen"
+  },
+  "history": {
+    "topWeight": "Höchstes Gewicht pro Training",
+    "topWeightShort": "Höchstes Gewicht",
+    "leastAssistance": "Geringste Unterstützung pro Training",
+    "leastAssistanceShort": "Geringste Unterstützung",
+    "topReps": "Meiste Wiederholungen pro Training",
+    "topRepsShort": "Meiste Wdh.",
+    "topSeconds": "Längstes Halten pro Training",
+    "topSecondsShort": "Längstes Halten",
+    "chartLabel": "Diagramm des höchsten Gewichts, gedrückt halten und ziehen",
+    "emptyRange": "Keine Trainings in diesem Zeitraum.",
+    "days_one": "{{count}} T",
+    "days_other": "{{count}} T",
+    "empty": "Noch keine Trainings. Beende ein Training mit dieser Übung, um deinen Fortschritt zu sehen."
   }
 }

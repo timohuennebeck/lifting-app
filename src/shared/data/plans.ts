@@ -20,8 +20,6 @@ import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 /** A plan's weekly goal when nothing says otherwise. */
 export const DEFAULT_SESSIONS_PER_WEEK = 3;
 export const MAX_SESSIONS_PER_WEEK = 7;
-/** Blocks a plan can run in, in weeks with the deload: 3, 4 or 5 weeks building up, then 1. */
-export const BLOCK_OPTIONS = [4, 5, 6] as const;
 /** A plan the AI makes: 4 weeks building up, then a deload. */
 export const AI_BLOCK_WEEKS = 5;
 /** Reps in reserve of every set in a deload week. */
@@ -126,7 +124,7 @@ export function usePlans() {
 }
 
 /**
- * The plan Today follows and Training shows first: the one marked active, else the first; with
+ * The plan Training follows and shows first: the one marked active, else the first; with
  * all plans and the profile. Loading until those are known, the first sync included: before it,
  * a returning user's plans aren't on the phone yet.
  */
@@ -231,8 +229,8 @@ export async function currentPlanWeek(tx: Tx, planId: string, sessionsPerWeek: n
 }
 
 /**
- * Routines of a plan with when each was last done (finished), for the order: when it was logged,
- * so one logged later for an earlier day counts as the latest. Empty ones can't be done.
+ * Routines of a plan with when each was last done (its latest finished workout's `created_at`),
+ * for the order. Empty ones can't be done.
  */
 const lastDoneQuery = (planId: string) =>
   drizzle

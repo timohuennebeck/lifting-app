@@ -2,7 +2,7 @@ import { Stack } from 'expo-router';
 
 import { colors } from '@/shared/lib/theme';
 
-/** Traqa Pro flow (paywall → trial → thank you) opened from Settings. */
+/** Traqa Pro flow (paywall → trial → thank you), from Settings or the subscription gate. */
 export default function ProLayout() {
   return (
     <Stack

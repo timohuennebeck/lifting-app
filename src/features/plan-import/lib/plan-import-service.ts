@@ -54,7 +54,7 @@ export interface ImportedPlan {
   newExercises: CustomExercise[];
 }
 
-export interface StreamPlanInput {
+interface StreamPlanInput {
   source: ImportSource;
   /** UI language, so exercise names and routine headings can be matched in context. */
   language: string;
@@ -76,6 +76,9 @@ const SERVER_ERRORS: Record<string, ImportFailure> = {
 
 /** Photos per import; the read-plan function accepts no more. */
 export const MAX_PHOTOS = 10;
+
+/** Steps in the "Import plan" branch, for the step counter. */
+export const IMPORT_STEPS = 3;
 
 /** Longest side photos are shrunk to: plenty for handwriting, small enough to send quickly. */
 const MAX_SIDE = 2000;

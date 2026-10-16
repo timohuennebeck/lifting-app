@@ -3,7 +3,8 @@ import type { ReactNode } from 'react';
 import type { Animated } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
-import { UnderlineTabs } from '@/shared/ui/underline-tabs';
+
+import { UnderlineTabs } from './underline-tabs';
 
 interface TabRoute {
   key: string;

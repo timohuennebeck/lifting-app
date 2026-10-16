@@ -17,7 +17,7 @@ import { supportKeys } from './support-keys';
 
 export type TicketKind = 'bug' | 'idea';
 export type TicketStatus = 'open' | 'planned' | 'resolved' | 'closed';
-export type MessageAuthor = 'user' | 'team';
+type MessageAuthor = 'user' | 'team';
 
 /** Open and planned tickets still await the team; resolved and closed ones are done. */
 export const isTicketActive = (status: TicketStatus) => status === 'open' || status === 'planned';

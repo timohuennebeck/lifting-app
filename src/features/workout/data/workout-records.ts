@@ -10,7 +10,7 @@ import {
   workoutEntriesSets,
 } from '@/shared/data/powersync/schema';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
-import { hasKnownWeight, previousExercise, previousSet, setScoreSql } from '@/shared/data/workouts';
+import { hasKnownWeight, setScoreSql } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 
 const recordKeys = createQueryKeys('workoutRecords', {
@@ -23,6 +23,9 @@ export interface WorkoutRecord {
   previous: SetValues;
 }
 
+// Aliases for the correlated subquery over the sets of earlier workouts.
+const previousSet = alias(workoutEntriesSets, 'previous_set');
+const previousExercise = alias(workoutEntriesExercises, 'previous_exercise');
 const previousWorkout = alias(workoutEntries, 'previous_workout');
 
 /**

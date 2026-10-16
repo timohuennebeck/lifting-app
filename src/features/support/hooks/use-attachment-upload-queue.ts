@@ -1,8 +1,8 @@
-import { useBackgroundDrain } from '@/shared/hooks/use-background-drain';
 import { useUserId } from '@/shared/stores/session-store';
 
 import { localAttachment, uploadAttachment } from '../data/attachments';
 import { useUploadQueueStore } from '../stores/upload-queue-store';
+import { useBackgroundDrain } from './use-background-drain';
 
 const ownPath = (userId: string | null, path: string) => !!userId && path.startsWith(`${userId}/`);
 

@@ -4,12 +4,14 @@ import { View } from 'react-native';
 
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
+import type { Goal } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
 import { OptionCard } from '@/shared/ui/option-card';
 import { StepScreen } from '@/shared/ui/step-screen';
 
 import { useCreateStep } from '../hooks/use-create-step';
-import { GOALS } from '../lib/goals';
+
+const GOALS = ['hypertrophy', 'strength', 'strength_hypertrophy'] as const satisfies Goal[];
 
 export function GoalScreen() {
   const { t } = useTranslation(['planCreate', 'common']);

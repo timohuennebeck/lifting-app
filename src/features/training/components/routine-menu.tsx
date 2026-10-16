@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 
 import { useCurrentPlan } from '@/shared/data/plans';
 import type { RoutineSummary } from '@/shared/data/routines';
-import { useLastDefined } from '@/shared/hooks/use-last-defined';
 import { attempt } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { ROUTINE_NAME_MAX } from '@/shared/lib/limits';
@@ -12,6 +11,7 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { TextInputSheet } from '@/shared/ui/text-input-sheet';
 
 import { copyRoutine, deleteRoutine, renameRoutine } from '../data/routine-mutations';
+import { useLastDefined } from '../hooks/use-last-defined';
 import { type RoutineCopy, RoutineOptionsSheet } from './routine-options-sheet';
 
 export type RoutineMenuTarget = Pick<
@@ -24,11 +24,11 @@ export interface RoutineMenuProps {
   routine: RoutineMenuTarget | null;
   onClose: () => void;
   /** Runs before the routine is deleted, e.g. to leave its page. */
-  onDelete?: () => void;
+  onDelete: () => void;
 }
 
 /**
- * A routine's "⋯": rename, copy (out of its plan into Meine Trainings, or from there into the
+ * A routine's "⋯": rename, copy (out of its plan into Einzeltrainings, or from there into the
  * current plan) or delete.
  */
 export function RoutineMenu({ routine, onClose, onDelete }: RoutineMenuProps) {
@@ -78,7 +78,7 @@ export function RoutineMenu({ routine, onClose, onDelete }: RoutineMenuProps) {
         onDelete={async () => {
           onClose();
           if (!routine) return;
-          onDelete?.();
+          onDelete();
           if (await attempt('Deleting the routine failed', () => deleteRoutine(routine.id))) {
             haptics.success();
           }

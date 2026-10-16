@@ -13,7 +13,7 @@ import {
 } from '@/shared/data/weight-entries';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { addDays, fromIsoDate, toIsoDate } from '@/shared/lib/date';
-import { formatNumber, formatShortDate, type UnitSystem } from '@/shared/lib/format';
+import { formatNumber, formatShortDate, type UnitSystem, weightUnit } from '@/shared/lib/format';
 import { clamp } from '@/shared/lib/math';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
@@ -31,7 +31,7 @@ import {
   toUnits,
 } from '@/shared/lib/body-weight';
 
-import { useDayLabel } from '../components/entry-row';
+import { useDayLabel } from '../hooks/use-day-label';
 import { formatChange } from '../lib/format';
 import { pickDate } from '../lib/pick-date';
 
@@ -112,7 +112,7 @@ function EntryForm({ initialDate, entries, units, initialKg }: EntryFormProps) {
     setRange(around);
     setValue(clamp(snapTo(toUnits(picked.weightKg, units), scale.step), around.min, around.max));
   };
-  const unit = t(`common:units.${units === 'imperial' ? 'lb' : 'kg'}`);
+  const unit = weightUnit(units);
   const today = toIsoDate(new Date());
   // With the year when it isn't this one, as in "seit 28. Dez. 2025".
   const shortDate = (iso: string) => formatShortDate(fromIsoDate(iso));

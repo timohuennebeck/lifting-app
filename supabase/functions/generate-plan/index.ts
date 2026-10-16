@@ -1,10 +1,12 @@
-// Builds a training plan from the onboarding answers (goal, focus, equipment, workouts a week,
-// session length, experience; no name or body data). The model picks from the exercises the user's
-// equipment allows and answers in a fixed shape; the plan streams to the app as the import's does
-// (see PlanEvent), checked part by part (planBuilder). It runs before there is an account, so
-// plans are limited per network and in total per day (start_plan_request, kind "generate").
+// Builds a training plan from the plan flow's answers, in onboarding and in the app (goal, focus,
+// equipment, workouts a week, session length, experience; no name or body data). The model picks
+// from the exercises the user's equipment allows and answers in a fixed shape; the plan streams to
+// the app as the import's does (see PlanEvent), checked part by part (planBuilder). It also runs
+// before there is an account, so plans are limited per network and in total per day
+// (start_plan_request, kind "generate").
 import { reply } from '../_shared/common.ts';
 import { openAiConfigured, streamStructured } from '../_shared/openai.ts';
+import { LANGUAGES } from '../_shared/plan-events.ts';
 import {
   envLimit,
   loadCatalog,
@@ -28,7 +30,6 @@ const IP_LIMIT = envLimit('PLAN_GENERATE_IP_LIMIT', 10);
 const DAILY_LIMIT = envLimit('PLAN_GENERATE_DAILY_LIMIT', 1000);
 /** OpenAI's Fast mode (twice the token price); PLAN_GENERATE_FAST=false turns it off. */
 const FAST = Deno.env.get('PLAN_GENERATE_FAST') !== 'false';
-const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR', 'ko'];
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return reply(405, { error: 'method_not_allowed' });

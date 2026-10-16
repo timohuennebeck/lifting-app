@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { saveProfile, useProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
-import type { AppLanguage } from '@/shared/i18n';
+import type { AppLanguage } from '@/shared/i18n/resources';
 import { storage } from '@/shared/lib/storage';
 import { useSessionStore } from '@/shared/stores/session-store';
 

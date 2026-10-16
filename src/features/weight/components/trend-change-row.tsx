@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import type { UnitSystem } from '@/shared/lib/format';
+import { type UnitSystem, weightUnit } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
@@ -42,7 +42,7 @@ export function TrendChangeRow({ change, units }: TrendChangeRowProps) {
   const { t } = useTranslation(['weight', 'common']);
   const { d, end } = sparkPath(change.series);
   const value = formatChange(change.changeKg, units);
-  const unit = t(`common:units.${units === 'imperial' ? 'lb' : 'kg'}`);
+  const unit = weightUnit(units);
   // Neutral: whether down is good depends on the user's goal.
   const direction = value.startsWith('−')
     ? 'trend-down'

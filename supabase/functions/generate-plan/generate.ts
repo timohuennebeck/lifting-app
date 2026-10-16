@@ -1,39 +1,22 @@
-// What the model is asked to build from the onboarding answers, and how its answer becomes a plan
+// What the model is asked to build from the plan flow's answers, and how its answer becomes a plan
 // the app can take as it is: one routine per workout a week, sessions that fit the chosen length,
 // sets and reps in sensible ranges. Plain TypeScript without Deno APIs, so it can be tested outside the
 // Edge runtime.
 
-import { cut, type ImportedRoutine, type PlanExercise } from '../_shared/plan-events.ts';
+import {
+  catalogNames,
+  cut,
+  type ImportedRoutine,
+  MUSCLES,
+  type PlanExercise,
+} from '../_shared/plan-events.ts';
 import type { CatalogRow, EquipmentRow } from '../_shared/plans.ts';
 
 export const GOALS = ['hypertrophy', 'strength', 'strength_hypertrophy'] as const;
 export const EQUIPMENT_ACCESS = ['gym', 'home', 'bodyweight'] as const;
 export const EXPERIENCE_LEVELS = ['none', 'beginner', 'intermediate', 'advanced'] as const;
-/** The muscles the app's focus step offers (its MuscleId). */
-export const FOCUS_MUSCLES = [
-  'abs',
-  'adductors',
-  'biceps',
-  'calves',
-  'chest',
-  'forearms',
-  'front_delts',
-  'glutes',
-  'hamstrings',
-  'lats',
-  'lower_back',
-  'neck',
-  'obliques',
-  'quads',
-  'rear_delts',
-  'side_delts',
-  'tibialis',
-  'traps',
-  'triceps',
-  'upper_back',
-] as const;
 
-/** The onboarding answers a plan is made from; no name, no body data. */
+/** The plan flow's answers a plan is made from; no name, no body data. */
 export interface PlanAnswers {
   goal: (typeof GOALS)[number];
   focus: string[];
@@ -60,15 +43,14 @@ export function parseAnswers(value: unknown): PlanAnswers | null {
   const a = value as Record<string, unknown>;
   const sessions = a.sessionsPerWeek;
   const minutes = a.sessionMinutes;
-  // Left out by app versions without the home checklist.
-  const home = a.homeEquipment ?? [];
+  const home = a.homeEquipment;
   if (
     !oneOf(GOALS, a.goal) ||
     !oneOf(EQUIPMENT_ACCESS, a.equipment) ||
     !(a.experience === null || oneOf(EXPERIENCE_LEVELS, a.experience)) ||
     !Array.isArray(a.focus) ||
-    a.focus.length > FOCUS_MUSCLES.length ||
-    !a.focus.every((m) => oneOf(FOCUS_MUSCLES, m)) ||
+    a.focus.length > MUSCLES.length ||
+    !a.focus.every((m) => oneOf(MUSCLES, m)) ||
     typeof sessions !== 'number' ||
     !Number.isInteger(sessions) ||
     sessions < 1 ||
@@ -169,9 +151,8 @@ export function contextText(
   catalog: CatalogRow[],
   language: string,
 ) {
-  const languages = [...new Set([language, 'de', 'en'])];
   const lines = catalog.map((e) => {
-    const names = [...new Set(languages.map((l) => e.name[l]).filter(Boolean))].join(' / ');
+    const names = catalogNames(e.name, language);
     const logs = e.measures.includes('seconds') ? 'timed' : 'reps';
     return `${e.id} | ${names} | ${e.equipment} | ${mainMuscles(e.muscles)} | ${logs}`;
   });

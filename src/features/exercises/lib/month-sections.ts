@@ -1,6 +1,6 @@
-import { formatDate } from './format';
+import { formatDate } from '@/shared/lib/format';
 
-export interface MonthSection<T> {
+interface MonthSection<T> {
   key: string;
   /** "OKTOBER", or "OKTOBER 2025" for another year. */
   title: string;

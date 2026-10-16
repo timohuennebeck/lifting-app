@@ -8,7 +8,8 @@ import { saveProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
 import { insertPlan } from '@/shared/data/plans';
 import { saveWeightEntry } from '@/shared/data/weight-entries';
-import { type AppLanguage, i18n } from '@/shared/i18n';
+import { i18n } from '@/shared/i18n';
+import type { AppLanguage } from '@/shared/i18n/resources';
 import { toIsoDate } from '@/shared/lib/date';
 import { FIRST_NAME_MAX } from '@/shared/lib/limits';
 

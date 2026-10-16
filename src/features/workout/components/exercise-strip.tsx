@@ -7,13 +7,14 @@ import { scheduleOnUI } from 'react-native-worklets';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { exerciseName, useCustomExerciseStore } from '@/shared/data/exercises';
-import type { WorkoutExercise } from '@/shared/data/workouts';
 import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { CheckBadge } from '@/shared/ui/check-item';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
+
+import type { WorkoutExercise } from '../data/workout-detail';
 
 const TILE = 64;
 const GAP = 6;

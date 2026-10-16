@@ -7,7 +7,7 @@ import { attachmentPath, keepLocalCopy } from '../data/attachments';
 import { useUploadQueueStore } from '../stores/upload-queue-store';
 import { compressScreenshot, MAX_SCREENSHOTS, pickScreenshots } from '../lib/screenshots';
 
-export interface DraftShot {
+interface DraftShot {
   id: string;
   uri: string;
   /** False while the picked image is still being compressed. */

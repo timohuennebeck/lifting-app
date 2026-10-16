@@ -6,7 +6,7 @@ export const MAX_SCREENSHOTS = 5;
 const MAX_EDGE = 1600;
 const JPEG_QUALITY = 0.7;
 
-export interface PickedImage {
+interface PickedImage {
   uri: string;
   width: number;
   height: number;

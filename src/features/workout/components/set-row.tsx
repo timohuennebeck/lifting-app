@@ -14,7 +14,7 @@ import type { SetField } from '../stores/workout-session-store';
 /** Box width: one of two boxes, or a single box spanning both (planks, push-ups). */
 export const cellWidth = (count: number) => (count > 1 ? 'w-19.5' : 'w-41.5');
 
-export interface SetCell {
+interface SetCell {
   field: SetField;
   value: string;
 }

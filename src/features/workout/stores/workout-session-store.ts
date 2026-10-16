@@ -8,7 +8,7 @@ import { mmkvStorage } from '@/shared/lib/storage';
 
 /** The box being typed into: one per measure of the exercise. */
 export type SetField = Measure;
-export type MiddleColumn = 'targets' | 'last';
+type MiddleColumn = 'targets' | 'last';
 
 interface WorkoutSessionState {
   workoutId: string | null;

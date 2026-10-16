@@ -2,8 +2,7 @@ import { type StyleProp, View, type ViewStyle } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
 import { colors } from '@/shared/lib/theme';
-
-import { Text } from './text';
+import { Text } from '@/shared/ui/text';
 
 interface DashedRingProps {
   color: string;
@@ -37,7 +36,7 @@ export interface RoutineSlotProps {
   number: number;
   /** The slot being shown: only it gets the accent ring. */
   selected?: boolean;
-  /** Amber dot: something in this slot still needs a check (plan import). */
+  /** Amber dot: something in this slot still needs a check. */
   review?: boolean;
 }
 

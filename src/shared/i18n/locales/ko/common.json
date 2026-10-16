@@ -19,8 +19,6 @@
     "stepOf": "{{current}}/{{total}}"
   },
   "units": {
-    "kg": "kg",
-    "lb": "lb",
     "cm": "cm",
     "sec": "초",
     "reps_one": "{{count}}회",
@@ -35,13 +33,6 @@
     "long": ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"]
   },
   "greeting": "안녕하세요, {{name}}님",
-  "languages": {
-    "en": "English",
-    "de": "Deutsch",
-    "pt-PT": "Português",
-    "pt-BR": "Português (Brasil)",
-    "ko": "한국어"
-  },
   "errors": {
     "generic": "문제가 발생했어요. 다시 시도해 주세요."
   },

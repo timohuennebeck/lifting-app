@@ -40,7 +40,7 @@ export interface MuscleMapProps {
   onToggle?: (part: BodyPartId) => void;
   /** Limits which parts react to taps (default: all); keep it a stable function. */
   isSelectable?: (part: BodyPartId) => boolean;
-  /** Highlight color; defaults to the accent (e.g. pass red for pain). */
+  /** Highlight color; defaults to the accent (e.g. grey for a muscle that isn't the main one). */
   accent?: string;
   /** Crops to a region (MUSCLE_CARDS[id].viewBox) that covers the box, like CSS object-fit. */
   viewBox?: string;

@@ -2,7 +2,7 @@ import { Image, type ImageSource } from 'expo-image';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Gradient, type GradientStop } from './gradient';
+import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 
 /** The photo's lower part fades into the page, under the text set over it. */
 const FADE: GradientStop[] = [

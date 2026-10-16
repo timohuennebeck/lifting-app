@@ -10,8 +10,8 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
 import { SourceCard, ViewfinderArt } from '../components/source-card';
-import { IMPORT_STEPS } from '../lib/format';
 import { pickPlanFile } from '../lib/pick-source';
+import { IMPORT_STEPS } from '../lib/plan-import-service';
 import { useImportStore } from '../stores/import-store';
 
 /** 05: choose how to import a plan (photo or file), or build one exercise by exercise. */

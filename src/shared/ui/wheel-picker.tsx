@@ -1,11 +1,5 @@
 import { type ReactNode, useEffect, useRef } from 'react';
-import {
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
-  Platform,
-  ScrollView,
-  View,
-} from 'react-native';
+import { type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
@@ -24,9 +18,6 @@ const EDGE_FADE: GradientStop[] = [
   [0.62, 0],
   [1, 0.92],
 ];
-// React Native Web ignores snapToInterval; CSS scroll snapping does the same there.
-const WEB_SNAP = Platform.OS === 'web' ? ({ scrollSnapType: 'y mandatory' } as object) : null;
-const WEB_SNAP_ROW = Platform.OS === 'web' ? ({ scrollSnapAlign: 'center' } as object) : null;
 
 export interface WheelGroupProps {
   /** The wheels, side by side. */
@@ -115,11 +106,10 @@ export function WheelPicker({
             scrollRef.current?.scrollTo({ y: shown.current * ROW, animated: false }),
           )
         }
-        style={WEB_SNAP}
         contentContainerStyle={{ paddingVertical: PAD }}
       >
         {items.map((item, i) => (
-          <View key={item} style={WEB_SNAP_ROW} className="h-11 items-center justify-center">
+          <View key={item} className="h-11 items-center justify-center">
             <Text
               tone={i === index ? 'default' : 'subtle'}
               className="font-inter-medium text-[22px] leading-7 tabular-nums"

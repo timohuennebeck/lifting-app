@@ -14,7 +14,7 @@ export type SheetKind =
 export type SheetSummary = SheetKind & { name: string };
 
 /** Lower case, without accents and punctuation: "Bankdrücken (KH)" → "bankdrucken kh". */
-export const fold = (text: string) =>
+const fold = (text: string) =>
   text
     .toLowerCase()
     .normalize('NFD')

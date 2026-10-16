@@ -1,15 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { PlanProgress } from '@/features/training/components/plan-progress';
-import { MuscleStack } from '@/features/training/components/routine-row';
 import { type MuscleShare, muscleShares } from '@/shared/data/muscles';
 import type { PlanStatus, PlanSummary } from '@/shared/data/plans';
 import type { Goal } from '@/shared/data/profile';
 import type { RoutineSummary } from '@/shared/data/routines';
 import { Text } from '@/shared/ui/text';
 
-export interface PlanCardProps {
+import { PlanProgress } from './plan-progress';
+import { MuscleStack } from './routine-row';
+
+export interface ActivePlanCardProps {
   plan: PlanSummary;
   status: PlanStatus;
   /** Its routines, in their order: the circles show the muscle each works most. */
@@ -20,9 +21,9 @@ export interface PlanCardProps {
 
 /**
  * The plan Training follows: the muscle each of its routines works most in neon, its name, the
- * goal and workouts per block, and where it stands in its blocks.
+ * goal and its workouts per plan week, and where it stands (PlanProgress).
  */
-export function PlanCard({ plan, status, routines, goal }: PlanCardProps) {
+export function ActivePlanCard({ plan, status, routines, goal }: ActivePlanCardProps) {
   const { t } = useTranslation(['training', 'planCreate']);
   // One circle per routine, each muscle once.
   const tops: MuscleShare[] = [];

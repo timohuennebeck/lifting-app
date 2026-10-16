@@ -2,11 +2,19 @@
   "home": {
     "single": "Treinos avulsos",
     "showAll": "Ver todos",
-    "activePlan": "Plano ativo"
+    "activePlan": "Plano ativo",
+    "resumeActive": "Retomar {{name}}",
+    "noPlan": {
+      "title": "Ainda sem plano",
+      "body": "Toca para pedir um plano ou importar o teu."
+    },
+    "emptyPlan": {
+      "title": "Plano sem treinos",
+      "body": "Toca para adicionar treinos ao teu plano."
+    }
   },
   "list": {
     "start": "Iniciar {{name}}",
-    "more": "Opções para {{name}}",
     "minutes": "{{count}} min",
     "addRoutine": "Adicionar treino"
   },
@@ -32,7 +40,8 @@
     "plan": "Plano",
     "planHint": "Pede um, importa-o ou cria-o tu",
     "createRoutine": "Criar treino",
-    "createPlan": "Criar plano"
+    "createPlan": "Criar plano",
+    "emptyWorkoutName": "Treino"
   },
   "newRoutine": {
     "title": "Novo treino",

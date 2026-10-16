@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/shared/data/supabase';
 import { HOUR_MS } from '@/shared/lib/date';
 
-export const LEGAL_KINDS = ['terms', 'privacy'] as const;
+const LEGAL_KINDS = ['terms', 'privacy'] as const;
 export type LegalKind = (typeof LEGAL_KINDS)[number];
 
 export const isLegalKind = (value: string | undefined): value is LegalKind =>
@@ -36,7 +36,7 @@ export async function fetchCurrentDocuments(language: string) {
   return documents.filter((d): d is LegalDocument => d !== null);
 }
 
-/** The app language first; English, then the default locale, when it has no translation. */
+/** The app language first; English, then pt-BR, when the document isn't translated into it. */
 const localesFor = (language: string) => [...new Set([language, 'en', 'pt-BR'])];
 
 const COLUMNS = 'id, kind, locale, version, content_md, effective_at, requires_reacceptance';

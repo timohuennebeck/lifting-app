@@ -6,16 +6,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
+import { useTimedProgress } from '@/shared/hooks/use-timed-progress';
 import { singleFlight } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
-import { useTimedProgress } from '@/shared/ui/scan-stage';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
-import { AssessmentRow } from '../components/assessment-row';
+import { AssessmentRow, type AssessmentRowState } from '../components/assessment-row';
 import { GroupMarquee } from '../components/group-marquee';
 import { useProgressChecks } from '../data/progress-checks';
 import {
@@ -129,7 +129,7 @@ export function AssessmentScreen() {
       <View className="px-4 pt-3.5" style={{ gap: ROW_GAP }}>
         {POSES.map((pose, i) => {
           const progress = done ? 1 : clamp((pct - i * share) / share, 0, 1);
-          let state: 'waiting' | 'active' | 'done' = 'waiting';
+          let state: AssessmentRowState = 'waiting';
           if (progress >= 1) state = 'done';
           else if (i === segment) state = 'active';
           return (

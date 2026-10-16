@@ -29,7 +29,7 @@ export interface HistoryChartProps {
 
 /** Best set per session; press and drag to read a session (design 03·C·2H·V5H). */
 export function HistoryChart({ data, metric, format }: HistoryChartProps) {
-  const { t } = useTranslation('workout');
+  const { t } = useTranslation('exercises');
   const [width, setWidth] = useState(0);
   const [hover, setHover] = useState<number | null>(null);
   const { points, line, area } = buildLineChart(data, width, HEIGHT);

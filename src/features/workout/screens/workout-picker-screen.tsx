@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
 import { ExercisePickerPage } from '@/features/exercises/components/exercise-picker-page';
-import { addWorkoutExercise, useWorkout } from '@/shared/data/workouts';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 
-import { swapWorkoutExercise } from '../data/workout-mutations';
+import { useWorkout } from '../data/workout-detail';
+import { addWorkoutExercise, swapWorkoutExercise } from '../data/workout-mutations';
 import { useWorkoutSessionStore } from '../stores/workout-session-store';
 
 /** Add exercises to the running workout, or swap one. */

@@ -8,7 +8,7 @@ import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { Text } from '@/shared/ui/text';
 
-import { formatKg } from '../lib/format';
+import { formatBodyWeight } from '../lib/format';
 
 export interface CalendarMonthProps {
   year: number;
@@ -111,7 +111,7 @@ export const CalendarMonth = memo(function CalendarMonth({
                       tone="muted"
                       className="mt-1 font-inter-medium text-[10px] leading-3.25 tabular-nums"
                     >
-                      {formatKg(kg, units)}
+                      {formatBodyWeight(kg, units)}
                     </Text>
                   ) : null}
                 </TouchableOpacity>

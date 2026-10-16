@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 
-import { discardWorkout, finishWorkout } from '@/shared/data/workouts';
 import { haptics } from '@/shared/lib/haptics';
 
+import { discardWorkout, finishWorkout } from '../data/workout-mutations';
 import { useWorkoutSessionStore } from '../stores/workout-session-store';
 
 /** Finish (→ summary) or discard the running workout. */

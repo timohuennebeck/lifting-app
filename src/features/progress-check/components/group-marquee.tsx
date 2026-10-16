@@ -10,7 +10,7 @@ import { Text } from '@/shared/ui/text';
 const GAP = 8;
 const LOOP_SECONDS = 3.75;
 
-export interface MarqueeChip {
+interface MarqueeChip {
   label: string;
   /** Lit chips turn accent with a check (the group is assessed). */
   on: boolean;

@@ -31,7 +31,7 @@ export function TrialScreen() {
   const days = offering?.trialDays ?? DEFAULT_TRIAL_DAYS;
 
   const start = async () => {
-    if (await buy(planId)) flow.toWelcome();
+    if (await buy(planId)) flow.toThankYou();
   };
 
   return (

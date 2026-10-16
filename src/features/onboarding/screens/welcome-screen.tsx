@@ -8,11 +8,11 @@ import { useProfile } from '@/shared/data/profile';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { Button } from '@/shared/ui/button';
 import { CheckChip } from '@/shared/ui/check-item';
-import { PhotoBackdrop } from '@/shared/ui/photo-backdrop';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
 import { LanguagePicker } from '../components/language-picker';
+import { PhotoBackdrop } from '../components/photo-backdrop';
 import { useOnboardingStore } from '../stores/onboarding-store';
 
 const FEATURES = ['import', 'create', 'progress'] as const;

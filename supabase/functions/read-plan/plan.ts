@@ -2,46 +2,18 @@
 // reviews. Plain TypeScript without Deno APIs, so it can be tested outside the Edge runtime.
 
 import {
+  catalogNames,
   cut,
   type ImportedExercise,
   type ImportedRoutine,
+  MUSCLES,
   type NewExercise,
   type PlanExercise,
   type SetTarget,
 } from '../_shared/plan-events.ts';
+import type { CatalogRow } from '../_shared/plans.ts';
 
-/** The muscles of `public.muscle`, which custom exercises are tagged with. */
-export const MUSCLES = [
-  'abs',
-  'adductors',
-  'biceps',
-  'calves',
-  'chest',
-  'forearms',
-  'front_delts',
-  'glutes',
-  'hamstrings',
-  'lats',
-  'lower_back',
-  'neck',
-  'obliques',
-  'quads',
-  'rear_delts',
-  'side_delts',
-  'tibialis',
-  'traps',
-  'triceps',
-  'upper_back',
-] as const;
 type Muscle = (typeof MUSCLES)[number];
-
-/** An active row of `public.exercises`, as much as the model needs. */
-export interface CatalogExercise {
-  id: string;
-  name: Record<string, string>;
-  equipment: string;
-  measures: string[];
-}
 
 const MAX_SETS = 10;
 const DEFAULT_SETS = 3;
@@ -70,18 +42,17 @@ name: the plan's title if it has one, else a short name for the split ("Push Pul
 If the input is not a training plan or cannot be read at all, set is_plan to false and return no routines.`;
 
 /** The catalog as the model reads it: one line per exercise with its names in a few languages. */
-export function catalogText(catalog: CatalogExercise[], language: string) {
-  const languages = [...new Set([language, 'de', 'en'])];
+export function catalogText(catalog: CatalogRow[], language: string) {
   return catalog
     .map((e) => {
-      const names = [...new Set(languages.map((l) => e.name[l]).filter(Boolean))].join(' / ');
+      const names = catalogNames(e.name, language);
       const logs = e.measures.includes('seconds') ? 'timed' : 'reps';
       return `${e.id} | ${names} | ${e.equipment} | ${logs}`;
     })
     .join('\n');
 }
 
-export function contextText(catalog: CatalogExercise[], language: string) {
+export function contextText(catalog: CatalogRow[], language: string) {
   return `App language: ${language}.\n\nCatalog (id | names | equipment | logs):\n${catalogText(catalog, language)}`;
 }
 
@@ -213,7 +184,7 @@ function setTarget(line: ModelExercise, timed: boolean): SetTarget {
  * set as a row, and every new exercise once with an id (`newId()`) the plan references. Numbers
  * are kept in the ranges the database accepts.
  */
-export function planReader(catalog: CatalogExercise[], newId: () => string) {
+export function planReader(catalog: CatalogRow[], newId: () => string) {
   const timedIds = new Set(catalog.filter((e) => e.measures.includes('seconds')).map((e) => e.id));
   // The same new exercise in two routines is one exercise.
   const created = new Map<string, NewExercise>();

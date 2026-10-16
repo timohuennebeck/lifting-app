@@ -19,7 +19,7 @@ export interface WeightEntry {
  * first 32 hex digits of SHA-256("<user id>:<date>"). Two devices saving the same day write
  * one row instead of colliding.
  */
-export async function weightEntryId(userId: string, date: string) {
+async function weightEntryId(userId: string, date: string) {
   const hex = await digestStringAsync(CryptoDigestAlgorithm.SHA256, `${userId}:${date}`);
   return [
     hex.slice(0, 8),

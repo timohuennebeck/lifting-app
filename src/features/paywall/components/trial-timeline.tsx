@@ -5,7 +5,7 @@ import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
-export interface TrialStep {
+interface TrialStep {
   title: string;
   body: string;
 }

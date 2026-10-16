@@ -8,11 +8,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { useUploadQueueStore } from '@/features/support/stores/upload-queue-store';
 import { LanguageSheet } from '@/shared/components/language-sheet';
-import { ProfileAvatar } from '@/shared/components/user-avatar';
+import { ProfileAvatar } from '@/shared/components/profile-avatar';
 import { db } from '@/shared/data/powersync/database';
 import { saveProfile, useProfile } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
 import { useAppLanguage } from '@/shared/hooks/use-app-language';
+import { LANGUAGE_NAMES } from '@/shared/i18n/resources';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId, useSessionStore } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
@@ -102,7 +103,7 @@ export function SettingsScreen() {
         <View className="flex-row gap-2.5">
           <PreferenceCard
             label={t('settings.language')}
-            value={t(`common:languages.${language}`)}
+            value={LANGUAGE_NAMES[language]}
             icon={<LanguageFlag language={language} size={32} />}
             onPress={() => setSheet('language')}
           />

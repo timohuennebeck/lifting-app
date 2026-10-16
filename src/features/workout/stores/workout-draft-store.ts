@@ -5,7 +5,7 @@ import { newId } from '@/shared/data/json';
 import type { ExerciseDraft, SetTarget } from '@/shared/data/routines';
 
 /** A draft exercise; `key` stays with it when it is dragged to another place. */
-export type DraftExercise = ExerciseDraft & { key: string };
+type DraftExercise = ExerciseDraft & { key: string };
 
 interface WorkoutDraftState {
   name: string;

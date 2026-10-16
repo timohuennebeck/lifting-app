@@ -19,8 +19,6 @@
     "stepOf": "{{current}} of {{total}}"
   },
   "units": {
-    "kg": "kg",
-    "lb": "lb",
     "cm": "cm",
     "sec": "s",
     "reps_one": "{{count}} rep",
@@ -35,13 +33,6 @@
     "long": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
   },
   "greeting": "Hi {{name}}",
-  "languages": {
-    "en": "English",
-    "de": "Deutsch",
-    "pt-PT": "Português",
-    "pt-BR": "Português (Brasil)",
-    "ko": "한국어"
-  },
   "errors": {
     "generic": "Something went wrong. Please try again."
   },

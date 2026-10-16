@@ -73,11 +73,11 @@
   "progressCheck": {
     "title": "KÖRPERCHECK MACHEN?",
     "subtitle": "Basierend auf deinen Fotos passen wir den Plan an deine Schwachstellen an.",
-    "lightStrong": "Helles Licht",
-    "clothesStrong": "Unterwäsche",
-    "framingStrong": "Kompletter Körper im Bild",
-    "sameStrong": "Gleicher Ort, gleiches Licht",
-    "privacyStrong": "Fotos bleiben privat",
+    "light": "Helles Licht",
+    "clothes": "Unterwäsche",
+    "framing": "Kompletter Körper im Bild",
+    "same": "Gleicher Ort, gleiches Licht",
+    "privacy": "Fotos bleiben privat",
     "now": "Fotos jetzt machen",
     "later": "Später"
   }

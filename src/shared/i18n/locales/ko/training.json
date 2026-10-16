@@ -2,11 +2,19 @@
   "home": {
     "single": "단일 루틴",
     "showAll": "모두 보기",
-    "activePlan": "진행 중인 플랜"
+    "activePlan": "진행 중인 플랜",
+    "resumeActive": "{{name}} 계속하기",
+    "noPlan": {
+      "title": "아직 플랜이 없어요",
+      "body": "탭해서 플랜을 만들거나 가져와 보세요."
+    },
+    "emptyPlan": {
+      "title": "루틴 없는 플랜",
+      "body": "탭해서 플랜에 루틴을 추가해 보세요."
+    }
   },
   "list": {
     "start": "{{name}} 시작",
-    "more": "{{name}} 옵션",
     "minutes": "{{count}}분",
     "addRoutine": "루틴 추가"
   },
@@ -32,7 +40,8 @@
     "plan": "플랜",
     "planHint": "자동으로 만들기, 가져오기 또는 직접 만들기",
     "createRoutine": "루틴 만들기",
-    "createPlan": "플랜 만들기"
+    "createPlan": "플랜 만들기",
+    "emptyWorkoutName": "운동"
   },
   "newRoutine": {
     "title": "새 루틴",

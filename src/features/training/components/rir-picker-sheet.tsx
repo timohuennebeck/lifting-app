@@ -7,7 +7,7 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
-import { editorRirStyle } from '../lib/training-ui';
+import { editorRirStyle } from './set-editor-row';
 
 export interface RirPickerSheetProps {
   visible: boolean;

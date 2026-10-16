@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { SwipeTabs } from '@/shared/components/swipe-tabs';
 import { archiveCustomExercise } from '@/shared/data/custom-exercises';
 import {
   useCustomExerciseStore,
@@ -23,6 +22,7 @@ import { Text } from '@/shared/ui/text';
 
 import { primaryGroup } from '../lib/muscle-groups';
 import { ExerciseThumb } from './exercise-thumb';
+import { SwipeTabs } from './swipe-tabs';
 
 /** Shades the photo under the back button and blends its foot into the page. */
 const HERO_FADE: GradientStop[] = [
@@ -41,7 +41,7 @@ export const useExerciseId = () => use(ExerciseIdContext);
 /**
  * Exercise info (design 06e): photo, name and the swipeable tabs "Übung" (muscles, technique)
  * and "Historie" (/exercise/[id]/history). Both stay mounted. Opened from the live workout, the
- * routines, the plan import and the search.
+ * workout summary, the routines, the plan import and the search.
  */
 export function ExerciseLayout() {
   const { id: exerciseId } = useLocalSearchParams<{ id: string }>();

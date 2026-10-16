@@ -4,11 +4,11 @@ import { trendOn, withTrend } from '@/features/weight/lib/trend';
 import { getExercise, useCatalogStore } from '@/shared/data/exercises';
 import { useProfile } from '@/shared/data/profile';
 import { useWeightEntries } from '@/shared/data/weight-entries';
-import { useLevelSets } from '@/shared/data/workouts';
 import { useToday } from '@/shared/hooks/use-today';
 import { DEFAULT_BODY_WEIGHT_KG } from '@/shared/lib/body-weight';
 import { DAY_MS } from '@/shared/lib/date';
 
+import { useLevelSets } from '../data/level-sets';
 import { type LevelExercise, muscleLevels, PAUSE_DAYS } from '../lib/levels';
 
 /** Gains are counted over this many days. */

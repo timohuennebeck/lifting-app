@@ -4,12 +4,13 @@ import { ScrollView, useWindowDimensions, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { Icon } from '@/shared/ui/icon';
-import { ROUTINE_ADD_SIZE, RoutineSlot } from '@/shared/ui/routine-slot';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-/** A strip entry; `review` adds the plan import's amber dot. */
-export interface RoutineBarItem {
+import { ROUTINE_ADD_SIZE, RoutineSlot } from './routine-slot';
+
+/** A strip entry; `review` adds the amber dot. */
+interface RoutineBarItem {
   name: string;
   review?: boolean;
 }

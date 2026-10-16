@@ -25,7 +25,7 @@ export interface Shot extends StoredPhoto {
   rejected?: boolean;
 }
 
-export type CameraFacing = 'front' | 'back';
+type CameraFacing = 'front' | 'back';
 export type Shots = Partial<Record<Pose, Shot>>;
 
 /** Whether every pose has its photo. */

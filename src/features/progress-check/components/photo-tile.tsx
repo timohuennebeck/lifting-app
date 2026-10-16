@@ -12,10 +12,10 @@ const TILE_MAX = 216;
 /** Side padding and gaps of the tile row (px-4, gap-2.5). */
 const ROW_CHROME = 32 + 2 * 10;
 
-/** Height of a tile in the row of three poses: 2:3, at most TILE_MAX and `room`. */
-export function photoTileHeight(windowWidth: number, room = Infinity) {
+/** Height of a tile in the row of three poses: 2:3, between TILE_MIN and TILE_MAX. */
+export function photoTileHeight(windowWidth: number) {
   const width = (windowWidth - ROW_CHROME) / POSES.length;
-  return clamp(Math.min(width * 1.5, room), TILE_MIN, TILE_MAX);
+  return clamp(width * 1.5, TILE_MIN, TILE_MAX);
 }
 
 export interface PhotoTileProps {
@@ -26,7 +26,7 @@ export interface PhotoTileProps {
   trailing?: ReactNode;
 }
 
-/** A pose photo in the row of three, named at the bottom (assessment and result, design 08c-H). */
+/** A pose photo in the result's row of three, named at the bottom (design 08d-A). */
 export function PhotoTile({ children, label, trailing }: PhotoTileProps) {
   return (
     <View className="flex-1 overflow-hidden rounded-[22px] bg-surface">

@@ -1,6 +1,5 @@
 import {
   and,
-  asc,
   count,
   desc,
   eq,
@@ -9,12 +8,11 @@ import {
   isNotNull,
   isNull,
   lt,
-  ne,
   or,
   sql,
   type SQL,
 } from 'drizzle-orm';
-import { alias, type AnySQLiteColumn } from 'drizzle-orm/sqlite-core';
+import type { AnySQLiteColumn } from 'drizzle-orm/sqlite-core';
 
 import type { SetValues } from '@/shared/lib/format';
 import { getOrInsert } from '@/shared/lib/map';
@@ -25,25 +23,16 @@ import {
   bodyweightExerciseIds,
   exerciseIdsWithout,
   isAssisted,
-  newExerciseDraft,
-  type SetTargets,
 } from './exercises';
-import { newId, nowIso } from './json';
-import { nextPosition } from './positions';
-import { drizzle, type Executor, type Tx } from './powersync/database';
-import { blockWeekOf, currentPlanWeek, setsForWeek } from './plans';
+import { drizzle } from './powersync/database';
 import {
-  plans,
-  routineExercises,
-  routines,
-  routineSets,
   weightEntries,
   workoutEntries,
   workoutEntriesExercises,
   workoutEntriesSets,
 } from './powersync/schema';
 import { queryKeys } from './query-keys';
-import type { ExerciseItem, ExerciseDraft } from './routines';
+import type { ExerciseItem } from './routines';
 import { firstCount, type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /**
@@ -54,8 +43,9 @@ import { firstCount, type RowOf, useDrizzleQuery } from './use-drizzle-query';
 const bodyweightSql = sql<number>`coalesce((select ${weightEntries.weight_kg} from ${weightEntries} order by ${weightEntries.date} desc limit 1), ${DEFAULT_BODY_WEIGHT_KG})`;
 
 /**
- * Whether a completed set counts for history and records. "Mark as done" completes the sets of
- * a weighted exercise without weight when it was never logged; those only count as done sets.
+ * Whether a completed set counts for history and records: one without a weight only for an
+ * exercise that logs none. Sets logged before the catalog gave their exercise a weight have none,
+ * and stay out.
  */
 export const hasKnownWeight = (
   set: { weight_kg: AnySQLiteColumn },
@@ -84,338 +74,6 @@ export function setScoreSql(
     when ${inArray(exerciseId, bodyweightExerciseIds())} then ${bodyweightSql} + ${set.weight_kg}
     when ${inArray(exerciseId, assistedExerciseIds())} then max(${bodyweightSql} - ${set.weight_kg}, 0)
     else ${set.weight_kg} end) * (1 + ${set.reps} / 30.0) end`;
-}
-
-/** Aliases for correlated subqueries over the sets of other workouts. */
-export const previousSet = alias(workoutEntriesSets, 'previous_set');
-export const previousExercise = alias(workoutEntriesExercises, 'previous_exercise');
-
-/** Subquery with the ids of a workout's exercises, for `inArray(…)`. */
-const workoutExerciseIds = (workoutId: string) =>
-  drizzle
-    .select({ id: workoutEntriesExercises.id })
-    .from(workoutEntriesExercises)
-    .where(eq(workoutEntriesExercises.workout_entries_id, workoutId));
-
-/** Copies a routine into a new running workout (an empty one starts with `startDraftWorkout`). */
-export async function startWorkout(userId: string, name: string, routineId: string) {
-  return drizzle.transaction((tx) => insertWorkout(tx, userId, name, routineId));
-}
-
-/**
- * Starts a workout with exercises and target sets put together beforehand (an empty workout,
- * which isn't a routine). Returns the new workout id.
- */
-export async function startDraftWorkout(userId: string, name: string, exercises: ExerciseDraft[]) {
-  return drizzle.transaction(async (tx) => {
-    const workoutId = await insertWorkout(tx, userId, name, null);
-    for (const [position, exercise] of exercises.entries()) {
-      await insertWorkoutExercise(tx, userId, workoutId, position, exercise);
-    }
-    return workoutId;
-  });
-}
-
-/** The plan of a routine, if it has one, with its week and block settings. */
-async function planOf(tx: Tx, routineId: string) {
-  const row = await tx
-    .select({
-      id: plans.id,
-      sessionsPerWeek: plans.sessions_per_week,
-      blockWeeks: plans.block_weeks,
-      blockStartWeek: plans.block_start_week,
-    })
-    .from(routines)
-    .innerJoin(plans, eq(plans.id, routines.plan_id))
-    .where(eq(routines.id, routineId))
-    .get();
-  return row ?? null;
-}
-
-/**
- * `startWorkout` inside an existing transaction. Returns the new workout id. A routine of a plan
- * counts for the plan's current week, and its sets get that week's targets (see `setsForWeek`).
- */
-export async function insertWorkout(
-  tx: Tx,
-  userId: string,
-  name: string,
-  routineId: string | null,
-) {
-  const workoutId = newId();
-  const now = nowIso();
-  const plan = routineId ? await planOf(tx, routineId) : null;
-  // Before the insert, which would count itself.
-  const planWeek = plan ? await currentPlanWeek(tx, plan.id, plan.sessionsPerWeek) : null;
-  await tx.insert(workoutEntries).values({
-    id: workoutId,
-    user_id: userId,
-    routine_id: routineId,
-    plan_id: plan?.id ?? null,
-    plan_week: planWeek,
-    name,
-    started_at: now,
-    created_at: now,
-  });
-  if (!routineId) return workoutId;
-  const blockWeek = plan && planWeek ? blockWeekOf(planWeek, plan) : null;
-  const exercises = await tx.query.routineExercises.findMany({
-    where: eq(routineExercises.routine_id, routineId),
-    orderBy: asc(routineExercises.position),
-    with: { sets: { orderBy: asc(routineSets.position) } },
-  });
-  for (const te of exercises) {
-    const workoutExerciseId = newId();
-    await tx.insert(workoutEntriesExercises).values({
-      id: workoutExerciseId,
-      user_id: userId,
-      workout_entries_id: workoutId,
-      exercise_id: te.exercise_id,
-      position: te.position,
-      rest_seconds: te.rest_seconds,
-    });
-    const sets = setsForWeek(te.sets, blockWeek, { blockWeeks: plan?.blockWeeks ?? null });
-    if (!sets.length) continue;
-    // The routine's targets for this week become the workout's empty sets.
-    await tx.insert(workoutEntriesSets).values(
-      sets.map((set) => ({
-        id: newId(),
-        user_id: userId,
-        workout_entries_exercise_id: workoutExerciseId,
-        position: set.position,
-        target_min: set.target_min,
-        target_max: set.target_max,
-        target_rir: set.rir,
-        is_pr: false,
-      })),
-    );
-  }
-  return workoutId;
-}
-
-/** Inserts one empty set with the given targets (`drizzle` or a transaction). */
-export async function insertWorkoutSet(
-  executor: Executor,
-  userId: string,
-  workoutExerciseId: string,
-  position: number,
-  target: SetTargets,
-) {
-  await executor.insert(workoutEntriesSets).values({
-    id: newId(),
-    user_id: userId,
-    workout_entries_exercise_id: workoutExerciseId,
-    position,
-    target_min: target.min,
-    target_max: target.max,
-    target_rir: target.rir,
-    is_pr: false,
-  });
-}
-
-/** Adds an exercise with one empty set per target; `position` may be a `nextPosition` subquery. */
-async function insertWorkoutExercise(
-  tx: Tx,
-  userId: string,
-  workoutId: string,
-  position: number | SQL<number>,
-  exercise: ExerciseDraft,
-) {
-  const id = newId();
-  await tx.insert(workoutEntriesExercises).values({
-    id,
-    user_id: userId,
-    workout_entries_id: workoutId,
-    exercise_id: exercise.exerciseId,
-    position,
-    rest_seconds: exercise.restSeconds ?? null,
-  });
-  for (const [k, set] of exercise.sets.entries()) {
-    await insertWorkoutSet(tx, userId, id, k, {
-      min: set.targetMin,
-      max: set.targetMax,
-      rir: set.rir,
-    });
-  }
-}
-
-/** Appends an exercise with empty sets at its default targets to a running workout. */
-export async function addWorkoutExercise(userId: string, workoutId: string, exerciseId: string) {
-  await drizzle.transaction((tx) =>
-    insertWorkoutExercise(
-      tx,
-      userId,
-      workoutId,
-      nextPosition(
-        workoutEntriesExercises.position,
-        eq(workoutEntriesExercises.workout_entries_id, workoutId),
-      ),
-      newExerciseDraft(exerciseId),
-    ),
-  );
-}
-
-/** Whether `values` beat every other completed set of the exercise; the first set never does. */
-async function isRecord(setId: string, exerciseId: string, values: SetValues) {
-  const logged = {
-    weight_kg: sql`${values.weightKg}`,
-    reps: sql`${values.reps}`,
-    seconds: sql`${values.seconds}`,
-  };
-  const [row] = await drizzle
-    .select({
-      best: sql<number | null>`max(${setScoreSql(workoutEntriesSets, workoutEntriesExercises)})`,
-      score: setScoreSql(logged, { exercise_id: sql`${exerciseId}` }),
-    })
-    .from(workoutEntriesSets)
-    .innerJoin(
-      workoutEntriesExercises,
-      eq(workoutEntriesExercises.id, workoutEntriesSets.workout_entries_exercise_id),
-    )
-    .where(
-      and(
-        eq(workoutEntriesExercises.exercise_id, exerciseId),
-        isNotNull(workoutEntriesSets.completed_at),
-        hasKnownWeight(workoutEntriesSets, workoutEntriesExercises),
-        ne(workoutEntriesSets.id, setId),
-      ),
-    );
-  return !!row?.best && row.score > row.best + 0.01;
-}
-
-/** Completes (or re-edits) a set. Returns true when it is a new personal record. */
-export async function logSet(setId: string, exerciseId: string, values: SetValues) {
-  const isPr = await isRecord(setId, exerciseId, values);
-  await drizzle
-    .update(workoutEntriesSets)
-    .set({
-      weight_kg: values.weightKg,
-      reps: values.reps,
-      seconds: values.seconds,
-      is_pr: isPr,
-      // A re-edit keeps the original completion time.
-      completed_at: sql`coalesce(${workoutEntriesSets.completed_at}, ${nowIso()})`,
-    })
-    .where(eq(workoutEntriesSets.id, setId));
-  return isPr;
-}
-
-export async function finishWorkout(workoutId: string) {
-  await drizzle.transaction(async (tx) => {
-    // Unlogged sets are dropped so history only holds real work.
-    await tx
-      .delete(workoutEntriesSets)
-      .where(
-        and(
-          isNull(workoutEntriesSets.completed_at),
-          inArray(workoutEntriesSets.workout_entries_exercise_id, workoutExerciseIds(workoutId)),
-        ),
-      );
-    await tx
-      .update(workoutEntries)
-      .set({ finished_at: nowIso() })
-      .where(eq(workoutEntries.id, workoutId));
-  });
-}
-
-/** Local SQLite views have no FK cascades, so children are removed explicitly. */
-export async function discardWorkout(workoutId: string) {
-  await drizzle.transaction(async (tx) => {
-    await tx
-      .delete(workoutEntriesSets)
-      .where(
-        inArray(workoutEntriesSets.workout_entries_exercise_id, workoutExerciseIds(workoutId)),
-      );
-    await tx
-      .delete(workoutEntriesExercises)
-      .where(eq(workoutEntriesExercises.workout_entries_id, workoutId));
-    await tx.delete(workoutEntries).where(eq(workoutEntries.id, workoutId));
-  });
-}
-
-export interface WorkoutSet extends SetValues {
-  id: string;
-  position: number;
-  /** Reps, or seconds for timed exercises. */
-  targetMin: number | null;
-  targetMax: number | null;
-  targetRir: number | null;
-  completedAt: string | null;
-  isPr: boolean;
-}
-
-export interface WorkoutExercise {
-  id: string;
-  exerciseId: string;
-  restSeconds: number | null;
-  sets: WorkoutSet[];
-}
-
-export interface WorkoutDetail {
-  id: string;
-  name: string;
-  startedAt: string;
-  finishedAt: string | null;
-  exercises: WorkoutExercise[];
-}
-
-/** One workout with its exercises and their sets, each ordered by position. */
-const workoutDetailQuery = (workoutId: string) =>
-  drizzle.query.workoutEntries.findMany({
-    columns: { id: true, name: true, started_at: true, finished_at: true },
-    where: eq(workoutEntries.id, workoutId),
-    with: {
-      exercises: {
-        columns: { id: true, exercise_id: true, rest_seconds: true },
-        orderBy: asc(workoutEntriesExercises.position),
-        with: {
-          sets: {
-            columns: { user_id: false, workout_entries_exercise_id: false },
-            orderBy: asc(workoutEntriesSets.position),
-          },
-        },
-      },
-    },
-  });
-
-type WorkoutDetailRow = RowOf<typeof workoutDetailQuery>;
-
-const toWorkoutSet = (s: WorkoutDetailRow['exercises'][number]['sets'][number]): WorkoutSet => ({
-  id: s.id,
-  position: s.position,
-  targetMin: s.target_min,
-  targetMax: s.target_max,
-  targetRir: s.target_rir,
-  weightKg: s.weight_kg,
-  reps: s.reps,
-  seconds: s.seconds,
-  completedAt: s.completed_at,
-  isPr: s.is_pr,
-});
-
-function toDetail([w]: WorkoutDetailRow[]): WorkoutDetail | null {
-  if (!w) return null;
-  return {
-    id: w.id,
-    name: w.name,
-    startedAt: w.started_at,
-    finishedAt: w.finished_at,
-    exercises: w.exercises.map((e) => ({
-      id: e.id,
-      exerciseId: e.exercise_id,
-      restSeconds: e.rest_seconds,
-      sets: e.sets.map(toWorkoutSet),
-    })),
-  };
-}
-
-export function useWorkout(workoutId: string | undefined) {
-  return useDrizzleQuery({
-    queryKey: queryKeys.workouts.detail(workoutId ?? '').queryKey,
-    enabled: !!workoutId,
-    query: workoutDetailQuery(workoutId ?? ''),
-    map: toDetail,
-  });
 }
 
 const activeWorkoutQuery = () =>
@@ -673,41 +331,5 @@ export function useLastExerciseSession(exerciseId: string | undefined) {
     enabled: !!exerciseId,
     query: exerciseHistoryQuery(exerciseId ?? '', inArray(workoutEntries.id, latest)),
     map: toLastSession,
-  });
-}
-
-// Identical sets of an exercise in a workout count once: they make the same level.
-const levelSetsQuery = () =>
-  drizzle
-    .selectDistinct({
-      exercise_id: workoutEntriesExercises.exercise_id,
-      started_at: workoutEntries.started_at,
-      weight_kg: workoutEntriesSets.weight_kg,
-      reps: workoutEntriesSets.reps,
-      seconds: workoutEntriesSets.seconds,
-    })
-    .from(workoutEntriesSets)
-    .innerJoin(
-      workoutEntriesExercises,
-      eq(workoutEntriesExercises.id, workoutEntriesSets.workout_entries_exercise_id),
-    )
-    .innerJoin(workoutEntries, eq(workoutEntries.id, workoutEntriesExercises.workout_entries_id))
-    .where(isNotNull(workoutEntriesSets.completed_at));
-
-const toLevelSets = (rows: RowOf<typeof levelSetsQuery>[]) =>
-  rows.map((r) => ({
-    exerciseId: r.exercise_id,
-    startedAt: r.started_at,
-    weightKg: r.weight_kg,
-    reps: r.reps,
-    seconds: r.seconds,
-  }));
-
-/** Every completed set with what it logged (muscle levels). */
-export function useLevelSets() {
-  return useDrizzleQuery({
-    queryKey: queryKeys.workouts.levelSets.queryKey,
-    query: levelSetsQuery(),
-    map: toLevelSets,
   });
 }

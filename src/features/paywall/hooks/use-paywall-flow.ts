@@ -25,7 +25,7 @@ export function usePaywallFlow() {
     toTrial: (plan: PlanId) =>
       router.push({ pathname: inApp ? '/pro/trial' : '/paywall/trial', params: { plan } }),
     /** After a purchase: the thank-you screen replaces the paywall step. */
-    toWelcome: () => router.replace(inApp ? '/pro/welcome' : '/paywall/welcome'),
+    toThankYou: () => router.replace(inApp ? '/pro/welcome' : '/paywall/welcome'),
     /** Leaves the flow: next onboarding step, or dismiss the whole modal. */
     exit: () => {
       if (!inApp) router.push('/create-account');

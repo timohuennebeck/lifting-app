@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { AGE_RANGE, ageFrom } from '@/shared/data/profile';
+import { ageFrom } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
 import { DateWheel } from '@/shared/ui/date-wheel';
 import { StepScreen } from '@/shared/ui/step-screen';
@@ -12,6 +12,8 @@ import { Text } from '@/shared/ui/text';
 import { ABOUT_STEPS } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 
+/** Ages that can be given, in whole years; the profile's database check has the same minimum. */
+const AGE_RANGE = { min: 14, max: 99 } as const;
 /** The wheels start on 1 January of the year someone this old was born. */
 const START_AGE = 25;
 

@@ -126,7 +126,7 @@ const ICONS = {
       </>
     ),
   },
-  // A calendar with today's date (top bar, weight history). Drawn 0.3 below the box's middle so
+  // A calendar with today's date (weight history). Drawn 0.3 below the box's middle so
   // it sits centred in a round button: the rings make it taller on top. The date is centred in
   // the space under the rings.
   calendar: {
@@ -258,7 +258,6 @@ const ICONS = {
       </>
     ),
   },
-  // An open book: the exercise's technique and history.
   // A spreadsheet: a header row over two columns.
   table: {
     viewBox: '0 0 18 18',
@@ -278,6 +277,7 @@ const ICONS = {
       </>
     ),
   },
+  // An open book: the exercise's technique and history.
   book: {
     viewBox: '0 0 14 14',
     render: stroke(

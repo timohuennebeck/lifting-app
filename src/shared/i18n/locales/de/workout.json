@@ -58,21 +58,6 @@
     "duration": "Geschätzte Dauer: {{minutes}} Min.",
     "hint": "Tippe auf +, um deine erste Übung hinzuzufügen."
   },
-  "history": {
-    "topWeight": "Höchstes Gewicht pro Training",
-    "topWeightShort": "Höchstes Gewicht",
-    "leastAssistance": "Geringste Unterstützung pro Training",
-    "leastAssistanceShort": "Geringste Unterstützung",
-    "topReps": "Meiste Wiederholungen pro Training",
-    "topRepsShort": "Meiste Wdh.",
-    "topSeconds": "Längstes Halten pro Training",
-    "topSecondsShort": "Längstes Halten",
-    "chartLabel": "Diagramm des höchsten Gewichts, gedrückt halten und ziehen",
-    "emptyRange": "Keine Trainings in diesem Zeitraum.",
-    "days_one": "{{count}} T",
-    "days_other": "{{count}} T",
-    "empty": "Noch keine Trainings. Beende ein Training mit dieser Übung, um deinen Fortschritt zu sehen."
-  },
   "summary": {
     "title": "{{name}} erledigt.",
     "records_one": "{{count}} neuer Rekord",

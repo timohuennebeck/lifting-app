@@ -5,9 +5,10 @@ import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
-import { Gradient, type GradientStop } from '@/shared/ui/gradient';
-import { IconButton } from '@/shared/ui/icon-button';
-import { Text } from '@/shared/ui/text';
+
+import { Gradient, type GradientStop } from './gradient';
+import { IconButton } from './icon-button';
+import { Text } from './text';
 
 /** Behind the strip and buttons: solid for its first third, then fading out. */
 const BOTTOM_SCRIM: GradientStop[] = [

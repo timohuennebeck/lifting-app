@@ -4,7 +4,7 @@ This file lists everything the owner must supply or decide before `docs/legal/de
 
 The drafts are not legal advice. Have a lawyer review both documents before release.
 
-Every placeholder must be resolved before publication. Beyond filling in facts, these items need a product or code change, or a firm decision, before the texts can be true and compliant (marked "blocker" below): 26, 29, 32, 33, 37, 38, 39, 47, 50, 56.
+Every placeholder must be resolved before publication. Beyond filling in facts, these items need a product or code change, or a firm decision, before the texts can be true and compliant (marked "blocker" below): 26, 29, 32, 33, 38, 39, 47, 50, 56.
 
 ## A. Company and contacts
 
@@ -42,13 +42,13 @@ Every placeholder must be resolved before publication. Beyond filling in facts, 
 
 ## D. Health data and consent (Art. 9 GDPR)
 
-26. **Explicit consent flow (blocker).** Placeholder „Beschreibung, wie und an welcher Stelle der App die Einwilligung für Gesundheitsdaten eingeholt wird“ (DS §4.4). Why: the app has no consent step. The only legal line is on Create Account („Mit der Erstellung akzeptierst du … die Datenschutzerklärung“), which is not a valid explicit consent, and weight and height are collected in onboarding before any legal text is shown (complaints are no longer asked since 2026-10-14).
+26. **Explicit consent flow (blocker).** Placeholder „Beschreibung, wie und an welcher Stelle der App die Einwilligung für Gesundheitsdaten eingeholt wird“ (DS §4.4). Why: the app has no consent step. The only legal line is on Create Account („Mit der Erstellung akzeptierst du … die Datenschutzerklärung“), which is not a valid explicit consent, and weight and height are collected in onboarding before any legal text is shown.
 27. **Weight and height as health data (decision).** No placeholder; DS §4.3 and §4.4 currently treat them as health data. Why: this is the conservative reading, but weight and height are mandatory onboarding steps with prefilled defaults (78 kg / 178 cm, `onboarding-store.ts`), so keeping it requires a way to decline; if you drop it, edit DS §4.3, §4.4 and the summary.
 28. **DPIA (decision).** No placeholder. Why: systematic processing of health data, including body photos in underwear, likely requires a data protection impact assessment (Art. 35 GDPR), which in Germany also triggers the DPO duty (item 7).
 29. **Withdrawal path in the app (blocker).** Placeholder „Ort in der App, an dem die Einwilligung für Gesundheitsdaten widerrufen werden kann“ (DS §12). Why: the refactored settings screen no longer edits sex, birth date, weight or height; withdrawing must be as easy as consenting (Art. 7(3) GDPR).
 30. **Correcting profile data (decision).** No placeholder. Why: Art. 16 GDPR; right now users can only edit name, bio, avatar and units in the app (`profile-screen.tsx`, `settings-screen.tsx`). DS §4.3 says "a part" is editable, which stays true, but body data needs a correction path.
 31. **Team access to body photos.** Placeholder „Festlegen und beschreiben, wer im Team unter welchen Umständen auf Körpercheck-Fotos zugreifen kann“ (DS §4.6). Why: the app promises „Fotos bleiben privat – nur für dich“, but the service role can read the private `progress-photos` bucket.
-32. **Minors and health data consent (blocker).** Placeholder „Regelung für Minderjährige, insbesondere zur Einwilligung in die Verarbeitung von Gesundheitsdaten“ (DS §16). Why: the app accepts age 14 (`AGE_RANGE` in `src/shared/data/profile.ts`, also the DB check on `birth_date`), while Germany sets the Art. 8 GDPR consent age at 16.
+32. **Minors and health data consent (blocker).** Placeholder „Regelung für Minderjährige, insbesondere zur Einwilligung in die Verarbeitung von Gesundheitsdaten“ (DS §16). Why: the app accepts age 14 (`AGE_RANGE` in `src/features/onboarding/screens/birth-date-screen.tsx`, also the DB check on `birth_date`), while Germany sets the Art. 8 GDPR consent age at 16.
 
 ## E. Code that is mocked or differs from what the UI says
 
@@ -56,7 +56,7 @@ Every placeholder must be resolved before publication. Beyond filling in facts, 
 34. **Plan import and plan generation (decided: OpenAI).** The `read-plan` Edge Function sends the photos or file, with the exercise catalog, to OpenAI in the USA; nothing is stored on our side except a keyed hash of the IP for the import limits (deleted after two days). The `generate-plan` Edge Function sends the plan answers (goal, focus muscles, equipment, workouts per week, session length, experience, app language), with the catalog exercises for that equipment, to OpenAI; no name, body data or account, and the same IP-hash limits (`plan_requests`, kind `generate`). There is no plan made on the device any more. DS §4.1, §4.3, §4.7, §7, §8 and §15 and NB §4 say so. Still open, as for the progress check: OpenAI's retention and training terms (DS §4.7 placeholder) and the transfer basis (§8).
 35. **Voice input (decided: removed).** The scripted voice import was removed from the app (October 2026), so no microphone permission or speech provider is involved. If voice input comes back, it needs a real speech provider, microphone permission and an entry in the privacy policy.
 36. **Social sign-in.** Placeholders on Google's contracting entity, role and US transfer, and on Apple's (DS §4.2). Why: Google Sign-In (`google-sign-in.ts`; Supabase stores the email, name, profile picture URL and Google account ID) and Sign in with Apple on iOS (`apple-sign-in.ts`; Apple account ID, email or relay address, name on the first sign-in) are wired up; Facebook was dropped. Sign in with Apple also covers App Store guideline 4.8. Guideline 5.1.1(v) (revoke the Apple tokens on account deletion) is covered on iOS: `delete-account.ts` gets a fresh code from Apple's sheet and the `revoke-apple-token` function revokes the tokens (DS §10). An Apple account deleted on Android stays linked at Apple until the user removes Traqa in their Apple ID settings.
-37. **Recording legal acceptance (blocker).** Placeholder „Bestätigen, dass die App die Zustimmung bei der Registrierung tatsächlich speichert“ (DS §4.9). Why: the README says the app doesn't write `legal_acceptances` yet; without it there is no proof of acceptance or consent (Art. 7(1) GDPR).
+37. **Recording legal acceptance.** Placeholder „Bestätigen, dass die App die Zustimmung bei der Registrierung tatsächlich speichert“ (DS §4.9). Why: the proof of acceptance and consent (Art. 7(1) GDPR). The app writes `legal_acceptances` at sign-up and when a user agrees to a changed version (`acceptDocuments` in `src/features/legal/data/legal-acceptances.ts`; README, "Legal documents"); confirm it and remove the placeholder.
 38. **Trial reminder (blocker).** Placeholder „Ob und wie wir vor dem Ende des Testzeitraums erinnern“ (NB §6). Why: the trial screen promises a reminder two days before billing (`REMINDER_DAYS_BEFORE` in `trial-screen.tsx`), but the app has no notification or email mechanism, and DS §6 says the app sends no push notifications.
 39. **Progress-check deletion in storage (blocker).** Placeholder „Bestätigen, dass die Löschung im Speicher auch bei fehlender Internetverbindung zuverlässig nachgeholt wird“ (DS §4.6). Why: `deleteProgressCheck` removes the bucket files fire-and-forget, so offline or on error the photos stay until account deletion. The same pattern applies to replaced or removed avatars (`src/features/profile/lib/avatar.ts`).
 40. **Device backups.** Placeholder „Entscheidung, ob Körpercheck-Fotos und Screenshots von Gerätebackups ausgeschlossen werden“ (DS §5). Why: photos are stored in the app's documents directory, which iCloud/Google backups can include (a comment in `use-auth-listener.ts` already notes this).
@@ -124,7 +124,7 @@ Every placeholder must be resolved before publication. Beyond filling in facts, 
 87. **Governing law.** Placeholder „Anwendbares Recht, z. B. das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts“ (NB §15). Why: a choice of law must not deprive consumers of their mandatory home-country protection (Art. 6 Rome I).
 88. **Place of jurisdiction.** Placeholder „Gerichtsstand für Kaufleute, juristische Personen des öffentlichen Rechts und öffentlich-rechtliche Sondervermögen“ (NB §15). Why: it can only be agreed with merchants, not with consumers.
 89. **Consumer dispute resolution.** Placeholder „Erklärung nach § 36 VSBG, ob wir bereit oder verpflichtet sind, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen“ (NB §15). Why: required for traders using standard terms unless they had 10 or fewer employees on 31 Dec of the prior year. The EU ODR platform link is no longer needed since the platform closed in July 2025.
-90. **Contract language.** Placeholder „Vertragssprache festlegen“ (NB §15). Why: the app ships in en, de, pt-PT and pt-BR with per-locale documents; decide which version governs.
+90. **Contract language.** Placeholder „Vertragssprache festlegen“ (NB §15). Why: the app ships in en, de, pt-PT, pt-BR and ko with per-locale documents (Korean shows the English ones, as there is no Korean version); decide which version governs.
 
 ---
 
@@ -132,4 +132,4 @@ Note: the profile now stores the birth date instead of the age (`birth_date`, `s
 
 Note: after these drafts were written, the settings lost the email and password sheets (password only via „Passwort vergessen“) and „Käufe wiederherstellen“ moved to the paywall; DS §4.2 and NB §3, §6 were updated to match.
 
-Count: 90 items (73 tied to placeholders in the drafts, 17 further decisions or checks), of which 10 are marked as blockers.
+Count: 90 items (73 tied to placeholders in the drafts, 17 further decisions or checks), of which 9 are marked as blockers.

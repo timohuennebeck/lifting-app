@@ -79,22 +79,6 @@ export async function renameRoutine(routineId: string, name: string) {
     .where(eq(routines.id, routineId));
 }
 
-/** Saves the order of a plan's routines (or the library's) after a drag. */
-export async function reorderRoutines(orderedIds: string[]) {
-  await drizzle.transaction(async (tx) => {
-    const rows = await tx
-      .select({ id: routines.id, position: routines.position })
-      .from(routines)
-      .where(inArray(routines.id, orderedIds));
-    // Only rows whose position changes: every write is queued for upload.
-    const stored = new Map(rows.map((r) => [r.id, r.position]));
-    for (const [position, id] of orderedIds.entries()) {
-      if (stored.get(id) === position) continue;
-      await tx.update(routines).set({ position }).where(eq(routines.id, id));
-    }
-  });
-}
-
 export async function deleteRoutine(routineId: string) {
   await drizzle.transaction((tx) => deleteRoutineTx(tx, routineId));
 }

@@ -1,8 +1,7 @@
 import { eq } from 'drizzle-orm';
 
 import type { AppLanguage } from '@/shared/i18n/resources';
-import { CM_PER_INCH, type UnitSystem } from '@/shared/lib/format';
-import { clamp } from '@/shared/lib/math';
+import type { UnitSystem } from '@/shared/lib/format';
 import { useUserId } from '@/shared/stores/session-store';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
@@ -16,27 +15,6 @@ export type Sex = 'male' | 'female' | 'unspecified';
 export type Experience = 'none' | 'beginner' | 'intermediate' | 'advanced';
 export type Goal = 'hypertrophy' | 'strength' | 'strength_hypertrophy';
 export type EquipmentAccess = 'gym' | 'home' | 'bodyweight';
-
-/** Limits of the body measurements, in onboarding and in Settings. Ages in whole years. */
-export const AGE_RANGE = { min: 14, max: 99 } as const;
-const HEIGHT_CM = { min: 120, max: 230 } as const;
-const HEIGHT_IN = { min: 47, max: 91 } as const;
-
-/** Height range in the user's unit (cm or inches). */
-export const heightRange = (units: UnitSystem) => (units === 'imperial' ? HEIGHT_IN : HEIGHT_CM);
-
-/** Stored cm → value edited in the user's unit (whole inches), clamped to the range. */
-export function heightToDisplay(cm: number, units: UnitSystem) {
-  const { min, max } = heightRange(units);
-  return clamp(units === 'imperial' ? Math.round(cm / CM_PER_INCH) : cm, min, max);
-}
-
-/** Edited value → whole centimetres as the profile stores them. */
-export function heightFromDisplay(value: number, units: UnitSystem) {
-  const { min, max } = heightRange(units);
-  const v = clamp(value, min, max);
-  return units === 'imperial' ? Math.round(v * CM_PER_INCH) : v;
-}
 
 /**
  * Whole years someone born on `birthDate` (YYYY-MM-DD) is on `today`, counting the birthday

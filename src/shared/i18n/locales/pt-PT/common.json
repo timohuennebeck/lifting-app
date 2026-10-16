@@ -19,8 +19,6 @@
     "stepOf": "{{current}} de {{total}}"
   },
   "units": {
-    "kg": "kg",
-    "lb": "lb",
     "cm": "cm",
     "sec": "s",
     "reps_one": "{{count}} rep",
@@ -43,13 +41,6 @@
     ]
   },
   "greeting": "Olá {{name}}",
-  "languages": {
-    "en": "English",
-    "de": "Deutsch",
-    "pt-PT": "Português",
-    "pt-BR": "Português (Brasil)",
-    "ko": "한국어"
-  },
   "errors": {
     "generic": "Algo correu mal. Tenta novamente."
   },

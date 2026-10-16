@@ -16,7 +16,6 @@ const routineKeys = createQueryKeys('routines', {
   list: null,
   detail: (routineId: string) => [routineId],
   lastDone: null,
-  weekDone: (planId: string, week: number) => [planId, week],
 });
 
 const workoutKeys = createQueryKeys('workouts', {
@@ -28,10 +27,6 @@ const workoutKeys = createQueryKeys('workouts', {
   exerciseHistory: (exerciseId: string) => [exerciseId],
   lastExerciseSession: (exerciseId: string) => [exerciseId],
   levelSets: null,
-});
-
-const progressCheckKeys = createQueryKeys('progressChecks', {
-  list: null,
 });
 
 const exerciseCatalogKeys = createQueryKeys('exerciseCatalog', {
@@ -52,7 +47,6 @@ export const queryKeys = mergeQueryKeys(
   planKeys,
   routineKeys,
   workoutKeys,
-  progressCheckKeys,
   exerciseCatalogKeys,
   customExerciseKeys,
   weightKeys,

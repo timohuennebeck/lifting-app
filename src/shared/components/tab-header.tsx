@@ -1,5 +1,4 @@
 import { router } from 'expo-router';
-import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
@@ -11,11 +10,9 @@ import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-import { ProfileAvatar } from './user-avatar';
+import { ProfileAvatar } from './profile-avatar';
 
 export interface TabHeaderProps {
-  /** Extra round buttons placed before weight and search. */
-  actions?: ReactNode;
   /** Avatar, date and greeting on the left; the profile tab hides them (01b-2). */
   greeting?: boolean;
   /** Settings after search: only the profile tab, which the avatar on the others leads to. */
@@ -23,13 +20,14 @@ export interface TabHeaderProps {
 }
 
 /**
- * Header shared by all tabs: avatar, today's date, greeting, optional actions, then the weight
- * history and search (exercises and their records), always in the same place.
+ * Header shared by all tabs: avatar, today's date and greeting, then the weight history and
+ * search (exercises and their records), always in the same place.
  */
-export function TabHeader({ actions, greeting = true, settings = false }: TabHeaderProps) {
+export function TabHeader({ greeting = true, settings = false }: TabHeaderProps) {
   const { t } = useTranslation(['common', 'weight']);
   const { profile } = useProfile();
-  // Ticks every minute so the date turns over at midnight.
+  // Ticks every minute so the date turns over at midnight and, within a minute, follows a
+  // language switch (the React Compiler keeps the formatted date until `now` changes).
   const now = useNow(MINUTE_MS);
   const name = profile?.firstName ?? '';
   return (
@@ -54,7 +52,6 @@ export function TabHeader({ actions, greeting = true, settings = false }: TabHea
         <View className="flex-1" />
       )}
       <View className="flex-row gap-2">
-        {actions}
         <IconButton
           icon="scale"
           iconSize={19}
