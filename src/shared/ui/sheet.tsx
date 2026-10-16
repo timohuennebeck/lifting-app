@@ -131,7 +131,7 @@ function SheetBody({
           sheetStyle,
           { maxHeight: windowHeight * MAX_HEIGHT, backgroundColor: colors.sheet },
         ]}
-        className="absolute inset-x-0 bottom-0 rounded-t-[34px]"
+        className="absolute inset-x-0 bottom-0 rounded-t-[18px]"
       >
         <GestureDetector gesture={pan}>
           <View>

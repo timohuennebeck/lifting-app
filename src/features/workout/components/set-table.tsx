@@ -16,7 +16,6 @@ import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-import { SwipeToDelete } from '@/shared/ui/swipe-to-delete';
 import { Text } from '@/shared/ui/text';
 
 import type { WorkoutExercise } from '../data/workout-detail';
@@ -34,8 +33,6 @@ export interface SetTableProps {
   units: UnitSystem;
   onSelect: (index: number, field: SetField) => void;
   onToggleDone: (index: number) => void;
-  /** A row swiped left and its delete mark tapped. */
-  onRemove: (index: number) => void;
   /** Reports each row's y offset inside the table (for scrolling it into view). */
   onRowLayout: (index: number, y: number) => void;
 }
@@ -50,7 +47,6 @@ export function SetTable({
   units,
   onSelect,
   onToggleDone,
-  onRemove,
   onRowLayout,
 }: SetTableProps) {
   const { t } = useTranslation('workout');
@@ -127,28 +123,22 @@ export function SetTable({
           const done = !!set.completedAt || !!logged[set.id];
           return (
             <View key={set.id} onLayout={(e) => onRowLayout(i, e.nativeEvent.layout.y)}>
-              {/* Swiped left: the delete mark; to the right stays the swipe between exercises.
-                  The row is opaque over the mark, also when a logged set is dimmed. */}
-              <SwipeToDelete leftOnly label={t('table.removeSet')} onDelete={() => onRemove(i)}>
-                <View className="bg-bg">
-                  <SetRow
-                    number={i + 1}
-                    middle={middleLabel(i)}
-                    cells={measures.map((measure) => ({
-                      field: measure,
-                      value: cellValue(measure, selected, i),
-                    }))}
-                    rir={set.targetRir}
-                    done={done}
-                    record={done && set.isPr}
-                    selected={selected}
-                    field={field}
-                    pristine={pristine}
-                    onSelect={(f) => onSelect(i, f)}
-                    onToggleDone={() => onToggleDone(i)}
-                  />
-                </View>
-              </SwipeToDelete>
+              <SetRow
+                number={i + 1}
+                middle={middleLabel(i)}
+                cells={measures.map((measure) => ({
+                  field: measure,
+                  value: cellValue(measure, selected, i),
+                }))}
+                rir={set.targetRir}
+                done={done}
+                record={done && set.isPr}
+                selected={selected}
+                field={field}
+                pristine={pristine}
+                onSelect={(f) => onSelect(i, f)}
+                onToggleDone={() => onToggleDone(i)}
+              />
             </View>
           );
         })}

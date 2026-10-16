@@ -85,7 +85,7 @@ export function NumberKeypad({
         entering={SlideInDown.springify().mass(1).damping(30).stiffness(260)}
         exiting={SlideOutDown.duration(180)}
         onLayout={onLayout}
-        className="absolute inset-x-0 bottom-0 z-20 gap-2.5 rounded-t-[28px] border-t border-white/6 bg-surface px-3 pt-2"
+        className="absolute inset-x-0 bottom-0 z-20 gap-2.5 rounded-t-[18px] border-t border-white/6 bg-surface px-3 pt-2"
         style={{ paddingBottom: Math.max(insets.bottom, 12) + 8 }}
       >
         <PressableScale

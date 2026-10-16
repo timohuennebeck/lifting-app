@@ -9,6 +9,7 @@ const profileKeys = createQueryKeys('profile', {
 const planKeys = createQueryKeys('plans', {
   list: null,
   latestWeek: (planId: string) => [planId],
+  weekDone: (planId: string, week: number) => [planId, week],
 });
 
 const routineKeys = createQueryKeys('routines', {

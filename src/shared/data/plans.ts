@@ -229,6 +229,31 @@ export interface PlanStatus extends PlanWeek {
   deload: boolean;
 }
 
+const weekDoneQuery = (planId: string, week: number) =>
+  drizzle
+    .selectDistinct({ routineId: workoutEntries.routine_id })
+    .from(workoutEntries)
+    .where(
+      and(
+        eq(workoutEntries.plan_id, planId),
+        eq(workoutEntries.plan_week, week),
+        isNotNull(workoutEntries.finished_at),
+      ),
+    );
+
+const toRoutineIds = (rows: RowOf<typeof weekDoneQuery>[]) =>
+  new Set(rows.flatMap((r) => (r.routineId ? [r.routineId] : [])));
+
+/** The plan's routines with a finished workout in plan week `week`: done for that week. */
+export function usePlanWeekDone(planId: string | undefined, week: number | undefined) {
+  return useDrizzleQuery({
+    queryKey: queryKeys.plans.weekDone(planId ?? '', week ?? 0).queryKey,
+    enabled: !!planId && !!week,
+    query: weekDoneQuery(planId ?? '', week ?? 0),
+    map: toRoutineIds,
+  });
+}
+
 /** Where a plan stands: its week and the block week. Undefined while loading. */
 export function usePlanStatus(plan: PlanSummary | undefined): PlanStatus | undefined {
   const planId = plan?.id ?? '';

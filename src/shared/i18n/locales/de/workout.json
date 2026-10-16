@@ -21,8 +21,7 @@
     "repsCell": "Wiederholungen",
     "secondsCell": "Sekunden",
     "done": "Satz erledigt",
-    "addSet": "Satz hinzufügen",
-    "removeSet": "Satz entfernen"
+    "addSet": "Satz hinzufügen"
   },
   "rest": {
     "title": "Pause",

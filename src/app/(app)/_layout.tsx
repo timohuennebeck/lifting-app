@@ -19,7 +19,16 @@ export default function AppLayout() {
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="workout/[id]" options={{ gestureEnabled: false }} />
-        <Stack.Screen name="workout/summary/[id]" options={{ gestureEnabled: false }} />
+        {/* Just finished (`?finished=1`): fades in over the workout; from the history it slides. */}
+        <Stack.Screen
+          name="workout/summary/[id]"
+          options={({ route }) => ({
+            gestureEnabled: false,
+            animation: (route.params as { finished?: string } | undefined)?.finished
+              ? 'fade'
+              : 'default',
+          })}
+        />
         <Stack.Screen name="progress-check" options={{ gestureEnabled: false }} />
         <Stack.Screen name="pro" options={{ gestureEnabled: false, animation: 'fade' }} />
         <Stack.Screen name="support" />

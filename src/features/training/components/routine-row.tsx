@@ -92,10 +92,21 @@ export interface RoutineRowProps {
   starting?: boolean;
   /** Neon line under the name, e.g. the muscle it works most: "Brust 40 %". */
   focus?: string;
+  /** Done this plan week: the neon line says so instead. */
+  done?: boolean;
 }
 
 /** Routine card: its top muscles as circles, the name and a line under it, and a play button. */
-function RoutineRow({ name, items, meta, onPress, onStart, starting, focus }: RoutineRowProps) {
+function RoutineRow({
+  name,
+  items,
+  meta,
+  onPress,
+  onStart,
+  starting,
+  focus,
+  done,
+}: RoutineRowProps) {
   const { t } = useTranslation('training');
   const shares = muscleShares(items);
 
@@ -104,7 +115,7 @@ function RoutineRow({ name, items, meta, onPress, onStart, starting, focus }: Ro
       haptic="none"
       activeScale={0.98}
       accessibilityRole="button"
-      accessibilityLabel={[name, focus, meta].filter(Boolean).join(', ')}
+      accessibilityLabel={[name, done ? t('list.done') : focus, meta].filter(Boolean).join(', ')}
       // The card hides its play button from screen readers; this stands in for it.
       accessibilityActions={[{ name: 'start', label: t('list.start', { name }) }]}
       onAccessibilityAction={(e) => {
@@ -118,7 +129,14 @@ function RoutineRow({ name, items, meta, onPress, onStart, starting, focus }: Ro
         <Text variant="bodyStrong" numberOfLines={1}>
           {name}
         </Text>
-        {focus ? (
+        {done ? (
+          <View className="flex-row items-center gap-1.25">
+            <Icon name="check" size={11} color={colors.accent} />
+            <Text variant="caption" tone="accent" numberOfLines={1} className="font-inter-semibold">
+              {t('list.done')}
+            </Text>
+          </View>
+        ) : focus ? (
           <Text variant="caption" tone="accent" numberOfLines={1} className="font-inter-semibold">
             {focus}
           </Text>
@@ -151,12 +169,21 @@ interface RoutineRowsProps {
   meta: (routine: RoutineSummary) => string;
   /** A neon line above it, e.g. the muscle it works most. */
   focus?: (routine: RoutineSummary) => string | undefined;
+  /** Done this plan week (a plan's routines). */
+  done?: (routine: RoutineSummary) => boolean;
   startingId: string | null;
   onStart: (routine: RoutineSummary) => void;
 }
 
 /** Routine cards with quick start; an empty routine opens instead, to add exercises. */
-export function RoutineRows({ routines, meta, focus, startingId, onStart }: RoutineRowsProps) {
+export function RoutineRows({
+  routines,
+  meta,
+  focus,
+  done,
+  startingId,
+  onStart,
+}: RoutineRowsProps) {
   return (
     <View className="gap-2 px-4">
       {routines.map((routine) => (
@@ -165,6 +192,7 @@ export function RoutineRows({ routines, meta, focus, startingId, onStart }: Rout
           name={routine.name}
           items={routine.items}
           focus={focus?.(routine)}
+          done={done?.(routine)}
           meta={meta(routine)}
           starting={startingId === routine.id}
           onPress={() => router.push(`/routine/${routine.id}`)}

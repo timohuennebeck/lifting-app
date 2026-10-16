@@ -56,7 +56,7 @@ function PlaceholderCard({ letter, locked, tilt }: PlaceholderCardProps) {
   return (
     <View
       className={cn(
-        'h-30 w-23 items-center justify-center rounded-[18px] bg-surface',
+        'h-30 w-23 items-center justify-center rounded-[18px] border-[1.5px] border-track bg-surface',
         locked && 'overflow-hidden',
       )}
       style={{ transform: [{ rotate: `${tilt}deg` }] }}

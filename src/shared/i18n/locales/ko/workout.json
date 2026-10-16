@@ -21,8 +21,7 @@
     "repsCell": "반복 수",
     "secondsCell": "초",
     "done": "세트 완료",
-    "addSet": "세트 추가",
-    "removeSet": "세트 삭제"
+    "addSet": "세트 추가"
   },
   "rest": {
     "title": "휴식",

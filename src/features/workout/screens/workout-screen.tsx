@@ -17,7 +17,6 @@ import {
   type ExerciseMenuAction,
   ExerciseMenuSheet,
 } from '@/features/training/components/exercise-menu-sheet';
-import { useExerciseName } from '@/shared/data/exercises';
 import { restSecondsFor } from '@/shared/data/routines';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { haptics } from '@/shared/lib/haptics';
@@ -28,27 +27,21 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
 import { EmptyWorkout } from '../components/empty-workout';
-import { ExerciseActions } from '../components/exercise-actions';
+import { ExercisePage } from '../components/exercise-page';
 import { ExerciseStrip } from '../components/exercise-strip';
 import { SetKeypad } from '../components/set-keypad';
-import { SetTable } from '../components/set-table';
 import { WorkoutMenuSheet } from '../components/workout-menu-sheet';
 import { WorkoutTopBar } from '../components/workout-top-bar';
 import { useWorkout, type WorkoutDetail } from '../data/workout-detail';
-import {
-  removeWorkoutExercise,
-  removeWorkoutSet,
-  reorderWorkoutExercise,
-} from '../data/workout-mutations';
+import { removeWorkoutExercise, reorderWorkoutExercise } from '../data/workout-mutations';
 import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
 const SWIPE_DISTANCE = 70;
 const SWIPE_VELOCITY = 600;
-/** The exercise leaves quickly and the next one settles in: about a quarter second in all. */
-const SLIDE_OUT = { duration: 110, easing: Easing.in(Easing.quad) };
-const SLIDE_IN = { duration: 160, easing: Easing.out(Easing.cubic) };
+/** From where the finger let go, the next exercise (already drawn beside) slides into place. */
+const SLIDE = { duration: 200, easing: Easing.out(Easing.cubic) };
 /** A swipe that didn't go far enough springs back. */
 const SNAP_BACK = { duration: 160, easing: Easing.out(Easing.cubic) };
 /** Room for the "Finish workout" button over the foot of the sets. */
@@ -59,7 +52,7 @@ interface LiveWorkoutProps {
 }
 
 function LiveWorkout({ workout }: LiveWorkoutProps) {
-  const { t, i18n } = useTranslation(['workout', 'common']);
+  const { t } = useTranslation(['workout', 'common']);
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -67,7 +60,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   const live = useLiveWorkout(workout);
   const { abandon, finish, finishing } = useWorkoutActions(workout.id);
   const field = useWorkoutSessionStore((s) => s.field);
-  const { exercise, exerciseIndex, selectedIndex, openIndex } = live;
+  const { exercise, exerciseIndex, selectedIndex } = live;
   const count = workout.exercises.length;
   const keypadOpen = selectedIndex >= 0;
   // Every set logged: "Finish workout" appears at the bottom.
@@ -99,17 +92,14 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     live.goToExercise(index);
   };
 
-  // Swiping the exercise drags it along; past the threshold it slides out and the next slides in.
-  const offset = useSharedValue(0);
-  // Direction of a swipe in progress: the next exercise slides in from that side once shown.
-  const slideIn = useSharedValue(0);
+  // The exercises sit side by side, one screen width apart; `position` scrolls the row. The
+  // shown one and its neighbours are drawn, so a swipe slides the next one in without a wait:
+  // the shown exercise only changes once it has arrived.
+  const position = useSharedValue(-exerciseIndex * width);
+  // Shown another way (the strip, a reorder): straight there.
   useEffect(() => {
-    const direction = slideIn.get();
-    if (!direction) return;
-    slideIn.set(0);
-    offset.set(direction * width);
-    offset.set(withTiming(0, SLIDE_IN));
-  }, [exerciseIndex, offset, slideIn, width]);
+    position.set(-exerciseIndex * width);
+  }, [exerciseIndex, width, position]);
 
   const swipe = Gesture.Pan()
     .activeOffsetX([-16, 16])
@@ -118,7 +108,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
       const atEdge =
         (e.translationX > 0 && exerciseIndex === 0) ||
         (e.translationX < 0 && exerciseIndex === count - 1);
-      offset.set(atEdge ? e.translationX * 0.25 : e.translationX);
+      position.set(-exerciseIndex * width + (atEdge ? e.translationX * 0.25 : e.translationX));
     })
     .onEnd((e) => {
       // Swiped left: the next exercise; swiped right: the one before.
@@ -127,18 +117,19 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
       else if (e.translationX > SWIPE_DISTANCE || e.velocityX > SWIPE_VELOCITY) direction = -1;
       const target = exerciseIndex + direction;
       if (!direction || target < 0 || target >= count) {
-        offset.set(withTiming(0, SNAP_BACK));
+        position.set(withTiming(-exerciseIndex * width, SNAP_BACK));
         return;
       }
-      offset.set(
-        withTiming(-direction * width, SLIDE_OUT, (done) => {
-          if (!done) return;
-          slideIn.set(direction);
-          scheduleOnRN(go, target);
+      position.set(
+        withTiming(-target * width, SLIDE, (done) => {
+          if (done) scheduleOnRN(go, target);
         }),
       );
     });
-  const contentStyle = useAnimatedStyle(() => ({ transform: [{ translateX: offset.get() }] }));
+  const contentStyle = useAnimatedStyle(() => ({ transform: [{ translateX: position.get() }] }));
+  const pages = [exerciseIndex - 1, exerciseIndex, exerciseIndex + 1].filter(
+    (i) => i >= 0 && i < count,
+  );
 
   // Dragged in the strip: the exercise on screen stays on screen at its new place. It moves
   // with the new order as it loads (before that frame is drawn), and an open keypad stays.
@@ -181,17 +172,6 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     ]);
   };
 
-  // A set swiped away: its typed and logged values go with it.
-  const removeSet = (index: number) => {
-    const set = exercise?.sets[index];
-    if (!set) return;
-    const store = useWorkoutSessionStore.getState();
-    if (store.selectedSetId === set.id) store.closeKeypad();
-    store.clearLogged(set.id);
-    store.clearDraft(set.id);
-    void removeWorkoutSet(set.id);
-  };
-
   function onExerciseMenu(action: ExerciseMenuAction) {
     setExerciseMenuOpen(false);
     if (!exercise) return;
@@ -205,13 +185,6 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     if (f === field) return live.closeInput();
     useWorkoutSessionStore.getState().focusField(f);
   };
-
-  const exerciseName = useExerciseName(exercise?.exerciseId ?? '', i18n.language);
-
-  // "Set n of m": the set being typed in, else the first open one, else the last.
-  let shownSet = (exercise?.sets.length ?? 1) - 1;
-  if (selectedIndex >= 0) shownSet = selectedIndex;
-  else if (openIndex >= 0) shownSet = openIndex;
 
   return (
     <View className="flex-1">
@@ -247,40 +220,36 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                 style={contentStyle}
                 onLayout={(e) => (layout.current.block = e.nativeEvent.layout.y)}
               >
-                <View className="px-5 pt-5">
-                  <Text className="font-inter-semibold text-[30px] leading-9">{exerciseName}</Text>
-                  <Text variant="label" tone="subtle" className="mt-2 font-inter">
-                    {exercise.sets.length
-                      ? t('setOf', { current: shownSet + 1, total: exercise.sets.length })
-                      : t('noSets')}
-                  </Text>
-                </View>
-                <ExerciseActions
-                  // How the exercise works and its history (design 06e).
-                  onInfo={() =>
-                    router.push({ pathname: '/exercise/[id]', params: { id: exercise.exerciseId } })
-                  }
-                  onTargets={() =>
-                    router.push({
-                      pathname: '/workout/targets/[exerciseId]',
-                      params: { exerciseId: exercise.id, workoutId: workout.id },
-                    })
-                  }
-                  onSwap={() => openPicker('swap')}
-                  onMore={() => setExerciseMenuOpen(true)}
-                />
-                <View onLayout={(e) => (layout.current.table = e.nativeEvent.layout.y)}>
-                  <SetTable
-                    exercise={exercise}
-                    measures={live.measures}
-                    last={live.last}
-                    units={live.units}
-                    onSelect={onSelect}
-                    onToggleDone={live.toggleDone}
-                    onRemove={removeSet}
-                    onRowLayout={(i, y) => (layout.current.rows[i] = y + 48)}
-                  />
-                </View>
+                {pages.map((i) => {
+                  const shown = i === exerciseIndex;
+                  const page = workout.exercises[i];
+                  return (
+                    // The shown page sets the height; its neighbours lie beside it.
+                    <View
+                      key={page.id}
+                      pointerEvents={shown ? 'auto' : 'none'}
+                      style={
+                        shown
+                          ? { width, left: i * width }
+                          : { position: 'absolute', top: 0, width, left: i * width }
+                      }
+                    >
+                      <ExercisePage
+                        exercise={page}
+                        workoutId={workout.id}
+                        selectedIndex={shown ? selectedIndex : -1}
+                        onSelect={onSelect}
+                        onToggleDone={live.toggleDone}
+                        onSwap={() => openPicker('swap')}
+                        onMore={() => setExerciseMenuOpen(true)}
+                        onTableLayout={shown ? (y) => (layout.current.table = y) : undefined}
+                        onRowLayout={
+                          shown ? (row, y) => (layout.current.rows[row] = y + 48) : undefined
+                        }
+                      />
+                    </View>
+                  );
+                })}
               </Animated.View>
             </GestureDetector>
           </ScrollView>

@@ -9,6 +9,7 @@ import {
   type PlanSummary,
   useCurrentPlan,
   usePlanStatus,
+  usePlanWeekDone,
 } from '@/shared/data/plans';
 import { muscleShares } from '@/shared/data/muscles';
 import {
@@ -56,6 +57,7 @@ export function TrainingScreen() {
   const { days, isLoading: weekLoading } = useWeekWorkouts(today);
   const { plan, profile, isLoading: planLoading } = useCurrentPlan();
   const status = usePlanStatus(plan);
+  const { data: doneThisWeek } = usePlanWeekDone(plan?.id, status?.week);
   const { data: routines = [], isLoading: routinesLoading } = useRoutines();
   const { data: lastDone = {}, isLoading: lastDoneLoading } = useLastDone();
   const meta = useRoutineMeta();
@@ -140,6 +142,7 @@ export function TrainingScreen() {
                 routines={planRoutines}
                 meta={planMeta}
                 focus={planFocus}
+                done={(r) => !!doneThisWeek?.has(r.id)}
                 startingId={startingId}
                 onStart={start}
               />

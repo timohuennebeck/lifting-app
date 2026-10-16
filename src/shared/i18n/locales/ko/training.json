@@ -16,7 +16,8 @@
   "list": {
     "start": "{{name}} 시작",
     "minutes": "{{count}}분",
-    "addRoutine": "루틴 추가"
+    "addRoutine": "루틴 추가",
+    "done": "완료"
   },
   "card": {
     "perBlock_one": "블록당 {{count}}회 운동",

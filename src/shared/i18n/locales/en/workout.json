@@ -21,8 +21,7 @@
     "repsCell": "Reps",
     "secondsCell": "Seconds",
     "done": "Set done",
-    "addSet": "Add set",
-    "removeSet": "Remove set"
+    "addSet": "Add set"
   },
   "rest": {
     "title": "Rest",

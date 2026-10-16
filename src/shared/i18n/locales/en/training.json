@@ -16,7 +16,8 @@
   "list": {
     "start": "Start {{name}}",
     "minutes": "{{count}} min",
-    "addRoutine": "Add workout"
+    "addRoutine": "Add workout",
+    "done": "Done"
   },
   "card": {
     "perBlock_one": "{{count}} workout per block",
