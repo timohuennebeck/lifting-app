@@ -24,6 +24,7 @@ import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
 import { Icon } from '@/shared/ui/icon';
+import { ScaleBar } from '@/shared/ui/scale-bar';
 import { Text } from '@/shared/ui/text';
 
 import { BodyPhotoCard, CompareArrow, NextCheckCard } from '../components/body-photo-card';
@@ -44,44 +45,33 @@ const openCompare = (side: 'a' | 'b') =>
 // the edges (about 9pt across), enough to cover the card; the card clips them to its corners.
 const HATCH = Array.from({ length: 16 }, (_, k) => `M${(k + 1) * 13} 0L0 ${(k + 1) * 13}`).join('');
 
-interface PlaceholderCardProps {
+interface LockedCardProps {
   letter: 'A' | 'B';
-  /** Hatched, with a padlock instead of the question mark (under 18). */
-  locked?: boolean;
   tilt: number;
 }
 
-/** An empty photo card of the comparison, tilted, with a question mark or a padlock. */
-function PlaceholderCard({ letter, locked, tilt }: PlaceholderCardProps) {
+/** A locked photo card of the comparison (under 18): tilted, hatched, with a padlock. */
+function LockedCard({ letter, tilt }: LockedCardProps) {
   return (
     <View
-      className={cn(
-        'h-30 w-23 items-center justify-center rounded-[18px] border-[1.5px] border-track bg-surface',
-        locked && 'overflow-hidden',
-      )}
+      className="h-30 w-23 items-center justify-center overflow-hidden rounded-[18px] border-[1.5px] border-track bg-surface"
       style={{ transform: [{ rotate: `${tilt}deg` }] }}
     >
-      {locked ? (
-        <Svg width="100%" height="100%" style={StyleSheet.absoluteFill}>
-          <Path d={HATCH} stroke={colors.fg} strokeOpacity={0.05} strokeWidth={1.5} />
-        </Svg>
-      ) : null}
+      <Svg width="100%" height="100%" style={StyleSheet.absoluteFill}>
+        <Path d={HATCH} stroke={colors.fg} strokeOpacity={0.05} strokeWidth={1.5} />
+      </Svg>
       <View className="absolute top-2 left-2 size-6 items-center justify-center rounded-full bg-control">
         <Text variant="caption" tone="subtle" className="text-xs">
           {letter}
         </Text>
       </View>
-      {locked ? (
-        <Icon name="lock" size={26} color={colors.track} />
-      ) : (
-        <Text className="font-inter-semibold text-[34px] leading-10 text-track">?</Text>
-      )}
+      <Icon name="lock" size={26} color={colors.track} />
     </View>
   );
 }
 
 /**
- * The gap between the two placeholder cards, with what sits in it centred and drawn over the
+ * The gap between the two locked cards, with what sits in it centred and drawn over the
  * cards' edges where it is wider. A column of the row rather than an absolute overlay: the row
  * is only as wide as its cards, and percentages of that size don't centre reliably on device.
  */
@@ -97,7 +87,7 @@ interface NoChecksProps {
   onStart: () => void;
 }
 
-/** Empty state before the first check: two blank cards to compare later. */
+/** Empty state before the first check: the score still a question mark on its empty scale. */
 function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
   const { t } = useTranslation('body');
   if (!allowed) {
@@ -109,7 +99,7 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
         >
-          <PlaceholderCard letter="A" locked tilt={-7} />
+          <LockedCard letter="A" tilt={-7} />
           <CardGap className="w-8">
             <View
               className="size-14.5 items-center justify-center rounded-full border-[3px] border-bg bg-accent"
@@ -120,7 +110,7 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
               </Text>
             </View>
           </CardGap>
-          <PlaceholderCard letter="B" locked tilt={7} />
+          <LockedCard letter="B" tilt={7} />
         </View>
         <Text variant="headline" className="mt-9 text-center">
           {t('adultsOnly.title')}
@@ -137,15 +127,26 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
   return (
     <View className="flex-1 items-center justify-center px-8 pt-6 pb-12">
       <View
-        className="flex-row items-center"
+        className="w-full max-w-80 items-center"
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
       >
-        <PlaceholderCard letter="A" tilt={-7} />
-        <CardGap className="w-14">
-          <CompareArrow inline muted />
-        </CardGap>
-        <PlaceholderCard letter="B" tilt={7} />
+        <View className="flex-row items-baseline gap-1.5">
+          <Text className="font-inter-bold text-[104px] leading-26 text-track">?</Text>
+          <Text variant="label" className="text-xl text-dim">
+            /100
+          </Text>
+        </View>
+        <View className="mt-5 w-full">
+          <ScaleBar />
+          <View className="mt-3 flex-row justify-between">
+            {[0, 50, 100].map((n) => (
+              <Text key={n} variant="caption" className="font-inter-semibold text-xs text-dim">
+                {n}
+              </Text>
+            ))}
+          </View>
+        </View>
       </View>
       <Text variant="headline" className="mt-9 text-center">
         {t('empty.title')}

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { scheduleOnRN } from 'react-native-worklets';
-import Svg, { Circle, ClipPath, Defs, G, Path } from 'react-native-svg';
+import Svg, { Circle } from 'react-native-svg';
 
 import { colors } from '@/shared/lib/theme';
 
@@ -11,21 +11,13 @@ const C = SIZE / 2;
 const RINGS = [95, 102, 109, 116];
 const DOTS = 90;
 
+/** Each dot with its place around the ring (0 at 12 o'clock, clockwise to 1). */
 const DOT_POINTS = RINGS.flatMap((r) =>
   Array.from({ length: DOTS }, (_, i) => {
     const a = (i / DOTS) * 2 * Math.PI;
-    return { x: C + r * Math.sin(a), y: C - r * Math.cos(a) };
+    return { x: C + r * Math.sin(a), y: C - r * Math.cos(a), at: i / DOTS };
   }),
 );
-
-function sectorPath(fraction: number) {
-  if (fraction >= 0.999) return `M0 0H${SIZE}V${SIZE}H0Z`;
-  const a = fraction * 2 * Math.PI;
-  const R = SIZE;
-  const x = C + R * Math.sin(a);
-  const y = C - R * Math.cos(a);
-  return `M${C} ${C}L${C} ${C - R}A${R} ${R} 0 ${fraction > 0.5 ? 1 : 0} 1 ${x} ${y}Z`;
-}
 
 export interface DialRingProps {
   /** 0–1, how much of the ring is filled. */
@@ -35,7 +27,10 @@ export interface DialRingProps {
   children?: ReactNode;
 }
 
-/** Dotted circular dial; drag anywhere on it to set the value (Duration). */
+/**
+ * Dotted circular dial; drag anywhere on it to set the value (Duration). Filled clockwise from
+ * 12 o'clock, a whole dot at a time: no clip path, so reaching the full ring doesn't flicker.
+ */
 export function DialRing({ fraction, onChange, children }: DialRingProps) {
   const pan = Gesture.Pan()
     .minDistance(0)
@@ -55,19 +50,16 @@ export function DialRing({ fraction, onChange, children }: DialRingProps) {
         className="items-center justify-center self-center"
       >
         <Svg width={SIZE} height={SIZE} style={{ position: 'absolute' }}>
-          <Defs>
-            <ClipPath id="dial-fill">
-              <Path d={sectorPath(fraction)} />
-            </ClipPath>
-          </Defs>
           {DOT_POINTS.map((p, i) => (
-            <Circle key={i} cx={p.x} cy={p.y} r={2.5} fill={colors.track} />
+            <Circle
+              key={i}
+              cx={p.x}
+              cy={p.y}
+              r={2.5}
+              // The small margin keeps a full ring full despite rounding.
+              fill={p.at < fraction - 1e-6 ? colors.accent : colors.track}
+            />
           ))}
-          <G clipPath="url(#dial-fill)">
-            {DOT_POINTS.map((p, i) => (
-              <Circle key={i} cx={p.x} cy={p.y} r={2.5} fill={colors.accent} />
-            ))}
-          </G>
         </Svg>
         {children}
       </View>

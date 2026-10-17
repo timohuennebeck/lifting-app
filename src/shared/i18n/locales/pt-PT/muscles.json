@@ -33,7 +33,7 @@
     "pause_one": "Pausa · {{count}} sem.",
     "pause_other": "Pausa · {{count}} sem.",
     "new": "Novo",
-    "locked": "Ainda sem nível",
+    "locked": "Sem nível",
     "find": "Encontrar exercício",
     "tiers": {
       "beginner": "Iniciante",

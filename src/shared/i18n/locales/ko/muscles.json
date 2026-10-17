@@ -33,7 +33,7 @@
     "pause_one": "휴식 중 · {{count}}주",
     "pause_other": "휴식 중 · {{count}}주",
     "new": "NEW",
-    "locked": "아직 레벨 없음",
+    "locked": "레벨 없음",
     "find": "운동 찾기",
     "tiers": {
       "beginner": "입문",

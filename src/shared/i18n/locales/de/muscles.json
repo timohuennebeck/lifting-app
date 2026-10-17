@@ -33,7 +33,7 @@
     "pause_one": "Pause · {{count}} Wo.",
     "pause_other": "Pause · {{count}} Wo.",
     "new": "Neu",
-    "locked": "Noch kein Level",
+    "locked": "Kein Level vorhanden",
     "find": "Übung finden",
     "tiers": {
       "beginner": "Anfänger",
