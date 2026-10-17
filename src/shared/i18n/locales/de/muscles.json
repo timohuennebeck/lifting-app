@@ -36,9 +36,9 @@
     "locked": "Kein Level vorhanden",
     "find": "Übung finden",
     "tiers": {
-      "beginner": "Anfänger",
-      "novice": "Aufsteiger",
-      "intermediate": "Fortgeschritten",
+      "beginner": "Einsteiger",
+      "novice": "Fortgeschritten",
+      "intermediate": "Trainiert",
       "advanced": "Erfahren",
       "elite": "Elite"
     },
