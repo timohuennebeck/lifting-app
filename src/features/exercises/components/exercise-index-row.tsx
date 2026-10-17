@@ -48,8 +48,11 @@ export function ExerciseIndexRow({ item, trailing, dimmed, ...pressable }: Exerc
           <Text variant="label" numberOfLines={2} className="leading-5">
             {item.name}
           </Text>
-          <Text variant="caption" tone="subtle" className="mt-0.5 font-inter">
-            {t(`groups.${item.group}`)}
+          {/* Found by its name in another language: that name first, so the match makes sense. */}
+          <Text variant="caption" tone="subtle" numberOfLines={1} className="mt-0.5 font-inter">
+            {item.foundAs
+              ? `${item.foundAs} · ${t(`groups.${item.group}`)}`
+              : t(`groups.${item.group}`)}
           </Text>
         </View>
         {trailing}
