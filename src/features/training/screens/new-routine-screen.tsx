@@ -31,7 +31,7 @@ export function NewRoutineScreen() {
     await attempt('Creating the routine failed', async () => {
       const id = await createRoutine(requireUserId(), name, planId ?? null);
       haptics.success();
-      router.replace(`/routine/${id}`);
+      router.replace({ pathname: '/routine/[id]', params: { id, created: '1' } });
     });
     setSaving(false);
   };

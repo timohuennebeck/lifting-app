@@ -59,6 +59,7 @@
     "duration": "예상 시간: {{minutes}}분",
     "emptyHint": "+를 탭해 첫 운동을 추가해 보세요.",
     "start": "운동 시작",
+    "save": "루틴 저장",
     "addExercise": "운동 추가",
     "more": "옵션 더 보기",
     "exerciseMenu": "{{name}} 옵션",

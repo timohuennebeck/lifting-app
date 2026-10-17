@@ -22,10 +22,11 @@ import { useStartRoutine } from '../hooks/use-start-routine';
 
 /**
  * Routine overview: its name on top with the plan it is in, the muscles, the editable exercise
- * list and the start CTA (03·0b). "⋯" renames, copies or deletes it.
+ * list and the start CTA (03·0b). Just created (`?created=1`) the CTA saves it instead: changes
+ * are kept as they are made, so it goes back. "⋯" renames, copies or deletes it.
  */
 export function RoutineScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, created } = useLocalSearchParams<{ id: string; created?: string }>();
   const { t } = useTranslation(['training', 'common']);
   const insets = useSafeAreaInsets();
   const { data: found, isLoading } = useRoutineDetail(id);
@@ -97,7 +98,7 @@ export function RoutineScreen() {
       <Animated.ScrollView
         ref={scrollRef}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + (empty ? 40 : 130) }}
+        contentContainerStyle={{ paddingBottom: insets.bottom + (empty && !created ? 40 : 130) }}
       >
         <EditableExerciseList
           title={routine.name}
@@ -115,7 +116,14 @@ export function RoutineScreen() {
         />
       </Animated.ScrollView>
 
-      {!empty ? (
+      {created ? (
+        <BottomFade>
+          <Button
+            label={t('overview.save')}
+            onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+          />
+        </BottomFade>
+      ) : !empty ? (
         <BottomFade>
           <Button
             label={t('overview.start')}

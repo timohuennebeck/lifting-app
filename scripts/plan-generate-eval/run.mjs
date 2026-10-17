@@ -69,7 +69,7 @@ const PROFILES = [
   ['11', 'en', 'strength', 'gym', 3, 'ppl', 60, 'advanced', []],
   ['12', 'de', 'hypertrophy', 'gym', 6, 'full_body', 30, 'advanced', []],
   ['13', 'de', 'hypertrophy', 'gym', 4, 'upper_lower', 120, 'intermediate', ['lats', 'upper_back']],
-  ['14', 'pt-BR', 'strength_hypertrophy', 'home', 5, 'bro', 20, 'intermediate', ['abs']],
+  ['14', 'pt-BR', 'strength_hypertrophy', 'home', 5, 'bro', 30, 'intermediate', ['abs']],
   ['15', 'de', 'hypertrophy', 'gym', 3, null, 60, null, ['quads']],
   ['16', 'de', 'hypertrophy', 'gym', 4, 'upper_lower', 60, 'intermediate', []],
   ['17', 'en', 'hypertrophy', 'gym', 6, 'arnold', 60, 'intermediate', []],

@@ -5,21 +5,20 @@ import { View } from 'react-native';
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { haptics } from '@/shared/lib/haptics';
-import { clamp } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { DialRing } from '@/shared/ui/dial-ring';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
 import { useCreateStep } from '../hooks/use-create-step';
-
-const DURATION = { min: 10, max: 120, step: 5 } as const;
+import { clampMinutes, SESSION_MINUTES as DURATION } from '../lib/plan-answers';
 
 export function DurationScreen() {
   const { t } = useTranslation(['planCreate', 'common']);
   const counter = useCreateStep('duration');
   const { step } = usePlanFlow();
-  const { sessionMinutes } = useDraft();
+  // A length saved before the 30-minute minimum shows within the range.
+  const sessionMinutes = clampMinutes(useDraft().sessionMinutes);
   const update = useUpdateDraft();
 
   function set(minutes: number) {
@@ -33,7 +32,7 @@ export function DurationScreen() {
     // Don't jump across the 12 o'clock seam while dragging.
     if (sessionMinutes >= 100 && next < 30) next = DURATION.max;
     if (sessionMinutes <= 30 && next > 100) next = DURATION.min;
-    set(clamp(next, DURATION.min, DURATION.max));
+    set(clampMinutes(next));
   }
 
   return (
@@ -43,7 +42,10 @@ export function DurationScreen() {
       footer={
         <Button
           label={t('common:actions.continue')}
-          onPress={() => router.push(step('/create/building'))}
+          onPress={() => {
+            update({ sessionMinutes });
+            router.push(step('/create/building'));
+          }}
         />
       }
     >

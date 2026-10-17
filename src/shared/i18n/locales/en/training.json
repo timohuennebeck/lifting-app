@@ -59,6 +59,7 @@
     "duration": "Estimated duration: {{minutes}} min.",
     "emptyHint": "Tap + to add your first exercise.",
     "start": "Start workout",
+    "save": "Save workout",
     "addExercise": "Add exercise",
     "more": "More options",
     "exerciseMenu": "Options for {{name}}",

@@ -72,8 +72,8 @@ export function parseAnswers(value: unknown): PlanAnswers | null {
     sessions > MAX_SESSIONS_PER_WEEK ||
     typeof minutes !== 'number' ||
     !Number.isInteger(minutes) ||
-    minutes < 10 ||
-    minutes > 180 ||
+    minutes < 30 ||
+    minutes > 120 ||
     !Array.isArray(home) ||
     home.length > MAX_HOME_EQUIPMENT ||
     !home.every(isSlug)

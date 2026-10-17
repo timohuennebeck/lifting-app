@@ -59,6 +59,7 @@
     "duration": "Duração estimada: {{minutes}} min.",
     "emptyHint": "Toca em + para adicionar o teu primeiro exercício.",
     "start": "Iniciar treino",
+    "save": "Guardar treino",
     "addExercise": "Adicionar exercício",
     "more": "Mais opções",
     "exerciseMenu": "Opções de {{name}}",

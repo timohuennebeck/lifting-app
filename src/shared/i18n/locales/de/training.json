@@ -59,6 +59,7 @@
     "duration": "Geschätzte Dauer: {{minutes}} Min.",
     "emptyHint": "Tippe auf +, um deine erste Übung hinzuzufügen.",
     "start": "Training starten",
+    "save": "Training speichern",
     "addExercise": "Übung hinzufügen",
     "more": "Mehr",
     "exerciseMenu": "Optionen für {{name}}",

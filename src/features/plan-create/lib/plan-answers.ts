@@ -2,9 +2,17 @@ import type { OnboardingDraft } from '@/features/onboarding/stores/onboarding-st
 import type { ImportFailure } from '@/features/plan-import/lib/plan-import-service';
 import type { EquipmentAccess, Experience, Goal, ProfilePatch, Split } from '@/shared/data/profile';
 import { clampSessions } from '@/shared/data/plans';
+import { clamp } from '@/shared/lib/math';
 import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 
 import { chosenSplit } from './splits';
+
+/** Session length the plan is made for, in minutes (the dial's range and steps). */
+export const SESSION_MINUTES = { min: 30, max: 120, step: 5 } as const;
+
+/** A session length within the dial's range. */
+export const clampMinutes = (minutes: number) =>
+  clamp(minutes, SESSION_MINUTES.min, SESSION_MINUTES.max);
 
 /** What the AI makes the plan from (generate-plan); no name, no body data. */
 export interface PlanAnswers {
@@ -30,7 +38,7 @@ export function answersFromDraft(draft: OnboardingDraft): PlanAnswers {
     homeEquipment: draft.equipment === 'home' ? draft.homeEquipment : [],
     sessionsPerWeek: clampSessions(draft.sessionsPerWeek),
     split: chosenSplit(draft),
-    sessionMinutes: draft.sessionMinutes,
+    sessionMinutes: clampMinutes(draft.sessionMinutes),
     experience: draft.experience,
   };
 }
