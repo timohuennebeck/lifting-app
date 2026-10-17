@@ -4,6 +4,7 @@ import { clearLocalPhotos } from '@/features/progress-check/lib/photo-files';
 import { useProgressCheckStore } from '@/features/progress-check/stores/progress-check-store';
 import { useCompareStore } from '@/features/body/stores/compare-store';
 import { useLevelSeenStore } from '@/features/muscles/stores/level-seen-store';
+import { useRankLiftStore } from '@/features/muscles/stores/rank-lift-store';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { purchases } from '@/features/paywall/lib/purchases-service';
 import {
@@ -68,6 +69,7 @@ export function useAuthListener() {
         useCompareStore.getState().reset();
         // And the muscle levels last seen on the Level tab.
         useLevelSeenStore.getState().reset();
+        useRankLiftStore.getState().reset();
         // The next Google sign-in asks for the account again instead of reusing this one.
         signOutOfGoogle();
         return;

@@ -55,6 +55,7 @@
   "search": {
     "open": "Pesquisar exercícios",
     "title": "Exercícios",
+    "pickRank": "Exercício para as categorias",
     "recent": "Treinados recentemente",
     "forMuscle": "Para o nível de {{muscle}}",
     "recordA11y": "Recorde pessoal: {{value}}, último a {{date}}"

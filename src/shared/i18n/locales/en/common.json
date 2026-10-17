@@ -47,6 +47,7 @@
   "search": {
     "open": "Search exercises",
     "title": "Exercises",
+    "pickRank": "Exercise for ranks",
     "recent": "Recently trained",
     "forMuscle": "Builds your {{muscle}} level",
     "recordA11y": "Personal record: {{value}}, last on {{date}}"

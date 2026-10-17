@@ -51,21 +51,31 @@ function RecordSummary({ exerciseId, record, units }: RecordSummaryProps) {
   );
 }
 
+/** Picking an exercise instead of opening it, e.g. the lift of the ranks screen. */
+export interface ExercisePick {
+  /** Marked with a check. */
+  selectedId: string | null;
+  /** Only these exercises are listed. */
+  allows: (exerciseId: string) => boolean;
+  onPick: (exerciseId: string) => void;
+}
+
 export interface ExerciseResultsProps {
   query: string;
   /** Height of the search bar over the foot of the list, so the last rows clear it. */
   bottomInset: number;
   /** Opened for a muscle (from a Level card): the exercises making its level first. */
   muscle?: MuscleId | null;
+  pick?: ExercisePick;
 }
 
 /**
  * The exercises matching the search and the muscle chip picked above them: the trained ones
  * first, last done on top, with their heaviest set (★); then the others A–Z with the letter
  * index. For a muscle, its exercises come first instead, those working it most on top. A tap
- * opens the exercise on its "Übung" tab.
+ * opens the exercise on its "Übung" tab, or with `pick` picks it (the picked one checked).
  */
-export function ExerciseResults({ query, bottomInset, muscle }: ExerciseResultsProps) {
+export function ExerciseResults({ query, bottomInset, muscle, pick }: ExerciseResultsProps) {
   const { t } = useTranslation(['common', 'muscles']);
   const units = useUnits();
   const { data: records } = useExerciseRecords();
@@ -77,7 +87,8 @@ export function ExerciseResults({ query, bottomInset, muscle }: ExerciseResultsP
       query={query}
       bottomInset={bottomInset}
       initialGroup={muscle ? groupOfMuscle(muscle) : null}
-      split={(options) => {
+      split={(found) => {
+        const options = pick ? found.filter((o) => pick.allows(o.id)) : found;
         if (muscle) {
           const share = (o: ExerciseOption) => (rows[o.id] ? levelShare(rows[o.id], muscle) : 0);
           return {
@@ -98,19 +109,31 @@ export function ExerciseResults({ query, bottomInset, muscle }: ExerciseResultsP
           rest: options.filter((o) => !records?.has(o.id)),
         };
       }}
-      renderRow={(item) => (
-        <ExerciseIndexRow
-          item={item}
-          activeScale={0.98}
-          accessibilityRole="button"
-          onPress={() => router.push({ pathname: '/exercise/[id]', params: { id: item.id } })}
-          trailing={
-            item.record ? (
-              <RecordSummary exerciseId={item.id} record={item.record} units={units} />
-            ) : null
-          }
-        />
-      )}
+      renderRow={(item) => {
+        const selected = pick?.selectedId === item.id;
+        return (
+          <ExerciseIndexRow
+            item={item}
+            activeScale={0.98}
+            accessibilityRole="button"
+            accessibilityState={pick ? { selected } : undefined}
+            onPress={() =>
+              pick
+                ? pick.onPick(item.id)
+                : router.push({ pathname: '/exercise/[id]', params: { id: item.id } })
+            }
+            trailing={
+              selected ? (
+                <View className="size-7 items-center justify-center rounded-full bg-accent">
+                  <Icon name="check" size={13} color={colors.onAccent} />
+                </View>
+              ) : item.record ? (
+                <RecordSummary exerciseId={item.id} record={item.record} units={units} />
+              ) : null
+            }
+          />
+        );
+      }}
     />
   );
 }

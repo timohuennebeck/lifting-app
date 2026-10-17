@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
@@ -8,8 +9,10 @@ import { useUnits } from '@/shared/data/profile';
 import { cn } from '@/shared/lib/cn';
 import { formatNumber, toDisplayWeight, weightUnit } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
+import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
 import { MuscleCircle, type MuscleId } from '@/shared/ui/muscle-map';
+import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Sheet } from '@/shared/ui/sheet';
@@ -82,8 +85,9 @@ function MuscleRow({ muscles }: { muscles: MuscleId[] }) {
 
 /**
  * Ränge: the user's rank by the overall level, with the way to the next, then all five ranks
- * with their levels, the bench press each one takes for this user (body weight and sex) and
- * the muscles in it now. "i" explains how levels and ranks are worked out.
+ * with their levels, what each one takes in a lift for this user (body weight and sex) and the
+ * muscles in it now. The lift is picked in the exercise search from the pill above the ranks.
+ * "i" explains how levels and ranks are worked out.
  */
 export function RanksScreen() {
   const { t, i18n } = useTranslation('muscles');
@@ -109,18 +113,15 @@ export function RanksScreen() {
   const target = lift && levelTarget(1, lift.exercise, bodyWeight, sex, lift.reps);
   const unit =
     target?.weightKg === undefined ? t('ranks.repsUnit') : `${weightUnit(units)} × ${target.reps}`;
-  // Under each rank: what it takes in the user's main lift, or an example lift without one.
+  // Under each rank: what it takes in the lift of the pill above.
   const example = (k: number) => {
     const after = TIERS[k + 1];
     const from = amount(TIERS[k].from);
     const to = after && amount(after.from);
     if (!lift || from === null || to === null) return null;
-    const range = !k
-      ? t('ranks.upTo', { value: `${to} ${unit}` })
-      : !after
-        ? t('ranks.over', { value: `${from} ${unit}` })
-        : t('ranks.between', { from, to, unit });
-    return t(lift.own ? 'ranks.forYou' : 'ranks.example', { exercise: exerciseName, range });
+    if (!k) return t('ranks.upTo', { value: `${to} ${unit}` });
+    if (!after) return t('ranks.over', { value: `${from} ${unit}` });
+    return t('ranks.between', { from, to, unit });
   };
   // The muscles whose level lies in each rank, the strongest first.
   const musclesIn = (from: number, to: number) =>
@@ -184,9 +185,29 @@ export function RanksScreen() {
             </View>
           </View>
 
-          <Text variant="overline" tone="subtle" className="px-5 pt-8 pb-1 text-[11px]">
-            {t('ranks.all')}
-          </Text>
+          <View className="flex-row items-center justify-between gap-3 px-5 pt-8 pb-1">
+            <Text variant="overline" tone="subtle" className="text-[11px]">
+              {t('ranks.all')}
+            </Text>
+            {lift ? (
+              <PressableScale
+                haptic="select"
+                accessibilityHint={t('ranks.change')}
+                onPress={() =>
+                  router.push({
+                    pathname: '/search',
+                    params: { pick: 'rank', selected: lift.exerciseId },
+                  })
+                }
+                className="h-8 max-w-[60%] flex-row items-center gap-1.5 rounded-full bg-elevated px-3"
+              >
+                <Text variant="caption" numberOfLines={1} className="shrink font-inter-semibold">
+                  {lift.own ? exerciseName : t('ranks.example', { exercise: exerciseName })}
+                </Text>
+                <Icon name="chevron-down" size={11} color={colors.subtle} />
+              </PressableScale>
+            ) : null}
+          </View>
           <View className="gap-6 px-5 pt-3">
             {TIERS.map((rank, k) => {
               const reached = level >= rank.from;

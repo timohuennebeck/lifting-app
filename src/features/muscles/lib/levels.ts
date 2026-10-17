@@ -195,7 +195,7 @@ function shareOf(set: LevelSet, exercise: LevelExercise, bodyWeight: number, fac
  * How a level can be put for an exercise: as a weight for some reps (a loaded lift), as reps (an
  * exercise scored in reps), or not at all (assisted, body weight plus load, seconds, no standard).
  */
-function targetKind(exercise: LevelExercise): 'weight' | 'reps' | null {
+export function targetKind(exercise: LevelExercise): 'weight' | 'reps' | null {
   const { standard, measures } = exercise;
   if (!standard) return null;
   if (measures.includes('weight') && measures.includes('reps')) {
@@ -229,10 +229,10 @@ export function levelTarget(
 }
 
 /**
- * The exercise done in the most sets over the last 12 weeks that a level can be put for, with
- * its usual reps (the median), or null without one.
+ * Per exercise a level can be put for, its sets over the last 12 weeks: how many, their reps
+ * and the last one's time.
  */
-export function mainLift(
+function recentLifts(
   sets: LevelSet[],
   exercises: (id: string) => LevelExercise | undefined,
   now: Date,
@@ -250,12 +250,31 @@ export function mainLift(
     if (set.startedAt > entry.last) entry.last = set.startedAt;
     byExercise.set(set.exerciseId, entry);
   }
-  const best = [...byExercise].sort(
+  return byExercise;
+}
+
+const median = (values: number[]) =>
+  values.length ? [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)] : null;
+
+/**
+ * The lift to put levels in numbers with and its usual reps (the median over 12 weeks): the one
+ * `chosen`, else the one done in the most sets. Null without either.
+ */
+export function rankLift(
+  sets: LevelSet[],
+  exercises: (id: string) => LevelExercise | undefined,
+  now: Date,
+  chosen: string | null,
+) {
+  const recent = recentLifts(sets, exercises, now);
+  const chosenExercise = chosen ? exercises(chosen) : undefined;
+  if (chosen && chosenExercise && targetKind(chosenExercise)) {
+    return { exerciseId: chosen, reps: median(recent.get(chosen)?.reps ?? []) };
+  }
+  const best = [...recent].sort(
     ([, a], [, b]) => b.count - a.count || b.last.localeCompare(a.last),
   )[0];
-  if (!best) return null;
-  const reps = best[1].reps.sort((a, b) => a - b);
-  return { exerciseId: best[0], reps: reps[Math.floor(reps.length / 2)] ?? 1 };
+  return best ? { exerciseId: best[0], reps: median(best[1].reps) } : null;
 }
 
 /** The region an exercise's standard belongs to: that of the muscle it works most. */

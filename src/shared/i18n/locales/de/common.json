@@ -47,6 +47,7 @@
   "search": {
     "open": "Übungen suchen",
     "title": "Übungen",
+    "pickRank": "Übung für Ränge",
     "recent": "Zuletzt trainiert",
     "forMuscle": "Fürs Level · {{muscle}}",
     "recordA11y": "Bestleistung: {{value}}, zuletzt am {{date}}"
