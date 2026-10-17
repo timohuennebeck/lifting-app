@@ -4,6 +4,7 @@ import { View } from 'react-native';
 
 import { useProfile } from '@/shared/data/profile';
 import { useToday } from '@/shared/hooks/use-today';
+import { toIsoDate } from '@/shared/lib/date';
 import { formatDate } from '@/shared/lib/format';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -19,8 +20,8 @@ export interface TabHeaderProps {
 }
 
 /**
- * Header shared by all tabs: avatar, today's date and greeting, then the weight history and
- * search (exercises and their records), always in the same place.
+ * Header shared by all tabs: avatar, today's date and greeting, then the weight calendar, the
+ * weight history and search (exercises and their records), always in the same place.
  */
 export function TabHeader({ greeting = true, settings = false }: TabHeaderProps) {
   const { t } = useTranslation(['common', 'weight']);
@@ -51,6 +52,14 @@ export function TabHeader({ greeting = true, settings = false }: TabHeaderProps)
         <View className="flex-1" />
       )}
       <View className="flex-row gap-2">
+        <IconButton
+          // A new day remounts it, so the date drawn on the icon turns over.
+          key={toIsoDate(new Date(today))}
+          icon="calendar"
+          iconSize={19}
+          accessibilityLabel={t('weight:history.calendar')}
+          onPress={() => router.push('/body-weight/calendar')}
+        />
         <IconButton
           icon="scale"
           iconSize={19}
