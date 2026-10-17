@@ -4,26 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { TabScreen } from '@/shared/components/tab-screen';
-import { cn } from '@/shared/lib/cn';
 import { DAY_MS } from '@/shared/lib/date';
+import { colors } from '@/shared/lib/theme';
+import { Icon } from '@/shared/ui/icon';
 import { BodyMaps, MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { LevelCard } from '../components/level-card';
 import { useMuscleLevels } from '../hooks/use-muscle-levels';
-import {
-  type LevelRegion,
-  MAIN_MUSCLES,
-  type MuscleLevel,
-  overallLevel,
-  RARE_MUSCLES,
-  regionOfMuscle,
-  tierOf,
-} from '../lib/levels';
+import { MAIN_MUSCLES, type MuscleLevel, overallLevel, RARE_MUSCLES, tierOf } from '../lib/levels';
 import { useLevelSeenStore } from '../stores/level-seen-store';
 
-const FILTERS: ('all' | LevelRegion)[] = ['all', 'upper', 'core', 'lower'];
 const WEEK_MS = 7 * DAY_MS;
 
 const floors = (levels: ReadonlyMap<MuscleId, MuscleLevel>) =>
@@ -37,7 +29,6 @@ const floors = (levels: ReadonlyMap<MuscleId, MuscleLevel>) =>
 export function LevelScreen() {
   const { t } = useTranslation('muscles');
   const { levels, before, pauseSince, end, isLoading } = useMuscleLevels();
-  const [filter, setFilter] = useState<'all' | LevelRegion>('all');
 
   // Levels seen when the tab was last left: higher ones now get "Neu". Saved when leaving.
   const [seen, setSeen] = useState(() => useLevelSeenStore.getState().levels);
@@ -58,10 +49,7 @@ export function LevelScreen() {
   const overall = overallLevel(levels);
   const trained = [...levels.keys()];
 
-  const shown = MUSCLE_IDS.filter(
-    (m) =>
-      (levels.has(m) || !RARE_MUSCLES.has(m)) && (filter === 'all' || regionOfMuscle(m) === filter),
-  ).sort((a, b) => {
+  const shown = MUSCLE_IDS.filter((m) => levels.has(m) || !RARE_MUSCLES.has(m)).sort((a, b) => {
     const la = levels.get(a)?.value;
     const lb = levels.get(b)?.value;
     if (la !== undefined || lb !== undefined) return (lb ?? -1) - (la ?? -1);
@@ -101,7 +89,15 @@ export function LevelScreen() {
       <BodyMaps selected={trained} />
       {isLoading ? null : (
         <>
-          <View className="gap-3 px-5 pt-1">
+          {/* The overall level opens the ranks: where it stands and what each rank takes. */}
+          <PressableScale
+            haptic="tap"
+            activeScale={0.98}
+            accessibilityRole="button"
+            accessibilityLabel={t('ranks.open')}
+            onPress={() => router.push('/ranks')}
+            className="gap-3 px-5 pt-1"
+          >
             <Text variant="overline" tone="subtle" className="text-[11px]">
               {t('level.overall')}
             </Text>
@@ -112,42 +108,18 @@ export function LevelScreen() {
               <Text tone="subtle" className="mb-2 text-lg">
                 /100
               </Text>
-              {overall >= 1 ? (
-                <View className="mb-2.5 ml-auto rounded-full bg-accent/15 px-3 py-1">
-                  <Text variant="caption" tone="accent">
-                    {t(`level.tiers.${tierOf(Math.floor(overall))}`)}
-                  </Text>
-                </View>
-              ) : null}
+              <View className="mb-2.5 ml-auto flex-row items-center gap-1 rounded-full bg-accent/15 py-1 pr-2 pl-3">
+                <Text variant="caption" tone="accent">
+                  {t(`level.tiers.${tierOf(Math.max(Math.floor(overall), 1))}`)}
+                </Text>
+                <Icon name="chevron-right" size={8} color={colors.accent} />
+              </View>
             </View>
             <View className="h-2 overflow-hidden rounded-full bg-control">
               <View className="h-full rounded-full bg-accent" style={{ width: `${overall}%` }} />
             </View>
-          </View>
-          <View className="flex-row flex-wrap gap-2 px-4 pt-6 pb-1">
-            {FILTERS.map((f) => (
-              <PressableScale
-                key={f}
-                haptic="select"
-                accessibilityRole="tab"
-                accessibilityState={{ selected: filter === f }}
-                onPress={() => setFilter(f)}
-                className={cn(
-                  'h-9 justify-center rounded-full px-4',
-                  filter === f ? 'bg-accent' : 'bg-surface',
-                )}
-              >
-                <Text
-                  variant="caption"
-                  tone={filter === f ? 'onAccent' : 'default'}
-                  className="text-sm"
-                >
-                  {t(`level.filters.${f}`)}
-                </Text>
-              </PressableScale>
-            ))}
-          </View>
-          <View className="gap-2 px-4 pt-2.5">
+          </PressableScale>
+          <View className="gap-2 px-4 pt-7">
             {rows.map((row) => (
               <View key={row[0]} className="flex-row gap-2">
                 {row.map((muscle) => (

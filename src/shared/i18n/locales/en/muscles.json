@@ -41,12 +41,26 @@
       "intermediate": "Intermediate",
       "advanced": "Advanced",
       "elite": "Elite"
-    },
-    "filters": {
-      "all": "All",
-      "upper": "Upper body",
-      "core": "Core",
-      "lower": "Lower body"
     }
+  },
+  "ranks": {
+    "title": "Ranks",
+    "yours": "Your rank",
+    "all": "All ranks",
+    "levelShort": "Lvl {{level}}",
+    "levels": "Lvl {{from}}–{{to}}",
+    "toNext": "{{levels}} to {{tier}}",
+    "top": "Highest rank",
+    "forYou": "For you: {{exercise}} {{range}}",
+    "upTo": "up to {{value}}",
+    "over": "over {{value}}",
+    "between": "{{from}}–{{to}} {{unit}}",
+    "more": "+{{n}}",
+    "open": "View ranks",
+    "info": "How ranks work",
+    "infoStandard": "Every exercise has a standard. Your best set is compared with it: the standard is level 50, double it is level 100.",
+    "infoLevel": "Each muscle gets its level from your three best exercises, your overall level from the 13 main muscles. Bigger muscles count more.",
+    "infoFair": "Body weight and sex are taken into account. After 12 weeks off, a level drops slowly, but it never disappears.",
+    "infoExample": "The {{exercise}} numbers show roughly what one-rep max a rank takes for you."
   }
 }

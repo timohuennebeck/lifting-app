@@ -34,6 +34,23 @@ const TIER_STARTS: readonly (readonly [level: number, tier: Tier])[] = [
 export const tierOf = (level: number): Tier =>
   TIER_STARTS.find(([from]) => level >= from)?.[1] ?? 'beginner';
 
+/** The tiers from the lowest, each with its first and last level. */
+export const TIERS = TIER_STARTS.map(([from, tier], i) => ({
+  tier,
+  from,
+  to: i === 0 ? 100 : TIER_STARTS[i - 1][0] - 1,
+})).reverse();
+
+/** The share of the standard a level takes: the other way round from `levelOf`. */
+function shareAt(level: number) {
+  for (let i = 1; i < ANCHORS.length; i++) {
+    const [l0, s0] = ANCHORS[i - 1];
+    const [l1, s1] = ANCHORS[i];
+    if (level <= l1) return s0 + ((Math.max(level, l0) - l0) / (l1 - l0)) * (s1 - s0);
+  }
+  return ANCHORS[ANCHORS.length - 1][1];
+}
+
 /** The level (1–100, with fractions) a share of the standard reaches. */
 function levelOf(share: number) {
   if (share <= ANCHORS[0][1]) return 1;
@@ -47,6 +64,15 @@ function levelOf(share: number) {
 
 /** Standards are set for this body weight; others scale by weight^⅔, as strength does. */
 const REFERENCE_KG = 80;
+
+/**
+ * The one-rep max (kg) an upper-body weighted lift with `standard` takes for `level`, at
+ * `bodyWeight` and for `sex`: e.g. the bench press a rank needs.
+ */
+export function oneRepMaxFor(level: number, standard: number, bodyWeight: number, sex: Sex | null) {
+  const factor = SEX_FACTOR[sex ?? 'unspecified'].upper;
+  return shareAt(level) * standard * factor * REFERENCE_KG * (bodyWeight / REFERENCE_KG) ** (2 / 3);
+}
 
 /** What women and unspecified reach of the men's standard, by body region. */
 const SEX_FACTOR: Record<Sex, Record<'upper' | 'lower', number>> = {
@@ -62,14 +88,6 @@ const LOWER_BODY: ReadonlySet<MuscleId> = new Set([
   'adductors',
   'tibialis',
 ]);
-
-const CORE: ReadonlySet<MuscleId> = new Set(['abs', 'obliques', 'lower_back']);
-
-export type LevelRegion = 'upper' | 'core' | 'lower';
-
-/** A muscle's filter on the Level tab. */
-export const regionOfMuscle = (muscle: MuscleId): LevelRegion =>
-  CORE.has(muscle) ? 'core' : LOWER_BODY.has(muscle) ? 'lower' : 'upper';
 
 /** Shown only once they have a level: hardly anyone trains them on purpose. */
 export const RARE_MUSCLES: ReadonlySet<MuscleId> = new Set(['neck', 'tibialis']);

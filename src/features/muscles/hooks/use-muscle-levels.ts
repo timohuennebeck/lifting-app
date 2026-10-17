@@ -6,7 +6,7 @@ import { useProfile } from '@/shared/data/profile';
 import { useWeightEntries } from '@/shared/data/weight-entries';
 import { useToday } from '@/shared/hooks/use-today';
 import { DEFAULT_BODY_WEIGHT_KG } from '@/shared/lib/body-weight';
-import { DAY_MS } from '@/shared/lib/date';
+import { DAY_MS, toIsoDate } from '@/shared/lib/date';
 
 import { useLevelSets } from '../data/level-sets';
 import { type LevelExercise, muscleLevels, PAUSE_DAYS } from '../lib/levels';
@@ -16,7 +16,8 @@ const GAIN_DAYS = 30;
 
 /**
  * Each muscle's level now and 30 days ago, from the completed sets, the body-weight trend on
- * each lift's day and the profile's sex; with the muscles on pause.
+ * each lift's day and the profile's sex; with the muscles on pause, and today's body weight and
+ * the sex the levels were scored for.
  */
 export function useMuscleLevels() {
   const dayKey = useToday();
@@ -47,9 +48,10 @@ export function useMuscleLevels() {
     const levels = muscleLevels({ ...input, now: new Date(end) });
     const before = muscleLevels({ ...input, now: new Date(end - GAIN_DAYS * DAY_MS) });
     const pauseSince = new Date(end - PAUSE_DAYS * DAY_MS).toISOString();
-    return { levels, before, pauseSince, end };
+    const bodyWeight = bodyWeightOn(toIsoDate(new Date(dayKey)));
+    return { levels, before, pauseSince, end, bodyWeight, sex: input.sex };
     // The user's own exercises have no standard, so they never change a level.
-  }, [sets, entries, profile?.sex, rows, end]);
+  }, [sets, entries, profile?.sex, rows, end, dayKey]);
 
   return { ...result, isLoading: isLoading || weightLoading };
 }

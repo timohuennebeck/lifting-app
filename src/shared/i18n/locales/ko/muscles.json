@@ -41,12 +41,26 @@
       "intermediate": "중급",
       "advanced": "상급",
       "elite": "엘리트"
-    },
-    "filters": {
-      "all": "전체",
-      "upper": "상체",
-      "core": "코어",
-      "lower": "하체"
     }
+  },
+  "ranks": {
+    "title": "랭크",
+    "yours": "내 랭크",
+    "all": "전체 랭크",
+    "levelShort": "Lv. {{level}}",
+    "levels": "Lv. {{from}}–{{to}}",
+    "toNext": "{{tier}}까지 {{levels}}",
+    "top": "최고 랭크",
+    "forYou": "나에게: {{exercise}} {{range}}",
+    "upTo": "{{value}}까지",
+    "over": "{{value}} 이상",
+    "between": "{{from}}–{{to}} {{unit}}",
+    "more": "+{{n}}",
+    "open": "랭크 보기",
+    "info": "랭크는 이렇게 정해져요",
+    "infoStandard": "모든 운동에는 기준값이 있어요. 가장 좋은 세트를 기준과 비교해요. 기준은 레벨 50, 두 배는 레벨 100이에요.",
+    "infoLevel": "근육 레벨은 가장 좋은 운동 세 가지로, 전체 레벨은 주요 근육 13개로 정해져요. 큰 근육일수록 더 크게 반영돼요.",
+    "infoFair": "체중과 성별을 반영해요. 12주 넘게 쉬면 레벨이 천천히 내려가지만 사라지지는 않아요.",
+    "infoExample": "{{exercise}} 값은 각 랭크에 필요한 1회 최대 중량을 대략 보여 줘요."
   }
 }

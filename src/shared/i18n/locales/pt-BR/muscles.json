@@ -41,12 +41,26 @@
       "intermediate": "Intermediário",
       "advanced": "Avançado",
       "elite": "Elite"
-    },
-    "filters": {
-      "all": "Todos",
-      "upper": "Superiores",
-      "core": "Core",
-      "lower": "Inferiores"
     }
+  },
+  "ranks": {
+    "title": "Categorias",
+    "yours": "Sua categoria",
+    "all": "Todas as categorias",
+    "levelShort": "Nv. {{level}}",
+    "levels": "Nv. {{from}}–{{to}}",
+    "toNext": "faltam {{levels}} para {{tier}}",
+    "top": "Categoria máxima",
+    "forYou": "Para você: {{exercise}} {{range}}",
+    "upTo": "até {{value}}",
+    "over": "acima de {{value}}",
+    "between": "{{from}}–{{to}} {{unit}}",
+    "more": "+{{n}}",
+    "open": "Ver categorias",
+    "info": "Como funcionam as categorias",
+    "infoStandard": "Cada exercício tem um valor de referência. Sua melhor série é comparada com ele: a referência é o nível 50, o dobro é o nível 100.",
+    "infoLevel": "Cada músculo recebe o nível dos seus três melhores exercícios e o nível geral vem dos 13 músculos principais. Músculos grandes contam mais.",
+    "infoFair": "Peso corporal e sexo são levados em conta. Depois de 12 semanas de pausa, o nível cai devagar, mas nunca some.",
+    "infoExample": "Os valores de {{exercise}} mostram, aproximadamente, a carga máxima para uma repetição de que você precisa em cada categoria."
   }
 }

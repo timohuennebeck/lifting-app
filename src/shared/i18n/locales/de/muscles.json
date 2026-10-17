@@ -41,12 +41,26 @@
       "intermediate": "Trainiert",
       "advanced": "Erfahren",
       "elite": "Elite"
-    },
-    "filters": {
-      "all": "Alle",
-      "upper": "Oberkörper",
-      "core": "Core",
-      "lower": "Unterkörper"
     }
+  },
+  "ranks": {
+    "title": "Ränge",
+    "yours": "Dein Rang",
+    "all": "Alle Ränge",
+    "levelShort": "Lvl {{level}}",
+    "levels": "Lvl {{from}}–{{to}}",
+    "toNext": "noch {{levels}} bis {{tier}}",
+    "top": "Höchster Rang",
+    "forYou": "Für dich: {{exercise}} {{range}}",
+    "upTo": "bis {{value}}",
+    "over": "über {{value}}",
+    "between": "{{from}}–{{to}} {{unit}}",
+    "more": "+{{n}}",
+    "open": "Ränge ansehen",
+    "info": "So funktionieren Ränge",
+    "infoStandard": "Jede Übung hat einen Richtwert. Dein bester Satz wird damit verglichen: der Richtwert ist Level 50, das Doppelte Level 100.",
+    "infoLevel": "Jeder Muskel bekommt sein Level aus deinen drei besten Übungen, dein Gesamtlevel aus den 13 Hauptmuskeln. Große Muskeln zählen mehr.",
+    "infoFair": "Körpergewicht und Geschlecht werden berücksichtigt. Nach 12 Wochen Pause sinkt ein Level langsam, verschwindet aber nie.",
+    "infoExample": "Die Werte für {{exercise}} zeigen, welches Maximum (eine Wiederholung) du für einen Rang ungefähr brauchst."
   }
 }
