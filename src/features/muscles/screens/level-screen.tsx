@@ -5,8 +5,6 @@ import { View } from 'react-native';
 
 import { TabScreen } from '@/shared/components/tab-screen';
 import { DAY_MS } from '@/shared/lib/date';
-import { colors } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
 import { BodyMaps, MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
@@ -108,11 +106,10 @@ export function LevelScreen() {
               <Text tone="subtle" className="mb-2 text-lg">
                 /100
               </Text>
-              <View className="mb-2.5 ml-auto flex-row items-center gap-1 rounded-full bg-accent/15 py-1 pr-2 pl-3">
+              <View className="mb-2.5 ml-auto rounded-full bg-accent/15 px-3 py-1">
                 <Text variant="caption" tone="accent">
                   {t(`level.tiers.${tierOf(Math.max(Math.floor(overall), 1))}`)}
                 </Text>
-                <Icon name="chevron-right" size={8} color={colors.accent} />
               </View>
             </View>
             <View className="h-2 overflow-hidden rounded-full bg-control">
