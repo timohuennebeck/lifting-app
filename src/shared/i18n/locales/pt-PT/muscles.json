@@ -52,15 +52,17 @@
     "toNext": "faltam {{levels}} para {{tier}}",
     "top": "Categoria máxima",
     "forYou": "Para ti: {{exercise}} {{range}}",
+    "example": "p. ex. {{exercise}} {{range}}",
     "upTo": "até {{value}}",
     "over": "acima de {{value}}",
     "between": "{{from}}–{{to}} {{unit}}",
+    "repsUnit": "rep.",
     "more": "+{{n}}",
     "open": "Ver categorias",
     "info": "Como funcionam as categorias",
     "infoStandard": "Cada exercício tem um valor de referência. A tua melhor série é comparada com ele: a referência é o nível 50, o dobro é o nível 100.",
     "infoLevel": "Cada músculo tem o nível dos teus três melhores exercícios e o nível geral vem dos 13 músculos principais. Os músculos grandes contam mais.",
     "infoFair": "O peso corporal e o sexo são tidos em conta. Após 12 semanas de pausa, o nível desce devagar, mas nunca desaparece.",
-    "infoExample": "Os valores de {{exercise}} mostram, aproximadamente, a repetição máxima de que precisas para cada categoria."
+    "infoExample": "A linha por baixo de cada categoria mostra, aproximadamente, o que ela exige no exercício que fazes mais, com as tuas repetições habituais. Sem treinos, aparece o supino como exemplo."
   }
 }

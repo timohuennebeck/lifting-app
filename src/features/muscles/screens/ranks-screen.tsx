@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useCatalogStore, useExerciseName } from '@/shared/data/exercises';
+import { useExerciseName } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { cn } from '@/shared/lib/cn';
 import { formatNumber, toDisplayWeight, weightUnit } from '@/shared/lib/format';
@@ -16,10 +16,8 @@ import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
 import { useMuscleLevels } from '../hooks/use-muscle-levels';
-import { oneRepMaxFor, overallLevel, TIERS, tierOf } from '../lib/levels';
+import { levelTarget, overallLevel, TIERS, tierOf } from '../lib/levels';
 
-/** The lift each rank is put in numbers with: the one most people know their best at. */
-const EXAMPLE_EXERCISE = 'bench-press';
 const SEGMENTS = 20;
 /** Muscle circles shown per rank before "+n". */
 const CIRCLES = 5;
@@ -91,9 +89,8 @@ export function RanksScreen() {
   const { t, i18n } = useTranslation('muscles');
   const insets = useSafeAreaInsets();
   const units = useUnits();
-  const { levels, bodyWeight, sex, isLoading } = useMuscleLevels();
-  const standard = useCatalogStore((s) => s.rows[EXAMPLE_EXERCISE]?.strength_standard ?? null);
-  const exerciseName = useExerciseName(EXAMPLE_EXERCISE, i18n.language);
+  const { levels, bodyWeight, sex, lift, isLoading } = useMuscleLevels();
+  const exerciseName = useExerciseName(lift?.exerciseId ?? '', i18n.language);
   const [info, setInfo] = useState(false);
 
   const level = Math.floor(overallLevel(levels));
@@ -101,21 +98,29 @@ export function RanksScreen() {
   const current = TIERS[index];
   const next = TIERS[index + 1];
 
-  const weight = (rankLevel: number) => {
-    const kg = oneRepMaxFor(rankLevel, standard ?? 0, bodyWeight, sex);
-    return formatNumber(Math.round(toDisplayWeight(kg, units)), 0);
+  // What a rank's first level takes in the lift: a weight in the usual reps, or reps.
+  const amount = (rankLevel: number) => {
+    const target = lift && levelTarget(rankLevel, lift.exercise, bodyWeight, sex, lift.reps);
+    if (!target) return null;
+    return target.weightKg === undefined
+      ? formatNumber(Math.round(target.reps), 0)
+      : formatNumber(Math.round(toDisplayWeight(target.weightKg, units)), 0);
   };
-  const unit = weightUnit(units);
+  const target = lift && levelTarget(1, lift.exercise, bodyWeight, sex, lift.reps);
+  const unit =
+    target?.weightKg === undefined ? t('ranks.repsUnit') : `${weightUnit(units)} × ${target.reps}`;
+  // Under each rank: what it takes in the user's main lift, or an example lift without one.
   const example = (k: number) => {
-    if (!standard) return null;
-    const rank = TIERS[k];
     const after = TIERS[k + 1];
+    const from = amount(TIERS[k].from);
+    const to = after && amount(after.from);
+    if (!lift || from === null || to === null) return null;
     const range = !k
-      ? t('ranks.upTo', { value: `${weight(after.from)} ${unit}` })
+      ? t('ranks.upTo', { value: `${to} ${unit}` })
       : !after
-        ? t('ranks.over', { value: `${weight(rank.from)} ${unit}` })
-        : t('ranks.between', { from: weight(rank.from), to: weight(after.from), unit });
-    return t('ranks.forYou', { exercise: exerciseName, range });
+        ? t('ranks.over', { value: `${from} ${unit}` })
+        : t('ranks.between', { from, to, unit });
+    return t(lift.own ? 'ranks.forYou' : 'ranks.example', { exercise: exerciseName, range });
   };
   // The muscles whose level lies in each rank, the strongest first.
   const musclesIn = (from: number, to: number) =>
@@ -232,7 +237,7 @@ export function RanksScreen() {
         <View className="gap-3 pb-2">
           {(['infoStandard', 'infoLevel', 'infoFair', 'infoExample'] as const).map((key) => (
             <Text key={key} variant="paragraph" tone="subtle">
-              {t(`ranks.${key}`, { exercise: exerciseName })}
+              {t(`ranks.${key}`)}
             </Text>
           ))}
         </View>

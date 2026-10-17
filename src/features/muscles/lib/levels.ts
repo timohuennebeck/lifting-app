@@ -65,15 +65,6 @@ function levelOf(share: number) {
 /** Standards are set for this body weight; others scale by weight^⅔, as strength does. */
 const REFERENCE_KG = 80;
 
-/**
- * The one-rep max (kg) an upper-body weighted lift with `standard` takes for `level`, at
- * `bodyWeight` and for `sex`: e.g. the bench press a rank needs.
- */
-export function oneRepMaxFor(level: number, standard: number, bodyWeight: number, sex: Sex | null) {
-  const factor = SEX_FACTOR[sex ?? 'unspecified'].upper;
-  return shareAt(level) * standard * factor * REFERENCE_KG * (bodyWeight / REFERENCE_KG) ** (2 / 3);
-}
-
 /** What women and unspecified reach of the men's standard, by body region. */
 const SEX_FACTOR: Record<Sex, Record<'upper' | 'lower', number>> = {
   male: { upper: 1, lower: 1 },
@@ -146,7 +137,7 @@ export interface LevelExercise {
   muscles: Partial<Record<MuscleId, number>>;
 }
 
-interface LevelSet {
+export interface LevelSet {
   exerciseId: string;
   startedAt: string;
   weightKg: number | null;
@@ -198,6 +189,73 @@ function shareOf(set: LevelSet, exercise: LevelExercise, bodyWeight: number, fac
     return set.seconds ? set.seconds / standard : null;
   }
   return null;
+}
+
+/**
+ * How a level can be put for an exercise: as a weight for some reps (a loaded lift), as reps (an
+ * exercise scored in reps), or not at all (assisted, body weight plus load, seconds, no standard).
+ */
+function targetKind(exercise: LevelExercise): 'weight' | 'reps' | null {
+  const { standard, measures } = exercise;
+  if (!standard) return null;
+  if (measures.includes('weight') && measures.includes('reps')) {
+    return exercise.assisted || exercise.equipment === 'bodyweight' ? null : 'weight';
+  }
+  return measures.length === 1 && measures[0] === 'reps' ? 'reps' : null;
+}
+
+export type LevelTarget = { weightKg: number; reps: number } | { reps: number; weightKg?: never };
+
+/**
+ * What `level` takes in an exercise at this body weight and sex, the way its sets are scored:
+ * the weight for `reps` repetitions (Epley), or the reps of an exercise scored in reps.
+ */
+export function levelTarget(
+  level: number,
+  exercise: LevelExercise,
+  bodyWeight: number,
+  sex: Sex | null,
+  reps: number,
+): LevelTarget | null {
+  const kind = targetKind(exercise);
+  if (!kind || !exercise.standard) return null;
+  const factor = SEX_FACTOR[sex ?? 'unspecified'][regionOf(exercise)];
+  const share = shareAt(level);
+  if (kind === 'reps') return { reps: share * exercise.standard * factor };
+  const oneRepMax =
+    share * exercise.standard * factor * REFERENCE_KG * (bodyWeight / REFERENCE_KG) ** (2 / 3);
+  const count = Math.min(Math.max(reps, 1), MAX_REPS);
+  return { weightKg: oneRepMax / (1 + count / 30), reps: count };
+}
+
+/**
+ * The exercise done in the most sets over the last 12 weeks that a level can be put for, with
+ * its usual reps (the median), or null without one.
+ */
+export function mainLift(
+  sets: LevelSet[],
+  exercises: (id: string) => LevelExercise | undefined,
+  now: Date,
+) {
+  const since = now.getTime() - FULL_DAYS * DAY_MS;
+  const byExercise = new Map<string, { count: number; reps: number[]; last: string }>();
+  for (const set of sets) {
+    const time = Date.parse(set.startedAt);
+    if (time < since || time > now.getTime()) continue;
+    const exercise = exercises(set.exerciseId);
+    if (!exercise || !targetKind(exercise)) continue;
+    const entry = byExercise.get(set.exerciseId) ?? { count: 0, reps: [], last: '' };
+    entry.count += 1;
+    if (set.reps) entry.reps.push(set.reps);
+    if (set.startedAt > entry.last) entry.last = set.startedAt;
+    byExercise.set(set.exerciseId, entry);
+  }
+  const best = [...byExercise].sort(
+    ([, a], [, b]) => b.count - a.count || b.last.localeCompare(a.last),
+  )[0];
+  if (!best) return null;
+  const reps = best[1].reps.sort((a, b) => a - b);
+  return { exerciseId: best[0], reps: reps[Math.floor(reps.length / 2)] ?? 1 };
 }
 
 /** The region an exercise's standard belongs to: that of the muscle it works most. */
