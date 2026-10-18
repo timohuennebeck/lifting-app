@@ -146,6 +146,7 @@ export function TrainingScreen() {
                 status={card.status}
                 routines={planRoutines}
                 goal={profile?.goal}
+                onEdit={() => {}}
               />
               <SectionTitle>
                 {t('home.planRoutines', {

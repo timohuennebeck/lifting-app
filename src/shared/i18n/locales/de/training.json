@@ -23,7 +23,8 @@
   },
   "card": {
     "perBlock_one": "{{count}} Training pro Block",
-    "perBlock_other": "{{count}} Trainings pro Block"
+    "perBlock_other": "{{count}} Trainings pro Block",
+    "edit": "Bearbeiten"
   },
   "progress": {
     "session": "Training {{n}} von {{total}}",

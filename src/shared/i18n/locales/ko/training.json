@@ -23,7 +23,8 @@
   },
   "card": {
     "perBlock_one": "블록당 {{count}}회 운동",
-    "perBlock_other": "블록당 {{count}}회 운동"
+    "perBlock_other": "블록당 {{count}}회 운동",
+    "edit": "편집"
   },
   "progress": {
     "session": "{{n}}/{{total}}번째 운동",
