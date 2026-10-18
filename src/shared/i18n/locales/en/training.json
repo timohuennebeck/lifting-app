@@ -22,7 +22,8 @@
   },
   "card": {
     "perBlock_one": "{{count}} workout per block",
-    "perBlock_other": "{{count}} workouts per block"
+    "perBlock_other": "{{count}} workouts per block",
+    "edit": "Edit"
   },
   "progress": {
     "session": "Workout {{n}} of {{total}}",
