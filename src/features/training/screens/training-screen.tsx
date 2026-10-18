@@ -147,7 +147,13 @@ export function TrainingScreen() {
                 routines={planRoutines}
                 goal={profile?.goal}
               />
-              <View className="h-2" />
+              <SectionTitle>
+                {t('home.planRoutines', {
+                  week: card.status.deload
+                    ? t('plan.deload')
+                    : t('plan.block', { n: card.status.blockWeek ?? card.status.week }),
+                })}
+              </SectionTitle>
               <RoutineRows
                 routines={planRoutines}
                 meta={planMeta}

@@ -3,6 +3,7 @@
     "single": "Treinos avulsos",
     "showAll": "Ver todos",
     "activePlan": "Plano ativo",
+    "planRoutines": "Treinos · {{week}}",
     "resumeActive": "Retomar {{name}}",
     "noPlan": {
       "title": "Ainda sem plano",

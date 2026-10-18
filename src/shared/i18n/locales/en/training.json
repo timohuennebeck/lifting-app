@@ -3,6 +3,7 @@
     "single": "Single workouts",
     "showAll": "Show all",
     "activePlan": "Active plan",
+    "planRoutines": "Workouts · {{week}}",
     "resumeActive": "Resume {{name}}",
     "noPlan": {
       "title": "No plan yet",

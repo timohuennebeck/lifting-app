@@ -3,6 +3,7 @@
     "single": "Einzeltrainings",
     "showAll": "Alle anzeigen",
     "activePlan": "Aktiver Plan",
+    "planRoutines": "Trainings · {{week}}",
     "resumeActive": "{{name}} fortsetzen",
     "noPlan": {
       "title": "Noch kein Plan",
