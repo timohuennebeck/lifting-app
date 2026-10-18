@@ -1,0 +1,50 @@
+{
+  "title": "Ernährung",
+  "add": "Mahlzeit eintragen",
+  "addTo": "{{meal}} eintragen",
+  "today": "Heute, {{date}}",
+  "yesterday": "Gestern, {{date}}",
+  "previousDay": "Vorheriger Tag",
+  "nextDay": "Nächster Tag",
+  "backToToday": "Zurück zu heute",
+  "delete": "{{name}} löschen",
+  "meal": {
+    "breakfast": "Frühstück",
+    "lunch": "Mittagessen",
+    "dinner": "Abendessen",
+    "snack": "Snacks"
+  },
+  "macros": {
+    "protein": "Protein",
+    "carbs": "Kohlenhydrate",
+    "fat": "Fett"
+  },
+  "short": {
+    "protein": "P {{value}} g",
+    "carbs": "K {{value}} g",
+    "fat": "F {{value}} g"
+  },
+  "day": {
+    "calories": "Kalorien"
+  },
+  "trend": {
+    "title": "Verlauf",
+    "average": "Ø 7 Tage",
+    "day": "Tag",
+    "averages": "Ø pro Tag",
+    "days_one": "{{count}} Tag",
+    "days_other": "{{count}} Tage",
+    "protein": "{{value}} g Protein",
+    "empty": "Trag Mahlzeiten ein, um deinen Verlauf zu sehen."
+  },
+  "entry": {
+    "title": "Neue Mahlzeit",
+    "editTitle": "Mahlzeit bearbeiten",
+    "name": "Was hast du gegessen?",
+    "nutrition": "Nährwerte",
+    "calories": "Kalorien",
+    "optional": "Optional",
+    "macrosHint": "Protein, Kohlenhydrate und Fett sind optional.",
+    "delete": "Mahlzeit löschen"
+  }
+}

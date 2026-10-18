@@ -43,7 +43,10 @@
     "planHint": "Have one made, import it or build it yourself",
     "createRoutine": "Create workout",
     "createPlan": "Create plan",
-    "emptyWorkoutName": "Workout"
+    "emptyWorkoutName": "Workout",
+    "meal": "Meal",
+    "mealHint": "Log what you eat and follow your calories",
+    "openMeals": "Log meals"
   },
   "newRoutine": {
     "title": "New workout",

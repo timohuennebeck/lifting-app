@@ -10,18 +10,35 @@ export const KEYPAD_ROWS: KeypadKey[][] = [
 ];
 
 const MAX_INT_DIGITS = { decimal: 4, integer: 3 } as const;
+const MAX_FRACTION_DIGITS = 2;
+
+/** Digits a buffer may hold, where a field needs other limits than sets do. */
+export interface KeypadDigits {
+  int?: number;
+  fraction?: number;
+}
 
 /** Appends a key; a pristine buffer is replaced by the first key press. */
-export function appendKey(value: string, key: KeypadKey, decimal: boolean, pristine: boolean) {
+export function appendKey(
+  value: string,
+  key: KeypadKey,
+  decimal: boolean,
+  pristine: boolean,
+  digits: KeypadDigits = {},
+) {
   const current = pristine ? '' : value;
   if (key === '.') {
     if (!decimal || current.includes('.')) return current;
     return current === '' ? '0.' : `${current}.`;
   }
   const [int, fraction] = current.split('.');
-  if (fraction !== undefined) return fraction.length >= 2 ? current : current + key;
+  if (fraction !== undefined) {
+    return fraction.length >= (digits.fraction ?? MAX_FRACTION_DIGITS) ? current : current + key;
+  }
   if (int === '0') return key;
-  if (int.length >= MAX_INT_DIGITS[decimal ? 'decimal' : 'integer']) return current;
+  if (int.length >= (digits.int ?? MAX_INT_DIGITS[decimal ? 'decimal' : 'integer'])) {
+    return current;
+  }
   return current + key;
 }
 

@@ -265,6 +265,26 @@ export const weightEntries = sqliteTable(
   (t) => [index('date').on(t.date)],
 );
 
+// Meals the user logged, any number per calendar day (see Meal for `meal`).
+export const mealEntries = sqliteTable(
+  'meal_entries',
+  {
+    id: text().primaryKey(),
+    user_id: text().notNull(),
+    // Postgres date (YYYY-MM-DD): the user's calendar day, no time zone.
+    date: text().notNull(),
+    meal: text().notNull(),
+    name: text().notNull(),
+    kcal: integer().notNull(),
+    // Grams with one decimal; null when not given.
+    protein_g: real(),
+    carbs_g: real(),
+    fat_g: real(),
+    created_at: text().notNull(),
+  },
+  (t) => [index('date').on(t.date)],
+);
+
 // Relations power nested reads such as `drizzle.query.routines.findMany({ with: … })`; Drizzle
 // finds them through `drizzleSchema`. Each `many` needs the `one` pointing back.
 const routinesRelations = relations(routines, ({ many }) => ({
@@ -319,6 +339,7 @@ export const drizzleSchema = {
   legalAcceptances,
   customExercises,
   weightEntries,
+  mealEntries,
   routinesRelations,
   routineExercisesRelations,
   routineSetsRelations,
@@ -333,6 +354,7 @@ export type ProfileRecord = typeof profiles.$inferSelect;
 export type ProgressCheckRecord = typeof progressChecks.$inferSelect;
 export type CustomExerciseRecord = typeof customExercises.$inferSelect;
 export type WeightEntryRecord = typeof weightEntries.$inferSelect;
+export type MealEntryRecord = typeof mealEntries.$inferSelect;
 export type TicketRecord = typeof tickets.$inferSelect;
 export type TicketMessageRecord = typeof ticketMessages.$inferSelect;
 export type TicketEventRecord = typeof ticketEvents.$inferSelect;

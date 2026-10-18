@@ -1,0 +1,50 @@
+{
+  "title": "Meals",
+  "add": "Log meal",
+  "addTo": "Add to {{meal}}",
+  "today": "Today, {{date}}",
+  "yesterday": "Yesterday, {{date}}",
+  "previousDay": "Previous day",
+  "nextDay": "Next day",
+  "backToToday": "Back to today",
+  "delete": "Delete {{name}}",
+  "meal": {
+    "breakfast": "Breakfast",
+    "lunch": "Lunch",
+    "dinner": "Dinner",
+    "snack": "Snacks"
+  },
+  "macros": {
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat"
+  },
+  "short": {
+    "protein": "P {{value}} g",
+    "carbs": "C {{value}} g",
+    "fat": "F {{value}} g"
+  },
+  "day": {
+    "calories": "Calories"
+  },
+  "trend": {
+    "title": "Trend",
+    "average": "7-day avg",
+    "day": "Day",
+    "averages": "Average per day",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "protein": "{{value}} g protein",
+    "empty": "Log meals to see your trend."
+  },
+  "entry": {
+    "title": "New meal",
+    "editTitle": "Edit meal",
+    "name": "What did you eat?",
+    "nutrition": "Nutrition",
+    "calories": "Calories",
+    "optional": "Optional",
+    "macrosHint": "Protein, carbs and fat are optional.",
+    "delete": "Delete meal"
+  }
+}

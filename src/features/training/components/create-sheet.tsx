@@ -12,7 +12,7 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 
 import { glyphColor, PlanGlyph, RoutineGlyph } from './glyphs';
 
-type CreateKind = 'workout' | 'routine' | 'plan';
+type CreateKind = 'workout' | 'routine' | 'plan' | 'meal';
 
 export interface CreateSheetProps {
   visible: boolean;
@@ -20,8 +20,8 @@ export interface CreateSheetProps {
 }
 
 /**
- * The tab bar's "+" sheet: an empty workout (or the running one, resumed), a new routine, or a
- * plan, which is made, imported or built (01·V·A·6).
+ * The tab bar's "+" sheet: an empty workout (or the running one, resumed), a new routine, a
+ * plan, which is made, imported or built (01·V·A·6), or the meal log.
  */
 export function CreateSheet({ visible, onClose }: CreateSheetProps) {
   const { t } = useTranslation('training');
@@ -54,6 +54,7 @@ export function CreateSheet({ visible, onClose }: CreateSheetProps) {
       onConfirm={(value) => {
         if (value === 'workout') then(emptyWorkout);
         else if (value === 'routine') then(() => router.push('/routine/new'));
+        else if (value === 'meal') then(() => router.push('/meals'));
         else then(() => openPlanFlow(profile, plan?.sessionsPerWeek));
       }}
       options={[
@@ -77,6 +78,13 @@ export function CreateSheet({ visible, onClose }: CreateSheetProps) {
           description: t('create.planHint'),
           cta: t('create.createPlan'),
           renderIcon: (active) => <PlanGlyph color={glyphColor(active)} />,
+        },
+        {
+          value: 'meal',
+          title: t('create.meal'),
+          description: t('create.mealHint'),
+          cta: t('create.openMeals'),
+          renderIcon: (active) => <Icon name="meal" size={15} color={glyphColor(active)} />,
         },
       ]}
     />

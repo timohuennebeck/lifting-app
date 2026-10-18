@@ -43,7 +43,10 @@
     "planHint": "자동으로 만들기, 가져오기 또는 직접 만들기",
     "createRoutine": "루틴 만들기",
     "createPlan": "플랜 만들기",
-    "emptyWorkoutName": "운동"
+    "emptyWorkoutName": "운동",
+    "meal": "식사",
+    "mealHint": "먹은 음식을 기록하고 칼로리를 확인해요",
+    "openMeals": "식사 기록하기"
   },
   "newRoutine": {
     "title": "새 루틴",

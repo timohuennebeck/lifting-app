@@ -11,6 +11,7 @@ import {
   useWeightEntries,
   type WeightEntry,
 } from '@/shared/data/weight-entries';
+import { useDayLabel } from '@/shared/hooks/use-day-label';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { addDays, fromIsoDate, toIsoDate } from '@/shared/lib/date';
 import { formatNumber, formatShortDate, type UnitSystem, weightUnit } from '@/shared/lib/format';
@@ -31,7 +32,6 @@ import {
   toUnits,
 } from '@/shared/lib/body-weight';
 
-import { useDayLabel } from '../hooks/use-day-label';
 import { formatChange } from '../lib/format';
 import { pickDate } from '../lib/pick-date';
 

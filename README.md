@@ -3,9 +3,9 @@
 Workout logger for iOS and Android. Tabs: **Training** (the week, the plan with its routines,
 single routines), **Level** (muscle levels 1–100), **Körper** (progress checks: three photos, an
 AI score, before and after) and **Profile** (workout history, support, settings). "+" starts a
-workout or creates a routine or a plan (imported from photos or a file, or made by the AI). The
-scale button in every tab's header opens the weight history. The original design handoff is in
-git history (`git show 48b667e:design/README.md`).
+workout, creates a routine or a plan (imported from photos or a file, or made by the AI), or opens
+the meal log. The scale button in every tab's header opens the weight history. The original design
+handoff is in git history (`git show 48b667e:design/README.md`).
 
 ## Stack
 
@@ -138,6 +138,17 @@ Documents are readable without an account (onboarding runs logged out) and writt
   The trend is computed on the device: each weigh-in moves it 10 % toward the scale value. The
   onboarding weight becomes the first entry; bodyweight exercise scores and the progress check
   assessment use the latest one.
+
+## Meal tracking
+
+- **`meal_entries`:** one row per logged meal, any number a day: `date` (the user's own day, no
+  time zone), `meal` (`breakfast`, `lunch`, `dinner` or `snack`), `name`, `kcal` and, optional,
+  `protein_g`, `carbs_g` and `fat_g` (one decimal). The id is a random UUID.
+- **In the app:** "+" → Meal opens the log at `/meals`: a day's calories and macros and its meals
+  (‹ › move between days), then the calories over time in the weight history's chart: each logged
+  day and its 7-day average, and the average day over 7 to 90 days. Days without meals are left
+  out of the averages rather than counted as 0 kcal, and today, still being logged, only counts in
+  them once it's over.
 
 ## Progress check assessment
 

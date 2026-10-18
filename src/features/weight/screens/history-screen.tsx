@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useUnits } from '@/shared/data/profile';
 import { deleteWeightEntry, useWeightEntries } from '@/shared/data/weight-entries';
+import { useDayLabel } from '@/shared/hooks/use-day-label';
 import { useToday } from '@/shared/hooks/use-today';
 import { toIsoDate } from '@/shared/lib/date';
 import { formatShortDate, weightUnit } from '@/shared/lib/format';
@@ -18,7 +19,6 @@ import { Text } from '@/shared/ui/text';
 import { EntryRow } from '../components/entry-row';
 import { TrendChangeRow } from '../components/trend-change-row';
 import { WeightChart } from '../components/weight-chart';
-import { useDayLabel } from '../hooks/use-day-label';
 import { formatBodyWeight, formatChange } from '../lib/format';
 import { daysBefore, trendChange, trendOn, withTrend } from '../lib/trend';
 

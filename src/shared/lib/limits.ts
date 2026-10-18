@@ -11,6 +11,8 @@ export const PLAN_NAME_MAX = 30;
 export const ROUTINE_NAME_MAX = 40;
 /** A custom exercise's name. */
 export const CUSTOM_EXERCISE_NAME_MAX = 60;
+/** A logged meal's name ("Oats with berries"). */
+export const MEAL_NAME_MAX = 60;
 /** A support message; a ticket's subject is its first line, cut to TICKET_SUBJECT_MAX. */
 export const TICKET_MESSAGE_MAX = 5000;
 export const TICKET_SUBJECT_MAX = 120;

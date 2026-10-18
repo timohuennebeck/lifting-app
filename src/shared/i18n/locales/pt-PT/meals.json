@@ -1,0 +1,50 @@
+{
+  "title": "Refeições",
+  "add": "Registar refeição",
+  "addTo": "{{meal}}: adicionar",
+  "today": "Hoje, {{date}}",
+  "yesterday": "Ontem, {{date}}",
+  "previousDay": "Dia anterior",
+  "nextDay": "Dia seguinte",
+  "backToToday": "Voltar a hoje",
+  "delete": "Apagar {{name}}",
+  "meal": {
+    "breakfast": "Pequeno-almoço",
+    "lunch": "Almoço",
+    "dinner": "Jantar",
+    "snack": "Snacks"
+  },
+  "macros": {
+    "protein": "Proteína",
+    "carbs": "Hidratos",
+    "fat": "Gordura"
+  },
+  "short": {
+    "protein": "P {{value}} g",
+    "carbs": "H {{value}} g",
+    "fat": "G {{value}} g"
+  },
+  "day": {
+    "calories": "Calorias"
+  },
+  "trend": {
+    "title": "Evolução",
+    "average": "Média 7 dias",
+    "day": "Dia",
+    "averages": "Média por dia",
+    "days_one": "{{count}} dia",
+    "days_other": "{{count}} dias",
+    "protein": "{{value}} g de proteína",
+    "empty": "Regista refeições para veres a tua evolução."
+  },
+  "entry": {
+    "title": "Nova refeição",
+    "editTitle": "Editar refeição",
+    "name": "O que comeste?",
+    "nutrition": "Valores nutricionais",
+    "calories": "Calorias",
+    "optional": "Opcional",
+    "macrosHint": "Proteína, hidratos e gordura são opcionais.",
+    "delete": "Apagar refeição"
+  }
+}

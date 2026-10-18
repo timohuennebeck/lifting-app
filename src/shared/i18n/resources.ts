@@ -2,6 +2,7 @@ import deAuth from './locales/de/auth.json';
 import deBody from './locales/de/body.json';
 import deCommon from './locales/de/common.json';
 import deExercises from './locales/de/exercises.json';
+import deMeals from './locales/de/meals.json';
 import deMuscles from './locales/de/muscles.json';
 import deOnboarding from './locales/de/onboarding.json';
 import dePaywall from './locales/de/paywall.json';
@@ -17,6 +18,7 @@ import enAuth from './locales/en/auth.json';
 import enBody from './locales/en/body.json';
 import enCommon from './locales/en/common.json';
 import enExercises from './locales/en/exercises.json';
+import enMeals from './locales/en/meals.json';
 import enMuscles from './locales/en/muscles.json';
 import enOnboarding from './locales/en/onboarding.json';
 import enPaywall from './locales/en/paywall.json';
@@ -32,6 +34,7 @@ import koAuth from './locales/ko/auth.json';
 import koBody from './locales/ko/body.json';
 import koCommon from './locales/ko/common.json';
 import koExercises from './locales/ko/exercises.json';
+import koMeals from './locales/ko/meals.json';
 import koMuscles from './locales/ko/muscles.json';
 import koOnboarding from './locales/ko/onboarding.json';
 import koPaywall from './locales/ko/paywall.json';
@@ -47,6 +50,7 @@ import ptBRAuth from './locales/pt-BR/auth.json';
 import ptBRBody from './locales/pt-BR/body.json';
 import ptBRCommon from './locales/pt-BR/common.json';
 import ptBRExercises from './locales/pt-BR/exercises.json';
+import ptBRMeals from './locales/pt-BR/meals.json';
 import ptBRMuscles from './locales/pt-BR/muscles.json';
 import ptBROnboarding from './locales/pt-BR/onboarding.json';
 import ptBRPaywall from './locales/pt-BR/paywall.json';
@@ -62,6 +66,7 @@ import ptPTAuth from './locales/pt-PT/auth.json';
 import ptPTBody from './locales/pt-PT/body.json';
 import ptPTCommon from './locales/pt-PT/common.json';
 import ptPTExercises from './locales/pt-PT/exercises.json';
+import ptPTMeals from './locales/pt-PT/meals.json';
 import ptPTMuscles from './locales/pt-PT/muscles.json';
 import ptPTOnboarding from './locales/pt-PT/onboarding.json';
 import ptPTPaywall from './locales/pt-PT/paywall.json';
@@ -92,6 +97,7 @@ export const resources = {
     profile: enProfile,
     exercises: enExercises,
     weight: enWeight,
+    meals: enMeals,
   },
   de: {
     common: deCommon,
@@ -109,6 +115,7 @@ export const resources = {
     profile: deProfile,
     exercises: deExercises,
     weight: deWeight,
+    meals: deMeals,
   },
   'pt-PT': {
     common: ptPTCommon,
@@ -126,6 +133,7 @@ export const resources = {
     profile: ptPTProfile,
     exercises: ptPTExercises,
     weight: ptPTWeight,
+    meals: ptPTMeals,
   },
   'pt-BR': {
     common: ptBRCommon,
@@ -143,6 +151,7 @@ export const resources = {
     profile: ptBRProfile,
     exercises: ptBRExercises,
     weight: ptBRWeight,
+    meals: ptBRMeals,
   },
   ko: {
     common: koCommon,
@@ -160,6 +169,7 @@ export const resources = {
     profile: koProfile,
     exercises: koExercises,
     weight: koWeight,
+    meals: koMeals,
   },
 } as const;
 

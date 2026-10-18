@@ -43,7 +43,10 @@
     "planHint": "Erstellen lassen, einlesen oder selbst bauen",
     "createRoutine": "Training erstellen",
     "createPlan": "Plan erstellen",
-    "emptyWorkoutName": "Training"
+    "emptyWorkoutName": "Training",
+    "meal": "Mahlzeit",
+    "mealHint": "Eintragen, was du isst, und Kalorien verfolgen",
+    "openMeals": "Mahlzeiten eintragen"
   },
   "newRoutine": {
     "title": "Neues Training",

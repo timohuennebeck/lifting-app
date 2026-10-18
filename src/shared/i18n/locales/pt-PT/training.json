@@ -43,7 +43,10 @@
     "planHint": "Pede um, importa-o ou cria-o tu",
     "createRoutine": "Criar treino",
     "createPlan": "Criar plano",
-    "emptyWorkoutName": "Treino"
+    "emptyWorkoutName": "Treino",
+    "meal": "Refeição",
+    "mealHint": "Regista o que comes e acompanha as calorias",
+    "openMeals": "Registar refeições"
   },
   "newRoutine": {
     "title": "Novo treino",

@@ -183,6 +183,14 @@ const ICONS = {
       </>
     ),
   },
+  // Fork and knife: the meal log.
+  meal: {
+    viewBox: '0 0 18 20',
+    render: stroke(
+      'M3 1.5V6a3 3 0 0 0 6 0V1.5M6 1.5v17M14.5 18.5v-17c-2.2 1.3-3.3 4-3.3 7.6v2.4h3.3',
+      1.7,
+    ),
+  },
   // Zigzag arrows for a trend that went down or up.
   'trend-down': {
     viewBox: '0 0 14 8',

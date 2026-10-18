@@ -1,0 +1,50 @@
+{
+  "title": "식단",
+  "add": "식사 기록",
+  "addTo": "{{meal}}에 추가",
+  "today": "오늘, {{date}}",
+  "yesterday": "어제, {{date}}",
+  "previousDay": "이전 날",
+  "nextDay": "다음 날",
+  "backToToday": "오늘로 돌아가기",
+  "delete": "{{name}} 삭제",
+  "meal": {
+    "breakfast": "아침",
+    "lunch": "점심",
+    "dinner": "저녁",
+    "snack": "간식"
+  },
+  "macros": {
+    "protein": "단백질",
+    "carbs": "탄수화물",
+    "fat": "지방"
+  },
+  "short": {
+    "protein": "단 {{value}}g",
+    "carbs": "탄 {{value}}g",
+    "fat": "지 {{value}}g"
+  },
+  "day": {
+    "calories": "칼로리"
+  },
+  "trend": {
+    "title": "추세",
+    "average": "7일 평균",
+    "day": "당일",
+    "averages": "하루 평균",
+    "days_one": "{{count}}일",
+    "days_other": "{{count}}일",
+    "protein": "단백질 {{value}}g",
+    "empty": "식사를 기록하면 추세를 볼 수 있어요."
+  },
+  "entry": {
+    "title": "새 식사",
+    "editTitle": "식사 수정",
+    "name": "무엇을 먹었나요?",
+    "nutrition": "영양 정보",
+    "calories": "칼로리",
+    "optional": "선택",
+    "macrosHint": "단백질, 탄수화물, 지방은 선택 사항이에요.",
+    "delete": "식사 삭제"
+  }
+}

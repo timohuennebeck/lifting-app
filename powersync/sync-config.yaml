@@ -17,6 +17,7 @@ streams:
       - SELECT * FROM workout_entries_sets WHERE user_id = auth.user_id()
       - SELECT * FROM custom_exercises WHERE user_id = auth.user_id()
       - SELECT * FROM weight_entries WHERE user_id = auth.user_id()
+      - SELECT * FROM meal_entries WHERE user_id = auth.user_id()
       - SELECT * FROM progress_checks WHERE user_id = auth.user_id()
       - SELECT * FROM progress_check_photos WHERE user_id = auth.user_id()
       - SELECT * FROM tickets WHERE user_id = auth.user_id()
