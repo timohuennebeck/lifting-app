@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import type { PlanAnswers } from '@/features/plan-create/lib/plan-answers';
 import { newId } from '@/shared/data/json';
-import { track } from '@/shared/lib/analytics';
+import { track } from '@/shared/lib/posthog';
 
 import {
   type ImportedPlan,

@@ -11,7 +11,7 @@ import { CheckChip } from '@/shared/ui/check-item';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
-import { track } from '@/shared/lib/analytics';
+import { track } from '@/shared/lib/posthog';
 
 import { LanguagePicker } from '../components/language-picker';
 import { PhotoBackdrop } from '../components/photo-backdrop';

@@ -30,7 +30,11 @@ export interface AnalyticsEvents {
   'paywall:view': { placement: PaywallPlacement };
   'paywall:purchase_complete': { package: string; has_trial: boolean };
   'paywall:purchase_fail': { package: string; error_code: string; is_cancelled: boolean };
-  'account:sign_up_complete': { method: 'apple' | 'google' | 'email' };
+  /** An earlier purchase restored, which lets the user past the paywall too. */
+  'paywall:restore_complete': Record<string, never>;
+  'account:sign_up_complete': { method: SignUpMethod };
+  /** Why the account wasn't made, e.g. "alreadyRegistered" or "confirmEmail". */
+  'account:sign_up_fail': { method: SignUpMethod; error_code: string };
   'workout:start': WorkoutProperties;
   'workout:finish': WorkoutProperties & {
     duration_min: number;
@@ -42,6 +46,8 @@ export interface AnalyticsEvents {
 }
 
 export type AnalyticsEvent = keyof AnalyticsEvents;
+
+export type SignUpMethod = 'apple' | 'google' | 'email';
 
 /** Where the paywall shows: in onboarding, opened in the app, or in front of a locked app. */
 export type PaywallPlacement = 'onboarding' | 'in_app' | 'locked';

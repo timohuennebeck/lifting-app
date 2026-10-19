@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { useCurrentPlan } from '@/shared/data/plans';
 import { ageFrom } from '@/shared/data/profile';
-import { ageGroupOf, identify, type PersonProperties } from '@/shared/lib/analytics';
+import { ageGroupOf, identify, type PersonProperties } from '@/shared/lib/posthog';
 
 /**
  * Keeps the signed-in person's PostHog properties up to date: their answers, plan and Pro

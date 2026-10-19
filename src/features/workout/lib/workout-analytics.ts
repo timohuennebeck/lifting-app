@@ -1,4 +1,4 @@
-import { track } from '@/shared/lib/analytics';
+import { track } from '@/shared/lib/posthog';
 
 import { workoutStats } from '../data/workout-mutations';
 

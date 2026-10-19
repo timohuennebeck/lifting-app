@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { LegalLinks } from '@/features/legal/components/legal-link';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
-import { track } from '@/shared/lib/analytics';
+import { track } from '@/shared/lib/posthog';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 import { CheckItem } from '@/shared/ui/check-item';

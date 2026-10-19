@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
-import { track } from '@/shared/lib/analytics';
+import { track } from '@/shared/lib/posthog';
 import { haptics } from '@/shared/lib/haptics';
 
 import { paywallKeys } from '../data/paywall-keys';
@@ -68,6 +68,7 @@ export function useRestorePurchases() {
       useSubscriptionStore.getState().apply(await purchases.restore());
       queryClient.invalidateQueries({ queryKey: paywallKeys.offering.queryKey });
       haptics.success();
+      track('paywall:restore_complete');
       Alert.alert(t('restoreResult.successTitle'), t('restoreResult.successBody'));
       restored = true;
     } catch (error) {

@@ -309,13 +309,14 @@ What the code expects:
 
 Product analytics and error tracking go to PostHog's EU cloud once `EXPO_PUBLIC_POSTHOG_KEY` (the
 public `phc_…` project key) is in `.env`; without it nothing is sent. The events and their
-properties are typed in `src/shared/lib/analytics.ts` (`AnalyticsEvents`), named
+properties are typed in `src/shared/lib/posthog.ts` (`AnalyticsEvents`), named
 `category:object_action`:
 
 - **Onboarding and plans:** `onboarding:flow_start`, `plan:generate_complete` / `_fail`,
   `plan_import:read_complete` / `_fail`.
-- **Money:** `paywall:view` (with `placement`), `paywall:purchase_complete` / `_fail`.
-- **Account:** `account:sign_up_complete`; the PostHog id is the Supabase user id from sign-in
+- **Money:** `paywall:view` (with `placement`), `paywall:purchase_complete` / `_fail`,
+  `paywall:restore_complete`.
+- **Account:** `account:sign_up_complete` / `_fail` (with the reason); the PostHog id is the Supabase user id from sign-in
   (`identify`), so the anonymous onboarding and purchase events join the person, and `reset` on
   sign-out.
 - **Training:** `workout:start`, `workout:finish`, `workout:discard`, with the plan week, sets and

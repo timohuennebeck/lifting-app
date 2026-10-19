@@ -15,7 +15,7 @@ import {
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { supabase } from '@/shared/data/supabase';
 import { i18n } from '@/shared/i18n';
-import { type AnalyticsEvents, identify, track } from '@/shared/lib/analytics';
+import { identify, type SignUpMethod, track } from '@/shared/lib/posthog';
 import { haptics } from '@/shared/lib/haptics';
 import { useSessionStore } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
@@ -50,17 +50,14 @@ export function CreateAccountScreen() {
   // Account errors from before the user signed in (e.g. "already registered") no longer apply.
   const shownError = signedIn && error !== 'generic' ? null : error;
 
-  const fail = (key: ErrorKey) => {
+  const fail = (key: ErrorKey, method: SignUpMethod) => {
     haptics.error();
     setError(key);
+    track('account:sign_up_fail', { method, error_code: key });
   };
 
   /** Saves the onboarding answers to the new account with the accepted documents, then goes on. */
-  const finish = async (
-    userId: string,
-    documents: LegalDocument[],
-    method: AnalyticsEvents['account:sign_up_complete']['method'],
-  ) => {
+  const finish = async (userId: string, documents: LegalDocument[], method: SignUpMethod) => {
     // An account that is already set up (e.g. signed in with Google or Apple) keeps its own
     // profile and plan. A retry after a failed save lands here too, so the acceptance is
     // recorded here as well (only missing rows are added; the profile row exists by now).
@@ -96,8 +93,8 @@ export function CreateAccountScreen() {
         // The language lets Supabase send its account emails in the app language.
         options: { data: { first_name: draft.firstName.trim(), language: i18n.language } },
       });
-      if (signUpError) return fail(authErrorKey(signUpError));
-      if (!data.session) return fail('confirmEmail');
+      if (signUpError) return fail(authErrorKey(signUpError), 'email');
+      if (!data.session) return fail('confirmEmail', 'email');
       userId = data.session.user.id;
     }
     await finish(userId, documents, 'email');
@@ -108,7 +105,7 @@ export function CreateAccountScreen() {
     setBusy('email');
     setError(null);
     await createAccount()
-      .catch(() => fail('generic'))
+      .catch(() => fail('generic', 'email'))
       .finally(() => setBusy(null));
   };
 
@@ -122,7 +119,7 @@ export function CreateAccountScreen() {
       const user = await signInWith(provider);
       if (user) await finish(user.id, documents, provider);
     } catch {
-      fail('generic');
+      fail('generic', provider);
     }
     setBusy(null);
   };

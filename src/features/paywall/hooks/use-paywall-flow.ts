@@ -1,7 +1,7 @@
 import { router, useNavigation, useSegments } from 'expo-router';
 import { useState } from 'react';
 
-import type { PaywallPlacement } from '@/shared/lib/analytics';
+import type { PaywallPlacement } from '@/shared/lib/posthog';
 
 import { useIsLocked } from '../stores/subscription-store';
 

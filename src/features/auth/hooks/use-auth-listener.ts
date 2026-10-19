@@ -18,7 +18,7 @@ import { useWorkoutSessionStore } from '@/features/workout/stores/workout-sessio
 import { connector, db } from '@/shared/data/powersync/database';
 import { queryClient } from '@/shared/data/query-client';
 import { supabase } from '@/shared/data/supabase';
-import { identify, resetAnalytics } from '@/shared/lib/analytics';
+import { identify, resetAnalytics } from '@/shared/lib/posthog';
 import { useSessionStore } from '@/shared/stores/session-store';
 
 import { signOutOfGoogle } from '../lib/google-sign-in';
