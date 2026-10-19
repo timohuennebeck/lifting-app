@@ -1,6 +1,8 @@
 import { router, useNavigation, useSegments } from 'expo-router';
 import { useState } from 'react';
 
+import type { PaywallPlacement } from '@/shared/lib/analytics';
+
 import { useIsLocked } from '../stores/subscription-store';
 
 /**
@@ -15,8 +17,12 @@ export function usePaywallFlow() {
   // Privacy) would otherwise turn this paywall into the onboarding one while it is still shown.
   const [inApp] = useState(segments[0] === '(app)');
   const locked = useIsLocked();
+  let placement: PaywallPlacement = 'onboarding';
+  if (inApp) placement = locked ? 'locked' : 'in_app';
 
   return {
+    /** Where it shows, for analytics. */
+    placement,
     /** Opened from Settings: closes. Onboarding and a locked app go on only with a plan. */
     closable: inApp && !locked,
     /** In front of the app because the subscription ran out (Settings stays reachable). */

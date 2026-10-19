@@ -1,4 +1,16 @@
-import { and, asc, desc, eq, inArray, isNotNull, isNull, ne, type SQL, sql } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  inArray,
+  isNotNull,
+  isNull,
+  ne,
+  type SQL,
+  sql,
+} from 'drizzle-orm';
 
 import type { SetDraft } from '@/features/training/components/set-editor-row';
 import {
@@ -31,6 +43,72 @@ const workoutExerciseIds = (workoutId: string) =>
     .select({ id: workoutEntriesExercises.id })
     .from(workoutEntriesExercises)
     .where(eq(workoutEntriesExercises.workout_entries_id, workoutId));
+
+/**
+ * A workout as analytics describes it (PostHog `workout:*` events): where it comes from, its plan
+ * week, its sets so far and records. Null for a workout that's gone.
+ */
+export async function workoutStats(workoutId: string) {
+  const entry = await drizzle
+    .select({
+      userId: workoutEntries.user_id,
+      routineId: workoutEntries.routine_id,
+      planWeek: workoutEntries.plan_week,
+      startedAt: workoutEntries.started_at,
+      blockWeeks: plans.block_weeks,
+      blockStartWeek: plans.block_start_week,
+    })
+    .from(workoutEntries)
+    .leftJoin(plans, eq(plans.id, workoutEntries.plan_id))
+    .where(eq(workoutEntries.id, workoutId))
+    .get();
+  if (!entry) return null;
+  const sets = await drizzle
+    .select({
+      planned: count(),
+      completed: count(workoutEntriesSets.completed_at),
+      prs: sql<number>`coalesce(sum(case when ${workoutEntriesSets.completed_at} is not null then ${workoutEntriesSets.is_pr} else 0 end), 0)`,
+    })
+    .from(workoutEntriesSets)
+    .where(inArray(workoutEntriesSets.workout_entries_exercise_id, workoutExerciseIds(workoutId)))
+    .get();
+  const exercises = await drizzle
+    .select({ n: count() })
+    .from(workoutEntriesExercises)
+    .where(eq(workoutEntriesExercises.workout_entries_id, workoutId))
+    .get();
+  const earlier = await drizzle
+    .select({ n: count() })
+    .from(workoutEntries)
+    .where(
+      and(
+        eq(workoutEntries.user_id, entry.userId),
+        isNotNull(workoutEntries.finished_at),
+        ne(workoutEntries.id, workoutId),
+      ),
+    )
+    .get();
+  const inPlan = entry.planWeek !== null && entry.blockStartWeek !== null;
+  const blockWeek = inPlan
+    ? blockWeekOf(entry.planWeek ?? 1, {
+        blockWeeks: entry.blockWeeks,
+        blockStartWeek: entry.blockStartWeek ?? 1,
+      })
+    : null;
+  let source: 'plan' | 'single' | 'empty' = 'empty';
+  if (entry.routineId) source = inPlan ? 'plan' : 'single';
+  return {
+    source,
+    is_first: !earlier?.n,
+    block_week: blockWeek,
+    is_deload: blockWeek !== null && blockWeek === entry.blockWeeks,
+    exercise_count: exercises?.n ?? 0,
+    duration_min: Math.round((Date.now() - Date.parse(entry.startedAt)) / 60_000),
+    completed_set_count: sets?.completed ?? 0,
+    planned_set_count: sets?.planned ?? 0,
+    pr_count: Number(sets?.prs ?? 0),
+  };
+}
 
 /** Copies a routine into a new running workout (an empty one starts with `startDraftWorkout`). */
 export async function startWorkout(userId: string, name: string, routineId: string) {

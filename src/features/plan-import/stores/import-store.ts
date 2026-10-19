@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import type { PlanAnswers } from '@/features/plan-create/lib/plan-answers';
 import { newId } from '@/shared/data/json';
+import { track } from '@/shared/lib/analytics';
 
 import {
   type ImportedPlan,
@@ -78,6 +79,26 @@ const EMPTY = {
 /** The run in progress, stopped when another one starts or the user leaves. */
 let running: AbortController | null = null;
 
+/** A plan the AI made or read, for analytics: how long it took and what came out. */
+function trackRead(source: ImportSource, plan: ImportedPlan | null, durationMs: number) {
+  const routines = plan?.routines ?? [];
+  if (source.kind === 'answers') {
+    track('plan:generate_complete', {
+      duration_ms: durationMs,
+      sessions_per_week: source.answers.sessionsPerWeek,
+      split: source.answers.split ?? 'auto',
+      routine_count: routines.length,
+    });
+    return;
+  }
+  track('plan_import:read_complete', {
+    source: source.kind,
+    exercise_count: routines.reduce((n, r) => n + r.exercises.length, 0),
+    unmatched_count: plan?.newExercises.length ?? 0,
+    duration_ms: durationMs,
+  });
+}
+
 /** The plan with what the function just sent. */
 function receive(s: ImportState, event: PlanEvent): Partial<ImportState> {
   if (event.type === 'plan') return { plan: { name: event.name, routines: [], newExercises: [] } };
@@ -149,16 +170,22 @@ export const useImportStore = create<ImportState>()((set, get) => ({
     const run = last + 1;
     set({ run, plan: null, routineIndex: 0, reading: !!source, failure: null, following: true });
     if (!source) return run;
+    const startedAt = Date.now();
     streamPlan(
       { source, language },
       (event) => !controller.signal.aborted && set((s) => receive(s, event)),
       controller.signal,
     )
-      .then(() => set({ reading: false }))
+      .then(() => {
+        set({ reading: false });
+        trackRead(source, get().plan, Date.now() - startedAt);
+      })
       .catch((error: unknown) => {
         if (controller.signal.aborted) return;
         const reason = error instanceof ImportError ? error.reason : 'failed';
         set({ reading: false, failure: { run, reason } });
+        if (source.kind === 'answers') track('plan:generate_fail', { error_code: reason });
+        else track('plan_import:read_fail', { source: source.kind, error_code: reason });
       });
     return run;
   },

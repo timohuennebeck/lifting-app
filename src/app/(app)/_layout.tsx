@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 
+import { useAnalyticsPerson } from '@/features/auth/hooks/use-analytics-person';
 import { LegalUpdateGate } from '@/features/legal/components/legal-update-gate';
 import { useSubscriptionGate } from '@/features/paywall/hooks/use-subscription-gate';
 import { useAttachmentUploadQueue } from '@/features/support/hooks/use-attachment-upload-queue';
@@ -10,6 +11,7 @@ export default function AppLayout() {
   // Background uploads of ticket screenshots, also after restarts.
   useAttachmentUploadQueue();
   useSyncAccountLanguage();
+  useAnalyticsPerson();
   // The whole app is Pro: without a subscription only the paywall, the account and a running
   // workout stay open (see useSubscriptionGate).
   useSubscriptionGate();

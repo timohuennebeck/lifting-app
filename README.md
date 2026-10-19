@@ -305,6 +305,29 @@ What the code expects:
 - **Testing:** a development build on an iPhone, signed in to a sandbox tester under Settings →
   App Store → Sandbox Account.
 
+## Analytics (PostHog)
+
+Product analytics and error tracking go to PostHog's EU cloud once `EXPO_PUBLIC_POSTHOG_KEY` (the
+public `phc_…` project key) is in `.env`; without it nothing is sent. The events and their
+properties are typed in `src/shared/lib/analytics.ts` (`AnalyticsEvents`), named
+`category:object_action`:
+
+- **Onboarding and plans:** `onboarding:flow_start`, `plan:generate_complete` / `_fail`,
+  `plan_import:read_complete` / `_fail`.
+- **Money:** `paywall:view` (with `placement`), `paywall:purchase_complete` / `_fail`.
+- **Account:** `account:sign_up_complete`; the PostHog id is the Supabase user id from sign-in
+  (`identify`), so the anonymous onboarding and purchase events join the person, and `reset` on
+  sign-out.
+- **Training:** `workout:start`, `workout:finish`, `workout:discard`, with the plan week, sets and
+  records from the local database.
+- **Automatic:** a `$screen` per route (`/workout/[id]`, ids left out), uncaught errors and
+  unhandled rejections as `$exception`, app lifecycle events.
+
+Person properties are the profile's answers, the plan's workouts per week, an age band and Pro.
+Body weight, height, progress photos and their scores, names, email, the birth date and free text
+are never sent. `posthog-react-native` uses `expo-application` and `expo-device`: a new
+development build is needed after pulling.
+
 ## Languages
 
 `en` (source), `de`, `pt-PT`, `pt-BR` and `ko`. App texts are in

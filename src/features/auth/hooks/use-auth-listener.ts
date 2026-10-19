@@ -18,6 +18,7 @@ import { useWorkoutSessionStore } from '@/features/workout/stores/workout-sessio
 import { connector, db } from '@/shared/data/powersync/database';
 import { queryClient } from '@/shared/data/query-client';
 import { supabase } from '@/shared/data/supabase';
+import { identify, resetAnalytics } from '@/shared/lib/analytics';
 import { useSessionStore } from '@/shared/stores/session-store';
 
 import { signOutOfGoogle } from '../lib/google-sign-in';
@@ -29,6 +30,7 @@ let connectedUserId: string | null = null;
 function connectAccount(userId: string) {
   if (connectedUserId === userId) return;
   connectedUserId = userId;
+  identify(userId);
   // The connector fetches fresh tokens itself; offline, PowerSync keeps retrying.
   db.connect(connector);
   refreshSubscription(userId);
@@ -70,6 +72,8 @@ export function useAuthListener() {
         // And the muscle levels last seen on the Level tab.
         useLevelSeenStore.getState().reset();
         useRankLiftStore.getState().reset();
+        // Events after this belong to whoever uses the app next.
+        resetAnalytics();
         // The next Google sign-in asks for the account again instead of reusing this one.
         signOutOfGoogle();
         return;

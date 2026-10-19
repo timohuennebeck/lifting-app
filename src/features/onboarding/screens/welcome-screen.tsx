@@ -11,6 +11,8 @@ import { CheckChip } from '@/shared/ui/check-item';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
+import { track } from '@/shared/lib/analytics';
+
 import { LanguagePicker } from '../components/language-picker';
 import { PhotoBackdrop } from '../components/photo-backdrop';
 import { useOnboardingStore } from '../stores/onboarding-store';
@@ -63,7 +65,10 @@ export function WelcomeScreen() {
         </View>
         <Button
           label={t('welcome.start')}
-          onPress={() => router.push('/name')}
+          onPress={() => {
+            track('onboarding:flow_start');
+            router.push('/name');
+          }}
           className="mt-6.5"
         />
         <TextButton

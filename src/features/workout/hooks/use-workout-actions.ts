@@ -3,7 +3,8 @@ import { useState } from 'react';
 
 import { haptics } from '@/shared/lib/haptics';
 
-import { discardWorkout, finishWorkout } from '../data/workout-mutations';
+import { discardWorkout, finishWorkout, workoutStats } from '../data/workout-mutations';
+import { trackWorkoutDiscard, trackWorkoutFinish } from '../lib/workout-analytics';
 import { useWorkoutSessionStore } from '../stores/workout-session-store';
 
 /** Finish (→ summary) or discard the running workout. */
@@ -12,8 +13,11 @@ export function useWorkoutActions(workoutId: string) {
 
   async function finish() {
     setFinishing(true);
+    // Read before finishing, which drops the sets that weren't logged.
+    const stats = await workoutStats(workoutId).catch(() => null);
     try {
       await finishWorkout(workoutId);
+      trackWorkoutFinish(stats);
       haptics.success();
       useWorkoutSessionStore.getState().reset();
       router.replace({
@@ -33,7 +37,9 @@ export function useWorkoutActions(workoutId: string) {
     useWorkoutSessionStore.getState().reset();
     if (router.canGoBack()) router.back();
     else router.replace('/');
+    const stats = await workoutStats(workoutId).catch(() => null);
     await discardWorkout(workoutId);
+    trackWorkoutDiscard(stats);
   }
 
   return { finish, abandon, finishing };

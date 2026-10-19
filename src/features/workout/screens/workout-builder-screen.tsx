@@ -15,6 +15,7 @@ import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 
 import { startDraftWorkout } from '../data/workout-mutations';
+import { trackWorkoutStart } from '../lib/workout-analytics';
 import { useWorkoutDraftStore } from '../stores/workout-draft-store';
 
 /**
@@ -48,7 +49,10 @@ export function WorkoutBuilderScreen() {
       // Only one workout runs at a time; a second one would be orphaned unfinished.
       let workoutId = await getActiveWorkoutId();
       // Not `??`, which the React Compiler can't compile inside a try.
-      if (workoutId === null) workoutId = await startDraftWorkout(requireUserId(), name, exercises);
+      if (workoutId === null) {
+        workoutId = await startDraftWorkout(requireUserId(), name, exercises);
+        void trackWorkoutStart(workoutId);
+      }
       haptics.success();
       router.replace(`/workout/${workoutId}`);
     } catch (error) {

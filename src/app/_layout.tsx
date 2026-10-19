@@ -26,6 +26,7 @@ import { useCustomExerciseStore } from '@/shared/data/exercises';
 import { db } from '@/shared/data/powersync/database';
 import { queryClient } from '@/shared/data/query-client';
 import { useCatalogRefresh } from '@/shared/hooks/use-catalog-refresh';
+import { useScreenTracking } from '@/shared/hooks/use-screen-tracking';
 import { colors } from '@/shared/lib/theme';
 import { useSessionStore } from '@/shared/stores/session-store';
 
@@ -47,6 +48,7 @@ export default function RootLayout() {
     Inter_700Bold,
   });
   useAuthListener();
+  useScreenTracking();
   // Also before login: onboarding builds the first plan from the catalog.
   const catalog = useCatalogRefresh();
   const signedIn = useSessionStore((s) => !!s.session);

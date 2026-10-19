@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 
 import { startWorkout } from '@/features/workout/data/workout-mutations';
+import { trackWorkoutStart } from '@/features/workout/lib/workout-analytics';
 import type { RoutineSummary } from '@/shared/data/routines';
 import { getActiveWorkoutId } from '@/shared/data/workouts';
 import { haptics } from '@/shared/lib/haptics';
@@ -26,6 +27,7 @@ export function useStartRoutine() {
       // Not `??`, which the React Compiler can't compile inside a try.
       if (workoutId === null) {
         workoutId = await startWorkout(requireUserId(), routine.name, routine.id);
+        void trackWorkoutStart(workoutId);
       }
       haptics.success();
       router.push(`/workout/${workoutId}`);

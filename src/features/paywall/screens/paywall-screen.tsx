@@ -1,11 +1,12 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { LegalLinks } from '@/features/legal/components/legal-link';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
+import { track } from '@/shared/lib/analytics';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
 import { CheckItem } from '@/shared/ui/check-item';
@@ -36,6 +37,11 @@ export function PaywallScreen() {
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
   const flow = usePaywallFlow();
+  // Counted once per showing, where it first showed (a purchase changes `locked`).
+  const [placement] = useState(flow.placement);
+  useEffect(() => {
+    track('paywall:view', { placement });
+  }, [placement]);
   const isPro = useIsPro();
   const { offering, plan, priceOf, failed, loading, refetch } = useOffering();
   const { buy, busy } = usePurchase();

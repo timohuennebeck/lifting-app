@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
+import { track } from '@/shared/lib/analytics';
 import { haptics } from '@/shared/lib/haptics';
 
 import { paywallKeys } from '../data/paywall-keys';
@@ -25,13 +26,21 @@ export function usePurchase() {
     setBusy(true);
     let bought = false;
     try {
-      useSubscriptionStore.getState().apply(await purchases.purchase(planId));
+      const info = await purchases.purchase(planId);
+      useSubscriptionStore.getState().apply(info);
       queryClient.invalidateQueries({ queryKey: paywallKeys.offering.queryKey });
       haptics.success();
+      track('paywall:purchase_complete', { package: planId, has_trial: !!info.trialEndsAt });
       bought = true;
     } catch (error) {
+      const cancelled = error instanceof PurchaseCancelledError;
+      track('paywall:purchase_fail', {
+        package: planId,
+        error_code: error instanceof Error ? error.name : 'unknown',
+        is_cancelled: cancelled,
+      });
       // Closing the store's sheet isn't an error.
-      if (!(error instanceof PurchaseCancelledError)) {
+      if (!cancelled) {
         console.warn('Purchase failed', error);
         haptics.error();
         Alert.alert(t('errors.generic'));

@@ -15,6 +15,7 @@ import {
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { supabase } from '@/shared/data/supabase';
 import { i18n } from '@/shared/i18n';
+import { type AnalyticsEvents, identify, track } from '@/shared/lib/analytics';
 import { haptics } from '@/shared/lib/haptics';
 import { useSessionStore } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
@@ -55,7 +56,11 @@ export function CreateAccountScreen() {
   };
 
   /** Saves the onboarding answers to the new account with the accepted documents, then goes on. */
-  const finish = async (userId: string, documents: LegalDocument[]) => {
+  const finish = async (
+    userId: string,
+    documents: LegalDocument[],
+    method: AnalyticsEvents['account:sign_up_complete']['method'],
+  ) => {
     // An account that is already set up (e.g. signed in with Google or Apple) keeps its own
     // profile and plan. A retry after a failed save lands here too, so the acceptance is
     // recorded here as well (only missing rows are added; the profile row exists by now).
@@ -68,6 +73,9 @@ export function CreateAccountScreen() {
     const { draft } = useOnboardingStore.getState();
     await persistOnboarding(userId, draft);
     await acceptDocuments(userId, documents);
+    // A new account: its onboarding and purchase events join it, then the sign-up counts.
+    identify(userId);
+    track('account:sign_up_complete', { method });
     haptics.success();
     // The progress check is for adults only; younger users go straight to the app.
     if (isProgressCheckAge(draft.birthDate)) router.push('/progress-check');
@@ -92,7 +100,7 @@ export function CreateAccountScreen() {
       if (!data.session) return fail('confirmEmail');
       userId = data.session.user.id;
     }
-    await finish(userId, documents);
+    await finish(userId, documents, 'email');
   };
 
   const submit = async () => {
@@ -112,7 +120,7 @@ export function CreateAccountScreen() {
       // Loaded first for the same reason as with email: the provider creates the account at once.
       const documents = await fetchCurrentDocuments(i18n.language);
       const user = await signInWith(provider);
-      if (user) await finish(user.id, documents);
+      if (user) await finish(user.id, documents, provider);
     } catch {
       fail('generic');
     }
