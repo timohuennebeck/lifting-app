@@ -28,7 +28,7 @@
     "title": "WANN HAST DU\nGEBURTSTAG?",
     "age_one": "{{count}} Jahr",
     "age_other": "{{count}} Jahre",
-    "tooYoung": "Traqa ist ab {{min}} Jahren."
+    "tooYoung": "Loqqa ist ab {{min}} Jahren."
   },
   "units": {
     "title": "WELCHE EINHEITEN\nNUTZT DU?",

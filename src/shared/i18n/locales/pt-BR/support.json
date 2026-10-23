@@ -1,5 +1,5 @@
 {
-  "team": "Equipe Traqa",
+  "team": "Equipe Loqqa",
   "teamReplyTime": "Costuma responder em 24–48 h.",
   "kind": {
     "bug": "Erro",
@@ -15,7 +15,7 @@
   "ticketNumber": "Chamado #{{number}}",
   "ticketPending": "Novo chamado",
   "preview": {
-    "team": "Equipe Traqa: {{text}}",
+    "team": "Equipe Loqqa: {{text}}",
     "user": "Você: {{text}}",
     "screenshots_one": "Captura de tela",
     "screenshots_other": "{{count}} capturas de tela"

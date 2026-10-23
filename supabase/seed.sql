@@ -9,7 +9,7 @@ insert into public.legal_documents (kind, locale, version, content_md, effective
 
 ## 1. Scope
 
-These terms apply to the use of the **Traqa** app.
+These terms apply to the use of the **Loqqa** app.
 
 ## 2. Your account
 
@@ -37,7 +37,7 @@ $md$, '2026-10-01'),
 
 ## 1. Geltungsbereich
 
-Diese Bedingungen gelten für die Nutzung der App **Traqa**.
+Diese Bedingungen gelten für die Nutzung der App **Loqqa**.
 
 ## 2. Dein Konto
 

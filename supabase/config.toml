@@ -160,7 +160,7 @@ site_url = "http://127.0.0.1:3000"
 # The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
 # external_url = ""
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://127.0.0.1:3000", "traqa://**"]
+additional_redirect_urls = ["https://127.0.0.1:3000", "loqqa://**"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # JWT issuer URL. If not set, defaults to auth.external_url.
@@ -245,11 +245,11 @@ otp_expiry = 3600
 
 # Account emails in the user's app language (user_metadata.language, set by the app).
 [auth.email.template.confirmation]
-subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Bestätige deine E-Mail für Traqa{{ else if eq $l "pt-PT" }}Confirma o teu email no Traqa{{ else if eq $l "pt-BR" }}Confirme seu e-mail no Traqa{{ else if eq $l "ko" }}Traqa 이메일을 인증해 주세요{{ else }}Confirm your email for Traqa{{ end }}'
+subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Bestätige deine E-Mail für Loqqa{{ else if eq $l "pt-PT" }}Confirma o teu email no Loqqa{{ else if eq $l "pt-BR" }}Confirme seu e-mail no Loqqa{{ else if eq $l "ko" }}Loqqa 이메일을 인증해 주세요{{ else }}Confirm your email for Loqqa{{ end }}'
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.email.template.recovery]
-subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Passwort für Traqa zurücksetzen{{ else if eq $l "pt-PT" }}Repor a palavra-passe do Traqa{{ else if eq $l "pt-BR" }}Redefinir a senha do Traqa{{ else if eq $l "ko" }}Traqa 비밀번호 재설정{{ else }}Reset your Traqa password{{ end }}'
+subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Passwort für Loqqa zurücksetzen{{ else if eq $l "pt-PT" }}Repor a palavra-passe do Loqqa{{ else if eq $l "pt-BR" }}Redefinir a senha do Loqqa{{ else if eq $l "ko" }}Loqqa 비밀번호 재설정{{ else }}Reset your Loqqa password{{ end }}'
 content_path = "./supabase/templates/recovery.html"
 
 [auth.email.template.email_change]

@@ -6,11 +6,11 @@ Version: [[PLATZHALTER: Versionsnummer]]
 
 Stand: [[PLATZHALTER: Datum]]
 
-Hier erfährst du, welche personenbezogenen Daten wir verarbeiten, wenn du die App Traqa nutzt, wofür wir das tun und welche Rechte du hast. Grundlage sind die Datenschutz-Grundverordnung (DSGVO), das Bundesdatenschutzgesetz (BDSG) und das Telekommunikation-Digitale-Dienste-Datenschutz-Gesetz (TDDDG).
+Hier erfährst du, welche personenbezogenen Daten wir verarbeiten, wenn du die App Loqqa nutzt, wofür wir das tun und welche Rechte du hast. Grundlage sind die Datenschutz-Grundverordnung (DSGVO), das Bundesdatenschutzgesetz (BDSG) und das Telekommunikation-Digitale-Dienste-Datenschutz-Gesetz (TDDDG).
 
 ## Kurz zusammengefasst
 
-- Traqa speichert deine Pläne und Trainings zuerst auf deinem Gerät und gleicht sie mit deinem Konto ab, sobald du online bist.
+- Loqqa speichert deine Pläne und Trainings zuerst auf deinem Gerät und gleicht sie mit deinem Konto ab, sobald du online bist.
 - Andere Nutzer können dein Profil, deine Trainings und deine Fotos nicht sehen.
 - Deine Körpermaße und deine Körpercheck-Fotos behandeln wir als Gesundheitsdaten. Wir verarbeiten sie nur mit deiner ausdrücklichen Einwilligung.
 - Für den Körpercheck und den Plan-Import wertet ein KI-Modell von OpenAI deine Fotos und Dateien aus, und es erstellt deinen Plan aus deinen Antworten, wenn du dir einen erstellen lässt. Dafür übermitteln wir diese Daten an OpenAI in den USA.
@@ -32,13 +32,13 @@ Im Folgenden nennen wir uns „wir“.
 
 [[PLATZHALTER: Name und Kontaktdaten des Datenschutzbeauftragten oder Hinweis, dass keiner benannt werden muss]]
 
-## 3. So funktioniert Traqa
+## 3. So funktioniert Loqqa
 
-Traqa ist eine Trainings-App. Du kannst dir einen Trainingsplan erstellen lassen oder einen vorhandenen importieren, deine Trainings protokollieren und Körperchecks mit Fotos machen.
+Loqqa ist eine Trainings-App. Du kannst dir einen Trainingsplan erstellen lassen oder einen vorhandenen importieren, deine Trainings protokollieren und Körperchecks mit Fotos machen.
 
 Die App arbeitet „offline first“: Deine Daten liegen in einer Datenbank auf deinem Gerät, damit du auch ohne Internet trainieren kannst. Bist du angemeldet und online, gleicht die App diese Daten mit deinem Konto auf unseren Servern ab. So sind dein Plan und deine Historie gesichert und auf all deinen Geräten verfügbar. Für die Server nutzen wir Dienstleister (Abschnitt 7).
 
-Alle Daten in unserer Datenbank sind deinem Konto zugeordnet. Technische Zugriffsregeln sorgen dafür, dass nur du deine eigenen Daten lesen und ändern kannst. Traqa hat derzeit keine Funktionen, mit denen andere Nutzer dein Profil, deine Trainings oder deine Fotos sehen.
+Alle Daten in unserer Datenbank sind deinem Konto zugeordnet. Technische Zugriffsregeln sorgen dafür, dass nur du deine eigenen Daten lesen und ändern kannst. Loqqa hat derzeit keine Funktionen, mit denen andere Nutzer dein Profil, deine Trainings oder deine Fotos sehen.
 
 ## 4. Welche Daten wir wofür verarbeiten
 
@@ -52,7 +52,7 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der App, die du nutz
 
 ### 4.2 Dein Konto
 
-Um Traqa zu nutzen, erstellst du ein Konto mit E-Mail-Adresse und Passwort oder meldest dich mit deinem Google-Konto oder deinem Apple Account an. Dabei verarbeiten wir:
+Um Loqqa zu nutzen, erstellst du ein Konto mit E-Mail-Adresse und Passwort oder meldest dich mit deinem Google-Konto oder deinem Apple Account an. Dabei verarbeiten wir:
 
 - deine E-Mail-Adresse und dein Passwort (das Passwort speichern wir nur als kryptografischen Hashwert, nie im Klartext; mit Anmeldung über Google oder Apple gibt es bei uns kein Passwort)
 - deinen Vornamen und deine App-Sprache: die Sprache, damit Konto-E-Mails in deiner Sprache ankommen, den Vornamen, damit die App ihn nach einer Anmeldung auf einem neuen Gerät wieder eintragen kann
@@ -62,7 +62,7 @@ Wir schicken dir E-Mails, die für dein Konto nötig sind: gegebenenfalls zur Be
 
 Damit du angemeldet bleibst, speichert die App deine Anmeldesitzung auf deinem Gerät.
 
-**Anmeldung mit Google:** Wenn du „Google“ wählst, öffnet sich die Anmeldung von Google auf deinem Gerät. Google bestätigt uns danach deine Anmeldung und übermittelt uns deine E-Mail-Adresse, deinen Namen, die Adresse deines Google-Profilbilds und eine Kennung deines Google-Kontos. Diese Angaben speichern wir zu deinem Konto. Google erfährt dabei, dass du dich bei Traqa anmeldest. Für die Anmeldung über dein Google-Konto ist Google eigenständig verantwortlich; es gilt die Datenschutzerklärung von Google. [[PLATZHALTER: Vertragspartner von Google für Nutzer in der EU mit Anschrift, Rolle von Google und Drittlandübermittlung an Google in den USA rechtlich prüfen]]
+**Anmeldung mit Google:** Wenn du „Google“ wählst, öffnet sich die Anmeldung von Google auf deinem Gerät. Google bestätigt uns danach deine Anmeldung und übermittelt uns deine E-Mail-Adresse, deinen Namen, die Adresse deines Google-Profilbilds und eine Kennung deines Google-Kontos. Diese Angaben speichern wir zu deinem Konto. Google erfährt dabei, dass du dich bei Loqqa anmeldest. Für die Anmeldung über dein Google-Konto ist Google eigenständig verantwortlich; es gilt die Datenschutzerklärung von Google. [[PLATZHALTER: Vertragspartner von Google für Nutzer in der EU mit Anschrift, Rolle von Google und Drittlandübermittlung an Google in den USA rechtlich prüfen]]
 
 **Anmeldung mit Apple** (nur auf Apple-Geräten): Wenn du „Apple“ wählst, öffnet sich die Anmeldung von Apple auf deinem Gerät. Apple bestätigt uns danach deine Anmeldung und übermittelt uns eine Kennung deines Apple Accounts und deine E-Mail-Adresse. Du kannst stattdessen eine von Apple erzeugte Adresse wählen, die E-Mails an dich weiterleitet („E-Mail-Adresse verbergen“). Bei der ersten Anmeldung übermittelt Apple auch deinen Namen, wenn du ihn freigibst. Diese Angaben speichern wir zu deinem Konto. Für die Anmeldung über deinen Apple Account ist Apple eigenständig verantwortlich; es gilt die Datenschutzrichtlinie von Apple. [[PLATZHALTER: Vertragspartner von Apple für Nutzer in der EU mit Anschrift und Rolle von Apple rechtlich prüfen]]
 
@@ -95,7 +95,7 @@ Der Körpercheck ist freiwillig: Du kannst ihn überspringen. Deine Einwilligung
 
 ### 4.5 Trainingsdaten
 
-Wenn du Traqa nutzt, speichern wir deine Trainingsdaten:
+Wenn du Loqqa nutzt, speichern wir deine Trainingsdaten:
 
 - **Pläne:** Name, Trainings pro Woche, Blöcke mit Deload-Woche, Trainings in ihrer Reihenfolge (auch Trainings ohne Plan), Übungen, Sätze mit Zielwerten (Wiederholungen oder Sekunden), Wiederholungen in Reserve (RIR) und Pausenzeiten
 - **Absolvierte Trainings:** Beginn und Ende, zu welchem Plan und welcher Planwoche sie zählen, Übungen, Gewicht und Wiederholungen oder Sekunden je Satz, der Zeitpunkt jedes erledigten Satzes und persönliche Bestleistungen
@@ -157,7 +157,7 @@ Screenshots speichert die App zuerst auf deinem Gerät und lädt sie dann im Hin
 
 Bitte schick uns in Nachrichten und Screenshots keine Gesundheitsdaten und keine Daten anderer Personen, wenn sie für dein Anliegen nicht nötig sind.
 
-Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO, soweit deine Anfrage die Nutzung der App betrifft, zum Beispiel bei Fehlern. Bei Ideen und sonstigem Feedback Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist es, deine Anfrage zu beantworten und Traqa zu verbessern.
+Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO, soweit deine Anfrage die Nutzung der App betrifft, zum Beispiel bei Fehlern. Bei Ideen und sonstigem Feedback Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist es, deine Anfrage zu beantworten und Loqqa zu verbessern.
 
 ### 4.9 Rechtstexte und Zustimmungen
 
@@ -165,11 +165,11 @@ Die App lädt die jeweils gültige Fassung der Nutzungsbedingungen und dieser Da
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. c in Verbindung mit Art. 7 Abs. 1 DSGVO (Nachweis von Einwilligungen) und Art. 6 Abs. 1 lit. f DSGVO (unser berechtigtes Interesse, nachweisen zu können, welche Bedingungen gelten).
 
-### 4.10 Traqa Pro: Abos und Käufe
+### 4.10 Loqqa Pro: Abos und Käufe
 
-Traqa Pro kaufst du über den App Store von Apple oder über Google Play. Die Zahlung wickeln Apple bzw. Google ab. Sie sind dafür selbst verantwortlich und verarbeiten deine Zahlungsdaten nach ihren eigenen Datenschutzbestimmungen: [Apple](https://www.apple.com/legal/privacy/de-ww/) und [Google](https://policies.google.com/privacy?hl=de). Zahlungsdaten wie Kreditkartennummern erhalten wir nicht.
+Loqqa Pro kaufst du über den App Store von Apple oder über Google Play. Die Zahlung wickeln Apple bzw. Google ab. Sie sind dafür selbst verantwortlich und verarbeiten deine Zahlungsdaten nach ihren eigenen Datenschutzbestimmungen: [Apple](https://www.apple.com/legal/privacy/de-ww/) und [Google](https://policies.google.com/privacy?hl=de). Zahlungsdaten wie Kreditkartennummern erhalten wir nicht.
 
-Damit wir Traqa Pro freischalten können, erfahren wir, welches Abo du gekauft hast, ob ein Testzeitraum läuft, wann du gekauft hast und ob das Abo aktiv ist. Die App speichert diesen Status auf deinem Gerät und fragt ihn beim Start und bei jeder Anmeldung erneut ab. [[PLATZHALTER: Die Kaufabwicklung ist im aktuellen Code eine Testversion; vor dem Livegang ergänzen, welche Kaufdaten auf unseren Servern oder bei RevenueCat gespeichert werden]]
+Damit wir Loqqa Pro freischalten können, erfahren wir, welches Abo du gekauft hast, ob ein Testzeitraum läuft, wann du gekauft hast und ob das Abo aktiv ist. Die App speichert diesen Status auf deinem Gerät und fragt ihn beim Start und bei jeder Anmeldung erneut ab. [[PLATZHALTER: Die Kaufabwicklung ist im aktuellen Code eine Testversion; vor dem Livegang ergänzen, welche Kaufdaten auf unseren Servern oder bei RevenueCat gespeichert werden]]
 
 Dein Abo verwaltest und kündigst du in den Einstellungen deines Store-Kontos. Die App verlinkt in ihren Einstellungen unter „Abo verwalten“ dorthin.
 
@@ -183,9 +183,9 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist ei
 
 ### 4.12 Geplant: Produktanalyse mit PostHog
 
-> Dieser Abschnitt beschreibt einen geplanten Dienst. Traqa nutzt PostHog derzeit noch nicht.
+> Dieser Abschnitt beschreibt einen geplanten Dienst. Loqqa nutzt PostHog derzeit noch nicht.
 
-Wir planen, mit PostHog zu messen, wie die App genutzt wird, zum Beispiel welche Bildschirme aufgerufen und welche Funktionen genutzt werden. So wollen wir Traqa verbessern. Das passiert nur, wenn du vorher in der App eingewilligt hast. Ohne deine Einwilligung werden keine Analysedaten erhoben.
+Wir planen, mit PostHog zu messen, wie die App genutzt wird, zum Beispiel welche Bildschirme aufgerufen und welche Funktionen genutzt werden. So wollen wir Loqqa verbessern. Das passiert nur, wenn du vorher in der App eingewilligt hast. Ohne deine Einwilligung werden keine Analysedaten erhoben.
 
 Voraussichtlich verarbeitet werden Nutzungsereignisse mit Zeitpunkt, eine pseudonyme Kennung sowie Angaben zu Gerät, Betriebssystem und App-Version. [[PLATZHALTER: Endgültige Liste der an PostHog übermittelten Daten, insbesondere ob IP-Adressen gespeichert, ob Sitzungsaufzeichnungen genutzt und ob Ereignisse mit deinem Konto verknüpft werden]] Gesundheitsdaten und Fotos übermitteln wir nicht an PostHog.
 
@@ -198,7 +198,7 @@ Rechtsgrundlage: deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1
 
 ### 4.13 Abo-Verwaltung mit RevenueCat
 
-Käufe und Abos verwalten wir über RevenueCat, derzeit für Käufe über den App Store. RevenueCat prüft für uns die Kaufbelege von Apple und teilt der App mit, ob Traqa Pro aktiv ist. Bevor unser Server einen Körpercheck auswertet, fragt er bei RevenueCat nach, ob dein Konto Traqa Pro hat.
+Käufe und Abos verwalten wir über RevenueCat, derzeit für Käufe über den App Store. RevenueCat prüft für uns die Kaufbelege von Apple und teilt der App mit, ob Loqqa Pro aktiv ist. Bevor unser Server einen Körpercheck auswertet, fragt er bei RevenueCat nach, ob dein Konto Loqqa Pro hat.
 
 Damit RevenueCat deine Käufe deinem Konto zuordnen kann, übermitteln wir deine Konto-ID, eine zufällige Kennung ohne Namen oder E-Mail-Adresse. Kaufst du vor dem Erstellen deines Kontos, vergibt RevenueCat zunächst eine eigene zufällige Kennung und ordnet den Kauf danach deinem Konto zu. Außerdem verarbeitet RevenueCat Kauf- und Abo-Informationen aus dem Store (zum Beispiel Produkt, Preis, Währung, Kauf-, Verlängerungs- und Ablaufdaten, Testzeitraum und Transaktionskennungen) sowie technische Angaben wie Plattform und App-Version. [[PLATZHALTER: Endgültige Liste der an RevenueCat übermittelten Daten bestätigen]]
 
@@ -212,7 +212,7 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.
 
 ## 5. Speicherung auf deinem Gerät
 
-Damit Traqa auch offline funktioniert, speichert die App Daten auf deinem Gerät:
+Damit Loqqa auch offline funktioniert, speichert die App Daten auf deinem Gerät:
 
 - eine lokale Datenbank mit deinem Profil, deinen Plänen und Trainings, deinen Körpercheck-Werten, deinen Support-Anfragen und deinen Zustimmungen
 - Körpercheck-Fotos, die du auf diesem Gerät aufgenommen hast, und Kopien deiner Support-Screenshots
@@ -227,13 +227,13 @@ Je nach Einstellungen deines Geräts können Dateien der App, auch Körpercheck-
 
 ## 6. Berechtigungen auf deinem Gerät
 
-Traqa fragt nur dann nach einer Berechtigung, wenn du eine Funktion nutzt, die sie braucht:
+Loqqa fragt nur dann nach einer Berechtigung, wenn du eine Funktion nutzt, die sie braucht:
 
 - **Kamera:** um deinen Trainingsplan zu fotografieren, für Körpercheck-Fotos und für dein Profilfoto
 - **Fotos:** um Bilder für den Plan-Import, für Support-Screenshots und für dein Profilfoto auszuwählen. Dafür nutzt die App die Bildauswahl deines Betriebssystems und erhält nur die Bilder, die du auswählst.
 - **Dateien:** um eine Plan-Datei über die Dateiauswahl deines Betriebssystems auszuwählen
 
-Traqa fragt nicht nach Zugriff auf Mikrofon, Standort, Kontakte oder Gesundheits-Apps wie Apple Health oder Health Connect und sendet keine Push-Mitteilungen. Berechtigungen kannst du jederzeit in den Einstellungen deines Geräts entziehen.
+Loqqa fragt nicht nach Zugriff auf Mikrofon, Standort, Kontakte oder Gesundheits-Apps wie Apple Health oder Health Connect und sendet keine Push-Mitteilungen. Berechtigungen kannst du jederzeit in den Einstellungen deines Geräts entziehen.
 
 ## 7. Empfänger und Auftragsverarbeiter
 
@@ -279,7 +279,7 @@ Wenn wir Daten in ein Drittland übermitteln, stützen wir das auf einen Angemes
 
 Du kannst dein Konto jederzeit in der App löschen: in den Einstellungen unter „Konto löschen“. Dabei passiert Folgendes:
 
-1. Hast du dich mit Apple angemeldet, bestätigst du das auf einem Apple-Gerät noch einmal bei Apple. Damit beenden wir die Verbindung zwischen deinem Apple Account und Traqa: Unser Server tauscht die Bestätigung bei Apple gegen deine Anmeldeschlüssel und lässt sie sofort ungültig machen. Gespeichert wird dabei nichts.
+1. Hast du dich mit Apple angemeldet, bestätigst du das auf einem Apple-Gerät noch einmal bei Apple. Damit beenden wir die Verbindung zwischen deinem Apple Account und Loqqa: Unser Server tauscht die Bestätigung bei Apple gegen deine Anmeldeschlüssel und lässt sie sofort ungültig machen. Gespeichert wird dabei nichts.
 2. Die App löscht dein Profilfoto, deine Körpercheck-Fotos und deine Support-Screenshots aus unserem Speicher.
 3. Danach wird dein Konto gelöscht. Damit werden automatisch alle zugehörigen Daten in unserer Datenbank gelöscht: Profil, Pläne, Trainings, Körperchecks, Support-Anfragen mit allen Nachrichten und deine gespeicherten Zustimmungen.
 4. Zum Schluss meldet die App dich auf diesem Gerät ab und löscht die dort gespeicherten Daten.
@@ -321,7 +321,7 @@ Du kannst dich bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77 DSGVO
 
 ## 14. Musst du uns Daten geben?
 
-Für ein Konto brauchen wir deine E-Mail-Adresse und ein Passwort oder dein Google-Konto bzw. deinen Apple Account. Ohne Konto kannst du Traqa nach der Einrichtung nicht nutzen und deine Daten nicht sichern. Die Angaben in der Einrichtung braucht die App, um deinen Plan zu erstellen. Freiwillig sind insbesondere dein Geschlecht (du kannst „Keine Angabe“ wählen), der Körpercheck, ein Profilfoto und der Text „Über dich“.
+Für ein Konto brauchen wir deine E-Mail-Adresse und ein Passwort oder dein Google-Konto bzw. deinen Apple Account. Ohne Konto kannst du Loqqa nach der Einrichtung nicht nutzen und deine Daten nicht sichern. Die Angaben in der Einrichtung braucht die App, um deinen Plan zu erstellen. Freiwillig sind insbesondere dein Geschlecht (du kannst „Keine Angabe“ wählen), der Körpercheck, ein Profilfoto und der Text „Über dich“.
 
 ## 15. Keine automatisierten Entscheidungen
 
@@ -329,7 +329,7 @@ Die App erstellt Pläne, Vorschläge und Körpercheck-Werte automatisch; Pläne,
 
 ## 16. Kinder und Jugendliche
 
-Traqa richtet sich an Personen ab [[PLATZHALTER: Mindestalter]] Jahren. [[PLATZHALTER: Regelung für Minderjährige, insbesondere zur Einwilligung in die Verarbeitung von Gesundheitsdaten]] [[PLATZHALTER: Vorgehen, wenn uns ein Konto einer Person unter dem Mindestalter bekannt wird]]
+Loqqa richtet sich an Personen ab [[PLATZHALTER: Mindestalter]] Jahren. [[PLATZHALTER: Regelung für Minderjährige, insbesondere zur Einwilligung in die Verarbeitung von Gesundheitsdaten]] [[PLATZHALTER: Vorgehen, wenn uns ein Konto einer Person unter dem Mindestalter bekannt wird]]
 
 ## 17. Sicherheit
 

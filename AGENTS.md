@@ -1,4 +1,4 @@
-# Traqa: notes for AI agents
+# Loqqa: notes for AI agents
 
 Workout logger for iOS and Android on Expo SDK 57 (no web build). Expo's APIs change with every
 SDK: read the docs for this version (https://docs.expo.dev/versions/v57.0.0/, index with

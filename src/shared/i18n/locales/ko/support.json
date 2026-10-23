@@ -1,5 +1,5 @@
 {
-  "team": "Traqa 팀",
+  "team": "Loqqa 팀",
   "teamReplyTime": "보통 24–48시간 안에 답변해요.",
   "kind": {
     "bug": "버그",
@@ -15,7 +15,7 @@
   "ticketNumber": "문의 #{{number}}",
   "ticketPending": "새 문의",
   "preview": {
-    "team": "Traqa 팀: {{text}}",
+    "team": "Loqqa 팀: {{text}}",
     "user": "나: {{text}}",
     "screenshots_one": "스크린샷 {{count}}장",
     "screenshots_other": "스크린샷 {{count}}장"

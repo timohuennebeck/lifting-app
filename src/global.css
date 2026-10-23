@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 @import 'uniwind';
 
-/* Design tokens from the Traqa design (dark only). */
+/* Design tokens from the Loqqa design (dark only). */
 @theme {
   --font-inter: 'Inter_400Regular';
   --font-inter-medium: 'Inter_500Medium';

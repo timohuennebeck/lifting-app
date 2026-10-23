@@ -9,7 +9,7 @@ export interface TeamAvatarProps {
   highlight?: boolean;
 }
 
-/** The Traqa team's "T" badge used in the chat and ticket rows. */
+/** The Loqqa team's "L" badge used in the chat and ticket rows. */
 export function TeamAvatar({ size = 28, highlight = true }: TeamAvatarProps) {
   // 22 → 12pt, 28 → 13pt, 40 → 15pt as in the design.
   const fontSize = Math.round(9 + size * 0.15);
@@ -26,7 +26,7 @@ export function TeamAvatar({ size = 28, highlight = true }: TeamAvatarProps) {
         tone={highlight ? 'onAccent' : 'muted'}
         style={{ fontSize, lineHeight: fontSize + 4 }}
       >
-        T
+        L
       </Text>
     </View>
   );

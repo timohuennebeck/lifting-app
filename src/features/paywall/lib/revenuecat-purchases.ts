@@ -17,7 +17,7 @@ import {
   type PurchasesService,
 } from './purchases-types';
 
-/** RevenueCat entitlement that unlocks Traqa Pro. */
+/** RevenueCat entitlement that unlocks Loqqa Pro. */
 const ENTITLEMENT = 'pro';
 /** Store product per plan, as set up in App Store Connect and RevenueCat (README). */
 const PRODUCT_IDS: Record<PlanId, string> = {

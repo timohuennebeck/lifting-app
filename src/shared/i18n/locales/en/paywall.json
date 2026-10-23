@@ -48,11 +48,13 @@
   },
   "welcome": {
     "header": "A message from your coach",
-    "role": "Head Coach at Traqa",
+    "role": "Head Coach at Loqqa",
+    "aiBadge": "AI",
+    "aiNotice": "May contain AI-edited content.",
     "cta": "Let's go",
     "captions": {
-      "hello": "Hey {{name}}, I'm Max, Head Coach at Traqa.",
-      "helloAnon": "Hey, I'm Max, Head Coach at Traqa.",
+      "hello": "Hey {{name}}, I'm Kai, Head Coach at Loqqa.",
+      "helloAnon": "Hey, I'm Kai, Head Coach at Loqqa.",
       "thanks": "Thanks for being here. It really means a lot to us.",
       "plan": "Your plan is ready. From now on, every set counts.",
       "seeYou": "See you at your first workout!"
@@ -67,13 +69,13 @@
   },
   "restoreResult": {
     "successTitle": "Purchases restored",
-    "successBody": "Traqa Pro is active again.",
+    "successBody": "Loqqa Pro is active again.",
     "emptyTitle": "Nothing to restore",
     "emptyBody": "We couldn't find an active subscription for this account."
   },
   "settings": {
     "section": "Subscription",
-    "title": "Traqa Pro",
+    "title": "Loqqa Pro",
     "upgrade": "Upgrade",
     "trialUntil": "Trial until {{date}}",
     "manage": "Manage subscription",

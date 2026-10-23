@@ -6,11 +6,11 @@ Version: [[PLATZHALTER: Versionsnummer]]
 
 Stand: [[PLATZHALTER: Datum]]
 
-Diese Nutzungsbedingungen regeln, wie du die App Traqa nutzen kannst. Bitte lies sie aufmerksam. Wie wir mit deinen Daten umgehen, erklären wir in unserer Datenschutzerklärung.
+Diese Nutzungsbedingungen regeln, wie du die App Loqqa nutzen kannst. Bitte lies sie aufmerksam. Wie wir mit deinen Daten umgehen, erklären wir in unserer Datenschutzerklärung.
 
 ## 1. Anbieter und Geltungsbereich
 
-Anbieter der App Traqa ist:
+Anbieter der App Loqqa ist:
 
 - [[PLATZHALTER: Name des Unternehmens mit Rechtsform]]
 - Anschrift: [[PLATZHALTER: Straße, Hausnummer, PLZ, Ort, Land]]
@@ -22,18 +22,18 @@ Im Folgenden nennen wir uns „wir“. Diese Bedingungen gelten für alle Funkti
 
 ## 2. Mindestalter
 
-Du musst mindestens [[PLATZHALTER: Mindestalter]] Jahre alt sein, um Traqa zu nutzen. [[PLATZHALTER: Regelung für Minderjährige, z. B. Zustimmung der Erziehungsberechtigten, insbesondere für Käufe]]
+Du musst mindestens [[PLATZHALTER: Mindestalter]] Jahre alt sein, um Loqqa zu nutzen. [[PLATZHALTER: Regelung für Minderjährige, z. B. Zustimmung der Erziehungsberechtigten, insbesondere für Käufe]]
 
 ## 3. Dein Konto
 
-- Um Traqa nach der Einrichtung zu nutzen, brauchst du ein Konto mit E-Mail-Adresse und Passwort. Der Vertrag über die kostenlose Nutzung kommt zustande, wenn du dein Konto erstellst.
+- Um Loqqa nach der Einrichtung zu nutzen, brauchst du ein Konto mit E-Mail-Adresse und Passwort. Der Vertrag über die kostenlose Nutzung kommt zustande, wenn du dein Konto erstellst.
 - Mache bei der Registrierung wahre Angaben. Dein Passwort kannst du bei der Anmeldung über „Passwort vergessen“ zurücksetzen.
 - Halte dein Passwort geheim. Wenn du vermutest, dass jemand anderes dein Konto nutzt, setze dein Passwort zurück und informiere uns.
 - Dein Konto ist persönlich und nicht übertragbar.
 
-## 4. Was Traqa bietet
+## 4. Was Loqqa bietet
 
-Traqa unterstützt dich beim Krafttraining. Je nach Version und Abo gehören dazu insbesondere:
+Loqqa unterstützt dich beim Krafttraining. Je nach Version und Abo gehören dazu insbesondere:
 
 - ein Trainingsplan, den ein KI-Modell aus deinen Angaben erstellt, zum Beispiel aus Ziel, Erfahrung, Ausstattung und Trainings pro Woche
 - der Import eines vorhandenen Plans per Foto oder Datei
@@ -42,33 +42,33 @@ Traqa unterstützt dich beim Krafttraining. Je nach Version und Abo gehören daz
 - ein Übungskatalog mit Anleitungen, Bildern und Videos
 - ein Support-Chat für Fehlermeldungen und Ideen
 
-Welche Funktionen kostenlos sind und welche Traqa Pro erfordern, siehst du in der App. [[PLATZHALTER: Abgrenzung zwischen kostenlosen Funktionen und Traqa Pro festlegen]]
+Welche Funktionen kostenlos sind und welche Loqqa Pro erfordern, siehst du in der App. [[PLATZHALTER: Abgrenzung zwischen kostenlosen Funktionen und Loqqa Pro festlegen]]
 
 Die Erkennung beim Plan-Import kann Fehler machen. Prüfe den erkannten Plan deshalb, bevor du ihn übernimmst; unsichere Stellen markiert die App zur Prüfung. Auch ein Plan, den die App für dich erstellt, ist ein Vorschlag: Sieh ihn dir an und pass ihn bei Bedarf an. Für Planerstellung und Plan-Import braucht die App eine Internetverbindung.
 
-Traqa funktioniert auch ohne Internetverbindung. Deine Daten werden synchronisiert, sobald du online bist. Änderungen, die bei einer Abmeldung noch nicht synchronisiert sind, gehen verloren; die App warnt dich vorher.
+Loqqa funktioniert auch ohne Internetverbindung. Deine Daten werden synchronisiert, sobald du online bist. Änderungen, die bei einer Abmeldung noch nicht synchronisiert sind, gehen verloren; die App warnt dich vorher.
 
-Traqa ist ein Hilfsmittel für dein Training. Einen bestimmten Trainingserfolg schulden wir nicht.
+Loqqa ist ein Hilfsmittel für dein Training. Einen bestimmten Trainingserfolg schulden wir nicht.
 
 ## 5. Gesundheitshinweise
 
-> Traqa ersetzt keine ärztliche Beratung, Diagnose oder Behandlung.
+> Loqqa ersetzt keine ärztliche Beratung, Diagnose oder Behandlung.
 
-- Traqa gibt allgemeine Trainingsempfehlungen. Die App bietet keine medizinische, physiotherapeutische oder ernährungsbezogene Beratung. Traqa ist kein Medizinprodukt. [[PLATZHALTER: Bestätigen, dass Traqa nach seiner Zweckbestimmung kein Medizinprodukt ist]]
+- Loqqa gibt allgemeine Trainingsempfehlungen. Die App bietet keine medizinische, physiotherapeutische oder ernährungsbezogene Beratung. Loqqa ist kein Medizinprodukt. [[PLATZHALTER: Bestätigen, dass Loqqa nach seiner Zweckbestimmung kein Medizinprodukt ist]]
 - Lass dich vor Beginn eines Trainingsprogramms ärztlich beraten, besonders bei Vorerkrankungen (zum Beispiel des Herz-Kreislauf-Systems), bei Beschwerden oder Verletzungen, nach Operationen, in der Schwangerschaft oder Stillzeit und wenn du lange nicht trainiert hast.
 - Die Werte des Körperchecks, zum Beispiel der geschätzte Körperfettanteil, sind grobe Schätzungen. Sie sind keine medizinische Messung und keine Diagnose.
 - Pläne und Vorschläge sind eine Orientierung. Wähle Gewichte und Wiederholungen so, dass du sie mit sauberer Technik sicher schaffst. Nutze bei schweren Gewichten Sicherungen oder eine Hilfestellung.
 - Hör sofort auf, wenn du Schmerzen, Schwindel, Atemnot oder Druck in der Brust spürst, und hol bei Bedarf ärztliche Hilfe.
 
-## 6. Traqa Pro, Testzeitraum und Abo
+## 6. Loqqa Pro, Testzeitraum und Abo
 
-- **Kauf:** Traqa Pro kaufst du in der App über den App Store oder über Google Play. Zahlung und Abrechnung übernimmt der jeweilige Store. [[PLATZHALTER: Bestätigen, wer bei In-App-Käufen Vertragspartner ist (Apple bzw. Google oder wir)]]
-- **Preise und Laufzeiten:** Traqa Pro gibt es als Monatsabo (derzeit 9,99 € pro Monat) und als Jahresabo (derzeit 59,99 € pro Jahr). Die aktuellen Preise in deiner Währung siehst du vor dem Kauf in der App und im Store.
-- **Testzeitraum:** Traqa Pro kann mit einem kostenlosen Testzeitraum von 7 Tagen beginnen. Ob du ihn nutzen kannst, entscheidet der Store: in der Regel einmal pro Store-Konto. Kündigst du nicht rechtzeitig vor dem Ende des Tests, geht er automatisch in ein kostenpflichtiges Abo über. [[PLATZHALTER: Ob und wie wir vor dem Ende des Testzeitraums erinnern]]
+- **Kauf:** Loqqa Pro kaufst du in der App über den App Store oder über Google Play. Zahlung und Abrechnung übernimmt der jeweilige Store. [[PLATZHALTER: Bestätigen, wer bei In-App-Käufen Vertragspartner ist (Apple bzw. Google oder wir)]]
+- **Preise und Laufzeiten:** Loqqa Pro gibt es als Monatsabo (derzeit 9,99 € pro Monat) und als Jahresabo (derzeit 59,99 € pro Jahr). Die aktuellen Preise in deiner Währung siehst du vor dem Kauf in der App und im Store.
+- **Testzeitraum:** Loqqa Pro kann mit einem kostenlosen Testzeitraum von 7 Tagen beginnen. Ob du ihn nutzen kannst, entscheidet der Store: in der Regel einmal pro Store-Konto. Kündigst du nicht rechtzeitig vor dem Ende des Tests, geht er automatisch in ein kostenpflichtiges Abo über. [[PLATZHALTER: Ob und wie wir vor dem Ende des Testzeitraums erinnern]]
 - **Verlängerung:** Dein Abo verlängert sich automatisch um die gewählte Laufzeit, wenn du es nicht spätestens [[PLATZHALTER: Kündigungsfrist laut Store, z. B. 24 Stunden vor Ablauf der Laufzeit]] kündigst.
-- **Kündigung:** Du kündigst in den Abo-Einstellungen deines Store-Kontos. In der App findest du den Link dazu in den Einstellungen unter „Abo verwalten“. Nach der Kündigung bleibt Traqa Pro bis zum Ende der bezahlten Laufzeit aktiv.
+- **Kündigung:** Du kündigst in den Abo-Einstellungen deines Store-Kontos. In der App findest du den Link dazu in den Einstellungen unter „Abo verwalten“. Nach der Kündigung bleibt Loqqa Pro bis zum Ende der bezahlten Laufzeit aktiv.
 - **Wichtig:** Wenn du die App oder dein Konto löschst, wird dein Abo nicht gekündigt.
-- **Käufe wiederherstellen:** Hast du Traqa Pro schon gekauft, kannst du den Kauf auf der Traqa-Pro-Seite der App unter „Käufe wiederherstellen“ erneut aktivieren. [[PLATZHALTER: Ob Traqa Pro an das Store-Konto oder an das Traqa-Konto gebunden ist und auf welchen Geräten es gilt]]
+- **Käufe wiederherstellen:** Hast du Loqqa Pro schon gekauft, kannst du den Kauf auf der Loqqa-Pro-Seite der App unter „Käufe wiederherstellen“ erneut aktivieren. [[PLATZHALTER: Ob Loqqa Pro an das Store-Konto oder an das Loqqa-Konto gebunden ist und auf welchen Geräten es gilt]]
 - **Erstattungen:** Erstattungen richten sich nach den Bedingungen des jeweiligen Stores. Wende dich dafür an Apple bzw. Google.
 - **Preisänderungen:** [[PLATZHALTER: Regelung für Preisänderungen bei laufenden Abos]]
 
@@ -80,7 +80,7 @@ Als Verbraucher hast du bei Verträgen über digitale Inhalte und digitale Diens
 
 ## 8. Deine Inhalte
 
-Inhalte, die du in Traqa einstellst, bleiben deine, zum Beispiel Pläne, Trainingsdaten, Fotos, dein Text „Über dich“ und deine Support-Nachrichten. Du räumst uns daran nur die einfachen, nicht übertragbaren Rechte ein, die wir brauchen, um die App für dich bereitzustellen: deine Inhalte speichern, synchronisieren, verarbeiten und dir anzeigen sowie deine Support-Anfragen bearbeiten. Diese Rechte enden, wenn du die Inhalte oder dein Konto löschst.
+Inhalte, die du in Loqqa einstellst, bleiben deine, zum Beispiel Pläne, Trainingsdaten, Fotos, dein Text „Über dich“ und deine Support-Nachrichten. Du räumst uns daran nur die einfachen, nicht übertragbaren Rechte ein, die wir brauchen, um die App für dich bereitzustellen: deine Inhalte speichern, synchronisieren, verarbeiten und dir anzeigen sowie deine Support-Anfragen bearbeiten. Diese Rechte enden, wenn du die Inhalte oder dein Konto löschst.
 
 - Lade nur Inhalte hoch, an denen du die nötigen Rechte hast. Trainingspläne von Trainern, aus Büchern oder Apps darfst du nur importieren, soweit du sie für dein eigenes Training nutzen darfst.
 - Auf deinen Fotos und Screenshots dürfen keine anderen Personen zu sehen sein, die nicht eingewilligt haben.
@@ -94,7 +94,7 @@ Im Support-Chat der App kannst du Fehler melden und Funktionen vorschlagen. Wir 
 
 ## 10. Erlaubte Nutzung
 
-Du darfst Traqa nur für dein eigenes Training nutzen. [[PLATZHALTER: Ob eine gewerbliche Nutzung, z. B. durch Trainer für ihre Kunden, erlaubt ist]] Nicht erlaubt ist insbesondere:
+Du darfst Loqqa nur für dein eigenes Training nutzen. [[PLATZHALTER: Ob eine gewerbliche Nutzung, z. B. durch Trainer für ihre Kunden, erlaubt ist]] Nicht erlaubt ist insbesondere:
 
 - technische Schutzmaßnahmen oder die Abo-Abfrage zu umgehen
 - automatisiert auf die App oder unsere Server zuzugreifen, Inhalte massenhaft auszulesen oder unsere Server übermäßig zu belasten
@@ -105,9 +105,9 @@ Die App, der Übungskatalog mit Texten, Bildern und Videos sowie Marken und Desi
 
 ## 11. Verfügbarkeit, Updates und Änderungen der App
 
-- Wir bemühen uns, dass Traqa zuverlässig funktioniert. Eine ununterbrochene Verfügbarkeit unserer Server können wir aber nicht zusagen, etwa bei Wartung oder bei Störungen unserer Dienstleister. Viele Funktionen kannst du auch dann offline nutzen.
-- Wir stellen dir Updates bereit, die nötig sind, damit Traqa vertragsgemäß funktioniert, insbesondere Sicherheitsupdates (§ 327f BGB). Bitte installiere sie zeitnah.
-- Wir dürfen Traqa ändern und weiterentwickeln, wenn dafür ein triftiger Grund besteht (zum Beispiel neue technische Anforderungen, Sicherheit, Weiterentwicklung der App oder eine geänderte Rechtslage), dir dadurch keine zusätzlichen Kosten entstehen und wir dich klar und verständlich informieren. Beeinträchtigt eine Änderung deinen Zugang zu Traqa oder die Nutzbarkeit mehr als nur unerheblich, informieren wir dich vorab. Du kannst den Vertrag dann nach Maßgabe von § 327r BGB unentgeltlich beenden.
+- Wir bemühen uns, dass Loqqa zuverlässig funktioniert. Eine ununterbrochene Verfügbarkeit unserer Server können wir aber nicht zusagen, etwa bei Wartung oder bei Störungen unserer Dienstleister. Viele Funktionen kannst du auch dann offline nutzen.
+- Wir stellen dir Updates bereit, die nötig sind, damit Loqqa vertragsgemäß funktioniert, insbesondere Sicherheitsupdates (§ 327f BGB). Bitte installiere sie zeitnah.
+- Wir dürfen Loqqa ändern und weiterentwickeln, wenn dafür ein triftiger Grund besteht (zum Beispiel neue technische Anforderungen, Sicherheit, Weiterentwicklung der App oder eine geänderte Rechtslage), dir dadurch keine zusätzlichen Kosten entstehen und wir dich klar und verständlich informieren. Beeinträchtigt eine Änderung deinen Zugang zu Loqqa oder die Nutzbarkeit mehr als nur unerheblich, informieren wir dich vorab. Du kannst den Vertrag dann nach Maßgabe von § 327r BGB unentgeltlich beenden.
 - Den Übungskatalog aktualisieren wir laufend.
 
 ## 12. Haftung
@@ -120,7 +120,7 @@ Die App, der Übungskatalog mit Texten, Bildern und Videos sowie Marken und Desi
 
 ## 13. Laufzeit, Kündigung und Kontolöschung
 
-- Der Vertrag über die Nutzung von Traqa läuft auf unbestimmte Zeit.
+- Der Vertrag über die Nutzung von Loqqa läuft auf unbestimmte Zeit.
 - Du kannst ihn jederzeit beenden, indem du dein Konto in der App löschst: in den Einstellungen unter „Konto löschen“. Du kannst die Löschung auch per E-Mail an [[PLATZHALTER: Kontakt-E-Mail für allgemeine Anfragen und Support]] verlangen.
 - Wir können den Vertrag über die kostenlose Nutzung mit einer Frist von [[PLATZHALTER: Kündigungsfrist für kostenlose Konten]] kündigen. Ein bezahltes Abo bleibt davon bis zum Ende der bezahlten Laufzeit unberührt.
 - Das Recht beider Seiten, aus wichtigem Grund fristlos zu kündigen, bleibt unberührt. Ein wichtiger Grund liegt für uns insbesondere bei schweren oder wiederholten Verstößen gegen diese Bedingungen vor.

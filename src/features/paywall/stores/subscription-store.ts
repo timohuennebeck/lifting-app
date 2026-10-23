@@ -25,7 +25,7 @@ export const useSubscriptionStore = create<SubscriptionState>()(
   ),
 );
 
-/** True while the user has Traqa Pro (trial or paid). */
+/** True while the user has Loqqa Pro (trial or paid). */
 export const useIsPro = () => useSubscriptionStore((s) => s.isPro);
 
 /**

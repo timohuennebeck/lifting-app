@@ -5,7 +5,7 @@ import type { TicketSummary } from '../data/tickets';
 import { useHasUnread } from '../stores/seen-store';
 import { useTicketFormat } from './use-ticket-format';
 
-/** Date, "Traqa Team: …" / "You: …" preview, unread state and tap action of a ticket row. */
+/** Date, "Loqqa Team: …" / "You: …" preview, unread state and tap action of a ticket row. */
 export function useTicketRow(ticket: TicketSummary) {
   const { t } = useTranslation('support');
   const format = useTicketFormat();

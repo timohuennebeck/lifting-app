@@ -28,7 +28,7 @@
     "title": "WHEN'S YOUR\nBIRTHDAY?",
     "age_one": "{{count}} year old",
     "age_other": "{{count}} years old",
-    "tooYoung": "Traqa is for ages {{min}} and up."
+    "tooYoung": "Loqqa is for ages {{min}} and up."
   },
   "units": {
     "title": "WHICH UNITS\nDO YOU USE?",

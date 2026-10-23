@@ -48,7 +48,7 @@
     "full": "No máximo {{count}} páginas por importação",
     "permission": {
       "title": "ACESSO À CÂMERA",
-      "body": "Para fotografar seu plano, o Traqa precisa de acesso à câmera. As fotos ficam no seu aparelho até você importá-las.",
+      "body": "Para fotografar seu plano, o Loqqa precisa de acesso à câmera. As fotos ficam no seu aparelho até você importá-las.",
       "allow": "Permitir câmera",
       "settings": "Abrir ajustes"
     },

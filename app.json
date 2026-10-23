@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Traqa",
-    "slug": "traqa",
+    "name": "Loqqa",
+    "slug": "loqqa",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "traqa",
+    "scheme": "loqqa",
     "userInterfaceStyle": "dark",
     "ios": {
       "icon": "./assets/expo.icon",
@@ -53,7 +53,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Traqa uses the camera to photograph your training plan, to take your body check photos and your profile photo.",
+          "cameraPermission": "Loqqa uses the camera to photograph your training plan, to take your body check photos and your profile photo.",
           "microphonePermission": false,
           "recordAudioAndroid": false
         }
@@ -61,7 +61,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Traqa lets you import a training plan from your photos, attach screenshots to support tickets and pick a profile photo.",
+          "photosPermission": "Loqqa lets you import a training plan from your photos, attach screenshots to support tickets and pick a profile photo.",
           "microphonePermission": false
         }
       ],

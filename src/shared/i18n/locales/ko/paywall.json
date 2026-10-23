@@ -48,11 +48,13 @@
   },
   "welcome": {
     "header": "코치가 보낸 메시지",
-    "role": "Traqa 헤드 코치",
+    "role": "Loqqa 헤드 코치",
+    "aiBadge": "AI",
+    "aiNotice": "AI로 편집된 콘텐츠가 포함될 수 있습니다.",
     "cta": "시작해요",
     "captions": {
-      "hello": "{{name}}님, 안녕하세요! Traqa 헤드 코치 Max예요.",
-      "helloAnon": "안녕하세요! Traqa 헤드 코치 Max예요.",
+      "hello": "{{name}}님, 안녕하세요! Loqqa 헤드 코치 Kai예요.",
+      "helloAnon": "안녕하세요! Loqqa 헤드 코치 Kai예요.",
       "thanks": "함께해 주셔서 고마워요. 저희에게 정말 큰 의미가 있어요.",
       "plan": "플랜이 준비됐어요. 이제부터 모든 세트가 중요해요.",
       "seeYou": "첫 운동에서 만나요!"
@@ -67,13 +69,13 @@
   },
   "restoreResult": {
     "successTitle": "구매 복원 완료",
-    "successBody": "Traqa Pro가 다시 활성화되었어요.",
+    "successBody": "Loqqa Pro가 다시 활성화되었어요.",
     "emptyTitle": "복원할 구매 내역이 없어요",
     "emptyBody": "이 계정에서 활성화된 구독을 찾지 못했어요."
   },
   "settings": {
     "section": "구독",
-    "title": "Traqa Pro",
+    "title": "Loqqa Pro",
     "upgrade": "업그레이드",
     "trialUntil": "{{date}}까지 무료 체험",
     "manage": "구독 관리",

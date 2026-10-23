@@ -2,9 +2,9 @@
 {{ $l := or .Data.language "en" }}
 <div style="background:#0a0a0a;padding:32px 20px;font-family:Inter,Helvetica,Arial,sans-serif;color:#f4f4f0">
   <div style="max-width:420px;margin:0 auto">
-    <div style="font-size:15px;font-weight:600;letter-spacing:2px;color:#dfff1f">TRAQA</div>
+    <div style="font-size:15px;font-weight:600;letter-spacing:2px;color:#dfff1f">LOQQA</div>
     <h1 style="font-size:26px;line-height:1.2;margin:24px 0 12px">{{ if eq $l "de" }}Bestätige deine E-Mail{{ else if eq $l "pt-PT" }}Confirma o teu email{{ else if eq $l "pt-BR" }}Confirme seu e-mail{{ else if eq $l "ko" }}이메일을 인증해 주세요{{ else }}Confirm your email{{ end }}</h1>
-    <p style="font-size:16px;line-height:1.5;color:#a3a39e;margin:0 0 28px">{{ if eq $l "de" }}Tippe auf den Button, um deine E-Mail-Adresse zu bestätigen und mit Traqa loszulegen.{{ else if eq $l "pt-PT" }}Toca no botão para confirmar o teu email e começar a treinar com o Traqa.{{ else if eq $l "pt-BR" }}Toque no botão para confirmar seu e-mail e começar a treinar com o Traqa.{{ else if eq $l "ko" }}버튼을 눌러 이메일 주소를 인증하고 Traqa로 운동을 시작해 보세요.{{ else }}Tap the button to confirm your email address and start training with Traqa.{{ end }}</p>
+    <p style="font-size:16px;line-height:1.5;color:#a3a39e;margin:0 0 28px">{{ if eq $l "de" }}Tippe auf den Button, um deine E-Mail-Adresse zu bestätigen und mit Loqqa loszulegen.{{ else if eq $l "pt-PT" }}Toca no botão para confirmar o teu email e começar a treinar com o Loqqa.{{ else if eq $l "pt-BR" }}Toque no botão para confirmar seu e-mail e começar a treinar com o Loqqa.{{ else if eq $l "ko" }}버튼을 눌러 이메일 주소를 인증하고 Loqqa로 운동을 시작해 보세요.{{ else }}Tap the button to confirm your email address and start training with Loqqa.{{ end }}</p>
     <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#dfff1f;color:#0a0a0a;font-size:16px;font-weight:600;text-decoration:none;padding:16px 28px;border-radius:999px">{{ if eq $l "de" }}E-Mail bestätigen{{ else if eq $l "pt-PT" }}Confirmar email{{ else if eq $l "pt-BR" }}Confirmar e-mail{{ else if eq $l "ko" }}이메일 인증하기{{ else }}Confirm email{{ end }}</a>
   </div>
 </div>

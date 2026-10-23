@@ -1,5 +1,5 @@
 {
-  "team": "Traqa Team",
+  "team": "Loqqa Team",
   "teamReplyTime": "Usually replies within 24–48 hrs.",
   "kind": {
     "bug": "Bug",
@@ -15,7 +15,7 @@
   "ticketNumber": "Ticket #{{number}}",
   "ticketPending": "New ticket",
   "preview": {
-    "team": "Traqa Team: {{text}}",
+    "team": "Loqqa Team: {{text}}",
     "user": "You: {{text}}",
     "screenshots_one": "Screenshot",
     "screenshots_other": "{{count}} screenshots"

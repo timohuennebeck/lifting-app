@@ -137,7 +137,7 @@ export function ProfileScreen() {
           >
             {name}
           </Text>
-          {/* Traqa Pro: a neon check by the name. */}
+          {/* Loqqa Pro: a neon check by the name. */}
           {isPro ? (
             <View accessible accessibilityLabel={t('paywall:settings.title')}>
               <Icon name="verified" size={26} color={colors.accent} />

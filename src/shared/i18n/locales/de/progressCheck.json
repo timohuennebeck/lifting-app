@@ -80,7 +80,7 @@
       "offline": "Für die Analyse brauchst du eine Internetverbindung. Deine Fotos bleiben erhalten.",
       "limit": "Du hast heute schon mehrere Analysen gestartet. Versuch es morgen wieder.",
       "notAdult": "Der Körpercheck ist erst ab 18 Jahren verfügbar.",
-      "notPro": "Für die Analyse brauchst du Traqa Pro.",
+      "notPro": "Für die Analyse brauchst du Loqqa Pro.",
       "refused": "Diese Fotos können wir nicht auswerten. Bitte nimm sie in Sportkleidung oder Unterwäsche neu auf.",
       "failed": "Die Analyse hat nicht geklappt. Bitte versuch es noch einmal."
     },
@@ -134,7 +134,7 @@
     "more": "Weitere Optionen",
     "delete": "Check löschen",
     "deleteHint": "Die Fotos und Werte dieses Checks werden endgültig gelöscht.",
-    "shareMessage": "Mein Körperwert in Traqa: {{score}}/100",
+    "shareMessage": "Mein Körperwert in Loqqa: {{score}}/100",
     "notFound": "Dieser Körpercheck ist nicht mehr vorhanden."
   }
 }

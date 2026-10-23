@@ -28,7 +28,7 @@
     "title": "생일이\n언제예요?",
     "age_one": "{{count}}세",
     "age_other": "{{count}}세",
-    "tooYoung": "Traqa는 {{min}}세 이상부터 이용할 수 있어요."
+    "tooYoung": "Loqqa는 {{min}}세 이상부터 이용할 수 있어요."
   },
   "units": {
     "title": "어떤 단위를\n사용하나요?",

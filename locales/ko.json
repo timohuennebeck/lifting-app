@@ -1,6 +1,6 @@
 {
   "ios": {
-    "NSCameraUsageDescription": "Traqa는 운동 플랜을 촬영하고 바디 체크 사진과 프로필 사진을 찍기 위해 카메라를 사용해요.",
-    "NSPhotoLibraryUsageDescription": "Traqa에서 사진으로 운동 플랜을 가져오고, 문의에 스크린샷을 첨부하고, 프로필 사진을 고를 수 있어요."
+    "NSCameraUsageDescription": "Loqqa는 운동 플랜을 촬영하고 바디 체크 사진과 프로필 사진을 찍기 위해 카메라를 사용해요.",
+    "NSPhotoLibraryUsageDescription": "Loqqa에서 사진으로 운동 플랜을 가져오고, 문의에 스크린샷을 첨부하고, 프로필 사진을 고를 수 있어요."
   }
 }

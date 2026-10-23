@@ -32,7 +32,7 @@ const OPENAI_TIMEOUT_MS = 120_000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const REVENUECAT_SECRET_KEY = Deno.env.get('REVENUECAT_SECRET_KEY');
-/** RevenueCat entitlement that unlocks Traqa Pro (same as the app). */
+/** RevenueCat entitlement that unlocks Loqqa Pro (same as the app). */
 const PRO_ENTITLEMENT = 'pro';
 
 async function photoDataUrl(path: string) {

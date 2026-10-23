@@ -53,7 +53,7 @@ export function usePurchase() {
   return { buy, busy };
 }
 
-/** "Restore purchases": resolves true when Traqa Pro is active again; alerts either way. */
+/** "Restore purchases": resolves true when Loqqa Pro is active again; alerts either way. */
 export function useRestorePurchases() {
   const { t } = useTranslation('paywall');
   const { t: tc } = useTranslation();

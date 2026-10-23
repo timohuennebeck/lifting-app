@@ -65,7 +65,7 @@
       "titleBoth": "Our legal texts have been updated",
       "changes_one": "{{count}} part has changed since you last agreed.",
       "changes_other": "{{count}} parts have changed since you last agreed.",
-      "subtitle": "We've updated our legal texts. Read the new version and agree to it to keep using Traqa.",
+      "subtitle": "We've updated our legal texts. Read the new version and agree to it to keep using Loqqa.",
       "accept": "I agree",
       "signOut": "Sign out",
       "intro": "Introduction",
@@ -102,6 +102,6 @@
   },
   "catalogOffline": {
     "title": "No connection",
-    "body": "On first launch, Traqa downloads its exercises. Check your internet connection and try again."
+    "body": "On first launch, Loqqa downloads its exercises. Check your internet connection and try again."
   }
 }

@@ -1,4 +1,4 @@
-# Traqa
+# Loqqa
 
 Workout logger for iOS and Android. Tabs: **Training** (the week, the plan with its routines,
 single routines), **Level** (muscle levels 1–100), **Körper** (progress checks: three photos, an
@@ -294,7 +294,7 @@ Supabase user ID; purchases made before sign-up move to the account at login.
 
 What the code expects:
 
-- **App Store Connect:** subscription group "Traqa Pro" with `traqa_pro_monthly` (1 month,
+- **App Store Connect:** subscription group "Loqqa Pro" with `traqa_pro_monthly` (1 month,
   9,99 €) and `traqa_pro_yearly` (1 year, 59,99 €), each with a 1-week free-trial introductory
   offer. The Paid Apps agreement must be active, also for sandbox purchases.
 - **RevenueCat:** entitlement `pro` with both products; offering `default` (current) with the

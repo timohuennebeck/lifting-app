@@ -1,6 +1,7 @@
+import { Image } from 'expo-image';
 import { Stack, useIsFocused } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { useDraft } from '@/features/onboarding/stores/onboarding-store';
 import { useProfile } from '@/shared/data/profile';
@@ -51,10 +52,8 @@ export function ThankYouScreen() {
         <CoachVideo active={focused} name={name} />
       </View>
       <View className="flex-row items-center gap-2.5 px-5 pt-5.5">
-        <View className="size-9 items-center justify-center rounded-full bg-accent">
-          <Text variant="caption" tone="onAccent">
-            {COACH.initials}
-          </Text>
+        <View className="size-9 overflow-hidden rounded-full border-[1.5px] border-accent bg-surface">
+          <Image source={COACH.avatar} contentFit="cover" style={StyleSheet.absoluteFill} />
         </View>
         <View className="flex-1">
           <Text variant="label">{COACH.name}</Text>
@@ -62,6 +61,21 @@ export function ThankYouScreen() {
             {t('welcome.role')}
           </Text>
         </View>
+      </View>
+      {/* Labels the AI-made video, as platforms ask for AI-generated people. */}
+      <View className="flex-row items-center gap-2 px-5 pt-3.5">
+        <View className="rounded-[5px] border-[1.5px] border-muted px-1 py-px">
+          <Text
+            variant="caption"
+            tone="muted"
+            className="font-inter-medium text-[11px] leading-3.5"
+          >
+            {t('welcome.aiBadge')}
+          </Text>
+        </View>
+        <Text variant="caption" tone="muted" className="flex-1 font-inter text-xs leading-4">
+          {t('welcome.aiNotice')}
+        </Text>
       </View>
     </Screen>
   );

@@ -80,7 +80,7 @@
       "offline": "The analysis needs an internet connection. Your photos are kept.",
       "limit": "You’ve started several analyses today. Please try again tomorrow.",
       "notAdult": "The body check is only available from age 18.",
-      "notPro": "The analysis needs Traqa Pro.",
+      "notPro": "The analysis needs Loqqa Pro.",
       "refused": "We can’t analyse these photos. Please retake them in sportswear or underwear.",
       "failed": "The analysis didn't work. Please try again."
     },
@@ -134,7 +134,7 @@
     "more": "More options",
     "delete": "Delete check",
     "deleteHint": "This check’s photos and values are deleted for good.",
-    "shareMessage": "My body score in Traqa: {{score}}/100",
+    "shareMessage": "My body score in Loqqa: {{score}}/100",
     "notFound": "This body check no longer exists."
   }
 }

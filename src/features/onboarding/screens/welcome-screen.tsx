@@ -21,7 +21,7 @@ const FEATURES = ['import', 'create', 'progress'] as const;
 /** Placeholder until the design's photo is in. */
 const PHOTO = require('@/assets/images/demo-person.jpg');
 
-/** 00: the first screen, full screen over a borderless photo: what Traqa does, then start. */
+/** 00: the first screen, full screen over a borderless photo: what Loqqa does, then start. */
 export function WelcomeScreen() {
   const { t } = useTranslation('onboarding');
   const insets = useSafeAreaInsets();

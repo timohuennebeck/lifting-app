@@ -31,7 +31,7 @@ import { useIsPro } from '../stores/subscription-store';
 
 const BENEFITS = ['import', 'history', 'levels'] as const;
 
-/** Traqa Pro paywall: before/after header, benefits, plan picker. */
+/** Loqqa Pro paywall: before/after header, benefits, plan picker. */
 export function PaywallScreen() {
   const { t, i18n } = useTranslation(['paywall', 'common']);
   const insets = useSafeAreaInsets();

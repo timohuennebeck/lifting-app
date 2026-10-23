@@ -1,6 +1,9 @@
 import type { VideoSource } from 'expo-video';
 
-export const COACH = { name: 'Max Krüger', initials: 'MK' } as const;
+export const COACH = {
+  name: 'Kai Brooks',
+  avatar: require('@/assets/images/coach-kai-avatar.jpg'),
+} as const;
 
 /**
  * The coach's thank-you video. No file exists yet: set this to a bundled
@@ -8,7 +11,7 @@ export const COACH = { name: 'Max Krüger', initials: 'MK' } as const;
  * stands in and a timer drives the progress ring and captions.
  */
 export const COACH_VIDEO_SOURCE: VideoSource = null;
-export const COACH_POSTER = require('@/assets/images/demo-person.jpg');
+export const COACH_POSTER = require('@/assets/images/coach-kai.jpg');
 
 /** Length of the timer fallback; a real video reports its own duration. */
 export const COACH_FALLBACK_SECONDS = 24;

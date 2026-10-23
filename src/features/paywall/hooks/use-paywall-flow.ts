@@ -6,7 +6,7 @@ import type { PaywallPlacement } from '@/shared/lib/posthog';
 import { useIsLocked } from '../stores/subscription-store';
 
 /**
- * The same screens run in onboarding (/paywall → /create-account), as the Traqa Pro modal from
+ * The same screens run in onboarding (/paywall → /create-account), as the Loqqa Pro modal from
  * Settings (/pro, closed back to where it was opened) and in front of a locked app (/pro, which
  * opens the app once there is a plan).
  */
