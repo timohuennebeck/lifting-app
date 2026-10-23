@@ -36,6 +36,11 @@ export function useCoachPlayback(active: boolean) {
     setClock({ elapsed: currentTime, duration: player.duration || COACH_FALLBACK_SECONDS });
   });
 
+  // Starts on its own: play() before the file has loaded can be dropped, so retry once it's ready.
+  useEventListener(player, 'statusChange', ({ status }) => {
+    if (hasVideo && playing && status === 'readyToPlay') player.play();
+  });
+
   useEffect(() => {
     if (!hasVideo) return;
     if (playing) player.play();

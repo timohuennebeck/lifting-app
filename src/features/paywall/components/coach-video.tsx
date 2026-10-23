@@ -127,14 +127,15 @@ export function CoachVideo({ active }: CoachVideoProps) {
           </PressableScale>
         </View>
 
-        <View pointerEvents="box-none" className="absolute inset-0 items-center justify-center">
-          <PressableScale
-            haptic="none"
-            accessibilityLabel={playLabel}
-            onPress={togglePlay}
-            className="size-18 items-center justify-center rounded-full bg-elevated"
-          >
-            {playback.paused ? (
+        {/* Only while paused: during playback the face stays clear and a tap anywhere pauses. */}
+        {playback.paused ? (
+          <View pointerEvents="box-none" className="absolute inset-0 items-center justify-center">
+            <PressableScale
+              haptic="none"
+              accessibilityLabel={playLabel}
+              onPress={togglePlay}
+              className="size-18 items-center justify-center rounded-full bg-elevated"
+            >
               <Svg width={22} height={24} viewBox="0 0 22 24">
                 <Path
                   d="M7 5.6v12.8l10.6-6.4z"
@@ -144,14 +145,9 @@ export function CoachVideo({ active }: CoachVideoProps) {
                   strokeLinejoin="round"
                 />
               </Svg>
-            ) : (
-              <View className="flex-row gap-1.5">
-                <View className="h-5.5 w-1.5 rounded-sm bg-fg" />
-                <View className="h-5.5 w-1.5 rounded-sm bg-fg" />
-              </View>
-            )}
-          </PressableScale>
-        </View>
+            </PressableScale>
+          </View>
+        ) : null}
 
         {captions ? (
           <View pointerEvents="none" className="absolute inset-x-3 bottom-3 items-center">
