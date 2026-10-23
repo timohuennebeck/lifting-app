@@ -7,7 +7,7 @@
 import { decodeBase64 } from 'jsr:@std/encoding@1/base64';
 
 import { reply } from '../_shared/common.ts';
-import { openAiConfigured, streamStructured } from '../_shared/openai.ts';
+import { openAiConfigured } from '../_shared/openai.ts';
 import { LANGUAGES } from '../_shared/plan-events.ts';
 import {
   type CatalogRow,
@@ -18,6 +18,7 @@ import {
 } from '../_shared/plans.ts';
 import { buildSchema, contextText, INSTRUCTIONS, planReader } from './plan.ts';
 
+/** For both attempts together (see planEventResponse); the function may run 150 s at most. */
 const OPENAI_TIMEOUT_MS = 120_000;
 /** Imports per network (hashed IP) and in total in 24 hours; each one is a paid model call. */
 const IP_LIMIT = envLimit('PLAN_IMPORT_IP_LIMIT', 10);
@@ -150,36 +151,18 @@ Deno.serve(async (req) => {
     return reply(400, { error: 'unreadable' });
   }
 
-  // Stops the model when the app goes away (the stream below is cancelled), so the rest of the
-  // answer isn't paid for. Not req.signal: Deno also aborts that once a response is delivered.
-  const stop = new AbortController();
-  let started: Awaited<ReturnType<typeof streamStructured>>;
-  try {
-    started = await streamStructured(
-      {
-        instructions: INSTRUCTIONS,
-        content,
-        name: 'training_plan',
-        schema: buildSchema(catalog.map((e) => e.id)),
-        timeoutMs: OPENAI_TIMEOUT_MS,
-        fast: FAST,
-      },
-      stop.signal,
-    );
-  } catch (error) {
-    // A timeout may still have been billed, so the import stays counted.
-    console.error('OpenAI request failed', error);
-    return reply(502, { error: 'failed' });
-  }
-  if ('upstream' in started) {
-    await giveBack();
-    return reply(502, { error: 'failed', upstream: started.upstream });
-  }
-
-  const { answer } = started;
-  const reader = planReader(catalog, () => crypto.randomUUID());
-  return planEventResponse(
-    { answer, reader, giveBack, noPlan: 'not_a_plan', label: 'import' },
-    stop,
-  );
+  return planEventResponse({
+    request: {
+      instructions: INSTRUCTIONS,
+      content,
+      name: 'training_plan',
+      schema: buildSchema(catalog.map((e) => e.id)),
+      timeoutMs: OPENAI_TIMEOUT_MS,
+      fast: FAST,
+    },
+    reader: () => planReader(catalog, () => crypto.randomUUID()),
+    giveBack,
+    noPlan: 'not_a_plan',
+    label: 'import',
+  });
 });

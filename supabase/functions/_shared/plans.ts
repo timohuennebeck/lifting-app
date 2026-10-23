@@ -1,10 +1,10 @@
 // What the plan functions (read-plan, generate-plan) share: the exercise catalog, the limits
 // per network and per day (they run before there is an account, and each is a paid model call),
-// and the response that streams the plan to the app.
+// and the response that asks the model and streams the plan to the app.
 import { encodeHex } from 'jsr:@std/encoding@1/hex';
 
 import { admin, reply } from './common.ts';
-import type { StreamedAnswer } from './openai.ts';
+import { type StructuredRequest, streamStructured } from './openai.ts';
 import {
   type ImportedRoutine,
   type PlanEvent,
@@ -135,10 +135,12 @@ export interface PlanReader<Routine extends { exercises: unknown[] }, Exercise> 
   exercise: (line: Exercise) => PlanExercise | null;
 }
 
-/** The model's streamed plan and what the function does with it. */
+/** The model request for a plan and what the function does with the answer. */
 export interface PlanAnswer<Routine extends { exercises: unknown[] }, Exercise> {
-  answer: AsyncGenerator<StreamedAnswer>;
-  reader: PlanReader<Routine, Exercise>;
+  /** Its `timeoutMs` covers every attempt together. */
+  request: StructuredRequest;
+  /** A new reader for each attempt. */
+  reader: () => PlanReader<Routine, Exercise>;
   /** Hands the request back (see takePlanRequest). */
   giveBack: () => PromiseLike<unknown>;
   /** The error for a refusal, and for an answer without exercises. */
@@ -147,67 +149,131 @@ export interface PlanAnswer<Routine extends { exercises: unknown[] }, Exercise> 
   label: string;
 }
 
-/**
- * Reads the streamed answer into the app's events (see PlanEvent) and sends them. An answer that
- * fails before its first word gives the request back, as a failed request does.
- */
-async function sendPlan<Routine extends { exercises: unknown[] }, Exercise>(
-  { answer, reader, giveBack, noPlan, label }: PlanAnswer<Routine, Exercise>,
+/** A second attempt runs when the first fails for a passing reason before the app got an exercise. */
+const ATTEMPTS = 2;
+/** Time a second attempt needs at least; with less left the failure stands. */
+const MIN_RETRY_MS = 60_000;
+const RETRY_PAUSE_MS = 1000;
+/** OpenAI's HTTP statuses worth another attempt: timeout, conflict, rate limit, overload. */
+const PASSING_STATUSES = new Set([408, 409, 429, 500, 502, 503, 504]);
+/** Ends of a streamed answer worth another attempt (see streamedAnswer); not e.g. "incomplete". */
+const PASSING_ENDS = new Set(['failed', 'error', 'cut_off']);
+
+/** What the attempts so far have done. */
+interface Progress {
+  exercises: number;
+  /** The model wrote something or ran into the timeout, so it may have been billed. */
+  billed: boolean;
+}
+
+/** How an attempt ended: with the app's last event, or failed (`passing`: another may work). */
+type AttemptEnd = { last: PlanEvent } | { failed: unknown; passing: boolean };
+
+/** One model answer, read into the app's events (see PlanEvent) as it is written. */
+async function attemptPlan<Routine extends { exercises: unknown[] }, Exercise>(
+  { request, reader: newReader, noPlan }: PlanAnswer<Routine, Exercise>,
   send: (event: PlanEvent) => void,
-) {
+  signal: AbortSignal,
+  timeoutMs: number,
+  progress: Progress,
+): Promise<AttemptEnd> {
+  const reader = newReader();
   const stream = new PlanStream<Routine, Exercise>();
   // A routine waits for its first exercise.
   let routine: ImportedRoutine | null = null;
-  let exercises = 0;
-  let written = false;
-  const end = () => send(exercises ? { type: 'done' } : { type: 'error', error: noPlan });
-  for await (const step of answer) {
-    if ('refusal' in step) {
-      console.warn('The model refused the plan');
-      return send({ type: 'error', error: noPlan });
+  const end = (): AttemptEnd => ({
+    last: progress.exercises ? { type: 'done' } : { type: 'error', error: noPlan },
+  });
+  try {
+    const started = await streamStructured({ ...request, timeoutMs }, signal);
+    if (!started.answer) {
+      const status = started.upstream;
+      return { failed: `OpenAI ${status}`, passing: PASSING_STATUSES.has(status) };
     }
-    if ('incomplete' in step) {
-      console.error(`The ${label} did not complete`, step.incomplete);
-      if (!written) await giveBack();
-      return send({ type: 'error', error: 'failed' });
-    }
-    if ('done' in step) return end();
-    written = true;
-    for (const piece of stream.push(step.text)) {
-      if (piece.kind === 'start') {
-        // Leaving the loop also stops the model.
-        if (!piece.isPlan) return send({ type: 'error', error: 'not_a_plan' });
-        send({ type: 'plan', name: planName(piece.name) });
-      } else if (piece.kind === 'routine') {
-        routine = reader.routine(piece.routine);
-        // E.g. a routine past the workouts a week: the plan is complete.
-        if (!routine) return end();
-      } else {
-        const read = reader.exercise(piece.exercise);
-        if (!read) continue;
-        if (routine) send({ type: 'routine', routine });
-        routine = null;
-        send({ type: 'exercise', ...read });
-        exercises++;
+    for await (const step of started.answer) {
+      if ('refusal' in step) {
+        console.warn('The model refused the plan');
+        return { last: { type: 'error', error: noPlan } };
+      }
+      if ('incomplete' in step) {
+        return { failed: step.incomplete, passing: PASSING_ENDS.has(step.incomplete) };
+      }
+      if ('done' in step) return end();
+      progress.billed = true;
+      for (const piece of stream.push(step.text)) {
+        if (piece.kind === 'start') {
+          // Leaving the loop also stops the model.
+          if (!piece.isPlan) return { last: { type: 'error', error: 'not_a_plan' } };
+          // A second attempt sends it again, which starts the app's plan afresh.
+          send({ type: 'plan', name: planName(piece.name) });
+        } else if (piece.kind === 'routine') {
+          routine = reader.routine(piece.routine);
+          // E.g. a routine past the workouts a week: the plan is complete.
+          if (!routine) return end();
+        } else {
+          const read = reader.exercise(piece.exercise);
+          if (!read) continue;
+          if (routine) send({ type: 'routine', routine });
+          routine = null;
+          send({ type: 'exercise', ...read });
+          progress.exercises++;
+        }
       }
     }
+    return { failed: 'cut_off', passing: true };
+  } catch (error) {
+    // The app went away: nothing more to send.
+    if (signal.aborted) throw error;
+    // A timeout or a broken connection; a timeout may still have been billed.
+    progress.billed = true;
+    return { failed: error, passing: true };
+  }
+}
+
+/**
+ * Sends the plan, trying once more when the model fails for a passing reason (overload, a broken
+ * connection) before the first exercise and enough time is left. Without anything billed, a
+ * failure gives the request back, so it doesn't count toward the limits.
+ */
+async function sendPlan<Routine extends { exercises: unknown[] }, Exercise>(
+  plan: PlanAnswer<Routine, Exercise>,
+  send: (event: PlanEvent) => void,
+  signal: AbortSignal,
+) {
+  const deadline = Date.now() + plan.request.timeoutMs;
+  const progress: Progress = { exercises: 0, billed: false };
+  for (let attempt = 1; ; attempt++) {
+    const ended = await attemptPlan(plan, send, signal, deadline - Date.now(), progress);
+    if ('last' in ended) return send(ended.last);
+    console.error(`The ${plan.label} failed (attempt ${attempt})`, ended.failed);
+    const again =
+      ended.passing &&
+      attempt < ATTEMPTS &&
+      !progress.exercises &&
+      deadline - Date.now() >= MIN_RETRY_MS + RETRY_PAUSE_MS;
+    if (!again) {
+      if (!progress.billed) await plan.giveBack();
+      return send({ type: 'error', error: 'failed' });
+    }
+    await new Promise((resolve) => setTimeout(resolve, RETRY_PAUSE_MS));
   }
 }
 
 /**
  * The plan as server-sent events (see sendPlan); when sending throws, the app gets an `error`
- * event. Cancelling (the app went away) aborts `stop`, which should stop the model too.
+ * event. Cancelling (the app went away) stops the model too.
  */
 export function planEventResponse<Routine extends { exercises: unknown[] }, Exercise>(
   plan: PlanAnswer<Routine, Exercise>,
-  stop: AbortController,
 ) {
+  // Not the request's signal: Deno also aborts that once a response is delivered.
+  const stop = new AbortController();
   const encoder = new TextEncoder();
   const events = new ReadableStream<Uint8Array>({
     start(controller) {
       const send = (event: PlanEvent) =>
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
-      void sendPlan(plan, send)
+      void sendPlan(plan, send, stop.signal)
         .catch((error) => {
           if (stop.signal.aborted) return;
           console.error(`The ${plan.label} broke off`, error);

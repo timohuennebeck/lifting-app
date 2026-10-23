@@ -5,7 +5,7 @@
 // before there is an account, so plans are limited per network and in total per day
 // (start_plan_request, kind "generate").
 import { reply } from '../_shared/common.ts';
-import { openAiConfigured, streamStructured } from '../_shared/openai.ts';
+import { openAiConfigured } from '../_shared/openai.ts';
 import { LANGUAGES } from '../_shared/plan-events.ts';
 import {
   envLimit,
@@ -24,6 +24,7 @@ import {
   usableExercises,
 } from './generate.ts';
 
+/** For both attempts together (see planEventResponse); the function may run 150 s at most. */
 const OPENAI_TIMEOUT_MS = 120_000;
 /** Plans per network (hashed IP) and in total in 24 hours; each one is a paid model call. */
 const IP_LIMIT = envLimit('PLAN_GENERATE_IP_LIMIT', 10);
@@ -61,35 +62,18 @@ Deno.serve(async (req) => {
     return reply(500, { error: 'failed' });
   }
 
-  // Stops the model when the app goes away (the stream below is cancelled), so the rest of the
-  // answer isn't paid for. Not req.signal: Deno also aborts that once a response is delivered.
-  const stop = new AbortController();
-  let started: Awaited<ReturnType<typeof streamStructured>>;
-  try {
-    started = await streamStructured(
-      {
-        instructions: INSTRUCTIONS,
-        content: [{ type: 'input_text', text: contextText(answers, have, catalog, language) }],
-        name: 'training_plan',
-        schema: buildSchema(catalog.map((e) => e.id)),
-        timeoutMs: OPENAI_TIMEOUT_MS,
-        fast: FAST,
-      },
-      stop.signal,
-    );
-  } catch (error) {
-    // A timeout may still have been billed, so the plan stays counted.
-    console.error('OpenAI request failed', error);
-    return reply(502, { error: 'failed' });
-  }
-  if ('upstream' in started) {
-    await giveBack();
-    return reply(502, { error: 'failed', upstream: started.upstream });
-  }
-
-  const { answer } = started;
-  return planEventResponse(
-    { answer, reader: planBuilder(answers, catalog), giveBack, noPlan: 'failed', label: 'plan' },
-    stop,
-  );
+  return planEventResponse({
+    request: {
+      instructions: INSTRUCTIONS,
+      content: [{ type: 'input_text', text: contextText(answers, have, catalog, language) }],
+      name: 'training_plan',
+      schema: buildSchema(catalog.map((e) => e.id)),
+      timeoutMs: OPENAI_TIMEOUT_MS,
+      fast: FAST,
+    },
+    reader: () => planBuilder(answers, catalog),
+    giveBack,
+    noPlan: 'failed',
+    label: 'plan',
+  });
 });

@@ -82,7 +82,6 @@ export type PlanEvent =
   | { type: 'done' }
   | { type: 'error'; error: 'not_a_plan' | 'failed' };
 
-/** Text on one line, trimmed, at most `max` characters. */
 /**
  * At most `max` characters, cut after a whole word where that keeps most of it, without a
  * dangling "+", "/" or "–".
