@@ -7,7 +7,7 @@ import { type AppleConfig, revokeWithCode } from './apple.ts';
 const TEAM_ID = Deno.env.get('APPLE_TEAM_ID');
 const KEY_ID = Deno.env.get('APPLE_KEY_ID');
 const PRIVATE_KEY = Deno.env.get('APPLE_PRIVATE_KEY');
-const CLIENT_ID = Deno.env.get('APPLE_CLIENT_ID') ?? 'app.traqa.mobile';
+const CLIENT_ID = Deno.env.get('APPLE_CLIENT_ID') ?? 'app.loqqa.mobile';
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return reply(405, { error: 'method_not_allowed' });

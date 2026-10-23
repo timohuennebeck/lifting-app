@@ -1,7 +1,7 @@
 import { createMMKV } from 'react-native-mmkv';
 import type { StateStorage } from 'zustand/middleware';
 
-export const storage = createMMKV({ id: 'traqa' });
+export const storage = createMMKV({ id: 'loqqa' });
 
 // String key-value adapter over MMKV for Zustand's persist middleware and the Supabase session.
 export const mmkvStorage = {

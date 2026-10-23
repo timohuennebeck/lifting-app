@@ -21,8 +21,8 @@ import {
 const ENTITLEMENT = 'pro';
 /** Store product per plan, as set up in App Store Connect and RevenueCat (README). */
 const PRODUCT_IDS: Record<PlanId, string> = {
-  monthly: 'traqa_pro_monthly',
-  yearly: 'traqa_pro_yearly',
+  monthly: 'loqqa_pro_monthly',
+  yearly: 'loqqa_pro_yearly',
 };
 const DAYS_PER_UNIT: Record<string, number> = { DAY: 1, WEEK: 7, MONTH: 30, YEAR: 365 };
 

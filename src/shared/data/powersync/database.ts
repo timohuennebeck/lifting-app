@@ -8,7 +8,7 @@ import { AppSchema, drizzleSchema } from './schema';
 
 export const db = new PowerSyncDatabase({
   schema: AppSchema,
-  database: { dbFilename: 'traqa.db' },
+  database: { dbFilename: 'loqqa.db' },
 });
 
 /**

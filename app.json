@@ -9,7 +9,7 @@
     "userInterfaceStyle": "dark",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "app.traqa.mobile",
+      "bundleIdentifier": "app.loqqa.mobile",
       "supportsTablet": false,
       "infoPlist": {
         "CFBundleAllowMixedLocalizations": true
@@ -23,7 +23,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "app.traqa.mobile"
+      "package": "app.loqqa.mobile"
     },
     "locales": {
       "de": "./locales/de.json",
