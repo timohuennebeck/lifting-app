@@ -47,7 +47,6 @@
     }
   },
   "welcome": {
-    "header": "Nachricht von deinem Coach",
     "role": "Head Coach bei Loqqa",
     "aiBadge": "KI",
     "aiNotice": "Kann KI-bearbeitete Inhalte enthalten.",

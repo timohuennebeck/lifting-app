@@ -47,7 +47,6 @@
     }
   },
   "welcome": {
-    "header": "코치가 보낸 메시지",
     "role": "Loqqa 헤드 코치",
     "aiBadge": "AI",
     "aiNotice": "AI로 편집된 콘텐츠가 포함될 수 있습니다.",

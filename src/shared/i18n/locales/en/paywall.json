@@ -47,7 +47,6 @@
     }
   },
   "welcome": {
-    "header": "A message from your coach",
     "role": "Head Coach at Loqqa",
     "aiBadge": "AI",
     "aiNotice": "May contain AI-edited content.",

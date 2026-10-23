@@ -47,7 +47,6 @@
     }
   },
   "welcome": {
-    "header": "Mensagem do seu coach",
     "role": "Head Coach na Loqqa",
     "aiBadge": "IA",
     "aiNotice": "Pode conter conteúdo editado com IA.",

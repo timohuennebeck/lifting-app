@@ -23,23 +23,7 @@ export function ThankYouScreen() {
 
   return (
     <Screen
-      header={
-        <ScreenHeader
-          icon="close"
-          onBack={flow.exit}
-          title={
-            <Text
-              variant="caption"
-              tone="muted"
-              numberOfLines={1}
-              className="text-center font-inter-medium text-sm"
-            >
-              {t('welcome.header')}
-            </Text>
-          }
-          action={<View />}
-        />
-      }
+      header={<ScreenHeader icon="close" onBack={flow.exit} action={<View />} />}
       footer={<Button label={t('welcome.cta')} onPress={flow.exit} />}
     >
       <Stack.Screen options={{ gestureEnabled: false }} />
