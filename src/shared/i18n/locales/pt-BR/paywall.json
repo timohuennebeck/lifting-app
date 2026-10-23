@@ -53,11 +53,18 @@
     "aiNotice": "Pode conter conteúdo editado com IA.",
     "cta": "Vamos lá",
     "captions": {
-      "hello": "Oi {{name}}, eu sou o Kai, Head Coach na Loqqa.",
-      "helloAnon": "Oi, eu sou o Kai, Head Coach na Loqqa.",
-      "thanks": "Obrigado por estar com a gente. Isso significa muito pra nós.",
-      "plan": "Seu plano está pronto. A partir de agora, cada série conta.",
-      "seeYou": "Nos vemos no primeiro treino!"
+      "welcome": "Oi, que bom ter você aqui.",
+      "ready": "Seu plano está pronto.",
+      "built": "Ele foi montado com base nos seus dias de treino, nos seus pontos fracos e no seu equipamento.",
+      "blocks": "Funciona assim: você treina em blocos.",
+      "harder": "Cada semana fica um pouco mais desafiadora.",
+      "deload": "Depois de algumas semanas, vem uma semana de deload.",
+      "recover": "É uma semana mais leve, para o seu corpo se recuperar.",
+      "noPlanning": "Ou seja, você não precisa planejar nada.",
+      "appDoesIt": "O app faz isso por você.",
+      "howTo": "É só abrir, começar o próximo treino e registrar.",
+      "rest": "A gente cuida do resto.",
+      "start": "Quando estiver pronto, vamos começar."
     },
     "a11y": {
       "subtitles": "Legendas",

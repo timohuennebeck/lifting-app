@@ -6,22 +6,32 @@ export const COACH = {
 } as const;
 
 /**
- * The coach's thank-you video. No file exists yet: set this to a bundled
- * `require('@/assets/videos/…mp4')` or a remote URL. While it is null the poster
- * stands in and a timer drives the progress ring and captions.
+ * The coach's thank-you video (bundled, English audio). Set it to null and the poster
+ * stands in while a timer drives the progress ring and captions.
  */
-export const COACH_VIDEO_SOURCE: VideoSource = null;
+export const COACH_VIDEO_SOURCE: VideoSource = require('@/assets/videos/coach-kai.mp4');
 export const COACH_POSTER = require('@/assets/images/coach-kai.jpg');
 
 /** Length of the timer fallback; a real video reports its own duration. */
-export const COACH_FALLBACK_SECONDS = 24;
+export const COACH_FALLBACK_SECONDS = 30;
 
-/** Caption cues (seconds from the start) → `welcome.captions.*` keys. */
+/**
+ * Caption cues (seconds from the start, where each spoken line begins) →
+ * `welcome.captions.*` keys, translated into the app language.
+ */
 const COACH_CAPTIONS = [
-  { at: 0, key: 'hello' },
-  { at: 6, key: 'thanks' },
-  { at: 13, key: 'plan' },
-  { at: 19, key: 'seeYou' },
+  { at: 0, key: 'welcome' },
+  { at: 2.4, key: 'ready' },
+  { at: 4, key: 'built' },
+  { at: 8.5, key: 'blocks' },
+  { at: 11.4, key: 'harder' },
+  { at: 13.9, key: 'deload' },
+  { at: 16.5, key: 'recover' },
+  { at: 19.6, key: 'noPlanning' },
+  { at: 21.3, key: 'appDoesIt' },
+  { at: 22.9, key: 'howTo' },
+  { at: 26.3, key: 'rest' },
+  { at: 28, key: 'start' },
 ] as const;
 
 type CaptionKey = (typeof COACH_CAPTIONS)[number]['key'];

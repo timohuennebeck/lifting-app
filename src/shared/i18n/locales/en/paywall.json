@@ -53,11 +53,18 @@
     "aiNotice": "May contain AI-edited content.",
     "cta": "Let's go",
     "captions": {
-      "hello": "Hey {{name}}, I'm Kai, Head Coach at Loqqa.",
-      "helloAnon": "Hey, I'm Kai, Head Coach at Loqqa.",
-      "thanks": "Thanks for being here. It really means a lot to us.",
-      "plan": "Your plan is ready. From now on, every set counts.",
-      "seeYou": "See you at your first workout!"
+      "welcome": "Hey, great to have you here.",
+      "ready": "Your plan is ready.",
+      "built": "It's built around your training days, your weak spots and your equipment.",
+      "blocks": "Here's how it works: you train in blocks.",
+      "harder": "Each week gets a little more challenging.",
+      "deload": "After a few weeks, you'll get a deload week.",
+      "recover": "That's a lighter week, so your body can recover.",
+      "noPlanning": "So you don't have to plan anything.",
+      "appDoesIt": "The app does that for you.",
+      "howTo": "Just open it, start your next workout and log it.",
+      "rest": "We'll take care of the rest.",
+      "start": "Whenever you're ready, let's get started."
     },
     "a11y": {
       "subtitles": "Subtitles",

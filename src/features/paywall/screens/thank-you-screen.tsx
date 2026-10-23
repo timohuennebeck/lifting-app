@@ -3,8 +3,6 @@ import { Stack, useIsFocused } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { useDraft } from '@/features/onboarding/stores/onboarding-store';
-import { useProfile } from '@/shared/data/profile';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
@@ -20,9 +18,6 @@ export function ThankYouScreen() {
   const { t } = useTranslation('paywall');
   const flow = usePaywallFlow();
   const focused = useIsFocused();
-  const { profile } = useProfile();
-  const draftName = useDraft().firstName;
-  const name = (profile?.firstName || draftName).trim();
   // Purchased: there is no way back into the paywall, only on; Android's back goes on too.
   useHardwareBack(flow.exit);
 
@@ -49,7 +44,7 @@ export function ThankYouScreen() {
     >
       <Stack.Screen options={{ gestureEnabled: false }} />
       <View className="mx-4 mt-3 h-120 shrink">
-        <CoachVideo active={focused} name={name} />
+        <CoachVideo active={focused} />
       </View>
       <View className="flex-row items-center gap-2.5 px-5 pt-5.5">
         <View className="size-9 overflow-hidden rounded-full border-[1.5px] border-accent bg-surface">

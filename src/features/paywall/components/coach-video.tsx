@@ -48,23 +48,17 @@ const SHADE: GradientStop[] = [
 export interface CoachVideoProps {
   /** False while the screen is in the background: playback pauses. */
   active: boolean;
-  /** First name for the greeting caption; may be empty. */
-  name: string;
 }
 
 /** Coach message: video (or poster), captions, controls and a progress line around the frame. */
-export function CoachVideo({ active, name }: CoachVideoProps) {
+export function CoachVideo({ active }: CoachVideoProps) {
   const { t } = useTranslation('paywall');
   const playback = useCoachPlayback(active);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [captions, setCaptions] = useState(true);
   const [firstFrame, setFirstFrame] = useState(false);
 
-  const cue = captionAt(playback.elapsed);
-  const caption =
-    cue === 'hello' && !name
-      ? t('welcome.captions.helloAnon')
-      : t(`welcome.captions.${cue}`, { name });
+  const caption = t(`welcome.captions.${captionAt(playback.elapsed)}`);
   const playLabel = t(playback.paused ? 'welcome.a11y.play' : 'welcome.a11y.pause');
 
   const togglePlay = () => {

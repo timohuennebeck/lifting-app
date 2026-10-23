@@ -53,11 +53,18 @@
     "aiNotice": "Kann KI-bearbeitete Inhalte enthalten.",
     "cta": "Los geht's",
     "captions": {
-      "hello": "Hey {{name}}, ich bin Kai, Head Coach bei Loqqa.",
-      "helloAnon": "Hey, ich bin Kai, Head Coach bei Loqqa.",
-      "thanks": "Danke, dass du dabei bist. Das bedeutet uns echt viel.",
-      "plan": "Dein Plan steht. Ab jetzt zählt jeder Satz.",
-      "seeYou": "Wir sehen uns beim ersten Training!"
+      "welcome": "Hey, schön, dass du da bist.",
+      "ready": "Dein Plan ist fertig.",
+      "built": "Er ist auf deine Trainingstage, deine Schwachstellen und deine Geräte abgestimmt.",
+      "blocks": "So funktioniert's: Du trainierst in Blöcken.",
+      "harder": "Jede Woche wird ein bisschen fordernder.",
+      "deload": "Nach ein paar Wochen kommt eine Deload-Woche.",
+      "recover": "Das ist eine leichtere Woche, damit dein Körper sich erholen kann.",
+      "noPlanning": "Du musst also nichts planen.",
+      "appDoesIt": "Das übernimmt die App für dich.",
+      "howTo": "Öffne sie einfach, starte dein nächstes Training und trag es ein.",
+      "rest": "Um den Rest kümmern wir uns.",
+      "start": "Wann immer du bereit bist: Los geht's."
     },
     "a11y": {
       "subtitles": "Untertitel",
