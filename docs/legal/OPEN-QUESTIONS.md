@@ -1,135 +1,55 @@
-# Open questions for the German legal drafts
+# Legal texts: what is still open
 
-This file lists everything the owner must supply or decide before `docs/legal/de/datenschutz.md` (DS) and `docs/legal/de/nutzungsbedingungen.md` (NB) can be published. Each item quotes the matching placeholder (if there is one) and says where it appears and why it matters.
+Version 1.0 of the privacy policy (DS) and the terms of use (NB) is published (October 2026,
+`docs/legal/<locale>/`, migration `20261023130000_legal_documents_v1`). German is the binding
+version; `en`, `pt-PT` and `pt-BR` are translations, and Korean users see English.
 
-The drafts are not legal advice. Have a lawyer review both documents before release.
+The texts are not legal advice. A lawyer should review them, above all the health data, body
+photos and AI parts.
 
-Every placeholder must be resolved before publication. Beyond filling in facts, these items need a product or code change, or a firm decision, before the texts can be true and compliant (marked "blocker" below): 26, 29, 32, 33, 38, 39, 47, 50, 56.
+## Accepted risks (owner's decision)
 
-## A. Company and contacts
+1. **PostHog without consent.** The SDK stores an id on the device and sends events without an
+   opt-in. § 25(1) TDDDG requires consent for that in Germany; DS §4.13 names Art. 6(1)(f) GDPR and
+   the right to object. Fix: an opt-in prompt before the SDK starts, or a mode without device
+   storage.
+2. **Body data consent without a checkbox.** The line above "Create account" (`createAccount.terms`)
+   states the explicit consent (DS §4.4). A separate checkbox would be the safer form of explicit
+   consent (Art. 9(2)(a) GDPR).
+3. **Progress check consent without its own step.** One line above the camera's "Done"
+   (`camera.consent`) names OpenAI and the USA; DS §4.6 and §8 rely on it, also for Art. 49(1)(a)
+   GDPR.
 
-1. **Legal entity name and form.** Placeholder „Name des Unternehmens mit Rechtsform“ (DS §1, NB §1). Why: Art. 13(1)(a) GDPR requires the controller's identity and the terms need a contracting party. Loqqa is a private project, so this is presumably the owner as a private person (name instead of a company; items 3 and 4 then fall away). The app ID `app.loqqa.mobile` says nothing about who the provider is.
-2. **Postal address.** Placeholder „Straße, Hausnummer, PLZ, Ort, Land“ (DS §1, NB §1). Why: mandatory controller contact data; it also determines the competent supervisory authority (item 8).
-3. **Legal representative(s).** Placeholder „Geschäftsführung bzw. vertretungsberechtigte Person“ (DS §1, NB §1). Why: identifies who acts for the controller/provider.
-4. **Commercial register.** Placeholder „Registergericht und Registernummer, falls vorhanden“ (NB §1). Why: provider identification; also needed for the Impressum (item 9).
-5. **Privacy contact email.** Placeholder „Kontakt-E-Mail für Datenschutzanfragen“ (DS §1, §10, §11, §12). Why: every data subject request (access, deletion, export, withdrawal) is routed to this address.
-6. **General/support contact email.** Placeholder „Kontakt-E-Mail für allgemeine Anfragen und Support“ (NB §1, §13). Why: the terms offer it for contact and for account deletion requests; it may be the same as item 5.
-7. **Data protection officer.** Placeholder „Name und Kontaktdaten des Datenschutzbeauftragten oder Hinweis, dass keiner benannt werden muss“ (DS §2). Why: § 38 BDSG requires a DPO from 20 people regularly processing personal data, or regardless of headcount when a DPIA is required (likely, see item 28).
-8. **Competent supervisory authority.** Placeholder „Zuständige Datenschutz-Aufsichtsbehörde mit Anschrift und Website“ (DS §13). Why: Art. 13(2)(d) GDPR; depends on the federal state of the company's seat.
-9. **Impressum (not drafted here).** No placeholder. Why: § 5 DDG requires provider identification that is easy to reach in the app and in the store listings; neither document replaces it.
+## Before launch
 
-## B. Document metadata
+4. **DPAs.** Sign one with every processor: Supabase (dashboard), OpenAI (DPA form), RevenueCat,
+   PostHog, PowerSync (email dpo@powersync.com). DS §8 relies on the SCCs in them.
+5. **PowerSync Cloud in the EU region.** DS §7 and §8 say the sync copy is in the EU. Only the
+   local setup exists today.
+6. **Imprint on itsloqqa.com** (§ 5 DDG) and in the store listings. NB §1 covers the app.
+7. **Email delivery.** Supabase's built-in mailer only reaches team members, so password-reset
+   codes don't reach real users. With a custom SMTP service (e.g. Resend), add it to DS §4.2, §7
+   and §8.
+8. **Data protection officer.** DS §2 says none is required. If a DPIA is required (health data,
+   body photos, AI), § 38 BDSG requires one; check with the lawyer.
 
-10. **Version and date.** Placeholders „Versionsnummer“ and „Datum“ (top of DS and NB). Why: the app also shows `legal_documents.version` and `effective_at` from the database (`legal.meta`), so the text and the row must match.
-11. **Draft notice.** Placeholder „Diesen Entwurfshinweis vor der Veröffentlichung entfernen“ (top of DS and NB). Why: the quote marks the text as an unreviewed draft and must not ship.
+## Manual processes the texts promise
 
-## C. Hosting, processors and transfers
+9. Withdrawing the body data consent (DS §12): delete `weight_kg`/`height_cm` and the weight entries
+   on request.
+10. Data export within one month as JSON (DS §11).
+11. Deleting PostHog persons and RevenueCat customers on request (DS §10, §4.13).
+12. Deleting progress-check photos left in storage after an offline delete (DS §4.6).
+13. Deleting closed support tickets on request (DS §4.8).
 
-12. **Supabase production region.** Placeholder „Supabase-Region des Produktivprojekts“ (DS §7). Why: the repo only contains local development config (`supabase/config.toml`, `.env.example` on 127.0.0.1); the EU storage claim depends on it.
-13. **Supabase contracting entity and DPA.** Placeholder „Vertragspartner und Anschrift von Supabase laut Auftragsverarbeitungsvertrag“ (DS §7). Why: Art. 28 GDPR requires a signed DPA; name the exact entity from it.
-14. **Supabase third-country transfer.** Placeholder „Drittlandübermittlung bei Supabase und Garantie“ (DS §8). Why: Supabase is a US company; support or sub-processor access can be a transfer even with an EU region, so check DPF certification or SCCs.
-15. **PowerSync deployment.** Placeholder „PowerSync Cloud oder selbst betrieben; Vertragspartner bzw. Hosting-Anbieter mit Anschrift“ (DS §7). Why: the repo has a self-hosted setup (`powersync/` with MongoDB bucket storage); production may be PowerSync Cloud or self-hosted, which changes who the processor is and where the data copy lives.
-16. **PowerSync region.** Placeholder „Region des PowerSync-Dienstes“ (DS §7). Why: PowerSync keeps a copy of every synced row, including profile, weight entries and progress-check results (`powersync/sync-config.yaml`).
-17. **PowerSync third-country transfer.** Placeholder „Drittlandübermittlung bei PowerSync und Garantie“ (DS §8). Why: same reasoning as item 14 for the PowerSync provider or the hoster of a self-hosted instance.
-18. **Email delivery provider.** Placeholders „E-Mail-Versanddienst“ (DS §4.2, §7) and „Drittlandübermittlung beim E-Mail-Versanddienst und Garantie“ (DS §8). Why: `[auth.email.smtp]` is commented out in `config.toml`; Supabase's built-in mailer is not meant for production, and the chosen SMTP service is a processor that sees email addresses and reset codes.
-19. **EU storage for every service.** Placeholder „Für jeden Dienst bestätigen, dass die Daten in der EU gespeichert werden“ (DS §8). Why: the owner says "all hosted in EU", but nothing in the repo proves it, and the policy must not claim it unverified. Not true for the progress check assessment: the photos and profile details go to OpenAI in the USA, because EU data residency at OpenAI needs an Enterprise contract (DS §4.6 and §8 say so).
-20. **Server log retention.** Placeholder „Speicherdauer der Server-Protokolle bei Supabase und PowerSync“ (DS §4.11, §9). Why: Art. 13(2)(a) GDPR requires retention periods, and IP addresses are logged on every request, also before sign-up.
-21. **Backups.** Placeholder „Ob und wie lange Datenbank- und Speicher-Backups aufbewahrt werden“ (DS §9). Why: deleted accounts survive in backups until they expire, and users must be told.
-22. **Team access.** Placeholder „Kreis der zugriffsberechtigten Personen im Team bestätigen“ (DS §7). Why: the README shows the team works directly with the service role, which bypasses RLS; limit and document access (Art. 32 GDPR).
-23. **HTTPS in production.** Placeholder „Bestätigen, dass im Produktivbetrieb ausschließlich HTTPS genutzt wird“ (DS §17). Why: the local URLs are `http://`; the TLS statement is only true if production URLs are `https://`.
-24. **Apple/Google developer diagnostics.** No placeholder. Why: if you use crash or usage statistics from App Store Connect or the Play Console (shared by users who opt in on their device), DS should mention them; the drafts currently don't.
-25. **DPAs and records of processing.** No placeholder. Why: sign a DPA with every processor (Supabase, PowerSync or its hoster, email provider, OpenAI, later PostHog and RevenueCat) and keep an Art. 30 record; the policy states processors act under Art. 28.
+## Keep in sync with the app
 
-## D. Health data and consent (Art. 9 GDPR)
-
-26. **Explicit consent flow (blocker).** Placeholder „Beschreibung, wie und an welcher Stelle der App die Einwilligung für Gesundheitsdaten eingeholt wird“ (DS §4.4). Why: the app has no consent step. The only legal line is on Create Account („Mit der Erstellung akzeptierst du … die Datenschutzerklärung“), which is not a valid explicit consent, and weight and height are collected in onboarding before any legal text is shown.
-27. **Weight and height as health data (decision).** No placeholder; DS §4.3 and §4.4 currently treat them as health data. Why: this is the conservative reading, but weight and height are mandatory onboarding steps with prefilled defaults (78 kg / 178 cm, `onboarding-store.ts`), so keeping it requires a way to decline; if you drop it, edit DS §4.3, §4.4 and the summary.
-28. **DPIA (decision).** No placeholder. Why: systematic processing of health data, including body photos in underwear, likely requires a data protection impact assessment (Art. 35 GDPR), which in Germany also triggers the DPO duty (item 7).
-29. **Withdrawal path in the app (blocker).** Placeholder „Ort in der App, an dem die Einwilligung für Gesundheitsdaten widerrufen werden kann“ (DS §12). Why: the refactored settings screen no longer edits sex, birth date, weight or height; withdrawing must be as easy as consenting (Art. 7(3) GDPR).
-30. **Correcting profile data (decision).** No placeholder. Why: Art. 16 GDPR; right now users can only edit name, bio, avatar and units in the app (`profile-screen.tsx`, `settings-screen.tsx`). DS §4.3 says "a part" is editable, which stays true, but body data needs a correction path.
-31. **Team access to body photos.** Placeholder „Festlegen und beschreiben, wer im Team unter welchen Umständen auf Körpercheck-Fotos zugreifen kann“ (DS §4.6). Why: the app promises „Fotos bleiben privat – nur für dich“, but the service role can read the private `progress-photos` bucket.
-32. **Minors and health data consent (blocker).** Placeholder „Regelung für Minderjährige, insbesondere zur Einwilligung in die Verarbeitung von Gesundheitsdaten“ (DS §16). Why: the app accepts age 14 (`AGE_RANGE` in `src/features/onboarding/screens/birth-date-screen.tsx`, also the DB check on `birth_date`), while Germany sets the Art. 8 GDPR consent age at 16.
-
-## E. Code that is mocked or differs from what the UI says
-
-33. **Progress-check assessment (blocker).** Placeholders in DS §4.4, §4.6, §7, §8 and §12. Why: the assessment is real now. The `assess-progress` Edge Function sends the three photos, sex, age, height, weight, training experience and the previous check's values to OpenAI's standard API in the USA (no name, email or account id; `store: false`), and saves the values it returns. DS §4.6 is drafted accordingly. Still open: a DPA with OpenAI and its contracting entity; the transfer safeguard (EU-US Data Privacy Framework certification or SCCs, possibly Art. 49(1)(a) via the consent); confirming OpenAI's retention (up to 30 days for abuse monitoring) and no-training terms; a DPIA (Art. 35: health data, photos, AI); and the progress check consent screen (design pending), which must name OpenAI and the USA before DS §4.4 can describe it.
-34. **Plan import and plan generation (decided: OpenAI).** The `read-plan` Edge Function sends the photos or file, with the exercise catalog, to OpenAI in the USA; nothing is stored on our side except a keyed hash of the IP for the import limits (deleted after two days). The `generate-plan` Edge Function sends the plan answers (goal, focus muscles, equipment, workouts per week, session length, experience, app language), with the catalog exercises for that equipment, to OpenAI; no name, body data or account, and the same IP-hash limits (`plan_requests`, kind `generate`). There is no plan made on the device any more. DS §4.1, §4.3, §4.7, §7, §8 and §15 and NB §4 say so. Still open, as for the progress check: OpenAI's retention and training terms (DS §4.7 placeholder) and the transfer basis (§8).
-35. **Voice input (decided: removed).** The scripted voice import was removed from the app (October 2026), so no microphone permission or speech provider is involved. If voice input comes back, it needs a real speech provider, microphone permission and an entry in the privacy policy.
-36. **Social sign-in.** Placeholders on Google's contracting entity, role and US transfer, and on Apple's (DS §4.2). Why: Google Sign-In (`google-sign-in.ts`; Supabase stores the email, name, profile picture URL and Google account ID) and Sign in with Apple on iOS (`apple-sign-in.ts`; Apple account ID, email or relay address, name on the first sign-in) are wired up; Facebook was dropped. Sign in with Apple also covers App Store guideline 4.8. Guideline 5.1.1(v) (revoke the Apple tokens on account deletion) is covered on iOS: `delete-account.ts` gets a fresh code from Apple's sheet and the `revoke-apple-token` function revokes the tokens (DS §10). An Apple account deleted on Android stays linked at Apple until the user removes Loqqa in their Apple ID settings.
-37. **Recording legal acceptance.** Placeholder „Bestätigen, dass die App die Zustimmung bei der Registrierung tatsächlich speichert“ (DS §4.9). Why: the proof of acceptance and consent (Art. 7(1) GDPR). The app writes `legal_acceptances` at sign-up and when a user agrees to a changed version (`acceptDocuments` in `src/features/legal/data/legal-acceptances.ts`; README, "Legal documents"); confirm it and remove the placeholder.
-38. **Trial reminder (blocker).** Placeholder „Ob und wie wir vor dem Ende des Testzeitraums erinnern“ (NB §6). Why: the app has no notification or email mechanism, and DS §6 says the app sends no push notifications. The trial screen promises no reminder; it shows the day the paid plan starts and that it can be cancelled before then (`trial-screen.tsx`). Decide whether to add a reminder or to state that there is none.
-39. **Progress-check deletion in storage (blocker).** Placeholder „Bestätigen, dass die Löschung im Speicher auch bei fehlender Internetverbindung zuverlässig nachgeholt wird“ (DS §4.6). Why: `deleteProgressCheck` removes the bucket files fire-and-forget, so offline or on error the photos stay until account deletion. The same pattern applies to replaced or removed avatars (`src/features/profile/lib/avatar.ts`).
-40. **Device backups.** Placeholder „Entscheidung, ob Körpercheck-Fotos und Screenshots von Gerätebackups ausgeschlossen werden“ (DS §5). Why: photos are stored in the app's documents directory, which iCloud/Google backups can include (a comment in `use-auth-listener.ts` already notes this).
-41. **Local data at rest (decision).** No placeholder. Why: the local SQLite file (`loqqa.db`) and MMKV aren't encrypted by the app. DS makes no such claim, but consider encryption for health data.
-42. **Keys left after sign-out (minor).** No placeholder. Why: MMKV keeps `account.language.<userId>`, `account.metadataLanguage.<userId>` and the mock purchase receipt after sign-out, while DS §5 says only settings like the language remain.
-43. **Age range mismatch.** No placeholder. Why: the DB allows birth dates from 1900 up to 14 years ago and the app ages 14–99; align both with the minimum age (item 47).
-44. **Coach video persona (decision).** No placeholder. Why: the paywall welcome shows „Max Krüger, Head Coach bei Loqqa“ with a demo photo (`coach-video.ts`); if he isn't a real person, this may be misleading advertising (UWG).
-45. **Support response time.** Placeholder „Ob die in der App genannte Antwortzeit von 24 bis 48 Stunden verbindlich zugesagt wird“ (NB §9). Why: the auto-reply states „Unser Team antwortet dir innerhalb von 24–48 Stunden“ as a firm promise.
-46. **Support retention.** Placeholder „Gegebenenfalls kürzere Löschfrist für abgeschlossene Support-Anfragen“ (DS §4.8). Why: tickets and messages can't be deleted by users (RLS) and live until account deletion; storage limitation (Art. 5(1)(e) GDPR) may call for a shorter period.
-
-## F. Minimum age and minors
-
-47. **Minimum age (blocker).** Placeholder „Mindestalter“ (DS §16, NB §2). Why: it drives consent validity (Art. 8 GDPR, 16 in Germany) and contractual capacity (§§ 106 ff. BGB).
-48. **Rules for minors in the terms.** Placeholder „Regelung für Minderjährige, z. B. Zustimmung der Erziehungsberechtigten, insbesondere für Käufe“ (NB §2). Why: subscriptions by minors generally need parental consent.
-49. **Under-age accounts.** Placeholder „Vorgehen, wenn uns ein Konto einer Person unter dem Mindestalter bekannt wird“ (DS §16). Why: you need a defined process (e.g. deletion) once you learn of one.
-
-## G. Subscriptions, purchases and RevenueCat
-
-50. **Purchase data flows (blocker).** Placeholder „Die Kaufabwicklung ist im aktuellen Code eine Testversion; vor dem Livegang ergänzen, welche Kaufdaten auf unseren Servern oder bei RevenueCat gespeichert werden“ (DS §4.10). Why: on iOS purchases now go through RevenueCat (`revenuecat-purchases.ts`, keyed by the Supabase user id; the progress check function asks RevenueCat's API for the `pro` entitlement). We store no purchase data ourselves; Android still uses the development-only mock.
-51. **Free vs. Pro features.** Placeholder „Abgrenzung zwischen kostenlosen Funktionen und Loqqa Pro festlegen“ (NB §4). Why: the paywall advertises plan import, history and records, and weight suggestions as Pro benefits; the terms must match what is actually gated.
-52. **Plans and prices (decided).** NB §6 now names the monthly plan (9,99 €) and the yearly plan (59,99 €). Why: check that naming prices in the terms is wanted, since store prices vary by country and can change.
-53. **Trial length (decided).** NB §6 says 7 days, matching the App Store introductory offers.
-54. **Trial eligibility scope (decided).** NB §6 says the store decides, usually once per store account (Apple: per Apple ID and subscription group).
-55. **Cancellation deadline.** Placeholder „Kündigungsfrist laut Store, z. B. 24 Stunden vor Ablauf der Laufzeit“ (NB §6). Why: it must match each store's actual auto-renewal rules.
-56. **Contracting party for in-app purchases (blocker).** Placeholder „Bestätigen, wer bei In-App-Käufen Vertragspartner ist (Apple bzw. Google oder wir)“ (NB §6). Why: it decides who owes the withdrawal notice, invoices and refunds (items 57, 61).
-57. **Withdrawal notice.** Placeholder „Vollständige Widerrufsbelehrung, soweit wir selbst Vertragspartner sind, einschließlich Regelungen zum vorzeitigen Erlöschen des Widerrufsrechts bzw. zum Wertersatz“ (NB §7). Why: it is mandatory if you are the seller, and early expiry for digital products needs express consent and acknowledgement at purchase.
-58. **Entitlement binding.** Placeholder „Ob Loqqa Pro an das Store-Konto oder an das Loqqa-Konto gebunden ist und auf welchen Geräten es gilt“ (NB §6). Why: RevenueCat now uses the Supabase user id as app user id, so Pro follows the Loqqa account to every device it signs in on; a restore on another Loqqa account moves the purchase there (RevenueCat's default transfer behaviour).
-59. **Price changes.** Placeholder „Regelung für Preisänderungen bei laufenden Abos“ (NB §6). Why: price changes need a valid mechanism; the stores run their own consent flows.
-60. **§ 312k BGB cancellation button (lawyer).** No placeholder. Why: check whether the statutory cancellation-button duty for online consumer subscriptions applies to store-sold subscriptions.
-61. **Purchase record retention.** Placeholder „Konkrete Aufbewahrungsfrist und betroffene Kaufdaten“ (DS §9). Why: HGB/AO retention only applies to records you keep yourself, which depends on item 56.
-62. **RevenueCat app user ID (decided).** DS §4.13 now says the Supabase user id (Konto-ID) is sent, with an anonymous RevenueCat id before sign-up.
-63. **RevenueCat data list.** Placeholder „Endgültige Liste der an RevenueCat übermittelten Daten bestätigen“ (DS §4.13). Why: check the SDK defaults (device data, IP, subscriber attributes) against its documentation.
-64. **RevenueCat entity.** Placeholder „Vertragspartner und Anschrift von RevenueCat laut Auftragsverarbeitungsvertrag“ (DS §4.13). Why: Art. 28 GDPR DPA.
-65. **RevenueCat role.** Placeholder „Rolle von RevenueCat laut Vertrag bestätigen, z. B. Auftragsverarbeiter“ (DS §4.13). Why: processor and controller roles are described differently.
-66. **RevenueCat region.** Placeholder „Region der Datenverarbeitung bei RevenueCat“ (DS §4.13). Why: I could not verify that RevenueCat offers EU data residency, so don't claim EU hosting until RevenueCat confirms it in writing.
-67. **RevenueCat transfer.** Placeholder „Drittlandübermittlung bei RevenueCat und Garantie, z. B. EU-US Data Privacy Framework oder Standardvertragsklauseln“ (DS §4.13). Why: RevenueCat is US-based, so a transfer is likely; confirm DPF certification or SCCs.
-68. **RevenueCat retention.** Placeholder „Speicherdauer der Kaufdaten bei RevenueCat“ (DS §4.13). Why: Art. 13(2)(a) GDPR.
-
-## H. Product analytics (PostHog)
-
-69. **PostHog region.** Placeholder „Hosting-Region bei PostHog bestätigen, z. B. PostHog Cloud EU“ (DS §4.12). Why: PostHog Cloud EU exists, but US and EU are separate instances, so confirm the project was created in the EU one.
-70. **PostHog entity and DPA.** Placeholder „Vertragspartner und Anschrift von PostHog laut Auftragsverarbeitungsvertrag“ (DS §4.12). Why: Art. 28 GDPR DPA.
-71. **PostHog transfer.** Placeholder „Drittlandübermittlung bei PostHog und Garantie, z. B. EU-US Data Privacy Framework oder Standardvertragsklauseln“ (DS §4.12). Why: PostHog is a US company; support access can be a transfer even with EU hosting.
-72. **Data collected.** Placeholder „Endgültige Liste der an PostHog übermittelten Daten, insbesondere ob IP-Adressen gespeichert, ob Sitzungsaufzeichnungen genutzt und ob Ereignisse mit deinem Konto verknüpft werden“ (DS §4.12). Why: autocapture and session replay can capture screens with health data and body photos.
-73. **No health data or photos to PostHog.** No placeholder; DS §4.12 promises it. Why: the implementation must guarantee it (event properties, replay off or fully masked).
-74. **Consent UI.** Placeholder „Ort in der App, an dem die Einwilligung in die Analyse widerrufen werden kann“ (DS §4.12). Why: § 25(1) TDDDG requires opt-in before the SDK initializes or stores identifiers, and withdrawal must be easy.
-75. **PostHog retention.** Placeholder „Speicherdauer der Analysedaten bei PostHog“ (DS §4.12). Why: Art. 13(2)(a) GDPR.
-76. **Summary line.** No placeholder. Why: DS „Kurz zusammengefasst“ says the app has no analytics trackers „derzeit“; update it when PostHog ships.
-
-## I. Retention and deletion
-
-77. **Inactive accounts.** Placeholder „Entscheidung, ob und wann inaktive Konten gelöscht werden“ (DS §9). Why: storage limitation; without a rule, data of abandoned accounts is kept forever.
-78. **Deletion beyond the database.** Placeholder „Beschreiben, wie gelöschte Daten aus Backups, aus dem Zwischenspeicher von PowerSync sowie bei PostHog und RevenueCat entfernt werden“ (DS §10). Why: `delete_own_account` only deletes the `auth.users` row (cascading to every table) after the app removes the storage files; PowerSync bucket storage, PostHog persons and RevenueCat customers need their own deletion steps.
-79. **Legal acceptances deleted with the account (decision).** No placeholder. Why: the cascade also deletes `legal_acceptances`, i.e. the proof of acceptance and consent; consider keeping minimal proof to defend legal claims (Art. 17(3)(e) GDPR).
-80. **Data export.** Placeholder „Verfahren für den Datenexport, z. B. per E-Mail-Anfrage“ (DS §11). Why: Art. 20 GDPR; the app has no export function.
-81. **Verify final account deletion.** No placeholder. Why: `src/features/settings/lib/delete-account.ts` and `supabase/migrations/20261010120000_delete_own_account.sql` were added while these drafts were written. Re-check that the final flow matches DS §10 (storage files, then the RPC, then a local sign-out; a failure shows „Dein Konto konnte nicht gelöscht werden …“).
-
-## J. Terms of use decisions
-
-82. **Medical device status.** Placeholder „Bestätigen, dass Loqqa nach seiner Zweckbestimmung kein Medizinprodukt ist“ (NB §5). Why: body-fat estimates could be read as a medical purpose under the MDR; marketing claims must stay consistent with the intended purpose.
-83. **Ideas and feedback.** Placeholder „Regelung, ob und wie wir Ideen und Feedback aus dem Support nutzen dürfen“ (NB §8). Why: without a clause, rights to implement user suggestions are unclear.
-84. **Commercial use.** Placeholder „Ob eine gewerbliche Nutzung, z. B. durch Trainer für ihre Kunden, erlaubt ist“ (NB §10). Why: it defines the user group and affects consumer-law assumptions.
-85. **Notice period for free accounts.** Placeholder „Kündigungsfrist für kostenlose Konten“ (NB §13). Why: ordinary termination by the provider needs a reasonable notice period.
-86. **Refusing changed terms.** Placeholder „Regelung, was gilt, wenn du einer geänderten Fassung nicht zustimmst“ (NB §14). Why: the app can block use until re-acceptance (`requires_reacceptance`), and German case law (BGH 2021) rejects deemed-consent clauses, so define the outcome explicitly.
-87. **Governing law.** Placeholder „Anwendbares Recht, z. B. das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts“ (NB §15). Why: a choice of law must not deprive consumers of their mandatory home-country protection (Art. 6 Rome I).
-88. **Place of jurisdiction.** Placeholder „Gerichtsstand für Kaufleute, juristische Personen des öffentlichen Rechts und öffentlich-rechtliche Sondervermögen“ (NB §15). Why: it can only be agreed with merchants, not with consumers.
-89. **Consumer dispute resolution.** Placeholder „Erklärung nach § 36 VSBG, ob wir bereit oder verpflichtet sind, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen“ (NB §15). Why: required for traders using standard terms unless they had 10 or fewer employees on 31 Dec of the prior year. The EU ODR platform link is no longer needed since the platform closed in July 2025.
-90. **Contract language.** Placeholder „Vertragssprache festlegen“ (NB §15). Why: the app ships in en, de, pt-PT, pt-BR and ko with per-locale documents (Korean shows the English ones, as there is no Korean version); decide which version governs.
-
----
-
-Note: the profile now stores the birth date instead of the age (`birth_date`, `supabase/migrations/20261011090000_profile_birth_date.sql`), so the app can show the day the 18+ progress check unlocks; DS §4.1 and §4.3 say „Geburtsdatum“, and the progress check assessment still sends only the age in years (DS §4.6). Weigh this against data minimisation (Art. 5(1)(c) GDPR): the age alone would be enough to gate the check.
-
-Note: after these drafts were written, the settings lost the email and password sheets (password only via „Passwort vergessen“) and „Käufe wiederherstellen“ moved to the paywall; DS §4.2 and NB §3, §6 were updated to match.
-
-Count: 90 items (73 tied to placeholders in the drafts, 17 further decisions or checks), of which 9 are marked as blockers.
+14. **Backups.** DS §9 says there are none (Supabase Free). Upgrading to Pro adds daily backups
+    kept 7 days: update DS §9 then.
+15. **Minimum ages** per country (`src/features/onboarding/lib/minimum-age.ts`) match DS §16 and
+    NB §2. Spain and Norway have pending bills to raise theirs.
+16. **Brazil:** the ECA Digital (Law 15.211/2025, in force since 17 March 2026) asks apps likely used
+    by minors for real age checks; a self-declared birth date may not be enough there.
+17. **Support reply time.** The chat says "24–48 hours"; NB §9 calls it a guideline.
+18. Every change to the app's data flows (new service, new data sent to OpenAI or PostHog) needs a
+    new version of DS: `node scripts/legal-migration.mjs <version> <date> <name>`.

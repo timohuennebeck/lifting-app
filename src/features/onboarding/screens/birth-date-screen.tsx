@@ -10,10 +10,11 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
 import { ABOUT_STEPS } from '../lib/flow';
+import { minimumAge } from '../lib/minimum-age';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 
-/** Ages that can be given, in whole years; the profile's database check has the same minimum. */
-const AGE_RANGE = { min: 14, max: 99 } as const;
+/** Ages that can be given, in whole years; the minimum depends on the phone's region. */
+const AGE_RANGE = { min: minimumAge(), max: 99 } as const;
 /** The wheels start on 1 January of the year someone this old was born. */
 const START_AGE = 25;
 

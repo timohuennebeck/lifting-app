@@ -45,7 +45,8 @@
       "front": "Face the camera",
       "side": "Turn to the side",
       "back": "Turn your back to the camera"
-    }
+    },
+    "consent": "By tapping “{{done}}” you consent to your photos and body data being sent to OpenAI (USA) for the assessment."
   },
   "discard": {
     "title": "Discard body check?",

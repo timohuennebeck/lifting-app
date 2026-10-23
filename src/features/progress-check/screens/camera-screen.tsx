@@ -392,6 +392,12 @@ export function CameraScreen() {
                 onPress={shutter}
               />
             </CaptureRow>
+            {/* "Fertig" sends the photos to the assessment: this says where they go. */}
+            {finished ? (
+              <Text variant="caption" tone="subtle" className="-mt-2 px-8 text-center font-inter">
+                {t('camera.consent', { done: t('common:actions.done') })}
+              </Text>
+            ) : null}
           </View>
         </>
       )}

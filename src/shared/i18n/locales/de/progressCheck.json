@@ -45,7 +45,8 @@
       "front": "Stell dich frontal zur Kamera",
       "side": "Dreh dich zur Seite",
       "back": "Dreh dich mit dem Rücken zur Kamera"
-    }
+    },
+    "consent": "Mit „{{done}}“ willigst du ein, dass deine Fotos und Körperdaten zur Auswertung an OpenAI (USA) übermittelt werden."
   },
   "discard": {
     "title": "Körpercheck verwerfen?",

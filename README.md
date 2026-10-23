@@ -48,9 +48,10 @@ src/
   shared/              ui primitives, app-level components, data layer, hooks, i18n, lib, stores
 supabase/              config, migrations (RLS, PowerSync publication), Edge Functions, email templates
 powersync/             self-hosted service config, sync streams, docker compose
-scripts/               React Compiler check, plan import and generation tests, muscle artwork, Apple IDs
+scripts/               React Compiler check, plan import and generation tests, muscle artwork, Apple IDs,
+                       legal texts migration
 locales/               iOS permission texts per language (app.json `locales`)
-docs/legal/            German legal drafts and the questions open before publishing them
+docs/legal/            the legal texts per language and what is still open about them
 ```
 
 AI agents: see `AGENTS.md`.
@@ -124,8 +125,11 @@ Documents are readable without an account (onboarding runs logged out) and writt
 - **In the app:** `/legal/terms` and `/legal/privacy` show the version in effect, in the app language
   (else English, else `pt-BR`), linked from sign-up, the paywall and Settings.
   Write the text as Markdown: headings, paragraphs, `>` quotes, lists, `**bold**` and
-  `[links](https://…)`. Locally, `supabase/seed.sql` adds placeholder documents on
-  `npm run supabase:reset`.
+  `[links](https://…)`.
+- **Publishing:** the texts live in `docs/legal/<locale>/` (German is binding; `en`, `pt-PT` and
+  `pt-BR` are translations). `node scripts/legal-migration.mjs <version> <date> <name>` turns them
+  into a migration with one row per kind and locale, which `supabase db push` publishes.
+  `docs/legal/OPEN-QUESTIONS.md` lists what is still open.
 
 ## Weight tracking
 

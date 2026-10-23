@@ -45,7 +45,8 @@
       "front": "Fica de frente para a câmara",
       "side": "Vira-te de lado",
       "back": "Fica de costas para a câmara"
-    }
+    },
+    "consent": "Ao tocar em “{{done}}”, consentes que as tuas fotos e dados corporais sejam enviados à OpenAI (EUA) para a avaliação."
   },
   "discard": {
     "title": "Descartar check corporal?",
