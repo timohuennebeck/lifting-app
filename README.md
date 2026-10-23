@@ -10,7 +10,7 @@ git history (`git show 48b667e:design/README.md`).
 ## Stack
 
 - **Expo SDK 57** with Expo Router (typed routes), protected routes, native tabs and the React Compiler
-- **Supabase** for auth, Postgres, storage and the Edge Functions (Deno; the plan and progress-check functions call OpenAI)
+- **Supabase** for auth (Sign in with Apple and Google; no email sign-in), Postgres, storage and the Edge Functions (Deno; the plan and progress-check functions call OpenAI)
 - **PowerSync** for local-first SQLite sync, read through **TanStack Query** (`@powersync/tanstack-react-query`)
 - **Drizzle ORM** (`@powersync/drizzle-driver`) for typed queries; `src/shared/data/powersync/schema.ts` is the client schema
 - **Uniwind** (Tailwind v4) with `tailwind-merge` via `cn()`
@@ -46,7 +46,7 @@ src/
   app/                 Expo Router routes only (thin files re-exporting feature screens)
   features/<feature>/  components, screens, data, hooks, lib, stores per feature
   shared/              ui primitives, app-level components, data layer, hooks, i18n, lib, stores
-supabase/              config, migrations (RLS, PowerSync publication), Edge Functions, email templates
+supabase/              config, migrations (RLS, PowerSync publication), Edge Functions
 powersync/             self-hosted service config, sync streams, docker compose
 scripts/               React Compiler check, plan import and generation tests, muscle artwork, Apple IDs,
                        legal texts migration
@@ -341,7 +341,4 @@ development build is needed after pulling.
 permission texts in `locales/`, and exercise and equipment names in the catalog rows. Legal
 documents are per language too; there is no Korean version, so Korean shows the English one.
 
-The app language is mirrored to `profiles.language` (for the team) and to the auth user metadata
-(`user_metadata.language`). The account emails in `supabase/templates/` (confirmation, password
-reset, email change) pick their text from it. `config.toml` applies them locally; for the hosted
-project run `supabase config push` or paste them under Auth → Email Templates.
+The app language is mirrored to `profiles.language` (for the team).

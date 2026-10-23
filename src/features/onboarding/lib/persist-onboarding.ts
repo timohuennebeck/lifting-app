@@ -92,7 +92,7 @@ export async function isOnboardedAfterSync(userId: string) {
 export function adoptSignUpName(user: User) {
   const { draft, update } = useOnboardingStore.getState();
   const { first_name: firstName, full_name: fullName } = user.user_metadata ?? {};
-  // Email and Apple sign-ups store the first name; Google gives the full name.
+  // Apple sign-ups store the first name; Google gives the full name.
   const name =
     typeof firstName === 'string'
       ? firstName

@@ -217,8 +217,9 @@ web3 = 30
 # secret = ""
 
 [auth.email]
-# Allow/disallow new user signups via email to your project.
-enable_signup = true
+# Off: accounts sign in with Apple or Google only. This turns off email sign-in too, so Supabase
+# sends no account emails.
+enable_signup = false
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
@@ -242,19 +243,6 @@ otp_expiry = 3600
 # pass = "env(SENDGRID_API_KEY)"
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
-
-# Account emails in the user's app language (user_metadata.language, set by the app).
-[auth.email.template.confirmation]
-subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Bestätige deine E-Mail für Loqqa{{ else if eq $l "pt-PT" }}Confirma o teu email no Loqqa{{ else if eq $l "pt-BR" }}Confirme seu e-mail no Loqqa{{ else if eq $l "ko" }}Loqqa 이메일을 인증해 주세요{{ else }}Confirm your email for Loqqa{{ end }}'
-content_path = "./supabase/templates/confirmation.html"
-
-[auth.email.template.recovery]
-subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Passwort für Loqqa zurücksetzen{{ else if eq $l "pt-PT" }}Repor a palavra-passe do Loqqa{{ else if eq $l "pt-BR" }}Redefinir a senha do Loqqa{{ else if eq $l "ko" }}Loqqa 비밀번호 재설정{{ else }}Reset your Loqqa password{{ end }}'
-content_path = "./supabase/templates/recovery.html"
-
-[auth.email.template.email_change]
-subject = '{{ $l := or .Data.language "en" }}{{ if eq $l "de" }}Bestätige deine neue E-Mail-Adresse{{ else if eq $l "pt-PT" }}Confirma o teu novo email{{ else if eq $l "pt-BR" }}Confirme seu novo e-mail{{ else if eq $l "ko" }}새 이메일 주소를 인증해 주세요{{ else }}Confirm your new email address{{ end }}'
-content_path = "./supabase/templates/email_change.html"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]

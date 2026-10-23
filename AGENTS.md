@@ -16,9 +16,8 @@ Expo Go). `ios/` and `android/` are generated: configure native behaviour in `ap
 - `src/shared/`: code several features use. `ui` holds presentational primitives, `components`
   app-level composed pieces, `data` the shared data layer; then `hooks`, `lib`, `stores`, `i18n`,
   `config`. Code only one feature uses belongs in that feature.
-- `supabase/`: migrations, Edge Functions (Deno, shared code in `functions/_shared/`, outside tsc
-  and ESLint) and the auth email templates (one branch per app language). `powersync/`: the
-  service config and what syncs.
+- `supabase/`: migrations and Edge Functions (Deno, shared code in `functions/_shared/`, outside
+  tsc and ESLint). `powersync/`: the service config and what syncs.
 
 ## Data
 
@@ -34,8 +33,8 @@ Expo Go). `ios/` and `android/` are generated: configure native behaviour in `ap
 - The exercise catalog isn't synced: it is kept in MMKV and refreshed by `useCatalogRefresh`.
   Render code reads exercises with `useExercise` / `useExerciseName`, not `getExercise`.
 - Client state: zustand + MMKV (`src/shared/lib/storage.ts`).
-- Edge Function, `supabase/config.toml` and template changes reach the hosted project only with a
-  function deploy or `supabase config push`.
+- Edge Function and `supabase/config.toml` changes reach the hosted project only with a function
+  deploy or `supabase config push`.
 
 ## i18n
 

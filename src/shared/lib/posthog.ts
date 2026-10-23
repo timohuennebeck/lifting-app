@@ -33,10 +33,10 @@ export interface AnalyticsEvents {
   /** An earlier purchase restored, which lets the user past the paywall too. */
   'paywall:restore_complete': Record<string, never>;
   'account:sign_up_complete': { method: AuthMethod };
-  /** Why the account wasn't made, e.g. "alreadyRegistered" or "confirmEmail". */
+  /** The account wasn't made; `error_code` is "generic" (the provider or the save failed). */
   'account:sign_up_fail': { method: AuthMethod; error_code: string };
   /**
-   * Signed in to an existing account on the sign-in screen. `is_onboarded`: false when its
+   * Signed in to an existing account in the sign-in sheet. `is_onboarded`: false when its
    * onboarding wasn't finished, which then goes on and ends in `account:sign_up_complete`.
    */
   'account:sign_in_complete': { method: AuthMethod; is_onboarded: boolean };
@@ -52,7 +52,7 @@ export interface AnalyticsEvents {
 
 export type AnalyticsEvent = keyof AnalyticsEvents;
 
-export type AuthMethod = 'apple' | 'google' | 'email';
+export type AuthMethod = 'apple' | 'google';
 
 /** Where the paywall shows: in onboarding, opened in the app, or in front of a locked app. */
 export type PaywallPlacement = 'onboarding' | 'in_app' | 'locked';

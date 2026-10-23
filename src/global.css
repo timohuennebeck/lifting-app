@@ -49,4 +49,9 @@
   --color-paper: #edeae2;
   --color-ink: #1c1a16;
   --color-accent: #dfff1f;
+
+  /* Google's sign-in button in the dark style of its branding guidelines. */
+  --color-google: #131314;
+  --color-google-line: #8e918f;
+  --color-google-fg: #e3e3e3;
 }

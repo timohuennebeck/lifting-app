@@ -1,9 +1,10 @@
 import { router, useIsFocused } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { SignInSheet } from '@/features/auth/components/sign-in-sheet';
 import { useProfile } from '@/shared/data/profile';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { Button } from '@/shared/ui/button';
@@ -26,6 +27,7 @@ export function WelcomeScreen() {
   const { t } = useTranslation('onboarding');
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
+  const [signingIn, setSigningIn] = useState(false);
 
   // A signed-in user who already finished onboarding (e.g. app killed on the last step).
   // Only while focused: this screen stays mounted under the flow, and Create Account
@@ -73,11 +75,12 @@ export function WelcomeScreen() {
         />
         <TextButton
           className="mt-1 self-center"
-          onPress={() => router.push('/sign-in')}
+          onPress={() => setSigningIn(true)}
           prefix={t('welcome.haveAccount')}
           label={t('welcome.signIn')}
         />
       </View>
+      <SignInSheet visible={signingIn} onClose={() => setSigningIn(false)} />
     </View>
   );
 }

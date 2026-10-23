@@ -13,47 +13,35 @@ import {
   persistOnboarding,
 } from '@/features/onboarding/lib/persist-onboarding';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
-import { supabase } from '@/shared/data/supabase';
 import { i18n } from '@/shared/i18n';
 import { type AuthMethod, identify, track } from '@/shared/lib/posthog';
 import { haptics } from '@/shared/lib/haptics';
 import { useSessionStore } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
+import { CheckItem } from '@/shared/ui/check-item';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
-import { TextButton } from '@/shared/ui/text-button';
 
-import { CredentialFields } from '../components/credential-fields';
 import { SocialSignIn } from '../components/social-sign-in';
-import {
-  type AuthErrorKey,
-  authErrorKey,
-  isValidEmail,
-  MIN_PASSWORD_LENGTH,
-} from '../lib/credentials';
 import { signInWith, type SocialProvider } from '../lib/social-sign-in';
 
-type ErrorKey = AuthErrorKey | 'confirmEmail';
+/** What the account backs up, listed above the sign-in buttons. */
+const BACKUP = ['plan', 'history', 'body'] as const;
 
 export function CreateAccountScreen() {
   const { t } = useTranslation('auth');
   const { t: tc } = useTranslation();
   const session = useSessionStore((s) => s.session);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [busy, setBusy] = useState<'email' | SocialProvider | null>(null);
-  const [error, setError] = useState<ErrorKey | null>(null);
+  const [busy, setBusy] = useState<SocialProvider | 'continue' | null>(null);
+  const [failed, setFailed] = useState(false);
 
   // Already signed in (e.g. came back from the next step): just save and continue.
   const signedIn = !!session;
-  const valid = signedIn || (isValidEmail(email) && password.length >= MIN_PASSWORD_LENGTH);
-  // Account errors from before the user signed in (e.g. "already registered") no longer apply.
-  const shownError = signedIn && error !== 'generic' ? null : error;
 
-  const fail = (key: ErrorKey, method: AuthMethod) => {
+  const fail = (method: AuthMethod) => {
     haptics.error();
-    setError(key);
-    track('account:sign_up_fail', { method, error_code: key });
+    setFailed(true);
+    track('account:sign_up_fail', { method, error_code: 'generic' });
   };
 
   /** Saves the onboarding answers to the new account with the accepted documents, then goes on. */
@@ -79,47 +67,34 @@ export function CreateAccountScreen() {
     else useOnboardingStore.getState().complete();
   };
 
-  /** Signs up with the email (unless already signed in), then saves the answers to the account. */
-  const createAccount = async () => {
-    // Creating the account accepts the documents linked below the button: the versions in
-    // effect now, loaded first so that no account exists without a record of them.
-    const documents = await fetchCurrentDocuments(i18n.language);
-    const { draft } = useOnboardingStore.getState();
-    let userId = session?.user.id;
-    if (!userId) {
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        // The language lets Supabase send its account emails in the app language.
-        options: { data: { first_name: draft.firstName.trim(), language: i18n.language } },
-      });
-      if (signUpError) return fail(authErrorKey(signUpError), 'email');
-      if (!data.session) return fail('confirmEmail', 'email');
-      userId = data.session.user.id;
-    }
-    await finish(userId, documents, 'email');
-  };
-
-  const submit = async () => {
-    if (!valid || busy) return;
-    setBusy('email');
-    setError(null);
-    await createAccount()
-      .catch(() => fail('generic', 'email'))
-      .finally(() => setBusy(null));
-  };
-
   const social = async (provider: SocialProvider) => {
     if (busy) return;
     setBusy(provider);
-    setError(null);
+    setFailed(false);
     try {
-      // Loaded first for the same reason as with email: the provider creates the account at once.
+      // Creating the account accepts the documents linked below the buttons: the versions in
+      // effect now, loaded first because the provider makes the account at once, and no
+      // account may exist without a record of them.
       const documents = await fetchCurrentDocuments(i18n.language);
       const user = await signInWith(provider);
       if (user) await finish(user.id, documents, provider);
     } catch {
-      fail('generic', provider);
+      fail(provider);
+    }
+    setBusy(null);
+  };
+
+  /** Signed in already: saves the answers to that account and goes on. */
+  const continueSignedIn = async () => {
+    if (!session || busy) return;
+    const method: AuthMethod = session.user.app_metadata.provider === 'apple' ? 'apple' : 'google';
+    setBusy('continue');
+    setFailed(false);
+    try {
+      const documents = await fetchCurrentDocuments(i18n.language);
+      await finish(session.user.id, documents, method);
+    } catch {
+      fail(method);
     }
     setBusy(null);
   };
@@ -134,12 +109,30 @@ export function CreateAccountScreen() {
       scroll
       footer={
         <View className="gap-3">
-          <Button
-            label={signedIn ? tc('actions.continue') : t('createAccount.submit')}
-            disabled={!valid || (!!busy && busy !== 'email')}
-            loading={busy === 'email'}
-            onPress={submit}
-          />
+          {failed ? (
+            <Text
+              variant="caption"
+              tone="danger"
+              className="px-1 text-center"
+              accessibilityLiveRegion="assertive"
+            >
+              {t('errors.generic')}
+            </Text>
+          ) : null}
+          {signedIn ? (
+            <Button
+              label={tc('actions.continue')}
+              loading={busy === 'continue'}
+              onPress={continueSignedIn}
+            />
+          ) : (
+            <SocialSignIn
+              action="continue"
+              onSignIn={social}
+              busy={busy === 'continue' ? null : busy}
+              disabled={!!busy}
+            />
+          )}
           <Text
             variant="caption"
             tone="subtle"
@@ -157,39 +150,12 @@ export function CreateAccountScreen() {
         </View>
       }
     >
-      <View className="px-4 pt-5">
-        <SocialSignIn
-          onSignIn={social}
-          busy={busy === 'email' ? null : busy}
-          disabled={signedIn || !!busy}
-        />
-      </View>
-      <View className="px-4 pt-3.5">
-        <CredentialFields
-          mode="new"
-          email={signedIn ? (session.user.email ?? '') : email}
-          password={signedIn ? '' : password}
-          onChangeEmail={setEmail}
-          onChangePassword={setPassword}
-          onSubmit={submit}
-          editable={!signedIn && !busy}
-          autoFocus={!signedIn}
-        />
-        {shownError ? (
-          <View className="items-start gap-1 px-1 pt-3">
-            <Text variant="caption" tone="danger" accessibilityLiveRegion="assertive">
-              {t(`errors.${shownError}`)}
-            </Text>
-            {shownError === 'alreadyRegistered' || shownError === 'confirmEmail' ? (
-              <TextButton
-                label={t('signIn.submit')}
-                tone="accent"
-                className="min-h-10 px-0"
-                onPress={() => router.push({ pathname: '/sign-in', params: { email } })}
-              />
-            ) : null}
-          </View>
-        ) : null}
+      <View className="gap-4 px-5 pt-8">
+        {BACKUP.map((item) => (
+          <CheckItem key={item} size="sm" textClassName="font-inter-medium text-fg-mid">
+            {t(`createAccount.backup.${item}`)}
+          </CheckItem>
+        ))}
       </View>
     </StepScreen>
   );

@@ -22,4 +22,8 @@ export const colors = {
   selection: 'rgba(10,132,255,0.35)',
   sheet: '#0F0F0F',
   ink: '#1C1A16',
+  /** On the white Sign in with Apple button. */
+  black: '#000000',
+  /** Text on Google's sign-in button (mirrors --color-google-fg). */
+  googleFg: '#E3E3E3',
 } as const;

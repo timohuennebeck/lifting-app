@@ -25,8 +25,8 @@ export async function signInWithApple() {
       nonce,
     });
     if (error) throw error;
-    // Apple shares the name only on the first sign-in and never in the token: kept on the
-    // account like an email sign-up's, so a later sign-in on a new device finds it.
+    // Apple shares the name only on the first sign-in and never in the token: kept in the
+    // account's metadata, so a later sign-in on a new device finds it.
     const firstName = credential.fullName?.givenName;
     if (!firstName || !credential.fullName) return data.user;
     const { data: named, error: nameError } = await supabase.auth.updateUser({

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
+import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -39,19 +40,34 @@ function AppleLogo() {
   return (
     <Svg width={20} height={20} viewBox="0 0 24 24">
       <Path
-        fill={colors.fg}
+        fill={colors.black}
         d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
       />
     </Svg>
   );
 }
 
+// Apple's white button and Google's dark one, as their brand guidelines describe them.
 const PROVIDERS = [
-  { id: 'google', name: 'Google', Logo: GoogleLogo },
-  { id: 'apple', name: 'Apple', Logo: AppleLogo },
-] as const satisfies readonly { id: SocialProvider; name: string; Logo: () => ReactNode }[];
+  { id: 'apple', Logo: AppleLogo, box: 'bg-white', text: 'text-black', spinner: colors.black },
+  {
+    id: 'google',
+    Logo: GoogleLogo,
+    box: 'border border-google-line bg-google',
+    text: 'text-google-fg',
+    spinner: colors.googleFg,
+  },
+] as const satisfies readonly {
+  id: SocialProvider;
+  Logo: () => ReactNode;
+  box: string;
+  text: string;
+  spinner: string;
+}[];
 
 export interface SocialSignInProps {
+  /** The button labels: "Continue with …" when creating the account, "Sign in with …" after. */
+  action: 'continue' | 'signIn';
   /** Signs in with the provider; the screen decides what follows. */
   onSignIn: (provider: SocialProvider) => void;
   /** The provider whose sign-in is running: a spinner in place of its logo. */
@@ -60,41 +76,35 @@ export interface SocialSignInProps {
 }
 
 /**
- * Google and (on Apple devices) Apple buttons plus the "or with email" divider. Until Google's
- * client IDs are set up, its button explains in a sheet that it isn't available yet.
+ * Full-width Apple (on Apple devices, first) and Google buttons. Until Google's client IDs are
+ * set up, its button explains in a sheet that it isn't available yet.
  */
-export function SocialSignIn({ onSignIn, busy, disabled }: SocialSignInProps) {
+export function SocialSignIn({ action, onSignIn, busy, disabled }: SocialSignInProps) {
   const { t } = useTranslation('auth');
   const [unavailable, setUnavailable] = useState(false);
   const providers = PROVIDERS.filter(({ id }) => id !== 'apple' || appleSignInAvailable);
 
   return (
-    <View>
-      <View className="flex-row gap-2.5">
-        {providers.map(({ id, name, Logo }) => {
-          // Apple's button is only shown where it works; Google's waits for its client IDs.
-          const ready = id === 'apple' || googleSignInReady;
-          return (
-            <PressableScale
-              key={id}
-              disabled={disabled}
-              accessibilityState={{ disabled, busy: busy === id }}
-              onPress={() => (ready ? onSignIn(id) : setUnavailable(true))}
-              className="h-13 flex-1 flex-row items-center justify-center gap-2.5 rounded-full bg-pill"
-            >
-              {busy === id ? <ActivityIndicator size="small" color={colors.fg} /> : <Logo />}
-              <Text variant="label">{name}</Text>
-            </PressableScale>
-          );
-        })}
-      </View>
-      <View className="flex-row items-center gap-3 px-1 pt-4.5">
-        <View className="h-px flex-1 bg-white/10" />
-        <Text variant="caption" tone="subtle" className="font-inter">
-          {t('social.orEmail')}
-        </Text>
-        <View className="h-px flex-1 bg-white/10" />
-      </View>
+    <View className="gap-2.5">
+      {providers.map(({ id, Logo, box, text, spinner }) => {
+        // Apple's button is only shown where it works; Google's waits for its client IDs.
+        const ready = id === 'apple' || googleSignInReady;
+        return (
+          <PressableScale
+            key={id}
+            activeScale={0.98}
+            disabled={disabled}
+            accessibilityState={{ disabled, busy: busy === id }}
+            onPress={() => (ready ? onSignIn(id) : setUnavailable(true))}
+            className={cn('h-14 flex-row items-center justify-center gap-2.5 rounded-full', box)}
+          >
+            {busy === id ? <ActivityIndicator size="small" color={spinner} /> : <Logo />}
+            <Text variant="bodyStrong" className={text}>
+              {t(`social.${action}.${id}`)}
+            </Text>
+          </PressableScale>
+        );
+      })}
       <Sheet
         visible={unavailable}
         onClose={() => setUnavailable(false)}
