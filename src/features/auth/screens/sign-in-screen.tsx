@@ -11,6 +11,7 @@ import {
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { supabase } from '@/shared/data/supabase';
 import { haptics } from '@/shared/lib/haptics';
+import { type AuthMethod, identify, track } from '@/shared/lib/posthog';
 import { Button } from '@/shared/ui/button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
@@ -21,9 +22,16 @@ import { TextButton } from '@/shared/ui/text-button';
 import { CredentialFields } from '../components/credential-fields';
 import { SocialSignIn } from '../components/social-sign-in';
 import { type AuthErrorKey, authErrorKey, isValidEmail } from '../lib/credentials';
-import { signInWith, type SocialProvider } from '../lib/social-sign-in';
+import {
+  discardNewAccount,
+  isNewAccount,
+  signInWith,
+  type SocialProvider,
+} from '../lib/social-sign-in';
 
 type Phase = 'idle' | 'signingIn' | SocialProvider | 'syncing';
+/** `noAccount`: Google or Apple would have made a new account, which only onboarding does. */
+type ErrorKey = AuthErrorKey | 'noAccount';
 
 export function SignInScreen() {
   const { t } = useTranslation('auth');
@@ -32,23 +40,31 @@ export function SignInScreen() {
   const [email, setEmail] = useState(params.email ?? '');
   const [password, setPassword] = useState('');
   const [phase, setPhase] = useState<Phase>('idle');
-  const [error, setError] = useState<AuthErrorKey | null>(null);
+  const [error, setError] = useState<ErrorKey | null>(null);
   const valid = isValidEmail(email) && password.length > 0;
   const busy = phase !== 'idle';
   const socialBusy = phase === 'google' || phase === 'apple' ? phase : null;
 
-  const fail = (key: AuthErrorKey) => {
+  const fail = (key: ErrorKey) => {
     haptics.error();
     setError(key);
     setPhase('idle');
   };
 
   /** Signed in: into the app, or into onboarding for an account that hasn't finished it. */
-  const continueAs = async (user: User) => {
-    haptics.success();
+  const continueAs = async (user: User, method: AuthMethod) => {
     setPhase('syncing');
     const store = useOnboardingStore.getState();
-    if (await isOnboardedAfterSync(user.id)) {
+    const onboarded = await isOnboardedAfterSync(user.id);
+    // Accounts are made at the end of onboarding, after its answers and the terms.
+    if (!onboarded && method !== 'email' && isNewAccount(user)) {
+      await discardNewAccount(method);
+      return fail('noAccount');
+    }
+    haptics.success();
+    identify(user.id);
+    track('account:sign_in_complete', { method, is_onboarded: onboarded });
+    if (onboarded) {
       // The root guard switches to the app once onboarding is marked complete.
       store.complete();
       return;
@@ -74,7 +90,7 @@ export function SignInScreen() {
       });
       if (signInError) return fail(authErrorKey(signInError));
       if (!data.user) return fail('generic');
-      await continueAs(data.user);
+      await continueAs(data.user, 'email');
     } catch {
       fail('generic');
     }
@@ -86,7 +102,7 @@ export function SignInScreen() {
     setError(null);
     try {
       const user = await signInWith(provider);
-      if (user) await continueAs(user);
+      if (user) await continueAs(user, provider);
       else setPhase('idle');
     } catch {
       fail('generic');

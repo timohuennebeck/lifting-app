@@ -316,9 +316,10 @@ properties are typed in `src/shared/lib/posthog.ts` (`AnalyticsEvents`), named
   `plan_import:read_complete` / `_fail`.
 - **Money:** `paywall:view` (with `placement`), `paywall:purchase_complete` / `_fail`,
   `paywall:restore_complete`.
-- **Account:** `account:sign_up_complete` / `_fail` (with the reason); the PostHog id is the Supabase user id from sign-in
-  (`identify`), so the anonymous onboarding and purchase events join the person, and `reset` on
-  sign-out.
+- **Account:** `account:sign_up_complete` / `_fail` (with the reason) for new accounts,
+  `account:sign_in_complete` for returning ones (with whether onboarding was finished). The
+  PostHog id is the Supabase user id from sign-up or sign-in (`identify`), so the anonymous
+  onboarding and purchase events join the person, and `reset` on sign-out.
 - **Training:** `workout:start`, `workout:finish`, `workout:discard`, with the plan week, sets and
   records from the local database.
 - **Automatic:** a `$screen` per route (`/workout/[id]`, ids left out), uncaught errors and

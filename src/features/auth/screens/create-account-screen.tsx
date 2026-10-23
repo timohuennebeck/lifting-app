@@ -15,7 +15,7 @@ import {
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { supabase } from '@/shared/data/supabase';
 import { i18n } from '@/shared/i18n';
-import { identify, type SignUpMethod, track } from '@/shared/lib/posthog';
+import { type AuthMethod, identify, track } from '@/shared/lib/posthog';
 import { haptics } from '@/shared/lib/haptics';
 import { useSessionStore } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
@@ -50,14 +50,14 @@ export function CreateAccountScreen() {
   // Account errors from before the user signed in (e.g. "already registered") no longer apply.
   const shownError = signedIn && error !== 'generic' ? null : error;
 
-  const fail = (key: ErrorKey, method: SignUpMethod) => {
+  const fail = (key: ErrorKey, method: AuthMethod) => {
     haptics.error();
     setError(key);
     track('account:sign_up_fail', { method, error_code: key });
   };
 
   /** Saves the onboarding answers to the new account with the accepted documents, then goes on. */
-  const finish = async (userId: string, documents: LegalDocument[], method: SignUpMethod) => {
+  const finish = async (userId: string, documents: LegalDocument[], method: AuthMethod) => {
     // An account that is already set up (e.g. signed in with Google or Apple) keeps its own
     // profile and plan. A retry after a failed save lands here too, so the acceptance is
     // recorded here as well (only missing rows are added; the profile row exists by now).
