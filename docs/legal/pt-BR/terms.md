@@ -1,8 +1,8 @@
 # Termos de Uso
 
-Versão: 1.0
+Versão: 1.1
 
-Última atualização: 23 de outubro de 2026
+Última atualização: 24 de outubro de 2026
 
 Esta é uma tradução. A versão em alemão é a juridicamente vinculante.
 
@@ -14,8 +14,8 @@ O fornecedor do app Loqqa é:
 
 - Jan Timo Hünnebeck
 - Adamstr. 5, 80636 Munique, Alemanha
-- E-mail: support@itsloqqa.com
-- Site: [itsloqqa.com](https://itsloqqa.com)
+- E-mail: support@useloqqa.com
+- Site: [useloqqa.com](https://useloqqa.com)
 
 A seguir, nos referimos a nós mesmos como “nós”. Estes termos se aplicam a todas as funções do app. Para compras pela App Store da Apple ou pelo Google Play, aplicam-se adicionalmente os termos da respectiva loja.
 
@@ -27,9 +27,9 @@ Se você ainda não for maior de idade, precisa do consentimento dos seus respon
 
 ## 3. Sua conta
 
-- Para usar o Loqqa após a configuração inicial, você precisa de uma conta. Você a cria no final da configuração inicial com endereço de e-mail e senha ou com sua Conta do Google ou Conta Apple. O contrato de uso do Loqqa é celebrado quando você cria sua conta.
-- Forneça informações verdadeiras na configuração inicial. Você pode redefinir sua senha no login, pela opção “Esqueceu a senha?”.
-- Mantenha seus dados de acesso em sigilo. Se suspeitar que outra pessoa está usando sua conta, redefina sua senha e nos informe.
+- Para usar o Loqqa após a configuração inicial, você precisa de uma conta. Você a cria no final da configuração inicial com sua Conta do Google ou, em dispositivos Apple, com sua Conta Apple. O contrato de uso do Loqqa é celebrado quando você cria sua conta.
+- Forneça informações verdadeiras na configuração inicial.
+- Proteja o acesso à sua Conta do Google ou Conta Apple. Se suspeitar que outra pessoa está usando sua conta, nos informe.
 - Sua conta é pessoal e intransferível.
 
 ## 4. O que o Loqqa oferece
@@ -90,7 +90,7 @@ Ideias e sugestões que você nos envia podem ser usadas por nós gratuitamente 
 
 ## 9. Suporte
 
-No chat de suporte do app, você pode relatar erros e sugerir funções. Respondemos a você por lá, normalmente em poucos dias. Os tempos de resposta informados no app são estimativas, não um compromisso vinculante. Você também pode falar com a gente por e-mail em support@itsloqqa.com.
+No chat de suporte do app, você pode relatar erros e sugerir funções. Respondemos a você por lá, normalmente em poucos dias. Os tempos de resposta informados no app são estimativas, não um compromisso vinculante. Você também pode falar com a gente por e-mail em support@useloqqa.com.
 
 ## 10. Uso permitido
 
@@ -121,7 +121,7 @@ O app, o catálogo de exercícios com textos, imagens e vídeos, bem como marcas
 ## 13. Vigência, rescisão e exclusão da conta
 
 - O contrato de uso do Loqqa vigora por prazo indeterminado.
-- Você pode encerrá-lo a qualquer momento excluindo sua conta no app: nas configurações, em “Excluir conta”. Você também pode solicitar a exclusão por e-mail para support@itsloqqa.com.
+- Você pode encerrá-lo a qualquer momento excluindo sua conta no app: nas configurações, em “Excluir conta”. Você também pode solicitar a exclusão por e-mail para support@useloqqa.com.
 - Podemos rescindir o contrato com um aviso prévio de quatro semanas se você não tiver uma assinatura ativa. Uma assinatura paga não é afetada até o fim do período pago.
 - O direito de ambas as partes de rescindir o contrato sem aviso prévio por justa causa não é afetado. Para nós, há justa causa em especial no caso de violações graves ou reiteradas destes termos.
 - Com a exclusão da sua conta, excluímos seus dados conforme descrito na Política de Privacidade. Não podemos recuperar dados excluídos.

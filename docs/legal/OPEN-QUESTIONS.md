@@ -1,7 +1,7 @@
 # Legal texts: what is still open
 
-Version 1.0 of the privacy policy (DS) and the terms of use (NB) is published (October 2026,
-`docs/legal/<locale>/`, migration `20261023130000_legal_documents_v1`). German is the binding
+Version 1.1 of the privacy policy (DS) and the terms of use (NB) is published (October 2026,
+`docs/legal/<locale>/`, migration `20261024120000_legal_documents_v1_1`). German is the binding
 version; `en`, `pt-PT` and `pt-BR` are translations, and Korean users see English.
 
 The texts are not legal advice. A lawyer should review them, above all the health data, body
@@ -24,32 +24,28 @@ photos and AI parts.
 
 4. **DPAs.** Sign one with every processor: Supabase (dashboard), OpenAI (DPA form), RevenueCat,
    PostHog, PowerSync (email dpo@powersync.com). DS §8 relies on the SCCs in them.
-5. **PowerSync Cloud in the EU region.** DS §7 and §8 say the sync copy is in the EU. Only the
-   local setup exists today.
-6. **Imprint on itsloqqa.com** (§ 5 DDG) and in the store listings. NB §1 covers the app.
-7. **Email delivery.** Supabase's built-in mailer only reaches team members, so password-reset
-   codes don't reach real users. With a custom SMTP service (e.g. Resend), add it to DS §4.2, §7
-   and §8.
-8. **Data protection officer.** DS §2 says none is required. If a DPIA is required (health data,
+5. **Imprint on useloqqa.com** (§ 5 DDG) and in the store listings. NB §1 covers the app. The site
+   also needs the terms and privacy policy for the store listings and Google's consent screen.
+6. **Data protection officer.** DS §2 says none is required. If a DPIA is required (health data,
    body photos, AI), § 38 BDSG requires one; check with the lawyer.
 
 ## Manual processes the texts promise
 
-9. Withdrawing the body data consent (DS §12): delete `weight_kg`/`height_cm` and the weight entries
+7. Withdrawing the body data consent (DS §12): delete `weight_kg`/`height_cm` and the weight entries
    on request.
-10. Data export within one month as JSON (DS §11).
-11. Deleting PostHog persons and RevenueCat customers on request (DS §10, §4.13).
-12. Deleting progress-check photos left in storage after an offline delete (DS §4.6).
-13. Deleting closed support tickets on request (DS §4.8).
+8. Data export within one month as JSON (DS §11).
+9. Deleting PostHog persons and RevenueCat customers on request (DS §10, §4.13).
+10. Deleting progress-check photos left in storage after an offline delete (DS §4.6).
+11. Deleting closed support tickets on request (DS §4.8).
 
 ## Keep in sync with the app
 
-14. **Backups.** DS §9 says there are none (Supabase Free). Upgrading to Pro adds daily backups
+12. **Backups.** DS §9 says there are none (Supabase Free). Upgrading to Pro adds daily backups
     kept 7 days: update DS §9 then.
-15. **Minimum ages** per country (`src/features/onboarding/lib/minimum-age.ts`) match DS §16 and
+13. **Minimum ages** per country (`src/features/onboarding/lib/minimum-age.ts`) match DS §16 and
     NB §2. Spain and Norway have pending bills to raise theirs.
-16. **Brazil:** the ECA Digital (Law 15.211/2025, in force since 17 March 2026) asks apps likely used
+14. **Brazil:** the ECA Digital (Law 15.211/2025, in force since 17 March 2026) asks apps likely used
     by minors for real age checks; a self-declared birth date may not be enough there.
-17. **Support reply time.** The chat says "24–48 hours"; NB §9 calls it a guideline.
-18. Every change to the app's data flows (new service, new data sent to OpenAI or PostHog) needs a
+15. **Support reply time.** The chat says "24–48 hours"; NB §9 calls it a guideline.
+16. Every change to the app's data flows (new service, new data sent to OpenAI or PostHog) needs a
     new version of DS: `node scripts/legal-migration.mjs <version> <date> <name>`.

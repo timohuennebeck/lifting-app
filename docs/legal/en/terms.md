@@ -1,8 +1,8 @@
 # Terms of Use
 
-Version: 1.0
+Version: 1.1
 
-Last updated: 23 October 2026
+Last updated: 24 October 2026
 
 This is a translation. The German version is legally binding.
 
@@ -14,8 +14,8 @@ The provider of the Loqqa app is:
 
 - Jan Timo Hünnebeck
 - Adamstr. 5, 80636 Munich, Germany
-- Email: support@itsloqqa.com
-- Website: [itsloqqa.com](https://itsloqqa.com)
+- Email: support@useloqqa.com
+- Website: [useloqqa.com](https://useloqqa.com)
 
 Below, we refer to ourselves as “we”. These terms apply to all features of the app. For purchases via Apple’s App Store or via Google Play, the terms of the respective store also apply.
 
@@ -27,9 +27,9 @@ If you are not yet of legal age, you need the consent of your parents or legal g
 
 ## 3. Your account
 
-- To use Loqqa after setup, you need an account. You create it at the end of setup with an email address and password or with your Google account or Apple Account. The contract for the use of Loqqa is concluded when you create your account.
-- Provide truthful information during setup. You can reset your password when signing in via “Forgot password?”.
-- Keep your login details secret. If you suspect that someone else is using your account, reset your password and let us know.
+- To use Loqqa after setup, you need an account. You create it at the end of setup with your Google account or, on Apple devices, your Apple Account. The contract for the use of Loqqa is concluded when you create your account.
+- Provide truthful information during setup.
+- Protect access to your Google account or Apple Account. If you suspect that someone else is using your account, let us know.
 - Your account is personal and not transferable.
 
 ## 4. What Loqqa offers
@@ -90,7 +90,7 @@ We may use ideas and suggestions that you send us free of charge to improve Loqq
 
 ## 9. Support
 
-In the app’s support chat, you can report bugs and suggest features. We reply to you there, usually within a few days. The response times stated in the app are guidelines, not a binding commitment. You can also reach us by email at support@itsloqqa.com.
+In the app’s support chat, you can report bugs and suggest features. We reply to you there, usually within a few days. The response times stated in the app are guidelines, not a binding commitment. You can also reach us by email at support@useloqqa.com.
 
 ## 10. Permitted use
 
@@ -121,7 +121,7 @@ The app, the exercise catalog with texts, images and videos, as well as trademar
 ## 13. Term, termination and account deletion
 
 - The contract for the use of Loqqa runs for an indefinite period.
-- You can end it at any time by deleting your account in the app: in the settings under “Delete account”. You can also request deletion by email to support@itsloqqa.com.
+- You can end it at any time by deleting your account in the app: in the settings under “Delete account”. You can also request deletion by email to support@useloqqa.com.
 - We can terminate the contract with four weeks’ notice if you do not have an active subscription. A paid subscription remains unaffected until the end of the paid term.
 - The right of both parties to terminate without notice for good cause remains unaffected. For us, good cause exists in particular in the case of serious or repeated violations of these terms.
 - When your account is deleted, we delete your data as described in the Privacy Policy. We cannot restore deleted data.

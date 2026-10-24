@@ -1,8 +1,8 @@
 # Política de Privacidade
 
-Versão: 1.0
+Versão: 1.1
 
-Última atualização: 23 de outubro de 2026
+Última atualização: 24 de outubro de 2026
 
 Esta é uma tradução. A versão em alemão é a juridicamente vinculante.
 
@@ -23,13 +23,13 @@ O responsável pelo tratamento dos seus dados (controlador) é:
 
 - Jan Timo Hünnebeck
 - Adamstr. 5, 80636 Munique, Alemanha
-- E-mail: support@itsloqqa.com
+- E-mail: support@useloqqa.com
 
 A seguir, nos referimos a nós mesmos como “nós”.
 
 ## 2. Encarregado de proteção de dados
 
-Não nomeamos um encarregado de proteção de dados, porque não somos obrigados a isso. Você pode enviar todas as suas dúvidas sobre proteção de dados diretamente para support@itsloqqa.com.
+Não nomeamos um encarregado de proteção de dados, porque não somos obrigados a isso. Você pode enviar todas as suas dúvidas sobre proteção de dados diretamente para support@useloqqa.com.
 
 ## 3. Como o Loqqa funciona
 
@@ -51,21 +51,19 @@ Base legal: art. 6(1)(b) do RGPD (disponibilização do app que você deseja usa
 
 ### 4.2 Sua conta
 
-No final da configuração inicial, você cria uma conta com endereço de e-mail e senha ou entra com sua Conta do Google ou sua Conta Apple. Nesse processo, tratamos:
+No final da configuração inicial, você cria uma conta ao entrar com sua Conta do Google ou, em dispositivos Apple, com sua Conta Apple. Não existe senha do Loqqa. Nesse processo, tratamos:
 
-- seu endereço de e-mail e sua senha (salvamos a senha apenas como valor de hash criptográfico, nunca em texto simples; com login pelo Google ou pela Apple, não existe senha conosco)
-- seu nome e o idioma do app: o idioma, para que os e-mails da conta cheguem no seu idioma, e o nome, para que o app possa preenchê-lo novamente depois de um login em um novo dispositivo
+- as informações que o Google ou a Apple nos transmitem no login, incluindo seu endereço de e-mail (veja abaixo)
+- seu nome, para que o app possa preenchê-lo novamente depois de um login em um novo dispositivo
 - dados técnicos da conta, como a data e a hora do cadastro e do último login, além de tokens de login
-
-Enviamos a você e-mails necessários para a sua conta, por exemplo um código de seis dígitos para redefinir sua senha. O envio é feito pela Supabase (seção 7).
 
 Para que você continue logado, o app salva sua sessão de login no seu dispositivo.
 
-**Login com o Google:** quando você escolhe “Google”, o login do Google é aberto no seu dispositivo. Em seguida, o Google nos confirma seu login e nos transfere seu endereço de e-mail, seu nome, o endereço da sua foto de perfil do Google e um identificador da sua Conta do Google. Salvamos essas informações na sua conta. Com isso, o Google fica sabendo que você está entrando no Loqqa. Pelo login com a sua Conta do Google, a Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irlanda, é controladora independente; aplica-se a [Política de Privacidade do Google](https://policies.google.com/privacy?hl=pt-BR).
+**Login com o Google:** quando você entra com o Google, o login do Google é aberto no seu dispositivo. Em seguida, o Google nos confirma seu login e nos transfere seu endereço de e-mail, seu nome, o endereço da sua foto de perfil do Google e um identificador da sua Conta do Google. Salvamos essas informações na sua conta. Com isso, o Google fica sabendo que você está entrando no Loqqa. Pelo login com a sua Conta do Google, a Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irlanda, é controladora independente; aplica-se a [Política de Privacidade do Google](https://policies.google.com/privacy?hl=pt-BR).
 
-**Login com a Apple** (somente em dispositivos Apple): quando você escolhe “Apple”, o login da Apple é aberto no seu dispositivo. Em seguida, a Apple nos confirma seu login e nos transfere um identificador da sua Conta Apple e seu endereço de e-mail. Em vez disso, você pode escolher um endereço gerado pela Apple que encaminha os e-mails para você (“Ocultar Meu E-mail”). No primeiro login, a Apple também transfere seu nome, se você autorizar. Salvamos essas informações na sua conta. Pelo login com a sua Conta Apple, a Apple Distribution International Limited, Hollyhill Industrial Estate, Hollyhill, Cork, Irlanda, é controladora independente; aplica-se a [Política de Privacidade da Apple](https://www.apple.com/br/legal/privacy/).
+**Login com a Apple** (somente em dispositivos Apple): quando você entra com a Apple, o login da Apple é aberto no seu dispositivo. Em seguida, a Apple nos confirma seu login e nos transfere um identificador da sua Conta Apple e seu endereço de e-mail. Em vez disso, você pode escolher um endereço gerado pela Apple que encaminha os e-mails para você (“Ocultar Meu E-mail”). No primeiro login, a Apple também transfere seu nome, se você autorizar. Salvamos essas informações na sua conta. Pelo login com a sua Conta Apple, a Apple Distribution International Limited, Hollyhill Industrial Estate, Hollyhill, Cork, Irlanda, é controladora independente; aplica-se a [Política de Privacidade da Apple](https://www.apple.com/br/legal/privacy/).
 
-Contas só são criadas no final da configuração inicial. Se um login com o Google ou com a Apple na tela de login criar uma nova conta, o app a exclui imediatamente e avisa você de que ainda não existe uma conta.
+Contas só são criadas no final da configuração inicial. Se um login por “Entrar” na tela inicial criar uma nova conta, o app a exclui imediatamente e avisa você de que ainda não existe uma conta.
 
 Base legal: art. 6(1)(b) do RGPD.
 
@@ -152,7 +150,7 @@ Base legal: art. 6(1)(b) do RGPD para a importação e a criação de plano que 
 
 ### 4.8 Suporte
 
-Por meio de “Relatar erro” e “Sugerir recurso”, você pode escrever para nós diretamente no app, ou pode escrever para support@itsloqqa.com. No app, tratamos nesse processo:
+Por meio de “Relatar erro” e “Sugerir recurso”, você pode escrever para nós diretamente no app, ou pode escrever para support@useloqqa.com. No app, tratamos nesse processo:
 
 - o tipo da sua solicitação (erro ou ideia), no caso de ideias a importância de 1 a 5, suas mensagens e o assunto (a primeira linha da sua primeira mensagem)
 - até cinco capturas de tela por mensagem, que você seleciona da sua galeria; o app as reduz (lado mais longo com no máximo 1600 pixels) e as salva como JPEG
@@ -215,7 +213,7 @@ Não vão para o PostHog seu nome, seu endereço de e-mail, peso, altura, sua da
 - Local de armazenamento: PostHog Cloud EU (Frankfurt am Main); o PostHog é certificado no âmbito do EU-US Data Privacy Framework (seção 8)
 - Prazo de armazenamento: os eventos são excluídos após um ano
 
-Base legal: art. 6(1)(f) do RGPD; nosso legítimo interesse é melhorar o Loqqa e corrigir erros. Você pode se opor a isso a qualquer momento (seção 11), por exemplo por e-mail para support@itsloqqa.com; nesse caso, excluímos os dados de análise da sua conta.
+Base legal: art. 6(1)(f) do RGPD; nosso legítimo interesse é melhorar o Loqqa e corrigir erros. Você pode se opor a isso a qualquer momento (seção 11), por exemplo por e-mail para support@useloqqa.com; nesse caso, excluímos os dados de análise da sua conta.
 
 ## 5. Armazenamento no seu dispositivo
 
@@ -247,7 +245,7 @@ O Loqqa não pede acesso ao microfone, à localização, aos contatos nem a apps
 
 Só compartilhamos seus dados quando isso for necessário para as finalidades mencionadas, quando você tiver consentido ou quando formos legalmente obrigados a isso. Nossos prestadores de serviços tratam dados em nosso nome e de acordo com nossas instruções, como operadores (art. 28 do RGPD):
 
-- **Supabase, Inc.** (banco de dados, login, armazenamento de arquivos, funções de servidor e envio dos e-mails da conta): servidores em Frankfurt am Main (Amazon Web Services)
+- **Supabase, Inc.** (banco de dados, login, armazenamento de arquivos, e funções de servidor): servidores em Frankfurt am Main (Amazon Web Services)
 - **PowerSync**, da Journey Mobile, Inc. (sincronização entre o app e o banco de dados; para isso, o serviço mantém uma cópia dos seus dados sincronizados): servidores na UE
 - **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Irlanda (criação de planos por IA, reconhecimento de planos importados e avaliação das fotos do check corporal, seções 4.6 e 4.7): tratamento nos EUA pela OpenAI OpCo, LLC
 - **RevenueCat, Inc.** (gestão de assinaturas, seção 4.11)
@@ -296,7 +294,7 @@ Você pode excluir sua conta a qualquer momento no app: nas configurações, em 
 
 Em outros dispositivos em que você estava logado, dados salvos localmente podem permanecer até você sair da conta neles ou excluir o app. Dados de análise no PostHog e dados de assinatura na RevenueCat não são excluídos automaticamente junto; escreva para nós se quiser que solicitemos a exclusão imediata deles; caso contrário, valem os prazos da seção 9.
 
-Se a exclusão não funcionar, por exemplo sem conexão com a internet, o app mostra um aviso e você pode tentar novamente. Você também pode solicitar a exclusão por e-mail para support@itsloqqa.com.
+Se a exclusão não funcionar, por exemplo sem conexão com a internet, o app mostra um aviso e você pode tentar novamente. Você também pode solicitar a exclusão por e-mail para support@useloqqa.com.
 
 ## 11. Seus direitos
 
@@ -311,13 +309,13 @@ Você tem os seguintes direitos em relação a nós:
 
 **Direito de oposição (art. 21 do RGPD):** quando tratamos dados com base no art. 6(1)(f) do RGPD (legítimos interesses), por exemplo para a análise de produto com o PostHog, você pode se opor a esse tratamento a qualquer momento, por motivos relacionados à sua situação particular. Nesse caso, deixamos de tratar os dados, a menos que possamos comprovar motivos legítimos imperiosos que prevaleçam sobre os seus interesses, ou que o tratamento sirva para a declaração, o exercício ou a defesa de direitos num processo judicial.
 
-Para qualquer assunto, basta um e-mail para support@itsloqqa.com. Para que possamos identificar sua conta, escreva para nós, por favor, a partir do endereço de e-mail da sua conta.
+Para qualquer assunto, basta um e-mail para support@useloqqa.com. Para que possamos identificar sua conta, informe, por favor, o endereço de e-mail que o app mostra nas configurações.
 
 ## 12. Revogar consentimentos
 
 Você pode revogar um consentimento a qualquer momento, com efeito para o futuro (art. 7(3) do RGPD). O tratamento realizado até a revogação continua lícito.
 
-- **Medidas corporais:** por e-mail para support@itsloqqa.com. Nesse caso, excluímos seu peso, sua altura e seus registros de peso. Sem essas informações, o app só consegue adaptar seu treino de forma limitada; em vez disso, você também pode excluir sua conta (seção 10).
+- **Medidas corporais:** por e-mail para support@useloqqa.com. Nesse caso, excluímos seu peso, sua altura e seus registros de peso. Sem essas informações, o app só consegue adaptar seu treino de forma limitada; em vez disso, você também pode excluir sua conta (seção 10).
 - **Check corporal:** exclua seus checks no app e não faça novos, ou escreva para nós; nesse caso, excluímos todas as fotos e todos os valores do check corporal.
 
 ## 13. Reclamação junto a uma autoridade de controle
@@ -326,7 +324,7 @@ Você pode apresentar uma reclamação junto a uma autoridade de controle de pro
 
 ## 14. Você precisa nos fornecer dados?
 
-Para uma conta, precisamos do seu endereço de e-mail e de uma senha ou da sua Conta do Google ou da sua Conta Apple. Sem conta, você não pode usar o Loqqa após a configuração inicial. O app precisa das informações da configuração inicial para verificar sua idade e para criar e adaptar seu plano. São opcionais, em especial, seu sexo (você pode escolher “Prefiro não informar”), o check corporal, os registros de peso, uma foto de perfil e o texto “Sobre você”.
+Para uma conta, precisamos da sua Conta do Google ou da sua Conta Apple. Sem conta, você não pode usar o Loqqa após a configuração inicial. O app precisa das informações da configuração inicial para verificar sua idade e para criar e adaptar seu plano. São opcionais, em especial, seu sexo (você pode escolher “Prefiro não informar”), o check corporal, os registros de peso, uma foto de perfil e o texto “Sobre você”.
 
 ## 15. Nenhuma decisão automatizada
 
@@ -346,10 +344,10 @@ Protegemos seus dados com medidas técnicas e organizacionais, entre elas:
 - regras de acesso no banco de dados, pelas quais cada conta só pode ler e alterar os seus próprios dados
 - áreas de armazenamento não públicas para fotos de perfil, fotos do check corporal e capturas de tela, nas quais cada conta só pode acessar a sua própria pasta
 - links com validade limitada para exibir fotos: uma hora para fotos do check corporal e capturas de tela, 24 horas para fotos de perfil
-- senhas que são salvas apenas como valor de hash
+- o login pelo Google ou pela Apple, para que não salvemos senhas
 
 Nenhum sistema é totalmente seguro. Como o app salva dados no seu dispositivo, proteja seu dispositivo, por favor, com um bloqueio de tela.
 
 ## 18. Alterações desta Política de Privacidade
 
-Ajustamos esta Política de Privacidade quando o app ou a situação jurídica mudam. Você encontra a versão vigente no app, nas configurações, e em [itsloqqa.com](https://itsloqqa.com). Informamos você no app sobre alterações relevantes e, quando necessário, pedimos o seu consentimento.
+Ajustamos esta Política de Privacidade quando o app ou a situação jurídica mudam. Você encontra a versão vigente no app, nas configurações, e em [useloqqa.com](https://useloqqa.com). Informamos você no app sobre alterações relevantes e, quando necessário, pedimos o seu consentimento.

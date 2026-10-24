@@ -1,8 +1,8 @@
 # Datenschutzerklärung
 
-Version: 1.0
+Version: 1.1
 
-Stand: 23. Oktober 2026
+Stand: 24. Oktober 2026
 
 Hier erfährst du, welche personenbezogenen Daten wir verarbeiten, wenn du die App Loqqa nutzt, wofür wir das tun und welche Rechte du hast. Grundlage sind die Datenschutz-Grundverordnung (DSGVO), das Bundesdatenschutzgesetz (BDSG) und das Telekommunikation-Digitale-Dienste-Datenschutz-Gesetz (TDDDG).
 
@@ -21,13 +21,13 @@ Verantwortlich für die Verarbeitung deiner Daten ist:
 
 - Jan Timo Hünnebeck
 - Adamstr. 5, 80636 München, Deutschland
-- E-Mail: support@itsloqqa.com
+- E-Mail: support@useloqqa.com
 
 Im Folgenden nennen wir uns „wir“.
 
 ## 2. Datenschutzbeauftragter
 
-Einen Datenschutzbeauftragten haben wir nicht benannt, weil wir dazu nicht verpflichtet sind. Mit allen Fragen zum Datenschutz kannst du dich direkt an support@itsloqqa.com wenden.
+Einen Datenschutzbeauftragten haben wir nicht benannt, weil wir dazu nicht verpflichtet sind. Mit allen Fragen zum Datenschutz kannst du dich direkt an support@useloqqa.com wenden.
 
 ## 3. So funktioniert Loqqa
 
@@ -49,21 +49,19 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der App, die du nutz
 
 ### 4.2 Dein Konto
 
-Am Ende der Einrichtung erstellst du ein Konto mit E-Mail-Adresse und Passwort oder meldest dich mit deinem Google-Konto oder deinem Apple Account an. Dabei verarbeiten wir:
+Am Ende der Einrichtung erstellst du ein Konto, indem du dich mit deinem Google-Konto oder, auf Apple-Geräten, mit deinem Apple Account anmeldest. Ein Passwort für Loqqa gibt es nicht. Dabei verarbeiten wir:
 
-- deine E-Mail-Adresse und dein Passwort (das Passwort speichern wir nur als kryptografischen Hashwert, nie im Klartext; mit Anmeldung über Google oder Apple gibt es bei uns kein Passwort)
-- deinen Vornamen und deine App-Sprache: die Sprache, damit Konto-E-Mails in deiner Sprache ankommen, den Vornamen, damit die App ihn nach einer Anmeldung auf einem neuen Gerät wieder eintragen kann
+- die Angaben, die Google bzw. Apple uns bei der Anmeldung übermitteln, darunter deine E-Mail-Adresse (siehe unten)
+- deinen Vornamen, damit die App ihn nach einer Anmeldung auf einem neuen Gerät wieder eintragen kann
 - technische Kontodaten wie den Zeitpunkt der Registrierung und der letzten Anmeldung sowie Anmelde-Tokens
-
-Wir schicken dir E-Mails, die für dein Konto nötig sind, zum Beispiel einen sechsstelligen Code zum Zurücksetzen deines Passworts. Den Versand übernimmt Supabase (Abschnitt 7).
 
 Damit du angemeldet bleibst, speichert die App deine Anmeldesitzung auf deinem Gerät.
 
-**Anmeldung mit Google:** Wenn du „Google“ wählst, öffnet sich die Anmeldung von Google auf deinem Gerät. Google bestätigt uns danach deine Anmeldung und übermittelt uns deine E-Mail-Adresse, deinen Namen, die Adresse deines Google-Profilbilds und eine Kennung deines Google-Kontos. Diese Angaben speichern wir zu deinem Konto. Google erfährt dabei, dass du dich bei Loqqa anmeldest. Für die Anmeldung über dein Google-Konto ist Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland, eigenständig verantwortlich; es gilt die [Datenschutzerklärung von Google](https://policies.google.com/privacy?hl=de).
+**Anmeldung mit Google:** Wenn du dich mit Google anmeldest, öffnet sich die Anmeldung von Google auf deinem Gerät. Google bestätigt uns danach deine Anmeldung und übermittelt uns deine E-Mail-Adresse, deinen Namen, die Adresse deines Google-Profilbilds und eine Kennung deines Google-Kontos. Diese Angaben speichern wir zu deinem Konto. Google erfährt dabei, dass du dich bei Loqqa anmeldest. Für die Anmeldung über dein Google-Konto ist Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland, eigenständig verantwortlich; es gilt die [Datenschutzerklärung von Google](https://policies.google.com/privacy?hl=de).
 
-**Anmeldung mit Apple** (nur auf Apple-Geräten): Wenn du „Apple“ wählst, öffnet sich die Anmeldung von Apple auf deinem Gerät. Apple bestätigt uns danach deine Anmeldung und übermittelt uns eine Kennung deines Apple Accounts und deine E-Mail-Adresse. Du kannst stattdessen eine von Apple erzeugte Adresse wählen, die E-Mails an dich weiterleitet („E-Mail-Adresse verbergen“). Bei der ersten Anmeldung übermittelt Apple auch deinen Namen, wenn du ihn freigibst. Diese Angaben speichern wir zu deinem Konto. Für die Anmeldung über deinen Apple Account ist Apple Distribution International Limited, Hollyhill Industrial Estate, Hollyhill, Cork, Irland, eigenständig verantwortlich; es gilt die [Datenschutzrichtlinie von Apple](https://www.apple.com/legal/privacy/de-ww/).
+**Anmeldung mit Apple** (nur auf Apple-Geräten): Wenn du dich mit Apple anmeldest, öffnet sich die Anmeldung von Apple auf deinem Gerät. Apple bestätigt uns danach deine Anmeldung und übermittelt uns eine Kennung deines Apple Accounts und deine E-Mail-Adresse. Du kannst stattdessen eine von Apple erzeugte Adresse wählen, die E-Mails an dich weiterleitet („E-Mail-Adresse verbergen“). Bei der ersten Anmeldung übermittelt Apple auch deinen Namen, wenn du ihn freigibst. Diese Angaben speichern wir zu deinem Konto. Für die Anmeldung über deinen Apple Account ist Apple Distribution International Limited, Hollyhill Industrial Estate, Hollyhill, Cork, Irland, eigenständig verantwortlich; es gilt die [Datenschutzrichtlinie von Apple](https://www.apple.com/legal/privacy/de-ww/).
 
-Konten entstehen nur am Ende der Einrichtung. Würde eine Anmeldung mit Google oder Apple auf der Anmeldeseite ein neues Konto anlegen, löscht die App es sofort wieder und weist dich darauf hin, dass es noch kein Konto gibt.
+Konten entstehen nur am Ende der Einrichtung. Würde eine Anmeldung über „Anmelden“ auf dem Startbildschirm ein neues Konto anlegen, löscht die App es sofort wieder und weist dich darauf hin, dass es noch kein Konto gibt.
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.
 
@@ -150,7 +148,7 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO für den Import und die Planerstellu
 
 ### 4.8 Support
 
-Über „Fehler melden“ und „Funktion wünschen“ kannst du uns direkt in der App schreiben, oder du schreibst an support@itsloqqa.com. In der App verarbeiten wir dabei:
+Über „Fehler melden“ und „Funktion wünschen“ kannst du uns direkt in der App schreiben, oder du schreibst an support@useloqqa.com. In der App verarbeiten wir dabei:
 
 - die Art deiner Anfrage (Fehler oder Idee), bei Ideen die Wichtigkeit von 1 bis 5, deine Nachrichten und den Betreff (die erste Zeile deiner ersten Nachricht)
 - bis zu fünf Screenshots pro Nachricht, die du aus deiner Mediathek auswählst; die App verkleinert sie (längste Seite höchstens 1600 Pixel) und speichert sie als JPEG
@@ -213,7 +211,7 @@ Nicht an PostHog gehen dein Name, deine E-Mail-Adresse, Gewicht, Größe, dein G
 - Speicherort: PostHog Cloud EU (Frankfurt am Main); PostHog ist unter dem EU-US Data Privacy Framework zertifiziert (Abschnitt 8)
 - Speicherdauer: Ereignisse werden nach einem Jahr gelöscht
 
-Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist es, Loqqa zu verbessern und Fehler zu beheben. Du kannst dem jederzeit widersprechen (Abschnitt 11), zum Beispiel per E-Mail an support@itsloqqa.com; dann löschen wir die Analysedaten zu deinem Konto.
+Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist es, Loqqa zu verbessern und Fehler zu beheben. Du kannst dem jederzeit widersprechen (Abschnitt 11), zum Beispiel per E-Mail an support@useloqqa.com; dann löschen wir die Analysedaten zu deinem Konto.
 
 ## 5. Speicherung auf deinem Gerät
 
@@ -245,7 +243,7 @@ Loqqa fragt nicht nach Zugriff auf Mikrofon, Standort, Kontakte oder Gesundheits
 
 Wir geben deine Daten nur weiter, wenn das für die genannten Zwecke nötig ist, du eingewilligt hast oder wir gesetzlich dazu verpflichtet sind. Unsere Dienstleister verarbeiten Daten in unserem Auftrag und nach unseren Weisungen (Art. 28 DSGVO):
 
-- **Supabase, Inc.** (Datenbank, Anmeldung, Dateispeicher, Serverfunktionen und Versand der Konto-E-Mails): Server in Frankfurt am Main (Amazon Web Services)
+- **Supabase, Inc.** (Datenbank, Anmeldung, Dateispeicher und Serverfunktionen): Server in Frankfurt am Main (Amazon Web Services)
 - **PowerSync** von Journey Mobile, Inc. (Synchronisation zwischen App und Datenbank; der Dienst hält dafür eine Kopie deiner synchronisierten Daten vor): Server in der EU
 - **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Irland (KI-Erstellung von Plänen, Erkennung importierter Pläne und Auswertung der Körpercheck-Fotos, Abschnitte 4.6 und 4.7): Verarbeitung in den USA durch OpenAI OpCo, LLC
 - **RevenueCat, Inc.** (Abo-Verwaltung, Abschnitt 4.11)
@@ -294,7 +292,7 @@ Du kannst dein Konto jederzeit in der App löschen: in den Einstellungen unter �
 
 Auf anderen Geräten, auf denen du angemeldet warst, können lokal gespeicherte Daten bleiben, bis du dich dort abmeldest oder die App löschst. Analysedaten bei PostHog und Abo-Daten bei RevenueCat werden nicht automatisch mitgelöscht; schreib uns, wenn wir sie sofort löschen lassen sollen, sonst gelten die Fristen aus Abschnitt 9.
 
-Klappt die Löschung nicht, zum Beispiel ohne Internetverbindung, zeigt die App einen Hinweis und du kannst es erneut versuchen. Du kannst die Löschung auch per E-Mail an support@itsloqqa.com verlangen.
+Klappt die Löschung nicht, zum Beispiel ohne Internetverbindung, zeigt die App einen Hinweis und du kannst es erneut versuchen. Du kannst die Löschung auch per E-Mail an support@useloqqa.com verlangen.
 
 ## 11. Deine Rechte
 
@@ -309,13 +307,13 @@ Du hast gegenüber uns folgende Rechte:
 
 **Widerspruchsrecht (Art. 21 DSGVO):** Wenn wir Daten auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO verarbeiten (berechtigte Interessen), zum Beispiel für die Produktanalyse mit PostHog, kannst du dieser Verarbeitung aus Gründen, die sich aus deiner besonderen Situation ergeben, jederzeit widersprechen. Wir verarbeiten die Daten dann nicht mehr, es sei denn, wir können zwingende schutzwürdige Gründe nachweisen, die deine Interessen überwiegen, oder die Verarbeitung dient der Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen.
 
-Für alle Anliegen genügt eine E-Mail an support@itsloqqa.com. Damit wir dein Konto zuordnen können, schreib uns bitte von der E-Mail-Adresse deines Kontos.
+Für alle Anliegen genügt eine E-Mail an support@useloqqa.com. Damit wir dein Konto zuordnen können, nenn uns bitte die E-Mail-Adresse, die die App in den Einstellungen anzeigt.
 
 ## 12. Einwilligungen widerrufen
 
 Eine Einwilligung kannst du jederzeit mit Wirkung für die Zukunft widerrufen (Art. 7 Abs. 3 DSGVO). Die Verarbeitung bis zum Widerruf bleibt rechtmäßig.
 
-- **Körpermaße:** per E-Mail an support@itsloqqa.com. Wir löschen dann dein Gewicht, deine Größe und deine Gewichtseinträge. Ohne diese Angaben kann die App dein Training nur eingeschränkt anpassen; du kannst stattdessen auch dein Konto löschen (Abschnitt 10).
+- **Körpermaße:** per E-Mail an support@useloqqa.com. Wir löschen dann dein Gewicht, deine Größe und deine Gewichtseinträge. Ohne diese Angaben kann die App dein Training nur eingeschränkt anpassen; du kannst stattdessen auch dein Konto löschen (Abschnitt 10).
 - **Körpercheck:** Lösche deine Checks in der App und mache keine neuen, oder schreib uns; dann löschen wir alle Körpercheck-Fotos und -Werte.
 
 ## 13. Beschwerde bei einer Aufsichtsbehörde
@@ -324,7 +322,7 @@ Du kannst dich bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77 DSGVO
 
 ## 14. Musst du uns Daten geben?
 
-Für ein Konto brauchen wir deine E-Mail-Adresse und ein Passwort oder dein Google-Konto bzw. deinen Apple Account. Ohne Konto kannst du Loqqa nach der Einrichtung nicht nutzen. Die Angaben in der Einrichtung braucht die App, um dein Alter zu prüfen und deinen Plan zu erstellen und anzupassen. Freiwillig sind insbesondere dein Geschlecht (du kannst „Keine Angabe“ wählen), der Körpercheck, Gewichtseinträge, ein Profilfoto und der Text „Über dich“.
+Für ein Konto brauchen wir dein Google-Konto oder deinen Apple Account. Ohne Konto kannst du Loqqa nach der Einrichtung nicht nutzen. Die Angaben in der Einrichtung braucht die App, um dein Alter zu prüfen und deinen Plan zu erstellen und anzupassen. Freiwillig sind insbesondere dein Geschlecht (du kannst „Keine Angabe“ wählen), der Körpercheck, Gewichtseinträge, ein Profilfoto und der Text „Über dich“.
 
 ## 15. Keine automatisierten Entscheidungen
 
@@ -344,10 +342,10 @@ Wir schützen deine Daten mit technischen und organisatorischen Maßnahmen, unte
 - Zugriffsregeln in der Datenbank, durch die jedes Konto nur seine eigenen Daten lesen und ändern kann
 - nicht öffentlichen Speicherbereichen für Profilfotos, Körpercheck-Fotos und Screenshots, in denen jedes Konto nur auf seinen eigenen Ordner zugreifen kann
 - zeitlich begrenzten Links zur Anzeige von Fotos: eine Stunde für Körpercheck-Fotos und Screenshots, 24 Stunden für Profilfotos
-- Passwörtern, die nur als Hashwert gespeichert werden
+- der Anmeldung über Google oder Apple, sodass wir keine Passwörter speichern
 
 Kein System ist vollkommen sicher. Da die App Daten auf deinem Gerät speichert, schütze dein Gerät bitte mit einer Bildschirmsperre.
 
 ## 18. Änderungen dieser Datenschutzerklärung
 
-Wir passen diese Datenschutzerklärung an, wenn sich die App oder die Rechtslage ändert. Die jeweils gültige Fassung findest du in der App in den Einstellungen und auf [itsloqqa.com](https://itsloqqa.com). Über wesentliche Änderungen informieren wir dich in der App und bitten dich, wo nötig, um deine Einwilligung.
+Wir passen diese Datenschutzerklärung an, wenn sich die App oder die Rechtslage ändert. Die jeweils gültige Fassung findest du in der App in den Einstellungen und auf [useloqqa.com](https://useloqqa.com). Über wesentliche Änderungen informieren wir dich in der App und bitten dich, wo nötig, um deine Einwilligung.

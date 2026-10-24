@@ -1,8 +1,8 @@
 # Nutzungsbedingungen
 
-Version: 1.0
+Version: 1.1
 
-Stand: 23. Oktober 2026
+Stand: 24. Oktober 2026
 
 Diese Nutzungsbedingungen regeln, wie du die App Loqqa nutzen kannst. Bitte lies sie aufmerksam. Wie wir mit deinen Daten umgehen, erklären wir in unserer Datenschutzerklärung.
 
@@ -12,8 +12,8 @@ Anbieter der App Loqqa ist:
 
 - Jan Timo Hünnebeck
 - Adamstr. 5, 80636 München, Deutschland
-- E-Mail: support@itsloqqa.com
-- Website: [itsloqqa.com](https://itsloqqa.com)
+- E-Mail: support@useloqqa.com
+- Website: [useloqqa.com](https://useloqqa.com)
 
 Im Folgenden nennen wir uns „wir“. Diese Bedingungen gelten für alle Funktionen der App. Für Käufe über den App Store von Apple oder über Google Play gelten zusätzlich die Bedingungen des jeweiligen Stores.
 
@@ -25,9 +25,9 @@ Bist du noch nicht volljährig, brauchst du für den Kauf von Loqqa Pro die Zust
 
 ## 3. Dein Konto
 
-- Um Loqqa nach der Einrichtung zu nutzen, brauchst du ein Konto. Du erstellst es am Ende der Einrichtung mit E-Mail-Adresse und Passwort oder mit deinem Google-Konto oder Apple Account. Der Vertrag über die Nutzung von Loqqa kommt zustande, wenn du dein Konto erstellst.
-- Mache bei der Einrichtung wahre Angaben. Dein Passwort kannst du bei der Anmeldung über „Passwort vergessen“ zurücksetzen.
-- Halte deine Zugangsdaten geheim. Wenn du vermutest, dass jemand anderes dein Konto nutzt, setze dein Passwort zurück und informiere uns.
+- Um Loqqa nach der Einrichtung zu nutzen, brauchst du ein Konto. Du erstellst es am Ende der Einrichtung mit deinem Google-Konto oder, auf Apple-Geräten, mit deinem Apple Account. Der Vertrag über die Nutzung von Loqqa kommt zustande, wenn du dein Konto erstellst.
+- Mache bei der Einrichtung wahre Angaben.
+- Schütze den Zugang zu deinem Google-Konto bzw. Apple Account. Wenn du vermutest, dass jemand anderes dein Konto nutzt, informiere uns.
 - Dein Konto ist persönlich und nicht übertragbar.
 
 ## 4. Was Loqqa bietet
@@ -88,7 +88,7 @@ Ideen und Vorschläge, die du uns schickst, dürfen wir unentgeltlich nutzen, um
 
 ## 9. Support
 
-Im Support-Chat der App kannst du Fehler melden und Funktionen vorschlagen. Wir antworten dir dort, in der Regel innerhalb weniger Tage. Die in der App genannten Antwortzeiten sind Richtwerte, keine verbindliche Zusage. Du erreichst uns außerdem per E-Mail an support@itsloqqa.com.
+Im Support-Chat der App kannst du Fehler melden und Funktionen vorschlagen. Wir antworten dir dort, in der Regel innerhalb weniger Tage. Die in der App genannten Antwortzeiten sind Richtwerte, keine verbindliche Zusage. Du erreichst uns außerdem per E-Mail an support@useloqqa.com.
 
 ## 10. Erlaubte Nutzung
 
@@ -119,7 +119,7 @@ Die App, der Übungskatalog mit Texten, Bildern und Videos sowie Marken und Desi
 ## 13. Laufzeit, Kündigung und Kontolöschung
 
 - Der Vertrag über die Nutzung von Loqqa läuft auf unbestimmte Zeit.
-- Du kannst ihn jederzeit beenden, indem du dein Konto in der App löschst: in den Einstellungen unter „Konto löschen“. Du kannst die Löschung auch per E-Mail an support@itsloqqa.com verlangen.
+- Du kannst ihn jederzeit beenden, indem du dein Konto in der App löschst: in den Einstellungen unter „Konto löschen“. Du kannst die Löschung auch per E-Mail an support@useloqqa.com verlangen.
 - Wir können den Vertrag mit einer Frist von vier Wochen kündigen, wenn du kein aktives Abo hast. Ein bezahltes Abo bleibt bis zum Ende der bezahlten Laufzeit unberührt.
 - Das Recht beider Seiten, aus wichtigem Grund fristlos zu kündigen, bleibt unberührt. Ein wichtiger Grund liegt für uns insbesondere bei schweren oder wiederholten Verstößen gegen diese Bedingungen vor.
 - Mit der Löschung deines Kontos löschen wir deine Daten, wie in der Datenschutzerklärung beschrieben. Gelöschte Daten können wir nicht wiederherstellen.
