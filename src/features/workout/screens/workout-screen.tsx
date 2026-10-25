@@ -36,6 +36,7 @@ import { useWorkout, type WorkoutDetail } from '../data/workout-detail';
 import { removeWorkoutExercise, reorderWorkoutExercise } from '../data/workout-mutations';
 import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
+import { useWorkoutActivity } from '../hooks/use-workout-activity';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
 const SWIPE_DISTANCE = 70;
@@ -58,6 +59,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [exerciseMenuOpen, setExerciseMenuOpen] = useState(false);
   const live = useLiveWorkout(workout);
+  useWorkoutActivity(workout, live);
   const { abandon, finish, finishing } = useWorkoutActions(workout.id);
   const field = useWorkoutSessionStore((s) => s.field);
   const { exercise, exerciseIndex, selectedIndex } = live;

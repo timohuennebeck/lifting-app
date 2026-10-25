@@ -4,6 +4,7 @@ import { useAnalyticsPerson } from '@/features/auth/hooks/use-analytics-person';
 import { LegalUpdateGate } from '@/features/legal/components/legal-update-gate';
 import { useSubscriptionGate } from '@/features/paywall/hooks/use-subscription-gate';
 import { useAttachmentUploadQueue } from '@/features/support/hooks/use-attachment-upload-queue';
+import { useEndWorkoutActivity } from '@/features/workout/hooks/use-end-workout-activity';
 import { useSyncAccountLanguage } from '@/shared/hooks/use-sync-account-language';
 import { colors } from '@/shared/lib/theme';
 
@@ -15,6 +16,8 @@ export default function AppLayout() {
   // The whole app is Pro: without a subscription only the paywall, the account and a running
   // workout stay open (see useSubscriptionGate).
   useSubscriptionGate();
+  // The Lock Screen / Dynamic Island workout goes when no workout runs any more.
+  useEndWorkoutActivity();
 
   return (
     <>
