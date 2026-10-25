@@ -15,8 +15,8 @@ import { Text } from '@/shared/ui/text';
 import { useRestTimer } from '../hooks/use-rest-timer';
 import { useWorkoutSessionStore } from '../stores/workout-session-store';
 
-/** The −/+ buttons move the running timer by this much. */
-const NUDGE = 10;
+/** The −/+ buttons (here and on the Live Activity) move the running timer by this much. */
+export const REST_NUDGE = 10;
 /** Fixed lengths to restart with, after "stop" and the exercise's own rest. */
 const PRESETS = [30, 60, 90, 120, 180];
 
@@ -122,9 +122,9 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
         <View className="flex-row items-center justify-between py-6">
           <NudgeButton
             icon="replay-10"
-            accessibilityLabel={t('rest.minus', { seconds: NUDGE })}
+            accessibilityLabel={t('rest.minus', { seconds: REST_NUDGE })}
             disabled={!resting}
-            onPress={() => addRest(-NUDGE)}
+            onPress={() => addRest(-REST_NUDGE)}
           />
           <View className="flex-row items-center gap-2">
             <Icon name="timer" size={22} color={tint} />
@@ -138,9 +138,9 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
           </View>
           <NudgeButton
             icon="forward-10"
-            accessibilityLabel={t('rest.plus', { seconds: NUDGE })}
+            accessibilityLabel={t('rest.plus', { seconds: REST_NUDGE })}
             disabled={!resting}
-            onPress={() => addRest(NUDGE)}
+            onPress={() => addRest(REST_NUDGE)}
           />
         </View>
         <Text variant="label" className="pb-3 text-base">
