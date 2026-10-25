@@ -122,9 +122,18 @@
   "generate": {
     "making": "Plan wird erstellt …",
     "errors": {
-      "failed": "Wir konnten deinen Plan nicht erstellen. Bitte versuch es noch einmal.",
-      "offline": "Keine Verbindung. Prüfe dein Internet und versuche es erneut.",
-      "limit": "Heute können keine weiteren Pläne erstellt werden. Versuch es morgen wieder oder importier deinen Plan."
+      "failed": {
+        "title": "Plan konnte nicht erstellt werden",
+        "message": "Bitte versuche es noch einmal."
+      },
+      "offline": {
+        "title": "Keine Verbindung",
+        "message": "Zum Erstellen deines Plans brauchst du Internet. Prüfe deine Verbindung und versuche es noch einmal."
+      },
+      "limit": {
+        "title": "Tageslimit erreicht",
+        "message": "Morgen kannst du wieder Pläne erstellen. Bis dahin kannst du deinen Plan importieren."
+      }
     }
   },
   "planName": {

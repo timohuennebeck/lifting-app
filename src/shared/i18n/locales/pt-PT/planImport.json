@@ -67,11 +67,26 @@
       "A aplicar séries e repetições …"
     ],
     "errors": {
-      "failed": "Não conseguimos ler este plano. Tenta novamente.",
-      "offline": "Sem ligação. Verifica a tua internet e tenta novamente.",
-      "limit": "Hoje já não são possíveis mais importações. Tenta amanhã ou cria um plano.",
-      "notAPlan": "Isto não parece um plano de treino. Tenta outra foto ou outro ficheiro.",
-      "tooLarge": "O ficheiro é demasiado grande. Usa um mais pequeno (até 15 MB)."
+      "failed": {
+        "title": "Não conseguimos ler o plano",
+        "message": "Tenta novamente. Uma foto mais nítida ou outro ficheiro pode ajudar."
+      },
+      "offline": {
+        "title": "Sem ligação",
+        "message": "Para ler o teu plano precisas de internet. Verifica a ligação e tenta novamente."
+      },
+      "limit": {
+        "title": "Limite diário atingido",
+        "message": "Amanhã já podes importar de novo. Até lá, podes criar o teu plano tu mesmo."
+      },
+      "notAPlan": {
+        "title": "Nenhum plano de treino encontrado",
+        "message": "Tenta outra foto ou outro ficheiro."
+      },
+      "tooLarge": {
+        "title": "Ficheiro demasiado grande",
+        "message": "Usa um ficheiro até 15 MB."
+      }
     }
   },
   "confirm": {
@@ -90,7 +105,13 @@
     "newExercise": "Novo · criado como exercício próprio"
   },
   "errors": {
-    "file": "Não foi possível abrir o ficheiro.",
-    "camera": "Não foi possível tirar a foto."
+    "file": {
+      "title": "Não foi possível abrir o ficheiro",
+      "message": "Escolhe-o novamente ou usa outro ficheiro."
+    },
+    "camera": {
+      "title": "A foto não foi tirada",
+      "message": "Tenta novamente."
+    }
   }
 }

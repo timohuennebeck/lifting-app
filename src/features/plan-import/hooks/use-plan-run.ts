@@ -1,13 +1,13 @@
 import { router } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert } from 'react-native';
 
-import { generateFailure, type PlanAnswers } from '@/features/plan-create/lib/plan-answers';
+import type { PlanAnswers } from '@/features/plan-create/lib/plan-answers';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { useTimedProgress } from '@/shared/hooks/use-timed-progress';
 import { haptics } from '@/shared/lib/haptics';
 
+import { showPlanFailure } from '../lib/plan-failure';
 import { useImportStore } from '../stores/import-store';
 
 /** The animation plays at least this long, even when the first exercise comes sooner. */
@@ -18,11 +18,11 @@ const EXPECTED_MS = 15_000;
 /**
  * Gets the plan behind the reading or building animation: the AI makes it from `answers`, else
  * it is read from the import's source. Opens the editor with the first exercise once the
- * animation has played; the rest fills in there (ConfirmScreen). A failure alerts and goes back.
- * Returns the progress to show.
+ * animation has played; the rest fills in there (ConfirmScreen). A failure shows the error sheet
+ * and goes back. Returns the progress to show.
  */
 export function usePlanRun(answers?: PlanAnswers) {
-  const { t, i18n } = useTranslation(['planImport', 'planCreate']);
+  const { i18n } = useTranslation();
   const { step } = usePlanFlow();
   const started = useImportStore((s) => !!s.plan?.routines[0]?.exercises.length);
   const failure = useImportStore((s) => s.failure);
@@ -53,13 +53,11 @@ export function usePlanRun(answers?: PlanAnswers) {
   useEffect(() => {
     if (failure?.run !== run.current || opened.current) return;
     opened.current = true;
-    Alert.alert(
-      answers
-        ? t(`planCreate:generate.errors.${generateFailure(failure.reason)}`)
-        : t(`planImport:reading.errors.${failure.reason}`),
-    );
+    // The sheet stays up over the screen this goes back to; trying again opens this one anew.
+    const again = answers ? step('/create/building') : step('/import/reading');
+    showPlanFailure(failure.reason, !!answers, () => router.push(again));
     router.back();
-  }, [failure, answers, t]);
+  }, [failure, answers, step]);
 
   return started ? 1 : Math.min(0.95, progress);
 }

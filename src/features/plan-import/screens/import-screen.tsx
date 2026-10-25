@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { FormatCards } from '@/shared/ui/format-cards';
@@ -10,7 +10,7 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
 import { SourceCard, ViewfinderArt } from '../components/source-card';
-import { pickPlanFile } from '../lib/pick-source';
+import { choosePlanFile } from '../lib/pick-source';
 import { IMPORT_STEPS } from '../lib/plan-import-service';
 import { useImportStore } from '../stores/import-store';
 
@@ -32,16 +32,11 @@ export function ImportScreen() {
     router.push(step('/import/confirm'));
   }
 
-  async function uploadFile() {
-    try {
-      const file = await pickPlanFile();
-      if (!file) return;
+  const uploadFile = () =>
+    choosePlanFile((file) => {
       setFile(file);
       router.push(step('/import/options'));
-    } catch {
-      Alert.alert(t('errors.file'));
-    }
-  }
+    });
 
   return (
     <StepScreen

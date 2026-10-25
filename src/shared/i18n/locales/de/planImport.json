@@ -67,11 +67,26 @@
       "Übernehme Sätze und Wiederholungen …"
     ],
     "errors": {
-      "failed": "Wir konnten den Plan nicht lesen. Bitte versuch es noch einmal.",
-      "offline": "Keine Verbindung. Prüfe dein Internet und versuche es erneut.",
-      "limit": "Heute sind keine weiteren Importe möglich. Versuch es morgen wieder oder erstell dir einen Plan.",
-      "notAPlan": "Das sieht nicht nach einem Trainingsplan aus. Versuch ein anderes Foto oder eine andere Datei.",
-      "tooLarge": "Die Datei ist zu groß. Bitte nimm eine kleinere (bis 15 MB)."
+      "failed": {
+        "title": "Plan konnte nicht gelesen werden",
+        "message": "Bitte versuche es noch einmal. Ein schärferes Foto oder eine andere Datei kann helfen."
+      },
+      "offline": {
+        "title": "Keine Verbindung",
+        "message": "Zum Lesen deines Plans brauchst du Internet. Prüfe deine Verbindung und versuche es noch einmal."
+      },
+      "limit": {
+        "title": "Tageslimit erreicht",
+        "message": "Morgen kannst du wieder Pläne importieren. Bis dahin kannst du deinen Plan selbst erstellen."
+      },
+      "notAPlan": {
+        "title": "Kein Trainingsplan erkannt",
+        "message": "Versuche es mit einem anderen Foto oder einer anderen Datei."
+      },
+      "tooLarge": {
+        "title": "Datei zu groß",
+        "message": "Bitte nimm eine Datei mit höchstens 15 MB."
+      }
     }
   },
   "confirm": {
@@ -90,7 +105,13 @@
     "newExercise": "Neu · wird als eigene Übung angelegt"
   },
   "errors": {
-    "file": "Die Datei konnte nicht geöffnet werden.",
-    "camera": "Das Foto konnte nicht aufgenommen werden."
+    "file": {
+      "title": "Datei lässt sich nicht öffnen",
+      "message": "Bitte wähle die Datei noch einmal oder nimm eine andere."
+    },
+    "camera": {
+      "title": "Foto nicht aufgenommen",
+      "message": "Bitte versuche es noch einmal."
+    }
   }
 }

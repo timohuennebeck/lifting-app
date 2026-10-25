@@ -1,12 +1,10 @@
 import { Redirect, router, useIsFocused, useNavigation } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert } from 'react-native';
 import Animated, { FadeInDown, useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
-import { generateFailure } from '@/features/plan-create/lib/plan-answers';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { EditableExerciseList } from '@/features/training/components/editable-exercise-list';
 import { EditableTitle } from '@/features/training/components/editable-title';
@@ -25,6 +23,7 @@ import { ReadingGhost } from '../components/reading-ghost';
 import { ReviewPrompt } from '../components/review-prompt';
 import { RoutineBar } from '../components/routine-bar';
 import { editExerciseAt, editRoutineAt, settle } from '../lib/edit-plan';
+import { showPlanFailure } from '../lib/plan-failure';
 import {
   type ImportedExercise,
   type ImportedRoutine,
@@ -83,15 +82,14 @@ export function ConfirmScreen() {
   useEffect(() => {
     if (failure?.run !== run || !focused || alerted.current) return;
     alerted.current = true;
-    const message = made
-      ? t(`planCreate:generate.errors.${generateFailure(failure.reason)}`)
-      : t(`planImport:reading.errors.${failure.reason}`);
     const again = made ? step('/create/building') : step('/import/reading');
-    Alert.alert(message, undefined, [
-      { text: t('common:actions.cancel'), style: 'cancel', onPress: () => router.back() },
-      { text: t('common:actions.retry'), onPress: () => router.replace(again) },
-    ]);
-  }, [failure, run, focused, made, t, step]);
+    showPlanFailure(
+      failure.reason,
+      made,
+      () => router.replace(again),
+      () => router.back(),
+    );
+  }, [failure, run, focused, made, step]);
 
   if (!plan) return <Redirect href={step('/import')} />;
 

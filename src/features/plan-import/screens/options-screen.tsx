@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { Redirect, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { formatNumber } from '@/shared/lib/format';
@@ -11,7 +11,7 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
-import { pickPlanFile } from '../lib/pick-source';
+import { choosePlanFile } from '../lib/pick-source';
 import { IMPORT_STEPS } from '../lib/plan-import-service';
 import { loadSheets } from '../lib/sheets';
 import { useImportStore } from '../stores/import-store';
@@ -63,14 +63,7 @@ export function OptionsScreen() {
   }
   const isImage = file.mimeType?.startsWith('image/');
 
-  async function swap() {
-    try {
-      const next = await pickPlanFile();
-      if (next) setFile(next);
-    } catch {
-      Alert.alert(t('errors.file'));
-    }
-  }
+  const swap = () => choosePlanFile(setFile);
 
   return (
     <StepScreen
