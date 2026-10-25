@@ -33,6 +33,11 @@
     "restartDefault": "Mit der Standardpause neu starten",
     "restartWith": "Mit {{time}} neu starten"
   },
+  "activity": {
+    "skipRest": "Pause überspringen",
+    "logSet": "Satz eintragen",
+    "reps": "Wdh."
+  },
   "menu": {
     "open": "Trainingsoptionen",
     "progress": "{{done}} von {{total}} Sätzen eingetragen",

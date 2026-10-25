@@ -33,6 +33,11 @@
     "restartDefault": "Restart with the default rest",
     "restartWith": "Restart with {{time}}"
   },
+  "activity": {
+    "skipRest": "Skip rest",
+    "logSet": "Log set",
+    "reps": "reps"
+  },
   "menu": {
     "open": "Workout options",
     "progress": "{{done}} of {{total}} sets logged",
