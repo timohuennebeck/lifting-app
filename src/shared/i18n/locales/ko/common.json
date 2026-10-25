@@ -13,7 +13,9 @@
     "togglePassword": "비밀번호 표시 또는 숨기기",
     "close": "닫기",
     "retry": "다시 시도",
-    "notNow": "나중에"
+    "notNow": "나중에",
+    "gotIt": "확인",
+    "openSettings": "설정 열기"
   },
   "progress": {
     "stepOf": "{{current}}/{{total}}"

@@ -13,7 +13,9 @@
     "togglePassword": "Mostrar ou ocultar senha",
     "close": "Fechar",
     "retry": "Tentar novamente",
-    "notNow": "Agora não"
+    "notNow": "Agora não",
+    "gotIt": "Entendi",
+    "openSettings": "Abrir ajustes"
   },
   "progress": {
     "stepOf": "{{current}} de {{total}}"

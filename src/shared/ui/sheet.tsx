@@ -10,6 +10,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
+import { create } from 'zustand';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { cn } from '@/shared/lib/cn';
@@ -19,13 +20,21 @@ import { Text } from './text';
 
 const OPEN_MS = 280;
 const CLOSE_MS = 220;
+/** Time for a closed sheet's modal to be gone before the next one shows. */
+const SETTLE_MS = 60;
 const MAX_HEIGHT = 0.92;
 /** A drag this far (or a fast flick) closes the sheet. */
 const DISMISS_DISTANCE = 120;
 const DISMISS_VELOCITY = 900;
 
 /** Runs `fn` once a closing sheet has animated out, so sheets never overlap. */
-export const afterSheetClose = (fn: () => void) => setTimeout(fn, CLOSE_MS + 60);
+export const afterSheetClose = (fn: () => void) => setTimeout(fn, CLOSE_MS + SETTLE_MS);
+
+/**
+ * Sheets on screen. iOS can't present a second native modal beside one (it silently doesn't
+ * show), so the error sheet waits until this is 0.
+ */
+export const useOpenSheets = create<{ count: number }>()(() => ({ count: 0 }));
 
 export interface SheetProps {
   visible: boolean;
@@ -34,6 +43,8 @@ export interface SheetProps {
   subtitle?: string;
   children: ReactNode;
   className?: string;
+  /** Left out of useOpenSheets: the error sheet, which waits for the others. */
+  uncounted?: boolean;
 }
 
 /**
@@ -55,6 +66,15 @@ interface MountedSheetProps extends SheetProps {
 
 /** The sheet while it is shown or animating out; closed sheets run none of these hooks. */
 function MountedSheet(props: MountedSheetProps) {
+  const { uncounted } = props;
+  useEffect(() => {
+    if (uncounted) return;
+    useOpenSheets.setState((s) => ({ count: s.count + 1 }));
+    return () => {
+      setTimeout(() => useOpenSheets.setState((s) => ({ count: s.count - 1 })), SETTLE_MS);
+    };
+  }, [uncounted]);
+
   return (
     <Modal
       transparent
