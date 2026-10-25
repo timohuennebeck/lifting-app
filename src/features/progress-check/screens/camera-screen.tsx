@@ -2,7 +2,7 @@ import { CameraView } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -11,6 +11,7 @@ import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { playSound, preloadSounds } from '@/shared/lib/sounds';
+import { showError } from '@/shared/stores/error-sheet-store';
 import { CameraPermission } from '@/shared/ui/camera/camera-permission';
 import {
   CameraSideButton,
@@ -178,7 +179,7 @@ export function CameraScreen() {
     await take(camera.current)
       .catch((error) => {
         console.warn('Progress-check photo failed', error);
-        Alert.alert(t('camera.error'));
+        showError({ title: t('camera.error.title'), message: t('camera.error.message') });
       })
       .finally(() => setBusy(false));
   }
@@ -246,7 +247,12 @@ export function CameraScreen() {
         animateShutter={false}
         active={focused && !viewShot}
         onCameraReady={() => setReady(true)}
-        onMountError={() => Alert.alert(t('camera.error'))}
+        onMountError={() =>
+          showError({
+            title: t('camera.unavailable.title'),
+            message: t('camera.unavailable.message'),
+          })
+        }
       />
       <Gradient from="top" size={200} color="black" opacity={0.6} />
       <Gradient from="bottom" size={300} color="black" stops={BOTTOM_SCRIM} />

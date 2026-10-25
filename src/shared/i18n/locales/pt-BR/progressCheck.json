@@ -37,7 +37,10 @@
     "flip": "Trocar câmera",
     "shutter": "Tirar foto",
     "cancelTimer": "Cancelar timer",
-    "error": "Não foi possível salvar a foto. Tente novamente.",
+    "error": {
+      "title": "Foto não salva",
+      "message": "Tente novamente."
+    },
     "access": "Para as fotos do seu check corporal. Elas ficam privadas.",
     "tapToCancel": "Toque para cancelar",
     "turn": {
@@ -46,7 +49,11 @@
       "side": "Vire de lado",
       "back": "Fique de costas para a câmera"
     },
-    "consent": "Ao tocar em “{{done}}”, você consente que suas fotos e dados corporais sejam enviados à OpenAI (EUA) para a avaliação."
+    "consent": "Ao tocar em “{{done}}”, você consente que suas fotos e dados corporais sejam enviados à OpenAI (EUA) para a avaliação.",
+    "unavailable": {
+      "title": "A câmera não iniciou",
+      "message": "Feche o check corporal e abra de novo. Se não resolver, reinicie o app."
+    }
   },
   "discard": {
     "title": "Descartar check corporal?",
@@ -78,12 +85,30 @@
     "keepOpen": "Mantenha o app aberto",
     "cta": "Ver resultado",
     "errors": {
-      "offline": "A análise precisa de conexão com a internet. Suas fotos ficam salvas.",
-      "limit": "Você já iniciou várias análises hoje. Tente novamente amanhã.",
-      "notAdult": "O check corporal só está disponível a partir dos 18 anos.",
-      "notPro": "A análise precisa do Loqqa Pro.",
-      "refused": "Não conseguimos analisar essas fotos. Refaça-as com roupa esportiva ou roupa íntima.",
-      "failed": "A análise falhou. Tente novamente."
+      "offline": {
+        "title": "Sem conexão",
+        "message": "A análise precisa de internet. Suas fotos ficam salvas."
+      },
+      "limit": {
+        "title": "Limite diário atingido",
+        "message": "Você já iniciou várias análises hoje. Amanhã você pode continuar."
+      },
+      "notAdult": {
+        "title": "Só a partir dos 18",
+        "message": "O check corporal só está disponível a partir dos 18 anos."
+      },
+      "notPro": {
+        "title": "É preciso ter o Loqqa Pro",
+        "message": "A análise faz parte do Loqqa Pro."
+      },
+      "refused": {
+        "title": "Não conseguimos analisar as fotos",
+        "message": "Refaça-as com roupa esportiva ou roupa íntima."
+      },
+      "failed": {
+        "title": "A análise falhou",
+        "message": "Suas fotos ficam salvas. Tente novamente."
+      }
     },
     "row": {
       "done": "Registrado",
@@ -136,6 +161,10 @@
     "delete": "Excluir check",
     "deleteHint": "As fotos e os valores deste check serão excluídos definitivamente.",
     "shareMessage": "Minha pontuação corporal no Loqqa: {{score}}/100",
-    "notFound": "Este check corporal não existe mais."
+    "notFound": "Este check corporal não existe mais.",
+    "saveFailed": {
+      "title": "Check corporal não salvo",
+      "message": "Suas fotos e o resultado continuam aqui. Tente novamente."
+    }
   }
 }
