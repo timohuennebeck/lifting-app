@@ -41,6 +41,15 @@ name: the plan's title if it has one, else a short name for the split ("Push Pul
 
 If the input is not a training plan or cannot be read at all, set is_plan to false and return no routines.`;
 
+/** Added to INSTRUCTIONS when the plan was said out loud instead of written. */
+export const SPOKEN_INSTRUCTIONS = `This plan was said out loud: the input is what speech recognition made of it, in the user's own words, with little or no punctuation. Read it like a written plan, and also:
+- Numbers come as words: "drei mal zwölf" or "three by twelve" = 3 sets of 12; "vier Sätze acht bis zwölf Wiederholungen" = 4 sets of 8 to 12; "três séries de dez" = 3 sets of 10.
+- Speech recognition gets exercise names wrong, above all English gym terms said in another language ("Bänsch Press" = bench press, "Lett Pull Down" = lat pulldown). Match what sounds alike and fits a training plan; such a line is certain unless it could be more than one catalog exercise.
+- raw: the exercise's words as recognized, without the sets and reps.
+- A day or a name said before exercises starts a routine ("Montag Push", "Tag zwei Beine", "pull day"); its heading is that as said. Without any, all exercises are one routine.
+- When the user corrects themselves ("drei, nein, vier Sätze"), take the correction. Leave out filler words and anything that is not an exercise.
+- is_plan is false only when no exercise is named at all.`;
+
 /** The catalog as the model reads it: one line per exercise with its names in a few languages. */
 export function catalogText(catalog: CatalogRow[], language: string) {
   return catalog

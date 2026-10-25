@@ -14,7 +14,10 @@ import { choosePlanFile } from '../lib/pick-source';
 import { IMPORT_STEPS } from '../lib/plan-import-service';
 import { useImportStore } from '../stores/import-store';
 
-/** 05: choose how to import a plan (photo or file), or build one exercise by exercise. */
+/**
+ * 05: choose how to import a plan (photo or file) or say it out loud, or build one exercise by
+ * exercise.
+ */
 export function ImportScreen() {
   const { t } = useTranslation('planImport');
   const { step } = usePlanFlow();
@@ -66,6 +69,12 @@ export function ImportScreen() {
         >
           <FormatCards shadow={false} className="mt-1" />
         </SourceCard>
+        <SourceCard
+          title={t('index.voice.title')}
+          description={t('index.voice.description')}
+          icon="mic"
+          onPress={() => router.push(step('/import/voice'))}
+        />
       </View>
       <PressableScale haptic="select" onPress={buildOwn} className="items-center px-5 pt-4.5 pb-2">
         <Text variant="caption" tone="subtle" className="font-inter text-sm">

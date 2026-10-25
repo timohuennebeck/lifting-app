@@ -96,6 +96,21 @@ const ICONS = {
       </>
     ),
   },
+  mic: {
+    viewBox: '0 0 16 22',
+    render: (c) => (
+      <>
+        <Rect x={4.5} y={1} width={7} height={12} rx={3.5} fill={c} />
+        <Path
+          d="M1.5 10a6.5 6.5 0 0 0 13 0M8 16.5V21"
+          stroke={c}
+          strokeWidth={2}
+          strokeLinecap="round"
+          fill="none"
+        />
+      </>
+    ),
+  },
   stop: {
     viewBox: '0 0 14 14',
     render: (c) => <Rect x={2} y={2} width={10} height={10} rx={1.5} fill={c} />,

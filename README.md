@@ -159,14 +159,21 @@ the standard API at `api.openai.com`) and returns the check's values, or the pho
 
 ## Plan import
 
-Users can import their plan from photos or a file (PDF, Excel, CSV, text) instead of having one
-made: in onboarding, and in the app from "+" or Training (the same screens, routed under
-`src/app/(onboarding)/import/` and `src/app/(app)/plan/import/`). The app shrinks photos to JPEGs
-and calls the `read-plan` Edge Function, which sends them to OpenAI together with the exercise
-catalog and returns the plan in the app's shape: each line matched to a catalog exercise, or a new
-exercise the app creates for the user with the plan. Lines it isn't sure about come with
-alternatives for the user to review.
+Users can import their plan from photos or a file (PDF, Excel, CSV, text), or say it out loud,
+instead of having one made: in onboarding, and in the app from "+" or Training (the same screens,
+routed under `src/app/(onboarding)/import/` and `src/app/(app)/plan/import/`). The app shrinks
+photos to JPEGs and calls the `read-plan` Edge Function, which sends them to OpenAI together with
+the exercise catalog and returns the plan in the app's shape: each line matched to a catalog
+exercise, or a new exercise the app creates for the user with the plan. Lines it isn't sure about
+come with alternatives for the user to review.
 
+- **Voice input:** "Plan einsprechen" turns speech into text on the phone with
+  `expo-speech-recognition` (Apple's or Google's recognition, in the app language), shown as it is
+  heard and editable by hand. Each tap on the microphone adds to the text. `read-plan` gets it as
+  `text` (at most 4,000 characters) and reads it with extra rules for spoken plans
+  (`SPOKEN_INSTRUCTIONS`: numbers as words, misheard exercise names, a day starting each workout);
+  it counts toward the same limits. The microphone and speech recognition permissions are asked on
+  the first tap. Needs a new development build.
 - **Streaming:** the function passes each exercise on as soon as the model has written it, as
   server-sent events (`PlanEvent` in `supabase/functions/_shared/plan-events.ts`); the app reads
   them with `expo/fetch`. The
@@ -180,11 +187,11 @@ alternatives for the user to review.
 - **Rules (server-side):** it also runs before there is an account, so imports are limited per network
   (`PLAN_IMPORT_IP_LIMIT`, default 10) and in total (`PLAN_IMPORT_DAILY_LIMIT`, default 1,000) per
   24 hours. `plan_requests` keeps a keyed hash of the IP, never the IP itself.
-- **Testing:** `npm run plan:eval` sends the 15 test plans in `scripts/plan-import-eval/fixtures`
-  (typed, spreadsheet, handwritten, whiteboard, screenshot; German, English, Portuguese) to the
-  function and scores what it read against `cases.json`, with the time to the first exercise and
+- **Testing:** `npm run plan:eval` sends the 17 test plans in `scripts/plan-import-eval/fixtures`
+  (typed, spreadsheet, handwritten, whiteboard, screenshot, spoken; German, English, Portuguese)
+  to the function and scores what it read against `cases.json`, with the time to the first exercise and
   to the whole plan. `npm run plan:eval -- --dir <folder>` reads your own photos and files and
-  prints what it found. One run is 15 imports, so set `PLAN_IMPORT_IP_LIMIT=1000` in
+  prints what it found. One run is 17 imports, so set `PLAN_IMPORT_IP_LIMIT=1000` in
   `supabase/functions/.env` locally first.
 
 ## Plans, routines and workout entries

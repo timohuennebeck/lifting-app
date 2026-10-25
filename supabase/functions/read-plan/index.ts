@@ -1,6 +1,7 @@
-// Reads a training plan from photos or a file for the plan import (in onboarding and in the app).
-// The app sends the photos (shrunk JPEGs) or the file as base64; the model gets them with the
-// exercise catalog and answers in a fixed shape, which becomes the plan the user reviews. The
+// Reads a training plan from photos, a file or what the user said, for the plan import (in
+// onboarding and in the app). The app sends the photos (shrunk JPEGs), the file as base64 or the
+// text speech recognition made of the user's words; the model gets them with the exercise catalog
+// and answers in a fixed shape, which becomes the plan the user reviews. The
 // answer is streamed: each exercise goes to the app as soon as the model has written it (see
 // `PlanEvent`). It also runs before there is an account, so imports are limited per network and in
 // total per day (start_plan_request).
@@ -16,7 +17,7 @@ import {
   planEventResponse,
   takePlanRequest,
 } from '../_shared/plans.ts';
-import { buildSchema, contextText, INSTRUCTIONS, planReader } from './plan.ts';
+import { buildSchema, contextText, INSTRUCTIONS, planReader, SPOKEN_INSTRUCTIONS } from './plan.ts';
 
 /** For both attempts together (see planEventResponse); the function may run 150 s at most. */
 const OPENAI_TIMEOUT_MS = 120_000;
@@ -31,6 +32,8 @@ const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const MAX_FILE_BYTES = 15 * 1024 * 1024;
 /** Characters of a text or spreadsheet file the model reads. */
 const MAX_TEXT = 60_000;
+/** Characters of a spoken plan (the app's MAX_SPOKEN). */
+const MAX_SPOKEN = 4000;
 
 interface PlanFile {
   name: string;
@@ -110,9 +113,16 @@ Deno.serve(async (req) => {
   const language = LANGUAGES.includes(body?.language) ? body.language : 'de';
   const photos: unknown = body?.photos;
   const file: PlanFile | undefined = body?.file;
+  // What the user said, as speech recognition wrote it down.
+  const spoken = typeof body?.text === 'string' ? body.text.trim() : '';
   const hasPhotos = Array.isArray(photos) && photos.length > 0;
-  if (hasPhotos === !!file) return reply(400, { error: 'bad_request' });
-  if (hasPhotos) {
+  if (body?.text !== undefined && !spoken) return reply(400, { error: 'bad_request' });
+  if ([hasPhotos, !!file, !!spoken].filter(Boolean).length !== 1) {
+    return reply(400, { error: 'bad_request' });
+  }
+  if (spoken) {
+    if (spoken.length > MAX_SPOKEN) return reply(413, { error: 'too_large' });
+  } else if (hasPhotos) {
     if (photos.length > MAX_PHOTOS || !photos.every(isBase64)) {
       return reply(400, { error: 'bad_request' });
     }
@@ -137,13 +147,15 @@ Deno.serve(async (req) => {
   let content: unknown[];
   try {
     catalog = await loadCatalog();
-    const source = hasPhotos
-      ? (photos as string[]).map((p) => ({
-          type: 'input_image',
-          image_url: `data:image/jpeg;base64,${p}`,
-          detail: 'high',
-        }))
-      : [await fileContent(file!)];
+    const source = spoken
+      ? [{ type: 'input_text', text: `Spoken plan:\n${spoken}` }]
+      : hasPhotos
+        ? (photos as string[]).map((p) => ({
+            type: 'input_image',
+            image_url: `data:image/jpeg;base64,${p}`,
+            detail: 'high',
+          }))
+        : [await fileContent(file!)];
     content = [{ type: 'input_text', text: contextText(catalog, language) }, ...source];
   } catch (error) {
     console.error('Preparing the import failed', error);
@@ -153,7 +165,7 @@ Deno.serve(async (req) => {
 
   return planEventResponse({
     request: {
-      instructions: INSTRUCTIONS,
+      instructions: spoken ? `${INSTRUCTIONS}\n\n${SPOKEN_INSTRUCTIONS}` : INSTRUCTIONS,
       content,
       name: 'training_plan',
       schema: buildSchema(catalog.map((e) => e.id)),

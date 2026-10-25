@@ -23,7 +23,7 @@ import { ReadingGhost } from '../components/reading-ghost';
 import { ReviewPrompt } from '../components/review-prompt';
 import { RoutineBar } from '../components/routine-bar';
 import { editExerciseAt, editRoutineAt, settle } from '../lib/edit-plan';
-import { showPlanFailure } from '../lib/plan-failure';
+import { originOf, showPlanFailure } from '../lib/plan-failure';
 import {
   type ImportedExercise,
   type ImportedRoutine,
@@ -58,6 +58,11 @@ export function ConfirmScreen() {
   // Made from the answers, not read: it goes on to its name, and is made again on a retry.
   const answers = useImportStore((s) => (s.source?.kind === 'answers' ? s.source.answers : null));
   const made = !!answers;
+  const origin = useImportStore((s) => originOf(s.source));
+  // Said out loud: it is made from the user's words rather than read.
+  const spoken = origin === 'spoken';
+  const creating = made || spoken;
+  const readAs = spoken ? 'planImport:voice.heardAs' : 'planImport:confirm.readAs';
   const scroller = useAnimatedRef<Animated.ScrollView>();
   // The run this screen shows; leaving the screen stops it.
   const [run] = useState(() => useImportStore.getState().run);
@@ -85,11 +90,11 @@ export function ConfirmScreen() {
     const again = made ? step('/create/building') : step('/import/reading');
     showPlanFailure(
       failure.reason,
-      made,
+      origin,
       () => router.replace(again),
       () => router.back(),
     );
-  }, [failure, run, focused, made, step]);
+  }, [failure, run, focused, made, origin, step]);
 
   if (!plan) return <Redirect href={step('/import')} />;
 
@@ -223,7 +228,7 @@ export function ConfirmScreen() {
                   ) : null}
                   {e.raw ? (
                     <ReviewPrompt
-                      message={t('planImport:confirm.readAs', { raw: e.raw })}
+                      message={t(readAs, { raw: e.raw })}
                       alternatives={e.alternatives}
                       onConfirm={() => editExercise(i, settle)}
                       onPickAlternative={(exerciseId) =>
@@ -246,7 +251,7 @@ export function ConfirmScreen() {
         <Button
           label={
             reading
-              ? made
+              ? creating
                 ? t('planCreate:generate.making')
                 : t('planImport:confirm.reading')
               : pending

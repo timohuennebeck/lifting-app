@@ -1326,5 +1326,128 @@
         }
       ]
     }
+  },
+  {
+    "id": "16-voice-ppl-de",
+    "title": "Spoken German PPL: numbers as words, misheard English names, a correction, AMRAP",
+    "files": ["16-voice-ppl-de.txt"],
+    "as": "voice",
+    "language": "de",
+    "expect": {
+      "routines": [
+        {
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["incline-dumbbell-press"],
+              "sets": 3,
+              "reps": [10, 12]
+            },
+            {
+              "ex": ["lateral-raise"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["french-press"],
+              "sets": 3,
+              "reps": [12, 12]
+            }
+          ]
+        },
+        {
+          "exercises": [
+            {
+              "ex": ["pull-up"],
+              "sets": 4,
+              "reps": "none"
+            },
+            {
+              "ex": ["lat-pulldown"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["barbell-row"],
+              "sets": 4,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["hammer-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            }
+          ]
+        },
+        {
+          "exercises": [
+            {
+              "ex": ["hack-squat"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["leg-extension"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["seated-leg-curl"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["calf-raise"],
+              "sets": 4,
+              "reps": [15, 15]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "17-voice-legs-en",
+    "title": "Spoken English leg day without weekdays (one routine), a timed hold",
+    "files": ["17-voice-legs-en.txt"],
+    "as": "voice",
+    "language": "en",
+    "expect": {
+      "routines": [
+        {
+          "exercises": [
+            {
+              "ex": ["leg-press"],
+              "sets": 4,
+              "reps": [10, 12]
+            },
+            {
+              "ex": ["romanian-deadlift"],
+              "sets": 3,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["walking-lunge"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["lying-leg-curl"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["plank"],
+              "sets": 3,
+              "seconds": 60
+            }
+          ]
+        }
+      ]
+    }
   }
 ]

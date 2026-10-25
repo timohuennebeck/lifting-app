@@ -38,6 +38,8 @@ interface ImportState {
   /** The confirm screen shows the routine being read until the user picks one. */
   following: boolean;
   setFile: (file: ImportFile) => void;
+  /** The plan is to be read from what the user said. */
+  setSpokenPlan: (text: string) => void;
   /** The plan is to be made from these answers (by the AI), not read. */
   setAnswers: (answers: PlanAnswers) => void;
   offerSheets: (workbook: SheetSummary[]) => void;
@@ -138,6 +140,7 @@ export const useImportStore = create<ImportState>()((set, get) => ({
     // Read ahead: its sheets are ready by the time the user goes on.
     void loadSheets(file);
   },
+  setSpokenPlan: (text) => set({ source: { kind: 'voice', text }, workbook: null }),
   offerSheets: (workbook) => set({ workbook }),
   setAnswers: (answers) => set({ source: { kind: 'answers', answers }, workbook: null }),
   pickSheets: (sheets) =>

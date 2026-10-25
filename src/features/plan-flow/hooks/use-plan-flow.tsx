@@ -18,6 +18,7 @@ type PlanStep =
   | '/import/options'
   | '/import/sheets'
   | '/import/camera'
+  | '/import/voice'
   | '/import/review'
   | '/import/reading'
   | '/import/confirm'
