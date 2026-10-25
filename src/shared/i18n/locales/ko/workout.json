@@ -33,6 +33,11 @@
     "restartDefault": "기본 휴식 시간으로 다시 시작",
     "restartWith": "{{time}} 휴식으로 다시 시작"
   },
+  "activity": {
+    "skipRest": "휴식 건너뛰기",
+    "logSet": "세트 기록",
+    "reps": "회"
+  },
   "menu": {
     "open": "운동 옵션",
     "progress": "{{total}}세트 중 {{done}}세트 기록됨",

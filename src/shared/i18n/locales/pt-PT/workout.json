@@ -33,6 +33,11 @@
     "restartDefault": "Reiniciar com o descanso padrão",
     "restartWith": "Reiniciar com {{time}}"
   },
+  "activity": {
+    "skipRest": "Saltar descanso",
+    "logSet": "Registar série",
+    "reps": "reps"
+  },
   "menu": {
     "open": "Opções do treino",
     "progress": "{{done}} de {{total}} séries registadas",

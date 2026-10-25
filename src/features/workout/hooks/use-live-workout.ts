@@ -7,7 +7,7 @@ import { useLastExerciseSession } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 
-import type { WorkoutDetail } from '../data/workout-detail';
+import type { WorkoutDetail, WorkoutExercise } from '../data/workout-detail';
 import { logSet, saveOpenSetValues, unlogSet } from '../data/workout-mutations';
 import { firstOpenSet, rowValues } from '../lib/row-values';
 import { parseSetInput, toSetInput, typedValues } from '../lib/set-input';
@@ -116,9 +116,9 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     useWorkoutSessionStore.getState().select(set.id, inputFor(index), field ?? measures[0]);
   };
 
-  /** Logs set `index` with values in kg. */
-  async function commit(index: number, values: SetValues) {
-    const set = exercise.sets[index];
+  /** Logs set `index` of `target` (the shown exercise, unless logged from the Live Activity). */
+  async function commit(target: WorkoutExercise, index: number, values: SetValues) {
+    const set = target.sets[index];
     const store = useWorkoutSessionStore.getState();
     const editing = !!set.completedAt;
     // Shown at once; the rest timer starts, so the keypad closes instead of moving on.
@@ -129,18 +129,18 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     const { logged } = useWorkoutSessionStore.getState();
     const workoutDone = allSets.every((s) => s.completedAt || s.id in logged);
     if (!editing && !workoutDone) {
-      store.startRest(restSecondsFor(exercise.exerciseId, exercise.restSeconds));
+      store.startRest(restSecondsFor(target.exerciseId, target.restSeconds));
     }
     let isPr: boolean;
     try {
-      isPr = await logSet(set.id, exercise.exerciseId, values);
+      isPr = await logSet(set.id, target.exerciseId, values);
     } catch (error) {
       // The keypad already closed; reopen this set so the failed log isn't mistaken for saved.
       console.error(error);
       haptics.error();
       store.skipRest();
       store.clearLogged(set.id);
-      store.select(set.id, toSetInput(values, units), measures[0]);
+      store.select(set.id, toSetInput(values, units), measuresOf(target.exerciseId)[0]);
       return;
     }
     // A new record gets a success tick; the set's number turns accent in the table.
@@ -165,7 +165,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
       focusField(missing);
       return;
     }
-    void commit(selectedIndex, values);
+    void commit(exercise, selectedIndex, values);
   }
 
   /**
@@ -199,7 +199,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     }
     // All shown as done first, so the rest timer doesn't start when they finish the workout.
     for (const row of rows) store.markLogged(exercise.sets[row.index].id, row.values);
-    for (const row of rows) void commit(row.index, row.values);
+    for (const row of rows) void commit(exercise, row.index, row.values);
   }
 
   /** The round check at the end of a row: logs with the prefill, or re-opens a set. */
@@ -217,7 +217,27 @@ export function useLiveWorkout(workout: WorkoutDetail) {
       selectSet(index, missing);
       return;
     }
-    void commit(index, values);
+    void commit(exercise, index, values);
+  }
+
+  /**
+   * The Live Activity's "Log set": logs set `setIndex` of exercise `atExercise` with what its row
+   * shows and shows that exercise. What the open row was typed with is kept first.
+   */
+  function logSetAt(atExercise: number, setIndex: number) {
+    const target = exercises[atExercise];
+    const set = target?.sets[setIndex];
+    if (!set || set.completedAt || set.id in useWorkoutSessionStore.getState().logged) return;
+    closeInput();
+    if (atExercise !== exerciseIndex) useWorkoutSessionStore.getState().goTo(atExercise);
+    const store = useWorkoutSessionStore.getState();
+    const { values, missing } = parseSetInput(
+      toSetInput(rowValues(target, setIndex, store.logged, null, store.drafts), units),
+      measuresOf(target.exerciseId),
+      isBodyweight(target.exerciseId),
+      units,
+    );
+    if (!missing) void commit(target, setIndex, values);
   }
 
   return {
@@ -236,5 +256,6 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     confirmInput,
     toggleDone,
     toggleAll,
+    logSetAt,
   };
 }
