@@ -3,15 +3,15 @@
     "title": "WAS IST\nDEIN ZIEL?",
     "options": {
       "hypertrophy": {
-        "title": "Hypertrophie",
+        "title": "Muskelaufbau",
         "description": "Muskelmasse aufbauen, meist 8–12 Wdh."
       },
       "strength": {
-        "title": "Maximalkraft",
+        "title": "Kraftaufbau",
         "description": "Schwerer heben, meist 3–6 Wdh."
       },
       "strength_hypertrophy": {
-        "title": "Kraft und Hypertrophie",
+        "title": "Kraft und Muskelaufbau",
         "description": "Beides kombiniert, 4–10 Wdh."
       }
     }
@@ -136,8 +136,8 @@
   },
   "goalShort": {
     "hypertrophy": "Muskelaufbau",
-    "strength": "Maximalkraft",
-    "strength_hypertrophy": "Kraft & Masse"
+    "strength": "Kraftaufbau",
+    "strength_hypertrophy": "Kraft & Muskelaufbau"
   },
   "equipmentShort": {
     "gym": "Studio",
