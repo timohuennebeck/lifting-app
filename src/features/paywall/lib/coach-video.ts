@@ -11,6 +11,8 @@ export const COACH = {
  */
 export const COACH_VIDEO_SOURCE: VideoSource = require('@/assets/videos/coach-kai.mp4');
 export const COACH_POSTER = require('@/assets/images/coach-kai.jpg');
+/** Width / height of the video and poster (1080 × 1920): the frame takes this shape, uncropped. */
+export const COACH_VIDEO_ASPECT = 9 / 16;
 
 /** Length of the timer fallback; a real video reports its own duration. */
 export const COACH_FALLBACK_SECONDS = 30;

@@ -25,6 +25,28 @@ function framePath(width: number, height: number, r: number) {
   ].join('');
 }
 
+/**
+ * The progress (0–1) at the point of the outline nearest to (x, y): the side closest to the
+ * touch, then the position along it in the outline's clockwise order.
+ */
+export function progressAt(x: number, y: number, width: number, height: number, r: number) {
+  const w = width - STROKE;
+  const h = height - STROKE;
+  const top = w - 2 * r;
+  const side = h - 2 * r;
+  const arc = (Math.PI * r) / 2;
+  const clamp = (value: number, max: number) => Math.min(Math.max(value, 0), max);
+  const distances = [y, width - x, height - y, x];
+  const nearest = distances.indexOf(Math.min(...distances));
+  const along = [
+    clamp(x - r, top),
+    top + arc + clamp(y - r, side),
+    top + side + 2 * arc + clamp(w - r - x, top),
+    2 * top + side + 3 * arc + clamp(h - r - y, side),
+  ][nearest];
+  return along / (2 * (top + side) + 4 * arc);
+}
+
 export interface ProgressFrameProps {
   width: number;
   height: number;

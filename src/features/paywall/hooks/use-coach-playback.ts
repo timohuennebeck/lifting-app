@@ -16,19 +16,26 @@ function configure(player: VideoPlayer) {
 function setMuted(player: VideoPlayer, muted: boolean) {
   player.muted = muted;
 }
+function seekTo(player: VideoPlayer, seconds: number) {
+  player.currentTime = seconds;
+}
+
+/** Scrubbing stops just short of the end, where the looping video would start over. */
+const MAX_SCRUB = 0.995;
 
 /**
  * Coach video state. With a source, time and duration come from expo-video;
  * without one, a looping timer of `COACH_FALLBACK_SECONDS` stands in.
- * Playback only runs while `active` (screen focused) and not paused by the user.
+ * Playback only runs while `active` (screen focused), not paused by the user and not scrubbed.
  */
 export function useCoachPlayback(active: boolean) {
   const hasVideo = COACH_VIDEO_SOURCE != null;
   const player = useVideoPlayer(COACH_VIDEO_SOURCE, configure);
   const [paused, setPaused] = useState(false);
   const [muted, setMutedState] = useState(true);
+  const [scrubbing, setScrubbing] = useState(false);
   const [clock, setClock] = useState({ elapsed: 0, duration: COACH_FALLBACK_SECONDS });
-  const playing = active && !paused;
+  const playing = active && !paused && !scrubbing;
 
   useEventListener(player, 'timeUpdate', ({ currentTime }) => {
     // A source-less player can still tick with 0s; the timer owns the clock then.
@@ -70,7 +77,16 @@ export function useCoachPlayback(active: boolean) {
     progress: Math.min(1, clock.elapsed / clock.duration),
     paused,
     muted,
+    scrubbing,
     togglePlay: () => setPaused((p) => !p),
     toggleMute: () => setMutedState((m) => !m),
+    /** Jumps to `fraction` (0–1) of the video; playback holds until `endScrub`. */
+    scrub: (fraction: number) => {
+      setScrubbing(true);
+      const elapsed = Math.min(Math.max(fraction, 0), MAX_SCRUB) * clock.duration;
+      if (hasVideo) seekTo(player, elapsed);
+      setClock((c) => ({ ...c, elapsed }));
+    },
+    endScrub: () => setScrubbing(false),
   };
 }

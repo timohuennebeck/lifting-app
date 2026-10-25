@@ -27,7 +27,7 @@ export function ThankYouScreen() {
       footer={<Button label={t('welcome.cta')} onPress={flow.exit} />}
     >
       <Stack.Screen options={{ gestureEnabled: false }} />
-      <View className="mx-4 mt-3 h-120 shrink">
+      <View className="mx-4 mt-3 flex-1">
         <CoachVideo active={focused} />
       </View>
       <View className="flex-row items-center gap-2.5 px-5 pt-5.5">
