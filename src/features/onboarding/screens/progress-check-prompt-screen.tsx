@@ -55,7 +55,7 @@ export function ProgressCheckPromptScreen() {
     >
       <View className="mx-4 mt-5 mb-3 flex-1 overflow-hidden rounded-[22px] bg-surface">
         <Image source={PHOTO} contentFit="cover" style={StyleSheet.absoluteFill} />
-        <View className="absolute inset-x-3.5 bottom-3.5 flex-row flex-wrap justify-center gap-2">
+        <View className="absolute inset-x-3.5 bottom-3.5 flex-row flex-wrap gap-2">
           {TIPS.map((tip) => (
             <CheckChip key={tip} label={t(`progressCheck.${tip}`)} />
           ))}
