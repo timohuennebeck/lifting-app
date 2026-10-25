@@ -1,7 +1,8 @@
 import { View } from 'react-native';
+import Svg, { Rect } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
-import { Text } from '@/shared/ui/text';
+import { colors } from '@/shared/lib/theme';
 
 export interface TeamAvatarProps {
   size?: number;
@@ -9,10 +10,12 @@ export interface TeamAvatarProps {
   highlight?: boolean;
 }
 
-/** The Loqqa team's "L" badge used in the chat and ticket rows. */
+/** The Loqqa team's badge used in the chat and ticket rows: the logo's mark in a circle. */
 export function TeamAvatar({ size = 28, highlight = true }: TeamAvatarProps) {
-  // 22 → 12pt, 28 → 13pt, 40 → 15pt as in the design.
-  const fontSize = Math.round(9 + size * 0.15);
+  // The mark's two blocks from assets/brand/loqqa-app-icon.svg (its 300-unit grid), half as tall
+  // as the circle.
+  const height = size * 0.5;
+  const fill = highlight ? colors.onAccent : colors.muted;
   return (
     <View
       className={cn(
@@ -21,13 +24,10 @@ export function TeamAvatar({ size = 28, highlight = true }: TeamAvatarProps) {
       )}
       style={{ width: size, height: size }}
     >
-      <Text
-        variant="label"
-        tone={highlight ? 'onAccent' : 'muted'}
-        style={{ fontSize, lineHeight: fontSize + 4 }}
-      >
-        L
-      </Text>
+      <Svg width={(height * 138) / 196} height={height} viewBox="84 52 138 196">
+        <Rect x={84} y={52} width={72} height={126} fill={fill} />
+        <Rect x={84} y={192} width={138} height={56} fill={fill} />
+      </Svg>
     </View>
   );
 }

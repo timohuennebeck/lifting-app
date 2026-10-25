@@ -8,7 +8,7 @@
     "scheme": "loqqa",
     "userInterfaceStyle": "dark",
     "ios": {
-      "icon": "./assets/expo.icon",
+      "icon": "./assets/images/icon.png",
       "bundleIdentifier": "app.loqqa.mobile",
       "supportsTablet": false,
       "infoPlist": {
@@ -38,7 +38,7 @@
         {
           "backgroundColor": "#0A0A0A",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 64
         }
       ],
       [
