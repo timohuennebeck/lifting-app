@@ -13,9 +13,12 @@ import { TextButton } from '@/shared/ui/text-button';
 import { START_STEPS } from '../lib/flow';
 import { useOnboardingStore } from '../stores/onboarding-store';
 
-const TIPS = ['light', 'clothes', 'framing', 'privacy'] as const;
-/** Placeholder until the design's gym photo is in. */
-const PHOTO = require('@/assets/images/demo-person.jpg');
+const TIPS = ['light', 'clothes', 'framing'] as const;
+/**
+ * The person in the upper 60 % of a wide wall-and-floor backdrop: the card crops only the
+ * sides, so the whole body stays in view and the tips sit on the floor below the feet.
+ */
+const PHOTO = require('@/assets/images/progress-check.jpg');
 
 /** Ends onboarding; the root guard then swaps to the app. */
 function finish(openProgressCheck: boolean) {
@@ -27,7 +30,7 @@ function finish(openProgressCheck: boolean) {
 
 /**
  * 08·0A: the progress check offer as the onboarding's last step, with the tips as pills over a
- * photo card. The card shrinks on short screens, so the buttons always stay in view.
+ * full-width photo card. The card shrinks on short screens, so the buttons always stay in view.
  */
 export function ProgressCheckPromptScreen() {
   const { t } = useTranslation(['onboarding', 'progressCheck']);
@@ -50,9 +53,9 @@ export function ProgressCheckPromptScreen() {
         </View>
       }
     >
-      <View className="mx-4 mt-5 max-h-83 flex-1 overflow-hidden rounded-[22px] bg-surface">
+      <View className="mx-4 mt-5 mb-3 flex-1 overflow-hidden rounded-[22px] bg-surface">
         <Image source={PHOTO} contentFit="cover" style={StyleSheet.absoluteFill} />
-        <View className="absolute inset-x-3.5 bottom-3.5 flex-row flex-wrap gap-2">
+        <View className="absolute inset-x-3.5 bottom-3.5 flex-row flex-wrap justify-center gap-2">
           {TIPS.map((tip) => (
             <CheckChip key={tip} label={t(`progressCheck.${tip}`)} />
           ))}
