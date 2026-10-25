@@ -45,8 +45,15 @@ export function MeasureValue({ value, amount, unit }: MeasureValueProps) {
 
   return (
     <View className="flex-row items-baseline gap-2">
-      <Animated.View style={style}>
-        <Text variant="display" className="tabular-nums" accessibilityLiveRegion="polite">
+      {/* One line: a value wider than the space (5′10″ next to the ruler) shrinks a little. */}
+      <Animated.View style={style} className="shrink">
+        <Text
+          variant="display"
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          className="tabular-nums"
+          accessibilityLiveRegion="polite"
+        >
           {value}
         </Text>
       </Animated.View>
