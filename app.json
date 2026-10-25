@@ -67,7 +67,14 @@
       ],
       "expo-document-picker",
       "expo-video",
-      "expo-apple-authentication"
+      "expo-apple-authentication",
+      [
+        "expo-widgets",
+        {
+          "bundleIdentifier": "app.loqqa.mobile.widgets",
+          "groupIdentifier": "group.app.loqqa.mobile"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
