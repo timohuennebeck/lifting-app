@@ -67,11 +67,26 @@
       "Applying sets and reps …"
     ],
     "errors": {
-      "failed": "We couldn't read this plan. Please try again.",
-      "offline": "No connection. Check your internet and try again.",
-      "limit": "No more imports today. Try again tomorrow or create a plan instead.",
-      "notAPlan": "This doesn't look like a training plan. Try another photo or file.",
-      "tooLarge": "This file is too large. Please use a smaller one (up to 15 MB)."
+      "failed": {
+        "title": "Couldn't read the plan",
+        "message": "Please try again. A sharper photo or a different file can help."
+      },
+      "offline": {
+        "title": "No connection",
+        "message": "Reading your plan needs the internet. Check your connection and try again."
+      },
+      "limit": {
+        "title": "Daily limit reached",
+        "message": "You can import again tomorrow. Until then, you can build your plan yourself."
+      },
+      "notAPlan": {
+        "title": "No training plan found",
+        "message": "Try a different photo or file."
+      },
+      "tooLarge": {
+        "title": "File too large",
+        "message": "Please use a file up to 15 MB."
+      }
     }
   },
   "confirm": {
@@ -90,7 +105,13 @@
     "newExercise": "New · added as your own exercise"
   },
   "errors": {
-    "file": "Couldn't open that file.",
-    "camera": "Couldn't take the photo."
+    "file": {
+      "title": "Couldn't open the file",
+      "message": "Pick it again or choose a different file."
+    },
+    "camera": {
+      "title": "Photo not taken",
+      "message": "Please try again."
+    }
   }
 }

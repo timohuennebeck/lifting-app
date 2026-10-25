@@ -1,6 +1,9 @@
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 
+import { i18n } from '@/shared/i18n';
+import { showError } from '@/shared/stores/error-sheet-store';
+
 import type { ImportFile, ImportPhoto } from './plan-import-service';
 
 const PLAN_FILE_TYPES = [
@@ -29,6 +32,23 @@ export async function pickPlanFile(): Promise<ImportFile | null> {
     size: asset.size ?? null,
     mimeType: asset.mimeType ?? null,
   };
+}
+
+/**
+ * pickPlanFile for a button: a picked file goes to `onPicked`. A file that can't be opened shows
+ * the error sheet, whose "Try again" opens the picker again.
+ */
+export async function choosePlanFile(onPicked: (file: ImportFile) => void) {
+  try {
+    const file = await pickPlanFile();
+    if (file) onPicked(file);
+  } catch {
+    showError({
+      title: i18n.t('planImport:errors.file.title'),
+      message: i18n.t('planImport:errors.file.message'),
+      onRetry: () => void choosePlanFile(onPicked),
+    });
+  }
 }
 
 /** Lets the user pick up to `limit` (at least 1) photos of their plan from the library. */

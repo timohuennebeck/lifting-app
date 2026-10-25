@@ -122,9 +122,18 @@
   "generate": {
     "making": "A criar o plano …",
     "errors": {
-      "failed": "Não conseguimos criar o teu plano. Tenta novamente.",
-      "offline": "Sem ligação. Verifica a tua internet e tenta novamente.",
-      "limit": "Hoje já não é possível criar mais planos. Tenta amanhã ou importa o teu plano."
+      "failed": {
+        "title": "Não conseguimos criar o teu plano",
+        "message": "Tenta novamente."
+      },
+      "offline": {
+        "title": "Sem ligação",
+        "message": "Para criar o teu plano precisas de internet. Verifica a ligação e tenta novamente."
+      },
+      "limit": {
+        "title": "Limite diário atingido",
+        "message": "Amanhã já podes criar planos de novo. Até lá, podes importar o teu plano."
+      }
     }
   },
   "planName": {

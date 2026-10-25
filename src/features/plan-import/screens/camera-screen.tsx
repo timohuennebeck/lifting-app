@@ -3,7 +3,7 @@ import { Image } from 'expo-image';
 import { router, Stack, useIsFocused, useLocalSearchParams } from 'expo-router';
 import { type RefObject, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
@@ -11,6 +11,7 @@ import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { wait } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
+import { showError } from '@/shared/stores/error-sheet-store';
 import { Button } from '@/shared/ui/button';
 import { CameraPermission } from '@/shared/ui/camera/camera-permission';
 import { useCameraScreenPermission } from '@/shared/ui/camera/use-camera-screen-permission';
@@ -151,6 +152,12 @@ export function CameraScreen() {
     if (ready.length && !closed.current) addPhotos(ready);
   }
 
+  const photoFailed = () =>
+    showError({
+      title: t('planImport:errors.camera.title'),
+      message: t('planImport:errors.camera.message'),
+    });
+
   async function shoot() {
     if (busy || full || !camera.current) return;
     haptics.heavy();
@@ -162,7 +169,7 @@ export function CameraScreen() {
         const photo = await capture(camera, line, running, closed);
         if (!closed.current) replace(photo);
       } catch {
-        if (!closed.current) Alert.alert(t('planImport:errors.camera'));
+        if (!closed.current) photoFailed();
       }
       setBusy(false);
       return;
@@ -173,7 +180,7 @@ export function CameraScreen() {
       settle(seq, [await capture(camera, line, running, closed)]);
     } catch {
       settle(seq, []);
-      if (!closed.current) Alert.alert(t('planImport:errors.camera'));
+      if (!closed.current) photoFailed();
     }
     setPending((n) => n - 1);
   }

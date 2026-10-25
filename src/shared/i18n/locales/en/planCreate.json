@@ -122,9 +122,18 @@
   "generate": {
     "making": "Creating your plan …",
     "errors": {
-      "failed": "We couldn't create your plan. Please try again.",
-      "offline": "No connection. Check your internet and try again.",
-      "limit": "No more plans can be created today. Try again tomorrow or import your plan."
+      "failed": {
+        "title": "Couldn't create your plan",
+        "message": "Please try again."
+      },
+      "offline": {
+        "title": "No connection",
+        "message": "Creating your plan needs the internet. Check your connection and try again."
+      },
+      "limit": {
+        "title": "Daily limit reached",
+        "message": "You can create plans again tomorrow. Until then, you can import your plan."
+      }
     }
   },
   "planName": {

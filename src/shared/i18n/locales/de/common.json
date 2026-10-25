@@ -13,7 +13,9 @@
     "togglePassword": "Passwort anzeigen oder verbergen",
     "close": "Schließen",
     "retry": "Erneut versuchen",
-    "notNow": "Nicht jetzt"
+    "notNow": "Nicht jetzt",
+    "gotIt": "Verstanden",
+    "openSettings": "Einstellungen öffnen"
   },
   "progress": {
     "stepOf": "{{current}} von {{total}}"

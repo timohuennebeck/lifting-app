@@ -22,6 +22,7 @@ import { legalUpdateWasPending } from '@/features/legal/data/legal-acceptances';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import { CatalogOffline } from '@/shared/components/catalog-offline';
 import { CustomExerciseGate } from '@/shared/components/custom-exercise-gate';
+import { ErrorSheetHost } from '@/shared/components/error-sheet-host';
 import { useCustomExerciseStore } from '@/shared/data/exercises';
 import { db } from '@/shared/data/powersync/database';
 import { queryClient } from '@/shared/data/query-client';
@@ -117,6 +118,7 @@ export default function RootLayout() {
               {catalog.failed ? (
                 <CatalogOffline retrying={catalog.retrying} onRetry={catalog.retry} />
               ) : null}
+              <ErrorSheetHost />
             </ThemeProvider>
           </QueryClientProvider>
         </PowerSyncContext.Provider>

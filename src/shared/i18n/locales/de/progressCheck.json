@@ -37,7 +37,10 @@
     "flip": "Kamera wechseln",
     "shutter": "Foto aufnehmen",
     "cancelTimer": "Selbstauslöser abbrechen",
-    "error": "Das Foto konnte nicht gespeichert werden. Bitte versuch es noch einmal.",
+    "error": {
+      "title": "Foto nicht gespeichert",
+      "message": "Bitte versuche es noch einmal."
+    },
     "access": "Für deine Körpercheck-Fotos. Sie bleiben privat.",
     "tapToCancel": "Tippen, um abzubrechen",
     "turn": {
@@ -46,7 +49,11 @@
       "side": "Dreh dich zur Seite",
       "back": "Dreh dich mit dem Rücken zur Kamera"
     },
-    "consent": "Mit „{{done}}“ willigst du ein, dass deine Fotos und Körperdaten zur Auswertung an OpenAI (USA) übermittelt werden."
+    "consent": "Mit „{{done}}“ willigst du ein, dass deine Fotos und Körperdaten zur Auswertung an OpenAI (USA) übermittelt werden.",
+    "unavailable": {
+      "title": "Kamera startet nicht",
+      "message": "Schließe den Körpercheck und öffne ihn erneut. Wenn es weiter nicht klappt, starte die App neu."
+    }
   },
   "discard": {
     "title": "Körpercheck verwerfen?",
@@ -78,12 +85,30 @@
     "keepOpen": "Bitte App geöffnet lassen",
     "cta": "Ergebnis ansehen",
     "errors": {
-      "offline": "Für die Analyse brauchst du eine Internetverbindung. Deine Fotos bleiben erhalten.",
-      "limit": "Du hast heute schon mehrere Analysen gestartet. Versuch es morgen wieder.",
-      "notAdult": "Der Körpercheck ist erst ab 18 Jahren verfügbar.",
-      "notPro": "Für die Analyse brauchst du Loqqa Pro.",
-      "refused": "Diese Fotos können wir nicht auswerten. Bitte nimm sie in Sportkleidung oder Unterwäsche neu auf.",
-      "failed": "Die Analyse hat nicht geklappt. Bitte versuch es noch einmal."
+      "offline": {
+        "title": "Keine Verbindung",
+        "message": "Für die Analyse brauchst du Internet. Deine Fotos bleiben erhalten."
+      },
+      "limit": {
+        "title": "Tageslimit erreicht",
+        "message": "Du hast heute schon mehrere Analysen gestartet. Morgen geht es weiter."
+      },
+      "notAdult": {
+        "title": "Erst ab 18",
+        "message": "Der Körpercheck ist erst ab 18 Jahren verfügbar."
+      },
+      "notPro": {
+        "title": "Loqqa Pro benötigt",
+        "message": "Die Analyse ist Teil von Loqqa Pro."
+      },
+      "refused": {
+        "title": "Fotos nicht auswertbar",
+        "message": "Bitte nimm sie in Sportkleidung oder Unterwäsche neu auf."
+      },
+      "failed": {
+        "title": "Analyse hat nicht geklappt",
+        "message": "Deine Fotos bleiben erhalten. Bitte versuche es noch einmal."
+      }
     },
     "row": {
       "done": "Erfasst",
@@ -136,6 +161,10 @@
     "delete": "Check löschen",
     "deleteHint": "Die Fotos und Werte dieses Checks werden endgültig gelöscht.",
     "shareMessage": "Mein Körperwert in Loqqa: {{score}}/100",
-    "notFound": "Dieser Körpercheck ist nicht mehr vorhanden."
+    "notFound": "Dieser Körpercheck ist nicht mehr vorhanden.",
+    "saveFailed": {
+      "title": "Körpercheck nicht gespeichert",
+      "message": "Deine Fotos und das Ergebnis sind noch da. Bitte versuche es noch einmal."
+    }
   }
 }

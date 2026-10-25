@@ -5,6 +5,7 @@ import { Alert } from 'react-native';
 
 import { track } from '@/shared/lib/posthog';
 import { haptics } from '@/shared/lib/haptics';
+import { showError } from '@/shared/stores/error-sheet-store';
 
 import { paywallKeys } from '../data/paywall-keys';
 import {
@@ -15,14 +16,17 @@ import {
 } from '../lib/purchases-service';
 import { useSubscriptionStore } from '../stores/subscription-store';
 
-/** Buys a plan through the purchases service and mirrors the result into the store. */
-export function usePurchase() {
-  const { t } = useTranslation();
+/**
+ * Buys a plan through the purchases service and mirrors the result into the store. `onBought`
+ * runs once it went through, also after "Try again" in the error sheet.
+ */
+export function usePurchase(onBought: () => void) {
+  const { t } = useTranslation('paywall');
   const queryClient = useQueryClient();
   const [busy, setBusy] = useState(false);
 
   const buy = async (planId: PlanId) => {
-    if (busy) return false;
+    if (busy) return;
     setBusy(true);
     let bought = false;
     try {
@@ -43,25 +47,31 @@ export function usePurchase() {
       if (!cancelled) {
         console.warn('Purchase failed', error);
         haptics.error();
-        Alert.alert(t('errors.generic'));
+        showError({
+          title: t('errors.purchase.title'),
+          message: t('errors.purchase.message'),
+          onRetry: () => void buy(planId),
+        });
       }
     }
     setBusy(false);
-    return bought;
+    if (bought) onBought();
   };
 
   return { buy, busy };
 }
 
-/** "Restore purchases": resolves true when Loqqa Pro is active again; alerts either way. */
-export function useRestorePurchases() {
+/**
+ * "Restore purchases": `onRestored` runs when Loqqa Pro is active again. The outcome shows in an
+ * alert, a failure in the error sheet.
+ */
+export function useRestorePurchases(onRestored: () => void) {
   const { t } = useTranslation('paywall');
-  const { t: tc } = useTranslation();
   const queryClient = useQueryClient();
   const [restoring, setRestoring] = useState(false);
 
   const restore = async () => {
-    if (restoring) return false;
+    if (restoring) return;
     setRestoring(true);
     let restored = false;
     try {
@@ -77,11 +87,15 @@ export function useRestorePurchases() {
         Alert.alert(t('restoreResult.emptyTitle'), t('restoreResult.emptyBody'));
       } else {
         haptics.error();
-        Alert.alert(tc('errors.generic'));
+        showError({
+          title: t('errors.restore.title'),
+          message: t('errors.restore.message'),
+          onRetry: () => void restore(),
+        });
       }
     }
     setRestoring(false);
-    return restored;
+    if (restored) onRestored();
   };
 
   return { restore, restoring };

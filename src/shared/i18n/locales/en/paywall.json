@@ -87,5 +87,15 @@
     "manage": "Manage subscription",
     "planMonthly": "Pro · monthly",
     "planYearly": "Pro · yearly"
+  },
+  "errors": {
+    "purchase": {
+      "title": "Purchase didn't go through",
+      "message": "Please try again. If the problem persists, restart the app."
+    },
+    "restore": {
+      "title": "Couldn't restore purchases",
+      "message": "Check your connection and try again."
+    }
   }
 }

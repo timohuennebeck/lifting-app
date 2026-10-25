@@ -1,13 +1,14 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, ScrollView, Share, useWindowDimensions, View } from 'react-native';
+import { ScrollView, Share, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useProfile } from '@/shared/data/profile';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { formatDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
+import { showError } from '@/shared/stores/error-sheet-store';
 import { useUserId } from '@/shared/stores/session-store';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
@@ -113,7 +114,7 @@ export function ResultScreen() {
     }
   }
 
-  async function save() {
+  const save = async () => {
     if (!draft || !userId || !hasAllShots(shots) || saving) return;
     setSaving(true);
     try {
@@ -123,10 +124,14 @@ export function ResultScreen() {
     } catch (error) {
       console.warn('Saving the progress check failed', error);
       haptics.error();
-      Alert.alert(t('common:errors.generic'));
+      showError({
+        title: t('result.saveFailed.title'),
+        message: t('result.saveFailed.message'),
+        onRetry: () => void save(),
+      });
     }
     setSaving(false);
-  }
+  };
 
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>

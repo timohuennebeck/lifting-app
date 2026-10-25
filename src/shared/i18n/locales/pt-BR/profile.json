@@ -53,7 +53,10 @@
       "option": "Excluir conta permanentemente",
       "body": "Todos os seus dados serão excluídos.",
       "subscription": "Isso não encerra uma assinatura ativa. Cancele-a na loja onde você a comprou.",
-      "failed": "Não foi possível excluir sua conta. Verifique sua conexão e tente novamente."
+      "failed": {
+        "title": "Conta não excluída",
+        "message": "Verifique sua conexão e tente novamente."
+      }
     }
   },
   "avatar": {
@@ -61,7 +64,13 @@
     "camera": "Tirar foto",
     "library": "Escolher foto",
     "remove": "Remover foto",
-    "cameraDenied": "Permita o acesso à câmera nos Ajustes para tirar uma foto de perfil.",
-    "failed": "Não foi possível salvar a foto de perfil. Verifique sua conexão e tente novamente."
+    "cameraDenied": {
+      "title": "Sem acesso à câmera",
+      "message": "Permita o acesso à câmera nos Ajustes para tirar uma foto de perfil."
+    },
+    "failed": {
+      "title": "Foto de perfil não salva",
+      "message": "Verifique sua conexão e tente novamente."
+    }
   }
 }

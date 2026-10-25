@@ -53,7 +53,10 @@
       "option": "Delete account permanently",
       "body": "All your data will be deleted.",
       "subscription": "This doesn't end an active subscription. Cancel it in the store you bought it from.",
-      "failed": "Your account couldn't be deleted. Check your connection and try again."
+      "failed": {
+        "title": "Account not deleted",
+        "message": "Check your connection and try again."
+      }
     }
   },
   "avatar": {
@@ -61,7 +64,13 @@
     "camera": "Take photo",
     "library": "Choose photo",
     "remove": "Remove photo",
-    "cameraDenied": "Allow camera access in Settings to take a profile photo.",
-    "failed": "Couldn’t save your profile photo. Check your connection and try again."
+    "cameraDenied": {
+      "title": "No camera access",
+      "message": "Allow camera access in Settings to take a profile photo."
+    },
+    "failed": {
+      "title": "Profile photo not saved",
+      "message": "Check your connection and try again."
+    }
   }
 }

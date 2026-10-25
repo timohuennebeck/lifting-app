@@ -1,7 +1,7 @@
 import { Redirect, router } from 'expo-router';
 import { useEffect, useEffectEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, useWindowDimensions, View } from 'react-native';
+import { useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
@@ -10,6 +10,7 @@ import { useTimedProgress } from '@/shared/hooks/use-timed-progress';
 import { singleFlight } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
+import { showError } from '@/shared/stores/error-sheet-store';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
 import { ScreenHeader } from '@/shared/ui/screen-header';
@@ -81,7 +82,15 @@ export function AssessmentScreen() {
         if (!active) return;
         console.warn('Progress-check assessment failed', error);
         const reason = error instanceof AssessmentError ? error.reason : 'failed';
-        Alert.alert(t(`assessment.errors.${reason}`));
+        // Shown over the camera this goes back to; trying again starts the analysis anew.
+        showError({
+          title: t(`assessment.errors.${reason}.title`),
+          message: t(`assessment.errors.${reason}.message`),
+          onRetry:
+            reason === 'offline' || reason === 'failed'
+              ? () => router.push('/progress-check/assessment')
+              : undefined,
+        });
         router.back();
       })
       // Discarded while the photos were still uploading: remove what arrived after the discard.

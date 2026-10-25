@@ -87,5 +87,15 @@
     "manage": "Abo verwalten",
     "planMonthly": "Pro · monatlich",
     "planYearly": "Pro · jährlich"
+  },
+  "errors": {
+    "purchase": {
+      "title": "Kauf hat nicht geklappt",
+      "message": "Bitte versuche es noch einmal. Wenn das Problem bleibt, starte die App neu."
+    },
+    "restore": {
+      "title": "Wiederherstellen hat nicht geklappt",
+      "message": "Prüfe deine Verbindung und versuche es noch einmal."
+    }
   }
 }
