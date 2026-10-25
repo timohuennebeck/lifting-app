@@ -44,8 +44,8 @@ export function PaywallScreen() {
   }, [placement]);
   const isPro = useIsPro();
   const { offering, plan, priceOf, failed, loading, refetch } = useOffering();
-  const { buy, busy } = usePurchase();
-  const { restore, restoring } = useRestorePurchases();
+  const { buy, busy } = usePurchase(flow.toThankYou);
+  const { restore, restoring } = useRestorePurchases(flow.exit);
   const [selected, setSelected] = useState<PlanId>('yearly');
 
   const price = priceOf(selected);
@@ -57,14 +57,9 @@ export function PaywallScreen() {
   // The yearly plan's price per month, for its small print.
   const perMonth = yearly && offering ? formatPrice(yearly.price / 12, offering.currency) : null;
 
-  const onContinue = async () => {
+  const onContinue = () => {
     if (isPro) return flow.exit();
-    if (!offering) return;
-    if (await buy(selected)) flow.toThankYou();
-  };
-
-  const onRestore = async () => {
-    if (await restore()) flow.exit();
+    if (offering) void buy(selected);
   };
 
   return (
@@ -96,7 +91,7 @@ export function PaywallScreen() {
               disabled={restoring || busy}
               className="px-0"
               textClassName="font-inter-medium text-sm"
-              onPress={onRestore}
+              onPress={() => void restore()}
             />
           }
         />

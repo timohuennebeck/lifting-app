@@ -87,5 +87,15 @@
     "manage": "Gerenciar assinatura",
     "planMonthly": "Pro · mensal",
     "planYearly": "Pro · anual"
+  },
+  "errors": {
+    "purchase": {
+      "title": "A compra não foi concluída",
+      "message": "Tente novamente. Se o problema continuar, reinicie o app."
+    },
+    "restore": {
+      "title": "Não foi possível restaurar as compras",
+      "message": "Verifique sua conexão e tente novamente."
+    }
   }
 }

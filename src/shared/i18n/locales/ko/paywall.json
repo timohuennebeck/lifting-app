@@ -87,5 +87,15 @@
     "manage": "구독 관리",
     "planMonthly": "Pro · 월간",
     "planYearly": "Pro · 연간"
+  },
+  "errors": {
+    "purchase": {
+      "title": "구매가 완료되지 않았어요",
+      "message": "다시 시도해 주세요. 문제가 계속되면 앱을 다시 시작해 주세요."
+    },
+    "restore": {
+      "title": "구매를 복원하지 못했어요",
+      "message": "연결을 확인하고 다시 시도해 주세요."
+    }
   }
 }
