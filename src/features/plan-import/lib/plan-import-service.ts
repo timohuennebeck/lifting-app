@@ -27,7 +27,7 @@ export type ImportSource =
   | { kind: 'photos'; photos: ImportPhoto[] }
   /** `sheets`: of a workbook, the ones to read (picked by the user); all when left out. */
   | { kind: 'file'; file: ImportFile; sheets?: string[] }
-  /** The plan as the user said it (speech recognition's text, maybe corrected by hand). */
+  /** Exercises the user said (speech recognition's text), read as one workout: voice input. */
   | { kind: 'voice'; text: string }
   /** Not read but made: the AI plan from the onboarding answers (generate-plan). */
   | { kind: 'answers'; answers: PlanAnswers };
@@ -42,6 +42,8 @@ export interface ImportedExercise extends ExerciseDraft {
   raw?: string;
   /** Other plausible catalog exercise ids for an uncertain line. */
   alternatives?: string[];
+  /** Added by voice: `raw` is what was heard rather than read. */
+  heard?: boolean;
 }
 
 export interface ImportedRoutine extends RoutineDraft {
@@ -79,7 +81,7 @@ const SERVER_ERRORS: Record<string, ImportFailure> = {
 /** Photos per import; the read-plan function accepts no more. */
 export const MAX_PHOTOS = 10;
 
-/** Characters of a spoken plan; the read-plan function accepts no more. */
+/** Characters of spoken exercises (voice input); the read-plan function accepts no more. */
 export const MAX_SPOKEN = 4000;
 
 /** Steps in the "Import plan" branch, for the step counter. */
@@ -154,7 +156,7 @@ export type PlanEvent =
 
 /**
  * Gets a training plan from the Edge Functions, which stream it: reads it from photos, a file or
- * what the user said (read-plan) or makes it from the onboarding answers (generate-plan).
+ * what the user said (read-plan, one workout) or makes it from the onboarding answers (generate-plan).
  * `onEvent` gets the plan's name, then each routine and exercise as soon as it is there (an
  * exercise belongs to the routine before it). Resolves once the plan is complete. Throws an
  * ImportError with the reason when there is no plan to show, also when the stream breaks off;

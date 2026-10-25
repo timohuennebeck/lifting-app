@@ -1,4 +1,4 @@
-import { MAX_SPOKEN } from './plan-import-service';
+import { MAX_SPOKEN } from '@/features/plan-import/lib/plan-import-service';
 
 /** The text of a voice input while speech recognition adds to it. */
 export interface Transcript {
@@ -18,7 +18,7 @@ const joinWords = (...parts: string[]) =>
     .filter(Boolean)
     .join(' ');
 
-/** The whole text, as much as the plan import takes; typed text stays as typed. */
+/** The whole text, as much as read-plan takes; typed text stays as typed. */
 export function transcriptText(t: Transcript) {
   const heard = !!t.final || !!t.partial;
   return (heard ? joinWords(t.before, t.final, t.partial) : t.before).slice(0, MAX_SPOKEN);

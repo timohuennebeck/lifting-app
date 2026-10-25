@@ -23,7 +23,7 @@ import { ReadingGhost } from '../components/reading-ghost';
 import { ReviewPrompt } from '../components/review-prompt';
 import { RoutineBar } from '../components/routine-bar';
 import { editExerciseAt, editRoutineAt, settle } from '../lib/edit-plan';
-import { originOf, showPlanFailure } from '../lib/plan-failure';
+import { showPlanFailure } from '../lib/plan-failure';
 import {
   type ImportedExercise,
   type ImportedRoutine,
@@ -32,6 +32,10 @@ import {
   toPlanDraft,
 } from '../lib/plan-import-service';
 import { useImportStore } from '../stores/import-store';
+
+/** What an unsure exercise says it was taken from: read, or heard by voice input. */
+const reviewLabel = (e: ImportedExercise) =>
+  e.heard ? ('planImport:confirm.heardAs' as const) : ('planImport:confirm.readAs' as const);
 
 /**
  * 06c: the detected plan in the training overview layout (03·0b). Its routines sit in the plan
@@ -58,11 +62,6 @@ export function ConfirmScreen() {
   // Made from the answers, not read: it goes on to its name, and is made again on a retry.
   const answers = useImportStore((s) => (s.source?.kind === 'answers' ? s.source.answers : null));
   const made = !!answers;
-  const origin = useImportStore((s) => originOf(s.source));
-  // Said out loud: it is made from the user's words rather than read.
-  const spoken = origin === 'spoken';
-  const creating = made || spoken;
-  const readAs = spoken ? 'planImport:voice.heardAs' : 'planImport:confirm.readAs';
   const scroller = useAnimatedRef<Animated.ScrollView>();
   // The run this screen shows; leaving the screen stops it.
   const [run] = useState(() => useImportStore.getState().run);
@@ -90,11 +89,11 @@ export function ConfirmScreen() {
     const again = made ? step('/create/building') : step('/import/reading');
     showPlanFailure(
       failure.reason,
-      origin,
+      made,
       () => router.replace(again),
       () => router.back(),
     );
-  }, [failure, run, focused, made, origin, step]);
+  }, [failure, run, focused, made, step]);
 
   if (!plan) return <Redirect href={step('/import')} />;
 
@@ -210,6 +209,8 @@ export function ConfirmScreen() {
               emptyHint={t('planImport:confirm.empty')}
               scrollRef={scroller}
               onAdd={() => openPicker({ mode: 'add' })}
+              // Not while the plan is still read into the routines.
+              onVoice={reading ? undefined : () => router.push(step('/import/voice'))}
               onOpen={(i) =>
                 router.push({ pathname: '/exercise/[id]', params: { id: exercises[i].exerciseId } })
               }
@@ -228,7 +229,7 @@ export function ConfirmScreen() {
                   ) : null}
                   {e.raw ? (
                     <ReviewPrompt
-                      message={t(readAs, { raw: e.raw })}
+                      message={t(reviewLabel(e), { raw: e.raw })}
                       alternatives={e.alternatives}
                       onConfirm={() => editExercise(i, settle)}
                       onPickAlternative={(exerciseId) =>
@@ -251,7 +252,7 @@ export function ConfirmScreen() {
         <Button
           label={
             reading
-              ? creating
+              ? made
                 ? t('planCreate:generate.making')
                 : t('planImport:confirm.reading')
               : pending

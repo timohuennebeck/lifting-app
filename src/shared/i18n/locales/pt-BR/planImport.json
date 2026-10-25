@@ -10,10 +10,6 @@
       "title": "Enviar um arquivo",
       "description": "PDF, Excel, CSV ou print"
     },
-    "voice": {
-      "title": "Ditar o plano",
-      "description": "Exercícios, séries e repetições em voz alta"
-    },
     "noPlan": "Está sem o plano em mãos?",
     "createOwn": "Criar eu mesmo",
     "ownPlan": "Meu plano"
@@ -63,51 +59,6 @@
     "addPage": "Adicionar página",
     "remove": "Remover página {{count}}"
   },
-  "voice": {
-    "title": "Entrada por voz",
-    "format": "Exercício · séries × repetições",
-    "example": "“Agachamento hack, três séries de quinze”",
-    "days": "Vários treinos? Diga o dia antes, por exemplo “segunda push”.",
-    "tap": "Toque para falar",
-    "listening": "Ouvindo …",
-    "more": "Toque para continuar falando",
-    "missed": "Não ouvimos nada. Toque para tentar de novo",
-    "cta": "Criar plano",
-    "heardAs": "Ouvido como “{{raw}}”",
-    "dayChip": "Segunda · Push",
-    "stages": [
-      "Detectando os dias de treino …",
-      "Identificando exercícios …",
-      "Aplicando séries e repetições …"
-    ],
-    "a11y": {
-      "start": "Começar a falar",
-      "stop": "Parar de ouvir",
-      "text": "Seu plano em texto"
-    },
-    "errors": {
-      "failed": {
-        "title": "Não conseguimos criar o plano",
-        "message": "Tente novamente. Ajuda dizer cada exercício com as séries e repetições."
-      },
-      "notAPlan": {
-        "title": "Nenhum exercício ouvido",
-        "message": "Diga cada exercício com as séries e repetições, por exemplo “supino reto, três séries de dez”."
-      },
-      "access": {
-        "title": "Microfone necessário",
-        "message": "Para ditar seu plano, o Loqqa precisa do microfone e do reconhecimento de fala. Você também pode digitá-lo."
-      },
-      "unavailable": {
-        "title": "Entrada por voz indisponível",
-        "message": "Seu celular não consegue transformar fala em texto agora. Você pode digitar seu plano."
-      },
-      "offline": {
-        "title": "Sem conexão",
-        "message": "O reconhecimento de fala precisa de internet. Verifique sua conexão e tente novamente, ou digite seu plano."
-      }
-    }
-  },
   "reading": {
     "stages": [
       "Lendo a letra …",
@@ -141,6 +92,7 @@
   "confirm": {
     "planName": "Nome do plano",
     "readAs": "Lido como “{{raw}}”",
+    "heardAs": "Ouvido como “{{raw}}”",
     "correct": "Está certo",
     "add": "Adicionar exercício",
     "swap": "Trocar exercício",
@@ -148,7 +100,7 @@
     "reading": "Lendo o plano …",
     "check_one": "Revisar {{count}} item",
     "check_other": "Revisar {{count}} itens",
-    "empty": "Ainda sem exercícios. Adicione um com +.",
+    "empty": "Ainda sem exercícios. Adicione com + ou com o microfone.",
     "newRoutine": "Treino {{number}}",
     "renamePlan": "Renomear plano",
     "newExercise": "Novo · criado como exercício personalizado"

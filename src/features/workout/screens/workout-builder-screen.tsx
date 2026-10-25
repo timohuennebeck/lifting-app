@@ -80,6 +80,7 @@ export function WorkoutBuilderScreen() {
           emptyHint={t('training:overview.emptyHint')}
           scrollRef={scrollRef}
           onAdd={() => openPicker({ mode: 'add' })}
+          onVoice={() => router.push('/workout/new/voice')}
           onOpen={openSets}
           onEditSets={openSets}
           onSwap={(i) => openPicker({ mode: 'swap', index: String(i) })}

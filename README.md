@@ -159,21 +159,14 @@ the standard API at `api.openai.com`) and returns the check's values, or the pho
 
 ## Plan import
 
-Users can import their plan from photos or a file (PDF, Excel, CSV, text), or say it out loud,
-instead of having one made: in onboarding, and in the app from "+" or Training (the same screens,
-routed under `src/app/(onboarding)/import/` and `src/app/(app)/plan/import/`). The app shrinks
-photos to JPEGs and calls the `read-plan` Edge Function, which sends them to OpenAI together with
-the exercise catalog and returns the plan in the app's shape: each line matched to a catalog
-exercise, or a new exercise the app creates for the user with the plan. Lines it isn't sure about
-come with alternatives for the user to review.
+Users can import their plan from photos or a file (PDF, Excel, CSV, text) instead of having one
+made: in onboarding, and in the app from "+" or Training (the same screens, routed under
+`src/app/(onboarding)/import/` and `src/app/(app)/plan/import/`). The app shrinks photos to JPEGs
+and calls the `read-plan` Edge Function, which sends them to OpenAI together with the exercise
+catalog and returns the plan in the app's shape: each line matched to a catalog exercise, or a new
+exercise the app creates for the user with the plan. Lines it isn't sure about come with
+alternatives for the user to review.
 
-- **Voice input:** "Plan einsprechen" turns speech into text on the phone with
-  `expo-speech-recognition` (Apple's or Google's recognition, in the app language), shown as it is
-  heard and editable by hand. Each tap on the microphone adds to the text. `read-plan` gets it as
-  `text` (at most 4,000 characters) and reads it with extra rules for spoken plans
-  (`SPOKEN_INSTRUCTIONS`: numbers as words, misheard exercise names, a day starting each workout);
-  it counts toward the same limits. The microphone and speech recognition permissions are asked on
-  the first tap. Needs a new development build.
 - **Streaming:** the function passes each exercise on as soon as the model has written it, as
   server-sent events (`PlanEvent` in `supabase/functions/_shared/plan-events.ts`); the app reads
   them with `expo/fetch`. The
@@ -191,8 +184,28 @@ come with alternatives for the user to review.
   (typed, spreadsheet, handwritten, whiteboard, screenshot, spoken; German, English, Portuguese)
   to the function and scores what it read against `cases.json`, with the time to the first exercise and
   to the whole plan. `npm run plan:eval -- --dir <folder>` reads your own photos and files and
-  prints what it found. One run is 17 imports, so set `PLAN_IMPORT_IP_LIMIT=1000` in
-  `supabase/functions/.env` locally first.
+  prints what it found. One run is 15 imports (the 2 spoken cases count as voice input), so set
+  `PLAN_IMPORT_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
+
+## Voice input
+
+Wherever exercises are edited (a plan in the plan flow, including "Selbst erstellen", a routine,
+the workout builder), a microphone next to "+" opens the voice input (`src/features/voice-input/`):
+the user names exercises with sets and reps, e.g. „Hack Squat drei mal fünfzehn", and they are
+added to the workout shown.
+
+- **Speech to text** runs on the phone with `expo-speech-recognition` (Apple's or Google's
+  recognition, in the app language). The text shows as it is heard and can be corrected by hand;
+  each tap on the microphone adds to it. The microphone and speech recognition permissions are
+  asked on the first tap. Needs a development build with the module.
+- **Matching:** `read-plan` gets the text as `text` (at most 4,000 characters) and reads it as one
+  workout, with extra rules for speech (`SPOKEN_INSTRUCTIONS`: numbers as words, misheard exercise
+  names, corrections). Exercises the catalog lacks are created for the user; in a plan still being
+  set up they wait for the plan like an import's. Unsure matches show "Gehört als …" in the plan
+  review.
+- **Rules (server-side):** limited on their own (`plan_requests` kind `voice`):
+  `PLAN_VOICE_IP_LIMIT` (default 60) per network and `PLAN_VOICE_DAILY_LIMIT` (default 5,000) in
+  total per 24 hours.
 
 ## Plans, routines and workout entries
 

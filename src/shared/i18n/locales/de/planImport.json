@@ -10,10 +10,6 @@
       "title": "Datei hochladen",
       "description": "PDF, Excel, CSV oder Screenshot"
     },
-    "voice": {
-      "title": "Plan einsprechen",
-      "description": "Übungen, Sätze und Wiederholungen ansagen"
-    },
     "noPlan": "Kein Plan zur Hand?",
     "createOwn": "Selbst erstellen",
     "ownPlan": "Mein Plan"
@@ -63,51 +59,6 @@
     "addPage": "Seite hinzufügen",
     "remove": "Seite {{count}} entfernen"
   },
-  "voice": {
-    "title": "Spracheingabe",
-    "format": "Übungen · Sätze × Wiederholungen",
-    "example": "„Hack Squat drei mal fünfzehn“",
-    "days": "Mehrere Trainings? Sag den Tag davor, z. B. „Montag Push“.",
-    "tap": "Tippen zum Sprechen",
-    "listening": "Ich höre zu …",
-    "more": "Tippen zum Weitersprechen",
-    "missed": "Nichts gehört. Tippe, um es noch mal zu versuchen",
-    "cta": "Plan erstellen",
-    "heardAs": "Gehört als „{{raw}}“",
-    "dayChip": "Montag · Push",
-    "stages": [
-      "Erkenne Trainingstage …",
-      "Ordne Übungen zu …",
-      "Übernehme Sätze und Wiederholungen …"
-    ],
-    "a11y": {
-      "start": "Spracheingabe starten",
-      "stop": "Zuhören beenden",
-      "text": "Dein Plan als Text"
-    },
-    "errors": {
-      "failed": {
-        "title": "Plan konnte nicht erstellt werden",
-        "message": "Bitte versuche es noch einmal. Nenne am besten jede Übung mit Sätzen und Wiederholungen."
-      },
-      "notAPlan": {
-        "title": "Keine Übungen erkannt",
-        "message": "Nenne jede Übung mit Sätzen und Wiederholungen, z. B. „Bankdrücken drei mal zehn“."
-      },
-      "access": {
-        "title": "Mikrofon erlauben",
-        "message": "Um deinen Plan einzusprechen, braucht Loqqa das Mikrofon und die Spracherkennung. Du kannst ihn auch eintippen."
-      },
-      "unavailable": {
-        "title": "Spracheingabe nicht verfügbar",
-        "message": "Dein Handy kann gerade keine Sprache in Text umwandeln. Du kannst deinen Plan auch eintippen."
-      },
-      "offline": {
-        "title": "Keine Verbindung",
-        "message": "Die Spracherkennung braucht Internet. Prüfe deine Verbindung und versuche es noch einmal oder tippe deinen Plan ein."
-      }
-    }
-  },
   "reading": {
     "stages": [
       "Lese Handschrift …",
@@ -141,6 +92,7 @@
   "confirm": {
     "planName": "Planname",
     "readAs": "Gelesen als „{{raw}}“",
+    "heardAs": "Gehört als „{{raw}}“",
     "correct": "Stimmt",
     "add": "Übung hinzufügen",
     "swap": "Übung tauschen",
@@ -148,7 +100,7 @@
     "reading": "Plan wird gelesen …",
     "check_one": "Noch {{count}} Punkt prüfen",
     "check_other": "Noch {{count}} Punkte prüfen",
-    "empty": "Noch keine Übungen. Füg eine mit + hinzu.",
+    "empty": "Noch keine Übungen. Füg welche mit + oder dem Mikrofon hinzu.",
     "newRoutine": "Training {{number}}",
     "renamePlan": "Plan umbenennen",
     "newExercise": "Neu · wird als eigene Übung angelegt"

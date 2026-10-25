@@ -14,11 +14,11 @@ export interface SourceCardProps {
   /** Accent circle for the primary option. */
   primary?: boolean;
   onPress: () => void;
-  /** Illustration in the upper part of the card; without one the card is a single row. */
-  children?: ReactNode;
+  /** Illustration in the upper part of the card. */
+  children: ReactNode;
 }
 
-/** Tappable card on "Import plan" (photo / file / voice). */
+/** Big tappable card on "Import plan" (photo / file). */
 export function SourceCard({
   title,
   description,
@@ -33,9 +33,9 @@ export function SourceCard({
       activeScale={0.985}
       onPress={onPress}
       accessibilityLabel={`${title}. ${description}`}
-      className={cn('overflow-hidden rounded-[28px] bg-surface', children ? 'h-58' : 'pt-4.5')}
+      className="h-58 overflow-hidden rounded-[28px] bg-surface"
     >
-      {children ? <View className="flex-1 items-center pt-6.5">{children}</View> : null}
+      <View className="flex-1 items-center pt-6.5">{children}</View>
       <View className="flex-row items-center gap-3 px-5 pb-4.5">
         <View className="min-w-0 flex-1">
           <Text variant="bodyStrong" className="text-lg">

@@ -110,7 +110,7 @@ async function networkHash(req: Request) {
  */
 export async function takePlanRequest(
   req: Request,
-  kind: 'import' | 'generate',
+  kind: 'import' | 'generate' | 'voice',
   limits: { perNetwork: number; perDay: number },
 ): Promise<{ giveBack: () => PromiseLike<unknown> } | { refused: Response }> {
   const { data: slot, error } = await admin.rpc('start_plan_request', {

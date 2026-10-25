@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import type { PlanAnswers } from '@/features/plan-create/lib/plan-answers';
+import type { SpokenExercises } from '@/features/voice-input/lib/spoken-exercises';
 import { newId } from '@/shared/data/json';
 import { track } from '@/shared/lib/posthog';
 
@@ -19,8 +20,11 @@ import {
 import type { SheetSummary } from '../lib/sheet-summary';
 import { loadSheets } from '../lib/sheets';
 
+/** What a session reads or makes a plan from; voice input adds to a routine instead. */
+type PlanSource = Exclude<ImportSource, { kind: 'voice' }>;
+
 interface ImportState {
-  source: ImportSource | null;
+  source: PlanSource | null;
   /** The file's sheets, offered to pick from once it is to be read (see `loadSheets`). */
   workbook: SheetSummary[] | null;
   /** Detected plan being reviewed on the confirm screen; it fills in while `reading`. */
@@ -38,8 +42,6 @@ interface ImportState {
   /** The confirm screen shows the routine being read until the user picks one. */
   following: boolean;
   setFile: (file: ImportFile) => void;
-  /** The plan is to be read from what the user said. */
-  setSpokenPlan: (text: string) => void;
   /** The plan is to be made from these answers (by the AI), not read. */
   setAnswers: (answers: PlanAnswers) => void;
   offerSheets: (workbook: SheetSummary[]) => void;
@@ -56,6 +58,8 @@ interface ImportState {
   stop: (run: number) => void;
   setPlan: (plan: ImportedPlan) => void;
   editPlan: (edit: (plan: ImportedPlan) => ImportedPlan) => void;
+  /** Adds exercises the user said to the selected routine. */
+  addSpoken: (spoken: SpokenExercises) => void;
   selectRoutine: (index: number) => void;
   /** Stops following the routine being read (the user started on the one shown). */
   holdRoutine: () => void;
@@ -64,7 +68,7 @@ interface ImportState {
 }
 
 const NO_PHOTOS: ImportPhoto[] = [];
-const photosOf = (source: ImportSource | null) =>
+const photosOf = (source: PlanSource | null) =>
   source?.kind === 'photos' ? source.photos : NO_PHOTOS;
 
 const EMPTY = {
@@ -82,7 +86,7 @@ const EMPTY = {
 let running: AbortController | null = null;
 
 /** A plan the AI made or read, for analytics: how long it took and what came out. */
-function trackRead(source: ImportSource, plan: ImportedPlan | null, durationMs: number) {
+function trackRead(source: PlanSource, plan: ImportedPlan | null, durationMs: number) {
   const routines = plan?.routines ?? [];
   if (source.kind === 'answers') {
     track('plan:generate_complete', {
@@ -140,7 +144,6 @@ export const useImportStore = create<ImportState>()((set, get) => ({
     // Read ahead: its sheets are ready by the time the user goes on.
     void loadSheets(file);
   },
-  setSpokenPlan: (text) => set({ source: { kind: 'voice', text }, workbook: null }),
   offerSheets: (workbook) => set({ workbook }),
   setAnswers: (answers) => set({ source: { kind: 'answers', answers }, workbook: null }),
   pickSheets: (sheets) =>
@@ -202,6 +205,25 @@ export const useImportStore = create<ImportState>()((set, get) => ({
     set({ plan, routineIndex: 0, reading: false, failure: null });
   },
   editPlan: (edit) => set((s) => (s.plan ? { plan: edit(s.plan) } : {})),
+  addSpoken: ({ exercises, newExercises }) => {
+    // New exercises are created at sign-up or with the plan, like an import's (see `receive`).
+    const { draft, update } = useOnboardingStore.getState();
+    update({ customExercises: [...draft.customExercises, ...newExercises] });
+    const added = exercises.map((e) => ({ ...e, key: newId(), ...(e.raw ? { heard: true } : {}) }));
+    set((s) =>
+      s.plan
+        ? {
+            plan: {
+              ...s.plan,
+              routines: s.plan.routines.map((r, i) =>
+                i === s.routineIndex ? { ...r, exercises: [...r.exercises, ...added] } : r,
+              ),
+              newExercises: [...s.plan.newExercises, ...newExercises],
+            },
+          }
+        : {},
+    );
+  },
   selectRoutine: (routineIndex) => set({ routineIndex, following: false }),
   holdRoutine: () => get().following && set({ following: false }),
   reset: () => {

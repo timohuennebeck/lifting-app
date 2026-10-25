@@ -10,10 +10,6 @@
       "title": "Carregar um ficheiro",
       "description": "PDF, Excel, CSV ou captura de ecrã"
     },
-    "voice": {
-      "title": "Ditar o plano",
-      "description": "Exercícios, séries e repetições em voz alta"
-    },
     "noPlan": "Não tens o plano à mão?",
     "createOwn": "Criar eu mesmo",
     "ownPlan": "O meu plano"
@@ -63,51 +59,6 @@
     "addPage": "Adicionar página",
     "remove": "Remover página {{count}}"
   },
-  "voice": {
-    "title": "Entrada por voz",
-    "format": "Exercício · séries × repetições",
-    "example": "“Agachamento hack, três séries de quinze”",
-    "days": "Vários treinos? Diz primeiro o dia, por exemplo “segunda push”.",
-    "tap": "Toca para falar",
-    "listening": "A ouvir …",
-    "more": "Toca para continuar a falar",
-    "missed": "Não ouvimos nada. Toca para tentar de novo",
-    "cta": "Criar plano",
-    "heardAs": "Ouvido como “{{raw}}”",
-    "dayChip": "Segunda · Push",
-    "stages": [
-      "A detetar os dias de treino …",
-      "A identificar exercícios …",
-      "A aplicar séries e repetições …"
-    ],
-    "a11y": {
-      "start": "Começar a falar",
-      "stop": "Parar de ouvir",
-      "text": "O teu plano em texto"
-    },
-    "errors": {
-      "failed": {
-        "title": "Não conseguimos criar o plano",
-        "message": "Tenta novamente. Ajuda dizer cada exercício com as séries e repetições."
-      },
-      "notAPlan": {
-        "title": "Nenhum exercício ouvido",
-        "message": "Diz cada exercício com as séries e repetições, por exemplo “supino plano, três séries de dez”."
-      },
-      "access": {
-        "title": "Microfone necessário",
-        "message": "Para ditares o teu plano, o Loqqa precisa do microfone e do reconhecimento de voz. Também o podes escrever."
-      },
-      "unavailable": {
-        "title": "Entrada por voz indisponível",
-        "message": "O teu telemóvel não consegue converter voz em texto neste momento. Podes escrever o teu plano."
-      },
-      "offline": {
-        "title": "Sem ligação",
-        "message": "O reconhecimento de voz precisa de internet. Verifica a ligação e tenta novamente, ou escreve o teu plano."
-      }
-    }
-  },
   "reading": {
     "stages": [
       "A ler a caligrafia …",
@@ -141,6 +92,7 @@
   "confirm": {
     "planName": "Nome do plano",
     "readAs": "Lido como “{{raw}}”",
+    "heardAs": "Ouvido como “{{raw}}”",
     "correct": "Está certo",
     "add": "Adicionar exercício",
     "swap": "Trocar exercício",
@@ -148,7 +100,7 @@
     "reading": "A ler o plano …",
     "check_one": "Rever {{count}} ponto",
     "check_other": "Rever {{count}} pontos",
-    "empty": "Ainda sem exercícios. Adiciona um com +.",
+    "empty": "Ainda sem exercícios. Adiciona-os com + ou com o microfone.",
     "newRoutine": "Treino {{number}}",
     "renamePlan": "Mudar o nome do plano",
     "newExercise": "Novo · criado como exercício próprio"

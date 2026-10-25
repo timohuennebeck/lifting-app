@@ -7,7 +7,7 @@ import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { useTimedProgress } from '@/shared/hooks/use-timed-progress';
 import { haptics } from '@/shared/lib/haptics';
 
-import { originOf, showPlanFailure } from '../lib/plan-failure';
+import { showPlanFailure } from '../lib/plan-failure';
 import { useImportStore } from '../stores/import-store';
 
 /** The animation plays at least this long, even when the first exercise comes sooner. */
@@ -55,8 +55,7 @@ export function usePlanRun(answers?: PlanAnswers) {
     opened.current = true;
     // The sheet stays up over the screen this goes back to; trying again opens this one anew.
     const again = answers ? step('/create/building') : step('/import/reading');
-    const origin = originOf(useImportStore.getState().source);
-    showPlanFailure(failure.reason, origin, () => router.push(again));
+    showPlanFailure(failure.reason, !!answers, () => router.push(again));
     router.back();
   }, [failure, answers, step]);
 

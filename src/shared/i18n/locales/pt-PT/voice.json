@@ -1,0 +1,50 @@
+{
+  "title": "Entrada por voz",
+  "format": "Exercício · séries × repetições",
+  "example": "“Agachamento hack, três séries de quinze”",
+  "tap": "Toca para falar",
+  "listening": "A ouvir …",
+  "more": "Toca para continuar a falar",
+  "missed": "Não ouvimos nada. Toca para tentar de novo",
+  "cta": "Adicionar exercícios",
+  "stages": [
+    "A detetar exercícios …",
+    "A procurar os exercícios certos …",
+    "A aplicar séries e repetições …"
+  ],
+  "a11y": {
+    "start": "Começar a falar",
+    "stop": "Parar de ouvir",
+    "text": "Os teus exercícios em texto"
+  },
+  "errors": {
+    "access": {
+      "title": "Microfone necessário",
+      "message": "Para ditares os teus exercícios, o Loqqa precisa do microfone e do reconhecimento de voz. Também os podes escrever."
+    },
+    "unavailable": {
+      "title": "Entrada por voz indisponível",
+      "message": "O teu telemóvel não consegue converter voz em texto neste momento. Podes escrever os teus exercícios."
+    },
+    "network": {
+      "title": "Sem ligação",
+      "message": "O reconhecimento de voz precisa de internet. Verifica a ligação e tenta novamente, ou escreve os teus exercícios."
+    },
+    "failed": {
+      "title": "Não conseguimos adicionar os exercícios",
+      "message": "Tenta novamente. Ajuda dizer cada exercício com as séries e repetições."
+    },
+    "offline": {
+      "title": "Sem ligação",
+      "message": "Para adicionar exercícios por voz precisas de internet. Verifica a ligação e tenta novamente."
+    },
+    "limit": {
+      "title": "Limite diário atingido",
+      "message": "Amanhã já podes ditar exercícios de novo. Até lá, adiciona-os com +."
+    },
+    "noExercises": {
+      "title": "Nenhum exercício ouvido",
+      "message": "Diz cada exercício com as séries e repetições, por exemplo “supino plano, três séries de dez”."
+    }
+  }
+}

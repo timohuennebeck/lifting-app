@@ -3,10 +3,11 @@
 // and rest. With --dir it reads your own photos and files and prints what it found instead.
 // The fixtures are made up: typed and spreadsheet plans, handwriting, whiteboard and screenshot
 // photos drawn with handwriting fonts, then tilted, shaded and blurred like phone photos, and
-// spoken plans as speech recognition writes them down (sent as the voice input does).
+// exercises said for one workout as speech recognition writes them down (sent as the voice
+// input does; they count toward its own limit).
 //
 // Needs the function with an OpenAI key at EXPO_PUBLIC_SUPABASE_URL from .env: locally
-// `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 17 imports, so
+// `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 15 imports, so
 // set PLAN_IMPORT_IP_LIMIT=1000 there first, then restart Supabase), or the deployed project.
 // Usage: npm run plan:eval                          all fixtures
 //        npm run plan:eval -- 05 09                 only these cases

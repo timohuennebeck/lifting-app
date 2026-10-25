@@ -108,6 +108,7 @@ export function RoutineScreen() {
           emptyHint={t('overview.emptyHint')}
           scrollRef={scrollRef}
           onAdd={() => openPicker({ mode: 'add' })}
+          onVoice={() => router.push({ pathname: '/routine/[id]/voice', params: { id } })}
           onOpen={openSets}
           onEditSets={openSets}
           onSwap={(i) => openPicker({ mode: 'swap', routineExerciseId: exercises[i].id })}

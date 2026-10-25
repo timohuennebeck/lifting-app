@@ -11,6 +11,7 @@ import deProfile from './locales/de/profile.json';
 import deProgressCheck from './locales/de/progressCheck.json';
 import deSupport from './locales/de/support.json';
 import deTraining from './locales/de/training.json';
+import deVoice from './locales/de/voice.json';
 import deWeight from './locales/de/weight.json';
 import deWorkout from './locales/de/workout.json';
 import enAuth from './locales/en/auth.json';
@@ -26,6 +27,7 @@ import enProfile from './locales/en/profile.json';
 import enProgressCheck from './locales/en/progressCheck.json';
 import enSupport from './locales/en/support.json';
 import enTraining from './locales/en/training.json';
+import enVoice from './locales/en/voice.json';
 import enWeight from './locales/en/weight.json';
 import enWorkout from './locales/en/workout.json';
 import koAuth from './locales/ko/auth.json';
@@ -41,6 +43,7 @@ import koProfile from './locales/ko/profile.json';
 import koProgressCheck from './locales/ko/progressCheck.json';
 import koSupport from './locales/ko/support.json';
 import koTraining from './locales/ko/training.json';
+import koVoice from './locales/ko/voice.json';
 import koWeight from './locales/ko/weight.json';
 import koWorkout from './locales/ko/workout.json';
 import ptBRAuth from './locales/pt-BR/auth.json';
@@ -56,6 +59,7 @@ import ptBRProfile from './locales/pt-BR/profile.json';
 import ptBRProgressCheck from './locales/pt-BR/progressCheck.json';
 import ptBRSupport from './locales/pt-BR/support.json';
 import ptBRTraining from './locales/pt-BR/training.json';
+import ptBRVoice from './locales/pt-BR/voice.json';
 import ptBRWeight from './locales/pt-BR/weight.json';
 import ptBRWorkout from './locales/pt-BR/workout.json';
 import ptPTAuth from './locales/pt-PT/auth.json';
@@ -71,6 +75,7 @@ import ptPTProfile from './locales/pt-PT/profile.json';
 import ptPTProgressCheck from './locales/pt-PT/progressCheck.json';
 import ptPTSupport from './locales/pt-PT/support.json';
 import ptPTTraining from './locales/pt-PT/training.json';
+import ptPTVoice from './locales/pt-PT/voice.json';
 import ptPTWeight from './locales/pt-PT/weight.json';
 import ptPTWorkout from './locales/pt-PT/workout.json';
 
@@ -86,6 +91,7 @@ export const resources = {
     auth: enAuth,
     onboarding: enOnboarding,
     training: enTraining,
+    voice: enVoice,
     workout: enWorkout,
     muscles: enMuscles,
     body: enBody,
@@ -103,6 +109,7 @@ export const resources = {
     auth: deAuth,
     onboarding: deOnboarding,
     training: deTraining,
+    voice: deVoice,
     workout: deWorkout,
     muscles: deMuscles,
     body: deBody,
@@ -120,6 +127,7 @@ export const resources = {
     auth: ptPTAuth,
     onboarding: ptPTOnboarding,
     training: ptPTTraining,
+    voice: ptPTVoice,
     workout: ptPTWorkout,
     muscles: ptPTMuscles,
     body: ptPTBody,
@@ -137,6 +145,7 @@ export const resources = {
     auth: ptBRAuth,
     onboarding: ptBROnboarding,
     training: ptBRTraining,
+    voice: ptBRVoice,
     workout: ptBRWorkout,
     muscles: ptBRMuscles,
     body: ptBRBody,
@@ -154,6 +163,7 @@ export const resources = {
     auth: koAuth,
     onboarding: koOnboarding,
     training: koTraining,
+    voice: koVoice,
     workout: koWorkout,
     muscles: koMuscles,
     body: koBody,

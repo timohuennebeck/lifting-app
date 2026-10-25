@@ -7,6 +7,7 @@ import type { ImportedExercise, ImportedPlan, ImportedRoutine } from './plan-imp
 export const settle = ({
   raw: _raw,
   alternatives: _alts,
+  heard: _heard,
   ...e
 }: ImportedExercise): ImportedExercise => e;
 

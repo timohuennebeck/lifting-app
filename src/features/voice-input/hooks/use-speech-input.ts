@@ -54,17 +54,17 @@ function showNoAccess(canAskAgain: boolean) {
     dismissLabel: i18n.t('common:actions.notNow'),
   };
   showError({
-    title: i18n.t('planImport:voice.errors.access.title'),
-    message: i18n.t('planImport:voice.errors.access.message'),
+    title: i18n.t('voice:errors.access.title'),
+    message: i18n.t('voice:errors.access.message'),
     ...(canAskAgain ? {} : settings),
   });
 }
 
 function showUnavailable(offline: boolean) {
-  const key = offline ? 'offline' : 'unavailable';
+  const key = offline ? 'network' : 'unavailable';
   showError({
-    title: i18n.t(`planImport:voice.errors.${key}.title`),
-    message: i18n.t(`planImport:voice.errors.${key}.message`),
+    title: i18n.t(`voice:errors.${key}.title`),
+    message: i18n.t(`voice:errors.${key}.message`),
   });
 }
 

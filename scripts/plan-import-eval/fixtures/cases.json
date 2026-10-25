@@ -1328,9 +1328,9 @@
     }
   },
   {
-    "id": "16-voice-ppl-de",
-    "title": "Spoken German PPL: numbers as words, misheard English names, a correction, AMRAP",
-    "files": ["16-voice-ppl-de.txt"],
+    "id": "16-voice-list-de",
+    "title": "Spoken German exercise list for one workout: numbers as words, misheard English names, a correction, AMRAP",
+    "files": ["16-voice-list-de.txt"],
     "as": "voice",
     "language": "de",
     "expect": {
@@ -1356,15 +1356,6 @@
               "ex": ["french-press"],
               "sets": 3,
               "reps": [12, 12]
-            }
-          ]
-        },
-        {
-          "exercises": [
-            {
-              "ex": ["pull-up"],
-              "sets": 4,
-              "reps": "none"
             },
             {
               "ex": ["lat-pulldown"],
@@ -1377,33 +1368,14 @@
               "reps": [8, 8]
             },
             {
-              "ex": ["hammer-curl"],
-              "sets": 3,
-              "reps": [12, 12]
-            }
-          ]
-        },
-        {
-          "exercises": [
+              "ex": ["pull-up"],
+              "sets": 4,
+              "reps": "none"
+            },
             {
               "ex": ["hack-squat"],
               "sets": 4,
               "reps": [10, 10]
-            },
-            {
-              "ex": ["leg-extension"],
-              "sets": 3,
-              "reps": [15, 15]
-            },
-            {
-              "ex": ["seated-leg-curl"],
-              "sets": 3,
-              "reps": [12, 12]
-            },
-            {
-              "ex": ["calf-raise"],
-              "sets": 4,
-              "reps": [15, 15]
             }
           ]
         }

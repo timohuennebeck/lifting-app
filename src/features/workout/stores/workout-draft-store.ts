@@ -14,6 +14,8 @@ interface WorkoutDraftState {
   begin: (name: string) => void;
   rename: (name: string) => void;
   add: (exerciseIds: string[]) => void;
+  /** Appends exercises with their target sets (said by voice). */
+  addDrafts: (drafts: ExerciseDraft[]) => void;
   /** Replaces exercise `at`; its sets get new defaults when the measures differ. */
   swap: (at: number, exerciseId: string) => void;
   remove: (at: number) => void;
@@ -39,6 +41,18 @@ export const useWorkoutDraftStore = create<WorkoutDraftState>()((set) => {
         exercises: [
           ...s.exercises,
           ...exerciseIds.map((id) => ({ ...newExerciseDraft(id), key: newId() })),
+        ],
+      })),
+    addDrafts: (drafts) =>
+      set((s) => ({
+        exercises: [
+          ...s.exercises,
+          ...drafts.map(({ exerciseId, sets, restSeconds }) => ({
+            exerciseId,
+            sets,
+            restSeconds,
+            key: newId(),
+          })),
         ],
       })),
     swap: (at, exerciseId) => editAt(at, (e) => swapExerciseDraft(e, exerciseId)),

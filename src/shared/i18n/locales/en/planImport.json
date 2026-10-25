@@ -10,10 +10,6 @@
       "title": "Upload a file",
       "description": "PDF, Excel, CSV or screenshot"
     },
-    "voice": {
-      "title": "Say your plan",
-      "description": "Exercises, sets and reps out loud"
-    },
     "noPlan": "No plan at hand?",
     "createOwn": "Create it myself",
     "ownPlan": "My plan"
@@ -63,47 +59,6 @@
     "addPage": "Add page",
     "remove": "Remove page {{count}}"
   },
-  "voice": {
-    "title": "Voice input",
-    "format": "Exercise · sets × reps",
-    "example": "“Hack squat three by fifteen”",
-    "days": "Several workouts? Say the day first, like “Monday push”.",
-    "tap": "Tap to speak",
-    "listening": "Listening …",
-    "more": "Tap to keep talking",
-    "missed": "Didn't catch that. Tap to try again",
-    "cta": "Create plan",
-    "heardAs": "Heard as “{{raw}}”",
-    "dayChip": "Monday · Push",
-    "stages": ["Detecting workout days …", "Matching exercises …", "Applying sets and reps …"],
-    "a11y": {
-      "start": "Start speaking",
-      "stop": "Stop listening",
-      "text": "Your plan as text"
-    },
-    "errors": {
-      "failed": {
-        "title": "Couldn't create the plan",
-        "message": "Please try again. Naming each exercise with its sets and reps helps."
-      },
-      "notAPlan": {
-        "title": "No exercises heard",
-        "message": "Name each exercise with its sets and reps, like “bench press, three by ten”."
-      },
-      "access": {
-        "title": "Microphone needed",
-        "message": "To speak your plan, Loqqa needs the microphone and speech recognition. You can also type it."
-      },
-      "unavailable": {
-        "title": "Voice input unavailable",
-        "message": "Your phone can't turn speech into text right now. You can type your plan instead."
-      },
-      "offline": {
-        "title": "No connection",
-        "message": "Speech recognition needs the internet. Check your connection and try again, or type your plan."
-      }
-    }
-  },
   "reading": {
     "stages": [
       "Reading handwriting …",
@@ -137,6 +92,7 @@
   "confirm": {
     "planName": "Plan name",
     "readAs": "Read as “{{raw}}”",
+    "heardAs": "Heard as “{{raw}}”",
     "correct": "Correct",
     "add": "Add exercise",
     "swap": "Swap exercise",
@@ -144,7 +100,7 @@
     "reading": "Reading your plan …",
     "check_one": "Check {{count}} item",
     "check_other": "Check {{count}} items",
-    "empty": "No exercises yet. Add one with +.",
+    "empty": "No exercises yet. Add some with + or the microphone.",
     "newRoutine": "Workout {{number}}",
     "renamePlan": "Rename plan",
     "newExercise": "New · added as your own exercise"

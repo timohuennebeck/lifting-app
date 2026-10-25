@@ -20,13 +20,13 @@ export interface AnalyticsEvents {
   };
   'plan:generate_fail': { error_code: string };
   'plan_import:read_complete': {
-    source: 'photos' | 'file' | 'voice';
+    source: 'photos' | 'file';
     exercise_count: number;
     /** Exercises the catalog doesn't have, created as the user's own. */
     unmatched_count: number;
     duration_ms: number;
   };
-  'plan_import:read_fail': { source: 'photos' | 'file' | 'voice'; error_code: string };
+  'plan_import:read_fail': { source: 'photos' | 'file'; error_code: string };
   'paywall:view': { placement: PaywallPlacement };
   'paywall:purchase_complete': { package: string; has_trial: boolean };
   'paywall:purchase_fail': { package: string; error_code: string; is_cancelled: boolean };
