@@ -126,9 +126,10 @@ Documents are readable without an account (onboarding runs logged out) and writt
   (else English, else `pt-BR`), linked from sign-up, the paywall and Settings.
   Write the text as Markdown: headings, paragraphs, `>` quotes, lists, `**bold**` and
   `[links](https://…)`.
-- **Publishing:** the texts live in `docs/legal/<locale>/` (German is binding; `en`, `pt-PT` and
-  `pt-BR` are translations). `node scripts/legal-migration.mjs <version> <date> <name>` turns them
-  into a migration with one row per kind and locale, which `supabase db push` publishes.
+- **Publishing:** the texts live in `docs/legal/<locale>/` (German is binding; `en`, `pt-PT`,
+  `pt-BR` and `ko` are translations). `node scripts/legal-migration.mjs <version> <date> <name>`
+  turns them into a migration with one row per kind and locale, which `supabase db push` publishes.
+  Locales after the name publish only those, e.g. a translation added to a version already out.
   `docs/legal/OPEN-QUESTIONS.md` lists what is still open.
 
 ## Weight tracking
@@ -339,6 +340,6 @@ development build is needed after pulling.
 `en` (source), `de`, `pt-PT`, `pt-BR` and `ko`. App texts are in
 `src/shared/i18n/locales/<language>/<namespace>.json` (every language has the same keys), the iOS
 permission texts in `locales/`, and exercise and equipment names in the catalog rows. Legal
-documents are per language too; there is no Korean version, so Korean shows the English one.
+documents are per language too, in all five.
 
 The app language is mirrored to `profiles.language` (for the team).

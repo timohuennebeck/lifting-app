@@ -1,8 +1,9 @@
 # Legal texts: what is still open
 
 Version 1.1 of the privacy policy (DS) and the terms of use (NB) is published (October 2026,
-`docs/legal/<locale>/`, migration `20261024120000_legal_documents_v1_1`). German is the binding
-version; `en`, `pt-PT` and `pt-BR` are translations, and Korean users see English.
+`docs/legal/<locale>/`, migration `20261024120000_legal_documents_v1_1`; Korean followed in
+`20261025120100_legal_documents_v1_1_ko`). German is the binding version; `en`, `pt-PT`, `pt-BR`
+and `ko` are translations.
 
 The texts are not legal advice. A lawyer should review them, above all the health data, body
 photos and AI parts.
@@ -49,3 +50,14 @@ photos and AI parts.
 15. **Support reply time.** The chat says "24–48 hours"; NB §9 calls it a guideline.
 16. Every change to the app's data flows (new service, new data sent to OpenAI or PostHog) needs a
     new version of DS: `node scripts/legal-migration.mjs <version> <date> <name>`.
+
+## Korean
+
+17. **Review.** The Korean 1.1 was translated from the English one and has not been read by a native
+    speaker or a lawyer.
+18. **Languages line.** NB §15 in Korean names Korean among the languages; `de`, `en`, `pt-PT` and
+    `pt-BR` 1.1 name only German, English and Portuguese. Add Korean there in the next version.
+19. **Korean law.** The texts follow the GDPR. Korea's PIPA has its own rules for privacy policies
+    (for example a named privacy officer and details of transfers abroad); check whether they apply
+    to users in Korea.
+20. **Website.** useloqqa.com/ko still shows the English texts.
