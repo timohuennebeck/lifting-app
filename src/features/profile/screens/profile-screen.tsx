@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Alert, Linking, View } from 'react-native';
+import { ActivityIndicator, Linking, View } from 'react-native';
 
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { OpenTicketsSection } from '@/features/support/components/open-tickets-section';
@@ -12,6 +12,7 @@ import { useWorkoutCount, useWorkoutHistory } from '@/shared/data/workouts';
 import { formatDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
+import { showError } from '@/shared/stores/error-sheet-store';
 import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -22,7 +23,7 @@ import { ActivityHeatmap } from '../components/activity-heatmap';
 import { type AvatarAction, AvatarSheet } from '../components/avatar-sheet';
 import { HistoryEntry } from '../components/history-entry';
 import { NameSheet } from '../components/name-sheet';
-import { pickAvatar, removeAvatar, saveAvatar } from '../lib/avatar';
+import { type AvatarSource, pickAvatar, removeAvatar, saveAvatar } from '../lib/avatar';
 
 const PAGE = 10;
 
@@ -68,29 +69,53 @@ export function ProfileScreen() {
       return;
     }
     // The system picker opens once the sheet has gone.
-    afterSheetClose(async () => {
-      try {
-        const picked = await pickAvatar(action);
-        if (picked === 'denied') {
-          Alert.alert(t('avatar.cameraDenied'), undefined, [
-            { text: t('common:actions.cancel'), style: 'cancel' },
-            { text: t('common:settings'), onPress: () => void Linking.openSettings() },
-          ]);
-          return;
-        }
-        if (!picked) return;
-        setLocal({ uri: picked, path: null, replaces: previous });
-        const path = await saveAvatar(userId, picked, previous);
-        setLocal({ uri: picked, path, replaces: previous });
-        haptics.success();
-      } catch (error) {
-        console.warn('Saving the profile photo failed', error);
-        haptics.error();
-        setLocal(null);
-        Alert.alert(t('avatar.failed'));
-      }
-    });
+    afterSheetClose(() => void pickPhoto(userId, action, previous));
   }
+
+  async function pickPhoto(userId: string, source: AvatarSource, previous: string | null) {
+    try {
+      const picked = await pickAvatar(source);
+      if (picked === 'denied') {
+        showError({
+          title: t('avatar.cameraDenied.title'),
+          message: t('avatar.cameraDenied.message'),
+          action: {
+            label: t('common:actions.openSettings'),
+            onPress: () => void Linking.openSettings(),
+          },
+          dismissLabel: t('common:actions.notNow'),
+        });
+        return;
+      }
+      if (picked) await uploadPhoto(userId, picked, previous);
+    } catch (error) {
+      console.warn('Picking the profile photo failed', error);
+      haptics.error();
+      showAvatarFailed(() => void pickPhoto(userId, source, previous));
+    }
+  }
+
+  // Trying again uploads the same photo; it isn't picked anew.
+  async function uploadPhoto(userId: string, uri: string, previous: string | null) {
+    setLocal({ uri, path: null, replaces: previous });
+    try {
+      const path = await saveAvatar(userId, uri, previous);
+      setLocal({ uri, path, replaces: previous });
+      haptics.success();
+    } catch (error) {
+      console.warn('Saving the profile photo failed', error);
+      haptics.error();
+      setLocal(null);
+      showAvatarFailed(() => void uploadPhoto(userId, uri, previous));
+    }
+  }
+
+  const showAvatarFailed = (onRetry: () => void) =>
+    showError({
+      title: t('avatar.failed.title'),
+      message: t('avatar.failed.message'),
+      onRetry,
+    });
 
   async function saveName(firstName: string) {
     if (!profile) return;

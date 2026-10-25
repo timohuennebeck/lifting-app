@@ -2,7 +2,7 @@ import Constants from 'expo-constants';
 import { type Href, router, Stack } from 'expo-router';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
@@ -15,6 +15,7 @@ import { supabase } from '@/shared/data/supabase';
 import { useAppLanguage } from '@/shared/hooks/use-app-language';
 import { LANGUAGE_NAMES } from '@/shared/i18n/resources';
 import { haptics } from '@/shared/lib/haptics';
+import { showError } from '@/shared/stores/error-sheet-store';
 import { requireUserId, useSessionStore } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
 import { LanguageFlag } from '@/shared/ui/language-flag';
@@ -77,7 +78,17 @@ export function SettingsScreen() {
       haptics.error();
       setDeleting(false);
       close();
-      afterSheetClose(() => Alert.alert(t('settings.deleteConfirm.failed')));
+      // Trying again reopens the delete sheet, which shows the deletion running.
+      afterSheetClose(() =>
+        showError({
+          title: t('settings.deleteConfirm.failed.title'),
+          message: t('settings.deleteConfirm.failed.message'),
+          onRetry: () => {
+            setSheet('delete');
+            void removeAccount();
+          },
+        }),
+      );
     }
   };
 
