@@ -7,11 +7,11 @@ import { TabScreen } from '@/shared/components/tab-screen';
 import { DAY_MS } from '@/shared/lib/date';
 import { Button } from '@/shared/ui/button';
 import { BodyMaps, MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
-import { Text } from '@/shared/ui/text';
 
 import { LevelCard } from '../components/level-card';
+import { RankCard } from '../components/rank-card';
 import { useMuscleLevels } from '../hooks/use-muscle-levels';
-import { MAIN_MUSCLES, type MuscleLevel, overallLevel, RARE_MUSCLES, tierOf } from '../lib/levels';
+import { MAIN_MUSCLES, type MuscleLevel, overallLevel, RARE_MUSCLES } from '../lib/levels';
 import { useLevelSeenStore } from '../stores/level-seen-store';
 
 const WEEK_MS = 7 * DAY_MS;
@@ -44,7 +44,6 @@ export function LevelScreen() {
   );
   const hasSeen = Object.keys(seen).length > 0;
 
-  const overall = overallLevel(levels);
   const trained = [...levels.keys()];
 
   const shown = MUSCLE_IDS.filter((m) => levels.has(m) || !RARE_MUSCLES.has(m)).sort((a, b) => {
@@ -83,36 +82,17 @@ export function LevelScreen() {
       <BodyMaps selected={trained} />
       {isLoading ? null : (
         <>
-          <View className="gap-3 px-5 pt-1">
-            <Text variant="overline" tone="subtle" className="text-[11px]">
-              {t('level.overall')}
-            </Text>
-            <View className="flex-row items-end gap-3">
-              <Text className="font-inter-semibold text-[56px] leading-[60px] tabular-nums">
-                {Math.floor(overall)}
-              </Text>
-              <Text tone="subtle" className="mb-2 text-lg">
-                /100
-              </Text>
-              <View className="mb-2.5 ml-auto rounded-full bg-accent/15 px-3 py-1">
-                <Text variant="caption" tone="accent">
-                  {t(`level.tiers.${tierOf(Math.max(Math.floor(overall), 1))}`)}
-                </Text>
-              </View>
-            </View>
-            <View className="h-2 overflow-hidden rounded-full bg-control">
-              <View className="h-full rounded-full bg-accent" style={{ width: `${overall}%` }} />
-            </View>
-            {/* The ranks: where the overall level stands and what each rank takes. */}
+          <RankCard level={Math.floor(overallLevel(levels))} className="mx-4 mt-1">
+            {/* The ranks: what each one takes and the muscles in it. */}
             <Button
               label={t('level.overview')}
               variant="secondary"
               size="md"
               accessibilityLabel={t('ranks.open')}
-              className="mt-2"
+              className="mt-1.5"
               onPress={() => router.push('/ranks')}
             />
-          </View>
+          </RankCard>
           <View className="gap-2 px-4 pt-7">
             {rows.map((row) => (
               <View key={row[0]} className="flex-row gap-2">

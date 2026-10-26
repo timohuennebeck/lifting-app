@@ -18,37 +18,15 @@ import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
+import { RankCard } from '../components/rank-card';
+import { filled, RankSegments } from '../components/rank-segments';
 import { useMuscleLevels } from '../hooks/use-muscle-levels';
-import { levelTarget, overallLevel, TIERS, tierOf } from '../lib/levels';
+import { levelTarget, overallLevel, TIERS } from '../lib/levels';
 
-const SEGMENTS = 20;
 /** Muscle circles shown per rank before "+n". */
 const CIRCLES = 5;
 const CIRCLE = 30;
 const CIRCLE_STEP = 21;
-
-/**
- * How many of a rank's segments `level` fills: all once past it (or at 100), none before it, and
- * never all while still in it, so its last level doesn't look like the next rank.
- */
-function filled(level: number, from: number, to: number) {
-  if (level > to || level >= 100) return SEGMENTS;
-  if (level < from) return 0;
-  return Math.min(SEGMENTS - 1, Math.round(((level - from + 1) / (to - from + 1)) * SEGMENTS));
-}
-
-function Segments({ lit, className }: { lit: number; className?: string }) {
-  return (
-    <View className={cn('flex-row gap-1', className)}>
-      {Array.from({ length: SEGMENTS }, (_, i) => (
-        <View
-          key={i}
-          className={cn('h-full flex-1 rounded-full', i < lit ? 'bg-accent' : 'bg-control')}
-        />
-      ))}
-    </View>
-  );
-}
 
 /** A rank's muscles as overlapping circles, the strongest in front, then "+n". */
 function MuscleRow({ muscles }: { muscles: MuscleId[] }) {
@@ -98,9 +76,6 @@ export function RanksScreen() {
   const [info, setInfo] = useState(false);
 
   const level = Math.floor(overallLevel(levels));
-  const index = TIERS.findIndex((r) => r.tier === tierOf(Math.max(level, 1)));
-  const current = TIERS[index];
-  const next = TIERS[index + 1];
 
   // What a rank's first level takes in the lift: a weight in the usual reps, or reps.
   const amount = (rankLevel: number) => {
@@ -151,42 +126,7 @@ export function RanksScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
         >
-          <View className="mx-4 mt-3 gap-3.5 rounded-[18px] bg-surface p-5">
-            <View className="flex-row items-end justify-between gap-3">
-              {/* The overline sits on the rank's name, not on the taller level beside it. */}
-              <View className="shrink gap-1">
-                <Text variant="overline" tone="subtle" className="text-[11px]">
-                  {t('ranks.yours')}
-                </Text>
-                <Text
-                  numberOfLines={1}
-                  className="font-inter-semibold text-[30px] leading-9 tracking-[-0.5px]"
-                >
-                  {t(`level.tiers.${current.tier}`)}
-                </Text>
-              </View>
-              <View className="flex-row items-baseline gap-1">
-                <Text className="font-inter-semibold text-[48px] leading-[50px] tabular-nums">
-                  {level}
-                </Text>
-                <Text className="font-inter-medium text-lg text-dim">/100</Text>
-              </View>
-            </View>
-            <Segments lit={filled(level, current.from, current.to)} className="h-1.5" />
-            <View className="flex-row justify-between gap-3">
-              <Text variant="caption" tone="subtle" className="font-inter-medium">
-                {t('ranks.levelShort', { level: current.from })}
-              </Text>
-              <Text variant="caption" tone="subtle" className="font-inter-medium">
-                {next
-                  ? t('ranks.toNext', {
-                      levels: next.from - level,
-                      tier: t(`level.tiers.${next.tier}`),
-                    })
-                  : t('ranks.top')}
-              </Text>
-            </View>
-          </View>
+          <RankCard level={level} className="mx-4 mt-3" />
 
           <View className="flex-row items-center justify-between gap-3 px-5 pt-8 pb-1">
             <Text variant="overline" tone="subtle" className="text-[11px]">
@@ -243,7 +183,7 @@ export function RanksScreen() {
                         {t('ranks.levels', { from: rank.from, to: rank.to })}
                       </Text>
                     </View>
-                    <Segments lit={filled(level, rank.from, rank.to)} className="h-1" />
+                    <RankSegments lit={filled(level, rank.from, rank.to)} className="h-1" />
                     {line ? (
                       <Text variant="caption" tone="subtle" className="font-inter-medium">
                         {line}

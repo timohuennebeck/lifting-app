@@ -27,7 +27,6 @@
     "showMore": "Mostrar mais {{count}}"
   },
   "level": {
-    "overall": "Nível geral",
     "overview": "Visão geral",
     "badge": "Nv.",
     "toNext": "{{percent}} % até Nv. {{next}}",

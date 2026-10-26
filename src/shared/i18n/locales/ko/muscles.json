@@ -27,7 +27,6 @@
     "showMore": "{{count}}개 더 보기"
   },
   "level": {
-    "overall": "전체 레벨",
     "overview": "개요",
     "badge": "Lv.",
     "toNext": "Lv. {{next}}까지 {{percent}}%",
