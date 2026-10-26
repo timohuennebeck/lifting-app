@@ -19,6 +19,12 @@ const TICK = 5;
 // Wide enough that a flick doesn't race through dozens of values.
 const GAP = 11;
 const PITCH = TICK + GAP;
+/**
+ * The centre marker's length. Dots repeat every 5px from an element's start, and marker and ticks
+ * end on the same line: lengths alike modulo 5 (the ticks' 64, 44 and 24) put the marker's dots
+ * on the ticks' dots, so none show between them.
+ */
+const MARKER = 94;
 // Dot colors of the design's tick columns.
 const TICK_MAJOR = '#B5B5AF';
 const TICK_MINOR = colors.outline;
@@ -164,8 +170,8 @@ export function RulerPicker({
         className="absolute"
         style={
           vertical
-            ? { right: 0, top: extent / 2 - TICK / 2, height: TICK, width: 96 }
-            : { bottom: 0, left: extent / 2 - TICK / 2, width: TICK, height: 96 }
+            ? { right: 0, top: extent / 2 - TICK / 2, height: TICK, width: MARKER }
+            : { bottom: 0, left: extent / 2 - TICK / 2, width: TICK, height: MARKER }
         }
       />
       <Gradient from={vertical ? 'top' : 'left'} stops={EDGE_FADE} />
