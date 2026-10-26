@@ -23,7 +23,8 @@ export function EntryRow({ point, units, dayLabel, onPress, onDelete }: EntryRow
   const off = offTrend(point);
   const distance = `${formatBodyWeight(Math.abs(off), units)} ${weightUnit(units)}`;
   return (
-    <SwipeToDelete label={t('history.delete')} onDelete={onDelete}>
+    // Only a swipe to the left opens it: one to the right is the screen's swipe back.
+    <SwipeToDelete label={t('history.delete')} onDelete={onDelete} leftOnly>
       <PressableScale
         activeScale={0.98}
         onPress={onPress}
