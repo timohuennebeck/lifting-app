@@ -15,7 +15,7 @@ export interface SwipeToDeleteProps {
   label: string;
   /**
    * Only a swipe to the left moves the row: one to the right is left to a swipe around it
-   * (the live workout's swipe to the previous exercise).
+   * (the live workout's swipe to the previous exercise, a page's swipe back).
    */
   leftOnly?: boolean;
 }

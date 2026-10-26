@@ -23,6 +23,11 @@ const LABELS = 58;
 const MIN_STEPS = 3;
 const MAX_LABELS = 6;
 const DAY_LABELS = 4;
+/**
+ * The chart spans the screen from its left edge: a drag starting this close to it is iOS's swipe
+ * back, not a scrub (as the back swipe also wins over scroll views there).
+ */
+const BACK_SWIPE_EDGE = 20;
 
 export interface WeightChartProps {
   /** The weigh-ins shown, oldest first. */
@@ -85,6 +90,7 @@ export function WeightChart({ points, from, to, units, selected, onSelect }: Wei
   };
   const scrub = Gesture.Pan()
     .runOnJS(true)
+    .hitSlop({ left: -BACK_SWIPE_EDGE })
     .minDistance(0)
     .activeOffsetX([-8, 8])
     .failOffsetY([-12, 12])
