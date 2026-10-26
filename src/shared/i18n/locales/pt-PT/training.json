@@ -69,7 +69,8 @@
     "exerciseInfo": "Sobre {{name}}",
     "notFound": "Este treino já não existe.",
     "swapTitle": "Trocar exercício",
-    "partOf": "Parte de {{plan}}"
+    "partOf": "Parte de {{plan}}",
+    "new": "Novo"
   },
   "exerciseMenu": {
     "editSets": "Editar séries",

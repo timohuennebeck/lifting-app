@@ -1,7 +1,15 @@
-import { type ReactNode, useState } from 'react';
+import { useIsFocused } from 'expo-router';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
-import type Animated from 'react-native-reanimated';
-import type { AnimatedRef } from 'react-native-reanimated';
+import Animated, {
+  type AnimatedRef,
+  Easing,
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withDelay,
+  withTiming,
+} from 'react-native-reanimated';
 import Sortable, { type SortableGridProps } from 'react-native-sortables';
 
 import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
@@ -14,6 +22,34 @@ import { useLastDefined } from '../hooks/use-last-defined';
 import { ExerciseListHeader } from './exercise-list-header';
 import { type ExerciseMenuAction, ExerciseMenuSheet } from './exercise-menu-sheet';
 import { RoutineExerciseCard } from './routine-exercise-card';
+
+/** Back on the screen, the list scrolls to the end first; the new cards come in after that. */
+const REVEAL_AFTER_MS = 350;
+/** Between one new card coming in and the next. */
+const STAGGER_MS = 140;
+
+/** A card added since the screen was left: hidden until it comes in, after `delay`. */
+function Reveal({
+  hidden,
+  delay,
+  children,
+}: {
+  hidden: boolean;
+  delay: number;
+  children: ReactNode;
+}) {
+  const reduceMotion = useReducedMotion();
+  const shown = useSharedValue(hidden ? 0 : 1);
+  useEffect(() => {
+    const timing = withTiming(1, { duration: 450, easing: Easing.out(Easing.cubic) });
+    shown.set(hidden ? 0 : withDelay(delay, timing));
+  }, [hidden, delay, shown]);
+  const style = useAnimatedStyle(() => ({
+    opacity: shown.get(),
+    transform: [{ translateY: reduceMotion ? 0 : (1 - shown.get()) * 22 }],
+  }));
+  return <Animated.View style={style}>{children}</Animated.View>;
+}
 
 export interface EditableExerciseListProps<T extends ExerciseDraft> {
   /** The training's name, over its muscles. */
@@ -79,6 +115,34 @@ export function EditableExerciseList<T extends ExerciseDraft>({
   const drag = useSortableDrag<T>(({ fromIndex, toIndex }) => onMove(fromIndex, toIndex));
   const items = exerciseItems(exercises);
 
+  // Exercises added in the picker or by voice: what wasn't in the list when the screen was left.
+  // Back on it, the list scrolls to the end where they go, they come in one after another and
+  // keep a "Neu" until the screen is left for good.
+  const focused = useIsFocused();
+  const keys = exercises.map(keyOf);
+  const latestKeys = useRef(keys);
+  const [left, setLeft] = useState<ReadonlySet<string> | null>(null);
+  /** The cards that came in, each with its delay in the batch it came in with. */
+  const [revealed, setRevealed] = useState<ReadonlyMap<string, number>>(() => new Map());
+  const toReveal = left ? keys.filter((k) => !left.has(k) && !revealed.has(k)) : [];
+  const joinedToReveal = toReveal.join('\n');
+  useEffect(() => {
+    latestKeys.current = keys;
+  });
+  useEffect(() => {
+    if (!focused) setLeft(new Set(latestKeys.current));
+  }, [focused]);
+  useEffect(() => {
+    if (!focused || !joinedToReveal) return;
+    const scroll = setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 50);
+    const batch = joinedToReveal.split('\n').map((k, i) => [k, i * STAGGER_MS] as const);
+    const reveal = setTimeout(() => setRevealed((r) => new Map([...r, ...batch])), REVEAL_AFTER_MS);
+    return () => {
+      clearTimeout(scroll);
+      clearTimeout(reveal);
+    };
+  }, [focused, joinedToReveal, scrollRef]);
+
   function onAction(action: ExerciseMenuAction) {
     const at = menuFor;
     setMenuFor(null);
@@ -111,17 +175,24 @@ export function EditableExerciseList<T extends ExerciseDraft>({
             sortEnabled={sortEnabled}
             {...(itemEntering !== undefined ? { itemEntering } : {})}
             {...drag.gridProps}
-            renderItem={({ item, index }) => (
-              <RoutineExerciseCard
-                exerciseId={item.exerciseId}
-                sets={item.sets}
-                review={review?.(item)}
-                onMenu={drag.unlessDragging(() => setMenuFor(index))}
-                onPress={drag.unlessDragging(() => onOpen(index))}
-              >
-                {renderExtra?.(item, index)}
-              </RoutineExerciseCard>
-            )}
+            renderItem={({ item, index }) => {
+              const key = keyOf(item);
+              const waiting = toReveal.indexOf(key);
+              return (
+                <Reveal hidden={waiting >= 0} delay={revealed.get(key) ?? 0}>
+                  <RoutineExerciseCard
+                    exerciseId={item.exerciseId}
+                    sets={item.sets}
+                    review={review?.(item)}
+                    fresh={waiting >= 0 || revealed.has(key)}
+                    onMenu={drag.unlessDragging(() => setMenuFor(index))}
+                    onPress={drag.unlessDragging(() => onOpen(index))}
+                  >
+                    {renderExtra?.(item, index)}
+                  </RoutineExerciseCard>
+                </Reveal>
+              );
+            }}
           />
         ) : (
           <EmptyExercises hint={emptyHint} />

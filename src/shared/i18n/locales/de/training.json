@@ -69,7 +69,8 @@
     "exerciseInfo": "Infos zu {{name}}",
     "notFound": "Dieses Training gibt es nicht mehr.",
     "swapTitle": "Übung tauschen",
-    "partOf": "Teil von {{plan}}"
+    "partOf": "Teil von {{plan}}",
+    "new": "Neu"
   },
   "exerciseMenu": {
     "editSets": "Sätze bearbeiten",

@@ -221,6 +221,8 @@ export function ConfirmScreen() {
               onSubmit={(name) => editRoutine((r) => ({ ...r, name }))}
             />
             <EditableExerciseList
+              // Its own list per routine: another one shown isn't exercises added to it.
+              key={routine.key}
               title={routine.name}
               exercises={exercises}
               keyOf={(e) => e.key}

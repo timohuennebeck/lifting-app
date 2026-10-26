@@ -69,7 +69,8 @@
     "exerciseInfo": "About {{name}}",
     "notFound": "This workout no longer exists.",
     "swapTitle": "Swap exercise",
-    "partOf": "Part of {{plan}}"
+    "partOf": "Part of {{plan}}",
+    "new": "New"
   },
   "exerciseMenu": {
     "editSets": "Edit sets",

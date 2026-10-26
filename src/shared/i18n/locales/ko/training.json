@@ -69,7 +69,8 @@
     "exerciseInfo": "{{name}} 정보",
     "notFound": "이 루틴은 더 이상 없어요.",
     "swapTitle": "운동 바꾸기",
-    "partOf": "{{plan}}에 포함"
+    "partOf": "{{plan}}에 포함",
+    "new": "NEW"
   },
   "exerciseMenu": {
     "editSets": "세트 편집",

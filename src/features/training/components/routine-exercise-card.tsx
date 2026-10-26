@@ -21,6 +21,8 @@ export interface RoutineExerciseCardProps {
   onPress: () => void;
   /** Amber dot after the name: the plan import isn't sure about this match. */
   review?: boolean;
+  /** "Neu" after the name: just added (from the picker or by voice). */
+  fresh?: boolean;
   /** Below the muscles, e.g. the import's "read as …" prompt. */
   children?: ReactNode;
 }
@@ -57,6 +59,7 @@ export function RoutineExerciseCard({
   onMenu,
   onPress,
   review,
+  fresh,
   children,
 }: RoutineExerciseCardProps) {
   const { t, i18n } = useTranslation('training');
@@ -85,6 +88,13 @@ export function RoutineExerciseCard({
           </Text>
           {review ? (
             <View className="mt-3 size-2 rounded-full" style={{ backgroundColor: colors.review }} />
+          ) : null}
+          {fresh ? (
+            <View className="mt-1 h-6 justify-center rounded-full bg-accent px-2.5">
+              <Text variant="caption" tone="onAccent" className="font-inter-bold text-xs">
+                {t('overview.new')}
+              </Text>
+            </View>
           ) : null}
           {/* As wide as an RIR badge, so the dots line up over the badges below. */}
           <PressableScale
