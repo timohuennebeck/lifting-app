@@ -43,6 +43,10 @@ export interface ImportedExercise extends ExerciseDraft {
 }
 
 export interface ImportedRoutine extends RoutineDraft {
+  /** Stays with the routine while it is dragged to another place in the plan strip. */
+  key: string;
+  /** The saved routine it is, when the editor changes a saved plan ("Bearbeiten"). */
+  routineId?: string;
   exercises: ImportedExercise[];
 }
 
@@ -138,7 +142,7 @@ function stopIfAborted(signal: AbortSignal) {
 /** What the plan functions send while they read or make it (their PlanEvent). */
 export type PlanEvent =
   | { type: 'plan'; name: string }
-  | { type: 'routine'; routine: Omit<ImportedRoutine, 'exercises'> }
+  | { type: 'routine'; routine: Omit<RoutineDraft, 'exercises'> }
   | {
       type: 'exercise';
       exercise: Omit<ImportedExercise, 'key'>;

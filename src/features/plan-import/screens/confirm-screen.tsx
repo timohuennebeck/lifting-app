@@ -8,6 +8,7 @@ import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { EditableExerciseList } from '@/features/training/components/editable-exercise-list';
 import { EditableTitle } from '@/features/training/components/editable-title';
+import { newId } from '@/shared/data/json';
 import { AI_BLOCK_WEEKS } from '@/shared/data/plans';
 import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
@@ -39,11 +40,12 @@ import { useImportStore } from '../stores/import-store';
  * the user checks it. It opens with the first exercise read and fills in while the function sends
  * the rest, following the routine being read until the user picks one. "Selbst erstellen" opens
  * it with an empty plan to build routine by routine. A plan the AI makes (BuildingScreen) opens
- * here the same way and goes on to its name.
+ * here the same way and goes on to its name. A saved plan opens here to be edited
+ * (`openPlanEditor`) and is saved back. Hold a routine in the strip to move it.
  */
 export function ConfirmScreen() {
   const { t } = useTranslation(['planImport', 'planCreate', 'training', 'common']);
-  const { step, finish } = usePlanFlow();
+  const { step, finish, saveEdits } = usePlanFlow();
   const updateDraft = useUpdateDraft();
   const insets = useSafeAreaInsets();
   const plan = useImportStore((s) => s.plan);
@@ -55,6 +57,8 @@ export function ConfirmScreen() {
   const failure = useImportStore((s) => s.failure);
   const holdRoutine = useImportStore((s) => s.holdRoutine);
   const following = useImportStore((s) => s.following);
+  // A saved plan being edited: saving writes it back.
+  const editing = useImportStore((s) => s.editing);
   // Made from the answers, not read: it goes on to its name, and is made again on a retry.
   const answers = useImportStore((s) => (s.source?.kind === 'answers' ? s.source.answers : null));
   const made = !!answers;
@@ -120,10 +124,19 @@ export function ConfirmScreen() {
       ...p,
       routines: [
         ...p.routines,
-        { name: t('planImport:confirm.newRoutine', { number }), exercises: [] },
+        { key: newId(), name: t('planImport:confirm.newRoutine', { number }), exercises: [] },
       ],
     }));
     selectRoutine(plan.routines.length);
+  }
+
+  // The routine shown stays shown at its new place.
+  function moveRoutine(from: number, to: number) {
+    if (!plan || !routine) return;
+    const routines = plan.routines.filter((_, k) => k !== from);
+    routines.splice(to, 0, plan.routines[from]);
+    editPlan((p) => ({ ...p, routines }));
+    selectRoutine(routines.indexOf(routine));
   }
 
   function moveExercise(from: number, to: number) {
@@ -140,6 +153,10 @@ export function ConfirmScreen() {
       haptics.warning();
       const next = plan.routines.findIndex(needsReview);
       if (next >= 0) selectRoutine(next);
+      return;
+    }
+    if (editing) {
+      void saveEdits(editing, plan);
       return;
     }
     if (answers) {
@@ -185,11 +202,12 @@ export function ConfirmScreen() {
         contentContainerStyle={{ paddingBottom: insets.bottom + 130 }}
       >
         <RoutineBar
-          items={plan.routines.map((r) => ({ name: r.name, review: needsReview(r) }))}
+          items={plan.routines.map((r) => ({ key: r.key, name: r.name, review: needsReview(r) }))}
           currentIndex={index}
           onSelect={selectRoutine}
-          // Routines the user adds go after the read ones.
+          // Routines the user adds go after the read ones; all can be moved once the plan is read.
           onAdd={reading ? undefined : addRoutine}
+          onMove={reading ? undefined : moveRoutine}
         />
         {routine ? (
           <>
@@ -251,9 +269,11 @@ export function ConfirmScreen() {
                 : t('planImport:confirm.reading')
               : pending
                 ? t('planImport:confirm.check', { count: pending })
-                : made
-                  ? t('common:actions.continue')
-                  : t('planImport:confirm.cta')
+                : editing
+                  ? t('common:actions.save')
+                  : made
+                    ? t('common:actions.continue')
+                    : t('planImport:confirm.cta')
           }
           variant={pending || reading ? 'secondary' : 'primary'}
           // Nor after it broke off: a partial plan isn't taken over.

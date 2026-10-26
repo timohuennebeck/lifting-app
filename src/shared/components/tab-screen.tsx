@@ -1,5 +1,6 @@
 import { type ReactNode, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
+import Animated, { type AnimatedRef } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { QueryFocus } from '@/shared/data/query-focus';
@@ -16,6 +17,8 @@ export interface TabScreenProps {
   settings?: boolean;
   /** Rendered under the header, outside the scroll area. */
   pinned?: ReactNode;
+  /** The scroll view, e.g. for a list dragged inside it to scroll it near its edges. */
+  scrollRef?: AnimatedRef<Animated.ScrollView>;
 }
 
 /**
@@ -25,7 +28,7 @@ export interface TabScreenProps {
  * home indicator cover, and the scroll view pads for that. Queries rendered inside it pause while
  * the tab is hidden (QueryFocus).
  */
-export function TabScreen({ children, greeting, settings, pinned }: TabScreenProps) {
+export function TabScreen({ children, greeting, settings, pinned, scrollRef }: TabScreenProps) {
   const insets = useSafeAreaInsets();
   const [tabBarInset, setTabBarInset] = useState(insets.bottom);
   return (
@@ -34,13 +37,14 @@ export function TabScreen({ children, greeting, settings, pinned }: TabScreenPro
         <TabHeader greeting={greeting} settings={settings} />
         {pinned}
         <View className="flex-1">
-          <ScrollView
+          <Animated.ScrollView
+            ref={scrollRef}
             contentInsetAdjustmentBehavior="never"
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ flexGrow: 1, paddingBottom: tabBarInset + 24 }}
           >
             {children}
-          </ScrollView>
+          </Animated.ScrollView>
           <SafeAreaView
             edges={['bottom']}
             pointerEvents="none"
