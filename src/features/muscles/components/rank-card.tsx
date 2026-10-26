@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
+import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { TIERS, tierOf } from '../lib/levels';
@@ -13,18 +14,28 @@ export interface RankCardProps {
   level: number;
   /** Under the way to the next rank, e.g. the Level tab's "Übersicht". */
   children?: ReactNode;
+  /** Makes the whole card a button, e.g. to open the ranks. */
+  onPress?: () => void;
+  accessibilityLabel?: string;
   className?: string;
 }
 
 /** "Dein Rang": the rank the overall level is in, the level and the way to the next rank. */
-export function RankCard({ level, children, className }: RankCardProps) {
+export function RankCard({
+  level,
+  children,
+  onPress,
+  accessibilityLabel,
+  className,
+}: RankCardProps) {
   const { t } = useTranslation('muscles');
   const index = TIERS.findIndex((r) => r.tier === tierOf(Math.max(level, 1)));
   const current = TIERS[index];
   const next = TIERS[index + 1];
+  const box = cn('gap-3.5 rounded-[18px] bg-surface p-5', className);
 
-  return (
-    <View className={cn('gap-3.5 rounded-[18px] bg-surface p-5', className)}>
+  const content = (
+    <>
       <View className="flex-row items-end justify-between gap-3">
         {/* The overline sits on the rank's name, not on the taller level beside it. */}
         <View className="shrink gap-1">
@@ -57,6 +68,20 @@ export function RankCard({ level, children, className }: RankCardProps) {
         </Text>
       </View>
       {children}
-    </View>
+    </>
+  );
+
+  return onPress ? (
+    <PressableScale
+      haptic="tap"
+      activeScale={0.98}
+      accessibilityLabel={accessibilityLabel}
+      onPress={onPress}
+      className={box}
+    >
+      {content}
+    </PressableScale>
+  ) : (
+    <View className={box}>{content}</View>
   );
 }
