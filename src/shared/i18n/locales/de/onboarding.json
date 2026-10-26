@@ -43,6 +43,17 @@
   "height": {
     "title": "WIE GROSS\nBIST DU?"
   },
+  "actionButton": {
+    "title": "EIN DRUCK,\nUND SCHON ERFASST",
+    "subtitle": "Leg Loqqa auf die Aktionstaste deines iPhones. Ein Druck öffnet direkt dein Gewicht.",
+    "action": "Aktion",
+    "steps": {
+      "settings": "Öffne Einstellungen › Aktionstaste",
+      "shortcut": "Wische zu <b>Kurzbefehl</b>",
+      "pick": "Wähle <b>Loqqa: Gewicht eintragen</b>"
+    },
+    "later": "Später"
+  },
   "experience": {
     "title": "WIE ERFAHREN\nBIST DU?",
     "none": "Keine",

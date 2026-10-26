@@ -54,13 +54,25 @@ function startingKg(entries: WeightEntry[], date: string) {
  */
 export function WeightEntryScreen() {
   const { date, add } = useLocalSearchParams<{ date: string; add?: string }>();
+  return <DayEntry date={date} adding={add === '1'} />;
+}
+
+/**
+ * Today's weight, as the "Log weight" shortcut opens it (Action button, Siri): a day with an entry
+ * edits it, and another day picked adds one there rather than moving today's.
+ */
+export function TodayWeightEntryScreen() {
+  return <DayEntry date={toIsoDate(new Date())} adding />;
+}
+
+function DayEntry({ date, adding }: { date: string; adding: boolean }) {
   const { entries, isLoading } = useWeightEntries();
   const units = useUnits();
   if (isLoading) return <View className="flex-1 bg-bg" />;
   return (
     <EntryForm
       initialDate={date}
-      adding={add === '1'}
+      adding={adding}
       entries={entries}
       units={units}
       initialKg={startingKg(entries, date)}

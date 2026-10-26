@@ -8,6 +8,9 @@ import { useEndWorkoutActivity } from '@/features/workout/hooks/use-end-workout-
 import { useSyncAccountLanguage } from '@/shared/hooks/use-sync-account-language';
 import { colors } from '@/shared/lib/theme';
 
+// A link into the app (the weight shortcut) opens over the tabs, so going back leads there.
+export const unstable_settings = { initialRouteName: '(tabs)' };
+
 export default function AppLayout() {
   // Background uploads of ticket screenshots, also after restarts.
   useAttachmentUploadQueue();

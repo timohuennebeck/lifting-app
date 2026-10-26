@@ -43,6 +43,17 @@
   "height": {
     "title": "HOW TALL\nARE YOU?"
   },
+  "actionButton": {
+    "title": "ONE PRESS,\nAND IT'S LOGGED",
+    "subtitle": "Put Loqqa on your iPhone's Action button. One press opens your weight right away.",
+    "action": "Action",
+    "steps": {
+      "settings": "Open Settings › Action Button",
+      "shortcut": "Swipe to <b>Shortcut</b>",
+      "pick": "Choose <b>Loqqa: Log weight</b>"
+    },
+    "later": "Later"
+  },
   "experience": {
     "title": "HOW EXPERIENCED\nARE YOU?",
     "none": "None",

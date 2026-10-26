@@ -1,0 +1,42 @@
+{
+  "de": {
+    "Localizable.strings": {
+      "Log weight": "Gewicht eintragen",
+      "Opens today's weight entry.": "Öffnet den Gewichtseintrag für heute."
+    },
+    "AppShortcuts.strings": {
+      "Log weight in ${applicationName}": "Gewicht in ${applicationName} eintragen",
+      "Log my weight in ${applicationName}": "Mein Gewicht in ${applicationName} eintragen"
+    }
+  },
+  "pt-PT": {
+    "Localizable.strings": {
+      "Log weight": "Registar peso",
+      "Opens today's weight entry.": "Abre o registo de peso de hoje."
+    },
+    "AppShortcuts.strings": {
+      "Log weight in ${applicationName}": "Registar peso no ${applicationName}",
+      "Log my weight in ${applicationName}": "Registar o meu peso no ${applicationName}"
+    }
+  },
+  "pt-BR": {
+    "Localizable.strings": {
+      "Log weight": "Registrar peso",
+      "Opens today's weight entry.": "Abre o registro de peso de hoje."
+    },
+    "AppShortcuts.strings": {
+      "Log weight in ${applicationName}": "Registrar peso no ${applicationName}",
+      "Log my weight in ${applicationName}": "Registrar meu peso no ${applicationName}"
+    }
+  },
+  "ko": {
+    "Localizable.strings": {
+      "Log weight": "체중 기록",
+      "Opens today's weight entry.": "오늘의 체중 기록을 엽니다."
+    },
+    "AppShortcuts.strings": {
+      "Log weight in ${applicationName}": "${applicationName}에 체중 기록",
+      "Log my weight in ${applicationName}": "${applicationName}에 내 체중 기록"
+    }
+  }
+}

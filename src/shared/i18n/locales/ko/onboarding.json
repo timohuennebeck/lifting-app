@@ -43,6 +43,17 @@
   "height": {
     "title": "키가\n어떻게 되나요?"
   },
+  "actionButton": {
+    "title": "한 번 누르면,\n바로 기록",
+    "subtitle": "iPhone의 동작 버튼에 Loqqa를 지정하세요. 한 번 누르면 바로 체중 기록이 열려요.",
+    "action": "동작",
+    "steps": {
+      "settings": "설정 › 동작 버튼을 여세요",
+      "shortcut": "<b>단축어</b>로 스와이프하세요",
+      "pick": "<b>Loqqa: 체중 기록</b>을 선택하세요"
+    },
+    "later": "나중에"
+  },
   "experience": {
     "title": "운동 경험이\n얼마나 되나요?",
     "none": "없음",

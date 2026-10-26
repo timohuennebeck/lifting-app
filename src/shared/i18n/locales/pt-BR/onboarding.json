@@ -43,6 +43,17 @@
   "height": {
     "title": "QUAL É A\nSUA ALTURA?"
   },
+  "actionButton": {
+    "title": "UM CLIQUE,\nE JÁ ESTÁ REGISTRADO",
+    "subtitle": "Coloque o Loqqa no Botão de Ação do seu iPhone. Um clique abre direto o seu peso.",
+    "action": "Ação",
+    "steps": {
+      "settings": "Abra Ajustes › Botão de Ação",
+      "shortcut": "Deslize até <b>Atalho</b>",
+      "pick": "Escolha <b>Loqqa: Registrar peso</b>"
+    },
+    "later": "Depois"
+  },
   "experience": {
     "title": "QUAL É A SUA\nEXPERIÊNCIA?",
     "none": "Nenhuma",

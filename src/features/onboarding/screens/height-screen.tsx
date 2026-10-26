@@ -9,7 +9,7 @@ import { RulerPicker } from '@/shared/ui/ruler-picker';
 import { StepScreen } from '@/shared/ui/step-screen';
 
 import { MeasureValue, StepButtons } from '../components/measure-value';
-import { ABOUT_STEPS } from '../lib/flow';
+import { ABOUT_STEPS, HAS_ACTION_BUTTON } from '../lib/flow';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';
 
 const CM_PER_INCH = 2.54;
@@ -55,7 +55,12 @@ export function HeightScreen() {
       step={6}
       total={ABOUT_STEPS}
       title={t('height.title')}
-      footer={<Button label={tc('actions.continue')} onPress={() => router.push('/experience')} />}
+      footer={
+        <Button
+          label={tc('actions.continue')}
+          onPress={() => router.push(HAS_ACTION_BUTTON ? '/action-button' : '/experience')}
+        />
+      }
     >
       <View className="flex-row items-center gap-5 pt-7.5 pr-5 pl-7">
         <View className="flex-1 gap-5.5">

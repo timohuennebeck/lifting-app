@@ -20,7 +20,7 @@ export function ExperienceScreen() {
 
   return (
     <StepScreen
-      step={7}
+      step={ABOUT_STEPS - 1}
       total={ABOUT_STEPS}
       title={t('experience.title')}
       scroll

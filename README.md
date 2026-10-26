@@ -51,6 +51,7 @@ powersync/             self-hosted service config, sync streams, docker compose
 scripts/               React Compiler check, plan import and generation tests, muscle artwork, Apple IDs,
                        legal texts migration
 locales/               iOS permission texts per language (app.json `locales`)
+plugins/               local config plugins: the iOS "Log weight" App Shortcut (Swift, its texts)
 docs/legal/            the legal texts per language and what is still open about them
 ```
 

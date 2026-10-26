@@ -75,7 +75,8 @@
           "bundleIdentifier": "app.loqqa.mobile.widgets",
           "groupIdentifier": "group.app.loqqa.mobile"
         }
-      ]
+      ],
+      "./plugins/weight-shortcut"
     ],
     "experiments": {
       "typedRoutes": true,

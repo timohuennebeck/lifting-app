@@ -18,6 +18,8 @@ Expo Go). `ios/` and `android/` are generated: configure native behaviour in `ap
   `config`. Code only one feature uses belongs in that feature.
 - `supabase/`: migrations and Edge Functions (Deno, shared code in `functions/_shared/`, outside
   tsc and ESLint). `powersync/`: the service config and what syncs.
+- `plugins/`: local config plugins for native code, e.g. `weight-shortcut/` (the "Log weight" App
+  Shortcut: Swift in the app target, its texts per language). Native changes need a new build.
 
 ## Data
 
