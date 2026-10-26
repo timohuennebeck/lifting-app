@@ -133,7 +133,7 @@ function NoChecks({ allowed, birthDate, onStart }: NoChecksProps) {
         importantForAccessibility="no-hide-descendants"
       >
         <View className="flex-row items-baseline gap-1.5">
-          <Text className="font-inter-bold text-[104px] leading-26 text-track">?</Text>
+          <Text className="font-inter-bold text-[104px] leading-26 text-track">0</Text>
           <Text variant="label" className="text-xl text-dim">
             /100
           </Text>
