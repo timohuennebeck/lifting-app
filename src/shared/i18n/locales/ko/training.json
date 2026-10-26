@@ -70,7 +70,7 @@
     "notFound": "이 루틴은 더 이상 없어요.",
     "swapTitle": "운동 바꾸기",
     "partOf": "{{plan}}에 포함",
-    "new": "NEW"
+    "new": "신규"
   },
   "exerciseMenu": {
     "editSets": "세트 편집",
