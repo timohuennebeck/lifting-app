@@ -12,7 +12,9 @@
       "bundleIdentifier": "app.loqqa.mobile",
       "supportsTablet": false,
       "infoPlist": {
-        "CFBundleAllowMixedLocalizations": true
+        "CFBundleAllowMixedLocalizations": true,
+        "NSMicrophoneUsageDescription": "Loqqa uses the microphone so you can say your training plan instead of typing it.",
+        "NSSpeechRecognitionUsageDescription": "Loqqa turns the training plan you say into text to create your plan from it."
       }
     },
     "android": {
@@ -54,20 +56,19 @@
         "expo-camera",
         {
           "cameraPermission": "Loqqa uses the camera to photograph your training plan, to take your body check photos and your profile photo.",
-          "microphonePermission": false,
           "recordAudioAndroid": false
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "Loqqa lets you import a training plan from your photos, attach screenshots to support tickets and pick a profile photo.",
-          "microphonePermission": false
+          "photosPermission": "Loqqa lets you import a training plan from your photos, attach screenshots to support tickets and pick a profile photo."
         }
       ],
       "expo-document-picker",
       "expo-video",
       "expo-apple-authentication",
+      "expo-speech-recognition",
       [
         "expo-widgets",
         {

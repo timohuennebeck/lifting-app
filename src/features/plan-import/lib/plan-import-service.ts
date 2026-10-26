@@ -40,6 +40,8 @@ export interface ImportedExercise extends ExerciseDraft {
   raw?: string;
   /** Other plausible catalog exercise ids for an uncertain line. */
   alternatives?: string[];
+  /** Added by voice: `raw` is what was heard rather than read. */
+  heard?: boolean;
 }
 
 export interface ImportedRoutine extends RoutineDraft {

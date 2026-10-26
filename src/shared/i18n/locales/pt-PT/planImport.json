@@ -99,7 +99,7 @@
     "reading": "A ler o plano …",
     "check_one": "Rever {{count}} ponto",
     "check_other": "Rever {{count}} pontos",
-    "empty": "Ainda sem exercícios. Adiciona um com +.",
+    "empty": "Ainda sem exercícios. Adiciona-os com + ou com o microfone.",
     "newRoutine": "Treino {{number}}",
     "renamePlan": "Mudar o nome do plano",
     "newExercise": "Novo · criado como exercício próprio"

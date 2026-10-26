@@ -99,7 +99,7 @@
     "reading": "플랜을 읽는 중 …",
     "check_one": "항목 {{count}}개 확인",
     "check_other": "항목 {{count}}개 확인",
-    "empty": "아직 운동이 없어요. +로 추가해 보세요.",
+    "empty": "아직 운동이 없어요. + 또는 마이크로 추가해 보세요.",
     "newRoutine": "루틴 {{number}}",
     "renamePlan": "플랜 이름 변경",
     "newExercise": "신규 · 나만의 운동으로 추가돼요"

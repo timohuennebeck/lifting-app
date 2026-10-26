@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import type { PlanAnswers } from '@/features/plan-create/lib/plan-answers';
+import type { SpokenExercises } from '@/features/voice-input/lib/spoken-exercises';
 import { newId } from '@/shared/data/json';
 import { track } from '@/shared/lib/posthog';
 
@@ -58,6 +59,8 @@ interface ImportState {
   /** Opens saved plan `planId` in the editor, to be changed rather than made anew. */
   editSaved: (planId: string, plan: ImportedPlan) => void;
   editPlan: (edit: (plan: ImportedPlan) => ImportedPlan) => void;
+  /** Adds exercises the user said to the selected routine. */
+  addSpoken: (spoken: SpokenExercises) => void;
   selectRoutine: (index: number) => void;
   /** Stops following the routine being read (the user started on the one shown). */
   holdRoutine: () => void;
@@ -216,6 +219,25 @@ export const useImportStore = create<ImportState>()((set, get) => ({
     set({ ...EMPTY, plan, editing: planId });
   },
   editPlan: (edit) => set((s) => (s.plan ? { plan: edit(s.plan) } : {})),
+  addSpoken: ({ exercises, newExercises }) => {
+    // New exercises are created at sign-up or with the plan, like an import's (see `receive`).
+    const { draft, update } = useOnboardingStore.getState();
+    update({ customExercises: [...draft.customExercises, ...newExercises] });
+    const added = exercises.map((e) => ({ ...e, key: newId(), ...(e.raw ? { heard: true } : {}) }));
+    set((s) =>
+      s.plan
+        ? {
+            plan: {
+              ...s.plan,
+              routines: s.plan.routines.map((r, i) =>
+                i === s.routineIndex ? { ...r, exercises: [...r.exercises, ...added] } : r,
+              ),
+              newExercises: [...s.plan.newExercises, ...newExercises],
+            },
+          }
+        : {},
+    );
+  },
   selectRoutine: (routineIndex) => set({ routineIndex, following: false }),
   holdRoutine: () => get().following && set({ following: false }),
   reset: () => {

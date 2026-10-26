@@ -1,8 +1,10 @@
 // Tests the plan import (the read-plan Edge Function) with the plans in fixtures/ and scores
 // what it read against cases.json: routines, exercises (catalog match or new), sets, reps, RIR
 // and rest. With --dir it reads your own photos and files and prints what it found instead.
-// The fixtures are made up: typed and spreadsheet plans, and handwriting, whiteboard and screenshot
-// photos drawn with handwriting fonts, then tilted, shaded and blurred like phone photos.
+// The fixtures are made up: typed and spreadsheet plans, handwriting, whiteboard and screenshot
+// photos drawn with handwriting fonts, then tilted, shaded and blurred like phone photos, and
+// exercises said for one workout as speech recognition writes them down (sent to read-exercises
+// as the voice input does; they count toward its own limit).
 //
 // Needs the function with an OpenAI key at EXPO_PUBLIC_SUPABASE_URL from .env: locally
 // `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 15 imports, so
@@ -28,6 +30,7 @@ import { basename, extname, join } from 'node:path';
 import {
   loadCatalog,
   pool,
+  readExercises,
   streamPlan,
   supabaseEnv,
   timing,
@@ -100,6 +103,7 @@ function photoBase64(path, shrink) {
 }
 
 function requestBody({ files, as, language }, shrink) {
+  if (as === 'voice') return { text: readFileSync(files[0], 'utf8').trim(), language };
   if (as === 'photos') return { photos: files.map((f) => photoBase64(f, shrink)), language };
   const [path] = files;
   const mimeType = MIME[extname(path).toLowerCase()] ?? 'text/plain';
@@ -116,11 +120,13 @@ function requestBody({ files, as, language }, shrink) {
 }
 
 /**
- * One import, put together from the streamed events (see streamPlan); null once the limit is
- * reached or the function doesn't answer.
+ * One import, put together from the streamed events (see streamPlan), or the spoken exercises
+ * from read-exercises; null once the limit is reached or the function doesn't answer.
  */
 const requests = untilStopped((body) =>
-  streamPlan(`${SUPABASE_URL}/functions/v1/read-plan`, KEY, body),
+  body.text
+    ? readExercises(`${SUPABASE_URL}/functions/v1/read-exercises`, KEY, body)
+    : streamPlan(`${SUPABASE_URL}/functions/v1/read-plan`, KEY, body),
 );
 
 // ---------- reading a plan ----------

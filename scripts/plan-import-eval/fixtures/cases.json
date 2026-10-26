@@ -1326,5 +1326,160 @@
         }
       ]
     }
+  },
+  {
+    "id": "16-voice-list-de",
+    "title": "Spoken German exercise list for one workout: numbers as words, misheard English names, a correction, AMRAP",
+    "files": ["16-voice-list-de.txt"],
+    "as": "voice",
+    "language": "de",
+    "expect": {
+      "routines": [
+        {
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["incline-dumbbell-press"],
+              "sets": 3,
+              "reps": [10, 12]
+            },
+            {
+              "ex": ["lateral-raise"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["french-press"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["lat-pulldown"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["barbell-row"],
+              "sets": 4,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["pull-up"],
+              "sets": 4,
+              "reps": "none"
+            },
+            {
+              "ex": ["hack-squat"],
+              "sets": 4,
+              "reps": [10, 10]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "17-voice-legs-en",
+    "title": "Spoken English leg day without weekdays (one routine), a timed hold",
+    "files": ["17-voice-legs-en.txt"],
+    "as": "voice",
+    "language": "en",
+    "expect": {
+      "routines": [
+        {
+          "exercises": [
+            {
+              "ex": ["leg-press"],
+              "sets": 4,
+              "reps": [10, 12]
+            },
+            {
+              "ex": ["romanian-deadlift"],
+              "sets": 3,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["walking-lunge"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["lying-leg-curl"],
+              "sets": 3,
+              "reps": [15, 15]
+            },
+            {
+              "ex": ["plank"],
+              "sets": 3,
+              "seconds": 60
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "18-voice-list-ko",
+    "title": "Spoken Korean exercise list: reps before sets, a number in words",
+    "files": ["18-voice-list-ko.txt"],
+    "as": "voice",
+    "language": "ko",
+    "expect": {
+      "routines": [
+        {
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["lat-pulldown"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["leg-press"],
+              "sets": 3,
+              "reps": [15, 15]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "19-voice-list-pt-br",
+    "title": "Spoken Brazilian Portuguese exercise list, numbers as words",
+    "files": ["19-voice-list-pt-br.txt"],
+    "as": "voice",
+    "language": "pt-BR",
+    "expect": {
+      "routines": [
+        {
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 3,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["lat-pulldown"],
+              "sets": 4,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["squat"],
+              "sets": 5,
+              "reps": [5, 5]
+            }
+          ]
+        }
+      ]
+    }
   }
 ]

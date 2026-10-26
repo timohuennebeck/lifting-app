@@ -25,6 +25,11 @@ function playerFor(name: SoundName) {
   return players[name];
 }
 
+/** Another module set the audio session up (speech input): the next sound sets it up again. */
+export function resetAudioMode() {
+  audioMode = null;
+}
+
 /** Loads sounds ahead, so the first one starts on time (e.g. in step with a countdown). */
 export function preloadSounds(...names: SoundName[]) {
   names.forEach(playerFor);

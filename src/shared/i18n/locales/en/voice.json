@@ -1,0 +1,51 @@
+{
+  "title": "Voice input",
+  "format": "Exercise · sets × reps",
+  "example": "“Hack squat three by fifteen”",
+  "tap": "Tap to speak",
+  "listening": "Listening …",
+  "more": "Tap to keep talking",
+  "missed": "Didn't catch that. Tap to try again",
+  "cta": "Add exercises",
+  "heardAs": "Heard as “{{raw}}”",
+  "stages": [
+    "Detecting exercises …",
+    "Finding the matching exercises …",
+    "Applying sets and reps …"
+  ],
+  "a11y": {
+    "start": "Start speaking",
+    "stop": "Stop listening",
+    "text": "Your exercises as text"
+  },
+  "errors": {
+    "access": {
+      "title": "Microphone needed",
+      "message": "To say your exercises, Loqqa needs the microphone and speech recognition. You can also type them."
+    },
+    "unavailable": {
+      "title": "Voice input unavailable",
+      "message": "Your phone can't turn speech into text right now. You can type your exercises instead."
+    },
+    "network": {
+      "title": "No connection",
+      "message": "Speech recognition needs the internet. Check your connection and try again, or type your exercises."
+    },
+    "failed": {
+      "title": "Couldn't add the exercises",
+      "message": "Please try again. Naming each exercise with its sets and reps helps."
+    },
+    "offline": {
+      "title": "No connection",
+      "message": "Adding exercises by voice needs the internet. Check your connection and try again."
+    },
+    "limit": {
+      "title": "Daily limit reached",
+      "message": "You can add exercises by voice again tomorrow. Until then, add them with +."
+    },
+    "noExercises": {
+      "title": "No exercises heard",
+      "message": "Name each exercise with its sets and reps, like “bench press, three by ten”."
+    }
+  }
+}

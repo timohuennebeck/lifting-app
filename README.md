@@ -181,12 +181,35 @@ alternatives for the user to review.
 - **Rules (server-side):** it also runs before there is an account, so imports are limited per network
   (`PLAN_IMPORT_IP_LIMIT`, default 10) and in total (`PLAN_IMPORT_DAILY_LIMIT`, default 1,000) per
   24 hours. `plan_requests` keeps a keyed hash of the IP, never the IP itself.
-- **Testing:** `npm run plan:eval` sends the 15 test plans in `scripts/plan-import-eval/fixtures`
-  (typed, spreadsheet, handwritten, whiteboard, screenshot; German, English, Portuguese) to the
-  function and scores what it read against `cases.json`, with the time to the first exercise and
+- **Testing:** `npm run plan:eval` sends the 19 test plans in `scripts/plan-import-eval/fixtures`
+  (typed, spreadsheet, handwritten, whiteboard, screenshot, spoken; German, English, Portuguese,
+  Korean) to the functions and scores what it read against `cases.json`, with the time to the first exercise and
   to the whole plan. `npm run plan:eval -- --dir <folder>` reads your own photos and files and
-  prints what it found. One run is 15 imports, so set `PLAN_IMPORT_IP_LIMIT=1000` in
-  `supabase/functions/.env` locally first.
+  prints what it found. One run is 15 imports (the 4 spoken cases go to read-exercises), so set
+  `PLAN_IMPORT_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
+
+## Voice input
+
+Wherever exercises are edited (a plan in the plan flow, including "Selbst erstellen", a routine,
+the workout builder), a microphone next to "+" opens the voice input (`src/features/voice-input/`):
+the user names exercises with sets and reps, e.g. „Hack Squat drei mal fünfzehn", and they are
+added to the workout shown.
+
+- **Speech to text** runs on the phone with `expo-speech-recognition` (Apple's or Google's
+  recognition, in the app language). The text shows as it is heard and can be corrected by hand;
+  each tap on the microphone adds to it. The microphone and speech recognition permissions are
+  asked on the first tap. Needs a development build with the module.
+- **Matching:** the `read-exercises` Edge Function gets the text (at most 4,000 characters) with
+  the app language and answers the exercises with their sets at once (not streamed). It reads each
+  exercise exactly as `read-plan` reads a plan's line (`_shared/exercise-reading.ts`: the rules,
+  the catalog, the answer shape, the clean-up), plus rules for speech: numbers as words (Korean
+  names the reps first), misheard names, corrections.
+- **Adding:** in a plan being set up and in the workout builder, unsure matches show "Gehört
+  als …" to confirm or swap, and exercises the catalog lacks are created with the plan or when the
+  workout starts (only those still in it). A saved routine takes them at once, best match first.
+- **Rules (server-side):** limited on their own (`plan_requests` kind `voice`):
+  `PLAN_VOICE_IP_LIMIT` (default 60) per network and `PLAN_VOICE_DAILY_LIMIT` (default 5,000) in
+  total per 24 hours; Fast mode as the plan import (`PLAN_VOICE_FAST=false` turns it off).
 
 ## Plans, routines and workout entries
 

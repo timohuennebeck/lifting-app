@@ -34,6 +34,10 @@ import {
 } from '../lib/plan-import-service';
 import { useImportStore } from '../stores/import-store';
 
+/** What an unsure exercise says it was taken from: read, or heard by voice input. */
+const reviewLabel = (e: ImportedExercise) =>
+  e.heard ? ('voice:heardAs' as const) : ('planImport:confirm.readAs' as const);
+
 /**
  * 06c: the detected plan in the training overview layout (03·0b). Its routines sit in the plan
  * strip, in the order they are trained; amber dots mark what the import wasn't sure about until
@@ -44,7 +48,7 @@ import { useImportStore } from '../stores/import-store';
  * (`openPlanEditor`) and is saved back. Hold a routine in the strip to move it.
  */
 export function ConfirmScreen() {
-  const { t } = useTranslation(['planImport', 'planCreate', 'training', 'common']);
+  const { t } = useTranslation(['planImport', 'planCreate', 'training', 'voice', 'common']);
   const { step, finish, saveEdits } = usePlanFlow();
   const updateDraft = useUpdateDraft();
   const insets = useSafeAreaInsets();
@@ -223,6 +227,8 @@ export function ConfirmScreen() {
               emptyHint={t('planImport:confirm.empty')}
               scrollRef={scroller}
               onAdd={() => openPicker({ mode: 'add' })}
+              // Not while the plan is still read into the routines.
+              onVoice={reading ? undefined : () => router.push(step('/import/voice'))}
               onOpen={(i) =>
                 router.push({ pathname: '/exercise/[id]', params: { id: exercises[i].exerciseId } })
               }
@@ -241,7 +247,7 @@ export function ConfirmScreen() {
                   ) : null}
                   {e.raw ? (
                     <ReviewPrompt
-                      message={t('planImport:confirm.readAs', { raw: e.raw })}
+                      message={t(reviewLabel(e), { raw: e.raw })}
                       alternatives={e.alternatives}
                       onConfirm={() => editExercise(i, settle)}
                       onPickAlternative={(exerciseId) =>

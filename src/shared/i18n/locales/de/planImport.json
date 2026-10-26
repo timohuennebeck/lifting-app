@@ -99,7 +99,7 @@
     "reading": "Plan wird gelesen …",
     "check_one": "Noch {{count}} Punkt prüfen",
     "check_other": "Noch {{count}} Punkte prüfen",
-    "empty": "Noch keine Übungen. Füg eine mit + hinzu.",
+    "empty": "Noch keine Übungen. Füg welche mit + oder dem Mikrofon hinzu.",
     "newRoutine": "Training {{number}}",
     "renamePlan": "Plan umbenennen",
     "newExercise": "Neu · wird als eigene Übung angelegt"

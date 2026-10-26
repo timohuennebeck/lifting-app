@@ -26,6 +26,8 @@ export interface EditableExerciseListProps<T extends ExerciseDraft> {
   /** The scroll view the list is in: dragging near its edges scrolls it. */
   scrollRef: AnimatedRef<Animated.ScrollView>;
   onAdd: () => void;
+  /** The microphone next to "+": adds exercises by voice. */
+  onVoice?: () => void;
   /** A tap on a card. */
   onOpen: (index: number) => void;
   /** The menu's "edit sets"; without it the menu leaves that out. */
@@ -59,6 +61,7 @@ export function EditableExerciseList<T extends ExerciseDraft>({
   emptyHint,
   scrollRef,
   onAdd,
+  onVoice,
   onOpen,
   onEditSets,
   onSwap,
@@ -95,6 +98,7 @@ export function EditableExerciseList<T extends ExerciseDraft>({
         minutes={estimateMinutes(items)}
         addLabel={addLabel}
         onAdd={onAdd}
+        onVoice={onVoice}
       />
 
       <View className="px-5 pt-2">

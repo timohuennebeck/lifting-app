@@ -99,7 +99,7 @@
     "reading": "Reading your plan …",
     "check_one": "Check {{count}} item",
     "check_other": "Check {{count}} items",
-    "empty": "No exercises yet. Add one with +.",
+    "empty": "No exercises yet. Add some with + or the microphone.",
     "newRoutine": "Workout {{number}}",
     "renamePlan": "Rename plan",
     "newExercise": "New · added as your own exercise"

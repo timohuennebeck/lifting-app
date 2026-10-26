@@ -143,8 +143,9 @@ interface CustomExerciseState {
   /** Set once the local database was read, so ids of custom exercises resolve from the start. */
   loaded: boolean;
   /**
-   * Exercises an onboarding plan import found that aren't in the catalog: shown by name in the
-   * plan before the account exists, created with it (see the onboarding store).
+   * Exercises not saved yet, shown by name until they are: those an onboarding plan import found
+   * that aren't in the catalog (created with the account, see the onboarding store), and those
+   * voice input found for an empty workout (created when it starts). See `showDraftExercises`.
    */
   drafts: Record<string, CustomExercise>;
 }
@@ -155,6 +156,16 @@ export const useCustomExerciseStore = create<CustomExerciseState>(() => ({
   loaded: false,
   drafts: {},
 }));
+
+/** The unsaved exercises of each place that has some. */
+const draftsBySource: Record<string, CustomExercise[]> = {};
+
+/** Shows a place's unsaved exercises by name, like saved ones; an empty list clears them. */
+export function showDraftExercises(source: 'plan' | 'workout', exercises: CustomExercise[]) {
+  draftsBySource[source] = exercises;
+  const all = Object.values(draftsBySource).flat();
+  useCustomExerciseStore.setState({ drafts: Object.fromEntries(all.map((e) => [e.id, e])) });
+}
 
 const customExercises = () => useCustomExerciseStore.getState().exercises;
 const draftExercise = (id: string) => useCustomExerciseStore.getState().drafts[id];

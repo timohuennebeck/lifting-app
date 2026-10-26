@@ -1,0 +1,51 @@
+{
+  "title": "Spracheingabe",
+  "format": "Übungen · Sätze × Wiederholungen",
+  "example": "„Hack Squat drei mal fünfzehn“",
+  "tap": "Tippen zum Sprechen",
+  "listening": "Ich höre zu …",
+  "more": "Tippen zum Weitersprechen",
+  "missed": "Nichts gehört. Tippe, um es noch mal zu versuchen",
+  "cta": "Übungen hinzufügen",
+  "heardAs": "Gehört als „{{raw}}“",
+  "stages": [
+    "Erkenne Übungen …",
+    "Suche die passenden Übungen …",
+    "Übernehme Sätze und Wiederholungen …"
+  ],
+  "a11y": {
+    "start": "Spracheingabe starten",
+    "stop": "Zuhören beenden",
+    "text": "Deine Übungen als Text"
+  },
+  "errors": {
+    "access": {
+      "title": "Mikrofon erlauben",
+      "message": "Um deine Übungen einzusprechen, braucht Loqqa das Mikrofon und die Spracherkennung. Du kannst sie auch eintippen."
+    },
+    "unavailable": {
+      "title": "Spracheingabe nicht verfügbar",
+      "message": "Dein Handy kann gerade keine Sprache in Text umwandeln. Du kannst deine Übungen auch eintippen."
+    },
+    "network": {
+      "title": "Keine Verbindung",
+      "message": "Die Spracherkennung braucht Internet. Prüfe deine Verbindung und versuche es noch einmal oder tippe deine Übungen ein."
+    },
+    "failed": {
+      "title": "Übungen konnten nicht hinzugefügt werden",
+      "message": "Bitte versuche es noch einmal. Nenne am besten jede Übung mit Sätzen und Wiederholungen."
+    },
+    "offline": {
+      "title": "Keine Verbindung",
+      "message": "Zum Einsprechen von Übungen brauchst du Internet. Prüfe deine Verbindung und versuche es noch einmal."
+    },
+    "limit": {
+      "title": "Tageslimit erreicht",
+      "message": "Morgen kannst du wieder Übungen einsprechen. Bis dahin fügst du sie mit + hinzu."
+    },
+    "noExercises": {
+      "title": "Keine Übungen erkannt",
+      "message": "Nenne jede Übung mit Sätzen und Wiederholungen, z. B. „Bankdrücken drei mal zehn“."
+    }
+  }
+}

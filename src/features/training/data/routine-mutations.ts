@@ -1,5 +1,7 @@
 import { asc, eq, inArray } from 'drizzle-orm';
 
+import type { SpokenExercises } from '@/features/voice-input/lib/spoken-exercises';
+import { insertCustomExercises } from '@/shared/data/custom-exercises';
 import { newExerciseDraft, swapTargets } from '@/shared/data/exercises';
 import { nowIso } from '@/shared/data/json';
 import { nextPosition } from '@/shared/data/positions';
@@ -152,6 +154,25 @@ export async function addRoutineExercise(userId: string, routineId: string, exer
       eq(routineExercises.routine_id, routineId),
     );
     await insertRoutineExercise(tx, userId, routineId, position, newExerciseDraft(exerciseId));
+    await touchRoutine(tx, routineId);
+  });
+}
+
+/** Appends exercises the user said, with their sets, creating the ones the catalog lacks. */
+export async function addSpokenExercises(
+  userId: string,
+  routineId: string,
+  { exercises, newExercises }: SpokenExercises,
+) {
+  await drizzle.transaction(async (tx) => {
+    await insertCustomExercises(tx, userId, newExercises);
+    for (const exercise of exercises) {
+      const position = nextPosition(
+        routineExercises.position,
+        eq(routineExercises.routine_id, routineId),
+      );
+      await insertRoutineExercise(tx, userId, routineId, position, exercise);
+    }
     await touchRoutine(tx, routineId);
   });
 }

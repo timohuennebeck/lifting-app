@@ -1,19 +1,34 @@
 import { create } from 'zustand';
 
-import { newExerciseDraft, swapExerciseDraft } from '@/shared/data/exercises';
+import type { SpokenExercises } from '@/features/voice-input/lib/spoken-exercises';
+import {
+  type CustomExercise,
+  newExerciseDraft,
+  showDraftExercises,
+  swapExerciseDraft,
+} from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
 import type { ExerciseDraft, SetTarget } from '@/shared/data/routines';
 
-/** A draft exercise; `key` stays with it when it is dragged to another place. */
-type DraftExercise = ExerciseDraft & { key: string };
+/**
+ * A draft exercise; `key` stays with it when it is dragged to another place. One added by voice
+ * that it wasn't sure about has what was heard (`raw`) and likely others until it is settled.
+ */
+export type DraftExercise = ExerciseDraft & { key: string; raw?: string; alternatives?: string[] };
 
 interface WorkoutDraftState {
   name: string;
   exercises: DraftExercise[];
+  /** Exercises voice input found that the catalog lacks; created when the workout starts. */
+  newExercises: CustomExercise[];
   /** Starts a fresh draft. */
   begin: (name: string) => void;
   rename: (name: string) => void;
   add: (exerciseIds: string[]) => void;
+  /** Appends exercises the user said, with their target sets. */
+  addSpoken: (spoken: SpokenExercises) => void;
+  /** Keeps a voice match the user confirmed. */
+  settle: (at: number) => void;
   /** Replaces exercise `at`; its sets get new defaults when the measures differ. */
   swap: (at: number, exerciseId: string) => void;
   remove: (at: number) => void;
@@ -21,6 +36,9 @@ interface WorkoutDraftState {
   move: (at: number, to: number) => void;
   setSets: (at: number, sets: SetTarget[], restSeconds: number | null) => void;
 }
+
+/** Without voice input's doubts. */
+const settled = ({ raw: _raw, alternatives: _alts, ...e }: DraftExercise): DraftExercise => e;
 
 /**
  * An empty workout being put together before it starts: exercises and target sets like a
@@ -32,7 +50,11 @@ export const useWorkoutDraftStore = create<WorkoutDraftState>()((set) => {
   return {
     name: '',
     exercises: [],
-    begin: (name) => set({ name, exercises: [] }),
+    newExercises: [],
+    begin: (name) => {
+      showDraftExercises('workout', []);
+      set({ name, exercises: [], newExercises: [] });
+    },
     rename: (name) => set({ name }),
     add: (exerciseIds) =>
       set((s) => ({
@@ -41,7 +63,18 @@ export const useWorkoutDraftStore = create<WorkoutDraftState>()((set) => {
           ...exerciseIds.map((id) => ({ ...newExerciseDraft(id), key: newId() })),
         ],
       })),
-    swap: (at, exerciseId) => editAt(at, (e) => swapExerciseDraft(e, exerciseId)),
+    addSpoken: ({ exercises, newExercises }) =>
+      set((s) => {
+        const pending = [...s.newExercises, ...newExercises];
+        // Shown by name until the workout starts and creates them.
+        showDraftExercises('workout', pending);
+        return {
+          exercises: [...s.exercises, ...exercises.map((e) => ({ ...e, key: newId() }))],
+          newExercises: pending,
+        };
+      }),
+    settle: (at) => editAt(at, settled),
+    swap: (at, exerciseId) => editAt(at, (e) => settled(swapExerciseDraft(e, exerciseId))),
     remove: (at) => set((s) => ({ exercises: s.exercises.filter((_, i) => i !== at) })),
     move: (at, to) =>
       set((s) => {

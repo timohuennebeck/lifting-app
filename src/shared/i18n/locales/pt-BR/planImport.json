@@ -99,7 +99,7 @@
     "reading": "Lendo o plano …",
     "check_one": "Revisar {{count}} item",
     "check_other": "Revisar {{count}} itens",
-    "empty": "Ainda sem exercícios. Adicione um com +.",
+    "empty": "Ainda sem exercícios. Adicione com + ou com o microfone.",
     "newRoutine": "Treino {{number}}",
     "renamePlan": "Renomear plano",
     "newExercise": "Novo · criado como exercício personalizado"
