@@ -152,16 +152,19 @@ export function RanksScreen() {
           contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
         >
           <View className="mx-4 mt-3 gap-3.5 rounded-[18px] bg-surface p-5">
-            <Text variant="overline" tone="subtle" className="text-[11px]">
-              {t('ranks.yours')}
-            </Text>
-            <View className="-mt-1.5 flex-row items-end justify-between gap-3">
-              <Text
-                numberOfLines={1}
-                className="shrink font-inter-semibold text-[30px] leading-9 tracking-[-0.5px]"
-              >
-                {t(`level.tiers.${current.tier}`)}
-              </Text>
+            <View className="flex-row items-end justify-between gap-3">
+              {/* The overline sits on the rank's name, not on the taller level beside it. */}
+              <View className="shrink gap-1">
+                <Text variant="overline" tone="subtle" className="text-[11px]">
+                  {t('ranks.yours')}
+                </Text>
+                <Text
+                  numberOfLines={1}
+                  className="font-inter-semibold text-[30px] leading-9 tracking-[-0.5px]"
+                >
+                  {t(`level.tiers.${current.tier}`)}
+                </Text>
+              </View>
               <View className="flex-row items-baseline gap-1">
                 <Text className="font-inter-semibold text-[48px] leading-[50px] tabular-nums">
                   {level}

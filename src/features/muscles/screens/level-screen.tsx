@@ -5,8 +5,8 @@ import { View } from 'react-native';
 
 import { TabScreen } from '@/shared/components/tab-screen';
 import { DAY_MS } from '@/shared/lib/date';
+import { Button } from '@/shared/ui/button';
 import { BodyMaps, MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
-import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { LevelCard } from '../components/level-card';
@@ -60,11 +60,7 @@ export function LevelScreen() {
 
   const cardProps = (muscle: MuscleId) => {
     const level = levels.get(muscle);
-    if (!level) {
-      return {
-        onFind: () => router.push({ pathname: '/search', params: { muscle } }),
-      };
-    }
+    if (!level) return {};
     const now = Math.floor(level.value);
     const was = before.get(muscle);
     const seenLevel = seen[muscle];
@@ -87,15 +83,7 @@ export function LevelScreen() {
       <BodyMaps selected={trained} />
       {isLoading ? null : (
         <>
-          {/* The overall level opens the ranks: where it stands and what each rank takes. */}
-          <PressableScale
-            haptic="tap"
-            activeScale={0.98}
-            accessibilityRole="button"
-            accessibilityLabel={t('ranks.open')}
-            onPress={() => router.push('/ranks')}
-            className="gap-3 px-5 pt-1"
-          >
+          <View className="gap-3 px-5 pt-1">
             <Text variant="overline" tone="subtle" className="text-[11px]">
               {t('level.overall')}
             </Text>
@@ -115,7 +103,16 @@ export function LevelScreen() {
             <View className="h-2 overflow-hidden rounded-full bg-control">
               <View className="h-full rounded-full bg-accent" style={{ width: `${overall}%` }} />
             </View>
-          </PressableScale>
+            {/* The ranks: where the overall level stands and what each rank takes. */}
+            <Button
+              label={t('level.overview')}
+              variant="secondary"
+              size="md"
+              accessibilityLabel={t('ranks.open')}
+              className="mt-2"
+              onPress={() => router.push('/ranks')}
+            />
+          </View>
           <View className="gap-2 px-4 pt-7">
             {rows.map((row) => (
               <View key={row[0]} className="flex-row gap-2">
