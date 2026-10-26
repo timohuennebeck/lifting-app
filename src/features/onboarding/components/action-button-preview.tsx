@@ -47,21 +47,23 @@ export function ActionButtonPreview() {
       importantForAccessibility="no-hide-descendants"
     >
       <View className="absolute top-7 right-[6%] -bottom-16 left-[24%]">
-        {/* The side buttons, outside the frame: the Action button, then the volume buttons. */}
-        <View className="absolute top-16 -left-3 h-11 w-4 rounded-md border border-accent/40 bg-accent/20" />
-        <View className="absolute top-[70px] -left-[7px] h-8 w-[5px] rounded-sm bg-accent" />
-        <View className="absolute top-31 -left-[7px] h-10 w-[5px] rounded-sm bg-control" />
-        <View className="absolute top-45 -left-[7px] h-10 w-[5px] rounded-sm bg-control" />
+        {/* The side buttons, reaching 4pt under the frame drawn over them so they sit flush on
+            it: the Action button in two rings of glow (10 %, then 25 % accent), then volume. */}
+        <View className="absolute top-14 -left-[15px] h-15 w-[19px] rounded-md bg-accent/10" />
+        <View className="absolute top-15.5 -left-2.5 h-12 w-3.5 rounded bg-accent/[0.17]" />
+        <View className="absolute top-16.5 -left-[5px] h-10 w-[9px] rounded-sm bg-accent" />
+        <View className="absolute top-[125px] -left-1 h-[45px] w-2 rounded-sm bg-track" />
+        <View className="absolute top-[179px] -left-1 h-[51px] w-2 rounded-sm bg-track" />
         {/* A box of its own width: with only `right` set the label would get none and wrap. */}
-        <View className="absolute top-[74px] right-full mr-4 w-40 items-end">
-          <View className="h-6 justify-center rounded-full bg-accent px-2.5">
+        <View className="absolute top-[75px] right-full mr-[17px] w-40 items-end">
+          <View className="h-5.5 justify-center rounded-full bg-accent px-2">
             <Text variant="caption" tone="onAccent" numberOfLines={1} className="font-inter-bold">
               {t('actionButton.action')}
             </Text>
           </View>
         </View>
 
-        <View className="flex-1 items-center rounded-[46px] border-8 border-control bg-bg pt-14">
+        <View className="flex-1 items-center rounded-[46px] border-[7px] border-line bg-bg pt-14">
           <View className="flex-row items-baseline gap-1">
             <Text className="font-inter-semibold text-[56px] leading-[60px] tracking-[-2px] tabular-nums">
               {formatNumber(tenths / 10, 1, 1)}
