@@ -51,7 +51,6 @@ export function RoutineScreen() {
 
   const header = (
     <ScreenHeader
-      icon="chevron-left-thin"
       title={
         <View className="items-center">
           <Text variant="bodyStrong" numberOfLines={1} className="text-center">

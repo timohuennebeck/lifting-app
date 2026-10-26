@@ -9,8 +9,8 @@ import { IconButton } from './icon-button';
 import { Text } from './text';
 
 export interface ScreenHeaderProps {
-  /** Leading button: back chevron (thin on the training screens) or close cross; null for none. */
-  icon?: 'chevron-left' | 'chevron-left-thin' | 'close' | null;
+  /** Leading button: back chevron or close cross; null for none. */
+  icon?: 'chevron-left' | 'close' | null;
   /** Defaults to `router.back()`. */
   onBack?: () => void;
   /** Replaces the leading button. */

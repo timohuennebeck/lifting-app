@@ -68,7 +68,7 @@ export function WorkoutBuilderScreen() {
   }
 
   return (
-    <Screen header={<ScreenHeader icon="chevron-left-thin" title={t('builder.title')} />}>
+    <Screen header={<ScreenHeader title={t('builder.title')} />}>
       <Animated.ScrollView
         ref={scrollRef}
         showsVerticalScrollIndicator={false}

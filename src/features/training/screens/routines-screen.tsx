@@ -94,7 +94,7 @@ export function RoutinesScreen() {
       : [];
 
   return (
-    <Screen header={<ScreenHeader icon="chevron-left-thin" title={t('home.single')} />}>
+    <Screen header={<ScreenHeader title={t('home.single')} />}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 24 }}

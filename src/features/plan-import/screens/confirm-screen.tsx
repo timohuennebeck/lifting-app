@@ -183,7 +183,6 @@ export function ConfirmScreen() {
     <Screen
       header={
         <ScreenHeader
-          icon="chevron-left-thin"
           title={plan.name}
           action={
             <IconButton

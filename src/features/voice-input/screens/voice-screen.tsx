@@ -90,7 +90,7 @@ export function VoiceScreen({ onAdd }: VoiceScreenProps) {
 
   return (
     <Screen
-      header={<ScreenHeader icon="close" title={t('title')} />}
+      header={<ScreenHeader title={t('title')} />}
       // Kept the same height without the button, so the microphone doesn't move when it shows.
       footer={
         <View className="h-15">

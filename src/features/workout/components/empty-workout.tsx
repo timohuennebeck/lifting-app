@@ -20,7 +20,6 @@ export function EmptyWorkout({ name, onBack, onMenu, onAdd }: EmptyWorkoutProps)
     <View className="flex-1">
       <ScreenHeader
         className="gap-3.5 pr-5"
-        icon="chevron-left-thin"
         onBack={onBack}
         title={
           <Text variant="bodyStrong" numberOfLines={1} className="text-center text-lg">
