@@ -57,6 +57,8 @@ export function LevelScreen() {
     shown.slice(i * 2, i * 2 + 2),
   );
 
+  const openRanks = () => router.push('/ranks');
+
   const cardProps = (muscle: MuscleId) => {
     const level = levels.get(muscle);
     if (!level) return {};
@@ -82,15 +84,20 @@ export function LevelScreen() {
       <BodyMaps selected={trained} />
       {isLoading ? null : (
         <>
-          <RankCard level={Math.floor(overallLevel(levels))} className="mx-4 mt-1">
-            {/* The ranks: what each one takes and the muscles in it. */}
+          {/* The card and its button open the ranks: what each takes and the muscles in it. */}
+          <RankCard
+            level={Math.floor(overallLevel(levels))}
+            accessibilityLabel={t('ranks.open')}
+            onPress={openRanks}
+            className="mx-4 mt-1"
+          >
             <Button
               label={t('level.overview')}
               variant="secondary"
               size="md"
               accessibilityLabel={t('ranks.open')}
               className="mt-1.5"
-              onPress={() => router.push('/ranks')}
+              onPress={openRanks}
             />
           </RankCard>
           <View className="gap-2 px-4 pt-7">
