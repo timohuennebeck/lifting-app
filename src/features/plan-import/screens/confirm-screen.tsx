@@ -120,6 +120,8 @@ export function ConfirmScreen() {
   // Adding and swapping happen on the library page; picks apply when it closes with "Done".
   const openPicker = (params: { mode: 'add' } | { mode: 'swap'; index: string }) =>
     router.push({ pathname: step('/import/picker'), params });
+  const openSets = (i: number) =>
+    router.push({ pathname: step('/import/sets'), params: { index: String(i) } });
 
   function addRoutine() {
     if (!plan) return;
@@ -229,9 +231,8 @@ export function ConfirmScreen() {
               onAdd={() => openPicker({ mode: 'add' })}
               // Not while the plan is still read into the routines.
               onVoice={reading ? undefined : () => router.push(step('/import/voice'))}
-              onOpen={(i) =>
-                router.push({ pathname: '/exercise/[id]', params: { id: exercises[i].exerciseId } })
-              }
+              onOpen={openSets}
+              onEditSets={openSets}
               onSwap={(i) => openPicker({ mode: 'swap', index: String(i) })}
               onRemove={(i) =>
                 editRoutine((r) => ({ ...r, exercises: r.exercises.filter((_, k) => k !== i) }))

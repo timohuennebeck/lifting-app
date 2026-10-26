@@ -25,6 +25,7 @@ type PlanStep =
   | '/import/reading'
   | '/import/confirm'
   | '/import/picker'
+  | '/import/sets'
   | '/create/goal'
   | '/create/focus'
   | '/create/equipment'
