@@ -23,7 +23,8 @@
   },
   "breakdown": {
     "primary": "Primários",
-    "secondary": "Secundários"
+    "secondary": "Secundários",
+    "showMore": "Mostrar mais {{count}}"
   },
   "level": {
     "overall": "Nível geral",

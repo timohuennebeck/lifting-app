@@ -23,7 +23,8 @@
   },
   "breakdown": {
     "primary": "주동근",
-    "secondary": "보조근"
+    "secondary": "보조근",
+    "showMore": "{{count}}개 더 보기"
   },
   "level": {
     "overall": "전체 레벨",
