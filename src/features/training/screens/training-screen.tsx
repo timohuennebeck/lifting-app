@@ -1,8 +1,9 @@
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
+import Animated, { useAnimatedRef } from 'react-native-reanimated';
 
-import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
+import { openPlanEditor, openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { TabScreen } from '@/shared/components/tab-screen';
 import {
   type PlanStatus,
@@ -32,6 +33,7 @@ import { PlanPrompt } from '../components/plan-prompt';
 import { RECENT_ROUTINES, RoutineRows, useRoutineMeta } from '../components/routine-row';
 import { SectionTitle } from '../components/section-title';
 import { WeekStrip } from '../components/week-strip';
+import { reorderPlanRoutine } from '../data/routine-mutations';
 import { useStartRoutine } from '../hooks/use-start-routine';
 import { useWeekWorkouts } from '../hooks/use-week-workouts';
 
@@ -46,8 +48,9 @@ function recentFirst(routines: RoutineSummary[], lastDone: DoneDates, language: 
 
 /**
  * Training, the first tab: the week with its workouts (a finished one opens its summary), the
- * plan it follows with where it stands and its routines, then the routines outside a plan
- * (Einzeltrainings). Without a plan, or with an empty one, a way to make or fill it.
+ * plan it follows with where it stands (a tap opens it to edit) and its routines (hold one to
+ * move it), then the routines outside a plan (Einzeltrainings). Without a plan, or with an empty
+ * one, a way to make or fill it.
  */
 export function TrainingScreen() {
   const { t, i18n } = useTranslation(['training', 'muscles']);
@@ -63,6 +66,7 @@ export function TrainingScreen() {
   const meta = useRoutineMeta();
   // One starter for the whole screen, so two starts can't race.
   const { start, startingId } = useStartRoutine();
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
 
   const planRoutines = plan ? routines.filter((r) => r.planId === plan.id) : [];
   const library = routines.filter((r) => r.planId === null);
@@ -125,6 +129,7 @@ export function TrainingScreen() {
 
   return (
     <TabScreen
+      scrollRef={scrollRef}
       pinned={
         <View>
           {resume}
@@ -146,7 +151,7 @@ export function TrainingScreen() {
                 status={card.status}
                 routines={planRoutines}
                 goal={profile?.goal}
-                onEdit={() => {}}
+                onEdit={() => void openPlanEditor(card.plan.id)}
               />
               <SectionTitle>
                 {t('home.planRoutines', {
@@ -163,6 +168,8 @@ export function TrainingScreen() {
                 nextId={nextId}
                 startingId={startingId}
                 onStart={start}
+                onMove={(id, to) => void reorderPlanRoutine(id, to)}
+                scrollRef={scrollRef}
               />
             </>
           ) : null}

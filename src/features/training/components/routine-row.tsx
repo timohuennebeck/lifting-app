@@ -1,9 +1,13 @@
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
+import type Animated from 'react-native-reanimated';
+import type { AnimatedRef } from 'react-native-reanimated';
+import Sortable from 'react-native-sortables';
 
 import { type MuscleShare, muscleShares } from '@/shared/data/muscles';
 import type { ExerciseItem, RoutineSummary } from '@/shared/data/routines';
+import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -204,9 +208,16 @@ interface RoutineRowsProps {
   nextId?: string;
   startingId: string | null;
   onStart: (routine: RoutineSummary) => void;
+  /** A card held and dragged to another place; without it the cards stay put. */
+  onMove?: (routineId: string, toIndex: number) => void;
+  /** The scroll view the cards are in: dragging near its edges scrolls it. */
+  scrollRef?: AnimatedRef<Animated.ScrollView>;
 }
 
-/** Routine cards with quick start; an empty routine opens instead, to add exercises. */
+/**
+ * Routine cards with quick start; an empty routine opens instead, to add exercises. With `onMove`,
+ * hold a card to drag it to another place.
+ */
 export function RoutineRows({
   routines,
   meta,
@@ -215,25 +226,39 @@ export function RoutineRows({
   nextId,
   startingId,
   onStart,
+  onMove,
+  scrollRef,
 }: RoutineRowsProps) {
+  const drag = useSortableDrag<RoutineSummary>(({ key, toIndex }) => onMove?.(key, toIndex));
+  const row = (routine: RoutineSummary) => (
+    <RoutineRow
+      key={routine.id}
+      name={routine.name}
+      items={routine.items}
+      focus={focus?.(routine)}
+      done={done?.(routine)}
+      next={routine.id === nextId}
+      meta={meta(routine)}
+      starting={startingId === routine.id}
+      onPress={drag.unlessDragging(() => router.push(`/routine/${routine.id}`))}
+      onStart={drag.unlessDragging(() =>
+        routine.exerciseCount ? onStart(routine) : router.push(`/routine/${routine.id}`),
+      )}
+    />
+  );
+
+  if (!onMove) return <View className="gap-2 px-4">{routines.map(row)}</View>;
   return (
-    <View className="gap-2 px-4">
-      {routines.map((routine) => (
-        <RoutineRow
-          key={routine.id}
-          name={routine.name}
-          items={routine.items}
-          focus={focus?.(routine)}
-          done={done?.(routine)}
-          next={routine.id === nextId}
-          meta={meta(routine)}
-          starting={startingId === routine.id}
-          onPress={() => router.push(`/routine/${routine.id}`)}
-          onStart={() =>
-            routine.exerciseCount ? onStart(routine) : router.push(`/routine/${routine.id}`)
-          }
-        />
-      ))}
+    <View className="px-4">
+      <Sortable.Grid
+        data={routines}
+        keyExtractor={(routine) => routine.id}
+        columns={1}
+        rowGap={8}
+        scrollableRef={scrollRef}
+        {...drag.gridProps}
+        renderItem={({ item }) => row(item)}
+      />
     </View>
   );
 }

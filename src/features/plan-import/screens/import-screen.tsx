@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
+import { newId } from '@/shared/data/json';
 import { FormatCards } from '@/shared/ui/format-cards';
 import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -26,7 +27,7 @@ export function ImportScreen() {
   function buildOwn() {
     setPlan({
       name: t('index.ownPlan'),
-      routines: [{ name: t('confirm.newRoutine', { number: 1 }), exercises: [] }],
+      routines: [{ key: newId(), name: t('confirm.newRoutine', { number: 1 }), exercises: [] }],
       newExercises: [],
     });
     router.push(step('/import/confirm'));

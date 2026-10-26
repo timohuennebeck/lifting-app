@@ -79,6 +79,36 @@ export async function renameRoutine(routineId: string, name: string) {
     .where(eq(routines.id, routineId));
 }
 
+/**
+ * Puts a plan's routine at slot `target` of the plan (dragged there on Training); the others close
+ * up around it.
+ */
+export async function reorderPlanRoutine(routineId: string, target: number) {
+  await drizzle.transaction(async (tx) => {
+    const routine = await tx
+      .select({ plan_id: routines.plan_id })
+      .from(routines)
+      .where(eq(routines.id, routineId))
+      .get();
+    if (!routine?.plan_id) return;
+    const rows = await tx
+      .select({ id: routines.id, position: routines.position })
+      .from(routines)
+      .where(eq(routines.plan_id, routine.plan_id))
+      .orderBy(routines.position);
+    const order = rows.map((r) => r.id).filter((id) => id !== routineId);
+    if (target < 0 || target > order.length) return;
+    order.splice(target, 0, routineId);
+    const before = new Map(rows.map((r) => [r.id, r.position]));
+    for (const [position, id] of order.entries()) {
+      // Only rows that are off: every write is queued for upload.
+      if (before.get(id) !== position) {
+        await tx.update(routines).set({ position }).where(eq(routines.id, id));
+      }
+    }
+  });
+}
+
 export async function deleteRoutine(routineId: string) {
   await drizzle.transaction((tx) => deleteRoutineTx(tx, routineId));
 }

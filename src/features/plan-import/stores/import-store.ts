@@ -25,6 +25,8 @@ interface ImportState {
   workbook: SheetSummary[] | null;
   /** Detected plan being reviewed on the confirm screen; it fills in while `reading`. */
   plan: ImportedPlan | null;
+  /** The saved plan `plan` is, when the editor changes it ("Bearbeiten") instead of making one. */
+  editing: string | null;
   /** Selected routine tab on the confirm screen. */
   routineIndex: number;
   /** Counts the runs, so a screen only reacts to the one it started or shows. */
@@ -53,6 +55,8 @@ interface ImportState {
   /** Stops that run if it is still going (the user left it). */
   stop: (run: number) => void;
   setPlan: (plan: ImportedPlan) => void;
+  /** Opens saved plan `planId` in the editor, to be changed rather than made anew. */
+  editSaved: (planId: string, plan: ImportedPlan) => void;
   editPlan: (edit: (plan: ImportedPlan) => ImportedPlan) => void;
   selectRoutine: (index: number) => void;
   /** Stops following the routine being read (the user started on the one shown). */
@@ -69,6 +73,7 @@ const EMPTY = {
   source: null,
   workbook: null,
   plan: null,
+  editing: null,
   routineIndex: 0,
   reading: false,
   failure: null,
@@ -105,7 +110,7 @@ function receive(s: ImportState, event: PlanEvent): Partial<ImportState> {
   const { plan } = s;
   if (!plan) return {};
   if (event.type === 'routine') {
-    const routines = [...plan.routines, { ...event.routine, exercises: [] }];
+    const routines = [...plan.routines, { ...event.routine, key: newId(), exercises: [] }];
     const at = routines.length - 1;
     return {
       plan: { ...plan, routines },
@@ -128,7 +133,7 @@ function receive(s: ImportState, event: PlanEvent): Partial<ImportState> {
 
 /**
  * In-memory state of one plan import or AI plan session (source, the plan as it comes in, review
- * position).
+ * position), or of a saved plan being edited.
  */
 export const useImportStore = create<ImportState>()((set, get) => ({
   ...EMPTY,
@@ -168,7 +173,15 @@ export const useImportStore = create<ImportState>()((set, get) => ({
     running = controller;
     const { source, run: last } = get();
     const run = last + 1;
-    set({ run, plan: null, routineIndex: 0, reading: !!source, failure: null, following: true });
+    set({
+      run,
+      plan: null,
+      editing: null,
+      routineIndex: 0,
+      reading: !!source,
+      failure: null,
+      following: true,
+    });
     if (!source) return run;
     const startedAt = Date.now();
     streamPlan(
@@ -196,7 +209,11 @@ export const useImportStore = create<ImportState>()((set, get) => ({
   },
   setPlan: (plan) => {
     running?.abort();
-    set({ plan, routineIndex: 0, reading: false, failure: null });
+    set({ plan, editing: null, routineIndex: 0, reading: false, failure: null });
+  },
+  editSaved: (planId, plan) => {
+    running?.abort();
+    set({ ...EMPTY, plan, editing: planId });
   },
   editPlan: (edit) => set((s) => (s.plan ? { plan: edit(s.plan) } : {})),
   selectRoutine: (routineIndex) => set({ routineIndex, following: false }),
