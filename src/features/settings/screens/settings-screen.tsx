@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { legalHref } from '@/features/legal/lib/legal-href';
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { useUploadQueueStore } from '@/features/support/stores/upload-queue-store';
 import { LanguageSheet } from '@/shared/components/language-sheet';
@@ -37,8 +38,8 @@ type OpenSheet = 'language' | 'signOut' | 'delete';
 
 const LINKS: { key: 'help' | 'privacy' | 'terms'; href: Href }[] = [
   { key: 'help', href: '/support' },
-  { key: 'privacy', href: '/legal/privacy' },
-  { key: 'terms', href: '/legal/terms' },
+  { key: 'privacy', href: legalHref('privacy') },
+  { key: 'terms', href: legalHref('terms') },
 ];
 
 export function SettingsScreen() {

@@ -27,6 +27,7 @@ import {
 } from '../data/legal-acceptances';
 import type { LegalDocument } from '../data/legal-documents';
 import { diffLegalDocuments, type LegalChange, legalChanges } from '../lib/legal-diff';
+import { legalHref } from '../lib/legal-href';
 
 const CHANGE_ICON: Record<LegalChange['kind'], { icon: IconName; box: string; color: string }> = {
   added: { icon: 'plus', box: 'bg-accent', color: colors.onAccent },
@@ -189,7 +190,7 @@ function DocumentLink({ document }: { document: LegalDocument }) {
       haptic="tap"
       activeScale={0.98}
       accessibilityRole="link"
-      onPress={() => router.push(`/legal/${document.kind}`)}
+      onPress={() => router.push(legalHref(document.kind))}
       className="mb-1.5 flex-row items-center gap-3 rounded-[22px] bg-surface p-4"
     >
       <View className="min-w-0 flex-1 gap-0.5">

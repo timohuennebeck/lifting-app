@@ -6,6 +6,7 @@ import { haptics } from '@/shared/lib/haptics';
 import { Text } from '@/shared/ui/text';
 
 import type { LegalKind } from '../data/legal-documents';
+import { legalHref } from '../lib/legal-href';
 
 export interface LegalLinkProps {
   kind: LegalKind;
@@ -20,7 +21,7 @@ export function LegalLink({ kind, children }: LegalLinkProps) {
       accessibilityRole="link"
       onPress={() => {
         haptics.tap();
-        router.push(`/legal/${kind}`);
+        router.push(legalHref(kind));
       }}
       className="text-xs leading-4.25"
     >
