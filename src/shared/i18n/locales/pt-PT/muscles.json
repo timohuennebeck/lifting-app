@@ -28,6 +28,7 @@
   },
   "level": {
     "overall": "Nível geral",
+    "overview": "Visão geral",
     "badge": "Nv.",
     "toNext": "{{percent}} % até Nv. {{next}}",
     "max": "Nível máximo",
@@ -35,7 +36,6 @@
     "pause_other": "Pausa · {{count}} sem.",
     "new": "Novo",
     "locked": "Sem nível",
-    "find": "Encontrar exercício",
     "tiers": {
       "beginner": "Iniciante",
       "novice": "Em progresso",

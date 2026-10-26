@@ -28,6 +28,7 @@
   },
   "level": {
     "overall": "전체 레벨",
+    "overview": "개요",
     "badge": "Lv.",
     "toNext": "Lv. {{next}}까지 {{percent}}%",
     "max": "최고 레벨",
@@ -35,7 +36,6 @@
     "pause_other": "휴식 중 · {{count}}주",
     "new": "NEW",
     "locked": "레벨 없음",
-    "find": "운동 찾기",
     "tiers": {
       "beginner": "입문",
       "novice": "초급",

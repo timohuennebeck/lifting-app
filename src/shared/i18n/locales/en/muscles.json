@@ -28,6 +28,7 @@
   },
   "level": {
     "overall": "Overall level",
+    "overview": "Overview",
     "badge": "Lv.",
     "toNext": "{{percent}}% to Lv. {{next}}",
     "max": "Top level",
@@ -35,7 +36,6 @@
     "pause_other": "Paused · {{count}} wk",
     "new": "New",
     "locked": "No level",
-    "find": "Find an exercise",
     "tiers": {
       "beginner": "Beginner",
       "novice": "Novice",

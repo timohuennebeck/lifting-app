@@ -6,7 +6,6 @@ import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { MUSCLE_IDS, MuscleCrop, type MuscleId } from '@/shared/ui/muscle-map';
-import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { type Tier, tierOf } from '../lib/levels';
@@ -34,8 +33,6 @@ export interface LevelCardProps {
   fresh?: number;
   /** Weeks since it was last trained, once that's long enough to count as a pause. */
   pauseWeeks?: number;
-  /** For a muscle without a level: find an exercise for it. */
-  onFind?: () => void;
 }
 
 /** A muscle on the Level tab: its picture, level, progress to the next and what changed. */
@@ -45,19 +42,15 @@ export const LevelCard = memo(function LevelCard({
   gain,
   fresh,
   pauseWeeks,
-  onFind,
 }: LevelCardProps) {
   const { t } = useTranslation('muscles');
   const name = t(`names.${muscle}`);
 
   if (value === undefined) {
     return (
-      <PressableScale
-        haptic="tap"
-        activeScale={0.98}
-        accessibilityRole="button"
-        accessibilityLabel={`${name}, ${t('level.locked')}. ${t('level.find')}`}
-        onPress={onFind}
+      <View
+        accessible
+        accessibilityLabel={`${name}, ${t('level.locked')}`}
         className="min-w-0 flex-1 gap-2.5 rounded-[18px] bg-tile px-2.5 pt-2.5 pb-3.5"
       >
         <View className="aspect-square w-full overflow-hidden rounded-xl bg-elevated">
@@ -71,11 +64,11 @@ export const LevelCard = memo(function LevelCard({
             {name}
           </Text>
           <View className="h-1.5 rounded-full bg-control" />
-          <Text variant="caption" tone="accent" numberOfLines={1} className="text-xs">
-            {`${t('level.locked')} · ${t('level.find')}`}
+          <Text variant="caption" tone="subtle" numberOfLines={1} className="text-xs">
+            {t('level.locked')}
           </Text>
         </View>
-      </PressableScale>
+      </View>
     );
   }
 

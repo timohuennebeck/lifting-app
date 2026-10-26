@@ -28,6 +28,7 @@
   },
   "level": {
     "overall": "Gesamtlevel",
+    "overview": "Übersicht",
     "badge": "Lv.",
     "toNext": "{{percent}} % bis Lv. {{next}}",
     "max": "Höchstes Level",
@@ -35,7 +36,6 @@
     "pause_other": "Pause · {{count}} Wo.",
     "new": "Neu",
     "locked": "Kein Level vorhanden",
-    "find": "Übung finden",
     "tiers": {
       "beginner": "Einsteiger",
       "novice": "Fortgeschritten",
