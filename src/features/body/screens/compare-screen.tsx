@@ -17,11 +17,12 @@ import { cn } from '@/shared/lib/cn';
 import { DAY_MS } from '@/shared/lib/date';
 import { formatShortDate } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
+import { CompareArrow } from '@/shared/ui/compare-photo-card';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
-import { BodyPhotoCard, CompareArrow } from '../components/body-photo-card';
+import { BodyPhotoCard } from '../components/body-photo-card';
 import { comparedPair, inOrder } from '../lib/comparison';
 import { useCompareStore } from '../stores/compare-store';
 

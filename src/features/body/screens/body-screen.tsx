@@ -23,11 +23,12 @@ import { formatLongDate, formatShortDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
+import { CompareArrow } from '@/shared/ui/compare-photo-card';
 import { Icon } from '@/shared/ui/icon';
 import { ScaleBar } from '@/shared/ui/scale-bar';
 import { Text } from '@/shared/ui/text';
 
-import { BodyPhotoCard, CompareArrow, NextCheckCard } from '../components/body-photo-card';
+import { BodyPhotoCard, NextCheckCard } from '../components/body-photo-card';
 import { CheckHistoryRow } from '../components/check-history-row';
 import { comparedPair } from '../lib/comparison';
 import { useCompareStore } from '../stores/compare-store';
