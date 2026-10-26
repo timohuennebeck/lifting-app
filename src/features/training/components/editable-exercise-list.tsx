@@ -121,6 +121,8 @@ export function EditableExerciseList<T extends ExerciseDraft>({
   const focused = useIsFocused();
   const keys = exercises.map(keyOf);
   const latestKeys = useRef(keys);
+  /** Scrolling to the end while the new cards are laid out: the list only grows once they are. */
+  const following = useRef(false);
   const [left, setLeft] = useState<ReadonlySet<string> | null>(null);
   /** The cards that came in, each with its delay in the batch it came in with. */
   const [revealed, setRevealed] = useState<ReadonlyMap<string, number>>(() => new Map());
@@ -134,12 +136,19 @@ export function EditableExerciseList<T extends ExerciseDraft>({
   }, [focused]);
   useEffect(() => {
     if (!focused || !joinedToReveal) return;
-    const scroll = setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 50);
+    const toEnd = () => scrollRef.current?.scrollToEnd({ animated: true });
+    following.current = true;
+    const scroll = setTimeout(toEnd, 50);
     const batch = joinedToReveal.split('\n').map((k, i) => [k, i * STAGGER_MS] as const);
-    const reveal = setTimeout(() => setRevealed((r) => new Map([...r, ...batch])), REVEAL_AFTER_MS);
+    const reveal = setTimeout(() => {
+      toEnd();
+      setRevealed((r) => new Map([...r, ...batch]));
+    }, REVEAL_AFTER_MS);
+    const settled = setTimeout(() => (following.current = false), 1000);
     return () => {
       clearTimeout(scroll);
       clearTimeout(reveal);
+      clearTimeout(settled);
     };
   }, [focused, joinedToReveal, scrollRef]);
 
@@ -165,7 +174,10 @@ export function EditableExerciseList<T extends ExerciseDraft>({
         onVoice={onVoice}
       />
 
-      <View className="px-5 pt-2">
+      <View
+        className="px-5 pt-2"
+        onLayout={() => following.current && scrollRef.current?.scrollToEnd({ animated: true })}
+      >
         {exercises.length ? (
           <Sortable.Grid
             data={exercises}
