@@ -31,6 +31,7 @@ export interface ActivitySet {
 /** Texts in the app language: the widget runtime has no i18n. */
 export interface ActivityTexts {
   rest: string;
+  /** Read out for the ±10 s buttons, which show icons. */
   minus: string;
   plus: string;
   skipRest: string;

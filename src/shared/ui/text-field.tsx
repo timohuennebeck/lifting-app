@@ -21,7 +21,7 @@ export interface TextFieldProps extends TextInputProps {
   icon?: IconName;
   /** A pill for search fields; every other field has rounded corners. */
   shape?: 'rounded' | 'pill';
-  /** 44pt instead of 56pt, e.g. the search bar, as tall as the button beside it. */
+  /** 48pt instead of 56pt, e.g. the search bar, as tall as the button beside it. */
   compact?: boolean;
   className?: string;
   ref?: Ref<TextInput>;
@@ -67,7 +67,7 @@ export function TextField({
         </Text>
       ) : null}
       <Pressable
-        // One field style app-wide: 56pt (44pt compact), 16pt text. The 1pt line never changes;
+        // One field style app-wide: 56pt (48pt compact), 16pt text. The 1pt line never changes;
         // the 2pt focus or error ring is drawn on top of it, so neither the field nor its text can
         // shift.
         // A tap anywhere on the field focuses it, not only on the text line.
@@ -76,7 +76,7 @@ export function TextField({
         className={cn(
           'flex-row gap-3 border border-white/8 bg-pill pr-1.75 pl-4.25',
           radius,
-          multiline ? 'min-h-32 items-start' : cn('items-center', compact ? 'h-11' : 'h-14'),
+          multiline ? 'min-h-32 items-start' : cn('items-center', compact ? 'h-12' : 'h-14'),
         )}
       >
         {error || focused ? (
@@ -136,7 +136,7 @@ export function TextField({
             onPress={() => onChangeText?.('')}
             className={cn(
               'items-center justify-center rounded-full bg-control',
-              compact ? 'size-8' : 'size-10',
+              compact ? 'size-9' : 'size-10',
             )}
           >
             <Icon name="close" size={12} />

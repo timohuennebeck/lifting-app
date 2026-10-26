@@ -4,6 +4,7 @@ import {
   Circle,
   HStack,
   ProgressView,
+  Image,
   RoundedRectangle,
   Spacer,
   Text,
@@ -11,6 +12,7 @@ import {
   ZStack,
 } from '@expo/ui/swift-ui';
 import {
+  accessibilityLabel,
   activityBackgroundTint,
   background,
   buttonStyle,
@@ -142,7 +144,7 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
     ) : null;
 
   // The label carries the shape, so all of it takes the tap (a plain button's area is its label).
-  const pill = (target: string, text: string) => (
+  const pill = (target: string, text: string, height: number) => (
     <Button target={target} modifiers={[buttonStyle('plain')]}>
       <Text
         modifiers={[
@@ -150,7 +152,7 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
           foregroundStyle(ON_ACCENT),
           lineLimit(1),
           frame({ maxWidth: Infinity }),
-          frame({ height: 40 }),
+          frame({ height }),
           background(ACCENT, shapes.capsule()),
         ]}
       >
@@ -159,19 +161,23 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
     </Button>
   );
 
-  const nudge = (target: string, text: string) => (
-    <Button target={target} modifiers={[buttonStyle('plain')]}>
-      <Text
+  // As the rest sheet's −/+ buttons: a circular arrow around "10" on a round control.
+  const nudge = (
+    target: string,
+    symbol: 'gobackward.10' | 'goforward.10',
+    text: string,
+    size: number,
+  ) => (
+    <Button target={target} modifiers={[buttonStyle('plain'), accessibilityLabel(text)]}>
+      <Image
+        systemName={symbol}
         modifiers={[
-          font({ size: 13, weight: 'semibold' }),
+          font({ size: Math.round(size * 0.46), weight: 'medium' }),
           foregroundStyle(FG),
-          lineLimit(1),
-          frame({ width: 44, height: 44 }),
+          frame({ width: size, height: size }),
           background(CONTROL, shapes.circle()),
         ]}
-      >
-        {text}
-      </Text>
+      />
     </Button>
   );
 
@@ -182,15 +188,16 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
     </HStack>
   );
 
-  const restBody = (
-    <VStack spacing={5}>
+  // `roomy` on the Lock Screen, which has a little more height to give than the island.
+  const restBody = (roomy: boolean) => (
+    <VStack spacing={roomy ? 7 : 5}>
       {/* As tall as the circles: the digits' line box is taller than the digits. */}
-      <HStack modifiers={[frame({ height: 44 })]}>
-        {nudge(TARGETS.minus, texts.minus)}
+      <HStack modifiers={[frame({ height: roomy ? 46 : 44 })]}>
+        {nudge(TARGETS.minus, 'gobackward.10', texts.minus, roomy ? 46 : 44)}
         <Spacer />
         {countdown(40, 130)}
         <Spacer />
-        {nudge(TARGETS.plus, texts.plus)}
+        {nudge(TARGETS.plus, 'goforward.10', texts.plus, roomy ? 46 : 44)}
       </HStack>
       {restRange ? (
         <ProgressView
@@ -205,7 +212,7 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
           ]}
         />
       ) : null}
-      {pill(TARGETS.skipRest, texts.skipRest)}
+      {pill(TARGETS.skipRest, texts.skipRest, roomy ? 46 : 40)}
     </VStack>
   );
 
@@ -258,53 +265,59 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
     </HStack>
   ) : null;
 
-  const setBody = next ? (
-    <VStack spacing={5}>
-      <VStack spacing={3}>
-        {values}
-        <HStack spacing={4}>
-          {next.done.map((done, i) => (
-            <Capsule
-              key={`s${i}`}
-              modifiers={[foregroundStyle(done ? ACCENT : TRACK), frame({ height: 4 })]}
-            />
-          ))}
-        </HStack>
-        <Text
-          modifiers={[
-            font({ size: 13, weight: 'medium' }),
-            foregroundStyle(MUTED),
-            lineLimit(1),
-            frame({ height: 15 }),
-          ]}
-        >
-          {next.exercise}
-        </Text>
+  const setBody = (roomy: boolean) =>
+    next ? (
+      <VStack spacing={roomy ? 7 : 5}>
+        <VStack spacing={roomy ? 4 : 3}>
+          {values}
+          <HStack spacing={4}>
+            {next.done.map((done, i) => (
+              <Capsule
+                key={`s${i}`}
+                modifiers={[foregroundStyle(done ? ACCENT : TRACK), frame({ height: 4 })]}
+              />
+            ))}
+          </HStack>
+          <Text
+            modifiers={[
+              font({ size: 13, weight: 'medium' }),
+              foregroundStyle(MUTED),
+              lineLimit(1),
+              frame({ height: 15 }),
+            ]}
+          >
+            {next.exercise}
+          </Text>
+        </VStack>
+        {next.loggable ? pill(TARGETS.logSet, texts.logSet, roomy ? 46 : 40) : null}
       </VStack>
-      {next.loggable ? pill(TARGETS.logSet, texts.logSet) : null}
-    </VStack>
-  ) : texts.allDone ? (
-    <Text modifiers={[font({ size: 22, weight: 'bold' }), foregroundStyle(FG), lineLimit(1)]}>
-      {texts.allDone}
-    </Text>
-  ) : null;
+    ) : texts.allDone ? (
+      <Text modifiers={[font({ size: 22, weight: 'bold' }), foregroundStyle(FG), lineLimit(1)]}>
+        {texts.allDone}
+      </Text>
+    ) : null;
 
   const header = (tight: boolean) => (resting ? restHeader : setHeader(tight));
-  const body = resting ? restBody : setBody;
+  const body = (roomy: boolean) => (resting ? restBody(roomy) : setBody(roomy));
+  const islandBody = body(false);
   const dot = <Circle modifiers={[foregroundStyle(ACCENT), frame({ width: 10, height: 10 })]} />;
 
   return {
     banner: (
       <VStack
         spacing={8}
-        modifiers={[padding({ horizontal: 16, vertical: 11 }), activityBackgroundTint('#000000')]}
+        modifiers={[
+          padding({ horizontal: 16, vertical: 11 }),
+          background('#000000'),
+          activityBackgroundTint('#000000'),
+        ]}
       >
         <HStack>
           {header(false)}
           <Spacer />
           {resting ? null : elapsed(72)}
         </HStack>
-        {body}
+        {body(true)}
       </VStack>
     ),
     compactLeading: resting ? stopwatch(15) : dot,
@@ -314,7 +327,9 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
     expandedTrailing: resting ? null : (
       <HStack modifiers={[padding({ trailing: 6 })]}>{elapsed(72)}</HStack>
     ),
-    expandedBottom: body ? <VStack modifiers={[padding({ horizontal: 6 })]}>{body}</VStack> : null,
+    expandedBottom: islandBody ? (
+      <VStack modifiers={[padding({ horizontal: 6 })]}>{islandBody}</VStack>
+    ) : null,
   };
 }
 

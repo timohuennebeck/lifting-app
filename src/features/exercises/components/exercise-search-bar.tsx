@@ -69,13 +69,7 @@ export function ExerciseSearchBar({
           <View className="flex-row items-center gap-2">
             {field}
             {/* As tall as the compact field beside it. */}
-            <Button
-              label={t('picker.done')}
-              size="sm"
-              disabled={doneDisabled}
-              className="h-11"
-              onPress={onDone}
-            />
+            <Button label={t('picker.done')} size="md" disabled={doneDisabled} onPress={onDone} />
           </View>
         ) : (
           field

@@ -23,7 +23,8 @@
   },
   "breakdown": {
     "primary": "Primär",
-    "secondary": "Sekundär"
+    "secondary": "Sekundär",
+    "showMore": "{{count}} weitere anzeigen"
   },
   "level": {
     "overall": "Gesamtlevel",

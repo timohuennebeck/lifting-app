@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { exerciseInstructions, useExercise } from '@/shared/data/exercises';
 import { splitMuscles } from '@/shared/data/muscle-groups';
 import { exerciseShares } from '@/shared/data/muscles';
-import { MUSCLE_CARDS, MuscleMap, MuscleTile } from '@/shared/ui/muscle-map';
+import { MUSCLE_CARDS, MuscleMap, MuscleTileList } from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
 
 import { useExerciseId } from '../components/exercise-layout';
@@ -30,15 +30,17 @@ export function ExerciseTechniquePage() {
       showsVerticalScrollIndicator={false}
     >
       <View className="flex-row items-start gap-1.5">
-        <View className="min-w-0 flex-1 items-start gap-2">
-          {shares.map((s) => (
-            <MuscleTile
-              key={s.muscle}
-              muscle={s.muscle}
-              percent={s.percent}
-              highlight={primary.includes(s.muscle)}
-            />
-          ))}
+        {/* Primary then secondary, each at most three tiles before a "+N" that shows the rest. */}
+        <View className="min-w-0 flex-1 gap-2">
+          <MuscleTileList
+            shares={shares.filter((s) => primary.includes(s.muscle))}
+            highlight
+            className="items-start gap-2"
+          />
+          <MuscleTileList
+            shares={shares.filter((s) => !primary.includes(s.muscle))}
+            className="items-start gap-2"
+          />
         </View>
         <View className="h-45 w-19">
           <MuscleMap view={view} selected={primary} secondary={secondary} width={76} height={180} />

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 import type { MuscleShare } from '@/shared/data/muscles';
 import { cn } from '@/shared/lib/cn';
-import { MuscleTile } from '@/shared/ui/muscle-map';
+import { MuscleTileList } from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
 
 interface MuscleGroupProps {
@@ -12,7 +12,7 @@ interface MuscleGroupProps {
   primary: boolean;
 }
 
-/** "PRIMÄR ②" over its chips; primary in neon, secondary in grey. */
+/** "PRIMÄR ②" over its chips (at most three, then "+N"); primary in neon, secondary in grey. */
 function MuscleGroup({ label, shares, primary }: MuscleGroupProps) {
   return (
     <View className="gap-3.5">
@@ -35,12 +35,8 @@ function MuscleGroup({ label, shares, primary }: MuscleGroupProps) {
           </Text>
         </View>
       </View>
-      {/* Side by side where they fit, the next line where they don't. */}
-      <View className="flex-row flex-wrap gap-2.5">
-        {shares.map((s) => (
-          <MuscleTile key={s.muscle} muscle={s.muscle} percent={s.percent} highlight={primary} />
-        ))}
-      </View>
+      {/* Side by side where they fit, the next line where they don't; past three, "+N". */}
+      <MuscleTileList shares={shares} highlight={primary} className="flex-row flex-wrap gap-2.5" />
     </View>
   );
 }
