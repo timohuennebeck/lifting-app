@@ -6,7 +6,7 @@ import type { Pose } from '@/features/progress-check/lib/poses';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { CheckBadge } from '@/shared/ui/check-item';
-import { Gradient } from '@/shared/ui/gradient';
+import { ComparePhotoCard } from '@/shared/ui/compare-photo-card';
 import { Icon } from '@/shared/ui/icon';
 import { MuscleMap } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -72,51 +72,44 @@ export function BodyPhotoCard({
         accessibilityLabel={`${label}, ${score}`}
         accessibilityState={{ selected }}
         onPress={onPress}
-        className={cn(
-          'h-62.5 w-full overflow-hidden rounded-[18px] bg-surface',
-          selected ? 'border-2 border-accent' : 'border border-white/8',
-          faded && 'opacity-45',
-        )}
+        className={cn('h-62.5 w-full', faded && 'opacity-45')}
       >
-        <CheckPhoto
-          checkId={checkId}
-          pose={pose}
-          storagePath={storagePath}
-          fallback={
-            <View className="absolute inset-0 p-4 opacity-60">
-              <MuscleMap view={pose === 'back' ? 'back' : 'front'} />
-            </View>
+        <ComparePhotoCard
+          photo={
+            <CheckPhoto
+              checkId={checkId}
+              pose={pose}
+              storagePath={storagePath}
+              fallback={
+                <View className="absolute inset-0 p-4 opacity-60">
+                  <MuscleMap view={pose === 'back' ? 'back' : 'front'} />
+                </View>
+              }
+            />
           }
-        />
-        {muted ? <View pointerEvents="none" className="absolute inset-0 bg-black/25" /> : null}
-        <Gradient from="bottom" size={80} color="black" opacity={0.8} />
-        <View className="absolute right-3 bottom-3 left-3 flex-row items-end justify-between">
-          <View className="gap-0.5">
-            <Text variant="caption" tone="secondary" className="text-xs">
-              {label}
-            </Text>
-            <Text
-              variant="headline"
-              tone={after ? 'accent' : 'default'}
-              className="text-[28px] leading-7"
+          label={label}
+          score={score}
+          after={after}
+          muted={muted}
+          trailing={done ? <CheckBadge size={22} glyph={11} /> : null}
+          className={cn(
+            'flex-1 rounded-[18px]',
+            selected ? 'border-2 border-accent' : 'border border-white/8',
+          )}
+        >
+          {badge ? (
+            <View
+              className={cn(
+                'absolute top-3 left-3 size-6.5 items-center justify-center rounded-full',
+                badge === 'A' ? 'bg-fg' : 'bg-accent',
+              )}
             >
-              {score}
-            </Text>
-          </View>
-          {done ? <CheckBadge size={22} glyph={11} /> : null}
-        </View>
-        {badge ? (
-          <View
-            className={cn(
-              'absolute top-3 left-3 size-6.5 items-center justify-center rounded-full',
-              badge === 'A' ? 'bg-fg' : 'bg-accent',
-            )}
-          >
-            <Text variant="caption" tone="onAccent" className="font-inter-bold text-xs">
-              {badge}
-            </Text>
-          </View>
-        ) : null}
+              <Text variant="caption" tone="onAccent" className="font-inter-bold text-xs">
+                {badge}
+              </Text>
+            </View>
+          ) : null}
+        </ComparePhotoCard>
       </PressableScale>
       {/* Beside the card, not in it: a button can't sit inside another one (web). */}
       {onEdit ? (
@@ -165,20 +158,5 @@ export function NextCheckCard({ title, note, onPress }: NextCheckCardProps) {
         </Text>
       </PressableScale>
     </CardSlot>
-  );
-}
-
-/**
- * The accent arrow from the before to the after card, centred over their row (which must be as
- * wide as its parent: the centring is a percentage of it).
- */
-export function CompareArrow() {
-  return (
-    <View
-      pointerEvents="none"
-      className="absolute top-1/2 left-1/2 -mt-5 -ml-5 size-10 items-center justify-center rounded-full bg-accent"
-    >
-      <Icon name="arrow-right" size={16} color={colors.onAccent} />
-    </View>
   );
 }
