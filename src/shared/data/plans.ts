@@ -1,12 +1,12 @@
 import { useStatus } from '@powersync/react-native';
-import { and, count, desc, eq, isNotNull, max } from 'drizzle-orm';
+import { and, count, desc, eq, isNotNull, max, ne } from 'drizzle-orm';
 
 import { insertCustomExercises } from './custom-exercises';
 import type { CustomExercise } from './exercises';
 import { newId, nowIso } from './json';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
-import { plans, workoutEntries } from './powersync/schema';
+import { plans, routines, workoutEntries } from './powersync/schema';
 import { useProfile } from './profile';
 import { queryKeys } from './query-keys';
 import {
@@ -47,6 +47,23 @@ export const clampSessions = (count: number) =>
     Math.max(Math.round(count) || DEFAULT_SESSIONS_PER_WEEK, MIN_SESSIONS_PER_WEEK),
     MAX_SESSIONS_PER_WEEK,
   );
+
+/**
+ * A plan has a workout a week per routine: after routines were added to or removed from plan
+ * `planId`, its workouts a week follow their number (2 to 6). Written only when it changes.
+ */
+export async function syncSessionsPerWeek(tx: Tx, planId: string) {
+  const row = await tx
+    .select({ routines: count() })
+    .from(routines)
+    .where(eq(routines.plan_id, planId))
+    .get();
+  const sessions = clampSessions(row?.routines ?? 0);
+  await tx
+    .update(plans)
+    .set({ sessions_per_week: sessions })
+    .where(and(eq(plans.id, planId), ne(plans.sessions_per_week, sessions)));
+}
 
 /**
  * Writes a plan with its routines inside `tx`, with the exercises of `newExercises` it uses (an

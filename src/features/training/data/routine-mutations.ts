@@ -4,6 +4,7 @@ import type { SpokenExercises } from '@/features/voice-input/lib/spoken-exercise
 import { insertCustomExercises } from '@/shared/data/custom-exercises';
 import { newExerciseDraft, swapTargets } from '@/shared/data/exercises';
 import { nowIso } from '@/shared/data/json';
+import { syncSessionsPerWeek } from '@/shared/data/plans';
 import { nextPosition } from '@/shared/data/positions';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
 import {
@@ -33,8 +34,16 @@ async function routineOf(tx: Tx, routineExerciseId: string) {
   return row.routine_id;
 }
 
-/** Local SQLite views have no FK cascades, so children are removed explicitly. */
+/**
+ * Local SQLite views have no FK cascades, so children are removed explicitly. A plan's workouts
+ * a week follow its routines.
+ */
 async function deleteRoutineTx(tx: Tx, routineId: string) {
+  const routine = await tx
+    .select({ plan_id: routines.plan_id })
+    .from(routines)
+    .where(eq(routines.id, routineId))
+    .get();
   const exerciseIds = tx
     .select({ id: routineExercises.id })
     .from(routineExercises)
@@ -46,6 +55,7 @@ async function deleteRoutineTx(tx: Tx, routineId: string) {
     .set({ routine_id: null })
     .where(eq(workoutEntries.routine_id, routineId));
   await tx.delete(routines).where(eq(routines.id, routineId));
+  if (routine?.plan_id) await syncSessionsPerWeek(tx, routine.plan_id);
 }
 
 async function setExercisePosition(tx: Tx, routineExerciseId: string, position: number) {
@@ -71,7 +81,11 @@ async function renumberExercises(tx: Tx, routineId: string) {
 
 /** A new empty routine at the end of a plan, or of the library for `null`. */
 export async function createRoutine(userId: string, name: string, planId: string | null) {
-  return insertRoutine(drizzle, userId, planId, name.trim());
+  return drizzle.transaction(async (tx) => {
+    const id = await insertRoutine(tx, userId, planId, name.trim());
+    if (planId) await syncSessionsPerWeek(tx, planId);
+    return id;
+  });
 }
 
 export async function renameRoutine(routineId: string, name: string) {
@@ -143,6 +157,7 @@ export async function copyRoutine(userId: string, routineId: string, planId: str
         })),
       });
     }
+    if (planId) await syncSessionsPerWeek(tx, planId);
     return id;
   });
 }

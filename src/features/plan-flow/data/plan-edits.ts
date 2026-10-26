@@ -2,7 +2,7 @@ import { asc, eq, inArray } from 'drizzle-orm';
 
 import type { ImportedPlan } from '@/features/plan-import/lib/plan-import-service';
 import { nowIso } from '@/shared/data/json';
-import { clampSessions } from '@/shared/data/plans';
+import { syncSessionsPerWeek } from '@/shared/data/plans';
 import { drizzle, type Executor, type Tx } from '@/shared/data/powersync/database';
 import { plans, routineExercises, routines, routineSets } from '@/shared/data/powersync/schema';
 import { type ExerciseDraft, insertRoutine, insertRoutineExercise } from '@/shared/data/routines';
@@ -88,13 +88,13 @@ async function replaceExercises(
 /**
  * Writes the editor's plan back to saved plan `planId`: its name, its routines' names, order and
  * exercises, and the routines added (new ones without exercises are left out, saved ones stay).
- * Saved routines keep their ids, so the workouts done with them still count. A plan with a
- * workout a week per routine keeps that when routines are added.
+ * Saved routines keep their ids, so the workouts done with them still count. A plan has a
+ * workout a week per routine, so its workouts a week follow the routines it ends up with.
  */
 export async function savePlanEdits(userId: string, planId: string, plan: ImportedPlan) {
   await drizzle.transaction(async (tx) => {
     const current = await tx
-      .select({ name: plans.name, sessionsPerWeek: plans.sessions_per_week })
+      .select({ name: plans.name })
       .from(plans)
       .where(eq(plans.id, planId))
       .get();
@@ -131,14 +131,7 @@ export async function savePlanEdits(userId: string, planId: string, plan: Import
     }
 
     const name = plan.name.trim() || current.name;
-    const count = kept.length + others.length;
-    const sessionsPerWeek =
-      current.sessionsPerWeek === saved.size ? clampSessions(count) : current.sessionsPerWeek;
-    if (name !== current.name || sessionsPerWeek !== current.sessionsPerWeek) {
-      await tx
-        .update(plans)
-        .set({ name, sessions_per_week: sessionsPerWeek })
-        .where(eq(plans.id, planId));
-    }
+    if (name !== current.name) await tx.update(plans).set({ name }).where(eq(plans.id, planId));
+    await syncSessionsPerWeek(tx, planId);
   });
 }
