@@ -92,7 +92,6 @@
   "confirm": {
     "planName": "Plan name",
     "readAs": "Read as “{{raw}}”",
-    "heardAs": "Heard as “{{raw}}”",
     "correct": "Correct",
     "add": "Add exercise",
     "swap": "Swap exercise",

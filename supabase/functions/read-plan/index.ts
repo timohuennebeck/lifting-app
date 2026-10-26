@@ -1,10 +1,9 @@
-// Reads a training plan from photos or a file for the plan import (in onboarding and in the app),
-// and the exercises of one workout from what the user said (voice input, `text`). The app sends
-// the photos (shrunk JPEGs), the file as base64 or the text speech recognition made of the user's
-// words; the model gets them with the exercise catalog and answers in a fixed shape, which becomes
-// the plan the user reviews. The answer is streamed: each exercise goes to the app as soon as the
-// model has written it (see `PlanEvent`). It also runs before there is an account, so requests
-// are limited per network and in total per day (start_plan_request), voice input on its own.
+// Reads a training plan from photos or a file for the plan import (in onboarding and in the app).
+// The app sends the photos (shrunk JPEGs) or the file as base64; the model gets them with the
+// exercise catalog and answers in a fixed shape, which becomes the plan the user reviews. The
+// answer is streamed: each exercise goes to the app as soon as the model has written it (see
+// `PlanEvent`). It also runs before there is an account, so imports are limited per network and in
+// total per day (start_plan_request).
 import { decodeBase64 } from 'jsr:@std/encoding@1/base64';
 
 import { reply } from '../_shared/common.ts';
@@ -17,16 +16,13 @@ import {
   planEventResponse,
   takePlanRequest,
 } from '../_shared/plans.ts';
-import { buildSchema, contextText, INSTRUCTIONS, planReader, SPOKEN_INSTRUCTIONS } from './plan.ts';
+import { buildSchema, contextText, INSTRUCTIONS, planReader } from './plan.ts';
 
 /** For both attempts together (see planEventResponse); the function may run 150 s at most. */
 const OPENAI_TIMEOUT_MS = 120_000;
 /** Imports per network (hashed IP) and in total in 24 hours; each one is a paid model call. */
 const IP_LIMIT = envLimit('PLAN_IMPORT_IP_LIMIT', 10);
 const DAILY_LIMIT = envLimit('PLAN_IMPORT_DAILY_LIMIT', 1000);
-/** Voice input: short text requests, made far more often than a plan import. */
-const VOICE_IP_LIMIT = envLimit('PLAN_VOICE_IP_LIMIT', 60);
-const VOICE_DAILY_LIMIT = envLimit('PLAN_VOICE_DAILY_LIMIT', 5000);
 /** OpenAI's Fast mode for the import (twice the token price); PLAN_IMPORT_FAST=false turns it off. */
 const FAST = Deno.env.get('PLAN_IMPORT_FAST') !== 'false';
 const MAX_PHOTOS = 10;
@@ -35,8 +31,6 @@ const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const MAX_FILE_BYTES = 15 * 1024 * 1024;
 /** Characters of a text or spreadsheet file the model reads. */
 const MAX_TEXT = 60_000;
-/** Characters of spoken exercises (the app's MAX_SPOKEN). */
-const MAX_SPOKEN = 4000;
 
 interface PlanFile {
   name: string;
@@ -116,16 +110,9 @@ Deno.serve(async (req) => {
   const language = LANGUAGES.includes(body?.language) ? body.language : 'de';
   const photos: unknown = body?.photos;
   const file: PlanFile | undefined = body?.file;
-  // Voice input: what the user said, as speech recognition wrote it down.
-  const spoken = typeof body?.text === 'string' ? body.text.trim() : '';
   const hasPhotos = Array.isArray(photos) && photos.length > 0;
-  if (body?.text !== undefined && !spoken) return reply(400, { error: 'bad_request' });
-  if ([hasPhotos, !!file, !!spoken].filter(Boolean).length !== 1) {
-    return reply(400, { error: 'bad_request' });
-  }
-  if (spoken) {
-    if (spoken.length > MAX_SPOKEN) return reply(413, { error: 'too_large' });
-  } else if (hasPhotos) {
+  if (hasPhotos === !!file) return reply(400, { error: 'bad_request' });
+  if (hasPhotos) {
     if (photos.length > MAX_PHOTOS || !photos.every(isBase64)) {
       return reply(400, { error: 'bad_request' });
     }
@@ -142,9 +129,7 @@ Deno.serve(async (req) => {
     return reply(413, { error: 'too_large' });
   }
 
-  const taken = spoken
-    ? await takePlanRequest(req, 'voice', { perNetwork: VOICE_IP_LIMIT, perDay: VOICE_DAILY_LIMIT })
-    : await takePlanRequest(req, 'import', { perNetwork: IP_LIMIT, perDay: DAILY_LIMIT });
+  const taken = await takePlanRequest(req, 'import', { perNetwork: IP_LIMIT, perDay: DAILY_LIMIT });
   if ('refused' in taken) return taken.refused;
   const { giveBack } = taken;
 
@@ -152,15 +137,13 @@ Deno.serve(async (req) => {
   let content: unknown[];
   try {
     catalog = await loadCatalog();
-    const source = spoken
-      ? [{ type: 'input_text', text: `Spoken plan:\n${spoken}` }]
-      : hasPhotos
-        ? (photos as string[]).map((p) => ({
-            type: 'input_image',
-            image_url: `data:image/jpeg;base64,${p}`,
-            detail: 'high',
-          }))
-        : [await fileContent(file!)];
+    const source = hasPhotos
+      ? (photos as string[]).map((p) => ({
+          type: 'input_image',
+          image_url: `data:image/jpeg;base64,${p}`,
+          detail: 'high',
+        }))
+      : [await fileContent(file!)];
     content = [{ type: 'input_text', text: contextText(catalog, language) }, ...source];
   } catch (error) {
     console.error('Preparing the import failed', error);
@@ -170,7 +153,7 @@ Deno.serve(async (req) => {
 
   return planEventResponse({
     request: {
-      instructions: spoken ? `${INSTRUCTIONS}\n\n${SPOKEN_INSTRUCTIONS}` : INSTRUCTIONS,
+      instructions: INSTRUCTIONS,
       content,
       name: 'training_plan',
       schema: buildSchema(catalog.map((e) => e.id)),
@@ -180,6 +163,6 @@ Deno.serve(async (req) => {
     reader: () => planReader(catalog, () => crypto.randomUUID()),
     giveBack,
     noPlan: 'not_a_plan',
-    label: spoken ? 'voice input' : 'import',
+    label: 'import',
   });
 });

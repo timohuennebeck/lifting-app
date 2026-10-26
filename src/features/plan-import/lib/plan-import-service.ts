@@ -27,8 +27,6 @@ export type ImportSource =
   | { kind: 'photos'; photos: ImportPhoto[] }
   /** `sheets`: of a workbook, the ones to read (picked by the user); all when left out. */
   | { kind: 'file'; file: ImportFile; sheets?: string[] }
-  /** Exercises the user said (speech recognition's text), read as one workout: voice input. */
-  | { kind: 'voice'; text: string }
   /** Not read but made: the AI plan from the onboarding answers (generate-plan). */
   | { kind: 'answers'; answers: PlanAnswers };
 
@@ -81,9 +79,6 @@ const SERVER_ERRORS: Record<string, ImportFailure> = {
 /** Photos per import; the read-plan function accepts no more. */
 export const MAX_PHOTOS = 10;
 
-/** Characters of spoken exercises (voice input); the read-plan function accepts no more. */
-export const MAX_SPOKEN = 4000;
-
 /** Steps in the "Import plan" branch, for the step counter. */
 export const IMPORT_STEPS = 3;
 
@@ -110,7 +105,6 @@ async function jpegBase64(uri: string) {
 }
 
 async function requestBody(source: ReadSource) {
-  if (source.kind === 'voice') return { text: source.text };
   if (source.kind === 'photos') {
     // One at a time: a full-size camera photo takes tens of MB while it is decoded.
     const photos: string[] = [];
@@ -155,12 +149,12 @@ export type PlanEvent =
     };
 
 /**
- * Gets a training plan from the Edge Functions, which stream it: reads it from photos, a file or
- * what the user said (read-plan, one workout) or makes it from the onboarding answers (generate-plan).
- * `onEvent` gets the plan's name, then each routine and exercise as soon as it is there (an
- * exercise belongs to the routine before it). Resolves once the plan is complete. Throws an
- * ImportError with the reason when there is no plan to show, also when the stream breaks off;
- * once `signal` stops it, the error doesn't matter.
+ * Gets a training plan from the Edge Functions, which stream it: reads it from photos or a file
+ * (read-plan) or makes it from the onboarding answers (generate-plan). `onEvent` gets the
+ * plan's name, then each routine and exercise as soon as it is there (an exercise belongs to the
+ * routine before it). Resolves once the plan is complete. Throws an ImportError with the reason when
+ * there is no plan to show, also when the stream breaks off; once `signal` stops it, the error
+ * doesn't matter.
  */
 export async function streamPlan(
   { source, language }: StreamPlanInput,

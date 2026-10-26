@@ -73,6 +73,42 @@ export async function streamPlan(url, key, body) {
 }
 
 /**
+ * One request to read-exercises (voice input), which answers the exercises at once; they are put
+ * into the plan shape streamPlan returns, as one routine, so both are scored alike.
+ */
+export async function readExercises(url, key, body) {
+  const started = performance.now();
+  const seconds = () => (performance.now() - started) / 1000;
+  let response;
+  try {
+    response = await fetch(url, {
+      method: 'POST',
+      headers: { apikey: key, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  } catch (error) {
+    return { status: 0, seconds: seconds(), plan: null, error: error.cause?.code ?? error.message };
+  }
+  const answer = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = answer.error ?? [answer.code, answer.message].filter(Boolean).join(': ');
+    return {
+      status: response.status,
+      seconds: seconds(),
+      plan: null,
+      error,
+      upstream: answer.upstream,
+    };
+  }
+  const plan = {
+    name: '',
+    routines: [{ name: '', exercises: answer.exercises }],
+    newExercises: answer.newExercises,
+  };
+  return { status: 200, first: seconds(), seconds: seconds(), plan, error: null };
+}
+
+/**
  * Why no further request can succeed, or null: the limit, the functions not served (no
  * connection; 502, 503 or 504 from the gateway), no OpenAI key, or OpenAI refusing the key or
  * the quota (401, 403, 429), which would fail every plan alike.

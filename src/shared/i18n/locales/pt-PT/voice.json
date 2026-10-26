@@ -7,6 +7,7 @@
   "more": "Toca para continuar a falar",
   "missed": "Não ouvimos nada. Toca para tentar de novo",
   "cta": "Adicionar exercícios",
+  "heardAs": "Ouvido como “{{raw}}”",
   "stages": [
     "A detetar exercícios …",
     "A procurar os exercícios certos …",

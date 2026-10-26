@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ReviewPrompt } from '@/features/plan-import/components/review-prompt';
 import { EditableTitle } from '@/features/training/components/editable-title';
 import { EditableExerciseList } from '@/features/training/components/editable-exercise-list';
 import { getActiveWorkoutId } from '@/shared/data/workouts';
@@ -23,10 +24,13 @@ import { useWorkoutDraftStore } from '../stores/workout-draft-store';
  * "Start workout" creates it and opens live logging. One-off: nothing is saved as a routine.
  */
 export function WorkoutBuilderScreen() {
-  const { t } = useTranslation(['workout', 'training', 'common']);
+  const { t } = useTranslation(['workout', 'training', 'voice', 'common']);
   const insets = useSafeAreaInsets();
   const name = useWorkoutDraftStore((s) => s.name);
   const exercises = useWorkoutDraftStore((s) => s.exercises);
+  const newExercises = useWorkoutDraftStore((s) => s.newExercises);
+  const settle = useWorkoutDraftStore((s) => s.settle);
+  const swap = useWorkoutDraftStore((s) => s.swap);
   const rename = useWorkoutDraftStore((s) => s.rename);
   const remove = useWorkoutDraftStore((s) => s.remove);
   const move = useWorkoutDraftStore((s) => s.move);
@@ -50,7 +54,7 @@ export function WorkoutBuilderScreen() {
       let workoutId = await getActiveWorkoutId();
       // Not `??`, which the React Compiler can't compile inside a try.
       if (workoutId === null) {
-        workoutId = await startDraftWorkout(requireUserId(), name, exercises);
+        workoutId = await startDraftWorkout(requireUserId(), name, exercises, newExercises);
         void trackWorkoutStart(workoutId);
       }
       haptics.success();
@@ -86,6 +90,18 @@ export function WorkoutBuilderScreen() {
           onSwap={(i) => openPicker({ mode: 'swap', index: String(i) })}
           onRemove={remove}
           onMove={move}
+          // Voice input wasn't sure: confirm what was heard or pick another.
+          review={(e) => !!e.raw}
+          renderExtra={(e, i) =>
+            e.raw ? (
+              <ReviewPrompt
+                message={t('voice:heardAs', { raw: e.raw })}
+                alternatives={e.alternatives}
+                onConfirm={() => settle(i)}
+                onPickAlternative={(exerciseId) => swap(i, exerciseId)}
+              />
+            ) : null
+          }
         />
       </Animated.ScrollView>
 

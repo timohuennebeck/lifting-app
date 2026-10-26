@@ -13,7 +13,9 @@ import {
 } from 'drizzle-orm';
 
 import type { SetDraft } from '@/features/training/components/set-editor-row';
+import { insertCustomExercises } from '@/shared/data/custom-exercises';
 import {
+  type CustomExercise,
   defaultTargets,
   newExerciseDraft,
   type SetTargets,
@@ -117,10 +119,22 @@ export async function startWorkout(userId: string, name: string, routineId: stri
 
 /**
  * Starts a workout with exercises and target sets put together beforehand (an empty workout,
- * which isn't a routine). Returns the new workout id.
+ * which isn't a routine). Of `newExercises` (voice input found them, the catalog lacks them),
+ * those the workout still has are created first. Returns the new workout id.
  */
-export async function startDraftWorkout(userId: string, name: string, exercises: ExerciseDraft[]) {
+export async function startDraftWorkout(
+  userId: string,
+  name: string,
+  exercises: ExerciseDraft[],
+  newExercises: CustomExercise[] = [],
+) {
+  const used = new Set(exercises.map((e) => e.exerciseId));
   return drizzle.transaction(async (tx) => {
+    await insertCustomExercises(
+      tx,
+      userId,
+      newExercises.filter((e) => used.has(e.id)),
+    );
     const workoutId = await insertWorkout(tx, userId, name, null);
     for (const [position, exercise] of exercises.entries()) {
       await insertWorkoutExercise(tx, userId, workoutId, position, exercise);

@@ -414,6 +414,10 @@ verify_jwt = false
 # Same as read-plan: also before there is an account; it limits the plans itself.
 verify_jwt = false
 
+[functions.read-exercises]
+# Same as read-plan: voice input also works before there is an account; it limits itself.
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 55327

@@ -92,7 +92,6 @@
   "confirm": {
     "planName": "플랜 이름",
     "readAs": "인식된 내용: “{{raw}}”",
-    "heardAs": "들린 내용: “{{raw}}”",
     "correct": "맞아요",
     "add": "운동 추가",
     "swap": "운동 바꾸기",

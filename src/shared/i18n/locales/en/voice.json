@@ -7,6 +7,7 @@
   "more": "Tap to keep talking",
   "missed": "Didn't catch that. Tap to try again",
   "cta": "Add exercises",
+  "heardAs": "Heard as “{{raw}}”",
   "stages": [
     "Detecting exercises …",
     "Finding the matching exercises …",

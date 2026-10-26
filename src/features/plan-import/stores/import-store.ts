@@ -20,11 +20,8 @@ import {
 import type { SheetSummary } from '../lib/sheet-summary';
 import { loadSheets } from '../lib/sheets';
 
-/** What a session reads or makes a plan from; voice input adds to a routine instead. */
-type PlanSource = Exclude<ImportSource, { kind: 'voice' }>;
-
 interface ImportState {
-  source: PlanSource | null;
+  source: ImportSource | null;
   /** The file's sheets, offered to pick from once it is to be read (see `loadSheets`). */
   workbook: SheetSummary[] | null;
   /** Detected plan being reviewed on the confirm screen; it fills in while `reading`. */
@@ -68,7 +65,7 @@ interface ImportState {
 }
 
 const NO_PHOTOS: ImportPhoto[] = [];
-const photosOf = (source: PlanSource | null) =>
+const photosOf = (source: ImportSource | null) =>
   source?.kind === 'photos' ? source.photos : NO_PHOTOS;
 
 const EMPTY = {
@@ -86,7 +83,7 @@ const EMPTY = {
 let running: AbortController | null = null;
 
 /** A plan the AI made or read, for analytics: how long it took and what came out. */
-function trackRead(source: PlanSource, plan: ImportedPlan | null, durationMs: number) {
+function trackRead(source: ImportSource, plan: ImportedPlan | null, durationMs: number) {
   const routines = plan?.routines ?? [];
   if (source.kind === 'answers') {
     track('plan:generate_complete', {

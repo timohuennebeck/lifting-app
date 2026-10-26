@@ -35,7 +35,7 @@ import { useImportStore } from '../stores/import-store';
 
 /** What an unsure exercise says it was taken from: read, or heard by voice input. */
 const reviewLabel = (e: ImportedExercise) =>
-  e.heard ? ('planImport:confirm.heardAs' as const) : ('planImport:confirm.readAs' as const);
+  e.heard ? ('voice:heardAs' as const) : ('planImport:confirm.readAs' as const);
 
 /**
  * 06c: the detected plan in the training overview layout (03·0b). Its routines sit in the plan
@@ -46,7 +46,7 @@ const reviewLabel = (e: ImportedExercise) =>
  * here the same way and goes on to its name.
  */
 export function ConfirmScreen() {
-  const { t } = useTranslation(['planImport', 'planCreate', 'training', 'common']);
+  const { t } = useTranslation(['planImport', 'planCreate', 'training', 'voice', 'common']);
   const { step, finish } = usePlanFlow();
   const updateDraft = useUpdateDraft();
   const insets = useSafeAreaInsets();

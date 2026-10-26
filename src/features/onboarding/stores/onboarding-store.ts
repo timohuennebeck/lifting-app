@@ -2,7 +2,7 @@ import { getLocales } from 'expo-localization';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { type CustomExercise, useCustomExerciseStore } from '@/shared/data/exercises';
+import { type CustomExercise, showDraftExercises } from '@/shared/data/exercises';
 import type { EquipmentAccess, Experience, Goal, Sex, Split } from '@/shared/data/profile';
 import { DEFAULT_SESSIONS_PER_WEEK, type PlanDraft } from '@/shared/data/plans';
 import { DEFAULT_BODY_WEIGHT_KG } from '@/shared/lib/body-weight';
@@ -89,13 +89,11 @@ export const useOnboardingStore = create<OnboardingState>()(
 );
 
 // The draft's own exercises resolve like saved ones, also after a restart (MMKV hydrates on create).
-const showDraftExercises = ({ draft }: OnboardingState) =>
-  useCustomExerciseStore.setState({
-    drafts: Object.fromEntries(draft.customExercises.map((e) => [e.id, e])),
-  });
-showDraftExercises(useOnboardingStore.getState());
+showDraftExercises('plan', useOnboardingStore.getState().draft.customExercises);
 useOnboardingStore.subscribe((state, previous) => {
-  if (state.draft.customExercises !== previous.draft.customExercises) showDraftExercises(state);
+  if (state.draft.customExercises !== previous.draft.customExercises) {
+    showDraftExercises('plan', state.draft.customExercises);
+  }
 });
 
 export const useDraft = () => useOnboardingStore((s) => s.draft);

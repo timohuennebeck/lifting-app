@@ -72,10 +72,6 @@ export async function insertCustomExercises(
     );
 }
 
-/** Adds custom exercises under the ids drafts already reference (exercises added by voice). */
-export const addCustomExercises = (userId: string, exercises: CustomExercise[]) =>
-  insertCustomExercises(drizzle, userId, exercises);
-
 /** Adds a custom exercise; returns its id, which plans and workouts reference. */
 export async function createCustomExercise(userId: string, draft: CustomExerciseDraft) {
   const id = newId();

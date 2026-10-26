@@ -92,7 +92,6 @@
   "confirm": {
     "planName": "Planname",
     "readAs": "Gelesen als „{{raw}}“",
-    "heardAs": "Gehört als „{{raw}}“",
     "correct": "Stimmt",
     "add": "Übung hinzufügen",
     "swap": "Übung tauschen",

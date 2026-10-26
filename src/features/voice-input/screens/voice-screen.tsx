@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, TextInput, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-import { MAX_SPOKEN } from '@/features/plan-import/lib/plan-import-service';
 import { haptics } from '@/shared/lib/haptics';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
@@ -17,6 +16,7 @@ import { VoiceButton } from '../components/voice-button';
 import { VoiceProcessing } from '../components/voice-processing';
 import { useSpeechInput } from '../hooks/use-speech-input';
 import {
+  MAX_SPOKEN,
   readSpokenExercises,
   showSpokenFailure,
   type SpokenExercises,
