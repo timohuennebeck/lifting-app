@@ -14,7 +14,8 @@
       "infoPlist": {
         "CFBundleAllowMixedLocalizations": true,
         "NSMicrophoneUsageDescription": "Loqqa uses the microphone so you can say your training plan instead of typing it.",
-        "NSSpeechRecognitionUsageDescription": "Loqqa turns the training plan you say into text to create your plan from it."
+        "NSSpeechRecognitionUsageDescription": "Loqqa turns the training plan you say into text to create your plan from it.",
+        "UIBackgroundModes": ["audio"]
       }
     },
     "android": {
