@@ -18,8 +18,10 @@ struct LogWeightIntent: AppIntent {
   }
 }
 
-/// Lists "Log weight" under the app in Shortcuts and the Action button settings, no setup needed.
-/// iOS 16's initializer: the one with a short title and symbol needs iOS 17.
+/// Lists "Log weight" under the app in Shortcuts, Spotlight and the Action button settings, no
+/// setup needed. Those list a shortcut only with a short title and a symbol, which need iOS 17,
+/// as the Action button does.
+@available(iOS 17.0, *)
 struct LoqqaShortcuts: AppShortcutsProvider {
   static var appShortcuts: [AppShortcut] {
     AppShortcut(
@@ -27,7 +29,9 @@ struct LoqqaShortcuts: AppShortcutsProvider {
       phrases: [
         "Log weight in \(.applicationName)",
         "Log my weight in \(.applicationName)",
-      ]
+      ],
+      shortTitle: "Log weight",
+      systemImageName: "scalemass"
     )
   }
 }

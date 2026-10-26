@@ -58,6 +58,9 @@ export function RulerPicker({
 }: RulerPickerProps) {
   const scrollRef = useRef<ScrollView>(null);
   const [extent, setExtent] = useState(0);
+  // Hidden until it is centred on the value: the first frames are laid out without the scale's
+  // width, so it would show at its start and then jump (seen where nothing slides it in).
+  const [placed, setPlaced] = useState(false);
   const lastIndex = useRef(Math.round((value - min) / step));
   // From touch-down until a fling settles the scale sets the value; programmatic scrolls don't.
   const dragging = useRef(false);
@@ -108,17 +111,22 @@ export function RulerPicker({
     const offset = lastIndex.current * PITCH;
     // Not a computed key ({ [axis]: offset }): the React Compiler can't compile that, and the
     // ruler's 400+ ticks would re-render on every value while dragging.
-    requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
       scrollRef.current?.scrollTo(
         vertical ? { y: offset, animated: false } : { x: offset, animated: false },
-      ),
-    );
+      );
+      requestAnimationFrame(() => setPlaced(true));
+    });
   };
 
   const length = (i: number) => (i % majorEvery === 0 ? 64 : i % midEvery === 0 ? 44 : 24);
 
   return (
-    <View className={cn(vertical ? 'w-27.5' : 'h-25 w-full', className)} onLayout={onLayout}>
+    <View
+      className={cn(vertical ? 'w-27.5' : 'h-25 w-full', className)}
+      style={{ opacity: placed ? 1 : 0 }}
+      onLayout={onLayout}
+    >
       <ScrollView
         ref={scrollRef}
         horizontal={!vertical}
