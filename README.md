@@ -53,12 +53,10 @@ npm run ios   # or npm run android; installs Loqqa Dev
 - **Production settings** live in EAS's `production` environment (the EAS dashboard, or
   `eas env:create --environment production`): `EXPO_PUBLIC_SUPABASE_URL`,
   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `EXPO_PUBLIC_POWERSYNC_URL`,
-  `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`, `EXPO_PUBLIC_POSTHOG_KEY`, and for iOS
-  `EXPO_PUBLIC_REVENUECAT_IOS_KEY` and `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`; `EXPO_PUBLIC_POSTHOG_HOST`
-  only to leave PostHog's EU cloud.
+  `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`, `EXPO_PUBLIC_POSTHOG_KEY`, `EXPO_PUBLIC_POSTHOG_HOST`, and
+  for iOS `EXPO_PUBLIC_REVENUECAT_IOS_KEY` and `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`.
   EAS builds from what git tracks, so `.env.local` never goes in. A production build fails when Supabase
-  or PowerSync is a local address, and on EAS when one of those values (all but the host) is
-  missing.
+  or PowerSync is a local address, and on EAS when one of those values is missing.
 - **Accounts for Loqqa Dev:** the first signed build registers its App ID, with Sign in with Apple
   and the app group (automatic signing); it needs no App Store Connect app. Sign in with Apple
   works with the local Supabase (`config.toml` takes both app IDs); Google sign-in needs an iOS
