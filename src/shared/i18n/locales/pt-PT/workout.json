@@ -69,7 +69,10 @@
     "records_other": "{{count}} novos recordes",
     "noRecords": "Muito bem",
     "newRecord": "NOVO RECORDE",
-    "previously": "antes {{value}}"
+    "previously": "antes {{value}}",
+    "more": "Mais",
+    "delete": "Eliminar treino",
+    "deleteHint": "Elimina {{name}} de {{date}} com todas as séries. Não é possível desfazer."
   },
   "builder": {
     "title": "Treino vazio"

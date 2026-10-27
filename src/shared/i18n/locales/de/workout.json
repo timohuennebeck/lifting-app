@@ -69,7 +69,10 @@
     "records_other": "{{count}} neue Rekorde",
     "noRecords": "Stark gemacht",
     "newRecord": "NEUER REKORD",
-    "previously": "vorher {{value}}"
+    "previously": "vorher {{value}}",
+    "more": "Mehr",
+    "delete": "Training löschen",
+    "deleteHint": "Löscht {{name}} vom {{date}} mit allen Sätzen. Das lässt sich nicht rückgängig machen."
   },
   "builder": {
     "title": "Leeres Training"

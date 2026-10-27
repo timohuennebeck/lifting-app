@@ -69,7 +69,10 @@
     "records_other": "새 기록 {{count}}개",
     "noRecords": "잘했어요",
     "newRecord": "신기록",
-    "previously": "이전 {{value}}"
+    "previously": "이전 {{value}}",
+    "more": "더 보기",
+    "delete": "운동 삭제",
+    "deleteHint": "{{date}}의 {{name}} 운동과 모든 세트를 삭제해요. 되돌릴 수 없어요."
   },
   "builder": {
     "title": "빈 운동"

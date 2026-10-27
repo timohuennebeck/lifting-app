@@ -22,10 +22,10 @@ export interface ExercisePickerPageProps {
 }
 
 /**
- * The exercise library as a page (design 06c): picks collect under "Selected" (tap the check to
- * undo) and are applied with "Done"; back discards them. Adding takes several exercises, a swap
- * one (a new pick replaces the last). The search field is focused on arrival. Signed in, the plus
- * creates a custom exercise, which comes back picked.
+ * The exercise library as a page (design 06c). Adding takes several exercises: picks collect
+ * under "Selected" (tap the check to undo) and are applied with "Done"; back discards them. A
+ * swap takes the exercise tapped at once, without "Done". The search field is focused on
+ * arrival. Signed in, the plus creates a custom exercise, which comes back picked.
  */
 export function ExercisePickerPage({ title, mode, exerciseIds, onDone }: ExercisePickerPageProps) {
   const { t } = useTranslation('exercises');
@@ -36,8 +36,18 @@ export function ExercisePickerPage({ title, mode, exerciseIds, onDone }: Exercis
   const [saving, setSaving] = useState(false);
   const [barHeight, setBarHeight] = useState(0);
 
+  function apply(ids: string[]) {
+    if (saving) return;
+    setSaving(true);
+    // A promise chain, not try/finally: the React Compiler can't compile a component with that.
+    void Promise.resolve()
+      .then(() => onDone(ids))
+      .finally(() => setSaving(false));
+  }
+
   const pick = (exerciseId: string) => {
-    setPicked((current) => (mode === 'swap' ? [exerciseId] : [...current, exerciseId]));
+    if (mode === 'swap') return apply([exerciseId]);
+    setPicked((current) => [...current, exerciseId]);
     setQuery('');
   };
 
@@ -56,11 +66,7 @@ export function ExercisePickerPage({ title, mode, exerciseIds, onDone }: Exercis
   function done() {
     if (saving) return;
     if (!picked.length) return router.back();
-    setSaving(true);
-    // A promise chain, not try/finally: the React Compiler can't compile a component with that.
-    void Promise.resolve()
-      .then(() => onDone(picked))
-      .finally(() => setSaving(false));
+    apply(picked);
   }
 
   return (
@@ -95,7 +101,7 @@ export function ExercisePickerPage({ title, mode, exerciseIds, onDone }: Exercis
         query={query}
         onChangeQuery={setQuery}
         onHeight={setBarHeight}
-        onDone={done}
+        onDone={mode === 'add' ? done : undefined}
         doneDisabled={saving}
       />
     </Screen>

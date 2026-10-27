@@ -69,7 +69,10 @@
     "records_other": "{{count}} new records",
     "noRecords": "Well done",
     "newRecord": "NEW RECORD",
-    "previously": "previously {{value}}"
+    "previously": "previously {{value}}",
+    "more": "More",
+    "delete": "Delete workout",
+    "deleteHint": "Deletes {{name}} from {{date}} with all its sets. This can't be undone."
   },
   "builder": {
     "title": "Empty workout"
