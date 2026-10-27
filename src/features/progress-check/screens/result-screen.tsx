@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useIsFocused, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Share, useWindowDimensions, View } from 'react-native';
@@ -43,6 +43,8 @@ function leaveSaved() {
 export function ResultScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation(['progressCheck', 'common']);
+  const navigation = useNavigation();
+  const focused = useIsFocused();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const userId = useUserId();
@@ -73,6 +75,14 @@ export function ResultScreen() {
   else if (draft) close = closeDraft;
   // Android back closes like the header's X, so an unsaved result isn't dropped unasked.
   useHardwareBack(close);
+  // A saved check opened from the Körper tab goes back with the edge swipe like any page. Opened
+  // that way it is the flow's first screen, so the swipe is the flow's own, off in its parent;
+  // off again under a photo, whose sideways swipes go through the poses.
+  const swipeBack = !!saved && !justSaved;
+  const flowSwipe = swipeBack && focused;
+  useEffect(() => {
+    navigation.getParent()?.setOptions({ gestureEnabled: flowSwipe });
+  }, [navigation, flowSwipe]);
 
   if (!checks || !check) {
     return (
@@ -135,6 +145,7 @@ export function ResultScreen() {
 
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
+      <Stack.Screen options={{ gestureEnabled: swipeBack }} />
       <View className="flex-row items-center justify-between px-4 py-1.5">
         <IconButton
           icon="chevron-left"

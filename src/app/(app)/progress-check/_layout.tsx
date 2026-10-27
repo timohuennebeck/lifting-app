@@ -12,6 +12,7 @@ export default function ProgressCheckLayout() {
           options={{ animation: 'fade', contentStyle: { backgroundColor: 'black' } }}
         />
         <Stack.Screen name="assessment" options={{ animation: 'fade', gestureEnabled: false }} />
+        {/* No swipe back while a result is fresh; a saved one turns it on (ResultScreen). */}
         <Stack.Screen name="result/[id]" options={{ animation: 'fade', gestureEnabled: false }} />
         {/* A tapped photo fades in; it closes with its X: sideways swipes go through the poses. */}
         <Stack.Screen
