@@ -53,8 +53,11 @@ npm run ios   # or npm run android; installs Loqqa Dev
   the production Supabase project, so test data stays out of it; `ALLOW_PRODUCTION_BACKEND=true`
   allows it on purpose.
 - **Loqqa** (`APP_VARIANT=production`, the `production` profile in `eas.json`): bundle ID
-  `app.loqqa.mobile`, links `loqqa://`. `npm run build:ios` builds it on EAS with a new build number
-  and submits it to TestFlight.
+  `app.loqqa.mobile`, links `loqqa://`. `npm run build:ios` builds it on this Mac with a new build
+  number (`eas build --local`, with EAS's settings and signing; needs Xcode, CocoaPods and
+  fastlane) and uploads it to TestFlight with `npm run upload:ios` (Xcode's altool, the App Store
+  Connect key in `.env.local`), which also retries an upload. `npm run build:ios:cloud` builds
+  and submits on EAS instead, behind its free queues.
 - **Production settings** live in EAS's `production` environment (the EAS dashboard, or
   `eas env:create --environment production`): `EXPO_PUBLIC_SUPABASE_URL`,
   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `EXPO_PUBLIC_POWERSYNC_URL`,

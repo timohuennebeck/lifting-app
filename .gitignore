@@ -42,6 +42,10 @@ example
 /ios
 /android
 
+# local production builds (npm run build:ios)
+/build
+*.ipa
+
 # env: .env.local is Loqqa Dev's; production values live in EAS
 .env
 .env.*

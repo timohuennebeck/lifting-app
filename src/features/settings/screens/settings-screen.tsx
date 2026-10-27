@@ -1,3 +1,4 @@
+import * as Application from 'expo-application';
 import Constants from 'expo-constants';
 import { type Href, router, Stack } from 'expo-router';
 import { type ReactNode, useState } from 'react';
@@ -35,6 +36,10 @@ import { UnitBadge } from '../components/unit-badge';
 import { deleteAccount } from '../lib/delete-account';
 
 type OpenSheet = 'language' | 'signOut' | 'delete';
+
+/** The app version and build number, e.g. "1.0.0 (2)": tells TestFlight builds apart. */
+const BUILD = Application.nativeBuildVersion;
+const VERSION = `${Constants.expoConfig?.version ?? ''}${BUILD ? ` (${BUILD})` : ''}`;
 
 const LINKS: { key: 'help' | 'privacy' | 'terms'; href: Href }[] = [
   { key: 'help', href: '/support' },
@@ -169,7 +174,7 @@ export function SettingsScreen() {
           onPress={() => setSheet('delete')}
         />
         <Text tone="subtle" className="pt-2 text-xs">
-          {t('settings.version', { version: Constants.expoConfig?.version ?? '' })}
+          {t('settings.version', { version: VERSION })}
         </Text>
       </View>
 
