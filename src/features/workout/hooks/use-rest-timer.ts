@@ -15,8 +15,9 @@ const SOUND_LEAD_MS = 3000;
 
 /**
  * Rest countdown from the session store. Vibrates when it reaches zero (a full vibration, felt in
- * a pocket; with the app closed `useRestAlert` does it), and plays the rest-end sound so its
- * chime lands on zero (unless it is turned off in Settings). Mount it once per screen.
+ * a pocket), and plays the rest-end sound so its chime lands on zero (unless it is turned off in
+ * Settings). Both need the app open: iOS suspends it once the phone is locked. Mount it once per
+ * screen.
  */
 export function useRestTimer() {
   const restEndsAt = useWorkoutSessionStore((s) => s.restEndsAt);

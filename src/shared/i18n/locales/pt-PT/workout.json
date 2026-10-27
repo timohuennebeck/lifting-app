@@ -31,10 +31,7 @@
     "restart": "Reiniciar temporizador",
     "stop": "Parar temporizador",
     "restartDefault": "Reiniciar com o descanso padrão",
-    "restartWith": "Reiniciar com {{time}}",
-    "doneTitle": "Descanso terminado",
-    "doneBody": "Siga para a próxima série.",
-    "channel": "Temporizador de descanso"
+    "restartWith": "Reiniciar com {{time}}"
   },
   "activity": {
     "skipRest": "Saltar descanso",

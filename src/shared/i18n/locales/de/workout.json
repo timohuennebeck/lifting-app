@@ -31,10 +31,7 @@
     "restart": "Timer neu starten",
     "stop": "Timer stoppen",
     "restartDefault": "Mit der Standardpause neu starten",
-    "restartWith": "Mit {{time}} neu starten",
-    "doneTitle": "Pause vorbei",
-    "doneBody": "Weiter mit dem nächsten Satz.",
-    "channel": "Pausen-Timer"
+    "restartWith": "Mit {{time}} neu starten"
   },
   "activity": {
     "skipRest": "Pause überspringen",

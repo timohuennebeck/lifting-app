@@ -31,10 +31,7 @@
     "restart": "Restart timer",
     "stop": "Stop timer",
     "restartDefault": "Restart with the default rest",
-    "restartWith": "Restart with {{time}}",
-    "doneTitle": "Rest is over",
-    "doneBody": "On to your next set.",
-    "channel": "Rest timer"
+    "restartWith": "Restart with {{time}}"
   },
   "activity": {
     "skipRest": "Skip rest",

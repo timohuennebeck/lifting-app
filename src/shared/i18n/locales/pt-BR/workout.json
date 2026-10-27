@@ -31,10 +31,7 @@
     "restart": "Reiniciar timer",
     "stop": "Parar timer",
     "restartDefault": "Reiniciar com o descanso padrão",
-    "restartWith": "Reiniciar com {{time}}",
-    "doneTitle": "Descanso terminado",
-    "doneBody": "Bora para a próxima série.",
-    "channel": "Timer de descanso"
+    "restartWith": "Reiniciar com {{time}}"
   },
   "activity": {
     "skipRest": "Pular descanso",
