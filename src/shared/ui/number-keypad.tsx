@@ -1,11 +1,20 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type LayoutChangeEvent, View } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
+import { Gesture, GestureDetector, type TapGesture } from 'react-native-gesture-handler';
+import Animated, {
+  Easing,
+  type SharedValue,
+  SlideInDown,
+  SlideOutDown,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { cn } from '@/shared/lib/cn';
+import { haptics } from '@/shared/lib/haptics';
 import { decimalSeparator, KEYPAD_ROWS, type KeypadKey } from '@/shared/lib/keypad';
 import { colors } from '@/shared/lib/theme';
 
@@ -13,32 +22,87 @@ import { Icon } from './icon';
 import { PressableScale } from './pressable-scale';
 import { Text } from './text';
 
+type KeyId = KeypadKey | 'hide' | 'backspace' | 'confirm';
+const KEY_IDS: KeyId[] = [...KEYPAD_ROWS.flat(), '.', '0', 'hide', 'backspace', 'confirm'];
+
+/** The keys held down now, for their press animation. */
+type HeldKeys = Partial<Record<KeyId, boolean>>;
+
 interface KeyProps {
-  label?: string;
+  id: KeyId;
+  tap: TapGesture;
+  held: SharedValue<HeldKeys>;
+  /** What the key does, for screen readers (a tap goes through `tap`). */
   onPress: () => void;
+  label?: string;
   disabled?: boolean;
+  /** The check: neon, as tall as the space left. */
+  accent?: boolean;
   className?: string;
   children?: ReactNode;
   accessibilityLabel?: string;
 }
 
-function Key({ label, onPress, disabled, className, children, accessibilityLabel }: KeyProps) {
+function Key({
+  id,
+  tap,
+  held,
+  onPress,
+  label,
+  disabled,
+  accent,
+  className,
+  children,
+  accessibilityLabel,
+}: KeyProps) {
+  // Scaled down while held, timed both ways as PressableScale.
+  const style = useAnimatedStyle(() => {
+    const down = !!held.value[id];
+    return {
+      transform: [
+        {
+          scale: withTiming(down ? 0.94 : 1, {
+            duration: down ? 90 : 140,
+            easing: Easing.out(Easing.quad),
+          }),
+        },
+      ],
+    };
+  });
   return (
-    <PressableScale
-      haptic="tap"
-      activeScale={0.94}
-      disabled={disabled}
-      onPress={onPress}
-      accessibilityLabel={accessibilityLabel ?? label}
-      className={cn(
-        'h-11.5 items-center justify-center rounded-xl bg-control',
-        disabled && 'opacity-30',
-        className,
-      )}
-    >
-      {children ?? <Text className="font-inter-medium text-2xl leading-7 text-fg">{label}</Text>}
-    </PressableScale>
+    <GestureDetector gesture={tap}>
+      <Animated.View
+        accessible
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel ?? label}
+        accessibilityState={{ disabled }}
+        accessibilityActions={[{ name: 'activate' }]}
+        onAccessibilityAction={(e) => {
+          if (e.nativeEvent.actionName === 'activate' && !disabled) onPress();
+        }}
+        style={style}
+        className={cn(
+          'items-center justify-center rounded-xl',
+          accent ? 'flex-1 bg-accent' : 'h-11.5 bg-control',
+          disabled && 'opacity-30',
+          className,
+        )}
+      >
+        {children ?? <Text className="font-inter-medium text-2xl leading-7 text-fg">{label}</Text>}
+      </Animated.View>
+    </GestureDetector>
   );
+}
+
+/** The key held down whose press hasn't counted yet, for the taps' callbacks (not render). */
+function usePendingKey() {
+  const ref = useRef<KeyId | null>(null);
+  return {
+    get: () => ref.current,
+    set: (id: KeyId | null) => {
+      ref.current = id;
+    },
+  };
 }
 
 export interface NumberKeypadProps {
@@ -66,6 +130,8 @@ export function NumberKeypad({
 }: NumberKeypadProps) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
+  const held = useSharedValue<HeldKeys>({});
+  const pending = usePendingKey();
 
   // Swipe the panel down to close it.
   const swipe = Gesture.Pan()
@@ -75,9 +141,46 @@ export function NumberKeypad({
       if (e.translationY > 40) onDismiss();
     });
 
-  const digit = (key: KeypadKey) => (
-    <Key key={key} label={key} onPress={() => onKey(key)} className="flex-1" />
-  );
+  const run = (id: KeyId) => {
+    haptics[id === 'confirm' ? 'press' : 'tap']();
+    if (id === 'hide') onDismiss();
+    else if (id === 'backspace') onBackspace();
+    else if (id === 'confirm') onConfirm();
+    else onKey(id);
+  };
+
+  // Each key has a tap of its own, and they may run at once, so a key touched while another is
+  // still held counts too (fast typing with both thumbs). A key counts when let go of, or when
+  // the next key is touched first, so the keys keep the order they were typed in. A slide off
+  // the key or a swipe down cancels it.
+  const taps = Object.fromEntries(
+    KEY_IDS.map((id) => [
+      id,
+      Gesture.Tap()
+        .runOnJS(true)
+        .enabled(id !== '.' || decimal)
+        .maxDuration(60_000)
+        .maxDistance(24)
+        .onBegin(() => {
+          const previous = pending.get();
+          if (previous && previous !== id) run(previous);
+          pending.set(id);
+          held.set((keys) => ({ ...keys, [id]: true }));
+        })
+        .onEnd((_e, success) => {
+          if (success && pending.get() === id) run(id);
+        })
+        .onFinalize(() => {
+          if (pending.get() === id) pending.set(null);
+          held.set((keys) => ({ ...keys, [id]: false }));
+        }),
+    ]),
+  ) as Record<KeyId, TapGesture>;
+  const all = Object.values(taps);
+  for (const tap of all)
+    tap.simultaneousWithExternalGesture(...all.filter((other) => other !== tap));
+
+  const keyProps = (id: KeyId) => ({ id, tap: taps[id], held, onPress: () => run(id) });
 
   return (
     <GestureDetector gesture={swipe}>
@@ -101,35 +204,32 @@ export function NumberKeypad({
           <View className="flex-1 gap-1.5">
             {KEYPAD_ROWS.map((row) => (
               <View key={row.join()} className="flex-row gap-1.5">
-                {row.map(digit)}
+                {row.map((digit) => (
+                  <Key key={digit} {...keyProps(digit)} label={digit} className="flex-1" />
+                ))}
               </View>
             ))}
             <View className="flex-row gap-1.5">
               <Key
+                {...keyProps('.')}
                 label={decimalSeparator()}
                 accessibilityLabel={t('keypad.decimal')}
                 disabled={!decimal}
-                onPress={() => onKey('.')}
                 className="flex-1"
               />
-              <Key label="0" onPress={() => onKey('0')} className="flex-2" />
+              <Key {...keyProps('0')} label="0" className="flex-2" />
             </View>
           </View>
           <View className="w-21.5 gap-1.5">
-            <Key accessibilityLabel={t('keypad.close')} onPress={onDismiss}>
+            <Key {...keyProps('hide')} accessibilityLabel={t('keypad.close')}>
               <Icon name="keyboard-hide" size={24} color={colors.fg} />
             </Key>
-            <Key accessibilityLabel={t('keypad.backspace')} onPress={onBackspace}>
+            <Key {...keyProps('backspace')} accessibilityLabel={t('keypad.backspace')}>
               <Icon name="backspace" size={24} color={colors.fg} />
             </Key>
-            <PressableScale
-              haptic="press"
-              accessibilityLabel={t('keypad.confirm')}
-              onPress={onConfirm}
-              className="flex-1 items-center justify-center rounded-xl bg-accent"
-            >
+            <Key {...keyProps('confirm')} accessibilityLabel={t('keypad.confirm')} accent>
               <Icon name="check-thin" size={26} color={colors.onAccent} />
-            </PressableScale>
+            </Key>
           </View>
         </View>
       </Animated.View>

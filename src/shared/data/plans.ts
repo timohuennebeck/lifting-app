@@ -142,15 +142,17 @@ export function usePlans() {
 
 /**
  * The plan Training follows and shows first (the one marked active, else the first; undefined
- * without plans) and the profile. Loading until those are known, the first sync included: before
- * it, a returning user's plans aren't on the phone yet.
+ * without plans) and the profile. Loading until those are known. Without the profile on the phone
+ * that includes the first sync, which brings a returning user's plans; with it, the plans are
+ * here too (onboarding saves them together; a sync brings them together), so no waiting.
  */
 export function useCurrentPlan() {
   const { hasSynced } = useStatus();
   const { profile, isLoading: profileLoading } = useProfile();
   const { data: plans = [], isLoading: plansLoading } = usePlans();
   const plan = plans.find((p) => p.id === profile?.activePlanId) ?? plans.at(0);
-  return { plan, profile, isLoading: !hasSynced || profileLoading || plansLoading };
+  const waitingForSync = !hasSynced && !profile;
+  return { plan, profile, isLoading: profileLoading || plansLoading || waitingForSync };
 }
 
 interface PlanWeek {

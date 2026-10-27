@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, View } from 'react-native';
 
-import { defaultSetDrafts, isTimed } from '@/shared/data/exercises';
+import { emptySetDraft, isTimed } from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
 import { restSecondsFor } from '@/shared/data/routines';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
@@ -124,7 +124,7 @@ export function SetTargetsForm({
   const addSet = () => {
     focusBox(null);
     setSets((all) => {
-      const last = all[all.length - 1] ?? defaultSetDrafts(exerciseId, 1)[0];
+      const last = all[all.length - 1] ?? emptySetDraft();
       return [...all, { ...last, key: newId() }];
     });
   };

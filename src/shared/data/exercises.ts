@@ -379,13 +379,23 @@ export function defaultSetDrafts(exerciseId: string, count: number): SetTarget[]
 export const swapTargets = (fromId: string, toId: string): SetTargets | null =>
   isTimed(fromId) !== isTimed(toId) ? defaultTargets(toId) : null;
 
-/** Sets of an exercise added to a plan, routine or workout. */
-const NEW_EXERCISE_SETS = 3;
+/** A set without targets: its reps (or seconds) and RIR are the user's to set. */
+export const emptySetDraft = (): SetTarget => ({ targetMin: null, targetMax: null, rir: null });
 
-/** An exercise as the library adds it: three sets at its default targets, its default rest. */
+/** An exercise added to a plan or routine: one set without targets, its default rest. */
 export const newExerciseDraft = (exerciseId: string): ExerciseDraft => ({
   exerciseId,
-  sets: defaultSetDrafts(exerciseId, NEW_EXERCISE_SETS),
+  sets: [emptySetDraft()],
+  restSeconds: null,
+});
+
+/** Sets of an exercise added to a workout, ready to log. */
+const NEW_WORKOUT_SETS = 3;
+
+/** An exercise added to a workout: three sets at its default targets, its default rest. */
+export const newWorkoutExerciseDraft = (exerciseId: string): ExerciseDraft => ({
+  exerciseId,
+  sets: defaultSetDrafts(exerciseId, NEW_WORKOUT_SETS),
   restSeconds: null,
 });
 

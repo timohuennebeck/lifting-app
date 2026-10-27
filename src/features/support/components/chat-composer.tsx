@@ -30,6 +30,7 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
   const draft = useScreenshotDraft();
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
+  const [focused, setFocused] = useState(false);
   const hasContent = text.trim().length > 0 || draft.shots.length > 0;
   const canSend = !!userId && hasContent && !draft.preparing && !sending;
 
@@ -56,7 +57,14 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
 
   return (
     <View className="px-3 pt-2">
-      <View className="gap-3.5 rounded-[28px] bg-tile px-2.5 pt-4 pb-2.5">
+      {/* Like the text fields: a 1pt line, with the 2pt neon ring on top of it while typing. */}
+      <View className="gap-3.5 rounded-[24px] border border-white/8 bg-tile px-2.5 pt-4 pb-2.5">
+        {focused ? (
+          <View
+            pointerEvents="none"
+            className="absolute -inset-px rounded-[24px] border-2 border-accent"
+          />
+        ) : null}
         {draft.shots.length ? (
           <ScreenshotTiles
             draft={draft}
@@ -76,6 +84,8 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
           cursorColor={colors.fg}
           keyboardAppearance="dark"
           textAlignVertical="top"
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           // Two lines tall even when empty, so there's room to start typing.
           className="max-h-30 min-h-11 px-2 py-0 font-inter text-base leading-5.5 text-fg"
         />

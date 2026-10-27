@@ -31,7 +31,7 @@ export const editExerciseAt = (
   exercises: routine.exercises.map((e, i) => (i === at ? edit(e) : e)),
 });
 
-/** Appends exercises with default target sets. */
+/** Appends exercises, each with one set without targets. */
 export const addExercises = (routine: ImportedRoutine, exerciseIds: string[]): ImportedRoutine => ({
   ...routine,
   exercises: [

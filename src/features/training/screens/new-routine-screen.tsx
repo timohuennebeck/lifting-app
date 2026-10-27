@@ -59,6 +59,8 @@ export function NewRoutineScreen() {
         onChangeText={setName}
         placeholder={t('newRoutine.namePlaceholder')}
         clearable
+        // Ready to type, like the other name fields.
+        autoFocus
         maxLength={ROUTINE_NAME_MAX}
         returnKeyType="done"
         onSubmitEditing={create}

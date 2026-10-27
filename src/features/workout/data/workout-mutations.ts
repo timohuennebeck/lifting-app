@@ -17,7 +17,7 @@ import { insertCustomExercises } from '@/shared/data/custom-exercises';
 import {
   type CustomExercise,
   defaultTargets,
-  newExerciseDraft,
+  newWorkoutExerciseDraft,
   type SetTargets,
   swapTargets,
 } from '@/shared/data/exercises';
@@ -273,7 +273,7 @@ export async function addWorkoutExercise(userId: string, workoutId: string, exer
         workoutEntriesExercises.position,
         eq(workoutEntriesExercises.workout_entries_id, workoutId),
       ),
-      newExerciseDraft(exerciseId),
+      newWorkoutExerciseDraft(exerciseId),
     ),
   );
 }
