@@ -23,6 +23,9 @@ const REQUIRED = [
   'EXPO_PUBLIC_POSTHOG_HOST',
 ];
 const REQUIRED_IOS = ['EXPO_PUBLIC_REVENUECAT_IOS_KEY', 'EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID'];
+/** The widget extension's target (expo-widgets), and the app groups both apps use. */
+const WIDGETS_TARGET = 'ExpoWidgetsTarget';
+const APP_GROUPS = 'com.apple.security.application-groups';
 /** An address that only works on this computer or its network, or without TLS. */
 const LOCAL = /^http:\/\/|\/\/(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/;
 
@@ -86,6 +89,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ? `com.googleusercontent.apps.${iosClientId.replace('.apps.googleusercontent.com', '')}`
     : null;
   // The widget extension's ID starts with the app's, and the app group goes with it.
+  const group = `group.${variant.id}`;
   const plugins: ExpoConfig['plugins'] = (config.plugins ?? []).map((plugin) =>
     Array.isArray(plugin) && plugin[0] === 'expo-widgets'
       ? ([
@@ -93,19 +97,41 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           {
             ...plugin[1],
             bundleIdentifier: `${variant.id}.widgets`,
-            groupIdentifier: `group.${variant.id}`,
+            groupIdentifier: group,
           },
         ] as [string, unknown])
       : plugin,
+  );
+  // expo-widgets only adds a missing widget extension entry (for EAS's signing) and app group, so
+  // ones app.json kept for the other app (`eas init` saves the config it read) would stay:
+  // dropped here, and the plugin adds this app's.
+  const eas = config.extra?.eas ?? {};
+  const ios = eas.build?.experimental?.ios ?? {};
+  const appExtensions = (ios.appExtensions ?? []).filter(
+    (extension: { targetName?: string }) => extension.targetName !== WIDGETS_TARGET,
+  );
+  const appGroups = (config.ios?.entitlements?.[APP_GROUPS] ?? []).filter(
+    (id: string) => !Object.values(VARIANTS).some((v) => id === `group.${v.id}`),
   );
   return {
     ...(config as ExpoConfig),
     name: variant.name,
     scheme: variant.scheme,
     plugins,
+    extra: {
+      ...config.extra,
+      eas: {
+        ...eas,
+        build: {
+          ...eas.build,
+          experimental: { ...eas.build?.experimental, ios: { ...ios, appExtensions } },
+        },
+      },
+    },
     ios: {
       ...config.ios,
       bundleIdentifier: variant.id,
+      entitlements: { ...config.ios?.entitlements, [APP_GROUPS]: appGroups },
       ...(googleScheme ? { scheme: googleScheme } : {}),
     },
     android: { ...config.android, package: variant.id },

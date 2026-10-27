@@ -2,6 +2,7 @@
   "expo": {
     "name": "Loqqa",
     "slug": "loqqa",
+    "owner": "loqqa",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,6 +17,9 @@
         "NSMicrophoneUsageDescription": "Loqqa uses the microphone so you can say your training plan instead of typing it.",
         "NSSpeechRecognitionUsageDescription": "Loqqa turns the training plan you say into text to create your plan from it.",
         "UIBackgroundModes": ["audio"]
+      },
+      "config": {
+        "usesNonExemptEncryption": false
       }
     },
     "android": {
@@ -83,6 +87,11 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "backgroundColor": "#0A0A0A"
+    "backgroundColor": "#0A0A0A",
+    "extra": {
+      "eas": {
+        "projectId": "2c523ad0-50ec-48fb-9e67-75e4a67b36ef"
+      }
+    }
   }
 }
