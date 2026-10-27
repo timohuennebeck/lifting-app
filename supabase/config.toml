@@ -161,7 +161,7 @@ site_url = "http://127.0.0.1:3000"
 # The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
 # external_url = ""
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://127.0.0.1:3000", "loqqa://**"]
+additional_redirect_urls = ["https://127.0.0.1:3000", "loqqa-dev://**", "loqqa://**"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # JWT issuer URL. If not set, defaults to auth.external_url.
@@ -322,10 +322,10 @@ max_frequency = "5s"
 # `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin_oidc`, `notion`, `twitch`,
 # `twitter`, `x`, `slack`, `spotify`, `workos`, `zoom`.
 # Sign in with Apple: the app gets an identity token from Apple's own sign-in and exchanges it
-# here. Its audience is the app ID; no secret is needed for that.
+# here. Its audience is the app ID (Loqqa Dev's locally, see app.config.ts); no secret is needed.
 [auth.external.apple]
 enabled = true
-client_id = "app.loqqa.mobile"
+client_id = "app.loqqa.mobile.dev,app.loqqa.mobile"
 secret = ""
 # Overrides the default auth callback URL derived from auth.external_url.
 redirect_uri = ""

@@ -42,8 +42,10 @@ example
 /ios
 /android
 
-# env
+# env: .env is Loqqa Dev's; production values live in EAS
 .env
+.env.*
+!.env.example
 supabase/signing_key.json
 
 # plan import test reports

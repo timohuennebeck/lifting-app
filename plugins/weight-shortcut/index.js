@@ -13,10 +13,10 @@ const stringsFile = (entries) =>
     .join('\n') + '\n';
 
 /**
- * The "Log weight" App Shortcut (iOS): copies WeightShortcut.swift into the app target and writes
- * its translations next to Expo's InfoPlist.strings, one `<lang>.lproj` per language. The intent
- * opens loqqa://body-weight/today. Localizable.strings is written here, so the app's `locales`
- * must not add one of their own.
+ * The "Log weight" App Shortcut (iOS): copies WeightShortcut.swift into the app target, with the
+ * build's link scheme (app.config.ts), and writes its translations next to Expo's
+ * InfoPlist.strings, one `<lang>.lproj` per language. The intent opens <scheme>://body-weight/today.
+ * Localizable.strings is written here, so the app's `locales` must not add one of their own.
  */
 const withWeightShortcut = (config) =>
   withXcodeProject(config, async (config) => {
@@ -24,7 +24,12 @@ const withWeightShortcut = (config) =>
     const project = config.modResults;
     const appDir = path.join(platformProjectRoot, projectName);
 
-    await fs.promises.copyFile(path.join(__dirname, SWIFT_FILE), path.join(appDir, SWIFT_FILE));
+    const scheme = [config.scheme].flat()[0] ?? 'loqqa';
+    const swift = await fs.promises.readFile(path.join(__dirname, SWIFT_FILE), 'utf8');
+    const placed = swift.replace('appScheme = "loqqa"', `appScheme = ${JSON.stringify(scheme)}`);
+    if (placed === swift && scheme !== 'loqqa')
+      throw new Error(`${SWIFT_FILE}: no appScheme to set`);
+    await fs.promises.writeFile(path.join(appDir, SWIFT_FILE), placed);
     IOSConfig.XcodeUtils.addBuildSourceFileToGroup({
       filepath: `${projectName}/${SWIFT_FILE}`,
       groupName: projectName,

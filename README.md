@@ -22,7 +22,7 @@ git history (`git show 48b667e:design/README.md`).
 
 ```bash
 npm install
-cp .env.example .env
+cp .env.example .env            # Loqqa Dev's settings: the local stack
 
 # Supabase (Docker required); generate the ES256 signing key once
 npm run supabase:keys           # writes supabase/signing_key.json (gitignored)
@@ -36,8 +36,30 @@ cp supabase/functions/.env.example supabase/functions/.env
 npm run powersync:up
 
 # Native modules (MMKV, op-sqlite) need a development build, not Expo Go
-npm run ios   # or npm run android
+npm run ios   # or npm run android; installs Loqqa Dev
 ```
+
+## Loqqa Dev and production builds
+
+`app.config.ts` makes two apps that install side by side, each with its own data:
+
+- **Loqqa Dev** (`npm run ios`, the default): bundle ID `app.loqqa.mobile.dev`, links
+  `loqqa-dev://`, widgets `app.loqqa.mobile.dev.widgets` with the app group
+  `group.app.loqqa.mobile.dev`. Its settings come from `.env`, so it works with the local stack.
+- **Loqqa** (`APP_VARIANT=production`, the `production` profile in `eas.json`): bundle ID
+  `app.loqqa.mobile`, links `loqqa://`. `npm run build:ios` builds it on EAS with a new build number
+  and submits it to TestFlight.
+- **Production settings** live in EAS's `production` environment (the EAS dashboard, or
+  `eas env:create --environment production`): `EXPO_PUBLIC_SUPABASE_URL`,
+  `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `EXPO_PUBLIC_POWERSYNC_URL`,
+  `EXPO_PUBLIC_REVENUECAT_IOS_KEY`, and if used the Google client IDs and the PostHog key and host.
+  EAS builds from what git tracks, so `.env` never goes in. A production build fails when Supabase
+  or PowerSync is a local address, and on EAS when one of those values is missing.
+- **Accounts for Loqqa Dev:** the first signed build registers its App ID, with Sign in with Apple
+  and the app group (automatic signing); it needs no App Store Connect app. Sign in with Apple
+  works with the local Supabase (`config.toml` takes both app IDs); Google sign-in needs an iOS
+  OAuth client of its own (see Google Sign-In); purchases stay simulated (no RevenueCat key in
+  `.env`).
 
 ## Project structure
 
@@ -152,8 +174,9 @@ calls the `assess-progress` Edge Function, which sends them to OpenAI (`gpt-6.1-
 the standard API at `api.openai.com`) and returns the check's values, or the photos to retake.
 
 - **Secrets:** `supabase/functions/.env` locally (loaded by `supabase start`); in production
-  `npx supabase secrets set --env-file supabase/functions/.env`. `OPENAI_API_KEY` is an OpenAI API
-  key; `OPENAI_MODEL` overrides the default model.
+  `npx supabase secrets set`, e.g. with `--env-file` from a copy of that file without
+  `APPLE_CLIENT_ID` (that one is Loqqa Dev's). `OPENAI_API_KEY` is an OpenAI API key;
+  `OPENAI_MODEL` overrides the default model.
 - **Rules (server-side):** adults only (18+ by the profile's birth date), at most 5 assessments per user in 24 hours.
 - **`progress_check_runs`:** one row per assessment (a run of the function), server-only. Saving a
   check (`progress_checks`, with its photos in `progress_check_photos`) takes its score, values and
@@ -280,13 +303,14 @@ says it isn't available yet.
 1. **Google Cloud** (APIs & Services): set up the OAuth consent screen (app name, support email;
    scopes `openid`, `email`, `profile`), then create three OAuth client IDs:
    - **Web application**: its client ID is the one the ID token is issued for.
-   - **iOS**: bundle ID `app.loqqa.mobile`.
+   - **iOS**: bundle ID `app.loqqa.mobile`, and one more for Loqqa Dev, `app.loqqa.mobile.dev`.
    - **Android**: package `app.loqqa.mobile` and the SHA-1 of the signing key, one client
      per key (debug keystore for local builds, EAS credentials, Play App Signing).
-2. **App:** in `.env`, `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` and `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`.
+2. **App:** `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` and `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`, in `.env`
+   with Loqqa Dev's iOS client and in EAS's production environment with the app's.
    `app.config.ts` turns the iOS ID into the URL scheme, so make a new development build.
-3. **Supabase (local):** `cp supabase/.env.example supabase/.env`, put the web and iOS client IDs
-   in `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID` (comma-separated), restart Supabase.
+3. **Supabase (local):** `cp supabase/.env.example supabase/.env`, put the web and Loqqa Dev's iOS
+   client IDs in `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID` (comma-separated), restart Supabase.
 4. **Supabase (production):** Authentication → Providers → Google: enable, the same client IDs,
    "Skip nonce checks" on.
 
@@ -317,8 +341,9 @@ needs an App Store Connect API key in `.env` (see `.env.example`).
 ## Purchases (RevenueCat)
 
 On iOS the paywall buys through RevenueCat (`react-native-purchases`) once
-`EXPO_PUBLIC_REVENUECAT_IOS_KEY` (the public `appl_…` key) is in `.env`; without it, and on Android
-for now, purchases are simulated in development builds only. The RevenueCat app user ID is the
+`EXPO_PUBLIC_REVENUECAT_IOS_KEY` (the public `appl_…` key) is set (EAS's production environment
+for TestFlight and the App Store); without it, as in Loqqa Dev, and on Android for now, purchases
+are simulated in development builds only. The RevenueCat app user ID is the
 Supabase user ID; purchases made before sign-up move to the account at login.
 
 What the code expects:

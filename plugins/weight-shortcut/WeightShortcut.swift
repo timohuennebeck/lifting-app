@@ -1,6 +1,9 @@
 import AppIntents
 import UIKit
 
+/// The app's link scheme; the config plugin writes the build's (loqqa-dev in Loqqa Dev).
+private let appScheme = "loqqa"
+
 /// "Log weight": opens today's weight entry from the Action button, Siri, Spotlight or the
 /// Shortcuts app. The app opens first, then the link; Expo Router keeps a link that comes in
 /// before the JS is running. Translations: plugins/weight-shortcut/strings.json.
@@ -11,7 +14,7 @@ struct LogWeightIntent: AppIntent {
 
   @MainActor
   func perform() async throws -> some IntentResult {
-    if let url = URL(string: "loqqa://body-weight/today") {
+    if let url = URL(string: "\(appScheme)://body-weight/today") {
       _ = await UIApplication.shared.open(url)
     }
     return .result()
