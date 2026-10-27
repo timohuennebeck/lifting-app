@@ -42,7 +42,7 @@ example
 /ios
 /android
 
-# env: .env is Loqqa Dev's; production values live in EAS
+# env: .env.development is Loqqa Dev's; production values live in EAS
 .env
 .env.*
 !.env.example

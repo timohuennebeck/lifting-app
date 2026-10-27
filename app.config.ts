@@ -39,7 +39,7 @@ function checkProductionEnv() {
   if (problems.length) {
     throw new Error(
       `A production build with the wrong settings:\n- ${problems.join('\n- ')}\n` +
-        'Production values belong in EAS (environment "production"), not in a local .env file.',
+        'Production values belong in EAS (environment "production"), not in .env.development.',
     );
   }
 }

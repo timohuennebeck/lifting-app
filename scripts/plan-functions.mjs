@@ -1,11 +1,13 @@
 // What the plan tests (plan-import-eval, plan-generate-eval) share: calling a plan function as the
 // app does, the catalog, and running a few requests at a time.
 
-/** The Supabase project from .env: its URL and publishable key. Exits without them. */
+/** The Supabase project from .env.development: its URL and publishable key. Exits without them. */
 export function supabaseEnv() {
   const { EXPO_PUBLIC_SUPABASE_URL: url, EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: key } = process.env;
   if (!url || !key) {
-    console.error('Set EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY in .env.');
+    console.error(
+      'Set EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY in .env.development.',
+    );
     process.exit(1);
   }
   return { url, key };

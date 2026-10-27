@@ -4,7 +4,7 @@
 // pushing and pulling about even, focus muscles trained more, sets and reps that suit the goal and
 // the experience, core work only where the goal or focus asks for it and no timed holds. The checks are rules of thumb; read the plans in the report as well.
 //
-// Needs the function with an OpenAI key at EXPO_PUBLIC_SUPABASE_URL from .env: locally
+// Needs the function with an OpenAI key at EXPO_PUBLIC_SUPABASE_URL from .env.development: locally
 // `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 18 plans, so
 // set PLAN_GENERATE_IP_LIMIT=1000 there first, then restart Supabase), or the deployed project.
 // Usage: npm run plan:generate-eval                    all profiles

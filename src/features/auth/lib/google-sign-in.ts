@@ -10,7 +10,7 @@ import { env } from '@/shared/config/env';
 import { supabase } from '@/shared/data/supabase';
 
 /**
- * Whether Google Sign-In is set up (OAuth client IDs in .env, README). iOS also needs its own
+ * Whether Google Sign-In is set up (OAuth client IDs in .env.development or EAS, README). iOS also needs its own
  * client ID: the URL scheme made from it must be in the build, or signing in crashes the app.
  */
 export const googleSignInReady =
