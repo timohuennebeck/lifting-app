@@ -22,11 +22,11 @@ git history (`git show 48b667e:design/README.md`).
 
 ```bash
 npm install
-cp .env.example .env.development   # Loqqa Dev's settings: the local stack
+cp .env.example .env.local      # Loqqa Dev's settings: the local stack
 
 # Supabase (Docker required); generate the ES256 signing key once
 npm run supabase:keys           # writes supabase/signing_key.json (gitignored)
-npm run supabase:start             # copy the publishable key into .env.development
+npm run supabase:start          # copy the publishable key into .env.local
 
 # Edge Function secrets (OpenAI key for the plan import, plan generation and progress check;
 # Apple key for revoking tokens), see the file
@@ -45,8 +45,8 @@ npm run ios   # or npm run android; installs Loqqa Dev
 
 - **Loqqa Dev** (`npm run ios`, the default): bundle ID `app.loqqa.mobile.dev`, links
   `loqqa-dev://`, widgets `app.loqqa.mobile.dev.widgets` with the app group
-  `group.app.loqqa.mobile.dev`. Its settings come from `.env.development` (Expo loads it for
-  development builds), so it works with the local stack.
+  `group.app.loqqa.mobile.dev`. Its settings come from `.env.local` (Expo loads it for
+  every build on your computer), so it works with the local stack.
 - **Loqqa** (`APP_VARIANT=production`, the `production` profile in `eas.json`): bundle ID
   `app.loqqa.mobile`, links `loqqa://`. `npm run build:ios` builds it on EAS with a new build number
   and submits it to TestFlight.
@@ -54,13 +54,13 @@ npm run ios   # or npm run android; installs Loqqa Dev
   `eas env:create --environment production`): `EXPO_PUBLIC_SUPABASE_URL`,
   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `EXPO_PUBLIC_POWERSYNC_URL`,
   `EXPO_PUBLIC_REVENUECAT_IOS_KEY`, and if used the Google client IDs and the PostHog key and host.
-  EAS builds from what git tracks, so `.env.development` never goes in. A production build fails when Supabase
+  EAS builds from what git tracks, so `.env.local` never goes in. A production build fails when Supabase
   or PowerSync is a local address, and on EAS when one of those values is missing.
 - **Accounts for Loqqa Dev:** the first signed build registers its App ID, with Sign in with Apple
   and the app group (automatic signing); it needs no App Store Connect app. Sign in with Apple
   works with the local Supabase (`config.toml` takes both app IDs); Google sign-in needs an iOS
   OAuth client of its own (see Google Sign-In); purchases stay simulated (no RevenueCat key in
-  `.env.development`).
+  `.env.local`).
 
 ## Project structure
 
@@ -308,7 +308,7 @@ says it isn't available yet.
    - **Android**: package `app.loqqa.mobile` and the SHA-1 of the signing key, one client
      per key (debug keystore for local builds, EAS credentials, Play App Signing).
 2. **App:** `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` and `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`, in
-   `.env.development` with Loqqa Dev's iOS client and in EAS's production environment with the app's.
+   `.env.local` with Loqqa Dev's iOS client and in EAS's production environment with the app's.
    `app.config.ts` turns the iOS ID into the URL scheme, so make a new development build.
 3. **Supabase (local):** `cp supabase/.env.example supabase/.env`, put the web and Loqqa Dev's iOS
    client IDs in `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID` (comma-separated), restart Supabase.
@@ -337,7 +337,7 @@ app ID, so no secret is needed.
 
 App IDs in the developer account: `npm run apple:ids` lists them with the App Store record that
 uses each one, `npm run apple:ids -- delete <identifier> …` deletes unused ones after asking. It
-needs an App Store Connect API key in `.env.development` (see `.env.example`).
+needs an App Store Connect API key in `.env.local` (see `.env.example`).
 
 ## Purchases (RevenueCat)
 
@@ -363,7 +363,7 @@ What the code expects:
 ## Analytics (PostHog)
 
 Product analytics and error tracking go to PostHog's EU cloud once `EXPO_PUBLIC_POSTHOG_KEY` (the
-public `phc_…` project key) is set (`.env.development`, EAS for production); without it nothing
+public `phc_…` project key) is set (`.env.local`, EAS for production); without it nothing
 is sent. The events and their
 properties are typed in `src/shared/lib/posthog.ts` (`AnalyticsEvents`), named
 `category:object_action`:

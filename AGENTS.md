@@ -5,7 +5,7 @@ SDK: read the docs for this version (https://docs.expo.dev/versions/v57.0.0/, in
 corrections at https://docs.expo.dev/llms.txt), not memory. Add packages with
 `npx expo install <package>`; native ones need a new development build (`npm run ios|android`, not
 Expo Go). `ios/` and `android/` are generated: configure native behaviour in `app.json` and
-`app.config.ts`. That makes two apps: Loqqa Dev (the default, `.env.development`, the local stack) and
+`app.config.ts`. That makes two apps: Loqqa Dev (the default, `.env.local`, the local stack) and
 the production app (`APP_VARIANT=production`, `eas.json`), whose values live in EAS only.
 `README.md` covers the product, setup and the team-side data.
 

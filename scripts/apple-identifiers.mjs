@@ -1,5 +1,5 @@
 // Lists the team's App IDs (bundle IDs) with the App Store Connect app record that uses each one,
-// and deletes the ones you name. Uses an App Store Connect API key (Admin), set in .env.development:
+// and deletes the ones you name. Uses an App Store Connect API key (Admin), set in .env.local:
 //   ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_PATH (path to the AuthKey_….p8 file)
 // Usage: npm run apple:ids                    lists them
 //        npm run apple:ids -- delete <id> …   deletes those App IDs after asking
@@ -13,7 +13,7 @@ const API = 'https://api.appstoreconnect.apple.com/v1';
 const { ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_PATH } = process.env;
 if (!ASC_KEY_ID || !ASC_ISSUER_ID || !ASC_KEY_PATH) {
   console.error(
-    'Set ASC_KEY_ID, ASC_ISSUER_ID and ASC_KEY_PATH in .env.development (see the top of this file).',
+    'Set ASC_KEY_ID, ASC_ISSUER_ID and ASC_KEY_PATH in .env.local (see the top of this file).',
   );
   process.exit(1);
 }

@@ -6,7 +6,7 @@
 // exercises said for one workout as speech recognition writes them down (sent to read-exercises
 // as the voice input does; they count toward its own limit).
 //
-// Needs the function with an OpenAI key at EXPO_PUBLIC_SUPABASE_URL from .env.development: locally
+// Needs the function with an OpenAI key at EXPO_PUBLIC_SUPABASE_URL from .env.local: locally
 // `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 15 imports, so
 // set PLAN_IMPORT_IP_LIMIT=1000 there first, then restart Supabase), or the deployed project.
 // Usage: npm run plan:eval                          all fixtures
