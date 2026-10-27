@@ -13,6 +13,8 @@ export interface CheckHistoryRowProps {
   score?: number;
   latest?: boolean;
   trailing?: ReactNode;
+  /** The next check before its week has come. */
+  disabled?: boolean;
   onPress: () => void;
 }
 
@@ -23,6 +25,7 @@ export function CheckHistoryRow({
   score,
   latest,
   trailing,
+  disabled,
   onPress,
 }: CheckHistoryRowProps) {
   const next = score === undefined;
@@ -30,6 +33,8 @@ export function CheckHistoryRow({
     <PressableScale
       activeScale={0.98}
       accessibilityLabel={date ? `${title} · ${date}` : title}
+      accessibilityState={{ disabled }}
+      disabled={disabled}
       onPress={onPress}
       className="gap-2.5 py-3.5"
     >

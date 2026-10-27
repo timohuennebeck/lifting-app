@@ -29,12 +29,12 @@ export interface PhotoTileProps {
 /** A pose photo in the result's row of three, named at the bottom (design 08d-A). */
 export function PhotoTile({ children, label, trailing }: PhotoTileProps) {
   return (
-    <View className="flex-1 overflow-hidden rounded-[22px] bg-surface">
+    <View className="flex-1 overflow-hidden rounded-[18px] bg-surface">
       {children}
       <Gradient from="bottom" size={70} color="black" opacity={0.75} />
       <View
         pointerEvents="none"
-        className="absolute inset-0 rounded-[22px] border border-white/10"
+        className="absolute inset-0 rounded-[18px] border border-white/10"
       />
       <View className="absolute right-3 bottom-3 left-3 flex-row items-center justify-between">
         <Text variant="label" className="text-sm">

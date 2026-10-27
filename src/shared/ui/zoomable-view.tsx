@@ -1,8 +1,7 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
-  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withDecay,
@@ -14,29 +13,47 @@ import { clamp } from '@/shared/lib/math';
 
 const MAX_SCALE = 4;
 const DOUBLE_TAP_SCALE = 2.5;
-/** Unzoomed, a drag this far (or a fast flick) up or down closes. */
-const DISMISS_DISTANCE = 100;
-const DISMISS_VELOCITY = 900;
+/** Unzoomed, a drag this far (or a fast flick) sideways goes to the next or previous content. */
+const SWIPE_DISTANCE = 80;
+const SWIPE_VELOCITY = 700;
+/** How long content takes to slide out or in. */
+const SLIDE_MS = 200;
+/** Past the first or last content, a drag moves it only this much of the way. */
+const EDGE_RESISTANCE = 0.25;
+
+/** The content before (-1) or after (1) this one. */
+export type SwipeStep = -1 | 1;
 
 export interface ZoomableViewProps {
   children: ReactNode;
   /** Width / height of the content shown whole ("contain"); unknown, it fills the screen. */
   contentAspect?: number;
-  /** Unzoomed drag up or down. */
-  onDismiss: () => void;
+  /** Unzoomed swipe sideways: left for the next (1), right for the previous (-1). */
+  onSwipe?: (step: SwipeStep) => void;
+  /** Whether there is content to swipe to on each side. */
+  canSwipe?: { previous: boolean; next: boolean };
+  /** Slides in from this side when mounted: the step that led here. */
+  enterFrom?: SwipeStep;
 }
 
 /**
  * Full-screen content to look at closely: pinch or double-tap to zoom, drag to move the zoomed
- * content. Unzoomed, dragging up or down closes. Remount it (key) to reset the zoom.
+ * content. Unzoomed, a swipe sideways slides it out to the next or previous one (`onSwipe`).
+ * Remount it (key) to reset the zoom.
  */
-export function ZoomableView({ children, contentAspect, onDismiss }: ZoomableViewProps) {
+export function ZoomableView({
+  children,
+  contentAspect,
+  onSwipe,
+  canSwipe,
+  enterFrom,
+}: ZoomableViewProps) {
   const { width, height } = useWindowDimensions();
   // The content's size on screen unzoomed: the bars beside it are never panned into view.
   const fitWidth = contentAspect ? Math.min(width, height * contentAspect) : width;
   const fitHeight = contentAspect ? fitWidth / contentAspect : height;
   const scale = useSharedValue(1);
-  const x = useSharedValue(0);
+  const x = useSharedValue(enterFrom ? enterFrom * width : 0);
   const y = useSharedValue(0);
   const start = useSharedValue({ scale: 1, x: 0, y: 0, focalX: 0, focalY: 0 });
 
@@ -55,6 +72,13 @@ export function ZoomableView({ children, contentAspect, onDismiss }: ZoomableVie
     x.set(withTiming(0));
     y.set(withTiming(0));
   };
+  const previous = !!canSwipe?.previous;
+  const next = !!canSwipe?.next;
+
+  // Arrived by a swipe: slides in from the side it came from.
+  useEffect(() => {
+    if (enterFrom) x.set(withTiming(0, { duration: SLIDE_MS }));
+  }, [enterFrom, x]);
 
   const pinch = Gesture.Pinch()
     .onStart((e) => {
@@ -95,7 +119,10 @@ export function ZoomableView({ children, contentAspect, onDismiss }: ZoomableVie
         x.set(clamp(from.x + e.translationX, -maxX(s), maxX(s)));
         y.set(clamp(from.y + e.translationY, -maxY(s), maxY(s)));
       } else {
-        y.set(e.translationY);
+        // Sideways only, held back where there is nothing to swipe to.
+        const t = e.translationX;
+        const open = t < 0 ? next : previous;
+        x.set(open ? t : t * EDGE_RESISTANCE);
       }
     })
     .onEnd((e) => {
@@ -105,11 +132,15 @@ export function ZoomableView({ children, contentAspect, onDismiss }: ZoomableVie
         y.set(withDecay({ velocity: e.velocityY, clamp: [-maxY(s), maxY(s)] }));
         return;
       }
-      if (Math.abs(e.translationY) > DISMISS_DISTANCE || Math.abs(e.velocityY) > DISMISS_VELOCITY) {
-        scheduleOnRN(onDismiss);
-      } else {
-        reset();
-      }
+      let step: SwipeStep | 0 = 0;
+      if (e.translationX < -SWIPE_DISTANCE || e.velocityX < -SWIPE_VELOCITY) step = 1;
+      else if (e.translationX > SWIPE_DISTANCE || e.velocityX > SWIPE_VELOCITY) step = -1;
+      if (!onSwipe || !step || !(step === 1 ? next : previous)) return reset();
+      x.set(
+        withTiming(-step * width, { duration: SLIDE_MS }, (done) => {
+          if (done) scheduleOnRN(onSwipe, step);
+        }),
+      );
     });
 
   const doubleTap = Gesture.Tap()
@@ -124,8 +155,6 @@ export function ZoomableView({ children, contentAspect, onDismiss }: ZoomableVie
     });
 
   const contentStyle = useAnimatedStyle(() => ({
-    // Unzoomed, the content fades while it is dragged away.
-    opacity: scale.get() > 1 ? 1 : interpolate(Math.abs(y.get()), [0, height / 2], [1, 0.4]),
     transform: [{ translateX: x.get() }, { translateY: y.get() }, { scale: scale.get() }],
   }));
 

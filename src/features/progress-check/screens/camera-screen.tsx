@@ -1,4 +1,5 @@
 import { CameraView } from 'expo-camera';
+import { useKeepAwake } from 'expo-keep-awake';
 import { router, useIsFocused } from 'expo-router';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -61,6 +62,8 @@ const TURN_MS = 5000;
  */
 export function CameraScreen() {
   const { t } = useTranslation(['progressCheck', 'common']);
+  // The phone lies still while the timer runs: it would lock in the middle of the photos.
+  useKeepAwake();
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
   const focused = useIsFocused();

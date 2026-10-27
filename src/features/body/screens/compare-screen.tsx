@@ -12,10 +12,12 @@ import {
   useProgressChecks,
 } from '@/features/progress-check/data/progress-checks';
 import type { Pose } from '@/features/progress-check/lib/poses';
+import { useUnits } from '@/shared/data/profile';
+import { useWeightEntries } from '@/shared/data/weight-entries';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { cn } from '@/shared/lib/cn';
 import { DAY_MS } from '@/shared/lib/date';
-import { formatShortDate } from '@/shared/lib/format';
+import { formatShortDate, formatWeight } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 import { CompareArrow } from '@/shared/ui/compare-photo-card';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -23,6 +25,7 @@ import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 import { BodyPhotoCard } from '../components/body-photo-card';
+import { weightAt } from '../lib/check-weight';
 import { comparedPair, inOrder } from '../lib/comparison';
 import { useCompareStore } from '../stores/compare-store';
 
@@ -94,6 +97,8 @@ export function CompareScreen() {
   const saved = useCompareStore();
   const [active, setActive] = useState<Side>(side === 'b' ? 'B' : 'A');
   const [pose, setPose] = useState<Pose>('front');
+  const { entries } = useWeightEntries();
+  const units = useUnits();
   const [picked, setPicked] = useState<{ beforeId: string; afterId: string } | null>(null);
 
   const byId = (id: string | undefined) => checks.find((c) => c.id === id);
@@ -110,6 +115,10 @@ export function CompareScreen() {
   }
 
   const numberOf = (check: ProgressCheck) => checks.indexOf(check) + 1;
+  const weightOf = (check: ProgressCheck) => {
+    const kg = weightAt(entries, check.createdAt);
+    return kg === undefined ? undefined : formatWeight(kg, units);
+  };
   const sideOf = (check: ProgressCheck): Side | null =>
     check.id === before.id ? 'A' : check.id === after.id ? 'B' : null;
   const days = Math.round((Date.parse(after.createdAt) - Date.parse(before.createdAt)) / DAY_MS);
@@ -133,6 +142,7 @@ export function CompareScreen() {
       storagePath={photos[check.id]?.[pose]}
       label={t('checkLabel', { n: numberOf(check), date: formatShortDate(check.createdAt) })}
       score={check.score}
+      weight={weightOf(check)}
       badge={cardSide}
       after={cardSide === 'B'}
       selected={active === cardSide}

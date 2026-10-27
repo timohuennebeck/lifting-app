@@ -11,15 +11,18 @@ import {
   useProgressChecks,
 } from '@/features/progress-check/data/progress-checks';
 import {
-  progressCheckUnlockDate,
   isProgressCheckAge,
+  nextCheckDate,
+  progressCheckUnlockDate,
 } from '@/features/progress-check/lib/eligibility';
 import type { Pose } from '@/features/progress-check/lib/poses';
 import { startProgressCheck } from '@/features/progress-check/stores/progress-check-store';
 import { TabScreen } from '@/shared/components/tab-screen';
-import { type Profile, useProfile } from '@/shared/data/profile';
+import { type Profile, useProfile, useUnits } from '@/shared/data/profile';
+import { useWeightEntries } from '@/shared/data/weight-entries';
+import { useToday } from '@/shared/hooks/use-today';
 import { cn } from '@/shared/lib/cn';
-import { formatLongDate, formatShortDate } from '@/shared/lib/format';
+import { formatLongDate, formatShortDate, formatWeight } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
@@ -30,6 +33,7 @@ import { Text } from '@/shared/ui/text';
 
 import { BodyPhotoCard, NextCheckCard } from '../components/body-photo-card';
 import { CheckHistoryRow } from '../components/check-history-row';
+import { weightAt } from '../lib/check-weight';
 import { comparedPair } from '../lib/comparison';
 import { useCompareStore } from '../stores/compare-store';
 
@@ -168,6 +172,9 @@ export function BodyScreen() {
   const { data: checks = [], isLoading: checksLoading } = useProgressChecks();
   const { data: photos = {} } = useProgressCheckPhotos();
   const [pose, setPose] = useState<Pose>('front');
+  const { entries } = useWeightEntries();
+  const units = useUnits();
+  const today = useToday();
   const allowed = isProgressCheckAge(profile?.birthDate);
 
   const saved = useCompareStore();
@@ -182,6 +189,14 @@ export function BodyScreen() {
     t('checkLabel', { n: checks.indexOf(check) + 1, date: formatShortDate(check.createdAt) });
   const delta = latest && first ? latest.score - first.score : 0;
   const nextTitle = t('check', { n: checks.length + 1 });
+  // A check a week at most: until then the next check shows from when.
+  const nextDate = nextCheckDate(latest?.createdAt);
+  const waiting = !!nextDate && nextDate.getTime() > today;
+  const nextFrom = nextDate ? formatShortDate(nextDate) : '';
+  const weightOf = (check: ProgressCheck) => {
+    const kg = weightAt(entries, check.createdAt);
+    return kg === undefined ? undefined : formatWeight(kg, units);
+  };
 
   return (
     <TabScreen>
@@ -233,6 +248,7 @@ export function BodyScreen() {
                         storagePath={photos[pair.before.id]?.[pose]}
                         label={labelOf(pair.before)}
                         score={pair.before.score}
+                        weight={weightOf(pair.before)}
                         muted
                         onPress={() => openCheck(pair.before.id)}
                         onEdit={() => openCompare('a')}
@@ -244,6 +260,7 @@ export function BodyScreen() {
                         storagePath={photos[pair.after.id]?.[pose]}
                         label={labelOf(pair.after)}
                         score={pair.after.score}
+                        weight={weightOf(pair.after)}
                         after
                         selected
                         done={pair.after.id === latest.id}
@@ -259,6 +276,7 @@ export function BodyScreen() {
                       storagePath={photos[latest.id]?.[pose]}
                       label={labelOf(latest)}
                       score={latest.score}
+                      weight={weightOf(latest)}
                       after
                       selected
                       done
@@ -269,7 +287,8 @@ export function BodyScreen() {
                   {!compared && allowed ? (
                     <NextCheckCard
                       title={nextTitle}
-                      note={t('startNow')}
+                      note={waiting ? t('weeklyNote', { date: nextFrom }) : t('startNow')}
+                      disabled={waiting}
                       onPress={camera.request}
                     />
                   ) : null}
@@ -286,13 +305,20 @@ export function BodyScreen() {
                 {allowed ? (
                   <CheckHistoryRow
                     title={nextTitle}
+                    disabled={waiting}
                     onPress={camera.request}
                     trailing={
-                      <View className="h-6.5 justify-center rounded-full border-[1.5px] border-accent px-2.5">
-                        <Text variant="caption" tone="accent" className="text-xs">
-                          {t('startShort')}
+                      waiting ? (
+                        <Text variant="caption" tone="subtle" className="text-xs">
+                          {t('nextFrom', { date: nextFrom })}
                         </Text>
-                      </View>
+                      ) : (
+                        <View className="h-6.5 justify-center rounded-full border-[1.5px] border-accent px-2.5">
+                          <Text variant="caption" tone="accent" className="text-xs">
+                            {t('startShort')}
+                          </Text>
+                        </View>
+                      )
                     }
                   />
                 ) : null}

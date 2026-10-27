@@ -1,3 +1,4 @@
+import { useKeepAwake } from 'expo-keep-awake';
 import { Redirect, router } from 'expo-router';
 import { useEffect, useEffectEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,6 +45,8 @@ const MAX_PHOTO = 124;
  */
 export function AssessmentScreen() {
   const { t } = useTranslation('progressCheck');
+  // On while the photos are uploaded and assessed, as the camera before.
+  useKeepAwake();
   const close = useCloseCheck();
   // Android back asks before discarding, like the X.
   useHardwareBack(close);

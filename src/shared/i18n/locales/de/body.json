@@ -6,6 +6,8 @@
   "baseline": "Startwert",
   "startNow": "Jetzt starten",
   "startShort": "Starten",
+  "nextFrom": "Ab {{date}}",
+  "weeklyNote": "Einmal pro Woche · ab {{date}}",
   "history": "Historie",
   "start": "Körpercheck starten",
   "empty": {

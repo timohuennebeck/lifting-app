@@ -38,8 +38,7 @@ export function GroupBands({ scores }: GroupBandsProps) {
               return (
                 <View
                   key={group}
-                  className="h-10 flex-row items-center gap-2.5 rounded-full border border-line bg-surface pr-1.5 pl-3.5"
-                  style={color ? { borderColor: `${color}70` } : undefined}
+                  className="h-10 flex-row items-center gap-2.5 rounded-full bg-surface pr-1.5 pl-3.5"
                 >
                   <Text variant="label" className="text-sm">
                     {t(`groups.${group}`)}

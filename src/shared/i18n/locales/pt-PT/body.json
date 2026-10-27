@@ -6,6 +6,8 @@
   "baseline": "Valor inicial",
   "startNow": "Iniciar agora",
   "startShort": "Iniciar",
+  "nextFrom": "A partir de {{date}}",
+  "weeklyNote": "Uma vez por semana · a partir de {{date}}",
   "history": "Histórico",
   "start": "Iniciar check corporal",
   "empty": {

@@ -6,6 +6,8 @@
   "baseline": "기준",
   "startNow": "지금 시작",
   "startShort": "시작",
+  "nextFrom": "{{date}}부터",
+  "weeklyNote": "주 1회 · {{date}}부터",
   "history": "기록",
   "start": "바디 체크 시작",
   "empty": {

@@ -18,6 +18,8 @@ export interface BodyPhotoCardProps {
   storagePath?: string;
   label: string;
   score: number;
+  /** Beside the score: the weight at the check, e.g. "84,2 kg". */
+  weight?: string;
   /** The "after" check: accent score. */
   after?: boolean;
   /** Accent ring: the latest check, or the side being picked on the compare page. */
@@ -54,6 +56,7 @@ export function BodyPhotoCard({
   storagePath,
   label,
   score,
+  weight,
   after,
   selected,
   done,
@@ -89,6 +92,7 @@ export function BodyPhotoCard({
           }
           label={label}
           score={score}
+          weight={weight}
           after={after}
           muted={muted}
           trailing={done ? <CheckBadge size={22} glyph={11} /> : null}
@@ -131,23 +135,32 @@ export function BodyPhotoCard({
 export interface NextCheckCardProps {
   /** "Check 2" */
   title: string;
-  /** E.g. "Jetzt starten". */
+  /** E.g. "Jetzt starten", or from when it can start. */
   note: string;
+  /** Not yet: a check a week at most. */
+  disabled?: boolean;
   onPress: () => void;
 }
 
-/** Empty tile beside the only check so far: starts the next one. */
-export function NextCheckCard({ title, note, onPress }: NextCheckCardProps) {
+/** Empty tile beside the only check so far: starts the next one, once its week has come. */
+export function NextCheckCard({ title, note, disabled, onPress }: NextCheckCardProps) {
   return (
     <CardSlot>
       <PressableScale
         haptic="press"
         activeScale={0.98}
         accessibilityLabel={`${title} · ${note}`}
+        accessibilityState={{ disabled }}
+        disabled={disabled}
         onPress={onPress}
         className="h-62.5 w-full items-center justify-center gap-1 rounded-[18px] bg-surface px-4"
       >
-        <View className="mb-3 size-12 items-center justify-center rounded-full bg-elevated">
+        <View
+          className={cn(
+            'mb-3 size-12 items-center justify-center rounded-full bg-elevated',
+            disabled && 'opacity-40',
+          )}
+        >
           <Icon name="plus" size={14} color={colors.fg} />
         </View>
         <Text variant="bodyStrong" className="text-center">

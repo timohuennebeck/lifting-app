@@ -6,6 +6,8 @@
   "baseline": "Baseline",
   "startNow": "Start now",
   "startShort": "Start",
+  "nextFrom": "From {{date}}",
+  "weeklyNote": "Once a week · from {{date}}",
   "history": "History",
   "start": "Start body check",
   "empty": {
