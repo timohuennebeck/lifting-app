@@ -93,6 +93,10 @@
         "title": "Tageslimit erreicht",
         "message": "Du hast heute schon mehrere Analysen gestartet. Morgen geht es weiter."
       },
+      "weekly": {
+        "title": "Ein Check pro Woche",
+        "message": "Dein letzter Check ist noch keine Woche her. Der nächste ist 7 Tage danach möglich."
+      },
       "notAdult": {
         "title": "Erst ab 18",
         "message": "Der Körpercheck ist erst ab 18 Jahren verfügbar."

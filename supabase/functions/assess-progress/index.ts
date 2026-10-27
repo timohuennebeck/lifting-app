@@ -2,7 +2,8 @@
 // progress-photos/<user id>/<check id>/<pose>.jpg, then calls this function with the check id.
 // The photos go to OpenAI's Responses API; the answer is either the check's values or
 // the photos to retake. Every assessment takes a row in progress_check_runs first, which limits how
-// often a user can run one and is the only source the saved check's values are taken from.
+// often a user can run one and is the only source the saved check's values are taken from. A new
+// check comes at most a week after the last saved one.
 import { encodeBase64 } from 'jsr:@std/encoding@1/base64';
 
 import { admin, reply, requestUser } from '../_shared/common.ts';
@@ -28,6 +29,12 @@ const BUCKET = 'progress-photos';
 const MIN_AGE = 18;
 /** Assessments per user in 24 hours, retakes included; each one is an OpenAI call. */
 const DAILY_LIMIT = 5;
+/**
+ * A new check this soon after the last saved one is refused: one a week. The app lets the next
+ * start from local midnight of the 7th day, at least 6 days after the last check (less an hour
+ * when the clocks change), so this never refuses one the app allows.
+ */
+const MIN_CHECK_GAP_MS = 6 * 24 * 60 * 60 * 1000 - 2 * 60 * 60 * 1000;
 const OPENAI_TIMEOUT_MS = 120_000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -134,6 +141,10 @@ Deno.serve(async (req) => {
   const age = profile?.birth_date ? ageFrom(profile.birth_date, new Date()) : 0;
   if (age < MIN_AGE) return reply(403, { error: 'not_adult' });
   if (!(await pro)) return reply(403, { error: 'not_pro' });
+  // Retakes of this check go on: only saved checks other than it count.
+  if (previous && Date.now() - Date.parse(previous.created_at) < MIN_CHECK_GAP_MS) {
+    return reply(429, { error: 'weekly_limit' });
+  }
 
   // The previous check's photos let the model compare pose by pose; one that fails to download
   // is left out.

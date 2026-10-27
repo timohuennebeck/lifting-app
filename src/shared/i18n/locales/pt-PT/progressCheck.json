@@ -93,6 +93,10 @@
         "title": "Limite diário atingido",
         "message": "Já iniciaste várias análises hoje. Amanhã podes continuar."
       },
+      "weekly": {
+        "title": "Um check por semana",
+        "message": "O teu último check foi há menos de uma semana. O próximo fica disponível 7 dias depois."
+      },
       "notAdult": {
         "title": "Só a partir dos 18",
         "message": "O check corporal só está disponível a partir dos 18 anos."

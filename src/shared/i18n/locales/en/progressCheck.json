@@ -93,6 +93,10 @@
         "title": "Daily limit reached",
         "message": "You've started several analyses today. You can continue tomorrow."
       },
+      "weekly": {
+        "title": "One check a week",
+        "message": "Your last check was less than a week ago. Your next one opens 7 days after it."
+      },
       "notAdult": {
         "title": "Only from 18",
         "message": "The body check is only available from age 18."

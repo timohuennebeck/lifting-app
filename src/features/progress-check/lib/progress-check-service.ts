@@ -40,7 +40,8 @@ type AssessmentOutcome =
   /** The assessment could not judge these photos; nothing was scored. */
   | { status: 'retake'; issues: PhotoRejection[] };
 
-type AssessmentFailure = 'offline' | 'limit' | 'notAdult' | 'notPro' | 'refused' | 'failed';
+type AssessmentFailure =
+  'offline' | 'limit' | 'weekly' | 'notAdult' | 'notPro' | 'refused' | 'failed';
 
 export class AssessmentError extends Error {
   constructor(readonly reason: AssessmentFailure) {
@@ -59,6 +60,7 @@ const SERVER_ISSUES: Record<string, PhotoIssue> = {
 
 const SERVER_ERRORS: Record<string, AssessmentFailure> = {
   limit: 'limit',
+  weekly_limit: 'weekly',
   not_adult: 'notAdult',
   not_pro: 'notPro',
   refused: 'refused',
