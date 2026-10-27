@@ -5,6 +5,7 @@ import { LegalUpdateGate } from '@/features/legal/components/legal-update-gate';
 import { useSubscriptionGate } from '@/features/paywall/hooks/use-subscription-gate';
 import { useAttachmentUploadQueue } from '@/features/support/hooks/use-attachment-upload-queue';
 import { useEndWorkoutActivity } from '@/features/workout/hooks/use-end-workout-activity';
+import { useRestAlert } from '@/features/workout/hooks/use-rest-alert';
 import { useSyncAccountLanguage } from '@/shared/hooks/use-sync-account-language';
 import { colors } from '@/shared/lib/theme';
 
@@ -21,6 +22,8 @@ export default function AppLayout() {
   useSubscriptionGate();
   // The Lock Screen / Dynamic Island workout goes when no workout runs any more.
   useEndWorkoutActivity();
+  // The end of a rest vibrates also with the phone locked.
+  useRestAlert();
 
   return (
     <>

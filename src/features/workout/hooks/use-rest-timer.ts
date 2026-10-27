@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
-import { useSharedValue, withDelay, withSequence, withTiming } from 'react-native-reanimated';
+import { Vibration } from 'react-native';
 
 import { useNow } from '@/shared/hooks/use-now';
-import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
 import { playSound, preloadSounds } from '@/shared/lib/sounds';
 import { useSettingsStore } from '@/shared/stores/settings-store';
@@ -15,16 +14,15 @@ const STALE_MS = 5000;
 const SOUND_LEAD_MS = 3000;
 
 /**
- * Rest countdown from the session store. Fires a haptic and a flash (0→1→0
- * shared value) when it reaches zero, and plays the rest-end sound so its chime lands on zero
- * (unless it is turned off in Settings). Mount it once per screen.
+ * Rest countdown from the session store. Vibrates when it reaches zero (a full vibration, felt in
+ * a pocket; with the app closed `useRestAlert` does it), and plays the rest-end sound so its
+ * chime lands on zero (unless it is turned off in Settings). Mount it once per screen.
  */
 export function useRestTimer() {
   const restEndsAt = useWorkoutSessionStore((s) => s.restEndsAt);
   const restSeconds = useWorkoutSessionStore((s) => s.restSeconds);
   const restSound = useSettingsStore((s) => s.restSound);
   const now = useNow(250, restEndsAt != null);
-  const flash = useSharedValue(0);
 
   useEffect(() => {
     if (restEndsAt == null || !restSound) return;
@@ -53,19 +51,13 @@ export function useRestTimer() {
     }
     const id = setTimeout(
       () => {
-        haptics.success();
-        flash.set(
-          withSequence(
-            withTiming(1, { duration: 150 }),
-            withDelay(1600, withTiming(0, { duration: 400 })),
-          ),
-        );
+        Vibration.vibrate();
         skipRest();
       },
       Math.max(0, ms),
     );
     return () => clearTimeout(id);
-  }, [restEndsAt, flash]);
+  }, [restEndsAt]);
 
   // Until the clock catches up with a timer that just started, it shows the full length
   // instead of a jump from a stale time.
@@ -75,6 +67,5 @@ export function useRestTimer() {
     remainingSeconds: Math.ceil(remainingMs / 1000),
     /** 1 → 0 while counting down. */
     fraction: restSeconds > 0 ? Math.min(1, remainingMs / (restSeconds * 1000)) : 0,
-    flash,
   };
 }

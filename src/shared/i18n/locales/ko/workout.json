@@ -31,7 +31,10 @@
     "restart": "타이머 다시 시작",
     "stop": "타이머 정지",
     "restartDefault": "기본 휴식 시간으로 다시 시작",
-    "restartWith": "{{time}} 휴식으로 다시 시작"
+    "restartWith": "{{time}} 휴식으로 다시 시작",
+    "doneTitle": "휴식 끝",
+    "doneBody": "다음 세트를 시작하세요.",
+    "channel": "휴식 타이머"
   },
   "activity": {
     "skipRest": "휴식 건너뛰기",

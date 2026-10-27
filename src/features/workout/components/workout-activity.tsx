@@ -127,7 +127,8 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
     />
   );
 
-  const countdown = (size: number, width: number) =>
+  // A timer text takes all the width it gets, so it gets a fixed one, its digits placed in it.
+  const countdown = (size: number, width: number, alignment: 'center' | 'trailing') =>
     restRange ? (
       <Text
         timerInterval={restRange}
@@ -136,8 +137,8 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
           font({ size, weight: 'bold' }),
           monospacedDigit(),
           foregroundStyle(ACCENT),
-          multilineTextAlignment('center'),
-          frame({ width }),
+          multilineTextAlignment(alignment),
+          frame({ width, alignment }),
           id(`countdown-${restKey}`),
         ]}
       />
@@ -188,16 +189,17 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
     </HStack>
   );
 
-  // `roomy` on the Lock Screen, which has a little more height to give than the island.
+  // `roomy` on the Lock Screen, which has a little more height to give than the island: there
+  // the gaps are wider (about 156 pt of the 160 in all).
   const restBody = (roomy: boolean) => (
-    <VStack spacing={roomy ? 7 : 5}>
+    <VStack spacing={roomy ? 10 : 5}>
       {/* As tall as the circles: the digits' line box is taller than the digits. */}
-      <HStack modifiers={[frame({ height: roomy ? 46 : 44 })]}>
-        {nudge(TARGETS.minus, 'gobackward.10', texts.minus, roomy ? 46 : 44)}
+      <HStack modifiers={[frame({ height: roomy ? 42 : 44 })]}>
+        {nudge(TARGETS.minus, 'gobackward.10', texts.minus, roomy ? 42 : 44)}
         <Spacer />
-        {countdown(40, 130)}
+        {countdown(40, 130, 'center')}
         <Spacer />
-        {nudge(TARGETS.plus, 'goforward.10', texts.plus, roomy ? 46 : 44)}
+        {nudge(TARGETS.plus, 'goforward.10', texts.plus, roomy ? 42 : 44)}
       </HStack>
       {restRange ? (
         <ProgressView
@@ -212,7 +214,7 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
           ]}
         />
       ) : null}
-      {pill(TARGETS.skipRest, texts.skipRest, roomy ? 46 : 40)}
+      {pill(TARGETS.skipRest, texts.skipRest, 40)}
     </VStack>
   );
 
@@ -265,10 +267,11 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
     </HStack>
   ) : null;
 
+  // On the Lock Screen with the button about 159 pt in all; without it the lines get more room.
   const setBody = (roomy: boolean) =>
     next ? (
-      <VStack spacing={roomy ? 7 : 5}>
-        <VStack spacing={roomy ? 4 : 3}>
+      <VStack spacing={roomy ? 8 : 5}>
+        <VStack spacing={roomy ? (next.loggable ? 5 : 7) : 3}>
           {values}
           <HStack spacing={4}>
             {next.done.map((done, i) => (
@@ -289,7 +292,7 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
             {next.exercise}
           </Text>
         </VStack>
-        {next.loggable ? pill(TARGETS.logSet, texts.logSet, roomy ? 46 : 40) : null}
+        {next.loggable ? pill(TARGETS.logSet, texts.logSet, 40) : null}
       </VStack>
     ) : texts.allDone ? (
       <Text modifiers={[font({ size: 22, weight: 'bold' }), foregroundStyle(FG), lineLimit(1)]}>
@@ -305,9 +308,9 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
   return {
     banner: (
       <VStack
-        spacing={8}
+        spacing={10}
         modifiers={[
-          padding({ horizontal: 16, vertical: 11 }),
+          padding({ horizontal: 16, vertical: 13 }),
           background('#000000'),
           activityBackgroundTint('#000000'),
         ]}
@@ -321,7 +324,7 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
       </VStack>
     ),
     compactLeading: resting ? stopwatch(15) : dot,
-    compactTrailing: resting ? countdown(15, 46) : elapsed(58),
+    compactTrailing: resting ? countdown(15, 46, 'trailing') : elapsed(58),
     minimal: resting ? stopwatch(15) : dot,
     expandedLeading: <HStack modifiers={[padding({ leading: 6 })]}>{header(true)}</HStack>,
     expandedTrailing: resting ? null : (

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
-import Animated, { interpolateColor, useAnimatedStyle } from 'react-native-reanimated';
 
 import { cn } from '@/shared/lib/cn';
 import { formatDuration } from '@/shared/lib/format';
@@ -74,12 +73,12 @@ export interface RestTimerProps {
 }
 
 /**
- * Header rest countdown with a bar that empties as it runs; flashes when done and opens a sheet
- * to adjust, stop or restart it.
+ * Header rest countdown, neon while it runs (white at zero), with a bar that empties as it runs;
+ * opens a sheet to adjust, stop or restart it.
  */
 export function RestTimer({ defaultSeconds }: RestTimerProps) {
   const { t } = useTranslation('workout');
-  const { resting, remainingSeconds, fraction, flash } = useRestTimer();
+  const { resting, remainingSeconds, fraction } = useRestTimer();
   const [open, setOpen] = useState(false);
   const startRest = useWorkoutSessionStore((s) => s.startRest);
   const addRest = useWorkoutSessionStore((s) => s.addRest);
@@ -87,10 +86,6 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
   const tint = resting ? colors.accent : colors.fg;
   const progress = resting ? fraction : 0;
 
-  const pulse = useAnimatedStyle(() => ({
-    color: interpolateColor(flash.get(), [0, 1], [tint, colors.accent]),
-    transform: [{ scale: 1 + flash.get() * 0.15 }],
-  }));
   const label = formatDuration(remainingSeconds);
 
   const restart = (seconds: number) => {
@@ -111,9 +106,12 @@ export function RestTimer({ defaultSeconds }: RestTimerProps) {
       >
         <View className="flex-row items-center gap-1.5">
           <Icon name="timer" size={16} color={tint} />
-          <Animated.Text className="font-inter-semibold text-xl tabular-nums" style={pulse}>
+          <Text
+            tone={resting ? 'accent' : 'default'}
+            className="font-inter-semibold text-xl tabular-nums"
+          >
             {label}
-          </Animated.Text>
+          </Text>
         </View>
         <ProgressBar value={progress} className="h-1.5 w-24 flex-none" />
       </PressableScale>
