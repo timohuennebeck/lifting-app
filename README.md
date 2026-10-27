@@ -49,7 +49,9 @@ npm run ios   # or npm run android; installs Loqqa Dev
   every build on your computer), so it works with the local stack.
 - **Loqqa Dev's settings** are kept in EAS's `development` environment too: `npm run env:pull`
   writes them into `.env.local`, replacing the file, so redo local changes after it (your Mac's
-  Wi-Fi IP instead of `127.0.0.1` for a phone, `ASC_KEY_PATH`). Loqqa Dev doesn't build against
+  Wi-Fi IP instead of `127.0.0.1` for a phone). The App Store Connect key's `ASC_KEY_ID`,
+  `ASC_ISSUER_ID` (Sensitive) and `ASC_KEY_PATH` (`~/…`) are kept there too; the `.p8` file stays
+  on the Mac. Loqqa Dev doesn't build against
   the production Supabase project, so test data stays out of it; `ALLOW_PRODUCTION_BACKEND=true`
   allows it on purpose.
 - **Loqqa** (`APP_VARIANT=production`, the `production` profile in `eas.json`): bundle ID
