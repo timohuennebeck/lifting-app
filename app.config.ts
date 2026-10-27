@@ -10,13 +10,18 @@ const VARIANTS = {
   production: { name: 'Loqqa', id: 'app.loqqa.mobile', scheme: 'loqqa' },
 } as const;
 
-/** What a production build needs; the RevenueCat key only on iOS, where purchases are real. */
+/**
+ * What a production build needs: the backend, Google Sign-In and analytics; on iOS also the
+ * RevenueCat key (purchases are real there) and Google's iOS client. PostHog's host has a default.
+ */
 const REQUIRED = [
   'EXPO_PUBLIC_SUPABASE_URL',
   'EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY',
   'EXPO_PUBLIC_POWERSYNC_URL',
+  'EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID',
+  'EXPO_PUBLIC_POSTHOG_KEY',
 ];
-const REQUIRED_IOS = ['EXPO_PUBLIC_REVENUECAT_IOS_KEY'];
+const REQUIRED_IOS = ['EXPO_PUBLIC_REVENUECAT_IOS_KEY', 'EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID'];
 /** An address that only works on this computer or its network, or without TLS. */
 const LOCAL = /^http:\/\/|\/\/(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/;
 
