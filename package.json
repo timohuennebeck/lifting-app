@@ -85,6 +85,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "build:ios": "eas build --profile production --platform ios --auto-submit",
+    "env:pull": "eas env:pull --environment development --path .env.local",
     "lint": "expo lint",
     "lint:fix": "expo lint --fix",
     "format": "prettier --write .",

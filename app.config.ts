@@ -50,6 +50,26 @@ function checkProductionEnv() {
   }
 }
 
+/** The production Supabase project: Loqqa Dev's test data must not end up there. */
+const PRODUCTION_SUPABASE = 'gaxahmqzhygnphrjlkgk.supabase.co';
+
+/**
+ * Stops Loqqa Dev built against the production project (e.g. after pulling the wrong
+ * environment), so test workouts don't land among the users'. ALLOW_PRODUCTION_BACKEND=true
+ * allows it on purpose; `npm run env:pull` is let through, as it is what fixes the file.
+ */
+function checkDevelopmentEnv() {
+  const url = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
+  if (!url.includes(PRODUCTION_SUPABASE)) return;
+  if (process.env.ALLOW_PRODUCTION_BACKEND === 'true') return;
+  if (process.env.npm_lifecycle_event === 'env:pull') return;
+  throw new Error(
+    `Loqqa Dev with the production Supabase project (${url}).\n` +
+      'Run `npm run env:pull` for the development values, or set ALLOW_PRODUCTION_BACKEND=true ' +
+      'to use production on purpose.',
+  );
+}
+
 /**
  * app.json plus what comes from the environment. Google Sign-In on iOS needs the iOS OAuth client
  * ID, reversed, as a URL scheme. It goes in `ios.scheme`, which Expo merges with the app's own
@@ -59,6 +79,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   const production = process.env.APP_VARIANT === 'production';
   const variant = production ? VARIANTS.production : VARIANTS.development;
   if (production) checkProductionEnv();
+  else checkDevelopmentEnv();
 
   const iosClientId = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID;
   const googleScheme = iosClientId
