@@ -206,6 +206,19 @@ function afterBreak(ex: RuleExercise, out: Suggested[], targets: Target[], days:
 }
 
 /**
+ * The set a workout worked up to: sets of one rep range that only got heavier, the last one
+ * still in the range. Its weight then counts for every set (the ones before were warming up).
+ */
+function workedUpTo(ex: RuleExercise, sets: RuleSet[], targets: Target[]): RuleSet | null {
+  const sameRange = new Set(targets.map((t) => `${t.min}-${t.max}`)).size === 1;
+  if (ex.kind !== 'load' || sets.length < 2 || !sameRange) return null;
+  const top = sets[sets.length - 1];
+  const rising = sets.every((s, i) => i === 0 || (s.weight ?? 0) >= (sets[i - 1].weight ?? 0));
+  if (!rising || top.weight === sets[0].weight) return null;
+  return effective(top, targets[0]) >= targets[0].min ? top : null;
+}
+
+/**
  * Suggestions for today's sets (`targets`, one per set) from the exercise's last workouts,
  * newest first, the newest `days` ago. Null the first time.
  */
@@ -236,12 +249,18 @@ export function planSets(
   } else if (ex.kind === 'timed') {
     out = sets.map((s, i) => timed(s, targets[i]));
   } else {
+    const top = workedUpTo(ex, done[base], targets);
     const sameWeight = new Set(sets.map((s) => s.weight)).size === 1;
     const sameRange = new Set(targets.map((t) => `${t.min}-${t.max}`)).size === 1;
-    out =
-      sameWeight && sameRange
-        ? together(ex, sets, targets, before)
-        : sets.map((s, i) => together(ex, [s], [targets[i]], before && [nth(before, i)])[0]);
+    if (top)
+      out = together(
+        ex,
+        targets.map(() => top),
+        targets,
+        null,
+      );
+    else if (sameWeight && sameRange) out = together(ex, sets, targets, before);
+    else out = sets.map((s, i) => together(ex, [s], [targets[i]], before && [nth(before, i)])[0]);
   }
   return afterBreak(ex, out, targets, days);
 }
