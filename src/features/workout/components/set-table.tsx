@@ -25,7 +25,7 @@ import type { WorkoutExercise } from '../data/workout-detail';
 import { addWorkoutSet } from '../data/workout-mutations';
 import { rowValues } from '../lib/row-values';
 import { typedValues, valueOf } from '../lib/set-input';
-import type { ExerciseSuggestions } from '../lib/set-suggestions';
+import type { SetSuggestion } from '../lib/set-suggestions';
 import {
   MIDDLE_COLUMNS,
   type MiddleColumn,
@@ -39,8 +39,8 @@ export interface SetTableProps {
   /** Boxes per set, from the exercise's measures. */
   measures: Measure[];
   last: ExerciseHistoryEntry | undefined;
-  /** None the first time the exercise is done: the targets show instead. */
-  suggestions: ExerciseSuggestions | null;
+  /** Per set; none the first time the exercise is done: the targets show instead. */
+  suggestions: SetSuggestion[] | null;
   units: UnitSystem;
   /** Sets that are the workout's record for their exercise: the number turns accent. */
   recordSetIds: string[];
@@ -110,7 +110,7 @@ export function SetTable({
     if (editing) {
       return measure === 'weight' ? displayInput(input.weight, separator) : input[measure];
     }
-    const suggested = suggestions?.sets.map((x) => x.values);
+    const suggested = suggestions?.map((x) => x.values);
     const value = valueOf(rowValues(exercise, index, logged, typed, drafts, suggested), measure);
     if (value == null) return '';
     return measure === 'weight' ? formatWeightValue(value, units) : formatNumber(value, 0);
@@ -135,7 +135,7 @@ export function SetTable({
       const previous = last?.sets[index];
       return previous ? setLabel(previous) : null;
     }
-    const suggestion = suggestions?.sets[index];
+    const suggestion = suggestions?.[index];
     if (!suggestion) return null;
     const label = setLabel(suggestion.values);
     // The marker goes before what changed: the weight, else the reps.

@@ -39,23 +39,6 @@ export interface SetSuggestion {
   reps: 'up' | null;
 }
 
-/** A set that fell well short: the open sets after it were lowered (weights in kg). */
-export interface MissNotice {
-  reps: number;
-  target: number;
-  fromKg: number;
-  toKg: number;
-  /** The reps the lowered sets aim for, and how many of them are still open. */
-  toReps: number;
-  open: number;
-}
-
-export interface ExerciseSuggestions {
-  /** Per set; the first time the exercise is done there are none. */
-  sets: SetSuggestion[];
-  miss: MissNotice | null;
-}
-
 function loadKind(exerciseId: string): LoadKind {
   if (isTimed(exerciseId)) return 'timed';
   if (isAssisted(exerciseId)) return 'assisted';
@@ -82,17 +65,17 @@ function targetOf(set: TargetFields, timed: boolean): Target {
 }
 
 /**
- * Suggestions for one exercise of the live workout from its last workouts (`sessions`, newest
- * first) and the sets logged so far; null the first time it is done, and for cardio.
+ * Suggestions for each set of one exercise of the live workout from its last workouts
+ * (`sessions`, newest first) and the sets logged so far; null the first time it is done, and
+ * for cardio.
  */
 export function suggestionsFor(
   exercise: WorkoutExercise,
   sessions: RecentSession[],
   logged: Record<string, LoggedValues>,
-  keepPlan: boolean,
   startedAt: string,
   units: UnitSystem,
-): ExerciseSuggestions | null {
+): SetSuggestion[] | null {
   const { exerciseId } = exercise;
   if (!sessions.length || !exercise.sets.length || isCardio(exerciseId)) return null;
   const kind = loadKind(exerciseId);
@@ -128,7 +111,7 @@ export function suggestionsFor(
   const days = (Date.parse(startedAt) - Date.parse(sessions[0].startedAt)) / DAY_MS;
   const planned = planSets(rules, targets, history, days);
   if (!planned) return null;
-  const { sets, miss } = adaptSets(rules, targets, planned, done, keepPlan);
+  const sets = adaptSets(rules, targets, planned, done);
 
   const toKg = (w: number) => fromDisplayWeight(w, units);
   const compare = (s: Suggested, i: number): SetSuggestion => {
@@ -154,15 +137,5 @@ export function suggestionsFor(
       reps,
     };
   };
-  return {
-    sets: sets.map(compare),
-    miss: miss && {
-      reps: miss.reps,
-      target: miss.target,
-      fromKg: toKg(miss.from),
-      toKg: toKg(miss.to),
-      toReps: miss.toReps,
-      open: miss.open,
-    },
-  };
+  return sets.map(compare);
 }

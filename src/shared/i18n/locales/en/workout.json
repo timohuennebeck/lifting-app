@@ -25,12 +25,6 @@
     "doneAll": "All sets done",
     "addSet": "Add set"
   },
-  "miss": {
-    "title": "{{reps}} instead of {{target}} reps, no problem",
-    "body_one": "The next set now with {{weight}}, so you get the {{reps}}.",
-    "body_other": "The next {{count}} sets now with {{weight}}, so you get the {{reps}}.",
-    "keep": "Stay at {{weight}}"
-  },
   "rest": {
     "title": "Rest",
     "minus": "−{{seconds}} s",

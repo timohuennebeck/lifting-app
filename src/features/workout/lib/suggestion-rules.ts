@@ -41,20 +41,6 @@ export interface Suggested {
   reps: number;
 }
 
-/** A set that fell well short, and what the sets after it were lowered to. */
-export interface Miss {
-  setIndex: number;
-  reps: number;
-  /** The reps it was meant to get. */
-  target: number;
-  /** The weight it was done with, and the one the open sets after it now get. */
-  from: number;
-  to: number;
-  toReps: number;
-  /** Open sets after it that were lowered. */
-  open: number;
-}
-
 /** Reps past the top of the range while the next weight would be too big a jump. */
 const EXTEND = 5;
 /** A suggestion goes up by at most this share of the weight (one step is always allowed). */
@@ -262,21 +248,19 @@ export function planSets(
 
 /**
  * What each set suggests with the sets logged so far (`done`, null for open ones), from the
- * plan: after a set falls well short the open sets after it get lighter, unless `keepPlan`;
- * after a too-light set they go back to the plan; a weight the user picked that works stays.
- * A logged set keeps what it suggested when it was logged.
+ * plan: after a set falls well short the open sets after it get lighter; after a too-light set
+ * they go back to the plan; a weight the user picked that works stays. A logged set keeps what
+ * it suggested when it was logged.
  */
 export function adaptSets(
   ex: RuleExercise,
   targets: Target[],
   planned: Suggested[],
   done: (RuleSet | null)[],
-  keepPlan: boolean,
 ) {
   const current = [...planned];
   const shown = [...planned];
   const straight = new Set(planned.map((p) => p.weight)).size === 1;
-  let miss = null as Miss | null;
   for (let i = 0; i < planned.length; i++) {
     shown[i] = current[i];
     const s = done[i];
@@ -290,7 +274,7 @@ export function adaptSets(
       const next = current[j];
       if (s.weight == null || next.weight == null) continue;
       if (e < targets[i].min - 1) {
-        if (keepPlan || (ex.kind !== 'load' && ex.kind !== 'assisted')) continue;
+        if (ex.kind !== 'load' && ex.kind !== 'assisted') continue;
         let w: number;
         if (ex.kind === 'assisted') w = round2(s.weight + ex.step);
         else {
@@ -298,32 +282,23 @@ export function adaptSets(
           w = floorStep(est / (1 + (target.min + target.rir) / 30), ex.step);
           w = minWeight(ex, Math.max(w, floorStep(s.weight * (1 - MAX_DROP), ex.step)));
         }
-        if (lighter(ex, w, next.weight)) {
-          current[j] = { weight: w, reps: target.min };
-          if (!done[j]) {
-            miss = {
-              setIndex: i,
-              reps: s.reps,
-              target: shown[i].reps,
-              from: s.weight,
-              to: w,
-              toReps: target.min,
-              open: (miss?.setIndex === i ? miss.open : 0) + 1,
-            };
-          }
-        }
+        if (lighter(ex, w, next.weight)) current[j] = { weight: w, reps: target.min };
       } else if (e > targets[i].max && lighter(ex, s.weight, planned[j].weight ?? s.weight)) {
         current[j] = planned[j];
       } else if (suggestedWeight != null && s.weight !== suggestedWeight) {
-        // Another weight than suggested, and it works: the same again (a pyramid keeps its shape).
+        // Another weight than suggested, and it works: the same again. A pyramid keeps its shape,
+        // above its plan only as far as the user went above it.
         const shift = s.weight - suggestedWeight;
+        const above = Math.max(0, s.weight - (planned[i].weight ?? s.weight));
+        const weight = Math.min(next.weight + shift, (planned[j].weight ?? Infinity) + above);
         current[j] = straight
           ? { weight: s.weight, reps: clamp(s.reps, target.min, target.max) }
-          : { weight: round2(next.weight + shift), reps: next.reps };
+          : {
+              weight: round2(ex.kind === 'assisted' ? next.weight + shift : weight),
+              reps: next.reps,
+            };
       }
     }
   }
-  // A miss whose lowered sets are all logged needs no card any more.
-  if (miss && done.every((d, i) => i <= miss!.setIndex || d)) miss = null;
-  return { sets: shown, miss };
+  return shown;
 }

@@ -25,12 +25,6 @@
     "doneAll": "모든 세트 완료",
     "addSet": "세트 추가"
   },
-  "miss": {
-    "title": "{{target}}회 대신 {{reps}}회, 괜찮아요",
-    "body_one": "다음 세트는 {{weight}}(으)로 해서 {{reps}}회를 채워요.",
-    "body_other": "다음 {{count}}세트는 {{weight}}(으)로 해서 {{reps}}회를 채워요.",
-    "keep": "{{weight}} 유지하기"
-  },
   "rest": {
     "title": "휴식",
     "minus": "−{{seconds}}초",

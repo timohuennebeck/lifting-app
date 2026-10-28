@@ -25,12 +25,6 @@
     "doneAll": "Todas as séries feitas",
     "addSet": "Adicionar série"
   },
-  "miss": {
-    "title": "{{reps}} em vez de {{target}} reps, não faz mal",
-    "body_one": "A próxima série agora com {{weight}}, para conseguires as {{reps}}.",
-    "body_other": "As próximas {{count}} séries agora com {{weight}}, para conseguires as {{reps}}.",
-    "keep": "Ficar nos {{weight}}"
-  },
   "rest": {
     "title": "Descanso",
     "minus": "−{{seconds}} s",

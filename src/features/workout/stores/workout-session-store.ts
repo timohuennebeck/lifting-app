@@ -30,8 +30,6 @@ interface WorkoutSessionState {
   edited: SetField[];
   /** Reps in reserve picked in the number pad for the row being edited (null: none yet). */
   rir: number | null;
-  /** Workout exercises whose open sets stay at the plan after a set fell short. */
-  keepPlan: string[];
   restEndsAt: number | null;
   restSeconds: number;
   column: MiddleColumn;
@@ -48,7 +46,6 @@ interface WorkoutSessionState {
     rir: number | null,
   ) => void;
   setRir: (rir: number) => void;
-  keepToPlan: (workoutExerciseId: string) => void;
   focusField: (field: SetField) => void;
   closeKeypad: () => void;
   pressKey: (key: KeypadKey) => void;
@@ -72,7 +69,6 @@ const idle = {
   pristine: true,
   edited: [] as SetField[],
   rir: null,
-  keepPlan: [] as string[],
   restEndsAt: null,
   restSeconds: 0,
   logged: {} as Record<string, LoggedValues>,
@@ -101,8 +97,6 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
       select: (selectedSetId, input, field, rir) =>
         set({ selectedSetId, input, field, rir, pristine: true, edited: [] }),
       setRir: (rir) => set({ rir }),
-      keepToPlan: (id) =>
-        set((s) => (s.keepPlan.includes(id) ? {} : { keepPlan: [...s.keepPlan, id] })),
       focusField: (field) => set({ field, pristine: true }),
       closeKeypad: () => set({ selectedSetId: null }),
       pressKey: (key) =>
@@ -155,7 +149,6 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
         restEndsAt: s.restEndsAt,
         restSeconds: s.restSeconds,
         column: s.column,
-        keepPlan: s.keepPlan,
       }),
     },
   ),

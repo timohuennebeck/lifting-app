@@ -10,16 +10,15 @@ import { Text } from '@/shared/ui/text';
 import type { WorkoutExercise } from '../data/workout-detail';
 import { useWorkoutRecords } from '../data/workout-records';
 import { firstOpenSet } from '../lib/row-values';
-import type { ExerciseSuggestions } from '../lib/set-suggestions';
-import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
+import type { SetSuggestion } from '../lib/set-suggestions';
+import type { SetField } from '../stores/workout-session-store';
 import { ExerciseActions } from './exercise-actions';
-import { MissCard } from './miss-card';
 import { SetTable } from './set-table';
 
 export interface ExercisePageProps {
   exercise: WorkoutExercise;
   workoutId: string;
-  suggestions: ExerciseSuggestions | null;
+  suggestions: SetSuggestion[] | null;
   /** The row being typed in, or -1 (always on the pages beside the shown one). */
   selectedIndex: number;
   onSelect: (index: number, field: SetField | null) => void;
@@ -56,7 +55,6 @@ export function ExercisePage({
   const { data: records = [] } = useWorkoutRecords(workoutId);
   const name = useExerciseName(exercise.exerciseId, i18n.language);
   const openIndex = firstOpenSet(exercise);
-  const keepToPlan = useWorkoutSessionStore((s) => s.keepToPlan);
 
   // "Set n of m": the set being typed in, else the first open one, else the last.
   let shownSet = exercise.sets.length - 1;
@@ -87,9 +85,6 @@ export function ExercisePage({
         onSwap={onSwap}
         onMore={onMore}
       />
-      {suggestions?.miss ? (
-        <MissCard miss={suggestions.miss} units={units} onKeep={() => keepToPlan(exercise.id)} />
-      ) : null}
       <View onLayout={(e) => onTableLayout?.(e.nativeEvent.layout.y)}>
         <SetTable
           exercise={exercise}
