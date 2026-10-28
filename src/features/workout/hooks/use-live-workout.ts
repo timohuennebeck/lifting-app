@@ -12,6 +12,7 @@ import { logSet, saveOpenSetValues, unlogSet } from '../data/workout-mutations';
 import { firstOpenSet, rowValues } from '../lib/row-values';
 import { parseSetInput, toSetInput, typedValues } from '../lib/set-input';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
+import { useSetSuggestions } from './use-set-suggestions';
 
 /** Current exercise, progress and set logging for the live workout screen. */
 export function useLiveWorkout(workout: WorkoutDetail) {
@@ -24,6 +25,10 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   const exerciseIndex = Math.min(storedIndex, exercises.length - 1);
   const exercise = exercises[exerciseIndex];
   const { data: last } = useLastExerciseSession(exercise?.exerciseId);
+  const suggestions = useSetSuggestions(workout, units);
+  /** The suggested values of each set of `target`, the boxes' prefill (none the first time). */
+  const suggestedValues = (target: WorkoutExercise) =>
+    suggestions[target.id]?.sets.map((s) => s.values);
 
   const allSets = exercises.flatMap((e) => e.sets);
   const doneSets = allSets.filter((s) => s.completedAt).length;
@@ -59,7 +64,10 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     const { input } = useWorkoutSessionStore.getState();
     const typed =
       selectedIndex >= 0 ? { index: selectedIndex, values: typedValues(input, units) } : null;
-    return toSetInput(rowValues(exercise, index, logged, typed, drafts), units);
+    return toSetInput(
+      rowValues(exercise, index, logged, typed, drafts, suggestedValues(exercise)),
+      units,
+    );
   };
 
   /**
@@ -74,8 +82,8 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     if (set.completedAt || logged[set.id]) {
       const { values, missing } = parseSetInput(store.input, measures, bodyweight, units);
       if (missing) return;
-      store.markLogged(set.id, values);
-      logSet(set.id, exercise.exerciseId, values).catch((error) => {
+      store.markLogged(set.id, { ...values, rir: store.rir });
+      logSet(set.id, exercise.exerciseId, values, store.rir).catch((error) => {
         console.error(error);
         haptics.error();
         store.clearLogged(set.id);
@@ -113,16 +121,25 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     if (!set) return;
     if (index !== selectedIndex) keepTyped();
     // Defaulted here: the React Compiler can't compile `field = measures[0]` as a parameter.
-    useWorkoutSessionStore.getState().select(set.id, inputFor(index), field ?? measures[0]);
+    const rir = logged[set.id]?.rir ?? set.rir;
+    useWorkoutSessionStore.getState().select(set.id, inputFor(index), field ?? measures[0], rir);
   };
 
-  /** Logs set `index` of `target` (the shown exercise, unless logged from the Live Activity). */
-  async function commit(target: WorkoutExercise, index: number, values: SetValues) {
+  /**
+   * Logs set `index` of `target` (the shown exercise, unless logged from the Live Activity), with
+   * the reps in reserve when they come from the number pad.
+   */
+  async function commit(
+    target: WorkoutExercise,
+    index: number,
+    values: SetValues,
+    rir?: number | null,
+  ) {
     const set = target.sets[index];
     const store = useWorkoutSessionStore.getState();
     const editing = !!set.completedAt;
     // Shown at once; the rest timer starts, so the keypad closes instead of moving on.
-    store.markLogged(set.id, values);
+    store.markLogged(set.id, rir === undefined ? values : { ...values, rir });
     store.clearDraft(set.id);
     store.closeKeypad();
     // Sets logged a moment ago may not be in the database yet: they count as done too.
@@ -133,14 +150,19 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     }
     let isPr: boolean;
     try {
-      isPr = await logSet(set.id, target.exerciseId, values);
+      isPr = await logSet(set.id, target.exerciseId, values, rir);
     } catch (error) {
       // The keypad already closed; reopen this set so the failed log isn't mistaken for saved.
       console.error(error);
       haptics.error();
       store.skipRest();
       store.clearLogged(set.id);
-      store.select(set.id, toSetInput(values, units), measuresOf(target.exerciseId)[0]);
+      store.select(
+        set.id,
+        toSetInput(values, units),
+        measuresOf(target.exerciseId)[0],
+        rir ?? set.rir,
+      );
       return;
     }
     // A new record gets a success tick; the set's number turns accent in the table.
@@ -152,7 +174,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
    * typed over); on the last box it logs the set, or focuses a box that is still empty.
    */
   function confirmInput() {
-    const { input, field, focusField } = useWorkoutSessionStore.getState();
+    const { input, field, focusField, rir } = useWorkoutSessionStore.getState();
     if (selectedIndex < 0) return;
     const nextField = measures[measures.indexOf(field) + 1];
     if (nextField) {
@@ -165,7 +187,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
       focusField(missing);
       return;
     }
-    void commit(exercise, selectedIndex, values);
+    void commit(exercise, selectedIndex, values, measures.includes('reps') ? rir : undefined);
   }
 
   /**
@@ -232,7 +254,10 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     if (atExercise !== exerciseIndex) useWorkoutSessionStore.getState().goTo(atExercise);
     const store = useWorkoutSessionStore.getState();
     const { values, missing } = parseSetInput(
-      toSetInput(rowValues(target, setIndex, store.logged, null, store.drafts), units),
+      toSetInput(
+        rowValues(target, setIndex, store.logged, null, store.drafts, suggestedValues(target)),
+        units,
+      ),
       measuresOf(target.exerciseId),
       isBodyweight(target.exerciseId),
       units,
@@ -246,6 +271,8 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     measures,
     exerciseIndex,
     last,
+    suggestions,
+    suggestedValues,
     doneSets,
     totalSets: allSets.length,
     selectedIndex,

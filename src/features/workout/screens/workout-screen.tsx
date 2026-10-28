@@ -281,6 +281,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                       <ExercisePage
                         exercise={page}
                         workoutId={workout.id}
+                        suggestions={live.suggestions[page.id] ?? null}
                         selectedIndex={shown ? selectedIndex : -1}
                         onSelect={onSelect}
                         onToggleDone={live.toggleDone}
@@ -308,6 +309,8 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
               onConfirm={live.confirmInput}
               onDismiss={live.closeInput}
               onLayout={(e) => setKeypadHeight(e.nativeEvent.layout.height)}
+              withRir={live.measures.includes('reps')}
+              rirTarget={exercise?.sets[selectedIndex]?.targetRir ?? null}
             />
           ) : null}
         </>

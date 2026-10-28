@@ -8,7 +8,14 @@ import { mmkvStorage } from '@/shared/lib/storage';
 
 /** The box being typed into: one per measure of the exercise. */
 export type SetField = Measure;
-type MiddleColumn = 'targets' | 'last';
+/** What the table's middle column shows; tapping its header goes round in this order. */
+export const MIDDLE_COLUMNS = ['suggested', 'targets', 'last'] as const;
+export type MiddleColumn = (typeof MIDDLE_COLUMNS)[number];
+
+/** A logged set's values, with the reps in reserve when they were entered. */
+export interface LoggedValues extends SetValues {
+  rir?: number | null;
+}
 
 interface WorkoutSessionState {
   workoutId: string | null;
@@ -21,16 +28,27 @@ interface WorkoutSessionState {
   pristine: boolean;
   /** Boxes typed into since the row was selected: closing the keypad keeps those. */
   edited: SetField[];
+  /** Reps in reserve picked in the number pad for the row being edited (null: none yet). */
+  rir: number | null;
+  /** Workout exercises whose open sets stay at the plan after a set fell short. */
+  keepPlan: string[];
   restEndsAt: number | null;
   restSeconds: number;
   column: MiddleColumn;
   /** Values of sets just logged, shown until the database has them (no flash of empty boxes). */
-  logged: Record<string, SetValues>;
+  logged: Record<string, LoggedValues>;
   /** Values kept in open sets when the keypad closed, shown until the database has them. */
   drafts: Record<string, Partial<SetValues>>;
   attach: (workoutId: string) => void;
   goTo: (exerciseIndex: number) => void;
-  select: (setId: string, input: Record<SetField, string>, field: SetField) => void;
+  select: (
+    setId: string,
+    input: Record<SetField, string>,
+    field: SetField,
+    rir: number | null,
+  ) => void;
+  setRir: (rir: number) => void;
+  keepToPlan: (workoutExerciseId: string) => void;
   focusField: (field: SetField) => void;
   closeKeypad: () => void;
   pressKey: (key: KeypadKey) => void;
@@ -38,8 +56,8 @@ interface WorkoutSessionState {
   startRest: (seconds: number) => void;
   addRest: (seconds: number) => void;
   skipRest: () => void;
-  toggleColumn: () => void;
-  markLogged: (setId: string, values: SetValues) => void;
+  showColumn: (column: MiddleColumn) => void;
+  markLogged: (setId: string, values: LoggedValues) => void;
   clearLogged: (setId: string) => void;
   markDraft: (setId: string, values: Partial<SetValues>) => void;
   clearDraft: (setId: string) => void;
@@ -53,9 +71,11 @@ const idle = {
   input: { weight: '', reps: '', seconds: '' },
   pristine: true,
   edited: [] as SetField[],
+  rir: null,
+  keepPlan: [] as string[],
   restEndsAt: null,
   restSeconds: 0,
-  logged: {} as Record<string, SetValues>,
+  logged: {} as Record<string, LoggedValues>,
   drafts: {} as Record<string, Partial<SetValues>>,
 };
 
@@ -68,17 +88,21 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
     (set) => ({
       ...idle,
       workoutId: null,
-      column: 'targets',
+      column: 'suggested',
+      // A new workout starts on the suggestions.
       attach: (workoutId) =>
         set((s) =>
           s.workoutId === workoutId
             ? { selectedSetId: null, pristine: true }
-            : { ...idle, workoutId },
+            : { ...idle, workoutId, column: 'suggested' },
         ),
       goTo: (exerciseIndex) =>
         set({ exerciseIndex: Math.max(0, exerciseIndex), selectedSetId: null }),
-      select: (selectedSetId, input, field) =>
-        set({ selectedSetId, input, field, pristine: true, edited: [] }),
+      select: (selectedSetId, input, field, rir) =>
+        set({ selectedSetId, input, field, rir, pristine: true, edited: [] }),
+      setRir: (rir) => set({ rir }),
+      keepToPlan: (id) =>
+        set((s) => (s.keepPlan.includes(id) ? {} : { keepPlan: [...s.keepPlan, id] })),
       focusField: (field) => set({ field, pristine: true }),
       closeKeypad: () => set({ selectedSetId: null }),
       pressKey: (key) =>
@@ -105,7 +129,7 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
             : {},
         ),
       skipRest: () => set({ restEndsAt: null }),
-      toggleColumn: () => set((s) => ({ column: s.column === 'targets' ? 'last' : 'targets' })),
+      showColumn: (column) => set({ column }),
       markLogged: (setId, values) => set((s) => ({ logged: { ...s.logged, [setId]: values } })),
       clearLogged: (setId) =>
         set((s) => {
@@ -131,6 +155,7 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
         restEndsAt: s.restEndsAt,
         restSeconds: s.restSeconds,
         column: s.column,
+        keepPlan: s.keepPlan,
       }),
     },
   ),

@@ -11,11 +11,12 @@
   },
   "table": {
     "set": "세트",
+    "suggested": "추천",
     "targets": "목표",
     "last": "지난번",
     "reps": "반복",
     "seconds": "초",
-    "toggleColumn": "목표와 지난번 기록 사이 전환",
+    "toggleColumn": "추천, 목표, 지난번 기록 사이 전환",
     "setLabel": "{{n}}세트",
     "weightCell": "무게",
     "repsCell": "반복 수",
@@ -23,6 +24,12 @@
     "done": "세트 완료",
     "doneAll": "모든 세트 완료",
     "addSet": "세트 추가"
+  },
+  "miss": {
+    "title": "{{target}}회 대신 {{reps}}회, 괜찮아요",
+    "body_one": "다음 세트는 {{weight}}(으)로 해서 {{reps}}회를 채워요.",
+    "body_other": "다음 {{count}}세트는 {{weight}}(으)로 해서 {{reps}}회를 채워요.",
+    "keep": "{{weight}} 유지하기"
   },
   "rest": {
     "title": "휴식",

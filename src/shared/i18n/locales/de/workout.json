@@ -11,11 +11,12 @@
   },
   "table": {
     "set": "SATZ",
+    "suggested": "VORSCHLAG",
     "targets": "ZIEL",
     "last": "ZULETZT",
     "reps": "WDH.",
     "seconds": "SEK.",
-    "toggleColumn": "Zwischen Ziel und letztem Mal wechseln",
+    "toggleColumn": "Zwischen Vorschlag, Ziel und letztem Mal wechseln",
     "setLabel": "Satz {{n}}",
     "weightCell": "Gewicht",
     "repsCell": "Wiederholungen",
@@ -23,6 +24,12 @@
     "done": "Satz erledigt",
     "doneAll": "Alle Sätze erledigt",
     "addSet": "Satz hinzufügen"
+  },
+  "miss": {
+    "title": "{{reps}} statt {{target}} Wdh., kein Problem",
+    "body_one": "Der nächste Satz jetzt mit {{weight}}, damit du die {{reps}} schaffst.",
+    "body_other": "Die nächsten {{count}} Sätze jetzt mit {{weight}}, damit du die {{reps}} schaffst.",
+    "keep": "Bei {{weight}} bleiben"
   },
   "rest": {
     "title": "Pause",

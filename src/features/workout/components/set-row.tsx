@@ -21,14 +21,40 @@ interface SetCell {
 
 const CELL_LABEL = { weight: 'weightCell', reps: 'repsCell', seconds: 'secondsCell' } as const;
 
-/** The middle column: targets ("7–9"), or last time's weight over its reps ("60 kg" over "× 9"). */
+/**
+ * The middle column: targets ("7–9"), or a set's weight over its reps ("60 kg" over "× 9"), the
+ * suggested one or last time's.
+ */
 export interface SetRowMiddle {
-  /** The targets, last time's weight, or its reps alone ("12 Wdh.") when there was no weight. */
+  /** The targets, the weight, or the reps alone ("12 Wdh.") when there is no weight. */
   main: string;
-  /** Last time's reps or time under its weight. */
+  /** The reps or time under the weight. */
   detail?: string;
-  /** Last time's set is set in semibold, targets aren't. */
+  /** A set is set in semibold, targets aren't. */
   strong?: boolean;
+  /** The suggestion went up or down from last time: a marker before the line that changed. */
+  mainTrend?: Trend;
+  detailTrend?: Trend;
+}
+
+type Trend = 'up' | 'down';
+
+interface TrendMarkProps {
+  trend: Trend;
+}
+
+/** Neon arrow up, or amber arrow down, before a suggested value. */
+function TrendMark({ trend }: TrendMarkProps) {
+  return (
+    <View
+      className={cn(
+        'size-3.5 items-center justify-center rounded-full',
+        trend === 'up' ? 'bg-accent' : 'bg-amber',
+      )}
+    >
+      <Icon name={trend === 'up' ? 'arrow-up' : 'arrow-down'} size={8} color={colors.onAccent} />
+    </View>
+  );
 }
 
 export interface SetRowProps {
@@ -47,7 +73,7 @@ export interface SetRowProps {
   onToggleDone: () => void;
 }
 
-/** One row of the logging table: SET · TARGETS/LAST · KG · REPS (or SEC) · done. */
+/** One row of the logging table: SET · SUGGESTED/TARGETS/LAST · KG · REPS (or SEC) · done. */
 export function SetRow({
   number,
   middle,
@@ -84,26 +110,32 @@ export function SetRow({
         </Text>
       </View>
       <View className="flex-1 items-center">
-        <Text
-          variant="label"
-          numberOfLines={1}
-          className={cn(
-            'text-center leading-4.75 tabular-nums',
-            !middle?.strong && 'font-inter',
-            !middle && 'text-dim',
-          )}
-        >
-          {middle?.main ?? '–'}
-        </Text>
-        {middle?.detail ? (
+        <View className="flex-row items-center gap-1">
+          {middle?.mainTrend ? <TrendMark trend={middle.mainTrend} /> : null}
           <Text
             variant="label"
-            tone="secondary"
             numberOfLines={1}
-            className="text-center font-inter leading-4.75 tabular-nums"
+            className={cn(
+              'text-center leading-4.75 tabular-nums',
+              !middle?.strong && 'font-inter',
+              !middle && 'text-dim',
+            )}
           >
-            {middle.detail}
+            {middle?.main ?? '–'}
           </Text>
+        </View>
+        {middle?.detail ? (
+          <View className="flex-row items-center gap-1">
+            {middle.detailTrend ? <TrendMark trend={middle.detailTrend} /> : null}
+            <Text
+              variant="label"
+              tone="secondary"
+              numberOfLines={1}
+              className="text-center font-inter leading-4.75 tabular-nums"
+            >
+              {middle.detail}
+            </Text>
+          </View>
         ) : null}
       </View>
       {cells.map((cell) => (

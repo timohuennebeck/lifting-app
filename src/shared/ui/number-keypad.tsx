@@ -114,6 +114,8 @@ export interface NumberKeypadProps {
   /** Hides the keypad: the handle, a swipe down or the keyboard key. */
   onDismiss: () => void;
   onLayout?: (e: LayoutChangeEvent) => void;
+  /** Shown above the keys (the reps in reserve when logging a set). */
+  accessory?: ReactNode;
 }
 
 /**
@@ -127,6 +129,7 @@ export function NumberKeypad({
   onConfirm,
   onDismiss,
   onLayout,
+  accessory,
 }: NumberKeypadProps) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
@@ -200,6 +203,7 @@ export function NumberKeypad({
         >
           <View className="h-1.25 w-9 rounded-full bg-track" />
         </PressableScale>
+        {accessory}
         <View className="flex-row gap-1.5">
           <View className="flex-1 gap-1.5">
             {KEYPAD_ROWS.map((row) => (

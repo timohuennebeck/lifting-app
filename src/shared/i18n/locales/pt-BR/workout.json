@@ -11,11 +11,12 @@
   },
   "table": {
     "set": "SÉRIE",
+    "suggested": "SUGESTÃO",
     "targets": "METAS",
     "last": "ÚLTIMA",
     "reps": "REPS",
     "seconds": "SEG",
-    "toggleColumn": "Alternar entre metas e última vez",
+    "toggleColumn": "Alternar entre sugestão, metas e última vez",
     "setLabel": "Série {{n}}",
     "weightCell": "Peso",
     "repsCell": "Repetições",
@@ -23,6 +24,12 @@
     "done": "Série concluída",
     "doneAll": "Todas as séries feitas",
     "addSet": "Adicionar série"
+  },
+  "miss": {
+    "title": "{{reps}} em vez de {{target}} reps, tudo bem",
+    "body_one": "A próxima série agora com {{weight}}, para você conseguir as {{reps}}.",
+    "body_other": "As próximas {{count}} séries agora com {{weight}}, para você conseguir as {{reps}}.",
+    "keep": "Ficar nos {{weight}}"
   },
   "rest": {
     "title": "Descanso",

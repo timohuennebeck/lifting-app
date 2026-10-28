@@ -16,6 +16,10 @@ export const colors = {
   accent: '#DFFF1F',
   onAccent: '#0A0A0A',
   red: '#ED4042',
+  /** Reps in reserve, and a suggestion that went down (mirrors --color-amber). */
+  amber: '#F9AD26',
+  /** The number pad's panel (mirrors --color-surface). */
+  surface: '#141414',
   /** Amber for things the plan import wasn't sure about (design 05b). */
   review: '#FFB547',
   /** iOS' text selection highlight (system blue). */

@@ -16,6 +16,8 @@ export interface WorkoutSet extends SetValues {
   targetMin: number | null;
   targetMax: number | null;
   targetRir: number | null;
+  /** Reps in reserve as entered in the number pad. */
+  rir: number | null;
   completedAt: string | null;
   isPr: boolean;
 }
@@ -61,6 +63,7 @@ const toWorkoutSet = (s: WorkoutDetailRow['exercises'][number]['sets'][number]):
   targetMin: s.target_min,
   targetMax: s.target_max,
   targetRir: s.target_rir,
+  rir: s.rir,
   weightKg: s.weight_kg,
   reps: s.reps,
   seconds: s.seconds,

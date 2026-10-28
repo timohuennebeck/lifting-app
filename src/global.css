@@ -45,6 +45,8 @@
   --color-danger: #e08a7a;
   --color-danger-bg: #3a2020;
   --color-red: #ed4042;
+  /* Reps in reserve, and a suggestion that went down. */
+  --color-amber: #f9ad26;
   --color-sheet: #0f0f0f;
   --color-paper: #edeae2;
   --color-ink: #1c1a16;

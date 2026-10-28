@@ -20,10 +20,11 @@ const merge = (own: SetValues, above: SetValues): SetValues => ({
 
 /**
  * What row `index` holds. A logged row: its logged values. An open row: its own values (typed
- * before the keypad closed, or kept after the check was undone), and in boxes without one what
- * the row above holds or is being typed with, so the rows below follow as it is typed. Nothing
- * comes from the targets or from last time: a box stays empty until something is entered.
- * `drafts` are own values the database doesn't have yet.
+ * before the keypad closed, or kept after the check was undone), in boxes without one what the
+ * row above is being typed with (so the rows below follow as it is typed), then its suggestion.
+ * Without suggestions (the first time) the rows below follow the row above, logged or not;
+ * otherwise nothing comes from the targets or from last time. `drafts` are own values the
+ * database doesn't have yet.
  */
 export function rowValues(
   exercise: WorkoutExercise,
@@ -31,22 +32,28 @@ export function rowValues(
   logged: Record<string, SetValues>,
   typed: TypedRow | null,
   drafts: Record<string, Partial<SetValues>>,
+  suggested?: SetValues[],
 ): SetValues {
   const loggedAt = (i: number) => {
     const set = exercise.sets[i];
     return logged[set.id] ?? (set.completedAt ? pick(set) : null);
   };
-  const open = (i: number): SetValues => {
+  const own = (i: number): SetValues => {
     const set = exercise.sets[i];
-    return merge({ ...pick(set), ...drafts[set.id] }, passedOn(i - 1));
+    return { ...pick(set), ...drafts[set.id] };
   };
-  // What a row hands down to the one below it.
+  // What a row hands down to the one below it. A logged row hands down nothing when there are
+  // suggestions: they already follow what was logged.
   const passedOn = (i: number): SetValues => {
     if (i < 0) return NONE;
     if (i === typed?.index) return typed.values;
-    return loggedAt(i) ?? open(i);
+    const done = loggedAt(i);
+    if (done) return suggested ? NONE : done;
+    return merge(own(i), passedOn(i - 1));
   };
-  return loggedAt(index) ?? open(index);
+  const done = loggedAt(index);
+  if (done) return pick(done);
+  return merge(merge(own(index), passedOn(index - 1)), suggested?.[index] ?? NONE);
 }
 
 /** Index of the first set that isn't logged yet, or -1. */

@@ -42,7 +42,14 @@ export function useWorkoutActivity(
 
   let next: WorkoutActivityProps['next'] = null;
   if (at && exercise) {
-    const values = rowValues(exercise, at.setIndex, logged, null, drafts);
+    const values = rowValues(
+      exercise,
+      at.setIndex,
+      logged,
+      null,
+      drafts,
+      live.suggestedValues(exercise),
+    );
     const measures = measuresOf(exercise.exerciseId);
     const bodyweight = isBodyweight(exercise.exerciseId);
     const { missing } = parseSetInput(toSetInput(values, units), measures, bodyweight, units);

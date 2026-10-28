@@ -306,8 +306,16 @@ async function isRecord(setId: string, exerciseId: string, values: SetValues) {
   return !!row?.best && row.score > row.best + 0.01;
 }
 
-/** Completes (or re-edits) a set. Returns true when it is a new personal record. */
-export async function logSet(setId: string, exerciseId: string, values: SetValues) {
+/**
+ * Completes (or re-edits) a set; `rir` (reps in reserve) is written when one was picked, else
+ * it stays. Returns true when it is a new personal record.
+ */
+export async function logSet(
+  setId: string,
+  exerciseId: string,
+  values: SetValues,
+  rir?: number | null,
+) {
   const isPr = await isRecord(setId, exerciseId, values);
   await drizzle
     .update(workoutEntriesSets)
@@ -315,6 +323,7 @@ export async function logSet(setId: string, exerciseId: string, values: SetValue
       weight_kg: values.weightKg,
       reps: values.reps,
       seconds: values.seconds,
+      ...(rir != null ? { rir } : {}),
       is_pr: isPr,
       // A re-edit keeps the original completion time.
       completed_at: sql`coalesce(${workoutEntriesSets.completed_at}, ${nowIso()})`,
