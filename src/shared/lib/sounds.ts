@@ -15,10 +15,11 @@ const players: Partial<Record<SoundName, AudioPlayer>> = {};
 let audioMode: Promise<void> | null = null;
 
 function playerFor(name: SoundName) {
-  // Cues also play with the phone on silent, and mix with music instead of pausing it.
+  // Cues also play with the phone on silent. Music from other apps goes quieter while one plays,
+  // not paused; it is back at full volume when the cue ends or stops (the session is let go then).
   audioMode ??= setAudioModeAsync({
     playsInSilentMode: true,
-    interruptionMode: 'mixWithOthers',
+    interruptionMode: 'duckOthers',
     shouldPlayInBackground: false,
   }).catch((error) => console.warn('Setting the audio mode failed', error));
   players[name] ??= createAudioPlayer(SOURCES[name]);
