@@ -32,7 +32,8 @@ export interface SetTableProps {
   measures: Measure[];
   last: ExerciseHistoryEntry | undefined;
   units: UnitSystem;
-  onSelect: (index: number, field: SetField) => void;
+  /** A box of row `index` tapped, or null for the row outside its boxes. */
+  onSelect: (index: number, field: SetField | null) => void;
   onToggleDone: (index: number) => void;
   /** The check over the table: every set done, or all re-opened. */
   onToggleAll: () => void;

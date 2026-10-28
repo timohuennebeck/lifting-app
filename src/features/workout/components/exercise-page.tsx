@@ -18,7 +18,7 @@ export interface ExercisePageProps {
   workoutId: string;
   /** The row being typed in, or -1 (always on the pages beside the shown one). */
   selectedIndex: number;
-  onSelect: (index: number, field: SetField) => void;
+  onSelect: (index: number, field: SetField | null) => void;
   onToggleDone: (index: number) => void;
   onToggleAll: () => void;
   onSwap: () => void;

@@ -189,9 +189,11 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     else if (action === 'moveDown') void reorder(exercise.id, exerciseIndex + 1);
   }
 
-  const onSelect = (index: number, f: SetField) => {
-    if (index !== selectedIndex) return live.selectSet(index, f);
-    if (f === field) return live.closeInput();
+  // A row tapped outside its boxes opens at its first box; the open row closes instead, as its
+  // focused box does.
+  const onSelect = (index: number, f: SetField | null) => {
+    if (index !== selectedIndex) return live.selectSet(index, f ?? undefined);
+    if (f === null || f === field) return live.closeInput();
     useWorkoutSessionStore.getState().focusField(f);
   };
 

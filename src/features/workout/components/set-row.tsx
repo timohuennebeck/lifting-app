@@ -33,7 +33,8 @@ export interface SetRowProps {
   selected: boolean;
   field: SetField;
   pristine: boolean;
-  onSelect: (field: SetField) => void;
+  /** A box tapped, or null for the row outside its boxes. */
+  onSelect: (field: SetField | null) => void;
   onToggleDone: () => void;
 }
 
@@ -55,7 +56,7 @@ export function SetRow({
   return (
     <Pressable
       accessibilityLabel={t('table.setLabel', { n: number })}
-      onPress={() => onSelect(cells[0].field)}
+      onPress={() => onSelect(null)}
       // Logged sets step back; the row being edited stays at full strength.
       className={cn('h-14 flex-row items-center gap-2.5', done && !selected && 'opacity-45')}
     >
