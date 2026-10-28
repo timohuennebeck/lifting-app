@@ -15,13 +15,14 @@ const OPEN_PAGES = ['pro', 'settings', 'support'];
  */
 export function useSubscriptionGate() {
   const locked = useIsLocked();
-  const segments = useSegments();
+  // Read as plain strings: the typed routes' segment tuples aren't needed here.
+  const segments: string[] = useSegments();
   const { data: activeWorkout } = useActiveWorkout();
   const activeId = activeWorkout?.id ?? null;
   // ['(app)', 'pro', …]: the page under the signed-in group. The segments are global, so root
   // routes such as legal/[kind] show up here too.
   const inApp = segments[0] === '(app)';
-  const page: string = segments[1] ?? '';
+  const page = segments[1] ?? '';
   const inWorkout = page === 'workout' && (!!activeId || segments[2] === 'summary');
   const open = OPEN_PAGES.includes(page) || inWorkout;
   useEffect(() => {
