@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useUserId } from '@/shared/stores/session-store';
-import { formatSet, isTimed, type Measure } from '@/shared/data/exercises';
+import { formatSetParts, isTimed, type Measure } from '@/shared/data/exercises';
 import type { ExerciseHistoryEntry } from '@/shared/data/workouts';
 import {
   formatNumber,
@@ -24,7 +24,7 @@ import { addWorkoutSet } from '../data/workout-mutations';
 import { rowValues } from '../lib/row-values';
 import { typedValues, valueOf } from '../lib/set-input';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
-import { cellWidth, SetRow } from './set-row';
+import { cellWidth, SetRow, type SetRowMiddle } from './set-row';
 
 export interface SetTableProps {
   exercise: WorkoutExercise;
@@ -92,13 +92,19 @@ export function SetTable({
   };
 
   /** The middle column of row `index`: its targets, or the same set last time (if there was one). */
-  const middleLabel = (index: number) => {
+  const middleLabel = (index: number): SetRowMiddle | null => {
     if (column === 'targets') {
       const { targetMin, targetMax } = exercise.sets[index];
-      return formatTargetLabel(targetMin, targetMax, isTimed(exercise.exerciseId));
+      const targets = formatTargetLabel(targetMin, targetMax, isTimed(exercise.exerciseId));
+      return targets ? { main: targets } : null;
     }
     const previous = last?.sets[index];
-    return previous ? formatSet(exercise.exerciseId, previous, units) : null;
+    if (!previous) return null;
+    const { weight, amount } = formatSetParts(exercise.exerciseId, previous, units);
+    // The weight over the reps ("60 kg" over "× 9"); without a weight the reps alone.
+    return weight
+      ? { main: weight, detail: `×\u00a0${amount}`, strong: true }
+      : { main: amount, strong: true };
   };
 
   return (

@@ -335,7 +335,14 @@ export const isTimed = (exerciseId: string) => hasMeasure(exerciseId, 'seconds')
  * Bodyweight exercises show added weight as "+10 kg × 8" (none as just the reps), assisted
  * machines their assistance as "−30 kg × 8".
  */
-export function formatSet(
+export function formatSet(exerciseId: string, values: SetValues, units: UnitSystem) {
+  const { weight, amount } = formatSetParts(exerciseId, values, units);
+  // A narrow column breaks it before the "×": "61,5 kg" over "× 9".
+  return weight ? `${weight} ×\u00a0${amount}` : amount;
+}
+
+/** The two parts of `formatSet`: the weight ("60 kg", null without one) and the reps or time. */
+export function formatSetParts(
   exerciseId: string,
   { weightKg, reps, seconds }: SetValues,
   units: UnitSystem,
@@ -349,8 +356,7 @@ export function formatSet(
       : weight
         ? String(reps ?? 0)
         : i18n.t('common:units.reps', { count: reps ?? 0 });
-  // A narrow column breaks it before the "×": "61,5 kg" over "× 9".
-  return weight ? `${weight} ×\u00a0${amount}` : amount;
+  return { weight, amount };
 }
 
 export interface SetTargets {

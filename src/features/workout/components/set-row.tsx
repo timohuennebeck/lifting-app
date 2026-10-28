@@ -21,10 +21,19 @@ interface SetCell {
 
 const CELL_LABEL = { weight: 'weightCell', reps: 'repsCell', seconds: 'secondsCell' } as const;
 
+/** The middle column: targets ("7–9"), or last time's weight over its reps ("60 kg" over "× 9"). */
+export interface SetRowMiddle {
+  /** The targets, last time's weight, or its reps alone ("12 Wdh.") when there was no weight. */
+  main: string;
+  /** Last time's reps or time under its weight. */
+  detail?: string;
+  /** Last time's set is set in semibold, targets aren't. */
+  strong?: boolean;
+}
+
 export interface SetRowProps {
   number: number;
-  /** Targets ("7–9") or last time ("60 kg × 9"), whichever column is shown. */
-  middle: string | null;
+  middle: SetRowMiddle | null;
   /** One box per measure of the exercise, e.g. KG and REPS, or only SEC. */
   cells: SetCell[];
   rir: number | null;
@@ -75,14 +84,27 @@ export function SetRow({
         </Text>
       </View>
       <View className="flex-1 items-center">
-        {/* Last time's set takes two lines where the column is narrow ("61,5 kg" over "× 9"). */}
         <Text
           variant="label"
-          numberOfLines={2}
-          className={cn('text-center font-inter tabular-nums', !middle && 'text-dim')}
+          numberOfLines={1}
+          className={cn(
+            'text-center leading-4.75 tabular-nums',
+            !middle?.strong && 'font-inter',
+            !middle && 'text-dim',
+          )}
         >
-          {middle ?? '–'}
+          {middle?.main ?? '–'}
         </Text>
+        {middle?.detail ? (
+          <Text
+            variant="label"
+            tone="secondary"
+            numberOfLines={1}
+            className="text-center font-inter leading-4.75 tabular-nums"
+          >
+            {middle.detail}
+          </Text>
+        ) : null}
       </View>
       {cells.map((cell) => (
         <InputCell
