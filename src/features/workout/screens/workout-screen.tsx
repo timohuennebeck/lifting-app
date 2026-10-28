@@ -1,5 +1,12 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+  type ReactNode,
+  useEffect,
+  useEffectEvent,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Alert, ScrollView, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -32,7 +39,7 @@ import { ExerciseStrip } from '../components/exercise-strip';
 import { SetKeypad } from '../components/set-keypad';
 import { WorkoutMenuSheet } from '../components/workout-menu-sheet';
 import { WorkoutTopBar } from '../components/workout-top-bar';
-import { useWorkout, type WorkoutDetail } from '../data/workout-detail';
+import { useWorkout, type WorkoutDetail, type WorkoutExercise } from '../data/workout-detail';
 import { removeWorkoutExercise, reorderWorkoutExercise } from '../data/workout-mutations';
 import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
@@ -47,6 +54,8 @@ const SLIDE = { duration: 200, easing: Easing.out(Easing.cubic) };
 const SNAP_BACK = { duration: 160, easing: Easing.out(Easing.cubic) };
 /** Room for the "Finish workout" button over the foot of the sets. */
 const FINISH_BAR_HEIGHT = 80;
+/** After an exercise's last set, the check shows this long before the next exercise slides in. */
+const ADVANCE_MS = 700;
 
 interface LiveWorkoutProps {
   workout: WorkoutDetail;
@@ -112,6 +121,30 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     swipedTo.set(index);
     go(index);
   };
+
+  // Every set logged; one logged a moment ago counts, as it may not be saved yet.
+  const logged = useWorkoutSessionStore((s) => s.logged);
+  const isDone = (e: WorkoutExercise) =>
+    e.sets.length > 0 && e.sets.every((s) => !!s.completedAt || s.id in logged);
+  const exerciseDone = !!exercise && isDone(exercise);
+  // The shown exercise's last set logged: the next one with open sets slides in (after it, else
+  // an earlier one), unless a box was opened meanwhile. An exercise opened done stays.
+  const advance = useEffectEvent(() => {
+    if (useWorkoutSessionStore.getState().selectedSetId) return;
+    const others = workout.exercises.map((_, i) => (exerciseIndex + 1 + i) % count).slice(0, -1);
+    const target = others.find((i) => !isDone(workout.exercises[i]));
+    if (target === undefined) return;
+    position.set(withTiming(-target * width, SLIDE));
+    swipeTo(target);
+  });
+  const shownDone = useRef({ index: exerciseIndex, done: exerciseDone });
+  useEffect(() => {
+    const before = shownDone.current;
+    shownDone.current = { index: exerciseIndex, done: exerciseDone };
+    if (before.index !== exerciseIndex || before.done || !exerciseDone) return;
+    const id = setTimeout(advance, ADVANCE_MS);
+    return () => clearTimeout(id);
+  }, [exerciseIndex, exerciseDone]);
 
   const swipe = Gesture.Pan()
     .activeOffsetX([-16, 16])

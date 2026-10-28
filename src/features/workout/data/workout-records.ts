@@ -19,6 +19,8 @@ const recordKeys = createQueryKeys('workoutRecords', {
 
 export interface WorkoutRecord {
   exerciseId: string;
+  /** The set of this workout that set it. */
+  setId: string;
   set: SetValues;
   previous: SetValues;
 }
@@ -56,6 +58,7 @@ const recordsQuery = (workoutId: string) =>
   drizzle
     .select({
       exercise_id: workoutEntriesExercises.exercise_id,
+      set_id: workoutEntriesSets.id,
       weight_kg: workoutEntriesSets.weight_kg,
       reps: workoutEntriesSets.reps,
       seconds: workoutEntriesSets.seconds,
@@ -86,9 +89,15 @@ function toRecords(rows: RowOf<typeof recordsQuery>[]): WorkoutRecord[] {
     const current = best.get(r.exercise_id);
     if (current && current.score >= r.score) continue;
     const set = { weightKg: r.weight_kg, reps: r.reps, seconds: r.seconds };
-    best.set(r.exercise_id, { exerciseId: r.exercise_id, set, previous, score: r.score });
+    best.set(r.exercise_id, {
+      exerciseId: r.exercise_id,
+      setId: r.set_id,
+      set,
+      previous,
+      score: r.score,
+    });
   }
-  return [...best.values()].map(({ exerciseId, set, previous }) => ({ exerciseId, set, previous }));
+  return [...best.values()].map(({ score: _score, ...record }) => record);
 }
 
 /** New personal records of a workout with the best set from before it. */

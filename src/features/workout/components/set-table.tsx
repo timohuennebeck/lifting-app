@@ -32,6 +32,8 @@ export interface SetTableProps {
   measures: Measure[];
   last: ExerciseHistoryEntry | undefined;
   units: UnitSystem;
+  /** Sets that are the workout's record for their exercise: the number turns accent. */
+  recordSetIds: string[];
   /** A box of row `index` tapped, or null for the row outside its boxes. */
   onSelect: (index: number, field: SetField | null) => void;
   onToggleDone: (index: number) => void;
@@ -49,6 +51,7 @@ export function SetTable({
   measures,
   last,
   units,
+  recordSetIds,
   onSelect,
   onToggleDone,
   onToggleAll,
@@ -154,7 +157,7 @@ export function SetTable({
                 }))}
                 rir={set.targetRir}
                 done={done}
-                record={done && set.isPr}
+                record={done && recordSetIds.includes(set.id)}
                 selected={selected}
                 field={field}
                 pristine={pristine}

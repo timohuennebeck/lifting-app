@@ -18,13 +18,15 @@ export interface DoneExerciseCardProps {
   /** The sets that were done. */
   sets: WorkoutSet[];
   units: UnitSystem;
+  /** The set that is the workout's record for this exercise, starred. */
+  recordSetId?: string;
 }
 
 /**
  * An exercise of a finished workout, laid out like the training overview's: photo, name, each
  * done set with its RIR, a record with a star. Opens the exercise's page.
  */
-export function DoneExerciseCard({ exerciseId, sets, units }: DoneExerciseCardProps) {
+export function DoneExerciseCard({ exerciseId, sets, units, recordSetId }: DoneExerciseCardProps) {
   const { t, i18n } = useTranslation('training');
   const name = useExerciseName(exerciseId, i18n.language);
   return (
@@ -54,7 +56,9 @@ export function DoneExerciseCard({ exerciseId, sets, units }: DoneExerciseCardPr
                 <Text variant="body" className="text-sm text-fg-soft tabular-nums">
                   {formatSet(exerciseId, set, units)}
                 </Text>
-                {set.isPr ? <Icon name="star" size={13} color={colors.accent} /> : null}
+                {set.id === recordSetId ? (
+                  <Icon name="star" size={13} color={colors.accent} />
+                ) : null}
               </View>
               {set.targetRir != null ? <RirBadge rir={set.targetRir} /> : null}
             </View>

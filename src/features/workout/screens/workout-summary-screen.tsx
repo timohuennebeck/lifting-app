@@ -137,6 +137,7 @@ export function WorkoutSummaryScreen() {
                     exerciseId={e.exerciseId}
                     sets={e.sets}
                     units={units}
+                    recordSetId={records.find((r) => e.sets.some((s) => s.id === r.setId))?.setId}
                   />
                 ))}
               </View>
