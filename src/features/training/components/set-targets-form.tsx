@@ -293,7 +293,7 @@ export function SetTargetsForm({
         value={rirIndex !== null ? (sets[rirIndex]?.rir ?? null) : null}
         onClose={() => setRirIndex(null)}
         onSelect={(rir) => {
-          // Like the boxes, the rows below take the same RIR.
+          // Like the boxes, the rows below take the same RIR (or none, when it was removed).
           if (rirIndex !== null) {
             setSets((all) => all.map((s, i) => (i >= rirIndex ? { ...s, rir } : s)));
           }

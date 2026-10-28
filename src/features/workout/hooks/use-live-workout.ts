@@ -103,11 +103,15 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     });
   }
 
-  /** A RIR picked in the number pad is saved at once, without logging or retyping the set. */
-  function pickRir(rir: number) {
+  /**
+   * A RIR picked in the number pad is saved at once, without logging or retyping the set; the
+   * entered one picked again is removed.
+   */
+  function pickRir(picked: number) {
     const store = useWorkoutSessionStore.getState();
     const set = exercise?.sets[selectedIndex];
     if (!set) return;
+    const rir = picked === store.rir ? null : picked;
     store.setRir(rir);
     const values = store.logged[set.id];
     if (values) store.markLogged(set.id, { ...values, rir });
@@ -134,7 +138,9 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     if (!set) return;
     if (index !== selectedIndex) keepTyped();
     // Defaulted here: the React Compiler can't compile `field = measures[0]` as a parameter.
-    const rir = logged[set.id]?.rir ?? set.rir;
+    // A RIR removed a moment ago is null in `logged` before the database has it.
+    const loggedRir = logged[set.id]?.rir;
+    const rir = loggedRir !== undefined ? loggedRir : set.rir;
     useWorkoutSessionStore.getState().select(set.id, inputFor(index), field ?? measures[0], rir);
   };
 

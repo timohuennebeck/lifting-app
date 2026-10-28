@@ -436,8 +436,8 @@ export async function saveOpenSetValues(setId: string, values: Partial<SetValues
     .where(and(eq(workoutEntriesSets.id, setId), isNull(workoutEntriesSets.completed_at)));
 }
 
-/** Saves the reps in reserve picked for a set, logged or still open. */
-export async function saveSetRir(setId: string, rir: number) {
+/** Saves the reps in reserve picked for a set, logged or still open; null removes them. */
+export async function saveSetRir(setId: string, rir: number | null) {
   await drizzle.update(workoutEntriesSets).set({ rir }).where(eq(workoutEntriesSets.id, setId));
 }
 

@@ -45,7 +45,7 @@ interface WorkoutSessionState {
     field: SetField,
     rir: number | null,
   ) => void;
-  setRir: (rir: number) => void;
+  setRir: (rir: number | null) => void;
   focusField: (field: SetField) => void;
   closeKeypad: () => void;
   pressKey: (key: KeypadKey) => void;

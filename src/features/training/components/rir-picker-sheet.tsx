@@ -13,10 +13,11 @@ export interface RirPickerSheetProps {
   visible: boolean;
   value: number | null;
   onClose: () => void;
-  onSelect: (rir: number) => void;
+  /** The value tapped, or null when the picked one is tapped again (no RIR). */
+  onSelect: (rir: number | null) => void;
 }
 
-/** Bottom sheet with RIR targets 0–5+ (00·P2 C·S·R). */
+/** Bottom sheet with RIR targets 0–5+ (00·P2 C·S·R); the picked one tapped again removes it. */
 export function RirPickerSheet({ visible, value, onClose, onSelect }: RirPickerSheetProps) {
   const { t } = useTranslation('training');
   return (
@@ -33,7 +34,7 @@ export function RirPickerSheet({ visible, value, onClose, onSelect }: RirPickerS
               accessibilityRole="radio"
               accessibilityState={{ selected }}
               accessibilityLabel={t('sets.rirOption', { value: formatRir(rir) })}
-              onPress={() => onSelect(rir)}
+              onPress={() => onSelect(selected ? null : rir)}
               className="aspect-square max-w-14 min-w-0 flex-1 items-center justify-center rounded-full"
               style={{
                 backgroundColor: style.bg,

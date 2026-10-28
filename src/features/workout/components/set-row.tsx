@@ -63,6 +63,8 @@ export interface SetRowProps {
   /** One box per measure of the exercise, e.g. KG and REPS, or only SEC. */
   cells: SetCell[];
   rir: number | null;
+  /** The RIR shown is the set's target, not entered: its badge is dimmed. */
+  rirIsTarget: boolean;
   done: boolean;
   record: boolean;
   selected: boolean;
@@ -79,6 +81,7 @@ export function SetRow({
   middle,
   cells,
   rir,
+  rirIsTarget,
   done,
   record,
   selected,
@@ -150,7 +153,10 @@ export function SetRow({
         >
           {/* Reps in reserve belong to the reps box. */}
           {cell.field === 'reps' && rir != null ? (
-            <RirBadge rir={rir} className="absolute -right-1.75 -bottom-1.75" />
+            <RirBadge
+              rir={rir}
+              className={cn('absolute -right-1.75 -bottom-1.75', rirIsTarget && 'opacity-40')}
+            />
           ) : null}
         </InputCell>
       ))}

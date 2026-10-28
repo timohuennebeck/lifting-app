@@ -204,9 +204,10 @@ export function SetTable({
         {exercise.sets.map((set, i) => {
           const selected = set.id === selectedSetId;
           const done = !!set.completedAt || !!logged[set.id];
-          // The reps in reserve the set had once entered, else its target.
-          const entered = logged[set.id]?.rir ?? set.rir;
-          const rir = selected ? (pickedRir ?? entered) : entered;
+          // The reps in reserve entered for the set (the open row's as picked), else its target.
+          const loggedRir = logged[set.id]?.rir;
+          const entered = loggedRir !== undefined ? loggedRir : set.rir;
+          const rir = selected ? pickedRir : entered;
           return (
             <View key={set.id} onLayout={(e) => onRowLayout(i, e.nativeEvent.layout.y)}>
               <SetRow
@@ -217,6 +218,7 @@ export function SetTable({
                   value: cellValue(measure, selected, i),
                 }))}
                 rir={rir ?? set.targetRir}
+                rirIsTarget={rir == null}
                 done={done}
                 record={done && recordSetIds.includes(set.id)}
                 selected={selected}
