@@ -57,7 +57,7 @@ const HEADER = 'font-inter-semibold text-[11px] leading-3.5 tracking-[0.9px] tex
 /** The arrow by the middle column's header turns once per tap. */
 const TURN = { duration: 450 };
 
-/** Logging table (design 03·C) whose middle column goes round SUGGESTED → TARGETS → LAST. */
+/** Logging table (design 03·C) whose middle column switches between SUGGESTED and LAST. */
 export function SetTable({
   exercise,
   measures,
@@ -90,8 +90,8 @@ export function SetTable({
     seconds: t('table.seconds'),
   };
 
-  // Without suggestions (the first time) the targets stand in for them.
-  const shown: MiddleColumn = column === 'suggested' && !suggestions ? 'targets' : column;
+  // Any other stored value shows the suggestions.
+  const shown: MiddleColumn = column === 'last' ? 'last' : 'suggested';
   const suggestedShown = shown === 'suggested';
   const toggleColumn = () => {
     showColumn(MIDDLE_COLUMNS[(MIDDLE_COLUMNS.indexOf(shown) + 1) % MIDDLE_COLUMNS.length]);
@@ -124,18 +124,21 @@ export function SetTable({
       : { main: amount, strong: true };
   };
 
-  /** The middle column of row `index`: its suggestion, its targets, or the same set last time. */
+  /**
+   * The middle column of row `index`: its suggestion, or the same set last time. Without
+   * suggestions (the first time) the suggestion column shows the set's targets.
+   */
   const middleLabel = (index: number): SetRowMiddle | null => {
-    if (shown === 'targets') {
-      const { targetMin, targetMax } = exercise.sets[index];
-      const targets = formatTargetLabel(targetMin, targetMax, isTimed(exercise.exerciseId));
-      return targets ? { main: targets } : null;
-    }
     if (shown === 'last') {
       const previous = last?.sets[index];
       return previous ? setLabel(previous) : null;
     }
-    const suggestion = suggestions?.[index];
+    if (!suggestions) {
+      const { targetMin, targetMax } = exercise.sets[index];
+      const targets = formatTargetLabel(targetMin, targetMax, isTimed(exercise.exerciseId));
+      return targets ? { main: targets } : null;
+    }
+    const suggestion = suggestions[index];
     if (!suggestion) return null;
     const label = setLabel(suggestion.values);
     // The marker goes before what changed: the weight, else the reps.

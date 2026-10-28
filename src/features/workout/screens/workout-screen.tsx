@@ -311,6 +311,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
               onLayout={(e) => setKeypadHeight(e.nativeEvent.layout.height)}
               withRir={live.measures.includes('reps')}
               rirTarget={exercise?.sets[selectedIndex]?.targetRir ?? null}
+              onPickRir={live.pickRir}
             />
           ) : null}
         </>

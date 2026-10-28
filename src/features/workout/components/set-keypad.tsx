@@ -14,15 +14,23 @@ export interface SetKeypadProps {
   withRir: boolean;
   /** The row's target reps in reserve, shown as picked until one is. */
   rirTarget: number | null;
+  /** Saves the picked reps in reserve to the row. */
+  onPickRir: (rir: number) => void;
 }
 
 /**
  * The number pad wired to the box being typed into in the live workout: weight, reps or seconds.
  */
-export function SetKeypad({ onConfirm, onDismiss, onLayout, withRir, rirTarget }: SetKeypadProps) {
+export function SetKeypad({
+  onConfirm,
+  onDismiss,
+  onLayout,
+  withRir,
+  rirTarget,
+  onPickRir,
+}: SetKeypadProps) {
   const field = useWorkoutSessionStore((s) => s.field);
   const rir = useWorkoutSessionStore((s) => s.rir);
-  const setRir = useWorkoutSessionStore((s) => s.setRir);
   const pressKey = useWorkoutSessionStore((s) => s.pressKey);
   const pressBackspace = useWorkoutSessionStore((s) => s.pressBackspace);
   return (
@@ -34,7 +42,7 @@ export function SetKeypad({ onConfirm, onDismiss, onLayout, withRir, rirTarget }
       onDismiss={onDismiss}
       onLayout={onLayout}
       accessory={
-        withRir ? <KeypadRir value={rir} target={rirTarget} onSelect={setRir} /> : undefined
+        withRir ? <KeypadRir value={rir} target={rirTarget} onSelect={onPickRir} /> : undefined
       }
     />
   );

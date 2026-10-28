@@ -9,7 +9,7 @@ import { mmkvStorage } from '@/shared/lib/storage';
 /** The box being typed into: one per measure of the exercise. */
 export type SetField = Measure;
 /** What the table's middle column shows; tapping its header goes round in this order. */
-export const MIDDLE_COLUMNS = ['suggested', 'targets', 'last'] as const;
+export const MIDDLE_COLUMNS = ['suggested', 'last'] as const;
 export type MiddleColumn = (typeof MIDDLE_COLUMNS)[number];
 
 /** A logged set's values, with the reps in reserve when they were entered. */

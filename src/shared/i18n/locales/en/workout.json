@@ -12,7 +12,6 @@
   "table": {
     "set": "SET",
     "suggested": "SUGGESTED",
-    "targets": "TARGETS",
     "last": "LAST",
     "reps": "REPS",
     "seconds": "SEC",

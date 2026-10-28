@@ -8,7 +8,7 @@ import type { SetValues } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 
 import type { WorkoutDetail, WorkoutExercise } from '../data/workout-detail';
-import { logSet, saveOpenSetValues, unlogSet } from '../data/workout-mutations';
+import { logSet, saveOpenSetValues, saveSetRir, unlogSet } from '../data/workout-mutations';
 import { firstOpenSet, rowValues } from '../lib/row-values';
 import { parseSetInput, toSetInput, typedValues } from '../lib/set-input';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
@@ -100,6 +100,20 @@ export function useLiveWorkout(workout: WorkoutDetail) {
       console.error(error);
       haptics.error();
       store.clearDraft(set.id);
+    });
+  }
+
+  /** A RIR picked in the number pad is saved at once, without logging or retyping the set. */
+  function pickRir(rir: number) {
+    const store = useWorkoutSessionStore.getState();
+    const set = exercise?.sets[selectedIndex];
+    if (!set) return;
+    store.setRir(rir);
+    const values = store.logged[set.id];
+    if (values) store.markLogged(set.id, { ...values, rir });
+    saveSetRir(set.id, rir).catch((error) => {
+      console.error(error);
+      haptics.error();
     });
   }
 
@@ -277,6 +291,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     selectedIndex,
     openIndex,
     selectSet,
+    pickRir,
     closeInput,
     goToExercise,
     confirmInput,
