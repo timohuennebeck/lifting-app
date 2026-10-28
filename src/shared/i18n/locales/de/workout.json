@@ -5,17 +5,17 @@
   "missing": "Dieses Training ist nicht mehr verfügbar.",
   "actions": {
     "info": "Info",
-    "targets": "Targets",
+    "targets": "Ziele",
     "swap": "Tauschen",
     "more": "Mehr"
   },
   "table": {
     "set": "SATZ",
-    "targets": "TARGETS",
+    "targets": "ZIEL",
     "last": "ZULETZT",
     "reps": "WDH.",
     "seconds": "SEK.",
-    "toggleColumn": "Zwischen Targets und letztem Mal wechseln",
+    "toggleColumn": "Zwischen Ziel und letztem Mal wechseln",
     "setLabel": "Satz {{n}}",
     "weightCell": "Gewicht",
     "repsCell": "Wiederholungen",
