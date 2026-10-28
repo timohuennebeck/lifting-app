@@ -27,7 +27,6 @@ import { rowValues } from '../lib/row-values';
 import { typedValues, valueOf } from '../lib/set-input';
 import type { SetSuggestion } from '../lib/set-suggestions';
 import {
-  MIDDLE_COLUMNS,
   type MiddleColumn,
   type SetField,
   useWorkoutSessionStore,
@@ -57,7 +56,10 @@ const HEADER = 'font-inter-semibold text-[11px] leading-3.5 tracking-[0.9px] tex
 /** The arrow by the middle column's header turns once per tap. */
 const TURN = { duration: 450 };
 
-/** Logging table (design 03·C) whose middle column switches between SUGGESTED and LAST. */
+/**
+ * Logging table (design 03·C) whose middle column switches between SUGGESTED and LAST; without
+ * suggestions it shows LAST, or the first time the targets.
+ */
 export function SetTable({
   exercise,
   measures,
@@ -90,11 +92,13 @@ export function SetTable({
     seconds: t('table.seconds'),
   };
 
-  // Any other stored value shows the suggestions.
-  const shown: MiddleColumn = column === 'last' ? 'last' : 'suggested';
+  // Without suggestions (the first time, or cardio) there is nothing to switch: the column
+  // shows the same set last time, or the first time the set's targets.
+  let shown: MiddleColumn | 'targets' = column === 'last' ? 'last' : 'suggested';
+  if (!suggestions) shown = last ? 'last' : 'targets';
   const suggestedShown = shown === 'suggested';
   const toggleColumn = () => {
-    showColumn(MIDDLE_COLUMNS[(MIDDLE_COLUMNS.indexOf(shown) + 1) % MIDDLE_COLUMNS.length]);
+    showColumn(column === 'last' ? 'suggested' : 'last');
     // To the next full turn, so a tap during the last one doesn't leave the arrow askew.
     turn.set(withTiming((Math.floor(turn.get() / 360) + 1) * 360, TURN));
   };
@@ -124,21 +128,18 @@ export function SetTable({
       : { main: amount, strong: true };
   };
 
-  /**
-   * The middle column of row `index`: its suggestion, or the same set last time. Without
-   * suggestions (the first time) the suggestion column shows the set's targets.
-   */
+  /** The middle column of row `index`: its suggestion, the same set last time, or its targets. */
   const middleLabel = (index: number): SetRowMiddle | null => {
-    if (shown === 'last') {
-      const previous = last?.sets[index];
-      return previous ? setLabel(previous) : null;
-    }
-    if (!suggestions) {
+    if (shown === 'targets') {
       const { targetMin, targetMax } = exercise.sets[index];
       const targets = formatTargetLabel(targetMin, targetMax, isTimed(exercise.exerciseId));
       return targets ? { main: targets } : null;
     }
-    const suggestion = suggestions[index];
+    if (shown === 'last') {
+      const previous = last?.sets[index];
+      return previous ? setLabel(previous) : null;
+    }
+    const suggestion = suggestions?.[index];
     if (!suggestion) return null;
     const label = setLabel(suggestion.values);
     // The marker goes before what changed: the weight, else the reps.
@@ -157,19 +158,23 @@ export function SetTable({
       <View className="flex-row items-center gap-2.5 px-5 pt-6 pb-2">
         <Text className={`${HEADER} w-10 text-center`}>{t('table.set')}</Text>
         <View className="flex-1 items-center">
-          <PressableScale
-            haptic="select"
-            onPress={toggleColumn}
-            accessibilityLabel={t('table.toggleColumn')}
-            className="-my-1.5 flex-row items-center gap-1.5 rounded-full px-2.5 py-1.5"
-          >
-            <Text className={cn(HEADER, suggestedShown ? 'text-accent' : 'text-fg')}>
-              {t(`table.${shown}`)}
-            </Text>
-            <Animated.View style={turnStyle}>
-              <Icon name="refresh" size={12} color={suggestedShown ? colors.accent : colors.fg} />
-            </Animated.View>
-          </PressableScale>
+          {suggestions ? (
+            <PressableScale
+              haptic="select"
+              onPress={toggleColumn}
+              accessibilityLabel={t('table.toggleColumn')}
+              className="-my-1.5 flex-row items-center gap-1.5 rounded-full px-2.5 py-1.5"
+            >
+              <Text className={cn(HEADER, suggestedShown ? 'text-accent' : 'text-fg')}>
+                {t(`table.${shown}`)}
+              </Text>
+              <Animated.View style={turnStyle}>
+                <Icon name="refresh" size={12} color={suggestedShown ? colors.accent : colors.fg} />
+              </Animated.View>
+            </PressableScale>
+          ) : (
+            <Text className={cn(HEADER, 'text-fg')}>{t(`table.${shown}`)}</Text>
+          )}
         </View>
         {measures.map((m) => (
           <Text key={m} className={`${HEADER} ${cellWidth(measures.length)} text-center`}>

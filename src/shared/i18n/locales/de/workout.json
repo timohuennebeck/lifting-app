@@ -12,6 +12,7 @@
   "table": {
     "set": "SATZ",
     "suggested": "VORSCHLAG",
+    "targets": "ZIEL",
     "last": "ZULETZT",
     "reps": "WDH.",
     "seconds": "SEK.",
