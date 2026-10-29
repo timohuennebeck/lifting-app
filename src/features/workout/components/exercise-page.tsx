@@ -8,7 +8,6 @@ import { useLastExerciseSession } from '@/shared/data/workouts';
 import { Text } from '@/shared/ui/text';
 
 import type { WorkoutExercise } from '../data/workout-detail';
-import { useWorkoutRecords } from '../data/workout-records';
 import { firstOpenSet } from '../lib/row-values';
 import type { SetSuggestion } from '../lib/set-suggestions';
 import type { SetField } from '../stores/workout-session-store';
@@ -51,8 +50,6 @@ export function ExercisePage({
   const { t, i18n } = useTranslation('workout');
   const units = useUnits();
   const { data: last } = useLastExerciseSession(exercise.exerciseId);
-  // As the summary counts them: per exercise the best set past the earlier workouts' best.
-  const { data: records = [] } = useWorkoutRecords(workoutId);
   const name = useExerciseName(exercise.exerciseId, i18n.language);
   const openIndex = firstOpenSet(exercise);
 
@@ -92,7 +89,6 @@ export function ExercisePage({
           last={last}
           suggestions={suggestions}
           units={units}
-          recordSetIds={records.map((r) => r.setId)}
           onSelect={onSelect}
           onToggleDone={onToggleDone}
           onToggleAll={onToggleAll}

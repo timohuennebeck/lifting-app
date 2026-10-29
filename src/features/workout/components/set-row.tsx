@@ -66,7 +66,6 @@ export interface SetRowProps {
   /** The RIR shown is the set's target, not entered: its badge is dimmed. */
   rirIsTarget: boolean;
   done: boolean;
-  record: boolean;
   selected: boolean;
   field: SetField;
   pristine: boolean;
@@ -83,7 +82,6 @@ export function SetRow({
   rir,
   rirIsTarget,
   done,
-  record,
   selected,
   field,
   pristine,
@@ -102,12 +100,6 @@ export function SetRow({
         <Text variant="bodyStrong" className="text-base tabular-nums">
           {number}
         </Text>
-        {/* A record gets a star on its number, as in the summary. */}
-        {record ? (
-          <View className="absolute -top-1 -right-1 size-5 items-center justify-center rounded-full bg-accent">
-            <Icon name="star" size={11} color={colors.onAccent} />
-          </View>
-        ) : null}
       </View>
       <View className="flex-1 items-center">
         <View className="flex-row items-center gap-1">

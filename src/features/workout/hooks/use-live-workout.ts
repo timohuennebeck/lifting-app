@@ -184,7 +184,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
       );
       return;
     }
-    // A new record gets a success tick; the set's number gets a star in the table.
+    // A new record gets a success tick.
     if (isPr && !set.isPr) haptics.success();
   }
 

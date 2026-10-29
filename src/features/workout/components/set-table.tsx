@@ -41,8 +41,6 @@ export interface SetTableProps {
   /** Per set; none the first time the exercise is done: the targets show instead. */
   suggestions: SetSuggestion[] | null;
   units: UnitSystem;
-  /** Sets that are the workout's record for their exercise: a star on the number. */
-  recordSetIds: string[];
   /** A box of row `index` tapped, or null for the row outside its boxes. */
   onSelect: (index: number, field: SetField | null) => void;
   onToggleDone: (index: number) => void;
@@ -66,7 +64,6 @@ export function SetTable({
   last,
   suggestions,
   units,
-  recordSetIds,
   onSelect,
   onToggleDone,
   onToggleAll,
@@ -220,7 +217,6 @@ export function SetTable({
                 rir={rir ?? set.targetRir}
                 rirIsTarget={rir == null}
                 done={done}
-                record={done && recordSetIds.includes(set.id)}
                 selected={selected}
                 field={field}
                 pristine={pristine}
