@@ -184,7 +184,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
       );
       return;
     }
-    // A new record gets a success tick; the set's number turns accent in the table.
+    // A new record gets a success tick; the set's number gets a star in the table.
     if (isPr && !set.isPr) haptics.success();
   }
 

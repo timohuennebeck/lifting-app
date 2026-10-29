@@ -98,19 +98,16 @@ export function SetRow({
       // Logged sets step back; the row being edited stays at full strength.
       className={cn('h-14 flex-row items-center gap-2.5', done && !selected && 'opacity-45')}
     >
-      <View
-        className={cn(
-          'size-10 items-center justify-center rounded-full bg-elevated',
-          record && 'bg-accent',
-        )}
-      >
-        <Text
-          variant="bodyStrong"
-          tone={record ? 'onAccent' : 'default'}
-          className="text-base tabular-nums"
-        >
+      <View className="size-10 items-center justify-center rounded-full bg-elevated">
+        <Text variant="bodyStrong" className="text-base tabular-nums">
           {number}
         </Text>
+        {/* A record gets a star on its number, as in the summary. */}
+        {record ? (
+          <View className="absolute -top-1 -right-1 size-5 items-center justify-center rounded-full bg-accent">
+            <Icon name="star" size={11} color={colors.onAccent} />
+          </View>
+        ) : null}
       </View>
       <View className="flex-1 items-center">
         <View className="flex-row items-center gap-1">

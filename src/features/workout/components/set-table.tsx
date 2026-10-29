@@ -41,7 +41,7 @@ export interface SetTableProps {
   /** Per set; none the first time the exercise is done: the targets show instead. */
   suggestions: SetSuggestion[] | null;
   units: UnitSystem;
-  /** Sets that are the workout's record for their exercise: the number turns accent. */
+  /** Sets that are the workout's record for their exercise: a star on the number. */
   recordSetIds: string[];
   /** A box of row `index` tapped, or null for the row outside its boxes. */
   onSelect: (index: number, field: SetField | null) => void;
