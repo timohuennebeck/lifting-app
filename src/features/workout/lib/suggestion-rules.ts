@@ -273,8 +273,8 @@ export function planSets(
 /**
  * What each set suggests with the sets logged so far (`done`, null for open ones), from the
  * plan: after a set falls well short the open sets after it get lighter; after a too-light set
- * they go back to the plan; a weight the user picked that works stays. A logged set keeps what
- * it suggested when it was logged.
+ * they go back to the plan; a weight the user picked that works stays; after a set better than
+ * suggested they ask for what it showed. A logged set keeps what it suggested when it was logged.
  */
 export function adaptSets(
   ex: RuleExercise,
@@ -321,6 +321,22 @@ export function adaptSets(
               weight: round2(ex.kind === 'assisted' ? next.weight + shift : weight),
               reps: next.reps,
             };
+      } else if (e > shown[i].reps && ex.kind === 'load' && s.weight > 0 && next.weight > 0) {
+        // Better than suggested (more reps, or more in reserve): the reps it shows are doable,
+        // one less per set after it; past the top of the range, one step heavier.
+        const est = e1rm(s.weight, s.reps, rir);
+        const later = j - i;
+        const up = round2(Math.max(s.weight, next.weight) + ex.step);
+        const repsUp = Math.floor(repsAt(est, up, target.rir) - later);
+        if (e > targets[i].max && repsUp >= target.min) {
+          current[j] = { weight: up, reps: Math.min(repsUp, target.max) };
+        } else {
+          const reps = Math.floor(repsAt(est, next.weight, target.rir) - later);
+          current[j] = {
+            weight: next.weight,
+            reps: clamp(Math.max(reps, next.reps), target.min, target.max),
+          };
+        }
       }
     }
   }
