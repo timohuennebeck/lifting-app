@@ -51,6 +51,9 @@ function RecordSummary({ exerciseId, record, units }: RecordSummaryProps) {
   );
 }
 
+/** How many trained exercises are listed first, under "Recently trained". */
+const RECENT_EXERCISES = 5;
+
 /** Picking an exercise instead of opening it, e.g. the lift of the ranks screen. */
 export interface ExercisePick {
   /** Marked with a check. */
@@ -70,9 +73,9 @@ export interface ExerciseResultsProps {
 }
 
 /**
- * The exercises matching the search and the muscle chip picked above them: the trained ones
- * first, last done on top, with their heaviest set (★); then the others A–Z with the letter
- * index. For a muscle, its exercises come first instead, those working it most on top. A tap
+ * The exercises matching the search and the muscle chip picked above them: the five trained
+ * last first, last done on top, with their heaviest set (★); then the others A–Z with the letter
+ * index, trained ones with theirs too. For a muscle, its exercises come first instead, those working it most on top. A tap
  * opens the exercise on its "Übung" tab, or with `pick` picks it (the picked one checked).
  */
 export function ExerciseResults({ query, bottomInset, muscle, pick }: ExerciseResultsProps) {
@@ -100,13 +103,16 @@ export function ExerciseResults({ query, bottomInset, muscle, pick }: ExerciseRe
             rest: options.filter((o) => share(o) === 0),
           };
         }
+        const recent = options
+          .filter((o) => records?.has(o.id))
+          .map(withRecord)
+          .sort((a, b) => (b.record?.lastAt ?? '').localeCompare(a.record?.lastAt ?? ''))
+          .slice(0, RECENT_EXERCISES);
+        const listed = new Set(recent.map((o) => o.id));
         return {
-          first: options
-            .filter((o) => records?.has(o.id))
-            .map(withRecord)
-            .sort((a, b) => (b.record?.lastAt ?? '').localeCompare(a.record?.lastAt ?? '')),
+          first: recent,
           title: t('search.recent'),
-          rest: options.filter((o) => !records?.has(o.id)),
+          rest: options.filter((o) => !listed.has(o.id)).map(withRecord),
         };
       }}
       renderRow={(item) => {
