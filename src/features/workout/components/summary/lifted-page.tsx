@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { useEffect, useId, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -74,12 +75,16 @@ export function LiftedPage({ kg, object, units, bottomInset }: LiftedPageProps) 
         />
       </StoryTitle>
       <View
-        className="flex-1 items-center justify-center"
+        className="flex-1 items-center justify-center py-6"
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
       >
         <Glow />
-        <Text style={{ fontSize: 140, lineHeight: 170 }}>{object.emoji}</Text>
+        {object.image ? (
+          <Image source={object.image} contentFit="contain" style={{ width: '100%', flex: 1 }} />
+        ) : (
+          <Text style={{ fontSize: 140, lineHeight: 170 }}>{object.emoji}</Text>
+        )}
       </View>
       <View
         className="flex-row items-baseline gap-2.5"
