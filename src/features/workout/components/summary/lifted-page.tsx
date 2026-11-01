@@ -80,11 +80,7 @@ export function LiftedPage({ kg, object, units, bottomInset }: LiftedPageProps) 
         importantForAccessibility="no-hide-descendants"
       >
         <Glow />
-        {object.image ? (
-          <Image source={object.image} contentFit="contain" style={{ width: '100%', flex: 1 }} />
-        ) : (
-          <Text style={{ fontSize: 140, lineHeight: 170 }}>{object.emoji}</Text>
-        )}
+        <Image source={object.image} contentFit="contain" style={{ width: '100%', flex: 1 }} />
       </View>
       <View
         className="flex-row items-baseline gap-2.5"
