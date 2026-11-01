@@ -30,9 +30,9 @@ export function StoryHeader({ name, page, pages, progress, onClose }: StoryHeade
         {Array.from({ length: pages }, (_, i) => (
           <View key={i} className="h-0.75 flex-1 overflow-hidden rounded-full bg-track">
             {i === page ? (
-              <Animated.View className="h-full bg-fg" style={filling} />
+              <Animated.View className="h-full rounded-full bg-fg" style={filling} />
             ) : (
-              <View className={cn('h-full bg-fg', i < page ? 'w-full' : 'w-0')} />
+              <View className={cn('h-full rounded-full bg-fg', i < page ? 'w-full' : 'w-0')} />
             )}
           </View>
         ))}
