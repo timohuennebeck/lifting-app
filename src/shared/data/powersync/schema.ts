@@ -191,6 +191,11 @@ export const tickets = sqliteTable(
     created_at: text().notNull(),
     updated_at: text().notNull(),
     closed_at: text(),
+    // Where it was sent from, for the support desk; null on tickets from older app versions.
+    platform: text(),
+    os_version: text(),
+    device_model: text(),
+    app_version: text(),
   },
   (t) => [index('updated').on(t.updated_at)],
 );

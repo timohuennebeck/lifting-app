@@ -106,7 +106,13 @@ AI agents: see `AGENTS.md`.
 
 ## Support tickets (team side)
 
-Users write `tickets` and `ticket_messages` from the app. The team works with the service role:
+Users write `tickets` and `ticket_messages` from the app; each ticket records the platform, OS version,
+device model and app version it came from. The team answers in the support desk
+([lifting-app-customer-support](https://github.com/timohuennebeck/lifting-app-customer-support)), signed in as
+one account whose `app_metadata.role` is `'support'` (set it with the service role, e.g. in the dashboard's SQL
+editor: `update auth.users set raw_app_meta_data = raw_app_meta_data || '{"role":"support"}' where email = …`;
+it takes effect at the next sign-in). That account reads every ticket through the `support_inbox` view and
+`support_customers()` and keeps what it has read in `support_ticket_reads`. It and the service role write:
 
 - **Reply:** insert into `ticket_messages` with `author = 'team'`, the ticket owner's `user_id` and the
   text in `content` (up to 5,000 characters), written in the owner's `profiles.language`. Screenshots in

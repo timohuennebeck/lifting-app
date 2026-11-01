@@ -1,4 +1,7 @@
 import { eq } from 'drizzle-orm';
+import Constants from 'expo-constants';
+import * as Device from 'expo-device';
+import { Platform } from 'react-native';
 
 import { newId, nowIso } from '@/shared/data/json';
 import { drizzle, type Executor } from '@/shared/data/powersync/database';
@@ -33,6 +36,16 @@ async function insertMessage(executor: Executor, message: NewMessage, createdAt:
   });
 }
 
+/** The phone and app version a ticket is sent from, shown to the support desk. */
+function deviceInfo() {
+  return {
+    platform: Platform.OS === 'ios' || Platform.OS === 'android' ? Platform.OS : null,
+    os_version: Device.osVersion?.slice(0, 40) ?? null,
+    device_model: Device.modelName?.slice(0, 80) ?? null,
+    app_version: Constants.expoConfig?.version?.slice(0, 40) ?? null,
+  };
+}
+
 /**
  * Creates the ticket and its first message in one local transaction; PowerSync uploads both.
  * The number is left out on purpose: the server assigns it and syncs it back.
@@ -49,6 +62,7 @@ export async function createTicket(input: NewTicket) {
       subject: firstLine(input.content),
       created_at: now,
       updated_at: now,
+      ...deviceInfo(),
     });
     await insertMessage(tx, input, now);
   });
