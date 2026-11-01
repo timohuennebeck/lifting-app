@@ -27,7 +27,7 @@ import { TrainedPage } from './trained-page';
 type StoryPage = 'lifted' | 'trained' | 'records';
 
 /** How long each page shows before the next comes; the exercises get longer. */
-const PAGE_MS: Record<StoryPage, number> = { lifted: 6000, trained: 10000, records: 7000 };
+const PAGE_MS: Record<StoryPage, number> = { lifted: 8000, trained: 10000, records: 8000 };
 /** A tap on this share of the width from the left goes back, elsewhere on. */
 const BACK_ZONE = 0.3;
 /** A horizontal swipe this far turns the page. */
