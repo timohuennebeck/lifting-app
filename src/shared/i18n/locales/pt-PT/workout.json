@@ -73,7 +73,31 @@
     "previously": "antes {{value}}",
     "more": "Mais",
     "delete": "Eliminar treino",
-    "deleteHint": "Elimina {{name}} de {{date}} com todas as séries. Não é possível desfazer."
+    "deleteHint": "Elimina {{name}} de {{date}} com todas as séries. Não é possível desfazer.",
+    "story": {
+      "next": "Continuar",
+      "page": "Página {{current}} de {{total}}",
+      "liftedToday": "Hoje levantaste",
+      "moved": "{{unit}} movidos",
+      "objects": {
+        "washingMachine": "uma <accent>máquina de lavar</accent>.",
+        "motorbike": "uma <accent>mota</accent>.",
+        "grandPiano": "um <accent>piano de cauda</accent>.",
+        "smallCar": "um <accent>carro pequeno</accent>.",
+        "rhino": "um <accent>rinoceronte</accent>.",
+        "elephant": "um <accent>elefante</accent>.",
+        "tRex": "um <accent>T-Rex</accent>.",
+        "bus": "um <accent>autocarro</accent>.",
+        "fireTruck": "um <accent>camião de bombeiros</accent>.",
+        "humpbackWhale": "uma <accent>baleia-jubarte</accent>."
+      },
+      "trainedFor": "{{minutes}} min de treino",
+      "groupsOne": "<accent>{{first}}</accent>.",
+      "groupsTwo": "<accent>{{first}}</accent> e {{second}}.",
+      "recordsOverline": "Novo recorde pessoal",
+      "recordsTitle_one": "<accent>{{count}} recorde</accent>\nbatido.",
+      "recordsTitle_other": "<accent>{{count}} recordes</accent>\nbatidos."
+    }
   },
   "builder": {
     "title": "Treino vazio"

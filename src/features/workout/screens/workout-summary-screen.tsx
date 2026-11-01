@@ -20,21 +20,31 @@ import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 import { DoneExerciseCard } from '../components/done-exercise-card';
-import { FinishConfetti } from '../components/finish-confetti';
 import { RecordCard } from '../components/record-card';
+import { WorkoutStory } from '../components/summary/workout-story';
 import { WorkoutOptionsSheet } from '../components/workout-options-sheet';
 import { useWorkout } from '../data/workout-detail';
 import { discardWorkout } from '../data/workout-mutations';
 import { useWorkoutRecords } from '../data/workout-records';
 
 /**
- * Workout done: its name, time and records, the muscles it worked, the exercises with the sets
- * that were done, then each new record. Just finished (`?finished=1`) it fades in with confetti
- * and an X back to the app; opened from the history it slides in and goes back like any page.
- * Its "⋯" deletes it.
+ * A finished workout. Just finished (`?finished=1`) it is the story (`WorkoutStory`); opened from
+ * the history, a page that goes back like any other.
  */
 export function WorkoutSummaryScreen() {
   const { id, finished } = useLocalSearchParams<{ id: string; finished?: string }>();
+  return finished === '1' ? <WorkoutStory workoutId={id} /> : <WorkoutSummaryPage id={id} />;
+}
+
+interface WorkoutSummaryPageProps {
+  id: string;
+}
+
+/**
+ * A workout from the history: its name, time and records, the muscles it worked, the exercises
+ * with the sets that were done, then each new record. Its "⋯" deletes it.
+ */
+function WorkoutSummaryPage({ id }: WorkoutSummaryPageProps) {
   const { t } = useTranslation(['workout', 'common', 'training']);
   const insets = useSafeAreaInsets();
   const units = useUnits();
@@ -42,12 +52,7 @@ export function WorkoutSummaryScreen() {
   const { data: records = [] } = useWorkoutRecords(id);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const justFinished = finished === '1';
-  const close = () => {
-    if (!justFinished) router.back();
-    else if (router.canDismiss()) router.dismissAll();
-    else router.replace('/');
-  };
+  const close = () => router.back();
 
   const name = workout?.name ?? '';
   const minutes = workout ? minutesBetween(workout.startedAt, workout.finishedAt) : 0;
@@ -77,7 +82,7 @@ export function WorkoutSummaryScreen() {
       <Screen
         header={
           <ScreenHeader
-            icon={justFinished ? 'close' : 'chevron-left'}
+            icon="chevron-left"
             onBack={close}
             title={name}
             action={
@@ -163,8 +168,6 @@ export function WorkoutSummaryScreen() {
         date={date}
         onDelete={remove}
       />
-      {/* Over the header too, so it covers the whole screen. */}
-      {justFinished ? <FinishConfetti /> : null}
     </View>
   );
 }

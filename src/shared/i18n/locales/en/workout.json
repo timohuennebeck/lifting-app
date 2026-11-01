@@ -73,7 +73,31 @@
     "previously": "previously {{value}}",
     "more": "More",
     "delete": "Delete workout",
-    "deleteHint": "Deletes {{name}} from {{date}} with all its sets. This can't be undone."
+    "deleteHint": "Deletes {{name}} from {{date}} with all its sets. This can't be undone.",
+    "story": {
+      "next": "Continue",
+      "page": "Page {{current}} of {{total}}",
+      "liftedToday": "Today you lifted",
+      "moved": "{{unit}} moved",
+      "objects": {
+        "washingMachine": "a <accent>washing machine</accent>.",
+        "motorbike": "a <accent>motorbike</accent>.",
+        "grandPiano": "a <accent>grand piano</accent>.",
+        "smallCar": "a <accent>small car</accent>.",
+        "rhino": "a <accent>rhino</accent>.",
+        "elephant": "an <accent>elephant</accent>.",
+        "tRex": "a <accent>T. rex</accent>.",
+        "bus": "a <accent>city bus</accent>.",
+        "fireTruck": "a <accent>fire truck</accent>.",
+        "humpbackWhale": "a <accent>humpback whale</accent>."
+      },
+      "trainedFor": "Trained for {{minutes}} min",
+      "groupsOne": "<accent>{{first}}</accent>.",
+      "groupsTwo": "<accent>{{first}}</accent> and {{second}}.",
+      "recordsOverline": "New personal best",
+      "recordsTitle_one": "<accent>{{count}} record</accent>\nbroken.",
+      "recordsTitle_other": "<accent>{{count}} records</accent>\nbroken."
+    }
   },
   "builder": {
     "title": "Empty workout"

@@ -266,15 +266,22 @@ function toExerciseHistory(rows: RowOf<typeof exerciseHistoryQuery>[]): Exercise
       topScores.set(r.workout_entries_id, r.score);
     }
   }
-  // All rows are sets of the same exercise; the weight on an assisted machine isn't lifted.
-  const lifted = !isAssisted(rows[0]?.exercise_id ?? '');
+  // All rows are sets of the same exercise.
+  const exerciseId = rows[0]?.exercise_id ?? '';
   return [...map.values()].map((entry) => ({
     ...entry,
-    volumeKg: lifted
-      ? entry.sets.reduce((sum, s) => sum + (s.weightKg ?? 0) * (s.reps ?? 0), 0)
-      : 0,
+    volumeKg: volumeKg(exerciseId, entry.sets),
     hasPr: entry.sets.some((s) => s.isPr),
   }));
+}
+
+/**
+ * Weight moved by sets of one exercise: weight × reps. Bodyweight exercises count their added
+ * weight; the weight on an assisted machine isn't lifted, and timed sets have no reps.
+ */
+export function volumeKg(exerciseId: string, sets: Pick<SetValues, 'weightKg' | 'reps'>[]) {
+  if (isAssisted(exerciseId)) return 0;
+  return sets.reduce((sum, s) => sum + (s.weightKg ?? 0) * (s.reps ?? 0), 0);
 }
 
 /** Completed sets of one exercise from finished workouts, newest first. */

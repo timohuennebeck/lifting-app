@@ -73,7 +73,31 @@
     "previously": "이전 {{value}}",
     "more": "더 보기",
     "delete": "운동 삭제",
-    "deleteHint": "{{date}}의 {{name}} 운동과 모든 세트를 삭제해요. 되돌릴 수 없어요."
+    "deleteHint": "{{date}}의 {{name}} 운동과 모든 세트를 삭제해요. 되돌릴 수 없어요.",
+    "story": {
+      "next": "계속",
+      "page": "{{total}}페이지 중 {{current}}페이지",
+      "liftedToday": "오늘 들어 올린 무게",
+      "moved": "{{unit}} 들어 올림",
+      "objects": {
+        "washingMachine": "<accent>세탁기</accent>\n한 대.",
+        "motorbike": "<accent>오토바이</accent>\n한 대.",
+        "grandPiano": "<accent>그랜드 피아노</accent>\n한 대.",
+        "smallCar": "<accent>소형차</accent>\n한 대.",
+        "rhino": "<accent>코뿔소</accent>\n한 마리.",
+        "elephant": "<accent>코끼리</accent>\n한 마리.",
+        "tRex": "<accent>티라노사우루스</accent>\n한 마리.",
+        "bus": "<accent>시내버스</accent>\n한 대.",
+        "fireTruck": "<accent>소방차</accent>\n한 대.",
+        "humpbackWhale": "<accent>혹등고래</accent>\n한 마리."
+      },
+      "trainedFor": "{{minutes}}분 운동",
+      "groupsOne": "<accent>{{first}}</accent>.",
+      "groupsTwo": "<accent>{{first}}</accent> · {{second}}.",
+      "recordsOverline": "새로운 최고 기록",
+      "recordsTitle_one": "<accent>기록 {{count}}개</accent>\n경신.",
+      "recordsTitle_other": "<accent>기록 {{count}}개</accent>\n경신."
+    }
   },
   "builder": {
     "title": "빈 운동"

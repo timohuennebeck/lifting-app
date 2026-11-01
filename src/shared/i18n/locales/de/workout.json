@@ -73,7 +73,31 @@
     "previously": "vorher {{value}}",
     "more": "Mehr",
     "delete": "Training löschen",
-    "deleteHint": "Löscht {{name}} vom {{date}} mit allen Sätzen. Das lässt sich nicht rückgängig machen."
+    "deleteHint": "Löscht {{name}} vom {{date}} mit allen Sätzen. Das lässt sich nicht rückgängig machen.",
+    "story": {
+      "next": "Fortfahren",
+      "page": "Seite {{current}} von {{total}}",
+      "liftedToday": "Du hast heute",
+      "moved": "{{unit}} bewegt",
+      "objects": {
+        "washingMachine": "eine\n<accent>Waschmaschine</accent>\ngehoben.",
+        "motorbike": "ein\n<accent>Motorrad</accent>\ngehoben.",
+        "grandPiano": "einen\n<accent>Konzertflügel</accent>\ngehoben.",
+        "smallCar": "einen\n<accent>Kleinwagen</accent>\ngehoben.",
+        "rhino": "ein\n<accent>Nashorn</accent>\ngehoben.",
+        "elephant": "einen\n<accent>Elefanten</accent>\ngehoben.",
+        "tRex": "einen\n<accent>T-Rex</accent>\ngehoben.",
+        "bus": "einen\n<accent>Linienbus</accent>\ngehoben.",
+        "fireTruck": "ein\n<accent>Feuerwehrauto</accent>\ngehoben.",
+        "humpbackWhale": "einen\n<accent>Buckelwal</accent>\ngehoben."
+      },
+      "trainedFor": "{{minutes}} Min trainiert",
+      "groupsOne": "<accent>{{first}}</accent>.",
+      "groupsTwo": "<accent>{{first}}</accent> und {{second}}.",
+      "recordsOverline": "Neue Bestleistung",
+      "recordsTitle_one": "<accent>{{count}} Rekord</accent>\ngebrochen.",
+      "recordsTitle_other": "<accent>{{count}} Rekorde</accent>\ngebrochen."
+    }
   },
   "builder": {
     "title": "Leeres Training"

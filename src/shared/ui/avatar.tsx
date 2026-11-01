@@ -12,11 +12,13 @@ export interface AvatarProps {
   /** Cache key of the photo (its storage path), so a new signed URL isn't a new download. */
   cacheKey?: string;
   size?: number;
+  /** Neon with dark initials and no ring, e.g. a workout's in the finished story. */
+  accent?: boolean;
   className?: string;
 }
 
 /** Profile photo or initials avatar with the design's dark ring. */
-export function Avatar({ name, uri, cacheKey, size = 42, className }: AvatarProps) {
+export function Avatar({ name, uri, cacheKey, size = 42, accent, className }: AvatarProps) {
   const initials = name
     .split(/\s+/)
     .filter(Boolean)
@@ -28,12 +30,17 @@ export function Avatar({ name, uri, cacheKey, size = 42, className }: AvatarProp
     <View
       className={cn(
         'items-center justify-center overflow-hidden rounded-full border-2 border-line bg-elevated',
+        accent && 'border-0 bg-accent',
         className,
       )}
       style={{ width: size, height: size }}
     >
       {/* The line height follows the size; a fixed one clipped large initials. */}
-      <Text variant="label" style={{ fontSize, lineHeight: Math.round(fontSize * 1.25) }}>
+      <Text
+        variant="label"
+        tone={accent ? 'onAccent' : 'default'}
+        style={{ fontSize, lineHeight: Math.round(fontSize * 1.25) }}
+      >
         {initials || '·'}
       </Text>
       {uri ? (
