@@ -21,6 +21,7 @@ import { useExerciseId } from '../components/exercise-layout';
 import { HistoryChart, type HistoryMetric } from '../components/history-chart';
 import { HistorySessionRow } from '../components/history-session-row';
 import { monthSections } from '../lib/month-sections';
+import { sessionOneRepMaxKg } from '../lib/one-rep-max';
 
 /** "Last N days" choices of the chart. */
 const DAY_RANGES = [7, 14, 30, 90] as const;
@@ -71,10 +72,20 @@ export function ExerciseHistoryPage() {
       : metric === 'topSeconds'
         ? formatSeconds(value)
         : t('common:units.reps', { count: value });
-  const chartData = sessions
-    .filter((s) => Date.parse(s.startedAt) >= since)
-    .reverse()
-    .map((s) => ({ time: Date.parse(s.startedAt), value: chartValue(s) }));
+  const inRange = sessions.filter((s) => Date.parse(s.startedAt) >= since).reverse();
+  const chartData = inRange.map((s) => ({ time: Date.parse(s.startedAt), value: chartValue(s) }));
+  // The estimated 1RM as a second line, for lifts counted in weight and reps; a bodyweight
+  // exercise's would include the body and dwarf the added weight charted.
+  const withOneRepMax =
+    metric === 'topWeight' && !isBodyweight(exerciseId) && hasMeasure(exerciseId, 'reps');
+  const oneRepMaxData = withOneRepMax
+    ? inRange.flatMap((s) => {
+        const kg = sessionOneRepMaxKg(s.sets);
+        return kg == null
+          ? []
+          : [{ time: Date.parse(s.startedAt), value: toDisplayWeight(kg, units) }];
+      })
+    : undefined;
 
   return (
     <SectionList
@@ -89,7 +100,12 @@ export function ExerciseHistoryPage() {
       ListHeaderComponent={
         sessions.length ? (
           <View className="gap-3 px-2 pb-3">
-            <HistoryChart data={chartData} metric={metric} format={formatValue} />
+            <HistoryChart
+              data={chartData}
+              metric={metric}
+              format={formatValue}
+              oneRepMax={oneRepMaxData}
+            />
             <SegmentedControl
               className="bg-surface"
               value={range}

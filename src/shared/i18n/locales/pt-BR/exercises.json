@@ -60,6 +60,8 @@
     "emptyRange": "Sem treinos neste período.",
     "days_one": "{{count}} D",
     "days_other": "{{count}} D",
-    "empty": "Ainda sem treinos. Termine um treino com este exercício para ver seu progresso."
+    "empty": "Ainda sem treinos. Termine um treino com este exercício para ver seu progresso.",
+    "weight": "Peso",
+    "oneRepMax": "1RM"
   }
 }

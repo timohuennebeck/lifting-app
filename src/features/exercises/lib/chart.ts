@@ -13,14 +13,39 @@ const PAD = 10;
 /** Room left and right of the first and last session, so their dot (r 5 + stroke) shows whole. */
 const X_PAD = 7;
 
-/** Maps time/value pairs (oldest first) onto a width × height box. */
-export function buildLineChart(data: ChartInput[], width: number, height: number) {
-  if (!data.length || width <= 0) return { points: [] as ChartPoint[], line: '', area: '' };
-  const t0 = data[0].time;
-  const t1 = data[data.length - 1].time;
-  const values = data.map((d) => d.value);
-  const min = Math.min(...values);
-  const max = Math.max(...values);
+/** The times and values a chart spans; several lines on one chart share them. */
+export interface ChartBounds {
+  t0: number;
+  t1: number;
+  min: number;
+  max: number;
+}
+
+/** What `series` (each oldest first) span together. */
+export function chartBounds(...series: ChartInput[][]): ChartBounds | undefined {
+  const all = series.flat();
+  if (!all.length) return undefined;
+  const times = all.map((d) => d.time);
+  const values = all.map((d) => d.value);
+  return {
+    t0: Math.min(...times),
+    t1: Math.max(...times),
+    min: Math.min(...values),
+    max: Math.max(...values),
+  };
+}
+
+/** Maps time/value pairs (oldest first) onto a width × height box, by default their own span. */
+export function buildLineChart(
+  data: ChartInput[],
+  width: number,
+  height: number,
+  bounds = chartBounds(data),
+) {
+  if (!data.length || width <= 0 || !bounds) {
+    return { points: [] as ChartPoint[], line: '', area: '' };
+  }
+  const { t0, t1, min, max } = bounds;
   const points = data.map((d) => ({
     ...d,
     x: t1 === t0 ? width - X_PAD : X_PAD + ((d.time - t0) / (t1 - t0)) * (width - 2 * X_PAD),

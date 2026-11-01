@@ -60,6 +60,8 @@
     "emptyRange": "No sessions in this period.",
     "days_one": "{{count}} D",
     "days_other": "{{count}} D",
-    "empty": "No sessions yet. Finish a workout with this exercise to see your progress."
+    "empty": "No sessions yet. Finish a workout with this exercise to see your progress.",
+    "weight": "Weight",
+    "oneRepMax": "1RM"
   }
 }
