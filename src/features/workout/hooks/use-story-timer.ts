@@ -1,19 +1,19 @@
 import { useEffect, useEffectEvent, useRef } from 'react';
-import { cancelAnimation, Easing, useSharedValue, withTiming } from 'react-native-reanimated';
+import { cancelAnimation, Easing, type SharedValue, withTiming } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
 /**
- * The shown story page's progress, 0 to 1 over `durationMs`, then `onEnd`. Every new `page`,
- * also one shown before, starts from 0; while `running` is false it holds where it is and goes
- * on from there. The time run is kept here, so the bar is only drawn from it, never read.
+ * Runs `progress` for the shown story page, 0 to 1 over `durationMs`, then `onEnd`. Every new
+ * `page`, also one shown before, starts from 0; while `running` is false it holds where it is
+ * and goes on from there. The time run is kept here, so the bar is only drawn from it, never read.
  */
 export function useStoryTimer(
+  progress: SharedValue<number>,
   page: string,
   durationMs: number,
   running: boolean,
   onEnd: () => void,
 ) {
-  const progress = useSharedValue(0);
   const end = useEffectEvent(onEnd);
   const elapsed = useRef({ page, ms: 0 });
 
@@ -38,6 +38,4 @@ export function useStoryTimer(
       elapsed.current.ms = Math.min(durationMs, done + Date.now() - startedAt);
     };
   }, [page, running, durationMs, progress]);
-
-  return progress;
 }

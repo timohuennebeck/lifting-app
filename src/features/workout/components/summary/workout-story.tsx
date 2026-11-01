@@ -2,7 +2,7 @@ import { router, useIsFocused } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWindowDimensions, View } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, { FadeIn, useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useUnits } from '@/shared/data/profile';
@@ -27,7 +27,7 @@ import { TrainedPage } from './trained-page';
 type StoryPage = 'lifted' | 'trained' | 'records';
 
 /** How long each page shows before the next comes; the exercises get longer. */
-const PAGE_MS: Record<StoryPage, number> = { lifted: 8000, trained: 10000, records: 8000 };
+const PAGE_MS: Record<StoryPage, number> = { lifted: 5000, trained: 8000, records: 5000 };
 /** A tap on this share of the width from the left goes back, elsewhere on. */
 const BACK_ZONE = 0.3;
 
@@ -55,6 +55,8 @@ export function WorkoutStory({ workoutId }: WorkoutStoryProps) {
   // A finger held on the page, and the page scrolled to read (it then waits for a tap).
   const [held, setHeld] = useState(false);
   const [read, setRead] = useState<StoryPage | null>(null);
+  // How far the shown page is through its time, 0–1 (its bar).
+  const progress = useSharedValue(0);
 
   const close = () => {
     if (router.canDismiss()) router.dismissAll();
@@ -82,10 +84,12 @@ export function WorkoutStory({ workoutId }: WorkoutStoryProps) {
   const go = (to: number, tick = true) => {
     if (to < 0 || to >= pages.length) return;
     if (tick) haptics.select();
+    // Empty before the next page's bar is drawn, so it never shows the last page's for a frame.
+    progress.set(0);
     setPage(to);
   };
   const running = !!workout && !!records && focused && !screenReader && !held && read !== shown;
-  const progress = useStoryTimer(shown, PAGE_MS[shown], running, () => go(index + 1, false));
+  useStoryTimer(progress, shown, PAGE_MS[shown], running, () => go(index + 1, false));
   useHardwareBack(() => go(index - 1), index > 0);
 
   // The pages come with both queries, so the count and the first page don't change under it.
