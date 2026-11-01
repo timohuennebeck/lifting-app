@@ -10,6 +10,7 @@ import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 import type { LiftObject } from '../../lib/lift-comparison';
+import { type StoryTaps, StoryTapArea } from './story-tap-area';
 import { StoryTitle, storyAccent } from './story-title';
 
 const COUNT_MS = 1200;
@@ -57,43 +58,46 @@ export interface LiftedPageProps {
   object: LiftObject;
   units: UnitSystem;
   bottomInset: number;
+  taps: StoryTaps;
 }
 
 /** Story page 1: the weight the workout moved, as the object it outweighs, and counting up. */
-export function LiftedPage({ kg, object, units, bottomInset }: LiftedPageProps) {
+export function LiftedPage({ kg, object, units, bottomInset, taps }: LiftedPageProps) {
   const { t } = useTranslation('workout');
   const total = units === 'imperial' ? kgToLb(kg) : kg;
   const shown = useCountUp(total);
   const moved = t('summary.story.moved', { unit: weightUnit(units) });
   return (
-    <View className="flex-1 px-5 pt-8" style={{ paddingBottom: bottomInset }}>
-      <StoryTitle overline={t('summary.story.liftedToday')}>
-        <Trans
-          t={t}
-          i18nKey={`summary.story.objects.${object.id}`}
-          components={{ accent: storyAccent }}
-        />
-      </StoryTitle>
-      <View
-        className="flex-1 items-center justify-center py-6"
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-      >
-        <Glow />
-        <Image source={object.image} contentFit="contain" style={{ width: '100%', flex: 1 }} />
+    <StoryTapArea taps={taps}>
+      <View className="flex-1 px-5 pt-8" style={{ paddingBottom: bottomInset }}>
+        <StoryTitle overline={t('summary.story.liftedToday')}>
+          <Trans
+            t={t}
+            i18nKey={`summary.story.objects.${object.id}`}
+            components={{ accent: storyAccent }}
+          />
+        </StoryTitle>
+        <View
+          className="flex-1 items-center justify-center py-6"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        >
+          <Glow />
+          <Image source={object.image} contentFit="contain" style={{ width: '100%', flex: 1 }} />
+        </View>
+        <View
+          className="flex-row items-baseline gap-2.5"
+          accessible
+          accessibilityLabel={`${formatNumber(total, 0)} ${moved}`}
+        >
+          <Text className="font-inter-semibold text-[56px] leading-16 tabular-nums">
+            {formatNumber(shown, 0)}
+          </Text>
+          <Text tone="muted" className="font-inter-semibold text-xl leading-6">
+            {moved}
+          </Text>
+        </View>
       </View>
-      <View
-        className="flex-row items-baseline gap-2.5"
-        accessible
-        accessibilityLabel={`${formatNumber(total, 0)} ${moved}`}
-      >
-        <Text className="font-inter-semibold text-[56px] leading-16 tabular-nums">
-          {formatNumber(shown, 0)}
-        </Text>
-        <Text tone="muted" className="font-inter-semibold text-xl leading-6">
-          {moved}
-        </Text>
-      </View>
-    </View>
+    </StoryTapArea>
   );
 }

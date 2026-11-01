@@ -1,7 +1,7 @@
 import { router, useIsFocused } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, useWindowDimensions, View } from 'react-native';
+import { useWindowDimensions, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -21,6 +21,7 @@ import { FinishConfetti } from '../finish-confetti';
 import { LiftedPage } from './lifted-page';
 import { RecordsPage } from './records-page';
 import { StoryHeader } from './story-header';
+import type { StoryTaps } from './story-tap-area';
 import { TrainedPage } from './trained-page';
 
 type StoryPage = 'lifted' | 'trained' | 'records';
@@ -91,6 +92,12 @@ export function WorkoutStory({ workoutId }: WorkoutStoryProps) {
   if (!workout || !records) return <View className="flex-1 bg-bg" />;
   const bottomInset = 130 + insets.bottom;
   const liftedObject = shown === 'lifted' ? object : null;
+  const taps: StoryTaps = {
+    delayLongPress: 250,
+    onLongPress: () => setHeld(true),
+    onPressOut: () => setHeld(false),
+    onPress: (e) => go(e.nativeEvent.pageX < width * BACK_ZONE ? index - 1 : index + 1),
+  };
 
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
@@ -102,36 +109,34 @@ export function WorkoutStory({ workoutId }: WorkoutStoryProps) {
         onClose={close}
       />
       <Animated.View key={shown} entering={FadeIn.duration(250)} className="flex-1">
-        {/* A tap on one of the page's own buttons (an exercise, "+N") doesn't turn it. */}
-        <Pressable
-          accessible={false}
-          className="flex-1"
-          delayLongPress={250}
-          onLongPress={() => setHeld(true)}
-          onPressOut={() => setHeld(false)}
-          onPress={(e) => go(e.nativeEvent.pageX < width * BACK_ZONE ? index - 1 : index + 1)}
-        >
-          {liftedObject ? (
-            <LiftedPage kg={lifted} object={liftedObject} units={units} bottomInset={bottomInset} />
-          ) : null}
-          {shown === 'trained' ? (
-            <TrainedPage
-              workout={workout}
-              records={records}
-              units={units}
-              bottomInset={bottomInset}
-              onRead={() => setRead('trained')}
-            />
-          ) : null}
-          {shown === 'records' ? (
-            <RecordsPage
-              records={records}
-              units={units}
-              bottomInset={bottomInset}
-              onRead={() => setRead('records')}
-            />
-          ) : null}
-        </Pressable>
+        {liftedObject ? (
+          <LiftedPage
+            kg={lifted}
+            object={liftedObject}
+            units={units}
+            bottomInset={bottomInset}
+            taps={taps}
+          />
+        ) : null}
+        {shown === 'trained' ? (
+          <TrainedPage
+            workout={workout}
+            records={records}
+            units={units}
+            bottomInset={bottomInset}
+            onRead={() => setRead('trained')}
+            taps={taps}
+          />
+        ) : null}
+        {shown === 'records' ? (
+          <RecordsPage
+            records={records}
+            units={units}
+            bottomInset={bottomInset}
+            onRead={() => setRead('records')}
+            taps={taps}
+          />
+        ) : null}
       </Animated.View>
       <BottomFade>
         <Button
