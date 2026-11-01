@@ -11,15 +11,18 @@ export interface RecordsPageProps {
   records: WorkoutRecord[];
   units: UnitSystem;
   bottomInset: number;
+  /** Scrolling started: the user is reading. */
+  onRead: () => void;
 }
 
 /** Story page 3, only after new records: how many, then each with the best set before it. */
-export function RecordsPage({ records, units, bottomInset }: RecordsPageProps) {
+export function RecordsPage({ records, units, bottomInset, onRead }: RecordsPageProps) {
   const { t } = useTranslation('workout');
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: bottomInset }}
+      onScrollBeginDrag={onRead}
     >
       <View className="px-5 pt-8">
         <StoryTitle overline={t('summary.story.recordsOverline')}>

@@ -29,13 +29,15 @@ export interface TrainedPageProps {
   records: WorkoutRecord[];
   units: UnitSystem;
   bottomInset: number;
+  /** Scrolling started: the user is reading. */
+  onRead: () => void;
 }
 
 /**
  * Story page 2: how long the workout took and its two main muscle groups, the muscle map and
  * split, then each exercise with the sets that were done. Scrolls.
  */
-export function TrainedPage({ workout, records, units, bottomInset }: TrainedPageProps) {
+export function TrainedPage({ workout, records, units, bottomInset, onRead }: TrainedPageProps) {
   const { t } = useTranslation(['workout', 'training', 'exercises']);
   const minutes = minutesBetween(workout.startedAt, workout.finishedAt);
   // Only the sets that were done count.
@@ -53,6 +55,7 @@ export function TrainedPage({ workout, records, units, bottomInset }: TrainedPag
     <ScrollView
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: bottomInset }}
+      onScrollBeginDrag={onRead}
     >
       <View className="px-5 pt-8">
         <StoryTitle overline={t('summary.story.trainedFor', { minutes: formatNumber(minutes, 0) })}>
