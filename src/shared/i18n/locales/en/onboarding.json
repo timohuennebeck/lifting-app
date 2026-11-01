@@ -52,7 +52,9 @@
       "shortcut": "Swipe to <b>Shortcut</b>",
       "pick": "Choose <b>Loqqa: Log weight</b>"
     },
-    "later": "Later"
+    "later": "Later",
+    "done": "Done",
+    "openAgain": "Open Settings again"
   },
   "experience": {
     "title": "HOW EXPERIENCED\nARE YOU?",

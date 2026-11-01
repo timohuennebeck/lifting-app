@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Linking, View } from 'react-native';
 
@@ -24,11 +25,12 @@ function openSettings() {
 
 /**
  * Only on iPhones with an Action button (HAS_ACTION_BUTTON): how to put the "Log weight" shortcut
- * on it, which opens today's weight entry. Opening Settings goes on with onboarding as well, so
- * it continues where the user comes back to.
+ * on it, which opens today's weight entry. Once Settings was opened the main button says "Done"
+ * and goes on, so the steps are still there to look at; Settings can be opened again below it.
  */
 export function ActionButtonScreen() {
   const { t } = useTranslation(['onboarding', 'common']);
+  const [opened, setOpened] = useState(false);
 
   return (
     <StepScreen
@@ -39,13 +41,18 @@ export function ActionButtonScreen() {
       footer={
         <View className="gap-1">
           <Button
-            label={t('common:actions.openSettings')}
+            label={opened ? t('actionButton.done') : t('common:actions.openSettings')}
             onPress={() => {
-              next();
+              if (opened) return next();
+              setOpened(true);
               openSettings();
             }}
           />
-          <TextButton label={t('actionButton.later')} tone="secondary" onPress={next} />
+          <TextButton
+            label={opened ? t('actionButton.openAgain') : t('actionButton.later')}
+            tone="secondary"
+            onPress={opened ? openSettings : next}
+          />
         </View>
       }
     >

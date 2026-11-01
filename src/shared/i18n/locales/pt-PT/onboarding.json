@@ -52,7 +52,9 @@
       "shortcut": "Desliza até <b>Atalho</b>",
       "pick": "Escolhe <b>Loqqa: Registar peso</b>"
     },
-    "later": "Mais tarde"
+    "later": "Mais tarde",
+    "done": "Feito",
+    "openAgain": "Abrir definições novamente"
   },
   "experience": {
     "title": "QUE EXPERIÊNCIA\nTENS?",

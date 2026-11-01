@@ -52,7 +52,9 @@
       "shortcut": "Wische zu <b>Kurzbefehl</b>",
       "pick": "Wähle <b>Loqqa: Gewicht eintragen</b>"
     },
-    "later": "Später"
+    "later": "Später",
+    "done": "Erledigt",
+    "openAgain": "Einstellungen erneut öffnen"
   },
   "experience": {
     "title": "WIE ERFAHREN\nBIST DU?",
