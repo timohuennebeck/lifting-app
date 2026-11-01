@@ -3,7 +3,9 @@ import { View } from 'react-native';
 
 import { Text } from '@/shared/ui/text';
 
-const HEADLINE = 'text-[46px] leading-13 tracking-[-0.5px]';
+// Inter needs about 1.21 × its size per line: below that iOS clips what rises above the capitals,
+// such as the dots of "RÜCKEN".
+const HEADLINE = 'text-[46px] leading-14 tracking-[-0.5px]';
 
 /** The neon words of a story headline, for `Trans`'s `<accent>`. */
 export const storyAccent = <Text variant="title" tone="accent" className={HEADLINE} />;
