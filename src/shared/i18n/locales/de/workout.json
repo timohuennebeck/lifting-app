@@ -96,8 +96,7 @@
         "motorYacht": "eine\n<accent>Motoryacht</accent>\ngehoben.",
         "container": "einen vollen\n<accent>Container</accent>\ngehoben.",
         "passengerJet": "einen\n<accent>Passagierjet</accent>\ngehoben.",
-        "spaceShuttle": "ein\n<accent>Space Shuttle</accent>\ngehoben.",
-        "statueOfLiberty": "die\n<accent>Freiheitsstatue</accent>\ngehoben."
+        "spaceShuttle": "ein\n<accent>Space Shuttle</accent>\ngehoben."
       },
       "trainedFor": "{{minutes}} Min trainiert",
       "groupsOne": "<accent>{{first}}</accent>.",

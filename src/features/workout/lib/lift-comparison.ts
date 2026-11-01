@@ -38,12 +38,6 @@ export const LIFT_OBJECTS = [
     kg: 78000,
     image: require('@/assets/images/lift-objects/space-shuttle.webp'),
   },
-  // The statue alone (copper skin and steel frame), without its pedestal.
-  {
-    id: 'statueOfLiberty',
-    kg: 200000,
-    image: require('@/assets/images/lift-objects/statue-of-liberty.webp'),
-  },
 ] as const;
 
 export type LiftObject = (typeof LIFT_OBJECTS)[number];
