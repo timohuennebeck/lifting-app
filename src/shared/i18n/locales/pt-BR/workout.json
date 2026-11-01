@@ -96,7 +96,8 @@
         "motorYacht": "um <accent>iate</accent>.",
         "container": "um <accent>contêiner</accent> cheio.",
         "passengerJet": "um <accent>avião de passageiros</accent>.",
-        "spaceShuttle": "um <accent>ônibus espacial</accent>."
+        "spaceShuttle": "um <accent>ônibus espacial</accent>.",
+        "statueOfLiberty": "a <accent>Estátua da Liberdade</accent>."
       },
       "trainedFor": "{{minutes}} min de treino",
       "groupsOne": "<accent>{{first}}</accent>.",

@@ -96,7 +96,8 @@
         "motorYacht": "<accent>모터 요트</accent>\n한 척.",
         "container": "<accent>가득 찬 컨테이너</accent>\n한 개.",
         "passengerJet": "<accent>여객기</accent>\n한 대.",
-        "spaceShuttle": "<accent>우주왕복선</accent>\n한 대."
+        "spaceShuttle": "<accent>우주왕복선</accent>\n한 대.",
+        "statueOfLiberty": "<accent>자유의 여신상</accent>."
       },
       "trainedFor": "{{minutes}}분 운동",
       "groupsOne": "<accent>{{first}}</accent>.",
