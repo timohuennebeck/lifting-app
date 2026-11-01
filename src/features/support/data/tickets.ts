@@ -1,5 +1,5 @@
 import { and, desc, eq, getTableColumns, max, sql } from 'drizzle-orm';
-import { alias } from 'drizzle-orm/sqlite-core';
+import { alias, type AnySQLiteColumn } from 'drizzle-orm/sqlite-core';
 
 import { parseJson } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
@@ -7,11 +7,12 @@ import {
   ticketEvents,
   type TicketEventRecord,
   ticketMessages,
+  ticketMessageTranslations,
   tickets,
-  type TicketMessageRecord,
   type TicketRecord,
 } from '@/shared/data/powersync/schema';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
+import { useAppLanguage } from '@/shared/hooks/use-app-language';
 
 import { supportKeys } from './support-keys';
 
@@ -41,6 +42,8 @@ export interface TicketMessage {
   content: string;
   /** Storage paths in the ticket-attachments bucket. */
   attachments: string[];
+  /** The text in the app language when it was written in another one (team replies). */
+  translation: string | null;
   createdAt: string;
 }
 
@@ -58,7 +61,7 @@ export interface TicketEvent {
 }
 
 export interface TicketSummary extends Ticket {
-  lastMessage: Pick<TicketMessage, 'author' | 'content' | 'attachments'> | null;
+  lastMessage: Pick<TicketMessage, 'author' | 'content' | 'attachments' | 'translation'> | null;
   lastTeamAt: string | null;
   /** Latest message time (or the ticket's update), for sorting and the row date. */
   activityAt: string;
@@ -69,14 +72,28 @@ const lastMessage = alias(ticketMessages, 'last_message');
 /** Messages of the ticket in the outer query, for correlated subqueries. */
 const messagesOfTicket = eq(ticketMessages.ticket_id, tickets.id);
 
-/** Every ticket with its latest message and latest team reply. */
-const ticketListQuery = () =>
+/** A message's translation into `language`, for the query around it. */
+const translationOf = (messageId: AnySQLiteColumn, language: string) =>
+  sql<string | null>`${drizzle
+    .select({ content: ticketMessageTranslations.content })
+    .from(ticketMessageTranslations)
+    .where(
+      and(
+        eq(ticketMessageTranslations.message_id, messageId),
+        eq(ticketMessageTranslations.language, language),
+      ),
+    )
+    .limit(1)}`;
+
+/** Every ticket with its latest message (and its translation) and latest team reply. */
+const ticketListQuery = (language: string) =>
   drizzle
     .select({
       ...getTableColumns(tickets),
       last_author: lastMessage.author,
       last_content: lastMessage.content,
       last_attachments: lastMessage.attachments,
+      last_translation: translationOf(lastMessage.id, language),
       last_at: lastMessage.created_at,
       last_team_at: sql<string | null>`${drizzle
         .select({ at: max(ticketMessages.created_at) })
@@ -119,6 +136,7 @@ const toSummaries = (rows: RowOf<typeof ticketListQuery>[]): TicketSummary[] =>
             author: r.last_author === 'team' ? 'team' : 'user',
             content: r.last_content ?? '',
             attachments: parseJson<string[]>(r.last_attachments, []),
+            translation: r.last_translation,
           }
         : null,
       lastTeamAt: r.last_team_at,
@@ -128,13 +146,25 @@ const toSummaries = (rows: RowOf<typeof ticketListQuery>[]): TicketSummary[] =>
 
 const toTicketOrNull = (rows: TicketRecord[]) => (rows[0] ? toTicket(rows[0]) : null);
 
-const toMessages = (rows: TicketMessageRecord[]): TicketMessage[] =>
+/** A ticket's chat, oldest first, each message with its translation into `language`. */
+const messagesQuery = (ticketId: string, language: string) =>
+  drizzle
+    .select({
+      ...getTableColumns(ticketMessages),
+      translation: translationOf(ticketMessages.id, language),
+    })
+    .from(ticketMessages)
+    .where(eq(ticketMessages.ticket_id, ticketId))
+    .orderBy(ticketMessages.created_at, ticketMessages.id);
+
+const toMessages = (rows: RowOf<typeof messagesQuery>[]): TicketMessage[] =>
   rows.map((r) => ({
     id: r.id,
     ticketId: r.ticket_id,
     author: r.author === 'team' ? 'team' : 'user',
     content: r.content,
     attachments: parseJson<string[]>(r.attachments, []),
+    translation: r.translation,
     createdAt: r.created_at,
   }));
 
@@ -150,9 +180,10 @@ const toEvents = (rows: TicketEventRecord[]): TicketEvent[] =>
 
 /** All of the user's tickets with their latest message, most recent activity first. */
 export function useTickets() {
+  const language = useAppLanguage();
   return useDrizzleQuery({
-    queryKey: supportKeys.tickets.queryKey,
-    query: ticketListQuery(),
+    queryKey: supportKeys.tickets(language).queryKey,
+    query: ticketListQuery(language),
     map: toSummaries,
   });
 }
@@ -165,15 +196,15 @@ export function useTicket(ticketId: string) {
   });
 }
 
-/** The chat of one ticket, oldest first. Team replies arrive through sync. */
+/**
+ * The chat of one ticket, oldest first, in the app language where the server translated a
+ * message. Team replies and translations arrive through sync.
+ */
 export function useTicketMessages(ticketId: string) {
+  const language = useAppLanguage();
   return useDrizzleQuery({
-    queryKey: supportKeys.messages(ticketId).queryKey,
-    query: drizzle
-      .select()
-      .from(ticketMessages)
-      .where(eq(ticketMessages.ticket_id, ticketId))
-      .orderBy(ticketMessages.created_at, ticketMessages.id),
+    queryKey: supportKeys.messages(ticketId, language).queryKey,
+    query: messagesQuery(ticketId, language),
     map: toMessages,
   });
 }

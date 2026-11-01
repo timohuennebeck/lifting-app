@@ -209,9 +209,26 @@ export const ticketMessages = sqliteTable(
     author: text().notNull(),
     content: text().notNull(),
     attachments: text().notNull(),
+    // The language it was written in, once the server detected it (e.g. "de").
+    language: text(),
     created_at: text().notNull(),
   },
   (t) => [index('ticket').on(t.ticket_id, t.created_at)],
+);
+
+// Messages in other languages, made by the server (never written here): a team reply in the app
+// language, also again after a language switch.
+export const ticketMessageTranslations = sqliteTable(
+  'ticket_message_translations',
+  {
+    id: text().primaryKey(),
+    message_id: text().notNull(),
+    user_id: text().notNull(),
+    language: text().notNull(),
+    content: text().notNull(),
+    created_at: text().notNull(),
+  },
+  (t) => [index('message_language').on(t.message_id, t.language)],
 );
 
 export const ticketEvents = sqliteTable(
@@ -322,6 +339,7 @@ export const drizzleSchema = {
   progressCheckPhotos,
   tickets,
   ticketMessages,
+  ticketMessageTranslations,
   ticketEvents,
   legalAcceptances,
   customExercises,

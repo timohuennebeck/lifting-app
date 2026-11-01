@@ -74,6 +74,7 @@ export function TicketChatScreen() {
             content={item.message.content}
             attachments={item.message.attachments}
             priority={item.priority}
+            translation={item.message.translation}
             onOpenAttachment={(path) =>
               router.push({ pathname: '/support/screenshot', params: { path } })
             }
