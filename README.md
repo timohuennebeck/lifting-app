@@ -119,9 +119,10 @@ it takes effect at the next sign-in). That account reads every ticket through th
   `author = 'team'`, the ticket owner's `user_id` and the text in `content` (up to 5,000 characters), in any
   language; it is translated a moment later. Screenshots in `attachments` must lie under
   `<user_id>/<ticket_id>/` in the `ticket-attachments` bucket (at most 5).
-- **Change status:** insert into `ticket_events` with `kind = 'status'` and the new `status`. A trigger mirrors it
-  onto `tickets.status`. Optional: `version` (e.g. `'1.4.3'`), which the app shows translated ("Erscheint mit
-  Update 1.4.3" / "Coming in update 1.4.3"), or `note` for custom text, shown as written (not translated).
+- **Change status:** insert into `ticket_events` with `kind = 'status'` and the new `status`: `'open'` (waiting
+  for the team) or `'closed'`. A trigger mirrors it onto `tickets.status`. What a change means ("we'll build
+  this", "fixed in the next update") goes into a reply, which reaches the user in their language. Optional:
+  `note`, shown as written (not translated).
 - Users can only reopen (logged as `kind = 'reopened'`); messages are append-only.
 
 ### Translations

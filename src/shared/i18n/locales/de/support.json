@@ -7,10 +7,7 @@
   },
   "status": {
     "open": "Offen",
-    "planned": "Geplant",
-    "resolved": "Behoben",
-    "closed": "Geschlossen",
-    "shipped": "Umgesetzt"
+    "closed": "Geschlossen"
   },
   "ticketNumber": "Ticket #{{number}}",
   "ticketPending": "Neues Ticket",
@@ -73,10 +70,6 @@
     "showOriginal": "Original anzeigen",
     "showTranslation": "Übersetzung anzeigen",
     "statusLine": "Status: {{status}}",
-    "plannedHint": "Erscheint mit einem der nächsten Updates",
-    "comingIn": "Erscheint mit Update {{version}}",
-    "liveIn": "Live in Update {{version}}",
-    "resolved": "Gelöst · Ticket geschlossen",
     "closed": "Ticket geschlossen",
     "reopened": "Ticket wieder geöffnet",
     "placeholder": "Chatte mit uns",

@@ -17,11 +17,11 @@ import { useAppLanguage } from '@/shared/hooks/use-app-language';
 import { supportKeys } from './support-keys';
 
 export type TicketKind = 'bug' | 'idea';
-export type TicketStatus = 'open' | 'planned' | 'resolved' | 'closed';
+export type TicketStatus = 'open' | 'closed';
 type MessageAuthor = 'user' | 'team';
 
-/** Open and planned tickets still await the team; resolved and closed ones are done. */
-export const isTicketActive = (status: TicketStatus) => status === 'open' || status === 'planned';
+/** Open tickets still await the team; closed ones are done. */
+export const isTicketActive = (status: TicketStatus) => status === 'open';
 
 export interface Ticket {
   id: string;
@@ -47,14 +47,12 @@ export interface TicketMessage {
   createdAt: string;
 }
 
-/** History entry: the team changed the status (optionally with a note) or the user reopened. */
+/** History entry: the team opened or closed the ticket (optionally with a note) or the user reopened. */
 export interface TicketEvent {
   id: string;
   kind: 'status' | 'reopened';
   /** New status; 'open' for reopen events. */
   status: TicketStatus;
-  /** App version the change ships in, e.g. "1.4.3"; shown as a localized line. */
-  version: string | null;
   /** Custom team text, shown as written (not translated). */
   note: string | null;
   createdAt: string;
@@ -172,8 +170,7 @@ const toEvents = (rows: TicketEventRecord[]): TicketEvent[] =>
   rows.map((r) => ({
     id: r.id,
     kind: r.kind === 'reopened' ? 'reopened' : 'status',
-    status: r.kind === 'reopened' ? 'open' : ((r.status as TicketStatus | null) ?? 'open'),
-    version: r.version,
+    status: r.kind === 'reopened' || r.status !== 'closed' ? 'open' : 'closed',
     note: r.note,
     createdAt: r.created_at,
   }));

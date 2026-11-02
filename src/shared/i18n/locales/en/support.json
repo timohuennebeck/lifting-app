@@ -7,10 +7,7 @@
   },
   "status": {
     "open": "Open",
-    "planned": "Planned",
-    "resolved": "Fixed",
-    "closed": "Closed",
-    "shipped": "Shipped"
+    "closed": "Closed"
   },
   "ticketNumber": "Ticket #{{number}}",
   "ticketPending": "New ticket",
@@ -73,10 +70,6 @@
     "showOriginal": "Show original",
     "showTranslation": "Show translation",
     "statusLine": "Status: {{status}}",
-    "plannedHint": "Coming in an upcoming update",
-    "comingIn": "Coming in update {{version}}",
-    "liveIn": "Live in update {{version}}",
-    "resolved": "Resolved · Ticket closed",
     "closed": "Ticket closed",
     "reopened": "Ticket reopened",
     "placeholder": "Chat with us",

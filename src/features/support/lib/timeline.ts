@@ -15,7 +15,6 @@ export type TimelineItem =
       type: 'status';
       key: string;
       status: TicketStatus;
-      version: string | null;
       note: string | null;
     }
   | { type: 'reopened'; key: string; at: string };
@@ -70,7 +69,6 @@ export function buildTimeline(
             type: 'status',
             key: event.id,
             status: event.status,
-            version: event.version,
             note: event.note,
           };
     timed.push({ at, order: last + i, item });

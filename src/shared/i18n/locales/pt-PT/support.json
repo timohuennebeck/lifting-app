@@ -7,10 +7,7 @@
   },
   "status": {
     "open": "Aberto",
-    "planned": "Planeado",
-    "resolved": "Corrigido",
-    "closed": "Fechado",
-    "shipped": "Implementado"
+    "closed": "Fechado"
   },
   "ticketNumber": "Pedido #{{number}}",
   "ticketPending": "Novo pedido",
@@ -73,10 +70,6 @@
     "showOriginal": "Ver original",
     "showTranslation": "Ver tradução",
     "statusLine": "Estado: {{status}}",
-    "plannedHint": "Chega numa das próximas atualizações",
-    "comingIn": "Chega na atualização {{version}}",
-    "liveIn": "Disponível na atualização {{version}}",
-    "resolved": "Resolvido · Pedido fechado",
     "closed": "Pedido fechado",
     "reopened": "Pedido reaberto",
     "placeholder": "Fala connosco",

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { isSameDay, isYesterday, MINUTE_MS } from '@/shared/lib/date';
 import { formatDate, formatShortDate, formatTime, formatWeekdayDate } from '@/shared/lib/format';
 
-import type { TicketKind, TicketStatus } from '../data/tickets';
 import { toMs } from '../lib/ticket-format';
 
 const isJustNow = (date: Date, now: Date) => now.getTime() - date.getTime() < 2 * MINUTE_MS;
@@ -41,9 +40,6 @@ export function useTicketFormat() {
       if (isYesterday(date, now)) return t('chat.yesterday');
       return formatWeekdayDate(date);
     },
-    /** Status pill copy; a resolved idea reads "Shipped" instead of "Fixed". */
-    status: (kind: TicketKind, status: TicketStatus) =>
-      kind === 'idea' && status === 'resolved' ? t('status.shipped') : t(`status.${status}`),
     /** "Ticket #1042", or a placeholder until the server has assigned the number. */
     title: (number: number | null) =>
       number === null ? t('ticketPending') : t('ticketNumber', { number }),

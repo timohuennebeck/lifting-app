@@ -7,10 +7,7 @@
   },
   "status": {
     "open": "Aberto",
-    "planned": "Planejado",
-    "resolved": "Corrigido",
-    "closed": "Fechado",
-    "shipped": "Implementado"
+    "closed": "Fechado"
   },
   "ticketNumber": "Chamado #{{number}}",
   "ticketPending": "Novo chamado",
@@ -73,10 +70,6 @@
     "showOriginal": "Ver original",
     "showTranslation": "Ver tradução",
     "statusLine": "Status: {{status}}",
-    "plannedHint": "Chega em uma das próximas atualizações",
-    "comingIn": "Chega na atualização {{version}}",
-    "liveIn": "Disponível na atualização {{version}}",
-    "resolved": "Resolvido · Chamado fechado",
     "closed": "Chamado fechado",
     "reopened": "Chamado reaberto",
     "placeholder": "Fale com a gente",

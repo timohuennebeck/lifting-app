@@ -14,7 +14,7 @@ export interface ClosedBannerProps {
   onNewTicket: () => void;
 }
 
-/** Replaces the composer of a resolved or closed ticket: reopen it or start a new one (01f·B-2). */
+/** Replaces the composer of a closed ticket: reopen it or start a new one (01f·B-2). */
 export function ClosedBanner({ ticketId, onNewTicket }: ClosedBannerProps) {
   const { t } = useTranslation('support');
   const userId = useUserId();

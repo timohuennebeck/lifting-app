@@ -74,7 +74,7 @@ export function sendTicketMessage(message: NewMessage) {
 }
 
 /**
- * Puts a resolved or closed ticket back into the team's queue and logs it in the history.
+ * Puts a closed ticket back into the team's queue and logs it in the history.
  * The server applies the event too, so both writes agree.
  */
 export async function reopenTicket(userId: string, ticketId: string) {

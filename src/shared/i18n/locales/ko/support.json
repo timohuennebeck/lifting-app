@@ -7,10 +7,7 @@
   },
   "status": {
     "open": "접수됨",
-    "planned": "반영 예정",
-    "resolved": "해결됨",
-    "closed": "종료됨",
-    "shipped": "반영 완료"
+    "closed": "종료됨"
   },
   "ticketNumber": "문의 #{{number}}",
   "ticketPending": "새 문의",
@@ -73,10 +70,6 @@
     "showOriginal": "원문 보기",
     "showTranslation": "번역 보기",
     "statusLine": "상태: {{status}}",
-    "plannedHint": "곧 업데이트에 반영될 예정이에요",
-    "comingIn": "{{version}} 업데이트에 반영 예정",
-    "liveIn": "{{version}} 업데이트에 반영됨",
-    "resolved": "해결됨 · 문의 종료",
     "closed": "문의 종료",
     "reopened": "문의 다시 열림",
     "placeholder": "메시지를 남겨 주세요",
