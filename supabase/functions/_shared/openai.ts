@@ -1,5 +1,6 @@
 // The OpenAI Responses API call the functions share: an answer forced into a JSON schema, nothing
-// stored on OpenAI's side. OPENAI_MODEL and OPENAI_REASONING_EFFORT override the defaults.
+// stored on OpenAI's side. OPENAI_MODEL and OPENAI_REASONING_EFFORT override the defaults; a
+// request can name its own model instead (translations use a small one).
 const OPENAI_URL = 'https://api.openai.com/v1/responses';
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 const OPENAI_MODEL = Deno.env.get('OPENAI_MODEL') ?? 'gpt-6.1-sol';
@@ -45,22 +46,25 @@ export interface StructuredRequest {
   timeoutMs: number;
   /** OpenAI's Fast mode: up to 2.5× faster output at twice the token price. */
   fast?: boolean;
+  /** This request's model and reasoning effort, in place of OPENAI_MODEL / _REASONING_EFFORT. */
+  model?: { name: string; reasoningEffort?: string };
 }
 
 /** The Responses API request for an answer forced into `schema`. */
 function request(
-  { instructions, content, name, schema, fast }: StructuredRequest,
+  { instructions, content, name, schema, fast, model }: StructuredRequest,
   stream: boolean,
 ) {
+  const effort = model ? model.reasoningEffort : OPENAI_REASONING_EFFORT;
   return {
     method: 'POST',
     headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: OPENAI_MODEL,
+      model: model?.name ?? OPENAI_MODEL,
       instructions,
       input: [{ role: 'user', content }],
       text: { format: { type: 'json_schema', name, strict: true, schema } },
-      ...(OPENAI_REASONING_EFFORT ? { reasoning: { effort: OPENAI_REASONING_EFFORT } } : {}),
+      ...(effort ? { reasoning: { effort } } : {}),
       store: false,
       ...(fast ? { service_tier: 'fast' } : {}),
       ...(stream ? { stream: true } : {}),

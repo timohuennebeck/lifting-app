@@ -6,7 +6,7 @@ import { groupOfMuscle, type MuscleGroupId, workoutMuscleSplit } from '@/shared/
 import type { MuscleShare } from '@/shared/data/muscles';
 import { minutesBetween } from '@/shared/lib/date';
 import { formatNumber, type UnitSystem } from '@/shared/lib/format';
-import { MuscleMap } from '@/shared/ui/muscle-map';
+import { BodyMaps } from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
 
 import type { WorkoutDetail } from '../../data/workout-detail';
@@ -83,22 +83,10 @@ export function TrainedPage({
             )}
           </StoryTitle>
         </View>
-        <View
-          className="mx-5 mt-7 flex-row justify-center gap-2 rounded-3xl bg-surface py-6"
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-        >
-          {(['front', 'back'] as const).map((view) => (
-            <MuscleMap
-              key={view}
-              view={view}
-              selected={primary.map((s) => s.muscle)}
-              secondary={secondary.map((s) => s.muscle)}
-              width={125}
-              height={227}
-            />
-          ))}
-        </View>
+        <BodyMaps
+          selected={primary.map((s) => s.muscle)}
+          secondary={secondary.map((s) => s.muscle)}
+        />
         <MuscleSplit primary={primary} secondary={secondary} className="px-4 pt-6" />
         {done.length ? (
           <View className="px-5 pt-9">

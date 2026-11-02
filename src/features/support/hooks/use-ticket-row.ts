@@ -11,7 +11,10 @@ export function useTicketRow(ticket: TicketSummary) {
   const format = useTicketFormat();
   const unread = useHasUnread(ticket.id, ticket.lastTeamAt);
   const last = ticket.lastMessage;
-  const body = last?.content.replace(/\s+/g, ' ').trim();
+  // A team reply in the app language when the server translated it.
+  const team = last?.author === 'team';
+  const source = team ? (last?.translation ?? last?.content) : last?.content;
+  const body = source?.replace(/\s+/g, ' ').trim();
   const text = last
     ? body || t('preview.screenshots', { count: last.attachments.length })
     : ticket.subject;

@@ -104,6 +104,7 @@
     "plan:eval": "node --env-file=.env.local scripts/plan-import-eval/run.mjs",
     "plan:generate-eval": "node --env-file=.env.local scripts/plan-generate-eval/run.mjs",
     "plan:generate-compare": "node scripts/plan-generate-eval/compare.mjs",
+    "functions:test": "DENO_NO_PACKAGE_JSON=1 deno test --allow-env --no-lock --node-modules-dir=none supabase/functions/",
     "powersync:up": "docker compose -f powersync/docker-compose.yml up -d",
     "powersync:down": "docker compose -f powersync/docker-compose.yml down",
     "postinstall": "uniwind generate-artifacts --css ./src/global.css --dts ./src/uniwind-types.d.ts"

@@ -106,15 +106,54 @@ AI agents: see `AGENTS.md`.
 
 ## Support tickets (team side)
 
-Users write `tickets` and `ticket_messages` from the app. The team works with the service role:
+Users write `tickets` and `ticket_messages` from the app; each ticket records the platform, OS version,
+device model and app version it came from. The team answers in the support desk
+([lifting-app-customer-support](https://github.com/timohuennebeck/lifting-app-customer-support)), signed in as
+one account whose `app_metadata.role` is `'support'` (set it with the service role, e.g. in the dashboard's SQL
+editor: `update auth.users set raw_app_meta_data = raw_app_meta_data || '{"role":"support"}' where email = …`;
+it takes effect at the next sign-in). That account reads every ticket through the `support_inbox` view and
+`support_customers()` and keeps what it has read in `support_ticket_reads`. It and the service role write:
 
-- **Reply:** insert into `ticket_messages` with `author = 'team'`, the ticket owner's `user_id` and the
-  text in `content` (up to 5,000 characters), written in the owner's `profiles.language`. Screenshots in
-  `attachments` must lie under `<user_id>/<ticket_id>/` in the `ticket-attachments` bucket (at most 5).
+- **Reply:** the desk calls the `send-team-reply` Edge Function, which translates the reply into the owner's
+  app language and saves both (see Translations). With the service role, insert into `ticket_messages` with
+  `author = 'team'`, the ticket owner's `user_id` and the text in `content` (up to 5,000 characters), in any
+  language; it is translated a moment later. Screenshots in `attachments` must lie under
+  `<user_id>/<ticket_id>/` in the `ticket-attachments` bucket (at most 5).
 - **Change status:** insert into `ticket_events` with `kind = 'status'` and the new `status`. A trigger mirrors it
   onto `tickets.status`. Optional: `version` (e.g. `'1.4.3'`), which the app shows translated ("Erscheint mit
   Update 1.4.3" / "Coming in update 1.4.3"), or `note` for custom text, shown as written (not translated).
 - Users can only reopen (logged as `kind = 'reopened'`); messages are append-only.
+
+### Translations
+
+Every support message is stored once, as written, and shown to each reader in their language, with
+"Show original" beside it:
+
+- **A user's message** is translated into the team's language (`SUPPORT_LANGUAGE`, default German) as soon as
+  it arrives; the desk asks for other languages when it is switched to one.
+- **A team reply** is translated into the user's app language before it is saved (`send-team-reply`), so the
+  app never shows it untranslated. The team can write in any language.
+- **A switch of the app language** (mirrored to `profiles.language`) has the team's earlier replies translated
+  into the new one. Translations are kept, so switching back costs nothing.
+
+How: `ticket_messages.language` holds the detected language, `ticket_message_translations` one row per message
+and language (synced to the user with their messages; only the Edge Functions write it). Triggers call the
+`translate-ticket-messages` function through pg_net for every new message and for language switches. The model
+is OpenAI's GPT-6 Luna (`OPENAI_TRANSLATION_MODEL`), about $0.0002 per message; each call logs its tokens as
+`ticket_translation`. Without the setup below nothing breaks: messages simply show as written.
+
+Setup per Supabase project (locally `supabase/seed.sql` and `supabase/functions/.env.example` cover it):
+
+1. Edge Function secrets: `OPENAI_API_KEY` (already set for the plans) and `TRANSLATION_WEBHOOK_SECRET`, a long
+   random string; optionally `SUPPORT_LANGUAGE`. Deploy `translate-ticket-messages` and `send-team-reply`.
+2. In the SQL editor, where the database finds the functions and the same secret:
+
+   ```sql
+   select vault.create_secret('https://<project-ref>.supabase.co', 'project_url');
+   select vault.create_secret('<the TRANSLATION_WEBHOOK_SECRET value>', 'translation_webhook_secret');
+   ```
+
+Tests for the functions (faked OpenAI and Supabase): `npm run functions:test` (needs Deno).
 
 ## Exercise catalog (team side)
 
