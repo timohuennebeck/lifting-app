@@ -2,7 +2,6 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useToday } from '@/shared/hooks/use-today';
 import { ActionSheet } from '@/shared/ui/action-sheet';
@@ -14,16 +13,15 @@ import { openChat, useCoachStore } from '../stores/coach-store';
 
 const NONE: ReadonlySet<string> = new Set();
 
-/** Earlier chats (design CO·H): search, open one, or choose several to delete. */
+/** Earlier chats (design CO·H): open one, delete one from its "…", or choose several to delete. */
 export function CoachHistoryScreen() {
   const { t } = useTranslation('coach');
   const { data: chats = [] } = useCoachChats();
   const today = useToday();
-  const insets = useSafeAreaInsets();
-  const [query, setQuery] = useState('');
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState(NONE);
-  const [confirming, setConfirming] = useState(false);
+  // What the open sheet would delete: one chat from its "…", or the chosen ones.
+  const [deleting, setDeleting] = useState<string[] | null>(null);
 
   const show = (chatId: string | null) => {
     openChat(chatId);
@@ -35,25 +33,28 @@ export function CoachHistoryScreen() {
       if (!next.delete(chatId)) next.add(chatId);
       return next;
     });
-  const remove = async () => {
-    const chatIds = [...selected];
-    setConfirming(false);
+  const remove = async (chatIds: string[]) => {
+    setDeleting(null);
     setSelecting(false);
     setSelected(NONE);
-    // The chat the coach shows is gone: it starts a new one.
+    // The chat Kai shows is gone: it starts a new one.
     if (chatIds.includes(useCoachStore.getState().chatId ?? '')) openChat(null);
     await deleteCoachChats(chatIds).catch((error: unknown) =>
       console.warn('Deleting coach chats failed', error),
     );
   };
 
+  const one = !selecting;
+  const label = one
+    ? t('history.deleteChat')
+    : t('history.deleteConfirm', { count: deleting?.length ?? 0 });
+
   return (
     <View className="flex-1 bg-bg">
       <CoachHistoryView
-        sections={chatSections(chats, query, new Date(today), t)}
-        query={query}
-        onQuery={setQuery}
+        sections={chatSections(chats, new Date(today), t)}
         onOpen={show}
+        onMenu={(chatId) => setDeleting([chatId])}
         onBack={() => router.back()}
         onNew={() => show(null)}
         selecting={selecting}
@@ -63,14 +64,15 @@ export function CoachHistoryScreen() {
           setSelected(NONE);
         }}
         onToggle={toggle}
-        onDelete={() => setConfirming(selected.size > 0)}
-        bottomInset={insets.bottom}
+        onDelete={() => setDeleting(selected.size ? [...selected] : null)}
       />
       <ActionSheet
-        visible={confirming}
-        onClose={() => setConfirming(false)}
-        items={[{ action: 'delete', label: t('history.deleteConfirm', { count: selected.size }) }]}
-        onAction={() => void remove()}
+        visible={!!deleting}
+        onClose={() => setDeleting(null)}
+        items={[{ action: 'delete', label }]}
+        onAction={() => {
+          if (deleting) void remove(deleting);
+        }}
       />
     </View>
   );

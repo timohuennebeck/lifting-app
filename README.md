@@ -355,7 +355,7 @@ computes every number from the user's data, and the model writes the answer from
 and its chart stream to the app as server-sent events; once complete, the question and answer are
 saved and sync to the app; the app shows the streamed answer until the saved one has synced
 (`src/features/coach/stores/coach-store.ts`). The screens follow the design "Coach Screens" and open
-over the tabs from the Training tab's card, whose example questions take turns; Settings has a switch
+over the tabs from the Training tab's card, which a flash runs across; Settings has a switch
 that withdraws the consent.
 
 - **Tools** (`supabase/functions/_shared/coach/tools.ts`): `trend`, `compare`,

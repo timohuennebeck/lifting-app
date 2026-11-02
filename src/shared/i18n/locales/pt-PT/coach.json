@@ -4,14 +4,7 @@
   "consent": "Para as respostas, os teus dados de treino e de peso são transmitidos a um modelo de IA da OpenAI, nos EUA. Ao enviares a tua primeira pergunta, dás o teu consentimento.",
   "card": {
     "label": "Kai · Coach IA",
-    "questions": [
-      "Como correu o meu treino de push hoje?",
-      "Como evoluiu o meu supino?",
-      "Que músculos estou a treinar pouco?",
-      "Com que regularidade tenho treinado?",
-      "Quanto volume levantei esta semana?",
-      "Como evoluiu o meu peso?"
-    ]
+    "prompt": "Pergunta-me sobre o teu treino"
   },
   "composer": {
     "placeholder": "Pergunta ao Kai …",
@@ -36,14 +29,7 @@
     "title": "Pergunta-me tudo sobre o teu treino.",
     "subtitle_one": "Conheço o teu primeiro treino e respondo com factos e gráficos.",
     "subtitle_other": "Conheço todos os teus {{count}} treinos desde {{since}} e respondo com factos e gráficos.",
-    "empty": "Assim que treinares, respondo com factos e gráficos dos teus treinos.",
-    "tapToAsk": "Toca para perguntar",
-    "suggestions": {
-      "weight": "Como evoluiu o meu peso?",
-      "strength": "Como está a correr o meu supino desde janeiro?",
-      "balance": "Que músculos estou a treinar pouco?",
-      "volume": "Compara esta semana com a anterior"
-    }
+    "empty": "Assim que treinares, respondo com factos e gráficos dos teus treinos."
   },
   "values": {
     "reps_one": "{{count}} rep",
@@ -99,15 +85,14 @@
   },
   "history": {
     "title": "Chats anteriores",
-    "select": "Selecionar",
+    "menu": "Opções do chat",
     "selected_one": "{{count}} selecionado",
     "selected_other": "{{count}} selecionados",
     "delete": "Eliminar",
+    "deleteChat": "Eliminar chat",
     "deleteConfirm_one": "Eliminar {{count}} chat",
     "deleteConfirm_other": "Eliminar {{count}} chats",
-    "search": "Pesquisar chats",
     "empty": "Ainda sem chats. Faz a tua primeira pergunta ao Kai.",
-    "noResults": "Nenhum chat encontrado.",
     "today": "Hoje",
     "thisWeek": "Esta semana"
   },

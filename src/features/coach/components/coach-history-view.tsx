@@ -3,12 +3,13 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { cn } from '@/shared/lib/cn';
+import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
+import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
-import { TextField } from '@/shared/ui/text-field';
 
 /** A chat in the list: its first question, the start of its first answer, when it was last used. */
 export interface ChatSummary {
@@ -26,9 +27,9 @@ export interface ChatSection {
 
 export interface CoachHistoryViewProps {
   sections: ChatSection[];
-  query: string;
-  onQuery: (query: string) => void;
   onOpen: (chatId: string) => void;
+  /** A chat's "…": the sheet that deletes it. */
+  onMenu: (chatId: string) => void;
   onBack: () => void;
   onNew: () => void;
   /** Choosing chats to delete, with a box in front of each, as in Claude's chat list. */
@@ -37,8 +38,6 @@ export interface CoachHistoryViewProps {
   onSelecting: (selecting: boolean) => void;
   onToggle: (chatId: string) => void;
   onDelete: () => void;
-  /** What the home indicator covers at the bottom. */
-  bottomInset: number;
 }
 
 function CheckBox({ checked }: { checked: boolean }) {
@@ -56,21 +55,22 @@ function CheckBox({ checked }: { checked: boolean }) {
 
 interface RowProps {
   chat: ChatSummary;
-  divider: boolean;
   selecting: boolean;
   checked: boolean;
   onPress: () => void;
   onLongPress: () => void;
+  onMenu: () => void;
 }
 
-function ChatRow({ chat, divider, selecting, checked, onPress, onLongPress }: RowProps) {
+function ChatRow({ chat, selecting, checked, onPress, onLongPress, onMenu }: RowProps) {
+  const { t } = useTranslation('coach');
   return (
     <PressableScale
       haptic="tap"
       onPress={onPress}
       onLongPress={onLongPress}
       accessibilityState={selecting ? { checked } : undefined}
-      className={cn('flex-row gap-3 px-2 py-3.5', divider && 'border-t border-chip')}
+      className="flex-row gap-3 py-3.5 pl-2"
     >
       {selecting ? <CheckBox checked={checked} /> : null}
       <View className="min-w-0 flex-1 gap-[5px]">
@@ -87,19 +87,29 @@ function ChatRow({ chat, divider, selecting, checked, onPress, onLongPress }: Ro
           {chat.preview}
         </Text>
       </View>
+      {selecting ? (
+        <View className="w-2" />
+      ) : (
+        <IconButton
+          icon="more"
+          size={36}
+          accessibilityLabel={t('history.menu')}
+          onPress={onMenu}
+          className="-mt-1.5 bg-transparent"
+        />
+      )}
     </PressableScale>
   );
 }
 
 /**
- * The coach's earlier chats (design CO2-G): grouped by when they were last used, with search.
- * "Auswählen" (or a long press) puts boxes in front for deleting several at once.
+ * Kai's earlier chats (design CO2-G), grouped by when they were last used. A chat's "…" deletes
+ * it; a long press puts boxes in front for deleting several at once.
  */
 export function CoachHistoryView({
   sections,
-  query,
-  onQuery,
   onOpen,
+  onMenu,
   onBack,
   onNew,
   selecting,
@@ -107,92 +117,50 @@ export function CoachHistoryView({
   onSelecting,
   onToggle,
   onDelete,
-  bottomInset,
 }: CoachHistoryViewProps) {
-  const { t } = useTranslation(['coach', 'common']);
+  const { t } = useTranslation('coach');
   const insets = useSafeAreaInsets();
-  const empty = !sections.length;
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-      <View className="flex-row items-center gap-3.5 px-5 pt-1.5 pb-5">
-        {selecting ? (
-          <IconButton
-            icon="close"
-            accessibilityLabel={t('common:actions.cancel')}
-            onPress={() => onSelecting(false)}
-          />
-        ) : (
-          <IconButton
-            icon="chevron-left"
-            accessibilityLabel={t('common:actions.back')}
-            onPress={onBack}
-          />
-        )}
-        <Text
-          numberOfLines={1}
-          className="min-w-0 flex-1 font-inter-semibold text-[17px] leading-5 text-fg"
-        >
-          {selecting
-            ? t('coach:history.selected', { count: selected.size })
-            : t('coach:history.title')}
-        </Text>
-        {selecting ? (
-          <PressableScale
-            haptic="warning"
-            disabled={!selected.size}
-            onPress={onDelete}
-            className={cn('h-10.5 justify-center px-1', !selected.size && 'opacity-35')}
-          >
-            <Text className="font-inter-semibold text-label text-red">
-              {t('coach:history.delete')}
-            </Text>
-          </PressableScale>
-        ) : (
-          <>
-            {!empty ? (
-              <PressableScale
-                haptic="tap"
-                onPress={() => onSelecting(true)}
-                className="h-10.5 justify-center px-1"
-              >
-                <Text className="font-inter-semibold text-label text-fg">
-                  {t('coach:history.select')}
-                </Text>
-              </PressableScale>
-            ) : null}
+      {selecting ? (
+        <ScreenHeader
+          icon="close"
+          onBack={() => onSelecting(false)}
+          title={t('history.selected', { count: selected.size })}
+          action={
+            <PressableScale
+              haptic="warning"
+              disabled={!selected.size}
+              onPress={onDelete}
+              className={cn('h-10.5 justify-center px-1', !selected.size && 'opacity-35')}
+            >
+              <Text className="font-inter-semibold text-label text-red">{t('history.delete')}</Text>
+            </PressableScale>
+          }
+        />
+      ) : (
+        <ScreenHeader
+          onBack={onBack}
+          title={t('history.title')}
+          action={
             <IconButton
               icon="plus"
-              iconSize={12}
+              iconSize={14}
               color={colors.onAccent}
-              accessibilityLabel={t('coach:newChat')}
+              accessibilityLabel={t('newChat')}
               onPress={onNew}
               className="bg-accent"
             />
-          </>
-        )}
-      </View>
-      {/* The app's search field, as in the exercise search. */}
-      <TextField
-        icon="search"
-        shape="pill"
-        compact
-        clearable
-        value={query}
-        onChangeText={onQuery}
-        placeholder={t('coach:history.search')}
-        autoCorrect={false}
-        returnKeyType="search"
-        className="mx-5"
-      />
+          }
+        />
+      )}
       <ScrollView
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: bottomInset + 24 }}
+        contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: insets.bottom + 24 }}
       >
-        {empty ? (
+        {!sections.length ? (
           <Text className="pt-12 text-center font-inter text-label leading-[22px] text-subtle">
-            {query ? t('coach:history.noResults') : t('coach:history.empty')}
+            {t('history.empty')}
           </Text>
         ) : null}
         {sections.map((section) => (
@@ -202,18 +170,20 @@ export function CoachHistoryView({
                 {section.title}
               </Text>
             </View>
-            {section.chats.map((chat, i) => (
+            {section.chats.map((chat) => (
               <ChatRow
                 key={chat.id}
                 chat={chat}
-                divider={i > 0}
                 selecting={selecting}
                 checked={selected.has(chat.id)}
                 onPress={() => (selecting ? onToggle(chat.id) : onOpen(chat.id))}
                 onLongPress={() => {
+                  // The boxes appear with a tick, like any press.
+                  haptics.press();
                   if (!selecting) onSelecting(true);
                   onToggle(chat.id);
                 }}
+                onMenu={() => onMenu(chat.id)}
               />
             ))}
           </View>

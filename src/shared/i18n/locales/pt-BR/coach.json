@@ -4,14 +4,7 @@
   "consent": "Para as respostas, seus dados de treino e de peso são transferidos para um modelo de IA da OpenAI, nos EUA. Ao enviar sua primeira pergunta, você consente com isso.",
   "card": {
     "label": "Kai · Coach IA",
-    "questions": [
-      "Como foi meu treino de push hoje?",
-      "Como meu supino evoluiu?",
-      "Quais músculos estou treinando pouco?",
-      "Com que regularidade tenho treinado?",
-      "Quanto volume levantei esta semana?",
-      "Como meu peso evoluiu?"
-    ]
+    "prompt": "Me pergunte sobre o seu treino"
   },
   "composer": {
     "placeholder": "Pergunte ao Kai …",
@@ -36,14 +29,7 @@
     "title": "Pergunte o que quiser sobre o seu treino.",
     "subtitle_one": "Conheço seu primeiro treino e respondo com fatos e gráficos.",
     "subtitle_other": "Conheço todos os seus {{count}} treinos desde {{since}} e respondo com fatos e gráficos.",
-    "empty": "Assim que você treinar, respondo com fatos e gráficos dos seus treinos.",
-    "tapToAsk": "Toque para perguntar",
-    "suggestions": {
-      "weight": "Como meu peso evoluiu?",
-      "strength": "Como está indo meu supino desde janeiro?",
-      "balance": "Quais músculos estou treinando pouco?",
-      "volume": "Compare esta semana com a anterior"
-    }
+    "empty": "Assim que você treinar, respondo com fatos e gráficos dos seus treinos."
   },
   "values": {
     "reps_one": "{{count}} rep",
@@ -99,15 +85,14 @@
   },
   "history": {
     "title": "Chats anteriores",
-    "select": "Selecionar",
+    "menu": "Opções do chat",
     "selected_one": "{{count}} selecionado",
     "selected_other": "{{count}} selecionados",
     "delete": "Excluir",
+    "deleteChat": "Excluir chat",
     "deleteConfirm_one": "Excluir {{count}} chat",
     "deleteConfirm_other": "Excluir {{count}} chats",
-    "search": "Buscar chats",
     "empty": "Nenhum chat ainda. Faça sua primeira pergunta ao Kai.",
-    "noResults": "Nenhum chat encontrado.",
     "today": "Hoje",
     "thisWeek": "Esta semana"
   },

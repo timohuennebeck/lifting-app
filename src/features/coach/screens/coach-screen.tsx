@@ -4,7 +4,6 @@ import type { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useExerciseName } from '@/shared/data/exercises';
 import { useProfile } from '@/shared/data/profile';
@@ -14,7 +13,6 @@ import { formatDate, formatShortDate, formatTime } from '@/shared/lib/format';
 import { showError } from '@/shared/stores/error-sheet-store';
 
 import { CoachChatView } from '../components/coach-chat-view';
-import { CoachBack } from '../components/coach-header';
 import { CoachStartView } from '../components/coach-start-view';
 import { useCoachMessages, useCoachWorkouts } from '../data/coach-chats';
 import { chartTopic } from '../lib/charts';
@@ -51,7 +49,6 @@ export function CoachScreen() {
   const pending = useCoachStore((s) => s.pending);
   const { data: messages = [] } = useCoachMessages(chatId);
   const { data: workouts } = useCoachWorkouts();
-  const insets = useSafeAreaInsets();
   const [draft, setDraft] = useState('');
 
   // The answer in flight belongs to this chat until its saved copy has synced in.
@@ -106,13 +103,11 @@ export function CoachScreen() {
       <View className="flex-1 bg-bg">
         {starting ? (
           <CoachStartView
-            leading={<CoachBack onPress={() => router.back()} />}
             workouts={workouts?.count ?? 0}
             since={since}
+            onBack={() => router.back()}
             onHistory={onHistory}
-            onAsk={(question) => void send(question)}
             composer={composer}
-            bottomInset={insets.bottom}
           />
         ) : (
           <CoachChatView
@@ -123,7 +118,6 @@ export function CoachScreen() {
             onHistory={onHistory}
             onNew={() => openChat(null)}
             composer={composer}
-            bottomInset={insets.bottom}
           />
         )}
       </View>

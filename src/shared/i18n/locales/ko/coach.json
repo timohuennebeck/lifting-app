@@ -4,14 +4,7 @@
   "consent": "답변을 위해 운동 및 체중 데이터가 미국에 있는 OpenAI의 AI 모델로 전송돼요. 첫 질문을 보내면 이에 동의하게 돼요.",
   "card": {
     "label": "카이 · AI 코치",
-    "questions": [
-      "오늘 푸시 운동은 어땠나요?",
-      "벤치프레스 기록은 어떻게 늘었나요?",
-      "운동이 부족한 근육은 어디인가요?",
-      "얼마나 꾸준히 운동했나요?",
-      "이번 주 볼륨은 얼마였나요?",
-      "체중이 어떻게 변했나요?"
-    ]
+    "prompt": "운동에 대해 물어보세요"
   },
   "composer": {
     "placeholder": "카이에게 물어보세요 …",
@@ -36,14 +29,7 @@
     "title": "운동에 관해 무엇이든 물어보세요.",
     "subtitle_one": "첫 운동 기록을 바탕으로 데이터와 차트로 답해 드려요.",
     "subtitle_other": "{{since}}부터 기록한 운동 {{count}}회를 바탕으로 데이터와 차트로 답해 드려요.",
-    "empty": "운동을 기록하면 그 기록을 바탕으로 데이터와 차트로 답해 드려요.",
-    "tapToAsk": "눌러서 질문하기",
-    "suggestions": {
-      "weight": "체중이 어떻게 변했나요?",
-      "strength": "1월부터 벤치프레스는 어떻게 되고 있나요?",
-      "balance": "운동이 부족한 근육은 어디인가요?",
-      "volume": "이번 주와 지난주를 비교해 주세요"
-    }
+    "empty": "운동을 기록하면 그 기록을 바탕으로 데이터와 차트로 답해 드려요."
   },
   "values": {
     "reps_one": "{{count}}회",
@@ -99,15 +85,14 @@
   },
   "history": {
     "title": "이전 채팅",
-    "select": "선택",
+    "menu": "채팅 옵션",
     "selected_one": "{{count}}개 선택됨",
     "selected_other": "{{count}}개 선택됨",
     "delete": "삭제",
+    "deleteChat": "채팅 삭제",
     "deleteConfirm_one": "채팅 {{count}}개 삭제",
     "deleteConfirm_other": "채팅 {{count}}개 삭제",
-    "search": "채팅 검색",
     "empty": "아직 채팅이 없어요. 카이에게 첫 질문을 해 보세요.",
-    "noResults": "채팅을 찾지 못했어요.",
     "today": "오늘",
     "thisWeek": "이번 주"
   },

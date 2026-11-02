@@ -12,20 +12,17 @@ const short = (date: Date, options: Intl.DateTimeFormatOptions) =>
   formatDate(date, options).replace(/\.$/, '');
 
 /**
- * The chats matching `query` in sections by when they were last answered (design CO·H): today
- * with the time, this week with the weekday, then one per month with the date.
+ * The chats in sections by when they were last answered (design CO·H): today with the time, this
+ * week with the weekday, then one per month with the date.
  */
 export function chatSections(
   chats: CoachChatSummary[],
-  query: string,
   now: Date,
   t: TFunction<'coach'>,
 ): ChatSection[] {
-  const words = query.trim().toLowerCase();
   const weekStart = startOfWeek(now).getTime();
   const sections: ChatSection[] = [];
   for (const chat of chats) {
-    if (words && !`${chat.question}\n${chat.answer}`.toLowerCase().includes(words)) continue;
     const date = new Date(chat.updatedAt);
     let key: string;
     let title: string;
