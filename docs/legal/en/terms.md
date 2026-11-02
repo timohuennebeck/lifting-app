@@ -41,7 +41,7 @@ Loqqa supports you with strength training. This includes in particular:
 - logging your workouts with weights, reps and times, your history, records, levels and suggestions for your sets
 - recording your body weight
 - the body check with photos and estimated values (from age 18)
-- the coach: an AI model that answers your questions about your training, usually with a chart from your data (from age 16)
+- Kai, the AI coach: an AI model that answers your questions about your training, usually with a chart from your data (from age 16)
 - an exercise catalog with instructions, images and videos
 - a support chat for bug reports and ideas
 

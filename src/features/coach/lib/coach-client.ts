@@ -7,7 +7,10 @@ import type { CoachChart } from './charts';
 
 /** Why there is no answer; each has its own message in coach.json (errors). */
 export type CoachFailure =
-  'offline' | 'limitDaily' | 'limitMonthly' | 'failed' | 'refused' | 'tooYoung';
+  'offline' | 'limitDaily' | 'limitMonthly' | 'failed' | 'refused' | 'tooYoung' | 'notPro';
+
+/** The function's error codes that have their own message. */
+const REFUSALS: Record<string, CoachFailure> = { too_young: 'tooYoung', not_pro: 'notPro' };
 
 export class CoachError extends Error {
   constructor(
@@ -54,7 +57,7 @@ function failureOf(status: number, body: ErrorBody) {
       retryAt: body.retryAt,
     });
   }
-  return new CoachError(body.error === 'too_young' ? 'tooYoung' : 'failed');
+  return new CoachError(REFUSALS[body.error ?? ''] ?? 'failed');
 }
 
 /**

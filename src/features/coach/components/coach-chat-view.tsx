@@ -33,7 +33,7 @@ export interface PendingAnswer {
 }
 
 export interface CoachChatViewProps {
-  /** Under "Coach": what the chat is about; "Neuer Chat" before its first answer. */
+  /** Under "Kai · KI-Coach": what the chat is about; "Neuer Chat" before its first answer. */
   subtitle: string | null;
   items: ChatItem[];
   pending: PendingAnswer | null;

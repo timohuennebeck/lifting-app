@@ -19,7 +19,7 @@ export interface AskCoachCardProps {
   className?: string;
 }
 
-/** "Frag Kai" over example questions that take turns; a tap opens the coach (Training tab). */
+/** "Kai · KI-Coach" over example questions that take turns; a tap opens the coach (Training tab). */
 export function AskCoachCard({ onPress, className }: AskCoachCardProps) {
   const { t } = useTranslation('coach');
   const questions = t('card.questions', { returnObjects: true });
@@ -35,11 +35,12 @@ export function AskCoachCard({ onPress, className }: AskCoachCardProps) {
       accessibilityLabel={t('card.label')}
       onPress={onPress}
       className={cn(
-        'flex-row items-center gap-2.5 rounded-full bg-surface py-1.5 pr-1.5 pl-2',
+        'flex-row items-center gap-2.5 rounded-[18px] bg-surface py-1.5 pr-1.5 pl-2',
         className,
       )}
     >
-      <CoachMark size={36} />
+      {/* The diamond turns as each new question comes in. */}
+      <CoachMark size={36} turns={turn} />
       <View className="min-w-0 flex-1">
         <Text className="font-inter-semibold text-[11px] leading-[13px] tracking-[0.88px] text-dim uppercase">
           {t('card.label')}

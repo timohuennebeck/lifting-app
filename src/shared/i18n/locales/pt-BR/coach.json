@@ -1,9 +1,9 @@
 {
-  "title": "Coach",
+  "title": "Kai · Coach IA",
   "newChat": "Novo chat",
   "consent": "Para as respostas, seus dados de treino e de peso são transferidos para um modelo de IA da OpenAI, nos EUA. Ao enviar sua primeira pergunta, você consente com isso.",
   "card": {
-    "label": "Pergunte ao Kai",
+    "label": "Kai · Coach IA",
     "questions": [
       "Como foi meu treino de push hoje?",
       "Como meu supino evoluiu?",
@@ -14,8 +14,8 @@
     ]
   },
   "composer": {
-    "placeholder": "Pergunte ao seu coach …",
-    "answering": "O coach está respondendo …",
+    "placeholder": "Pergunte ao Kai …",
+    "answering": "Kai está respondendo …",
     "send": "Enviar",
     "stop": "Parar a resposta"
   },
@@ -106,7 +106,7 @@
     "deleteConfirm_one": "Excluir {{count}} chat",
     "deleteConfirm_other": "Excluir {{count}} chats",
     "search": "Buscar chats",
-    "empty": "Nenhum chat ainda. Faça sua primeira pergunta ao coach.",
+    "empty": "Nenhum chat ainda. Faça sua primeira pergunta ao Kai.",
     "noResults": "Nenhum chat encontrado.",
     "today": "Hoje",
     "thisWeek": "Esta semana"
@@ -114,7 +114,7 @@
   "errors": {
     "offline": {
       "title": "Sem conexão",
-      "message": "O coach precisa de internet. Sua pergunta continua no campo de texto."
+      "message": "Kai precisa de internet. Sua pergunta continua no campo de texto."
     },
     "limitDaily": {
       "title": "Limite diário atingido",
@@ -126,19 +126,23 @@
     },
     "failed": {
       "title": "Sem resposta",
-      "message": "O coach não conseguiu responder agora. Tente novamente."
+      "message": "Kai não conseguiu responder agora. Tente novamente."
     },
     "refused": {
       "title": "Sem resposta",
-      "message": "O coach não pode responder a essa pergunta. Tente perguntar de outro jeito."
+      "message": "Kai não pode responder a essa pergunta. Tente perguntar de outro jeito."
     },
     "tooYoung": {
       "title": "A partir dos 16",
-      "message": "Você pode usar o coach a partir dos 16 anos."
+      "message": "Você pode usar o Kai a partir dos 16 anos."
+    },
+    "notPro": {
+      "title": "Loqqa Pro não está ativo",
+      "message": "O Kai faz parte do Loqqa Pro. No momento, sua conta não tem uma assinatura ativa."
     }
   },
   "settings": {
     "label": "Enviar dados para a OpenAI",
-    "description": "Transferir seus dados de treino e de peso para a OpenAI para que o coach possa responder. Ao desativar, você revoga seu consentimento."
+    "description": "Transferir seus dados de treino e de peso para a OpenAI para que o Kai possa responder. Ao desativar, você revoga seu consentimento."
   }
 }

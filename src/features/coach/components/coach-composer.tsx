@@ -27,7 +27,7 @@ export interface CoachComposerProps {
   consentNote: boolean;
 }
 
-/** "Frag deinen Coach …" with the send arrow, over a fade (design "Coach Screens"). */
+/** "Frag Kai …" with the send arrow, over a fade (design "Coach Screens"). */
 export function CoachComposer({
   value,
   onChangeText,

@@ -147,9 +147,9 @@ Unser Server speichert deine Fotos und Dateien nicht; er gibt nur den erkannten 
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO für den Import und die Planerstellung, die du startest, auch für die Übermittlung an OpenAI in die USA. Für die Begrenzung der Anfragen Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist es, Missbrauch und unnötige Kosten zu verhindern.
 
-### 4.8 Coach
+### 4.8 Kai · KI-Coach
 
-Mit Loqqa Pro kannst du dem Coach Fragen zu deinem eigenen Training stellen, zum Beispiel „Wie hat sich mein Gewicht entwickelt?“. Der Coach antwortet in wenigen Sätzen, meist mit einem Diagramm aus deinen Daten. Allgemeine Trainingsfragen beantwortet er auch, etwa wie oft du Beine trainieren solltest oder welche Übung du machen kannst, wenn dir etwas wehtut. Eine Diagnose stellt er nicht. Der Coach ist freiwillig und erst ab 16 Jahren verfügbar. Für ihn brauchst du eine Internetverbindung.
+Mit Loqqa Pro kannst du Kai, dem KI-Coach der App, Fragen zu deinem eigenen Training stellen, zum Beispiel „Wie hat sich mein Gewicht entwickelt?“. Der Coach antwortet in wenigen Sätzen, meist mit einem Diagramm aus deinen Daten. Allgemeine Trainingsfragen beantwortet er auch, etwa wie oft du Beine trainieren solltest oder welche Übung du machen kannst, wenn dir etwas wehtut. Eine Diagnose stellt er nicht. Kai ist eine KI, kein Mensch. Der Coach ist freiwillig und erst ab 16 Jahren verfügbar. Für ihn brauchst du eine Internetverbindung.
 
 **Antworten durch ein KI-Modell von OpenAI:** Die App überträgt deine Frage mit deiner App-Sprache und der Zeitzone deines Geräts an unseren Server. Der gibt die Frage an ein KI-Modell von OpenAI weiter. Braucht das Modell Daten, fragt es sie bei unserem Server an: Der berechnet die Werte aus deinen gespeicherten Daten und übermittelt die Ergebnisse an OpenAI. Daraus schreibt das Modell die Antwort. Zu jeder Frage übermittelt unser Server an OpenAI:
 

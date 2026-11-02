@@ -1,9 +1,9 @@
 {
-  "title": "코치",
+  "title": "카이 · AI 코치",
   "newChat": "새 채팅",
   "consent": "답변을 위해 운동 및 체중 데이터가 미국에 있는 OpenAI의 AI 모델로 전송돼요. 첫 질문을 보내면 이에 동의하게 돼요.",
   "card": {
-    "label": "카이에게 물어보기",
+    "label": "카이 · AI 코치",
     "questions": [
       "오늘 푸시 운동은 어땠나요?",
       "벤치프레스 기록은 어떻게 늘었나요?",
@@ -14,8 +14,8 @@
     ]
   },
   "composer": {
-    "placeholder": "코치에게 물어보세요 …",
-    "answering": "코치가 답변하는 중 …",
+    "placeholder": "카이에게 물어보세요 …",
+    "answering": "카이가 답변하는 중 …",
     "send": "보내기",
     "stop": "답변 중지"
   },
@@ -106,7 +106,7 @@
     "deleteConfirm_one": "채팅 {{count}}개 삭제",
     "deleteConfirm_other": "채팅 {{count}}개 삭제",
     "search": "채팅 검색",
-    "empty": "아직 채팅이 없어요. 코치에게 첫 질문을 해 보세요.",
+    "empty": "아직 채팅이 없어요. 카이에게 첫 질문을 해 보세요.",
     "noResults": "채팅을 찾지 못했어요.",
     "today": "오늘",
     "thisWeek": "이번 주"
@@ -114,7 +114,7 @@
   "errors": {
     "offline": {
       "title": "인터넷에 연결되어 있지 않아요",
-      "message": "코치를 이용하려면 인터넷이 필요해요. 질문은 입력창에 그대로 남아 있어요."
+      "message": "카이를 이용하려면 인터넷이 필요해요. 질문은 입력창에 그대로 남아 있어요."
     },
     "limitDaily": {
       "title": "오늘 한도에 도달했어요",
@@ -126,19 +126,23 @@
     },
     "failed": {
       "title": "답변 없음",
-      "message": "코치가 방금 답변하지 못했어요. 다시 시도해 주세요."
+      "message": "카이가 방금 답변하지 못했어요. 다시 시도해 주세요."
     },
     "refused": {
       "title": "답변 없음",
-      "message": "코치가 이 질문에는 답할 수 없어요. 다르게 물어봐 주세요."
+      "message": "카이가 이 질문에는 답할 수 없어요. 다르게 물어봐 주세요."
     },
     "tooYoung": {
       "title": "16세 이상 전용",
-      "message": "코치는 만 16세부터 이용할 수 있어요."
+      "message": "카이는 만 16세부터 이용할 수 있어요."
+    },
+    "notPro": {
+      "title": "Loqqa Pro 비활성",
+      "message": "카이는 Loqqa Pro에 포함돼요. 지금 계정에 활성 구독이 없어요."
     }
   },
   "settings": {
     "label": "OpenAI에 데이터 전송",
-    "description": "코치가 답변할 수 있도록 운동 및 체중 데이터를 OpenAI로 전송해요. 끄면 동의가 철회돼요."
+    "description": "카이가 답변할 수 있도록 운동 및 체중 데이터를 OpenAI로 전송해요. 끄면 동의가 철회돼요."
   }
 }

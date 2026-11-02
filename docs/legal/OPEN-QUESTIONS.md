@@ -73,8 +73,9 @@ photos and AI parts.
     (`coach.consent`, on the start screen and in a chat while there is no consent) and the switch in
     Settings that withdraws the consent (clearing `profiles.coach_consent_at`); both exist. The
     notice names "an AI model by OpenAI": check with the lawyer that this shows the coach is an AI
-    (Art. 50(1) AI Act), and that it can't be taken for the paywall's head coach. The Training tab's
-    card says "Frag Kai", the head coach's first name (Kai Brooks, `paywall.json`). DS §4.8 and NB §4
+    (Art. 50(1) AI Act), and that it can't be taken for the paywall's head coach: the coach is called
+    "Kai · KI-Coach" everywhere (card, screen, Settings, DS §4.8, NB), and Kai is also the head
+    coach's first name (Kai Brooks, `paywall.json`). Asked, the coach says it is an AI. DS §4.8 and NB §4
     also name the limits (`COACH_DAILY_LIMIT`, `COACH_MONTHLY_LIMIT`) and what goes to OpenAI
     (`supabase/functions/_shared/coach/prompt.ts` and `tools.ts`).
 21. **Coach logs.** `coach_runs` keeps time, status, model, tokens and duration until the account

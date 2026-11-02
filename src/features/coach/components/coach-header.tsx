@@ -8,7 +8,7 @@ import { Text } from '@/shared/ui/text';
 export interface CoachHeaderProps {
   /** The start screen's profile photo, or a back button. */
   leading: ReactNode;
-  /** Under "Coach": what the chat is about, or "Neuer Chat". */
+  /** Under "Kai · KI-Coach": what the chat is about, or "Neuer Chat". */
   subtitle?: string | null;
   /** Earlier chats; left out where they are already shown. */
   onHistory?: () => void;
@@ -16,7 +16,7 @@ export interface CoachHeaderProps {
   onNew?: () => void;
 }
 
-/** "Coach" centred between 80pt columns, round 36pt buttons (design "Coach Screens"). */
+/** "Kai · KI-Coach" centred between 80pt columns, round 36pt buttons (design "Coach Screens"). */
 export function CoachHeader({ leading, subtitle, onHistory, onNew }: CoachHeaderProps) {
   const { t } = useTranslation('coach');
   return (

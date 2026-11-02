@@ -1,9 +1,9 @@
 {
-  "title": "Coach",
+  "title": "Kai · AI coach",
   "newChat": "New chat",
   "consent": "For its answers, your training and weight data go to an AI model by OpenAI in the USA. Sending your first question is your consent.",
   "card": {
-    "label": "Ask Kai",
+    "label": "Kai · AI coach",
     "questions": [
       "How did my push day go?",
       "How has my bench press developed?",
@@ -14,8 +14,8 @@
     ]
   },
   "composer": {
-    "placeholder": "Ask your coach …",
-    "answering": "Coach is answering …",
+    "placeholder": "Ask Kai …",
+    "answering": "Kai is answering …",
     "send": "Send",
     "stop": "Stop the answer"
   },
@@ -106,7 +106,7 @@
     "deleteConfirm_one": "Delete {{count}} chat",
     "deleteConfirm_other": "Delete {{count}} chats",
     "search": "Search chats",
-    "empty": "No chats yet. Ask the coach your first question.",
+    "empty": "No chats yet. Ask Kai your first question.",
     "noResults": "No chats found.",
     "today": "Today",
     "thisWeek": "This week"
@@ -114,7 +114,7 @@
   "errors": {
     "offline": {
       "title": "No connection",
-      "message": "The coach needs the internet. Your question stays in the field."
+      "message": "Kai needs the internet. Your question stays in the field."
     },
     "limitDaily": {
       "title": "Daily limit reached",
@@ -126,19 +126,23 @@
     },
     "failed": {
       "title": "No answer",
-      "message": "The coach couldn't answer just now. Please try again."
+      "message": "Kai couldn't answer just now. Please try again."
     },
     "refused": {
       "title": "No answer",
-      "message": "The coach can't answer this question. Try asking it differently."
+      "message": "Kai can't answer this question. Try asking it differently."
     },
     "tooYoung": {
       "title": "From 16",
-      "message": "You can use the coach from the age of 16."
+      "message": "You can use Kai from the age of 16."
+    },
+    "notPro": {
+      "title": "Loqqa Pro not active",
+      "message": "Kai is part of Loqqa Pro. Your account has no active subscription right now."
     }
   },
   "settings": {
     "label": "Share data with OpenAI",
-    "description": "Send your training and weight data to OpenAI so the coach can answer. Off withdraws your consent."
+    "description": "Send your training and weight data to OpenAI so Kai can answer. Off withdraws your consent."
   }
 }

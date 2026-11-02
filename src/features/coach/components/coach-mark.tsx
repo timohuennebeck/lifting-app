@@ -30,10 +30,12 @@ export interface CoachMarkProps {
   /** 28 beside an answer, 44 on the start screen. */
   size?: number;
   animation?: CoachMarkAnimation;
+  /** Each step turns the diamond half a turn (the card's question changing). */
+  turns?: number;
 }
 
 /** The coach's avatar: a dark diamond on neon (design "Coach Screens"). */
-export function CoachMark({ size = 28, animation }: CoachMarkProps) {
+export function CoachMark({ size = 28, animation, turns = 0 }: CoachMarkProps) {
   // 9pt on the 28pt mark, 14pt on the 44pt one.
   const diamond = Math.round(size * 0.32);
   return (
@@ -71,7 +73,14 @@ export function CoachMark({ size = 28, animation }: CoachMarkProps) {
         <Animated.View
           className="rounded-[2px] bg-bg"
           style={[
-            { width: diamond, height: diamond, transform: [{ rotate: '45deg' }] },
+            {
+              width: diamond,
+              height: diamond,
+              transform: [{ rotate: `${45 + turns * 180}deg` }],
+              transitionProperty: 'transform',
+              transitionDuration: '0.6s',
+              transitionTimingFunction: 'ease-in-out',
+            },
             animation && {
               animationName: TURN,
               animationDuration: TURN_DURATION[animation],

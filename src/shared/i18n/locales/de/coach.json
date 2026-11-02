@@ -1,9 +1,9 @@
 {
-  "title": "Coach",
+  "title": "Kai · KI-Coach",
   "newChat": "Neuer Chat",
   "consent": "Für die Antworten gehen deine Trainings- und Gewichtsdaten an ein KI-Modell von OpenAI in den USA. Mit deiner ersten Frage willigst du ein.",
   "card": {
-    "label": "Frag Kai",
+    "label": "Kai · KI-Coach",
     "questions": [
       "Wie lief mein Push heute?",
       "Wie hat sich mein Bankdrücken entwickelt?",
@@ -14,8 +14,8 @@
     ]
   },
   "composer": {
-    "placeholder": "Frag deinen Coach …",
-    "answering": "Coach antwortet …",
+    "placeholder": "Frag Kai …",
+    "answering": "Kai antwortet …",
     "send": "Senden",
     "stop": "Antwort stoppen"
   },
@@ -106,7 +106,7 @@
     "deleteConfirm_one": "{{count}} Chat löschen",
     "deleteConfirm_other": "{{count}} Chats löschen",
     "search": "Chats durchsuchen",
-    "empty": "Noch keine Chats. Stell dem Coach deine erste Frage.",
+    "empty": "Noch keine Chats. Stell Kai deine erste Frage.",
     "noResults": "Keine Chats gefunden.",
     "today": "Heute",
     "thisWeek": "Diese Woche"
@@ -114,7 +114,7 @@
   "errors": {
     "offline": {
       "title": "Keine Verbindung",
-      "message": "Der Coach braucht das Internet. Deine Frage bleibt im Feld."
+      "message": "Kai braucht das Internet. Deine Frage bleibt im Feld."
     },
     "limitDaily": {
       "title": "Tageslimit erreicht",
@@ -126,19 +126,23 @@
     },
     "failed": {
       "title": "Keine Antwort",
-      "message": "Der Coach konnte gerade nicht antworten. Versuch es noch einmal."
+      "message": "Kai konnte gerade nicht antworten. Versuch es noch einmal."
     },
     "refused": {
       "title": "Keine Antwort",
-      "message": "Auf diese Frage kann der Coach nicht antworten. Versuch es anders formuliert."
+      "message": "Auf diese Frage kann Kai nicht antworten. Versuch es anders formuliert."
     },
     "tooYoung": {
       "title": "Ab 16",
-      "message": "Den Coach kannst du ab 16 Jahren nutzen."
+      "message": "Kai kannst du ab 16 Jahren nutzen."
+    },
+    "notPro": {
+      "title": "Loqqa Pro nicht aktiv",
+      "message": "Kai gehört zu Loqqa Pro. Gerade ist für dein Konto kein Abo aktiv."
     }
   },
   "settings": {
     "label": "Daten an OpenAI senden",
-    "description": "Deine Trainings- und Gewichtsdaten an OpenAI senden, damit der Coach antworten kann. Aus widerruft deine Einwilligung."
+    "description": "Deine Trainings- und Gewichtsdaten an OpenAI senden, damit Kai antworten kann. Aus widerruft deine Einwilligung."
   }
 }

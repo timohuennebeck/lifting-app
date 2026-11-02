@@ -149,9 +149,9 @@ O nosso servidor não guarda as tuas fotos nem os teus ficheiros; limita-se a de
 
 Fundamento jurídico: art. 6.º, n.º 1, alínea b), do RGPD para a importação e a criação de planos que inicias, também para a transmissão à OpenAI, nos EUA. Para a limitação dos pedidos, art. 6.º, n.º 1, alínea f), do RGPD; o nosso interesse legítimo é evitar abusos e custos desnecessários.
 
-### 4.8 Coach
+### 4.8 Kai · Coach IA
 
-Com o Loqqa Pro, podes fazer perguntas ao coach sobre o teu próprio treino, por exemplo “Como evoluiu o meu peso?”. O coach responde em poucas frases, geralmente com um gráfico feito a partir dos teus dados. Também responde a perguntas gerais sobre treino, por exemplo com que frequência deves treinar pernas ou que exercício podes fazer se algo te doer. Não faz diagnósticos. O coach é facultativo e só está disponível a partir dos 16 anos. Para o utilizares, precisas de ligação à internet.
+Com o Loqqa Pro, podes fazer perguntas ao Kai, o coach de IA da app, sobre o teu próprio treino, por exemplo “Como evoluiu o meu peso?”. O coach responde em poucas frases, geralmente com um gráfico feito a partir dos teus dados. Também responde a perguntas gerais sobre treino, por exemplo com que frequência deves treinar pernas ou que exercício podes fazer se algo te doer. Não faz diagnósticos. O Kai é uma IA, não uma pessoa. O coach é facultativo e só está disponível a partir dos 16 anos. Para o utilizares, precisas de ligação à internet.
 
 **Respostas por um modelo de IA da OpenAI:** a app transmite a tua pergunta, juntamente com o idioma da tua app e o fuso horário do teu dispositivo, ao nosso servidor. Este reencaminha a pergunta para um modelo de IA da OpenAI. Se o modelo precisar de dados, pede-os ao nosso servidor: este calcula os valores a partir dos teus dados guardados e transmite os resultados à OpenAI. A partir deles, o modelo escreve a resposta. Em cada pergunta, o nosso servidor transmite à OpenAI:
 

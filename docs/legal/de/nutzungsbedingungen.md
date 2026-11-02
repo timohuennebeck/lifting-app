@@ -39,7 +39,7 @@ Loqqa unterstützt dich beim Krafttraining. Dazu gehören insbesondere:
 - das Protokollieren deiner Trainings mit Gewichten, Wiederholungen und Zeiten, deine Historie, Bestwerte, Level und Vorschläge für deine Sätze
 - das Erfassen deines Körpergewichts
 - der Körpercheck mit Fotos und geschätzten Werten (ab 18 Jahren)
-- der Coach: ein KI-Modell, das deine Fragen zu deinem Training beantwortet, meist mit einem Diagramm aus deinen Daten (ab 16 Jahren)
+- Kai, der KI-Coach: ein KI-Modell, das deine Fragen zu deinem Training beantwortet, meist mit einem Diagramm aus deinen Daten (ab 16 Jahren)
 - ein Übungskatalog mit Anleitungen, Bildern und Videos
 - ein Support-Chat für Fehlermeldungen und Ideen
 

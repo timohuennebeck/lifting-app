@@ -1,7 +1,7 @@
 # Loqqa
 
 Workout logger for iOS and Android. Tabs: **Training** (the week, the plan with its routines,
-single routines; its "Frag Kai" card opens the AI coach), **Level** (muscle levels 1–100),
+single routines; its "Kai · KI-Coach" card opens the AI coach), **Level** (muscle levels 1–100),
 **Körper** (progress checks: three photos, an AI score, before and after) and **Profile** (workout
 history, support, settings). "+" starts a workout or creates a routine or a plan (imported from
 photos or a file, or made by the AI). The scale button in every tab's header opens the weight
