@@ -427,6 +427,10 @@ verify_jwt = false
 # Called by the support desk; the function checks the support account's token itself.
 verify_jwt = false
 
+[functions.coach-chat]
+# The function checks the user's token itself, like assess-progress.
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 55327

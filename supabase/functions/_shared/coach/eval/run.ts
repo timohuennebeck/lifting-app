@@ -216,7 +216,7 @@ const percentile = (values: number[], p: number) => {
   return sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * p))] ?? 0;
 };
 
-/** How long single requests took, and how much of it OpenAI reports as its own processing. */
+/** How long single requests took, and how soon OpenAI started answering (its own time). */
 function requestLine(answered: Outcome[]) {
   const waits = answered.flatMap((o) => o.usage?.waits ?? []);
   const ms = waits.map((w) => w.ms);
@@ -224,7 +224,7 @@ function requestLine(answered: Outcome[]) {
   const average = (values: number[]) =>
     values.reduce((a, b) => a + b, 0) / Math.max(1, values.length);
   const share = reported.length
-    ? `; OpenAI reports ${Math.round((average(reported.map((w) => w.openAiMs!)) / average(reported.map((w) => w.ms))) * 100)} % as processing`
+    ? `; OpenAI started answering after ${Math.round((average(reported.map((w) => w.openAiMs!)) / average(reported.map((w) => w.ms))) * 100)} % of it`
     : '';
   return `Per request: ${seconds(average(ms))} on average, ${seconds(percentile(ms, 0.9))} at p90, ${seconds(Math.max(0, ...ms))} at most${share}`;
 }

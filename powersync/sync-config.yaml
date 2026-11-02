@@ -24,3 +24,5 @@ streams:
       - SELECT * FROM ticket_message_translations WHERE user_id = auth.user_id()
       - SELECT * FROM ticket_events WHERE user_id = auth.user_id()
       - SELECT * FROM legal_acceptances WHERE profile_id = auth.user_id()
+      - SELECT * FROM coach_chats WHERE user_id = auth.user_id()
+      - SELECT * FROM coach_messages WHERE user_id = auth.user_id()

@@ -5,6 +5,7 @@ import { assert, assertEquals } from 'jsr:@std/assert@1';
 
 import { type CoachData, type CoachExercise, type CoachUser, dayIn, splitShares } from './data.ts';
 import { numbersIn, unmatchedNumbers } from './eval/grade.ts';
+import { coachData, coachTurns } from './load.ts';
 import { type PeriodChart, runTool, TOOLS, type TrendChart } from './tools.ts';
 
 Deno.env.set('OPENAI_API_KEY', 'test-key');
@@ -276,18 +277,26 @@ Deno.test('the eval reads numbers as the language writes them', () => {
   assertEquals(unmatchedNumbers('**9,6 t**, rund 80 kg, 5 mal', 'de', [9600, 79.6]), [5]);
 });
 
+/** A streamed Responses API answer: its text as one delta, then the finished response. */
+function streamed(output: unknown[], usage: unknown, text = '') {
+  const events = [
+    ...(text ? [{ type: 'response.output_text.delta', delta: text }] : []),
+    { type: 'response.completed', response: { status: 'completed', output, usage } },
+  ];
+  return events.map((e) => `data: ${JSON.stringify(e)}\n\n`).join('');
+}
+
 Deno.test(
-  'chat: runs the tool the model calls, then returns its answer with the chart',
+  'chat: runs the tool the model calls, then streams its answer with the chart',
   async () => {
     const sent: {
       input: { type?: string; call_id?: string }[];
       store: boolean;
-      tools: unknown[];
+      stream: boolean;
     }[] = [];
     const replies = [
-      {
-        status: 'completed',
-        output: [
+      streamed(
+        [
           { type: 'reasoning', id: 'rs_1', encrypted_content: 'x' },
           {
             type: 'function_call',
@@ -302,27 +311,19 @@ Deno.test(
             }),
           },
         ],
-        usage: {
-          input_tokens: 3000,
-          output_tokens: 80,
-          input_tokens_details: { cached_tokens: 2000 },
-        },
-      },
-      {
-        status: 'completed',
-        output: [
-          {
-            type: 'message',
-            content: [{ type: 'output_text', text: 'Your bench is at **115.5 kg**.' }],
-          },
-        ],
-        usage: { input_tokens: 3400, output_tokens: 40 },
-      },
+        { input_tokens: 3000, output_tokens: 80, input_tokens_details: { cached_tokens: 2000 } },
+      ),
+      streamed(
+        [{ type: 'message', content: [{ type: 'output_text', text: 'At **115.5 kg**.' }] }],
+        { input_tokens: 3400, output_tokens: 40 },
+        'At **115.5 kg**.',
+      ),
     ];
     globalThis.fetch = (_url, init) => {
       sent.push(JSON.parse(String(init?.body)));
-      return Promise.resolve(new Response(JSON.stringify(replies[sent.length - 1])));
+      return Promise.resolve(new Response(replies[sent.length - 1]));
     };
+    const events: string[] = [];
     const reply = await askCoach({
       question: 'How is my bench going?',
       history: [],
@@ -332,10 +333,12 @@ Deno.test(
       model: 'test-model',
       effort: 'low',
       timeoutMs: 1000,
+      onEvent: (event) => events.push(event.type),
     });
     assert('answer' in reply);
-    assertEquals(reply.answer, 'Your bench is at **115.5 kg**.');
+    assertEquals(reply.answer, 'At **115.5 kg**.');
     assertEquals(reply.chart?.type, 'trend');
+    assertEquals(events, ['searched', 'found', 'text']);
     const { waits, ...totals } = reply.usage;
     assertEquals(waits.length, 2);
     assertEquals(totals, {
@@ -348,8 +351,78 @@ Deno.test(
     });
     assertEquals(sent.length, 2);
     assertEquals(sent[0].store, false);
-    assertEquals(sent[0].tools.length, TOOLS.length);
+    assertEquals(sent[0].stream, true);
     // The second request carries the call and its result.
     assert(sent[1].input.some((i) => i.type === 'function_call_output' && i.call_id === 'call_1'));
   },
 );
+
+Deno.test('load: database rows become the coach data, the chat its earlier turns', () => {
+  const data = coachData(
+    {
+      workouts: [
+        {
+          name: 'Pull',
+          started_at: '2026-10-05T17:00:00+00:00',
+          finished_at: '2026-10-05T18:00:00+00:00',
+          exercises: [
+            { exercise_id: 'pull-up', sets: [[0, 8, null, 2]] },
+            { exercise_id: 'c0ffee00-0000-0000-0000-000000000001', sets: [[20, 12, null, null]] },
+          ],
+        },
+      ],
+      weights: [['2026-10-01', 80.4]],
+      checks: [['2026-10-04T23:30:00+00:00', 64]],
+      exercises: [
+        {
+          id: 'pull-up',
+          name: { en: 'Pull-up', de: 'Klimmzug' },
+          measures: ['weight', 'reps'],
+          muscles: { lats: 0.55, upper_back: 0.25, biceps: 0.2 },
+          equipment: 'bodyweight',
+          assisted: false,
+          cardio: false,
+        },
+      ],
+      custom_exercises: [
+        {
+          id: 'c0ffee00-0000-0000-0000-000000000001',
+          name: 'Meine Rudermaschine',
+          measures: ['weight', 'reps'],
+          primary: ['upper_back'],
+          secondary: ['biceps'],
+        },
+      ],
+    },
+    'de',
+    'Europe/Berlin',
+  );
+  const pullUp = data.exercises.get('pull-up')!;
+  assertEquals([pullUp.name, pullUp.bodyweight, pullUp.primary], ['Klimmzug', true, ['lats']]);
+  assertEquals(data.exercises.get('c0ffee00-0000-0000-0000-000000000001')?.primary, ['upper_back']);
+  assertEquals(data.workouts[0].exercises[0].sets[0], {
+    weightKg: 0,
+    reps: 8,
+    seconds: null,
+    rir: 2,
+  });
+  // 23:30 UTC is already the next day in Berlin.
+  assertEquals(data.checks, [{ date: '2026-10-05', score: 64 }]);
+
+  const turns = coachTurns(
+    [
+      { id: 'q1', role: 'user', content: 'Wie läuft es?' },
+      { id: 'a1', role: 'coach', content: 'Gut.' },
+      { id: 'q2', role: 'user', content: 'Und sonst?' },
+      { id: 'a2', role: 'coach', content: 'Auch gut.' },
+    ],
+    [{ answer_id: 'a1', calls: [{ name: 'calendar', args: {}, result: {} }] }],
+  );
+  assertEquals(
+    turns.map((t) => [t.question, t.calls.length, t.answer]),
+    [
+      ['Wie läuft es?', 1, 'Gut.'],
+      ['Und sonst?', 0, 'Auch gut.'],
+    ],
+  );
+});

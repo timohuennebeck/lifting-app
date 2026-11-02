@@ -1,6 +1,8 @@
 // What the model is asked and how its answer becomes a progress check. Plain TypeScript without
 // Deno APIs, so it can be tested outside the Edge runtime.
 
+import { ageFrom } from '../_shared/account.ts';
+
 export const POSES = ['front', 'side', 'back'] as const;
 type Pose = (typeof POSES)[number];
 
@@ -119,17 +121,6 @@ const round = (value: number, min: number, max: number) =>
   Math.round(Math.min(max, Math.max(min, value)));
 
 const DAY_MS = 86_400_000;
-
-/**
- * Whole years someone born on `birthDate` (YYYY-MM-DD) is on `today`, as the app counts them
- * (`ageFrom` in src/shared/data/profile.ts), here on the UTC date.
- */
-export function ageFrom(birthDate: string, today: Date) {
-  const [year, month, day] = birthDate.split('-').map(Number);
-  const todayMonth = today.getUTCMonth() + 1;
-  const hadBirthday = todayMonth > month || (todayMonth === month && today.getUTCDate() >= day);
-  return today.getUTCFullYear() - year - (hadBirthday ? 0 : 1);
-}
 
 const WEIGHT_TREND_DAYS = 30;
 

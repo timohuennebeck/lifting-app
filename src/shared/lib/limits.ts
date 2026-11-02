@@ -14,3 +14,5 @@ export const CUSTOM_EXERCISE_NAME_MAX = 60;
 /** A support message; a ticket's subject is its first line, cut to TICKET_SUBJECT_MAX. */
 export const TICKET_MESSAGE_MAX = 5000;
 export const TICKET_SUBJECT_MAX = 120;
+/** A question to the coach; the coach-chat Edge Function checks it too. */
+export const COACH_QUESTION_MAX = 500;

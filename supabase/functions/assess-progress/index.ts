@@ -6,10 +6,10 @@
 // check comes at most a week after the last saved one.
 import { encodeBase64 } from 'jsr:@std/encoding@1/base64';
 
+import { ageFrom, hasPro } from '../_shared/account.ts';
 import { admin, reply, requestUser } from '../_shared/common.ts';
 import { askStructured, openAiConfigured } from '../_shared/openai.ts';
 import {
-  ageFrom,
   type AssessmentProfile,
   contextText,
   INSTRUCTIONS,
@@ -38,10 +38,6 @@ const MIN_CHECK_GAP_MS = 6 * 24 * 60 * 60 * 1000 - 2 * 60 * 60 * 1000;
 const OPENAI_TIMEOUT_MS = 120_000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-const REVENUECAT_SECRET_KEY = Deno.env.get('REVENUECAT_SECRET_KEY');
-/** RevenueCat entitlement that unlocks Loqqa Pro (same as the app). */
-const PRO_ENTITLEMENT = 'pro';
-
 async function photoDataUrl(path: string) {
   const { data, error } = await admin.storage.from(BUCKET).download(path);
   if (error || !data) return null;
@@ -54,35 +50,6 @@ async function checkPhotos(userId: string, checkId: string): Promise<Partial<Pho
     POSES.map((pose) => photoDataUrl(`${userId}/${checkId}/${pose}.jpg`)),
   );
   return Object.fromEntries(POSES.flatMap((pose, i) => (urls[i] ? [[pose, urls[i]]] : [])));
-}
-
-/**
- * Whether RevenueCat lists an active Pro entitlement for the user. Without a key (local
- * development) or when RevenueCat can't be reached it lets the assessment through: the app shows
- * the paywall itself, this only keeps the OpenAI cost to paying users.
- */
-async function hasPro(userId: string) {
-  if (!REVENUECAT_SECRET_KEY) return true;
-  try {
-    const response = await fetch(
-      `https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(userId)}`,
-      {
-        headers: { Authorization: `Bearer ${REVENUECAT_SECRET_KEY}` },
-        signal: AbortSignal.timeout(10_000),
-      },
-    );
-    if (!response.ok) {
-      console.error('Checking Pro with RevenueCat failed', response.status, await response.text());
-      return true;
-    }
-    const entitlement = (await response.json()).subscriber?.entitlements?.[PRO_ENTITLEMENT];
-    if (!entitlement) return false;
-    // No expiry date = lifetime.
-    return entitlement.expires_date === null || Date.parse(entitlement.expires_date) > Date.now();
-  } catch (error) {
-    console.error('Checking Pro with RevenueCat failed', error);
-    return true;
-  }
 }
 
 const askModel = (content: ReturnType<typeof modelInput>) =>

@@ -32,6 +32,8 @@ export const profiles = sqliteTable('profiles', {
   avatar_path: text(),
   // "About you" on the profile, up to 150 characters.
   bio: text(),
+  // When the user agreed to their data going to OpenAI for the coach (their first question).
+  coach_consent_at: text(),
   onboarded_at: text(),
   created_at: text().notNull(),
   updated_at: text().notNull(),
@@ -287,6 +289,36 @@ export const weightEntries = sqliteTable(
   (t) => [index('date').on(t.date)],
 );
 
+// The AI coach's chats and their questions and answers. Only the coach-chat Edge Function writes
+// them; the app reads them and deletes chats (with their messages).
+export const coachChats = sqliteTable(
+  'coach_chats',
+  {
+    id: text().primaryKey(),
+    user_id: text().notNull(),
+    created_at: text().notNull(),
+    // The last answer's time: the chat list's order and grouping.
+    updated_at: text().notNull(),
+  },
+  (t) => [index('updated').on(t.updated_at)],
+);
+
+export const coachMessages = sqliteTable(
+  'coach_messages',
+  {
+    id: text().primaryKey(),
+    user_id: text().notNull(),
+    chat_id: text().notNull(),
+    // 'user' (a question) or 'coach' (an answer, with **bold** parts).
+    role: text().notNull(),
+    content: text().notNull(),
+    // JSON: the chart under an answer (Chart in supabase/functions/_shared/coach/tools.ts).
+    chart: text(),
+    created_at: text().notNull(),
+  },
+  (t) => [index('chat').on(t.chat_id, t.created_at)],
+);
+
 // Relations power nested reads such as `drizzle.query.routines.findMany({ with: … })`; Drizzle
 // finds them through `drizzleSchema`. Each `many` needs the `one` pointing back.
 const routinesRelations = relations(routines, ({ many }) => ({
@@ -342,6 +374,8 @@ export const drizzleSchema = {
   legalAcceptances,
   customExercises,
   weightEntries,
+  coachChats,
+  coachMessages,
   routinesRelations,
   routineExercisesRelations,
   routineSetsRelations,

@@ -110,38 +110,61 @@ export interface ResponseUsage {
   output_tokens_details?: { reasoning_tokens?: number };
 }
 
+/** A finished response as the coach reads it. */
+interface CoachResult {
+  status?: string;
+  output?: OutputItem[];
+  usage?: ResponseUsage;
+  service_tier?: string;
+}
+
 /**
- * A Responses API request in free form (the coach sends tools and a conversation), nothing
- * stored on OpenAI's side. Resolves with the output items and usage, or OpenAI's HTTP status and
- * error text; throws on timeouts and network errors.
+ * A streamed Responses API request in free form (the coach sends tools and a conversation),
+ * nothing stored on OpenAI's side. `onText` gets the answer text as it is written. Resolves with
+ * the finished response's output items and usage, or OpenAI's HTTP status and error text; throws
+ * on timeouts, network errors and `signal`.
  */
-export async function respond(body: Record<string, unknown>, timeoutMs: number) {
+export async function respondStream(
+  body: Record<string, unknown>,
+  options: { timeoutMs: number; signal?: AbortSignal; onText?: (text: string) => void },
+) {
+  const timeout = AbortSignal.timeout(options.timeoutMs);
   const response = await fetch(OPENAI_URL, {
     method: 'POST',
     headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...body, store: false }),
-    signal: AbortSignal.timeout(timeoutMs),
+    body: JSON.stringify({ ...body, store: false, stream: true }),
+    signal: options.signal ? AbortSignal.any([options.signal, timeout]) : timeout,
   });
-  if (!response.ok) {
+  if (!response.ok || !response.body) {
     const error = await response.text();
     console.error('OpenAI request failed', response.status, error);
     return { upstream: response.status, error };
   }
-  const result = (await response.json()) as {
-    status?: string;
-    output?: OutputItem[];
-    usage?: ResponseUsage;
-    service_tier?: string;
-  };
-  return {
-    status: result.status ?? 'completed',
+  // The time OpenAI says it took to start answering; the rest of the wait is network.
+  const processingMs = Number(response.headers.get('openai-processing-ms')) || null;
+  const finished = (result: CoachResult, status: string) => ({
+    status: result.status ?? status,
     output: result.output ?? [],
     usage: result.usage ?? {},
     // Fast mode may fall back to standard when OpenAI is busy.
     tier: result.service_tier ?? null,
-    /** The time OpenAI says it spent on the request; the rest of the wait is network. */
-    processingMs: Number(response.headers.get('openai-processing-ms')) || null,
-  };
+    processingMs,
+  });
+  for await (const { event, data } of responseEvents(response.body)) {
+    if (event.type === 'response.output_text.delta' && event.delta) {
+      options.onText?.(event.delta);
+    } else if (event.type === 'response.completed') {
+      return finished(event.response ?? {}, 'completed');
+    } else if (
+      event.type === 'response.incomplete' ||
+      event.type === 'response.failed' ||
+      event.type === 'error'
+    ) {
+      console.error('OpenAI stream ended early', data.slice(0, 500));
+      return finished(event.response ?? {}, event.type);
+    }
+  }
+  return finished({}, 'cut_off');
 }
 
 /** A step of a streamed answer: more of its text, or how it ended. */
@@ -166,11 +189,14 @@ export async function streamStructured(req: StructuredRequest, signal: AbortSign
   return { answer: streamedAnswer(response.body, req.name) };
 }
 
-/** The Responses API's server-sent events, read into the steps of the answer. */
-async function* streamedAnswer(
-  body: ReadableStream<Uint8Array>,
-  name: string,
-): AsyncGenerator<StreamedAnswer> {
+interface ResponseEvent {
+  type: string;
+  delta?: string;
+  response?: ResponsesApiResult & CoachResult;
+}
+
+/** The Responses API's server-sent events as they arrive, with each one's raw data. */
+async function* responseEvents(body: ReadableStream<Uint8Array>) {
   let buffer = '';
   for await (const chunk of body.pipeThrough(new TextDecoderStream())) {
     buffer += chunk;
@@ -184,29 +210,34 @@ async function* streamedAnswer(
         .map((line) => line.slice(5).trimStart())
         .join('\n');
       if (!data || data === '[DONE]') continue;
-      const event = JSON.parse(data) as {
-        type: string;
-        delta?: string;
-        response?: ResponsesApiResult;
-      };
-      if (event.type === 'response.output_text.delta' && event.delta) {
-        yield { text: event.delta };
-      } else if (event.type === 'response.refusal.delta') {
-        yield { refusal: true };
-        return;
-      } else if (event.type === 'response.completed') {
-        logUsage(name, event.response ?? {});
-        yield { done: true };
-        return;
-      } else if (
-        event.type === 'response.incomplete' ||
-        event.type === 'response.failed' ||
-        event.type === 'error'
-      ) {
-        console.error('OpenAI stream ended early', data.slice(0, 500));
-        yield { incomplete: event.response?.status ?? event.type };
-        return;
-      }
+      yield { event: JSON.parse(data) as ResponseEvent, data };
+    }
+  }
+}
+
+/** The Responses API's server-sent events, read into the steps of the answer. */
+async function* streamedAnswer(
+  body: ReadableStream<Uint8Array>,
+  name: string,
+): AsyncGenerator<StreamedAnswer> {
+  for await (const { event, data } of responseEvents(body)) {
+    if (event.type === 'response.output_text.delta' && event.delta) {
+      yield { text: event.delta };
+    } else if (event.type === 'response.refusal.delta') {
+      yield { refusal: true };
+      return;
+    } else if (event.type === 'response.completed') {
+      logUsage(name, event.response ?? {});
+      yield { done: true };
+      return;
+    } else if (
+      event.type === 'response.incomplete' ||
+      event.type === 'response.failed' ||
+      event.type === 'error'
+    ) {
+      console.error('OpenAI stream ended early', data.slice(0, 500));
+      yield { incomplete: event.response?.status ?? event.type };
+      return;
     }
   }
   yield { incomplete: 'cut_off' };

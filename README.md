@@ -10,7 +10,7 @@ git history (`git show 48b667e:design/README.md`).
 ## Stack
 
 - **Expo SDK 57** with Expo Router (typed routes), protected routes, native tabs and the React Compiler
-- **Supabase** for auth (Sign in with Apple and Google; no email sign-in), Postgres, storage and the Edge Functions (Deno; the plan and progress-check functions call OpenAI)
+- **Supabase** for auth (Sign in with Apple and Google; no email sign-in), Postgres, storage and the Edge Functions (Deno; the plan, progress-check and coach functions call OpenAI)
 - **PowerSync** for local-first SQLite sync, read through **TanStack Query** (`@powersync/tanstack-react-query`)
 - **Drizzle ORM** (`@powersync/drizzle-driver`) for typed queries; `src/shared/data/powersync/schema.ts` is the client schema
 - **Uniwind** (Tailwind v4) with `tailwind-merge` via `cn()`
@@ -28,7 +28,7 @@ npm run env:pull                # Loqqa Dev's settings from EAS (or: cp .env.exa
 npm run supabase:keys           # writes supabase/signing_key.json (gitignored)
 npm run supabase:start          # copy the publishable key into .env.local
 
-# Edge Function secrets (OpenAI key for the plan import, plan generation and progress check;
+# Edge Function secrets (OpenAI key for the plan import, plan generation, progress check and coach;
 # Apple key for revoking tokens), see the file
 cp supabase/functions/.env.example supabase/functions/.env
 
@@ -100,10 +100,7 @@ AI agents: see `AGENTS.md`.
   `npm run powersync:up`, `powersync:down`
 - `npm run plan:eval` and `npm run plan:generate-eval`: plan import and plan generation tests (see
   below)
-- `npm run coach:eval`: asks the AI coach (in progress, `supabase/functions/_shared/coach/`) the
-  questions in `eval/cases.ts` about two made-up users and checks each answer; needs Deno and
-  `OPENAI_API_KEY` in `supabase/functions/.env`. `-- --model gpt-6-luna --effort medium` compares
-  others; the answers go to `eval/out/`
+- `npm run coach:eval`: tests the coach's answers (see Coach)
 - `npm run apple:ids`: App IDs in the Apple developer account (see Sign in with Apple)
 - `node scripts/generate-muscle-paths.mjs`: rebuilds `src/shared/ui/muscle-map/body-paths.ts` from
   `scripts/muscle-art`
@@ -348,6 +345,39 @@ the app says so and the user goes back a step.
   `npm run plan:generate-eval -- --repeat 3` before and after it, then
   `npm run plan:generate-compare`: how often each check passed in the last two runs, overall and
   per profile.
+
+## Coach
+
+The coach answers questions about the user's own training ("Wie hat sich mein Gewicht entwickelt?",
+"Welche Muskeln trainiere ich zu wenig?") in a few sentences, mostly with a chart. The app sends the
+question to the `coach-chat` Edge Function, where the model picks one of the coach's tools; the tool
+computes every number from the user's data, and the model writes the answer from them. The answer
+and its chart stream to the app as server-sent events; once complete, the question and answer are
+saved and sync to the app. The (in-progress) screens follow the design "Coach Screens".
+
+- **Tools** (`supabase/functions/_shared/coach/tools.ts`): `trend`, `compare`,
+  `period_vs_average`, `calendar` and `distribution` each draw a chart; `workouts` looks sessions
+  up. The values follow the app: the 1RM by Epley, bodyweight exercises with the latest body
+  weight, sets per muscle with main muscles counting fully and helpers half, against 10 a week.
+- **Rules (server-side):** 16+ by the profile's birth date; consent: the start screen says that the
+  first question agrees to the training and body data going to OpenAI, and the function records it
+  in `profiles.coach_consent_at` before anything is sent (clearing it withdraws it); Pro, as for
+  the progress check; at most 20 questions in 24 hours and 150 in 30 days (`COACH_DAILY_LIMIT`,
+  `COACH_MONTHLY_LIMIT`).
+- **Secrets:** `OPENAI_API_KEY` as for the plans; `OPENAI_COACH_MODEL` (default `gpt-6.1-sol`) and
+  `OPENAI_COACH_REASONING_EFFORT` (default `low`). It runs in Fast mode; `COACH_FAST=false` turns
+  that off.
+- **Tables:** `coach_chats` and `coach_messages` (an answer keeps its chart as it was) are written
+  only by the function and synced; users read them and delete chats. `coach_runs` is server-only:
+  one row per question, which the limits count, with the tool calls (replayed for follow-up
+  questions) and the tokens it took. It stays when its chat is deleted. Chats are kept until the
+  account is deleted.
+- **Testing:** `npm run coach:eval` (needs Deno and `OPENAI_API_KEY`) asks 33 questions about two
+  made-up users (`supabase/functions/_shared/coach/eval/`) and checks each answer: the tool and
+  its arguments, only numbers the tools gave, the question's language, at most 3 sentences and 50
+  words, and asking back only when the question is unclear. `-- --fast` uses Fast mode,
+  `-- --model gpt-6-luna --effort medium` tries others; the answers go to `eval/out/`. Run it
+  before and after changing the prompt or a tool.
 
 ## Google Sign-In
 
