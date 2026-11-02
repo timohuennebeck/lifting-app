@@ -1,9 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { TextInput, View } from 'react-native';
 
-import { ChatInput } from '@/shared/components/chat-input';
+import { cn } from '@/shared/lib/cn';
 import { COACH_QUESTION_MAX } from '@/shared/lib/limits';
+import { colors } from '@/shared/lib/theme';
 import { Gradient } from '@/shared/ui/gradient';
+import { Icon } from '@/shared/ui/icon';
+import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 /** How far above the field the content fades out. */
@@ -20,7 +23,7 @@ export interface CoachComposerProps {
   consentNote: boolean;
 }
 
-/** "Frag Kai …" in the support chat's input box, with the consent line above it until given. */
+/** "Frag Kai …" in one rounded line with the send arrow, the consent line above it until given. */
 export function CoachComposer({
   value,
   onChangeText,
@@ -43,18 +46,43 @@ export function CoachComposer({
           {t('consent')}
         </Text>
       ) : null}
-      <ChatInput
-        value={answering ? '' : value}
-        onChangeText={onChangeText}
-        editable={!answering}
-        placeholder={answering ? t('composer.answering') : t('composer.placeholder')}
-        maxLength={COACH_QUESTION_MAX}
-        onSend={onSend}
-        sendLabel={t('composer.send')}
-        canSend={canSend}
-        ready={canSend}
-        stop={answering ? { label: t('composer.stop'), onPress: onStop } : null}
-      />
+      <View className="px-3 pt-2">
+        <View className="flex-row items-center gap-2 rounded-full bg-chip py-1.5 pr-1.5 pl-[18px]">
+          <TextInput
+            value={answering ? '' : value}
+            onChangeText={onChangeText}
+            editable={!answering}
+            maxLength={COACH_QUESTION_MAX}
+            placeholder={answering ? t('composer.answering') : t('composer.placeholder')}
+            placeholderTextColor={colors.dim}
+            selectionColor={colors.fg}
+            cursorColor={colors.fg}
+            keyboardAppearance="dark"
+            returnKeyType="send"
+            onSubmitEditing={() => {
+              if (canSend) onSend();
+            }}
+            className="h-10 min-w-0 flex-1 py-0 font-inter text-base text-fg"
+          />
+          <PressableScale
+            haptic="press"
+            accessibilityLabel={answering ? t('composer.stop') : t('composer.send')}
+            accessibilityState={{ disabled: !answering && !canSend }}
+            disabled={!answering && !canSend}
+            onPress={answering ? onStop : onSend}
+            className={cn(
+              'size-10 items-center justify-center rounded-full',
+              answering ? 'bg-fg' : canSend ? 'bg-accent' : 'bg-control',
+            )}
+          >
+            {answering ? (
+              <View className="size-3 rounded-[3px] bg-bg" />
+            ) : (
+              <Icon name="arrow-up" size={16} color={canSend ? colors.onAccent : colors.dim} />
+            )}
+          </PressableScale>
+        </View>
+      </View>
     </View>
   );
 }
