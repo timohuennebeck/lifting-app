@@ -24,7 +24,7 @@ import { type AvatarAction, AvatarSheet } from '../components/avatar-sheet';
 import { HistoryEntry } from '../components/history-entry';
 import { type AvatarSource, pickAvatar, removeAvatar, saveAvatar } from '../lib/avatar';
 
-const PAGE = 10;
+const PAGE = 5;
 
 interface LocalPhoto {
   uri: string;
