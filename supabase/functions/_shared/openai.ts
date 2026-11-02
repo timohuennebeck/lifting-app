@@ -131,11 +131,14 @@ export async function respond(body: Record<string, unknown>, timeoutMs: number) 
     status?: string;
     output?: OutputItem[];
     usage?: ResponseUsage;
+    service_tier?: string;
   };
   return {
     status: result.status ?? 'completed',
     output: result.output ?? [],
     usage: result.usage ?? {},
+    // Fast mode may fall back to standard when OpenAI is busy.
+    tier: result.service_tier ?? null,
   };
 }
 

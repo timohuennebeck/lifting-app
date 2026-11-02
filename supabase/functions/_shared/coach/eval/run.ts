@@ -4,6 +4,7 @@
 // Needs OPENAI_API_KEY in supabase/functions/.env; one run is about 40 conversations.
 // Usage: npm run coach:eval                                  all cases, gpt-6.1-sol at low effort
 //        npm run coach:eval -- --model gpt-6-luna --effort medium
+//        npm run coach:eval -- --fast                          OpenAI's Fast mode (2× the price)
 //        npm run coach:eval -- --repeat 3 weight bench        cases whose id contains a word
 // Writes the answers with their checks to eval/out/ (JSON, and Markdown for reading).
 import { askCoach, type CoachCall, type CoachTurn, type CoachUsage } from '../chat.ts';
@@ -28,13 +29,17 @@ function options(args: string[]) {
     effort: 'low' as string | null,
     repeat: 1,
     parallel: 4,
+    fast: false,
     price: null as [number, number, number] | null,
     filters: [] as string[],
   };
   for (let i = 0; i < args.length; i++) {
     const value = args[i + 1];
     if (args[i] === '--model') opts.model = value;
-    else if (args[i] === '--effort') opts.effort = value === 'default' ? null : value;
+    else if (args[i] === '--fast') {
+      opts.fast = true;
+      continue;
+    } else if (args[i] === '--effort') opts.effort = value === 'default' ? null : value;
     else if (args[i] === '--repeat') opts.repeat = Number(value);
     else if (args[i] === '--parallel') opts.parallel = Number(value);
     else if (args[i] === '--price')
@@ -49,7 +54,10 @@ function options(args: string[]) {
 }
 
 const opts = options(Deno.args);
-const price = opts.price ?? PRICES[opts.model] ?? null;
+const label = `${opts.model}, effort ${opts.effort ?? 'default'}${opts.fast ? ', Fast mode' : ''}`;
+const base = opts.price ?? PRICES[opts.model] ?? null;
+// Fast mode costs twice as much per token (if OpenAI falls back to standard, this overstates).
+const price = base && (opts.fast ? (base.map((p) => p * 2) as typeof base) : base);
 const cost = (u: CoachUsage) =>
   price
     ? ((u.input - u.cached) * price[0] + u.cached * price[1] + u.output * price[2]) / 1e6
@@ -136,6 +144,7 @@ async function runCase(c: Case, run: number): Promise<Outcome> {
         user,
         model: opts.model,
         effort: opts.effort,
+        fast: opts.fast,
         timeoutMs: TIMEOUT_MS,
       });
       if ('error' in reply)
@@ -202,14 +211,14 @@ function summary(outcomes: Outcome[]) {
       answered.reduce((s, o) => s + (o.usage?.[key] ?? 0), 0) / Math.max(1, answered.length),
     );
   return [
-    `Model ${opts.model}, effort ${opts.effort ?? 'default'}, ${outcomes.length} questions`,
+    `Model ${label}, ${outcomes.length} questions`,
     `Passed ${share(outcomes.filter((o) => o.passed).length)}; errors ${outcomes.length - answered.length}`,
     `Failing: tool ${failing('tool')}, args ${failing('args')}, numbers ${failing('numbers')}, language ${failing('language')}, length ${failing('length')}, says ${failing("doesn't say")}`,
     `Time per question: ${(answered.reduce((s, o) => s + o.seconds, 0) / Math.max(1, answered.length)).toFixed(1)} s on average, ${percentile(
       answered.map((o) => o.seconds),
       0.9,
     ).toFixed(1)} s at p90`,
-    `Tokens per question: ${tokens('input')} in (${tokens('cached')} cached), ${tokens('output')} out (${tokens('reasoning')} reasoning), ${tokens('requests')} requests`,
+    `Tokens per question: ${tokens('input')} in (${tokens('cached')} cached), ${tokens('output')} out (${tokens('reasoning')} reasoning), ${tokens('requests')} requests${opts.fast ? `, ${answered.reduce((s, o) => s + (o.usage?.fast ?? 0), 0)} of ${answered.reduce((s, o) => s + (o.usage?.requests ?? 0), 0)} served in Fast mode` : ''}`,
     costs.length
       ? `Cost: $${(costs.reduce((a, b) => a + b, 0) / costs.length).toFixed(4)} per question, $${costs.reduce((a, b) => a + b, 0).toFixed(2)} for the graded questions`
       : `Cost: no price for ${opts.model}; pass --price input,cached,output ($ per million tokens)`,
@@ -242,9 +251,7 @@ if (!Deno.env.get('OPENAI_API_KEY')) {
   console.error('OPENAI_API_KEY is not set (supabase/functions/.env).');
   Deno.exit(1);
 }
-console.log(
-  `${cases.length} cases × ${opts.repeat} with ${opts.model}, effort ${opts.effort ?? 'default'}\n`,
-);
+console.log(`${cases.length} cases × ${opts.repeat} with ${label}\n`);
 const tasks = Array.from({ length: opts.repeat }, (_, run) =>
   cases.map((c) => () => runCase(c, run + 1)),
 ).flat();
@@ -256,7 +263,7 @@ console.log(`\n${lines.join('\n')}`);
 
 const out = new URL('./out/', import.meta.url);
 await Deno.mkdir(out, { recursive: true });
-const name = `${new Date().toISOString().slice(0, 16).replace(':', '')}-${opts.model}-${opts.effort ?? 'default'}`;
+const name = `${new Date().toISOString().slice(0, 16).replace(':', '')}-${opts.model}-${opts.effort ?? 'default'}${opts.fast ? '-fast' : ''}`;
 await Deno.writeTextFile(
   new URL(`${name}.json`, out),
   JSON.stringify({ options: opts, summary: lines, outcomes }, null, 2),

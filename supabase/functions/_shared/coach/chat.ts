@@ -29,6 +29,8 @@ export interface CoachUsage {
   cached: number;
   output: number;
   reasoning: number;
+  /** Requests OpenAI served in Fast mode. */
+  fast: number;
 }
 
 export interface CoachRequest {
@@ -41,6 +43,8 @@ export interface CoachRequest {
   model: string;
   /** Reasoning effort (e.g. "low"); null leaves the model's default. */
   effort: string | null;
+  /** OpenAI's Fast mode: faster output at twice the token price. */
+  fast?: boolean;
   timeoutMs: number;
 }
 
@@ -86,8 +90,9 @@ function parseArgs(json: unknown) {
   }
 }
 
-function addUsage(total: CoachUsage, usage: ResponseUsage) {
+function addUsage(total: CoachUsage, usage: ResponseUsage, tier: string | null) {
   total.requests += 1;
+  if (tier === 'fast') total.fast += 1;
   total.input += usage.input_tokens ?? 0;
   total.cached += usage.input_tokens_details?.cached_tokens ?? 0;
   total.output += usage.output_tokens ?? 0;
@@ -97,7 +102,7 @@ function addUsage(total: CoachUsage, usage: ResponseUsage) {
 export async function askCoach(req: CoachRequest): Promise<CoachReply> {
   const input: unknown[] = [...replay(req.history), { role: 'user', content: req.question }];
   const calls: CoachCall[] = [];
-  const usage: CoachUsage = { requests: 0, input: 0, cached: 0, output: 0, reasoning: 0 };
+  const usage: CoachUsage = { requests: 0, input: 0, cached: 0, output: 0, reasoning: 0, fast: 0 };
   let chart: Chart | null = null;
 
   for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
@@ -113,13 +118,14 @@ export async function askCoach(req: CoachRequest): Promise<CoachReply> {
         include: ['reasoning.encrypted_content'],
         max_output_tokens: MAX_OUTPUT_TOKENS,
         ...(req.effort ? { reasoning: { effort: req.effort } } : {}),
+        ...(req.fast ? { service_tier: 'fast' } : {}),
       },
       req.timeoutMs,
     );
     if ('upstream' in reply) {
       return { error: `openai_${reply.upstream}`, detail: reply.error, calls, usage };
     }
-    addUsage(usage, reply.usage);
+    addUsage(usage, reply.usage, reply.tier);
 
     const toolCalls = reply.output.filter((item) => item.type === 'function_call');
     if (!toolCalls.length) {

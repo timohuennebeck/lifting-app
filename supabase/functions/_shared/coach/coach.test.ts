@@ -329,6 +329,7 @@ Deno.test(
       cached: 2000,
       output: 120,
       reasoning: 0,
+      fast: 0,
     });
     assertEquals(sent.length, 2);
     assertEquals(sent[0].store, false);
