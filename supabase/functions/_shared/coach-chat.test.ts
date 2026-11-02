@@ -11,6 +11,8 @@ const rpcCalls: { name: string; body: any }[] = [];
 // deno-lint-ignore no-explicit-any
 const openAiRequests: any[] = [];
 let openAiReplies: Response[] = [];
+/** Runs as OpenAI is asked, e.g. to delete the chat while its answer is written. */
+let whileAnswering = () => {};
 let slot: Row = { run: 'run-1' };
 
 const ALICE = '00000000-0000-0000-0000-00000000000a';
@@ -47,6 +49,7 @@ function reset({ birthDate = '1995-04-01', consent = '2026-10-01T00:00:00Z' } = 
   rpcCalls.length = 0;
   openAiRequests.length = 0;
   openAiReplies = [];
+  whileAnswering = () => {};
   slot = { run: 'run-1' };
   db.profiles = [
     {
@@ -122,6 +125,7 @@ globalThis.fetch = async (input, init) => {
   const body = init?.body ? JSON.parse(String(init.body)) : undefined;
   if (url.hostname === 'api.openai.com') {
     openAiRequests.push(body);
+    whileAnswering();
     return openAiReplies.shift() ?? json({ error: 'no reply scripted' }, 500);
   }
   if (url.pathname === '/auth/v1/user') {
@@ -133,9 +137,11 @@ globalThis.fetch = async (input, init) => {
     rpcCalls.push({ name: rpc[1], body });
     if (rpc[1] === 'start_coach_run') return json(slot);
     if (rpc[1] === 'coach_history') return json(HISTORY);
-    // save_coach_answer, as the database does it.
-    if (!db.coach_chats.some((c) => c.id === body.p_chat_id)) {
+    // save_coach_answer, as the database does it: an existing chat must still be there.
+    if (body.p_new_chat) {
       db.coach_chats.push({ id: body.p_chat_id, user_id: body.p_user_id });
+    } else if (!db.coach_chats.some((c) => c.id === body.p_chat_id)) {
+      return json({ code: 'P0002', message: 'Chat is gone' }, 400);
     }
     db.coach_messages.push(
       {
@@ -317,6 +323,25 @@ Deno.test('a follow-up replays the chat with its tool calls', async () => {
   assertEquals(input[0].content, 'Wie hat sich mein Gewicht entwickelt?');
   assertEquals(JSON.parse(String(input[1].arguments)).metric, 'body_weight');
   assertEquals(input[3].content, 'Du hast **0,6 kg** abgenommen.');
+});
+
+Deno.test('an answer for a chat deleted while it was written is not saved', async () => {
+  reset();
+  openAiReplies = [answers('Du hast **0,6 kg** abgenommen.')];
+  const first = (
+    await eventsOf(await ask({ question: 'Wie hat sich mein Gewicht entwickelt?' }))
+  )[0];
+  assertEquals(rpcCalls.find((c) => c.name === 'save_coach_answer')!.body.p_new_chat, true);
+  // The user deletes the chat while the next answer is written.
+  whileAnswering = () => {
+    db.coach_chats = [];
+    db.coach_messages = [];
+  };
+  openAiReplies = [answers('In den letzten 2 Wochen kaum.')];
+  const events = await eventsOf(await ask({ question: 'Und nur zuletzt?', chatId: first.chatId }));
+  assertEquals(events.at(-1), { type: 'error', error: 'failed' });
+  assertEquals(db.coach_chats.length, 0);
+  assertEquals(db.coach_messages.length, 0);
 });
 
 Deno.test('an answer OpenAI rejects gives the slot back and saves nothing', async () => {

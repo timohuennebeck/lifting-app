@@ -3,10 +3,10 @@
 // untranslated. Whatever language the team writes in, the user gets theirs. If translating fails,
 // the reply is saved as written and the database asks for its translation again
 // (translate-ticket-messages). Called with the support account's token: { ticket_id, content }.
-import { admin } from '../_shared/common.ts';
+import { admin, isUuid } from '../_shared/common.ts';
 import { userLanguage } from '../_shared/message-translations.ts';
 import { openAiConfigured } from '../_shared/openai.ts';
-import { corsReply, isSupportRequest, preflight, UUID } from '../_shared/support-desk.ts';
+import { corsReply, isSupportRequest, preflight } from '../_shared/support-desk.ts';
 import { translateText } from '../_shared/translate.ts';
 
 /** The database's limit on a message (ticket_messages_content_length). */
@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
 
   const body = await req.json().catch(() => null);
   const content = typeof body?.content === 'string' ? body.content.trim() : '';
-  if (typeof body?.ticket_id !== 'string' || !UUID.test(body.ticket_id)) {
+  if (!isUuid(body?.ticket_id)) {
     return corsReply(400, { error: 'bad_request' });
   }
   if (!content || content.length > MESSAGE_MAX) return corsReply(400, { error: 'bad_content' });

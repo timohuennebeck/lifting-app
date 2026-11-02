@@ -4,8 +4,7 @@
 // the app as the import's does (see PlanEvent), checked part by part (planBuilder). It also runs
 // before there is an account, so plans are limited per network and in total per day
 // (start_plan_request, kind "generate").
-import { reply } from '../_shared/common.ts';
-import { openAiConfigured } from '../_shared/openai.ts';
+import { refuseAiRequest, reply } from '../_shared/common.ts';
 import { LANGUAGES } from '../_shared/plan-events.ts';
 import {
   envLimit,
@@ -33,11 +32,8 @@ const DAILY_LIMIT = envLimit('PLAN_GENERATE_DAILY_LIMIT', 1000);
 const FAST = Deno.env.get('PLAN_GENERATE_FAST') !== 'false';
 
 Deno.serve(async (req) => {
-  if (req.method !== 'POST') return reply(405, { error: 'method_not_allowed' });
-  if (!openAiConfigured()) {
-    console.error('OPENAI_API_KEY is not set (supabase/functions/.env)');
-    return reply(500, { error: 'not_configured' });
-  }
+  const refused = refuseAiRequest(req);
+  if (refused) return refused;
 
   const body = await req.json().catch(() => null);
   const language = LANGUAGES.includes(body?.language) ? body.language : 'de';

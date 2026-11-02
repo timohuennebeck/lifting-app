@@ -183,6 +183,10 @@ export async function askCoach(req: CoachRequest): Promise<CoachReply> {
       return { error: 'upstream', detail: `${reply.upstream} ${reply.error}`, calls, usage };
     }
     addUsage(usage, reply, performance.now() - started);
+    // Cut off (a token limit, a filter) or failed: what came is no answer, nor are half calls.
+    if (reply.status !== 'completed') {
+      return { error: 'no_answer', detail: reply.status, calls, usage };
+    }
 
     const toolCalls = reply.output.filter((item) => item.type === 'function_call');
     if (!toolCalls.length) {

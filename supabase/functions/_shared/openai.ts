@@ -50,6 +50,15 @@ export interface StructuredRequest {
   model?: { name: string; reasoningEffort?: string };
 }
 
+/** Sends a Responses API request; nothing of it is stored on OpenAI's side. */
+const post = (body: Record<string, unknown>, signal: AbortSignal) =>
+  fetch(OPENAI_URL, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...body, store: false }),
+    signal,
+  });
+
 /** The Responses API request for an answer forced into `schema`. */
 function request(
   { instructions, content, name, schema, fast, model }: StructuredRequest,
@@ -57,18 +66,13 @@ function request(
 ) {
   const effort = model ? model.reasoningEffort : OPENAI_REASONING_EFFORT;
   return {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: model?.name ?? OPENAI_MODEL,
-      instructions,
-      input: [{ role: 'user', content }],
-      text: { format: { type: 'json_schema', name, strict: true, schema } },
-      ...(effort ? { reasoning: { effort } } : {}),
-      store: false,
-      ...(fast ? { service_tier: 'fast' } : {}),
-      ...(stream ? { stream: true } : {}),
-    }),
+    model: model?.name ?? OPENAI_MODEL,
+    instructions,
+    input: [{ role: 'user', content }],
+    text: { format: { type: 'json_schema', name, strict: true, schema } },
+    ...(effort ? { reasoning: { effort } } : {}),
+    ...(fast ? { service_tier: 'fast' } : {}),
+    ...(stream ? { stream: true } : {}),
   };
 }
 
@@ -84,10 +88,7 @@ const logUsage = (name: string, { usage, service_tier }: ResponsesApiResult) =>
  * errors. Logs the token usage so costs can be followed in the function logs.
  */
 export async function askStructured(req: StructuredRequest) {
-  const response = await fetch(OPENAI_URL, {
-    ...request(req, false),
-    signal: AbortSignal.timeout(req.timeoutMs),
-  });
+  const response = await post(request(req, false), AbortSignal.timeout(req.timeoutMs));
   if (!response.ok) {
     console.error('OpenAI request failed', response.status, await response.text());
     return { upstream: response.status };
@@ -129,12 +130,10 @@ export async function respondStream(
   options: { timeoutMs: number; signal?: AbortSignal; onText?: (text: string) => void },
 ) {
   const timeout = AbortSignal.timeout(options.timeoutMs);
-  const response = await fetch(OPENAI_URL, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...body, store: false, stream: true }),
-    signal: options.signal ? AbortSignal.any([options.signal, timeout]) : timeout,
-  });
+  const response = await post(
+    { ...body, stream: true },
+    options.signal ? AbortSignal.any([options.signal, timeout]) : timeout,
+  );
   if (!response.ok || !response.body) {
     const error = await response.text();
     console.error('OpenAI request failed', response.status, error);
@@ -150,17 +149,13 @@ export async function respondStream(
     tier: result.service_tier ?? null,
     processingMs,
   });
-  for await (const { event, data } of responseEvents(response.body)) {
+  for await (const item of responseEvents(response.body)) {
+    const { event } = item;
     if (event.type === 'response.output_text.delta' && event.delta) {
       options.onText?.(event.delta);
     } else if (event.type === 'response.completed') {
       return finished(event.response ?? {}, 'completed');
-    } else if (
-      event.type === 'response.incomplete' ||
-      event.type === 'response.failed' ||
-      event.type === 'error'
-    ) {
-      console.error('OpenAI stream ended early', data.slice(0, 500));
+    } else if (endedEarly(item)) {
       return finished(event.response ?? {}, event.type);
     }
   }
@@ -178,10 +173,10 @@ export type StreamedAnswer =
  * `answer`.
  */
 export async function streamStructured(req: StructuredRequest, signal: AbortSignal) {
-  const response = await fetch(OPENAI_URL, {
-    ...request(req, true),
-    signal: AbortSignal.any([signal, AbortSignal.timeout(req.timeoutMs)]),
-  });
+  const response = await post(
+    request(req, true),
+    AbortSignal.any([signal, AbortSignal.timeout(req.timeoutMs)]),
+  );
   if (!response.ok || !response.body) {
     console.error('OpenAI request failed', response.status, await response.text());
     return { upstream: response.status };
@@ -215,12 +210,23 @@ async function* responseEvents(body: ReadableStream<Uint8Array>) {
   }
 }
 
+/** Whether the event ends the stream without a whole answer; logs it when it does. */
+function endedEarly({ event, data }: { event: ResponseEvent; data: string }) {
+  const early =
+    event.type === 'response.incomplete' ||
+    event.type === 'response.failed' ||
+    event.type === 'error';
+  if (early) console.error('OpenAI stream ended early', data.slice(0, 500));
+  return early;
+}
+
 /** The Responses API's server-sent events, read into the steps of the answer. */
 async function* streamedAnswer(
   body: ReadableStream<Uint8Array>,
   name: string,
 ): AsyncGenerator<StreamedAnswer> {
-  for await (const { event, data } of responseEvents(body)) {
+  for await (const item of responseEvents(body)) {
+    const { event } = item;
     if (event.type === 'response.output_text.delta' && event.delta) {
       yield { text: event.delta };
     } else if (event.type === 'response.refusal.delta') {
@@ -230,12 +236,7 @@ async function* streamedAnswer(
       logUsage(name, event.response ?? {});
       yield { done: true };
       return;
-    } else if (
-      event.type === 'response.incomplete' ||
-      event.type === 'response.failed' ||
-      event.type === 'error'
-    ) {
-      console.error('OpenAI stream ended early', data.slice(0, 500));
+    } else if (endedEarly(item)) {
       yield { incomplete: event.response?.status ?? event.type };
       return;
     }

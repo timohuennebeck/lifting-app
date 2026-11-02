@@ -98,6 +98,8 @@ type Args = Record<string, unknown>;
 // ---------- definitions ----------
 
 const EXERCISE_METRICS: ExerciseMetric[] = ['e1rm', 'top_weight', 'reps', 'seconds', 'volume'];
+const PERIOD_METRICS: PeriodMetric[] = ['volume', 'sets', 'workouts', 'minutes'];
+const DISTRIBUTION_BY: DistributionBy[] = ['muscle', 'exercise', 'weekday'];
 const METRIC_HELP =
   'e1rm: estimated one-rep max of the best set, the usual measure of strength. top_weight: ' +
   'heaviest weight lifted. reps: most reps in a set (bodyweight exercises). seconds: longest ' +
@@ -164,7 +166,7 @@ export const TOOLS = [
     {
       metric: {
         type: 'string',
-        enum: ['volume', 'sets', 'workouts', 'minutes'],
+        enum: PERIOD_METRICS,
         description: 'volume: weight × reps. sets: completed sets. minutes: time trained.',
       },
       period: { type: 'string', enum: ['week', 'month'] },
@@ -188,7 +190,7 @@ export const TOOLS = [
       "exercise's main muscles count a set fully, helping muscles half) against the guideline of " +
       '10. exercise: sets per week per exercise. weekday: workouts per weekday.',
     {
-      by: { type: 'string', enum: ['muscle', 'exercise', 'weekday'] },
+      by: { type: 'string', enum: DISTRIBUTION_BY },
       from: {
         type: ['string', 'null'],
         description: 'First day, YYYY-MM-DD. null: 4 weeks ago, the current state.',
@@ -245,6 +247,12 @@ interface Range {
 }
 
 /** The days asked for: from the start of the data to today unless given; null when invalid. */
+/** `range`, starting at the first workout at the earliest: the days before it were not missed. */
+const fromFirstWorkout = (range: Range, first: string | undefined): Range => ({
+  from: first && first > range.from ? first : range.from,
+  to: range.to,
+});
+
 function rangeOf(args: Args, start: string | undefined, user: CoachUser): Range | null {
   const from = args.from ?? start ?? user.today;
   const to = args.to ?? user.today;
@@ -288,6 +296,28 @@ function sample(points: Point[], max = 24) {
     { length: max },
     (_, i) => points[Math.round((i * (points.length - 1)) / (max - 1))],
   );
+}
+
+/** Most points a chart's line or dots keep: about one per 2 pt of a phone's plot. */
+const CHART_POINTS = 150;
+/** Single weigh-ins drawn as dots under the trend line. */
+const CHART_DOTS = 120;
+/** Each line of a comparison. */
+const COMPARE_POINTS = 100;
+/** The calendar shows the last year at most (a phone fits about 50 weeks). */
+const CALENDAR_WEEKS = 52;
+
+/**
+ * At most `max` points for a chart (it is saved with the answer and drawn on a phone): evenly
+ * spread, with the first, last, lowest and highest kept so the line keeps its shape.
+ */
+function thin(points: Point[], max: number) {
+  if (points.length <= max) return points;
+  const keep = new Set(sample(points, max - 2));
+  const values = points.map((p) => p.value);
+  keep.add(points[values.indexOf(Math.min(...values))]);
+  keep.add(points[values.indexOf(Math.max(...values))]);
+  return points.filter((p) => keep.has(p));
 }
 
 /** A series' points that set a new best over everything before them (the first value doesn't). */
@@ -383,7 +413,7 @@ function trend(args: Args, data: CoachData, user: CoachUser): ToolResult {
       metric,
       unit,
       exerciseId: exercise?.id ?? null,
-      points,
+      points: thin(points, CHART_POINTS),
       line: null,
       records,
     },
@@ -422,13 +452,14 @@ function bodyWeight(args: Args, data: CoachData, user: CoachUser): ToolResult {
   if (points.length < 2)
     return { chart: null, result: { ...result, note: tooLittle(points.length) } };
   const trendSummary = summary(line, 1);
+  const measured = summary(points, 1);
   const weeks = daysBetween(line[0].date, line.at(-1)!.date) / 7;
   Object.assign(result, {
     // The trend, not single weigh-ins, is what changed: it evens out water and meals.
     trend: trendSummary,
     change_per_week: weeks >= 1 ? round((line.at(-1)!.value - line[0].value) / weeks, 2) : null,
-    lowest_measurement: summary(points, 1).lowest,
-    highest_measurement: summary(points, 1).highest,
+    lowest_measurement: measured.lowest,
+    highest_measurement: measured.highest,
     trend_points: sample(line),
   });
   return {
@@ -437,8 +468,8 @@ function bodyWeight(args: Args, data: CoachData, user: CoachUser): ToolResult {
       metric: 'body_weight',
       unit,
       exerciseId: null,
-      points,
-      line,
+      points: thin(points, CHART_DOTS),
+      line: thin(line, CHART_POINTS),
       records: null,
     },
     result,
@@ -478,7 +509,11 @@ function compare(args: Args, data: CoachData, user: CoachUser): ToolResult {
     })),
   };
   if (series.every((s) => s.points.length < 2)) return { chart: null, result };
-  return { chart: { type: 'compare', metric, unit, asPercent: !!args.as_percent, series }, result };
+  const lines = series.map((s) => ({ ...s, points: thin(s.points, COMPARE_POINTS) }));
+  return {
+    chart: { type: 'compare', metric, unit, asPercent: !!args.as_percent, series: lines },
+    result,
+  };
 }
 
 // ---------- period vs average ----------
@@ -497,7 +532,7 @@ function periodValue(
 
 function periodVsAverage(args: Args, data: CoachData, user: CoachUser): ToolResult {
   const metric = args.metric as PeriodMetric;
-  if (!['volume', 'sets', 'workouts', 'minutes'].includes(metric)) {
+  if (!PERIOD_METRICS.includes(metric)) {
     return failed(`Unknown metric "${String(metric)}".`);
   }
   const period: Period = args.period === 'month' ? 'month' : 'week';
@@ -596,8 +631,7 @@ function calendar(args: Args, data: CoachData, user: CoachUser): ToolResult {
   const days = data.workouts.map((w) => dayOf(w, user));
   const asked = rangeOf(args, days[0], user);
   if (!asked) return failed(BAD_RANGE);
-  // Weeks before the first workout don't count as missed.
-  const range = { from: days[0] && days[0] > asked.from ? days[0] : asked.from, to: asked.to };
+  const range = fromFirstWorkout(asked, days[0]);
   const counts = new Map<string, number>();
   const sets = new Map<string, number>();
   data.workouts.forEach((workout, i) => {
@@ -645,16 +679,20 @@ function calendar(args: Args, data: CoachData, user: CoachUser): ToolResult {
     };
   });
 
+  const shownFrom = [range.from, addDays(weekStart(range.to), -7 * (CALENDAR_WEEKS - 1))].sort()[1];
   return {
     chart: trained.length
       ? {
           type: 'calendar',
-          ...range,
-          days: trained.map((date) => ({
-            date,
-            value: counts.get(date)!,
-            sets: sets.get(date) ?? 0,
-          })),
+          from: shownFrom,
+          to: range.to,
+          days: trained
+            .filter((date) => date >= shownFrom)
+            .map((date) => ({
+              date,
+              value: counts.get(date)!,
+              sets: sets.get(date) ?? 0,
+            })),
         }
       : null,
     result: {
@@ -697,12 +735,12 @@ const SETS_GUIDELINE = 10;
 
 function distribution(args: Args, data: CoachData, user: CoachUser): ToolResult {
   const by = args.by as DistributionBy;
-  if (!['muscle', 'exercise', 'weekday'].includes(by)) return failed(`Unknown by "${String(by)}".`);
+  if (!DISTRIBUTION_BY.includes(by)) return failed(`Unknown by "${String(by)}".`);
   const first = data.workouts[0] ? dayOf(data.workouts[0], user) : undefined;
   // Without a start the last 4 weeks: the current state, not one diluted by old breaks.
   const asked = rangeOf(args, addDays(user.today, -27), user);
   if (!asked) return failed(BAD_RANGE);
-  const range = { from: first && first > asked.from ? first : asked.from, to: asked.to };
+  const range = fromFirstWorkout(asked, first);
   const weeks = Math.max(1, (daysBetween(range.from, range.to) + 1) / 7);
   const inside = data.workouts.filter((w) => inRange(dayOf(w, user), range));
 

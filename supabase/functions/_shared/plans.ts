@@ -4,6 +4,7 @@
 import { encodeHex } from 'jsr:@std/encoding@1/hex';
 
 import { admin, reply } from './common.ts';
+import { eventStream } from './event-stream.ts';
 import { type StructuredRequest, streamStructured } from './openai.ts';
 import {
   type ImportedRoutine,
@@ -266,35 +267,12 @@ async function sendPlan<Routine extends { exercises: unknown[] }, Exercise>(
 export function planEventResponse<Routine extends { exercises: unknown[] }, Exercise>(
   plan: PlanAnswer<Routine, Exercise>,
 ) {
-  // Not the request's signal: Deno also aborts that once a response is delivered.
-  const stop = new AbortController();
-  const encoder = new TextEncoder();
-  const events = new ReadableStream<Uint8Array>({
-    start(controller) {
-      const send = (event: PlanEvent) =>
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
-      void sendPlan(plan, send, stop.signal)
-        .catch((error) => {
-          if (stop.signal.aborted) return;
-          console.error(`The ${plan.label} broke off`, error);
-          send({ type: 'error', error: 'failed' });
-        })
-        .finally(() => {
-          try {
-            controller.close();
-          } catch {
-            // Already closed because the app went away.
-          }
-        });
+  return eventStream<PlanEvent>(
+    (send, signal) => sendPlan(plan, send, signal),
+    (error, send, aborted) => {
+      if (aborted) return;
+      console.error(`The ${plan.label} broke off`, error);
+      send({ type: 'error', error: 'failed' });
     },
-    cancel: () => stop.abort(),
-  });
-  return new Response(events, {
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      // Proxies pass each event on right away instead of collecting the answer.
-      'X-Accel-Buffering': 'no',
-    },
-  });
+  );
 }

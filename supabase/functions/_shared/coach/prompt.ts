@@ -1,7 +1,7 @@
 // What the coach model reads before the conversation: the rules (the same for everyone, so
 // OpenAI caches them) and the user's context: today, units, profile, plan and the exercises
 // they have done, whose ids the tools take.
-import { type CoachData, type CoachUser, dayIn, weekdayOf } from './data.ts';
+import { type CoachData, type CoachUser, dayIn, weekdayOf, weightUnit } from './data.ts';
 
 export const INSTRUCTIONS = `You are Kai, the AI coach in Loqqa, a workout logging app. You answer the user's questions about their own training, body weight and body checks from their logged data. You are an AI, not a person: if asked, say so, also when asked about Loqqa's head coach, who isn't you.
 
@@ -78,7 +78,7 @@ export function contextText(user: CoachUser, profile: CoachProfile, data: CoachD
   const first = data.workouts[0];
   const last = data.workouts.at(-1);
   const lines = [
-    `Today: ${user.today} (${weekdayOf(user.today)}). Units: ${user.units === 'imperial' ? 'lb' : 'kg'}. App language: ${user.language}.`,
+    `Today: ${user.today} (${weekdayOf(user.today)}). Units: ${weightUnit(user.units)}. App language: ${user.language}.`,
     `Profile: goal ${profile.goal ?? 'not set'}, experience ${profile.experience ?? 'not set'}, equipment ${profile.equipment ?? 'not set'}${profile.focus.length ? `, focus ${profile.focus.join(', ')}` : ''}.`,
     profile.plan
       ? `Active plan: "${profile.plan.name}", ${profile.plan.sessionsPerWeek} workouts a week.`

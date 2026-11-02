@@ -7,8 +7,8 @@
 import { encodeBase64 } from 'jsr:@std/encoding@1/base64';
 
 import { ageFrom, hasPro } from '../_shared/account.ts';
-import { admin, reply, requestUser } from '../_shared/common.ts';
-import { askStructured, openAiConfigured } from '../_shared/openai.ts';
+import { admin, isUuid, refuseAiRequest, reply, requestUser } from '../_shared/common.ts';
+import { askStructured } from '../_shared/openai.ts';
 import {
   type AssessmentProfile,
   contextText,
@@ -36,7 +36,6 @@ const DAILY_LIMIT = 5;
  */
 const MIN_CHECK_GAP_MS = 6 * 24 * 60 * 60 * 1000 - 2 * 60 * 60 * 1000;
 const OPENAI_TIMEOUT_MS = 120_000;
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 async function photoDataUrl(path: string) {
   const { data, error } = await admin.storage.from(BUCKET).download(path);
@@ -62,17 +61,14 @@ const askModel = (content: ReturnType<typeof modelInput>) =>
   });
 
 Deno.serve(async (req) => {
-  if (req.method !== 'POST') return reply(405, { error: 'method_not_allowed' });
-  if (!openAiConfigured()) {
-    console.error('OPENAI_API_KEY is not set (supabase/functions/.env)');
-    return reply(500, { error: 'not_configured' });
-  }
+  const refused = refuseAiRequest(req);
+  if (refused) return refused;
 
   const userId = (await requestUser(req))?.id;
   if (!userId) return reply(401, { error: 'unauthorized' });
 
   const { checkId } = await req.json().catch(() => ({}));
-  if (typeof checkId !== 'string' || !UUID.test(checkId)) {
+  if (!isUuid(checkId)) {
     return reply(400, { error: 'bad_request' });
   }
 

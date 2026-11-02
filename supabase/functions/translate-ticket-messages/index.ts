@@ -4,7 +4,7 @@
 //   reply); { user_id, language } when a user switched the app language, for their team replies.
 // - by the support desk (the support account's token): { message_ids, language } for messages it
 //   shows in a language they have no translation in yet; answers with those translations.
-import { admin } from '../_shared/common.ts';
+import { admin, isUuid } from '../_shared/common.ts';
 import {
   MESSAGE_COLUMNS,
   type MessageRow,
@@ -13,7 +13,7 @@ import {
   userLanguage,
 } from '../_shared/message-translations.ts';
 import { openAiConfigured } from '../_shared/openai.ts';
-import { corsReply, isSupportRequest, preflight, UUID } from '../_shared/support-desk.ts';
+import { corsReply, isSupportRequest, preflight } from '../_shared/support-desk.ts';
 import { isAppLanguage } from '../_shared/translate.ts';
 
 const WEBHOOK_SECRET = Deno.env.get('TRANSLATION_WEBHOOK_SECRET');
@@ -65,15 +65,11 @@ Deno.serve(async (req) => {
   const body = await req.json().catch(() => null);
 
   if (fromDatabase(req)) {
-    if (typeof body?.message_id === 'string' && UUID.test(body.message_id)) {
+    if (isUuid(body?.message_id)) {
       await translateNewMessage(body.message_id);
       return corsReply(200, { ok: true });
     }
-    if (
-      typeof body?.user_id === 'string' &&
-      UUID.test(body.user_id) &&
-      isAppLanguage(body.language)
-    ) {
+    if (isUuid(body?.user_id) && isAppLanguage(body.language)) {
       await translateReplies(body.user_id, body.language);
       return corsReply(200, { ok: true });
     }
@@ -86,7 +82,7 @@ Deno.serve(async (req) => {
     !Array.isArray(ids) ||
     !ids.length ||
     ids.length > MAX_IDS ||
-    !ids.every((id) => typeof id === 'string' && UUID.test(id)) ||
+    !ids.every(isUuid) ||
     !isAppLanguage(body.language)
   ) {
     return corsReply(400, { error: 'bad_request' });

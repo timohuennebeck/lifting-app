@@ -4,8 +4,8 @@
 // the exercises the app adds (with their sets, and the ones the catalog lacks). It also runs
 // before there is an account (a plan set up in onboarding), so requests are limited per network
 // and in total per day (start_plan_request, kind "voice").
-import { reply } from '../_shared/common.ts';
-import { askStructured, openAiConfigured, type StructuredRequest } from '../_shared/openai.ts';
+import { refuseAiRequest, reply } from '../_shared/common.ts';
+import { askStructured, type StructuredRequest } from '../_shared/openai.ts';
 import { LANGUAGES } from '../_shared/plan-events.ts';
 import { type CatalogRow, envLimit, loadCatalog, takePlanRequest } from '../_shared/plans.ts';
 import {
@@ -44,11 +44,8 @@ async function ask(request: StructuredRequest) {
 }
 
 Deno.serve(async (req) => {
-  if (req.method !== 'POST') return reply(405, { error: 'method_not_allowed' });
-  if (!openAiConfigured()) {
-    console.error('OPENAI_API_KEY is not set (supabase/functions/.env)');
-    return reply(500, { error: 'not_configured' });
-  }
+  const refused = refuseAiRequest(req);
+  if (refused) return refused;
 
   const body = await req.json().catch(() => null);
   const language = LANGUAGES.includes(body?.language) ? body.language : 'de';

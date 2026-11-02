@@ -15,8 +15,8 @@ import {
   type ProfileRow,
 } from '../_shared/coach/load.ts';
 import { contextText } from '../_shared/coach/prompt.ts';
-import { admin, reply, requestUser } from '../_shared/common.ts';
-import { openAiConfigured } from '../_shared/openai.ts';
+import { admin, isUuid, refuseAiRequest, reply, requestUser } from '../_shared/common.ts';
+import { eventStream } from '../_shared/event-stream.ts';
 import { LANGUAGES } from '../_shared/plan-events.ts';
 
 /** The app's COACH_QUESTION_MAX (src/shared/lib/limits.ts), as the database checks it. */
@@ -34,7 +34,6 @@ const TIMEOUT_MS = 60_000;
 const HISTORY_TURNS = 6;
 /** The answers are a few sentences; the database takes up to 2,000 characters. */
 const ANSWER_MAX = 2000;
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** What the app streams back, after the coach's own events. */
 type Event =
@@ -168,10 +167,13 @@ async function answer(job: Job, send: (event: Event) => void, signal: AbortSigna
       await finishRun(job.runId, reply.error === 'refused' ? 'refused' : 'failed', reply.usage, ms);
     return send({ type: 'error', error: reply.error === 'refused' ? 'refused' : 'failed' });
   }
+  // Stopped after the model was done: nothing is saved, as the app has put the question back.
+  if (signal.aborted) return finishRun(job.runId, 'failed', reply.usage, ms);
   const { error } = await admin.rpc('save_coach_answer', {
     p_run_id: job.runId,
     p_user_id: job.userId,
     p_chat_id: chatId,
+    p_new_chat: !job.chatId,
     p_question_id: questionId,
     p_question: job.question,
     p_asked_at: askedAt.toISOString(),
@@ -191,61 +193,26 @@ async function answer(job: Job, send: (event: Event) => void, signal: AbortSigna
 
 /** The answer as server-sent events; cancelling (the app went away) stops the model too. */
 function eventResponse(job: Job) {
-  // Not the request's signal: Deno also aborts that once a response is delivered.
-  const stop = new AbortController();
-  const encoder = new TextEncoder();
-  const events = new ReadableStream<Uint8Array>({
-    start(controller) {
-      const send = (event: Event) => {
-        try {
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
-        } catch {
-          // The app went away: `cancel` below stops the answer.
-        }
-      };
-      void answer(job, send, stop.signal)
-        .catch(async (error) => {
-          if (!stop.signal.aborted) console.error('The coach broke off', error);
-          await finishRun(job.runId, 'failed');
-          send({ type: 'error', error: 'failed' });
-        })
-        .finally(() => {
-          try {
-            controller.close();
-          } catch {
-            // Already closed because the app went away.
-          }
-        });
+  return eventStream<Event>(
+    (send, signal) => answer(job, send, signal),
+    async (error, send, aborted) => {
+      if (!aborted) console.error('The coach broke off', error);
+      await finishRun(job.runId, 'failed');
+      send({ type: 'error', error: 'failed' });
     },
-    cancel: () => stop.abort(),
-  });
-  return new Response(events, {
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      // Proxies pass each event on right away instead of collecting the answer.
-      'X-Accel-Buffering': 'no',
-    },
-  });
+  );
 }
 
 Deno.serve(async (req) => {
-  if (req.method !== 'POST') return reply(405, { error: 'method_not_allowed' });
-  if (!openAiConfigured()) {
-    console.error('OPENAI_API_KEY is not set (supabase/functions/.env)');
-    return reply(500, { error: 'not_configured' });
-  }
+  const refused = refuseAiRequest(req);
+  if (refused) return refused;
   const userId = (await requestUser(req))?.id;
   if (!userId) return reply(401, { error: 'unauthorized' });
 
   const body = await req.json().catch(() => ({}));
   const question = typeof body.question === 'string' ? body.question.trim() : '';
   const chatId = body.chatId ?? null;
-  if (
-    !question ||
-    question.length > QUESTION_MAX ||
-    (chatId !== null && (typeof chatId !== 'string' || !UUID.test(chatId)))
-  ) {
+  if (!question || question.length > QUESTION_MAX || (chatId !== null && !isUuid(chatId))) {
     return reply(400, { error: 'bad_request' });
   }
 
@@ -291,10 +258,15 @@ Deno.serve(async (req) => {
 
   // Recorded before any of the user's data goes to OpenAI.
   if (!profile.coach_consent_at) {
-    await admin
+    const { error: consentError } = await admin
       .from('profiles')
       .update({ coach_consent_at: new Date().toISOString() })
       .eq('id', userId);
+    if (consentError) {
+      console.error('Recording the coach consent failed', consentError);
+      await giveBack(slot.run);
+      return reply(500, { error: 'failed' });
+    }
   }
   const language = LANGUAGES.includes(body.language)
     ? body.language
