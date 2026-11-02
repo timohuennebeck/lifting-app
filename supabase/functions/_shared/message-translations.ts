@@ -1,7 +1,8 @@
 // Stores translations of ticket messages: detects each message's language once
 // (ticket_messages.language) and adds the target language's translation where one is missing.
 import { admin } from './common.ts';
-import { type AppLanguage, isAppLanguage, sameLanguage, translateText } from './translate.ts';
+import { type AppLanguage, isAppLanguage } from './plan-events.ts';
+import { sameLanguage, translateText } from './translate.ts';
 
 export interface MessageRow {
   id: string;

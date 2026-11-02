@@ -2,7 +2,7 @@
 // the support account (app_metadata.role = 'support', which only the service role can set).
 import { reply, requestUser } from './common.ts';
 
-const CORS = {
+export const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',

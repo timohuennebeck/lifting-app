@@ -4,10 +4,10 @@
 // the exercises the app adds (with their sets, and the ones the catalog lacks). It also runs
 // before there is an account (a plan set up in onboarding), so requests are limited per network
 // and in total per day (start_plan_request, kind "voice").
-import { refuseAiRequest, reply } from '../_shared/common.ts';
-import { askStructured, type StructuredRequest } from '../_shared/openai.ts';
-import { LANGUAGES } from '../_shared/plan-events.ts';
-import { type CatalogRow, envLimit, loadCatalog, takePlanRequest } from '../_shared/plans.ts';
+import { envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
+import { askStructured, PASSING_STATUSES, type StructuredRequest } from '../_shared/openai.ts';
+import { isAppLanguage } from '../_shared/plan-events.ts';
+import { type CatalogRow, loadCatalog, takePlanRequest } from '../_shared/plans.ts';
 import {
   buildSchema,
   contextText,
@@ -25,8 +25,6 @@ const DAILY_LIMIT = envLimit('PLAN_VOICE_DAILY_LIMIT', 5000);
 const FAST = Deno.env.get('PLAN_VOICE_FAST') !== 'false';
 /** Characters of text (the app's MAX_SPOKEN). */
 const MAX_TEXT = 4000;
-/** OpenAI's HTTP statuses worth a second attempt: timeout, conflict, rate limit, overload. */
-const PASSING_STATUSES = new Set([408, 409, 429, 500, 502, 503, 504]);
 
 /**
  * The model's answer, with one more attempt when the first fails for a passing reason (overload,
@@ -48,7 +46,7 @@ Deno.serve(async (req) => {
   if (refused) return refused;
 
   const body = await req.json().catch(() => null);
-  const language = LANGUAGES.includes(body?.language) ? body.language : 'de';
+  const language = isAppLanguage(body?.language) ? body.language : 'de';
   const text = typeof body?.text === 'string' ? body.text.trim() : '';
   if (!text) return reply(400, { error: 'bad_request' });
   if (text.length > MAX_TEXT) return reply(413, { error: 'too_large' });

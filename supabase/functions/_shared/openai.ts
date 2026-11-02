@@ -8,6 +8,9 @@ const OPENAI_REASONING_EFFORT = Deno.env.get('OPENAI_REASONING_EFFORT');
 
 export const openAiConfigured = () => !!OPENAI_API_KEY;
 
+/** OpenAI's HTTP statuses worth another attempt: timeout, conflict, rate limit, overload. */
+export const PASSING_STATUSES = new Set([408, 409, 429, 500, 502, 503, 504]);
+
 interface ResponseContent {
   type: string;
   text?: string;

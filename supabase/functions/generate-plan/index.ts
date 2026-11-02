@@ -4,10 +4,9 @@
 // the app as the import's does (see PlanEvent), checked part by part (planBuilder). It also runs
 // before there is an account, so plans are limited per network and in total per day
 // (start_plan_request, kind "generate").
-import { refuseAiRequest, reply } from '../_shared/common.ts';
-import { LANGUAGES } from '../_shared/plan-events.ts';
+import { envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
+import { isAppLanguage } from '../_shared/plan-events.ts';
 import {
-  envLimit,
   loadCatalog,
   loadEquipment,
   planEventResponse,
@@ -36,7 +35,7 @@ Deno.serve(async (req) => {
   if (refused) return refused;
 
   const body = await req.json().catch(() => null);
-  const language = LANGUAGES.includes(body?.language) ? body.language : 'de';
+  const language = isAppLanguage(body?.language) ? body.language : 'de';
   const answers = parseAnswers(body?.answers);
   if (!answers) return reply(400, { error: 'bad_request' });
 

@@ -6,11 +6,10 @@
 // total per day (start_plan_request).
 import { decodeBase64 } from 'jsr:@std/encoding@1/base64';
 
-import { refuseAiRequest, reply } from '../_shared/common.ts';
-import { LANGUAGES } from '../_shared/plan-events.ts';
+import { envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
+import { isAppLanguage } from '../_shared/plan-events.ts';
 import {
   type CatalogRow,
-  envLimit,
   loadCatalog,
   planEventResponse,
   takePlanRequest,
@@ -103,7 +102,7 @@ Deno.serve(async (req) => {
   if (refused) return refused;
 
   const body = await req.json().catch(() => null);
-  const language = LANGUAGES.includes(body?.language) ? body.language : 'de';
+  const language = isAppLanguage(body?.language) ? body.language : 'de';
   const photos: unknown = body?.photos;
   const file: PlanFile | undefined = body?.file;
   const hasPhotos = Array.isArray(photos) && photos.length > 0;

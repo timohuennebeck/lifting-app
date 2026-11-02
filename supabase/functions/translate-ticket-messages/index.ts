@@ -4,7 +4,7 @@
 //   reply); { user_id, language } when a user switched the app language, for their team replies.
 // - by the support desk (the support account's token): { message_ids, language } for messages it
 //   shows in a language they have no translation in yet; answers with those translations.
-import { admin, isUuid } from '../_shared/common.ts';
+import { admin, isUuid, refuseAiRequest } from '../_shared/common.ts';
 import {
   MESSAGE_COLUMNS,
   type MessageRow,
@@ -12,9 +12,8 @@ import {
   translateMessages,
   userLanguage,
 } from '../_shared/message-translations.ts';
-import { openAiConfigured } from '../_shared/openai.ts';
-import { corsReply, isSupportRequest, preflight } from '../_shared/support-desk.ts';
-import { isAppLanguage } from '../_shared/translate.ts';
+import { CORS, corsReply, isSupportRequest, preflight } from '../_shared/support-desk.ts';
+import { isAppLanguage } from '../_shared/plan-events.ts';
 
 const WEBHOOK_SECRET = Deno.env.get('TRANSLATION_WEBHOOK_SECRET');
 /** The most messages the desk asks for at once. */
@@ -57,11 +56,8 @@ async function translateReplies(userId: string, language: Parameters<typeof tran
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return preflight();
-  if (req.method !== 'POST') return corsReply(405, { error: 'method_not_allowed' });
-  if (!openAiConfigured()) {
-    console.error('OPENAI_API_KEY is not set (supabase/functions/.env)');
-    return corsReply(500, { error: 'not_configured' });
-  }
+  const refused = refuseAiRequest(req, CORS);
+  if (refused) return refused;
   const body = await req.json().catch(() => null);
 
   if (fromDatabase(req)) {

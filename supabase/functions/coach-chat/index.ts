@@ -15,9 +15,9 @@ import {
   type ProfileRow,
 } from '../_shared/coach/load.ts';
 import { contextText } from '../_shared/coach/prompt.ts';
-import { admin, isUuid, refuseAiRequest, reply, requestUser } from '../_shared/common.ts';
+import { admin, envLimit, isUuid, refuseAiRequest, reply, requestUser } from '../_shared/common.ts';
 import { eventStream } from '../_shared/event-stream.ts';
-import { LANGUAGES } from '../_shared/plan-events.ts';
+import { isAppLanguage } from '../_shared/plan-events.ts';
 
 /** The app's COACH_QUESTION_MAX (src/shared/lib/limits.ts), as the database checks it. */
 const QUESTION_MAX = 500;
@@ -27,7 +27,7 @@ const setting = (name: string, fallback: string) => Deno.env.get(name) || fallba
 const MODEL = setting('OPENAI_COACH_MODEL', 'gpt-6.1-sol');
 const EFFORT = setting('OPENAI_COACH_REASONING_EFFORT', 'low');
 const FAST = setting('COACH_FAST', 'true') !== 'false';
-const DAILY_LIMIT = Number(setting('COACH_DAILY_LIMIT', '20'));
+const DAILY_LIMIT = envLimit('COACH_DAILY_LIMIT', 20);
 const MONTHLY_LIMIT = Number(setting('COACH_MONTHLY_LIMIT', '150'));
 const TIMEOUT_MS = 60_000;
 /** Earlier questions the model reads back with their answers and tool calls. */
@@ -268,11 +268,7 @@ Deno.serve(async (req) => {
       return reply(500, { error: 'failed' });
     }
   }
-  const language = LANGUAGES.includes(body.language)
-    ? body.language
-    : LANGUAGES.includes(profile.language ?? '')
-      ? profile.language!
-      : 'en';
+  const language = [body.language, profile.language].find(isAppLanguage) ?? 'en';
   return eventResponse({
     userId,
     runId: slot.run,

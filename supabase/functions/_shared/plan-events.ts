@@ -4,7 +4,11 @@
 // and how the names in them are tidied.
 
 /** The app languages (its AppLanguage). */
-export const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR', 'ko'];
+export const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR', 'ko'] as const;
+export type AppLanguage = (typeof LANGUAGES)[number];
+
+export const isAppLanguage = (value: unknown): value is AppLanguage =>
+  LANGUAGES.includes(value as AppLanguage);
 
 /** The app's muscles (its MuscleId): focus muscles and the muscles of new exercises. */
 export const MUSCLES = [

@@ -2,13 +2,7 @@
 // GPT-6 Luna): detects the language a text is written in and puts it into one of the app's
 // languages, in the app's voice. No database here; message-translations.ts stores the results.
 import { askStructured } from './openai.ts';
-
-/** The app's languages; translations are made into these. */
-export const APP_LANGUAGES = ['en', 'de', 'ko', 'pt-PT', 'pt-BR'] as const;
-export type AppLanguage = (typeof APP_LANGUAGES)[number];
-
-export const isAppLanguage = (value: unknown): value is AppLanguage =>
-  APP_LANGUAGES.includes(value as AppLanguage);
+import type { AppLanguage } from './plan-events.ts';
 
 /** The language part of a tag: "pt-BR" → "pt". */
 const base = (tag: string) => tag.trim().toLowerCase().split(/[-_]/)[0];
