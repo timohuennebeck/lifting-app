@@ -18,6 +18,8 @@ export interface Case {
   args?: (args: Args) => string[];
   /** Something the answer has to say. */
   says?: RegExp;
+  /** The question is unclear: the answer asks back. Every other answer must not ask anything. */
+  asks?: boolean;
 }
 
 /** A day within `slack` days of the expected one. */
@@ -333,5 +335,23 @@ export const CASES: Case[] = [
     turns: ['Wie oft trainiere ich pro Woche?'],
     language: 'de',
     tool: ['calendar', 'period_vs_average'],
+  },
+
+  // ---------- unclear questions: the only time the coach asks back ----------
+  {
+    id: 'unclear',
+    user: 'lena',
+    turns: ['Ist das gut so?'],
+    language: 'de',
+    tool: [null],
+    asks: true,
+  },
+  {
+    id: 'unclear-en',
+    user: 'sam',
+    turns: ['What about the other one?'],
+    language: 'en',
+    tool: [null],
+    asks: true,
   },
 ];

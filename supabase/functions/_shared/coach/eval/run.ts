@@ -122,6 +122,9 @@ function grade(c: Case, history: CoachTurn[], context: string) {
     found.push(`length: ${sentences} sentences, ${words} words`);
   }
   if (c.says && !c.says.test(turn.answer)) found.push(`doesn't say ${c.says}`);
+  if (turn.answer.includes('?') !== !!c.asks) {
+    found.push(c.asks ? "asks: doesn't ask what is meant" : 'asks: asks the user something');
+  }
   return found;
 }
 
@@ -240,7 +243,7 @@ function summary(outcomes: Outcome[]) {
   return [
     `Model ${label}, ${outcomes.length} questions`,
     `Passed ${share(outcomes.filter((o) => o.passed).length)}; errors ${outcomes.length - answered.length}`,
-    `Failing: tool ${failing('tool')}, args ${failing('args')}, numbers ${failing('numbers')}, language ${failing('language')}, length ${failing('length')}, says ${failing("doesn't say")}`,
+    `Failing: tool ${failing('tool')}, args ${failing('args')}, numbers ${failing('numbers')}, language ${failing('language')}, length ${failing('length')}, says ${failing("doesn't say")}, asks ${failing('asks')}`,
     `Time per question: ${(answered.reduce((s, o) => s + o.seconds, 0) / Math.max(1, answered.length)).toFixed(1)} s on average, ${percentile(
       answered.map((o) => o.seconds),
       0.9,
