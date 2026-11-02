@@ -2,7 +2,6 @@
   "memberSince": "{{date}} 가입",
   "name": {
     "title": "이름",
-    "subtitle": "프로필에 표시돼요.",
     "label": "이름",
     "placeholder": "이름",
     "edit": "이름 변경"

@@ -2,7 +2,6 @@
   "memberSince": "Member since {{date}}",
   "name": {
     "title": "Your name",
-    "subtitle": "Shown on your profile.",
     "label": "Name",
     "placeholder": "First name",
     "edit": "Change name"

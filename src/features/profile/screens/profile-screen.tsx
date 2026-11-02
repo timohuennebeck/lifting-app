@@ -7,7 +7,7 @@ import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { OpenTicketsSection } from '@/features/support/components/open-tickets-section';
 import { ProfileAvatar } from '@/shared/components/profile-avatar';
 import { TabScreen } from '@/shared/components/tab-screen';
-import { saveProfile, useProfile } from '@/shared/data/profile';
+import { useProfile } from '@/shared/data/profile';
 import { useWorkoutCount, useWorkoutHistory } from '@/shared/data/workouts';
 import { formatDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
@@ -22,7 +22,6 @@ import { Text } from '@/shared/ui/text';
 import { ActivityHeatmap } from '../components/activity-heatmap';
 import { type AvatarAction, AvatarSheet } from '../components/avatar-sheet';
 import { HistoryEntry } from '../components/history-entry';
-import { NameSheet } from '../components/name-sheet';
 import { type AvatarSource, pickAvatar, removeAvatar, saveAvatar } from '../lib/avatar';
 
 const PAGE = 10;
@@ -50,7 +49,6 @@ export function ProfileScreen() {
   const { data: history = [] } = useWorkoutHistory(visible);
   const { data: workoutCount = 0 } = useWorkoutCount();
   const name = profile?.firstName ?? '';
-  const [nameOpen, setNameOpen] = useState(false);
 
   async function onAvatarAction(action: AvatarAction) {
     setAvatarOpen(false);
@@ -117,13 +115,6 @@ export function ProfileScreen() {
       onRetry,
     });
 
-  async function saveName(firstName: string) {
-    if (!profile) return;
-    await saveProfile(profile.id, { firstName });
-    haptics.success();
-    setNameOpen(false);
-  }
-
   return (
     <TabScreen greeting={false} settings>
       <View className="items-start px-5 pt-4">
@@ -153,7 +144,7 @@ export function ProfileScreen() {
           haptic="tap"
           activeScale={0.98}
           accessibilityLabel={t('name.edit')}
-          onPress={() => setNameOpen(true)}
+          onPress={() => router.push('/profile-name')}
           className="mt-4.5 max-w-full flex-row items-center gap-2"
         >
           <Text
@@ -230,12 +221,6 @@ export function ProfileScreen() {
         onClose={() => setAvatarOpen(false)}
         hasPhoto={!!profile?.avatarPath}
         onAction={onAvatarAction}
-      />
-      <NameSheet
-        visible={nameOpen}
-        onClose={() => setNameOpen(false)}
-        initialValue={profile?.firstName ?? ''}
-        onSave={saveName}
       />
     </TabScreen>
   );
