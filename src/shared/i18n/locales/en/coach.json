@@ -85,7 +85,6 @@
   },
   "history": {
     "title": "Earlier chats",
-    "menu": "Chat options",
     "selected_one": "{{count}} selected",
     "selected_other": "{{count}} selected",
     "delete": "Delete",

@@ -10,6 +10,7 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { CoachMark } from './coach-mark';
+import { SparkBorder } from './spark-border';
 
 /** One flash, then a rest until the next; each letter lights up a moment after the one before. */
 const FLASH_MS = 3500;
@@ -71,6 +72,7 @@ export function AskCoachCard({ onPress, className }: AskCoachCardProps) {
         className,
       )}
     >
+      <SparkBorder radius={18} />
       {/* The diamond turns half a turn with each flash. */}
       <CoachMark size={36} turns={flashes} />
       <View className="min-w-0 flex-1">

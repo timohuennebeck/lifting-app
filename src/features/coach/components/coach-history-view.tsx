@@ -28,8 +28,6 @@ export interface ChatSection {
 export interface CoachHistoryViewProps {
   sections: ChatSection[];
   onOpen: (chatId: string) => void;
-  /** A chat's "…": the sheet that deletes it. */
-  onMenu: (chatId: string) => void;
   onBack: () => void;
   onNew: () => void;
   /** Choosing chats to delete, with a box in front of each, as in Claude's chat list. */
@@ -59,18 +57,16 @@ interface RowProps {
   checked: boolean;
   onPress: () => void;
   onLongPress: () => void;
-  onMenu: () => void;
 }
 
-function ChatRow({ chat, selecting, checked, onPress, onLongPress, onMenu }: RowProps) {
-  const { t } = useTranslation('coach');
+function ChatRow({ chat, selecting, checked, onPress, onLongPress }: RowProps) {
   return (
     <PressableScale
       haptic="tap"
       onPress={onPress}
       onLongPress={onLongPress}
       accessibilityState={selecting ? { checked } : undefined}
-      className="flex-row gap-3 py-3.5 pl-2"
+      className="flex-row gap-3 px-2 py-3.5"
     >
       {selecting ? <CheckBox checked={checked} /> : null}
       <View className="min-w-0 flex-1 gap-[5px]">
@@ -87,29 +83,17 @@ function ChatRow({ chat, selecting, checked, onPress, onLongPress, onMenu }: Row
           {chat.preview}
         </Text>
       </View>
-      {selecting ? (
-        <View className="w-2" />
-      ) : (
-        <IconButton
-          icon="more"
-          size={36}
-          accessibilityLabel={t('history.menu')}
-          onPress={onMenu}
-          className="-mt-1.5 bg-transparent"
-        />
-      )}
     </PressableScale>
   );
 }
 
 /**
- * Kai's earlier chats (design CO2-G), grouped by when they were last used. A chat's "…" deletes
- * it; a long press puts boxes in front for deleting several at once.
+ * Kai's earlier chats (design CO2-G), grouped by when they were last used. A long press puts
+ * boxes in front for deleting one or several.
  */
 export function CoachHistoryView({
   sections,
   onOpen,
-  onMenu,
   onBack,
   onNew,
   selecting,
@@ -183,7 +167,6 @@ export function CoachHistoryView({
                   if (!selecting) onSelecting(true);
                   onToggle(chat.id);
                 }}
-                onMenu={() => onMenu(chat.id)}
               />
             ))}
           </View>

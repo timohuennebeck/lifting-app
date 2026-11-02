@@ -7,23 +7,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
 
+import { framePath } from '@/shared/lib/frame-path';
 import { colors } from '@/shared/lib/theme';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const STROKE = 3;
 const TRACK = 'rgba(255,255,255,0.12)';
-
-/** Rounded-rect outline starting top-left after the corner, running clockwise. */
-function framePath(width: number, height: number, r: number) {
-  const o = STROKE / 2;
-  const [l, t, rt, b] = [o, o, width - o, height - o];
-  return [
-    `M${l + r} ${t}H${rt - r}A${r} ${r} 0 0 1 ${rt} ${t + r}`,
-    `V${b - r}A${r} ${r} 0 0 1 ${rt - r} ${b}`,
-    `H${l + r}A${r} ${r} 0 0 1 ${l} ${b - r}`,
-    `V${t + r}A${r} ${r} 0 0 1 ${l + r} ${t}Z`,
-  ].join('');
-}
 
 /**
  * The progress (0–1) at the point of the outline nearest to (x, y): the side closest to the
@@ -61,10 +50,7 @@ export interface ProgressFrameProps {
 /** Accent progress line that runs once around the video frame per playback loop. */
 export function ProgressFrame({ width, height, radius, progress, tickMs }: ProgressFrameProps) {
   const value = useSharedValue(progress);
-  const w = width - STROKE;
-  const h = height - STROKE;
-  const length = 2 * (w + h) - 8 * radius + 2 * Math.PI * radius;
-  const d = framePath(width, height, radius);
+  const { d, length } = framePath(width, height, radius, STROKE / 2);
 
   useEffect(() => {
     // Jump back on loop restarts or seeks; glide forward otherwise.

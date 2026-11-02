@@ -85,7 +85,6 @@
   },
   "history": {
     "title": "이전 채팅",
-    "menu": "채팅 옵션",
     "selected_one": "{{count}}개 선택됨",
     "selected_other": "{{count}}개 선택됨",
     "delete": "삭제",

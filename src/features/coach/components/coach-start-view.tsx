@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
-import { KeyboardStickyView } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
@@ -20,7 +20,7 @@ export interface CoachStartViewProps {
   composer: CoachComposerProps;
 }
 
-/** Kai's empty chat (design CO·A): who answers and from what, above the field. */
+/** Kai's empty chat (design CO·A): who answers and from what, centred above the field. */
 export function CoachStartView({
   workouts,
   since,
@@ -31,6 +31,7 @@ export function CoachStartView({
   const { t } = useTranslation('coach');
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
+  const known = workouts > 0 && !!since;
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
       <ScreenHeader
@@ -45,31 +46,36 @@ export function CoachStartView({
           />
         }
       />
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'flex-end',
-          paddingHorizontal: 20,
-          paddingBottom: 24,
-        }}
+      {/* The field rides up with the keyboard and pushes the text up with it, still centred. */}
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={-(footerInset - 8)}
+        style={{ flex: 1 }}
       >
-        <View className="gap-3">
-          <CoachMark size={44} animation="breathe" />
-          <Text className="font-inter-semibold text-[30px] leading-[34.5px] tracking-[-0.6px] text-fg">
-            {t('start.title')}
-          </Text>
-          <Text className="font-inter text-label leading-[21.75px] text-subtle">
-            {workouts && since ? t('start.subtitle', { count: workouts, since }) : t('start.empty')}
-          </Text>
-        </View>
-      </ScrollView>
-      <KeyboardStickyView offset={{ closed: 0, opened: footerInset - 8 }}>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+            paddingVertical: 24,
+          }}
+        >
+          <View className="gap-3">
+            <CoachMark size={44} animation="breathe" />
+            <Text className="font-inter-semibold text-[30px] leading-[34.5px] tracking-[-0.6px] text-fg">
+              {t('start.title')}
+            </Text>
+            <Text className="font-inter text-label leading-[21.75px] text-subtle">
+              {known ? t('start.subtitle', { count: workouts, since }) : t('start.empty')}
+            </Text>
+          </View>
+        </ScrollView>
         <View style={{ paddingBottom: footerInset }}>
           <CoachComposer {...composer} />
         </View>
-      </KeyboardStickyView>
+      </KeyboardAvoidingView>
     </View>
   );
 }

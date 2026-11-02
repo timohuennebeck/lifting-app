@@ -13,14 +13,14 @@ import { openChat, useCoachStore } from '../stores/coach-store';
 
 const NONE: ReadonlySet<string> = new Set();
 
-/** Earlier chats (design CO·H): open one, delete one from its "…", or choose several to delete. */
+/** Earlier chats (design CO·H): open one, or choose chats with a long press to delete them. */
 export function CoachHistoryScreen() {
   const { t } = useTranslation('coach');
   const { data: chats = [] } = useCoachChats();
   const today = useToday();
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState(NONE);
-  // What the sheet deletes: one chat from its "…", or the chosen ones; kept while it closes.
+  // The chosen chats the sheet deletes, kept while it closes.
   const [deleting, setDeleting] = useState<string[]>([]);
   const [sheetOpen, setSheetOpen] = useState(false);
   const confirm = (chatIds: string[]) => {
@@ -54,7 +54,6 @@ export function CoachHistoryScreen() {
       <CoachHistoryView
         sections={chatSections(chats, new Date(today), t)}
         onOpen={show}
-        onMenu={(chatId) => confirm([chatId])}
         onBack={() => router.back()}
         onNew={() => show(null)}
         selecting={selecting}
