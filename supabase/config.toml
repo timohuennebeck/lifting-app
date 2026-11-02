@@ -218,9 +218,9 @@ web3 = 30
 # secret = ""
 
 [auth.email]
-# Off: accounts sign in with Apple or Google only. This turns off email sign-in too, so Supabase
-# sends no account emails.
-enable_signup = false
+# On: the support desk's account signs in with email and password. The app itself offers Apple
+# and Google only for now. In production: Authentication → Sign In / Providers → Email.
+enable_signup = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
