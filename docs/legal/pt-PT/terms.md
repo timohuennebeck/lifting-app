@@ -1,8 +1,8 @@
 # Termos de Utilização
 
-Versão: 1.1
+Versão: 1.2
 
-Última atualização: 24 de outubro de 2026
+Última atualização: 2 de novembro de 2026
 
 Esta é uma tradução. A versão alemã é a juridicamente vinculativa.
 
@@ -23,7 +23,7 @@ Daqui em diante, designamo-nos por “nós”. Estes termos aplicam-se a todas a
 
 Tens de ter, pelo menos, a idade a partir da qual, no teu país, podes consentir tu próprio no tratamento dos teus dados: na Alemanha, 16 anos; noutros países, consoante a lei local, entre 13 e 16 anos. Na configuração inicial, a app pergunta a tua data de nascimento e só te deixa avançar a partir dessa idade.
 
-Se ainda não fores maior de idade, precisas do consentimento dos teus pais ou representantes legais para comprar o Loqqa Pro. O check corporal só está disponível a partir dos 18 anos.
+Se ainda não fores maior de idade, precisas do consentimento dos teus pais ou representantes legais para comprar o Loqqa Pro. O coach só está disponível a partir dos 16 anos e o check corporal só a partir dos 18 anos.
 
 ## 3. A tua conta
 
@@ -41,12 +41,13 @@ O Loqqa apoia-te no treino de força. Isto inclui, em especial:
 - o registo dos teus treinos com pesos, repetições e tempos, o teu histórico, os teus melhores valores, o teu nível e sugestões para as tuas séries
 - o registo do teu peso corporal
 - o check corporal com fotos e valores estimados (a partir dos 18 anos)
+- o coach: um modelo de IA que responde às tuas perguntas sobre o teu treino, geralmente com um gráfico feito a partir dos teus dados (a partir dos 16 anos)
 - um catálogo de exercícios com instruções, imagens e vídeos
 - um chat de suporte para comunicar erros e enviar ideias
 
 Podes fazer gratuitamente a configuração inicial, incluindo a criação ou a importação de um plano. Depois disso, a utilização do Loqqa pressupõe uma subscrição (Loqqa Pro, secção 6). Sem uma subscrição ativa, a tua conta e os teus dados mantêm-se e continuas a poder utilizar as definições, o suporte e a eliminação da conta; as restantes funções ficam então bloqueadas.
 
-O reconhecimento na importação de planos pode cometer erros. Por isso, verifica o plano reconhecido antes de o adotares; a app assinala para verificação os pontos em que há dúvidas. Também um plano que a app cria para ti é uma sugestão: revê-o e ajusta-o, se necessário. Para a criação de planos, a importação de planos e o check corporal, a app precisa de ligação à internet.
+O reconhecimento na importação de planos pode cometer erros. Por isso, verifica o plano reconhecido antes de o adotares; a app assinala para verificação os pontos em que há dúvidas. Também um plano que a app cria para ti é uma sugestão: revê-o e ajusta-o, se necessário. Também as respostas do coach podem estar erradas, por exemplo se o modelo compreender mal uma pergunta. Para que o coach não seja utilizado de forma abusiva, podes fazer-lhe, no máximo, 20 perguntas em 24 horas e 150 perguntas em 30 dias. Para a criação de planos, a importação de planos, o check corporal e o coach, a app precisa de ligação à internet.
 
 Muitas funções do Loqqa funcionam também sem ligação à internet. Os teus dados são sincronizados assim que estiveres online. As alterações que ainda não estejam sincronizadas quando terminas sessão perdem-se; a app avisa-te antes disso.
 
@@ -59,6 +60,7 @@ O Loqqa é uma ferramenta de apoio ao teu treino. Não garantimos nenhum resulta
 - O Loqqa dá recomendações gerais de treino. A app não presta aconselhamento médico, fisioterapêutico nem nutricional. O Loqqa não é um dispositivo médico e não se destina a detetar, monitorizar ou tratar doenças.
 - Antes de começares um programa de treino, procura aconselhamento médico, sobretudo se tiveres doenças preexistentes (por exemplo, do sistema cardiovascular), queixas ou lesões, depois de cirurgias, durante a gravidez ou a amamentação e se não treinas há muito tempo.
 - Os valores do check corporal, por exemplo a percentagem estimada de gordura corporal, são estimativas aproximadas de um modelo de IA. Não são uma medição médica nem um diagnóstico.
+- As respostas do coach são informações e recomendações gerais para o teu treino, criadas por um modelo de IA. Podem estar erradas e não substituem o aconselhamento de um médico ou fisioterapeuta. Em caso de dor ou lesão, o coach não faz diagnósticos; se as queixas persistirem, procura um médico.
 - Os planos e as sugestões servem de orientação. Escolhe pesos e repetições que consigas fazer em segurança e com uma técnica correta. Com pesos elevados, utiliza sistemas de segurança ou pede a alguém que te ajude.
 - Para de imediato se sentires dor, tonturas, falta de ar ou pressão no peito e, se necessário, procura ajuda médica.
 
@@ -80,11 +82,11 @@ Enquanto consumidor, tens, em princípio, um direito legal de livre resolução 
 
 ## 8. Os teus conteúdos
 
-Os conteúdos que colocas no Loqqa continuam a ser teus, por exemplo planos, dados de treino, fotos, o teu texto “Sobre ti” e as tuas mensagens de suporte. Concedes-nos sobre eles apenas os direitos não exclusivos e intransmissíveis de que precisamos para te disponibilizar a app: guardar, sincronizar, tratar e mostrar-te os teus conteúdos, bem como tratar os teus pedidos de suporte. Estes direitos terminam quando eliminas os conteúdos ou a tua conta.
+Os conteúdos que colocas no Loqqa continuam a ser teus, por exemplo planos, dados de treino, fotos, o teu texto “Sobre ti”, as tuas mensagens de suporte e as tuas perguntas ao coach. Concedes-nos sobre eles apenas os direitos não exclusivos e intransmissíveis de que precisamos para te disponibilizar a app: guardar, sincronizar, tratar e mostrar-te os teus conteúdos, bem como tratar os teus pedidos de suporte. Estes direitos terminam quando eliminas os conteúdos ou a tua conta.
 
 - Carrega apenas conteúdos sobre os quais tenhas os direitos necessários. Só podes importar planos de treino de treinadores, de livros ou de apps na medida em que os possas utilizar para o teu próprio treino.
 - As tuas fotos e capturas de ecrã não podem mostrar outras pessoas que não tenham dado o seu consentimento.
-- Não são permitidos conteúdos ilegais, ofensivos ou impróprios, nem mesmo no chat de suporte.
+- Não são permitidos conteúdos ilegais, ofensivos ou impróprios, nem mesmo no chat de suporte ou nas perguntas ao coach.
 
 Podemos utilizar gratuitamente as ideias e sugestões que nos envias para melhorar o Loqqa. Não existe qualquer direito à sua implementação nem a uma remuneração.
 
@@ -136,5 +138,5 @@ Podemos alterar estes termos, por exemplo quando introduzimos novas funções ou
 - **Lei aplicável:** aplica-se o direito da República Federal da Alemanha, com exclusão da Convenção das Nações Unidas sobre os Contratos de Compra e Venda Internacional de Mercadorias. Enquanto consumidor, manténs a proteção das disposições imperativas do Estado em que tens a tua residência habitual.
 - **Foro competente:** para comerciantes, pessoas coletivas de direito público e patrimónios autónomos de direito público, o foro competente é Munique. Para os consumidores, aplicam-se os foros legalmente previstos.
 - **Resolução de litígios de consumo:** não estamos dispostos nem obrigados a participar em procedimentos de resolução de litígios perante uma entidade de resolução alternativa de litígios de consumo.
-- **Idioma:** estes termos existem em alemão, inglês e português. A versão determinante é a alemã; as outras são traduções.
+- **Idioma:** estes termos existem em alemão, inglês, português e coreano. A versão determinante é a alemã; as outras são traduções.
 - **Disposições inválidas:** se uma disposição destes termos for inválida, o resto do contrato mantém-se válido. A disposição inválida é substituída pelas disposições legais.

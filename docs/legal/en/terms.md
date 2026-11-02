@@ -1,8 +1,8 @@
 # Terms of Use
 
-Version: 1.1
+Version: 1.2
 
-Last updated: 24 October 2026
+Last updated: 2 November 2026
 
 This is a translation. The German version is legally binding.
 
@@ -23,7 +23,7 @@ Below, we refer to ourselves as “we”. These terms apply to all features of t
 
 You must be at least old enough to consent to the processing of your data yourself in your country: in Germany 16 years, in other countries 13 to 16 years depending on local law. During setup, the app asks for your date of birth and only lets you continue from this age.
 
-If you are not yet of legal age, you need the consent of your parents or legal guardians to buy Loqqa Pro. The body check is only available from age 18.
+If you are not yet of legal age, you need the consent of your parents or legal guardians to buy Loqqa Pro. The coach is only available from age 16, the body check only from age 18.
 
 ## 3. Your account
 
@@ -41,12 +41,13 @@ Loqqa supports you with strength training. This includes in particular:
 - logging your workouts with weights, reps and times, your history, records, levels and suggestions for your sets
 - recording your body weight
 - the body check with photos and estimated values (from age 18)
+- the coach: an AI model that answers your questions about your training, usually with a chart from your data (from age 16)
 - an exercise catalog with instructions, images and videos
 - a support chat for bug reports and ideas
 
 You can go through setup, including plan creation or plan import, free of charge. After that, using Loqqa requires a subscription (Loqqa Pro, section 6). Without an active subscription, your account and your data are kept and you can still use the settings, support and account deletion; the other features are then locked.
 
-Recognition during plan import can make mistakes. So check the recognized plan before you accept it; the app marks uncertain parts for review. A plan the app creates for you is also a suggestion: look it over and adjust it if needed. For plan creation, plan import and the body check, the app needs an internet connection.
+Recognition during plan import can make mistakes. So check the recognized plan before you accept it; the app marks uncertain parts for review. A plan the app creates for you is also a suggestion: look it over and adjust it if needed. The coach’s answers can also be wrong, for example if the model misunderstands a question. So that the coach is not misused, you can ask it at most 20 questions in 24 hours and 150 questions in 30 days. For plan creation, plan import, the body check and the coach, the app needs an internet connection.
 
 Many of Loqqa’s features also work without an internet connection. Your data is synced as soon as you are online. Changes that have not yet been synced when you sign out are lost; the app warns you beforehand.
 
@@ -59,6 +60,7 @@ Loqqa is a tool for your training. We do not owe you any particular training suc
 - Loqqa gives general training recommendations. The app does not offer medical, physiotherapeutic or nutritional advice. Loqqa is not a medical device and is not intended to detect, monitor or treat diseases.
 - Get medical advice before starting a training program, especially if you have pre-existing conditions (for example of the cardiovascular system), complaints or injuries, after surgery, during pregnancy or breastfeeding and if you have not trained for a long time.
 - The body check values, for example the estimated body fat percentage, are rough estimates by an AI model. They are not a medical measurement and not a diagnosis.
+- The coach’s answers are general information and recommendations for your training, created by an AI model. They can be wrong and do not replace advice from a doctor or physiotherapist. The coach does not diagnose pain or injuries; have complaints that persist checked by a doctor.
 - Plans and suggestions are a guide. Choose weights and reps so that you can complete them safely with clean technique. Use safety bars or a spotter for heavy weights.
 - Stop immediately if you feel pain, dizziness, shortness of breath or pressure in your chest, and get medical help if needed.
 
@@ -80,11 +82,11 @@ As a consumer, you generally have a statutory right of withdrawal for contracts 
 
 ## 8. Your content
 
-Content that you put into Loqqa remains yours, for example plans, workout data, photos, your “About you” text and your support messages. You only grant us the non-exclusive, non-transferable rights we need to provide the app for you: storing, syncing, processing and displaying your content to you, and handling your support requests. These rights end when you delete the content or your account.
+Content that you put into Loqqa remains yours, for example plans, workout data, photos, your “About you” text, your support messages and your questions to the coach. You only grant us the non-exclusive, non-transferable rights we need to provide the app for you: storing, syncing, processing and displaying your content to you, and handling your support requests. These rights end when you delete the content or your account.
 
 - Only upload content for which you have the necessary rights. You may only import training plans from coaches, books or apps to the extent that you are allowed to use them for your own training.
 - Your photos and screenshots must not show any other people who have not consented.
-- Unlawful, offensive or objectionable content is not allowed, including in the support chat.
+- Unlawful, offensive or objectionable content is not allowed, including in the support chat or in questions to the coach.
 
 We may use ideas and suggestions that you send us free of charge to improve Loqqa. There is no entitlement to implementation or compensation.
 
@@ -136,5 +138,5 @@ We may change these terms, for example when we introduce new features or the leg
 - **Applicable law:** The law of the Federal Republic of Germany applies, excluding the UN Convention on Contracts for the International Sale of Goods (CISG). As a consumer, you retain the protection of the mandatory provisions of the country in which you have your habitual residence.
 - **Place of jurisdiction:** For merchants, legal entities under public law and special funds under public law, Munich is the place of jurisdiction. For consumers, the statutory places of jurisdiction apply.
 - **Consumer dispute resolution:** We are neither willing nor obliged to participate in dispute resolution proceedings before a consumer arbitration board.
-- **Language:** These terms are available in German, English and Portuguese. The German version is authoritative; the others are translations.
+- **Language:** These terms are available in German, English, Portuguese and Korean. The German version is authoritative; the others are translations.
 - **Invalid provisions:** If a provision of these terms is invalid, the rest of the contract remains valid. The statutory provisions take the place of the invalid provision.

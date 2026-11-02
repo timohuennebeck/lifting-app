@@ -1,8 +1,8 @@
 # Nutzungsbedingungen
 
-Version: 1.1
+Version: 1.2
 
-Stand: 24. Oktober 2026
+Stand: 2. November 2026
 
 Diese Nutzungsbedingungen regeln, wie du die App Loqqa nutzen kannst. Bitte lies sie aufmerksam. Wie wir mit deinen Daten umgehen, erklären wir in unserer Datenschutzerklärung.
 
@@ -21,7 +21,7 @@ Im Folgenden nennen wir uns „wir“. Diese Bedingungen gelten für alle Funkti
 
 Du musst mindestens so alt sein, dass du in deinem Land selbst in die Verarbeitung deiner Daten einwilligen darfst: in Deutschland 16 Jahre, in anderen Ländern je nach Recht dort 13 bis 16 Jahre. Die App fragt bei der Einrichtung nach deinem Geburtsdatum und lässt dich erst ab diesem Alter weiter.
 
-Bist du noch nicht volljährig, brauchst du für den Kauf von Loqqa Pro die Zustimmung deiner Erziehungsberechtigten. Der Körpercheck ist erst ab 18 Jahren verfügbar.
+Bist du noch nicht volljährig, brauchst du für den Kauf von Loqqa Pro die Zustimmung deiner Erziehungsberechtigten. Der Coach ist erst ab 16 Jahren verfügbar, der Körpercheck erst ab 18 Jahren.
 
 ## 3. Dein Konto
 
@@ -39,12 +39,13 @@ Loqqa unterstützt dich beim Krafttraining. Dazu gehören insbesondere:
 - das Protokollieren deiner Trainings mit Gewichten, Wiederholungen und Zeiten, deine Historie, Bestwerte, Level und Vorschläge für deine Sätze
 - das Erfassen deines Körpergewichts
 - der Körpercheck mit Fotos und geschätzten Werten (ab 18 Jahren)
+- der Coach: ein KI-Modell, das deine Fragen zu deinem Training beantwortet, meist mit einem Diagramm aus deinen Daten (ab 16 Jahren)
 - ein Übungskatalog mit Anleitungen, Bildern und Videos
 - ein Support-Chat für Fehlermeldungen und Ideen
 
 Die Einrichtung, einschließlich der Planerstellung oder des Plan-Imports, kannst du kostenlos durchlaufen. Danach setzt die Nutzung von Loqqa ein Abo voraus (Loqqa Pro, Abschnitt 6). Ohne aktives Abo bleiben dein Konto und deine Daten erhalten, und du kannst weiterhin die Einstellungen, den Support und die Kontolöschung nutzen; die übrigen Funktionen sind dann gesperrt.
 
-Die Erkennung beim Plan-Import kann Fehler machen. Prüfe den erkannten Plan deshalb, bevor du ihn übernimmst; unsichere Stellen markiert die App zur Prüfung. Auch ein Plan, den die App für dich erstellt, ist ein Vorschlag: Sieh ihn dir an und pass ihn bei Bedarf an. Für Planerstellung, Plan-Import und Körpercheck braucht die App eine Internetverbindung.
+Die Erkennung beim Plan-Import kann Fehler machen. Prüfe den erkannten Plan deshalb, bevor du ihn übernimmst; unsichere Stellen markiert die App zur Prüfung. Auch ein Plan, den die App für dich erstellt, ist ein Vorschlag: Sieh ihn dir an und pass ihn bei Bedarf an. Die Antworten des Coachs können ebenfalls falsch sein, zum Beispiel wenn das Modell eine Frage missversteht. Damit der Coach nicht missbraucht wird, kannst du ihm höchstens 20 Fragen in 24 Stunden und 150 Fragen in 30 Tagen stellen. Für Planerstellung, Plan-Import, Körpercheck und Coach braucht die App eine Internetverbindung.
 
 Viele Funktionen von Loqqa funktionieren auch ohne Internetverbindung. Deine Daten werden synchronisiert, sobald du online bist. Änderungen, die bei einer Abmeldung noch nicht synchronisiert sind, gehen verloren; die App warnt dich vorher.
 
@@ -57,6 +58,7 @@ Loqqa ist ein Hilfsmittel für dein Training. Einen bestimmten Trainingserfolg s
 - Loqqa gibt allgemeine Trainingsempfehlungen. Die App bietet keine medizinische, physiotherapeutische oder ernährungsbezogene Beratung. Loqqa ist kein Medizinprodukt und nicht dafür bestimmt, Krankheiten zu erkennen, zu überwachen oder zu behandeln.
 - Lass dich vor Beginn eines Trainingsprogramms ärztlich beraten, besonders bei Vorerkrankungen (zum Beispiel des Herz-Kreislauf-Systems), bei Beschwerden oder Verletzungen, nach Operationen, in der Schwangerschaft oder Stillzeit und wenn du lange nicht trainiert hast.
 - Die Werte des Körperchecks, zum Beispiel der geschätzte Körperfettanteil, sind grobe Schätzungen eines KI-Modells. Sie sind keine medizinische Messung und keine Diagnose.
+- Die Antworten des Coachs sind allgemeine Informationen und Empfehlungen für dein Training, erstellt von einem KI-Modell. Sie können falsch sein und ersetzen keine ärztliche oder physiotherapeutische Beratung. Bei Schmerzen oder Verletzungen stellt der Coach keine Diagnose; lass Beschwerden, die bleiben, ärztlich abklären.
 - Pläne und Vorschläge sind eine Orientierung. Wähle Gewichte und Wiederholungen so, dass du sie mit sauberer Technik sicher schaffst. Nutze bei schweren Gewichten Sicherungen oder eine Hilfestellung.
 - Hör sofort auf, wenn du Schmerzen, Schwindel, Atemnot oder Druck in der Brust spürst, und hol bei Bedarf ärztliche Hilfe.
 
@@ -78,11 +80,11 @@ Als Verbraucher hast du bei Verträgen über digitale Inhalte und digitale Diens
 
 ## 8. Deine Inhalte
 
-Inhalte, die du in Loqqa einstellst, bleiben deine, zum Beispiel Pläne, Trainingsdaten, Fotos, dein Text „Über dich“ und deine Support-Nachrichten. Du räumst uns daran nur die einfachen, nicht übertragbaren Rechte ein, die wir brauchen, um die App für dich bereitzustellen: deine Inhalte speichern, synchronisieren, verarbeiten und dir anzeigen sowie deine Support-Anfragen bearbeiten. Diese Rechte enden, wenn du die Inhalte oder dein Konto löschst.
+Inhalte, die du in Loqqa einstellst, bleiben deine, zum Beispiel Pläne, Trainingsdaten, Fotos, dein Text „Über dich“, deine Support-Nachrichten und deine Fragen an den Coach. Du räumst uns daran nur die einfachen, nicht übertragbaren Rechte ein, die wir brauchen, um die App für dich bereitzustellen: deine Inhalte speichern, synchronisieren, verarbeiten und dir anzeigen sowie deine Support-Anfragen bearbeiten. Diese Rechte enden, wenn du die Inhalte oder dein Konto löschst.
 
 - Lade nur Inhalte hoch, an denen du die nötigen Rechte hast. Trainingspläne von Trainern, aus Büchern oder Apps darfst du nur importieren, soweit du sie für dein eigenes Training nutzen darfst.
 - Auf deinen Fotos und Screenshots dürfen keine anderen Personen zu sehen sein, die nicht eingewilligt haben.
-- Rechtswidrige, beleidigende oder anstößige Inhalte sind nicht erlaubt, auch nicht im Support-Chat.
+- Rechtswidrige, beleidigende oder anstößige Inhalte sind nicht erlaubt, auch nicht im Support-Chat oder in Fragen an den Coach.
 
 Ideen und Vorschläge, die du uns schickst, dürfen wir unentgeltlich nutzen, um Loqqa zu verbessern. Einen Anspruch auf Umsetzung oder Vergütung gibt es nicht.
 
@@ -134,5 +136,5 @@ Wir können diese Bedingungen ändern, zum Beispiel wenn wir neue Funktionen ein
 - **Anwendbares Recht:** Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts. Als Verbraucher behältst du den Schutz der zwingenden Vorschriften des Staates, in dem du deinen gewöhnlichen Aufenthalt hast.
 - **Gerichtsstand:** Für Kaufleute, juristische Personen des öffentlichen Rechts und öffentlich-rechtliche Sondervermögen ist München Gerichtsstand. Für Verbraucher gelten die gesetzlichen Gerichtsstände.
 - **Verbraucherstreitbeilegung:** Wir sind weder bereit noch verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
-- **Sprache:** Diese Bedingungen gibt es auf Deutsch, Englisch und Portugiesisch. Maßgeblich ist die deutsche Fassung; die anderen sind Übersetzungen.
+- **Sprache:** Diese Bedingungen gibt es auf Deutsch, Englisch, Portugiesisch und Koreanisch. Maßgeblich ist die deutsche Fassung; die anderen sind Übersetzungen.
 - **Unwirksame Bestimmungen:** Ist eine Bestimmung dieser Bedingungen unwirksam, bleibt der Vertrag im Übrigen wirksam. An die Stelle der unwirksamen Bestimmung treten die gesetzlichen Vorschriften.

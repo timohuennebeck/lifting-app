@@ -1,6 +1,6 @@
 # Datenschutzerklärung
 
-Version: 1.2
+Version: 1.3
 
 Stand: 2. November 2026
 
@@ -11,7 +11,7 @@ Hier erfährst du, welche personenbezogenen Daten wir verarbeiten, wenn du die A
 - Loqqa speichert deine Pläne und Trainings zuerst auf deinem Gerät und gleicht sie mit deinem Konto ab, sobald du online bist. Unsere Datenbank liegt in Frankfurt am Main.
 - Andere Nutzer können dein Profil, deine Trainings und deine Fotos nicht sehen.
 - Dein Gewicht, deine Größe und deine Körpercheck-Fotos behandeln wir als Gesundheitsdaten. Wir verarbeiten sie nur mit deiner ausdrücklichen Einwilligung.
-- Für die Planerstellung, den Plan-Import, den Körpercheck und die Übersetzung von Support-Nachrichten nutzen wir ein KI-Modell von OpenAI. Dafür übermitteln wir die nötigen Daten an OpenAI, das sie in den USA verarbeitet.
+- Für die Planerstellung, den Plan-Import, den Körpercheck, den Coach und die Übersetzung von Support-Nachrichten nutzen wir ein KI-Modell von OpenAI. Dafür übermitteln wir die nötigen Daten an OpenAI, das sie in den USA verarbeitet.
 - Um die App zu verbessern, messen wir mit PostHog, wie sie genutzt wird. Gesundheitsdaten und Fotos gehen nicht an PostHog. Die App enthält keine Werbung.
 - Du kannst dein Konto jederzeit in der App löschen. Damit löschen wir auch deine Fotos und alle Daten deines Kontos.
 
@@ -31,7 +31,7 @@ Einen Datenschutzbeauftragten haben wir nicht benannt, weil wir dazu nicht verpf
 
 ## 3. So funktioniert Loqqa
 
-Loqqa ist eine Trainings-App. Du kannst dir einen Trainingsplan erstellen lassen oder einen vorhandenen importieren, deine Trainings und dein Körpergewicht protokollieren und ab 18 Jahren Körperchecks mit Fotos machen.
+Loqqa ist eine Trainings-App. Du kannst dir einen Trainingsplan erstellen lassen oder einen vorhandenen importieren, deine Trainings und dein Körpergewicht protokollieren, dem Coach Fragen zu deinem Training stellen und ab 18 Jahren Körperchecks mit Fotos machen.
 
 Die App arbeitet „offline first“: Deine Daten liegen in einer Datenbank auf deinem Gerät, damit du auch ohne Internet trainieren kannst. Bist du angemeldet und online, gleicht die App diese Daten mit deinem Konto auf unseren Servern ab. So sind dein Plan und deine Historie gesichert und auf all deinen Geräten verfügbar. Für die Server nutzen wir Dienstleister (Abschnitt 7).
 
@@ -41,7 +41,7 @@ Alle Daten in unserer Datenbank sind deinem Konto zugeordnet. Technische Zugriff
 
 ### 4.1 Einrichtung ohne Konto
 
-Die Einrichtung durchläufst du ohne Konto. Dabei lädt die App den Übungskatalog (Namen, Anleitungen, Bilder und Videos der Übungen) und diese Rechtstexte von unseren Servern. Den Übungskatalog prüft sie beim Start und danach stündlich auf Änderungen. Dabei fallen nur technisch notwendige Verbindungsdaten an (Abschnitt 4.12).
+Die Einrichtung durchläufst du ohne Konto. Dabei lädt die App den Übungskatalog (Namen, Anleitungen, Bilder und Videos der Übungen) und diese Rechtstexte von unseren Servern. Den Übungskatalog prüft sie beim Start und danach stündlich auf Änderungen. Dabei fallen nur technisch notwendige Verbindungsdaten an (Abschnitt 4.13).
 
 Deine Antworten in der Einrichtung (zum Beispiel Vorname, Geschlecht, Geburtsdatum, Gewicht, Größe, Ziel und der erstellte oder importierte Plan) speichert die App zunächst nur auf deinem Gerät. An uns gehen diese Angaben erst, wenn du ein Konto erstellst (Abschnitte 4.3 und 4.4). Ausnahmen: Lässt du dir einen Plan erstellen, überträgt die App schon vorher deine Antworten zu Ziel, Fokus, Ausstattung, Trainings pro Woche, Trainingsdauer und Erfahrung, damit der Plan erstellt werden kann; Fotos und Dateien, aus denen du einen Plan importierst, überträgt sie, damit der Plan erkannt werden kann (beides Abschnitt 4.7).
 
@@ -75,7 +75,7 @@ Wenn du ein Konto erstellst, speichern wir deine Angaben aus der Einrichtung als
 - deine App-Sprache, damit unser Support dir in deiner Sprache antworten kann
 - freiwillig: ein Profilfoto (die App speichert es als quadratisches Bild mit 512 × 512 Pixeln) und einen kurzen Text „Über dich“ mit bis zu 150 Zeichen
 
-Wofür: Dein Geburtsdatum brauchen wir, um das Mindestalter (Abschnitt 16) und die Altersgrenze des Körperchecks zu prüfen. Aus Trainingsziel, Fokus, Ausstattung, Trainings pro Woche, Trainingsdauer und Erfahrung erstellt ein KI-Modell von OpenAI deinen Trainingsplan, wenn du dir einen erstellen lässt (Abschnitt 4.7). Geschlecht, Alter, Gewicht und Größe nutzt die App für dein Level und deine Vorschläge sowie für den Körpercheck (Abschnitt 4.6). Profilfoto und „Über dich“ werden nur dir in deinem Profil angezeigt.
+Wofür: Dein Geburtsdatum brauchen wir, um das Mindestalter (Abschnitt 16) und die Altersgrenzen von Coach und Körpercheck zu prüfen. Aus Trainingsziel, Fokus, Ausstattung, Trainings pro Woche, Trainingsdauer und Erfahrung erstellt ein KI-Modell von OpenAI deinen Trainingsplan, wenn du dir einen erstellen lässt (Abschnitt 4.7). Ziel, Erfahrung, Ausstattung, Fokus und deine Einheiten nutzt auch der Coach für seine Antworten (Abschnitt 4.8). Geschlecht, Alter, Gewicht und Größe nutzt die App für dein Level und deine Vorschläge sowie für den Körpercheck (Abschnitt 4.6). Profilfoto und „Über dich“ werden nur dir in deinem Profil angezeigt.
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO; für Körpergewicht und Körpergröße deine Einwilligung (Abschnitt 4.4).
 
@@ -90,8 +90,9 @@ Diese Daten verarbeiten wir nur mit deiner ausdrücklichen Einwilligung (Art. 9 
 
 - **Körpermaße:** Wenn du dein Konto erstellst, willigst du mit dem Hinweis direkt über der Schaltfläche ausdrücklich ein, dass wir deine Körperdaten verarbeiten, um dein Training anzupassen. Vorher bleiben Gewicht und Größe auf deinem Gerät.
 - **Körpercheck:** Bevor die App deine Fotos zur Auswertung sendet, weist sie dich darauf hin, dass Fotos und Körperdaten dafür an OpenAI in den USA übermittelt werden. Mit „Fertig“ willigst du darin ein.
+- **Coach:** Der Coach nutzt für seine Antworten auch deine Gewichtseinträge und die Gesamtwerte deiner Körperchecks (Abschnitt 4.8). Bevor du ihm deine erste Frage sendest, weist die App dich darauf hin, dass deine Trainings- und Körperdaten für die Antworten an OpenAI in den USA übermittelt werden. Mit dem Senden der ersten Frage willigst du darin ein. Den Zeitpunkt deiner Einwilligung speichert unser Server, bevor er Daten an OpenAI übermittelt.
 
-Der Körpercheck ist freiwillig. Deine Einwilligungen kannst du jederzeit mit Wirkung für die Zukunft widerrufen (Abschnitt 12).
+Körpercheck und Coach sind freiwillig. Deine Einwilligungen kannst du jederzeit mit Wirkung für die Zukunft widerrufen (Abschnitt 12).
 
 ### 4.5 Trainingsdaten und Körpergewicht
 
@@ -102,7 +103,7 @@ Wenn du Loqqa nutzt, speichern wir:
 - **Eigene Übungen**, die du anlegst oder die beim Plan-Import entstehen
 - **Körpergewicht:** die Gewichtseinträge, die du erfasst, je Tag ein Wert
 
-Wofür: damit du deine Trainings und dein Gewicht protokollieren und deine Historie, Bestwerte, dein Level und deine Aktivität sehen kannst. Vorschläge für deine Sätze und dein Level berechnet die App auf deinem Gerät.
+Wofür: damit du deine Trainings und dein Gewicht protokollieren und deine Historie, Bestwerte, dein Level und deine Aktivität sehen kannst. Vorschläge für deine Sätze und dein Level berechnet die App auf deinem Gerät. Fragst du den Coach, beantwortet er deine Frage aus diesen Daten (Abschnitt 4.8).
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO; für die Gewichtseinträge deine Einwilligung (Abschnitt 4.4).
 
@@ -122,7 +123,7 @@ Deinen Namen, deine E-Mail-Adresse und deine Konto-ID übermitteln wir nicht. Op
 
 Das Modell prüft zuerst, ob die Fotos auswertbar sind, zum Beispiel ob sie hell genug sind und dein Körper mindestens vom Kopf bis zu den Knien zu sehen ist. Ist ein Foto nicht auswertbar, bittet dich die App, es neu aufzunehmen. Sonst liefert das Modell Werte für sechs Muskelgruppen (Schultern, Brust, Arme, Rücken, Bauch, Beine), einen geschätzten Körperfettanteil sowie Werte für Proportionen und Definition. Daraus berechnet unser Server den Gesamtwert. Diese Werte speichern wir zu deinem Check.
 
-Bevor unser Server einen Check auswertet, prüft er bei RevenueCat, ob dein Konto Loqqa Pro hat (Abschnitt 4.11). Jede Auswertung protokollieren wir mit Zeitpunkt und Ergebnis. So begrenzen wir die Zahl der Auswertungen pro Tag und stellen sicher, dass gespeicherte Werte aus einer Auswertung stammen. Das Protokoll löschen wir mit deinem Konto.
+Bevor unser Server einen Check auswertet, prüft er bei RevenueCat, ob dein Konto Loqqa Pro hat (Abschnitt 4.12). Jede Auswertung protokollieren wir mit Zeitpunkt und Ergebnis. So begrenzen wir die Zahl der Auswertungen pro Tag und stellen sicher, dass gespeicherte Werte aus einer Auswertung stammen. Das Protokoll löschen wir mit deinem Konto.
 
 Die Werte sind grobe Schätzungen und keine medizinische Messung oder Diagnose.
 
@@ -146,7 +147,42 @@ Unser Server speichert deine Fotos und Dateien nicht; er gibt nur den erkannten 
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO für den Import und die Planerstellung, die du startest, auch für die Übermittlung an OpenAI in die USA. Für die Begrenzung der Anfragen Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist es, Missbrauch und unnötige Kosten zu verhindern.
 
-### 4.8 Support
+### 4.8 Coach
+
+Mit Loqqa Pro kannst du im Tab „Coach“ Fragen zu deinem eigenen Training stellen, zum Beispiel „Wie hat sich mein Gewicht entwickelt?“. Der Coach antwortet in wenigen Sätzen, meist mit einem Diagramm aus deinen Daten. Allgemeine Trainingsfragen beantwortet er auch, etwa wie oft du Beine trainieren solltest oder welche Übung du machen kannst, wenn dir etwas wehtut. Eine Diagnose stellt er nicht. Der Coach ist freiwillig und erst ab 16 Jahren verfügbar. Für ihn brauchst du eine Internetverbindung.
+
+**Antworten durch ein KI-Modell von OpenAI:** Die App überträgt deine Frage mit deiner App-Sprache und der Zeitzone deines Geräts an unseren Server. Der gibt die Frage an ein KI-Modell von OpenAI weiter. Braucht das Modell Daten, fragt es sie bei unserem Server an: Der berechnet die Werte aus deinen gespeicherten Daten und übermittelt die Ergebnisse an OpenAI. Daraus schreibt das Modell die Antwort. Zu jeder Frage übermittelt unser Server an OpenAI:
+
+- deine Frage und die letzten bis zu sechs Fragen dieses Chats mit ihren Antworten und den Daten, die dafür abgefragt wurden
+- das heutige Datum, deine Einheiten und deine App-Sprache
+- Trainingsziel, Trainingserfahrung, Ausstattung und Muskelgruppen mit Fokus aus deinem Profil sowie Name und Trainings pro Woche deines aktiven Plans
+- die Zahl deiner Trainings mit dem Datum des ersten und des letzten, die Zahl deiner Gewichtseinträge mit dem Datum des ersten und die Zahl deiner Körperchecks
+- die Übungen, die du gemacht hast, auch eigene Übungen: Name, wie du sie protokollierst, in wie vielen Trainings du sie gemacht hast und wann zuletzt
+
+Je nach Frage übermittelt unser Server außerdem, was er dafür aus deinen Daten berechnet:
+
+- Trainings mit Datum, Name, Dauer, Übungen und Sätzen (Gewicht, Wiederholungen, Sekunden und RIR)
+- Werte je Training, zum Beispiel das geschätzte Maximalgewicht für eine Wiederholung (1RM), das schwerste Gewicht, Wiederholungen, Haltezeit, Volumen und Bestwerte
+- deine Gewichtseinträge und einen geglätteten Gewichtsverlauf
+- die Gesamtwerte deiner Körperchecks, ohne Fotos und ohne Einzelwerte wie den Körperfettanteil
+- Trainings, Sätze, Volumen und Trainingszeit pro Woche oder Monat, Trainingspausen und die Wochentage deiner Trainings
+- Sätze pro Muskelgruppe und pro Übung
+
+Deinen Namen, deine E-Mail-Adresse, deine Konto-ID, dein Geburtsdatum und Alter, dein Geschlecht, deine Größe, dein Profilfoto, deinen Text „Über dich“, deine Körpercheck-Fotos und deine Support-Nachrichten übermitteln wir nicht. Bitte schreib in deine Fragen keine Daten anderer Personen. OpenAI verarbeitet die Daten in den USA (Abschnitt 8). Wir haben eingestellt, dass OpenAI die Anfrage nicht für einen späteren Abruf speichert. OpenAI nutzt Daten aus seiner API nicht zum Training seiner Modelle und bewahrt sie bis zu 30 Tage auf, um Missbrauch zu erkennen; danach werden sie gelöscht.
+
+Die Antworten schreibt ein KI-Modell. Sie können falsch sein. Sie sind Informationen und Empfehlungen für dein Training, keine medizinische Beratung und keine Diagnose.
+
+Bevor unser Server eine Frage beantwortet, prüft er dein Alter anhand des Geburtsdatums in deinem Profil, deine Einwilligung (Abschnitt 4.4) und bei RevenueCat, ob dein Konto Loqqa Pro hat (Abschnitt 4.12).
+
+**Was wir speichern:** Deine Chats mit den Fragen, den Antworten und den Diagrammen unter den Antworten speichern wir in unserer Datenbank. Die App synchronisiert sie auf deine Geräte, damit du deine Chats dort siehst (Abschnitt 5). Zu jeder Frage speichern wir außerdem ein Protokoll, das die App nicht anzeigt: Zeitpunkt, Status (zum Beispiel ob eine Antwort zustande kam), das verwendete Modell, die Zahl der Tokens (Textbausteine, nach denen OpenAI abrechnet) und die Dauer, dazu die Abfragen des Modells mit den abgefragten Daten. Die Abfragen brauchen wir, damit der Coach Nachfragen zu einer Antwort beantworten kann.
+
+**Begrenzung der Fragen:** Damit der Coach nicht missbraucht wird und keine unnötigen Kosten entstehen, kannst du höchstens 20 Fragen in 24 Stunden und 150 Fragen in 30 Tagen stellen. Dafür zählt unser Server die Protokolle.
+
+Du kannst Chats in der App löschen, auch mehrere auf einmal. Dann löschen wir ihre Fragen, Antworten und Diagramme und die abgefragten Daten in ihren Protokollen. Zeitpunkt, Status, Modell, Tokens und Dauer bleiben, damit die Begrenzung weiter gilt und wir die Kosten des Coachs im Blick behalten. Sonst bewahren wir deine Chats auf, bis du sie oder dein Konto löschst. Mit deinem Konto löschen wir alle Chats und Protokolle (Abschnitt 10).
+
+Rechtsgrundlage: deine ausdrückliche Einwilligung (Abschnitt 4.4), auch für die Übermittlung an OpenAI in die USA (Art. 49 Abs. 1 lit. a DSGVO, ergänzend zu den Garantien in Abschnitt 8). Für die Begrenzung der Fragen und die Angaben zu Zeitpunkt, Status, Modell, Tokens und Dauer Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist es, Missbrauch und unnötige Kosten zu verhindern.
+
+### 4.9 Support
 
 Über „Fehler melden“ und „Funktion wünschen“ kannst du uns direkt in der App schreiben, oder du schreibst an support@useloqqa.com. In der App verarbeiten wir dabei:
 
@@ -167,25 +203,25 @@ Bitte schick uns in Nachrichten und Screenshots keine Gesundheitsdaten und keine
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO, soweit deine Anfrage die Nutzung der App betrifft, zum Beispiel bei Fehlern. Bei Ideen und sonstigem Feedback Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist es, deine Anfrage zu beantworten und Loqqa zu verbessern. Das gilt auch für die Übersetzung und die Übermittlung an OpenAI in die USA (Abschnitt 8).
 
-### 4.9 Rechtstexte und Zustimmungen
+### 4.10 Rechtstexte und Zustimmungen
 
 Die App lädt die jeweils gültige Fassung der Nutzungsbedingungen und dieser Datenschutzerklärung in deiner Sprache. Wenn du einer Fassung zustimmst, bei der Registrierung oder später bei einer geänderten Fassung, speichern wir, welcher Fassung du zugestimmt hast, den Zeitpunkt (vom Server gesetzt), die App-Version und die Plattform (iOS oder Android). So können wir nachweisen, welche Fassung für dich gilt, und dich bei wesentlichen Änderungen erneut um Zustimmung bitten.
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. c in Verbindung mit Art. 7 Abs. 1 DSGVO (Nachweis von Einwilligungen) und Art. 6 Abs. 1 lit. f DSGVO (unser berechtigtes Interesse, nachweisen zu können, welche Bedingungen gelten).
 
-### 4.10 Loqqa Pro: Abos und Käufe
+### 4.11 Loqqa Pro: Abos und Käufe
 
 Loqqa Pro kaufst du über den App Store von Apple oder über Google Play. Den Kauf und die Zahlung wickeln Apple bzw. Google ab. Sie sind dafür selbst verantwortlich und verarbeiten deine Zahlungsdaten nach ihren eigenen Datenschutzbestimmungen: [Apple](https://www.apple.com/legal/privacy/de-ww/) und [Google](https://policies.google.com/privacy?hl=de). Zahlungsdaten wie Kreditkartennummern erhalten wir nicht.
 
-Damit wir Loqqa Pro freischalten können, erfahren wir über RevenueCat (Abschnitt 4.11), welches Abo du gekauft hast, ob ein Testzeitraum läuft, wann du gekauft hast und ob das Abo aktiv ist. Die App speichert diesen Status auf deinem Gerät und fragt ihn beim Start und bei jeder Anmeldung erneut ab. Kaufdaten speichern wir nicht selbst in unserer Datenbank.
+Damit wir Loqqa Pro freischalten können, erfahren wir über RevenueCat (Abschnitt 4.12), welches Abo du gekauft hast, ob ein Testzeitraum läuft, wann du gekauft hast und ob das Abo aktiv ist. Die App speichert diesen Status auf deinem Gerät und fragt ihn beim Start und bei jeder Anmeldung erneut ab. Kaufdaten speichern wir nicht selbst in unserer Datenbank.
 
 Dein Abo verwaltest und kündigst du in den Einstellungen deines Store-Kontos. Die App verlinkt unter „Abo verwalten“ dorthin.
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.
 
-### 4.11 Abo-Verwaltung mit RevenueCat
+### 4.12 Abo-Verwaltung mit RevenueCat
 
-Käufe und Abos verwalten wir über RevenueCat. RevenueCat prüft für uns die Kaufbelege des Stores und teilt der App mit, ob Loqqa Pro aktiv ist. Bevor unser Server einen Körpercheck auswertet, fragt er bei RevenueCat nach, ob dein Konto Loqqa Pro hat.
+Käufe und Abos verwalten wir über RevenueCat. RevenueCat prüft für uns die Kaufbelege des Stores und teilt der App mit, ob Loqqa Pro aktiv ist. Bevor unser Server einen Körpercheck auswertet oder eine Frage an den Coach beantwortet, fragt er bei RevenueCat nach, ob dein Konto Loqqa Pro hat.
 
 Damit RevenueCat deine Käufe deinem Konto zuordnen kann, übermitteln wir deine Konto-ID, eine zufällige Kennung ohne Namen oder E-Mail-Adresse. Kaufst du vor dem Erstellen deines Kontos, vergibt RevenueCat zunächst eine eigene zufällige Kennung und ordnet den Kauf danach deinem Konto zu. Außerdem verarbeitet RevenueCat Kauf- und Abo-Informationen aus dem Store (zum Beispiel Produkt, Preis, Währung, Kauf-, Verlängerungs- und Ablaufdaten, Testzeitraum und Transaktionskennungen) sowie technische Angaben wie Plattform, Gerätetyp, App-Version und IP-Adresse.
 
@@ -195,13 +231,13 @@ Damit RevenueCat deine Käufe deinem Konto zuordnen kann, übermitteln wir deine
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.
 
-### 4.12 Technisch notwendige Verbindungsdaten
+### 4.13 Technisch notwendige Verbindungsdaten
 
 Immer wenn die App mit unseren Servern verbunden ist (zum Beispiel bei Anmeldung, Synchronisation, Uploads oder beim Laden von Übungskatalog und Rechtstexten), werden technisch notwendige Daten verarbeitet: deine IP-Adresse, Datum und Uhrzeit, die aufgerufene Schnittstelle sowie technische Angaben wie Statuscodes und, soweit übermittelt, Angaben zu App und Betriebssystem. Unsere Hosting-Dienstleister protokollieren diese Daten, um Betrieb und Sicherheit zu gewährleisten. Bei Supabase werden die Protokolle nach einem Tag gelöscht, bei PowerSync, sobald sie für Betrieb und Sicherheit nicht mehr nötig sind.
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist ein stabiler und sicherer Betrieb.
 
-### 4.13 Produktanalyse und Fehlerberichte mit PostHog
+### 4.14 Produktanalyse und Fehlerberichte mit PostHog
 
 Um zu verstehen, wie Loqqa genutzt wird, und um Fehler zu finden, nutzen wir PostHog. Die App sendet dafür:
 
@@ -223,11 +259,11 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist es
 
 Damit Loqqa auch offline funktioniert, speichert die App Daten auf deinem Gerät:
 
-- eine lokale Datenbank mit deinem Profil, deinen Plänen und Trainings, deinen Gewichtseinträgen, deinen Körpercheck-Werten, deinen Support-Anfragen und deinen Zustimmungen
+- eine lokale Datenbank mit deinem Profil, deinen Plänen und Trainings, deinen Gewichtseinträgen, deinen Körpercheck-Werten, deinen Coach-Chats, deinen Support-Anfragen und deinen Zustimmungen
 - Körpercheck-Fotos, die du auf diesem Gerät aufgenommen hast, und Kopien deiner Support-Screenshots
 - deine Anmeldesitzung, deine Antworten aus der Einrichtung, deinen Abo-Status, Einstellungen wie die App-Sprache sowie Listen der Dateien, die noch hochgeladen werden müssen
 - den Übungskatalog
-- die Kennung und noch nicht gesendete Ereignisse für PostHog (Abschnitt 4.13)
+- die Kennung und noch nicht gesendete Ereignisse für PostHog (Abschnitt 4.14)
 
 Bis auf die Daten für PostHog ist diese Speicherung für die Dienste, die du nutzen möchtest, unbedingt erforderlich (§ 25 Abs. 2 Nr. 2 TDDDG).
 
@@ -251,11 +287,11 @@ Wir geben deine Daten nur weiter, wenn das für die genannten Zwecke nötig ist,
 
 - **Supabase, Inc.** (Datenbank, Anmeldung, Dateispeicher und Serverfunktionen): Server in Frankfurt am Main (Amazon Web Services)
 - **PowerSync** von Journey Mobile, Inc. (Synchronisation zwischen App und Datenbank; der Dienst hält dafür eine Kopie deiner synchronisierten Daten vor): Server in der EU
-- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Irland (KI-Erstellung von Plänen, Erkennung importierter Pläne, Auswertung der Körpercheck-Fotos und Übersetzung von Support-Nachrichten, Abschnitte 4.6 bis 4.8): Verarbeitung in den USA durch OpenAI OpCo, LLC
-- **RevenueCat, Inc.** (Abo-Verwaltung, Abschnitt 4.11)
-- **PostHog, Inc.** (Produktanalyse und Fehlerberichte, Abschnitt 4.13)
+- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Irland (KI-Erstellung von Plänen, Erkennung importierter Pläne, Auswertung der Körpercheck-Fotos, Antworten des Coachs und Übersetzung von Support-Nachrichten, Abschnitte 4.6 bis 4.9): Verarbeitung in den USA durch OpenAI OpCo, LLC
+- **RevenueCat, Inc.** (Abo-Verwaltung, Abschnitt 4.12)
+- **PostHog, Inc.** (Produktanalyse und Fehlerberichte, Abschnitt 4.14)
 
-Apple und Google erhalten bei App-Downloads und Käufen Daten als eigenständig Verantwortliche (Abschnitt 4.10), ebenso bei der Anmeldung über ihr Konto (Abschnitt 4.2).
+Apple und Google erhalten bei App-Downloads und Käufen Daten als eigenständig Verantwortliche (Abschnitt 4.11), ebenso bei der Anmeldung über ihr Konto (Abschnitt 4.2).
 
 Loqqa wird von einer Person betrieben: Zugriff auf deine Daten hat nur Jan Timo Hünnebeck, soweit er ihn für Betrieb und Support braucht.
 
@@ -263,26 +299,27 @@ Behörden und Gerichten geben wir Daten nur, wenn wir gesetzlich dazu verpflicht
 
 ## 8. Übermittlung in Drittländer
 
-Dein Konto, deine Trainings und deine Fotos speichern wir in Rechenzentren in der EU (Supabase in Frankfurt am Main, PowerSync in der EU). Einige unserer Dienstleister haben ihren Sitz in den USA. Deshalb können Daten auch in die USA übermittelt werden, etwa bei Wartung oder Support durch den Dienstleister. Für die Planerstellung, den Plan-Import, die Auswertung des Körperchecks und die Übersetzung von Support-Nachrichten übermitteln wir Daten bei jeder Anfrage an OpenAI in den USA (Abschnitte 4.6 bis 4.8), und RevenueCat verarbeitet die Abo-Daten in den USA (Abschnitt 4.11).
+Dein Konto, deine Trainings und deine Fotos speichern wir in Rechenzentren in der EU (Supabase in Frankfurt am Main, PowerSync in der EU). Einige unserer Dienstleister haben ihren Sitz in den USA. Deshalb können Daten auch in die USA übermittelt werden, etwa bei Wartung oder Support durch den Dienstleister. Für die Planerstellung, den Plan-Import, die Auswertung des Körperchecks, die Antworten des Coachs und die Übersetzung von Support-Nachrichten übermitteln wir Daten bei jeder Anfrage an OpenAI in den USA (Abschnitte 4.6 bis 4.9), und RevenueCat verarbeitet die Abo-Daten in den USA (Abschnitt 4.12).
 
 Wir stützen diese Übermittlungen auf folgende Garantien:
 
 - **PostHog:** Angemessenheitsbeschluss der EU-Kommission für das EU-US Data Privacy Framework, unter dem PostHog zertifiziert ist (Art. 45 DSGVO)
 - **Supabase, PowerSync, OpenAI und RevenueCat:** Standardvertragsklauseln der EU-Kommission (Art. 46 Abs. 2 lit. c DSGVO), die Teil unserer Auftragsverarbeitungsverträge sind
-- **Körpercheck:** zusätzlich deine ausdrückliche Einwilligung (Art. 49 Abs. 1 lit. a DSGVO). In den USA können Behörden unter Umständen auf Daten zugreifen, ohne dass dir dagegen dieselben Rechtsbehelfe wie in der EU zustehen.
+- **Körpercheck und Coach:** zusätzlich deine ausdrückliche Einwilligung (Art. 49 Abs. 1 lit. a DSGVO). In den USA können Behörden unter Umständen auf Daten zugreifen, ohne dass dir dagegen dieselben Rechtsbehelfe wie in der EU zustehen.
 
 Eine Kopie der Standardvertragsklauseln kannst du bei uns anfordern.
 
 ## 9. Wie lange wir deine Daten speichern
 
-- **Konto, Profil, Pläne, Trainings, Gewichtseinträge, Körperchecks, Support-Anfragen und Zustimmungen:** solange dein Konto besteht. Einzelne Inhalte, zum Beispiel Pläne, Gewichtseinträge oder Körperchecks, kannst du vorher selbst löschen. Mit deinem Konto löschen wir sie vollständig (Abschnitt 10). Konten, die nicht mehr genutzt werden, löschen wir nicht automatisch; du kannst die Löschung jederzeit in der App oder per E-Mail verlangen.
+- **Konto, Profil, Pläne, Trainings, Gewichtseinträge, Körperchecks, Coach-Chats, Support-Anfragen und Zustimmungen:** solange dein Konto besteht. Einzelne Inhalte, zum Beispiel Pläne, Gewichtseinträge, Körperchecks oder Coach-Chats, kannst du vorher selbst löschen. Mit deinem Konto löschen wir sie vollständig (Abschnitt 10). Konten, die nicht mehr genutzt werden, löschen wir nicht automatisch; du kannst die Löschung jederzeit in der App oder per E-Mail verlangen.
 - **Antworten aus der Einrichtung ohne Konto:** nur auf deinem Gerät, bis du ein Konto erstellst oder die App löschst.
 - **Daten auf deinem Gerät:** bis du dich abmeldest oder die App löschst (Abschnitt 5).
-- **Server-Protokolle:** ein Tag bei Supabase; bei PowerSync, solange sie für Betrieb und Sicherheit nötig sind (Abschnitt 4.12).
+- **Server-Protokolle:** ein Tag bei Supabase; bei PowerSync, solange sie für Betrieb und Sicherheit nötig sind (Abschnitt 4.13).
 - **Begrenzung von Import und Planerstellung:** zwei Tage (Abschnitt 4.7).
-- **Bei OpenAI:** bis zu 30 Tage (Abschnitte 4.6 bis 4.8).
-- **Analysedaten bei PostHog:** ein Jahr (Abschnitt 4.13).
-- **Abo-Daten bei RevenueCat:** siehe Abschnitt 4.11.
+- **Protokolle des Coachs:** solange dein Konto besteht; die abgefragten Daten darin löschen wir mit dem jeweiligen Chat (Abschnitt 4.8).
+- **Bei OpenAI:** bis zu 30 Tage (Abschnitte 4.6 bis 4.9).
+- **Analysedaten bei PostHog:** ein Jahr (Abschnitt 4.14).
+- **Abo-Daten bei RevenueCat:** siehe Abschnitt 4.12.
 - **Backups:** Wir erstellen derzeit keine Backups unserer Datenbank und unseres Speichers. Ändert sich das, ergänzen wir hier, wie lange Backups aufbewahrt werden.
 
 ## 10. Konto löschen
@@ -291,7 +328,7 @@ Du kannst dein Konto jederzeit in der App löschen: in den Einstellungen unter �
 
 1. Hast du dich mit Apple angemeldet, bestätigst du das auf einem Apple-Gerät noch einmal bei Apple. Damit beenden wir die Verbindung zwischen deinem Apple Account und Loqqa: Unser Server tauscht die Bestätigung bei Apple gegen deine Anmeldeschlüssel und lässt sie sofort ungültig machen. Gespeichert wird dabei nichts.
 2. Die App löscht dein Profilfoto, deine Körpercheck-Fotos und deine Support-Screenshots aus unserem Speicher.
-3. Danach wird dein Konto gelöscht. Damit werden automatisch alle zugehörigen Daten in unserer Datenbank gelöscht: Profil, Pläne, Trainings, Gewichtseinträge, Körperchecks, Support-Anfragen mit allen Nachrichten und deine gespeicherten Zustimmungen. Die Kopie bei PowerSync wird dabei ebenfalls entfernt.
+3. Danach wird dein Konto gelöscht. Damit werden automatisch alle zugehörigen Daten in unserer Datenbank gelöscht: Profil, Pläne, Trainings, Gewichtseinträge, Körperchecks, Coach-Chats mit ihren Protokollen, Support-Anfragen mit allen Nachrichten und deine gespeicherten Zustimmungen. Die Kopie bei PowerSync wird dabei ebenfalls entfernt.
 4. Zum Schluss meldet die App dich auf diesem Gerät ab und löscht die dort gespeicherten Daten.
 
 **Ein laufendes Abo endet dadurch nicht.** Kündige es im App Store oder bei Google Play.
@@ -321,6 +358,7 @@ Eine Einwilligung kannst du jederzeit mit Wirkung für die Zukunft widerrufen (A
 
 - **Körpermaße:** per E-Mail an support@useloqqa.com. Wir löschen dann dein Gewicht, deine Größe und deine Gewichtseinträge. Ohne diese Angaben kann die App dein Training nur eingeschränkt anpassen; du kannst stattdessen auch dein Konto löschen (Abschnitt 10).
 - **Körpercheck:** Lösche deine Checks in der App und mache keine neuen, oder schreib uns; dann löschen wir alle Körpercheck-Fotos und -Werte.
+- **Coach:** Schalte den Coach in den Einstellungen der App aus. Danach übermitteln wir keine Daten mehr an OpenAI, und du kannst den Coach erst wieder nutzen, wenn du erneut einwilligst. Deine bisherigen Chats kannst du in der App löschen, oder schreib uns; dann löschen wir sie.
 
 ## 13. Beschwerde bei einer Aufsichtsbehörde
 
@@ -328,15 +366,15 @@ Du kannst dich bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77 DSGVO
 
 ## 14. Musst du uns Daten geben?
 
-Für ein Konto brauchen wir dein Google-Konto oder deinen Apple Account. Ohne Konto kannst du Loqqa nach der Einrichtung nicht nutzen. Die Angaben in der Einrichtung braucht die App, um dein Alter zu prüfen und deinen Plan zu erstellen und anzupassen. Freiwillig sind insbesondere dein Geschlecht (du kannst „Keine Angabe“ wählen), der Körpercheck, Gewichtseinträge, ein Profilfoto und der Text „Über dich“.
+Für ein Konto brauchen wir dein Google-Konto oder deinen Apple Account. Ohne Konto kannst du Loqqa nach der Einrichtung nicht nutzen. Die Angaben in der Einrichtung braucht die App, um dein Alter zu prüfen und deinen Plan zu erstellen und anzupassen. Freiwillig sind insbesondere dein Geschlecht (du kannst „Keine Angabe“ wählen), der Körpercheck, der Coach, Gewichtseinträge, ein Profilfoto und der Text „Über dich“.
 
 ## 15. Keine automatisierten Entscheidungen
 
-Die App erstellt Pläne, Vorschläge, Level und Körpercheck-Werte automatisch; Pläne, die du dir erstellen lässt, und die Körpercheck-Werte ermittelt ein KI-Modell von OpenAI (Abschnitte 4.6 und 4.7). Das sind Empfehlungen und Schätzungen für dein Training. Entscheidungen, die dir gegenüber rechtliche Wirkung entfalten oder dich in ähnlicher Weise erheblich beeinträchtigen (Art. 22 DSGVO), treffen wir nicht.
+Die App erstellt Pläne, Vorschläge, Level, Körpercheck-Werte und die Antworten des Coachs automatisch; Pläne, die du dir erstellen lässt, die Körpercheck-Werte und die Antworten des Coachs stammen von einem KI-Modell von OpenAI (Abschnitte 4.6 bis 4.8). Das sind Informationen, Empfehlungen und Schätzungen für dein Training. Die Antworten des Coachs können falsch sein und sind keine medizinische Beratung. Entscheidungen, die dir gegenüber rechtliche Wirkung entfalten oder dich in ähnlicher Weise erheblich beeinträchtigen (Art. 22 DSGVO), treffen wir nicht.
 
 ## 16. Kinder und Jugendliche
 
-Loqqa richtet sich an Personen ab dem Alter, ab dem sie in ihrem Land selbst in die Verarbeitung ihrer Daten einwilligen dürfen: in Deutschland ab 16 Jahren, in anderen Ländern je nach Recht dort ab 13 bis 16 Jahren. Die App fragt bei der Einrichtung nach deinem Geburtsdatum und lässt dich erst ab diesem Alter weiter; maßgeblich ist das Land, das in deinem Gerät eingestellt ist. Der Körpercheck ist erst ab 18 Jahren verfügbar.
+Loqqa richtet sich an Personen ab dem Alter, ab dem sie in ihrem Land selbst in die Verarbeitung ihrer Daten einwilligen dürfen: in Deutschland ab 16 Jahren, in anderen Ländern je nach Recht dort ab 13 bis 16 Jahren. Die App fragt bei der Einrichtung nach deinem Geburtsdatum und lässt dich erst ab diesem Alter weiter; maßgeblich ist das Land, das in deinem Gerät eingestellt ist. Der Coach ist erst ab 16 Jahren verfügbar, auch in Ländern mit einem niedrigeren Mindestalter. Der Körpercheck ist erst ab 18 Jahren verfügbar. Beides prüft unser Server anhand des Geburtsdatums in deinem Profil.
 
 Erfahren wir, dass ein Konto einer Person unter dem Mindestalter gehört, löschen wir es.
 

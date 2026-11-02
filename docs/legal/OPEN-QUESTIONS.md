@@ -4,8 +4,9 @@ Version 1.1 of the privacy policy (DS) and the terms of use (NB) is published (O
 `docs/legal/<locale>/`, migration `20261024120000_legal_documents_v1_1`; Korean followed in
 `20261025120100_legal_documents_v1_1_ko`). Version 1.2 of the privacy policy adds the device
 info of support requests, the OpenAI translation of support messages and what the support desk
-shows (`20261102120000_privacy_policy_v1_2`; the terms stay at 1.1). German is the binding version;
-`en`, `pt-PT`, `pt-BR` and `ko` are translations.
+shows (`20261102120000_privacy_policy_v1_2`). Version 1.3 of the privacy policy and 1.2 of the
+terms add the AI coach; their migrations aren't generated yet (item 8). NB 1.2 also names Korean among its languages. German is the
+binding version; `en`, `pt-PT`, `pt-BR` and `ko` are translations.
 
 The texts are not legal advice. A lawyer should review them, above all the health data, body
 photos and AI parts.
@@ -13,7 +14,7 @@ photos and AI parts.
 ## Accepted risks (owner's decision)
 
 1. **PostHog without consent.** The SDK stores an id on the device and sends events without an
-   opt-in. § 25(1) TDDDG requires consent for that in Germany; DS §4.13 names Art. 6(1)(f) GDPR and
+   opt-in. § 25(1) TDDDG requires consent for that in Germany; DS §4.14 names Art. 6(1)(f) GDPR and
    the right to object. Fix: an opt-in prompt before the SDK starts, or a mode without device
    storage.
 2. **Body data consent without a checkbox.** The line above "Create account" (`createAccount.terms`)
@@ -22,44 +23,69 @@ photos and AI parts.
 3. **Progress check consent without its own step.** One line above the camera's "Done"
    (`camera.consent`) names OpenAI and the USA; DS §4.6 and §8 rely on it, also for Art. 49(1)(a)
    GDPR.
+4. **Coach consent by sending the first question.** A notice on the coach's start screen says that
+   the training and body data go to OpenAI in the USA for the answers, and sending the first
+   question is the consent, like the body check's line above "Done". DS §4.4, §4.8 and §8 rely on
+   it, also for Art. 49(1)(a) GDPR. The server records it in `profiles.coach_consent_at` before
+   anything is sent. A separate confirmation step would be the safer form.
 
 ## Before launch
 
-4. **DPAs.** Sign one with every processor: Supabase (dashboard), OpenAI (DPA form), RevenueCat,
+5. **DPAs.** Sign one with every processor: Supabase (dashboard), OpenAI (DPA form), RevenueCat,
    PostHog, PowerSync (email dpo@powersync.com). DS §8 relies on the SCCs in them.
-5. **Imprint on useloqqa.com** (§ 5 DDG) and in the store listings. NB §1 covers the app. The site
+6. **Imprint on useloqqa.com** (§ 5 DDG) and in the store listings. NB §1 covers the app. The site
    also needs the terms and privacy policy for the store listings and Google's consent screen.
-6. **Data protection officer.** DS §2 says none is required. If a DPIA is required (health data,
+7. **Data protection officer.** DS §2 says none is required. If a DPIA is required (health data,
    body photos, AI), § 38 BDSG requires one; check with the lawyer.
+8. **Effective date of DS 1.3 and NB 1.2.** Their "Stand" lines say 2 November 2026 as a
+   placeholder. Set both to the coach's release date, then generate the migrations
+   (`node scripts/legal-migration.mjs 1.3 <date> <name> --kind=privacy`, and `1.2 … --kind=terms`):
+   a pushed migration takes effect at once (the app shows the newest version whose `effective_at`
+   has passed), and its rows can't be changed. With the placeholder date, DS 1.3 would have the
+   same `effective_at` as DS 1.2, so the app could show either.
+9. **Coach from 16 (for the lawyer).** The coach sends health data (weight entries, body check
+   scores) to OpenAI in the USA on the user's own consent from 16, also where the minimum age is
+   lower (DS §4.8, §16; NB §2); the body check stays 18+. Check whether a 16-year-old's own consent
+   is enough for that, under Art. 9(2)(a) and Art. 49(1)(a) GDPR. Also check that chats may stay
+   after the consent is withdrawn until the user deletes them (DS §12).
 
 ## Manual processes the texts promise
 
-7. Withdrawing the body data consent (DS §12): delete `weight_kg`/`height_cm` and the weight entries
-   on request.
-8. Data export within one month as JSON (DS §11).
-9. Deleting PostHog persons and RevenueCat customers on request (DS §10, §4.13).
-10. Deleting progress-check photos left in storage after an offline delete (DS §4.6).
-11. Deleting closed support tickets on request (DS §4.8).
+10. Withdrawing the body data consent (DS §12): delete `weight_kg`/`height_cm` and the weight
+    entries on request.
+11. Data export within one month as JSON (DS §11).
+12. Deleting PostHog persons and RevenueCat customers on request (DS §10, §4.14).
+13. Deleting progress-check photos left in storage after an offline delete (DS §4.6).
+14. Deleting closed support tickets on request (DS §4.9).
+15. Deleting coach chats on request, for example after the coach consent is withdrawn (DS §12).
 
 ## Keep in sync with the app
 
-12. **Backups.** DS §9 says there are none (Supabase Free). Upgrading to Pro adds daily backups
+16. **Backups.** DS §9 says there are none (Supabase Free). Upgrading to Pro adds daily backups
     kept 7 days: update DS §9 then.
-13. **Minimum ages** per country (`src/features/onboarding/lib/minimum-age.ts`) match DS §16 and
-    NB §2. Spain and Norway have pending bills to raise theirs.
-14. **Brazil:** the ECA Digital (Law 15.211/2025, in force since 17 March 2026) asks apps likely used
+17. **Minimum ages** per country (`src/features/onboarding/lib/minimum-age.ts`) match DS §16 and
+    NB §2, as do the coach's 16 (`coach-chat`) and the body check's 18 (`assess-progress`). Spain
+    and Norway have pending bills to raise theirs.
+18. **Brazil:** the ECA Digital (Law 15.211/2025, in force since 17 March 2026) asks apps likely used
     by minors for real age checks; a self-declared birth date may not be enough there.
-15. **Support reply time.** The chat says "24–48 hours"; NB §9 calls it a guideline.
-16. Every change to the app's data flows (new service, new data sent to OpenAI or PostHog) needs a
+19. **Support reply time.** The chat says "24–48 hours"; NB §9 calls it a guideline.
+20. **Coach screens.** DS §4.4, §4.8 and §12 describe the notice above the first question and a
+    switch in Settings that withdraws the consent (clearing `profiles.coach_consent_at`). The
+    coach's screens are still being built: check both exist as described before DS 1.3 is
+    published, and that the screen shows the coach is an AI (Art. 50(1) AI Act), not the paywall's
+    head coach. DS §4.8 and NB §4 also name the limits (`COACH_DAILY_LIMIT`, `COACH_MONTHLY_LIMIT`)
+    and what goes to OpenAI (`supabase/functions/_shared/coach/prompt.ts` and `tools.ts`).
+21. **Coach logs.** `coach_runs` keeps time, status, model, tokens and duration until the account
+    is deleted, also after its chat is deleted (DS §4.8, §9). The limits only need the last 30
+    days: decide how long the cost overview needs them, delete older rows and update DS §9.
+22. Every change to the app's data flows (new service, new data sent to OpenAI or PostHog) needs a
     new version of DS: `node scripts/legal-migration.mjs <version> <date> <name>`.
 
 ## Korean
 
-17. **Review.** The Korean 1.1 was translated from the English one and has not been read by a native
-    speaker or a lawyer.
-18. **Languages line.** NB §15 in Korean names Korean among the languages; `de`, `en`, `pt-PT` and
-    `pt-BR` 1.1 name only German, English and Portuguese. Add Korean there in the next version.
-19. **Korean law.** The texts follow the GDPR. Korea's PIPA has its own rules for privacy policies
+23. **Review.** The Korean 1.1 was translated from the English one and has not been read by a native
+    speaker or a lawyer; neither have the coach parts of DS 1.3 and NB 1.2.
+24. **Korean law.** The texts follow the GDPR. Korea's PIPA has its own rules for privacy policies
     (for example a named privacy officer and details of transfers abroad); check whether they apply
     to users in Korea.
-20. **Website.** useloqqa.com/ko still shows the English texts.
+25. **Website.** useloqqa.com/ko still shows the English texts.
