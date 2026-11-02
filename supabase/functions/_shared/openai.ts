@@ -97,6 +97,48 @@ export async function askStructured(req: StructuredRequest) {
   return readResponse(body);
 }
 
+/** A Responses API output item: a message, a reasoning step or a function call. */
+export interface OutputItem {
+  type: string;
+  [key: string]: unknown;
+}
+
+export interface ResponseUsage {
+  input_tokens?: number;
+  output_tokens?: number;
+  input_tokens_details?: { cached_tokens?: number };
+  output_tokens_details?: { reasoning_tokens?: number };
+}
+
+/**
+ * A Responses API request in free form (the coach sends tools and a conversation), nothing
+ * stored on OpenAI's side. Resolves with the output items and usage, or OpenAI's HTTP status and
+ * error text; throws on timeouts and network errors.
+ */
+export async function respond(body: Record<string, unknown>, timeoutMs: number) {
+  const response = await fetch(OPENAI_URL, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...body, store: false }),
+    signal: AbortSignal.timeout(timeoutMs),
+  });
+  if (!response.ok) {
+    const error = await response.text();
+    console.error('OpenAI request failed', response.status, error);
+    return { upstream: response.status, error };
+  }
+  const result = (await response.json()) as {
+    status?: string;
+    output?: OutputItem[];
+    usage?: ResponseUsage;
+  };
+  return {
+    status: result.status ?? 'completed',
+    output: result.output ?? [],
+    usage: result.usage ?? {},
+  };
+}
+
 /** A step of a streamed answer: more of its text, or how it ended. */
 export type StreamedAnswer =
   { text: string } | { refusal: true } | { done: true } | { incomplete: string };

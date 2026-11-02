@@ -1,0 +1,754 @@
+// The coach's tools: what the model can ask for and the code that answers. Each tool returns the
+// numbers for the model (`result`, which it quotes rather than computes) and, for the five chart
+// tools, the chart the app draws under the answer (`chart`; null without enough data).
+import {
+  addDays,
+  type CoachData,
+  type CoachExercise,
+  type CoachSet,
+  type CoachUser,
+  type CoachWorkout,
+  dayIn,
+  daysBetween,
+  daysInMonth,
+  type ExerciseMetric,
+  inUnits,
+  isDay,
+  latestBodyWeight,
+  monthStart,
+  previousMonth,
+  round,
+  sessionValue,
+  WEEKDAYS,
+  weekdayOf,
+  weekStart,
+  weightUnit,
+  workoutMinutes,
+  workoutSets,
+  workoutVolumeKg,
+} from './data.ts';
+
+export interface Point {
+  date: string;
+  value: number;
+}
+
+export type TrendMetric = ExerciseMetric | 'body_weight' | 'body_score';
+export type PeriodMetric = 'volume' | 'sets' | 'workouts' | 'minutes';
+export type Period = 'week' | 'month';
+export type DistributionBy = 'muscle' | 'exercise' | 'weekday';
+
+export interface TrendChart {
+  type: 'trend';
+  metric: TrendMetric;
+  unit: string;
+  exerciseId: string | null;
+  points: Point[];
+  /** Body weight: the smoothed line through the measurements. */
+  line: Point[] | null;
+  /** Each new all-time best, when asked for. */
+  records: Point[] | null;
+}
+
+export interface CompareChart {
+  type: 'compare';
+  metric: ExerciseMetric;
+  unit: string;
+  /** Each line as % of its first value. */
+  asPercent: boolean;
+  series: { exerciseId: string; points: Point[] }[];
+}
+
+export interface PeriodChart {
+  type: 'period_vs_average';
+  metric: PeriodMetric;
+  unit: string;
+  period: Period;
+  /** One bar per period, oldest first; the last is the current one. */
+  bars: Point[];
+  average: number | null;
+}
+
+export interface CalendarChart {
+  type: 'calendar';
+  from: string;
+  to: string;
+  /** Training days with their number of workouts. */
+  days: Point[];
+}
+
+export interface DistributionChart {
+  type: 'distribution';
+  by: DistributionBy;
+  unit: string;
+  /** The guideline line (10 sets a week per muscle). */
+  reference: number | null;
+  rows: { key: string; value: number }[];
+}
+
+export type Chart = TrendChart | CompareChart | PeriodChart | CalendarChart | DistributionChart;
+
+export interface ToolResult {
+  chart: Chart | null;
+  result: Record<string, unknown>;
+}
+
+type Args = Record<string, unknown>;
+
+// ---------- definitions ----------
+
+const EXERCISE_METRICS: ExerciseMetric[] = ['e1rm', 'top_weight', 'reps', 'seconds', 'volume'];
+const METRIC_HELP =
+  'e1rm: estimated one-rep max of the best set, the usual measure of strength. top_weight: ' +
+  'heaviest weight lifted. reps: most reps in a set (bodyweight exercises). seconds: longest ' +
+  'hold. volume: weight × reps of all sets.';
+
+const FROM = {
+  type: ['string', 'null'],
+  description: 'First day, YYYY-MM-DD. null: from the start.',
+};
+const TO = { type: ['string', 'null'], description: 'Last day, YYYY-MM-DD. null: today.' };
+
+/** A function tool in strict mode: every property required, nothing else allowed. */
+const tool = (name: string, description: string, properties: Record<string, unknown>) => ({
+  type: 'function',
+  name,
+  description,
+  strict: true,
+  parameters: {
+    type: 'object',
+    properties,
+    required: Object.keys(properties),
+    additionalProperties: false,
+  },
+});
+
+export const TOOLS = [
+  tool(
+    'trend',
+    'Chart: how one value developed over time. Body weight (with its smoothed trend), the body ' +
+      "check score, or one exercise's value per session.",
+    {
+      metric: {
+        type: 'string',
+        enum: ['body_weight', 'body_score', ...EXERCISE_METRICS],
+        description: `For an exercise: ${METRIC_HELP}`,
+      },
+      exercise_id: {
+        type: ['string', 'null'],
+        description: "An id from the user's exercises; null for body_weight and body_score.",
+      },
+      from: FROM,
+      to: TO,
+      show_records: {
+        type: 'boolean',
+        description: 'Mark every new all-time best, for questions about records.',
+      },
+    },
+  ),
+  tool('compare', 'Chart: 2 to 4 exercises over the same time, one line each.', {
+    exercise_ids: { type: 'array', items: { type: 'string' }, description: '2 to 4 exercise ids.' },
+    metric: { type: 'string', enum: EXERCISE_METRICS, description: METRIC_HELP },
+    from: FROM,
+    to: TO,
+    as_percent: {
+      type: 'boolean',
+      description: 'Show each line as % of its start (start = 100 %).',
+    },
+  }),
+  tool(
+    'period_vs_average',
+    'Chart: the current week or month against the average of the ones before, e.g. "more than ' +
+      'usual?". Also gives the previous period, for "this week vs last week".',
+    {
+      metric: {
+        type: 'string',
+        enum: ['volume', 'sets', 'workouts', 'minutes'],
+        description: 'volume: weight × reps. sets: completed sets. minutes: time trained.',
+      },
+      period: { type: 'string', enum: ['week', 'month'] },
+      periods: {
+        type: ['integer', 'null'],
+        description:
+          'How many periods before the current one make the average. null: 12 weeks or 6 months.',
+      },
+    },
+  ),
+  tool(
+    'calendar',
+    'Chart: the days the user trained, for consistency. Gives workouts per week, gaps of a week ' +
+      'or more, workouts per weekday and the weekdays of the last 4 weeks.',
+    { from: FROM, to: TO },
+  ),
+  tool(
+    'distribution',
+    'Chart: how the training is spread. muscle: sets per week per muscle (main muscles count a ' +
+      'set fully, helping muscles half) against the guideline of 10. exercise: sets per week per ' +
+      'exercise. weekday: workouts per weekday.',
+    {
+      by: { type: 'string', enum: ['muscle', 'exercise', 'weekday'] },
+      from: FROM,
+      to: TO,
+    },
+  ),
+  tool(
+    'workouts',
+    'No chart: looks up sessions with their exercises and sets, newest first (at most 10).',
+    {
+      from: FROM,
+      to: TO,
+      exercise_id: {
+        type: ['string', 'null'],
+        description: 'Only sessions with this exercise, and only its sets. null: all.',
+      },
+    },
+  ),
+];
+
+export const CHART_TOOLS = new Set([
+  'trend',
+  'compare',
+  'period_vs_average',
+  'calendar',
+  'distribution',
+]);
+
+/** Runs a tool the model called; a mistake in the call comes back as `error` for it to fix. */
+export function runTool(name: string, args: unknown, data: CoachData, user: CoachUser): ToolResult {
+  const run = RUNNERS[name];
+  if (!run) return failed(`There is no tool "${name}".`);
+  if (!args || typeof args !== 'object') return failed('The arguments are missing.');
+  return run(args as Args, data, user);
+}
+
+const failed = (error: string): ToolResult => ({ chart: null, result: { error } });
+
+const RUNNERS: Record<string, (args: Args, data: CoachData, user: CoachUser) => ToolResult> = {
+  trend,
+  compare,
+  period_vs_average: periodVsAverage,
+  calendar,
+  distribution,
+  workouts,
+};
+
+// ---------- shared ----------
+
+interface Range {
+  from: string;
+  to: string;
+}
+
+/** The days asked for: from the start of the data to today unless given; null when invalid. */
+function rangeOf(args: Args, start: string | undefined, user: CoachUser): Range | null {
+  const from = args.from ?? start ?? user.today;
+  const to = args.to ?? user.today;
+  if (!isDay(from) || !isDay(to) || from > to) return null;
+  return { from, to: to > user.today ? user.today : to };
+}
+
+const BAD_RANGE = 'from and to must be days (YYYY-MM-DD), from not after to.';
+const inRange = (date: string, { from, to }: Range) => date >= from && date <= to;
+const dayOf = (workout: CoachWorkout, user: CoachUser) => dayIn(workout.startedAt, user.timeZone);
+
+function exerciseOf(id: unknown, data: CoachData) {
+  return typeof id === 'string' ? data.exercises.get(id) : undefined;
+}
+
+const UNKNOWN_EXERCISE = "Unknown exercise_id: use an id from the user's exercises.";
+
+/** First, last and the extremes of a series, for the model to quote. */
+function summary(points: Point[], digits: number) {
+  if (!points.length) return { count: 0 };
+  const first = points[0];
+  const last = points.at(-1)!;
+  const lowest = points.reduce((a, b) => (b.value < a.value ? b : a));
+  const highest = points.reduce((a, b) => (b.value > a.value ? b : a));
+  const change = round(last.value - first.value, digits);
+  return {
+    count: points.length,
+    first,
+    last,
+    change,
+    change_percent: first.value ? Math.round((change / first.value) * 100) : null,
+    lowest,
+    highest,
+  };
+}
+
+/** At most `max` points, evenly picked with the first and last: enough to read the shape. */
+function sample(points: Point[], max = 24) {
+  if (points.length <= max) return points;
+  return Array.from(
+    { length: max },
+    (_, i) => points[Math.round((i * (points.length - 1)) / (max - 1))],
+  );
+}
+
+/** A series' points that set a new best over everything before them (the first value doesn't). */
+function recordsOf(all: Point[], range: Range) {
+  const records: Point[] = [];
+  let best = -Infinity;
+  all.forEach((point, i) => {
+    if (i > 0 && point.value > best && inRange(point.date, range)) records.push(point);
+    best = Math.max(best, point.value);
+  });
+  return records;
+}
+
+const unitOf = (metric: TrendMetric | PeriodMetric, user: CoachUser) =>
+  ({
+    e1rm: weightUnit(user.units),
+    top_weight: weightUnit(user.units),
+    volume: weightUnit(user.units),
+    body_weight: weightUnit(user.units),
+    body_score: 'points',
+    reps: 'reps',
+    seconds: 's',
+    sets: 'sets',
+    workouts: 'workouts',
+    minutes: 'min',
+  })[metric];
+
+/** A value in the user's units, rounded as the model should quote it. */
+function shown(metric: ExerciseMetric, kgOrCount: number, user: CoachUser) {
+  if (metric === 'reps' || metric === 'seconds') return Math.round(kgOrCount);
+  const value = inUnits(kgOrCount, user.units);
+  return metric === 'volume' ? Math.round(value) : round(value);
+}
+
+/** Every session's value of one exercise, oldest first. */
+function exerciseSeries(
+  exercise: CoachExercise,
+  metric: ExerciseMetric,
+  data: CoachData,
+  user: CoachUser,
+) {
+  const bodyKg = latestBodyWeight(data);
+  const points: Point[] = [];
+  for (const workout of data.workouts) {
+    const sets = workout.exercises
+      .filter((e) => e.exerciseId === exercise.id)
+      .flatMap((e) => e.sets);
+    const value = sets.length ? sessionValue(metric, exercise, sets, bodyKg) : null;
+    if (value != null)
+      points.push({ date: dayOf(workout, user), value: shown(metric, value, user) });
+  }
+  return points;
+}
+
+const tooLittle = (count: number) =>
+  count ? 'Only one value in this time: too little for a chart.' : 'No data in this time.';
+
+// ---------- trend ----------
+
+function trend(args: Args, data: CoachData, user: CoachUser): ToolResult {
+  const metric = args.metric as TrendMetric;
+  if (metric === 'body_weight') return bodyWeight(args, data, user);
+  let all: Point[];
+  let exercise: CoachExercise | undefined;
+  if (metric === 'body_score') {
+    all = data.checks.map((c) => ({ date: c.date, value: c.score }));
+  } else if (EXERCISE_METRICS.includes(metric)) {
+    exercise = exerciseOf(args.exercise_id, data);
+    if (!exercise) return failed(UNKNOWN_EXERCISE);
+    all = exerciseSeries(exercise, metric, data, user);
+  } else {
+    return failed(`Unknown metric "${String(metric)}".`);
+  }
+  const range = rangeOf(args, all[0]?.date, user);
+  if (!range) return failed(BAD_RANGE);
+  const points = all.filter((p) => inRange(p.date, range));
+  const records = args.show_records ? recordsOf(all, range) : null;
+  const unit = unitOf(metric, user);
+  const result = {
+    metric,
+    exercise: exercise?.name ?? null,
+    unit,
+    ...range,
+    ...summary(points, metric === 'volume' ? 0 : 1),
+    ...(records ? { records } : {}),
+    points: sample(points),
+  };
+  if (points.length < 2)
+    return { chart: null, result: { ...result, note: tooLittle(points.length) } };
+  return {
+    chart: {
+      type: 'trend',
+      metric,
+      unit,
+      exerciseId: exercise?.id ?? null,
+      points,
+      line: null,
+      records,
+    },
+    result,
+  };
+}
+
+/** Each entry pulls the trend line 10 % of the way per day since the last one. */
+function smoothed(entries: CoachData['weights']) {
+  let value = entries[0]?.kg ?? 0;
+  let previous = entries[0]?.date ?? '';
+  return entries.map(({ date, kg }) => {
+    value += (1 - 0.9 ** Math.max(1, daysBetween(previous, date))) * (kg - value);
+    previous = date;
+    return { date, value };
+  });
+}
+
+function bodyWeight(args: Args, data: CoachData, user: CoachUser): ToolResult {
+  const range = rangeOf(args, data.weights[0]?.date, user);
+  if (!range) return failed(BAD_RANGE);
+  const toPoint = ({ date, value }: Point) => ({ date, value: round(inUnits(value, user.units)) });
+  const points = data.weights
+    .filter((w) => inRange(w.date, range))
+    .map((w) => toPoint({ date: w.date, value: w.kg }));
+  const line = smoothed(data.weights)
+    .filter((p) => inRange(p.date, range))
+    .map(toPoint);
+  const unit = weightUnit(user.units);
+  const result: Record<string, unknown> = {
+    metric: 'body_weight',
+    unit,
+    ...range,
+    measurements: points.length,
+  };
+  if (points.length < 2)
+    return { chart: null, result: { ...result, note: tooLittle(points.length) } };
+  const trendSummary = summary(line, 1);
+  const weeks = daysBetween(line[0].date, line.at(-1)!.date) / 7;
+  Object.assign(result, {
+    // The trend, not single weigh-ins, is what changed: it evens out water and meals.
+    trend: trendSummary,
+    change_per_week: weeks >= 1 ? round((line.at(-1)!.value - line[0].value) / weeks, 2) : null,
+    lowest_measurement: summary(points, 1).lowest,
+    highest_measurement: summary(points, 1).highest,
+    trend_points: sample(line),
+  });
+  return {
+    chart: {
+      type: 'trend',
+      metric: 'body_weight',
+      unit,
+      exerciseId: null,
+      points,
+      line,
+      records: null,
+    },
+    result,
+  };
+}
+
+// ---------- compare ----------
+
+function compare(args: Args, data: CoachData, user: CoachUser): ToolResult {
+  const ids = Array.isArray(args.exercise_ids) ? args.exercise_ids : [];
+  if (ids.length < 2 || ids.length > 4) return failed('Give 2 to 4 exercise_ids.');
+  const exercises = ids.map((id) => exerciseOf(id, data));
+  if (exercises.some((e) => !e)) return failed(UNKNOWN_EXERCISE);
+  const metric = args.metric as ExerciseMetric;
+  if (!EXERCISE_METRICS.includes(metric)) return failed(`Unknown metric "${String(metric)}".`);
+  const all = exercises.map((e) => exerciseSeries(e!, metric, data, user));
+  const start = all
+    .map((points) => points[0]?.date)
+    .filter(Boolean)
+    .sort()[0];
+  const range = rangeOf(args, start, user);
+  if (!range) return failed(BAD_RANGE);
+  const series = all.map((points, i) => ({
+    exerciseId: exercises[i]!.id,
+    points: points.filter((p) => inRange(p.date, range)),
+  }));
+  const unit = unitOf(metric, user);
+  const result = {
+    metric,
+    unit,
+    ...range,
+    as_percent: !!args.as_percent,
+    exercises: series.map(({ points }, i) => ({
+      name: exercises[i]!.name,
+      ...summary(points, metric === 'volume' ? 0 : 1),
+      ...(points.length < 2 ? { note: tooLittle(points.length) } : {}),
+    })),
+  };
+  if (series.every((s) => s.points.length < 2)) return { chart: null, result };
+  return { chart: { type: 'compare', metric, unit, asPercent: !!args.as_percent, series }, result };
+}
+
+// ---------- period vs average ----------
+
+function periodValue(
+  metric: PeriodMetric,
+  workout: CoachWorkout,
+  data: CoachData,
+  user: CoachUser,
+) {
+  if (metric === 'volume') return inUnits(workoutVolumeKg(workout, data), user.units);
+  if (metric === 'sets') return workoutSets(workout, data);
+  if (metric === 'minutes') return workoutMinutes(workout);
+  return 1;
+}
+
+function periodVsAverage(args: Args, data: CoachData, user: CoachUser): ToolResult {
+  const metric = args.metric as PeriodMetric;
+  if (!['volume', 'sets', 'workouts', 'minutes'].includes(metric)) {
+    return failed(`Unknown metric "${String(metric)}".`);
+  }
+  const period: Period = args.period === 'month' ? 'month' : 'week';
+  if (!data.workouts.length)
+    return { chart: null, result: { metric, period, note: 'No workouts yet.' } };
+  const startOf = period === 'week' ? weekStart : monthStart;
+  const before = (start: string) => (period === 'week' ? addDays(start, -7) : previousMonth(start));
+  const totals = new Map<string, number>();
+  for (const workout of data.workouts) {
+    const key = startOf(dayOf(workout, user));
+    totals.set(key, (totals.get(key) ?? 0) + periodValue(metric, workout, data, user));
+  }
+  const valueOf = (start: string) => Math.round(totals.get(start) ?? 0);
+  const first = startOf(dayOf(data.workouts[0], user));
+  const current = startOf(user.today);
+  const count = Math.min(52, Math.max(1, Number(args.periods) || (period === 'week' ? 12 : 6)));
+  // The periods before the current one, oldest first; none before the first workout's.
+  const earlier: string[] = [];
+  for (
+    let start = before(current);
+    earlier.length < count && start >= first;
+    start = before(start)
+  ) {
+    earlier.unshift(start);
+  }
+  const bars = [...earlier, current].map((date) => ({ date, value: valueOf(date) }));
+  const now = valueOf(current);
+  const average = earlier.length
+    ? round(earlier.reduce((s, d) => s + valueOf(d), 0) / earlier.length)
+    : null;
+  // The latest earlier period at least as high as the current one: "your highest since August".
+  let asHigh: string | null = null;
+  for (let start = before(current); start >= first; start = before(start)) {
+    if (valueOf(start) >= now) {
+      asHigh = start;
+      break;
+    }
+  }
+  const daysIn = daysBetween(current, user.today) + 1;
+  const daysTotal = period === 'week' ? 7 : daysInMonth(current);
+  const unit = unitOf(metric, user);
+  const difference = average == null ? null : round(now - average);
+  return {
+    chart: { type: 'period_vs_average', metric, unit, period, bars, average },
+    result: {
+      metric,
+      unit,
+      period,
+      current: {
+        start: current,
+        value: now,
+        days_in: daysIn,
+        days_total: daysTotal,
+        partial: daysIn < daysTotal,
+      },
+      previous: bars.at(-2) ?? null,
+      average,
+      periods_averaged: earlier.length,
+      difference,
+      difference_percent: average ? Math.round(((now - average) / average) * 100) : null,
+      // null: higher than every earlier period.
+      last_period_as_high: asHigh,
+      periods: bars,
+    },
+  };
+}
+
+// ---------- calendar ----------
+
+function calendar(args: Args, data: CoachData, user: CoachUser): ToolResult {
+  const days = data.workouts.map((w) => dayOf(w, user));
+  const asked = rangeOf(args, days[0], user);
+  if (!asked) return failed(BAD_RANGE);
+  // Weeks before the first workout don't count as missed.
+  const range = { from: days[0] && days[0] > asked.from ? days[0] : asked.from, to: asked.to };
+  const counts = new Map<string, number>();
+  for (const day of days) if (inRange(day, range)) counts.set(day, (counts.get(day) ?? 0) + 1);
+  const trained = [...counts.keys()].sort();
+  const workouts = [...counts.values()].reduce((a, b) => a + b, 0);
+  const weeks = (daysBetween(range.from, range.to) + 1) / 7;
+
+  // Stretches of at least 7 days without training, the longest three in order.
+  const gaps: { from: string; to: string; days: number }[] = [];
+  const edges = [addDays(range.from, -1), ...trained, addDays(range.to, 1)];
+  for (let i = 1; i < edges.length; i++) {
+    const free = daysBetween(edges[i - 1], edges[i]) - 1;
+    if (free >= 7)
+      gaps.push({ from: addDays(edges[i - 1], 1), to: addDays(edges[i], -1), days: free });
+  }
+  const longest = gaps
+    .sort((a, b) => b.days - a.days)
+    .slice(0, 3)
+    .sort((a, b) => a.from.localeCompare(b.from));
+
+  const weekdays = Object.fromEntries(WEEKDAYS.map((d) => [d, 0]));
+  for (const day of trained) weekdays[weekdayOf(day)] += counts.get(day)!;
+  const recentWeeks = [3, 2, 1, 0].map((back) => {
+    const start = addDays(weekStart(range.to), -7 * back);
+    return {
+      week_start: start,
+      days: trained.filter((d) => d >= start && d <= addDays(start, 6)).map(weekdayOf),
+    };
+  });
+
+  return {
+    chart: trained.length
+      ? {
+          type: 'calendar',
+          ...range,
+          days: trained.map((date) => ({ date, value: counts.get(date)! })),
+        }
+      : null,
+    result: {
+      ...range,
+      workouts,
+      training_days: trained.length,
+      weeks: round(weeks),
+      per_week: weeks > 0 ? round(workouts / weeks) : null,
+      gaps_of_a_week_or_more: longest,
+      workouts_per_weekday: weekdays,
+      last_4_weeks: recentWeeks,
+      ...(trained.length ? {} : { note: 'No workouts in this time.' }),
+    },
+  };
+}
+
+// ---------- distribution ----------
+
+/** Muscles shown even when untrained: an empty bar is the answer to "what do I neglect?". */
+const MAIN_MUSCLES = [
+  'chest',
+  'lats',
+  'upper_back',
+  'front_delts',
+  'side_delts',
+  'rear_delts',
+  'biceps',
+  'triceps',
+  'quads',
+  'hamstrings',
+  'glutes',
+  'calves',
+  'abs',
+];
+const SETS_GUIDELINE = 10;
+
+function distribution(args: Args, data: CoachData, user: CoachUser): ToolResult {
+  const by = args.by as DistributionBy;
+  if (!['muscle', 'exercise', 'weekday'].includes(by)) return failed(`Unknown by "${String(by)}".`);
+  const first = data.workouts[0] ? dayOf(data.workouts[0], user) : undefined;
+  const asked = rangeOf(args, first, user);
+  if (!asked) return failed(BAD_RANGE);
+  const range = { from: first && first > asked.from ? first : asked.from, to: asked.to };
+  const weeks = Math.max(1, (daysBetween(range.from, range.to) + 1) / 7);
+  const inside = data.workouts.filter((w) => inRange(dayOf(w, user), range));
+
+  const totals = new Map<string, number>();
+  const add = (key: string, n: number) => totals.set(key, (totals.get(key) ?? 0) + n);
+  for (const workout of inside) {
+    if (by === 'weekday') {
+      add(weekdayOf(dayOf(workout, user)), 1);
+      continue;
+    }
+    for (const { exerciseId, sets } of workout.exercises) {
+      const exercise = data.exercises.get(exerciseId);
+      if (!exercise || exercise.cardio || !sets.length) continue;
+      if (by === 'exercise') add(exerciseId, sets.length);
+      else {
+        for (const m of exercise.primary) add(m, sets.length);
+        for (const m of exercise.secondary) add(m, sets.length / 2);
+      }
+    }
+  }
+  if (by === 'muscle') for (const m of MAIN_MUSCLES) add(m, 0);
+  if (by === 'weekday') for (const d of WEEKDAYS) add(d, 0);
+
+  const perWeek = by !== 'weekday';
+  let rows = [...totals].map(([key, n]) => ({ key, value: perWeek ? round(n / weeks) : n }));
+  rows =
+    by === 'weekday'
+      ? WEEKDAYS.map((d) => rows.find((r) => r.key === d)!)
+      : rows.sort((a, b) => b.value - a.value).slice(0, by === 'exercise' ? 12 : undefined);
+  const unit = perWeek ? 'sets_per_week' : 'workouts';
+  const reference = by === 'muscle' ? SETS_GUIDELINE : null;
+  return {
+    chart: inside.length ? { type: 'distribution', by, unit, reference, rows } : null,
+    result: {
+      by,
+      ...range,
+      weeks: round(weeks),
+      workouts: inside.length,
+      unit,
+      ...(reference ? { guideline: reference } : {}),
+      rows: rows.map((r) => ({
+        ...r,
+        ...(by === 'exercise' ? { name: data.exercises.get(r.key)?.name ?? r.key } : {}),
+      })),
+      ...(inside.length ? {} : { note: 'No workouts in this time.' }),
+    },
+  };
+}
+
+// ---------- workouts ----------
+
+/** A set as the app writes it: "80 kg × 8", "+10 kg × 6", "12 reps", "45 s", with its RIR. */
+function formatSet(exercise: CoachExercise, set: CoachSet, user: CoachUser) {
+  const unit = weightUnit(user.units);
+  const weight =
+    set.weightKg == null
+      ? null
+      : `${exercise.bodyweight ? '+' : ''}${round(inUnits(set.weightKg, user.units))} ${unit}`;
+  let text =
+    set.seconds != null
+      ? `${weight ? `${weight} × ` : ''}${set.seconds} s`
+      : weight && set.reps != null
+        ? `${weight} × ${set.reps}`
+        : `${set.reps ?? 0} reps`;
+  if (exercise.assisted && weight) text += ' (assisted)';
+  return set.rir == null ? text : `${text} (RIR ${set.rir})`;
+}
+
+const MAX_WORKOUTS = 10;
+
+function workouts(args: Args, data: CoachData, user: CoachUser): ToolResult {
+  const exercise = args.exercise_id == null ? null : exerciseOf(args.exercise_id, data);
+  if (exercise === undefined) return failed(UNKNOWN_EXERCISE);
+  const first = data.workouts[0] ? dayOf(data.workouts[0], user) : undefined;
+  const range = rangeOf(args, first, user);
+  if (!range) return failed(BAD_RANGE);
+  const found = data.workouts
+    .filter((w) => inRange(dayOf(w, user), range))
+    .filter((w) => !exercise || w.exercises.some((e) => e.exerciseId === exercise.id))
+    .reverse();
+  return {
+    chart: null,
+    result: {
+      ...range,
+      found: found.length,
+      shown: Math.min(found.length, MAX_WORKOUTS),
+      workouts: found.slice(0, MAX_WORKOUTS).map((w) => ({
+        date: dayOf(w, user),
+        weekday: weekdayOf(dayOf(w, user)),
+        name: w.name,
+        minutes: workoutMinutes(w),
+        exercises: w.exercises
+          .filter((e) => !exercise || e.exerciseId === exercise.id)
+          .map((e) => {
+            const ex = data.exercises.get(e.exerciseId);
+            return {
+              name: ex?.name ?? e.exerciseId,
+              sets: ex
+                ? e.sets.map((s) => formatSet(ex, s, user)).join(', ')
+                : `${e.sets.length} sets`,
+            };
+          }),
+      })),
+    },
+  };
+}

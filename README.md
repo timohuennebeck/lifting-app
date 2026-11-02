@@ -100,6 +100,10 @@ AI agents: see `AGENTS.md`.
   `npm run powersync:up`, `powersync:down`
 - `npm run plan:eval` and `npm run plan:generate-eval`: plan import and plan generation tests (see
   below)
+- `npm run coach:eval`: asks the AI coach (in progress, `supabase/functions/_shared/coach/`) the
+  questions in `eval/cases.ts` about two made-up users and checks each answer; needs Deno and
+  `OPENAI_API_KEY` in `supabase/functions/.env`. `-- --model gpt-6-luna --effort medium` compares
+  others; the answers go to `eval/out/`
 - `npm run apple:ids`: App IDs in the Apple developer account (see Sign in with Apple)
 - `node scripts/generate-muscle-paths.mjs`: rebuilds `src/shared/ui/muscle-map/body-paths.ts` from
   `scripts/muscle-art`
