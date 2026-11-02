@@ -129,7 +129,7 @@ export function CoachHistoryView({
           title={t('history.selected', { count: selected.size })}
           action={
             <PressableScale
-              haptic="warning"
+              haptic="tap"
               disabled={!selected.size}
               onPress={onDelete}
               className={cn('h-10.5 justify-center px-1', !selected.size && 'opacity-35')}

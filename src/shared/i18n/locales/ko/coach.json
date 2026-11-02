@@ -89,9 +89,15 @@
     "selected_one": "{{count}}개 선택됨",
     "selected_other": "{{count}}개 선택됨",
     "delete": "삭제",
-    "deleteChat": "채팅 삭제",
-    "deleteConfirm_one": "채팅 {{count}}개 삭제",
-    "deleteConfirm_other": "채팅 {{count}}개 삭제",
+    "deleteSheet": {
+      "title_one": "채팅을 삭제할까요?",
+      "title_other": "채팅 {{count}}개를 삭제할까요?",
+      "subtitle": "되돌릴 수 없어요.",
+      "option_one": "채팅 영구 삭제",
+      "option_other": "채팅 영구 삭제",
+      "body_one": "이 채팅의 질문과 카이의 답변이 삭제돼요.",
+      "body_other": "채팅 {{count}}개의 질문과 카이의 답변이 삭제돼요."
+    },
     "empty": "아직 채팅이 없어요. 카이에게 첫 질문을 해 보세요.",
     "today": "오늘",
     "thisWeek": "이번 주"

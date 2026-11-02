@@ -89,9 +89,15 @@
     "selected_one": "{{count}} ausgewählt",
     "selected_other": "{{count}} ausgewählt",
     "delete": "Löschen",
-    "deleteChat": "Chat löschen",
-    "deleteConfirm_one": "{{count}} Chat löschen",
-    "deleteConfirm_other": "{{count}} Chats löschen",
+    "deleteSheet": {
+      "title_one": "Chat löschen?",
+      "title_other": "{{count}} Chats löschen?",
+      "subtitle": "Das lässt sich nicht rückgängig machen.",
+      "option_one": "Chat endgültig löschen",
+      "option_other": "Chats endgültig löschen",
+      "body_one": "Deine Fragen und Kais Antworten in diesem Chat werden gelöscht.",
+      "body_other": "Deine Fragen und Kais Antworten in diesen {{count}} Chats werden gelöscht."
+    },
     "empty": "Noch keine Chats. Stell Kai deine erste Frage.",
     "today": "Heute",
     "thisWeek": "Diese Woche"

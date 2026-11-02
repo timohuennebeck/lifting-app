@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useToday } from '@/shared/hooks/use-today';
-import { ActionSheet } from '@/shared/ui/action-sheet';
 
 import { CoachHistoryView } from '../components/coach-history-view';
+import { DeleteChatsSheet } from '../components/delete-chats-sheet';
 import { deleteCoachChats, useCoachChats } from '../data/coach-chats';
 import { chatSections } from '../lib/history';
 import { openChat, useCoachStore } from '../stores/coach-store';
@@ -20,8 +20,13 @@ export function CoachHistoryScreen() {
   const today = useToday();
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState(NONE);
-  // What the open sheet would delete: one chat from its "…", or the chosen ones.
-  const [deleting, setDeleting] = useState<string[] | null>(null);
+  // What the sheet deletes: one chat from its "…", or the chosen ones; kept while it closes.
+  const [deleting, setDeleting] = useState<string[]>([]);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const confirm = (chatIds: string[]) => {
+    setDeleting(chatIds);
+    setSheetOpen(true);
+  };
 
   const show = (chatId: string | null) => {
     openChat(chatId);
@@ -34,7 +39,7 @@ export function CoachHistoryScreen() {
       return next;
     });
   const remove = async (chatIds: string[]) => {
-    setDeleting(null);
+    setSheetOpen(false);
     setSelecting(false);
     setSelected(NONE);
     // The chat Kai shows is gone: it starts a new one.
@@ -44,17 +49,12 @@ export function CoachHistoryScreen() {
     );
   };
 
-  const one = !selecting;
-  const label = one
-    ? t('history.deleteChat')
-    : t('history.deleteConfirm', { count: deleting?.length ?? 0 });
-
   return (
     <View className="flex-1 bg-bg">
       <CoachHistoryView
         sections={chatSections(chats, new Date(today), t)}
         onOpen={show}
-        onMenu={(chatId) => setDeleting([chatId])}
+        onMenu={(chatId) => confirm([chatId])}
         onBack={() => router.back()}
         onNew={() => show(null)}
         selecting={selecting}
@@ -64,15 +64,13 @@ export function CoachHistoryScreen() {
           setSelected(NONE);
         }}
         onToggle={toggle}
-        onDelete={() => setDeleting(selected.size ? [...selected] : null)}
+        onDelete={() => confirm([...selected])}
       />
-      <ActionSheet
-        visible={!!deleting}
-        onClose={() => setDeleting(null)}
-        items={[{ action: 'delete', label }]}
-        onAction={() => {
-          if (deleting) void remove(deleting);
-        }}
+      <DeleteChatsSheet
+        count={deleting.length}
+        visible={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        onDelete={() => void remove(deleting)}
       />
     </View>
   );

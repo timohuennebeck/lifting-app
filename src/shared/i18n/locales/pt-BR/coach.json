@@ -89,9 +89,15 @@
     "selected_one": "{{count}} selecionado",
     "selected_other": "{{count}} selecionados",
     "delete": "Excluir",
-    "deleteChat": "Excluir chat",
-    "deleteConfirm_one": "Excluir {{count}} chat",
-    "deleteConfirm_other": "Excluir {{count}} chats",
+    "deleteSheet": {
+      "title_one": "Excluir chat?",
+      "title_other": "Excluir {{count}} chats?",
+      "subtitle": "Isso não pode ser desfeito.",
+      "option_one": "Excluir chat permanentemente",
+      "option_other": "Excluir chats permanentemente",
+      "body_one": "Suas perguntas e as respostas do Kai neste chat serão excluídas.",
+      "body_other": "Suas perguntas e as respostas do Kai nestes {{count}} chats serão excluídas."
+    },
     "empty": "Nenhum chat ainda. Faça sua primeira pergunta ao Kai.",
     "today": "Hoje",
     "thisWeek": "Esta semana"

@@ -89,9 +89,15 @@
     "selected_one": "{{count}} selected",
     "selected_other": "{{count}} selected",
     "delete": "Delete",
-    "deleteChat": "Delete chat",
-    "deleteConfirm_one": "Delete {{count}} chat",
-    "deleteConfirm_other": "Delete {{count}} chats",
+    "deleteSheet": {
+      "title_one": "Delete chat?",
+      "title_other": "Delete {{count}} chats?",
+      "subtitle": "This can't be undone.",
+      "option_one": "Delete chat permanently",
+      "option_other": "Delete chats permanently",
+      "body_one": "Your questions and Kai's answers in this chat are deleted.",
+      "body_other": "Your questions and Kai's answers in these {{count}} chats are deleted."
+    },
     "empty": "No chats yet. Ask Kai your first question.",
     "today": "Today",
     "thisWeek": "This week"
