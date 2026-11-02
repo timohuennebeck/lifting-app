@@ -52,7 +52,7 @@ export function CoachMark({ size = 28, thinking = false }: CoachMarkProps) {
               animationName: TURN,
               animationDuration: '1.6s',
               animationIterationCount: 'infinite',
-              animationTimingFunction: 'cubic-bezier(0.7, 0, 0.3, 1)',
+              animationTimingFunction: 'ease-in-out',
             },
           ]}
         />
