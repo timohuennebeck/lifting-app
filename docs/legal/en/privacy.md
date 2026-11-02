@@ -1,8 +1,8 @@
 # Privacy Policy
 
-Version: 1.1
+Version: 1.2
 
-Last updated: 24 October 2026
+Last updated: 2 November 2026
 
 This is a translation. The German version is legally binding.
 
@@ -13,7 +13,7 @@ Here you can find out which personal data we process when you use the Loqqa app,
 - Loqqa first stores your plans and workouts on your device and syncs them with your account as soon as you are online. Our database is located in Frankfurt am Main.
 - Other users cannot see your profile, your workouts or your photos.
 - We treat your weight, your height and your body check photos as health data. We only process them with your explicit consent.
-- For plan creation, plan import and the body check, we use an AI model from OpenAI. For this, we transfer the necessary data to OpenAI, which processes it in the USA.
+- For plan creation, plan import, the body check and the translation of support messages, we use an AI model from OpenAI. For this, we transfer the necessary data to OpenAI, which processes it in the USA.
 - To improve the app, we use PostHog to measure how it is used. Health data and photos are not sent to PostHog. The app contains no advertising.
 - You can delete your account in the app at any time. This also deletes your photos and all data in your account.
 
@@ -155,13 +155,19 @@ You can write to us directly in the app via “Report a bug” and “Request a 
 - the type of your request (bug or idea), for ideas the importance from 1 to 5, your messages and the subject (the first line of your first message)
 - up to five screenshots per message that you select from your photo library; the app reduces them (longest side at most 1600 pixels) and saves them as JPEG
 - the history of your request, for example status changes, our replies and whether you reopened a request
-- your app language, so that we can reply to you in your language
+- the device you send a request from: platform (iOS or Android), operating system version, device model and app version, so that we can trace errors
+- your app language, so that we can translate our replies into your language
+- the detected language of each message and its translations (see below)
+
+**Translation by an AI model from OpenAI:** So that we understand you and you can read our replies in your language, an AI model from OpenAI translates support messages. For this, our server transfers every message containing text to OpenAI, together with the language to translate it into: your messages, to detect their language and translate them into the language of our support, and our replies, to translate them into your app language. If you change your app language, we translate our earlier replies into the new language. We do not transfer your name, your email address, your account ID or your screenshots. We store the translations with the messages; in the app, you can show the original at any time. OpenAI processes the data in the USA (section 8). We have configured OpenAI not to store the request for later retrieval. OpenAI does not use data from its API to train its models and retains it for up to 30 days to detect abuse; after that, it is deleted.
+
+**Who sees your request:** We handle requests in an internal support area in the browser that only Jan Timo Hünnebeck can access, with a separate login. For your request, the support area also shows your email address, whether you sign in with Apple or Google, your account ID, when you created your account and were last active, your app language and your earlier requests.
 
 The app first stores screenshots on your device and then uploads them in the background. You cannot delete messages and requests yourself, so that the history remains traceable. They are deleted together with your account; on request, we also delete closed requests earlier. We keep emails for as long as we need them for your request.
 
-Please do not send us health data or data of other people in messages and screenshots if they are not necessary for your request.
+Please do not send us health data or data of other people in messages and screenshots if they are not necessary for your request. We also transfer messages to OpenAI for translation.
 
-Legal basis: Art. 6(1)(b) GDPR, insofar as your request concerns the use of the app, for example in the case of bugs. For ideas and other feedback, Art. 6(1)(f) GDPR; our legitimate interest is to answer your request and improve Loqqa.
+Legal basis: Art. 6(1)(b) GDPR, insofar as your request concerns the use of the app, for example in the case of bugs. For ideas and other feedback, Art. 6(1)(f) GDPR; our legitimate interest is to answer your request and improve Loqqa. This also applies to the translation and the transfer to OpenAI in the USA (section 8).
 
 ### 4.9 Legal texts and agreements
 
@@ -247,7 +253,7 @@ We only pass on your data if this is necessary for the purposes stated, you have
 
 - **Supabase, Inc.** (database, sign-in, file storage and server functions): servers in Frankfurt am Main (Amazon Web Services)
 - **PowerSync** by Journey Mobile, Inc. (syncing between the app and the database; for this, the service keeps a copy of your synced data): servers in the EU
-- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Ireland (AI creation of plans, recognition of imported plans and assessment of body check photos, sections 4.6 and 4.7): processing in the USA by OpenAI OpCo, LLC
+- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Ireland (AI creation of plans, recognition of imported plans, assessment of body check photos and translation of support messages, sections 4.6 to 4.8): processing in the USA by OpenAI OpCo, LLC
 - **RevenueCat, Inc.** (subscription management, section 4.11)
 - **PostHog, Inc.** (product analytics and error reports, section 4.13)
 
@@ -259,7 +265,7 @@ We only provide data to authorities and courts if we are legally required to do 
 
 ## 8. Transfers to third countries
 
-We store your account, your workouts and your photos in data centers in the EU (Supabase in Frankfurt am Main, PowerSync in the EU). Some of our service providers are based in the USA. Data may therefore also be transferred to the USA, for example during maintenance or support by the service provider. For plan creation, plan import and the assessment of the body check, we transfer data to OpenAI in the USA with every request (sections 4.6 and 4.7), and RevenueCat processes the subscription data in the USA (section 4.11).
+We store your account, your workouts and your photos in data centers in the EU (Supabase in Frankfurt am Main, PowerSync in the EU). Some of our service providers are based in the USA. Data may therefore also be transferred to the USA, for example during maintenance or support by the service provider. For plan creation, plan import, the assessment of the body check and the translation of support messages, we transfer data to OpenAI in the USA with every request (sections 4.6 to 4.8), and RevenueCat processes the subscription data in the USA (section 4.11).
 
 We base these transfers on the following safeguards:
 
@@ -276,7 +282,7 @@ You can request a copy of the standard contractual clauses from us.
 - **Data on your device:** until you sign out or delete the app (section 5).
 - **Server logs:** one day at Supabase; at PowerSync, as long as they are needed for operation and security (section 4.12).
 - **Limits on import and plan creation:** two days (section 4.7).
-- **At OpenAI:** up to 30 days (sections 4.6 and 4.7).
+- **At OpenAI:** up to 30 days (sections 4.6 to 4.8).
 - **Analytics data at PostHog:** one year (section 4.13).
 - **Subscription data at RevenueCat:** see section 4.11.
 - **Backups:** We currently do not create backups of our database and our storage. If this changes, we will add here how long backups are kept.

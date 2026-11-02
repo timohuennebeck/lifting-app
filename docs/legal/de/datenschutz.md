@@ -1,8 +1,8 @@
 # Datenschutzerklärung
 
-Version: 1.1
+Version: 1.2
 
-Stand: 24. Oktober 2026
+Stand: 2. November 2026
 
 Hier erfährst du, welche personenbezogenen Daten wir verarbeiten, wenn du die App Loqqa nutzt, wofür wir das tun und welche Rechte du hast. Grundlage sind die Datenschutz-Grundverordnung (DSGVO), das Bundesdatenschutzgesetz (BDSG) und das Telekommunikation-Digitale-Dienste-Datenschutz-Gesetz (TDDDG).
 
@@ -11,7 +11,7 @@ Hier erfährst du, welche personenbezogenen Daten wir verarbeiten, wenn du die A
 - Loqqa speichert deine Pläne und Trainings zuerst auf deinem Gerät und gleicht sie mit deinem Konto ab, sobald du online bist. Unsere Datenbank liegt in Frankfurt am Main.
 - Andere Nutzer können dein Profil, deine Trainings und deine Fotos nicht sehen.
 - Dein Gewicht, deine Größe und deine Körpercheck-Fotos behandeln wir als Gesundheitsdaten. Wir verarbeiten sie nur mit deiner ausdrücklichen Einwilligung.
-- Für die Planerstellung, den Plan-Import und den Körpercheck nutzen wir ein KI-Modell von OpenAI. Dafür übermitteln wir die nötigen Daten an OpenAI, das sie in den USA verarbeitet.
+- Für die Planerstellung, den Plan-Import, den Körpercheck und die Übersetzung von Support-Nachrichten nutzen wir ein KI-Modell von OpenAI. Dafür übermitteln wir die nötigen Daten an OpenAI, das sie in den USA verarbeitet.
 - Um die App zu verbessern, messen wir mit PostHog, wie sie genutzt wird. Gesundheitsdaten und Fotos gehen nicht an PostHog. Die App enthält keine Werbung.
 - Du kannst dein Konto jederzeit in der App löschen. Damit löschen wir auch deine Fotos und alle Daten deines Kontos.
 
@@ -153,13 +153,19 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO für den Import und die Planerstellu
 - die Art deiner Anfrage (Fehler oder Idee), bei Ideen die Wichtigkeit von 1 bis 5, deine Nachrichten und den Betreff (die erste Zeile deiner ersten Nachricht)
 - bis zu fünf Screenshots pro Nachricht, die du aus deiner Mediathek auswählst; die App verkleinert sie (längste Seite höchstens 1600 Pixel) und speichert sie als JPEG
 - den Verlauf deiner Anfrage, zum Beispiel Statusänderungen, unsere Antworten und ob du eine Anfrage wieder geöffnet hast
-- deine App-Sprache, damit wir dir in deiner Sprache antworten können
+- das Gerät, von dem aus du eine Anfrage stellst: Plattform (iOS oder Android), Version des Betriebssystems, Gerätemodell und App-Version, damit wir Fehler nachvollziehen können
+- deine App-Sprache, damit wir unsere Antworten in deine Sprache übersetzen können
+- die erkannte Sprache jeder Nachricht und ihre Übersetzungen (siehe unten)
+
+**Übersetzung durch ein KI-Modell von OpenAI:** Damit wir dich verstehen und du unsere Antworten in deiner Sprache liest, übersetzt ein KI-Modell von OpenAI die Support-Nachrichten. Dafür übermittelt unser Server jede Nachricht mit Text zusammen mit der Sprache, in die sie übersetzt werden soll, an OpenAI: deine Nachrichten, um ihre Sprache zu erkennen und sie in die Sprache unseres Supports zu übersetzen, und unsere Antworten, um sie in deine App-Sprache zu übersetzen. Änderst du deine App-Sprache, übersetzen wir unsere bisherigen Antworten in die neue Sprache. Deinen Namen, deine E-Mail-Adresse, deine Konto-ID und deine Screenshots übermitteln wir nicht. Die Übersetzungen speichern wir zu den Nachrichten; in der App kannst du jederzeit das Original anzeigen. OpenAI verarbeitet die Daten in den USA (Abschnitt 8). Wir haben eingestellt, dass OpenAI die Anfrage nicht für einen späteren Abruf speichert. OpenAI nutzt Daten aus seiner API nicht zum Training seiner Modelle und bewahrt sie bis zu 30 Tage auf, um Missbrauch zu erkennen; danach werden sie gelöscht.
+
+**Wer deine Anfrage sieht:** Wir bearbeiten Anfragen in einem internen Support-Bereich im Browser, auf den nur Jan Timo Hünnebeck mit einem eigenen Zugang zugreifen kann. Der Support-Bereich zeigt zu deiner Anfrage auch deine E-Mail-Adresse, ob du dich mit Apple oder Google anmeldest, deine Konto-ID, wann du dein Konto erstellt hast und zuletzt aktiv warst, deine App-Sprache und deine früheren Anfragen.
 
 Screenshots speichert die App zuerst auf deinem Gerät und lädt sie dann im Hintergrund hoch. Nachrichten und Anfragen kannst du nicht selbst löschen, damit der Verlauf nachvollziehbar bleibt. Sie werden mit deinem Konto gelöscht; auf Wunsch löschen wir abgeschlossene Anfragen auch vorher. E-Mails bewahren wir so lange auf, wie wir sie für dein Anliegen brauchen.
 
-Bitte schick uns in Nachrichten und Screenshots keine Gesundheitsdaten und keine Daten anderer Personen, wenn sie für dein Anliegen nicht nötig sind.
+Bitte schick uns in Nachrichten und Screenshots keine Gesundheitsdaten und keine Daten anderer Personen, wenn sie für dein Anliegen nicht nötig sind. Nachrichten übermitteln wir zur Übersetzung auch an OpenAI.
 
-Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO, soweit deine Anfrage die Nutzung der App betrifft, zum Beispiel bei Fehlern. Bei Ideen und sonstigem Feedback Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist es, deine Anfrage zu beantworten und Loqqa zu verbessern.
+Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO, soweit deine Anfrage die Nutzung der App betrifft, zum Beispiel bei Fehlern. Bei Ideen und sonstigem Feedback Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist es, deine Anfrage zu beantworten und Loqqa zu verbessern. Das gilt auch für die Übersetzung und die Übermittlung an OpenAI in die USA (Abschnitt 8).
 
 ### 4.9 Rechtstexte und Zustimmungen
 
@@ -245,7 +251,7 @@ Wir geben deine Daten nur weiter, wenn das für die genannten Zwecke nötig ist,
 
 - **Supabase, Inc.** (Datenbank, Anmeldung, Dateispeicher und Serverfunktionen): Server in Frankfurt am Main (Amazon Web Services)
 - **PowerSync** von Journey Mobile, Inc. (Synchronisation zwischen App und Datenbank; der Dienst hält dafür eine Kopie deiner synchronisierten Daten vor): Server in der EU
-- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Irland (KI-Erstellung von Plänen, Erkennung importierter Pläne und Auswertung der Körpercheck-Fotos, Abschnitte 4.6 und 4.7): Verarbeitung in den USA durch OpenAI OpCo, LLC
+- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Irland (KI-Erstellung von Plänen, Erkennung importierter Pläne, Auswertung der Körpercheck-Fotos und Übersetzung von Support-Nachrichten, Abschnitte 4.6 bis 4.8): Verarbeitung in den USA durch OpenAI OpCo, LLC
 - **RevenueCat, Inc.** (Abo-Verwaltung, Abschnitt 4.11)
 - **PostHog, Inc.** (Produktanalyse und Fehlerberichte, Abschnitt 4.13)
 
@@ -257,7 +263,7 @@ Behörden und Gerichten geben wir Daten nur, wenn wir gesetzlich dazu verpflicht
 
 ## 8. Übermittlung in Drittländer
 
-Dein Konto, deine Trainings und deine Fotos speichern wir in Rechenzentren in der EU (Supabase in Frankfurt am Main, PowerSync in der EU). Einige unserer Dienstleister haben ihren Sitz in den USA. Deshalb können Daten auch in die USA übermittelt werden, etwa bei Wartung oder Support durch den Dienstleister. Für die Planerstellung, den Plan-Import und die Auswertung des Körperchecks übermitteln wir Daten bei jeder Anfrage an OpenAI in den USA (Abschnitte 4.6 und 4.7), und RevenueCat verarbeitet die Abo-Daten in den USA (Abschnitt 4.11).
+Dein Konto, deine Trainings und deine Fotos speichern wir in Rechenzentren in der EU (Supabase in Frankfurt am Main, PowerSync in der EU). Einige unserer Dienstleister haben ihren Sitz in den USA. Deshalb können Daten auch in die USA übermittelt werden, etwa bei Wartung oder Support durch den Dienstleister. Für die Planerstellung, den Plan-Import, die Auswertung des Körperchecks und die Übersetzung von Support-Nachrichten übermitteln wir Daten bei jeder Anfrage an OpenAI in den USA (Abschnitte 4.6 bis 4.8), und RevenueCat verarbeitet die Abo-Daten in den USA (Abschnitt 4.11).
 
 Wir stützen diese Übermittlungen auf folgende Garantien:
 
@@ -274,7 +280,7 @@ Eine Kopie der Standardvertragsklauseln kannst du bei uns anfordern.
 - **Daten auf deinem Gerät:** bis du dich abmeldest oder die App löschst (Abschnitt 5).
 - **Server-Protokolle:** ein Tag bei Supabase; bei PowerSync, solange sie für Betrieb und Sicherheit nötig sind (Abschnitt 4.12).
 - **Begrenzung von Import und Planerstellung:** zwei Tage (Abschnitt 4.7).
-- **Bei OpenAI:** bis zu 30 Tage (Abschnitte 4.6 und 4.7).
+- **Bei OpenAI:** bis zu 30 Tage (Abschnitte 4.6 bis 4.8).
 - **Analysedaten bei PostHog:** ein Jahr (Abschnitt 4.13).
 - **Abo-Daten bei RevenueCat:** siehe Abschnitt 4.11.
 - **Backups:** Wir erstellen derzeit keine Backups unserer Datenbank und unseres Speichers. Ändert sich das, ergänzen wir hier, wie lange Backups aufbewahrt werden.

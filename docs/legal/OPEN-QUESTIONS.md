@@ -2,8 +2,10 @@
 
 Version 1.1 of the privacy policy (DS) and the terms of use (NB) is published (October 2026,
 `docs/legal/<locale>/`, migration `20261024120000_legal_documents_v1_1`; Korean followed in
-`20261025120100_legal_documents_v1_1_ko`). German is the binding version; `en`, `pt-PT`, `pt-BR`
-and `ko` are translations.
+`20261025120100_legal_documents_v1_1_ko`). Version 1.2 of the privacy policy adds the device
+info of support requests, the OpenAI translation of support messages and what the support desk
+shows (`20261102120000_privacy_policy_v1_2`; the terms stay at 1.1). German is the binding version;
+`en`, `pt-PT`, `pt-BR` and `ko` are translations.
 
 The texts are not legal advice. A lawyer should review them, above all the health data, body
 photos and AI parts.

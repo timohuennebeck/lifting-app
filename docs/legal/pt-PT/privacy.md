@@ -1,8 +1,8 @@
 # Política de Privacidade
 
-Versão: 1.1
+Versão: 1.2
 
-Última atualização: 24 de outubro de 2026
+Última atualização: 2 de novembro de 2026
 
 Esta é uma tradução. A versão alemã é a juridicamente vinculativa.
 
@@ -13,7 +13,7 @@ Aqui ficas a saber que dados pessoais tratamos quando utilizas a app Loqqa, para
 - O Loqqa guarda os teus planos e treinos primeiro no teu dispositivo e sincroniza-os com a tua conta assim que estiveres online. A nossa base de dados está em Frankfurt am Main.
 - Os outros utilizadores não podem ver o teu perfil, os teus treinos nem as tuas fotos.
 - Tratamos o teu peso, a tua altura e as fotos do teu check corporal como dados de saúde. Só os tratamos com o teu consentimento explícito.
-- Para a criação de planos, a importação de planos e o check corporal, utilizamos um modelo de IA da OpenAI. Para isso, transmitimos os dados necessários à OpenAI, que os trata nos EUA.
+- Para a criação de planos, a importação de planos, o check corporal e a tradução das mensagens de suporte, utilizamos um modelo de IA da OpenAI. Para isso, transmitimos os dados necessários à OpenAI, que os trata nos EUA.
 - Para melhorar a app, medimos com o PostHog a forma como é utilizada. Os dados de saúde e as fotos não são enviados ao PostHog. A app não contém publicidade.
 - Podes eliminar a tua conta na app a qualquer momento. Ao fazê-lo, eliminamos também as tuas fotos e todos os dados da tua conta.
 
@@ -155,13 +155,19 @@ Através de “Reportar erro” e “Sugerir funcionalidade”, podes escrever-n
 - o tipo do teu pedido (erro ou ideia), no caso de ideias a importância de 1 a 5, as tuas mensagens e o assunto (a primeira linha da tua primeira mensagem)
 - até cinco capturas de ecrã por mensagem, que escolhes da tua galeria; a app reduz-as (lado mais comprido com um máximo de 1600 píxeis) e guarda-as como JPEG
 - o histórico do teu pedido, por exemplo alterações de estado, as nossas respostas e se voltaste a abrir um pedido
-- o idioma da tua app, para que te possamos responder no teu idioma
+- o dispositivo a partir do qual envias um pedido: plataforma (iOS ou Android), versão do sistema operativo, modelo do dispositivo e versão da app, para que possamos reproduzir erros
+- o idioma da tua app, para que possamos traduzir as nossas respostas para o teu idioma
+- o idioma detetado de cada mensagem e as respetivas traduções (ver abaixo)
+
+**Tradução por um modelo de IA da OpenAI:** para que te possamos compreender e leias as nossas respostas no teu idioma, um modelo de IA da OpenAI traduz as mensagens de suporte. Para isso, o nosso servidor transmite à OpenAI cada mensagem com texto, juntamente com o idioma para o qual deve ser traduzida: as tuas mensagens, para detetar o seu idioma e traduzi-las para o idioma do nosso suporte, e as nossas respostas, para traduzi-las para o idioma da tua app. Se alterares o idioma da tua app, traduzimos as nossas respostas anteriores para o novo idioma. Não transmitimos o teu nome, o teu endereço de e-mail, o ID da tua conta nem as tuas capturas de ecrã. Guardamos as traduções juntamente com as mensagens; na app, podes ver o original a qualquer momento. A OpenAI trata os dados nos EUA (secção 8). Configurámos as definições de modo que a OpenAI não guarde o pedido para consulta posterior. A OpenAI não utiliza dados provenientes da sua API para treinar os seus modelos e conserva-os até 30 dias para detetar abusos; depois disso, são eliminados.
+
+**Quem vê o teu pedido:** tratamos os pedidos numa área de suporte interna no navegador, à qual só Jan Timo Hünnebeck tem acesso, com um acesso próprio. Junto ao teu pedido, essa área mostra também o teu endereço de e-mail, se inicias sessão com a Apple ou com a Google, o ID da tua conta, a data de criação da tua conta e da tua última atividade, o idioma da tua app e os teus pedidos anteriores.
 
 A app guarda primeiro as capturas de ecrã no teu dispositivo e depois carrega-as em segundo plano. Não podes eliminar tu próprio as mensagens e os pedidos, para que o histórico se mantenha rastreável. São eliminados juntamente com a tua conta; a teu pedido, eliminamos também antes disso os pedidos já encerrados. Conservamos os e-mails enquanto deles precisarmos para tratar do teu assunto.
 
-Por favor, não nos envies dados de saúde nem dados de outras pessoas nas mensagens e capturas de ecrã, se não forem necessários para o teu assunto.
+Por favor, não nos envies dados de saúde nem dados de outras pessoas nas mensagens e capturas de ecrã, se não forem necessários para o teu assunto. As mensagens são também transmitidas à OpenAI para tradução.
 
-Fundamento jurídico: art. 6.º, n.º 1, alínea b), do RGPD, na medida em que o teu pedido diga respeito à utilização da app, por exemplo no caso de erros. No caso de ideias e de outro feedback, art. 6.º, n.º 1, alínea f), do RGPD; o nosso interesse legítimo é responder ao teu pedido e melhorar o Loqqa.
+Fundamento jurídico: art. 6.º, n.º 1, alínea b), do RGPD, na medida em que o teu pedido diga respeito à utilização da app, por exemplo no caso de erros. No caso de ideias e de outro feedback, art. 6.º, n.º 1, alínea f), do RGPD; o nosso interesse legítimo é responder ao teu pedido e melhorar o Loqqa. O mesmo se aplica à tradução e à transferência para a OpenAI nos EUA (secção 8).
 
 ### 4.9 Textos jurídicos e aceitações
 
@@ -247,7 +253,7 @@ Só transmitimos os teus dados se tal for necessário para os fins indicados, se
 
 - **Supabase, Inc.** (base de dados, início de sessão, armazenamento de ficheiros, e funções de servidor): servidores em Frankfurt am Main (Amazon Web Services)
 - **PowerSync**, da Journey Mobile, Inc. (sincronização entre a app e a base de dados; para isso, o serviço mantém uma cópia dos teus dados sincronizados): servidores na UE
-- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Irlanda (criação de planos por IA, reconhecimento de planos importados e avaliação das fotos do check corporal, secções 4.6 e 4.7): tratamento nos EUA pela OpenAI OpCo, LLC
+- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Irlanda (criação de planos por IA, reconhecimento de planos importados, avaliação das fotos do check corporal e tradução das mensagens de suporte, secções 4.6 a 4.8): tratamento nos EUA pela OpenAI OpCo, LLC
 - **RevenueCat, Inc.** (gestão de subscrições, secção 4.11)
 - **PostHog, Inc.** (análise do produto e relatórios de erros, secção 4.13)
 
@@ -259,7 +265,7 @@ Só fornecemos dados a autoridades e tribunais se a lei nos obrigar a isso.
 
 ## 8. Transferência para países terceiros
 
-Guardamos a tua conta, os teus treinos e as tuas fotos em centros de dados na UE (Supabase em Frankfurt am Main, PowerSync na UE). Alguns dos nossos prestadores de serviços têm sede nos EUA. Por isso, os dados também podem ser transferidos para os EUA, por exemplo em caso de manutenção ou suporte por parte do prestador de serviços. Para a criação de planos, a importação de planos e a avaliação do check corporal, transferimos dados para a OpenAI, nos EUA, em cada pedido (secções 4.6 e 4.7), e a RevenueCat trata os dados de subscrição nos EUA (secção 4.11).
+Guardamos a tua conta, os teus treinos e as tuas fotos em centros de dados na UE (Supabase em Frankfurt am Main, PowerSync na UE). Alguns dos nossos prestadores de serviços têm sede nos EUA. Por isso, os dados também podem ser transferidos para os EUA, por exemplo em caso de manutenção ou suporte por parte do prestador de serviços. Para a criação de planos, a importação de planos, a avaliação do check corporal e a tradução das mensagens de suporte, transferimos dados para a OpenAI, nos EUA, em cada pedido (secções 4.6 a 4.8), e a RevenueCat trata os dados de subscrição nos EUA (secção 4.11).
 
 Baseamos estas transferências nas seguintes garantias:
 
@@ -276,7 +282,7 @@ Podes pedir-nos uma cópia das cláusulas contratuais-tipo.
 - **Dados no teu dispositivo:** até terminares sessão ou eliminares a app (secção 5).
 - **Registos do servidor:** um dia na Supabase; na PowerSync, enquanto forem necessários para o funcionamento e a segurança (secção 4.12).
 - **Limitação da importação e da criação de planos:** dois dias (secção 4.7).
-- **Na OpenAI:** até 30 dias (secções 4.6 e 4.7).
+- **Na OpenAI:** até 30 dias (secções 4.6 a 4.8).
 - **Dados de análise no PostHog:** um ano (secção 4.13).
 - **Dados de subscrição na RevenueCat:** ver secção 4.11.
 - **Cópias de segurança:** atualmente, não fazemos cópias de segurança da nossa base de dados nem do nosso armazenamento. Se isso mudar, acrescentaremos aqui durante quanto tempo as cópias de segurança são conservadas.

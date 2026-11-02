@@ -1,8 +1,8 @@
 # Política de Privacidade
 
-Versão: 1.1
+Versão: 1.2
 
-Última atualização: 24 de outubro de 2026
+Última atualização: 2 de novembro de 2026
 
 Esta é uma tradução. A versão em alemão é a juridicamente vinculante.
 
@@ -13,7 +13,7 @@ Aqui você fica sabendo quais dados pessoais tratamos quando você usa o app Loq
 - O Loqqa salva seus planos e treinos primeiro no seu dispositivo e os sincroniza com a sua conta assim que você estiver on-line. Nosso banco de dados fica em Frankfurt am Main.
 - Outros usuários não podem ver seu perfil, seus treinos nem suas fotos.
 - Tratamos seu peso, sua altura e as fotos do seu check corporal como dados de saúde. Só os tratamos com o seu consentimento expresso.
-- Para a criação de plano, a importação de plano e o check corporal, usamos um modelo de IA da OpenAI. Para isso, transferimos os dados necessários à OpenAI, que os trata nos EUA.
+- Para a criação de plano, a importação de plano, o check corporal e a tradução das mensagens de suporte, usamos um modelo de IA da OpenAI. Para isso, transferimos os dados necessários à OpenAI, que os trata nos EUA.
 - Para melhorar o app, medimos com o PostHog como ele é usado. Dados de saúde e fotos não vão para o PostHog. O app não contém publicidade.
 - Você pode excluir sua conta a qualquer momento no app. Com isso, excluímos também suas fotos e todos os dados da sua conta.
 
@@ -155,13 +155,19 @@ Por meio de “Relatar erro” e “Sugerir recurso”, você pode escrever para
 - o tipo da sua solicitação (erro ou ideia), no caso de ideias a importância de 1 a 5, suas mensagens e o assunto (a primeira linha da sua primeira mensagem)
 - até cinco capturas de tela por mensagem, que você seleciona da sua galeria; o app as reduz (lado mais longo com no máximo 1600 pixels) e as salva como JPEG
 - o histórico da sua solicitação, por exemplo mudanças de status, nossas respostas e se você reabriu uma solicitação
-- o idioma do app, para que possamos responder a você no seu idioma
+- o dispositivo a partir do qual você envia uma solicitação: plataforma (iOS ou Android), versão do sistema operacional, modelo do dispositivo e versão do app, para que possamos reproduzir erros
+- o idioma do app, para que possamos traduzir nossas respostas para o seu idioma
+- o idioma detectado de cada mensagem e as respectivas traduções (veja abaixo)
+
+**Tradução por um modelo de IA da OpenAI:** para que possamos entender você e você leia nossas respostas no seu idioma, um modelo de IA da OpenAI traduz as mensagens de suporte. Para isso, nosso servidor transfere à OpenAI cada mensagem com texto, junto com o idioma para o qual ela deve ser traduzida: suas mensagens, para detectar o idioma delas e traduzi-las para o idioma do nosso suporte, e nossas respostas, para traduzi-las para o idioma do seu app. Se você mudar o idioma do app, traduzimos nossas respostas anteriores para o novo idioma. Não transferimos seu nome, seu endereço de e-mail, o ID da sua conta nem suas capturas de tela. Salvamos as traduções junto com as mensagens; no app, você pode ver o original a qualquer momento. A OpenAI trata os dados nos EUA (seção 8). Configuramos a OpenAI para não armazenar a solicitação para consulta posterior. A OpenAI não usa dados da sua API para treinar seus modelos e os guarda por até 30 dias para detectar abusos; depois disso, eles são excluídos.
+
+**Quem vê sua solicitação:** tratamos as solicitações em uma área de suporte interna no navegador, que só Jan Timo Hünnebeck pode acessar, com um acesso próprio. Junto com a sua solicitação, essa área mostra também seu endereço de e-mail, se você entra com a Apple ou com o Google, o ID da sua conta, a data de criação da sua conta e da sua última atividade, o idioma do app e suas solicitações anteriores.
 
 O app salva as capturas de tela primeiro no seu dispositivo e depois as envia em segundo plano. Você não pode excluir mensagens e solicitações por conta própria, para que o histórico continue rastreável. Elas são excluídas junto com a sua conta; se você quiser, excluímos solicitações encerradas também antes disso. Guardamos e-mails pelo tempo em que precisarmos deles para o seu assunto.
 
-Por favor, não nos envie em mensagens e capturas de tela dados de saúde nem dados de outras pessoas, se não forem necessários para o seu assunto.
+Por favor, não nos envie em mensagens e capturas de tela dados de saúde nem dados de outras pessoas, se não forem necessários para o seu assunto. As mensagens também são transferidas à OpenAI para tradução.
 
-Base legal: art. 6(1)(b) do RGPD, na medida em que sua solicitação diga respeito ao uso do app, por exemplo no caso de erros. No caso de ideias e outros feedbacks, art. 6(1)(f) do RGPD; nosso legítimo interesse é responder à sua solicitação e melhorar o Loqqa.
+Base legal: art. 6(1)(b) do RGPD, na medida em que sua solicitação diga respeito ao uso do app, por exemplo no caso de erros. No caso de ideias e outros feedbacks, art. 6(1)(f) do RGPD; nosso legítimo interesse é responder à sua solicitação e melhorar o Loqqa. O mesmo vale para a tradução e a transferência à OpenAI nos EUA (seção 8).
 
 ### 4.9 Textos legais e aceites
 
@@ -247,7 +253,7 @@ Só compartilhamos seus dados quando isso for necessário para as finalidades me
 
 - **Supabase, Inc.** (banco de dados, login, armazenamento de arquivos, e funções de servidor): servidores em Frankfurt am Main (Amazon Web Services)
 - **PowerSync**, da Journey Mobile, Inc. (sincronização entre o app e o banco de dados; para isso, o serviço mantém uma cópia dos seus dados sincronizados): servidores na UE
-- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Irlanda (criação de planos por IA, reconhecimento de planos importados e avaliação das fotos do check corporal, seções 4.6 e 4.7): tratamento nos EUA pela OpenAI OpCo, LLC
+- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Irlanda (criação de planos por IA, reconhecimento de planos importados, avaliação das fotos do check corporal e tradução das mensagens de suporte, seções 4.6 a 4.8): tratamento nos EUA pela OpenAI OpCo, LLC
 - **RevenueCat, Inc.** (gestão de assinaturas, seção 4.11)
 - **PostHog, Inc.** (análise de produto e relatórios de erro, seção 4.13)
 
@@ -259,7 +265,7 @@ Só fornecemos dados a autoridades e tribunais quando formos legalmente obrigado
 
 ## 8. Transferência para países terceiros
 
-Armazenamos sua conta, seus treinos e suas fotos em data centers na UE (Supabase em Frankfurt am Main, PowerSync na UE). Alguns dos nossos prestadores de serviços têm sede nos EUA. Por isso, dados também podem ser transferidos para os EUA, por exemplo em caso de manutenção ou suporte pelo prestador de serviços. Para a criação de plano, a importação de plano e a avaliação do check corporal, transferimos dados à OpenAI nos EUA a cada solicitação (seções 4.6 e 4.7), e a RevenueCat trata os dados de assinatura nos EUA (seção 4.11).
+Armazenamos sua conta, seus treinos e suas fotos em data centers na UE (Supabase em Frankfurt am Main, PowerSync na UE). Alguns dos nossos prestadores de serviços têm sede nos EUA. Por isso, dados também podem ser transferidos para os EUA, por exemplo em caso de manutenção ou suporte pelo prestador de serviços. Para a criação de plano, a importação de plano, a avaliação do check corporal e a tradução das mensagens de suporte, transferimos dados à OpenAI nos EUA a cada solicitação (seções 4.6 a 4.8), e a RevenueCat trata os dados de assinatura nos EUA (seção 4.11).
 
 Fundamentamos essas transferências nas seguintes garantias:
 
@@ -276,7 +282,7 @@ Você pode nos solicitar uma cópia das cláusulas contratuais-padrão.
 - **Dados no seu dispositivo:** até você sair da conta ou excluir o app (seção 5).
 - **Registros do servidor:** um dia na Supabase; na PowerSync, enquanto forem necessários para o funcionamento e a segurança (seção 4.12).
 - **Limitação da importação e da criação de plano:** dois dias (seção 4.7).
-- **Na OpenAI:** até 30 dias (seções 4.6 e 4.7).
+- **Na OpenAI:** até 30 dias (seções 4.6 a 4.8).
 - **Dados de análise no PostHog:** um ano (seção 4.13).
 - **Dados de assinatura na RevenueCat:** ver seção 4.11.
 - **Backups:** atualmente, não fazemos backups do nosso banco de dados nem do nosso armazenamento. Se isso mudar, informaremos aqui por quanto tempo os backups são guardados.
