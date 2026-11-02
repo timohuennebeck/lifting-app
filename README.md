@@ -370,6 +370,10 @@ that withdraws the consent.
 - **Secrets:** `OPENAI_API_KEY` as for the plans; `OPENAI_COACH_MODEL` (default `gpt-6.1-sol`) and
   `OPENAI_COACH_REASONING_EFFORT` (default `low`). It runs in Fast mode; `COACH_FAST=false` turns
   that off.
+- **Test data:** `scripts/seed-coach-data.sql` fills a local account with 34 weeks of Push, Pull
+  and Beine (today's Push included), half a year of weigh-ins and four body checks. Run it in the
+  database container; again, it replaces what it added:
+  `docker exec -i supabase_db_loqqa psql -U postgres -v email=you@example.com < scripts/seed-coach-data.sql`
 - **Tables:** `coach_chats` and `coach_messages` (an answer keeps its chart as it was) are written
   only by the function and synced; users read them and delete chats. `coach_runs` is server-only:
   one row per question, which the limits count, with the tool calls (replayed for follow-up

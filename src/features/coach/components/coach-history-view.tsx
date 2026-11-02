@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { ScrollView, TextInput, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { cn } from '@/shared/lib/cn';
@@ -8,6 +8,7 @@ import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
+import { TextField } from '@/shared/ui/text-field';
 
 /** A chat in the list: its first question, the start of its first answer, when it was last used. */
 export interface ChatSummary {
@@ -170,20 +171,19 @@ export function CoachHistoryView({
           </>
         )}
       </View>
-      <View className="mx-5 h-11 flex-row items-center gap-2.5 rounded-full bg-chip px-4">
-        <Icon name="search" size={15} color={colors.dim} />
-        <TextInput
-          value={query}
-          onChangeText={onQuery}
-          placeholder={t('coach:history.search')}
-          placeholderTextColor={colors.dim}
-          selectionColor={colors.fg}
-          cursorColor={colors.fg}
-          keyboardAppearance="dark"
-          returnKeyType="search"
-          className="min-w-0 flex-1 py-0 font-inter text-label text-fg"
-        />
-      </View>
+      {/* The app's search field, as in the exercise search. */}
+      <TextField
+        icon="search"
+        shape="pill"
+        compact
+        clearable
+        value={query}
+        onChangeText={onQuery}
+        placeholder={t('coach:history.search')}
+        autoCorrect={false}
+        returnKeyType="search"
+        className="mx-5"
+      />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
