@@ -47,17 +47,18 @@ function recentFirst(routines: RoutineSummary[], lastDone: DoneDates, language: 
 }
 
 /**
- * Training, the first tab: the week with its workouts (a finished one opens its summary), the
- * plan it follows with where it stands (a tap opens it to edit) and its routines (hold one to
- * move it), then the routines outside a plan (Einzeltrainings). Without a plan, or with an empty
- * one, a way to make or fill it.
+ * Training, the first tab: the week with its workouts (a finished one opens its summary; a swipe
+ * shows earlier and later weeks), the plan it follows with where it stands (a tap opens it to
+ * edit) and its routines (hold one to move it), then the routines outside a plan
+ * (Einzeltrainings). Without a plan, or with an empty one, a way to make or fill it.
  */
 export function TrainingScreen() {
   const { t, i18n } = useTranslation(['training', 'muscles']);
   // The tab stays mounted: the day comes from a clock so it moves on overnight.
   const today = new Date(useToday());
   const { data: active } = useActiveWorkout();
-  const { days, isLoading: weekLoading } = useWeekWorkouts(today);
+  // This week's workouts, which the strip opens on (the same query, so it is loaded once).
+  const { isLoading: weekLoading } = useWeekWorkouts(today);
   const { plan, profile, isLoading: planLoading } = useCurrentPlan();
   const status = usePlanStatus(plan);
   const { data: finishedThisWeek } = usePlanWeekDone(plan?.id, status?.week);
@@ -133,11 +134,7 @@ export function TrainingScreen() {
       pinned={
         <View>
           {resume}
-          <WeekStrip
-            days={days}
-            today={today}
-            onOpen={(id) => router.push(`/workout/summary/${id}`)}
-          />
+          <WeekStrip today={today} onOpen={(id) => router.push(`/workout/summary/${id}`)} />
         </View>
       }
     >

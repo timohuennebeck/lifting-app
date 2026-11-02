@@ -7,9 +7,9 @@ export interface WeekDay {
   workout: WorkoutSummary | null;
 }
 
-/** Each day of the week containing `today` with the workout done on it. */
-export function useWeekWorkouts(today: Date) {
-  const monday = startOfWeek(today);
+/** Each day of the week containing `date` with the workout done on it. */
+export function useWeekWorkouts(date: Date) {
+  const monday = startOfWeek(date);
   const { data: workouts = [], isLoading } = useWorkoutsInRange(
     monday.toISOString(),
     addDays(monday, 7).toISOString(),

@@ -31,8 +31,7 @@
   },
   "weekdays": {
     "short": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    "narrow": ["M", "T", "W", "T", "F", "S", "S"],
-    "long": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    "narrow": ["M", "T", "W", "T", "F", "S", "S"]
   },
   "greeting": "Hi {{name}}",
   "errors": {
