@@ -370,8 +370,8 @@ saved and sync to the app. The (in-progress) screens follow the design "Coach Sc
 - **Tables:** `coach_chats` and `coach_messages` (an answer keeps its chart as it was) are written
   only by the function and synced; users read them and delete chats. `coach_runs` is server-only:
   one row per question, which the limits count, with the tool calls (replayed for follow-up
-  questions) and the tokens it took. It stays when its chat is deleted. Chats are kept until the
-  account is deleted.
+  questions) and the tokens it took. Deleting a chat deletes its tool calls; the rest of the run
+  stays for the limits. Chats are kept until the user deletes them or the account.
 - **Testing:** `npm run coach:eval` (needs Deno and `OPENAI_API_KEY`) asks 33 questions about two
   made-up users (`supabase/functions/_shared/coach/eval/`) and checks each answer: the tool and
   its arguments, only numbers the tools gave, the question's language, at most 3 sentences and 50
