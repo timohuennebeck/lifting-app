@@ -13,7 +13,7 @@ import { CoachComposer, type CoachComposerProps } from './coach-composer';
 import { CoachMark } from './coach-mark';
 
 /** The questions to start with, in this order. */
-const SUGGESTIONS = ['weight', 'strength', 'volume', 'balance'] as const;
+const SUGGESTIONS = ['weight', 'strength', 'time', 'record'] as const;
 
 export interface CoachStartViewProps {
   /** Logged workouts and the month of the first, for "Ich kenne alle 142 Einheiten seit Januar". */

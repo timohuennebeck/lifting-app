@@ -37,15 +37,15 @@
       },
       "strength": {
         "label": "Strength",
-        "question": "Has my bench press improved since January?"
+        "question": "Has my bench press improved since September?"
       },
-      "volume": {
-        "label": "Volume",
-        "question": "Has my training volume gone up this week?"
+      "time": {
+        "label": "Time",
+        "question": "Has my training time changed this month?"
       },
-      "balance": {
-        "label": "Balance",
-        "question": "Has any muscle group had too few sets?"
+      "record": {
+        "label": "Record",
+        "question": "Have I set a new bench press record?"
       }
     }
   },

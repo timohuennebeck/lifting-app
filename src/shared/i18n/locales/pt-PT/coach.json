@@ -37,15 +37,15 @@
       },
       "strength": {
         "label": "Força",
-        "question": "O meu supino melhorou desde janeiro?"
+        "question": "O meu supino melhorou desde setembro?"
       },
-      "volume": {
-        "label": "Volume",
-        "question": "O meu volume de treino aumentou esta semana?"
+      "time": {
+        "label": "Tempo",
+        "question": "O meu tempo de treino mudou este mês?"
       },
-      "balance": {
-        "label": "Equilíbrio",
-        "question": "Algum grupo muscular teve poucas séries?"
+      "record": {
+        "label": "Recorde",
+        "question": "Bati um novo recorde no supino?"
       }
     }
   },

@@ -37,15 +37,15 @@
       },
       "strength": {
         "label": "Kraft",
-        "question": "Hat sich mein Bankdrücken seit Januar verbessert?"
+        "question": "Hat sich mein Bankdrücken seit September verbessert?"
       },
-      "volume": {
-        "label": "Volumen",
-        "question": "Hat mein Trainingsvolumen diese Woche zugenommen?"
+      "time": {
+        "label": "Zeit",
+        "question": "Hat sich meine Trainingszeit diesen Monat verändert?"
       },
-      "balance": {
-        "label": "Balance",
-        "question": "Hat eine Muskelgruppe zu wenige Sätze bekommen?"
+      "record": {
+        "label": "Rekord",
+        "question": "Hat mein Bankdrücken einen neuen Rekord?"
       }
     }
   },

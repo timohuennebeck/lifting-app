@@ -37,15 +37,15 @@
       },
       "strength": {
         "label": "근력",
-        "question": "1월 이후 벤치프레스가 늘었나요?"
+        "question": "9월 이후 벤치프레스가 늘었나요?"
       },
-      "volume": {
-        "label": "볼륨",
-        "question": "이번 주 운동 볼륨이 늘었나요?"
+      "time": {
+        "label": "시간",
+        "question": "이번 달 운동 시간이 달라졌나요?"
       },
-      "balance": {
-        "label": "균형",
-        "question": "세트 수가 부족한 근육이 있나요?"
+      "record": {
+        "label": "기록",
+        "question": "벤치프레스 신기록을 세웠나요?"
       }
     }
   },
