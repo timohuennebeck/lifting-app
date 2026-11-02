@@ -1,6 +1,6 @@
 // The coach eval: asks the coach the questions in cases.ts about the made-up users in
 // fixtures.ts with the real model, and checks each answer: the expected tool and arguments, only
-// numbers the tools returned, the question's language and at most three sentences.
+// numbers the tools returned, the question's language and a short answer.
 // Needs OPENAI_API_KEY in supabase/functions/.env; one run is about 40 conversations.
 // Usage: npm run coach:eval                                  all cases, gpt-6.1-sol at low effort
 //        npm run coach:eval -- --model gpt-6-luna --effort medium
@@ -21,6 +21,8 @@ const PRICES: Record<string, [number, number, number]> = {
 };
 const TIMEOUT_MS = 120_000;
 const MAX_SENTENCES = 3;
+/** The design's answers have 20–30 words. */
+const MAX_WORDS = 50;
 
 function options(args: string[]) {
   const opts = {
@@ -115,7 +117,10 @@ function grade(c: Case, history: CoachTurn[], context: string) {
   const language = languageOf(turn.answer);
   if (language !== c.language) found.push(`language ${language}, expected ${c.language}`);
   const sentences = sentenceCount(turn.answer);
-  if (sentences > MAX_SENTENCES) found.push(`length: ${sentences} sentences`);
+  const words = turn.answer.split(/\s+/).filter(Boolean).length;
+  if (sentences > MAX_SENTENCES || words > MAX_WORDS) {
+    found.push(`length: ${sentences} sentences, ${words} words`);
+  }
   if (c.says && !c.says.test(turn.answer)) found.push(`doesn't say ${c.says}`);
   return found;
 }

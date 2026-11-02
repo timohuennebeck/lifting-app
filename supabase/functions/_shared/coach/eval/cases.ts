@@ -157,6 +157,8 @@ export const CASES: Case[] = [
     turns: [SINCE_JULY, 'An welchem Tag fällt das Training am häufigsten aus?'],
     language: 'de',
     tool: ['calendar', 'distribution', null],
+    // Of her usual days she skipped Thursday most (9 of 19 since July).
+    says: /donnerstag/i,
   },
   {
     id: 'neglected-muscles',

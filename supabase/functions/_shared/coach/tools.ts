@@ -158,8 +158,9 @@ export const TOOLS = [
   }),
   tool(
     'period_vs_average',
-    'Chart: the current week or month against the average of the ones before, e.g. "more than ' +
-      'usual?". Also gives the previous period, for "this week vs last week".',
+    'Chart: the current week or month against the average of the earlier ones with training, ' +
+      'e.g. "more than usual?". Also gives the previous period ("this week vs last week") and, ' +
+      'while the current one runs, the same days of the previous period and on average.',
     {
       metric: {
         type: 'string',
@@ -177,17 +178,21 @@ export const TOOLS = [
   tool(
     'calendar',
     'Chart: the days the user trained, for consistency. Gives workouts per week, gaps of a week ' +
-      'or more, workouts per weekday and the weekdays of the last 4 weeks.',
+      'or more, workouts per weekday, the weekdays of the last 4 weeks, and the usual training ' +
+      'days with how often each was skipped (plans have no fixed weekdays).',
     { from: FROM, to: TO },
   ),
   tool(
     'distribution',
-    'Chart: how the training is spread. muscle: sets per week per muscle (main muscles count a ' +
-      'set fully, helping muscles half) against the guideline of 10. exercise: sets per week per ' +
-      'exercise. weekday: workouts per weekday.',
+    'Chart: how the training is spread. muscle: sets per week for the main muscles (an ' +
+      "exercise's main muscles count a set fully, helping muscles half) against the guideline of " +
+      '10. exercise: sets per week per exercise. weekday: workouts per weekday.',
     {
       by: { type: 'string', enum: ['muscle', 'exercise', 'weekday'] },
-      from: FROM,
+      from: {
+        type: ['string', 'null'],
+        description: 'First day, YYYY-MM-DD. null: 4 weeks ago, the current state.',
+      },
       to: TO,
     },
   ),
@@ -500,10 +505,13 @@ function periodVsAverage(args: Args, data: CoachData, user: CoachUser): ToolResu
     return { chart: null, result: { metric, period, note: 'No workouts yet.' } };
   const startOf = period === 'week' ? weekStart : monthStart;
   const before = (start: string) => (period === 'week' ? addDays(start, -7) : previousMonth(start));
+  const byDay = new Map<string, number>();
   const totals = new Map<string, number>();
   for (const workout of data.workouts) {
-    const key = startOf(dayOf(workout, user));
-    totals.set(key, (totals.get(key) ?? 0) + periodValue(metric, workout, data, user));
+    const day = dayOf(workout, user);
+    const value = periodValue(metric, workout, data, user);
+    byDay.set(day, (byDay.get(day) ?? 0) + value);
+    totals.set(startOf(day), (totals.get(startOf(day)) ?? 0) + value);
   }
   const valueOf = (start: string) => Math.round(totals.get(start) ?? 0);
   const first = startOf(dayOf(data.workouts[0], user));
@@ -520,9 +528,11 @@ function periodVsAverage(args: Args, data: CoachData, user: CoachUser): ToolResu
   }
   const bars = [...earlier, current].map((date) => ({ date, value: valueOf(date) }));
   const now = valueOf(current);
-  const average = earlier.length
-    ? round(earlier.reduce((s, d) => s + valueOf(d), 0) / earlier.length)
-    : null;
+  // "Usual" means a period with training: a vacation doesn't pull the average down.
+  const trainedIn = earlier.filter((start) => totals.has(start));
+  const mean = (values: number[]) =>
+    values.length ? round(values.reduce((a, b) => a + b, 0) / values.length) : null;
+  const average = mean(trainedIn.map(valueOf));
   // The latest earlier period at least as high as the current one: "your highest since August".
   let asHigh: string | null = null;
   for (let start = before(current); start >= first; start = before(start)) {
@@ -533,6 +543,24 @@ function periodVsAverage(args: Args, data: CoachData, user: CoachUser): ToolResu
   }
   const daysIn = daysBetween(current, user.today) + 1;
   const daysTotal = period === 'week' ? 7 : daysInMonth(current);
+  // While the current period runs, its first days against the same days of earlier ones.
+  const firstDays = (start: string) => {
+    let sum = 0;
+    for (let i = 0; i < Math.min(daysIn, period === 'week' ? 7 : daysInMonth(start)); i++) {
+      sum += byDay.get(addDays(start, i)) ?? 0;
+    }
+    return Math.round(sum);
+  };
+  const previous = earlier.at(-1);
+  const soFar =
+    daysIn < daysTotal
+      ? {
+          days: daysIn,
+          this_period: now,
+          previous_period_same_days: previous ? firstDays(previous) : null,
+          average_same_days: mean(trainedIn.map(firstDays)),
+        }
+      : null;
   const unit = unitOf(metric, user);
   const difference = average == null ? null : round(now - average);
   return {
@@ -550,11 +578,13 @@ function periodVsAverage(args: Args, data: CoachData, user: CoachUser): ToolResu
       },
       previous: bars.at(-2) ?? null,
       average,
-      periods_averaged: earlier.length,
+      periods_averaged: trainedIn.length,
+      periods_without_training: earlier.length - trainedIn.length,
       difference,
       difference_percent: average ? Math.round(((now - average) / average) * 100) : null,
       // null: higher than every earlier period.
       last_period_as_high: asHigh,
+      so_far: soFar,
       periods: bars,
     },
   };
@@ -589,6 +619,19 @@ function calendar(args: Args, data: CoachData, user: CoachUser): ToolResult {
 
   const weekdays = Object.fromEntries(WEEKDAYS.map((d) => [d, 0]));
   for (const day of trained) weekdays[weekdayOf(day)] += counts.get(day)!;
+  // Usual days: weekdays trained on at least every other time. Today counts once it's trained.
+  const dates = Object.fromEntries(WEEKDAYS.map((d) => [d, 0]));
+  const trainedOn = Object.fromEntries(WEEKDAYS.map((d) => [d, 0]));
+  for (let day = range.from; day <= range.to; day = addDays(day, 1)) {
+    if (day < user.today || counts.has(day)) dates[weekdayOf(day)] += 1;
+  }
+  for (const day of trained) trainedOn[weekdayOf(day)] += 1;
+  const usualDays = WEEKDAYS.filter((d) => dates[d] && trainedOn[d] >= dates[d] / 2).map((d) => ({
+    day: d,
+    trained: trainedOn[d],
+    of: dates[d],
+    skipped: dates[d] - trainedOn[d],
+  }));
   const recentWeeks = [3, 2, 1, 0].map((back) => {
     const start = addDays(weekStart(range.to), -7 * back);
     return {
@@ -613,6 +656,7 @@ function calendar(args: Args, data: CoachData, user: CoachUser): ToolResult {
       per_week: weeks > 0 ? round(workouts / weeks) : null,
       gaps_of_a_week_or_more: longest,
       workouts_per_weekday: weekdays,
+      usual_days: usualDays,
       last_4_weeks: recentWeeks,
       ...(trained.length ? {} : { note: 'No workouts in this time.' }),
     },
@@ -621,7 +665,10 @@ function calendar(args: Args, data: CoachData, user: CoachUser): ToolResult {
 
 // ---------- distribution ----------
 
-/** Muscles shown even when untrained: an empty bar is the answer to "what do I neglect?". */
+/**
+ * The muscles listed, also when untrained (an empty bar answers "what do I neglect?"). Forearms,
+ * traps and the like get their work from the big lifts and stay out.
+ */
 const MAIN_MUSCLES = [
   'chest',
   'lats',
@@ -643,7 +690,8 @@ function distribution(args: Args, data: CoachData, user: CoachUser): ToolResult 
   const by = args.by as DistributionBy;
   if (!['muscle', 'exercise', 'weekday'].includes(by)) return failed(`Unknown by "${String(by)}".`);
   const first = data.workouts[0] ? dayOf(data.workouts[0], user) : undefined;
-  const asked = rangeOf(args, first, user);
+  // Without a start the last 4 weeks: the current state, not one diluted by old breaks.
+  const asked = rangeOf(args, addDays(user.today, -27), user);
   if (!asked) return failed(BAD_RANGE);
   const range = { from: first && first > asked.from ? first : asked.from, to: asked.to };
   const weeks = Math.max(1, (daysBetween(range.from, range.to) + 1) / 7);
@@ -670,7 +718,9 @@ function distribution(args: Args, data: CoachData, user: CoachUser): ToolResult 
   if (by === 'weekday') for (const d of WEEKDAYS) add(d, 0);
 
   const perWeek = by !== 'weekday';
-  let rows = [...totals].map(([key, n]) => ({ key, value: perWeek ? round(n / weeks) : n }));
+  let rows = [...totals]
+    .filter(([key]) => by !== 'muscle' || MAIN_MUSCLES.includes(key))
+    .map(([key, n]) => ({ key, value: perWeek ? round(n / weeks) : n }));
   rows =
     by === 'weekday'
       ? WEEKDAYS.map((d) => rows.find((r) => r.key === d)!)

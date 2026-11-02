@@ -183,20 +183,21 @@ Deno.test('compare: one series per exercise, the percent view only changes the c
   );
 });
 
-Deno.test('period_vs_average: this week so far against the weeks before', () => {
+Deno.test('period_vs_average: this week so far against the weeks with training', () => {
   const { chart, result } = run('period_vs_average', {
     metric: 'sets',
     period: 'week',
     periods: 4,
   });
   // Weeks of 5 (two workouts), 12, 19 and 26 October: 5, 0, 0 and 2 sets; this week 1 (the
-  // treadmill is cardio). Average 1.75, shown as 1.8.
+  // treadmill is cardio). The two empty weeks stay out of the average.
   assertEquals(
     (chart as PeriodChart).bars.map((b) => b.value),
     [5, 0, 0, 2, 1],
   );
-  assertEquals(result.average, 1.8);
-  assertEquals(result.difference, -0.8);
+  assertEquals(result.average, 3.5);
+  assertEquals(result.periods_without_training, 2);
+  assertEquals(result.difference, -2.5);
   assertEquals(result.last_period_as_high, '2026-10-26');
   assertEquals(result.current, {
     start: '2026-11-02',
@@ -204,6 +205,13 @@ Deno.test('period_vs_average: this week so far against the weeks before', () => 
     days_in: 3,
     days_total: 7,
     partial: true,
+  });
+  // Monday to Wednesday: 2 sets the week before, 5 and 2 in the weeks with training.
+  assertEquals(result.so_far, {
+    days: 3,
+    this_period: 1,
+    previous_period_same_days: 2,
+    average_same_days: 3.5,
   });
 });
 
@@ -215,6 +223,8 @@ Deno.test('calendar: workouts per week, gaps and weekdays', () => {
   assertEquals(result.per_week, 0.9);
   assertEquals(result.gaps_of_a_week_or_more, [{ from: '2026-10-08', to: '2026-10-25', days: 18 }]);
   assertEquals((result.workouts_per_weekday as Record<string, number>).mon, 3);
+  // Mondays: trained on 3 of 5. Wednesdays (1 of 4, today not yet) aren't a usual day.
+  assertEquals(result.usual_days, [{ day: 'mon', trained: 3, of: 5, skipped: 2 }]);
   assertEquals(
     (result.last_4_weeks as { days: string[] }[]).map((w) => w.days),
     [[], [], ['mon'], ['mon']],
@@ -222,7 +232,7 @@ Deno.test('calendar: workouts per week, gaps and weekdays', () => {
 });
 
 Deno.test('distribution: sets per week, main muscles fully and helpers half', () => {
-  const { result } = run('distribution', { by: 'muscle', ...ALL });
+  const { result } = run('distribution', { by: 'muscle', from: '2026-10-05', to: null });
   const rows = Object.fromEntries(
     (result.rows as { key: string; value: number }[]).map((r) => [r.key, r.value]),
   );
@@ -231,7 +241,10 @@ Deno.test('distribution: sets per week, main muscles fully and helpers half', ()
   assertEquals(rows.triceps, 0.7);
   assertEquals(rows.calves, 0);
   assertEquals(rows.quads, 0); // the treadmill is cardio
+  assertEquals(rows.obliques, undefined); // not a main muscle
   assertEquals(result.guideline, 10);
+  // Without a start: the last 4 weeks.
+  assertEquals(run('distribution', { by: 'muscle', ...ALL }).result.from, '2026-10-08');
 });
 
 Deno.test('workouts: sessions newest first, sets as the app writes them', () => {
