@@ -139,6 +139,8 @@ export async function respond(body: Record<string, unknown>, timeoutMs: number) 
     usage: result.usage ?? {},
     // Fast mode may fall back to standard when OpenAI is busy.
     tier: result.service_tier ?? null,
+    /** The time OpenAI says it spent on the request; the rest of the wait is network. */
+    processingMs: Number(response.headers.get('openai-processing-ms')) || null,
   };
 }
 

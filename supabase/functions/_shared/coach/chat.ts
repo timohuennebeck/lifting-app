@@ -31,6 +31,8 @@ export interface CoachUsage {
   reasoning: number;
   /** Requests OpenAI served in Fast mode. */
   fast: number;
+  /** Each request's wait in ms, and how much of it OpenAI says it spent processing. */
+  waits: { ms: number; openAiMs: number | null }[];
 }
 
 export interface CoachRequest {
@@ -90,9 +92,18 @@ function parseArgs(json: unknown) {
   }
 }
 
-function addUsage(total: CoachUsage, usage: ResponseUsage, tier: string | null) {
+function addUsage(
+  total: CoachUsage,
+  {
+    usage,
+    tier,
+    processingMs,
+  }: { usage: ResponseUsage; tier: string | null; processingMs: number | null },
+  ms: number,
+) {
   total.requests += 1;
   if (tier === 'fast') total.fast += 1;
+  total.waits.push({ ms: Math.round(ms), openAiMs: processingMs });
   total.input += usage.input_tokens ?? 0;
   total.cached += usage.input_tokens_details?.cached_tokens ?? 0;
   total.output += usage.output_tokens ?? 0;
@@ -102,10 +113,19 @@ function addUsage(total: CoachUsage, usage: ResponseUsage, tier: string | null) 
 export async function askCoach(req: CoachRequest): Promise<CoachReply> {
   const input: unknown[] = [...replay(req.history), { role: 'user', content: req.question }];
   const calls: CoachCall[] = [];
-  const usage: CoachUsage = { requests: 0, input: 0, cached: 0, output: 0, reasoning: 0, fast: 0 };
+  const usage: CoachUsage = {
+    requests: 0,
+    input: 0,
+    cached: 0,
+    output: 0,
+    reasoning: 0,
+    fast: 0,
+    waits: [],
+  };
   let chart: Chart | null = null;
 
   for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
+    const started = performance.now();
     const reply = await respond(
       {
         model: req.model,
@@ -125,7 +145,7 @@ export async function askCoach(req: CoachRequest): Promise<CoachReply> {
     if ('upstream' in reply) {
       return { error: `openai_${reply.upstream}`, detail: reply.error, calls, usage };
     }
-    addUsage(usage, reply.usage, reply.tier);
+    addUsage(usage, reply, performance.now() - started);
 
     const toolCalls = reply.output.filter((item) => item.type === 'function_call');
     if (!toolCalls.length) {

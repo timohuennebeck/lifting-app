@@ -76,6 +76,14 @@ interface Outcome {
   error?: string;
 }
 
+/** A question this slow lists its requests' waits. */
+const SLOW_SECONDS = 10;
+const seconds = (ms: number) => `${(ms / 1000).toFixed(1)} s`;
+const waitsText = (waits: CoachUsage['waits']) =>
+  waits
+    .map((w) => `${seconds(w.ms)}${w.openAiMs == null ? '' : ` (OpenAI ${seconds(w.openAiMs)})`}`)
+    .join(' + ');
+
 const SMALL_NUMBERS = Array.from({ length: 13 }, (_, i) => i);
 
 /** The tool behind the answer: the last chart tool called, else the last tool. */
@@ -186,7 +194,8 @@ async function pool(tasks: (() => Promise<Outcome>)[], parallel: number) {
         console.log(
           `${o.passed ? '✓' : '✗'} ${o.id.padEnd(30)} ${main.padEnd(18)} ${o.seconds.toFixed(1).padStart(5)} s${money}` +
             (o.error ? `\n    error: ${o.error.slice(0, 300)}` : '') +
-            o.problems.map((p) => `\n    ${p}`).join(''),
+            o.problems.map((p) => `\n    ${p}`).join('') +
+            (o.seconds > SLOW_SECONDS ? `\n    requests: ${waitsText(o.usage?.waits ?? [])}` : ''),
         );
       }
     }),
@@ -199,6 +208,19 @@ const percentile = (values: number[], p: number) => {
   return sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * p))] ?? 0;
 };
 
+/** How long single requests took, and how much of it OpenAI reports as its own processing. */
+function requestLine(answered: Outcome[]) {
+  const waits = answered.flatMap((o) => o.usage?.waits ?? []);
+  const ms = waits.map((w) => w.ms);
+  const reported = waits.filter((w) => w.openAiMs != null);
+  const average = (values: number[]) =>
+    values.reduce((a, b) => a + b, 0) / Math.max(1, values.length);
+  const share = reported.length
+    ? `; OpenAI reports ${Math.round((average(reported.map((w) => w.openAiMs!)) / average(reported.map((w) => w.ms))) * 100)} % as processing`
+    : '';
+  return `Per request: ${seconds(average(ms))} on average, ${seconds(percentile(ms, 0.9))} at p90, ${seconds(Math.max(0, ...ms))} at most${share}`;
+}
+
 function summary(outcomes: Outcome[]) {
   const answered = outcomes.filter((o) => !o.error);
   const share = (n: number) =>
@@ -206,7 +228,7 @@ function summary(outcomes: Outcome[]) {
   const failing = (prefix: string) =>
     outcomes.filter((o) => o.problems.some((p) => p.startsWith(prefix))).length;
   const costs = answered.map((o) => o.cost).filter((c): c is number => c != null);
-  const tokens = (key: keyof CoachUsage) =>
+  const tokens = (key: Exclude<keyof CoachUsage, 'waits'>) =>
     Math.round(
       answered.reduce((s, o) => s + (o.usage?.[key] ?? 0), 0) / Math.max(1, answered.length),
     );
@@ -219,6 +241,7 @@ function summary(outcomes: Outcome[]) {
       0.9,
     ).toFixed(1)} s at p90`,
     `Tokens per question: ${tokens('input')} in (${tokens('cached')} cached), ${tokens('output')} out (${tokens('reasoning')} reasoning), ${tokens('requests')} requests${opts.fast ? `, ${answered.reduce((s, o) => s + (o.usage?.fast ?? 0), 0)} of ${answered.reduce((s, o) => s + (o.usage?.requests ?? 0), 0)} served in Fast mode` : ''}`,
+    requestLine(answered),
     costs.length
       ? `Cost: $${(costs.reduce((a, b) => a + b, 0) / costs.length).toFixed(4)} per question, $${costs.reduce((a, b) => a + b, 0).toFixed(2)} for the graded questions`
       : `Cost: no price for ${opts.model}; pass --price input,cached,output ($ per million tokens)`,

@@ -323,7 +323,9 @@ Deno.test(
     assert('answer' in reply);
     assertEquals(reply.answer, 'Your bench is at **115.5 kg**.');
     assertEquals(reply.chart?.type, 'trend');
-    assertEquals(reply.usage, {
+    const { waits, ...totals } = reply.usage;
+    assertEquals(waits.length, 2);
+    assertEquals(totals, {
       requests: 2,
       input: 6400,
       cached: 2000,
