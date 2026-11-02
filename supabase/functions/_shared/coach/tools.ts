@@ -305,7 +305,7 @@ const CHART_DOTS = 120;
 /** Each line of a comparison. */
 const COMPARE_POINTS = 100;
 /** The calendar shows the last year at most (a phone fits about 50 weeks). */
-const CALENDAR_WEEKS = 52;
+const CALENDAR_WEEKS = 53;
 
 /**
  * At most `max` points for a chart (it is saved with the answer and drawn on a phone): evenly
@@ -679,13 +679,17 @@ function calendar(args: Args, data: CoachData, user: CoachUser): ToolResult {
     };
   });
 
-  const shownFrom = [range.from, addDays(weekStart(range.to), -7 * (CALENDAR_WEEKS - 1))].sort()[1];
+  // The chart shows the range's last weeks, or the last weeks trained when those had none.
+  const yearBefore = (day: string) => addDays(weekStart(day), -7 * (CALENDAR_WEEKS - 1));
+  const lastTrained = trained.at(-1);
+  const shownTo = lastTrained && lastTrained < yearBefore(range.to) ? lastTrained : range.to;
+  const shownFrom = [range.from, yearBefore(shownTo)].sort()[1];
   return {
     chart: trained.length
       ? {
           type: 'calendar',
           from: shownFrom,
-          to: range.to,
+          to: shownTo,
           days: trained
             .filter((date) => date >= shownFrom)
             .map((date) => ({

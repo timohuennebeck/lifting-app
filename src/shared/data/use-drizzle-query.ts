@@ -48,13 +48,15 @@ export function useDrizzleQuery<TRow, TResult>({
   map,
   keepPrevious,
 }: DrizzleQueryOptions<TRow, TResult>) {
+  // Off inside a hidden tab's QueryFocus. Off, not unsubscribed: a query without an observer is
+  // dropped from the cache after 5 minutes, while an off one keeps its data and runs once when
+  // shown if a change made it stale.
+  const focused = useQueryFocus();
   const result = useQuery<TRow>({
     queryKey,
     query: compilable(queryKey, query),
-    enabled,
+    enabled: enabled !== false && focused,
     placeholderData: keepPrevious ? keepPreviousData : undefined,
-    // Paused inside a hidden tab's QueryFocus: it keeps its data and catches up when shown.
-    subscribed: useQueryFocus(),
   });
   const rows = result.data;
   const data = useMemo(() => (rows ? map(rows) : undefined), [rows, map]);
