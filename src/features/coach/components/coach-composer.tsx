@@ -3,7 +3,11 @@ import { View } from 'react-native';
 
 import { ChatInput } from '@/shared/components/chat-input';
 import { COACH_QUESTION_MAX } from '@/shared/lib/limits';
+import { Gradient } from '@/shared/ui/gradient';
 import { Text } from '@/shared/ui/text';
+
+/** How far above the field the content fades out. */
+const FADE = 28;
 
 export interface CoachComposerProps {
   value: string;
@@ -29,6 +33,11 @@ export function CoachComposer({
   const canSend = !answering && value.trim().length > 0;
   return (
     <View>
+      {/* The chat above fades into the page instead of ending at a hard edge. */}
+      <Gradient
+        from="bottom"
+        style={{ position: 'absolute', left: 0, right: 0, top: -FADE, height: FADE }}
+      />
       {consentNote ? (
         <Text className="px-6 pt-2 text-center font-inter text-xs leading-4 text-dim">
           {t('consent')}
