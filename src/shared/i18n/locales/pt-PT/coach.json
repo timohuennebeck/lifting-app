@@ -29,7 +29,25 @@
     "title": "Pergunta-me tudo sobre o teu treino.",
     "subtitle_one": "Conheço o teu primeiro treino e respondo com factos e gráficos.",
     "subtitle_other": "Conheço todos os teus {{count}} treinos desde {{since}} e respondo com factos e gráficos.",
-    "empty": "Assim que treinares, respondo com factos e gráficos dos teus treinos."
+    "empty": "Assim que treinares, respondo com factos e gráficos dos teus treinos.",
+    "suggestions": {
+      "weight": {
+        "label": "Peso",
+        "question": "O meu peso mudou nos últimos 3 meses?"
+      },
+      "strength": {
+        "label": "Força",
+        "question": "O meu supino melhorou desde janeiro?"
+      },
+      "volume": {
+        "label": "Volume",
+        "question": "O meu volume de treino aumentou esta semana?"
+      },
+      "balance": {
+        "label": "Equilíbrio",
+        "question": "Algum grupo muscular teve poucas séries?"
+      }
+    }
   },
   "values": {
     "reps_one": "{{count}} rep",

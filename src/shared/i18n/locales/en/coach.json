@@ -29,7 +29,25 @@
     "title": "Ask me anything about your training.",
     "subtitle_one": "I know your first workout and answer with facts and charts.",
     "subtitle_other": "I know all {{count}} workouts since {{since}} and answer with facts and charts.",
-    "empty": "Once you train, I answer with facts and charts from your workouts."
+    "empty": "Once you train, I answer with facts and charts from your workouts.",
+    "suggestions": {
+      "weight": {
+        "label": "Weight",
+        "question": "Has my weight changed in the last 3 months?"
+      },
+      "strength": {
+        "label": "Strength",
+        "question": "Has my bench press improved since January?"
+      },
+      "volume": {
+        "label": "Volume",
+        "question": "Has my training volume gone up this week?"
+      },
+      "balance": {
+        "label": "Balance",
+        "question": "Has any muscle group had too few sets?"
+      }
+    }
   },
   "values": {
     "reps_one": "{{count}} rep",

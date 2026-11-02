@@ -5,11 +5,15 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { IconButton } from '@/shared/ui/icon-button';
+import { PressableScale } from '@/shared/ui/pressable-scale';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 import { CoachComposer, type CoachComposerProps } from './coach-composer';
 import { CoachMark } from './coach-mark';
+
+/** The questions to start with, in this order. */
+const SUGGESTIONS = ['weight', 'strength', 'volume', 'balance'] as const;
 
 export interface CoachStartViewProps {
   /** Logged workouts and the month of the first, for "Ich kenne alle 142 Einheiten seit Januar". */
@@ -17,15 +21,18 @@ export interface CoachStartViewProps {
   since: string | null;
   onBack: () => void;
   onHistory: () => void;
+  /** A question to start with was tapped: it is sent as is. */
+  onAsk: (question: string) => void;
   composer: CoachComposerProps;
 }
 
-/** Kai's empty chat (design CO·A): who answers and from what, centred above the field. */
+/** Kai's empty chat (design CO·A): who answers and from what, and questions to start with. */
 export function CoachStartView({
   workouts,
   since,
   onBack,
   onHistory,
+  onAsk,
   composer,
 }: CoachStartViewProps) {
   const { t } = useTranslation('coach');
@@ -58,6 +65,7 @@ export function CoachStartView({
           contentContainerStyle={{
             flexGrow: 1,
             justifyContent: 'center',
+            gap: 22,
             paddingHorizontal: 20,
             paddingVertical: 24,
           }}
@@ -70,6 +78,24 @@ export function CoachStartView({
             <Text className="font-inter text-label leading-[21.75px] text-subtle">
               {known ? t('start.subtitle', { count: workouts, since }) : t('start.empty')}
             </Text>
+          </View>
+          {/* Four questions to start with, under their topic. */}
+          <View className="flex-row flex-wrap gap-2">
+            {SUGGESTIONS.map((key) => (
+              <PressableScale
+                key={key}
+                haptic="tap"
+                onPress={() => onAsk(t(`start.suggestions.${key}.question`))}
+                className="min-h-[86px] grow basis-[45%] gap-1.5 rounded-[18px] bg-surface p-3"
+              >
+                <Text className="font-inter-semibold text-[10px] leading-3 tracking-[1px] text-dim uppercase">
+                  {t(`start.suggestions.${key}.label`)}
+                </Text>
+                <Text className="font-inter-medium text-[13px] leading-[17.5px] text-fg">
+                  {t(`start.suggestions.${key}.question`)}
+                </Text>
+              </PressableScale>
+            ))}
           </View>
         </ScrollView>
         <View style={{ paddingBottom: footerInset }}>

@@ -29,7 +29,25 @@
     "title": "Frag mich alles zu deinem Training.",
     "subtitle_one": "Ich kenne deine erste Einheit und antworte mit Fakten und Diagrammen.",
     "subtitle_other": "Ich kenne alle {{count}} Einheiten seit {{since}} und antworte mit Fakten und Diagrammen.",
-    "empty": "Sobald du trainierst, antworte ich mit Fakten und Diagrammen aus deinen Einheiten."
+    "empty": "Sobald du trainierst, antworte ich mit Fakten und Diagrammen aus deinen Einheiten.",
+    "suggestions": {
+      "weight": {
+        "label": "Gewicht",
+        "question": "Hat sich mein Gewicht in den letzten 3 Monaten verändert?"
+      },
+      "strength": {
+        "label": "Kraft",
+        "question": "Hat sich mein Bankdrücken seit Januar verbessert?"
+      },
+      "volume": {
+        "label": "Volumen",
+        "question": "Hat mein Trainingsvolumen diese Woche zugenommen?"
+      },
+      "balance": {
+        "label": "Balance",
+        "question": "Hat eine Muskelgruppe zu wenige Sätze bekommen?"
+      }
+    }
   },
   "values": {
     "reps_one": "{{count}} Wdh.",

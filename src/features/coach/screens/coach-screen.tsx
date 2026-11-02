@@ -107,6 +107,7 @@ export function CoachScreen() {
             since={since}
             onBack={() => router.back()}
             onHistory={onHistory}
+            onAsk={(question) => void send(question)}
             composer={composer}
           />
         ) : (
