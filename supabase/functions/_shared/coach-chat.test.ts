@@ -233,6 +233,7 @@ Deno.test(
     assertEquals(await limited.json(), {
       error: 'limit',
       limit: 'daily',
+      count: 20,
       retryAt: '2026-11-03T14:30:00+00:00',
     });
     assertEquals(openAiRequests.length, 0);

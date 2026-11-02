@@ -29,6 +29,7 @@ import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
 import { DeleteAccountSheet } from '../components/delete-account-sheet';
+import { CoachSection } from '../components/coach-section';
 import { NotificationsSection } from '../components/notifications-section';
 import { ProSection } from '../components/pro-section';
 import { SignOutSheet } from '../components/sign-out-sheet';
@@ -139,6 +140,8 @@ export function SettingsScreen() {
       </View>
 
       <NotificationsSection />
+
+      <CoachSection consented={!!profile?.coachConsentAt} />
 
       <ProSection />
 

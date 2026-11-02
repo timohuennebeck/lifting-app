@@ -22,7 +22,7 @@ import { IconButton } from '@/shared/ui/icon-button';
 import { Text } from '@/shared/ui/text';
 
 import { ExerciseThumb } from './exercise-thumb';
-import { SwipeTabs } from './swipe-tabs';
+import { SwipeTabs } from '@/shared/components/swipe-tabs';
 
 /** Shades the photo under the back button and blends its foot into the page. */
 const HERO_FADE: GradientStop[] = [

@@ -69,12 +69,13 @@ photos and AI parts.
 18. **Brazil:** the ECA Digital (Law 15.211/2025, in force since 17 March 2026) asks apps likely used
     by minors for real age checks; a self-declared birth date may not be enough there.
 19. **Support reply time.** The chat says "24–48 hours"; NB §9 calls it a guideline.
-20. **Coach screens.** DS §4.4, §4.8 and §12 describe the notice above the first question and a
-    switch in Settings that withdraws the consent (clearing `profiles.coach_consent_at`). The
-    coach's screens are still being built: check both exist as described before DS 1.3 is
-    published, and that the screen shows the coach is an AI (Art. 50(1) AI Act), not the paywall's
-    head coach. DS §4.8 and NB §4 also name the limits (`COACH_DAILY_LIMIT`, `COACH_MONTHLY_LIMIT`)
-    and what goes to OpenAI (`supabase/functions/_shared/coach/prompt.ts` and `tools.ts`).
+20. **Coach screens.** DS §4.4, §4.8 and §12 describe the notice above the first question
+    (`coach.consent`, on the start screen and in a chat while there is no consent) and the switch in
+    Settings that withdraws the consent (clearing `profiles.coach_consent_at`); both exist. The
+    notice names "an AI model by OpenAI": check with the lawyer that this shows the coach is an AI
+    (Art. 50(1) AI Act), and that it can't be taken for the paywall's head coach. DS §4.8 and NB §4
+    also name the limits (`COACH_DAILY_LIMIT`, `COACH_MONTHLY_LIMIT`) and what goes to OpenAI
+    (`supabase/functions/_shared/coach/prompt.ts` and `tools.ts`).
 21. **Coach logs.** `coach_runs` keeps time, status, model, tokens and duration until the account
     is deleted, also after its chat is deleted (DS §4.8, §9). The limits only need the last 30
     days: decide how long the cost overview needs them, delete older rows and update DS §9.

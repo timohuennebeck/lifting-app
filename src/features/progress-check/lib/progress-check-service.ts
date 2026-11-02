@@ -1,10 +1,9 @@
 import { FunctionsFetchError, FunctionsHttpError } from '@supabase/supabase-js';
 import { File } from 'expo-file-system';
 
-import { db } from '@/shared/data/powersync/database';
+import { uploadsDone } from '@/shared/data/powersync/upload-queue';
 import { supabase } from '@/shared/data/supabase';
 import { uploadJpeg } from '@/shared/data/supabase-storage';
-import { wait } from '@/shared/lib/async';
 import { averageBrightness } from '@/shared/lib/jpeg';
 
 import { PHOTO_BUCKET, type StoredPhoto, storagePathOf } from './photo-files';
@@ -122,26 +121,11 @@ export function removeUploadedPhotos(checkId: string, userId: string) {
 const PROFILE_UPLOAD_TIMEOUT_MS = 30_000;
 
 /**
- * Waits (bounded) until no profile change is left in PowerSync's upload queue, since the assessment
- * checks the birth date on the server: right after sign-up the profile is still on its way there,
- * behind the onboarding plan. False when one is still waiting.
+ * Whether no profile change is left in the upload queue (waiting a bounded time), since the
+ * assessment checks the birth date on the server: right after sign-up the profile is still on its
+ * way there, behind the onboarding plan.
  */
-async function profileUploaded() {
-  const deadline = Date.now() + PROFILE_UPLOAD_TIMEOUT_MS;
-  try {
-    while (
-      await db.getOptional(
-        "SELECT 1 FROM ps_crud WHERE json_extract(data, '$.type') = 'profiles' LIMIT 1",
-      )
-    ) {
-      if (Date.now() >= deadline) return false;
-      await wait(500);
-    }
-  } catch (error) {
-    console.warn('Reading the upload queue failed', error);
-  }
-  return true;
-}
+const profileUploaded = () => uploadsDone(PROFILE_UPLOAD_TIMEOUT_MS, 'profiles');
 
 /**
  * Uploads the three photos and has the assess-progress Edge Function score them. Needs a

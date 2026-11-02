@@ -1,0 +1,144 @@
+{
+  "title": "코치",
+  "newChat": "새 채팅",
+  "consent": "답변을 위해 운동 및 체중 데이터가 미국에 있는 OpenAI의 AI 모델로 전송돼요. 첫 질문을 보내면 이에 동의하게 돼요.",
+  "composer": {
+    "placeholder": "코치에게 물어보세요 …",
+    "answering": "코치가 답변하는 중 …",
+    "send": "보내기",
+    "stop": "답변 중지"
+  },
+  "steps": {
+    "searched": {
+      "workouts_one": "운동 {{count}}회를 살펴봤어요",
+      "workouts_other": "운동 {{count}}회를 살펴봤어요",
+      "weights_one": "체중 기록 {{count}}개를 살펴봤어요",
+      "weights_other": "체중 기록 {{count}}개를 살펴봤어요",
+      "checks_one": "바디 체크 {{count}}회를 살펴봤어요",
+      "checks_other": "바디 체크 {{count}}회를 살펴봤어요"
+    },
+    "searching": "필요한 데이터를 찾는 중 …",
+    "found": "필요한 데이터를 찾았어요",
+    "writing": "답변을 작성하는 중 …"
+  },
+  "start": {
+    "title": "운동에 관해 무엇이든 물어보세요.",
+    "subtitle_one": "첫 운동 기록을 바탕으로 숫자와 차트로 답해 드려요.",
+    "subtitle_other": "{{since}}부터 기록한 운동 {{count}}회를 바탕으로 숫자와 차트로 답해 드려요.",
+    "empty": "운동을 기록하면 그 기록을 바탕으로 숫자와 차트로 답해 드려요.",
+    "suggestions": {
+      "weight": {
+        "label": "체중",
+        "question": "체중이 어떻게 변했나요?"
+      },
+      "strength": {
+        "label": "근력",
+        "question": "주요 운동 기록은 어떻게 늘었나요?"
+      },
+      "balance": {
+        "label": "균형",
+        "question": "운동이 부족한 근육은 어디인가요?"
+      },
+      "volume": {
+        "label": "볼륨",
+        "question": "이번 주와 지난주를 비교해 주세요"
+      }
+    }
+  },
+  "values": {
+    "reps_one": "{{count}}회",
+    "reps_other": "{{count}}회",
+    "points_one": "{{count}}점",
+    "points_other": "{{count}}점",
+    "sets_one": "{{count}}세트",
+    "sets_other": "{{count}}세트",
+    "workouts_one": "운동 {{count}}회",
+    "workouts_other": "운동 {{count}}회"
+  },
+  "topics": {
+    "bodyWeight": "체중",
+    "bodyScore": "바디 점수",
+    "progress": "진행 상황",
+    "compare": "비교",
+    "volume": "볼륨",
+    "sets": "세트 수",
+    "workouts": "운동 횟수",
+    "minutes": "운동 시간",
+    "consistency": "꾸준함",
+    "by": {
+      "muscle": "근육군",
+      "exercise": "운동 종목",
+      "weekday": "요일"
+    }
+  },
+  "trend": {
+    "bodyWeight": "오늘 추세 · {{since}}부터",
+    "since": "{{what}} · {{since}}부터",
+    "metric": {
+      "e1rm": "추정 1RM",
+      "top_weight": "최고 무게",
+      "reps": "반복 수",
+      "seconds": "유지 시간",
+      "volume": "볼륨",
+      "body_score": "바디 점수"
+    }
+  },
+  "period": {
+    "week": "{{week}}주차",
+    "average": "평균 {{value}}",
+    "caption": {
+      "week_one": "이번 주 {{metric}} · 지난 {{count}}주 평균 대비",
+      "week_other": "이번 주 {{metric}} · 지난 {{count}}주 평균 대비",
+      "month_one": "이번 달 {{metric}} · 지난 {{count}}개월 평균 대비",
+      "month_other": "이번 달 {{metric}} · 지난 {{count}}개월 평균 대비"
+    }
+  },
+  "distribution": {
+    "reference_one": "권장 {{count}}",
+    "reference_other": "권장 {{count}}"
+  },
+  "history": {
+    "title": "이전 채팅",
+    "select": "선택",
+    "selected_one": "{{count}}개 선택됨",
+    "selected_other": "{{count}}개 선택됨",
+    "delete": "삭제",
+    "deleteConfirm_one": "채팅 {{count}}개 삭제",
+    "deleteConfirm_other": "채팅 {{count}}개 삭제",
+    "search": "채팅 검색",
+    "empty": "아직 채팅이 없어요. 코치에게 첫 질문을 해 보세요.",
+    "noResults": "채팅을 찾지 못했어요.",
+    "today": "오늘",
+    "thisWeek": "이번 주"
+  },
+  "errors": {
+    "offline": {
+      "title": "인터넷에 연결되어 있지 않아요",
+      "message": "코치를 이용하려면 인터넷이 필요해요. 질문은 입력창에 그대로 남아 있어요."
+    },
+    "limitDaily": {
+      "title": "오늘 한도에 도달했어요",
+      "message": "오늘 이미 질문을 {{count}}개 했어요. {{time}}부터 다시 질문할 수 있어요."
+    },
+    "limitMonthly": {
+      "title": "월간 한도에 도달했어요",
+      "message": "최근 30일 동안 질문을 {{count}}개 했어요. {{date}}부터 다시 질문할 수 있어요."
+    },
+    "failed": {
+      "title": "답변 없음",
+      "message": "코치가 방금 답변하지 못했어요. 다시 시도해 주세요."
+    },
+    "refused": {
+      "title": "답변 없음",
+      "message": "코치가 이 질문에는 답할 수 없어요. 다르게 물어봐 주세요."
+    },
+    "tooYoung": {
+      "title": "16세 이상 전용",
+      "message": "코치는 만 16세부터 이용할 수 있어요."
+    }
+  },
+  "settings": {
+    "label": "OpenAI에 데이터 전송",
+    "description": "코치가 답변할 수 있도록 운동 및 체중 데이터를 OpenAI로 전송해요. 끄면 동의가 철회돼요."
+  }
+}

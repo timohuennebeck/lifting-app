@@ -93,7 +93,7 @@ export interface SwipeTabsProps {
   children: ReactNode;
 }
 
-/** The swipeable top tabs (exercise page) with the app's tab bar and page color. */
+/** The swipeable top tabs (exercise page, Progress tab) with the app's tab bar and page color. */
 export function SwipeTabs({ children }: SwipeTabsProps) {
   return (
     <TopTabs

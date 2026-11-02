@@ -1,8 +1,9 @@
 # Loqqa
 
 Workout logger for iOS and Android. Tabs: **Training** (the week, the plan with its routines,
-single routines), **Level** (muscle levels 1–100), **Körper** (progress checks: three photos, an
-AI score, before and after) and **Profile** (workout history, support, settings). "+" starts a
+single routines), **Coach** (questions about the own training, answered by an AI with charts),
+**Fortschritt** with two swipeable pages, Level (muscle levels 1–100) and Körper (progress checks:
+three photos, an AI score, before and after), and **Profile** (workout history, support, settings). "+" starts a
 workout or creates a routine or a plan (imported from photos or a file, or made by the AI). The
 scale button in every tab's header opens the weight history. The original design handoff is in
 git history (`git show 48b667e:design/README.md`).
@@ -353,7 +354,9 @@ The coach answers questions about the user's own training ("Wie hat sich mein Ge
 question to the `coach-chat` Edge Function, where the model picks one of the coach's tools; the tool
 computes every number from the user's data, and the model writes the answer from them. The answer
 and its chart stream to the app as server-sent events; once complete, the question and answer are
-saved and sync to the app. The (in-progress) screens follow the design "Coach Screens".
+saved and sync to the app; the app shows the streamed answer until the saved one has synced
+(`src/features/coach/stores/coach-store.ts`). The screens follow the design "Coach Screens"; Settings
+has a switch that withdraws the consent.
 
 - **Tools** (`supabase/functions/_shared/coach/tools.ts`): `trend`, `compare`,
   `period_vs_average`, `calendar` and `distribution` each draw a chart; `workouts` looks sessions

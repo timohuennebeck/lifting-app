@@ -39,7 +39,9 @@
   },
   "tabs": {
     "training": "Training",
+    "coach": "Coach",
     "level": "Level",
+    "progress": "Fortschritt",
     "body": "Körper",
     "profile": "Profil",
     "create": "Neu"

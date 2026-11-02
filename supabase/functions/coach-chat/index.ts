@@ -284,7 +284,10 @@ Deno.serve(async (req) => {
     console.error('Starting the coach run failed', error);
     return reply(500, { error: 'failed' });
   }
-  if (slot.limit) return reply(429, { error: 'limit', limit: slot.limit, retryAt: slot.retry_at });
+  if (slot.limit) {
+    const count = slot.limit === 'daily' ? DAILY_LIMIT : MONTHLY_LIMIT;
+    return reply(429, { error: 'limit', limit: slot.limit, count, retryAt: slot.retry_at });
+  }
 
   // Recorded before any of the user's data goes to OpenAI.
   if (!profile.coach_consent_at) {

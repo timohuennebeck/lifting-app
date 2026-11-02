@@ -1,0 +1,144 @@
+{
+  "title": "Coach",
+  "newChat": "Novo chat",
+  "consent": "Para as respostas, os teus dados de treino e de peso são transmitidos a um modelo de IA da OpenAI, nos EUA. Ao enviares a tua primeira pergunta, dás o teu consentimento.",
+  "composer": {
+    "placeholder": "Pergunta ao teu coach …",
+    "answering": "O coach está a responder …",
+    "send": "Enviar",
+    "stop": "Parar a resposta"
+  },
+  "steps": {
+    "searched": {
+      "workouts_one": "{{count}} treino consultado",
+      "workouts_other": "{{count}} treinos consultados",
+      "weights_one": "{{count}} registo de peso consultado",
+      "weights_other": "{{count}} registos de peso consultados",
+      "checks_one": "{{count}} check corporal consultado",
+      "checks_other": "{{count}} checks corporais consultados"
+    },
+    "searching": "A procurar os dados certos …",
+    "found": "Dados certos encontrados",
+    "writing": "A escrever a resposta …"
+  },
+  "start": {
+    "title": "Pergunta-me tudo sobre o teu treino.",
+    "subtitle_one": "Conheço o teu primeiro treino e respondo com números e gráficos.",
+    "subtitle_other": "Conheço todos os teus {{count}} treinos desde {{since}} e respondo com números e gráficos.",
+    "empty": "Assim que treinares, respondo com números e gráficos dos teus treinos.",
+    "suggestions": {
+      "weight": {
+        "label": "Peso",
+        "question": "Como evoluiu o meu peso?"
+      },
+      "strength": {
+        "label": "Força",
+        "question": "Como evoluíram os meus exercícios principais?"
+      },
+      "balance": {
+        "label": "Equilíbrio",
+        "question": "Que músculos estou a treinar pouco?"
+      },
+      "volume": {
+        "label": "Volume",
+        "question": "Compara esta semana com a anterior"
+      }
+    }
+  },
+  "values": {
+    "reps_one": "{{count}} rep",
+    "reps_other": "{{count}} reps",
+    "points_one": "{{count}} ponto",
+    "points_other": "{{count}} pontos",
+    "sets_one": "{{count}} série",
+    "sets_other": "{{count}} séries",
+    "workouts_one": "{{count}} treino",
+    "workouts_other": "{{count}} treinos"
+  },
+  "topics": {
+    "bodyWeight": "Peso corporal",
+    "bodyScore": "Pontuação corporal",
+    "progress": "Progresso",
+    "compare": "Comparação",
+    "volume": "Volume",
+    "sets": "Séries",
+    "workouts": "Treinos",
+    "minutes": "Tempo de treino",
+    "consistency": "Regularidade",
+    "by": {
+      "muscle": "Grupos musculares",
+      "exercise": "Exercícios",
+      "weekday": "Dias da semana"
+    }
+  },
+  "trend": {
+    "bodyWeight": "Tendência hoje · desde {{since}}",
+    "since": "{{what}} · desde {{since}}",
+    "metric": {
+      "e1rm": "1RM estimado",
+      "top_weight": "Peso máximo",
+      "reps": "Repetições",
+      "seconds": "Tempo de sustentação",
+      "volume": "Volume",
+      "body_score": "Pontuação corporal"
+    }
+  },
+  "period": {
+    "week": "S{{week}}",
+    "average": "Média {{value}}",
+    "caption": {
+      "week_one": "{{metric}} esta semana · vs. média de {{count}} semana",
+      "week_other": "{{metric}} esta semana · vs. média de {{count}} semanas",
+      "month_one": "{{metric}} este mês · vs. média de {{count}} mês",
+      "month_other": "{{metric}} este mês · vs. média de {{count}} meses"
+    }
+  },
+  "distribution": {
+    "reference_one": "Referência: {{count}}",
+    "reference_other": "Referência: {{count}}"
+  },
+  "history": {
+    "title": "Chats anteriores",
+    "select": "Selecionar",
+    "selected_one": "{{count}} selecionado",
+    "selected_other": "{{count}} selecionados",
+    "delete": "Eliminar",
+    "deleteConfirm_one": "Eliminar {{count}} chat",
+    "deleteConfirm_other": "Eliminar {{count}} chats",
+    "search": "Pesquisar chats",
+    "empty": "Ainda sem chats. Faz a tua primeira pergunta ao coach.",
+    "noResults": "Nenhum chat encontrado.",
+    "today": "Hoje",
+    "thisWeek": "Esta semana"
+  },
+  "errors": {
+    "offline": {
+      "title": "Sem ligação",
+      "message": "O coach precisa de internet. A tua pergunta fica no campo de texto."
+    },
+    "limitDaily": {
+      "title": "Limite diário atingido",
+      "message": "Já fizeste {{count}} perguntas hoje. Podes voltar a perguntar a partir das {{time}}."
+    },
+    "limitMonthly": {
+      "title": "Limite mensal atingido",
+      "message": "Fizeste {{count}} perguntas nos últimos 30 dias. Podes voltar a perguntar a partir de {{date}}."
+    },
+    "failed": {
+      "title": "Sem resposta",
+      "message": "O coach não conseguiu responder agora. Tenta novamente."
+    },
+    "refused": {
+      "title": "Sem resposta",
+      "message": "O coach não pode responder a esta pergunta. Tenta formulá-la de outra forma."
+    },
+    "tooYoung": {
+      "title": "A partir dos 16",
+      "message": "Podes usar o coach a partir dos 16 anos."
+    }
+  },
+  "settings": {
+    "label": "Enviar dados à OpenAI",
+    "description": "Transmitir os teus dados de treino e de peso à OpenAI para que o coach possa responder. Ao desativar, retiras o teu consentimento."
+  }
+}

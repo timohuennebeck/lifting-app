@@ -199,7 +199,7 @@ export function BodyScreen() {
   };
 
   return (
-    <TabScreen>
+    <TabScreen page>
       {loading ? null : (
         // A check starts from the next check's card or row whenever the user wants; the first from
         // the empty state. Under-18s get no new checks.

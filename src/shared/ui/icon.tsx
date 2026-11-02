@@ -115,6 +115,23 @@ const ICONS = {
     viewBox: '0 0 14 14',
     render: (c) => <Rect x={2} y={2} width={10} height={10} rx={1.5} fill={c} />,
   },
+  // The coach's earlier chats.
+  clock: {
+    viewBox: '0 0 18 18',
+    render: (c) => (
+      <>
+        <Circle cx={9} cy={9} r={6.5} stroke={c} strokeWidth={1.8} fill="none" />
+        <Path
+          d="M9 5.5V9l2.5 1.5"
+          stroke={c}
+          strokeWidth={1.8}
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </>
+    ),
+  },
   search: {
     viewBox: '0 0 16 16',
     render: (c) => (

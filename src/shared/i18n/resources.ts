@@ -1,5 +1,6 @@
 import deAuth from './locales/de/auth.json';
 import deBody from './locales/de/body.json';
+import deCoach from './locales/de/coach.json';
 import deCommon from './locales/de/common.json';
 import deExercises from './locales/de/exercises.json';
 import deMuscles from './locales/de/muscles.json';
@@ -16,6 +17,7 @@ import deWeight from './locales/de/weight.json';
 import deWorkout from './locales/de/workout.json';
 import enAuth from './locales/en/auth.json';
 import enBody from './locales/en/body.json';
+import enCoach from './locales/en/coach.json';
 import enCommon from './locales/en/common.json';
 import enExercises from './locales/en/exercises.json';
 import enMuscles from './locales/en/muscles.json';
@@ -32,6 +34,7 @@ import enWeight from './locales/en/weight.json';
 import enWorkout from './locales/en/workout.json';
 import koAuth from './locales/ko/auth.json';
 import koBody from './locales/ko/body.json';
+import koCoach from './locales/ko/coach.json';
 import koCommon from './locales/ko/common.json';
 import koExercises from './locales/ko/exercises.json';
 import koMuscles from './locales/ko/muscles.json';
@@ -48,6 +51,7 @@ import koWeight from './locales/ko/weight.json';
 import koWorkout from './locales/ko/workout.json';
 import ptBRAuth from './locales/pt-BR/auth.json';
 import ptBRBody from './locales/pt-BR/body.json';
+import ptBRCoach from './locales/pt-BR/coach.json';
 import ptBRCommon from './locales/pt-BR/common.json';
 import ptBRExercises from './locales/pt-BR/exercises.json';
 import ptBRMuscles from './locales/pt-BR/muscles.json';
@@ -64,6 +68,7 @@ import ptBRWeight from './locales/pt-BR/weight.json';
 import ptBRWorkout from './locales/pt-BR/workout.json';
 import ptPTAuth from './locales/pt-PT/auth.json';
 import ptPTBody from './locales/pt-PT/body.json';
+import ptPTCoach from './locales/pt-PT/coach.json';
 import ptPTCommon from './locales/pt-PT/common.json';
 import ptPTExercises from './locales/pt-PT/exercises.json';
 import ptPTMuscles from './locales/pt-PT/muscles.json';
@@ -95,6 +100,7 @@ export const resources = {
     workout: enWorkout,
     muscles: enMuscles,
     body: enBody,
+    coach: enCoach,
     profile: enProfile,
     exercises: enExercises,
     weight: enWeight,
@@ -113,6 +119,7 @@ export const resources = {
     workout: deWorkout,
     muscles: deMuscles,
     body: deBody,
+    coach: deCoach,
     profile: deProfile,
     exercises: deExercises,
     weight: deWeight,
@@ -131,6 +138,7 @@ export const resources = {
     workout: ptPTWorkout,
     muscles: ptPTMuscles,
     body: ptPTBody,
+    coach: ptPTCoach,
     profile: ptPTProfile,
     exercises: ptPTExercises,
     weight: ptPTWeight,
@@ -149,6 +157,7 @@ export const resources = {
     workout: ptBRWorkout,
     muscles: ptBRMuscles,
     body: ptBRBody,
+    coach: ptBRCoach,
     profile: ptBRProfile,
     exercises: ptBRExercises,
     weight: ptBRWeight,
@@ -167,6 +176,7 @@ export const resources = {
     workout: koWorkout,
     muscles: koMuscles,
     body: koBody,
+    coach: koCoach,
     profile: koProfile,
     exercises: koExercises,
     weight: koWeight,

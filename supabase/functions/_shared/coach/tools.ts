@@ -73,8 +73,8 @@ export interface CalendarChart {
   type: 'calendar';
   from: string;
   to: string;
-  /** Training days with their number of workouts. */
-  days: Point[];
+  /** Training days with their number of workouts and sets (how bright the day shows). */
+  days: (Point & { sets: number })[];
 }
 
 export interface DistributionChart {
@@ -599,7 +599,12 @@ function calendar(args: Args, data: CoachData, user: CoachUser): ToolResult {
   // Weeks before the first workout don't count as missed.
   const range = { from: days[0] && days[0] > asked.from ? days[0] : asked.from, to: asked.to };
   const counts = new Map<string, number>();
-  for (const day of days) if (inRange(day, range)) counts.set(day, (counts.get(day) ?? 0) + 1);
+  const sets = new Map<string, number>();
+  data.workouts.forEach((workout, i) => {
+    if (!inRange(days[i], range)) return;
+    counts.set(days[i], (counts.get(days[i]) ?? 0) + 1);
+    sets.set(days[i], (sets.get(days[i]) ?? 0) + workoutSets(workout, data));
+  });
   const trained = [...counts.keys()].sort();
   const workouts = [...counts.values()].reduce((a, b) => a + b, 0);
   const weeks = (daysBetween(range.from, range.to) + 1) / 7;
@@ -645,7 +650,11 @@ function calendar(args: Args, data: CoachData, user: CoachUser): ToolResult {
       ? {
           type: 'calendar',
           ...range,
-          days: trained.map((date) => ({ date, value: counts.get(date)! })),
+          days: trained.map((date) => ({
+            date,
+            value: counts.get(date)!,
+            sets: sets.get(date) ?? 0,
+          })),
         }
       : null,
     result: {
