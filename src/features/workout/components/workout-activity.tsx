@@ -5,6 +5,7 @@ import {
   HStack,
   ProgressView,
   Image,
+  Rectangle,
   RoundedRectangle,
   Spacer,
   Text,
@@ -54,6 +55,7 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
   const MUTED = '#8C8C87';
   const CONTROL = '#262626';
   const TRACK = '#2E2E2C';
+  const ICON = '#F2F1EC';
   // As ACTIVITY_TARGETS.
   const TARGETS = {
     minus: 'workout-rest-minus',
@@ -89,6 +91,18 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
             ]}
           />
         </ZStack>
+      </VStack>
+    );
+  };
+
+  // The app icon's mark (assets/brand/loqqa-app-icon.svg: an L of two bars, 196 units tall),
+  // without its near-black ground, which the island's black stands in for.
+  const appIcon = (height: number) => {
+    const u = height / 196;
+    return (
+      <VStack alignment="leading" spacing={14 * u}>
+        <Rectangle modifiers={[foregroundStyle(ICON), frame({ width: 72 * u, height: 126 * u })]} />
+        <Rectangle modifiers={[foregroundStyle(ICON), frame({ width: 138 * u, height: 56 * u })]} />
       </VStack>
     );
   };
@@ -303,7 +317,6 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
   const header = (tight: boolean) => (resting ? restHeader : setHeader(tight));
   const body = (roomy: boolean) => (resting ? restBody(roomy) : setBody(roomy));
   const islandBody = body(false);
-  const dot = <Circle modifiers={[foregroundStyle(ACCENT), frame({ width: 10, height: 10 })]} />;
 
   return {
     banner: (
@@ -323,9 +336,9 @@ function WorkoutActivity(props: WorkoutActivityProps, environment: LiveActivityE
         {body(true)}
       </VStack>
     ),
-    compactLeading: resting ? stopwatch(15) : dot,
+    compactLeading: resting ? stopwatch(15) : appIcon(15),
     compactTrailing: resting ? countdown(15, 46, 'trailing') : elapsed(58),
-    minimal: resting ? stopwatch(15) : dot,
+    minimal: resting ? stopwatch(15) : appIcon(15),
     expandedLeading: <HStack modifiers={[padding({ leading: 6 })]}>{header(true)}</HStack>,
     expandedTrailing: resting ? null : (
       <HStack modifiers={[padding({ trailing: 6 })]}>{elapsed(72)}</HStack>
