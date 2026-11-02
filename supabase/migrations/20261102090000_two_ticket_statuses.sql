@@ -3,19 +3,8 @@
 -- next update") goes into a message instead of a status line. The version line on status
 -- changes ("Erscheint mit Update 1.4.3") goes with them.
 --
--- Deploy the support desk version without "planned", "resolved" and the version field before
--- this migration: older desks still send `version` when they change a status.
-
--- Existing history: a resolved ticket is closed; a "planned" line has no meaning left.
-delete from public.ticket_events where status = 'planned';
-update public.ticket_events set status = 'closed' where status = 'resolved';
-
--- The guard below only lets the support account change statuses, and a migration runs without
--- one, so it is off for these two updates.
-alter table public.tickets disable trigger guard_ticket_update;
-update public.tickets set status = 'open' where status = 'planned';
-update public.tickets set status = 'closed' where status = 'resolved';
-alter table public.tickets enable trigger guard_ticket_update;
+-- No real tickets exist yet, so nothing is converted: clear test tickets that use the old
+-- statuses before applying it (delete from public.tickets), or the new checks refuse them.
 
 alter table public.tickets drop constraint tickets_status_check;
 alter table public.tickets
