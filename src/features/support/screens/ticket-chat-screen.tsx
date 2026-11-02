@@ -10,6 +10,7 @@ import { useProfile } from '@/shared/data/profile';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { useNow } from '@/shared/hooks/use-now';
 import { MINUTE_MS } from '@/shared/lib/date';
+import { ChatHeaderTitle } from '@/shared/ui/chat-header-title';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
@@ -136,17 +137,11 @@ export function TicketChatScreen() {
         onBack={back}
         className="pt-1.5 pr-5 pb-2.5 pl-4"
         title={
-          <View className="flex-row items-center gap-3">
-            <TeamAvatar size={28} />
-            <View className="min-w-0 flex-1">
-              <Text variant="bodyStrong" numberOfLines={1} className="text-base leading-5">
-                {t('team')}
-              </Text>
-              <Text numberOfLines={1} className="font-inter text-xs text-subtle">
-                {t('teamReplyTime')}
-              </Text>
-            </View>
-          </View>
+          <ChatHeaderTitle
+            avatar={<TeamAvatar size={28} />}
+            title={t('team')}
+            subtitle={t('teamReplyTime')}
+          />
         }
         action={<View />}
       />

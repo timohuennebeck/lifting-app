@@ -1,13 +1,14 @@
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
+import { SectionList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
+import { CheckBadge } from '@/shared/ui/check-item';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
+import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
@@ -22,7 +23,7 @@ export interface ChatSummary {
 export interface ChatSection {
   key: string;
   title: string;
-  chats: ChatSummary[];
+  data: ChatSummary[];
 }
 
 export interface CoachHistoryViewProps {
@@ -38,18 +39,13 @@ export interface CoachHistoryViewProps {
   onDelete: () => void;
 }
 
-function CheckBox({ checked }: { checked: boolean }) {
-  return (
-    <View
-      className={cn(
-        'mt-px size-[22px] items-center justify-center rounded-full',
-        checked ? 'bg-accent' : 'border-2 border-outline',
-      )}
-    >
-      {checked ? <Icon name="check" size={12} color={colors.onAccent} /> : null}
-    </View>
+/** The box in front of a chat while choosing: the accent check once chosen. */
+const CheckBox = ({ checked }: { checked: boolean }) =>
+  checked ? (
+    <CheckBadge size={22} glyph={12} className="mt-px" />
+  ) : (
+    <View className="mt-px size-[22px] rounded-full border-2 border-outline" />
   );
-}
 
 interface RowProps {
   chat: ChatSummary;
@@ -102,76 +98,80 @@ export function CoachHistoryView({
   onToggle,
   onDelete,
 }: CoachHistoryViewProps) {
-  const { t } = useTranslation('coach');
+  const { t } = useTranslation(['coach', 'common']);
   const insets = useSafeAreaInsets();
   return (
-    <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-      {selecting ? (
-        <ScreenHeader
-          icon="close"
-          onBack={() => onSelecting(false)}
-          title={t('history.selected', { count: selected.size })}
-          action={
-            <PressableScale
-              haptic="tap"
-              disabled={!selected.size}
-              onPress={onDelete}
-              className={cn('h-10.5 justify-center px-1', !selected.size && 'opacity-35')}
-            >
-              <Text className="font-inter-semibold text-label text-red">{t('history.delete')}</Text>
-            </PressableScale>
-          }
-        />
-      ) : (
-        <ScreenHeader
-          onBack={onBack}
-          title={t('history.title')}
-          action={
-            <IconButton
-              icon="plus"
-              iconSize={14}
-              color={colors.onAccent}
-              accessibilityLabel={t('newChat')}
-              onPress={onNew}
-              className="bg-accent"
-            />
-          }
-        />
-      )}
-      <ScrollView
+    <Screen
+      header={
+        selecting ? (
+          <ScreenHeader
+            icon="close"
+            onBack={() => onSelecting(false)}
+            title={t('history.selected', { count: selected.size })}
+            action={
+              <PressableScale
+                haptic="tap"
+                disabled={!selected.size}
+                onPress={onDelete}
+                className={cn('h-10.5 justify-center px-1', !selected.size && 'opacity-35')}
+              >
+                <Text className="font-inter-semibold text-label text-red">
+                  {t('common:actions.delete')}
+                </Text>
+              </PressableScale>
+            }
+          />
+        ) : (
+          <ScreenHeader
+            onBack={onBack}
+            title={t('history.title')}
+            action={
+              <IconButton
+                icon="plus"
+                iconSize={14}
+                color={colors.onAccent}
+                accessibilityLabel={t('newChat')}
+                onPress={onNew}
+                className="bg-accent"
+              />
+            }
+          />
+        )
+      }
+    >
+      <SectionList
+        sections={sections}
+        keyExtractor={(chat) => chat.id}
+        // The rows draw again when the boxes come, go or change.
+        extraData={selecting ? selected : null}
+        stickySectionHeadersEnabled={false}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: insets.bottom + 24 }}
-      >
-        {!sections.length ? (
+        ListEmptyComponent={
           <Text className="pt-12 text-center font-inter text-label leading-[22px] text-subtle">
             {t('history.empty')}
           </Text>
-        ) : null}
-        {sections.map((section) => (
-          <View key={section.key}>
-            <View className="px-2 pt-[18px] pb-1">
-              <Text className="font-inter-semibold text-[11px] leading-[13px] tracking-[1.1px] text-dim uppercase">
-                {section.title}
-              </Text>
-            </View>
-            {section.chats.map((chat) => (
-              <ChatRow
-                key={chat.id}
-                chat={chat}
-                selecting={selecting}
-                checked={selected.has(chat.id)}
-                onPress={() => (selecting ? onToggle(chat.id) : onOpen(chat.id))}
-                onLongPress={() => {
-                  // The boxes appear with a tick, like any press.
-                  haptics.press();
-                  if (!selecting) onSelecting(true);
-                  onToggle(chat.id);
-                }}
-              />
-            ))}
-          </View>
-        ))}
-      </ScrollView>
-    </View>
+        }
+        renderSectionHeader={({ section }) => (
+          <Text className="px-2 pt-[18px] pb-1 font-inter-semibold text-[11px] leading-[13px] tracking-[1.1px] text-dim uppercase">
+            {section.title}
+          </Text>
+        )}
+        renderItem={({ item: chat }) => (
+          <ChatRow
+            chat={chat}
+            selecting={selecting}
+            checked={selected.has(chat.id)}
+            onPress={() => (selecting ? onToggle(chat.id) : onOpen(chat.id))}
+            onLongPress={() => {
+              // The boxes appear with a tick, like any press.
+              haptics.press();
+              if (!selecting) onSelecting(true);
+              onToggle(chat.id);
+            }}
+          />
+        )}
+      />
+    </Screen>
   );
 }

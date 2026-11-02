@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
+import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
@@ -36,23 +36,25 @@ export function CoachStartView({
   composer,
 }: CoachStartViewProps) {
   const { t } = useTranslation('coach');
-  const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
   const known = workouts > 0 && !!since;
   return (
-    <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-      <ScreenHeader
-        onBack={onBack}
-        title={t('title')}
-        action={
-          <IconButton
-            icon="clock"
-            iconSize={18}
-            accessibilityLabel={t('history.title')}
-            onPress={onHistory}
-          />
-        }
-      />
+    <Screen
+      header={
+        <ScreenHeader
+          onBack={onBack}
+          title={t('title')}
+          action={
+            <IconButton
+              icon="clock"
+              iconSize={18}
+              accessibilityLabel={t('history.title')}
+              onPress={onHistory}
+            />
+          }
+        />
+      }
+    >
       {/* The field rides up with the keyboard and pushes the text up with it, still centred. */}
       <KeyboardAvoidingView
         behavior="padding"
@@ -102,6 +104,6 @@ export function CoachStartView({
           <CoachComposer {...composer} />
         </View>
       </KeyboardAvoidingView>
-    </View>
+    </Screen>
   );
 }

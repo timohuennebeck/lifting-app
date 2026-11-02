@@ -1,9 +1,8 @@
 {
   "title": "Kai · AI coach",
   "newChat": "New chat",
-  "consent": "For its answers, your training and weight data go to an AI model by OpenAI in the USA. Sending your first question is your consent.",
+  "consent": "For its answers, your training and body data (workouts, weight, body check scores) go to an AI model by OpenAI in the USA. Sending your first question is your consent.",
   "card": {
-    "label": "Kai · AI coach",
     "prompt": "Ask me about your training"
   },
   "composer": {
@@ -105,7 +104,6 @@
     "title": "Earlier chats",
     "selected_one": "{{count}} selected",
     "selected_other": "{{count}} selected",
-    "delete": "Delete",
     "deleteSheet": {
       "title_one": "Delete chat?",
       "title_other": "Delete {{count}} chats?",
@@ -151,6 +149,6 @@
   },
   "settings": {
     "label": "Share data with OpenAI",
-    "description": "Send your training and weight data to OpenAI so Kai can answer. Off withdraws your consent."
+    "description": "Send your training and body data (workouts, weight, body check scores) to OpenAI so Kai can answer. Off withdraws your consent."
   }
 }

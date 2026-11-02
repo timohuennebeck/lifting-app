@@ -12,8 +12,9 @@ the production app (`APP_VARIANT=production`, `eas.json`), whose values live in 
 ## Where things go
 
 - `src/app/**`: Expo Router routes only (typed routes, NativeTabs); screen files re-export a
-  screen from `src/features/<feature>/screens/`, `_layout.tsx` files set up the navigators. The
-  plan flow is mounted twice: `(onboarding)/` and `(app)/plan/`.
+  screen from `src/features/<feature>/screens/`, `_layout.tsx` files set up the navigators. Tab
+  routes wrap theirs in `withQueryFocus`, so a hidden tab's queries pause. The plan flow is
+  mounted twice: `(onboarding)/` and `(app)/plan/`.
 - `src/features/<feature>/{components,screens,data,hooks,lib,stores}`: code one feature uses.
 - `src/shared/`: code several features use. `ui` holds presentational primitives, `components`
   app-level composed pieces, `data` the shared data layer; then `hooks`, `lib`, `stores`, `i18n`,

@@ -4,7 +4,7 @@ import type { SetValues } from '@/shared/lib/format';
  * A set's estimated one-rep max in kg, as the records rank sets (Epley: weight × (1 + reps / 30));
  * null without weight or reps.
  */
-export function oneRepMaxKg({ weightKg, reps }: Pick<SetValues, 'weightKg' | 'reps'>) {
+function oneRepMaxKg({ weightKg, reps }: Pick<SetValues, 'weightKg' | 'reps'>) {
   if (!weightKg || !reps) return null;
   return weightKg * (1 + reps / 30);
 }

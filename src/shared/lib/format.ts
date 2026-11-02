@@ -125,6 +125,13 @@ export function dateFieldOrder() {
 export const formatMonthName = (month: number) =>
   formatDate(new Date(2000, month - 1, 1), { month: 'long' });
 
+/** "Oktober", or "Oktober 2025" when it is not in `currentYear`. */
+export const formatMonthYear = (date: Date, currentYear: number) =>
+  formatDate(date, {
+    month: 'long',
+    ...(date.getFullYear() !== currentYear && { year: 'numeric' }),
+  });
+
 /** "14. September 2028", "September 14, 2028" or "14 de setembro de 2028" */
 export const formatLongDate = (date: Date) =>
   formatDate(date, { day: 'numeric', month: 'long', year: 'numeric' });

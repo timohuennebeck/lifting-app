@@ -5,7 +5,6 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MuscleSplit } from '@/features/muscles/components/muscle-split';
-import { workoutMuscleSplit } from '@/shared/data/muscle-groups';
 import { useUnits } from '@/shared/data/profile';
 import { attempt } from '@/shared/lib/async';
 import { minutesBetween } from '@/shared/lib/date';
@@ -13,16 +12,20 @@ import { formatNumber, formatShortDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
+import { DeleteSheet } from '@/shared/ui/delete-sheet';
 import { IconButton } from '@/shared/ui/icon-button';
 import { MuscleMap } from '@/shared/ui/muscle-map';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
-import { DoneExerciseCard } from '../components/done-exercise-card';
 import { RecordCard } from '../components/record-card';
+import {
+  DoneExercises,
+  doneExercises,
+  doneMuscleSplit,
+} from '../components/summary/done-exercises';
 import { WorkoutStory } from '../components/summary/workout-story';
-import { WorkoutOptionsSheet } from '../components/workout-options-sheet';
 import { useWorkout } from '../data/workout-detail';
 import { discardWorkout } from '../data/workout-mutations';
 import { useWorkoutRecords } from '../data/workout-records';
@@ -45,7 +48,7 @@ interface WorkoutSummaryPageProps {
  * with the sets that were done, then each new record. Its "⋯" deletes it.
  */
 function WorkoutSummaryPage({ id }: WorkoutSummaryPageProps) {
-  const { t } = useTranslation(['workout', 'common', 'training']);
+  const { t } = useTranslation(['workout', 'common']);
   const insets = useSafeAreaInsets();
   const units = useUnits();
   const { data: workout } = useWorkout(id);
@@ -65,15 +68,8 @@ function WorkoutSummaryPage({ id }: WorkoutSummaryPageProps) {
     if (await attempt('Deleting the workout failed', () => discardWorkout(id))) haptics.success();
   };
   // Only the sets that were done count.
-  const { primary, secondary } = workoutMuscleSplit(
-    (workout?.exercises ?? []).map((e) => ({
-      exerciseId: e.exerciseId,
-      sets: e.sets.filter((s) => s.completedAt).length,
-    })),
-  );
-  const done = (workout?.exercises ?? [])
-    .map((e) => ({ ...e, sets: e.sets.filter((s) => s.completedAt) }))
-    .filter((e) => e.sets.length);
+  const done = doneExercises(workout?.exercises ?? []);
+  const { primary, secondary } = doneMuscleSplit(done);
   const primaryIds = primary.map((s) => s.muscle);
   const secondaryIds = secondary.map((s) => s.muscle);
 
@@ -130,24 +126,7 @@ function WorkoutSummaryPage({ id }: WorkoutSummaryPageProps) {
             ))}
           </View>
           <MuscleSplit primary={primary} secondary={secondary} className="px-4 pt-6" />
-          {done.length ? (
-            <View className="px-5 pt-9">
-              <Text variant="headline">
-                {t('training:overview.exercises', { count: done.length })}
-              </Text>
-              <View className="pt-1">
-                {done.map((e) => (
-                  <DoneExerciseCard
-                    key={e.id}
-                    exerciseId={e.exerciseId}
-                    sets={e.sets}
-                    units={units}
-                    recordSetId={records.find((r) => e.sets.some((s) => s.id === r.setId))?.setId}
-                  />
-                ))}
-              </View>
-            </View>
-          ) : null}
+          <DoneExercises done={done} records={records} units={units} />
           {records.length ? (
             <View className="gap-2.5 px-4 pt-9">
               {records.map((r) => (
@@ -160,12 +139,13 @@ function WorkoutSummaryPage({ id }: WorkoutSummaryPageProps) {
           <Button label={t('common:actions.done')} onPress={close} />
         </BottomFade>
       </Screen>
-      <WorkoutOptionsSheet
+      <DeleteSheet
         visible={menuOpen}
         onClose={() => setMenuOpen(false)}
-        name={name}
+        title={name}
         subtitle={`${date} · ${formatNumber(minutes, 0)} ${t('common:units.minShort')}`}
-        date={date}
+        option={t('summary.delete')}
+        description={t('summary.deleteHint', { name, date })}
         onDelete={remove}
       />
     </View>

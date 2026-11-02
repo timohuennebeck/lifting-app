@@ -8,6 +8,7 @@ import {
   isNotNull,
   isNull,
   lt,
+  min,
   or,
   sql,
   type SQL,
@@ -32,7 +33,7 @@ import {
   workoutEntriesSets,
 } from './powersync/schema';
 import { queryKeys } from './query-keys';
-import { firstCount, type RowOf, useDrizzleQuery } from './use-drizzle-query';
+import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /**
  * The user's latest body weight, for bodyweight and assisted sets where the logged weight is
@@ -113,6 +114,24 @@ export interface WorkoutSummary {
   setCount: number;
 }
 
+/**
+ * Completed sets of the workout in the outer query. A correlated count keeps to the indexes: a
+ * LEFT JOIN through PowerSync's views reads every set for each workout.
+ */
+const completedSets = sql<number>`${drizzle
+  .select({ count: count() })
+  .from(workoutEntriesSets)
+  .innerJoin(
+    workoutEntriesExercises,
+    eq(workoutEntriesExercises.id, workoutEntriesSets.workout_entries_exercise_id),
+  )
+  .where(
+    and(
+      eq(workoutEntriesExercises.workout_entries_id, workoutEntries.id),
+      isNotNull(workoutEntriesSets.completed_at),
+    ),
+  )}`;
+
 /** Finished workouts matching `where`, newest first, with their completed set counts. */
 const workoutSummaryQuery = (where?: SQL) =>
   drizzle
@@ -121,22 +140,10 @@ const workoutSummaryQuery = (where?: SQL) =>
       name: workoutEntries.name,
       started_at: workoutEntries.started_at,
       finished_at: workoutEntries.finished_at,
-      sets: count(workoutEntriesSets.id),
+      sets: completedSets,
     })
     .from(workoutEntries)
-    .leftJoin(
-      workoutEntriesExercises,
-      eq(workoutEntriesExercises.workout_entries_id, workoutEntries.id),
-    )
-    .leftJoin(
-      workoutEntriesSets,
-      and(
-        eq(workoutEntriesSets.workout_entries_exercise_id, workoutEntriesExercises.id),
-        isNotNull(workoutEntriesSets.completed_at),
-      ),
-    )
     .where(and(isNotNull(workoutEntries.finished_at), where))
-    .groupBy(workoutEntries.id)
     .orderBy(desc(workoutEntries.started_at));
 
 const toSummaries = (rows: RowOf<typeof workoutSummaryQuery>[]) =>
@@ -176,15 +183,23 @@ export function useWorkoutHistory(limit: number) {
   });
 }
 
-/** Number of finished workouts. */
-export function useWorkoutCount() {
+const workoutStatsQuery = () =>
+  drizzle
+    .select({ count: count(), first: min(workoutEntries.started_at) })
+    .from(workoutEntries)
+    .where(isNotNull(workoutEntries.finished_at));
+
+const toWorkoutStats = (rows: RowOf<typeof workoutStatsQuery>[]) => ({
+  count: rows[0]?.count ?? 0,
+  first: rows[0]?.first ?? null,
+});
+
+/** How many workouts are finished and when the first of them started. */
+export function useWorkoutStats() {
   return useDrizzleQuery({
-    queryKey: queryKeys.workouts.count.queryKey,
-    query: drizzle
-      .select({ count: count() })
-      .from(workoutEntries)
-      .where(isNotNull(workoutEntries.finished_at)),
-    map: firstCount,
+    queryKey: queryKeys.workouts.stats.queryKey,
+    query: workoutStatsQuery(),
+    map: toWorkoutStats,
   });
 }
 

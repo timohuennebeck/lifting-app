@@ -1,9 +1,8 @@
 {
   "title": "카이 · AI 코치",
   "newChat": "새 채팅",
-  "consent": "답변을 위해 운동 및 체중 데이터가 미국에 있는 OpenAI의 AI 모델로 전송돼요. 첫 질문을 보내면 이에 동의하게 돼요.",
+  "consent": "답변을 위해 운동 및 신체 데이터(운동 기록, 체중, 바디 체크 점수)가 미국에 있는 OpenAI의 AI 모델로 전송돼요. 첫 질문을 보내면 이에 동의하게 돼요.",
   "card": {
-    "label": "카이 · AI 코치",
     "prompt": "운동에 대해 물어보세요"
   },
   "composer": {
@@ -105,7 +104,6 @@
     "title": "이전 채팅",
     "selected_one": "{{count}}개 선택됨",
     "selected_other": "{{count}}개 선택됨",
-    "delete": "삭제",
     "deleteSheet": {
       "title_one": "채팅을 삭제할까요?",
       "title_other": "채팅 {{count}}개를 삭제할까요?",
@@ -151,6 +149,6 @@
   },
   "settings": {
     "label": "OpenAI에 데이터 전송",
-    "description": "카이가 답변할 수 있도록 운동 및 체중 데이터를 OpenAI로 전송해요. 끄면 동의가 철회돼요."
+    "description": "카이가 답변할 수 있도록 운동 및 신체 데이터(운동 기록, 체중, 바디 체크 점수)를 OpenAI로 전송해요. 끄면 동의가 철회돼요."
   }
 }

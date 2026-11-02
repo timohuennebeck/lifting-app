@@ -12,8 +12,10 @@ import {
   formatAxisValue,
   formatChange,
   formatValue,
+  linePath,
   niceTicks,
   type TrendChart as TrendChartData,
+  yScale,
 } from '../../lib/charts';
 import { Headline, monthLabel, TimeAxis, timeLabels, useWidth } from './chart-parts';
 
@@ -24,6 +26,8 @@ const AXIS = 40;
 const PAD = 12;
 /** So the end markers show whole at the edges. */
 const X_PAD = 6;
+/** Radius of a weigh-in's dot. */
+const DOT = 2.2;
 
 /**
  * One value over time (design CO3·1 "Verlauf"): body weight as grey measurements with the neon
@@ -45,9 +49,13 @@ export function TrendChart({ chart }: { chart: TrendChartData }) {
   const plotWidth = Math.max(0, width - AXIS);
   const x = (p: ChartPoint) =>
     X_PAD + (daysBetween(first.date, p.date) / span) * (plotWidth - 2 * X_PAD);
-  const y = (value: number) =>
-    max === min ? HEIGHT / 2 : HEIGHT - PAD - ((value - min) / (max - min)) * (HEIGHT - 2 * PAD);
-  const path = line.map((p, i) => `${i ? 'L' : 'M'}${x(p).toFixed(1)} ${y(p.value).toFixed(1)}`);
+  const y = yScale(min, max, HEIGHT, PAD);
+  const path = linePath(line, x, (p) => y(p.value));
+  // Each weigh-in's dot as two half circles from its left edge, all in one path.
+  const dot = `a${DOT} ${DOT} 0 1 0 ${2 * DOT} 0a${DOT} ${DOT} 0 1 0 ${-2 * DOT} 0`;
+  const dots = chart.line
+    ? chart.points.map((p) => `M${(x(p) - DOT).toFixed(1)} ${y(p.value).toFixed(1)}${dot}`).join('')
+    : '';
 
   const caption =
     chart.metric === 'body_weight'
@@ -71,13 +79,10 @@ export function TrendChart({ chart }: { chart: TrendChartData }) {
             <>
               <Svg width={plotWidth} height={HEIGHT}>
                 <ChartGrid id="coach-trend" width={plotWidth} height={HEIGHT} />
-                {chart.line
-                  ? chart.points.map((p) => (
-                      <Circle key={p.date} cx={x(p)} cy={y(p.value)} r={2.2} fill={colors.dim} />
-                    ))
-                  : null}
+                {/* The weigh-ins: one shape for all of them, however many. */}
+                {dots ? <Path d={dots} fill={colors.dim} /> : null}
                 <Path
-                  d={path.join(' ')}
+                  d={path}
                   stroke={colors.accent}
                   strokeWidth={2.5}
                   fill="none"

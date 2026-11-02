@@ -8,7 +8,7 @@ import { OpenTicketsSection } from '@/features/support/components/open-tickets-s
 import { ProfileAvatar } from '@/shared/components/profile-avatar';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useProfile } from '@/shared/data/profile';
-import { useWorkoutCount, useWorkoutHistory } from '@/shared/data/workouts';
+import { useWorkoutHistory, useWorkoutStats } from '@/shared/data/workouts';
 import { formatDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
@@ -47,7 +47,7 @@ export function ProfileScreen() {
   const uploading = !!local && !local.path;
   const [visible, setVisible] = useState(PAGE);
   const { data: history = [] } = useWorkoutHistory(visible);
-  const { data: workoutCount = 0 } = useWorkoutCount();
+  const workoutCount = useWorkoutStats().data?.count ?? 0;
   const name = profile?.firstName ?? '';
 
   async function onAvatarAction(action: AvatarAction) {

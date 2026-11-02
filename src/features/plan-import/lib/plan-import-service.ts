@@ -7,6 +7,7 @@ import { env } from '@/shared/config/env';
 import type { CustomExercise } from '@/shared/data/exercises';
 import { clampSessions, type PlanDraft, type RoutineDraft } from '@/shared/data/plans';
 import type { ExerciseDraft } from '@/shared/data/routines';
+import { readServerEvents } from '@/shared/lib/server-events';
 
 export interface ImportPhoto {
   uri: string;
@@ -187,35 +188,26 @@ export async function streamPlan(
     throw new ImportError(serverFailure(text));
   }
 
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = '';
-  for (;;) {
-    const { value, done } = await reader.read().catch((error: unknown) => {
-      stopIfAborted(signal);
-      console.warn(`${fn} broke off`, error);
-      throw new ImportError('offline');
-    });
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    // Server-sent events: one `data:` line each, separated by a blank line.
-    let end: number;
-    while ((end = buffer.indexOf('\n\n')) >= 0) {
-      const line = buffer.slice(0, end);
-      buffer = buffer.slice(end + 2);
-      if (!line.startsWith('data:')) continue;
-      const event = JSON.parse(line.slice(5)) as
-        PlanEvent | { type: 'done' } | { type: 'error'; error: string };
-      if (event.type === 'done') return;
+  const done = await readServerEvents<
+    PlanEvent | { type: 'done' } | { type: 'error'; error: string }
+  >(
+    response.body,
+    (event) => {
+      if (event.type === 'done') return true;
       if (event.type === 'error') {
         console.warn(`${fn} stopped: ${event.error}`);
         throw new ImportError(SERVER_ERRORS[event.error] ?? 'failed');
       }
       onEvent(event);
-    }
-  }
+    },
+    (error) => {
+      stopIfAborted(signal);
+      console.warn(`${fn} broke off`, error);
+      throw new ImportError('offline');
+    },
+  );
   // Ended without "done": the function stopped halfway.
-  throw new ImportError('failed');
+  if (!done) throw new ImportError('failed');
 }
 
 /**

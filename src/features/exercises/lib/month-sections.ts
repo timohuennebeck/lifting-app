@@ -1,4 +1,4 @@
-import { formatDate } from '@/shared/lib/format';
+import { formatMonthYear } from '@/shared/lib/format';
 
 interface MonthSection<T> {
   key: string;
@@ -14,11 +14,7 @@ export function monthSections<T extends { startedAt: string }>(
 ): MonthSection<T>[] {
   const sections: MonthSection<T>[] = [];
   for (const item of items) {
-    const date = new Date(item.startedAt);
-    const title = formatDate(date, {
-      month: 'long',
-      ...(date.getFullYear() !== currentYear && { year: 'numeric' }),
-    }).toUpperCase();
+    const title = formatMonthYear(new Date(item.startedAt), currentYear).toUpperCase();
     const section = sections.at(-1);
     if (section?.title === title) section.data.push(item);
     else sections.push({ key: title, title, data: [item] });

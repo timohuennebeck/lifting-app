@@ -1,4 +1,4 @@
-import { and, asc, count, eq, isNotNull, isNull, max, type SQL } from 'drizzle-orm';
+import { and, asc, count, eq, isNotNull, isNull, max, type SQL, sql } from 'drizzle-orm';
 
 import { getOrInsert } from '@/shared/lib/map';
 
@@ -130,7 +130,10 @@ export function estimateMinutes(items: ExerciseItem[]) {
   return Math.round(seconds / 60);
 }
 
-/** One row per routine exercise (or per empty routine) with its set count. */
+/**
+ * One row per routine exercise (or per empty routine) with its set count. The count is a
+ * correlated subquery: a LEFT JOIN of the sets through PowerSync's views reads all of them.
+ */
 const routineListQuery = () =>
   drizzle
     .select({
@@ -139,13 +142,14 @@ const routineListQuery = () =>
       plan_id: routines.plan_id,
       exercise_id: routineExercises.exercise_id,
       rest_seconds: routineExercises.rest_seconds,
-      set_count: count(routineSets.id),
+      set_count: sql<number>`${drizzle
+        .select({ count: count() })
+        .from(routineSets)
+        .where(eq(routineSets.routine_exercise_id, routineExercises.id))}`,
     })
     .from(routines)
     .leftJoin(plans, eq(plans.id, routines.plan_id))
     .leftJoin(routineExercises, eq(routineExercises.routine_id, routines.id))
-    .leftJoin(routineSets, eq(routineSets.routine_exercise_id, routineExercises.id))
-    .groupBy(routines.id, routineExercises.id)
     .orderBy(plans.position, routines.position, routineExercises.position);
 
 export interface RoutineSummary {

@@ -391,5 +391,4 @@ export type ProgressCheckRecord = typeof progressChecks.$inferSelect;
 export type CustomExerciseRecord = typeof customExercises.$inferSelect;
 export type WeightEntryRecord = typeof weightEntries.$inferSelect;
 export type TicketRecord = typeof tickets.$inferSelect;
-export type TicketMessageRecord = typeof ticketMessages.$inferSelect;
 export type TicketEventRecord = typeof ticketEvents.$inferSelect;

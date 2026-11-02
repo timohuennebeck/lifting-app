@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+import { resetCoach } from '@/features/coach/stores/coach-store';
 import { clearLocalPhotos } from '@/features/progress-check/lib/photo-files';
 import { useProgressCheckStore } from '@/features/progress-check/stores/progress-check-store';
 import { useCompareStore } from '@/features/body/stores/compare-store';
@@ -72,6 +73,8 @@ export function useAuthListener() {
         // And the muscle levels last seen on the Level tab.
         useLevelSeenStore.getState().reset();
         useRankLiftStore.getState().reset();
+        // An answer from Kai still coming in, and the chat it shows.
+        resetCoach();
         // Events after this belong to whoever uses the app next.
         resetAnalytics();
         // The next Google sign-in asks for the account again instead of reusing this one.

@@ -1,1 +1,4 @@
-export { BodyScreen as default } from '@/features/body/screens/body-screen';
+import { BodyScreen } from '@/features/body/screens/body-screen';
+import { withQueryFocus } from '@/shared/data/query-focus';
+
+export default withQueryFocus(BodyScreen);

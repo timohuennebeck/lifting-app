@@ -1,9 +1,8 @@
 {
   "title": "Kai · Coach IA",
   "newChat": "Novo chat",
-  "consent": "Para as respostas, seus dados de treino e de peso são transferidos para um modelo de IA da OpenAI, nos EUA. Ao enviar sua primeira pergunta, você consente com isso.",
+  "consent": "Para as respostas, seus dados de treino e corporais (treinos, peso, valores dos checks corporais) são transferidos para um modelo de IA da OpenAI, nos EUA. Ao enviar sua primeira pergunta, você consente com isso.",
   "card": {
-    "label": "Kai · Coach IA",
     "prompt": "Me pergunte sobre o seu treino"
   },
   "composer": {
@@ -105,7 +104,6 @@
     "title": "Chats anteriores",
     "selected_one": "{{count}} selecionado",
     "selected_other": "{{count}} selecionados",
-    "delete": "Excluir",
     "deleteSheet": {
       "title_one": "Excluir chat?",
       "title_other": "Excluir {{count}} chats?",
@@ -151,6 +149,6 @@
   },
   "settings": {
     "label": "Enviar dados para a OpenAI",
-    "description": "Transferir seus dados de treino e de peso para a OpenAI para que o Kai possa responder. Ao desativar, você revoga seu consentimento."
+    "description": "Transferir seus dados de treino e corporais (treinos, peso, valores dos checks corporais) para a OpenAI para que o Kai possa responder. Ao desativar, você revoga seu consentimento."
   }
 }

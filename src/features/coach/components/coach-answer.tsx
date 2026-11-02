@@ -10,7 +10,7 @@ import { TrendChart } from './charts/trend-chart';
 import { CoachMark } from './coach-mark';
 
 /** The chart under an answer, by its kind. */
-export function AnswerChart({ chart }: { chart: CoachChart }) {
+function AnswerChart({ chart }: { chart: CoachChart }) {
   switch (chart.type) {
     case 'trend':
       return <TrendChart chart={chart} />;

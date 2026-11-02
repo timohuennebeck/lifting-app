@@ -10,7 +10,14 @@ import { colors } from '@/shared/lib/theme';
 import { ChartGrid } from '@/shared/ui/chart-grid';
 import { Text } from '@/shared/ui/text';
 
-import { type CompareChart as CompareChartData, formatChange, formatValue } from '../../lib/charts';
+import {
+  type CompareChart as CompareChartData,
+  formatAxisValue,
+  formatChange,
+  formatValue,
+  linePath,
+  yScale,
+} from '../../lib/charts';
 import { monthLabel, TimeAxis, useWidth } from './chart-parts';
 
 const HEIGHT = 170;
@@ -91,29 +98,32 @@ function ExerciseRow({ exerciseId, color, from, to, change, first }: RowProps) {
 export function CompareChart({ chart }: { chart: CompareChartData }) {
   const { t } = useTranslation('coach');
   const [width, onLayout] = useWidth();
-  const series = chart.series.filter((s) => s.points.length);
+  // Each exercise with its colours and the values it is drawn at.
+  const series = chart.series
+    .filter((s) => s.points.length)
+    .map((s, i) => ({
+      ...s,
+      colors: SERIES[i % SERIES.length],
+      shown: valuesOf(
+        s.points.map((p) => p.value),
+        chart.asPercent,
+      ),
+    }));
   if (!series.length) return null;
   const dates = series.flatMap((s) => s.points.map((p) => p.date)).sort();
   const firstDay = dates[0];
   const lastDay = dates.at(-1)!;
   const span = Math.max(1, daysBetween(firstDay, lastDay));
-  const shown = series.map((s) =>
-    valuesOf(
-      s.points.map((p) => p.value),
-      chart.asPercent,
-    ),
-  );
-  const all = shown.flat();
+  const all = series.flatMap((s) => s.shown);
   const min = Math.min(...all);
   const max = Math.max(...all);
   const plotWidth = Math.max(0, width - LABELS);
   const x = (date: string) => 4 + (daysBetween(firstDay, date) / span) * (plotWidth - 8);
-  const y = (v: number) =>
-    max === min ? HEIGHT / 2 : HEIGHT - PAD - ((v - min) / (max - min)) * (HEIGHT - 2 * PAD);
+  const y = yScale(min, max, HEIGHT, PAD);
 
   // Each line's end label, moved apart where they would overlap.
   const labels = series
-    .map((s, i) => ({ i, top: y(shown[i].at(-1)!) - 14 }))
+    .map((s, i) => ({ i, top: y(s.shown.at(-1)!) - 14 }))
     .sort((a, b) => a.top - b.top);
   labels.forEach((label, k) => {
     if (k > 0) label.top = Math.max(label.top, labels[k - 1].top + LABEL_GAP);
@@ -131,41 +141,33 @@ export function CompareChart({ chart }: { chart: CompareChartData }) {
             <>
               <Svg width={plotWidth} height={HEIGHT}>
                 <ChartGrid id="coach-compare" width={plotWidth} height={HEIGHT} />
-                {series.map((s, i) => {
-                  const color = SERIES[i % SERIES.length].line;
-                  const d = s.points
-                    .map(
-                      (p, k) =>
-                        `${k ? 'L' : 'M'}${x(p.date).toFixed(1)} ${y(shown[i][k]).toFixed(1)}`,
-                    )
-                    .join(' ');
-                  return (
-                    <Path
-                      key={s.exerciseId}
-                      d={d}
-                      stroke={color}
-                      strokeWidth={2.5}
-                      fill="none"
-                      strokeLinejoin="round"
-                      strokeLinecap="round"
-                    />
-                  );
-                })}
+                {series.map((s) => (
+                  <Path
+                    key={s.exerciseId}
+                    d={linePath(
+                      s.points,
+                      (p) => x(p.date),
+                      (_, k) => y(s.shown[k]),
+                    )}
+                    stroke={s.colors.line}
+                    strokeWidth={2.5}
+                    fill="none"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                  />
+                ))}
                 {/* The end markers after all lines, so none is drawn over. */}
-                {series.map((s, i) => {
-                  const end = s.points.at(-1)!;
-                  return (
-                    <Circle
-                      key={`end${s.exerciseId}`}
-                      cx={x(end.date)}
-                      cy={y(shown[i].at(-1)!)}
-                      r={4.5}
-                      fill={colors.bg}
-                      stroke={SERIES[i % SERIES.length].line}
-                      strokeWidth={2.5}
-                    />
-                  );
-                })}
+                {series.map((s) => (
+                  <Circle
+                    key={`end${s.exerciseId}`}
+                    cx={x(s.points.at(-1)!.date)}
+                    cy={y(s.shown.at(-1)!)}
+                    r={4.5}
+                    fill={colors.bg}
+                    stroke={s.colors.line}
+                    strokeWidth={2.5}
+                  />
+                ))}
               </Svg>
               {labels.map(({ i, top }) => (
                 <View
@@ -175,8 +177,8 @@ export function CompareChart({ chart }: { chart: CompareChartData }) {
                 >
                   <ExerciseLabel
                     exerciseId={series[i].exerciseId}
-                    value={value(shown[i].at(-1)!)}
-                    color={SERIES[i % SERIES.length].label}
+                    value={value(series[i].shown.at(-1)!)}
+                    color={series[i].colors.label}
                   />
                 </View>
               ))}
@@ -194,8 +196,8 @@ export function CompareChart({ chart }: { chart: CompareChartData }) {
             <ExerciseRow
               key={s.exerciseId}
               exerciseId={s.exerciseId}
-              color={SERIES[i % SERIES.length].line}
-              from={formatValue(firstValue, chart.unit, t).replace(/\s\S+$/, '')}
+              color={s.colors.line}
+              from={formatAxisValue(firstValue, chart.unit)}
               to={formatValue(lastValue, chart.unit, t)}
               change={formatChange(firstValue ? (lastValue / firstValue - 1) * 100 : 0, '%', t)}
               first={i === 0}

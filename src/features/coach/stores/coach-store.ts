@@ -55,7 +55,9 @@ function apply(event: CoachEvent) {
   } else if (event.type === 'searched') {
     update({ progress: { ...pending.progress, searched: { of: event.of, count: event.count } } });
   } else if (event.type === 'found') {
-    update({ progress: { ...pending.progress, found: true }, chart: toChart(event.chart) });
+    // A later step without a chart (a look at single workouts) keeps the one drawn before.
+    const chart = toChart(event.chart) ?? pending.chart;
+    update({ progress: { ...pending.progress, found: true }, chart });
   } else if (event.type === 'text') {
     update({ text: pending.text + event.text });
   } else {
@@ -104,3 +106,13 @@ export async function ask(input: Omit<CoachQuestion, 'chatId'>) {
 }
 
 export const stopAnswer = () => controller?.abort();
+
+/** Whether an answer is still coming in. */
+export const isAnswering = (pending: PendingAnswer | null): pending is PendingAnswer =>
+  !!pending && !pending.done;
+
+/** Signing out: the answer in flight stops and the next account starts with a new chat. */
+export function resetCoach() {
+  stopAnswer();
+  useCoachStore.setState({ chatId: null, pending: null });
+}

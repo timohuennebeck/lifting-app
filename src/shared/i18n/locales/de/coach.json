@@ -1,9 +1,8 @@
 {
   "title": "Kai · KI-Coach",
   "newChat": "Neuer Chat",
-  "consent": "Für die Antworten gehen deine Trainings- und Gewichtsdaten an ein KI-Modell von OpenAI in den USA. Mit deiner ersten Frage willigst du ein.",
+  "consent": "Für die Antworten gehen deine Trainings- und Körperdaten (Trainings, Gewicht, Werte der Körperchecks) an ein KI-Modell von OpenAI in den USA. Mit deiner ersten Frage willigst du ein.",
   "card": {
-    "label": "Kai · KI-Coach",
     "prompt": "Frag mich zu deinem Training"
   },
   "composer": {
@@ -105,7 +104,6 @@
     "title": "Frühere Chats",
     "selected_one": "{{count}} ausgewählt",
     "selected_other": "{{count}} ausgewählt",
-    "delete": "Löschen",
     "deleteSheet": {
       "title_one": "Chat löschen?",
       "title_other": "{{count}} Chats löschen?",
@@ -151,6 +149,6 @@
   },
   "settings": {
     "label": "Daten an OpenAI senden",
-    "description": "Deine Trainings- und Gewichtsdaten an OpenAI senden, damit Kai antworten kann. Aus widerruft deine Einwilligung."
+    "description": "Deine Trainings- und Körperdaten (Trainings, Gewicht, Werte der Körperchecks) an OpenAI senden, damit Kai antworten kann. Aus widerruft deine Einwilligung."
   }
 }

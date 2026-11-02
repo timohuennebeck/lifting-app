@@ -1,16 +1,33 @@
 import { fetch } from 'expo/fetch';
 
 import { env } from '@/shared/config/env';
+import { parseJson } from '@/shared/data/json';
 import { supabase } from '@/shared/data/supabase';
+import { readServerEvents } from '@/shared/lib/server-events';
 
 import type { CoachChart } from './charts';
 
 /** Why there is no answer; each has its own message in coach.json (errors). */
 export type CoachFailure =
-  'offline' | 'limitDaily' | 'limitMonthly' | 'failed' | 'refused' | 'tooYoung' | 'notPro';
+  | 'offline'
+  | 'limitDaily'
+  | 'limitMonthly'
+  | 'failed'
+  | 'refused'
+  | 'tooYoung'
+  | 'notPro'
+  /** The consent was withdrawn (e.g. on another device): the next question asks again. */
+  | 'consent'
+  /** The chat was deleted (e.g. on another device). */
+  | 'chatGone';
 
 /** The function's error codes that have their own message. */
-const REFUSALS: Record<string, CoachFailure> = { too_young: 'tooYoung', not_pro: 'notPro' };
+const REFUSALS: Record<string, CoachFailure> = {
+  too_young: 'tooYoung',
+  not_pro: 'notPro',
+  consent_required: 'consent',
+  chat_not_found: 'chatGone',
+};
 
 export class CoachError extends Error {
   constructor(
@@ -89,42 +106,25 @@ export async function streamAnswer(
   if (!response.ok || !response.body) {
     const text = await response.text().catch(() => '');
     console.warn(`coach-chat answered ${response.status}: ${text.slice(0, 300)}`);
-    throw failureOf(response.status, parseBody(text));
+    throw failureOf(response.status, parseJson<ErrorBody>(text, {}));
   }
 
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = '';
-  for (;;) {
-    const { value, done } = await reader.read().catch((error: unknown) => {
-      if (!signal.aborted) console.warn('coach-chat broke off', error);
-      throw new CoachError('offline');
-    });
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    // Server-sent events: one `data:` line each, separated by a blank line.
-    let end: number;
-    while ((end = buffer.indexOf('\n\n')) >= 0) {
-      const line = buffer.slice(0, end);
-      buffer = buffer.slice(end + 2);
-      if (!line.startsWith('data:')) continue;
-      const event = JSON.parse(line.slice(5)) as
-        CoachEvent | { type: 'done' } | { type: 'error'; error: string };
-      if (event.type === 'done') return;
+  const done = await readServerEvents<
+    CoachEvent | { type: 'done' } | { type: 'error'; error: string }
+  >(
+    response.body,
+    (event) => {
+      if (event.type === 'done') return true;
       if (event.type === 'error') {
         throw new CoachError(event.error === 'refused' ? 'refused' : 'failed');
       }
       onEvent(event);
-    }
-  }
+    },
+    (error) => {
+      if (!signal.aborted) console.warn('coach-chat broke off', error);
+      throw new CoachError('offline');
+    },
+  );
   // Ended without "done": the function stopped halfway.
-  throw new CoachError('failed');
-}
-
-function parseBody(text: string): ErrorBody {
-  try {
-    return JSON.parse(text) as ErrorBody;
-  } catch {
-    return {};
-  }
+  if (!done) throw new CoachError('failed');
 }

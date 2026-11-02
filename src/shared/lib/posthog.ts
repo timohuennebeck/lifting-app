@@ -104,11 +104,6 @@ export function track<E extends AnalyticsEvent>(
   posthog?.capture(event, properties as Properties);
 }
 
-/** A handled error worth seeing in PostHog's error tracking, with what was going on. */
-export function trackError(error: unknown, context: Record<string, string | number | boolean>) {
-  posthog?.captureException(error, context);
-}
-
 /** Ties the device's events, those from before sign-up too, to the account. */
 export function identify(userId: string, person?: PersonProperties) {
   posthog?.identify(userId, person as Properties);

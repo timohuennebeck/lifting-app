@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import { type LayoutChangeEvent, View } from 'react-native';
+import { type LayoutChangeEvent, View, type ViewStyle } from 'react-native';
+import Svg, { Line } from 'react-native-svg';
 
 import { addDays, daysBetween, fromIsoDate } from '@/shared/lib/date';
-import { formatDate } from '@/shared/lib/format';
+import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
+
+import { dateLabel } from '../../lib/charts';
 
 /** A chart's measured width (0 until laid out), for the SVG inside it. */
 export function useWidth() {
@@ -35,8 +38,8 @@ export function Headline({ value, change, caption }: HeadlineProps) {
   );
 }
 
-/** "Mai", "Okt": month names without the abbreviation dot, as the design writes them. */
-export const monthLabel = (date: Date) => formatDate(date, { month: 'short' }).replace('.', '');
+/** "Mai", "Okt": month names as the design writes them. */
+export const monthLabel = (date: Date) => dateLabel(date, { month: 'short' });
 
 /**
  * `count` labels spread evenly from the first to the last day: month names for half a year,
@@ -46,9 +49,7 @@ export function timeLabels(first: string, last: string, count: number) {
   const span = Math.max(1, daysBetween(first, last));
   return Array.from({ length: count }, (_, i) => {
     const date = addDays(fromIsoDate(first), Math.round((span * i) / (count - 1)));
-    return span >= 60
-      ? monthLabel(date)
-      : formatDate(date, { day: 'numeric', month: 'short' }).replace(/\.$/, '');
+    return span >= 60 ? monthLabel(date) : dateLabel(date, { day: 'numeric', month: 'short' });
   });
 }
 
@@ -62,5 +63,35 @@ export function TimeAxis({ labels, inset = 0 }: { labels: string[]; inset?: numb
         </Text>
       ))}
     </View>
+  );
+}
+
+export interface DashedLineProps {
+  /** How long the line is: across, or down when `vertical`. */
+  length: number;
+  vertical?: boolean;
+  /** Where it sits in the chart. */
+  style: ViewStyle;
+}
+
+/** The dashed guideline of an average or a reference value. */
+export function DashedLine({ length, vertical = false, style }: DashedLineProps) {
+  return (
+    <Svg
+      className="absolute"
+      style={style}
+      width={vertical ? 2 : length}
+      height={vertical ? length : 2}
+    >
+      <Line
+        x1={vertical ? 0.75 : 0}
+        y1={vertical ? 0 : 0.75}
+        x2={vertical ? 0.75 : length}
+        y2={vertical ? length : 0.75}
+        stroke={colors.subtle}
+        strokeWidth={1.5}
+        strokeDasharray="4 3"
+      />
+    </Svg>
   );
 }

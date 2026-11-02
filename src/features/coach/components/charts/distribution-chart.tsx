@@ -1,15 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import Svg, { Line } from 'react-native-svg';
 
 import { useExerciseName } from '@/shared/data/exercises';
 import { cn } from '@/shared/lib/cn';
+import { addDays } from '@/shared/lib/date';
 import { formatDate, formatNumber } from '@/shared/lib/format';
-import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 import type { DistributionChart as DistributionChartData } from '../../lib/charts';
-import { useWidth } from './chart-parts';
+import { DashedLine, useWidth } from './chart-parts';
 
 /** Label column, value column and the 10pt gaps between them and the bar. */
 const LABEL = 104;
@@ -32,9 +31,7 @@ function RowLabel({ by, id, low }: { by: DistributionChartData['by']; id: string
       ? t(`names.${id}` as 'names.chest')
       : by === 'exercise'
         ? exercise
-        : formatDate(new Date(MONDAY.getTime() + WEEKDAYS.indexOf(id) * 86_400_000), {
-            weekday: 'long',
-          });
+        : formatDate(addDays(MONDAY, WEEKDAYS.indexOf(id)), { weekday: 'long' });
   return (
     <Text
       numberOfLines={1}
@@ -94,22 +91,7 @@ export function DistributionChart({ chart }: { chart: DistributionChartData }) {
       })}
       {width > 0 && referenceX != null ? (
         <>
-          <Svg
-            className="absolute"
-            style={{ left: referenceX - 1, top: -6 }}
-            width={2}
-            height={height + 12}
-          >
-            <Line
-              x1={0.75}
-              y1={0}
-              x2={0.75}
-              y2={height + 12}
-              stroke={colors.subtle}
-              strokeWidth={1.5}
-              strokeDasharray="4 3"
-            />
-          </Svg>
+          <DashedLine vertical length={height + 12} style={{ left: referenceX - 1, top: -6 }} />
           <View
             className="absolute items-center"
             style={{ left: referenceX - 60, width: 120, top: -26 }}

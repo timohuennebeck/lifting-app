@@ -13,12 +13,12 @@ import { useUserId } from '@/shared/stores/session-store';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { CheckBadge } from '@/shared/ui/check-item';
+import { DeleteSheet } from '@/shared/ui/delete-sheet';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { CheckPhoto } from '../components/check-photo';
-import { DeleteCheckSheet } from '../components/delete-check-sheet';
 import { GroupBands } from '../components/group-bands';
 import { MetricRow } from '../components/metric-row';
 import { PhotoTile, photoTileHeight } from '../components/photo-tile';
@@ -289,11 +289,13 @@ export function ResultScreen() {
           />
         </BottomFade>
       ) : null}
-      <DeleteCheckSheet
+      <DeleteSheet
         visible={menuOpen}
         onClose={() => setMenuOpen(false)}
         title={t('result.check', { n: number })}
         subtitle={date}
+        option={t('result.delete')}
+        description={t('result.deleteHint')}
         onDelete={remove}
       />
     </View>

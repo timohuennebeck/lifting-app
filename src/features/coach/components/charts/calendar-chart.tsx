@@ -1,10 +1,10 @@
 import { View } from 'react-native';
 
-import { addDays, DAY_MS, fromIsoDate, startOfWeek } from '@/shared/lib/date';
-import { formatDate } from '@/shared/lib/format';
+import { addDays, DAY_MS, fromIsoDate, startOfWeek, toIsoDate } from '@/shared/lib/date';
+import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
-import { type CalendarChart as CalendarChartData } from '../../lib/charts';
+import { type CalendarChart as CalendarChartData, dateLabel } from '../../lib/charts';
 import { monthLabel, useWidth } from './chart-parts';
 
 /** Column of weekday labels and the gap after it. */
@@ -12,12 +12,25 @@ const LABELS = 23;
 /** At most this many month names under the days. */
 const MONTHS = 6;
 
-/** A trained day's neon by its share of the most sets on one day; low ones mix with the grey. */
-const strength = (share: number) => (share >= 0.75 ? 1 : share >= 0.45 ? 0.62 : 0.3);
+/** The day's grey mixed with the neon by `t` (0–1): one colour, so a day is one view. */
+const shade = (t: number) =>
+  `#${[1, 3, 5]
+    .map((i) => {
+      const from = parseInt(colors.chip.slice(i, i + 2), 16);
+      const to = parseInt(colors.accent.slice(i, i + 2), 16);
+      return Math.round(from + (to - from) * t)
+        .toString(16)
+        .padStart(2, '0');
+    })
+    .join('')}`;
+const LOW = shade(0.3);
+const MID = shade(0.62);
+
+/** A trained day's colour by its share of the most sets on one day; low ones mix with the grey. */
+const dayColor = (share: number) => (share >= 0.75 ? colors.accent : share >= 0.45 ? MID : LOW);
 
 /** "Mo", "Mi": weekday names short enough for the 15pt rows. */
-const weekdayLabel = (date: Date) =>
-  formatDate(date, { weekday: 'short' }).replace('.', '').slice(0, 2);
+const weekdayLabel = (date: Date) => dateLabel(date, { weekday: 'short' }).slice(0, 2);
 
 /** Month names from `from`'s month to `to`'s, every other (or third) one when there are many. */
 function monthLabels(from: Date, to: Date) {
@@ -32,9 +45,6 @@ function monthLabels(from: Date, to: Date) {
   const every = Math.ceil(months.length / MONTHS);
   return months.filter((_, i) => i % every === 0);
 }
-
-const isoDay = (date: Date) =>
-  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
 /**
  * The days the user trained (design CO3·4 "Kalender"): a column per week, a row per weekday,
@@ -81,26 +91,24 @@ export function CalendarChart({ chart }: { chart: CalendarChartData }) {
             )}
             {columns.map((week, w) =>
               week.map((day, d) => {
-                const key = isoDay(day);
                 if (day < from || day > end) return null;
+                const key = toIsoDate(day);
                 const trained = days.get(key);
-                const share = trained ? (trained.sets ?? trained.value) / most : 0;
                 return (
                   <View
                     key={key}
-                    className="absolute overflow-hidden bg-chip"
+                    className="absolute"
                     style={{
                       left: LABELS + w * stepX,
                       top: d * stepY,
                       width: cell,
                       height: cell,
                       borderRadius: Math.min(4, cell / 3),
+                      backgroundColor: trained
+                        ? dayColor((trained.sets ?? trained.value) / most)
+                        : colors.chip,
                     }}
-                  >
-                    {trained ? (
-                      <View className="flex-1 bg-accent" style={{ opacity: strength(share) }} />
-                    ) : null}
-                  </View>
+                  />
                 );
               }),
             )}

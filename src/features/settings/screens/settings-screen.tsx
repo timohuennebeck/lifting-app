@@ -20,6 +20,7 @@ import { haptics } from '@/shared/lib/haptics';
 import { showError } from '@/shared/stores/error-sheet-store';
 import { requireUserId, useSessionStore } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
+import { DeleteSheet } from '@/shared/ui/delete-sheet';
 import { LanguageFlag } from '@/shared/ui/language-flag';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
@@ -28,7 +29,6 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
-import { DeleteAccountSheet } from '../components/delete-account-sheet';
 import { CoachSection } from '../components/coach-section';
 import { NotificationsSection } from '../components/notifications-section';
 import { ProSection } from '../components/pro-section';
@@ -193,11 +193,17 @@ export function SettingsScreen() {
           afterSheetClose(signOut);
         }}
       />
-      <DeleteAccountSheet
+      <DeleteSheet
         visible={sheet === 'delete'}
-        onClose={close}
-        subscribed={isPro}
-        deleting={deleting}
+        onClose={deleting ? () => {} : close}
+        title={t('settings.deleteConfirm.title')}
+        subtitle={t('settings.deleteConfirm.subtitle')}
+        option={t('settings.deleteConfirm.option')}
+        description={t('settings.deleteConfirm.body')}
+        cta={t('settings.deleteAccount')}
+        // A store subscription keeps running after the account is gone: say so.
+        note={isPro ? t('settings.deleteConfirm.subscription') : undefined}
+        loading={deleting}
         onDelete={removeAccount}
       />
     </Screen>

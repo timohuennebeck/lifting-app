@@ -1,16 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import Svg, { Line } from 'react-native-svg';
-
-import { ChartGrid } from '@/shared/ui/chart-grid';
+import Svg from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
-import { fromIsoDate } from '@/shared/lib/date';
-import { colors } from '@/shared/lib/theme';
+import { addDays, DAY_MS, fromIsoDate, startOfWeek } from '@/shared/lib/date';
+import { ChartGrid } from '@/shared/ui/chart-grid';
 import { Text } from '@/shared/ui/text';
 
 import { formatChange, formatValue, type PeriodChart as PeriodChartData } from '../../lib/charts';
-import { Headline, monthLabel, useWidth } from './chart-parts';
+import { DashedLine, Headline, monthLabel, useWidth } from './chart-parts';
 
 /** The chart, its tallest bar (the current one's value sits above that) and a bar's width. */
 const HEIGHT = 150;
@@ -20,13 +18,11 @@ const BAR_WIDTH = 18;
 const GRID_X = 4;
 const GRID_Y = 8;
 
-/** ISO week number of a Monday (YYYY-MM-DD). */
+/** ISO week number of a Monday (YYYY-MM-DD): counted from the week with the year's 4 January. */
 function isoWeek(day: string) {
-  const date = fromIsoDate(day);
-  date.setDate(date.getDate() + 3);
-  const firstThursday = new Date(date.getFullYear(), 0, 4);
-  firstThursday.setDate(firstThursday.getDate() + 3 - ((firstThursday.getDay() + 6) % 7));
-  return 1 + Math.round((date.getTime() - firstThursday.getTime()) / (7 * 86_400_000));
+  const thursday = addDays(fromIsoDate(day), 3);
+  const first = addDays(startOfWeek(new Date(thursday.getFullYear(), 0, 4)), 3);
+  return 1 + Math.round((thursday.getTime() - first.getTime()) / (7 * DAY_MS));
 }
 
 /**
@@ -65,55 +61,43 @@ export function PeriodChart({ chart }: { chart: PeriodChartData }) {
       <View className="mt-[22px] gap-3">
         <View style={{ height: HEIGHT }} onLayout={onLayout}>
           {width > 0 ? (
-            <Svg
-              className="absolute"
-              style={{ left: -GRID_X, top: -GRID_Y }}
-              width={width + 2 * GRID_X}
-              height={HEIGHT + GRID_Y}
-            >
-              <ChartGrid id="coach-period" width={width + 2 * GRID_X} height={HEIGHT + GRID_Y} />
-            </Svg>
-          ) : null}
-          {width > 0
-            ? chart.bars.map((bar, i) => {
-                const last = i === chart.bars.length - 1;
-                return (
-                  <View
-                    key={bar.date}
-                    className={cn('absolute bottom-0 rounded-md', last ? 'bg-accent' : 'bg-track')}
-                    style={{ left: i * step, width: BAR_WIDTH, height: height(bar.value) }}
-                  />
-                );
-              })
-            : null}
-          {width > 0 && averageTop != null ? (
             <>
-              <Svg className="absolute left-0" style={{ top: averageTop }} width={width} height={2}>
-                <Line
-                  x1={0}
-                  y1={0.75}
-                  x2={width}
-                  y2={0.75}
-                  stroke={colors.subtle}
-                  strokeWidth={1.5}
-                  strokeDasharray="4 3"
-                />
-              </Svg>
-              <Text
-                className="absolute left-0 bg-bg pr-1 font-inter-semibold text-[11px] leading-[14px] text-fg-2"
-                style={{ top: averageTop - 20 }}
+              <Svg
+                className="absolute"
+                style={{ left: -GRID_X, top: -GRID_Y }}
+                width={width + 2 * GRID_X}
+                height={HEIGHT + GRID_Y}
               >
-                {t('period.average', { value: formatValue(chart.average!, chart.unit, t) })}
+                <ChartGrid id="coach-period" width={width + 2 * GRID_X} height={HEIGHT + GRID_Y} />
+              </Svg>
+              {chart.bars.map((bar, i) => (
+                <View
+                  key={bar.date}
+                  className={cn(
+                    'absolute bottom-0 rounded-md',
+                    i === chart.bars.length - 1 ? 'bg-accent' : 'bg-track',
+                  )}
+                  style={{ left: i * step, width: BAR_WIDTH, height: height(bar.value) }}
+                />
+              ))}
+              {averageTop != null ? (
+                <>
+                  <DashedLine length={width} style={{ left: 0, top: averageTop }} />
+                  <Text
+                    className="absolute left-0 bg-bg pr-1 font-inter-semibold text-[11px] leading-[14px] text-fg-2"
+                    style={{ top: averageTop - 20 }}
+                  >
+                    {t('period.average', { value: formatValue(chart.average!, chart.unit, t) })}
+                  </Text>
+                </>
+              ) : null}
+              <Text
+                className="absolute right-0 font-inter-bold text-xs leading-[15px] text-accent"
+                style={{ top: HEIGHT - height(current.value) - 22 }}
+              >
+                {formatValue(current.value, chart.unit, t)}
               </Text>
             </>
-          ) : null}
-          {width > 0 ? (
-            <Text
-              className="absolute right-0 font-inter-bold text-xs leading-[15px] text-accent"
-              style={{ top: HEIGHT - height(current.value) - 22 }}
-            >
-              {formatValue(current.value, chart.unit, t)}
-            </Text>
           ) : null}
         </View>
         <View className="flex-row justify-between">

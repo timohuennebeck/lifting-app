@@ -2,16 +2,15 @@ import { Trans, useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
 import { MuscleSplit } from '@/features/muscles/components/muscle-split';
-import { groupOfMuscle, type MuscleGroupId, workoutMuscleSplit } from '@/shared/data/muscle-groups';
+import { groupOfMuscle, type MuscleGroupId } from '@/shared/data/muscle-groups';
 import type { MuscleShare } from '@/shared/data/muscles';
 import { minutesBetween } from '@/shared/lib/date';
 import { formatNumber, type UnitSystem } from '@/shared/lib/format';
 import { BodyMaps } from '@/shared/ui/muscle-map';
-import { Text } from '@/shared/ui/text';
 
 import type { WorkoutDetail } from '../../data/workout-detail';
 import type { WorkoutRecord } from '../../data/workout-records';
-import { DoneExerciseCard } from '../done-exercise-card';
+import { DoneExercises, doneExercises, doneMuscleSplit } from './done-exercises';
 import { type StoryTaps, StoryTapArea } from './story-tap-area';
 import { StoryTitle, storyAccent } from './story-title';
 
@@ -47,15 +46,10 @@ export function TrainedPage({
   onRead,
   taps,
 }: TrainedPageProps) {
-  const { t } = useTranslation(['workout', 'training', 'exercises']);
+  const { t } = useTranslation(['workout', 'exercises']);
   const minutes = minutesBetween(workout.startedAt, workout.finishedAt);
-  // Only the sets that were done count.
-  const done = workout.exercises
-    .map((e) => ({ ...e, sets: e.sets.filter((s) => s.completedAt) }))
-    .filter((e) => e.sets.length);
-  const { primary, secondary } = workoutMuscleSplit(
-    done.map((e) => ({ exerciseId: e.exerciseId, sets: e.sets.length })),
-  );
+  const done = doneExercises(workout.exercises);
+  const { primary, secondary } = doneMuscleSplit(done);
   const [first, second] = mainGroups(primary);
   const groupName = (group: MuscleGroupId | undefined) =>
     group ? t(`exercises:groups.${group}`) : '';
@@ -88,24 +82,7 @@ export function TrainedPage({
           secondary={secondary.map((s) => s.muscle)}
         />
         <MuscleSplit primary={primary} secondary={secondary} className="px-4 pt-6" />
-        {done.length ? (
-          <View className="px-5 pt-9">
-            <Text variant="headline">
-              {t('training:overview.exercises', { count: done.length })}
-            </Text>
-            <View className="pt-1">
-              {done.map((e) => (
-                <DoneExerciseCard
-                  key={e.id}
-                  exerciseId={e.exerciseId}
-                  sets={e.sets}
-                  units={units}
-                  recordSetId={records.find((r) => e.sets.some((s) => s.id === r.setId))?.setId}
-                />
-              ))}
-            </View>
-          </View>
-        ) : null}
+        <DoneExercises done={done} records={records} units={units} />
       </StoryTapArea>
     </ScrollView>
   );

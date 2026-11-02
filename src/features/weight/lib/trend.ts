@@ -31,14 +31,19 @@ export function withTrend(entries: WeightEntry[]): WeightPoint[] {
   return points;
 }
 
-/** The trend on a day: that of the last weigh-in on or before it; undefined before the first. */
+/**
+ * The trend on a day: that of the last weigh-in on or before it; undefined before the first.
+ * `points` are oldest first, so a binary search finds it (the levels ask once per set).
+ */
 export function trendOn(points: WeightPoint[], date: string) {
-  let trend: number | undefined;
-  for (const p of points) {
-    if (p.date > date) break;
-    trend = p.trendKg;
+  let low = 0;
+  let high = points.length;
+  while (low < high) {
+    const middle = (low + high) >> 1;
+    if (points[middle].date <= date) low = middle + 1;
+    else high = middle;
   }
-  return trend;
+  return low > 0 ? points[low - 1].trendKg : undefined;
 }
 
 /** Where a weigh-in sits against its trend: below (< 0), on it (0) or above (> 0), in kg. */
