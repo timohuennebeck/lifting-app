@@ -3,6 +3,7 @@ import { Pressable, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
+import { CheckCircle } from '@/shared/ui/check-item';
 import { Icon } from '@/shared/ui/icon';
 import { InputCell } from '@/shared/ui/input-cell';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -158,14 +159,7 @@ export function SetRow({
         onPress={onToggleDone}
         className="w-7 items-end"
       >
-        <View
-          className={cn(
-            'size-6 items-center justify-center rounded-full',
-            done ? 'bg-accent' : 'border-2 border-track',
-          )}
-        >
-          {done ? <Icon name="check" size={11} color={colors.onAccent} /> : null}
-        </View>
+        <CheckCircle checked={done} size={24} glyph={11} />
       </PressableScale>
     </Pressable>
   );

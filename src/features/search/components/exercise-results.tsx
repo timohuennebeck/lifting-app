@@ -11,6 +11,7 @@ import { groupOfMuscle } from '@/shared/data/muscle-groups';
 import { useUnits } from '@/shared/data/profile';
 import { formatShortDate, type UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
+import { CheckBadge } from '@/shared/ui/check-item';
 import { Icon } from '@/shared/ui/icon';
 import type { MuscleId } from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
@@ -130,9 +131,7 @@ export function ExerciseResults({ query, bottomInset, muscle, pick }: ExerciseRe
             }
             trailing={
               selected ? (
-                <View className="size-7 items-center justify-center rounded-full bg-accent">
-                  <Icon name="check" size={13} color={colors.onAccent} />
-                </View>
+                <CheckBadge size={28} glyph={13} />
               ) : item.record ? (
                 <RecordSummary exerciseId={item.id} record={item.record} units={units} />
               ) : null

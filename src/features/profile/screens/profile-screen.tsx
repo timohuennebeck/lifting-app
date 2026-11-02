@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Linking, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { OpenTicketsSection } from '@/features/support/components/open-tickets-section';
@@ -9,10 +9,11 @@ import { ProfileAvatar } from '@/shared/components/profile-avatar';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useProfile } from '@/shared/data/profile';
 import { useWorkoutHistory, useWorkoutStats } from '@/shared/data/workouts';
+import { attempt } from '@/shared/lib/async';
 import { formatDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
-import { showError } from '@/shared/stores/error-sheet-store';
+import { showError, showSettingsError } from '@/shared/stores/error-sheet-store';
 import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -58,12 +59,7 @@ export function ProfileScreen() {
     if (action === 'remove') {
       setLocal(null);
       if (!previous) return;
-      try {
-        await removeAvatar(userId, previous);
-      } catch (error) {
-        console.warn('Removing the profile photo failed', error);
-        haptics.error();
-      }
+      await attempt('Removing the profile photo failed', () => removeAvatar(userId, previous));
       return;
     }
     // The system picker opens once the sheet has gone.
@@ -74,15 +70,7 @@ export function ProfileScreen() {
     try {
       const picked = await pickAvatar(source);
       if (picked === 'denied') {
-        showError({
-          title: t('avatar.cameraDenied.title'),
-          message: t('avatar.cameraDenied.message'),
-          action: {
-            label: t('common:actions.openSettings'),
-            onPress: () => void Linking.openSettings(),
-          },
-          dismissLabel: t('common:actions.notNow'),
-        });
+        showSettingsError(t('avatar.cameraDenied.title'), t('avatar.cameraDenied.message'));
         return;
       }
       if (picked) await uploadPhoto(userId, picked, previous);

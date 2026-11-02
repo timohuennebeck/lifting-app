@@ -333,7 +333,7 @@ export function CameraScreen() {
           end={
             shots && retakeIndex === null ? (
               <DonePill
-                label={t('planImport:camera.done')}
+                label={t('common:actions.done')}
                 count={shots}
                 disabled={finishing}
                 onPress={() => setFinishing(true)}

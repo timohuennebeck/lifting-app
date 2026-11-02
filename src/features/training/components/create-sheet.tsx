@@ -6,11 +6,11 @@ import { useWorkoutDraftStore } from '@/features/workout/stores/workout-draft-st
 import { useCurrentPlan } from '@/shared/data/plans';
 import { getActiveWorkoutId } from '@/shared/data/workouts';
 import { useResetOnOpen } from '@/shared/hooks/use-reset-on-open';
-import { ChoiceSheet } from '@/shared/ui/choice-sheet';
+import { ChoiceSheet, glyphColor } from '@/shared/ui/choice-sheet';
 import { Icon } from '@/shared/ui/icon';
 import { afterSheetClose } from '@/shared/ui/sheet';
 
-import { glyphColor, PlanGlyph, RoutineGlyph } from './glyphs';
+import { PlanGlyph, RoutineGlyph } from './glyphs';
 
 type CreateKind = 'workout' | 'routine' | 'plan';
 

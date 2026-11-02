@@ -1,12 +1,12 @@
 import { ExpoSpeechRecognitionModule, useSpeechRecognitionEvent } from 'expo-speech-recognition';
 import { useEffect, useRef, useState } from 'react';
-import { Keyboard, Linking, Platform } from 'react-native';
+import { Keyboard, Platform } from 'react-native';
 import { useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { i18n } from '@/shared/i18n';
 import { clamp } from '@/shared/lib/math';
 import { resetAudioMode } from '@/shared/lib/sounds';
-import { showError } from '@/shared/stores/error-sheet-store';
+import { showError, showSettingsError } from '@/shared/stores/error-sheet-store';
 
 import {
   addResult,
@@ -51,18 +51,10 @@ function releaseAudio() {
  * the microphone does; once it was refused for good, only Settings can allow it.
  */
 function showNoAccess(canAskAgain: boolean) {
-  const settings = {
-    action: {
-      label: i18n.t('common:actions.openSettings'),
-      onPress: () => void Linking.openSettings(),
-    },
-    dismissLabel: i18n.t('common:actions.notNow'),
-  };
-  showError({
-    title: i18n.t('voice:errors.access.title'),
-    message: i18n.t('voice:errors.access.message'),
-    ...(canAskAgain ? {} : settings),
-  });
+  const title = i18n.t('voice:errors.access.title');
+  const message = i18n.t('voice:errors.access.message');
+  if (canAskAgain) showError({ title, message });
+  else showSettingsError(title, message);
 }
 
 function showUnavailable(offline: boolean) {

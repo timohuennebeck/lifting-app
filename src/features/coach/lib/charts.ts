@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next';
 
-import { formatDate, formatNumber } from '@/shared/lib/format';
+import { formatDate, formatNumber, NBSP } from '@/shared/lib/format';
 
 // The chart under a coach answer, as the coach-chat Edge Function saves it with the answer: the
 // same shapes as Chart in supabase/functions/_shared/coach/tools.ts. Weights are already in the
@@ -75,23 +75,6 @@ export function toChart(value: unknown): CoachChart | null {
   )
     ? (value as CoachChart)
     : null;
-}
-
-const NBSP = ' ';
-
-/** A chart's y for a value from `min` to `max`, `pad` clear of its edges; flat values in the middle. */
-export const yScale = (min: number, max: number, height: number, pad: number) => (value: number) =>
-  max === min ? height / 2 : height - pad - ((value - min) / (max - min)) * (height - 2 * pad);
-
-/** An SVG line through `items`, placed by `x` and `y`. */
-export function linePath<T>(
-  items: readonly T[],
-  x: (item: T, i: number) => number,
-  y: (item: T, i: number) => number,
-) {
-  return items
-    .map((item, i) => `${i ? 'L' : 'M'}${x(item, i).toFixed(1)} ${y(item, i).toFixed(1)}`)
-    .join(' ');
 }
 
 /** A date part as the design writes it, without the abbreviation dot: "Mai", "Do", "28. Okt". */

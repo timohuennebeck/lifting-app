@@ -7,6 +7,7 @@ import { nowIso } from '@/shared/data/json';
 import { syncSessionsPerWeek } from '@/shared/data/plans';
 import { nextPosition } from '@/shared/data/positions';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
+import { moved } from '@/shared/lib/array';
 import {
   routineExercises,
   routines,
@@ -235,9 +236,7 @@ export async function reorderRoutineExercise(routineExerciseId: string, target: 
     const ids = await renumberExercises(tx, routineId);
     const from = ids.indexOf(routineExerciseId);
     if (from < 0 || target === from || target < 0 || target >= ids.length) return;
-    const order = ids.filter((id) => id !== routineExerciseId);
-    order.splice(target, 0, routineExerciseId);
-    for (const [position, id] of order.entries()) {
+    for (const [position, id] of moved(ids, from, target).entries()) {
       if (ids[position] !== id) await setExercisePosition(tx, id, position);
     }
     await touchRoutine(tx, routineId);

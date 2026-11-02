@@ -82,7 +82,6 @@
   "options": {
     "meta_one": "{{count}} Übung · {{minutes}} Min.",
     "meta_other": "{{count}} Übungen · {{minutes}} Min.",
-    "rename": "Umbenennen",
     "renameHint": "Neuen Namen für {{name}} vergeben",
     "delete": "Training löschen",
     "deleteHint": "Löscht {{name}}. Geloggte Trainings bleiben erhalten.",

@@ -14,9 +14,6 @@ export interface TextFieldProps extends TextInputProps {
   label?: string;
   /** Shows a round clear button while the field has text. */
   clearable?: boolean;
-  /** Adds a show/hide toggle for password fields. */
-  revealable?: boolean;
-  error?: string;
   /** Leading icon, e.g. `search`. */
   icon?: IconName;
   /** A pill for search fields; every other field has rounded corners. */
@@ -30,8 +27,6 @@ export interface TextFieldProps extends TextInputProps {
 export function TextField({
   label,
   clearable,
-  revealable,
-  error,
   icon,
   shape = 'rounded',
   compact,
@@ -40,7 +35,6 @@ export function TextField({
   onChangeText,
   onFocus,
   onBlur,
-  secureTextEntry,
   multiline,
   maxLength,
   ref,
@@ -48,7 +42,6 @@ export function TextField({
 }: TextFieldProps) {
   const { t } = useTranslation();
   const [focused, setFocused] = useState(false);
-  const [revealed, setRevealed] = useState(false);
   const input = useRef<TextInput | null>(null);
   const setInput = (node: TextInput | null) => {
     input.current = node;
@@ -68,8 +61,7 @@ export function TextField({
       ) : null}
       <Pressable
         // One field style app-wide: 56pt (48pt compact), 16pt text. The 1pt line never changes;
-        // the 2pt focus or error ring is drawn on top of it, so neither the field nor its text can
-        // shift.
+        // the 2pt focus ring is drawn on top of it, so neither the field nor its text can shift.
         // A tap anywhere on the field focuses it, not only on the text line.
         accessible={false}
         onPress={() => input.current?.focus()}
@@ -79,14 +71,10 @@ export function TextField({
           multiline ? 'min-h-32 items-start' : cn('items-center', compact ? 'h-12' : 'h-14'),
         )}
       >
-        {error || focused ? (
+        {focused ? (
           <View
             pointerEvents="none"
-            className={cn(
-              'absolute -inset-px border-2',
-              radius,
-              error ? 'border-danger' : 'border-accent',
-            )}
+            className={cn('absolute -inset-px border-2 border-accent', radius)}
           />
         ) : null}
         {icon ? <Icon name={icon} size={16} color={colors.dim} /> : null}
@@ -98,7 +86,6 @@ export function TextField({
           selectionColor={colors.fg}
           cursorColor={colors.fg}
           keyboardAppearance="dark"
-          secureTextEntry={secureTextEntry && !revealed}
           onFocus={(e) => {
             setFocused(true);
             onFocus?.(e);
@@ -119,16 +106,6 @@ export function TextField({
           )}
           {...props}
         />
-        {revealable ? (
-          <PressableScale
-            haptic="select"
-            accessibilityLabel={t('actions.togglePassword')}
-            onPress={() => setRevealed((r) => !r)}
-            className="size-10 items-center justify-center rounded-full"
-          >
-            <Icon name="eye" size={18} color={revealed ? colors.fg : colors.muted} />
-          </PressableScale>
-        ) : null}
         {clearable && hasValue ? (
           <PressableScale
             haptic="select"
@@ -143,11 +120,6 @@ export function TextField({
           </PressableScale>
         ) : null}
       </Pressable>
-      {error ? (
-        <Text variant="caption" tone="danger" className="px-1">
-          {error}
-        </Text>
-      ) : null}
       {maxLength ? <CharCount length={value?.length ?? 0} max={maxLength} /> : null}
     </View>
   );

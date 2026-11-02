@@ -40,7 +40,6 @@
   "camera": {
     "page": "Seite {{count}}",
     "hint": "Seite für Seite fotografieren, dann auf Fertig",
-    "done": "Fertig",
     "torch": "Blitz",
     "shutter": "Foto aufnehmen",
     "library": "Aus Mediathek wählen",
@@ -49,8 +48,7 @@
     "permission": {
       "title": "KAMERAZUGRIFF",
       "body": "Um deinen Plan zu fotografieren, braucht Loqqa Zugriff auf deine Kamera. Die Fotos bleiben auf deinem Gerät, bis du sie importierst.",
-      "allow": "Kamera erlauben",
-      "settings": "Einstellungen öffnen"
+      "allow": "Kamera erlauben"
     },
     "access": "Damit du deinen Plan abfotografieren kannst. Die Fotos bleiben auf deinem Gerät, bis du sie importierst."
   },

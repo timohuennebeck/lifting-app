@@ -31,8 +31,7 @@
     "bug": "Reportar erro",
     "bugHint": "Algo não está a funcionar",
     "idea": "Sugerir funcionalidade",
-    "ideaHint": "Falta-te algo na app",
-    "cta": "Continuar"
+    "ideaHint": "Falta-te algo na app"
   },
   "form": {
     "bugTitle": "Reportar erro",

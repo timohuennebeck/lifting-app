@@ -4,6 +4,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Svg, { Circle, Defs, Line, LinearGradient, Path, Stop } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
 
+import { nearestIndex } from '@/shared/lib/chart';
 import { formatShortDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
@@ -11,7 +12,7 @@ import { colors } from '@/shared/lib/theme';
 import { ChartGrid } from '@/shared/ui/chart-grid';
 import { Text } from '@/shared/ui/text';
 
-import { buildLineChart, chartBounds, type ChartInput, nearestPoint } from '../lib/chart';
+import { buildLineChart, chartBounds, type ChartInput } from '../lib/chart';
 
 /** Nine grid squares. */
 const HEIGHT = 126;
@@ -85,9 +86,10 @@ export function HistoryChart({ data, metric, format, oneRepMax }: HistoryChartPr
   const delta = shown && base ? shown.value - base.value : 0;
   const shownEstimate = shown ? estimate.points.find((p) => p.time === shown.time) : undefined;
 
+  const xs = points.map((p) => p.x);
   const track = (x: number) => {
     if (!points.length) return;
-    const index = nearestPoint(points, x);
+    const index = nearestIndex(xs, x);
     if (index !== hover) haptics.select();
     setHover(index);
   };

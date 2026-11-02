@@ -82,7 +82,6 @@
   "options": {
     "meta_one": "운동 {{count}}개 · {{minutes}}분",
     "meta_other": "운동 {{count}}개 · {{minutes}}분",
-    "rename": "이름 변경",
     "renameHint": "{{name}}에 새 이름을 붙여요",
     "delete": "루틴 삭제",
     "deleteHint": "{{name}} 루틴을 삭제해요. 기록된 운동은 남아요.",

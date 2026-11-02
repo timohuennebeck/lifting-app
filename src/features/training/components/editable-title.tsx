@@ -14,7 +14,7 @@ export interface EditableTitleProps {
 
 /** A page title that turns into a text field when tapped (rename in place). */
 export function EditableTitle({ value, onSubmit }: EditableTitleProps) {
-  const { t } = useTranslation('training');
+  const { t } = useTranslation(['training', 'common']);
   // The text being typed; null while not editing, so outside renames show up.
   const [draft, setDraft] = useState<string | null>(null);
   // A submitted name shows until the saved one replaces the old value.
@@ -37,7 +37,7 @@ export function EditableTitle({ value, onSubmit }: EditableTitleProps) {
         onChangeText={(text) => setDraft(text.replace(/\n/g, ''))}
         onFocus={() => setDraft(value)}
         onBlur={finish}
-        accessibilityLabel={t('options.rename')}
+        accessibilityLabel={t('common:actions.rename')}
         maxLength={ROUTINE_NAME_MAX}
         multiline
         scrollEnabled={false}

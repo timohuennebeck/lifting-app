@@ -1,7 +1,4 @@
-import { fetch } from 'expo/fetch';
-
-import { env } from '@/shared/config/env';
-import { parseJson } from '@/shared/data/json';
+import { postFunction, refusalOf } from '@/shared/data/edge-functions';
 import { supabase } from '@/shared/data/supabase';
 import { readServerEvents } from '@/shared/lib/server-events';
 
@@ -89,24 +86,13 @@ export async function streamAnswer(
 ) {
   const { data } = await supabase.auth.getSession();
   if (!data.session) throw new CoachError('failed');
-  // expo/fetch, unlike React Native's own fetch, hands over the answer while it arrives.
-  const response = await fetch(`${env.supabaseUrl}/functions/v1/coach-chat`, {
-    method: 'POST',
-    headers: {
-      apikey: env.supabasePublishableKey,
-      Authorization: `Bearer ${data.session.access_token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(input),
+  const response = await postFunction('coach-chat', input, {
     signal,
-  }).catch((error: unknown) => {
-    if (!signal.aborted) console.warn('coach-chat could not be called', error);
-    throw new CoachError('offline');
+    token: data.session.access_token,
+    offline: () => new CoachError('offline'),
   });
   if (!response.ok || !response.body) {
-    const text = await response.text().catch(() => '');
-    console.warn(`coach-chat answered ${response.status}: ${text.slice(0, 300)}`);
-    throw failureOf(response.status, parseJson<ErrorBody>(text, {}));
+    throw failureOf(response.status, await refusalOf<ErrorBody>('coach-chat', response));
   }
 
   const done = await readServerEvents<

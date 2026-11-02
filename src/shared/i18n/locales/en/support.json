@@ -31,8 +31,7 @@
     "bug": "Report a bug",
     "bugHint": "Something isn't working",
     "idea": "Request a feature",
-    "ideaHint": "Something's missing in the app",
-    "cta": "Continue"
+    "ideaHint": "Something's missing in the app"
   },
   "form": {
     "bugTitle": "Report a bug",

@@ -131,7 +131,7 @@ export function ExerciseLayout() {
           onAction={onMenu}
           items={[
             { action: 'edit', icon: 'pencil', label: t('exercises:custom.edit') },
-            { action: 'delete', label: t('exercises:custom.delete') },
+            { action: 'delete', label: t('common:actions.delete') },
           ]}
         />
       ) : null}

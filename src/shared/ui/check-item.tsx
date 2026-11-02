@@ -27,6 +27,30 @@ export function CheckBadge({ size, glyph, className }: CheckBadgeProps) {
   );
 }
 
+export interface CheckCircleProps extends CheckBadgeProps {
+  checked: boolean;
+  /** The empty circle's ring, e.g. `border-outline`. */
+  ring?: string;
+}
+
+/** A check to tick: an empty ring until checked, then the accent badge. */
+export function CheckCircle({
+  checked,
+  size,
+  glyph,
+  ring = 'border-track',
+  className,
+}: CheckCircleProps) {
+  return checked ? (
+    <CheckBadge size={size} glyph={glyph} className={className} />
+  ) : (
+    <View
+      className={cn('rounded-full border-2', ring, className)}
+      style={{ width: size, height: size }}
+    />
+  );
+}
+
 const SIZES = {
   md: { size: 26, glyph: 12 },
   sm: { size: 24, glyph: 14 },

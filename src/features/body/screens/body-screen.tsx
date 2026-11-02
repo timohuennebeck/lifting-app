@@ -22,7 +22,7 @@ import { type Profile, useProfile, useUnits } from '@/shared/data/profile';
 import { useWeightEntries } from '@/shared/data/weight-entries';
 import { useToday } from '@/shared/hooks/use-today';
 import { cn } from '@/shared/lib/cn';
-import { formatLongDate, formatShortDate, formatWeight } from '@/shared/lib/format';
+import { formatLongDate, formatShortDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
@@ -33,7 +33,7 @@ import { Text } from '@/shared/ui/text';
 
 import { BodyPhotoCard, NextCheckCard } from '../components/body-photo-card';
 import { CheckHistoryRow } from '../components/check-history-row';
-import { weightAt } from '../lib/check-weight';
+import { checkWeightLabel } from '../lib/check-weight';
 import { comparedPair } from '../lib/comparison';
 import { useCompareStore } from '../stores/compare-store';
 
@@ -193,10 +193,7 @@ export function BodyScreen() {
   const nextDate = nextCheckDate(latest?.createdAt);
   const waiting = !!nextDate && nextDate.getTime() > today;
   const nextFrom = nextDate ? formatShortDate(nextDate) : '';
-  const weightOf = (check: ProgressCheck) => {
-    const kg = weightAt(entries, check.createdAt);
-    return kg === undefined ? undefined : formatWeight(kg, units);
-  };
+  const weightOf = (check: ProgressCheck) => checkWeightLabel(entries, check.createdAt, units);
 
   return (
     <TabScreen>

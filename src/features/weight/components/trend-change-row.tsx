@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
+import { linePath } from '@/shared/lib/chart';
 import { type UnitSystem, weightUnit } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -28,7 +29,11 @@ function sparkPath(series: number[]) {
     x: (i / Math.max(1, series.length - 1)) * LINE_WIDTH,
     y: TOP + ((max - v) / span) * LINE_HEIGHT,
   }));
-  const d = points.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join('');
+  const d = linePath(
+    points,
+    (p) => p.x,
+    (p) => p.y,
+  );
   return { d, end: points[points.length - 1] };
 }
 

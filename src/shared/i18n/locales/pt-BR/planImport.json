@@ -40,7 +40,6 @@
   "camera": {
     "page": "Página {{count}}",
     "hint": "Fotografe página por página e toque em Concluído",
-    "done": "Concluído",
     "torch": "Flash",
     "shutter": "Tirar foto",
     "library": "Escolher da galeria",
@@ -49,8 +48,7 @@
     "permission": {
       "title": "ACESSO À CÂMERA",
       "body": "Para fotografar seu plano, o Loqqa precisa de acesso à câmera. As fotos ficam no seu aparelho até você importá-las.",
-      "allow": "Permitir câmera",
-      "settings": "Abrir ajustes"
+      "allow": "Permitir câmera"
     },
     "access": "Para você fotografar seu plano. As fotos ficam no seu dispositivo até você importá-las."
   },

@@ -1,7 +1,6 @@
 {
   "picker": {
     "search": "Pesquisar exercícios",
-    "done": "Concluído",
     "empty": "Nenhum exercício encontrado",
     "index": "Índice alfabético",
     "selected": "Selecionados"
@@ -29,7 +28,6 @@
     "editTitle": "Editar exercício",
     "menu": "Opções do exercício",
     "edit": "Editar",
-    "delete": "Eliminar",
     "save": "Guardar",
     "namePlaceholder": "Nome do exercício",
     "nameTaken": "Este exercício já existe.",
@@ -58,8 +56,6 @@
     "topSecondsShort": "Maior tempo",
     "chartLabel": "Gráfico do peso máximo, mantém premido e arrasta",
     "emptyRange": "Sem treinos neste período.",
-    "days_one": "{{count}} D",
-    "days_other": "{{count}} D",
     "empty": "Ainda sem treinos. Termina um treino com este exercício para veres o teu progresso.",
     "weight": "Peso",
     "oneRepMax": "1RM"

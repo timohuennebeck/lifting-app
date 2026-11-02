@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, TextInput, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
+import { wait } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
@@ -26,8 +27,6 @@ import {
 const LONG_TEXT = 120;
 /** The working stage shows at least this long, even when the exercises come sooner. */
 const MIN_PROCESSING_MS = 2500;
-
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, Math.max(0, ms)));
 
 export interface VoiceScreenProps {
   /** Adds the exercises to the workout being edited; the screen closes once it is done. */

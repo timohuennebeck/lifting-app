@@ -35,7 +35,7 @@ export function ExerciseSearchBar({
   onDone,
   doneDisabled,
 }: ExerciseSearchBarProps) {
-  const { t } = useTranslation('exercises');
+  const { t } = useTranslation(['exercises', 'common']);
   const footerInset = useFooterInset();
   const field = (
     <TextField
@@ -69,7 +69,12 @@ export function ExerciseSearchBar({
           <View className="flex-row items-center gap-2">
             {field}
             {/* As tall as the compact field beside it. */}
-            <Button label={t('picker.done')} size="md" disabled={doneDisabled} onPress={onDone} />
+            <Button
+              label={t('common:actions.done')}
+              size="md"
+              disabled={doneDisabled}
+              onPress={onDone}
+            />
           </View>
         ) : (
           field

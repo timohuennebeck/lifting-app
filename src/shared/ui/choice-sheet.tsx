@@ -21,6 +21,9 @@ export interface ChoiceSheetOption<T extends string> {
   ctaDisabled?: boolean;
 }
 
+/** A glyph's colour in an option's circle: dark on the accent when selected, grey otherwise. */
+export const glyphColor = (active: boolean) => (active ? colors.onAccent : colors.fgMid);
+
 export interface ChoiceSheetProps<T extends string> {
   visible: boolean;
   onClose: () => void;

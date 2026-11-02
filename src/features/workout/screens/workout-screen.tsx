@@ -26,6 +26,7 @@ import {
 } from '@/features/training/components/exercise-menu-sheet';
 import { restSecondsFor } from '@/shared/data/routines';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
+import { moved } from '@/shared/lib/array';
 import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
@@ -185,9 +186,9 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   }, [order]);
 
   const reorder = async (workoutExerciseId: string, toIndex: number) => {
-    const ids = workout.exercises.map((e) => e.id).filter((id) => id !== workoutExerciseId);
-    ids.splice(toIndex, 0, workoutExerciseId);
-    if (exercise) follow.current = { id: exercise.id, order: ids.join() };
+    const ids = workout.exercises.map((e) => e.id);
+    const order = moved(ids, ids.indexOf(workoutExerciseId), toIndex);
+    if (exercise) follow.current = { id: exercise.id, order: order.join() };
     await reorderWorkoutExercise(workout.id, workoutExerciseId, toIndex);
   };
 

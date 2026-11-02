@@ -1,6 +1,7 @@
 import { FunctionsFetchError, FunctionsHttpError } from '@supabase/supabase-js';
 import { File } from 'expo-file-system';
 
+import { refusalOf } from '@/shared/data/edge-functions';
 import { uploadsDone } from '@/shared/data/powersync/upload-queue';
 import { supabase } from '@/shared/data/supabase';
 import { uploadJpeg } from '@/shared/data/supabase-storage';
@@ -71,22 +72,12 @@ interface ServerAssessment {
   issues?: { pose: Pose; issue: string }[];
 }
 
-function errorCode(text: string): string | undefined {
-  try {
-    return JSON.parse(text)?.error;
-  } catch {
-    return undefined;
-  }
-}
-
 async function failureOf(error: unknown): Promise<AssessmentFailure> {
   if (error instanceof FunctionsFetchError) return 'offline';
   if (error instanceof FunctionsHttpError) {
-    const response = error.context as Response;
-    const text = await response.text().catch(() => '');
     // Names the answer in the app's log; the function's own log has the details.
-    console.warn(`assess-progress answered ${response.status}: ${text.slice(0, 300)}`);
-    return SERVER_ERRORS[errorCode(text) ?? ''] ?? 'failed';
+    const { error: code } = await refusalOf('assess-progress', error.context as Response);
+    return SERVER_ERRORS[code ?? ''] ?? 'failed';
   }
   console.warn('assess-progress could not be called', error);
   return 'failed';

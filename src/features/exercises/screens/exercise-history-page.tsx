@@ -112,7 +112,7 @@ export function ExerciseHistoryPage() {
               onChange={setRange}
               options={DAY_RANGES.map((r) => ({
                 value: r,
-                label: t('history.days', { count: r }),
+                label: t('common:rangeDays', { count: r }),
               }))}
             />
           </View>

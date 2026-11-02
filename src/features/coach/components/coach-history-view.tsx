@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
-import { CheckBadge } from '@/shared/ui/check-item';
+import { CheckCircle } from '@/shared/ui/check-item';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
@@ -39,14 +39,6 @@ export interface CoachHistoryViewProps {
   onDelete: () => void;
 }
 
-/** The box in front of a chat while choosing: the accent check once chosen. */
-const CheckBox = ({ checked }: { checked: boolean }) =>
-  checked ? (
-    <CheckBadge size={22} glyph={12} className="mt-px" />
-  ) : (
-    <View className="mt-px size-[22px] rounded-full border-2 border-outline" />
-  );
-
 interface RowProps {
   chat: ChatSummary;
   selecting: boolean;
@@ -64,7 +56,15 @@ function ChatRow({ chat, selecting, checked, onPress, onLongPress }: RowProps) {
       accessibilityState={selecting ? { checked } : undefined}
       className="flex-row gap-3 px-2 py-3.5"
     >
-      {selecting ? <CheckBox checked={checked} /> : null}
+      {selecting ? (
+        <CheckCircle
+          checked={checked}
+          size={22}
+          glyph={12}
+          ring="border-outline"
+          className="mt-px"
+        />
+      ) : null}
       <View className="min-w-0 flex-1 gap-[5px]">
         <View className="flex-row items-baseline gap-3">
           <Text

@@ -1,7 +1,6 @@
 {
   "picker": {
     "search": "Buscar exercícios",
-    "done": "Concluído",
     "empty": "Nenhum exercício encontrado",
     "index": "Índice alfabético",
     "selected": "Selecionados"
@@ -29,7 +28,6 @@
     "editTitle": "Editar exercício",
     "menu": "Opções do exercício",
     "edit": "Editar",
-    "delete": "Excluir",
     "save": "Salvar",
     "namePlaceholder": "Nome do exercício",
     "nameTaken": "Esse exercício já existe.",
@@ -58,8 +56,6 @@
     "topSecondsShort": "Maior tempo",
     "chartLabel": "Gráfico do peso máximo, toque e arraste",
     "emptyRange": "Sem treinos neste período.",
-    "days_one": "{{count}} D",
-    "days_other": "{{count}} D",
     "empty": "Ainda sem treinos. Termine um treino com este exercício para ver seu progresso.",
     "weight": "Peso",
     "oneRepMax": "1RM"

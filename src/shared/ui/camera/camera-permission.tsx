@@ -1,5 +1,6 @@
 import type { PermissionResponse } from 'expo-camera';
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Linking, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -10,10 +11,8 @@ import { StepTitle } from '@/shared/ui/step-screen';
 export interface CameraPermissionCopy {
   title: string;
   body: string;
-  /** CTA while the system may still ask. */
+  /** CTA while the system may still ask; once access was denied for good it opens the settings. */
   allow: string;
-  /** CTA once access was denied for good. */
-  settings: string;
 }
 
 export interface CameraPermissionProps {
@@ -36,6 +35,7 @@ export function CameraPermission({
   bottomInset,
   children,
 }: CameraPermissionProps) {
+  const { t } = useTranslation('common');
   const insets = useSafeAreaInsets();
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top, paddingBottom: bottomInset }}>
@@ -44,7 +44,7 @@ export function CameraPermission({
       <View className="flex-1" />
       <View className="gap-2 px-4">
         <Button
-          label={permission.canAskAgain ? copy.allow : copy.settings}
+          label={permission.canAskAgain ? copy.allow : t('actions.openSettings')}
           icon="camera"
           onPress={() => (permission.canAskAgain ? onRequest() : Linking.openSettings())}
         />

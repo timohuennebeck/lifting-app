@@ -53,10 +53,8 @@ export default function RootLayout() {
   // Also before login: onboarding builds the first plan from the catalog.
   const catalog = useCatalogRefresh();
   const signedIn = useSessionStore((s) => !!s.session);
-  // A password reset signs in with its code; the app opens once the new password is set.
-  const recovering = useSessionStore((s) => s.recovering);
   const onboarded = useOnboardingStore((s) => s.completed);
-  const inApp = signedIn && onboarded && !recovering;
+  const inApp = signedIn && onboarded;
   // On first launch the splash stays up until the exercises are downloaded or that failed, and
   // always until the user's own are read (CustomExerciseGate), so no empty frame shows first.
   const customLoaded = useCustomExerciseStore((s) => s.loaded);

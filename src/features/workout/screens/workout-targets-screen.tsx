@@ -1,11 +1,7 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+import { useLocalSearchParams } from 'expo-router';
 
-import { SetTargetsForm } from '@/features/training/components/set-targets-form';
-import { haptics } from '@/shared/lib/haptics';
+import { SetTargetsScreen } from '@/features/training/components/set-targets-screen';
 import { requireUserId } from '@/shared/stores/session-store';
-import { Screen } from '@/shared/ui/screen';
-import { ScreenHeader } from '@/shared/ui/screen-header';
 
 import { useWorkout } from '../data/workout-detail';
 import { saveWorkoutTargets } from '../data/workout-mutations';
@@ -16,30 +12,27 @@ export function WorkoutTargetsScreen() {
     workoutId: string;
     exerciseId: string;
   }>();
-  const { t } = useTranslation('training');
   const { data: workout } = useWorkout(workoutId);
   const exercise = workout?.exercises.find((e) => e.id === exerciseId);
 
   return (
-    <Screen header={<ScreenHeader title={t('sets.title')} />}>
-      {exercise ? (
-        <SetTargetsForm
-          key={exercise.id}
-          exerciseId={exercise.exerciseId}
-          initialSets={exercise.sets.map((s) => ({
+    <SetTargetsScreen
+      exercise={
+        exercise && {
+          key: exercise.id,
+          exerciseId: exercise.exerciseId,
+          sets: exercise.sets.map((s) => ({
             key: s.id,
             targetMin: s.targetMin,
             targetMax: s.targetMax,
             rir: s.targetRir,
-          }))}
-          initialRest={exercise.restSeconds}
-          onSave={async (sets, rest) => {
-            await saveWorkoutTargets(requireUserId(), exercise.id, sets, rest);
-            haptics.success();
-            router.back();
-          }}
-        />
-      ) : null}
-    </Screen>
+          })),
+          restSeconds: exercise.restSeconds,
+        }
+      }
+      onSave={async (sets, rest) => {
+        if (exercise) await saveWorkoutTargets(requireUserId(), exercise.id, sets, rest);
+      }}
+    />
   );
 }

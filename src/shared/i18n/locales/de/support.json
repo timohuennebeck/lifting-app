@@ -31,8 +31,7 @@
     "bug": "Fehler melden",
     "bugHint": "Etwas funktioniert nicht",
     "idea": "Funktion wünschen",
-    "ideaHint": "Dir fehlt etwas in der App",
-    "cta": "Weiter"
+    "ideaHint": "Dir fehlt etwas in der App"
   },
   "form": {
     "bugTitle": "Fehler melden",

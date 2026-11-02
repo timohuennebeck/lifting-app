@@ -31,8 +31,7 @@
     "bug": "Relatar erro",
     "bugHint": "Algo não está funcionando",
     "idea": "Sugerir recurso",
-    "ideaHint": "Está faltando algo no app",
-    "cta": "Continuar"
+    "ideaHint": "Está faltando algo no app"
   },
   "form": {
     "bugTitle": "Relatar erro",

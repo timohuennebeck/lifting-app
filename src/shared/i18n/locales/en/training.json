@@ -82,7 +82,6 @@
   "options": {
     "meta_one": "{{count}} exercise · {{minutes}} min.",
     "meta_other": "{{count}} exercises · {{minutes}} min.",
-    "rename": "Rename",
     "renameHint": "Give {{name}} a new name",
     "delete": "Delete workout",
     "deleteHint": "Deletes {{name}}. Logged workouts stay.",

@@ -1,7 +1,6 @@
 {
   "picker": {
     "search": "Übungen suchen",
-    "done": "Fertig",
     "empty": "Keine Übungen gefunden",
     "index": "Alphabetischer Index",
     "selected": "Ausgewählt"
@@ -29,7 +28,6 @@
     "editTitle": "Übung bearbeiten",
     "menu": "Optionen für die Übung",
     "edit": "Bearbeiten",
-    "delete": "Löschen",
     "save": "Sichern",
     "namePlaceholder": "Name der Übung",
     "nameTaken": "Diese Übung gibt es schon.",
@@ -58,8 +56,6 @@
     "topSecondsShort": "Längstes Halten",
     "chartLabel": "Diagramm des höchsten Gewichts, gedrückt halten und ziehen",
     "emptyRange": "Keine Trainings in diesem Zeitraum.",
-    "days_one": "{{count}} T",
-    "days_other": "{{count}} T",
     "empty": "Noch keine Trainings. Beende ein Training mit dieser Übung, um deinen Fortschritt zu sehen.",
     "weight": "Gewicht",
     "oneRepMax": "1RM"

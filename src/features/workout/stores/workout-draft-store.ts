@@ -9,6 +9,7 @@ import {
 } from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
 import type { ExerciseDraft, SetTarget } from '@/shared/data/routines';
+import { moved } from '@/shared/lib/array';
 
 /**
  * A draft exercise; `key` stays with it when it is dragged to another place. One added by voice
@@ -76,12 +77,7 @@ export const useWorkoutDraftStore = create<WorkoutDraftState>()((set) => {
     settle: (at) => editAt(at, settled),
     swap: (at, exerciseId) => editAt(at, (e) => settled(swapExerciseDraft(e, exerciseId))),
     remove: (at) => set((s) => ({ exercises: s.exercises.filter((_, i) => i !== at) })),
-    move: (at, to) =>
-      set((s) => {
-        const exercises = s.exercises.filter((_, i) => i !== at);
-        exercises.splice(to, 0, s.exercises[at]);
-        return { exercises };
-      }),
+    move: (at, to) => set((s) => ({ exercises: moved(s.exercises, at, to) })),
     setSets: (at, sets, restSeconds) => editAt(at, (e) => ({ ...e, sets, restSeconds })),
   };
 });

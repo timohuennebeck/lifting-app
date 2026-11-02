@@ -82,7 +82,6 @@
   "options": {
     "meta_one": "{{count}} exercício · {{minutes}} min.",
     "meta_other": "{{count}} exercícios · {{minutes}} min.",
-    "rename": "Renomear",
     "renameHint": "Dê um novo nome para {{name}}",
     "delete": "Excluir treino",
     "deleteHint": "Exclui {{name}}. Os treinos registrados ficam.",

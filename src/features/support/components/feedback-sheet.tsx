@@ -2,8 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { colors } from '@/shared/lib/theme';
-import { ChoiceSheet } from '@/shared/ui/choice-sheet';
+import { ChoiceSheet, glyphColor } from '@/shared/ui/choice-sheet';
 import { Icon } from '@/shared/ui/icon';
 import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
@@ -17,7 +16,7 @@ export interface FeedbackSheetProps {
 
 /** "Report a bug" or "Request a feature", then on to the form (design 01f·S-B). */
 export function FeedbackSheet({ visible, onClose }: FeedbackSheetProps) {
-  const { t } = useTranslation('support');
+  const { t } = useTranslation(['support', 'common']);
   const [kind, setKind] = useState<TicketKind>('bug');
 
   function next(value: TicketKind) {
@@ -37,7 +36,7 @@ export function FeedbackSheet({ visible, onClose }: FeedbackSheetProps) {
           value: 'bug',
           title: t('sheet.bug'),
           description: t('sheet.bugHint'),
-          cta: t('sheet.cta'),
+          cta: t('common:actions.continue'),
           renderIcon: (active) => (
             <Text variant="headline" className={active ? 'text-on-accent' : 'text-fg-mid'}>
               !
@@ -48,10 +47,8 @@ export function FeedbackSheet({ visible, onClose }: FeedbackSheetProps) {
           value: 'idea',
           title: t('sheet.idea'),
           description: t('sheet.ideaHint'),
-          cta: t('sheet.cta'),
-          renderIcon: (active) => (
-            <Icon name="plus" size={16} color={active ? colors.onAccent : colors.fgMid} />
-          ),
+          cta: t('common:actions.continue'),
+          renderIcon: (active) => <Icon name="plus" size={16} color={glyphColor(active)} />,
         },
       ]}
     />

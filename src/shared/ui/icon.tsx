@@ -74,11 +74,6 @@ const ICONS = {
     viewBox: '0 0 14 14',
     render: stroke('M4.5 12.5v-10M2 5l2.5-2.5L7 5M9.5 1.5v10M7 9l2.5 2.5L12 9', 1.6),
   },
-  // Switching between two views, e.g. the set table's targets and last time.
-  'arrows-left-right': {
-    viewBox: '0 0 14 14',
-    render: stroke('M1.5 4.5h10M9 2l2.5 2.5L9 7M12.5 9.5h-10M5 7l-2.5 2.5L5 12', 1.6),
-  },
   refresh: { viewBox: '0 0 14 14', render: stroke('M12 7a5 5 0 1 1-1.5-3.6M12 1.5v3h-3', 1.6) },
   // A camera body with its lens (the "camera" icon is the viewfinder frame).
   'photo-camera': {
@@ -335,20 +330,6 @@ const ICONS = {
       <>
         <Circle cx={7} cy={7} r={5.5} fill="none" stroke={c} strokeWidth={1.6} />
         <Circle cx={7} cy={7} r={2.2} fill={c} />
-      </>
-    ),
-  },
-  eye: {
-    viewBox: '0 0 20 14',
-    render: (c) => (
-      <>
-        <Path
-          d="M1 7s3.3-6 9-6 9 6 9 6-3.3 6-9 6-9-6-9-6z"
-          stroke={c}
-          strokeWidth={1.6}
-          fill="none"
-        />
-        <Circle cx={10} cy={7} r={2.6} fill={c} />
       </>
     ),
   },

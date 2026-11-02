@@ -10,6 +10,7 @@ import { EditableExerciseList } from '@/features/training/components/editable-ex
 import { EditableTitle } from '@/features/training/components/editable-title';
 import { newId } from '@/shared/data/json';
 import { AI_BLOCK_WEEKS } from '@/shared/data/plans';
+import { moved } from '@/shared/lib/array';
 import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
@@ -139,18 +140,13 @@ export function ConfirmScreen() {
   // The routine shown stays shown at its new place.
   function moveRoutine(from: number, to: number) {
     if (!plan || !routine) return;
-    const routines = plan.routines.filter((_, k) => k !== from);
-    routines.splice(to, 0, plan.routines[from]);
+    const routines = moved(plan.routines, from, to);
     editPlan((p) => ({ ...p, routines }));
     selectRoutine(routines.indexOf(routine));
   }
 
   function moveExercise(from: number, to: number) {
-    editRoutine((r) => {
-      const next = r.exercises.filter((_, k) => k !== from);
-      next.splice(to, 0, r.exercises[from]);
-      return { ...r, exercises: next };
-    });
+    editRoutine((r) => ({ ...r, exercises: moved(r.exercises, from, to) }));
   }
 
   function submit() {

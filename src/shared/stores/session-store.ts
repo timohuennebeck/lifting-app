@@ -6,20 +6,12 @@ import { storedSession } from '@/shared/data/supabase';
 interface SessionState {
   /** The signed-in session; at launch the one saved on the device (see storedSession). */
   session: Session | null;
-  /**
-   * Signed in by a password reset code but no new password chosen yet: the app stays on the
-   * reset flow until it is.
-   */
-  recovering: boolean;
   setSession: (session: Session | null) => void;
-  setRecovering: (recovering: boolean) => void;
 }
 
 export const useSessionStore = create<SessionState>()((set) => ({
   session: storedSession(),
-  recovering: false,
   setSession: (session) => set({ session }),
-  setRecovering: (recovering) => set({ recovering }),
 }));
 
 export const useUserId = () => useSessionStore((s) => s.session?.user.id ?? null);

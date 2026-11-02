@@ -6,7 +6,8 @@ export type UnitSystem = 'metric' | 'imperial';
 const KG_PER_LB = 0.45359237;
 
 /** Between a number and its unit, so a line never breaks between them. */
-const NBSP = '\u00a0';
+/** A space a line never breaks at: between a number and its unit. */
+export const NBSP = '\u00a0';
 
 /** The weight unit's label, "kg" or "lb", the same in every app language. */
 export const weightUnit = (units: UnitSystem) => (units === 'imperial' ? 'lb' : 'kg');

@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Svg, { Circle, Path } from 'react-native-svg';
 
+import { linePath, nearestIndex } from '@/shared/lib/chart';
 import { daysBetween, fromIsoDate } from '@/shared/lib/date';
 import { formatNumber, formatShortDate, type UnitSystem } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
@@ -72,17 +73,16 @@ export function WeightChart({ points, from, to, units, selected, onSelect }: Wei
   // Each weigh-in's x once, not again (with its date parsed) on every finger move.
   const xs = points.map((p) => x(p.date));
   const trendLine = scale
-    ? points
-        .map((p, i) => `${i ? 'L' : 'M'}${xs[i]} ${scale.y(toUnits(p.trendKg, units))}`)
-        .join('')
+    ? linePath(
+        points,
+        (_, i) => xs[i],
+        (p) => scale.y(toUnits(p.trendKg, units)),
+      )
     : '';
 
   const pick = (touchX: number) => {
     if (!points.length) return;
-    let best = 0;
-    xs.forEach((px, i) => {
-      if (Math.abs(px - touchX) < Math.abs(xs[best] - touchX)) best = i;
-    });
+    const best = nearestIndex(xs, touchX);
     // Only a new weigh-in updates the screen around the chart.
     if (best === selected) return;
     haptics.select();

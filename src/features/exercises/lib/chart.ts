@@ -1,3 +1,5 @@
+import { yScale } from '@/shared/lib/chart';
+
 export interface ChartInput {
   time: number;
   value: number;
@@ -46,13 +48,11 @@ export function buildLineChart(
     return { points: [] as ChartPoint[], line: '', area: '' };
   }
   const { t0, t1, min, max } = bounds;
+  const y = yScale(min, max, height, PAD);
   const points = data.map((d) => ({
     ...d,
     x: t1 === t0 ? width - X_PAD : X_PAD + ((d.time - t0) / (t1 - t0)) * (width - 2 * X_PAD),
-    y:
-      max === min
-        ? height / 2
-        : height - PAD - ((d.value - min) / (max - min)) * (height - 2 * PAD),
+    y: y(d.value),
   }));
   const coords = points.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`);
   // A single session is drawn as a flat line across the chart.
@@ -63,13 +63,4 @@ export function buildLineChart(
   const first = points.length === 1 ? X_PAD : points[0].x;
   const last = points[points.length - 1].x;
   return { points, line, area: `${line} L${last} ${height} L${first} ${height} Z` };
-}
-
-/** Closest point to an x position. */
-export function nearestPoint(points: ChartPoint[], x: number) {
-  let best = 0;
-  for (let i = 1; i < points.length; i++) {
-    if (Math.abs(points[i].x - x) < Math.abs(points[best].x - x)) best = i;
-  }
-  return best;
 }

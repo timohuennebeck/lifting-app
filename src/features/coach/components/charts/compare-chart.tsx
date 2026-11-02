@@ -6,6 +6,7 @@ import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { useExerciseName } from '@/shared/data/exercises';
 import { cn } from '@/shared/lib/cn';
 import { daysBetween, fromIsoDate } from '@/shared/lib/date';
+import { linePath, yScale } from '@/shared/lib/chart';
 import { colors } from '@/shared/lib/theme';
 import { ChartGrid } from '@/shared/ui/chart-grid';
 import { Text } from '@/shared/ui/text';
@@ -15,8 +16,6 @@ import {
   formatAxisValue,
   formatChange,
   formatValue,
-  linePath,
-  yScale,
 } from '../../lib/charts';
 import { monthLabel, TimeAxis, useWidth } from './chart-parts';
 

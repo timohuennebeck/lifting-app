@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 
 import { useResetOnOpen } from '@/shared/hooks/use-reset-on-open';
-import { ChoiceSheet } from '@/shared/ui/choice-sheet';
+import { ChoiceSheet, glyphColor } from '@/shared/ui/choice-sheet';
 import { deleteIcon } from '@/shared/ui/minus-glyph';
 
-import { glyphColor, RenameGlyph, RoutineGlyph } from './glyphs';
+import { RenameGlyph, RoutineGlyph } from './glyphs';
 
 type RoutineOption = 'rename' | 'copy' | 'delete';
 
@@ -57,7 +57,7 @@ export function RoutineOptionsSheet({
       options={[
         {
           value: 'rename',
-          title: t('options.rename'),
+          title: t('common:actions.rename'),
           description: t('options.renameHint', { name }),
           cta: t('common:actions.rename'),
           renderIcon: (active) => <RenameGlyph color={glyphColor(active)} />,

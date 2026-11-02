@@ -1,4 +1,4 @@
-import { env } from '@/shared/config/env';
+import { postFunction, refusalOf } from '@/shared/data/edge-functions';
 import type { CustomExercise } from '@/shared/data/exercises';
 import type { ExerciseDraft } from '@/shared/data/routines';
 import { i18n } from '@/shared/i18n';
@@ -36,19 +36,13 @@ export async function readSpokenExercises(
   language: string,
   signal: AbortSignal,
 ): Promise<SpokenExercises> {
-  const response = await fetch(`${env.supabaseUrl}/functions/v1/read-exercises`, {
-    method: 'POST',
-    headers: { apikey: env.supabasePublishableKey, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text, language }),
-    signal,
-  }).catch((error: unknown) => {
-    if (signal.aborted) throw error;
-    console.warn('read-exercises could not be called', error);
-    throw new SpokenError('offline');
-  });
+  const response = await postFunction(
+    'read-exercises',
+    { text, language },
+    { signal, offline: () => new SpokenError('offline') },
+  );
   if (!response.ok) {
-    const text = await response.text().catch(() => '');
-    console.warn(`read-exercises answered ${response.status}: ${text.slice(0, 300)}`);
+    await refusalOf('read-exercises', response);
     throw new SpokenError(response.status === 429 ? 'limit' : 'failed');
   }
   const answer = (await response.json()) as {

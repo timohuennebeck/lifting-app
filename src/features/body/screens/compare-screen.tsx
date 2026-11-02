@@ -17,7 +17,7 @@ import { useWeightEntries } from '@/shared/data/weight-entries';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { cn } from '@/shared/lib/cn';
 import { DAY_MS } from '@/shared/lib/date';
-import { formatShortDate, formatWeight } from '@/shared/lib/format';
+import { formatShortDate } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 import { CompareArrow } from '@/shared/ui/compare-photo-card';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -25,7 +25,7 @@ import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 import { BodyPhotoCard } from '../components/body-photo-card';
-import { weightAt } from '../lib/check-weight';
+import { checkWeightLabel } from '../lib/check-weight';
 import { comparedPair, inOrder } from '../lib/comparison';
 import { useCompareStore } from '../stores/compare-store';
 
@@ -115,10 +115,7 @@ export function CompareScreen() {
   }
 
   const numberOf = (check: ProgressCheck) => checks.indexOf(check) + 1;
-  const weightOf = (check: ProgressCheck) => {
-    const kg = weightAt(entries, check.createdAt);
-    return kg === undefined ? undefined : formatWeight(kg, units);
-  };
+  const weightOf = (check: ProgressCheck) => checkWeightLabel(entries, check.createdAt, units);
   const sideOf = (check: ProgressCheck): Side | null =>
     check.id === before.id ? 'A' : check.id === after.id ? 'B' : null;
   const days = Math.round((Date.parse(after.createdAt) - Date.parse(before.createdAt)) / DAY_MS);

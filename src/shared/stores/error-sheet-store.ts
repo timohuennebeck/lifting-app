@@ -1,4 +1,7 @@
+import { Linking } from 'react-native';
 import { create } from 'zustand';
+
+import { i18n } from '@/shared/i18n';
 
 export interface ErrorSheetOptions {
   title: string;
@@ -35,3 +38,16 @@ export function showError(error: ErrorSheetOptions) {
 }
 
 export const hideError = () => useErrorSheetStore.setState({ visible: false });
+
+/** An error only the system settings can fix: "Open settings", or "Not now". */
+export function showSettingsError(title: string, message: string) {
+  showError({
+    title,
+    message,
+    action: {
+      label: i18n.t('common:actions.openSettings'),
+      onPress: () => void Linking.openSettings(),
+    },
+    dismissLabel: i18n.t('common:actions.notNow'),
+  });
+}

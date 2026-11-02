@@ -1,7 +1,6 @@
 {
   "picker": {
     "search": "Search exercises",
-    "done": "Done",
     "empty": "No exercises found",
     "index": "Alphabet index",
     "selected": "Selected"
@@ -29,7 +28,6 @@
     "editTitle": "Edit exercise",
     "menu": "Exercise options",
     "edit": "Edit",
-    "delete": "Delete",
     "save": "Save",
     "namePlaceholder": "Exercise name",
     "nameTaken": "This exercise already exists.",
@@ -58,8 +56,6 @@
     "topSecondsShort": "Longest hold",
     "chartLabel": "Top weight chart, press and drag to read a session",
     "emptyRange": "No sessions in this period.",
-    "days_one": "{{count}} D",
-    "days_other": "{{count}} D",
     "empty": "No sessions yet. Finish a workout with this exercise to see your progress.",
     "weight": "Weight",
     "oneRepMax": "1RM"

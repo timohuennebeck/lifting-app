@@ -25,8 +25,7 @@
     "permission": {
       "title": "Kamera erlauben",
       "body": "Für den Körpercheck brauchst du die Kamera. Deine Fotos bleiben privat.",
-      "allow": "Kamera erlauben",
-      "settings": "Einstellungen öffnen"
+      "allow": "Kamera erlauben"
     },
     "auto": "Auto",
     "autoA11y": "Automatisch: ein Tipp nimmt alle Fotos nacheinander auf",

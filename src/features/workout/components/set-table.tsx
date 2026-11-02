@@ -16,6 +16,7 @@ import {
 import { cn } from '@/shared/lib/cn';
 import { decimalSeparator, displayInput } from '@/shared/lib/keypad';
 import { colors } from '@/shared/lib/theme';
+import { CheckCircle } from '@/shared/ui/check-item';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -187,14 +188,7 @@ export function SetTable({
           onPress={onToggleAll}
           className="w-7 items-end"
         >
-          <View
-            className={cn(
-              'size-6 items-center justify-center rounded-full',
-              allDone ? 'bg-accent' : 'border-2 border-track',
-            )}
-          >
-            {allDone ? <Icon name="check" size={11} color={colors.onAccent} /> : null}
-          </View>
+          <CheckCircle checked={allDone} size={24} glyph={11} />
         </PressableScale>
       </View>
       <View className="gap-2.5 px-5">

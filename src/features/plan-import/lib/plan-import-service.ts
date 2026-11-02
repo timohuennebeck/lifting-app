@@ -1,9 +1,8 @@
-import { fetch } from 'expo/fetch';
 import { File } from 'expo-file-system';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 
 import type { PlanAnswers } from '@/features/plan-create/lib/plan-answers';
-import { env } from '@/shared/config/env';
+import { postFunction, refusalOf } from '@/shared/data/edge-functions';
 import type { CustomExercise } from '@/shared/data/exercises';
 import { clampSessions, type PlanDraft, type RoutineDraft } from '@/shared/data/plans';
 import type { ExerciseDraft } from '@/shared/data/routines';
@@ -125,15 +124,6 @@ async function requestBody(source: ReadSource) {
   return { file: { name: file.name, mimeType: file.mimeType ?? '', data, sheets } };
 }
 
-/** The reason in the function's `{ error }` answer, or 'failed'. */
-function serverFailure(text: string): ImportFailure {
-  try {
-    return SERVER_ERRORS[JSON.parse(text)?.error] ?? 'failed';
-  } catch {
-    return 'failed';
-  }
-}
-
 /**
  * Throws once the import was stopped. Not `signal.throwIfAborted()`: React Native's AbortSignal
  * (the abort-controller polyfill) doesn't have it.
@@ -169,23 +159,15 @@ export async function streamPlan(
   const fn = source.kind === 'answers' ? 'generate-plan' : 'read-plan';
   const request =
     source.kind === 'answers' ? { answers: source.answers } : await requestBody(source);
-  const body = JSON.stringify({ ...request, language });
   stopIfAborted(signal);
-  // expo/fetch, unlike React Native's own fetch, hands over the answer while it arrives.
-  const response = await fetch(`${env.supabaseUrl}/functions/v1/${fn}`, {
-    method: 'POST',
-    headers: { apikey: env.supabasePublishableKey, 'Content-Type': 'application/json' },
-    body,
-    signal,
-  }).catch((error: unknown) => {
-    stopIfAborted(signal);
-    console.warn(`${fn} could not be called`, error);
-    throw new ImportError('offline');
-  });
+  const response = await postFunction(
+    fn,
+    { ...request, language },
+    { signal, offline: () => new ImportError('offline') },
+  );
   if (!response.ok || !response.body) {
-    const text = await response.text().catch(() => '');
-    console.warn(`${fn} answered ${response.status}: ${text.slice(0, 300)}`);
-    throw new ImportError(serverFailure(text));
+    const { error } = await refusalOf(fn, response);
+    throw new ImportError(SERVER_ERRORS[error ?? ''] ?? 'failed');
   }
 
   const done = await readServerEvents<

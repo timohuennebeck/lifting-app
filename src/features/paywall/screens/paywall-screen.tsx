@@ -156,7 +156,9 @@ export function PaywallScreen() {
           label={
             failed
               ? t('common:actions.retry')
-              : t(trial ? 'paywall.startTrial' : 'paywall.continue')
+              : trial
+                ? t('paywall.startTrial')
+                : t('common:actions.continue')
           }
           loading={busy || loading}
           disabled={restoring}

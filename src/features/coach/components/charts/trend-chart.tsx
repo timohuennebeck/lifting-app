@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
 import { daysBetween, fromIsoDate } from '@/shared/lib/date';
+import { linePath, yScale } from '@/shared/lib/chart';
 import { colors } from '@/shared/lib/theme';
 import { ChartGrid } from '@/shared/ui/chart-grid';
 import { Text } from '@/shared/ui/text';
@@ -12,10 +13,8 @@ import {
   formatAxisValue,
   formatChange,
   formatValue,
-  linePath,
   niceTicks,
   type TrendChart as TrendChartData,
-  yScale,
 } from '../../lib/charts';
 import { Headline, monthLabel, TimeAxis, timeLabels, useWidth } from './chart-parts';
 

@@ -25,8 +25,7 @@
     "permission": {
       "title": "Permitir câmara",
       "body": "O check corporal precisa da câmara. As tuas fotos ficam privadas.",
-      "allow": "Permitir câmara",
-      "settings": "Abrir definições"
+      "allow": "Permitir câmara"
     },
     "auto": "Auto",
     "autoA11y": "Automático: um toque tira todas as fotos em sequência",
