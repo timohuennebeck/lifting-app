@@ -46,7 +46,7 @@ export function AnswerSteps({ progress }: { progress: AnswerProgress }) {
   const current = searched && !found ? t('steps.searching') : t('steps.writing');
   return (
     <View className="flex-row gap-2.5">
-      <CoachMark thinking />
+      <CoachMark animation="think" />
       <View className="min-w-0 flex-1 gap-2.5 pt-1">
         {searched ? <DoneStep label={t(`steps.searched.${searched.of}`, searched)} /> : null}
         {found ? <DoneStep label={t('steps.found')} /> : null}

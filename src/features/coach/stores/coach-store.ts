@@ -25,7 +25,7 @@ export interface PendingAnswer {
 }
 
 interface CoachState {
-  /** The chat on the coach tab; null: a new one (the start screen). */
+  /** The chat the coach shows; null: a new one (the start screen). */
   chatId: string | null;
   pending: PendingAnswer | null;
 }
@@ -35,7 +35,7 @@ export const useCoachStore = create<CoachState>()(() => ({ chatId: null, pending
 /** Stops the answer in flight. */
 let controller: AbortController | null = null;
 
-/** Shows a chat on the coach tab; null starts a new one. */
+/** Shows a chat in the coach; null starts a new one. */
 export const openChat = (chatId: string | null) => useCoachStore.setState({ chatId });
 
 const update = (patch: Partial<PendingAnswer>) =>
@@ -64,7 +64,7 @@ function apply(event: CoachEvent) {
 }
 
 /**
- * Asks the coach in the chat on the tab and streams the answer into `pending`. Resolves with what
+ * Asks the coach in the chat it shows and streams the answer into `pending`. Resolves with what
  * happened: a CoachError when there is no answer. Nothing is saved then, so a new chat stays new.
  */
 export async function ask(input: Omit<CoachQuestion, 'chatId'>) {

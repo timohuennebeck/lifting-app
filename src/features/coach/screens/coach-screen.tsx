@@ -4,18 +4,17 @@ import type { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useTabBarInset } from '@/shared/components/tab-screen';
-import { ProfileAvatar } from '@/shared/components/profile-avatar';
 import { useExerciseName } from '@/shared/data/exercises';
 import { useProfile } from '@/shared/data/profile';
 import { QueryFocus } from '@/shared/data/query-focus';
 import { useAppLanguage } from '@/shared/hooks/use-app-language';
 import { formatDate, formatShortDate, formatTime } from '@/shared/lib/format';
 import { showError } from '@/shared/stores/error-sheet-store';
-import { PressableScale } from '@/shared/ui/pressable-scale';
 
 import { CoachChatView } from '../components/coach-chat-view';
+import { CoachBack } from '../components/coach-header';
 import { CoachStartView } from '../components/coach-start-view';
 import { useCoachMessages, useCoachWorkouts } from '../data/coach-chats';
 import { chartTopic } from '../lib/charts';
@@ -41,19 +40,18 @@ function showCoachError(error: CoachError, t: TFunction<'coach'>, retry: () => v
 }
 
 /**
- * The coach tab (design "Coach Screens"): the start screen for a new chat, otherwise the chat with
- * the answer in flight below its saved questions and answers.
+ * The coach (design "Coach Screens"), opened from the Training tab's card: the start screen for a
+ * new chat, otherwise the chat with the answer in flight below its saved questions and answers.
  */
 export function CoachScreen() {
   const { t } = useTranslation('coach');
-  const { t: tCommon } = useTranslation();
   const language = useAppLanguage();
   const { profile } = useProfile();
   const chatId = useCoachStore((s) => s.chatId);
   const pending = useCoachStore((s) => s.pending);
   const { data: messages = [] } = useCoachMessages(chatId);
   const { data: workouts } = useCoachWorkouts();
-  const [bottomInset, tabBarProbe] = useTabBarInset();
+  const insets = useSafeAreaInsets();
   const [draft, setDraft] = useState('');
 
   // The answer in flight belongs to this chat until its saved copy has synced in.
@@ -108,34 +106,26 @@ export function CoachScreen() {
       <View className="flex-1 bg-bg">
         {starting ? (
           <CoachStartView
-            avatar={
-              <PressableScale
-                accessibilityLabel={tCommon('tabs.profile')}
-                onPress={() => router.navigate('/profile')}
-              >
-                <ProfileAvatar profile={profile} size={36} />
-              </PressableScale>
-            }
+            leading={<CoachBack onPress={() => router.back()} />}
             workouts={workouts?.count ?? 0}
             since={since}
             onHistory={onHistory}
             onAsk={(question) => void send(question)}
             composer={composer}
-            bottomInset={bottomInset}
+            bottomInset={insets.bottom}
           />
         ) : (
           <CoachChatView
             subtitle={subtitle}
             items={messages}
             pending={pendingHere}
-            onBack={() => openChat(null)}
+            onBack={() => router.back()}
             onHistory={onHistory}
             onNew={() => openChat(null)}
             composer={composer}
-            bottomInset={bottomInset}
+            bottomInset={insets.bottom}
           />
         )}
-        {tabBarProbe}
       </View>
     </QueryFocus>
   );

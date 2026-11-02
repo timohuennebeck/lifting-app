@@ -2,6 +2,17 @@
   "title": "Coach",
   "newChat": "New chat",
   "consent": "For its answers, your training and weight data go to an AI model by OpenAI in the USA. Sending your first question is your consent.",
+  "card": {
+    "label": "Ask Kai",
+    "questions": [
+      "How did my push day go?",
+      "How has my bench press developed?",
+      "Which muscles am I not training enough?",
+      "How consistent have I been?",
+      "How much volume did I lift this week?",
+      "How has my weight changed?"
+    ]
+  },
   "composer": {
     "placeholder": "Ask your coach …",
     "answering": "Coach is answering …",
@@ -23,26 +34,15 @@
   },
   "start": {
     "title": "Ask me anything about your training.",
-    "subtitle_one": "I know your first workout and answer with numbers and charts.",
-    "subtitle_other": "I know all {{count}} workouts since {{since}} and answer with numbers and charts.",
-    "empty": "Once you train, I answer with numbers and charts from your workouts.",
+    "subtitle_one": "I know your first workout and answer with facts and charts.",
+    "subtitle_other": "I know all {{count}} workouts since {{since}} and answer with facts and charts.",
+    "empty": "Once you train, I answer with facts and charts from your workouts.",
+    "tapToAsk": "Tap to ask",
     "suggestions": {
-      "weight": {
-        "label": "Weight",
-        "question": "How has my weight changed?"
-      },
-      "strength": {
-        "label": "Strength",
-        "question": "How have my main lifts developed?"
-      },
-      "balance": {
-        "label": "Balance",
-        "question": "Which muscles am I not training enough?"
-      },
-      "volume": {
-        "label": "Volume",
-        "question": "Compare this week with last week"
-      }
+      "weight": "How has my weight changed?",
+      "strength": "How is my bench press going since January?",
+      "balance": "Which muscles am I not training enough?",
+      "volume": "Compare this week with last week"
     }
   },
   "values": {

@@ -80,7 +80,7 @@ export function LevelScreen() {
   };
 
   return (
-    <TabScreen page>
+    <TabScreen>
       <BodyMaps selected={trained} />
       {isLoading ? null : (
         <>

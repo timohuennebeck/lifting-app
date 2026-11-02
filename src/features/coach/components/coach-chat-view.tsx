@@ -41,7 +41,7 @@ export interface CoachChatViewProps {
   onHistory: () => void;
   onNew: () => void;
   composer: CoachComposerProps;
-  /** What the tab bar covers at the bottom. */
+  /** What the home indicator covers at the bottom. */
   bottomInset: number;
 }
 

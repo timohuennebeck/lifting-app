@@ -36,7 +36,7 @@ export interface CoachHistoryViewProps {
   onSelecting: (selecting: boolean) => void;
   onToggle: (chatId: string) => void;
   onDelete: () => void;
-  /** What the tab bar covers at the bottom. */
+  /** What the home indicator covers at the bottom. */
   bottomInset: number;
 }
 

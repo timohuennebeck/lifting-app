@@ -2,6 +2,17 @@
   "title": "Coach",
   "newChat": "Neuer Chat",
   "consent": "Für die Antworten gehen deine Trainings- und Gewichtsdaten an ein KI-Modell von OpenAI in den USA. Mit deiner ersten Frage willigst du ein.",
+  "card": {
+    "label": "Frag Kai",
+    "questions": [
+      "Wie lief mein Push heute?",
+      "Wie hat sich mein Bankdrücken entwickelt?",
+      "Welche Muskeln trainiere ich zu wenig?",
+      "Wie regelmäßig trainiere ich?",
+      "Wie viel Volumen hatte ich diese Woche?",
+      "Wie hat sich mein Gewicht entwickelt?"
+    ]
+  },
   "composer": {
     "placeholder": "Frag deinen Coach …",
     "answering": "Coach antwortet …",
@@ -23,26 +34,15 @@
   },
   "start": {
     "title": "Frag mich alles zu deinem Training.",
-    "subtitle_one": "Ich kenne deine erste Einheit und antworte mit Zahlen und Diagrammen.",
-    "subtitle_other": "Ich kenne alle {{count}} Einheiten seit {{since}} und antworte mit Zahlen und Diagrammen.",
-    "empty": "Sobald du trainierst, antworte ich mit Zahlen und Diagrammen aus deinen Einheiten.",
+    "subtitle_one": "Ich kenne deine erste Einheit und antworte mit Fakten und Diagrammen.",
+    "subtitle_other": "Ich kenne alle {{count}} Einheiten seit {{since}} und antworte mit Fakten und Diagrammen.",
+    "empty": "Sobald du trainierst, antworte ich mit Fakten und Diagrammen aus deinen Einheiten.",
+    "tapToAsk": "Tippe, um zu fragen",
     "suggestions": {
-      "weight": {
-        "label": "Gewicht",
-        "question": "Wie hat sich mein Gewicht entwickelt?"
-      },
-      "strength": {
-        "label": "Kraft",
-        "question": "Wie haben sich meine Grundübungen entwickelt?"
-      },
-      "balance": {
-        "label": "Balance",
-        "question": "Welche Muskeln trainiere ich zu wenig?"
-      },
-      "volume": {
-        "label": "Volumen",
-        "question": "Vergleich diese Woche mit letzter"
-      }
+      "weight": "Wie hat sich mein Gewicht entwickelt?",
+      "strength": "Wie läuft mein Bankdrücken seit Januar?",
+      "balance": "Welche Muskeln trainiere ich zu wenig?",
+      "volume": "Vergleich diese Woche mit letzter"
     }
   },
   "values": {

@@ -2,6 +2,17 @@
   "title": "Coach",
   "newChat": "Novo chat",
   "consent": "Para as respostas, seus dados de treino e de peso são transferidos para um modelo de IA da OpenAI, nos EUA. Ao enviar sua primeira pergunta, você consente com isso.",
+  "card": {
+    "label": "Pergunte ao Kai",
+    "questions": [
+      "Como foi meu treino de push hoje?",
+      "Como meu supino evoluiu?",
+      "Quais músculos estou treinando pouco?",
+      "Com que regularidade tenho treinado?",
+      "Quanto volume levantei esta semana?",
+      "Como meu peso evoluiu?"
+    ]
+  },
   "composer": {
     "placeholder": "Pergunte ao seu coach …",
     "answering": "O coach está respondendo …",
@@ -23,26 +34,15 @@
   },
   "start": {
     "title": "Pergunte o que quiser sobre o seu treino.",
-    "subtitle_one": "Conheço seu primeiro treino e respondo com números e gráficos.",
-    "subtitle_other": "Conheço todos os seus {{count}} treinos desde {{since}} e respondo com números e gráficos.",
-    "empty": "Assim que você treinar, respondo com números e gráficos dos seus treinos.",
+    "subtitle_one": "Conheço seu primeiro treino e respondo com fatos e gráficos.",
+    "subtitle_other": "Conheço todos os seus {{count}} treinos desde {{since}} e respondo com fatos e gráficos.",
+    "empty": "Assim que você treinar, respondo com fatos e gráficos dos seus treinos.",
+    "tapToAsk": "Toque para perguntar",
     "suggestions": {
-      "weight": {
-        "label": "Peso",
-        "question": "Como meu peso evoluiu?"
-      },
-      "strength": {
-        "label": "Força",
-        "question": "Como meus exercícios principais evoluíram?"
-      },
-      "balance": {
-        "label": "Equilíbrio",
-        "question": "Quais músculos estou treinando pouco?"
-      },
-      "volume": {
-        "label": "Volume",
-        "question": "Compare esta semana com a anterior"
-      }
+      "weight": "Como meu peso evoluiu?",
+      "strength": "Como está indo meu supino desde janeiro?",
+      "balance": "Quais músculos estou treinando pouco?",
+      "volume": "Compare esta semana com a anterior"
     }
   },
   "values": {

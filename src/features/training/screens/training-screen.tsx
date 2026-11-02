@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated, { useAnimatedRef } from 'react-native-reanimated';
 
+import { AskCoachCard } from '@/features/coach/components/ask-coach-card';
+import { openCoach } from '@/features/coach/lib/open-coach';
 import { openPlanEditor, openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { TabScreen } from '@/shared/components/tab-screen';
 import {
@@ -138,6 +140,7 @@ export function TrainingScreen() {
         </View>
       }
     >
+      <AskCoachCard onPress={openCoach} className="mx-4 mt-3 mb-3" />
       {loading ? null : (
         <>
           {card ? (

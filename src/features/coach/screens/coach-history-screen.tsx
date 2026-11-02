@@ -2,8 +2,8 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useTabBarInset } from '@/shared/components/tab-screen';
 import { useToday } from '@/shared/hooks/use-today';
 import { ActionSheet } from '@/shared/ui/action-sheet';
 
@@ -19,7 +19,7 @@ export function CoachHistoryScreen() {
   const { t } = useTranslation('coach');
   const { data: chats = [] } = useCoachChats();
   const today = useToday();
-  const [bottomInset, tabBarProbe] = useTabBarInset();
+  const insets = useSafeAreaInsets();
   const [query, setQuery] = useState('');
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState(NONE);
@@ -40,7 +40,7 @@ export function CoachHistoryScreen() {
     setConfirming(false);
     setSelecting(false);
     setSelected(NONE);
-    // The chat on the tab is gone: the tab starts a new one.
+    // The chat the coach shows is gone: it starts a new one.
     if (chatIds.includes(useCoachStore.getState().chatId ?? '')) openChat(null);
     await deleteCoachChats(chatIds).catch((error: unknown) =>
       console.warn('Deleting coach chats failed', error),
@@ -64,7 +64,7 @@ export function CoachHistoryScreen() {
         }}
         onToggle={toggle}
         onDelete={() => setConfirming(selected.size > 0)}
-        bottomInset={bottomInset}
+        bottomInset={insets.bottom}
       />
       <ActionSheet
         visible={confirming}
@@ -72,7 +72,6 @@ export function CoachHistoryScreen() {
         items={[{ action: 'delete', label: t('history.deleteConfirm', { count: selected.size }) }]}
         onAction={() => void remove()}
       />
-      {tabBarProbe}
     </View>
   );
 }

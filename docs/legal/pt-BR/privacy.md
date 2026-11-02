@@ -151,7 +151,7 @@ Base legal: art. 6(1)(b) do RGPD para a importação e a criação de plano que 
 
 ### 4.8 Coach
 
-Com o Loqqa Pro, você pode fazer perguntas sobre o seu próprio treino na aba “Coach”, por exemplo “Como meu peso evoluiu?”. O coach responde em poucas frases, geralmente com um gráfico feito a partir dos seus dados. Ele também responde a perguntas gerais de treino, por exemplo com que frequência você deve treinar pernas ou que exercício você pode fazer se algo doer. Ele não faz diagnósticos. O coach é opcional e só está disponível a partir dos 16 anos. Para usá-lo, você precisa de conexão com a internet.
+Com o Loqqa Pro, você pode fazer perguntas ao coach sobre o seu próprio treino, por exemplo “Como meu peso evoluiu?”. O coach responde em poucas frases, geralmente com um gráfico feito a partir dos seus dados. Ele também responde a perguntas gerais de treino, por exemplo com que frequência você deve treinar pernas ou que exercício você pode fazer se algo doer. Ele não faz diagnósticos. O coach é opcional e só está disponível a partir dos 16 anos. Para usá-lo, você precisa de conexão com a internet.
 
 **Respostas por um modelo de IA da OpenAI:** o app transfere sua pergunta, junto com o idioma do app e o fuso horário do seu dispositivo, para o nosso servidor. O servidor repassa a pergunta a um modelo de IA da OpenAI. Se o modelo precisar de dados, ele os solicita ao nosso servidor: o servidor calcula os valores a partir dos seus dados salvos e transfere os resultados à OpenAI. A partir deles, o modelo escreve a resposta. A cada pergunta, nosso servidor transfere à OpenAI:
 

@@ -20,20 +20,20 @@ const ABOVE_COMPOSER = 26;
 
 export interface CoachStartViewProps {
   /** The profile photo, top left like on the other tabs. */
-  avatar: ReactNode;
+  leading: ReactNode;
   /** Logged workouts and the month of the first, for "Ich kenne alle 142 Einheiten seit Januar". */
   workouts: number;
   since: string | null;
   onHistory: () => void;
   onAsk: (question: string) => void;
   composer: CoachComposerProps;
-  /** What the tab bar covers at the bottom. */
+  /** What the home indicator covers at the bottom. */
   bottomInset: number;
 }
 
 /** The coach's empty chat (design CO·A): what it can do, four questions to start with. */
 export function CoachStartView({
-  avatar,
+  leading,
   workouts,
   since,
   onHistory,
@@ -46,7 +46,7 @@ export function CoachStartView({
   const [composerHeight, setComposerHeight] = useState(COMPOSER);
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
-      <CoachHeader leading={avatar} onHistory={onHistory} />
+      <CoachHeader leading={leading} onHistory={onHistory} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
@@ -59,7 +59,7 @@ export function CoachStartView({
         }}
       >
         <View className="gap-3 px-1">
-          <CoachMark size={44} />
+          <CoachMark size={44} animation="breathe" />
           <Text className="font-inter-semibold text-[30px] leading-[34.5px] tracking-[-0.6px] text-fg">
             {t('start.title')}
           </Text>
@@ -67,19 +67,20 @@ export function CoachStartView({
             {workouts && since ? t('start.subtitle', { count: workouts, since }) : t('start.empty')}
           </Text>
         </View>
-        <View className="flex-row flex-wrap gap-2">
+        {/* Questions to start with, as the user's own would look in the chat. */}
+        <View className="items-end gap-1.5">
+          <Text className="px-1 pb-0.5 font-inter text-xs leading-[15px] text-dim">
+            {t('start.tapToAsk')}
+          </Text>
           {SUGGESTIONS.map((key) => (
             <PressableScale
               key={key}
               haptic="tap"
-              onPress={() => onAsk(t(`start.suggestions.${key}.question`))}
-              className="min-h-24 grow basis-[45%] gap-2 rounded-[20px] bg-surface p-3.5"
+              onPress={() => onAsk(t(`start.suggestions.${key}`))}
+              className="max-w-[87%] rounded-[20px] rounded-br-md bg-elevated px-4 py-2.5"
             >
-              <Text className="font-inter-semibold text-[11px] leading-[14px] tracking-[0.88px] text-subtle uppercase">
-                {t(`start.suggestions.${key}.label`)}
-              </Text>
-              <Text className="font-inter-medium text-sm leading-[18.9px] text-fg">
-                {t(`start.suggestions.${key}.question`)}
+              <Text className="font-inter-medium text-sm leading-5 text-fg">
+                {t(`start.suggestions.${key}`)}
               </Text>
             </PressableScale>
           ))}

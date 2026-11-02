@@ -2,6 +2,17 @@
   "title": "Coach",
   "newChat": "Novo chat",
   "consent": "Para as respostas, os teus dados de treino e de peso são transmitidos a um modelo de IA da OpenAI, nos EUA. Ao enviares a tua primeira pergunta, dás o teu consentimento.",
+  "card": {
+    "label": "Pergunta ao Kai",
+    "questions": [
+      "Como correu o meu treino de push hoje?",
+      "Como evoluiu o meu supino?",
+      "Que músculos estou a treinar pouco?",
+      "Com que regularidade tenho treinado?",
+      "Quanto volume levantei esta semana?",
+      "Como evoluiu o meu peso?"
+    ]
+  },
   "composer": {
     "placeholder": "Pergunta ao teu coach …",
     "answering": "O coach está a responder …",
@@ -23,26 +34,15 @@
   },
   "start": {
     "title": "Pergunta-me tudo sobre o teu treino.",
-    "subtitle_one": "Conheço o teu primeiro treino e respondo com números e gráficos.",
-    "subtitle_other": "Conheço todos os teus {{count}} treinos desde {{since}} e respondo com números e gráficos.",
-    "empty": "Assim que treinares, respondo com números e gráficos dos teus treinos.",
+    "subtitle_one": "Conheço o teu primeiro treino e respondo com factos e gráficos.",
+    "subtitle_other": "Conheço todos os teus {{count}} treinos desde {{since}} e respondo com factos e gráficos.",
+    "empty": "Assim que treinares, respondo com factos e gráficos dos teus treinos.",
+    "tapToAsk": "Toca para perguntar",
     "suggestions": {
-      "weight": {
-        "label": "Peso",
-        "question": "Como evoluiu o meu peso?"
-      },
-      "strength": {
-        "label": "Força",
-        "question": "Como evoluíram os meus exercícios principais?"
-      },
-      "balance": {
-        "label": "Equilíbrio",
-        "question": "Que músculos estou a treinar pouco?"
-      },
-      "volume": {
-        "label": "Volume",
-        "question": "Compara esta semana com a anterior"
-      }
+      "weight": "Como evoluiu o meu peso?",
+      "strength": "Como está a correr o meu supino desde janeiro?",
+      "balance": "Que músculos estou a treinar pouco?",
+      "volume": "Compara esta semana com a anterior"
     }
   },
   "values": {
