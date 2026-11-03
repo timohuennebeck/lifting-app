@@ -9,7 +9,7 @@ import { Inter_700Bold } from '@expo-google-fonts/inter/700Bold';
 import { PowerSyncContext } from '@powersync/react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
-import { DarkTheme, Stack, ThemeProvider } from 'expo-router';
+import { DarkTheme, Stack, ThemeProvider, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
@@ -30,11 +30,12 @@ import { useCatalogRefresh } from '@/shared/hooks/use-catalog-refresh';
 import { useScreenTracking } from '@/shared/hooks/use-screen-tracking';
 import { colors } from '@/shared/lib/theme';
 import { useSessionStore } from '@/shared/stores/session-store';
+import { useSplashStore } from '@/shared/stores/splash-store';
 
 SplashScreen.preventAutoHideAsync();
 Uniwind.setTheme('dark');
 
-const LEGAL_CHECK_WAIT_MS = 2500;
+const SPLASH_MAX_WAIT_MS = 2500;
 
 const navigationTheme = {
   ...DarkTheme,
@@ -59,18 +60,25 @@ export default function RootLayout() {
   // always until the user's own are read (CustomExerciseGate), so no empty frame shows first.
   const customLoaded = useCustomExerciseStore((s) => s.loaded);
   const catalogSettled = catalog.failed || (catalog.ready && customLoaded);
+  const launched = fontsLoaded && catalogSettled;
+  // A launch into the Training tab also waits until it can draw all of itself, one with a link to
+  // another screen doesn't. While a new terms or privacy version waits for consent, it waits for
+  // the legal check too, so the app doesn't show first with the gate over it.
+  const pathname = usePathname();
+  const homeReady = useSplashStore((s) => s.homeReady);
+  const legalSettled = useSplashStore((s) => s.legalSettled);
+  const homeLoading = inApp && catalog.ready && pathname === '/' && !homeReady;
+  const legalChecking = inApp && legalUpdateWasPending() && !legalSettled;
+  const splashDone = launched && !homeLoading && !legalChecking;
   useEffect(() => {
-    if (!fontsLoaded || !catalogSettled) return;
-    if (!inApp || !legalUpdateWasPending()) {
-      SplashScreen.hide();
-      return;
-    }
-    // While a new terms or privacy version waits for consent, the legal check hides it
-    // (LegalUpdateGate), so the app doesn't show first with the gate over it; a slow or missing
-    // connection never keeps it up longer than this.
-    const timer = setTimeout(SplashScreen.hide, LEGAL_CHECK_WAIT_MS);
+    if (splashDone) SplashScreen.hide();
+  }, [splashDone]);
+  // A slow or missing connection never keeps it up longer than this.
+  useEffect(() => {
+    if (!launched) return;
+    const timer = setTimeout(SplashScreen.hide, SPLASH_MAX_WAIT_MS);
     return () => clearTimeout(timer);
-  }, [fontsLoaded, catalogSettled, inApp]);
+  }, [launched]);
 
   if (!fontsLoaded) return null;
 

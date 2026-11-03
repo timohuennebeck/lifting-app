@@ -46,6 +46,8 @@ export function WeekStrip({ today, onOpen }: WeekStripProps) {
       style={LIST_STYLE}
       getItemLayout={(_, index) => ({ length: width, offset: width * index, index })}
       initialScrollIndex={PAST_WEEKS}
+      // This week from the first frame: without it the list scrolls there a frame later.
+      contentOffset={{ x: width * PAST_WEEKS, y: 0 }}
       // The week on screen and one on each side, so a swipe never shows an empty page.
       initialNumToRender={1}
       maxToRenderPerBatch={2}

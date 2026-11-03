@@ -1,5 +1,4 @@
 import { router } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
@@ -14,6 +13,7 @@ import { formatLongDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { requireUserId } from '@/shared/stores/session-store';
+import { useSplashStore } from '@/shared/stores/splash-store';
 import { Button } from '@/shared/ui/button';
 import { Icon, type IconName } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -56,9 +56,10 @@ export function LegalUpdateGate() {
   const shown = pending.length > 0 && !activeWorkout;
   // On launch the splash screen stays until this check is done, so the app never shows first
   // with the gate popping up over it (the root layout stops waiting after a moment).
+  const setLegalSettled = useSplashStore((s) => s.setLegalSettled);
   useEffect(() => {
-    if (settled) SplashScreen.hide();
-  }, [settled]);
+    if (settled) setLegalSettled();
+  }, [settled, setLegalSettled]);
   // Back would reach the app underneath.
   useHardwareBack(() => {}, shown);
   const rows = useMemo(
