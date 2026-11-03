@@ -127,7 +127,7 @@ export function CoachChatView({
         {rows}
       </KeyboardChatScrollView>
       <KeyboardStickyView offset={{ closed: 0, opened: keyboardOffset }}>
-        <View style={{ paddingBottom: footerInset }}>
+        <View className="bg-bg" style={{ paddingBottom: footerInset }}>
           <CoachComposer {...composer} />
         </View>
       </KeyboardStickyView>

@@ -3,6 +3,7 @@ import { ScrollView, View } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
+import { colors } from '@/shared/lib/theme';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
@@ -39,27 +40,29 @@ export function CoachStartView({
   const footerInset = useFooterInset();
   const known = workouts > 0 && !!since;
   return (
-    <Screen
-      header={
-        <ScreenHeader
-          onBack={onBack}
-          title={t('title')}
-          action={
-            <IconButton
-              icon="clock"
-              iconSize={18}
-              accessibilityLabel={t('history.title')}
-              onPress={onHistory}
-            />
-          }
-        />
-      }
+    // Around the whole screen, as it takes its own top for the top of the window: inside, under
+    // the header, it would leave the field that much behind the keyboard. The field rides up with
+    // the keyboard and pushes the text up with it, still centred.
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={-(footerInset - 8)}
+      style={{ flex: 1, backgroundColor: colors.bg }}
     >
-      {/* The field rides up with the keyboard and pushes the text up with it, still centred. */}
-      <KeyboardAvoidingView
-        behavior="padding"
-        keyboardVerticalOffset={-(footerInset - 8)}
-        style={{ flex: 1 }}
+      <Screen
+        header={
+          <ScreenHeader
+            onBack={onBack}
+            title={t('title')}
+            action={
+              <IconButton
+                icon="clock"
+                iconSize={18}
+                accessibilityLabel={t('history.title')}
+                onPress={onHistory}
+              />
+            }
+          />
+        }
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
@@ -103,7 +106,7 @@ export function CoachStartView({
         <View style={{ paddingBottom: footerInset }}>
           <CoachComposer {...composer} />
         </View>
-      </KeyboardAvoidingView>
-    </Screen>
+      </Screen>
+    </KeyboardAvoidingView>
   );
 }
