@@ -169,30 +169,28 @@ const ICONS = {
       </>
     ),
   },
-  // A calendar with today's date (weight history). Drawn 0.3 below the box's middle so
-  // it sits centred in a round button: the rings make it taller on top. The date is centred in
-  // the space under the rings.
+  // A tile with today's date (weight history), in the same box as the scale. The date is
+  // centred in the tile.
   calendar: {
     viewBox: '0 0 20 20',
     render: (c) => (
       <>
         <Rect
-          x={2.4}
-          y={3.9}
-          width={15.2}
-          height={14}
-          rx={3.6}
+          x={2.2}
+          y={2.2}
+          width={15.6}
+          height={15.6}
+          rx={4.4}
           stroke={c}
           strokeWidth={1.8}
           fill="none"
         />
-        <Path d="M6.6 2.1v3.4M13.4 2.1v3.4" stroke={c} strokeWidth={1.8} strokeLinecap="round" />
         <Text
           x={10}
-          y={14.3}
+          y={13.2}
           fill={c}
-          fontSize={7.6}
-          fontFamily="Inter_700Bold"
+          fontSize={8.8}
+          fontFamily="Inter_600SemiBold"
           textAnchor="middle"
         >
           {new Date().getDate()}
