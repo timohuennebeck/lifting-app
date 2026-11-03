@@ -100,7 +100,7 @@ function TranscribingRow() {
           className="text-base leading-[22px]"
         />
       </View>
-      <View className="size-10 items-center justify-center rounded-full bg-control">
+      <View className="size-10 items-center justify-center">
         <ActivityIndicator size="small" color={colors.fg} />
       </View>
     </View>
