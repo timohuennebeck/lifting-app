@@ -1,7 +1,10 @@
-import { type ReactNode, useState } from 'react';
+import { useIsFocused } from 'expo-router';
+import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import Animated, { type AnimatedRef } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { useTabBarStore } from '@/shared/stores/tab-bar-store';
 
 import { TabHeader } from './tab-header';
 
@@ -23,11 +26,14 @@ export interface TabScreenProps {
  * Tab root: shared header plus a scroll view whose last rows clear the native tab bar. The tabs
  * turn iOS's automatic scroll insets off (they also pushed content under the header out of
  * view), so an empty view padded by its own bottom safe area measures what the tab bar and the
- * home indicator cover, and the scroll view pads for that.
+ * home indicator cover, and the scroll view pads for that. Only a shown tab can measure it, so
+ * every tab uses the same stored value: nothing moves when one is shown for the first time.
  */
 export function TabScreen({ children, greeting, settings, pinned, scrollRef }: TabScreenProps) {
   const insets = useSafeAreaInsets();
-  const [tabBarInset, setTabBarInset] = useState(insets.bottom);
+  const focused = useIsFocused();
+  const measured = useTabBarStore((s) => s.inset);
+  const tabBarInset = measured ?? insets.bottom;
   return (
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
       <TabHeader greeting={greeting} settings={settings} />
@@ -45,7 +51,10 @@ export function TabScreen({ children, greeting, settings, pinned, scrollRef }: T
           edges={['bottom']}
           pointerEvents="none"
           style={TAB_BAR_PROBE}
-          onLayout={(e) => setTabBarInset(e.nativeEvent.layout.height)}
+          onLayout={(e) => {
+            const { height } = e.nativeEvent.layout;
+            if (focused && height > 0) useTabBarStore.setState({ inset: height });
+          }}
         />
       </View>
     </View>
