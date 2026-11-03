@@ -103,5 +103,40 @@
   "catalogOffline": {
     "title": "Sem conexão",
     "body": "Na primeira abertura, o Loqqa baixa os exercícios. Verifique sua conexão com a internet e tente novamente."
+  },
+  "voiceInput": {
+    "start": "Falar em vez de digitar",
+    "cancel": "Descartar gravação",
+    "done": "Concluir gravação",
+    "silent": "Não estou ouvindo nada – continue falando",
+    "transcribing": "Transcrevendo …",
+    "noAccess": "Para a entrada por voz, o app precisa de acesso ao microfone.",
+    "settings": "Ajustes",
+    "errors": {
+      "failed": {
+        "title": "Não deu certo",
+        "message": "Não foi possível transformar o que você disse em texto. Tente de novo ou digite."
+      },
+      "offline": {
+        "title": "Sem conexão",
+        "message": "Para transcrever é preciso internet. Tente de novo quando estiver online ou digite."
+      },
+      "limit": {
+        "title": "Chega por hoje",
+        "message": "Você já usou bastante a entrada por voz hoje. Digite ou tente de novo amanhã."
+      },
+      "empty": {
+        "title": "Não entendi",
+        "message": "Não entendi nada. Tente de novo, um pouco mais perto do microfone."
+      },
+      "notPro": {
+        "title": "Loqqa Pro não está ativo",
+        "message": "A entrada por voz faz parte do Loqqa Pro. No momento, sua conta não tem uma assinatura ativa."
+      },
+      "tooYoung": {
+        "title": "A partir dos 16",
+        "message": "Você pode usar a entrada por voz a partir dos 16 anos."
+      }
+    }
   }
 }

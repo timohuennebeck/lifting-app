@@ -5,12 +5,12 @@ import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
+import { FlashText } from '@/shared/ui/flash-text';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { CoachMark } from './coach-mark';
-import { FlashText } from './flash-text';
 
 /** One flash, then a rest until the next. */
 const FLASH_MS = 3500;

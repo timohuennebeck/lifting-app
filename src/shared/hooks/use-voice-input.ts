@@ -11,16 +11,16 @@ import { File } from 'expo-file-system';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { AppState, Keyboard } from 'react-native';
 
+import {
+  TranscribeError,
+  type TranscribeFailure,
+  transcribeSpeech,
+  type VoiceTopic,
+} from '@/shared/data/transcribe-client';
 import { i18n } from '@/shared/i18n';
 import { clamp } from '@/shared/lib/math';
 import { resetAudioMode } from '@/shared/lib/sounds';
 import { showError } from '@/shared/stores/error-sheet-store';
-
-import {
-  TranscribeError,
-  type TranscribeFailure,
-  transcribeQuestion,
-} from '../lib/transcribe-client';
 
 /** Speech is all the transcription needs: mono AAC at 16 kHz, about 4 KB a second. */
 const RECORDING: RecordingOptions = {
@@ -36,7 +36,7 @@ const RECORDING: RecordingOptions = {
 const TICK_MS = 100;
 /** Levels kept for the wave: more than the widest field shows. */
 const HISTORY = 80;
-/** A question is at most this long; then the recording is written down by itself. */
+/** A recording is at most this long; then it is written down by itself. */
 export const MAX_RECORDING_MS = 120_000;
 /** This long without speaking brings up the hint that nothing is heard. */
 const SILENCE_MS = 2000;
@@ -51,17 +51,9 @@ const levelOf = (db: number | undefined) => (db === undefined ? 0 : clamp((db + 
 export type VoicePhase = 'idle' | 'recording' | 'transcribing';
 
 function showFailure(reason: TranscribeFailure | 'empty') {
-  // Pro and the age are the coach's own refusals, with its texts.
-  if (reason === 'notPro' || reason === 'tooYoung') {
-    showError({
-      title: i18n.t(`coach:errors.${reason}.title`),
-      message: i18n.t(`coach:errors.${reason}.message`),
-    });
-    return;
-  }
   showError({
-    title: i18n.t(`coach:voice.errors.${reason}.title`),
-    message: i18n.t(`coach:voice.errors.${reason}.message`),
+    title: i18n.t(`common:voiceInput.errors.${reason}.title`),
+    message: i18n.t(`common:voiceInput.errors.${reason}.message`),
   });
 }
 
@@ -82,13 +74,16 @@ async function releaseMicrophone() {
   resetAudioMode();
 }
 
+/** The draft with what was said after it, as far as the field takes it. */
+export const withSpoken = (draft: string, said: string, max: number) =>
+  (draft.trim() ? `${draft.trimEnd()} ${said}` : said).slice(0, max);
+
 /**
- * A spoken question for the coach's field (design "Spracheingabe"): records with the levels for
- * the wave and the time, notices silence, and has the recording written down; the text goes to
- * `onText`. `denied` stays up until access is given in the settings. Leaving the screen drops
- * a recording.
+ * Voice input for a chat's field (design "Spracheingabe"): records with the levels for the wave
+ * and the time, notices silence, and has the recording written down; the text goes to `onText`.
+ * `denied` stays up until access is given in the settings. Leaving the screen drops a recording.
  */
-export function useVoiceQuestion(language: string, onText: (text: string) => void) {
+export function useVoiceInput(language: string, topic: VoiceTopic, onText: (text: string) => void) {
   const recorder = useAudioRecorder(RECORDING);
   const [phase, setPhase] = useState<VoicePhase>('idle');
   const [levels, setLevels] = useState<readonly number[]>([]);
@@ -170,7 +165,7 @@ export function useVoiceQuestion(language: string, onText: (text: string) => voi
     setPhase('transcribing');
     const uri = await stopRecording();
     const text = uri
-      ? await transcribeQuestion(uri, language).catch((error: unknown) =>
+      ? await transcribeSpeech(uri, language, topic).catch((error: unknown) =>
           error instanceof TranscribeError ? error : new TranscribeError('failed'),
         )
       : new TranscribeError('failed');
@@ -229,3 +224,6 @@ export function useVoiceQuestion(language: string, onText: (text: string) => voi
 
   return { phase, levels, elapsedMs, silent, denied, start, cancel, finish };
 }
+
+/** A field's voice input, from useVoiceInput. */
+export type VoiceInput = ReturnType<typeof useVoiceInput>;

@@ -103,5 +103,40 @@
   "catalogOffline": {
     "title": "No connection",
     "body": "On first launch, Loqqa downloads its exercises. Check your internet connection and try again."
+  },
+  "voiceInput": {
+    "start": "Speak instead of typing",
+    "cancel": "Discard recording",
+    "done": "Finish recording",
+    "silent": "I can't hear anything – just keep talking",
+    "transcribing": "Transcribing …",
+    "noAccess": "For voice input, the app needs access to the microphone.",
+    "settings": "Settings",
+    "errors": {
+      "failed": {
+        "title": "That didn't work",
+        "message": "What you said couldn't be turned into text. Try again or type it."
+      },
+      "offline": {
+        "title": "No connection",
+        "message": "Writing down what you said needs the internet. Try again once you're online, or type it."
+      },
+      "limit": {
+        "title": "Enough for today",
+        "message": "You've used voice input a lot today. Type it or try again tomorrow."
+      },
+      "empty": {
+        "title": "Didn't catch that",
+        "message": "I didn't understand anything. Try again a little closer to the microphone."
+      },
+      "notPro": {
+        "title": "Loqqa Pro not active",
+        "message": "Voice input is part of Loqqa Pro. Your account has no active subscription right now."
+      },
+      "tooYoung": {
+        "title": "From 16",
+        "message": "You can use voice input from the age of 16."
+      }
+    }
   }
 }

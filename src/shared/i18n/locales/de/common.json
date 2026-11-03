@@ -103,5 +103,40 @@
   "catalogOffline": {
     "title": "Keine Verbindung",
     "body": "Beim ersten Start lädt Loqqa die Übungen herunter. Prüf deine Internetverbindung und versuch es noch einmal."
+  },
+  "voiceInput": {
+    "start": "Einsprechen statt tippen",
+    "cancel": "Aufnahme verwerfen",
+    "done": "Aufnahme beenden",
+    "silent": "Ich höre nichts – sprich einfach weiter",
+    "transcribing": "Transkribiere …",
+    "noAccess": "Für Spracheingabe braucht die App Zugriff aufs Mikrofon.",
+    "settings": "Einstellungen",
+    "errors": {
+      "failed": {
+        "title": "Das hat nicht geklappt",
+        "message": "Das Gesagte konnte nicht in Text umgewandelt werden. Versuch es noch einmal oder tipp es ein."
+      },
+      "offline": {
+        "title": "Keine Verbindung",
+        "message": "Zum Aufschreiben braucht es Internet. Versuch es noch einmal, sobald du online bist, oder tipp es ein."
+      },
+      "limit": {
+        "title": "Genug für heute",
+        "message": "Du hast die Spracheingabe heute schon oft genutzt. Tipp es ein oder versuch es morgen wieder."
+      },
+      "empty": {
+        "title": "Nichts verstanden",
+        "message": "Ich habe nichts verstanden. Versuch es noch einmal, etwas näher am Mikrofon."
+      },
+      "notPro": {
+        "title": "Loqqa Pro nicht aktiv",
+        "message": "Die Spracheingabe gehört zu Loqqa Pro. Gerade ist für dein Konto kein Abo aktiv."
+      },
+      "tooYoung": {
+        "title": "Ab 16",
+        "message": "Die Spracheingabe kannst du ab 16 Jahren nutzen."
+      }
+    }
   }
 }

@@ -1,7 +1,8 @@
-// Speech to text for the coach's field (design "Spracheingabe"): the app records a question and
-// sends it here; this function checks the user like coach-chat does (signed in, 16+, Pro), takes
-// one of their transcriptions for the day and has OpenAI (OPENAI_TRANSCRIBE_MODEL) write it down.
-// The recording is neither stored nor logged; the text goes back into the field to be edited.
+// Speech to text for the coach's and the support chat's field (design "Spracheingabe"): the app
+// records a question or message and sends it here; this function checks the user like coach-chat
+// does (signed in, 16+, Pro), takes one of their transcriptions for the day and has OpenAI
+// (OPENAI_TRANSCRIBE_MODEL) write it down. The recording is neither stored nor logged; the text
+// goes back into the field to be edited.
 import { decodeBase64 } from 'jsr:@std/encoding@1/base64';
 
 import { ageFrom, hasPro } from '../_shared/account.ts';
@@ -36,6 +37,17 @@ const CONTEXT: Record<AppLanguage, string> = {
   'pt-BR':
     'Uma pergunta ao treinador de um app de academia, por exemplo sobre supino, agachamento, levantamento terra, séries, repetições, RIR, volume, peso corporal ou o plano de treino.',
   ko: '피트니스 앱의 트레이닝 코치에게 하는 질문입니다. 예: 벤치프레스, 스쿼트, 데드리프트, 세트, 반복 횟수, RIR, 볼륨, 체중, 운동 계획.',
+};
+
+/** The same for a message to support (`topic: 'support'`), where a question's terms would mislead. */
+const SUPPORT_CONTEXT: Record<AppLanguage, string> = {
+  de: 'Eine Nachricht an den Support einer Fitness-App, z. B. zu einem Fehler, einer Idee, dem Abo oder dem Trainingsplan.',
+  en: 'A message to the support team of a fitness app, e.g. about a bug, an idea, the subscription or the training plan.',
+  'pt-PT':
+    'Uma mensagem para o suporte de uma app de fitness, por exemplo sobre um erro, uma ideia, a subscrição ou o plano de treino.',
+  'pt-BR':
+    'Uma mensagem para o suporte de um app de academia, por exemplo sobre um erro, uma ideia, a assinatura ou o plano de treino.',
+  ko: '피트니스 앱 고객 지원팀에 보내는 메시지입니다. 예: 오류, 아이디어, 구독, 운동 계획.',
 };
 
 Deno.serve(async (req) => {
@@ -80,7 +92,7 @@ Deno.serve(async (req) => {
     const result = await transcribe(
       new Blob([bytes], { type: body.mimeType }),
       `question.${ending}`,
-      CONTEXT[language],
+      (body.topic === 'support' ? SUPPORT_CONTEXT : CONTEXT)[language],
       TIMEOUT_MS,
     );
     if ('upstream' in result) {

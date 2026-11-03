@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 
+import { SPEAKING } from '@/shared/hooks/use-voice-input';
 import { cn } from '@/shared/lib/cn';
-
-import { SPEAKING } from '../hooks/use-voice-question';
 
 /** A bar's width and the gap after it. */
 const BAR = 3;

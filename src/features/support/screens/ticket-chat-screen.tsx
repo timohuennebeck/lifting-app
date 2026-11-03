@@ -172,7 +172,7 @@ export function TicketChatScreen() {
       </KeyboardChatScrollView>
       {ticket && !done ? (
         <KeyboardStickyView offset={{ closed: 0, opened: keyboardOffset }}>
-          <View style={{ paddingBottom: footerInset }}>
+          <View className="bg-bg" style={{ paddingBottom: footerInset }}>
             <ChatComposer ticketId={ticketId} />
           </View>
         </KeyboardStickyView>
