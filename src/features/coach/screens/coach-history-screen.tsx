@@ -8,7 +8,8 @@ import { DeleteSheet } from '@/shared/ui/delete-sheet';
 import { CoachHistoryView } from '../components/coach-history-view';
 import { deleteCoachChats, useCoachChats } from '../data/coach-chats';
 import { chatSections } from '../lib/history';
-import { isAnswering, openChat, stopAnswer, useCoachStore } from '../stores/coach-store';
+import { openCoachChat } from '../lib/open-coach';
+import { forgetChats } from '../stores/coach-store';
 
 const NONE: ReadonlySet<string> = new Set();
 
@@ -27,10 +28,6 @@ export function CoachHistoryScreen() {
     setSheetOpen(true);
   };
 
-  const show = (chatId: string | null) => {
-    openChat(chatId);
-    router.back();
-  };
   const toggle = (chatId: string) =>
     setSelected((current) => {
       const next = new Set(current);
@@ -41,10 +38,7 @@ export function CoachHistoryScreen() {
     setSheetOpen(false);
     setSelecting(false);
     setSelected(NONE);
-    // The chat Kai shows is gone: it starts a new one, and an answer still coming for it stops.
-    const { chatId, pending } = useCoachStore.getState();
-    if (chatIds.includes(chatId ?? '')) openChat(null);
-    if (isAnswering(pending) && chatIds.includes(pending.chatId ?? '')) stopAnswer();
+    forgetChats(chatIds);
     await deleteCoachChats(chatIds).catch((error: unknown) =>
       console.warn('Deleting coach chats failed', error),
     );
@@ -54,9 +48,9 @@ export function CoachHistoryScreen() {
     <>
       <CoachHistoryView
         sections={chatSections(chats, new Date(today), t)}
-        onOpen={show}
+        onOpen={openCoachChat}
         onBack={() => router.back()}
-        onNew={() => show(null)}
+        onNew={() => openCoachChat(null)}
         selecting={selecting}
         selected={selected}
         onSelecting={(on) => {

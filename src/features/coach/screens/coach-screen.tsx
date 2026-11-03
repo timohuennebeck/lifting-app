@@ -1,7 +1,7 @@
 import { getCalendars } from 'expo-localization';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import type { TFunction } from 'i18next';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useExerciseName } from '@/shared/data/exercises';
@@ -17,7 +17,8 @@ import { CoachStartView } from '../components/coach-start-view';
 import { useCoachMessages } from '../data/coach-chats';
 import { chartTopic } from '../lib/charts';
 import { CoachError, type CoachFailure } from '../lib/coach-client';
-import { ask, isAnswering, openChat, stopAnswer, useCoachStore } from '../stores/coach-store';
+import { openCoachChat } from '../lib/open-coach';
+import { ask, isAnswering, stopAnswer, useCoachStore } from '../stores/coach-store';
 
 /** The phone's time zone, which decides what "today" and "this week" are in an answer. */
 const timeZone = () => getCalendars()[0]?.timeZone ?? 'UTC';
@@ -44,14 +45,20 @@ function showCoachError(
 /**
  * The coach (design "Coach Screens"), opened from the Training tab's card: the start screen for a
  * new chat, otherwise the chat with the answer in flight below its saved questions and answers.
+ * Every chat opened is a screen of its own, so going back leads to where it was opened from.
  */
 export function CoachScreen() {
   const { t } = useTranslation('coach');
   const language = useAppLanguage();
   const { profile } = useProfile();
-  const chatId = useCoachStore((s) => s.chatId);
+  const params = useLocalSearchParams<{ chat?: string; asker?: string }>();
+  const ownId = useId();
+  const screenId = params.asker ?? ownId;
+  // null: a new chat, until the server names the id of its first question's chat.
+  const [chatId, setChatId] = useState(params.chat ?? null);
   const pending = useCoachStore((s) => s.pending);
-  const { data: messages = [] } = useCoachMessages(chatId);
+  const { data: saved } = useCoachMessages(chatId);
+  const messages = saved ?? [];
   const { data: workouts } = useWorkoutStats();
   const [draft, setDraft] = useState('');
   // The server found no consent (withdrawn on another device): the line shows again.
@@ -62,6 +69,9 @@ export function CoachScreen() {
   const synced = messages.some((m) => m.id === pending?.answerId);
   const inThisChat = pending?.chatId === chatId && !synced;
   const pendingHere = inThisChat ? pending : null;
+  if (!chatId && pending?.chatId && pending.screen === screenId) setChatId(pending.chatId);
+  // Nothing saved and nothing coming: it was deleted, or its first answer failed. A new chat then.
+  else if (chatId && saved?.length === 0 && !pendingHere) setChatId(null);
   const answering = isAnswering(pending);
   const starting = !chatId && !pendingHere;
   const lastChart = pendingHere?.chart ?? messages.filter((m) => m.chart).at(-1)?.chart ?? null;
@@ -73,7 +83,10 @@ export function CoachScreen() {
     // One answer at a time, also across chats.
     if (!question || answering) return;
     setDraft('');
-    const result = await ask({ question, consent: needsConsent, language, timeZone: timeZone() });
+    const result = await ask(
+      { question, chatId, consent: needsConsent, language, timeZone: timeZone() },
+      screenId,
+    );
     if (result === 'answered') setConsentAsked(false);
     // Without an answer the question goes back into the field.
     if (result === 'stopped') setDraft(question);
@@ -81,7 +94,7 @@ export function CoachScreen() {
       setDraft(question);
       if (result.reason === 'consent') setConsentAsked(true);
       // Deleted on another device: the question can go into a new chat.
-      else if (result.reason === 'chatGone') openChat(null);
+      else if (result.reason === 'chatGone') setChatId(null);
       else showCoachError(result.reason, result.limit, t, () => void send(question));
     }
   };
@@ -121,7 +134,7 @@ export function CoachScreen() {
           pending={pendingHere}
           onBack={() => router.back()}
           onHistory={onHistory}
-          onNew={() => openChat(null)}
+          onNew={() => openCoachChat(null)}
           composer={composer}
         />
       )}
