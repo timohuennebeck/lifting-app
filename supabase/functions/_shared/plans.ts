@@ -84,10 +84,8 @@ function networkOf(ip: string) {
     .join(':')}::/64`;
 }
 
-/** The network as a keyed hash: the IP itself is never stored. */
-async function networkHash(req: Request) {
-  // The first address is the client's as the platform's proxies forward it.
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+/** An HMAC of `text` with the service key: a stable key that doesn't show what it stands for. */
+async function keyHash(text: string) {
   const key = await crypto.subtle.importKey(
     'raw',
     new TextEncoder().encode(Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''),
@@ -95,22 +93,31 @@ async function networkHash(req: Request) {
     false,
     ['sign'],
   );
-  return encodeHex(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(networkOf(ip))));
+  return encodeHex(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(text)));
+}
+
+/** The network as a keyed hash: the IP itself is never stored. */
+async function networkHash(req: Request) {
+  // The first address is the client's as the platform's proxies forward it.
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+  return keyHash(networkOf(ip));
 }
 
 /**
- * Takes one request of `kind` for the caller's network if it and everyone together are below
- * their limits in the last 24 hours (start_plan_request). Resolves with `giveBack`, which hands it
- * back (when the model call failed before it could be billed), or with the error response.
+ * Takes one request of `kind` for the caller's network (or for `userId`, when given) if it and
+ * everyone together are below their limits in the last 24 hours (start_plan_request). Resolves
+ * with `giveBack`, which hands it back (when the model call failed before it could be billed), or
+ * with the error response.
  */
 export async function takePlanRequest(
   req: Request,
-  kind: 'import' | 'generate' | 'voice',
+  kind: 'import' | 'generate' | 'voice' | 'transcribe',
   limits: { perNetwork: number; perDay: number },
+  userId?: string,
 ): Promise<{ giveBack: () => PromiseLike<unknown> } | { refused: Response }> {
   const { data: slot, error } = await admin.rpc('start_plan_request', {
     p_kind: kind,
-    p_ip_hash: await networkHash(req),
+    p_ip_hash: userId ? await keyHash(`user:${userId}`) : await networkHash(req),
     p_ip_limit: limits.perNetwork,
     p_daily_limit: limits.perDay,
   });

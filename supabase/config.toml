@@ -431,6 +431,10 @@ verify_jwt = false
 # The function checks the user's token itself, like assess-progress.
 verify_jwt = false
 
+[functions.coach-transcribe]
+# Same as coach-chat: the function checks the user's token itself.
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 55327
