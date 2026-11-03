@@ -2,7 +2,6 @@ import { useIsFocused } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
@@ -11,43 +10,10 @@ import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { CoachMark } from './coach-mark';
+import { FlashText } from './flash-text';
 
-/** One flash, then a rest until the next; each letter lights up a moment after the one before. */
+/** One flash, then a rest until the next. */
 const FLASH_MS = 3500;
-const LETTER_MS = 30;
-
-/** A letter brightens and fades back early in each flash. */
-const FLASH: CSSAnimationKeyframes = {
-  '0%': { color: colors.subtle },
-  '6%': { color: colors.fg },
-  '18%': { color: colors.subtle },
-  '100%': { color: colors.subtle },
-};
-
-/** The line with a light running across it from left to right; it rests while `paused`. */
-function FlashText({ text, paused }: { text: string; paused: boolean }) {
-  return (
-    <View className="flex-row overflow-hidden" importantForAccessibility="no-hide-descendants">
-      {Array.from(text).map((letter, i) => (
-        <Animated.Text
-          key={i}
-          className="font-inter text-sm leading-[17px]"
-          style={{
-            color: colors.subtle,
-            animationName: FLASH,
-            animationDuration: `${FLASH_MS}ms`,
-            animationDelay: `${i * LETTER_MS}ms`,
-            animationIterationCount: 'infinite',
-            animationTimingFunction: 'linear',
-            animationPlayState: paused ? 'paused' : 'running',
-          }}
-        >
-          {letter}
-        </Animated.Text>
-      ))}
-    </View>
-  );
-}
 
 export interface AskCoachCardProps {
   onPress: () => void;
@@ -82,7 +48,12 @@ export function AskCoachCard({ onPress, className }: AskCoachCardProps) {
         <Text className="font-inter-semibold text-[11px] leading-[13px] tracking-[0.88px] text-dim uppercase">
           {t('title')}
         </Text>
-        <FlashText text={t('card.prompt')} paused={!focused} />
+        <FlashText
+          text={t('card.prompt')}
+          periodMs={FLASH_MS}
+          paused={!focused}
+          className="text-sm leading-[17px]"
+        />
       </View>
       <View className="size-10 items-center justify-center rounded-full bg-control">
         <Icon name="arrow-up" size={12} color={colors.fg} />

@@ -370,6 +370,12 @@ that withdraws the consent.
 - **Secrets:** `OPENAI_API_KEY` as for the plans; `OPENAI_COACH_MODEL` (default `gpt-6.1-sol`) and
   `OPENAI_COACH_REASONING_EFFORT` (default `low`). It runs in Fast mode; `COACH_FAST=false` turns
   that off.
+- **Voice input:** the microphone in the field records the question (expo-audio, mono AAC) and the
+  `coach-transcribe` Edge Function has OpenAI write it down (`OPENAI_TRANSCRIBE_MODEL`, default
+  `gpt-transcribe`), with the coach's topic and terms as context; the text goes into the field to
+  be edited. Same rules as the questions (16+, Pro), at most 100 a user and 20,000 in total per
+  24 hours (`COACH_TRANSCRIBE_USER_LIMIT`, `COACH_TRANSCRIBE_DAILY_LIMIT`, as `plan_requests` of
+  kind `transcribe`). The recording is deleted on the phone once written down and never stored.
 - **Test data:** `scripts/seed-coach-data.sql` fills a local account with 34 weeks of Push, Pull
   and Beine (today's Push included), half a year of weigh-ins and four body checks. Run it in the
   database container; again, it replaces what it added:

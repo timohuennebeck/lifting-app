@@ -150,5 +150,32 @@
   "settings": {
     "label": "Enviar dados para a OpenAI",
     "description": "Transferir seus dados de treino e corporais (treinos, peso, valores dos checks corporais) para a OpenAI para que o Kai possa responder. Ao desativar, você revoga seu consentimento."
+  },
+  "voice": {
+    "start": "Falar a pergunta",
+    "cancel": "Descartar gravação",
+    "done": "Concluir gravação",
+    "silent": "Não estou ouvindo nada – continue falando",
+    "transcribing": "Transcrevendo …",
+    "noAccess": "Para a entrada por voz, o app precisa de acesso ao microfone.",
+    "settings": "Ajustes",
+    "errors": {
+      "failed": {
+        "title": "Não deu certo",
+        "message": "Não foi possível transformar sua pergunta em texto. Tente de novo ou digite."
+      },
+      "offline": {
+        "title": "Sem conexão",
+        "message": "Para transcrever é preciso internet. Tente de novo quando estiver online ou digite sua pergunta."
+      },
+      "limit": {
+        "title": "Chega por hoje",
+        "message": "Você já usou bastante a entrada por voz hoje. Digite sua pergunta ou tente de novo amanhã."
+      },
+      "empty": {
+        "title": "Não entendi",
+        "message": "Não entendi nada. Tente de novo, um pouco mais perto do microfone."
+      }
+    }
   }
 }

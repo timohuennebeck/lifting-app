@@ -150,5 +150,32 @@
   "settings": {
     "label": "Share data with OpenAI",
     "description": "Send your training and body data (workouts, weight, body check scores) to OpenAI so Kai can answer. Off withdraws your consent."
+  },
+  "voice": {
+    "start": "Speak your question",
+    "cancel": "Discard recording",
+    "done": "Finish recording",
+    "silent": "I can't hear anything – just keep talking",
+    "transcribing": "Transcribing …",
+    "noAccess": "For voice input, the app needs access to the microphone.",
+    "settings": "Settings",
+    "errors": {
+      "failed": {
+        "title": "That didn't work",
+        "message": "Your question couldn't be turned into text. Try again or type it."
+      },
+      "offline": {
+        "title": "No connection",
+        "message": "Writing down what you said needs the internet. Try again once you're online, or type your question."
+      },
+      "limit": {
+        "title": "Enough for today",
+        "message": "You've used voice input a lot today. Type your question or try again tomorrow."
+      },
+      "empty": {
+        "title": "Didn't catch that",
+        "message": "I didn't understand anything. Try again a little closer to the microphone."
+      }
+    }
   }
 }

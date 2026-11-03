@@ -5,7 +5,8 @@ import { env } from '@/shared/config/env';
 import { parseJson } from './json';
 
 export interface PostFunctionOptions {
-  signal: AbortSignal;
+  /** Stops the call; without one it runs until it answers or fails. */
+  signal?: AbortSignal;
   /** The user's access token, for a function that answers per user. */
   token?: string;
   /** The error for a function that can't be reached; once stopped, the fetch's own is thrown. */
@@ -31,7 +32,7 @@ export function postFunction(
     body: JSON.stringify(body),
     signal,
   }).catch((error: unknown) => {
-    if (signal.aborted) throw error;
+    if (signal?.aborted) throw error;
     console.warn(`${name} could not be called`, error);
     throw offline();
   });

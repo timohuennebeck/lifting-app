@@ -150,5 +150,32 @@
   "settings": {
     "label": "Daten an OpenAI senden",
     "description": "Deine Trainings- und Körperdaten (Trainings, Gewicht, Werte der Körperchecks) an OpenAI senden, damit Kai antworten kann. Aus widerruft deine Einwilligung."
+  },
+  "voice": {
+    "start": "Frage einsprechen",
+    "cancel": "Aufnahme verwerfen",
+    "done": "Aufnahme beenden",
+    "silent": "Ich höre nichts – sprich einfach weiter",
+    "transcribing": "Transkribiere …",
+    "noAccess": "Für Spracheingabe braucht die App Zugriff aufs Mikrofon.",
+    "settings": "Einstellungen",
+    "errors": {
+      "failed": {
+        "title": "Das hat nicht geklappt",
+        "message": "Deine Frage konnte nicht in Text umgewandelt werden. Versuch es noch einmal oder tipp sie ein."
+      },
+      "offline": {
+        "title": "Keine Verbindung",
+        "message": "Zum Aufschreiben braucht es Internet. Versuch es noch einmal, sobald du online bist, oder tipp deine Frage ein."
+      },
+      "limit": {
+        "title": "Genug für heute",
+        "message": "Du hast die Spracheingabe heute schon oft genutzt. Tipp deine Frage ein oder versuch es morgen wieder."
+      },
+      "empty": {
+        "title": "Nichts verstanden",
+        "message": "Ich habe nichts verstanden. Versuch es noch einmal, etwas näher am Mikrofon."
+      }
+    }
   }
 }
