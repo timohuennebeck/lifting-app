@@ -234,7 +234,7 @@ Deno.serve(async (req) => {
   // An unknown birth date counts as too young, like the body check's.
   const age = profile?.birth_date ? ageFrom(profile.birth_date, new Date()) : 0;
   if (!profile || age < MIN_AGE) return reply(403, { error: 'too_young' });
-  // The start screen says that sending the first question is the consent.
+  // Sending the first question is the consent.
   if (!profile.coach_consent_at && body.consent !== true) {
     return reply(403, { error: 'consent_required' });
   }

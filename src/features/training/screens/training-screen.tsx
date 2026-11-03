@@ -5,7 +5,6 @@ import { View } from 'react-native';
 import Animated, { useAnimatedRef } from 'react-native-reanimated';
 
 import { AskCoachCard } from '@/features/coach/components/ask-coach-card';
-import { openCoach } from '@/features/coach/lib/open-coach';
 import { openPlanEditor, openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useCurrentPlan, usePlanStatus, usePlanWeekDone } from '@/shared/data/plans';
@@ -156,7 +155,7 @@ export function TrainingScreen() {
         ) : null
       }
     >
-      {shown ? <AskCoachCard onPress={openCoach} className="mx-4 mt-3 mb-3" /> : null}
+      {shown ? <AskCoachCard className="mx-4 mt-3 mb-3" /> : null}
       {loading ? null : (
         <>
           {planShown ? (

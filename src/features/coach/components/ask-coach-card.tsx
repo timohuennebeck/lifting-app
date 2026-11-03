@@ -1,62 +1,179 @@
-import { useIsFocused } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { router, useIsFocused } from 'expo-router';
+import { useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { Keyboard, type TextInput, View } from 'react-native';
+import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
+import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
 
+import { VoiceInputNotes } from '@/shared/components/voice-input';
+import { useProfile } from '@/shared/data/profile';
+import { useAppLanguage } from '@/shared/hooks/use-app-language';
+import { useVoiceInput, withSpoken } from '@/shared/hooks/use-voice-input';
+import { COACH_QUESTION_MAX } from '@/shared/lib/limits';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { CoachMark } from '@/shared/ui/coach-mark';
-import { FlashText } from '@/shared/ui/flash-text';
-import { Icon } from '@/shared/ui/icon';
-import { PressableScale } from '@/shared/ui/pressable-scale';
+import { IconButton } from '@/shared/ui/icon-button';
 import { Text } from '@/shared/ui/text';
 
-/** One flash, then a rest until the next. */
-const FLASH_MS = 3500;
+import { CoachError, timeZone } from '../lib/coach-client';
+import { showCoachError } from '../lib/coach-errors';
+import { openAnswer } from '../lib/open-coach';
+import { ask, isAnswering, stopAnswer, useCoachStore } from '../stores/coach-store';
+import { CoachField } from './coach-composer';
+
+/** How long each example question shows; the diamond turns as it changes. */
+const HINT_MS = 3500;
+const HINTS = ['strength', 'weight', 'record', 'time'] as const;
+
+/** Under the mark and fading out before the card's top edge, so it is never cut off. */
+const GLOW_SIZE = 136;
+const GLOW: CSSAnimationKeyframes = {
+  '0%': { opacity: 0.55 },
+  '50%': { opacity: 1 },
+  '100%': { opacity: 0.55 },
+};
+
+const setDraft = (draft: string) => useCoachStore.setState({ draft });
+
+/** The soft neon light behind Kai's mark, breathing with its halo. */
+function CoachGlow({ paused }: { paused: boolean }) {
+  return (
+    <Animated.View
+      pointerEvents="none"
+      className="absolute top-0 self-center"
+      style={{
+        width: GLOW_SIZE,
+        height: GLOW_SIZE,
+        animationName: GLOW,
+        animationDuration: '2.4s',
+        animationIterationCount: 'infinite',
+        animationTimingFunction: 'ease-in-out',
+        animationPlayState: paused ? 'paused' : 'running',
+      }}
+    >
+      <Svg width={GLOW_SIZE} height={GLOW_SIZE}>
+        <Defs>
+          <RadialGradient id="coach-glow" cx="50%" cy="50%" r="50%">
+            <Stop offset={0} stopColor={colors.accent} stopOpacity={0.34} />
+            <Stop offset={0.5} stopColor={colors.accent} stopOpacity={0.16} />
+            <Stop offset={1} stopColor={colors.accent} stopOpacity={0} />
+          </RadialGradient>
+        </Defs>
+        <Rect width={GLOW_SIZE} height={GLOW_SIZE} fill="url(#coach-glow)" />
+      </Svg>
+    </Animated.View>
+  );
+}
 
 export interface AskCoachCardProps {
-  onPress: () => void;
   className?: string;
 }
 
-/** "Kai · KI-Coach" over "Frag mich zu deinem Training"; a tap opens the coach (Training tab). */
-export function AskCoachCard({ onPress, className }: AskCoachCardProps) {
+/**
+ * Where a chat with Kai starts (Training tab): typing or speaking a question sends it to a chat of
+ * its own, and the clock opens earlier chats. A question that comes back without an answer returns
+ * to the field. While an answer comes in, the field leads to it.
+ */
+export function AskCoachCard({ className }: AskCoachCardProps) {
   const { t } = useTranslation('coach');
+  const language = useAppLanguage();
+  const { profile } = useProfile();
+  const asker = useId();
   // Behind another tab or the coach itself, the card rests.
   const focused = useIsFocused();
-  const [flashes, setFlashes] = useState(0);
+  const draft = useCoachStore((s) => s.draft);
+  const answering = useCoachStore((s) => isAnswering(s.pending));
+  const focusCard = useCoachStore((s) => s.focusCard);
+  const voice = useVoiceInput(language, 'coach', (said) =>
+    setDraft(withSpoken(draft, said, COACH_QUESTION_MAX)),
+  );
+  const inputRef = useRef<TextInput>(null);
+  const [typing, setTyping] = useState(false);
+  // The server found no consent (withdrawn on another device): the line shows again.
+  const [consentAsked, setConsentAsked] = useState(false);
+  const needsConsent = !profile?.coachConsentAt || consentAsked;
+
+  const [turns, setTurns] = useState(0);
+  const resting = !focused || typing;
   useEffect(() => {
-    if (!focused) return;
-    const id = setInterval(() => setFlashes((n) => n + 1), FLASH_MS);
+    if (resting) return;
+    const id = setInterval(() => setTurns((n) => n + 1), HINT_MS);
     return () => clearInterval(id);
-  }, [focused]);
+  }, [resting]);
+
+  useEffect(() => {
+    if (!focused || !focusCard) return;
+    useCoachStore.setState({ focusCard: false });
+    inputRef.current?.focus();
+  }, [focused, focusCard]);
+
+  const send = async (text: string) => {
+    const question = text.trim();
+    // One answer at a time, also across chats.
+    if (!question || answering) return;
+    setDraft('');
+    Keyboard.dismiss();
+    const asked = ask(
+      { question, chatId: null, consent: needsConsent, language, timeZone: timeZone() },
+      asker,
+    );
+    router.push({ pathname: '/coach', params: { asker } });
+    const result = await asked;
+    if (result === 'answered') setConsentAsked(false);
+    // Without an answer the chat closes and the question goes back into the field.
+    if (result === 'stopped') setDraft(question);
+    if (result instanceof CoachError) {
+      setDraft(question);
+      if (result.reason === 'consent') setConsentAsked(true);
+      else if (result.reason !== 'chatGone') {
+        showCoachError(result.reason, result.limit, t, () => void send(question));
+      }
+    }
+  };
+
   return (
-    <PressableScale
-      haptic="tap"
-      accessibilityRole="button"
-      accessibilityLabel={`${t('title')}: ${t('card.prompt')}`}
-      onPress={onPress}
+    <View
       className={cn(
-        'flex-row items-center gap-2.5 rounded-[18px] bg-surface py-1.5 pr-1.5 pl-2',
+        'items-center gap-3 overflow-hidden rounded-[18px] bg-surface px-3.5 pt-7.5 pb-3.5',
         className,
       )}
     >
-      {/* The diamond turns half a turn with each flash. */}
-      <CoachMark size={36} turns={flashes} />
-      <View className="min-w-0 flex-1">
-        <Text className="font-inter-semibold text-[11px] leading-[13px] tracking-[0.88px] text-dim uppercase">
-          {t('title')}
+      <CoachGlow paused={!focused} />
+      <IconButton
+        icon="clock"
+        size={40}
+        iconSize={17}
+        accessibilityLabel={t('history.title')}
+        onPress={() => router.push('/coach/history')}
+        className="absolute top-2.5 right-2.5 z-10 bg-control"
+      />
+      <View className="size-19 items-center justify-center">
+        <CoachMark size={52} animation={focused ? 'breathe' : undefined} turns={turns} />
+      </View>
+      <View className="gap-1">
+        <Text className="text-center font-inter-semibold text-[19px] leading-6 text-fg">
+          {t('card.title')}
         </Text>
-        <FlashText
-          text={t('card.prompt')}
-          periodMs={FLASH_MS}
-          paused={!focused}
-          className="text-sm leading-[17px]"
+        <Text className="text-center font-inter text-[13px] leading-[18px] text-muted">
+          {t('card.subtitle')}
+        </Text>
+      </View>
+      <VoiceInputNotes voice={voice} />
+      <View className="self-stretch">
+        <CoachField
+          inputRef={inputRef}
+          value={draft}
+          onChangeText={setDraft}
+          onSend={() => void send(draft)}
+          answering={answering}
+          onStop={stopAnswer}
+          onOpenAnswer={openAnswer}
+          onFocusChange={setTyping}
+          hint={t(`card.hints.${HINTS[turns % HINTS.length]}`)}
+          voice={voice}
         />
       </View>
-      <View className="size-10 items-center justify-center rounded-full bg-control">
-        <Icon name="arrow-up" size={12} color={colors.fg} />
-      </View>
-    </PressableScale>
+    </View>
   );
 }

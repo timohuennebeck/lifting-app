@@ -8,7 +8,7 @@ import { DeleteSheet } from '@/shared/ui/delete-sheet';
 import { CoachHistoryView } from '../components/coach-history-view';
 import { deleteCoachChats, useCoachChats } from '../data/coach-chats';
 import { chatSections } from '../lib/history';
-import { openCoachChat } from '../lib/open-coach';
+import { openCoachChat, startNewChat } from '../lib/open-coach';
 import { forgetChats } from '../stores/coach-store';
 
 const NONE: ReadonlySet<string> = new Set();
@@ -50,7 +50,7 @@ export function CoachHistoryScreen() {
         sections={chatSections(chats, new Date(today), t)}
         onOpen={openCoachChat}
         onBack={() => router.back()}
-        onNew={() => openCoachChat(null)}
+        onNew={startNewChat}
         selecting={selecting}
         selected={selected}
         onSelecting={(on) => {

@@ -63,15 +63,15 @@ export function CoachDiamond({ size, color = colors.bg, animation, turns = 0 }: 
 }
 
 export interface CoachMarkProps {
-  /** 28 beside an answer, 44 on the start screen. */
+  /** 28 beside an answer, 52 on the Training tab's card. */
   size?: number;
   animation?: CoachMarkAnimation;
-  /** Each step turns the diamond half a turn (the card's question changing). */
+  /** Each step turns the diamond half a turn (the card's question changing); it rests between. */
   turns?: number;
 }
 
 /** The coach's avatar: a dark diamond on neon (design "Coach Screens"). */
-export function CoachMark({ size = 28, animation, turns = 0 }: CoachMarkProps) {
+export function CoachMark({ size = 28, animation, turns }: CoachMarkProps) {
   return (
     <View style={{ width: size, height: size }}>
       {animation === 'think'
@@ -104,8 +104,12 @@ export function CoachMark({ size = 28, animation, turns = 0 }: CoachMarkProps) {
         />
       ) : null}
       <View className="flex-1 items-center justify-center rounded-full bg-accent">
-        {/* 9pt on the 28pt mark, 14pt on the 44pt one. */}
-        <CoachDiamond size={Math.round(size * 0.32)} animation={animation} turns={turns} />
+        {/* 9pt on the 28pt mark, 17pt on the 52pt one. */}
+        <CoachDiamond
+          size={Math.round(size * 0.32)}
+          animation={turns === undefined ? animation : undefined}
+          turns={turns}
+        />
       </View>
     </View>
   );

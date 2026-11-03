@@ -1,8 +1,13 @@
+import { getCalendars } from 'expo-localization';
+
 import { postFunction, refusalOf } from '@/shared/data/edge-functions';
 import { supabase } from '@/shared/data/supabase';
 import { readServerEvents } from '@/shared/lib/server-events';
 
 import type { CoachChart } from './charts';
+
+/** The phone's time zone, which decides what "today" and "this week" are in an answer. */
+export const timeZone = () => getCalendars()[0]?.timeZone ?? 'UTC';
 
 /** Why there is no answer; each has its own message in coach.json (errors). */
 export type CoachFailure =
