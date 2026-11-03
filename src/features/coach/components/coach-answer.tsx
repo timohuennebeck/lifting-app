@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import Animated, { FadeIn, LayoutAnimationConfig } from 'react-native-reanimated';
 
+import { CoachMark } from '@/shared/ui/coach-mark';
 import type { CoachChart } from '../lib/charts';
 import { AnswerText } from './answer-text';
 import { CalendarChart } from './charts/calendar-chart';
@@ -8,7 +9,6 @@ import { CompareChart } from './charts/compare-chart';
 import { DistributionChart } from './charts/distribution-chart';
 import { PeriodChart } from './charts/period-chart';
 import { TrendChart } from './charts/trend-chart';
-import { CoachMark } from './coach-mark';
 
 /** The chart under an answer, by its kind. */
 function AnswerChart({ chart }: { chart: CoachChart }) {

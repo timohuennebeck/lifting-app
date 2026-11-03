@@ -11,19 +11,7 @@
     "send": "보내기",
     "stop": "답변 중지"
   },
-  "steps": {
-    "searched": {
-      "workouts_one": "운동 {{count}}회를 살펴봤어요",
-      "workouts_other": "운동 {{count}}회를 살펴봤어요",
-      "weights_one": "체중 기록 {{count}}개를 살펴봤어요",
-      "weights_other": "체중 기록 {{count}}개를 살펴봤어요",
-      "checks_one": "바디 체크 {{count}}회를 살펴봤어요",
-      "checks_other": "바디 체크 {{count}}회를 살펴봤어요"
-    },
-    "searching": "필요한 데이터를 찾는 중 …",
-    "found": "필요한 데이터를 찾았어요",
-    "writing": "답변을 작성하는 중 …"
-  },
+  "thinking": "카이가 생각하는 중 …",
   "start": {
     "title": "운동에 관해 무엇이든 물어보세요.",
     "subtitle_one": "첫 운동 기록을 바탕으로 데이터와 차트로 답해 드려요.",
@@ -78,6 +66,7 @@
     "bodyWeight": "오늘 추세 · {{since}}부터",
     "since": "{{what}} · {{since}}부터",
     "metric": {
+      "body_weight": "추세",
       "e1rm": "추정 1RM",
       "top_weight": "최고 무게",
       "reps": "반복 수",
@@ -95,6 +84,9 @@
       "month_one": "이번 달 {{metric}} · 지난 {{count}}개월 평균 대비",
       "month_other": "이번 달 {{metric}} · 지난 {{count}}개월 평균 대비"
     }
+  },
+  "calendar": {
+    "rest": "운동 없음"
   },
   "distribution": {
     "reference_one": "권장 {{count}}",

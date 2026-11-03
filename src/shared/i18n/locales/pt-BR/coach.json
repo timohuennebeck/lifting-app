@@ -11,19 +11,7 @@
     "send": "Enviar",
     "stop": "Parar a resposta"
   },
-  "steps": {
-    "searched": {
-      "workouts_one": "{{count}} treino consultado",
-      "workouts_other": "{{count}} treinos consultados",
-      "weights_one": "{{count}} registro de peso consultado",
-      "weights_other": "{{count}} registros de peso consultados",
-      "checks_one": "{{count}} check corporal consultado",
-      "checks_other": "{{count}} checks corporais consultados"
-    },
-    "searching": "Procurando os dados certos …",
-    "found": "Dados certos encontrados",
-    "writing": "Escrevendo a resposta …"
-  },
+  "thinking": "Kai está pensando …",
   "start": {
     "title": "Pergunte o que quiser sobre o seu treino.",
     "subtitle_one": "Conheço seu primeiro treino e respondo com fatos e gráficos.",
@@ -78,6 +66,7 @@
     "bodyWeight": "Tendência hoje · desde {{since}}",
     "since": "{{what}} · desde {{since}}",
     "metric": {
+      "body_weight": "Tendência",
       "e1rm": "1RM estimado",
       "top_weight": "Peso máximo",
       "reps": "Repetições",
@@ -95,6 +84,9 @@
       "month_one": "{{metric}} este mês · vs. média de {{count}} mês",
       "month_other": "{{metric}} este mês · vs. média de {{count}} meses"
     }
+  },
+  "calendar": {
+    "rest": "Sem treino"
   },
   "distribution": {
     "reference_one": "Referência: {{count}}",

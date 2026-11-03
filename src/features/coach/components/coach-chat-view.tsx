@@ -6,6 +6,8 @@ import type Animated from 'react-native-reanimated';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { ChatHeaderTitle } from '@/shared/ui/chat-header-title';
+import { CoachMark } from '@/shared/ui/coach-mark';
+import { Gradient } from '@/shared/ui/gradient';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
@@ -13,10 +15,12 @@ import { ScreenHeader } from '@/shared/ui/screen-header';
 import type { CoachChart } from '../lib/charts';
 import type { PendingAnswer } from '../stores/coach-store';
 import { QuestionBubble } from './answer-text';
-import { AnswerSteps } from './answer-steps';
+import { AnswerThinking } from './answer-thinking';
 import { CoachAnswer } from './coach-answer';
 import { CoachComposer, type CoachComposerProps } from './coach-composer';
-import { CoachMark } from './coach-mark';
+
+/** How far under the header the chat fades out, and where its first row starts at rest. */
+const FADE = 28;
 
 export interface ChatItem {
   id: string;
@@ -29,7 +33,7 @@ export interface CoachChatViewProps {
   /** Under "Kai · KI-Coach": what the chat is about; "Neuer Chat" before its first answer. */
   subtitle: string | null;
   items: ChatItem[];
-  /** The answer on its way: the question, then the steps, then the text as it streams in. */
+  /** The answer on its way: the question, that Kai is thinking, then the text as it streams in. */
   pending: PendingAnswer | null;
   onBack: () => void;
   onHistory: () => void;
@@ -38,7 +42,7 @@ export interface CoachChatViewProps {
 }
 
 /**
- * A chat with Kai (design CO3, CO2-F): questions right, answers with their charts left. Laid out
+ * A chat with Kai (design CO3): questions right, answers with their charts left. Laid out
  * like the support chat: the header with who answers, the list, and the field below it.
  */
 export function CoachChatView({
@@ -74,7 +78,7 @@ export function CoachChatView({
           chart={pending.done ? pending.chart : null}
         />
       ) : (
-        <AnswerSteps key="steps" progress={pending.progress} />
+        <AnswerThinking key="thinking" />
       ),
     );
   }
@@ -119,13 +123,14 @@ export function CoachChatView({
         contentContainerStyle={{
           gap: 20,
           paddingHorizontal: 16,
-          paddingTop: 12,
+          paddingTop: FADE,
           paddingBottom: 16,
         }}
         onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
       >
         {rows}
       </KeyboardChatScrollView>
+      <Gradient from="top" size={FADE} />
       <KeyboardStickyView offset={{ closed: 0, opened: keyboardOffset }}>
         <View className="bg-bg" style={{ paddingBottom: footerInset }}>
           <CoachComposer {...composer} />

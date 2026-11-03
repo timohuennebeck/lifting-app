@@ -4,6 +4,7 @@ import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { colors } from '@/shared/lib/theme';
+import { CoachMark } from '@/shared/ui/coach-mark';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Screen } from '@/shared/ui/screen';
@@ -11,7 +12,6 @@ import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 import { CoachComposer, type CoachComposerProps } from './coach-composer';
-import { CoachMark } from './coach-mark';
 
 /** The questions to start with, in this order. */
 const SUGGESTIONS = ['weight', 'strength', 'time', 'record'] as const;

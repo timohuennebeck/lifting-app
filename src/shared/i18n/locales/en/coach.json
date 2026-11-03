@@ -11,19 +11,7 @@
     "send": "Send",
     "stop": "Stop the answer"
   },
-  "steps": {
-    "searched": {
-      "workouts_one": "{{count}} workout searched",
-      "workouts_other": "{{count}} workouts searched",
-      "weights_one": "{{count}} weigh-in searched",
-      "weights_other": "{{count}} weigh-ins searched",
-      "checks_one": "{{count}} body check searched",
-      "checks_other": "{{count}} body checks searched"
-    },
-    "searching": "Looking for the right data …",
-    "found": "Found the right data",
-    "writing": "Writing the answer …"
-  },
+  "thinking": "Kai is thinking …",
   "start": {
     "title": "Ask me anything about your training.",
     "subtitle_one": "I know your first workout and answer with facts and charts.",
@@ -78,6 +66,7 @@
     "bodyWeight": "Trend today · since {{since}}",
     "since": "{{what}} · since {{since}}",
     "metric": {
+      "body_weight": "Trend",
       "e1rm": "Estimated 1RM",
       "top_weight": "Heaviest weight",
       "reps": "Reps",
@@ -95,6 +84,9 @@
       "month_one": "{{metric}} this month · vs. Ø {{count}} month",
       "month_other": "{{metric}} this month · vs. Ø {{count}} months"
     }
+  },
+  "calendar": {
+    "rest": "No workout"
   },
   "distribution": {
     "reference_one": "{{count}} guideline",

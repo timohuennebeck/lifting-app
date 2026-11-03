@@ -3,7 +3,6 @@ import { create } from 'zustand';
 import { db } from '@/shared/data/powersync/database';
 import { uploadsDone } from '@/shared/data/powersync/upload-queue';
 
-import type { AnswerProgress } from '../components/answer-steps';
 import { type CoachChart, toChart } from '../lib/charts';
 import { CoachError, type CoachEvent, type CoachQuestion, streamAnswer } from '../lib/coach-client';
 
@@ -19,7 +18,6 @@ export interface PendingAnswer {
   screen: string;
   questionId: string | null;
   answerId: string | null;
-  progress: AnswerProgress;
   text: string;
   chart: CoachChart | null;
   /** The answer is complete and saved. */
@@ -45,15 +43,12 @@ function apply(event: CoachEvent) {
   if (event.type === 'start') {
     const { chatId, questionId, answerId } = event;
     update({ chatId, questionId, answerId });
-  } else if (event.type === 'searched') {
-    update({ progress: { ...pending.progress, searched: { of: event.of, count: event.count } } });
   } else if (event.type === 'found') {
     // A later step without a chart (a look at single workouts) keeps the one drawn before.
-    const chart = toChart(event.chart) ?? pending.chart;
-    update({ progress: { ...pending.progress, found: true }, chart });
+    update({ chart: toChart(event.chart) ?? pending.chart });
   } else if (event.type === 'text') {
     update({ text: pending.text + event.text });
-  } else {
+  } else if (event.type === 'reset') {
     update({ text: '' });
   }
 }
@@ -75,7 +70,6 @@ export async function ask(input: CoachQuestion, screen: string) {
       screen,
       questionId: null,
       answerId: null,
-      progress: { searched: null, found: false },
       text: '',
       chart: null,
       done: false,
