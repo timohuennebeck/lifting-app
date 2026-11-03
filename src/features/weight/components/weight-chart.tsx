@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Svg, { Circle, Path } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 
 import { linePath, nearestIndex, wholeNumberScale } from '@/shared/lib/chart';
 import { daysBetween, fromIsoDate } from '@/shared/lib/date';
@@ -26,6 +26,15 @@ const DAY_LABELS = 4;
  * back, not a scrub (as the back swipe also wins over scroll views there).
  */
 const BACK_SWIPE_EDGE = 20;
+/** Radius of a weigh-in's dot, of the shown one, and outer radius of the trend's ring there. */
+const DOT = 2.25;
+const SHOWN_DOT = 4;
+const RING = 6.25;
+const LAYER = { position: 'absolute', left: 0, top: 0 } as const;
+
+/** A dot as part of one SVG path: a single native view, however many weigh-ins there are. */
+const dotPath = (x: number, y: number) =>
+  `M${(x - DOT).toFixed(1)} ${y.toFixed(1)}a${DOT} ${DOT} 0 1 0 ${2 * DOT} 0a${DOT} ${DOT} 0 1 0 ${-2 * DOT} 0`;
 
 export interface WeightChartProps {
   /** The weigh-ins shown, oldest first. */
@@ -54,6 +63,9 @@ export function WeightChart({ points, from, to, units, selected, onSelect }: Wei
   const shown = points[selected ?? points.length - 1];
   // Each weigh-in's x once, not again (with its date parsed) on every finger move.
   const xs = points.map((p) => x(p.date));
+  const dots = scale
+    ? points.map((p, i) => dotPath(xs[i], scale.y(toUnits(p.weightKg, units)))).join('')
+    : '';
   const trendLine = scale
     ? linePath(
         points,
@@ -92,53 +104,49 @@ export function WeightChart({ points, from, to, units, selected, onSelect }: Wei
     <View>
       <GestureDetector gesture={scrub}>
         <View style={{ height: HEIGHT }} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
+          {/* Layers, as any change inside an Svg redraws all of it: the grid stays as it is, the
+              data changes with the range, and the marker is views a finger only moves. */}
           {width > 0 ? (
-            <Svg width={width} height={HEIGHT}>
+            <Svg width={width} height={HEIGHT} style={LAYER}>
               <ChartGrid id="weight-grid" width={width} height={HEIGHT} />
-              {scale ? (
-                <>
-                  {points.map((p, i) =>
-                    p === shown ? null : (
-                      <Circle
-                        key={p.id}
-                        cx={xs[i]}
-                        cy={scale.y(toUnits(p.weightKg, units))}
-                        r={i === selected ? 4 : 2.25}
-                        fill={colors.dim}
-                      />
-                    ),
-                  )}
-                  <Path
-                    d={trendLine}
-                    fill="none"
-                    stroke={colors.accent}
-                    strokeWidth={2.5}
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                  />
-                  {/* The weigh-in white, then the trend there as a ring on top, as the exercise
-                      charts mark a session: it stays a clean ring where the two meet. */}
-                  {shown ? (
-                    <>
-                      <Circle
-                        cx={x(shown.date)}
-                        cy={scale.y(toUnits(shown.weightKg, units))}
-                        r={4}
-                        fill={colors.fg}
-                      />
-                      <Circle
-                        cx={x(shown.date)}
-                        cy={scale.y(toUnits(shown.trendKg, units))}
-                        r={5}
-                        fill={colors.bg}
-                        stroke={colors.accent}
-                        strokeWidth={2.5}
-                      />
-                    </>
-                  ) : null}
-                </>
-              ) : null}
             </Svg>
+          ) : null}
+          {scale && width > 0 ? (
+            <Svg width={width} height={HEIGHT} style={LAYER}>
+              <Path d={dots} fill={colors.dim} />
+              <Path
+                d={trendLine}
+                fill="none"
+                stroke={colors.accent}
+                strokeWidth={2.5}
+                strokeLinejoin="round"
+                strokeLinecap="round"
+              />
+            </Svg>
+          ) : null}
+          {/* The weigh-in white, then the trend there as a ring on top, as the exercise charts
+              mark a session: it stays a clean ring where the two meet. */}
+          {scale && shown && width > 0 ? (
+            <>
+              <View
+                className="absolute rounded-full bg-fg"
+                style={{
+                  left: x(shown.date) - SHOWN_DOT,
+                  top: scale.y(toUnits(shown.weightKg, units)) - SHOWN_DOT,
+                  width: 2 * SHOWN_DOT,
+                  height: 2 * SHOWN_DOT,
+                }}
+              />
+              <View
+                className="absolute rounded-full border-[2.5px] border-accent bg-bg"
+                style={{
+                  left: x(shown.date) - RING,
+                  top: scale.y(toUnits(shown.trendKg, units)) - RING,
+                  width: 2 * RING,
+                  height: 2 * RING,
+                }}
+              />
+            </>
           ) : null}
           {scale && width > 0
             ? scale.labels.map((label) => (
