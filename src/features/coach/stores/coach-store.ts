@@ -26,9 +26,17 @@ export interface PendingAnswer {
 
 interface CoachState {
   pending: PendingAnswer | null;
+  /** The Training tab card's question, kept when one comes back without an answer. */
+  draft: string;
+  /** "New chat" was tapped elsewhere: the card's field takes focus once it is on screen. */
+  focusCard: boolean;
 }
 
-export const useCoachStore = create<CoachState>()(() => ({ pending: null }));
+export const useCoachStore = create<CoachState>()(() => ({
+  pending: null,
+  draft: '',
+  focusCard: false,
+}));
 
 /** Stops the answer in flight. */
 let controller: AbortController | null = null;
@@ -108,5 +116,5 @@ export const isAnswering = (pending: PendingAnswer | null): pending is PendingAn
 /** Signing out: the answer in flight stops and the next account starts with a new chat. */
 export function resetCoach() {
   stopAnswer();
-  useCoachStore.setState({ pending: null });
+  useCoachStore.setState({ pending: null, draft: '', focusCard: false });
 }

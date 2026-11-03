@@ -1,7 +1,12 @@
 import { useIsFocused } from 'expo-router';
-import type { ReactNode } from 'react';
+import type { ReactNode, Ref } from 'react';
 import { View } from 'react-native';
-import Animated, { type AnimatedRef } from 'react-native-reanimated';
+import {
+  KeyboardAwareScrollView,
+  type KeyboardAwareScrollViewRef,
+} from 'react-native-keyboard-controller';
+import type Animated from 'react-native-reanimated';
+import type { AnimatedRef } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTabBarStore } from '@/shared/stores/tab-bar-store';
@@ -39,14 +44,19 @@ export function TabScreen({ children, greeting, settings, pinned, scrollRef }: T
       <TabHeader greeting={greeting} settings={settings} />
       {pinned}
       <View className="flex-1">
-        <Animated.ScrollView
-          ref={scrollRef}
+        {/* A field on the page (Kai's card) stays above the keyboard and taps reach its buttons. */}
+        <KeyboardAwareScrollView
+          // Its ref is the scroll view itself, with one method added.
+          ref={scrollRef as unknown as Ref<KeyboardAwareScrollViewRef>}
+          bottomOffset={12}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="interactive"
           contentInsetAdjustmentBehavior="never"
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1, paddingBottom: tabBarInset + 24 }}
         >
           {children}
-        </Animated.ScrollView>
+        </KeyboardAwareScrollView>
         <SafeAreaView
           edges={['bottom']}
           pointerEvents="none"

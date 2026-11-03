@@ -3,7 +3,14 @@
   "newChat": "새 채팅",
   "consent": "답변을 위해 운동 및 신체 데이터(운동 기록, 체중, 바디 체크 점수)가 미국에 있는 OpenAI의 AI 모델로 전송돼요. 첫 질문을 보내면 이에 동의하게 돼요.",
   "card": {
-    "prompt": "운동에 대해 물어보세요"
+    "title": "운동에 관해 무엇이든 물어보세요.",
+    "subtitle": "카이가 데이터와 차트로 답해 드려요.",
+    "hints": {
+      "strength": "벤치프레스가 늘었나요?",
+      "weight": "체중이 변했나요?",
+      "record": "벤치프레스 신기록을 세웠나요?",
+      "time": "운동 시간이 달라졌나요?"
+    }
   },
   "composer": {
     "placeholder": "카이에게 물어보세요 …",
@@ -12,30 +19,6 @@
     "stop": "답변 중지"
   },
   "thinking": "카이가 생각하는 중 …",
-  "start": {
-    "title": "운동에 관해 무엇이든 물어보세요.",
-    "subtitle_one": "첫 운동 기록을 바탕으로 데이터와 차트로 답해 드려요.",
-    "subtitle_other": "{{since}}부터 기록한 운동 {{count}}회를 바탕으로 데이터와 차트로 답해 드려요.",
-    "empty": "운동을 기록하면 그 기록을 바탕으로 데이터와 차트로 답해 드려요.",
-    "suggestions": {
-      "weight": {
-        "label": "체중",
-        "question": "지난 3개월 동안 체중이 변했나요?"
-      },
-      "strength": {
-        "label": "근력",
-        "question": "9월 이후 벤치프레스가 늘었나요?"
-      },
-      "time": {
-        "label": "시간",
-        "question": "이번 달 운동 시간이 달라졌나요?"
-      },
-      "record": {
-        "label": "기록",
-        "question": "벤치프레스 신기록을 세웠나요?"
-      }
-    }
-  },
   "values": {
     "reps_one": "{{count}}회",
     "reps_other": "{{count}}회",

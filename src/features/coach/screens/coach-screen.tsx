@@ -1,51 +1,24 @@
-import { getCalendars } from 'expo-localization';
-import { router, useLocalSearchParams } from 'expo-router';
-import type { TFunction } from 'i18next';
-import { useId, useState } from 'react';
+import { router, useIsFocused, useLocalSearchParams } from 'expo-router';
+import { useEffect, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useExerciseName } from '@/shared/data/exercises';
 import { useProfile } from '@/shared/data/profile';
 import { QueryFocus } from '@/shared/data/query-focus';
-import { useWorkoutStats } from '@/shared/data/workouts';
 import { useAppLanguage } from '@/shared/hooks/use-app-language';
-import { formatMonthYear, formatShortDate, formatTime } from '@/shared/lib/format';
-import { showError } from '@/shared/stores/error-sheet-store';
 
 import { CoachChatView } from '../components/coach-chat-view';
-import { CoachStartView } from '../components/coach-start-view';
 import { useCoachMessages } from '../data/coach-chats';
 import { chartTopic } from '../lib/charts';
-import { CoachError, type CoachFailure } from '../lib/coach-client';
-import { openCoachChat } from '../lib/open-coach';
+import { CoachError, timeZone } from '../lib/coach-client';
+import { showCoachError } from '../lib/coach-errors';
+import { startNewChat } from '../lib/open-coach';
 import { ask, isAnswering, stopAnswer, useCoachStore } from '../stores/coach-store';
 
-/** The phone's time zone, which decides what "today" and "this week" are in an answer. */
-const timeZone = () => getCalendars()[0]?.timeZone ?? 'UTC';
-
-/** The error sheet for a question without an answer; the ones worth another try offer it. */
-function showCoachError(
-  reason: Exclude<CoachFailure, 'consent' | 'chatGone'>,
-  limit: CoachError['limit'],
-  t: TFunction<'coach'>,
-  retry: () => void,
-) {
-  const values = limit && {
-    count: limit.count,
-    time: formatTime(new Date(limit.retryAt)),
-    date: formatShortDate(limit.retryAt),
-  };
-  showError({
-    title: t(`errors.${reason}.title`),
-    message: t(`errors.${reason}.message`, values ?? {}),
-    onRetry: reason === 'offline' || reason === 'failed' ? retry : undefined,
-  });
-}
-
 /**
- * The coach (design "Coach Screens"), opened from the Training tab's card: the start screen for a
- * new chat, otherwise the chat with the answer in flight below its saved questions and answers.
- * Every chat opened is a screen of its own, so going back leads to where it was opened from.
+ * The coach's chat (design "Coach Screens"), opened from the Training tab's card or the history:
+ * the answer in flight below its saved questions and answers. Every chat opened is a screen of its
+ * own, so going back leads to where it was opened from.
  */
 export function CoachScreen() {
   const { t } = useTranslation('coach');
@@ -59,7 +32,6 @@ export function CoachScreen() {
   const pending = useCoachStore((s) => s.pending);
   const { data: saved } = useCoachMessages(chatId);
   const messages = saved ?? [];
-  const { data: workouts } = useWorkoutStats();
   const [draft, setDraft] = useState('');
   // The server found no consent (withdrawn on another device): the line shows again.
   const [consentAsked, setConsentAsked] = useState(false);
@@ -73,7 +45,15 @@ export function CoachScreen() {
   // Nothing saved and nothing coming: it was deleted, or its first answer failed. A new chat then.
   else if (chatId && saved?.length === 0 && !pendingHere) setChatId(null);
   const answering = isAnswering(pending);
-  const starting = !chatId && !pendingHere;
+  // No chat and nothing coming (its first answer failed, or it is gone): new chats start on the
+  // Training tab's card, so this screen goes back.
+  const empty = !chatId && !pendingHere;
+  const focused = useIsFocused();
+  useEffect(() => {
+    if (!empty || !focused) return;
+    if (router.canGoBack()) router.back();
+    else router.replace('/');
+  }, [empty, focused]);
   const lastChart = pendingHere?.chart ?? messages.filter((m) => m.chart).at(-1)?.chart ?? null;
   const exerciseId = lastChart?.type === 'trend' ? lastChart.exerciseId : null;
   const exerciseName = useExerciseName(exerciseId ?? '', language);
@@ -93,9 +73,11 @@ export function CoachScreen() {
     if (result instanceof CoachError) {
       setDraft(question);
       if (result.reason === 'consent') setConsentAsked(true);
-      // Deleted on another device: the question can go into a new chat.
-      else if (result.reason === 'chatGone') setChatId(null);
-      else showCoachError(result.reason, result.limit, t, () => void send(question));
+      // Deleted on another device: the question can go into a new chat, on the card.
+      else if (result.reason === 'chatGone') {
+        useCoachStore.setState({ draft: question });
+        setChatId(null);
+      } else showCoachError(result.reason, result.limit, t, () => void send(question));
     }
   };
 
@@ -107,37 +89,22 @@ export function CoachScreen() {
     onStop: stopAnswer,
     consentNote: needsConsent,
   };
-  const onHistory = () => router.push('/coach/history');
 
   let subtitle: string | null = null;
   if (lastChart) subtitle = chartTopic(lastChart, t, exerciseId ? exerciseName : null);
   else if (!messages.length) subtitle = t('newChat');
 
-  const first = workouts?.first ? new Date(workouts.first) : null;
-  const since = first && formatMonthYear(first, new Date().getFullYear());
-
   return (
     <QueryFocus>
-      {starting ? (
-        <CoachStartView
-          workouts={workouts?.count ?? 0}
-          since={since}
-          onBack={() => router.back()}
-          onHistory={onHistory}
-          onAsk={(question) => void send(question)}
-          composer={composer}
-        />
-      ) : (
-        <CoachChatView
-          subtitle={subtitle}
-          items={messages}
-          pending={pendingHere}
-          onBack={() => router.back()}
-          onHistory={onHistory}
-          onNew={() => openCoachChat(null)}
-          composer={composer}
-        />
-      )}
+      <CoachChatView
+        subtitle={subtitle}
+        items={messages}
+        pending={pendingHere}
+        onBack={() => router.back()}
+        onHistory={() => router.push('/coach/history')}
+        onNew={startNewChat}
+        composer={composer}
+      />
     </QueryFocus>
   );
 }

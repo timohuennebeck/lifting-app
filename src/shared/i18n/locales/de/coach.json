@@ -3,7 +3,14 @@
   "newChat": "Neuer Chat",
   "consent": "Für die Antworten gehen deine Trainings- und Körperdaten (Trainings, Gewicht, Werte der Körperchecks) an ein KI-Modell von OpenAI in den USA. Mit deiner ersten Frage willigst du ein.",
   "card": {
-    "prompt": "Frag mich zu deinem Training"
+    "title": "Frag mich alles zu deinem Training.",
+    "subtitle": "Kai antwortet mit Fakten und Diagrammen.",
+    "hints": {
+      "strength": "Hat sich mein Bankdrücken verbessert?",
+      "weight": "Hat sich mein Gewicht verändert?",
+      "record": "Hat mein Bankdrücken einen Rekord?",
+      "time": "Hat sich meine Trainingszeit verändert?"
+    }
   },
   "composer": {
     "placeholder": "Frag Kai …",
@@ -12,30 +19,6 @@
     "stop": "Antwort stoppen"
   },
   "thinking": "Kai denkt nach …",
-  "start": {
-    "title": "Frag mich alles zu deinem Training.",
-    "subtitle_one": "Ich kenne deine erste Einheit und antworte mit Fakten und Diagrammen.",
-    "subtitle_other": "Ich kenne alle {{count}} Einheiten seit {{since}} und antworte mit Fakten und Diagrammen.",
-    "empty": "Sobald du trainierst, antworte ich mit Fakten und Diagrammen aus deinen Einheiten.",
-    "suggestions": {
-      "weight": {
-        "label": "Gewicht",
-        "question": "Hat sich mein Gewicht in den letzten 3 Monaten verändert?"
-      },
-      "strength": {
-        "label": "Kraft",
-        "question": "Hat sich mein Bankdrücken seit September verbessert?"
-      },
-      "time": {
-        "label": "Zeit",
-        "question": "Hat sich meine Trainingszeit diesen Monat verändert?"
-      },
-      "record": {
-        "label": "Rekord",
-        "question": "Hat mein Bankdrücken einen neuen Rekord?"
-      }
-    }
-  },
   "values": {
     "reps_one": "{{count}} Wdh.",
     "reps_other": "{{count}} Wdh.",
