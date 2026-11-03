@@ -7,7 +7,7 @@ import { useCurrentPlan } from '@/shared/data/plans';
 import { getActiveWorkoutId } from '@/shared/data/workouts';
 import { useResetOnOpen } from '@/shared/hooks/use-reset-on-open';
 import { ChoiceSheet, glyphColor } from '@/shared/ui/choice-sheet';
-import { Icon } from '@/shared/ui/icon';
+import { CoachDiamond } from '@/shared/ui/coach-mark';
 import { afterSheetClose } from '@/shared/ui/sheet';
 
 import { PlanGlyph, RoutineGlyph } from './glyphs';
@@ -62,7 +62,13 @@ export function CreateSheet({ visible, onClose }: CreateSheetProps) {
           title: t('create.workout'),
           description: t('create.workoutHint'),
           cta: t('create.startWorkout'),
-          renderIcon: (active) => <Icon name="bolt" size={16} color={glyphColor(active)} />,
+          renderIcon: (active) => (
+            <CoachDiamond
+              size={15}
+              color={glyphColor(active)}
+              animation={active ? 'breathe' : undefined}
+            />
+          ),
         },
         {
           value: 'routine',
