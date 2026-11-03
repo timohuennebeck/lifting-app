@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import Animated, { FadeIn, LayoutAnimationConfig } from 'react-native-reanimated';
 
 import type { CoachChart } from '../lib/charts';
 import { AnswerText } from './answer-text';
@@ -25,14 +26,23 @@ function AnswerChart({ chart }: { chart: CoachChart }) {
   }
 }
 
-/** One answer: the coach's mark, the text and, mostly, a chart under it. */
+/**
+ * One answer: the coach's mark, the text and, mostly, a chart under it. A chart added to an answer
+ * on screen (once its text is complete) fades in; one there from the start just shows.
+ */
 export function CoachAnswer({ text, chart }: { text: string; chart: CoachChart | null }) {
   return (
     <View className="flex-row gap-2.5">
       <CoachMark />
       <View className="min-w-0 flex-1 gap-4">
         <AnswerText text={text} />
-        {chart ? <AnswerChart chart={chart} /> : null}
+        <LayoutAnimationConfig skipEntering>
+          {chart ? (
+            <Animated.View entering={FadeIn.duration(250)}>
+              <AnswerChart chart={chart} />
+            </Animated.View>
+          ) : null}
+        </LayoutAnimationConfig>
       </View>
     </View>
   );

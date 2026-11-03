@@ -67,7 +67,12 @@ export function CoachChatView({
     rows.push(<QuestionBubble key={pending.questionId ?? 'question'} text={pending.question} />);
     rows.push(
       pending.text ? (
-        <CoachAnswer key={pending.answerId ?? 'answer'} text={pending.text} chart={pending.chart} />
+        <CoachAnswer
+          key={pending.answerId ?? 'answer'}
+          text={pending.text}
+          // The chart waits for the whole text: it comes first from the server, but reads last.
+          chart={pending.done ? pending.chart : null}
+        />
       ) : (
         <AnswerSteps key="steps" progress={pending.progress} />
       ),
