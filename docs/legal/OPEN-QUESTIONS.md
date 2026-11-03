@@ -8,8 +8,9 @@ shows (`20261102120000_privacy_policy_v1_2`). Version 1.3 of the privacy policy 
 terms add the AI coach; their migrations aren't generated yet (item 8). DS 1.3 also covers voice
 input: exercises said out loud (the operating system's speech recognition, then OpenAI matches
 the text; DS §4.7) and questions to the coach said out loud (the recording goes to OpenAI to be
-written down and isn't stored; DS §4.8), and it names the microphone among the permissions
-(§6), which 1.2 wrongly said the app doesn't ask for. NB 1.2 also names Korean among its languages. German is the
+written down and isn't stored; DS §4.8), messages to support said out loud the same way (§4.9),
+and it names the microphone among the permissions (§6), which 1.2 wrongly said the app doesn't ask
+for. NB 1.2 also names Korean among its languages. German is the
 binding version; `en`, `pt-PT`, `pt-BR` and `ko` are translations.
 
 The texts are not legal advice. A lawyer should review them, above all the health data, body

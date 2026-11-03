@@ -201,6 +201,8 @@ You can write to us directly in the app via “Report a bug” and “Request a 
 
 **Translation by an AI model from OpenAI:** So that we understand you and you can read our replies in your language, an AI model from OpenAI translates support messages. For this, our server transfers every message containing text to OpenAI, together with the language to translate it into: your messages, to detect their language and translate them into the language of our support, and our replies, to translate them into your app language. If you change your app language, we translate our earlier replies into the new language. We do not transfer your name, your email address, your account ID or your screenshots. We store the translations with the messages; in the app, you can show the original at any time. OpenAI processes the data in the USA (section 8). We have configured OpenAI not to store the request for later retrieval. OpenAI does not use data from its API to train its models and retains it for up to 30 days to detect abuse; after that, it is deleted.
 
+**Messages by voice:** You can also say your message out loud. This works like questions to the coach (section 4.8): the app records until you end the recording, for at most two minutes. Our server passes the recording with a short note on the topic to a speech recognition model from OpenAI. The app shows the text in the input field, where you can change it; it only becomes your message once you send it. We don't store your recording. Here too, our server checks your age and whether your account has Loqqa Pro, and the same limit applies.
+
 **Who sees your request:** We handle requests in an internal support area in the browser that only Jan Timo Hünnebeck can access, with a separate login. For your request, the support area also shows your email address, whether you sign in with Apple or Google, your account ID, when you created your account and were last active, your app language and your earlier requests.
 
 The app first stores screenshots on your device and then uploads them in the background. You cannot delete messages and requests yourself, so that the history remains traceable. They are deleted together with your account; on request, we also delete closed requests earlier. We keep emails for as long as we need them for your request.
@@ -284,7 +286,7 @@ Loqqa only asks for a permission when you use a feature that needs it:
 - **Camera:** to photograph your training plan, for body check photos and for your profile photo
 - **Photos:** to select images for plan import, for support screenshots and for your profile photo. For this, the app uses your operating system’s image picker and only receives the images you select.
 - **Files:** to select a plan file via your operating system’s file picker
-- **Microphone:** to say exercises (section 4.7) and questions to the coach (section 4.8). The app only records while you use voice input.
+- **Microphone:** to say exercises (section 4.7), questions to the coach (section 4.8) and messages to support (section 4.9). The app only records while you use voice input.
 - **Speech recognition (iPhone):** so that Apple’s speech recognition can turn spoken exercises into text (section 4.7)
 
 Loqqa does not ask for access to location, contacts or health apps such as Apple Health or Health Connect, and does not send push notifications. You can revoke permissions at any time in your device settings.
