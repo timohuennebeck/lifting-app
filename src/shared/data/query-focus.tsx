@@ -6,8 +6,9 @@ const QueryFocusContext = createContext(true);
 
 /**
  * Pauses the watched queries rendered inside it while its tab is hidden (another tab, or a
- * workout pushed over the tabs). Queries a change made stale run once when the tab shows again
- * (staleTime is Infinity). Tabs get it with `withQueryFocus`.
+ * workout pushed over the tabs), once they have loaded: a tab has its data before it is first
+ * shown. Queries a change made stale run once when the tab shows again (staleTime is Infinity).
+ * Tabs get it with `withQueryFocus`.
  */
 export function QueryFocus({ children }: { children: ReactNode }) {
   const focused = useIsFocused();

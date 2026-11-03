@@ -37,6 +37,8 @@ function compilable<TRow>(queryKey: readonly unknown[], query: DrizzleQuery<TRow
   return { execute, compile: () => getOrInsert(compiled, JSON.stringify(queryKey), compile) };
 }
 
+const hasNoData = (query: { state: { data: unknown } }) => query.state.data === undefined;
+
 /**
  * Watched Drizzle query via PowerSync's TanStack Query integration, with a typed row
  * mapper. Re-renders automatically when any table used by `query` changes.
@@ -48,14 +50,15 @@ export function useDrizzleQuery<TRow, TResult>({
   map,
   keepPrevious,
 }: DrizzleQueryOptions<TRow, TResult>) {
-  // Off inside a hidden tab's QueryFocus. Off, not unsubscribed: a query without an observer is
-  // dropped from the cache after 5 minutes, while an off one keeps its data and runs once when
-  // shown if a change made it stale.
+  // Off inside a hidden tab's QueryFocus once it has its data, so a tab is ready before it is
+  // first shown. Off, not unsubscribed: a query without an observer is dropped from the cache
+  // after 5 minutes, while an off one keeps its data and runs once when shown if a change made it
+  // stale.
   const focused = useQueryFocus();
   const result = useQuery<TRow>({
     queryKey,
     query: compilable(queryKey, query),
-    enabled: enabled !== false && focused,
+    enabled: enabled !== false && (focused || hasNoData),
     placeholderData: keepPrevious ? keepPreviousData : undefined,
   });
   const rows = result.data;
