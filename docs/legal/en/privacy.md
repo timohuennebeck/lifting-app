@@ -13,7 +13,7 @@ Here you can find out which personal data we process when you use the Loqqa app,
 - Loqqa first stores your plans and workouts on your device and syncs them with your account as soon as you are online. Our database is located in Frankfurt am Main.
 - Other users cannot see your profile, your workouts or your photos.
 - We treat your weight, your height and your body check photos as health data. We only process them with your explicit consent.
-- For plan creation, plan import, the body check, the coach and the translation of support messages, we use an AI model from OpenAI. For this, we transfer the necessary data to OpenAI, which processes it in the USA.
+- For plan creation, plan import, voice input, the body check, the coach and the translation of support messages, we use an AI model from OpenAI. For this, we transfer the necessary data to OpenAI, which processes it in the USA.
 - To improve the app, we use PostHog to measure how it is used. Health data and photos are not sent to PostHog. The app contains no advertising.
 - You can delete your account in the app at any time. This also deletes your photos and all data in your account.
 
@@ -135,7 +135,7 @@ You can delete individual checks in the app. The app then deletes the photos on 
 
 Legal basis: your explicit consent (section 4.4), including for the transfer to OpenAI in the USA (Art. 49(1)(a) GDPR, in addition to the safeguards in section 8).
 
-### 4.7 Plan import and plan creation
+### 4.7 Plan import, plan creation and exercises by voice
 
 You can import an existing training plan: as a photo taken with the camera (for example of paper, a whiteboard or a screen), as up to ten images from your photo library or as a file (PDF, Excel, CSV, text or image). Please make sure that no data of other people can be seen in the images and files.
 
@@ -145,9 +145,11 @@ Our server does not store your photos and files; it only returns the recognized 
 
 **Plan creation by an AI model from OpenAI:** If you have a plan created for you, the app transfers your answers on training goal, focus muscle groups, equipment, workouts per week, workout duration and training experience, as well as your app language, to our server. The server passes them, together with the exercises from our catalog that match your equipment, to an AI model from OpenAI, which puts together your plan from them. We do not transfer your name, your date of birth, sex, weight or height in the process, and the request does not contain your account. The same applies to the processing at OpenAI as for the import. Our server does not store your answers in the process; it only returns the plan to the app, where you can change it.
 
-**Request limits:** To prevent import and plan creation from being misused, we limit how often they can be used per network and in total per day. For this, our server stores for each request the time, whether it was an import or a plan creation, and a hash of your IP address, which it generates with a secret key; we do not store the IP address itself. We delete entries older than two days with every new request.
+**Exercises by voice:** When importing a plan, editing a workout and putting together a free workout, you can say exercises with their sets and reps instead of looking them up one by one. Your operating system’s speech recognition turns what you say into text: Apple’s on the iPhone, Google’s on Android devices. Depending on the device, this happens on the device itself or on Apple’s or Google’s servers; their privacy policies apply to it. We do not receive the recording itself. The app transfers the text, which you can still change before adding the exercises, together with your app language to our server. The server passes it, together with our exercise catalog, to an AI model from OpenAI, which recognizes the exercises with their sets and reps. The request contains neither your account nor your name. The same applies to the processing at OpenAI as for the import. Our server does not store the text.
 
-Legal basis: Art. 6(1)(b) GDPR for the import and plan creation you start, including for the transfer to OpenAI in the USA. For the request limits, Art. 6(1)(f) GDPR; our legitimate interest is to prevent misuse and unnecessary costs.
+**Request limits:** To prevent import, plan creation and exercises by voice from being misused, we limit how often they can be used per network and in total per day. For this, our server stores for each request the time, which of these features it concerned, and a hash of your IP address, which it generates with a secret key; we do not store the IP address itself. We delete entries older than two days with every new request.
+
+Legal basis: Art. 6(1)(b) GDPR for the import, plan creation and exercises by voice you start, including for the transfer to OpenAI in the USA. For the request limits, Art. 6(1)(f) GDPR; our legitimate interest is to prevent misuse and unnecessary costs.
 
 ### 4.8 Kai · AI coach
 
@@ -176,13 +178,15 @@ The answers are written by an AI model. They can be wrong. They are information 
 
 Before our server answers a question, it checks your age using the date of birth in your profile, your consent (section 4.4) and, with RevenueCat, whether your account has Loqqa Pro (section 4.12).
 
+**Questions by voice:** You can also say your question. The app then records via the microphone until you end the recording, for at most two minutes, and transfers the recording together with your app language to our server. The server passes it to a speech recognition model from OpenAI, which turns it into text. So that terms like “bench press” are recognized correctly, it sends a short note on the topic along with it (questions to a training coach and typical terms). The app shows the text in the input field, where you can change it; it only becomes your question when you send it. We do not store your recording: our server only passes it on, and the app deletes it on your device as soon as the text is there or you discard the recording. Please do not record other people. The same applies to the processing at OpenAI as for the answers (USA, no use for training, retention of up to 30 days to detect misuse). For this, too, our server checks your age and whether your account has Loqqa Pro. To prevent the conversion from being misused, you can use it at most 100 times in 24 hours. For this, our server stores for each conversion the time and a hash of your account ID, which it generates with a secret key; we delete entries older than two days with every new conversion.
+
 **What we store:** We store your chats with the questions, the answers and the charts below the answers in our database. The app syncs them to your devices so that you can see your chats there (section 5). For each question, we also store a log that the app does not show: time, status (for example whether an answer was given), the model used, the number of tokens (text units that OpenAI bills by) and the duration, plus the model’s lookups with the data looked up. We need these lookups so that the coach can answer follow-up questions about an answer.
 
 **Question limits:** To prevent the coach from being misused and to avoid unnecessary costs, you can ask at most 20 questions in 24 hours and 150 questions in 30 days. For this, our server counts the logs.
 
 You can delete chats in the app, including several at once. We then delete their questions, answers and charts and the looked-up data in their logs. Time, status, model, tokens and duration are kept so that the limits continue to apply and we can keep track of the coach’s costs. Otherwise, we keep your chats until you delete them or your account. When you delete your account, we delete all chats and logs (section 10).
 
-Legal basis: your explicit consent (section 4.4), including for the transfer to OpenAI in the USA (Art. 49(1)(a) GDPR, in addition to the safeguards in section 8). For the question limits and the information on time, status, model, tokens and duration, Art. 6(1)(f) GDPR; our legitimate interest is to prevent misuse and unnecessary costs.
+Legal basis: your explicit consent (section 4.4), including for the transfer to OpenAI in the USA (Art. 49(1)(a) GDPR, in addition to the safeguards in section 8). For turning a spoken question into text, Art. 6(1)(b) GDPR, as you start it, including for the transfer to OpenAI in the USA. For the limits on questions and conversions and the information on time, status, model, tokens and duration, Art. 6(1)(f) GDPR; our legitimate interest is to prevent misuse and unnecessary costs.
 
 ### 4.9 Support
 
@@ -280,8 +284,10 @@ Loqqa only asks for a permission when you use a feature that needs it:
 - **Camera:** to photograph your training plan, for body check photos and for your profile photo
 - **Photos:** to select images for plan import, for support screenshots and for your profile photo. For this, the app uses your operating system’s image picker and only receives the images you select.
 - **Files:** to select a plan file via your operating system’s file picker
+- **Microphone:** to say exercises (section 4.7) and questions to the coach (section 4.8). The app only records while you use voice input.
+- **Speech recognition (iPhone):** so that Apple’s speech recognition can turn spoken exercises into text (section 4.7)
 
-Loqqa does not ask for access to the microphone, location, contacts or health apps such as Apple Health or Health Connect, and does not send push notifications. You can revoke permissions at any time in your device settings.
+Loqqa does not ask for access to location, contacts or health apps such as Apple Health or Health Connect, and does not send push notifications. You can revoke permissions at any time in your device settings.
 
 ## 7. Recipients and processors
 
@@ -289,11 +295,11 @@ We only pass on your data if this is necessary for the purposes stated, you have
 
 - **Supabase, Inc.** (database, sign-in, file storage and server functions): servers in Frankfurt am Main (Amazon Web Services)
 - **PowerSync** by Journey Mobile, Inc. (syncing between the app and the database; for this, the service keeps a copy of your synced data): servers in the EU
-- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Ireland (AI creation of plans, recognition of imported plans, assessment of body check photos, the coach’s answers and translation of support messages, sections 4.6 to 4.9): processing in the USA by OpenAI OpCo, LLC
+- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Ireland (AI creation of plans, recognition of imported plans and spoken exercises, assessment of body check photos, the coach’s answers, turning spoken questions into text and translation of support messages, sections 4.6 to 4.9): processing in the USA by OpenAI OpCo, LLC
 - **RevenueCat, Inc.** (subscription management, section 4.12)
 - **PostHog, Inc.** (product analytics and error reports, section 4.14)
 
-Apple and Google receive data as independent controllers for app downloads and purchases (section 4.11), as well as for signing in via their account (section 4.2).
+Apple and Google receive data as independent controllers for app downloads and purchases (section 4.11), as well as for signing in via their account (section 4.2) and for their operating system’s speech recognition (section 4.7).
 
 Loqqa is run by one person: only Jan Timo Hünnebeck has access to your data, to the extent he needs it for operation and support.
 
@@ -301,7 +307,7 @@ We only provide data to authorities and courts if we are legally required to do 
 
 ## 8. Transfers to third countries
 
-We store your account, your workouts and your photos in data centers in the EU (Supabase in Frankfurt am Main, PowerSync in the EU). Some of our service providers are based in the USA. Data may therefore also be transferred to the USA, for example during maintenance or support by the service provider. For plan creation, plan import, the assessment of the body check, the coach’s answers and the translation of support messages, we transfer data to OpenAI in the USA with every request (sections 4.6 to 4.9), and RevenueCat processes the subscription data in the USA (section 4.12).
+We store your account, your workouts and your photos in data centers in the EU (Supabase in Frankfurt am Main, PowerSync in the EU). Some of our service providers are based in the USA. Data may therefore also be transferred to the USA, for example during maintenance or support by the service provider. For plan creation, plan import, spoken exercises and questions, the assessment of the body check, the coach’s answers and the translation of support messages, we transfer data to OpenAI in the USA with every request (sections 4.6 to 4.9), and RevenueCat processes the subscription data in the USA (section 4.12).
 
 We base these transfers on the following safeguards:
 
@@ -317,7 +323,8 @@ You can request a copy of the standard contractual clauses from us.
 - **Answers from setup without an account:** only on your device, until you create an account or delete the app.
 - **Data on your device:** until you sign out or delete the app (section 5).
 - **Server logs:** one day at Supabase; at PowerSync, as long as they are needed for operation and security (section 4.13).
-- **Limits on import and plan creation:** two days (section 4.7).
+- **Limits on import, plan creation and voice input:** two days (sections 4.7 and 4.8).
+- **Recordings of spoken questions:** we do not store them; the app deletes them after the conversion (section 4.8).
 - **Coach logs:** as long as your account exists; we delete the looked-up data in them together with the respective chat (section 4.8).
 - **At OpenAI:** up to 30 days (sections 4.6 to 4.9).
 - **Analytics data at PostHog:** one year (section 4.14).
