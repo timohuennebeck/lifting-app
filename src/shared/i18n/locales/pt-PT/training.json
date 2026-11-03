@@ -2,7 +2,6 @@
   "home": {
     "single": "Treinos avulsos",
     "showAll": "Ver todos",
-    "activePlan": "Plano ativo",
     "planRoutines": "Treinos · {{week}}",
     "resumeActive": "Retomar {{name}}",
     "noPlan": {
@@ -22,13 +21,7 @@
     "doneAt": "{{date}} às {{time}}"
   },
   "card": {
-    "perBlock_one": "{{count}} treino por bloco",
-    "perBlock_other": "{{count}} treinos por bloco",
     "edit": "Editar"
-  },
-  "progress": {
-    "session": "Treino {{n}} de {{total}}",
-    "done": "{{done}} / {{total}} feitos"
   },
   "all": {
     "recent": "Feitos recentemente",

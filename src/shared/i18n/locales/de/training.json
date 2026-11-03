@@ -2,7 +2,6 @@
   "home": {
     "single": "Einzeltrainings",
     "showAll": "Alle anzeigen",
-    "activePlan": "Aktiver Plan",
     "planRoutines": "Trainings · {{week}}",
     "resumeActive": "{{name}} fortsetzen",
     "noPlan": {
@@ -22,13 +21,7 @@
     "doneAt": "{{date}} um {{time}}"
   },
   "card": {
-    "perBlock_one": "{{count}} Training pro Block",
-    "perBlock_other": "{{count}} Trainings pro Block",
     "edit": "Bearbeiten"
-  },
-  "progress": {
-    "session": "Training {{n}} von {{total}}",
-    "done": "{{done}} / {{total}} erledigt"
   },
   "all": {
     "recent": "Zuletzt trainiert",

@@ -2,7 +2,6 @@
   "home": {
     "single": "Single workouts",
     "showAll": "Show all",
-    "activePlan": "Active plan",
     "planRoutines": "Workouts · {{week}}",
     "resumeActive": "Resume {{name}}",
     "noPlan": {
@@ -22,13 +21,7 @@
     "doneAt": "{{date}} at {{time}}"
   },
   "card": {
-    "perBlock_one": "{{count}} workout per block",
-    "perBlock_other": "{{count}} workouts per block",
     "edit": "Edit"
-  },
-  "progress": {
-    "session": "Workout {{n}} of {{total}}",
-    "done": "{{done}} / {{total}} done"
   },
   "all": {
     "recent": "Recently done",

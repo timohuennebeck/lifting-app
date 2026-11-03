@@ -35,7 +35,7 @@ interface MuscleStackProps {
 }
 
 /** The three muscles worked most as overlapping circles of one size, the biggest share in front. */
-export function MuscleStack({ shares, highlight }: MuscleStackProps) {
+function MuscleStack({ shares, highlight }: MuscleStackProps) {
   const accent = highlight ? colors.accent : colors.fg2;
   return (
     <View

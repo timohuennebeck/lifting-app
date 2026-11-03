@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated, { useAnimatedRef } from 'react-native-reanimated';
@@ -7,13 +8,7 @@ import { AskCoachCard } from '@/features/coach/components/ask-coach-card';
 import { openCoach } from '@/features/coach/lib/open-coach';
 import { openPlanEditor, openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { TabScreen } from '@/shared/components/tab-screen';
-import {
-  type PlanStatus,
-  type PlanSummary,
-  useCurrentPlan,
-  usePlanStatus,
-  usePlanWeekDone,
-} from '@/shared/data/plans';
+import { useCurrentPlan, usePlanStatus, usePlanWeekDone } from '@/shared/data/plans';
 import { muscleShares } from '@/shared/data/muscles';
 import {
   type DoneDates,
@@ -26,11 +21,11 @@ import { useToday } from '@/shared/hooks/use-today';
 import { cn } from '@/shared/lib/cn';
 import { formatShortDate, formatTime, formatWeekdayDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
+import { useSplashStore } from '@/shared/stores/splash-store';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
-import { ActivePlanCard } from '../components/active-plan-card';
 import { PlanPrompt } from '../components/plan-prompt';
 import { RECENT_ROUTINES, RoutineRows, useRoutineMeta } from '../components/routine-row';
 import { SectionTitle } from '../components/section-title';
@@ -50,20 +45,23 @@ function recentFirst(routines: RoutineSummary[], lastDone: DoneDates, language: 
 
 /**
  * Training, the first tab: the week with its workouts (a finished one opens its summary; a swipe
- * shows earlier and later weeks), the plan it follows with where it stands (a tap opens it to
- * edit) and its routines (hold one to move it), then the routines outside a plan
- * (Einzeltrainings). Without a plan, or with an empty one, a way to make or fill it.
+ * shows earlier and later weeks), the plan's routines (hold one to move it, "Bearbeiten" opens the
+ * plan to edit), then the routines outside a plan (Einzeltrainings). Without a plan, or with an
+ * empty one, a way to make or fill it.
  */
 export function TrainingScreen() {
   const { t, i18n } = useTranslation(['training', 'muscles']);
   // The tab stays mounted: the day comes from a clock so it moves on overnight.
   const today = new Date(useToday());
-  const { data: active } = useActiveWorkout();
+  const { data: active, isLoading: activeLoading } = useActiveWorkout();
   // This week's workouts, which the strip opens on (the same query, so it is loaded once).
   const { isLoading: weekLoading } = useWeekWorkouts(today);
   const { plan, profile, isLoading: planLoading } = useCurrentPlan();
   const status = usePlanStatus(plan);
-  const { data: finishedThisWeek } = usePlanWeekDone(plan?.id, status?.week);
+  const { data: finishedThisWeek, isLoading: weekDoneLoading } = usePlanWeekDone(
+    plan?.id,
+    status?.week,
+  );
   const { data: routines = [], isLoading: routinesLoading } = useRoutines();
   const { data: lastDone = {}, isLoading: lastDoneLoading } = useLastDone();
   const meta = useRoutineMeta();
@@ -77,7 +75,24 @@ export function TrainingScreen() {
   // Nothing shows until the week, the plan and what was done are known, so no card moves down
   // once the rows above it arrive.
   const loading =
-    weekLoading || planLoading || routinesLoading || lastDoneLoading || (!!plan && !status);
+    activeLoading ||
+    weekLoading ||
+    planLoading ||
+    weekDoneLoading ||
+    routinesLoading ||
+    lastDoneLoading ||
+    (!!plan && !status);
+  // The tab appears all at once, under the splash screen on launch; after that the week strip and
+  // Kai stay when the rows below them reload.
+  const [shown, setShown] = useState(false);
+  if (!shown && !loading) setShown(true);
+  const setHomeReady = useSplashStore((s) => s.setHomeReady);
+  // A frame later, so the page is on screen under the splash screen when that goes.
+  useEffect(() => {
+    if (!shown) return;
+    const frame = requestAnimationFrame(() => setHomeReady());
+    return () => cancelAnimationFrame(frame);
+  }, [shown, setHomeReady]);
   // The first routine with exercises not done this plan week comes next.
   const nextId = planRoutines.find((r) => r.exerciseCount && !finishedThisWeek?.has(r.id))?.id;
   // A plan routine's time and exercises, with the muscle it works most in neon above; done this
@@ -112,9 +127,8 @@ export function TrainingScreen() {
     </PressableScale>
   ) : null;
 
-  // The plan card shows once the plan has routines.
-  let card: { plan: PlanSummary; status: PlanStatus } | undefined;
-  if (plan && status && planRoutines.length) card = { plan, status };
+  // The plan's routines show once it has some.
+  const planShown = plan && status && planRoutines.length ? { plan, status } : undefined;
   // Without a plan, or with an empty one, the way to make or fill it fills the rest of the page.
   const prompt = !plan ? (
     <PlanPrompt
@@ -134,30 +148,30 @@ export function TrainingScreen() {
     <TabScreen
       scrollRef={scrollRef}
       pinned={
-        <View>
-          {resume}
-          <WeekStrip today={today} onOpen={(id) => router.push(`/workout/summary/${id}`)} />
-        </View>
+        shown ? (
+          <View>
+            {resume}
+            <WeekStrip today={today} onOpen={(id) => router.push(`/workout/summary/${id}`)} />
+          </View>
+        ) : null
       }
     >
-      <AskCoachCard onPress={openCoach} className="mx-4 mt-3 mb-3" />
+      {shown ? <AskCoachCard onPress={openCoach} className="mx-4 mt-3 mb-3" /> : null}
       {loading ? null : (
         <>
-          {card ? (
+          {planShown ? (
             <>
-              <SectionTitle first>{t('home.activePlan')}</SectionTitle>
-              <ActivePlanCard
-                plan={card.plan}
-                status={card.status}
-                routines={planRoutines}
-                goal={profile?.goal}
-                onEdit={() => void openPlanEditor(card.plan.id)}
-              />
-              <SectionTitle>
+              <SectionTitle
+                first
+                edit={{
+                  label: t('card.edit'),
+                  onPress: () => void openPlanEditor(planShown.plan.id),
+                }}
+              >
                 {t('home.planRoutines', {
-                  week: card.status.deload
+                  week: planShown.status.deload
                     ? t('plan.deload')
-                    : t('plan.block', { n: card.status.blockWeek ?? card.status.week }),
+                    : t('plan.block', { n: planShown.status.blockWeek ?? planShown.status.week }),
                 })}
               </SectionTitle>
               <RoutineRows

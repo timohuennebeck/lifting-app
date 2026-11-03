@@ -2,7 +2,6 @@
   "home": {
     "single": "단일 루틴",
     "showAll": "모두 보기",
-    "activePlan": "진행 중인 플랜",
     "planRoutines": "루틴 · {{week}}",
     "resumeActive": "{{name}} 계속하기",
     "noPlan": {
@@ -22,13 +21,7 @@
     "doneAt": "{{date}} {{time}}"
   },
   "card": {
-    "perBlock_one": "블록당 {{count}}회 운동",
-    "perBlock_other": "블록당 {{count}}회 운동",
     "edit": "편집"
-  },
-  "progress": {
-    "session": "{{n}}/{{total}}번째 운동",
-    "done": "{{done}} / {{total}} 완료"
   },
   "all": {
     "recent": "최근 운동",
