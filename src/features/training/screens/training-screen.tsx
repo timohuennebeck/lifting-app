@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import Animated, { useAnimatedRef } from 'react-native-reanimated';
+import Animated, { FadeIn, LayoutAnimationConfig, useAnimatedRef } from 'react-native-reanimated';
 
 import { AskCoachCard } from '@/features/coach/components/ask-coach-card';
 import { openCoach } from '@/features/coach/lib/open-coach';
@@ -38,6 +38,7 @@ import { WeekStrip } from '../components/week-strip';
 import { reorderPlanRoutine } from '../data/routine-mutations';
 import { useStartRoutine } from '../hooks/use-start-routine';
 import { useWeekWorkouts } from '../hooks/use-week-workouts';
+import { usePlanCardStore } from '../stores/plan-card-store';
 
 /** Routines done most recently first, then the others A–Z. */
 function recentFirst(routines: RoutineSummary[], lastDone: DoneDates, language: string) {
@@ -70,6 +71,9 @@ export function TrainingScreen() {
   // One starter for the whole screen, so two starts can't race.
   const { start, startingId } = useStartRoutine();
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  // "Aktiver Plan" folds the plan's card away, and it stays folded until tapped again.
+  const planFolded = usePlanCardStore((s) => s.folded);
+  const togglePlan = usePlanCardStore((s) => s.toggle);
 
   const planRoutines = plan ? routines.filter((r) => r.planId === plan.id) : [];
   const library = routines.filter((r) => r.planId === null);
@@ -145,14 +149,23 @@ export function TrainingScreen() {
         <>
           {card ? (
             <>
-              <SectionTitle first>{t('home.activePlan')}</SectionTitle>
-              <ActivePlanCard
-                plan={card.plan}
-                status={card.status}
-                routines={planRoutines}
-                goal={profile?.goal}
-                onEdit={() => void openPlanEditor(card.plan.id)}
-              />
+              <SectionTitle first fold={{ folded: planFolded, onToggle: togglePlan }}>
+                {t('home.activePlan')}
+              </SectionTitle>
+              {/* The card fades in when unfolded, not when the tab first shows it. */}
+              <LayoutAnimationConfig skipEntering>
+                {planFolded ? null : (
+                  <Animated.View entering={FadeIn.duration(180)}>
+                    <ActivePlanCard
+                      plan={card.plan}
+                      status={card.status}
+                      routines={planRoutines}
+                      goal={profile?.goal}
+                      onEdit={() => void openPlanEditor(card.plan.id)}
+                    />
+                  </Animated.View>
+                )}
+              </LayoutAnimationConfig>
               <SectionTitle>
                 {t('home.planRoutines', {
                   week: card.status.deload
