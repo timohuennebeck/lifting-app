@@ -3,12 +3,16 @@ import { useTranslation } from 'react-i18next';
 import { FlatList, View } from 'react-native';
 
 import type { MuscleGroupId } from '@/shared/data/muscle-groups';
+import { Gradient } from '@/shared/ui/gradient';
 import { Text } from '@/shared/ui/text';
 
 import { type ExerciseOption, useExerciseSearch } from '../hooks/use-exercise-search';
 import { type IndexedRow, useLetterIndex } from '../hooks/use-letter-index';
 import { AlphabetRail } from './alphabet-rail';
 import { MuscleGroupFilter } from './muscle-group-filter';
+
+/** How far under the muscle groups the list fades out, and where its first row starts at rest. */
+const FADE = 20;
 
 export interface ExerciseIndexListProps<T extends ExerciseOption> {
   query: string;
@@ -46,12 +50,12 @@ export function ExerciseIndexList<T extends ExerciseOption>({
   return (
     <View className="flex-1">
       <MuscleGroupFilter value={group} onChange={setGroup} />
-      <View className="mt-1 flex-1 flex-row">
+      <View className="flex-1 flex-row">
         <FlatList
           ref={listRef}
           className="flex-1"
           contentContainerClassName="pr-7"
-          contentContainerStyle={{ paddingBottom: bottomInset + 16 }}
+          contentContainerStyle={{ paddingTop: FADE, paddingBottom: bottomInset + 16 }}
           data={rows}
           keyExtractor={(r) => r.id}
           keyboardShouldPersistTaps="handled"
@@ -70,6 +74,7 @@ export function ExerciseIndexList<T extends ExerciseOption>({
           }
           renderItem={({ item }) => renderRow(item)}
         />
+        <Gradient from="top" size={FADE} />
         {rest.length ? (
           <View className="absolute top-2 -right-2" style={{ bottom: bottomInset + 8 }}>
             <AlphabetRail available={letters} active={activeLetter} onJump={jump} />
