@@ -21,3 +21,25 @@ export function nearestIndex(xs: readonly number[], x: number) {
   }
   return best;
 }
+
+/** Weight labels sit on whole numbers, at least this many steps apart, and at most this many. */
+const MIN_STEPS = 3;
+const MAX_LABELS = 6;
+
+/**
+ * The weight charts' value labels: whole numbers around `values` (79, 81, 83 …), with the y of a
+ * value in a chart `height` tall and `pad` clear of its top and bottom.
+ */
+export function wholeNumberScale(values: readonly number[], height: number, pad: number) {
+  let lo = Math.floor(Math.min(...values));
+  let hi = Math.ceil(Math.max(...values));
+  while (hi - lo < MIN_STEPS) {
+    if ((hi - lo) % 2) lo--;
+    else hi++;
+  }
+  const step = Math.ceil((hi - lo) / (MAX_LABELS - 1));
+  hi = lo + Math.ceil((hi - lo) / step) * step;
+  const labels = Array.from({ length: (hi - lo) / step + 1 }, (_, i) => hi - i * step);
+  const y = (value: number) => pad + ((hi - value) / (hi - lo)) * (height - 2 * pad);
+  return { labels, y };
+}

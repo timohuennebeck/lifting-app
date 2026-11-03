@@ -107,17 +107,6 @@ export function formatChange(change: number, unit: string, t: TFunction<'coach'>
   return `${sign}${unit === '%' ? `${formatNumber(Math.abs(change), 0)}${NBSP}%` : formatValue(Math.abs(change), unit, t)}`;
 }
 
-/** Steps of 1, 2 or 5 × 10ⁿ: at least `count` labels between `min` and `max`. */
-export function niceTicks(min: number, max: number, count = 3) {
-  const span = max - min || Math.abs(max) || 1;
-  const raw = span / (count - 1);
-  const power = 10 ** Math.floor(Math.log10(raw));
-  const step = [5, 2, 1].map((m) => m * power).find((s) => s <= raw) ?? power;
-  const ticks: number[] = [];
-  for (let v = Math.ceil(min / step) * step; v <= max + 1e-9; v += step) ticks.push(v);
-  return ticks;
-}
-
 /** The chart a chat is about, for the header under "Coach" ("Körpergewicht", "Vergleich"). */
 export function chartTopic(chart: CoachChart, t: TFunction<'coach'>, exerciseName: string | null) {
   switch (chart.type) {

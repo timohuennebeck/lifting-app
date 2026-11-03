@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import { linePath, nearestIndex } from '@/shared/lib/chart';
+import { linePath, nearestIndex, wholeNumberScale } from '@/shared/lib/chart';
 import { daysBetween, fromIsoDate } from '@/shared/lib/date';
 import { formatNumber, formatShortDate, type UnitSystem } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
@@ -20,9 +20,6 @@ const PAD_Y = 15;
 /** The first day's x, and the room on the right for the value labels. */
 const LEFT = 16;
 const LABELS = 58;
-/** Value labels sit on whole kg or lb, at least three steps apart. */
-const MIN_STEPS = 3;
-const MAX_LABELS = 6;
 const DAY_LABELS = 4;
 /**
  * The chart spans the screen from its left edge: a drag starting this close to it is iOS's swipe
@@ -42,21 +39,6 @@ export interface WeightChartProps {
   onSelect: (index: number) => void;
 }
 
-/** Whole-number value labels around the shown weights, with the y of a value. */
-function valueScale(values: number[]) {
-  let lo = Math.floor(Math.min(...values));
-  let hi = Math.ceil(Math.max(...values));
-  while (hi - lo < MIN_STEPS) {
-    if ((hi - lo) % 2) lo--;
-    else hi++;
-  }
-  const step = Math.ceil((hi - lo) / (MAX_LABELS - 1));
-  hi = lo + Math.ceil((hi - lo) / step) * step;
-  const labels = Array.from({ length: (hi - lo) / step + 1 }, (_, i) => hi - i * step);
-  const y = (value: number) => PAD_Y + ((hi - value) / (hi - lo)) * (HEIGHT - 2 * PAD_Y);
-  return { labels, y };
-}
-
 /**
  * Daily weigh-ins as dots and the trend as a line over a grid (GW·2); tap or drag to pick a
  * weigh-in. Dates along the bottom, value labels on the right.
@@ -68,7 +50,7 @@ export function WeightChart({ points, from, to, units, selected, onSelect }: Wei
   const x = (date: string) => LEFT + (daysBetween(from, date) / span) * (right - LEFT);
 
   const values = points.flatMap((p) => [toUnits(p.weightKg, units), toUnits(p.trendKg, units)]);
-  const scale = values.length ? valueScale(values) : null;
+  const scale = values.length ? wholeNumberScale(values, HEIGHT, PAD_Y) : null;
   const shown = points[selected ?? points.length - 1];
   // Each weigh-in's x once, not again (with its date parsed) on every finger move.
   const xs = points.map((p) => x(p.date));

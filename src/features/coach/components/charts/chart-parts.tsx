@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { type LayoutChangeEvent, View, type ViewStyle } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 
-import { addDays, daysBetween, fromIsoDate } from '@/shared/lib/date';
 import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
@@ -40,18 +39,6 @@ export function Headline({ value, change, caption }: HeadlineProps) {
 
 /** "Mai", "Okt": month names as the design writes them. */
 export const monthLabel = (date: Date) => dateLabel(date, { month: 'short' });
-
-/**
- * `count` labels spread evenly from the first to the last day: month names for half a year,
- * "9. Okt" for shorter spans.
- */
-export function timeLabels(first: string, last: string, count: number) {
-  const span = Math.max(1, daysBetween(first, last));
-  return Array.from({ length: count }, (_, i) => {
-    const date = addDays(fromIsoDate(first), Math.round((span * i) / (count - 1)));
-    return span >= 60 ? monthLabel(date) : dateLabel(date, { day: 'numeric', month: 'short' });
-  });
-}
 
 /** A row of labels under a chart, spread from edge to edge (`inset` keeps clear on the right). */
 export function TimeAxis({ labels, inset = 0 }: { labels: string[]; inset?: number }) {
