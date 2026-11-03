@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import Animated, { FadeIn, LayoutAnimationConfig, useAnimatedRef } from 'react-native-reanimated';
+import Animated, { useAnimatedRef } from 'react-native-reanimated';
 
 import { AskCoachCard } from '@/features/coach/components/ask-coach-card';
 import { openCoach } from '@/features/coach/lib/open-coach';
@@ -33,12 +33,12 @@ import { Text } from '@/shared/ui/text';
 import { ActivePlanCard } from '../components/active-plan-card';
 import { PlanPrompt } from '../components/plan-prompt';
 import { RECENT_ROUTINES, RoutineRows, useRoutineMeta } from '../components/routine-row';
-import { SectionTitle } from '../components/section-title';
+import { SectionBody, SectionTitle } from '../components/section-title';
 import { WeekStrip } from '../components/week-strip';
 import { reorderPlanRoutine } from '../data/routine-mutations';
 import { useStartRoutine } from '../hooks/use-start-routine';
 import { useWeekWorkouts } from '../hooks/use-week-workouts';
-import { usePlanCardStore } from '../stores/plan-card-store';
+import { type TrainingSection, useSectionFoldStore } from '../stores/section-fold-store';
 
 /** Routines done most recently first, then the others A–Z. */
 function recentFirst(routines: RoutineSummary[], lastDone: DoneDates, language: string) {
@@ -71,9 +71,13 @@ export function TrainingScreen() {
   // One starter for the whole screen, so two starts can't race.
   const { start, startingId } = useStartRoutine();
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  // "Aktiver Plan" folds the plan's card away, and it stays folded until tapped again.
-  const planFolded = usePlanCardStore((s) => s.folded);
-  const togglePlan = usePlanCardStore((s) => s.toggle);
+  // A tap on a group's title folds it away, and it stays folded until tapped again.
+  const folded = useSectionFoldStore((s) => s.folded);
+  const toggleSection = useSectionFoldStore((s) => s.toggle);
+  const fold = (section: TrainingSection) => ({
+    folded: !!folded[section],
+    onToggle: () => toggleSection(section),
+  });
 
   const planRoutines = plan ? routines.filter((r) => r.planId === plan.id) : [];
   const library = routines.filter((r) => r.planId === null);
@@ -149,46 +153,44 @@ export function TrainingScreen() {
         <>
           {card ? (
             <>
-              <SectionTitle first fold={{ folded: planFolded, onToggle: togglePlan }}>
+              <SectionTitle first fold={fold('plan')}>
                 {t('home.activePlan')}
               </SectionTitle>
-              {/* The card fades in when unfolded, not when the tab first shows it. */}
-              <LayoutAnimationConfig skipEntering>
-                {planFolded ? null : (
-                  <Animated.View entering={FadeIn.duration(180)}>
-                    <ActivePlanCard
-                      plan={card.plan}
-                      status={card.status}
-                      routines={planRoutines}
-                      goal={profile?.goal}
-                      onEdit={() => void openPlanEditor(card.plan.id)}
-                    />
-                  </Animated.View>
-                )}
-              </LayoutAnimationConfig>
-              <SectionTitle>
+              <SectionBody folded={!!folded.plan}>
+                <ActivePlanCard
+                  plan={card.plan}
+                  status={card.status}
+                  routines={planRoutines}
+                  goal={profile?.goal}
+                  onEdit={() => void openPlanEditor(card.plan.id)}
+                />
+              </SectionBody>
+              <SectionTitle fold={fold('planRoutines')}>
                 {t('home.planRoutines', {
                   week: card.status.deload
                     ? t('plan.deload')
                     : t('plan.block', { n: card.status.blockWeek ?? card.status.week }),
                 })}
               </SectionTitle>
-              <RoutineRows
-                routines={planRoutines}
-                meta={planMeta}
-                focus={planFocus}
-                done={(r) => !!finishedThisWeek?.has(r.id)}
-                nextId={nextId}
-                startingId={startingId}
-                onStart={start}
-                onMove={(id, to) => void reorderPlanRoutine(id, to)}
-                scrollRef={scrollRef}
-              />
+              <SectionBody folded={!!folded.planRoutines}>
+                <RoutineRows
+                  routines={planRoutines}
+                  meta={planMeta}
+                  focus={planFocus}
+                  done={(r) => !!finishedThisWeek?.has(r.id)}
+                  nextId={nextId}
+                  startingId={startingId}
+                  onStart={start}
+                  onMove={(id, to) => void reorderPlanRoutine(id, to)}
+                  scrollRef={scrollRef}
+                />
+              </SectionBody>
             </>
           ) : null}
           {singles.length ? (
             <>
               <SectionTitle
+                fold={fold('singles')}
                 action={
                   library.length > RECENT_ROUTINES
                     ? { label: t('home.showAll'), onPress: () => router.push('/routines') }
@@ -197,18 +199,20 @@ export function TrainingScreen() {
               >
                 {t('home.single')}
               </SectionTitle>
-              <RoutineRows
-                routines={singles}
-                meta={(r) =>
-                  lastDone[r.id]
-                    ? t('all.lastDone', {
-                        date: formatWeekdayDate(new Date(lastDone[r.id])),
-                      })
-                    : meta(r)
-                }
-                startingId={startingId}
-                onStart={start}
-              />
+              <SectionBody folded={!!folded.singles}>
+                <RoutineRows
+                  routines={singles}
+                  meta={(r) =>
+                    lastDone[r.id]
+                      ? t('all.lastDone', {
+                          date: formatWeekdayDate(new Date(lastDone[r.id])),
+                        })
+                      : meta(r)
+                  }
+                  startingId={startingId}
+                  onStart={start}
+                />
+              </SectionBody>
             </>
           ) : null}
           {prompt ? (

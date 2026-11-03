@@ -1,5 +1,11 @@
+import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  LayoutAnimationConfig,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
@@ -61,5 +67,15 @@ export function SectionTitle({ children, action, first, fold }: SectionTitleProp
         </PressableScale>
       ) : null}
     </View>
+  );
+}
+
+/** The group under a foldable SectionTitle: gone while folded, fading in when unfolded. */
+export function SectionBody({ folded, children }: { folded: boolean; children: ReactNode }) {
+  return (
+    // Only an unfold fades it in, not the tab showing it the first time.
+    <LayoutAnimationConfig skipEntering>
+      {folded ? null : <Animated.View entering={FadeIn.duration(180)}>{children}</Animated.View>}
+    </LayoutAnimationConfig>
   );
 }
