@@ -1,12 +1,15 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import Svg, { Circle, Path } from 'react-native-svg';
+import { GestureDetector } from 'react-native-gesture-handler';
+import Svg, { Path } from 'react-native-svg';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { useExerciseName } from '@/shared/data/exercises';
 import { cn } from '@/shared/lib/cn';
 import { daysBetween, fromIsoDate } from '@/shared/lib/date';
-import { linePath, yScale } from '@/shared/lib/chart';
+import { linePath, nearestIndex, yScale } from '@/shared/lib/chart';
+import { formatShortDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { ChartGrid } from '@/shared/ui/chart-grid';
 import { Text } from '@/shared/ui/text';
@@ -17,7 +20,7 @@ import {
   formatChange,
   formatValue,
 } from '../../lib/charts';
-import { monthLabel, TimeAxis, useWidth } from './chart-parts';
+import { HoldLine, holdGesture, monthLabel, Ring, TimeAxis, useWidth } from './chart-parts';
 
 const HEIGHT = 170;
 /** Right of the lines: each line's last value and name. */
@@ -25,6 +28,8 @@ const LABELS = 70;
 const PAD = 12;
 /** Labels closer than this push apart. */
 const LABEL_GAP = 30;
+/** The date under a finger held on the chart. */
+const HELD_DATE = 96;
 /** Line colours in order, with their value labels' colour. */
 const SERIES = [
   { line: colors.fg, label: 'text-fg' },
@@ -92,11 +97,12 @@ function ExerciseRow({ exerciseId, color, from, to, change, first }: RowProps) {
 
 /**
  * Two to four exercises over the same time (design CO3·2 "Vergleich"): a line each with its last
- * value, then a row per exercise from first to last value.
+ * value, or the one at a finger held on the chart, then a row per exercise from first to last value.
  */
 export function CompareChart({ chart }: { chart: CompareChartData }) {
   const { t } = useTranslation('coach');
   const [width, onLayout] = useWidth();
+  const [picked, setPicked] = useState<number | null>(null);
   // Each exercise with its colours and the values it is drawn at.
   const series = chart.series
     .filter((s) => s.points.length)
@@ -119,10 +125,22 @@ export function CompareChart({ chart }: { chart: CompareChartData }) {
   const plotWidth = Math.max(0, width - LABELS);
   const x = (date: string) => 4 + (daysBetween(firstDay, date) / span) * (plotWidth - 8);
   const y = yScale(min, max, HEIGHT, PAD);
+  const days = [...new Set(dates)];
+  const dayXs = days.map(x);
+  const held = picked === null ? null : { day: days[picked], x: dayXs[picked] };
+  // Which point of each line shows: its last, or the one nearest to the day held.
+  const shownAt = series.map((s) =>
+    held
+      ? nearestIndex(
+          s.points.map((p) => x(p.date)),
+          held.x,
+        )
+      : s.points.length - 1,
+  );
 
-  // Each line's end label, moved apart where they would overlap.
+  // Each line's label, moved apart where they would overlap.
   const labels = series
-    .map((s, i) => ({ i, top: y(s.shown.at(-1)!) - 14 }))
+    .map((s, i) => ({ i, top: y(s.shown[shownAt[i]]) - 14 }))
     .sort((a, b) => a.top - b.top);
   labels.forEach((label, k) => {
     if (k > 0) label.top = Math.max(label.top, labels[k - 1].top + LABEL_GAP);
@@ -135,56 +153,76 @@ export function CompareChart({ chart }: { chart: CompareChartData }) {
   return (
     <View className="gap-5">
       <View className="gap-3">
-        <View style={{ height: HEIGHT }} onLayout={onLayout}>
-          {width > 0 ? (
-            <>
-              <Svg width={plotWidth} height={HEIGHT}>
-                <ChartGrid id="coach-compare" width={plotWidth} height={HEIGHT} />
-                {series.map((s) => (
-                  <Path
-                    key={s.exerciseId}
-                    d={linePath(
-                      s.points,
-                      (p) => x(p.date),
-                      (_, k) => y(s.shown[k]),
-                    )}
-                    stroke={s.colors.line}
-                    strokeWidth={2.5}
-                    fill="none"
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                  />
+        <GestureDetector gesture={holdGesture((at) => nearestIndex(dayXs, at), picked, setPicked)}>
+          <View style={{ height: HEIGHT }} onLayout={onLayout}>
+            {width > 0 ? (
+              <>
+                <Svg width={plotWidth} height={HEIGHT}>
+                  <ChartGrid id="coach-compare" width={plotWidth} height={HEIGHT} />
+                  {series.map((s) => (
+                    <Path
+                      key={s.exerciseId}
+                      d={linePath(
+                        s.points,
+                        (p) => x(p.date),
+                        (_, k) => y(s.shown[k]),
+                      )}
+                      stroke={s.colors.line}
+                      strokeWidth={2.5}
+                      fill="none"
+                      strokeLinejoin="round"
+                      strokeLinecap="round"
+                    />
+                  ))}
+                </Svg>
+                {held ? <HoldLine x={held.x} height={HEIGHT} /> : null}
+                {/* After all lines, so none is drawn over. */}
+                {series.map((s, i) => {
+                  const point = s.points[shownAt[i]];
+                  return (
+                    <Ring
+                      key={s.exerciseId}
+                      x={x(point.date)}
+                      y={y(s.shown[shownAt[i]])}
+                      color={s.colors.line}
+                    />
+                  );
+                })}
+                {labels.map(({ i, top }) => (
+                  <View
+                    key={series[i].exerciseId}
+                    className="absolute"
+                    style={{ left: plotWidth + 12, top }}
+                  >
+                    <ExerciseLabel
+                      exerciseId={series[i].exerciseId}
+                      value={value(series[i].shown[shownAt[i]])}
+                      color={series[i].colors.label}
+                    />
+                  </View>
                 ))}
-                {/* The end markers after all lines, so none is drawn over. */}
-                {series.map((s) => (
-                  <Circle
-                    key={`end${s.exerciseId}`}
-                    cx={x(s.points.at(-1)!.date)}
-                    cy={y(s.shown.at(-1)!)}
-                    r={4.5}
-                    fill={colors.bg}
-                    stroke={s.colors.line}
-                    strokeWidth={2.5}
-                  />
-                ))}
-              </Svg>
-              {labels.map(({ i, top }) => (
-                <View
-                  key={series[i].exerciseId}
-                  className="absolute"
-                  style={{ left: plotWidth + 12, top }}
-                >
-                  <ExerciseLabel
-                    exerciseId={series[i].exerciseId}
-                    value={value(series[i].shown.at(-1)!)}
-                    color={series[i].colors.label}
-                  />
-                </View>
-              ))}
-            </>
-          ) : null}
-        </View>
-        <TimeAxis labels={[monthLabel(fromIsoDate(firstDay)), monthLabel(fromIsoDate(lastDay))]} />
+              </>
+            ) : null}
+          </View>
+        </GestureDetector>
+        {held ? (
+          <View className="h-[15px]">
+            <Text
+              numberOfLines={1}
+              className="absolute text-center font-inter-semibold text-xs leading-[15px] text-fg"
+              style={{
+                width: HELD_DATE,
+                left: Math.max(0, Math.min(plotWidth - HELD_DATE, held.x - HELD_DATE / 2)),
+              }}
+            >
+              {formatShortDate(fromIsoDate(held.day))}
+            </Text>
+          </View>
+        ) : (
+          <TimeAxis
+            labels={[monthLabel(fromIsoDate(firstDay)), monthLabel(fromIsoDate(lastDay))]}
+          />
+        )}
       </View>
       <View>
         {series.map((s, i) => {

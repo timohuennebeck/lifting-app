@@ -1,11 +1,14 @@
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
+import { GestureDetector } from 'react-native-gesture-handler';
 
 import { addDays, DAY_MS, fromIsoDate, startOfWeek, toIsoDate } from '@/shared/lib/date';
 import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
-import { type CalendarChart as CalendarChartData, dateLabel } from '../../lib/charts';
-import { monthLabel, useWidth } from './chart-parts';
+import { type CalendarChart as CalendarChartData, dateLabel, formatValue } from '../../lib/charts';
+import { holdGesture, monthLabel, useWidth } from './chart-parts';
 
 /** Column of weekday labels and the gap after it. */
 const LABELS = 23;
@@ -48,10 +51,12 @@ function monthLabels(from: Date, to: Date) {
 
 /**
  * The days the user trained (design CO3·4 "Kalender"): a column per week, a row per weekday,
- * brighter the more sets that day had.
+ * brighter the more sets that day had. A finger held on a day reads it.
  */
 export function CalendarChart({ chart }: { chart: CalendarChartData }) {
+  const { t } = useTranslation('coach');
   const [width, onLayout] = useWidth();
+  const [picked, setPicked] = useState<number | null>(null);
   const days = new Map(chart.days.map((d) => [d.date, d]));
   const most = Math.max(1, ...chart.days.map((d) => d.sets ?? d.value));
   const from = fromIsoDate(chart.from);
@@ -73,53 +78,90 @@ export function CalendarChart({ chart }: { chart: CalendarChartData }) {
   // The months shown, spread under the days.
   const months = monthLabels(new Date(Math.max(first.getTime(), from.getTime())), end);
 
+  // The day under a finger, as its index through the weeks; none outside the chart's days.
+  const dayAt = (x: number, y: number) => {
+    const week = Math.round((x - LABELS - cell / 2) / stepX);
+    const weekday = Math.round((y - cell / 2) / stepY);
+    const index = Math.max(0, Math.min(weeks - 1, week)) * 7 + Math.max(0, Math.min(6, weekday));
+    const day = addDays(first, index);
+    return day < from || day > end ? null : index;
+  };
+  const held = picked === null ? null : addDays(first, picked);
+  const heldDay = held ? days.get(toIsoDate(held)) : undefined;
+  let heldText = t('calendar.rest');
+  if (heldDay) {
+    heldText = heldDay.sets
+      ? formatValue(heldDay.sets, 'sets', t)
+      : formatValue(heldDay.value, 'workouts', t);
+  }
+
   return (
     <View className="gap-3.5" onLayout={onLayout}>
       {width > 0 ? (
         <>
-          <View style={{ height: 7 * stepY - (stepY - cell) }}>
-            {columns[0]?.map((day, d) =>
-              d % 2 === 0 ? (
-                <Text
-                  key={d}
-                  className="absolute left-0 font-inter-semibold text-[10px] leading-[15px] text-dim"
-                  style={{ top: d * stepY + (cell - 15) / 2 }}
-                >
-                  {weekdayLabel(day)}
+          <GestureDetector gesture={holdGesture(dayAt, picked, setPicked)}>
+            <View style={{ height: 7 * stepY - (stepY - cell) }}>
+              {columns[0]?.map((day, d) =>
+                d % 2 === 0 ? (
+                  <Text
+                    key={d}
+                    className="absolute left-0 font-inter-semibold text-[10px] leading-[15px] text-dim"
+                    style={{ top: d * stepY + (cell - 15) / 2 }}
+                  >
+                    {weekdayLabel(day)}
+                  </Text>
+                ) : null,
+              )}
+              {columns.map((week, w) =>
+                week.map((day, d) => {
+                  if (day < from || day > end) return null;
+                  const key = toIsoDate(day);
+                  const trained = days.get(key);
+                  return (
+                    <View
+                      key={key}
+                      className="absolute"
+                      style={{
+                        left: LABELS + w * stepX,
+                        top: d * stepY,
+                        width: cell,
+                        height: cell,
+                        borderRadius: Math.min(4, cell / 3),
+                        backgroundColor: trained
+                          ? dayColor((trained.sets ?? trained.value) / most)
+                          : colors.chip,
+                      }}
+                    />
+                  );
+                }),
+              )}
+              {picked !== null ? (
+                <View
+                  className="absolute border-2 border-fg"
+                  style={{
+                    left: LABELS + Math.floor(picked / 7) * stepX,
+                    top: (picked % 7) * stepY,
+                    width: cell,
+                    height: cell,
+                    borderRadius: Math.min(4, cell / 3),
+                  }}
+                />
+              ) : null}
+            </View>
+          </GestureDetector>
+          {held ? (
+            <Text className="font-inter-semibold text-[11px] leading-[14px] text-fg">
+              {`${dateLabel(held, { weekday: 'short', day: 'numeric', month: 'short' })} · ${heldText}`}
+            </Text>
+          ) : (
+            <View className="flex-row justify-between">
+              {months.map((label, i) => (
+                <Text key={i} className="font-inter-semibold text-[11px] leading-[14px] text-dim">
+                  {label}
                 </Text>
-              ) : null,
-            )}
-            {columns.map((week, w) =>
-              week.map((day, d) => {
-                if (day < from || day > end) return null;
-                const key = toIsoDate(day);
-                const trained = days.get(key);
-                return (
-                  <View
-                    key={key}
-                    className="absolute"
-                    style={{
-                      left: LABELS + w * stepX,
-                      top: d * stepY,
-                      width: cell,
-                      height: cell,
-                      borderRadius: Math.min(4, cell / 3),
-                      backgroundColor: trained
-                        ? dayColor((trained.sets ?? trained.value) / most)
-                        : colors.chip,
-                    }}
-                  />
-                );
-              }),
-            )}
-          </View>
-          <View className="flex-row justify-between">
-            {months.map((label, i) => (
-              <Text key={i} className="font-inter-semibold text-[11px] leading-[14px] text-dim">
-                {label}
-              </Text>
-            ))}
-          </View>
+              ))}
+            </View>
+          )}
         </>
       ) : null}
     </View>
