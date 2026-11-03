@@ -116,6 +116,8 @@ export function WeightChart({ points, from, to, units, selected, onSelect }: Wei
                     strokeLinejoin="round"
                     strokeLinecap="round"
                   />
+                  {/* The weigh-in white, then the trend there as a ring on top, as the exercise
+                      charts mark a session: it stays a clean ring where the two meet. */}
                   {shown ? (
                     <>
                       <Circle
@@ -127,8 +129,10 @@ export function WeightChart({ points, from, to, units, selected, onSelect }: Wei
                       <Circle
                         cx={x(shown.date)}
                         cy={scale.y(toUnits(shown.trendKg, units))}
-                        r={4.5}
-                        fill={colors.accent}
+                        r={5}
+                        fill={colors.bg}
+                        stroke={colors.accent}
+                        strokeWidth={2.5}
                       />
                     </>
                   ) : null}

@@ -38,7 +38,7 @@ const xOf = (first: string, span: number, left: number, right: number) => (p: Ch
 
 /**
  * Body weight as the weight chart draws it: each weigh-in a grey dot, the neon trend through
- * them, the last weigh-in white and the trend's end neon; whole numbers on the right and four
+ * them, the trend's end a ring and the last weigh-in white; whole numbers on the right and four
  * dates under it.
  */
 function WeightTrend({
@@ -88,10 +88,19 @@ function WeightTrend({
             strokeLinejoin="round"
             strokeLinecap="round"
           />
+          {/* The last weigh-in white, then the trend's end as a ring on top, as the exercise
+              charts mark a session: it stays a clean ring where the two meet. */}
           {lastWeighIn ? (
             <Circle cx={x(lastWeighIn)} cy={scale.y(lastWeighIn.value)} r={4} fill={colors.fg} />
           ) : null}
-          <Circle cx={x(last)} cy={scale.y(last.value)} r={4.5} fill={colors.accent} />
+          <Circle
+            cx={x(last)}
+            cy={scale.y(last.value)}
+            r={5}
+            fill={colors.bg}
+            stroke={colors.accent}
+            strokeWidth={2.5}
+          />
         </Svg>
         {scale.labels.map((label) => (
           <Text
