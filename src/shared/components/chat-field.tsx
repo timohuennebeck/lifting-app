@@ -24,6 +24,8 @@ export interface ChatFieldProps {
   /** While resting, a tap on the text leads here. */
   onPressResting?: () => void;
   className?: string;
+  /** The corners of the box and its ring. */
+  radiusClassName?: string;
 }
 
 /**
@@ -43,6 +45,7 @@ export function ChatField({
   onFocusChange,
   onPressResting,
   className,
+  radiusClassName = 'rounded-[24px]',
 }: ChatFieldProps) {
   const [focused, setFocused] = useState(false);
   // The input is replaced when it starts or stops resting, and a replaced one reports no blur.
@@ -56,11 +59,11 @@ export function ChatField({
   };
 
   return (
-    <View className={cn('gap-3.5 rounded-[18px] bg-tile px-2.5 pt-4 pb-2.5', className)}>
+    <View className={cn('gap-3.5 bg-tile px-2.5 pt-4 pb-2.5', radiusClassName, className)}>
       {focused ? (
         <View
           pointerEvents="none"
-          className="absolute inset-0 rounded-[18px] border-2 border-accent"
+          className={cn('absolute inset-0 border-2 border-accent', radiusClassName)}
         />
       ) : null}
       {above}

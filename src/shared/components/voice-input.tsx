@@ -41,10 +41,10 @@ export function MicButton({ voice, alone }: MicButtonProps) {
 }
 
 /** While recording: ✕ drops it, the level runs in from the right, the time, ✓ writes it down. */
-export function RecordingRow({ voice }: { voice: VoiceInput }) {
+export function RecordingRow({ voice, className }: { voice: VoiceInput; className?: string }) {
   const { t } = useTranslation('common');
   return (
-    <View className="flex-row items-center gap-3 rounded-[18px] bg-chip p-1.5">
+    <View className={cn('flex-row items-center gap-3 rounded-[26px] bg-chip p-1.5', className)}>
       <PressableScale
         haptic="tap"
         accessibilityLabel={t('voiceInput.cancel')}
@@ -70,13 +70,16 @@ export function RecordingRow({ voice }: { voice: VoiceInput }) {
 }
 
 /** While the recording is written down: "Transkribiere …" with a light across it, a spinner. */
-export function TranscribingRow() {
+export function TranscribingRow({ className }: { className?: string }) {
   const { t } = useTranslation('common');
   return (
     <View
       accessible
       accessibilityLabel={t('voiceInput.transcribing')}
-      className="flex-row items-center gap-2 rounded-[18px] bg-chip py-1.5 pr-1.5 pl-[18px]"
+      className={cn(
+        'flex-row items-center gap-2 rounded-[26px] bg-chip py-1.5 pr-1.5 pl-[18px]',
+        className,
+      )}
     >
       <View className="min-w-0 flex-1">
         <FlashText
