@@ -1,6 +1,7 @@
-import { type ReactNode, useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { type ReactNode, type Ref, useEffect, useState } from 'react';
+import { Pressable, TextInput, View } from 'react-native';
 
+import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { CharCount } from '@/shared/ui/char-count';
 import { Text } from '@/shared/ui/text';
@@ -18,6 +19,11 @@ export interface ChatFieldProps {
   leading?: ReactNode;
   /** Right of the button row: the microphone, send, stop. */
   actions: ReactNode;
+  inputRef?: Ref<TextInput>;
+  onFocusChange?: (focused: boolean) => void;
+  /** While resting, a tap on the text leads here. */
+  onPressResting?: () => void;
+  className?: string;
 }
 
 /**
@@ -33,12 +39,24 @@ export function ChatField({
   above,
   leading,
   actions,
+  inputRef,
+  onFocusChange,
+  onPressResting,
+  className,
 }: ChatFieldProps) {
   const [focused, setFocused] = useState(false);
   // The input is replaced when it starts or stops resting, and a replaced one reports no blur.
   if (resting && focused) setFocused(false);
+  useEffect(() => {
+    if (resting) onFocusChange?.(false);
+  }, [resting, onFocusChange]);
+  const setFieldFocused = (next: boolean) => {
+    setFocused(next);
+    onFocusChange?.(next);
+  };
+
   return (
-    <View className="gap-3.5 rounded-[24px] bg-tile px-2.5 pt-4 pb-2.5">
+    <View className={cn('gap-3.5 rounded-[24px] bg-tile px-2.5 pt-4 pb-2.5', className)}>
       {focused ? (
         <View
           pointerEvents="none"
@@ -50,6 +68,7 @@ export function ChatField({
         {/* A new input each way: iOS would keep the height of the text it held before. */}
         <TextInput
           key={resting ? 'resting' : 'typing'}
+          ref={inputRef}
           accessibilityLabel={placeholder}
           value={value}
           onChangeText={onChangeText}
@@ -60,8 +79,8 @@ export function ChatField({
           cursorColor={colors.fg}
           keyboardAppearance="dark"
           textAlignVertical="top"
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onFocus={() => setFieldFocused(true)}
+          onBlur={() => setFieldFocused(false)}
           className="max-h-30 min-h-5.5 px-2 py-0 font-inter text-base leading-5.5 text-fg"
         />
         {value.trim() ? null : (
@@ -75,6 +94,14 @@ export function ChatField({
             {placeholder}
           </Text>
         )}
+        {resting && onPressResting ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={placeholder}
+            onPress={onPressResting}
+            className="absolute inset-0 z-10"
+          />
+        ) : null}
       </View>
       <View className="flex-row items-center justify-between">
         {leading ?? <View />}

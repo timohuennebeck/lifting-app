@@ -4,13 +4,7 @@
   "consent": "Für die Antworten gehen deine Trainings- und Körperdaten (Trainings, Gewicht, Werte der Körperchecks) an ein KI-Modell von OpenAI in den USA. Mit deiner ersten Frage willigst du ein.",
   "card": {
     "title": "Frag mich alles zu deinem Training.",
-    "subtitle": "Kai antwortet mit Fakten und Diagrammen.",
-    "hints": {
-      "strength": "Hat sich mein Bankdrücken verbessert?",
-      "weight": "Hat sich mein Gewicht verändert?",
-      "record": "Hat mein Bankdrücken einen Rekord?",
-      "time": "Hat sich meine Trainingszeit verändert?"
-    }
+    "subtitle": "Kai antwortet mit Fakten und Diagrammen."
   },
   "composer": {
     "placeholder": "Frag Kai …",

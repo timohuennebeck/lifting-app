@@ -4,13 +4,7 @@
   "consent": "Para as respostas, os teus dados de treino e corporais (treinos, peso, valores dos checks corporais) são transmitidos a um modelo de IA da OpenAI, nos EUA. Ao enviares a tua primeira pergunta, dás o teu consentimento.",
   "card": {
     "title": "Pergunta-me tudo sobre o teu treino.",
-    "subtitle": "O Kai responde com factos e gráficos.",
-    "hints": {
-      "strength": "O meu supino melhorou?",
-      "weight": "O meu peso mudou?",
-      "record": "Bati um recorde no supino?",
-      "time": "O meu tempo de treino mudou?"
-    }
+    "subtitle": "O Kai responde com factos e gráficos."
   },
   "composer": {
     "placeholder": "Pergunta ao Kai …",
