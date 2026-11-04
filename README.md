@@ -349,7 +349,8 @@ the app says so and the user goes back a step.
 ## Coach
 
 The coach answers questions about the user's own training ("Wie hat sich mein Gewicht entwickelt?",
-"Welche Muskeln trainiere ich zu wenig?") in a few sentences, mostly with a chart. The app sends the
+"Welche Muskeln trainiere ich zu wenig?") in a few sentences, mostly with a chart, and builds a
+workout when asked ("Bau mir ein Push-Training"). The app sends the
 question to the `coach-chat` Edge Function, where the model picks one of the coach's tools; the tool
 computes the numbers from the user's data, and the model writes the answer from them, working out
 what the question needs on top (a percentage, when a target is reached). The answer and its chart
@@ -361,7 +362,9 @@ that withdraws the consent.
 
 - **Tools** (`supabase/functions/_shared/coach/tools.ts`): `trend`, `compare`,
   `period_vs_average`, `calendar` and `distribution` each draw a chart; `workouts` looks sessions
-  up. The values follow the app: the 1RM by Epley, bodyweight exercises with the latest body
+  up; `find_exercises` and `create_workout` build a workout, which comes as a card in the chart's
+  place. The card saves it to the library the first time it opens, under its answer's id, so
+  until then nothing piles up there. The values follow the app: the 1RM by Epley, bodyweight exercises with the latest body
   weight, sets per muscle with main muscles counting fully and helpers half, against 10 a week.
 - **Rules (server-side):** 16+ by the profile's birth date; consent: the start screen says that the
   first question agrees to the training and body data going to OpenAI, and the function records it
@@ -387,7 +390,7 @@ that withdraws the consent.
   one row per question, which the limits count, with the tool calls (replayed for follow-up
   questions) and the tokens it took. Deleting a chat deletes its tool calls; the rest of the run
   stays for the limits. Chats are kept until the user deletes them or the account.
-- **Testing:** `npm run coach:eval` (needs Deno and `OPENAI_API_KEY`) asks 37 questions about two
+- **Testing:** `npm run coach:eval` (needs Deno and `OPENAI_API_KEY`) asks 45 questions about two
   made-up users (`supabase/functions/_shared/coach/eval/`) and checks each answer: the tool and
   its arguments, only numbers the tools gave (unless the question needs them worked out), the
   question's language, at most 3 sentences and 50 words, and asking back only when the question
