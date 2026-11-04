@@ -97,8 +97,8 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
 
   const [turns, setTurns] = useState(0);
   const resting = !focused || typing;
-  // The field's own ring takes over while typing.
-  const chasing = !resting && !reducedMotion;
+  // A lap with every second question; the field's own ring takes over while typing.
+  const lap = Math.ceil(turns / 2);
   useEffect(() => {
     if (resting) return;
     const id = setInterval(() => setTurns((n) => n + 1), HINT_MS);
@@ -137,7 +137,7 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
 
   return (
     <View className={className}>
-      <View className="items-center gap-3 overflow-hidden rounded-[18px] border border-accent/15 bg-surface px-3.5 pt-7.5 pb-3.5">
+      <View className="items-center gap-3 overflow-hidden rounded-[18px] bg-surface px-3.5 pt-7.5 pb-3.5">
         <CoachGlow paused={!focused} />
         <IconButton
           icon="clock"
@@ -174,7 +174,7 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
           />
         </View>
       </View>
-      {chasing ? <ChaseBorder /> : null}
+      {reducedMotion ? null : <ChaseBorder lap={lap} stopped={resting} />}
     </View>
   );
 }
