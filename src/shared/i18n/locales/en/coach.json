@@ -4,13 +4,7 @@
   "consent": "For its answers, your training and body data (workouts, weight, body check scores) go to an AI model by OpenAI in the USA. Sending your first question is your consent.",
   "card": {
     "title": "Ask me anything about your training.",
-    "subtitle": "Kai answers with facts and charts.",
-    "hints": {
-      "strength": "Has my bench press improved?",
-      "weight": "Has my weight changed?",
-      "record": "Have I set a bench press record?",
-      "time": "Has my training time changed?"
-    }
+    "subtitle": "Kai answers with facts and charts."
   },
   "composer": {
     "placeholder": "Ask Kai …",

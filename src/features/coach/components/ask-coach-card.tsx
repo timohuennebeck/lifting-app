@@ -23,9 +23,8 @@ import { ask, isAnswering, stopAnswer, useCoachStore } from '../stores/coach-sto
 import { ChaseBorder } from './chase-border';
 import { CoachField } from './coach-composer';
 
-/** How long each example question shows; the diamond turns as it changes. */
-const HINT_MS = 3500;
-const HINTS = ['strength', 'weight', 'record', 'time'] as const;
+/** How often the diamond turns. */
+const TURN_MS = 3500;
 
 /** Under the mark and fading out before the card's top edge, so it is never cut off. */
 const GLOW_SIZE = 136;
@@ -98,11 +97,11 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
 
   const [turns, setTurns] = useState(0);
   const resting = !focused || typing;
-  // A lap with every second question; the field's own ring takes over while typing.
+  // A lap with every second turn; the field's own ring takes over while typing.
   const lap = Math.ceil(turns / 2);
   useEffect(() => {
     if (resting) return;
-    const id = setInterval(() => setTurns((n) => n + 1), HINT_MS);
+    const id = setInterval(() => setTurns((n) => n + 1), TURN_MS);
     return () => clearInterval(id);
   }, [resting]);
 
@@ -183,8 +182,9 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
             onStop={stopAnswer}
             onOpenAnswer={openAnswer}
             onFocusChange={setTyping}
-            hint={t(`card.hints.${HINTS[turns % HINTS.length]}`)}
             voice={voice}
+            // Lighter than the chat's, as the card behind it is lighter than the page.
+            className="bg-chip"
           />
         </Pressable>
       </View>
