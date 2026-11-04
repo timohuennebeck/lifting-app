@@ -81,7 +81,8 @@
           "groupIdentifier": "group.app.loqqa.mobile"
         }
       ],
-      "./plugins/weight-shortcut"
+      "./plugins/weight-shortcut",
+      "./plugins/keep-image-cache"
     ],
     "experiments": {
       "typedRoutes": true,
