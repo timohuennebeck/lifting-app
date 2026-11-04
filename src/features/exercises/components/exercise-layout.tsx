@@ -25,13 +25,19 @@ import { Text } from '@/shared/ui/text';
 import { ExerciseThumb } from './exercise-thumb';
 import { SwipeTabs } from './swipe-tabs';
 
-/** Shades the photo under the back button and blends its foot into the page. */
+/** Shades the status bar and blends the photo's foot into the page. */
 const HERO_FADE: GradientStop[] = [
-  [0, 0.55],
-  [0.25, 0],
-  [0.45, 0],
+  [0, 0.7],
+  [0.18, 0],
+  [0.5, 0],
   [0.92, 1],
 ];
+
+const PHOTO_HEIGHT = 316;
+/** The hero below the photo, which the fade covers. */
+const HERO_FOOT = 24;
+/** Every photo starts with this much plain backdrop, which may lie under the status bar. */
+const PHOTO_HEADROOM = 34;
 
 // The tabs are routes of their own; switching between them doesn't carry the URL's id along.
 const ExerciseIdContext = createContext('');
@@ -48,6 +54,7 @@ export function ExerciseLayout() {
   const { id: exerciseId } = useLocalSearchParams<{ id: string }>();
   const { t, i18n } = useTranslation(['exercises', 'common']);
   const insets = useSafeAreaInsets();
+  const photoTop = Math.max(0, insets.top - PHOTO_HEADROOM);
   const [menuOpen, setMenuOpen] = useState(false);
   const [failedImage, setFailedImage] = useState<Exercise['image']>(null);
   const exercise = useExercise(exerciseId);
@@ -84,16 +91,36 @@ export function ExerciseLayout() {
 
   return (
     <View className="flex-1 bg-bg">
-      <View className="h-85 overflow-hidden">
+      <View className="overflow-hidden" style={{ height: photoTop + PHOTO_HEIGHT + HERO_FOOT }}>
         {/* A photo that can't load (no connection, not saved yet) falls back to the thumbnail. */}
         {exercise.image && exercise.image !== failedImage ? (
-          <Image
-            source={exercise.image}
-            contentFit="cover"
-            contentPosition={{ left: '50%', top: '35%' }}
-            style={[StyleSheet.absoluteFill, { bottom: 24 }]}
-            onError={() => setFailedImage(exercise.image)}
-          />
+          <>
+            {/* Its mirror image fills the gap up to the screen's edge: only backdrop shows there. */}
+            <Image
+              source={exercise.image}
+              contentFit="cover"
+              contentPosition="top"
+              style={[
+                StyleSheet.absoluteFill,
+                {
+                  top: photoTop - PHOTO_HEIGHT,
+                  bottom: undefined,
+                  height: PHOTO_HEIGHT,
+                  transform: [{ scaleY: -1 }],
+                },
+              ]}
+            />
+            <Image
+              source={exercise.image}
+              contentFit="cover"
+              contentPosition="top"
+              style={[
+                StyleSheet.absoluteFill,
+                { top: photoTop, bottom: undefined, height: PHOTO_HEIGHT },
+              ]}
+              onError={() => setFailedImage(exercise.image)}
+            />
+          </>
         ) : (
           <ExerciseThumb
             exerciseId={exerciseId}
