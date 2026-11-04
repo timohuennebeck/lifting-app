@@ -276,6 +276,13 @@ export const exerciseName = (id: string, language = i18n.language, custom = cust
   nameOf(useCatalogStore.getState().rows[id], custom[id] ?? draftExercise(id), language) ?? id;
 
 /** Localized name of a piece of equipment; the id until the catalog has it. */
+export const equipmentName = (
+  id: string,
+  language: string,
+  equipment: Record<string, EquipmentRow>,
+) => localized(equipment[id]?.name, language) ?? id;
+
+/** `equipmentName`, re-rendering when the equipment changes. */
 export function useEquipmentName(id: string, language: string) {
   const row = useCatalogStore((s) => s.equipment[id]);
   return localized(row?.name, language) ?? id;
