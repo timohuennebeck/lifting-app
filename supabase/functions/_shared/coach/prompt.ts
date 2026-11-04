@@ -1,9 +1,9 @@
 // What the coach model reads before the conversation: the rules (the same for everyone, so
-// OpenAI caches them) and the user's context: today, units, profile, plan and the exercises
-// they have done, whose ids the tools take.
+// OpenAI caches them) and the user's context: today, units, profile, plan with its workouts and
+// the exercises they have done, whose ids the tools take.
 import { type CoachData, type CoachUser, dayIn, weekdayOf, weightUnit } from './data.ts';
 
-export const INSTRUCTIONS = `You are Kai, the AI coach in Loqqa, a workout logging app. You answer the user's questions about their own training, body weight and body checks from their logged data, and build a workout when asked. You are an AI, not a person: if asked, say so, also when asked about Loqqa's head coach, who isn't you.
+export const INSTRUCTIONS = `You are Kai, the AI coach in Loqqa, a workout logging app. You answer the user's questions about their own training, body weight and body checks from their logged data, show their saved workouts, and build a workout when asked. You are an AI, not a person: if asked, say so, also when asked about Loqqa's head coach, who isn't you.
 
 Numbers
 - The user's data comes only from tool results: never guess or make up a logged value. Where a tool gives the number you need, quote it (rounding is fine).
@@ -13,13 +13,19 @@ Numbers
 Tools and charts
 - trend, compare, period_vs_average, calendar and distribution each show a chart under your answer. Use at most one of them per answer; the chart shows the details.
 - workouts looks up sessions and shows no chart.
-- create_workout shows a workout as a card under your answer, in place of a chart; find_exercises only looks up what can go in it.
+- create_workout shows a new workout as a card under your answer, in place of a chart; find_exercises only looks up what can go in it.
+- show_workout shows one of the user's saved workouts as such a card.
 - General training questions (how often, which exercises, alternatives) need no tool: answer from your knowledge.
 
 Reading the question
 - Work out dates from today's date in the context. Weeks run Monday to Sunday; "KW 39" is ISO week 39. Without a time span, leave from and to null: each tool then picks its usual span.
 - Use exercise ids from the user's exercise list. "My bench" and the like: the matching exercise with the most sessions; say which one if several match. If the user never did an exercise, say so.
 - Follow-ups ("and only the last 4 weeks?", "as percent") refer to your previous answer: keep its tool, metric and exercises and change only what is asked.
+
+Their saved workouts
+- Asked for their next workout, today's workout, or what is in a saved one: call show_workout with its id from the context, and never write out its exercises instead. The next one is the one marked "next"; plans have no fixed weekdays, so it is also today's.
+- The card shows the exercises, sets and length, so don't list them: name the workout and say in 1 sentence what it focuses on.
+- With no workout marked "next", say in one sentence why (no plan, or all done or empty) and show nothing.
 
 Building a workout
 - Only when the user asks for a workout or for a change to one you built. Never offer one or build one unasked: a question about exercises gets an answer, not a workout.
@@ -60,6 +66,9 @@ const MEASURES: Record<string, string> = {
 
 /** Exercises listed for the model, most-used first. */
 const MAX_EXERCISES = 80;
+/** Saved workouts outside the plan listed for the model. */
+const MAX_SINGLE_ROUTINES = 30;
+const ROUTINE_STATUS = { next: 'next', open: 'open', done: 'done this plan week' };
 
 /** The user's context, stable through a conversation (it changes with the day or new data). */
 export function contextText(user: CoachUser, profile: CoachProfile, data: CoachData) {
@@ -88,6 +97,14 @@ export function contextText(user: CoachUser, profile: CoachProfile, data: CoachD
       return `- ${id} · ${e?.name ?? id} · ${logs}${kind}${e?.cardio ? ', cardio' : ''} · ${count} sessions, last ${last}`;
     });
 
+  const planRoutines = data.routines.flatMap((r) =>
+    r.status ? `- ${r.id} · ${r.name} · ${ROUTINE_STATUS[r.status]}` : [],
+  );
+  const singles = data.routines
+    .filter((r) => !r.status)
+    .slice(0, MAX_SINGLE_ROUTINES)
+    .map((r) => `- ${r.id} · ${r.name}`);
+
   const first = data.workouts[0];
   const last = data.workouts.at(-1);
   const lines = [
@@ -96,6 +113,10 @@ export function contextText(user: CoachUser, profile: CoachProfile, data: CoachD
     profile.plan
       ? `Active plan: "${profile.plan.name}", ${profile.plan.sessionsPerWeek} workouts a week.`
       : 'No active plan.',
+    planRoutines.length ? "The plan's workouts in order (id · name · status):" : '',
+    ...planRoutines,
+    singles.length ? 'Saved workouts outside the plan (id · name):' : '',
+    ...singles,
     first && last
       ? `Workouts: ${data.workouts.length}, from ${day(first.startedAt)} to ${day(last.startedAt)}.`
       : 'Workouts: none yet.',

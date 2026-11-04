@@ -1,7 +1,7 @@
 // The coach's tools: what the model can ask for and the code that answers. Each tool returns the
 // numbers for the model (`result`, which it quotes rather than computes) and, for the five chart
 // tools, the chart the app draws under the answer (`chart`; null without enough data). In the
-// same place, create_workout gives the workout the app shows as a card.
+// same place, create_workout and show_workout give the workout the app shows as a card.
 import { cut, MUSCLES } from '../plan-events.ts';
 import {
   addDays,
@@ -29,6 +29,7 @@ import {
   workoutMinutes,
   workoutSets,
   workoutVolumeKg,
+  type WorkoutLine,
 } from './data.ts';
 
 export interface Point {
@@ -92,15 +93,9 @@ export interface DistributionChart {
 export interface WorkoutChart {
   type: 'workout';
   name: string;
-  exercises: {
-    exerciseId: string;
-    sets: number;
-    /** Reps of every set, or seconds for an exercise that logs seconds. */
-    targetMin: number;
-    targetMax: number;
-    rir: number | null;
-    restSeconds: number;
-  }[];
+  /** A workout the user saved, which the card opens; without it, one built for this answer. */
+  routineId?: string;
+  exercises: WorkoutLine[];
 }
 
 export type Chart =
@@ -280,6 +275,12 @@ export const TOOLS = [
       },
     },
   ),
+  tool(
+    'show_workout',
+    "Shows one of the user's saved workouts as a card under your answer: its exercises, and a " +
+      'button that opens it to edit and start. Returns what is in it.',
+    { routine_id: { type: 'string', description: 'A workout id from the context.' } },
+  ),
 ];
 
 export const CHART_TOOLS = new Set([
@@ -289,6 +290,7 @@ export const CHART_TOOLS = new Set([
   'calendar',
   'distribution',
   'create_workout',
+  'show_workout',
 ]);
 
 /** Runs a tool the model called; a mistake in the call comes back as `error` for it to fix. */
@@ -310,6 +312,7 @@ const RUNNERS: Record<string, (args: Args, data: CoachData, user: CoachUser) => 
   workouts,
   find_exercises: findExercises,
   create_workout: createWorkout,
+  show_workout: showWorkout,
 };
 
 // ---------- shared ----------
@@ -990,7 +993,7 @@ function createWorkout(args: Args, data: CoachData): ToolResult {
   const name = typeof args.name === 'string' ? cut(args.name, NAME_MAX) : '';
   if (!name) return failed('The workout needs a name.');
   const catalog = new Map(data.catalog.map((e) => [e.id, e]));
-  const exercises: WorkoutChart['exercises'] = [];
+  const exercises: (WorkoutLine & { restSeconds: number })[] = [];
   const skipped: string[] = [];
   for (const line of Array.isArray(args.exercises) ? (args.exercises as Args[]) : []) {
     const id = String(line.exercise_id);
@@ -1031,6 +1034,28 @@ function createWorkout(args: Args, data: CoachData): ToolResult {
       sets: exercises.reduce((sum, e) => sum + e.sets, 0),
       minutes: Math.round(seconds / 60),
       ...(skipped.length ? { skipped } : {}),
+    },
+  };
+}
+
+/** A saved workout for the card, with what is in it for the model. */
+function showWorkout(args: Args, data: CoachData): ToolResult {
+  const routine = data.routines.find((r) => r.id === args.routine_id);
+  if (!routine) return failed('Unknown routine_id: use a workout id from the context.');
+  const { id, name, status, exercises } = routine;
+  if (!exercises.length) return { chart: null, result: { name, note: 'It has no exercises yet.' } };
+  const catalog = new Map(data.catalog.map((e) => [e.id, e]));
+  return {
+    chart: { type: 'workout', name, routineId: id, exercises },
+    result: {
+      shown: name,
+      ...(status ? { status } : {}),
+      exercises: exercises.map((e) => ({
+        name: catalog.get(e.exerciseId)?.name ?? data.exercises.get(e.exerciseId)?.name ?? null,
+        sets: e.sets,
+        target_min: e.targetMin,
+        target_max: e.targetMax,
+      })),
     },
   };
 }

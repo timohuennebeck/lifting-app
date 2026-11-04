@@ -5,7 +5,8 @@ import { assert, assertEquals } from 'jsr:@std/assert@1';
 
 import { type CoachData, type CoachExercise, type CoachUser, dayIn, splitShares } from './data.ts';
 import { numbersIn, unmatchedNumbers } from './eval/grade.ts';
-import { coachCatalog, coachData, coachTurns } from './load.ts';
+import { coachCatalog, coachData, coachRoutines, coachTurns, type RoutineRow } from './load.ts';
+import { contextText } from './prompt.ts';
 import { type PeriodChart, runTool, TOOLS, type TrendChart, type WorkoutChart } from './tools.ts';
 
 Deno.env.set('OPENAI_API_KEY', 'test-key');
@@ -75,6 +76,24 @@ const DATA: CoachData = {
     catalogExercise('cable-fly', 'cable', { chest: 1 }, false),
     catalogExercise('squat', 'barbell', { quads: 0.6, glutes: 0.4 }),
     { ...catalogExercise('plank', 'bodyweight', { abs: 1 }), measures: ['seconds'] },
+  ],
+  routines: [
+    {
+      id: 'r-push',
+      name: 'Push',
+      status: 'next',
+      exercises: [
+        {
+          exerciseId: 'bench-press',
+          sets: 3,
+          targetMin: 6,
+          targetMax: 8,
+          rir: 2,
+          restSeconds: null,
+        },
+      ],
+    },
+    { id: 'r-empty', name: 'Empty', status: 'open', exercises: [] },
   ],
   workouts: [
     workout('2026-10-05', {
@@ -568,4 +587,106 @@ Deno.test('a follow-up reads the earlier workout but not the list it was picked 
     turn.calls.map((c) => c.name),
     ['create_workout'],
   );
+});
+
+Deno.test('show_workout: gives the saved workout for the card and what is in it', () => {
+  const { chart, result } = run('show_workout', { routine_id: 'r-push' });
+  const workout = chart as WorkoutChart;
+  assertEquals(workout.routineId, 'r-push');
+  assertEquals(workout.name, 'Push');
+  assertEquals(workout.exercises[0].exerciseId, 'bench-press');
+  assertEquals(result.status, 'next');
+  assertEquals((result.exercises as { sets: number }[])[0].sets, 3);
+
+  assertEquals(run('show_workout', { routine_id: 'r-empty' }).chart, null);
+  assert(run('show_workout', { routine_id: 'r-empty' }).result.note);
+  assert(run('show_workout', { routine_id: 'nope' }).result.error);
+});
+
+Deno.test('coachRoutines: finds the next one as the Training tab does', () => {
+  const row = (
+    id: string,
+    position: number,
+    plan_id: string | null,
+    empty = false,
+  ): RoutineRow => ({
+    id,
+    name: id,
+    plan_id,
+    position,
+    routine_exercises: empty
+      ? []
+      : [
+          {
+            exercise_id: 'squat',
+            position: 0,
+            rest_seconds: null,
+            routine_sets: [
+              { position: 1, target_min: 8, target_max: 12, rir: null },
+              { position: 0, target_min: 6, target_max: 8, rir: 2 },
+            ],
+          },
+        ],
+  });
+  const rows = [
+    row('c', 2, 'plan'),
+    row('a', 0, 'plan'),
+    row('empty', 1, 'plan', true),
+    row('single', 0, null),
+    row('other', 0, 'old-plan'),
+  ];
+  const plan = { id: 'plan', sessionsPerWeek: 2 };
+  const statuses = (workouts: { routine_id: string; plan_week: number }[]) =>
+    coachRoutines(rows, plan, workouts).map((r) => [r.id, r.status]);
+
+  assertEquals(statuses([]), [
+    ['a', 'next'],
+    ['empty', 'open'],
+    ['c', 'open'],
+    ['single', null],
+  ]);
+  // Done in the week the plan is in; an earlier week doesn't count.
+  assertEquals(
+    statuses([
+      { routine_id: 'a', plan_week: 3 },
+      { routine_id: 'c', plan_week: 2 },
+    ]),
+    [
+      ['a', 'done'],
+      ['empty', 'open'],
+      ['c', 'next'],
+      ['single', null],
+    ],
+  );
+  // The weekly goal reached: the next plan week starts over.
+  assertEquals(
+    statuses([
+      { routine_id: 'a', plan_week: 3 },
+      { routine_id: 'c', plan_week: 3 },
+    ])[0],
+    ['a', 'next'],
+  );
+  assertEquals(
+    coachRoutines(rows, null, []).map((r) => r.id),
+    ['single'],
+  );
+  assertEquals(coachRoutines(rows, plan, [])[0].exercises[0], {
+    exerciseId: 'squat',
+    sets: 2,
+    targetMin: 6,
+    targetMax: 12,
+    rir: 2,
+    restSeconds: null,
+  });
+});
+
+Deno.test('contextText: lists the workouts with the next one marked', () => {
+  const profile = { goal: null, experience: null, focus: [], equipment: null, plan: null };
+  const text = contextText(USER, profile, {
+    ...DATA,
+    routines: [...DATA.routines, { id: 'r-solo', name: 'Solo', status: null, exercises: [] }],
+  });
+  assert(text.includes('- r-push · Push · next'));
+  assert(text.includes('- r-empty · Empty · open'));
+  assert(text.includes('Saved workouts outside the plan (id · name):\n- r-solo · Solo'));
 });

@@ -7,6 +7,7 @@ import {
   type CoachCatalogExercise,
   type CoachData,
   type CoachExercise,
+  type CoachRoutine,
   type CoachUser,
   type CoachWorkout,
   daysBetween,
@@ -226,6 +227,26 @@ function generate({ start, today, trains, routines, hour }: Plan, rand: () => nu
   return workouts;
 }
 
+/** A saved workout: its exercises as [id, sets, lowest target, highest target]. */
+const routineOf = (
+  id: string,
+  name: string,
+  status: CoachRoutine['status'],
+  lines: [string, number, number, number][],
+): CoachRoutine => ({
+  id,
+  name,
+  status,
+  exercises: lines.map(([exerciseId, sets, targetMin, targetMax]) => ({
+    exerciseId,
+    sets,
+    targetMin,
+    targetMax,
+    rir: 2,
+    restSeconds: null,
+  })),
+});
+
 /** What each catalog row takes, for the exercises a workout can be built from. */
 const EQUIPMENT: Record<string, string> = {
   'bench-press': 'barbell',
@@ -365,6 +386,27 @@ function lena(): Fixture {
       exercises: exercisesOf(workouts, 'de'),
       catalog: catalogOf('de', null),
       workouts,
+      routines: [
+        routineOf('r-push', 'Push', 'done', [
+          ['bench-press', 3, 5, 8],
+          ['overhead-press', 3, 6, 10],
+          ['triceps-pushdown', 3, 10, 12],
+        ]),
+        routineOf('r-pull', 'Pull', 'next', [
+          ['deadlift', 3, 4, 6],
+          ['barbell-row', 3, 6, 10],
+          ['lat-pulldown', 3, 8, 12],
+        ]),
+        routineOf('r-beine', 'Beine', 'open', [
+          ['squat', 3, 5, 8],
+          ['leg-press', 3, 8, 12],
+          ['calf-raise', 2, 10, 15],
+        ]),
+        routineOf('r-arme', 'Arme', null, [
+          ['barbell-curl', 3, 8, 12],
+          ['triceps-pushdown', 3, 10, 12],
+        ]),
+      ],
       weights,
       checks: [
         { date: '2026-06-01', score: 62 },
@@ -411,6 +453,13 @@ function sam(): Fixture {
       exercises: exercisesOf(workouts, 'en'),
       catalog: catalogOf('en', ['dumbbell', 'bodyweight']),
       workouts,
+      routines: [
+        routineOf('r-full-body', 'Full Body', 'next', [
+          ['dumbbell-bench-press', 3, 8, 12],
+          ['goblet-squat', 3, 8, 12],
+          ['bent-over-dumbbell-row', 3, 8, 12],
+        ]),
+      ],
       weights: [],
       checks: [],
     },

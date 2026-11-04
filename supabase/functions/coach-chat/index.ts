@@ -10,10 +10,13 @@ import {
   coachCatalog,
   coachData,
   coachProfile,
+  coachRoutines,
   coachTurns,
   type HistoryRow,
   type MessageRow,
+  type PlanWorkoutRow,
   type ProfileRow,
+  type RoutineRow,
 } from '../_shared/coach/load.ts';
 import { contextText } from '../_shared/coach/prompt.ts';
 import { admin, envLimit, isUuid, refuseAiRequest, reply, requestUser } from '../_shared/common.ts';
@@ -34,6 +37,8 @@ const MONTHLY_LIMIT = Number(setting('COACH_MONTHLY_LIMIT', '150'));
 const TIMEOUT_MS = 60_000;
 /** Earlier questions the model reads back with their answers and tool calls. */
 const HISTORY_TURNS = 6;
+/** Enough of the plan's latest finished workouts to hold its latest week. */
+const PLAN_WORKOUTS = 50;
 /** The answers are a few sentences; the database takes up to 2,000 characters. */
 const ANSWER_MAX = 2000;
 
@@ -113,7 +118,7 @@ async function answer(job: Job, send: (event: Event) => void, signal: AbortSigna
   send({ type: 'start', chatId, questionId, answerId });
 
   const planId = job.profile.active_plan_id;
-  const [history, plan, recent, catalog, equipment] = await Promise.all([
+  const [history, plan, recent, catalog, equipment, routines, planWorkouts] = await Promise.all([
     admin.rpc('coach_history', { p_user_id: job.userId }),
     planId
       ? admin.from('plans').select('name, sessions_per_week').eq('id', planId).maybeSingle()
@@ -128,9 +133,26 @@ async function answer(job: Job, send: (event: Event) => void, signal: AbortSigna
       : Promise.resolve({ data: [] as MessageRow[], error: null }),
     loadCatalog(),
     loadEquipment(),
+    admin
+      .from('routines')
+      .select(
+        'id, name, plan_id, position, routine_exercises(exercise_id, position, rest_seconds, ' +
+          'routine_sets(position, target_min, target_max, rir))',
+      )
+      .eq('user_id', job.userId),
+    planId
+      ? admin
+          .from('workout_entries')
+          .select('routine_id, plan_week')
+          .eq('plan_id', planId)
+          .not('finished_at', 'is', null)
+          .order('plan_week', { ascending: false, nullsFirst: false })
+          .limit(PLAN_WORKOUTS)
+      : Promise.resolve({ data: [] as PlanWorkoutRow[], error: null }),
   ]);
-  if (history.error || recent.error) {
-    console.error('Reading the coach data failed', history.error ?? recent.error);
+  const failure = history.error ?? recent.error ?? routines.error ?? planWorkouts.error;
+  if (failure) {
+    console.error('Reading the coach data failed', failure);
     await giveBack(job.runId);
     return send({ type: 'error', error: 'failed' });
   }
@@ -145,6 +167,11 @@ async function answer(job: Job, send: (event: Event) => void, signal: AbortSigna
     job.language,
     job.timeZone,
     coachCatalog(catalog, equipment, job.profile, job.language),
+    coachRoutines(
+      (routines.data ?? []) as unknown as RoutineRow[],
+      planId && plan.data ? { id: planId, sessionsPerWeek: plan.data.sessions_per_week } : null,
+      (planWorkouts.data ?? []) as PlanWorkoutRow[],
+    ),
   );
   const user: CoachUser = {
     today: dayIn(askedAt.toISOString(), job.timeZone),
