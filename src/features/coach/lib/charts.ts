@@ -64,13 +64,28 @@ export interface DistributionChart {
   rows: { key: string; value: number }[];
 }
 
+/** Not a chart but in its place: a workout Kai built, which the card saves once it is opened. */
+export interface WorkoutChart {
+  type: 'workout';
+  name: string;
+  exercises: {
+    exerciseId: string;
+    sets: number;
+    /** Reps of every set, or seconds for a timed exercise. */
+    targetMin: number;
+    targetMax: number;
+    rir: number | null;
+    restSeconds: number;
+  }[];
+}
+
 export type CoachChart =
-  TrendChart | CompareChart | PeriodChart | CalendarChart | DistributionChart;
+  TrendChart | CompareChart | PeriodChart | CalendarChart | DistributionChart | WorkoutChart;
 
 /** A stored chart, or null when it isn't one the app knows (a newer server). */
 export function toChart(value: unknown): CoachChart | null {
   const type = (value as { type?: unknown } | null)?.type;
-  return ['trend', 'compare', 'period_vs_average', 'calendar', 'distribution'].includes(
+  return ['trend', 'compare', 'period_vs_average', 'calendar', 'distribution', 'workout'].includes(
     String(type),
   )
     ? (value as CoachChart)
@@ -122,5 +137,7 @@ export function chartTopic(chart: CoachChart, t: TFunction<'coach'>, exerciseNam
       return t('topics.consistency');
     case 'distribution':
       return t(`topics.by.${chart.by}`);
+    case 'workout':
+      return chart.name;
   }
 }

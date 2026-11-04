@@ -76,7 +76,7 @@ const inPlan = (planId: string | null) =>
 
 /**
  * Inserts an empty routine (`drizzle` or a transaction) at `position`, by default after the last
- * one of its plan, or of the library for `null`. Returns its id.
+ * one of its plan, or of the library for `null`. Returns its id, a new one unless given.
  */
 export async function insertRoutine(
   executor: Executor,
@@ -84,8 +84,8 @@ export async function insertRoutine(
   planId: string | null,
   name: string,
   position?: number,
+  id: string = newId(),
 ) {
-  const id = newId();
   await executor.insert(routines).values({
     id,
     user_id: userId,

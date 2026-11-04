@@ -19,6 +19,9 @@
     "stop": "답변 중지"
   },
   "thinking": "카이가 생각하는 중 …",
+  "workout": {
+    "open": "개요 열기"
+  },
   "values": {
     "reps_one": "{{count}}회",
     "reps_other": "{{count}}회",
