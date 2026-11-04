@@ -38,6 +38,10 @@ export const MUSCLES = [
 export const catalogNames = (name: Record<string, string>, language: string) =>
   [...new Set([language, 'de', 'en'].map((l) => name[l]).filter(Boolean))].join(' / ');
 
+/** Whether the user can do an exercise: each of its needs met by one of their items. */
+export const fits = (needs: string[][], have: Set<string>) =>
+  needs.every((items) => items.some((id) => have.has(id)));
+
 export interface SetTarget {
   targetMin: number | null;
   targetMax: number | null;

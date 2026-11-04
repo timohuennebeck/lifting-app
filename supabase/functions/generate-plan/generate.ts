@@ -6,6 +6,7 @@
 import {
   catalogNames,
   cut,
+  fits,
   type ImportedRoutine,
   MUSCLES,
   type PlanExercise,
@@ -103,10 +104,6 @@ export function equipmentOf(answers: PlanAnswers, equipment: EquipmentRow[]) {
   const active = new Set(equipment.map((e) => e.id));
   return new Set(answers.homeEquipment.filter((id) => active.has(id)));
 }
-
-/** Whether the user can do an exercise: each of its needs met by one of their items. */
-export const fits = (needs: string[][], have: Set<string>) =>
-  needs.every((items) => items.some((id) => have.has(id)));
 
 const CORE_MUSCLES = ['abs', 'obliques'];
 /** Core work: abs and obliques take at least half of the exercise's stimulus. */
