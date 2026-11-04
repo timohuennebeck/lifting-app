@@ -64,18 +64,23 @@ export interface DistributionChart {
   rows: { key: string; value: number }[];
 }
 
-/** Not a chart but in its place: a workout Kai built, which the card saves once it is opened. */
+/**
+ * Not a chart but in its place: a workout on a card, one Kai built, which the card saves once it is
+ * opened, or one the user saved (`routineId`).
+ */
 export interface WorkoutChart {
   type: 'workout';
   name: string;
+  routineId?: string;
   exercises: {
     exerciseId: string;
     sets: number;
-    /** Reps of every set, or seconds for a timed exercise. */
-    targetMin: number;
-    targetMax: number;
+    /** Reps of every set, or seconds for a timed exercise; null without a target. */
+    targetMin: number | null;
+    targetMax: number | null;
     rir: number | null;
-    restSeconds: number;
+    /** null: the exercise's own rest. */
+    restSeconds: number | null;
   }[];
 }
 

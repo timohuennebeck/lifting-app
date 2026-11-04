@@ -49,6 +49,27 @@ export interface CoachWorkout {
   exercises: { exerciseId: string; sets: CoachSet[] }[];
 }
 
+/** An exercise of a workout on a card, with one target for all its sets. */
+export interface WorkoutLine {
+  exerciseId: string;
+  sets: number;
+  /** Reps of every set, or seconds for an exercise that logs seconds; null without a target. */
+  targetMin: number | null;
+  targetMax: number | null;
+  rir: number | null;
+  /** null: the exercise's own rest. */
+  restSeconds: number | null;
+}
+
+/** A workout the user saved. */
+export interface CoachRoutine {
+  id: string;
+  name: string;
+  /** Where it stands in the active plan's week; null outside the plan. */
+  status: 'done' | 'next' | 'open' | null;
+  exercises: WorkoutLine[];
+}
+
 export interface CoachData {
   /** Every exercise the workouts use. */
   exercises: Map<string, CoachExercise>;
@@ -56,6 +77,8 @@ export interface CoachData {
   catalog: CoachCatalogExercise[];
   /** Finished workouts, oldest first, with their completed sets. */
   workouts: CoachWorkout[];
+  /** The active plan's workouts in their order, then the ones outside a plan. */
+  routines: CoachRoutine[];
   /** Oldest first. */
   weights: { date: string; kg: number }[];
   checks: { date: string; score: number }[];

@@ -8,9 +8,11 @@ import {
   type CoachCatalogExercise,
   type CoachData,
   type CoachExercise,
+  type CoachRoutine,
   dayIn,
   type Measure,
   splitShares,
+  type WorkoutLine,
 } from './data.ts';
 import type { CoachProfile } from './prompt.ts';
 
@@ -53,6 +55,7 @@ export function coachData(
   language: string,
   timeZone: string,
   catalog: CoachCatalogExercise[] = [],
+  routines: CoachRoutine[] = [],
 ): CoachData {
   const exercises = new Map<string, CoachExercise>();
   for (const x of row.exercises) {
@@ -81,6 +84,7 @@ export function coachData(
   return {
     exercises,
     catalog,
+    routines,
     workouts: row.workouts.map((w) => ({
       name: w.name,
       startedAt: w.started_at,
@@ -98,6 +102,84 @@ export function coachData(
     weights: row.weights.map(([date, kg]) => ({ date, kg: Number(kg) })),
     checks: row.checks.map(([at, score]) => ({ date: dayIn(at, timeZone), score: Number(score) })),
   };
+}
+
+export interface RoutineRow {
+  id: string;
+  name: string;
+  plan_id: string | null;
+  position: number;
+  routine_exercises: {
+    exercise_id: string;
+    position: number;
+    rest_seconds: number | null;
+    routine_sets: {
+      position: number;
+      target_min: number | null;
+      target_max: number | null;
+      rir: number | null;
+    }[];
+  }[];
+}
+
+/** A finished workout of the active plan. */
+export interface PlanWorkoutRow {
+  routine_id: string | null;
+  plan_week: number | null;
+}
+
+const byPosition = (a: { position: number }, b: { position: number }) => a.position - b.position;
+
+/** An exercise with its sets as one line: the lowest target to the highest. */
+function workoutLine(row: RoutineRow['routine_exercises'][number]): WorkoutLine {
+  const sets = [...row.routine_sets].sort(byPosition);
+  const lows = sets.flatMap((s) => s.target_min ?? s.target_max ?? []);
+  const highs = sets.flatMap((s) => s.target_max ?? s.target_min ?? []);
+  return {
+    exerciseId: row.exercise_id,
+    sets: sets.length,
+    targetMin: lows.length ? Math.min(...lows) : null,
+    targetMax: highs.length ? Math.max(...highs) : null,
+    rir: sets.find((s) => s.rir != null)?.rir ?? null,
+    restSeconds: row.rest_seconds,
+  };
+}
+
+/** The routines a plan's latest week has done; none once that week has the weekly goal. */
+function doneThisWeek(workouts: PlanWorkoutRow[], sessionsPerWeek: number) {
+  const weeks = workouts.flatMap((w) => w.plan_week ?? []);
+  if (!weeks.length) return new Set<string>();
+  const latest = workouts.filter((w) => w.plan_week === Math.max(...weeks));
+  if (latest.length >= sessionsPerWeek) return new Set<string>();
+  return new Set(latest.flatMap((w) => w.routine_id ?? []));
+}
+
+/**
+ * The active plan's routines in their order, then those outside a plan; other plans' are left out.
+ * As on the Training tab, the first with exercises not done this plan week comes next.
+ */
+export function coachRoutines(
+  rows: RoutineRow[],
+  plan: { id: string; sessionsPerWeek: number } | null,
+  planWorkouts: PlanWorkoutRow[],
+): CoachRoutine[] {
+  const done = plan ? doneThisWeek(planWorkouts, plan.sessionsPerWeek) : new Set<string>();
+  const routine = (row: RoutineRow, status: CoachRoutine['status']): CoachRoutine => ({
+    id: row.id,
+    name: row.name,
+    status,
+    exercises: row.routine_exercises
+      .filter((e) => e.routine_sets.length)
+      .sort(byPosition)
+      .map(workoutLine),
+  });
+  const sorted = [...rows].sort(byPosition);
+  const inPlan = sorted
+    .filter((r) => plan && r.plan_id === plan.id)
+    .map((r) => routine(r, done.has(r.id) ? 'done' : 'open'));
+  const next = inPlan.find((r) => r.status === 'open' && r.exercises.length);
+  if (next) next.status = 'next';
+  return [...inPlan, ...sorted.filter((r) => r.plan_id === null).map((r) => routine(r, null))];
 }
 
 export interface ProfileRow {

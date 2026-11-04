@@ -33,6 +33,10 @@ const problems = (...checks: [boolean, string][]) => checks.filter(([ok]) => !ok
 const sameSet = (value: unknown, ids: string[]) =>
   Array.isArray(value) && value.length === ids.length && ids.every((id) => value.includes(id));
 
+/** The saved workout it shows. */
+const shows = (id: string) => (args: Args) =>
+  problems([args.routine_id === id, `shows ${args.routine_id}, not ${id}`]);
+
 /** A workout of `min` to `max` exercises, none twice, only of the `allowed` ones if given. */
 const workoutOf = (min: number, max: number, allowed?: string[]) => (args: Args) => {
   const ids = ((args.exercises ?? []) as Args[]).map((e) => String(e.exercise_id));
@@ -397,6 +401,48 @@ export const CASES: Case[] = [
     turns: ['Wie oft trainiere ich pro Woche?'],
     language: 'de',
     tool: ['calendar', 'period_vs_average'],
+  },
+
+  // ---------- their saved workouts ----------
+  {
+    id: 'saved-next',
+    user: 'lena',
+    turns: ['Was ist mein nächstes Training?'],
+    language: 'de',
+    tool: ['show_workout'],
+    args: shows('r-pull'),
+  },
+  {
+    id: 'saved-next-en',
+    user: 'sam',
+    turns: ["What's my next training?"],
+    language: 'en',
+    tool: ['show_workout'],
+    args: shows('r-full-body'),
+  },
+  {
+    id: 'saved-today',
+    user: 'lena',
+    turns: ['Was trainiere ich heute?'],
+    language: 'de',
+    tool: ['show_workout'],
+    args: shows('r-pull'),
+  },
+  {
+    id: 'saved-contents',
+    user: 'lena',
+    turns: ['Was steht in meinem Beintraining drin?'],
+    language: 'de',
+    tool: ['show_workout'],
+    args: shows('r-beine'),
+  },
+  {
+    id: 'saved-single',
+    user: 'lena',
+    turns: ['Zeig mir mein Arme-Training'],
+    language: 'de',
+    tool: ['show_workout'],
+    args: shows('r-arme'),
   },
 
   // ---------- building a workout ----------

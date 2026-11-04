@@ -364,7 +364,9 @@ that withdraws the consent.
   `period_vs_average`, `calendar` and `distribution` each draw a chart; `workouts` looks sessions
   up; `find_exercises` and `create_workout` build a workout, which comes as a card in the chart's
   place. The card saves it to the library the first time it opens, under its answer's id, so
-  until then nothing piles up there. The values follow the app: the 1RM by Epley, bodyweight exercises with the latest body
+  until then nothing piles up there. `show_workout` shows a workout the user saved on the same
+  card ("Was ist mein nächstes Training?"), the next one found as on the Training tab; it opens
+  that routine. The values follow the app: the 1RM by Epley, bodyweight exercises with the latest body
   weight, sets per muscle with main muscles counting fully and helpers half, against 10 a week.
 - **Rules (server-side):** 16+ by the profile's birth date; consent: the start screen says that the
   first question agrees to the training and body data going to OpenAI, and the function records it
