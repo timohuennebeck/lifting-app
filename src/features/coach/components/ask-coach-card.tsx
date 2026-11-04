@@ -185,6 +185,8 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
             voice={voice}
             // Lighter than the chat's, as the card behind it is lighter than the page.
             className="bg-chip"
+            // The same corners as the card around it.
+            radiusClassName="rounded-[18px]"
           />
         </Pressable>
       </View>

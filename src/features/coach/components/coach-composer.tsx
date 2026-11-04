@@ -48,6 +48,8 @@ export interface CoachFieldProps extends Omit<CoachComposerProps, 'consentNote'>
   onOpenAnswer?: () => void;
   onFocusChange?: (focused: boolean) => void;
   className?: string;
+  /** The corners of the field, also while recording. */
+  radiusClassName?: string;
 }
 
 /**
@@ -65,12 +67,14 @@ export function CoachField({
   onOpenAnswer,
   onFocusChange,
   className,
+  radiusClassName,
 }: CoachFieldProps) {
   const { t } = useTranslation('coach');
   const typed = value.trim().length > 0;
 
-  if (voice.phase === 'recording') return <RecordingRow voice={voice} />;
-  if (voice.phase === 'transcribing') return <TranscribingRow />;
+  if (voice.phase === 'recording')
+    return <RecordingRow voice={voice} className={radiusClassName} />;
+  if (voice.phase === 'transcribing') return <TranscribingRow className={radiusClassName} />;
 
   return (
     <ChatField
@@ -83,6 +87,7 @@ export function CoachField({
       onFocusChange={onFocusChange}
       onPressResting={onOpenAnswer}
       className={className}
+      radiusClassName={radiusClassName}
       actions={
         answering ? (
           <PressableScale
