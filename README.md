@@ -351,8 +351,9 @@ the app says so and the user goes back a step.
 The coach answers questions about the user's own training ("Wie hat sich mein Gewicht entwickelt?",
 "Welche Muskeln trainiere ich zu wenig?") in a few sentences, mostly with a chart. The app sends the
 question to the `coach-chat` Edge Function, where the model picks one of the coach's tools; the tool
-computes every number from the user's data, and the model writes the answer from them. The answer
-and its chart stream to the app as server-sent events; once complete, the question and answer are
+computes the numbers from the user's data, and the model writes the answer from them, working out
+what the question needs on top (a percentage, when a target is reached). The answer and its chart
+stream to the app as server-sent events; once complete, the question and answer are
 saved and sync to the app; the app shows the streamed answer until the saved one has synced
 (`src/features/coach/stores/coach-store.ts`). The screens follow the design "Coach Screens" and open
 over the tabs from the Training tab's card, which a flash runs across; Settings has a switch
@@ -386,10 +387,11 @@ that withdraws the consent.
   one row per question, which the limits count, with the tool calls (replayed for follow-up
   questions) and the tokens it took. Deleting a chat deletes its tool calls; the rest of the run
   stays for the limits. Chats are kept until the user deletes them or the account.
-- **Testing:** `npm run coach:eval` (needs Deno and `OPENAI_API_KEY`) asks 33 questions about two
+- **Testing:** `npm run coach:eval` (needs Deno and `OPENAI_API_KEY`) asks 37 questions about two
   made-up users (`supabase/functions/_shared/coach/eval/`) and checks each answer: the tool and
-  its arguments, only numbers the tools gave, the question's language, at most 3 sentences and 50
-  words, and asking back only when the question is unclear. `-- --fast` uses Fast mode,
+  its arguments, only numbers the tools gave (unless the question needs them worked out), the
+  question's language, at most 3 sentences and 50 words, and asking back only when the question
+  is unclear. `-- --fast` uses Fast mode,
   `-- --model gpt-6-luna --effort medium` tries others; the answers go to `eval/out/`. Run it
   before and after changing the prompt or a tool.
 
