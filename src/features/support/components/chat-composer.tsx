@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, TextInput, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
 import { useIsLocked } from '@/features/paywall/stores/subscription-store';
+import { ChatField } from '@/shared/components/chat-field';
 import {
   MicButton,
   RecordingRow,
@@ -16,7 +17,6 @@ import { haptics } from '@/shared/lib/haptics';
 import { TICKET_MESSAGE_MAX } from '@/shared/lib/limits';
 import { colors } from '@/shared/lib/theme';
 import { useUserId } from '@/shared/stores/session-store';
-import { CharCount } from '@/shared/ui/char-count';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -40,7 +40,6 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
   const draft = useScreenshotDraft();
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
-  const [focused, setFocused] = useState(false);
   const language = useAppLanguage();
   const locked = useIsLocked();
   const voice = useVoiceInput(language, 'support', (said) =>
@@ -71,34 +70,22 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
   }
 
   let box = (
-    // Like the text fields: a 1pt line, with the 2pt neon ring on top of it while typing.
-    <View className="gap-3.5 rounded-[24px] border border-white/8 bg-tile px-2.5 pt-4 pb-2.5">
-      {focused ? (
-        <View
-          pointerEvents="none"
-          className="absolute -inset-px rounded-[24px] border-2 border-accent"
-        />
-      ) : null}
-      {draft.shots.length ? (
-        <ScreenshotTiles draft={draft} showAdd={false} tileClassName="h-18 w-13" className="px-2" />
-      ) : null}
-      <TextInput
-        value={text}
-        onChangeText={setText}
-        multiline
-        maxLength={TICKET_MESSAGE_MAX}
-        placeholder={t('chat.placeholder')}
-        placeholderTextColor={colors.dim}
-        selectionColor={colors.fg}
-        cursorColor={colors.fg}
-        keyboardAppearance="dark"
-        textAlignVertical="top"
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        // Two lines tall even when empty, so there's room to start typing.
-        className="max-h-30 min-h-11 px-2 py-0 font-inter text-base leading-5.5 text-fg"
-      />
-      <View className="flex-row items-center justify-between">
+    <ChatField
+      value={text}
+      onChangeText={setText}
+      maxLength={TICKET_MESSAGE_MAX}
+      placeholder={t('chat.placeholder')}
+      above={
+        draft.shots.length ? (
+          <ScreenshotTiles
+            draft={draft}
+            showAdd={false}
+            tileClassName="h-18 w-13"
+            className="px-2"
+          />
+        ) : null
+      }
+      leading={
         <IconButton
           icon="plus"
           size={40}
@@ -108,8 +95,9 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
           onPress={draft.add}
           className={cn(!draft.canAdd && 'opacity-35')}
         />
-        <CharCount length={text.length} max={TICKET_MESSAGE_MAX} className="self-center" />
-        <View className="flex-row items-center gap-1">
+      }
+      actions={
+        <>
           {locked ? null : <MicButton voice={voice} alone={!hasContent} />}
           {hasContent || locked ? (
             <PressableScale
@@ -130,9 +118,9 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
               )}
             </PressableScale>
           ) : null}
-        </View>
-      </View>
-    </View>
+        </>
+      }
+    />
   );
   if (voice.phase === 'recording') box = <RecordingRow voice={voice} />;
   else if (voice.phase === 'transcribing') box = <TranscribingRow />;
