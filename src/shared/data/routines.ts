@@ -189,6 +189,21 @@ export function useRoutines() {
   });
 }
 
+const routineExerciseIdsQuery = () =>
+  drizzle.selectDistinct({ exercise_id: routineExercises.exercise_id }).from(routineExercises);
+
+const toExerciseIds = (rows: RowOf<typeof routineExerciseIdsQuery>[]) =>
+  rows.flatMap((r) => (r.exercise_id ? [r.exercise_id] : []));
+
+/** The exercises in any of the user's routines. */
+export function useRoutineExerciseIds() {
+  return useDrizzleQuery({
+    queryKey: queryKeys.routines.exerciseIds.queryKey,
+    query: routineExerciseIdsQuery(),
+    map: toExerciseIds,
+  });
+}
+
 /** When routines were done: the start of each one's latest finished workout, by routine id. */
 const doneDatesQuery = () =>
   drizzle
