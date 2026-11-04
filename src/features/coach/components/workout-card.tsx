@@ -1,14 +1,12 @@
 import { router } from 'expo-router';
 import { useRef } from 'react';
-import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { MuscleStack } from '@/shared/components/muscle-stack';
-import { isTimed, useExerciseName } from '@/shared/data/exercises';
+import { useExerciseName } from '@/shared/data/exercises';
 import { muscleShares } from '@/shared/data/muscles';
 import { estimateMinutes } from '@/shared/data/routines';
-import { formatTargetLabel } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
@@ -17,19 +15,7 @@ import { Text } from '@/shared/ui/text';
 
 import { saveCoachWorkout } from '../data/coach-workout';
 import type { WorkoutChart } from '../lib/charts';
-
-/**
- * An exercise's sets with their target: "3 × 8–10", with the unit only for seconds: "3 × 30 s";
- * without a target just "3 Sätze".
- */
-function setsLabel(
-  { exerciseId, sets, targetMin, targetMax }: WorkoutChart['exercises'][number],
-  t: TFunction<'coach'>,
-) {
-  if (targetMin === null || targetMax === null) return t('values.sets', { count: sets });
-  if (isTimed(exerciseId)) return `${sets} × ${formatTargetLabel(targetMin, targetMax, true)}`;
-  return `${sets} × ${targetMin === targetMax ? targetMin : `${targetMin}–${targetMax}`}`;
-}
+import { setsLabel } from '../lib/sets-label';
 
 function WorkoutLine({ exercise }: { exercise: WorkoutChart['exercises'][number] }) {
   const { t, i18n } = useTranslation('coach');

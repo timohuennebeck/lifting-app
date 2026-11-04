@@ -84,18 +84,51 @@ export interface WorkoutChart {
   }[];
 }
 
+/**
+ * Not a chart but in its place: a change to the user's plan on a card. Per exercise, the options
+ * the user picks from before applying it in the plan's workouts that have it.
+ */
+export interface SwapChart {
+  type: 'swap';
+  swaps: {
+    exerciseId: string;
+    /** The plan's workouts it is swapped in, in plan order. */
+    routineIds: string[];
+    /** 1 to 3 exercises that log the same (reps or seconds), best first. */
+    options: string[];
+  }[];
+}
+
 export type CoachChart =
-  TrendChart | CompareChart | PeriodChart | CalendarChart | DistributionChart | WorkoutChart;
+  | TrendChart
+  | CompareChart
+  | PeriodChart
+  | CalendarChart
+  | DistributionChart
+  | WorkoutChart
+  | SwapChart;
+
+/** Shown on a card of the page's whole width instead of beside the answer. */
+export type CardChart = WorkoutChart | SwapChart;
+
+const CHART_TYPES = [
+  'trend',
+  'compare',
+  'period_vs_average',
+  'calendar',
+  'distribution',
+  'workout',
+  'swap',
+];
 
 /** A stored chart, or null when it isn't one the app knows (a newer server). */
 export function toChart(value: unknown): CoachChart | null {
   const type = (value as { type?: unknown } | null)?.type;
-  return ['trend', 'compare', 'period_vs_average', 'calendar', 'distribution', 'workout'].includes(
-    String(type),
-  )
-    ? (value as CoachChart)
-    : null;
+  return CHART_TYPES.includes(String(type)) ? (value as CoachChart) : null;
 }
+
+export const isCardChart = (chart: CoachChart | null): chart is CardChart =>
+  chart?.type === 'workout' || chart?.type === 'swap';
 
 /** A date part as the design writes it, without the abbreviation dot: "Mai", "Do", "28. Okt". */
 export const dateLabel = (date: Date, options: Intl.DateTimeFormatOptions) =>
@@ -144,5 +177,7 @@ export function chartTopic(chart: CoachChart, t: TFunction<'coach'>, exerciseNam
       return t(`topics.by.${chart.by}`);
     case 'workout':
       return chart.name;
+    case 'swap':
+      return t('swap.title');
   }
 }

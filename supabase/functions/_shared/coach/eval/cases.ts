@@ -58,6 +58,30 @@ const DUMBBELLS = [
 ];
 const BUILD_PUSH = 'Bau mir ein Push-Training für heute, etwa 45 Minuten';
 
+/** A plan change for these exercises, each with 1 to 3 options and never itself as one. */
+const swapsOf =
+  (ids: string[], routineId: string | null = null) =>
+  (args: Args) => {
+    const swaps = (args.swaps ?? []) as Args[];
+    return problems(
+      [
+        sameSet(
+          swaps.map((s) => s.exercise_id),
+          ids,
+        ),
+        `swaps ${swaps.map((s) => s.exercise_id)}`,
+      ],
+      ...swaps.flatMap((s): [boolean, string][] => {
+        const options = (s.options ?? []) as unknown[];
+        return [
+          [options.length >= 1 && options.length <= 3, `${options.length} options`],
+          [!options.includes(s.exercise_id), `${s.exercise_id} as its own option`],
+          [s.routine_id === routineId, `in ${s.routine_id}, not ${routineId}`],
+        ];
+      }),
+    );
+  };
+
 const WEIGHT_6_MONTHS = 'Wie hat sich mein Gewicht in den letzten 6 Monaten entwickelt?';
 const BIG_THREE = 'Wie haben sich meine drei Grundübungen entwickelt?';
 const WEEK_VS_USUAL = 'War diese Woche mehr als sonst?';
@@ -515,6 +539,40 @@ export const CASES: Case[] = [
     tool: [null, 'find_exercises'],
     // General advice may name a rep range.
     derives: true,
+  },
+
+  // ---------- swapping exercises in the plan ----------
+  {
+    id: 'plan-swap-pain',
+    user: 'lena',
+    turns: ['Mein Knie zwickt in letzter Zeit bei Kniebeugen. Was kann ich stattdessen machen?'],
+    language: 'de',
+    tool: ['swap_exercises'],
+    args: swapsOf(['squat']),
+  },
+  {
+    id: 'plan-swap-several',
+    user: 'lena',
+    turns: ['Bankdrücken und Langhantelrudern machen mir keinen Spaß mehr. Ersetz beide.'],
+    language: 'de',
+    tool: ['swap_exercises'],
+    args: swapsOf(['bench-press', 'barbell-row']),
+  },
+  {
+    id: 'plan-swap-one-workout',
+    user: 'lena',
+    turns: ['Tausch im Pull-Training das Latziehen gegen was anderes'],
+    language: 'de',
+    tool: ['swap_exercises'],
+    args: swapsOf(['lat-pulldown'], 'r-pull'),
+  },
+  {
+    id: 'plan-swap-home',
+    user: 'sam',
+    turns: ['Can you swap the goblet squats in my plan for something else?'],
+    language: 'en',
+    tool: ['swap_exercises'],
+    args: swapsOf(['goblet-squat']),
   },
 
   // ---------- unclear questions: the only time the coach asks back ----------

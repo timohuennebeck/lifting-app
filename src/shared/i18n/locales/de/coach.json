@@ -15,6 +15,28 @@
   "workout": {
     "open": "Übersicht öffnen"
   },
+  "swap": {
+    "title": "Planänderung",
+    "keepsMain": "{{muscle}} bleibt Hauptmuskel",
+    "newMain": "Hauptmuskel: {{to}} statt {{from}}",
+    "toSwap_one": "{{count}} Übung tauschen",
+    "toSwap_other": "{{count}} Übungen tauschen",
+    "swapped_one": "{{count}} Übung getauscht",
+    "swapped_other": "{{count}} Übungen getauscht",
+    "replaceWith": "Ersetzen durch",
+    "inPlan": "Jetzt im Plan",
+    "recommended": "Empfohlen",
+    "apply": "Übernehmen",
+    "applyBoth": "Beide übernehmen",
+    "applyAll": "Alle übernehmen",
+    "viewPlan": "Plan ansehen",
+    "appliedOne": "{{name}} übernommen",
+    "fromNext": "Ab deinem nächsten Training",
+    "undo": "Rückgängig",
+    "gone": "{{name}}: nicht mehr in {{workouts}}.",
+    "goneFromPlan": "{{name}}: nicht mehr in deinem Plan.",
+    "changed": "Dein Plan hat sich nach dieser Antwort geändert."
+  },
   "values": {
     "reps_one": "{{count}} Wdh.",
     "reps_other": "{{count}} Wdh.",
