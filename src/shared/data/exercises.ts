@@ -67,7 +67,10 @@ export interface Exercise {
   equipment: string | null;
   /** {weight, reps}, {reps}, {seconds} or {weight, seconds}, in display order. */
   measures: Measure[];
+  /** The horizontal photo, for the exercise page. */
   image: ImageSourcePropType | null;
+  /** The vertical thumbnail of that photo, for lists. */
+  thumb: ImageSourcePropType | null;
   /** Default rest between sets, in seconds. */
   restSeconds: number;
   /** Share of the training stimulus per muscle; values sum to 1. */
@@ -91,9 +94,22 @@ export interface CustomExercise {
 }
 
 /** Exercise media live in the public `exercise-media` bucket. */
-const mediaSource = (path: string): ImageSourcePropType => ({
-  uri: `${env.supabaseUrl}/storage/v1/object/public/exercise-media/${encodeURI(path)}`,
-});
+const mediaUrl = (path: string) =>
+  `${env.supabaseUrl}/storage/v1/object/public/exercise-media/${encodeURI(path)}`;
+
+/** A photo's thumbnail is stored next to it, with `-thumb` added to its name. */
+const thumbUrl = (imagePath: string) => mediaUrl(imagePath.replace(/\.webp$/, '-thumb.webp'));
+
+/** Thumbnails of the whole catalog, to download ahead of time. */
+export const catalogThumbUrls = (rows: Record<string, ExerciseRow>) =>
+  Object.values(rows).flatMap((r) => (r.image_path ? [thumbUrl(r.image_path)] : []));
+
+/** Photos of these exercises, to download ahead of time; the user's own exercises have none. */
+export const exerciseImageUrls = (rows: Record<string, ExerciseRow>, ids: string[]) =>
+  ids.flatMap((id) => {
+    const path = rows[id]?.image_path;
+    return path ? [mediaUrl(path)] : [];
+  });
 
 /** Every measure this app version knows, in display order. */
 const MEASURES: Measure[] = ['weight', 'reps', 'seconds'];
@@ -179,7 +195,8 @@ function toExercise(row: ExerciseRow): Exercise {
       id: row.id,
       equipment: row.equipment,
       measures: MEASURES.filter((m) => row.measures.includes(m)),
-      image: row.image_path ? mediaSource(row.image_path) : null,
+      image: row.image_path ? { uri: mediaUrl(row.image_path) } : null,
+      thumb: row.image_path ? { uri: thumbUrl(row.image_path) } : null,
       restSeconds: row.rest_seconds,
       // Muscles a newer catalog added have no place on this app's body map yet.
       muscles: Object.fromEntries(Object.entries(row.muscles).filter(([m]) => MUSCLES.includes(m))),
@@ -204,6 +221,7 @@ function fromCustom(custom: CustomExercise): Exercise {
       equipment: null,
       measures: custom.measures,
       image: null,
+      thumb: null,
       restSeconds: custom.restSeconds,
       muscles: Object.fromEntries([
         ...primary.map((m) => [m, PRIMARY_WEIGHT / total]),

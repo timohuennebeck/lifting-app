@@ -1,8 +1,9 @@
 import { Image } from 'expo-image';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-import { useExercise } from '@/shared/data/exercises';
+import { type Exercise, useExercise } from '@/shared/data/exercises';
 import { cn } from '@/shared/lib/cn';
 import { Text } from '@/shared/ui/text';
 
@@ -34,18 +35,24 @@ const initialsOf = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 
-/** Exercise photo, or the design's striped tile with initials. */
+/** Exercise thumbnail; the design's striped tile with initials without one or if it can't load. */
 export function ExerciseThumb({
   exerciseId,
   name,
   className,
   initialsClassName,
 }: ExerciseThumbProps) {
-  const image = useExercise(exerciseId)?.image;
+  const thumb = useExercise(exerciseId)?.thumb;
+  const [failed, setFailed] = useState<Exercise['thumb']>(null);
   return (
     <View className={cn('h-14.5 w-11 overflow-hidden rounded-[5px] bg-raised', className)}>
-      {image ? (
-        <Image source={image} contentFit="cover" style={StyleSheet.absoluteFill} />
+      {thumb && thumb !== failed ? (
+        <Image
+          source={thumb}
+          contentFit="cover"
+          style={StyleSheet.absoluteFill}
+          onError={() => setFailed(thumb)}
+        />
       ) : (
         <>
           <Svg width="100%" height="100%" style={StyleSheet.absoluteFill}>
