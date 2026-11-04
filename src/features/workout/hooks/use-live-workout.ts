@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { isBodyweight, measuresOf } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
-import { restSecondsFor } from '@/shared/data/routines';
+import { repTarget, restSecondsFor } from '@/shared/data/routines';
 import { useLastExerciseSession } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
@@ -165,7 +165,9 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     const { logged } = useWorkoutSessionStore.getState();
     const workoutDone = allSets.every((s) => s.completedAt || s.id in logged);
     if (!editing && !workoutDone) {
-      store.startRest(restSecondsFor(target.exerciseId, target.restSeconds));
+      // The set's rep target, else the reps just done: a heavy set gets a longer rest.
+      const reps = repTarget(set) ?? values.reps;
+      store.startRest(restSecondsFor(target.exerciseId, target.restSeconds, reps));
     }
     let isPr: boolean;
     try {

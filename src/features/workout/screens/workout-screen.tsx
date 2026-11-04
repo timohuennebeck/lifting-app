@@ -24,7 +24,7 @@ import {
   type ExerciseMenuAction,
   ExerciseMenuSheet,
 } from '@/features/training/components/exercise-menu-sheet';
-import { restSecondsFor } from '@/shared/data/routines';
+import { heaviestRepTarget, restSecondsFor } from '@/shared/data/routines';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { moved } from '@/shared/lib/array';
 import { haptics } from '@/shared/lib/haptics';
@@ -237,7 +237,11 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
         <>
           <WorkoutTopBar
             startedAt={workout.startedAt}
-            restSeconds={restSecondsFor(exercise.exerciseId, exercise.restSeconds)}
+            restSeconds={restSecondsFor(
+              exercise.exerciseId,
+              exercise.restSeconds,
+              heaviestRepTarget(exercise.sets),
+            )}
             onClose={() => setMenuOpen(true)}
           />
           {/* Pinned: the strip stays put while the sets scroll. */}

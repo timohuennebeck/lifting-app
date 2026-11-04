@@ -7,7 +7,7 @@ import { View } from 'react-native';
 import { MuscleStack } from '@/shared/components/muscle-stack';
 import { isTimed, useExerciseName } from '@/shared/data/exercises';
 import { muscleShares } from '@/shared/data/muscles';
-import { estimateMinutes } from '@/shared/data/routines';
+import { estimateMinutes, repTarget } from '@/shared/data/routines';
 import { formatTargetLabel } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -64,6 +64,7 @@ export function WorkoutCard({ answerId, workout }: WorkoutCardProps) {
   const { t } = useTranslation(['coach', 'training', 'muscles']);
   const shares = muscleShares(workout.exercises);
   const top = shares.at(0);
+  const minutes = estimateMinutes(workout.exercises.map((e) => ({ ...e, reps: repTarget(e) })));
   const routineId = workout.routineId ?? answerId;
   // State isn't updated yet on a double tap, which would open it twice.
   const opening = useRef(false);
@@ -101,7 +102,7 @@ export function WorkoutCard({ answerId, workout }: WorkoutCardProps) {
             </Text>
           ) : null}
           <Text variant="caption" tone="subtle" numberOfLines={1} className="font-inter-medium">
-            {`${t('training:list.minutes', { count: estimateMinutes(workout.exercises) })} · ${t('training:overview.exercises', { count: workout.exercises.length })}`}
+            {`${t('training:list.minutes', { count: minutes })} · ${t('training:overview.exercises', { count: workout.exercises.length })}`}
           </Text>
         </View>
       </View>
