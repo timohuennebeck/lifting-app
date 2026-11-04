@@ -33,6 +33,27 @@ const problems = (...checks: [boolean, string][]) => checks.filter(([ok]) => !ok
 const sameSet = (value: unknown, ids: string[]) =>
   Array.isArray(value) && value.length === ids.length && ids.every((id) => value.includes(id));
 
+/** A workout of `min` to `max` exercises, none twice, only of the `allowed` ones if given. */
+const workoutOf = (min: number, max: number, allowed?: string[]) => (args: Args) => {
+  const ids = ((args.exercises ?? []) as Args[]).map((e) => String(e.exercise_id));
+  return problems(
+    [ids.length >= min && ids.length <= max, `${ids.length} exercises`],
+    [new Set(ids).size === ids.length, 'an exercise twice'],
+    [typeof args.name === 'string' && args.name.length <= 24, `name ${args.name}`],
+    [!allowed || ids.every((id) => allowed.includes(id)), `exercises ${ids.join(', ')}`],
+  );
+};
+const DUMBBELLS = [
+  'lateral-raise',
+  'goblet-squat',
+  'dumbbell-bench-press',
+  'bent-over-dumbbell-row',
+  'plank',
+  'pull-up',
+  'push-up',
+];
+const BUILD_PUSH = 'Bau mir ein Push-Training für heute, etwa 45 Minuten';
+
 const WEIGHT_6_MONTHS = 'Wie hat sich mein Gewicht in den letzten 6 Monaten entwickelt?';
 const BIG_THREE = 'Wie haben sich meine drei Grundübungen entwickelt?';
 const WEEK_VS_USUAL = 'War diese Woche mehr als sonst?';
@@ -376,6 +397,78 @@ export const CASES: Case[] = [
     turns: ['Wie oft trainiere ich pro Woche?'],
     language: 'de',
     tool: ['calendar', 'period_vs_average'],
+  },
+
+  // ---------- building a workout ----------
+  {
+    id: 'build-push',
+    user: 'lena',
+    turns: [BUILD_PUSH],
+    language: 'de',
+    tool: ['create_workout'],
+    args: workoutOf(3, 8),
+  },
+  {
+    id: 'build-no-length',
+    user: 'lena',
+    turns: ['Erstell mir ein Beintraining'],
+    language: 'de',
+    tool: ['create_workout'],
+    args: workoutOf(3, 8),
+  },
+  {
+    id: 'build-home',
+    user: 'sam',
+    turns: ['Build me a quick full body workout'],
+    language: 'en',
+    tool: ['create_workout'],
+    args: workoutOf(2, 8, DUMBBELLS),
+  },
+  {
+    id: 'build-dumbbells-today',
+    user: 'lena',
+    turns: ['Ich bin heute im Hotel und hab nur Kurzhanteln. Bau mir ein Ganzkörpertraining.'],
+    language: 'de',
+    tool: ['create_workout'],
+    args: workoutOf(2, 8, DUMBBELLS),
+  },
+  {
+    id: 'build-shorter',
+    user: 'lena',
+    turns: [BUILD_PUSH, 'Mach es kürzer, ich hab nur 30 Minuten'],
+    language: 'de',
+    tool: ['create_workout'],
+    args: workoutOf(2, 6),
+  },
+  {
+    id: 'build-swap',
+    user: 'lena',
+    turns: [BUILD_PUSH, 'Tausch das Bankdrücken gegen was mit Kurzhanteln'],
+    language: 'de',
+    tool: ['create_workout'],
+    args: (a) => {
+      const ids = ((a.exercises ?? []) as Args[]).map((e) => e.exercise_id);
+      return problems(
+        [!ids.includes('bench-press'), 'still bench press'],
+        [ids.includes('dumbbell-bench-press'), `exercises ${ids.join(', ')}`],
+      );
+    },
+  },
+  {
+    id: 'build-several',
+    user: 'lena',
+    turns: ['Bau mir drei Trainings für diese Woche'],
+    language: 'de',
+    tool: ['create_workout'],
+  },
+  {
+    id: 'build-not-asked',
+    user: 'lena',
+    turns: ['Welche Übungen sind gut für die seitliche Schulter?'],
+    language: 'de',
+    tool: [null, 'find_exercises'],
+    // General advice may name a rep range.
+    derives: true,
   },
 
   // ---------- unclear questions: the only time the coach asks back ----------

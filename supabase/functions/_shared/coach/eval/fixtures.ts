@@ -4,6 +4,7 @@
 // Sam: English, lb, home workouts once or twice a week since mid-August, no body weight.
 import {
   addDays,
+  type CoachCatalogExercise,
   type CoachData,
   type CoachExercise,
   type CoachUser,
@@ -225,6 +226,40 @@ function generate({ start, today, trains, routines, hour }: Plan, rand: () => nu
   return workouts;
 }
 
+/** What each catalog row takes, for the exercises a workout can be built from. */
+const EQUIPMENT: Record<string, string> = {
+  'bench-press': 'barbell',
+  squat: 'barbell',
+  deadlift: 'barbell',
+  'overhead-press': 'barbell',
+  'barbell-row': 'barbell',
+  'lat-pulldown': 'cable',
+  'barbell-curl': 'barbell',
+  'triceps-pushdown': 'cable',
+  'lying-leg-curl': 'machine',
+  'leg-press': 'machine',
+  'calf-raise': 'machine',
+  'face-pull': 'cable',
+  'lateral-raise': 'dumbbell',
+  plank: 'bodyweight',
+  'pull-up': 'bodyweight',
+  'push-up': 'bodyweight',
+  'goblet-squat': 'dumbbell',
+  'dumbbell-bench-press': 'dumbbell',
+  'bent-over-dumbbell-row': 'dumbbell',
+};
+
+/** The catalog, with what the user's equipment allows (all of it for null). */
+const catalogOf = (language: 'de' | 'en', have: string[] | null): CoachCatalogExercise[] =>
+  Object.entries(CATALOG).map(([id, row]) => ({
+    id,
+    name: row[language],
+    equipment: EQUIPMENT[id],
+    measures: row.measures,
+    muscles: row.shares,
+    usable: !have || have.includes(EQUIPMENT[id]),
+  }));
+
 function exercisesOf(workouts: CoachWorkout[], language: 'de' | 'en') {
   const ids = new Set(workouts.flatMap((w) => w.exercises.map((e) => e.exerciseId)));
   return new Map(
@@ -328,6 +363,7 @@ function lena(): Fixture {
     },
     data: {
       exercises: exercisesOf(workouts, 'de'),
+      catalog: catalogOf('de', null),
       workouts,
       weights,
       checks: [
@@ -371,7 +407,13 @@ function sam(): Fixture {
       equipment: 'home',
       plan: { name: 'Home Full Body', sessionsPerWeek: 3 },
     },
-    data: { exercises: exercisesOf(workouts, 'en'), workouts, weights: [], checks: [] },
+    data: {
+      exercises: exercisesOf(workouts, 'en'),
+      catalog: catalogOf('en', ['dumbbell', 'bodyweight']),
+      workouts,
+      weights: [],
+      checks: [],
+    },
   };
 }
 
