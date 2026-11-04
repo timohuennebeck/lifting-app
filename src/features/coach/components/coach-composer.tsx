@@ -57,8 +57,8 @@ export interface CoachFieldProps extends Omit<CoachComposerProps, 'consentNote'>
 
 /**
  * The field's look for each state (design "Spracheingabe"): empty with the microphone where send
- * goes, typed with both, recording and being written down. The text grows line by line beside the
- * buttons, up to five lines.
+ * goes, typed with both, recording and being written down. The text has the whole width above the
+ * buttons' own row and grows line by line, up to five lines.
  */
 export function CoachField({
   value,
@@ -80,14 +80,13 @@ export function CoachField({
     onFocusChange?.(next);
   };
   const hintShown = !!hint && !typed && !focused && !answering;
-  // iOS hides the placeholder once the field holds anything, even only empty lines.
-  const placeholderLost = !!value && !typed && !hintShown && !answering;
+  const placeholderShown = (answering || !typed) && !hintShown;
 
   if (voice.phase === 'recording') return <RecordingRow voice={voice} />;
   if (voice.phase === 'transcribing') return <TranscribingRow />;
 
   return (
-    <View className="flex-row items-end gap-1 rounded-[26px] bg-chip py-1.5 pr-1.5 pl-[18px]">
+    <View className="gap-1 rounded-[26px] bg-chip p-1.5 pl-[18px]">
       {/* As the support chat's box: the 2pt neon ring while typing. */}
       {focused && !answering ? (
         <View
@@ -95,89 +94,86 @@ export function CoachField({
           className="absolute inset-0 rounded-[26px] border-2 border-accent"
         />
       ) : null}
-      {hintShown ? (
-        // Beside the 40pt button and 6pt inset, with some air before it.
-        <View
-          pointerEvents="none"
-          importantForAccessibility="no-hide-descendants"
-          className="absolute top-1.5 right-14 bottom-1.5 left-[18px] overflow-hidden"
-        >
-          <Animated.Text
-            key={hint}
-            entering={HINT_IN}
-            exiting={HINT_OUT}
-            numberOfLines={1}
-            className="absolute inset-x-0 top-2.5 font-inter text-sm leading-5 text-dim"
-          >
-            {hint}
-          </Animated.Text>
-        </View>
-      ) : null}
-      {placeholderLost ? (
-        <Text
-          pointerEvents="none"
-          importantForAccessibility="no-hide-descendants"
-          numberOfLines={1}
-          className="absolute top-[15px] right-14 left-[18px] font-inter text-base leading-[22px] text-dim"
-        >
-          {t('composer.placeholder')}
-        </Text>
-      ) : null}
-      {answering && onOpenAnswer ? (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={t('composer.answering')}
-          onPress={onOpenAnswer}
-          className="absolute top-0 right-14 bottom-0 left-0 z-10"
-        />
-      ) : null}
-      <TextInput
-        ref={inputRef}
-        accessibilityLabel={t('composer.placeholder')}
-        value={answering ? '' : value}
-        onChangeText={onChangeText}
-        editable={!answering}
-        multiline
-        maxLength={COACH_QUESTION_MAX}
-        placeholder={answering ? t('composer.answering') : t('composer.placeholder')}
-        // Clear under an example question: iOS doesn't bring back a placeholder taken away.
-        placeholderTextColor={hintShown ? 'transparent' : colors.dim}
-        selectionColor={colors.fg}
-        cursorColor={colors.fg}
-        keyboardAppearance="dark"
-        onFocus={() => setFieldFocused(true)}
-        onBlur={() => setFieldFocused(false)}
-        textAlignVertical="center"
-        className="max-h-32 min-h-10 min-w-0 flex-1 py-[9px] font-inter text-base leading-[22px] text-fg"
-      />
       <View>
-        <CharCount length={value.length} max={COACH_QUESTION_MAX} className="pb-1" />
-        <View className="flex-row items-center justify-end gap-1">
-          {answering ? (
-            <PressableScale
-              haptic="press"
-              accessibilityLabel={t('composer.stop')}
-              onPress={onStop}
-              className="size-10 items-center justify-center rounded-full bg-fg"
+        <TextInput
+          ref={inputRef}
+          accessibilityLabel={t('composer.placeholder')}
+          value={answering ? '' : value}
+          onChangeText={onChangeText}
+          editable={!answering}
+          multiline
+          maxLength={COACH_QUESTION_MAX}
+          selectionColor={colors.fg}
+          cursorColor={colors.fg}
+          keyboardAppearance="dark"
+          onFocus={() => setFieldFocused(true)}
+          onBlur={() => setFieldFocused(false)}
+          textAlignVertical="top"
+          className="max-h-32 min-h-10 py-[9px] pr-3 font-inter text-base leading-[22px] text-fg"
+        />
+        {hintShown ? (
+          <View
+            pointerEvents="none"
+            importantForAccessibility="no-hide-descendants"
+            className="absolute inset-y-0 right-3 left-0 overflow-hidden"
+          >
+            <Animated.Text
+              key={hint}
+              entering={HINT_IN}
+              exiting={HINT_OUT}
+              numberOfLines={1}
+              className="absolute inset-x-0 top-2.5 font-inter text-sm leading-5 text-dim"
             >
-              <View className="size-3 rounded-[3px] bg-bg" />
-            </PressableScale>
-          ) : (
-            <>
-              <MicButton voice={voice} alone={!typed} />
-              {typed ? (
-                <PressableScale
-                  haptic="press"
-                  accessibilityLabel={t('composer.send')}
-                  onPress={onSend}
-                  className="size-10 items-center justify-center rounded-full bg-accent"
-                >
-                  <Icon name="arrow-up" size={16} color={colors.onAccent} />
-                </PressableScale>
-              ) : null}
-            </>
-          )}
-        </View>
+              {hint}
+            </Animated.Text>
+          </View>
+        ) : null}
+        {placeholderShown ? (
+          // Our own on the first line: iOS drops its placeholder once the field holds empty lines.
+          <Text
+            pointerEvents="none"
+            importantForAccessibility="no-hide-descendants"
+            numberOfLines={1}
+            className="absolute top-2.5 right-3 left-0 font-inter text-base leading-[22px] text-dim"
+          >
+            {t(answering ? 'composer.answering' : 'composer.placeholder')}
+          </Text>
+        ) : null}
+        {answering && onOpenAnswer ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('composer.answering')}
+            onPress={onOpenAnswer}
+            className="absolute inset-0 z-10"
+          />
+        ) : null}
+      </View>
+      <View className="flex-row items-center justify-end gap-1">
+        <CharCount length={value.length} max={COACH_QUESTION_MAX} className="mr-1" />
+        {answering ? (
+          <PressableScale
+            haptic="press"
+            accessibilityLabel={t('composer.stop')}
+            onPress={onStop}
+            className="size-10 items-center justify-center rounded-full bg-fg"
+          >
+            <View className="size-3 rounded-[3px] bg-bg" />
+          </PressableScale>
+        ) : (
+          <>
+            <MicButton voice={voice} alone={!typed} />
+            {typed ? (
+              <PressableScale
+                haptic="press"
+                accessibilityLabel={t('composer.send')}
+                onPress={onSend}
+                className="size-10 items-center justify-center rounded-full bg-accent"
+              >
+                <Icon name="arrow-up" size={16} color={colors.onAccent} />
+              </PressableScale>
+            ) : null}
+          </>
+        )}
       </View>
     </View>
   );
