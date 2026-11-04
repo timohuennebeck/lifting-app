@@ -21,6 +21,20 @@ export interface CoachExercise {
   cardio: boolean;
 }
 
+/** A catalog exercise a workout can be built from. */
+export interface CoachCatalogExercise {
+  id: string;
+  /** In the user's language. */
+  name: string;
+  /** The kind of equipment it takes: barbell, dumbbell, machine, cable, bodyweight… */
+  equipment: string;
+  measures: Measure[];
+  /** Share of the training stimulus per muscle. */
+  muscles: Record<string, number>;
+  /** The equipment in the user's profile allows it. */
+  usable: boolean;
+}
+
 export interface CoachSet {
   weightKg: number | null;
   reps: number | null;
@@ -38,6 +52,8 @@ export interface CoachWorkout {
 export interface CoachData {
   /** Every exercise the workouts use. */
   exercises: Map<string, CoachExercise>;
+  /** The app's catalog without cardio, for building a workout. */
+  catalog: CoachCatalogExercise[];
   /** Finished workouts, oldest first, with their completed sets. */
   workouts: CoachWorkout[];
   /** Oldest first. */

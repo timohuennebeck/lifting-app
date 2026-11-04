@@ -7,6 +7,7 @@ import { ageFrom, hasPro } from '../_shared/account.ts';
 import { askCoach, type CoachEvent, type CoachUsage } from '../_shared/coach/chat.ts';
 import { type CoachUser, dayIn } from '../_shared/coach/data.ts';
 import {
+  coachCatalog,
   coachData,
   coachProfile,
   coachTurns,
@@ -18,6 +19,7 @@ import { contextText } from '../_shared/coach/prompt.ts';
 import { admin, envLimit, isUuid, refuseAiRequest, reply, requestUser } from '../_shared/common.ts';
 import { eventStream } from '../_shared/event-stream.ts';
 import { isAppLanguage } from '../_shared/plan-events.ts';
+import { loadCatalog, loadEquipment } from '../_shared/plans.ts';
 
 /** The app's COACH_QUESTION_MAX (src/shared/lib/limits.ts), as the database checks it. */
 const QUESTION_MAX = 500;
@@ -111,7 +113,7 @@ async function answer(job: Job, send: (event: Event) => void, signal: AbortSigna
   send({ type: 'start', chatId, questionId, answerId });
 
   const planId = job.profile.active_plan_id;
-  const [history, plan, recent] = await Promise.all([
+  const [history, plan, recent, catalog, equipment] = await Promise.all([
     admin.rpc('coach_history', { p_user_id: job.userId }),
     planId
       ? admin.from('plans').select('name, sessions_per_week').eq('id', planId).maybeSingle()
@@ -124,6 +126,8 @@ async function answer(job: Job, send: (event: Event) => void, signal: AbortSigna
           .order('created_at', { ascending: false })
           .limit(HISTORY_TURNS * 2)
       : Promise.resolve({ data: [] as MessageRow[], error: null }),
+    loadCatalog(),
+    loadEquipment(),
   ]);
   if (history.error || recent.error) {
     console.error('Reading the coach data failed', history.error ?? recent.error);
@@ -136,7 +140,12 @@ async function answer(job: Job, send: (event: Event) => void, signal: AbortSigna
     ? await admin.from('coach_runs').select('answer_id, calls').in('answer_id', answerIds)
     : { data: [] };
 
-  const data = coachData(history.data as HistoryRow, job.language, job.timeZone);
+  const data = coachData(
+    history.data as HistoryRow,
+    job.language,
+    job.timeZone,
+    coachCatalog(catalog, equipment, job.profile, job.language),
+  );
   const user: CoachUser = {
     today: dayIn(askedAt.toISOString(), job.timeZone),
     timeZone: job.timeZone,
@@ -222,8 +231,8 @@ Deno.serve(async (req) => {
     admin
       .from('profiles')
       .select(
-        'birth_date, unit_preference, goal, experience, focus, equipment, active_plan_id, ' +
-          'language, coach_consent_at',
+        'birth_date, unit_preference, goal, experience, focus, equipment, home_equipment, ' +
+          'active_plan_id, language, coach_consent_at',
       )
       .eq('id', userId)
       .maybeSingle<ProfileRow>(),

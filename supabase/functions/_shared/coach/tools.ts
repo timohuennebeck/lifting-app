@@ -1,6 +1,8 @@
 // The coach's tools: what the model can ask for and the code that answers. Each tool returns the
 // numbers for the model (`result`, which it quotes rather than computes) and, for the five chart
-// tools, the chart the app draws under the answer (`chart`; null without enough data).
+// tools, the chart the app draws under the answer (`chart`; null without enough data). In the
+// same place, create_workout gives the workout the app shows as a card.
+import { cut, MUSCLES } from '../plan-events.ts';
 import {
   addDays,
   type CoachData,
@@ -19,6 +21,7 @@ import {
   previousMonth,
   round,
   sessionValue,
+  splitShares,
   WEEKDAYS,
   weekdayOf,
   weekStart,
@@ -86,7 +89,22 @@ export interface DistributionChart {
   rows: { key: string; value: number }[];
 }
 
-export type Chart = TrendChart | CompareChart | PeriodChart | CalendarChart | DistributionChart;
+export interface WorkoutChart {
+  type: 'workout';
+  name: string;
+  exercises: {
+    exerciseId: string;
+    sets: number;
+    /** Reps of every set, or seconds for an exercise that logs seconds. */
+    targetMin: number;
+    targetMax: number;
+    rir: number | null;
+    restSeconds: number;
+  }[];
+}
+
+export type Chart =
+  TrendChart | CompareChart | PeriodChart | CalendarChart | DistributionChart | WorkoutChart;
 
 export interface ToolResult {
   chart: Chart | null;
@@ -104,6 +122,8 @@ const METRIC_HELP =
   'e1rm: estimated one-rep max of the best set, the usual measure of strength. top_weight: ' +
   'heaviest weight lifted. reps: most reps in a set (bodyweight exercises). seconds: longest ' +
   'hold. volume: weight × reps of all sets.';
+
+const EQUIPMENT_KINDS = ['barbell', 'dumbbell', 'machine', 'cable', 'bodyweight', 'kettlebell'];
 
 const FROM = {
   type: ['string', 'null'],
@@ -210,6 +230,56 @@ export const TOOLS = [
       },
     },
   ),
+  tool(
+    'find_exercises',
+    "No chart: the app's catalog exercises whose main muscles are these, the ones the user " +
+      'has done most first. For building a workout.',
+    {
+      muscles: {
+        type: 'array',
+        items: { type: 'string', enum: [...MUSCLES] },
+        description: 'Every muscle the workout should train.',
+      },
+      equipment: {
+        type: ['array', 'null'],
+        items: { type: 'string', enum: EQUIPMENT_KINDS },
+        description:
+          'Only these kinds, when the user says what they have today. null: what the ' +
+          "equipment in the user's profile allows.",
+      },
+    },
+  ),
+  tool(
+    'create_workout',
+    'Shows a workout as a card under your answer: its exercises, and a button that opens it ' +
+      'to edit and start. It is saved once the user opens it. Returns how long it takes.',
+    {
+      name: { type: 'string', description: 'Short, at most 24 characters.' },
+      exercises: {
+        type: 'array',
+        description: 'In the order they are done.',
+        items: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['exercise_id', 'sets', 'target_min', 'target_max', 'rir', 'rest_seconds'],
+          properties: {
+            exercise_id: {
+              type: 'string',
+              description: "From find_exercises or the user's exercises.",
+            },
+            sets: { type: 'integer' },
+            target_min: {
+              type: 'integer',
+              description: 'Reps of every set; seconds for an exercise that logs seconds.',
+            },
+            target_max: { type: 'integer', description: 'Equal to target_min for a fixed number.' },
+            rir: { type: ['integer', 'null'], description: 'Reps in reserve.' },
+            rest_seconds: { type: 'integer' },
+          },
+        },
+      },
+    },
+  ),
 ];
 
 export const CHART_TOOLS = new Set([
@@ -218,6 +288,7 @@ export const CHART_TOOLS = new Set([
   'period_vs_average',
   'calendar',
   'distribution',
+  'create_workout',
 ]);
 
 /** Runs a tool the model called; a mistake in the call comes back as `error` for it to fix. */
@@ -237,6 +308,8 @@ const RUNNERS: Record<string, (args: Args, data: CoachData, user: CoachUser) => 
   calendar,
   distribution,
   workouts,
+  find_exercises: findExercises,
+  create_workout: createWorkout,
 };
 
 // ---------- shared ----------
@@ -850,6 +923,114 @@ function workouts(args: Args, data: CoachData, user: CoachUser): ToolResult {
             };
           }),
       })),
+    },
+  };
+}
+
+// ---------- building a workout ----------
+
+/** Enough to choose from without a long list in every request. */
+const MAX_FOUND = 60;
+
+function findExercises(args: Args, data: CoachData): ToolResult {
+  const muscles = Array.isArray(args.muscles) ? (args.muscles as string[]) : [];
+  if (!muscles.length) return failed('Name at least one muscle.');
+  const kinds = Array.isArray(args.equipment) ? (args.equipment as string[]) : null;
+  const sessions = new Map<string, number>();
+  for (const workout of data.workouts) {
+    for (const { exerciseId } of workout.exercises) {
+      sessions.set(exerciseId, (sessions.get(exerciseId) ?? 0) + 1);
+    }
+  }
+  const exercises = data.catalog
+    .filter((e) => (kinds ? kinds.includes(e.equipment) : e.usable))
+    .map((e) => ({
+      id: e.id,
+      name: e.name,
+      equipment: e.equipment,
+      main_muscles: splitShares(e.muscles).primary,
+      logs: e.measures.includes('seconds') ? 'seconds' : 'reps',
+      sessions: sessions.get(e.id) ?? 0,
+    }))
+    .filter((e) => e.main_muscles.some((m) => muscles.includes(m)))
+    .sort((a, b) => b.sessions - a.sessions)
+    .slice(0, MAX_FOUND);
+  return {
+    chart: null,
+    result: { exercises, ...(exercises.length ? {} : { note: 'No exercise fits.' }) },
+  };
+}
+
+/** The app's ROUTINE_NAME_MAX (src/shared/lib/limits.ts), as the database checks it. */
+const NAME_MAX = 40;
+const MAX_EXERCISES_IN_WORKOUT = 10;
+const MAX_SETS = 6;
+const MAX_REPS = 30;
+/** The database's limit on a target, which in seconds is a long hold. */
+const MAX_SECONDS = 600;
+const MAX_RIR = 5;
+const MIN_REST = 30;
+const MAX_REST = 300;
+// The app's estimate (estimateMinutes in src/shared/data/routines.ts): set-up per exercise, and
+// per set its work and its rest.
+const EXERCISE_SECONDS = 150;
+const SET_SECONDS = 45;
+
+const clamp = (value: unknown, min: number, max: number) => {
+  const number = Math.round(Number(value));
+  return Math.min(max, Math.max(min, Number.isFinite(number) ? number : min));
+};
+
+/**
+ * The workout for the card, its values kept to what the app and the database take. Exercises it
+ * doesn't know (or cardio) and repeats are left out, and named back in `skipped`, so one wrong id
+ * doesn't cost the whole workout.
+ */
+function createWorkout(args: Args, data: CoachData): ToolResult {
+  const name = typeof args.name === 'string' ? cut(args.name, NAME_MAX) : '';
+  if (!name) return failed('The workout needs a name.');
+  const catalog = new Map(data.catalog.map((e) => [e.id, e]));
+  const exercises: WorkoutChart['exercises'] = [];
+  const skipped: string[] = [];
+  for (const line of Array.isArray(args.exercises) ? (args.exercises as Args[]) : []) {
+    const id = String(line.exercise_id);
+    const own = data.exercises.get(id);
+    const known = own?.cardio ? undefined : (catalog.get(id) ?? own);
+    if (
+      !known ||
+      exercises.length >= MAX_EXERCISES_IN_WORKOUT ||
+      exercises.some((e) => e.exerciseId === id)
+    ) {
+      skipped.push(id);
+      continue;
+    }
+    const most = known.measures.includes('seconds') ? MAX_SECONDS : MAX_REPS;
+    const low = clamp(line.target_min, 1, most);
+    const high = clamp(line.target_max, 1, most);
+    exercises.push({
+      exerciseId: id,
+      sets: clamp(line.sets, 1, MAX_SETS),
+      targetMin: Math.min(low, high),
+      targetMax: Math.max(low, high),
+      rir: line.rir == null ? null : clamp(line.rir, 0, MAX_RIR),
+      restSeconds: clamp(line.rest_seconds, MIN_REST, MAX_REST),
+    });
+  }
+  if (!exercises.length) {
+    return failed("Unknown exercise ids: use ids from find_exercises or the user's exercises.");
+  }
+  const seconds = exercises.reduce(
+    (sum, e) => sum + EXERCISE_SECONDS + e.sets * (SET_SECONDS + e.restSeconds),
+    0,
+  );
+  return {
+    chart: { type: 'workout', name, exercises },
+    result: {
+      created: name,
+      exercises: exercises.length,
+      sets: exercises.reduce((sum, e) => sum + e.sets, 0),
+      minutes: Math.round(seconds / 60),
+      ...(skipped.length ? { skipped } : {}),
     },
   };
 }

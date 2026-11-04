@@ -2,7 +2,16 @@
 // user's training (coach_history), the profile with its active plan, and the chat's earlier
 // questions with the tool calls their answers came from. Plain TypeScript without Deno APIs.
 import type { CoachCall, CoachTurn } from './chat.ts';
-import { type CoachData, type CoachExercise, dayIn, type Measure, splitShares } from './data.ts';
+import { fits } from '../plan-events.ts';
+import type { CatalogRow, EquipmentRow } from '../plans.ts';
+import {
+  type CoachCatalogExercise,
+  type CoachData,
+  type CoachExercise,
+  dayIn,
+  type Measure,
+  splitShares,
+} from './data.ts';
 import type { CoachProfile } from './prompt.ts';
 
 /** A set from coach_history: [weight_kg, reps, seconds, rir]. */
@@ -39,7 +48,12 @@ export interface HistoryRow {
 const numberOrNull = (value: unknown) => (value == null ? null : Number(value));
 
 /** The user's training, with exercise names in `language` (English when a catalog name lacks it). */
-export function coachData(row: HistoryRow, language: string, timeZone: string): CoachData {
+export function coachData(
+  row: HistoryRow,
+  language: string,
+  timeZone: string,
+  catalog: CoachCatalogExercise[] = [],
+): CoachData {
   const exercises = new Map<string, CoachExercise>();
   for (const x of row.exercises) {
     exercises.set(x.id, {
@@ -66,6 +80,7 @@ export function coachData(row: HistoryRow, language: string, timeZone: string): 
   }
   return {
     exercises,
+    catalog,
     workouts: row.workouts.map((w) => ({
       name: w.name,
       startedAt: w.started_at,
@@ -92,9 +107,36 @@ export interface ProfileRow {
   experience: string | null;
   focus: string[] | null;
   equipment: string | null;
+  home_equipment: string[] | null;
   active_plan_id: string | null;
   language: string | null;
   coach_consent_at: string | null;
+}
+
+/** The catalog without cardio, each exercise with whether the user's equipment allows it. */
+export function coachCatalog(
+  rows: CatalogRow[],
+  equipment: EquipmentRow[],
+  profile: Pick<ProfileRow, 'equipment' | 'home_equipment'>,
+  language: string,
+): CoachCatalogExercise[] {
+  const have = new Set(
+    profile.equipment === 'home'
+      ? (profile.home_equipment ?? [])
+      : profile.equipment === 'bodyweight'
+        ? []
+        : equipment.filter((e) => e.in_gym).map((e) => e.id),
+  );
+  return rows
+    .filter((e) => !e.cardio)
+    .map((e) => ({
+      id: e.id,
+      name: e.name[language] ?? e.name.en ?? e.id,
+      equipment: e.equipment,
+      measures: e.measures as Measure[],
+      muscles: e.muscles,
+      usable: fits(e.needs, have),
+    }));
 }
 
 export const coachProfile = (
@@ -116,7 +158,8 @@ export interface MessageRow {
 
 /**
  * The chat's questions with their answers, oldest first, from its messages (oldest first) and the
- * runs that wrote them: each answer's tool calls come from the run that saved it.
+ * runs that wrote them: each answer's tool calls come from the run that saved it, without the
+ * long lists of find_exercises.
  */
 export function coachTurns(
   messages: MessageRow[],
@@ -128,7 +171,8 @@ export function coachTurns(
   for (const message of messages) {
     if (message.role === 'user') question = message.content;
     else if (question != null) {
-      turns.push({ question, calls: callsOf.get(message.id) ?? [], answer: message.content });
+      const calls = (callsOf.get(message.id) ?? []).filter((c) => c.name !== 'find_exercises');
+      turns.push({ question, calls, answer: message.content });
       question = null;
     }
   }
