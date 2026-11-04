@@ -32,7 +32,7 @@ export const profiles = sqliteTable('profiles', {
   avatar_path: text(),
   // "About you" on the profile, up to 150 characters.
   bio: text(),
-  // When the user agreed to their data going to OpenAI for the coach (their first question).
+  // When the user agreed to their data going to OpenAI for the coach (at sign-up).
   coach_consent_at: text(),
   onboarded_at: text(),
   created_at: text().notNull(),

@@ -1,7 +1,6 @@
 {
   "title": "Kai · AI coach",
   "newChat": "New chat",
-  "consent": "For its answers, your training and body data (workouts, weight, body check scores) go to an AI model by OpenAI in the USA. Sending your first question is your consent.",
   "card": {
     "title": "Ask me anything about your training.",
     "subtitle": "Kai answers with facts and charts."
@@ -118,9 +117,5 @@
       "title": "Loqqa Pro not active",
       "message": "Kai is part of Loqqa Pro. Your account has no active subscription right now."
     }
-  },
-  "settings": {
-    "label": "Share data with OpenAI",
-    "description": "Send your training and body data (workouts, weight, body check scores) to OpenAI so Kai can answer. Off withdraws your consent."
   }
 }

@@ -3,7 +3,6 @@ import { useEffect, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useExerciseName } from '@/shared/data/exercises';
-import { useProfile } from '@/shared/data/profile';
 import { QueryFocus } from '@/shared/data/query-focus';
 import { useAppLanguage } from '@/shared/hooks/use-app-language';
 
@@ -22,7 +21,6 @@ import { ask, isAnswering, stopAnswer, useCoachStore } from '../stores/coach-sto
 export function CoachScreen() {
   const { t } = useTranslation('coach');
   const language = useAppLanguage();
-  const { profile } = useProfile();
   const params = useLocalSearchParams<{ chat?: string; asker?: string }>();
   const ownId = useId();
   const screenId = params.asker ?? ownId;
@@ -32,9 +30,6 @@ export function CoachScreen() {
   const { data: saved } = useCoachMessages(chatId);
   const messages = saved ?? [];
   const [draft, setDraft] = useState('');
-  // The server found no consent (withdrawn on another device): the line shows again.
-  const [consentAsked, setConsentAsked] = useState(false);
-  const needsConsent = !profile?.coachConsentAt || consentAsked;
 
   // The answer in flight belongs to this chat until its saved copy has synced in.
   const synced = messages.some((m) => m.id === pending?.answerId);
@@ -62,18 +57,13 @@ export function CoachScreen() {
     // One answer at a time, also across chats.
     if (!question || answering) return;
     setDraft('');
-    const result = await ask(
-      { question, chatId, consent: needsConsent, language, timeZone: timeZone() },
-      screenId,
-    );
-    if (result === 'answered') setConsentAsked(false);
+    const result = await ask({ question, chatId, language, timeZone: timeZone() }, screenId);
     // Without an answer the question goes back into the field.
     if (result === 'stopped') setDraft(question);
     if (result instanceof CoachError) {
       setDraft(question);
-      if (result.reason === 'consent') setConsentAsked(true);
       // Deleted on another device: the question can go into a new chat, on the card.
-      else if (result.reason === 'chatGone') {
+      if (result.reason === 'chatGone') {
         useCoachStore.setState({ draft: question });
         setChatId(null);
       } else showCoachError(result.reason, result.limit, t, () => void send(question));
@@ -86,7 +76,6 @@ export function CoachScreen() {
     onSend: () => void send(draft),
     answering,
     onStop: stopAnswer,
-    consentNote: needsConsent,
   };
 
   let subtitle: string | null = null;

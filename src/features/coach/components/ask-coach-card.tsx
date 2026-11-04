@@ -6,7 +6,6 @@ import Animated, { type CSSAnimationKeyframes, useReducedMotion } from 'react-na
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
 
 import { VoiceInputNotes } from '@/shared/components/voice-input';
-import { useProfile } from '@/shared/data/profile';
 import { useAppLanguage } from '@/shared/hooks/use-app-language';
 import { useVoiceInput, withSpoken } from '@/shared/hooks/use-voice-input';
 import { COACH_QUESTION_MAX } from '@/shared/lib/limits';
@@ -78,7 +77,6 @@ export interface AskCoachCardProps {
 export function AskCoachCard({ className }: AskCoachCardProps) {
   const { t } = useTranslation('coach');
   const language = useAppLanguage();
-  const { profile } = useProfile();
   const asker = useId();
   // Behind another tab or the coach itself, the card rests.
   const focused = useIsFocused();
@@ -91,9 +89,6 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
   );
   const inputRef = useRef<TextInput>(null);
   const [typing, setTyping] = useState(false);
-  // The server found no consent (withdrawn on another device): the line shows again.
-  const [consentAsked, setConsentAsked] = useState(false);
-  const needsConsent = !profile?.coachConsentAt || consentAsked;
 
   const [turns, setTurns] = useState(0);
   const resting = !focused || typing;
@@ -117,19 +112,14 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
     if (!question || answering) return;
     setDraft('');
     Keyboard.dismiss();
-    const asked = ask(
-      { question, chatId: null, consent: needsConsent, language, timeZone: timeZone() },
-      asker,
-    );
+    const asked = ask({ question, chatId: null, language, timeZone: timeZone() }, asker);
     router.push({ pathname: '/coach', params: { asker } });
     const result = await asked;
-    if (result === 'answered') setConsentAsked(false);
     // Without an answer the chat closes and the question goes back into the field.
     if (result === 'stopped') setDraft(question);
     if (result instanceof CoachError) {
       setDraft(question);
-      if (result.reason === 'consent') setConsentAsked(true);
-      else if (result.reason !== 'chatGone') {
+      if (result.reason !== 'chatGone') {
         showCoachError(result.reason, result.limit, t, () => void send(question));
       }
     }

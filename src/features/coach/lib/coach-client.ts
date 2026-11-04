@@ -18,8 +18,6 @@ export type CoachFailure =
   | 'refused'
   | 'tooYoung'
   | 'notPro'
-  /** The consent was withdrawn (e.g. on another device): the next question asks again. */
-  | 'consent'
   /** The chat was deleted (e.g. on another device). */
   | 'chatGone';
 
@@ -27,7 +25,6 @@ export type CoachFailure =
 const REFUSALS: Record<string, CoachFailure> = {
   too_young: 'tooYoung',
   not_pro: 'notPro',
-  consent_required: 'consent',
   chat_not_found: 'chatGone',
 };
 
@@ -55,8 +52,6 @@ export interface CoachQuestion {
   question: string;
   /** null: a new chat. */
   chatId: string | null;
-  /** Sent while the consent notice shows: this question is the consent. */
-  consent: boolean;
   language: string;
   timeZone: string;
 }
@@ -91,11 +86,16 @@ export async function streamAnswer(
 ) {
   const { data } = await supabase.auth.getSession();
   if (!data.session) throw new CoachError('failed');
-  const response = await postFunction('coach-chat', input, {
-    signal,
-    token: data.session.access_token,
-    offline: () => new CoachError('offline'),
-  });
+  // Asking agrees to the data going to OpenAI, for accounts from before that came with sign-up.
+  const response = await postFunction(
+    'coach-chat',
+    { ...input, consent: true },
+    {
+      signal,
+      token: data.session.access_token,
+      offline: () => new CoachError('offline'),
+    },
+  );
   if (!response.ok || !response.body) {
     throw failureOf(response.status, await refusalOf<ErrorBody>('coach-chat', response));
   }
