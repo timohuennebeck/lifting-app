@@ -7,9 +7,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
 
+import { framePath } from '@/shared/lib/frame-path';
 import { colors } from '@/shared/lib/theme';
-
-import { framePath } from '../lib/frame-path';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const STROKE = 3;

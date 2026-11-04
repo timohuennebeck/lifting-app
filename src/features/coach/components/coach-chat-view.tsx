@@ -8,7 +8,6 @@ import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { ChatHeaderTitle } from '@/shared/ui/chat-header-title';
 import { CoachMark } from '@/shared/ui/coach-mark';
 import { Gradient } from '@/shared/ui/gradient';
-import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 
@@ -36,8 +35,6 @@ export interface CoachChatViewProps {
   /** The answer on its way: the question, that Kai is thinking, then the text as it streams in. */
   pending: PendingAnswer | null;
   onBack: () => void;
-  onHistory: () => void;
-  onNew: () => void;
   composer: CoachComposerProps;
 }
 
@@ -45,15 +42,7 @@ export interface CoachChatViewProps {
  * A chat with Kai (design CO3): questions right, answers with their charts left. Laid out
  * like the support chat: the header with who answers, the list, and the field below it.
  */
-export function CoachChatView({
-  subtitle,
-  items,
-  pending,
-  onBack,
-  onHistory,
-  onNew,
-  composer,
-}: CoachChatViewProps) {
+export function CoachChatView({ subtitle, items, pending, onBack, composer }: CoachChatViewProps) {
   const { t } = useTranslation('coach');
   const footerInset = useFooterInset();
   const scrollRef = useRef<Animated.ScrollView>(null);
@@ -94,22 +83,6 @@ export function CoachChatView({
               title={t('title')}
               subtitle={subtitle}
             />
-          }
-          action={
-            <View className="flex-row gap-2">
-              <IconButton
-                icon="clock"
-                iconSize={18}
-                accessibilityLabel={t('history.title')}
-                onPress={onHistory}
-              />
-              <IconButton
-                icon="plus"
-                iconSize={14}
-                accessibilityLabel={t('newChat')}
-                onPress={onNew}
-              />
-            </View>
           }
         />
       }
