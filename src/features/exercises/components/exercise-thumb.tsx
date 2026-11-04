@@ -50,6 +50,7 @@ export function ExerciseThumb({
         <Image
           source={thumb}
           contentFit="cover"
+          contentPosition="top"
           style={StyleSheet.absoluteFill}
           onError={() => setFailed(thumb)}
         />
