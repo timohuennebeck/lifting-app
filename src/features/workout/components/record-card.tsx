@@ -19,11 +19,7 @@ export function RecordCard({ record, units }: RecordCardProps) {
   const name = useExerciseName(record.exerciseId, i18n.language);
   return (
     <View className="flex-row items-center gap-3.5 py-1.5">
-      <ExerciseThumb
-        exerciseId={record.exerciseId}
-        name={name}
-        className="h-21.5 w-16 rounded-lg"
-      />
+      <ExerciseThumb exerciseId={record.exerciseId} name={name} className="h-21.5 w-16" />
       <View className="flex-1 gap-2">
         <Text tone="accent" className="font-inter-bold text-xs leading-4 tracking-[1.4px]">
           {t('summary.newRecord')}
