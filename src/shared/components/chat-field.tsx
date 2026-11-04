@@ -56,11 +56,11 @@ export function ChatField({
   };
 
   return (
-    <View className={cn('gap-3.5 rounded-[24px] bg-tile px-2.5 pt-4 pb-2.5', className)}>
+    <View className={cn('gap-3.5 rounded-[18px] bg-tile px-2.5 pt-4 pb-2.5', className)}>
       {focused ? (
         <View
           pointerEvents="none"
-          className="absolute inset-0 rounded-[24px] border-2 border-accent"
+          className="absolute inset-0 rounded-[18px] border-2 border-accent"
         />
       ) : null}
       {above}

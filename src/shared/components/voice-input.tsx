@@ -44,7 +44,7 @@ export function MicButton({ voice, alone }: MicButtonProps) {
 export function RecordingRow({ voice }: { voice: VoiceInput }) {
   const { t } = useTranslation('common');
   return (
-    <View className="flex-row items-center gap-3 rounded-[26px] bg-chip p-1.5">
+    <View className="flex-row items-center gap-3 rounded-[18px] bg-chip p-1.5">
       <PressableScale
         haptic="tap"
         accessibilityLabel={t('voiceInput.cancel')}
@@ -76,7 +76,7 @@ export function TranscribingRow() {
     <View
       accessible
       accessibilityLabel={t('voiceInput.transcribing')}
-      className="flex-row items-center gap-2 rounded-[26px] bg-chip py-1.5 pr-1.5 pl-[18px]"
+      className="flex-row items-center gap-2 rounded-[18px] bg-chip py-1.5 pr-1.5 pl-[18px]"
     >
       <View className="min-w-0 flex-1">
         <FlashText
