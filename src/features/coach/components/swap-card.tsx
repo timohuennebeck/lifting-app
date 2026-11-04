@@ -3,6 +3,7 @@ import type { TFunction } from 'i18next';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { MuscleStack } from '@/shared/components/muscle-stack';
@@ -36,15 +37,19 @@ function headShares(chosen: string[]) {
   return shares;
 }
 
-/** One swap: whether its main muscle stays. Several: how many exercises it swaps. */
+/**
+ * One swap: whether its main muscle stays. Several: how many exercises it swaps (or swapped), or
+ * that all stay when none is picked. `inPlan` is what each slot holds after applying.
+ */
 function headline(
   status: SwapStatus,
   swaps: SwapView[],
-  chosen: string[],
+  inPlan: string[],
+  swapping: number,
   t: TFunction<['coach', 'muscles']>,
 ) {
   const from = swaps.length === 1 ? sharesOf(swaps[0].exerciseId)[0]?.muscle : undefined;
-  const to = swaps.length === 1 ? sharesOf(chosen[0])[0]?.muscle : undefined;
+  const to = swaps.length === 1 ? sharesOf(inPlan[0])[0]?.muscle : undefined;
   if (from && to && from === to) {
     return t('coach:swap.keepsMain', { muscle: t(`muscles:names.${to}`) });
   }
@@ -54,22 +59,45 @@ function headline(
       from: t(`muscles:names.${from}`),
     });
   }
+  if (!swapping) return t('coach:swap.keepAll');
   const key = status === 'applied' ? 'coach:swap.swapped' : 'coach:swap.toSwap';
-  return t(key, { count: swaps.length });
+  return t(key, { count: swapping });
+}
+
+/** A radio's ring and dot drawn as one, so the dot sits in the middle at every pixel density. */
+function Radio({ checked }: { checked: boolean }) {
+  return (
+    <Svg width={16} height={16} viewBox="0 0 16 16">
+      <Circle
+        cx={8}
+        cy={8}
+        r={7.25}
+        fill="none"
+        stroke={checked ? colors.accent : colors.outline}
+        strokeWidth={1.5}
+      />
+      {checked ? <Circle cx={8} cy={8} r={3.5} fill={colors.accent} /> : null}
+    </Svg>
+  );
 }
 
 interface SwapLineProps {
   exerciseId: string;
   /** "4 × 6–8"; empty once the plan changed. */
   label: string;
-  /** was: the exercise replaced. to: its replacement. option: one to pick (`checked`). */
-  kind: 'was' | 'to' | 'option';
+  /**
+   * was: the exercise replaced. to: its replacement. option: one to pick (`checked`). kept: one
+   * the user didn't swap.
+   */
+  kind: 'was' | 'to' | 'option' | 'kept';
   checked?: boolean;
   recommended?: boolean;
+  /** The option to keep the exercise: "Kniebeugen behalten". */
+  keep?: boolean;
 }
 
 /** An exercise as the workout card lists it, with its photo: name left, sets right. */
-function SwapLine({ exerciseId, label, kind, checked, recommended }: SwapLineProps) {
+function SwapLine({ exerciseId, label, kind, checked, recommended, keep }: SwapLineProps) {
   const { t, i18n } = useTranslation('coach');
   const name = useExerciseName(exerciseId, i18n.language);
   const was = kind === 'was';
@@ -98,7 +126,7 @@ function SwapLine({ exerciseId, label, kind, checked, recommended }: SwapLinePro
           className={cn('min-w-0 shrink text-sm leading-5', tone)}
           style={was ? { textDecorationColor: colors.outline } : undefined}
         >
-          {name}
+          {keep ? t('swap.keep', { name }) : name}
         </Text>
         {recommended ? (
           <Text variant="caption" tone="accent" className="ml-1.5 text-xs leading-4">
@@ -119,25 +147,41 @@ function SwapLine({ exerciseId, label, kind, checked, recommended }: SwapLinePro
 interface SwapGroupProps {
   swap: SwapView;
   status: SwapStatus;
-  /** The option picked, or the one in the plan once applied. */
-  chosen: string;
-  onPick: (option: string) => void;
+  /** The option picked, or the one in the plan once applied; null: the exercise stays. */
+  chosen: string | null;
+  onPick: (option: string | null) => void;
   /** Its workouts above it, when the card swaps several exercises. */
   showWorkouts: boolean;
 }
 
-/** One exercise of the change: it, struck through, then its options or its replacement. */
+/**
+ * One exercise of the change: it, struck through, then its options (and keeping it) or its
+ * replacement. Kept once the change was applied: it alone, not struck through.
+ */
 function SwapGroup({ swap, status, chosen, onPick, showWorkouts }: SwapGroupProps) {
   const { t } = useTranslation('coach');
   const label = (exerciseId: string) =>
     swap.line ? setsLabel({ ...swap.line, exerciseId }, t) : '';
+  const workouts = showWorkouts ? (
+    <Text numberOfLines={1} className="font-inter-medium text-xs leading-4 text-dim">
+      {swap.routines.map((r) => r.name).join(' · ')}
+    </Text>
+  ) : null;
+  if (status === 'applied' && !chosen) {
+    return (
+      <View className="gap-1">
+        {workouts}
+        <View className="flex-row">
+          <SwapLine kind="kept" exerciseId={swap.exerciseId} label={label(swap.exerciseId)} />
+        </View>
+        <Text className="font-inter-medium text-xs leading-4 text-dim">{t('swap.notSwapped')}</Text>
+      </View>
+    );
+  }
+  const choices = [...swap.options, null];
   return (
     <View className="gap-1">
-      {showWorkouts ? (
-        <Text numberOfLines={1} className="font-inter-medium text-xs leading-4 text-dim">
-          {swap.routines.map((r) => r.name).join(' · ')}
-        </Text>
-      ) : null}
+      {workouts}
       <View className="flex-row">
         <SwapLine kind="was" exerciseId={swap.exerciseId} label={label(swap.exerciseId)} />
       </View>
@@ -149,11 +193,11 @@ function SwapGroup({ swap, status, chosen, onPick, showWorkouts }: SwapGroupProp
       </View>
       {status === 'ready' ? (
         <View accessibilityRole="radiogroup" className="mt-0.5 -ml-2 gap-0.5">
-          {swap.options.map((option, i) => {
+          {choices.map((option, i) => {
             const checked = option === chosen;
             return (
               <PressableScale
-                key={option}
+                key={option ?? 'keep'}
                 accessibilityRole="radio"
                 accessibilityState={{ checked }}
                 haptic="select"
@@ -164,20 +208,14 @@ function SwapGroup({ swap, status, chosen, onPick, showWorkouts }: SwapGroupProp
                   checked && 'bg-elevated',
                 )}
               >
-                <View
-                  className={cn(
-                    'size-4 items-center justify-center rounded-full border-[1.5px]',
-                    checked ? 'border-accent' : 'border-outline',
-                  )}
-                >
-                  {checked ? <View className="size-[7px] rounded-full bg-accent" /> : null}
-                </View>
+                <Radio checked={checked} />
                 <SwapLine
                   kind="option"
-                  exerciseId={option}
-                  label={label(option)}
+                  exerciseId={option ?? swap.exerciseId}
+                  label={label(option ?? swap.exerciseId)}
                   checked={checked}
                   recommended={i === 0}
+                  keep={!option}
                 />
               </PressableScale>
             );
@@ -185,7 +223,11 @@ function SwapGroup({ swap, status, chosen, onPick, showWorkouts }: SwapGroupProp
         </View>
       ) : (
         <View className="flex-row">
-          <SwapLine kind="to" exerciseId={chosen} label={label(chosen)} />
+          <SwapLine
+            kind="to"
+            exerciseId={chosen ?? swap.options[0]}
+            label={label(chosen ?? swap.options[0])}
+          />
         </View>
       )}
     </View>
@@ -195,18 +237,19 @@ function SwapGroup({ swap, status, chosen, onPick, showWorkouts }: SwapGroupProp
 /** Applied: what is in the plan now, from when, and undo. */
 function AppliedNote({ swaps, onUndo }: { swaps: SwapView[]; onUndo: () => void }) {
   const { t, i18n } = useTranslation('coach');
-  const name = useExerciseName(swaps[0].applied ?? '', i18n.language);
+  const applied = swaps.flatMap((s) => s.applied ?? []);
+  const name = useExerciseName(applied.at(0) ?? '', i18n.language);
   const title =
-    swaps.length === 1
+    applied.length === 1
       ? t('swap.appliedOne', { name })
-      : t('swap.swapped', { count: swaps.length });
+      : t('swap.swapped', { count: applied.length });
   return (
     <View className="ml-1 flex-row items-center gap-2.5 rounded-[14px] bg-bg p-3">
       <View className="size-5.5 items-center justify-center rounded-full bg-accent">
         <Icon name="check" size={11} color={colors.onAccent} />
       </View>
       <View className="min-w-0 flex-1 gap-px">
-        <Text variant="label" numberOfLines={1} className="text-sm leading-[19px]">
+        <Text variant="label" numberOfLines={2} className="text-sm leading-[19px]">
           {title}
         </Text>
         <Text numberOfLines={1} className="font-inter text-xs leading-4 text-subtle">
@@ -251,18 +294,23 @@ export function SwapCard({ chart }: { chart: SwapChart }) {
   const { t } = useTranslation(['coach', 'muscles']);
   const routineIds = [...new Set(chart.swaps.flatMap((s) => s.routineIds))];
   const { data: routines } = useSwapRoutines(routineIds);
-  const [picks, setPicks] = useState<Record<string, string>>({});
+  // Per exercise the option picked, or null to keep it; the recommended one until then.
+  const [picks, setPicks] = useState<Record<string, string | null>>({});
   // State isn't updated yet on a double tap, which would swap twice.
   const busy = useRef(false);
   if (!routines) return null;
 
   const { status, swaps } = swapState(chart, routines);
-  const chosen = swaps.map((s) => s.applied ?? picks[s.exerciseId] ?? s.options[0]);
+  const picked = (s: SwapView) => (s.exerciseId in picks ? picks[s.exerciseId] : s.options[0]);
+  const chosen = swaps.map((s) => (status === 'ready' ? picked(s) : s.applied));
+  const inPlanAfter = swaps.map((s, i) => chosen[i] ?? s.exerciseId);
+  const swapping = chosen.filter(Boolean).length;
   const names = swapRoutineNames(swaps, routines);
   const count = swaps.length;
-  let applyLabel = t('coach:swap.applyAll');
-  if (count === 1) applyLabel = t('coach:swap.apply');
-  else if (count === 2) applyLabel = t('coach:swap.applyBoth');
+  // "Beide" and "Alle" only when every exercise is swapped.
+  let applyLabel = t('coach:swap.apply');
+  if (swapping === count && count === 2) applyLabel = t('coach:swap.applyBoth');
+  else if (swapping === count && count > 2) applyLabel = t('coach:swap.applyAll');
 
   const change = async (planSwaps: PlanSwap[]) => {
     if (busy.current) return;
@@ -279,7 +327,10 @@ export function SwapCard({ chart }: { chart: SwapChart }) {
   const inPlan = (s: SwapView) => s.routines.map((r) => r.id);
   const apply = () =>
     void change(
-      swaps.map((s, i) => ({ from: s.exerciseId, to: chosen[i], routineIds: inPlan(s) })),
+      swaps.flatMap((s, i) => {
+        const to = chosen[i];
+        return to ? [{ from: s.exerciseId, to, routineIds: inPlan(s) }] : [];
+      }),
     );
   const undo = () =>
     void change(
@@ -292,13 +343,13 @@ export function SwapCard({ chart }: { chart: SwapChart }) {
   return (
     <View className="gap-3.5 rounded-[18px] bg-surface py-3.5 pr-3.5 pl-2.5">
       <View className="flex-row items-center gap-3.5">
-        <MuscleStack shares={headShares(chosen)} highlight />
+        <MuscleStack shares={headShares(inPlanAfter)} highlight />
         <View className="min-w-0 flex-1 gap-0.5">
           <Text variant="bodyStrong" numberOfLines={1}>
             {t('coach:swap.title')}
           </Text>
           <Text variant="caption" tone="accent" numberOfLines={1} className="font-inter-semibold">
-            {headline(status, swaps, chosen, t)}
+            {headline(status, swaps, inPlanAfter, swapping, t)}
           </Text>
           <Text variant="caption" tone="subtle" numberOfLines={1} className="font-inter-medium">
             {names.join(' · ')}
@@ -320,7 +371,13 @@ export function SwapCard({ chart }: { chart: SwapChart }) {
       </View>
       {status === 'ready' ? (
         <View className="ml-1 flex-row gap-2">
-          <Button label={applyLabel} size="md" onPress={apply} className="flex-1" />
+          <Button
+            label={applyLabel}
+            size="md"
+            disabled={!swapping}
+            onPress={apply}
+            className="flex-1"
+          />
           <Button
             label={t('coach:swap.viewPlan')}
             variant="secondary"

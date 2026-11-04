@@ -22,8 +22,9 @@ export interface SwapView {
 }
 
 /**
- * ready: every exercise is still in its workouts. applied: every one is replaced by one of its
- * options. stale: the plan changed otherwise since the answer (an exercise or workout is gone).
+ * ready: every exercise is still in its workouts. applied: at least one is replaced by one of its
+ * options, the others were kept. stale: the plan changed otherwise since the answer (an exercise
+ * is gone from its workouts without one of its options in its place).
  */
 export type SwapStatus = 'ready' | 'applied' | 'stale';
 
@@ -59,9 +60,9 @@ export function swapState(chart: SwapChart, routines: SwapRoutine[]) {
       applied,
     };
   });
-  let status: SwapStatus = 'stale';
-  if (swaps.every((s) => s.line && !s.applied)) status = 'ready';
-  else if (swaps.every((s) => s.line && s.applied)) status = 'applied';
+  let status: SwapStatus = 'applied';
+  if (swaps.some((s) => !s.line)) status = 'stale';
+  else if (swaps.every((s) => !s.applied)) status = 'ready';
   return { status, swaps };
 }
 

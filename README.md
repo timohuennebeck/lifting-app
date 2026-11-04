@@ -371,7 +371,7 @@ over the tabs from the Training tab's card, which a flash runs across.
   until then nothing piles up there. `show_workout` shows a workout the user saved on the same
   card ("Was ist mein nächstes Training?"), the next one found as on the Training tab; it opens
   that routine. `swap_exercises` shows a plan change on such a card ("Planänderung"): per exercise
-  1 to 3 options logging the same (reps or seconds), which the user picks from before applying them
+  1 to 3 options logging the same (reps or seconds), which the user picks from (or keeps the exercise) before applying them
   in the plan's workouts that have the exercise; sets, targets and rest stay. Nothing changes until
   they tap Übernehmen; the card reads its state from the plan, so it then shows what is in the plan
   with Rückgängig, or that the plan changed since. The context lists each plan workout's exercises
