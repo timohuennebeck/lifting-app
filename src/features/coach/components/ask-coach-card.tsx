@@ -136,15 +136,15 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
   };
 
   const openHistory = () => router.push('/coach/history');
+  // While typing, a tap on the card only ends that.
+  const pressCard = () => {
+    if (typing) Keyboard.dismiss();
+    else openHistory();
+  };
 
   return (
     // Not one element for VoiceOver, which would hide the field; the clock opens the chats there.
-    <PressableScale
-      accessible={false}
-      activeScale={0.98}
-      onPress={openHistory}
-      className={className}
-    >
+    <PressableScale accessible={false} activeScale={0.98} onPress={pressCard} className={className}>
       <View className="items-center gap-3 overflow-hidden rounded-[18px] bg-surface px-3.5 pt-7.5 pb-3.5">
         <CoachGlow paused={!focused} />
         <IconButton
