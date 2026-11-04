@@ -11,6 +11,7 @@ import {
 } from '@/shared/components/voice-input';
 import { useAppLanguage } from '@/shared/hooks/use-app-language';
 import { useVoiceInput, type VoiceInput, withSpoken } from '@/shared/hooks/use-voice-input';
+import { cn } from '@/shared/lib/cn';
 import { COACH_QUESTION_MAX } from '@/shared/lib/limits';
 import { colors } from '@/shared/lib/theme';
 import { CharCount } from '@/shared/ui/char-count';
@@ -57,8 +58,8 @@ export interface CoachFieldProps extends Omit<CoachComposerProps, 'consentNote'>
 
 /**
  * The field's look for each state (design "Spracheingabe"): empty with the microphone where send
- * goes, typed with both, recording and being written down. The text has the whole width above the
- * buttons' own row and grows line by line, up to five lines.
+ * goes, typed with both, recording and being written down. One line sits beside the buttons; more
+ * takes the whole width above them and grows line by line, up to five lines.
  */
 export function CoachField({
   value,
@@ -81,12 +82,19 @@ export function CoachField({
   };
   const hintShown = !!hint && !typed && !focused && !answering;
   const placeholderShown = (answering || !typed) && !hintShown;
+  const [wraps, setWraps] = useState(false);
+  const stacked = !answering && (wraps || value.includes('\n'));
 
   if (voice.phase === 'recording') return <RecordingRow voice={voice} />;
   if (voice.phase === 'transcribing') return <TranscribingRow />;
 
   return (
-    <View className="gap-1 rounded-[26px] bg-chip p-1.5 pl-[18px]">
+    <View
+      className={cn(
+        'gap-1 rounded-[26px] bg-chip p-1.5 pl-[18px]',
+        !stacked && 'flex-row items-end',
+      )}
+    >
       {/* As the support chat's box: the 2pt neon ring while typing. */}
       {focused && !answering ? (
         <View
@@ -94,7 +102,17 @@ export function CoachField({
           className="absolute inset-0 rounded-[26px] border-2 border-accent"
         />
       ) : null}
-      <View>
+      {/* Whether the text fits beside both buttons, at that width in either layout so it can't flip. */}
+      <Text
+        pointerEvents="none"
+        importantForAccessibility="no-hide-descendants"
+        accessibilityElementsHidden
+        onTextLayout={(e) => setWraps(e.nativeEvent.lines.length > 1)}
+        className="absolute top-0 right-[106px] left-[18px] font-inter text-base leading-[22px] opacity-0"
+      >
+        {value}
+      </Text>
+      <View className={stacked ? undefined : 'min-w-0 flex-1'}>
         <TextInput
           ref={inputRef}
           accessibilityLabel={t('composer.placeholder')}
@@ -109,7 +127,11 @@ export function CoachField({
           onFocus={() => setFieldFocused(true)}
           onBlur={() => setFieldFocused(false)}
           textAlignVertical="top"
-          className="max-h-32 min-h-10 py-[9px] pr-3 font-inter text-base leading-[22px] text-fg"
+          // iOS keeps the height of the text just sent while the field rests.
+          className={cn(
+            'max-h-32 min-h-10 py-[9px] pr-3 font-inter text-base leading-[22px] text-fg',
+            answering && 'max-h-10',
+          )}
         />
         {hintShown ? (
           <View
