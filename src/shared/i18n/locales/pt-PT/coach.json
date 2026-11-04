@@ -19,6 +19,9 @@
     "stop": "Parar a resposta"
   },
   "thinking": "O Kai está a pensar …",
+  "workout": {
+    "open": "Abrir vista geral"
+  },
   "values": {
     "reps_one": "{{count}} rep",
     "reps_other": "{{count}} reps",

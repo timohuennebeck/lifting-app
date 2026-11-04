@@ -51,7 +51,7 @@ export function CoachChatView({ subtitle, items, pending, onBack, composer }: Co
     item.role === 'user' ? (
       <QuestionBubble key={item.id} text={item.content} />
     ) : (
-      <CoachAnswer key={item.id} text={item.content} chart={item.chart} />
+      <CoachAnswer key={item.id} id={item.id} text={item.content} chart={item.chart} />
     ),
   );
   // In the same list under the ids they are saved with, so the synced copies take their place
@@ -62,6 +62,7 @@ export function CoachChatView({ subtitle, items, pending, onBack, composer }: Co
       pending.text ? (
         <CoachAnswer
           key={pending.answerId ?? 'answer'}
+          id={pending.answerId ?? 'answer'}
           text={pending.text}
           // The chart waits for the whole text: it comes first from the server, but reads last.
           chart={pending.done ? pending.chart : null}

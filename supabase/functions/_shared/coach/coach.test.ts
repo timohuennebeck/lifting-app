@@ -5,8 +5,8 @@ import { assert, assertEquals } from 'jsr:@std/assert@1';
 
 import { type CoachData, type CoachExercise, type CoachUser, dayIn, splitShares } from './data.ts';
 import { numbersIn, unmatchedNumbers } from './eval/grade.ts';
-import { coachData, coachTurns } from './load.ts';
-import { type PeriodChart, runTool, TOOLS, type TrendChart } from './tools.ts';
+import { coachCatalog, coachData, coachTurns } from './load.ts';
+import { type PeriodChart, runTool, TOOLS, type TrendChart, type WorkoutChart } from './tools.ts';
 
 Deno.env.set('OPENAI_API_KEY', 'test-key');
 const { askCoach } = await import('./chat.ts');
@@ -41,6 +41,20 @@ const workout = (day: string, exercises: Record<string, ReturnType<typeof set>[]
   exercises: Object.entries(exercises).map(([exerciseId, sets]) => ({ exerciseId, sets })),
 });
 
+const catalogExercise = (
+  id: string,
+  equipment: string,
+  muscles: Record<string, number>,
+  usable = true,
+): CoachData['catalog'][number] => ({
+  id,
+  name: id,
+  equipment,
+  measures: ['weight', 'reps'],
+  muscles,
+  usable,
+});
+
 const DATA: CoachData = {
   exercises: new Map(
     [
@@ -55,6 +69,13 @@ const DATA: CoachData = {
       exercise('treadmill', ['seconds'], { quads: 1 }, { cardio: true }),
     ].map((e) => [e.id, e]),
   ),
+  catalog: [
+    catalogExercise('dumbbell-press', 'dumbbell', { chest: 0.75, triceps: 0.25 }),
+    catalogExercise('bench-press', 'barbell', { chest: 0.6, triceps: 0.25, front_delts: 0.15 }),
+    catalogExercise('cable-fly', 'cable', { chest: 1 }, false),
+    catalogExercise('squat', 'barbell', { quads: 0.6, glutes: 0.4 }),
+    { ...catalogExercise('plank', 'bodyweight', { abs: 1 }), measures: ['seconds'] },
+  ],
   workouts: [
     workout('2026-10-05', {
       'bench-press': [set(100, 5), set(100, 5)],
@@ -424,5 +445,127 @@ Deno.test('load: database rows become the coach data, the chat its earlier turns
       ['Wie läuft es?', 1, 'Gut.'],
       ['Und sonst?', 0, 'Auch gut.'],
     ],
+  );
+});
+
+Deno.test(
+  'find_exercises: main muscles, what the equipment allows, the ones done most first',
+  () => {
+    const ids = (equipment: string[] | null, muscles = ['chest']) =>
+      (run('find_exercises', { muscles, equipment }).result.exercises as { id: string }[]).map(
+        (e) => e.id,
+      );
+    assertEquals(ids(null), ['bench-press', 'dumbbell-press']);
+    // What the user says they have today goes before the profile.
+    assertEquals(ids(['cable']), ['cable-fly']);
+    // Triceps helps in the presses but is no main muscle there.
+    assertEquals(ids(null, ['triceps']), []);
+    assertEquals(run('find_exercises', { muscles: [], equipment: null }).chart, null);
+  },
+);
+
+Deno.test('create_workout: keeps values in range and leaves out what the app can not take', () => {
+  const line = (exercise_id: string, values: Record<string, unknown> = {}) => ({
+    exercise_id,
+    sets: 3,
+    target_min: 6,
+    target_max: 8,
+    rir: 2,
+    rest_seconds: 120,
+    ...values,
+  });
+  const { chart, result } = run('create_workout', {
+    name: 'Push',
+    exercises: [
+      line('bench-press', { target_min: 8, target_max: 6 }),
+      line('bench-press'),
+      line('no-such-exercise'),
+      line('treadmill'),
+      line('plank', { sets: 9, target_min: 45, target_max: 60, rir: null, rest_seconds: 10 }),
+    ],
+  });
+  assertEquals((chart as WorkoutChart).exercises, [
+    {
+      exerciseId: 'bench-press',
+      sets: 3,
+      targetMin: 6,
+      targetMax: 8,
+      rir: 2,
+      restSeconds: 120,
+    },
+    { exerciseId: 'plank', sets: 6, targetMin: 45, targetMax: 60, rir: null, restSeconds: 30 },
+  ]);
+  // (150 + 3 × (45 + 120)) + (150 + 6 × (45 + 30)) seconds, as the app estimates it.
+  assertEquals(result, {
+    created: 'Push',
+    exercises: 2,
+    sets: 9,
+    minutes: 21,
+    skipped: ['bench-press', 'no-such-exercise', 'treadmill'],
+  });
+
+  const nothing = run('create_workout', { name: 'Push', exercises: [line('no-such-exercise')] });
+  assertEquals(nothing.chart, null);
+  assert(nothing.result.error);
+  assert(run('create_workout', { name: ' ', exercises: [line('squat')] }).result.error);
+});
+
+Deno.test(
+  'the catalog for a workout: no cardio, and what the equipment in the profile allows',
+  () => {
+    const row = (id: string, needs: string[][], cardio = false) => ({
+      id,
+      name: { en: `${id} en`, de: `${id} de` },
+      equipment: 'x',
+      needs,
+      measures: ['weight', 'reps'],
+      muscles: { chest: 1 },
+      rest_seconds: 90,
+      cardio,
+    });
+    const rows = [
+      row('barbell-press', [['barbell']]),
+      row('dumbbell-press', [['dumbbell']]),
+      row('push-up', []),
+      row('run', [], true),
+    ];
+    const gear = [
+      { id: 'barbell', in_gym: true },
+      { id: 'dumbbell', in_gym: true },
+    ];
+    const usable = (equipment: string | null, home: string[] | null = null) =>
+      coachCatalog(rows, gear, { equipment, home_equipment: home }, 'de')
+        .filter((e) => e.usable)
+        .map((e) => e.id);
+    assertEquals(usable('gym'), ['barbell-press', 'dumbbell-press', 'push-up']);
+    assertEquals(usable(null), ['barbell-press', 'dumbbell-press', 'push-up']);
+    assertEquals(usable('home', ['dumbbell']), ['dumbbell-press', 'push-up']);
+    assertEquals(usable('bodyweight'), ['push-up']);
+    assertEquals(
+      coachCatalog(rows, gear, { equipment: 'gym', home_equipment: null }, 'de')[0].name,
+      'barbell-press de',
+    );
+  },
+);
+
+Deno.test('a follow-up reads the earlier workout but not the list it was picked from', () => {
+  const [turn] = coachTurns(
+    [
+      { id: 'q', role: 'user', content: 'Bau mir ein Training' },
+      { id: 'a', role: 'coach', content: 'Hier ist es.' },
+    ],
+    [
+      {
+        answer_id: 'a',
+        calls: [
+          { name: 'find_exercises', args: {}, result: { exercises: [] } },
+          { name: 'create_workout', args: {}, result: { minutes: 45 } },
+        ],
+      },
+    ],
+  );
+  assertEquals(
+    turn.calls.map((c) => c.name),
+    ['create_workout'],
   );
 });

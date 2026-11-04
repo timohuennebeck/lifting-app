@@ -19,6 +19,9 @@
     "stop": "Parar a resposta"
   },
   "thinking": "Kai está pensando …",
+  "workout": {
+    "open": "Abrir visão geral"
+  },
   "values": {
     "reps_one": "{{count}} rep",
     "reps_other": "{{count}} reps",
