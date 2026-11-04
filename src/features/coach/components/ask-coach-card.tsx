@@ -2,7 +2,7 @@ import { router, useIsFocused } from 'expo-router';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Keyboard, type TextInput, View } from 'react-native';
-import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
+import Animated, { type CSSAnimationKeyframes, useReducedMotion } from 'react-native-reanimated';
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
 
 import { VoiceInputNotes } from '@/shared/components/voice-input';
@@ -10,7 +10,6 @@ import { useProfile } from '@/shared/data/profile';
 import { useAppLanguage } from '@/shared/hooks/use-app-language';
 import { useVoiceInput, withSpoken } from '@/shared/hooks/use-voice-input';
 import { COACH_QUESTION_MAX } from '@/shared/lib/limits';
-import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { CoachMark } from '@/shared/ui/coach-mark';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -20,6 +19,7 @@ import { CoachError, timeZone } from '../lib/coach-client';
 import { showCoachError } from '../lib/coach-errors';
 import { openAnswer } from '../lib/open-coach';
 import { ask, isAnswering, stopAnswer, useCoachStore } from '../stores/coach-store';
+import { ChaseBorder } from './chase-border';
 import { CoachField } from './coach-composer';
 
 /** How long each example question shows; the diamond turns as it changes. */
@@ -82,6 +82,7 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
   const asker = useId();
   // Behind another tab or the coach itself, the card rests.
   const focused = useIsFocused();
+  const reducedMotion = useReducedMotion();
   const draft = useCoachStore((s) => s.draft);
   const answering = useCoachStore((s) => isAnswering(s.pending));
   const focusCard = useCoachStore((s) => s.focusCard);
@@ -96,6 +97,8 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
 
   const [turns, setTurns] = useState(0);
   const resting = !focused || typing;
+  // The field's own ring takes over while typing.
+  const chasing = !resting && !reducedMotion;
   useEffect(() => {
     if (resting) return;
     const id = setInterval(() => setTurns((n) => n + 1), HINT_MS);
@@ -133,47 +136,45 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
   };
 
   return (
-    <View
-      className={cn(
-        'items-center gap-3 overflow-hidden rounded-[18px] bg-surface px-3.5 pt-7.5 pb-3.5',
-        className,
-      )}
-    >
-      <CoachGlow paused={!focused} />
-      <IconButton
-        icon="clock"
-        size={40}
-        iconSize={17}
-        accessibilityLabel={t('history.title')}
-        onPress={() => router.push('/coach/history')}
-        className="absolute top-2.5 right-2.5 z-10 bg-control"
-      />
-      <View className="size-19 items-center justify-center">
-        <CoachMark size={52} animation={focused ? 'breathe' : undefined} turns={turns} />
-      </View>
-      <View className="gap-1">
-        <Text className="text-center font-inter-semibold text-[19px] leading-6 text-fg">
-          {t('card.title')}
-        </Text>
-        <Text className="text-center font-inter text-[13px] leading-[18px] text-muted">
-          {t('card.subtitle')}
-        </Text>
-      </View>
-      <VoiceInputNotes voice={voice} />
-      <View className="self-stretch">
-        <CoachField
-          inputRef={inputRef}
-          value={draft}
-          onChangeText={setDraft}
-          onSend={() => void send(draft)}
-          answering={answering}
-          onStop={stopAnswer}
-          onOpenAnswer={openAnswer}
-          onFocusChange={setTyping}
-          hint={t(`card.hints.${HINTS[turns % HINTS.length]}`)}
-          voice={voice}
+    <View className={className}>
+      <View className="items-center gap-3 overflow-hidden rounded-[18px] border border-accent/15 bg-surface px-3.5 pt-7.5 pb-3.5">
+        <CoachGlow paused={!focused} />
+        <IconButton
+          icon="clock"
+          size={40}
+          iconSize={17}
+          accessibilityLabel={t('history.title')}
+          onPress={() => router.push('/coach/history')}
+          className="absolute top-2.5 right-2.5 z-10 bg-control"
         />
+        <View className="size-19 items-center justify-center">
+          <CoachMark size={52} animation={focused ? 'breathe' : undefined} turns={turns} />
+        </View>
+        <View className="gap-1">
+          <Text className="text-center font-inter-semibold text-[19px] leading-6 text-fg">
+            {t('card.title')}
+          </Text>
+          <Text className="text-center font-inter text-[13px] leading-[18px] text-muted">
+            {t('card.subtitle')}
+          </Text>
+        </View>
+        <VoiceInputNotes voice={voice} />
+        <View className="self-stretch">
+          <CoachField
+            inputRef={inputRef}
+            value={draft}
+            onChangeText={setDraft}
+            onSend={() => void send(draft)}
+            answering={answering}
+            onStop={stopAnswer}
+            onOpenAnswer={openAnswer}
+            onFocusChange={setTyping}
+            hint={t(`card.hints.${HINTS[turns % HINTS.length]}`)}
+            voice={voice}
+          />
+        </View>
       </View>
+      {chasing ? <ChaseBorder /> : null}
     </View>
   );
 }
