@@ -5,65 +5,22 @@ import type Animated from 'react-native-reanimated';
 import type { AnimatedRef } from 'react-native-reanimated';
 import Sortable from 'react-native-sortables';
 
-import { type MuscleShare, muscleShares } from '@/shared/data/muscles';
+import { MuscleStack } from '@/shared/components/muscle-stack';
+import { muscleShares } from '@/shared/data/muscles';
 import type { ExerciseItem, RoutineSummary } from '@/shared/data/routines';
 import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
-import { MuscleCircle } from '@/shared/ui/muscle-map';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
-
-/** The circles are all one size, each further right overlapping the one before. */
-const CIRCLE = 50;
-const STEP = 33;
-/** Width of three circles, kept for fewer too so the titles line up. */
-const STACK_WIDTH = CIRCLE + 2 * STEP;
 
 /**
  * Routines outside a plan listed as done most recently: Training shows this many ("Alle
  * anzeigen" has the rest), the Einzeltrainings page this many above all of them.
  */
 export const RECENT_ROUTINES = 3;
-
-interface MuscleStackProps {
-  shares: MuscleShare[];
-  /** The muscles in neon (the active plan's card). */
-  highlight?: boolean;
-}
-
-/** The three muscles worked most as overlapping circles of one size, the biggest share in front. */
-function MuscleStack({ shares, highlight }: MuscleStackProps) {
-  const accent = highlight ? colors.accent : colors.fg2;
-  return (
-    <View
-      style={{ width: STACK_WIDTH, height: CIRCLE }}
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
-    >
-      {/* Drawn back to front, the biggest share in front; without exercises, one empty circle. */}
-      {(shares.length ? shares.slice(0, 3) : [null])
-        .map((share, i) => ({ share, left: i * STEP }))
-        .reverse()
-        .map(({ share, left }) => (
-          <View
-            key={share?.muscle ?? 'empty'}
-            className="absolute top-0"
-            style={{ left, width: CIRCLE, height: CIRCLE }}
-          >
-            {/* Each is cut out of the card behind it. */}
-            <MuscleCircle
-              muscle={share?.muscle ?? null}
-              accent={accent}
-              className="size-full border-2 border-surface"
-            />
-          </View>
-        ))}
-    </View>
-  );
-}
 
 /** Muscles below this share are side work: the line names only the main ones. */
 const MAIN_MUSCLE_MIN_PERCENT = 8;
