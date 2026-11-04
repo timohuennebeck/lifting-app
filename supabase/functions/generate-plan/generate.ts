@@ -177,7 +177,7 @@ Sets:
 - The app runs the plan in blocks of 5 weeks: each week after the first takes one rep off the reserve (never below 0), and the fifth week is a lighter deload. So rir is where a block starts.
 - hypertrophy: compounds 6-10 reps, isolation 10-15, rir 3. strength: main lifts 3-6 reps at rir 3-4, compound accessories 6-10 and isolation 8-15 at rir 3. strength_hypertrophy: compounds 4-8, isolation 8-12, rir 3. none and beginner: rir 4 on compounds, 3 on isolation.
 - strength: build each routine around one or two main lifts (squat, bench press, deadlift, overhead press, barbell row or pull-up; their closest variant the equipment allows), then 2-4 accessories that support them. Fewer exercises with more sets rather than many isolation exercises.
-- rest_seconds: compounds 120-180 (up to 240 for heavy strength work), isolation 60-90.
+- rest_seconds: squats and deadlifts 180; barbell presses, Romanian deadlifts and leg presses 150; other compounds 120; isolation 60-90 (90 for quads and hamstrings). A quarter more for 6-7 reps, half as long again for 5 reps or fewer.
 
 Names, in the app language given below: each routine a short name (at most 24 characters), e.g. "Push", "Oberkörper A", "Beine"; the plan a short name for the split (at most 30 characters), e.g. "Push Pull Beine", "Ganzkörper 3×".`;
 

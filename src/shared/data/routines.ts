@@ -1,4 +1,4 @@
-import { and, asc, count, eq, isNotNull, isNull, max, type SQL, sql } from 'drizzle-orm';
+import { and, asc, count, eq, isNotNull, isNull, max, min, type SQL, sql } from 'drizzle-orm';
 
 import { getOrInsert } from '@/shared/lib/map';
 
@@ -100,8 +100,35 @@ export async function insertRoutine(
   return id;
 }
 
-export function restSecondsFor(exerciseId: string, override: number | null | undefined) {
-  return override ?? getExercise(exerciseId)?.restSeconds ?? DEFAULT_REST;
+/** The reps a set aims for: the middle of its range, or the bound it has; null without one. */
+export function repTarget({ targetMin, targetMax }: Pick<SetTarget, 'targetMin' | 'targetMax'>) {
+  if (targetMin == null) return targetMax;
+  if (targetMax == null) return targetMin;
+  return (targetMin + targetMax) / 2;
+}
+
+/** The rep target of an exercise's heaviest set (the fewest reps), which its rest follows. */
+export function heaviestRepTarget(sets: Pick<SetTarget, 'targetMin' | 'targetMax'>[]) {
+  const targets = sets.flatMap((s) => repTarget(s) ?? []);
+  return targets.length ? Math.min(...targets) : null;
+}
+
+/**
+ * Rest after a set: the override, else the exercise's own rest, which is meant for 8 reps or
+ * more. Heavier sets recover longer: a quarter more for 6–7 reps, half for 5 or fewer, in 15 s
+ * steps. Without reps, and for timed exercises (their targets are seconds), the exercise's rest.
+ */
+export function restSecondsFor(
+  exerciseId: string,
+  override: number | null | undefined,
+  reps?: number | null,
+) {
+  if (override != null) return override;
+  const exercise = getExercise(exerciseId);
+  const rest = exercise?.restSeconds ?? DEFAULT_REST;
+  if (reps == null || exercise?.measures.includes('seconds')) return rest;
+  const factor = reps <= 5 ? 1.5 : reps < 8 ? 1.25 : 1;
+  return Math.round((rest * factor) / 15) * 15;
 }
 
 /** An exercise of a routine or workout with its set count, for the muscle shares and the time. */
@@ -110,6 +137,8 @@ export interface ExerciseItem {
   sets: number;
   /** The rest override; the exercise's own rest when null or left out. */
   restSeconds?: number | null;
+  /** The rep target the rest follows (`heaviestRepTarget`); none when null or left out. */
+  reps?: number | null;
 }
 
 /** Exercises as `estimateMinutes` and the muscle shares take them: set count and rest. */
@@ -118,21 +147,28 @@ export const exerciseItems = (exercises: ExerciseDraft[]): ExerciseItem[] =>
     exerciseId: e.exerciseId,
     sets: e.sets.length,
     restSeconds: e.restSeconds ?? null,
+    reps: heaviestRepTarget(e.sets),
   }));
 
 /** Rough session length in minutes from sets and rest times. */
 export function estimateMinutes(items: ExerciseItem[]) {
   const seconds = items.reduce(
     (sum, i) =>
-      sum + EXERCISE_SECONDS + i.sets * (SET_SECONDS + restSecondsFor(i.exerciseId, i.restSeconds)),
+      sum +
+      EXERCISE_SECONDS +
+      i.sets * (SET_SECONDS + restSecondsFor(i.exerciseId, i.restSeconds, i.reps)),
     0,
   );
   return Math.round(seconds / 60);
 }
 
+/** `repTarget` in SQL. */
+const { target_min: low, target_max: high } = routineSets;
+const setRepTarget = sql<number | null>`coalesce((${low} + ${high}) / 2.0, ${low}, ${high})`;
+
 /**
- * One row per routine exercise (or per empty routine) with its set count. The count is a
- * correlated subquery: a LEFT JOIN of the sets through PowerSync's views reads all of them.
+ * One row per routine exercise (or per empty routine) with its set count and rep target. Both
+ * are correlated subqueries: a LEFT JOIN of the sets through PowerSync's views reads all of them.
  */
 const routineListQuery = () =>
   drizzle
@@ -144,6 +180,11 @@ const routineListQuery = () =>
       rest_seconds: routineExercises.rest_seconds,
       set_count: sql<number>`${drizzle
         .select({ count: count() })
+        .from(routineSets)
+        .where(eq(routineSets.routine_exercise_id, routineExercises.id))}`,
+      // heaviestRepTarget in SQL: the smallest rep target of its sets.
+      reps: sql<number | null>`${drizzle
+        .select({ reps: min(setRepTarget) })
         .from(routineSets)
         .where(eq(routineSets.routine_exercise_id, routineExercises.id))}`,
     })
@@ -158,7 +199,7 @@ export interface RoutineSummary {
   planId: string | null;
   exerciseCount: number;
   estimatedMinutes: number;
-  /** Exercise ids with their set counts and rest overrides, for muscle shares and the time. */
+  /** Exercise ids with set counts, rest overrides and rep targets: muscle shares and time. */
   items: ExerciseItem[];
 }
 
@@ -174,7 +215,12 @@ function summarize(rows: RowOf<typeof routineListQuery>[]): RoutineSummary[] {
       items: [],
     }));
     if (!r.exercise_id) continue;
-    t.items.push({ exerciseId: r.exercise_id, sets: r.set_count, restSeconds: r.rest_seconds });
+    t.items.push({
+      exerciseId: r.exercise_id,
+      sets: r.set_count,
+      restSeconds: r.rest_seconds,
+      reps: r.reps,
+    });
     t.exerciseCount += 1;
   }
   return [...byId.values()].map((t) => ({ ...t, estimatedMinutes: estimateMinutes(t.items) }));

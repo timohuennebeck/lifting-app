@@ -4,7 +4,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 
 import { emptySetDraft, isTimed } from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
-import { restSecondsFor } from '@/shared/data/routines';
+import { heaviestRepTarget, restSecondsFor } from '@/shared/data/routines';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { cn } from '@/shared/lib/cn';
@@ -73,7 +73,7 @@ export function SetTargetsForm({
   const [saving, setSaving] = useState(false);
   const scroll = useRef<ScrollView>(null);
   const listTop = useRef(0);
-  const defaultRest = restSecondsFor(exerciseId, null);
+  const defaultRest = restSecondsFor(exerciseId, null, heaviestRepTarget(sets));
   const shownRest = rest ?? defaultRest;
 
   // Keep the edited row above the number pad.
