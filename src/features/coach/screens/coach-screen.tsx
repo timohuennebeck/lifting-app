@@ -12,7 +12,6 @@ import { useCoachMessages } from '../data/coach-chats';
 import { chartTopic } from '../lib/charts';
 import { CoachError, timeZone } from '../lib/coach-client';
 import { showCoachError } from '../lib/coach-errors';
-import { startNewChat } from '../lib/open-coach';
 import { ask, isAnswering, stopAnswer, useCoachStore } from '../stores/coach-store';
 
 /**
@@ -101,8 +100,6 @@ export function CoachScreen() {
         items={messages}
         pending={pendingHere}
         onBack={() => router.back()}
-        onHistory={() => router.push('/coach/history')}
-        onNew={startNewChat}
         composer={composer}
       />
     </QueryFocus>
