@@ -19,11 +19,12 @@ export interface ExerciseIndexRowProps extends PressableScaleProps {
 }
 
 /**
- * Thumbnail, name and muscle group of an exercise in a list with the A–Z index, under its
- * heading. `useLetterIndex` lays the list out with these heights.
+ * Thumbnail, name, equipment and muscle group of an exercise in a list with the A–Z index, under
+ * its heading. `useLetterIndex` lays the list out with these heights.
  */
 export function ExerciseIndexRow({ item, trailing, dimmed, ...pressable }: ExerciseIndexRowProps) {
   const { t } = useTranslation('exercises');
+  const kind = `${item.equipmentName ?? t('custom.label')} · ${t(`groups.${item.group}`)}`;
   return (
     <View>
       {/* A fixed height, also with larger system text, keeps the index's offsets right. */}
@@ -50,9 +51,7 @@ export function ExerciseIndexRow({ item, trailing, dimmed, ...pressable }: Exerc
           </Text>
           {/* Found by its name in another language: that name first, so the match makes sense. */}
           <Text variant="caption" tone="subtle" numberOfLines={1} className="mt-0.5 font-inter">
-            {item.foundAs
-              ? `${item.foundAs} · ${t(`groups.${item.group}`)}`
-              : t(`groups.${item.group}`)}
+            {item.foundAs ? `${item.foundAs} · ${kind}` : kind}
           </Text>
         </View>
         {trailing}

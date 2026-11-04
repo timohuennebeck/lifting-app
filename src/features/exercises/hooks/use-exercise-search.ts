@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import {
   activeExerciseIds,
+  equipmentName,
   exerciseName,
   useCatalogStore,
   useCustomExerciseStore,
@@ -23,6 +24,8 @@ export interface ExerciseOption {
   id: string;
   name: string;
   group: MuscleGroupId;
+  /** Localized name of its equipment; none on the user's own exercises. */
+  equipmentName?: string;
   /** Its entry in the index (see `indexLetterOf`). */
   letter: string;
   /** Its names in every app language, the app language's first, compared with what is typed. */
@@ -81,9 +84,10 @@ const collatorFor = (language: string) => {
 export function useExerciseSearch(query: string, group?: MuscleGroupId | null) {
   const { i18n } = useTranslation();
   const rows = useCatalogStore((s) => s.rows);
+  const equipment = useCatalogStore((s) => s.equipment);
   const custom = useCustomExerciseStore((s) => s.exercises);
-  // Names, groups, order and search keys change with the language or the exercises, not with
-  // each keystroke.
+  // Names, groups, equipment, order and search keys change with the language or the exercises,
+  // not with each keystroke.
   const options = useMemo(() => {
     const { compare } = collatorFor(i18n.language);
     return activeExerciseIds(rows, custom)
@@ -94,12 +98,15 @@ export function useExerciseSearch(query: string, group?: MuscleGroupId | null) {
           id,
           name,
           group: primaryGroup(id),
+          equipmentName: rows[id]
+            ? equipmentName(rows[id].equipment, i18n.language, equipment)
+            : undefined,
           letter: indexLetterOf(name, i18n.language),
           searchNames: searchNamesOf([name, ...names]),
         };
       })
       .sort((a, b) => compare(a.name, b.name));
-  }, [i18n.language, rows, custom]);
+  }, [i18n.language, rows, equipment, custom]);
   // Typing stays responsive: the list filters right after, at a lower priority.
   const deferredQuery = useDeferredValue(query);
   return useMemo(() => {
