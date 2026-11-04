@@ -9,7 +9,6 @@ import { deleteWeightEntry, useWeightEntries } from '@/shared/data/weight-entrie
 import { useToday } from '@/shared/hooks/use-today';
 import { toIsoDate } from '@/shared/lib/date';
 import { weightUnit } from '@/shared/lib/format';
-import { colors } from '@/shared/lib/theme';
 import { IconButton } from '@/shared/ui/icon-button';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
@@ -29,10 +28,10 @@ const openEntry = (date: string, add = false) =>
 
 /**
  * Weight history (GW·2): the trend and its change over the chosen range, the chart, how the
- * trend moved over the last days, and every weigh-in. Calendar and "+" lead to the entry.
+ * trend moved over the last days, and every weigh-in. The "+" leads to the entry.
  */
 export function WeightHistoryScreen() {
-  const { t } = useTranslation(['weight', 'common']);
+  const { t } = useTranslation('weight');
   const insets = useSafeAreaInsets();
   const units = useUnits();
   const dayLabel = useDayLabel();
@@ -81,35 +80,12 @@ export function WeightHistoryScreen() {
     <View className="flex-1 bg-bg" style={{ paddingTop: insets.top }}>
       <ScreenHeader
         title={t('history.title')}
-        leading={
-          // As wide as the two buttons on the right, so the title stays centred.
-          <View className="flex-row gap-2">
-            <IconButton
-              icon="chevron-left"
-              accessibilityLabel={t('common:actions.back')}
-              onPress={() => router.back()}
-            />
-            <View className="size-10.5" />
-          </View>
-        }
         action={
-          <View className="flex-row gap-2">
-            <IconButton
-              // A new day remounts it, so the date drawn on the icon turns over.
-              key={today}
-              icon="calendar"
-              iconSize={19}
-              accessibilityLabel={t('history.calendar')}
-              onPress={() => router.push('/body-weight/calendar')}
-            />
-            <IconButton
-              icon="plus"
-              accessibilityLabel={t('history.add')}
-              color={colors.onAccent}
-              className="bg-accent"
-              onPress={() => openEntry(today, true)}
-            />
-          </View>
+          <IconButton
+            icon="plus"
+            accessibilityLabel={t('history.add')}
+            onPress={() => openEntry(today, true)}
+          />
         }
       />
       <FlatList
