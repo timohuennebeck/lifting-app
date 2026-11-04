@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, TextInput, View } from 'react-native';
 import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 
+import { ChatField } from '@/shared/components/chat-field';
 import {
   MicButton,
   RecordingRow,
@@ -57,9 +58,9 @@ export interface CoachFieldProps extends Omit<CoachComposerProps, 'consentNote'>
 }
 
 /**
- * The field's look for each state (design "Spracheingabe"): empty with the microphone where send
- * goes, typed with both, recording and being written down. One line sits beside the buttons; more
- * takes the whole width above them and grows line by line, up to five lines.
+ * The Training card's field, for each state (design "Spracheingabe"): empty with the microphone
+ * where send goes, typed with both, recording and being written down. One line sits beside the
+ * buttons; more takes the whole width above them and grows line by line, up to five lines.
  */
 export function CoachField({
   value,
@@ -201,13 +202,57 @@ export function CoachField({
   );
 }
 
-/** The chat's composer: the field, and above it the consent line until it is given. */
+/** The chat's composer: the field chats share, and above it the consent line until it is given. */
 export function CoachComposerView({
+  value,
+  onChangeText,
+  onSend,
+  answering,
+  onStop,
   consentNote,
   voice,
-  ...field
 }: CoachComposerProps & { voice: VoiceInput }) {
   const { t } = useTranslation('coach');
+  const typed = value.trim().length > 0;
+
+  let box = (
+    <ChatField
+      value={answering ? '' : value}
+      onChangeText={onChangeText}
+      maxLength={COACH_QUESTION_MAX}
+      placeholder={t(answering ? 'composer.answering' : 'composer.placeholder')}
+      resting={answering}
+      actions={
+        answering ? (
+          <PressableScale
+            haptic="press"
+            accessibilityLabel={t('composer.stop')}
+            onPress={onStop}
+            className="size-10 items-center justify-center rounded-full bg-fg"
+          >
+            <View className="size-3 rounded-[3px] bg-bg" />
+          </PressableScale>
+        ) : (
+          <>
+            <MicButton voice={voice} alone={!typed} />
+            {typed ? (
+              <PressableScale
+                haptic="press"
+                accessibilityLabel={t('composer.send')}
+                onPress={onSend}
+                className="size-10 items-center justify-center rounded-full bg-accent"
+              >
+                <Icon name="arrow-up" size={16} color={colors.onAccent} />
+              </PressableScale>
+            ) : null}
+          </>
+        )
+      }
+    />
+  );
+  if (voice.phase === 'recording') box = <RecordingRow voice={voice} />;
+  else if (voice.phase === 'transcribing') box = <TranscribingRow />;
+
   return (
     // Solid, as the chat runs on behind it while the keyboard is open.
     <View className="bg-bg">
@@ -222,9 +267,7 @@ export function CoachComposerView({
         </Text>
       ) : null}
       <VoiceInputNotes voice={voice} />
-      <View className="px-3 pt-2">
-        <CoachField {...field} voice={voice} />
-      </View>
+      <View className="px-3 pt-2">{box}</View>
     </View>
   );
 }
