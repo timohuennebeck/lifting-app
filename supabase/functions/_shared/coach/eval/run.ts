@@ -1,6 +1,7 @@
 // The coach eval: asks the coach the questions in cases.ts about the made-up users in
 // fixtures.ts with the real model, and checks each answer: the expected tool and arguments, only
-// numbers the tools returned, the question's language and a short answer.
+// numbers the tools returned (unless the case works them out), the question's language and a short
+// answer.
 // Needs OPENAI_API_KEY in supabase/functions/.env; one run is about 40 conversations.
 // Usage: npm run coach:eval                                  all cases, gpt-6.1-sol at low effort
 //        npm run coach:eval -- --model gpt-6-luna --effort medium
@@ -111,9 +112,12 @@ function grade(c: Case, history: CoachTurn[], context: string) {
       ...history.flatMap((t) => t.calls.map((x) => x.result)),
     ]),
     ...SMALL_NUMBERS,
+    ...(Array.isArray(c.derives) ? c.derives : []),
   ];
   const unknown = unmatchedNumbers(turn.answer, c.language, allowed);
-  if (unknown.length) found.push(`numbers not from the tools: ${unknown.join(', ')}`);
+  if (unknown.length && c.derives !== true) {
+    found.push(`numbers not from the tools: ${unknown.join(', ')}`);
+  }
   const language = languageOf(turn.answer);
   if (language !== c.language) found.push(`language ${language}, expected ${c.language}`);
   const sentences = sentenceCount(turn.answer);

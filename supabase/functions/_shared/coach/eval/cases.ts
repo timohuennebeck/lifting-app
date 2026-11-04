@@ -18,6 +18,8 @@ export interface Case {
   args?: (args: Args) => string[];
   /** Something the answer has to say. */
   says?: RegExp;
+  /** The answer works numbers out from the tools' values: these ones, or true for any. */
+  derives?: true | number[];
   /** The question is unclear: the answer asks back. Every other answer must not ask anything. */
   asks?: boolean;
 }
@@ -65,6 +67,34 @@ export const CASES: Case[] = [
       ),
   },
   {
+    // About 80 kg, losing 0.15 to 0.18 kg a week: 27 to 33 weeks.
+    id: 'weight-target',
+    user: 'lena',
+    turns: ['Wie viel wiege ich derzeit?', 'Und wann werde ich voraussichtlich die 75 erreichen?'],
+    language: 'de',
+    tool: ['trend', null],
+    derives: true,
+    says: /\b(2[5-9]|3[0-5])\s+Wochen|\b[6-8]\s+Monate|halbes? Jahr|\b(April|Mai|Juni|Juli)\b/,
+  },
+  {
+    id: 'weight-target-wrong-way',
+    user: 'lena',
+    turns: ['Wann erreiche ich 90 kg?'],
+    language: 'de',
+    tool: ['trend'],
+    derives: true,
+    says: /sink|f[äa]ll|nimmst .*ab|abgenommen|abnimm|weniger|runter|nach unten/i,
+  },
+  {
+    id: 'bench-target',
+    user: 'lena',
+    turns: ['Wann schaffe ich beim Bankdrücken ein 1RM von 130 kg?'],
+    language: 'de',
+    tool: ['trend'],
+    derives: true,
+    args: (a) => problems([a.exercise_id === 'bench-press', `exercise ${a.exercise_id}`]),
+  },
+  {
     id: 'bench-since-january',
     user: 'lena',
     turns: ['Wie läuft mein Bankdrücken seit Januar?'],
@@ -107,6 +137,7 @@ export const CASES: Case[] = [
     user: 'lena',
     turns: [BIG_THREE, 'Zeig mir das als Prozent vom Start.'],
     language: 'de',
+    derives: [100, 109, 115, 133],
     tool: ['compare'],
     args: (a) =>
       problems(
@@ -158,6 +189,7 @@ export const CASES: Case[] = [
     user: 'lena',
     turns: [SINCE_JULY, 'An welchem Tag fällt das Training am häufigsten aus?'],
     language: 'de',
+    derives: [47],
     tool: ['calendar', 'distribution', null],
     // Of her usual days she skipped Thursday most (9 of 19 since July).
     says: /donnerstag/i,
@@ -271,6 +303,7 @@ export const CASES: Case[] = [
     user: 'lena',
     turns: ['Wie viel habe ich in KW 39 trainiert?'],
     language: 'de',
+    derives: [47, 251],
     tool: ['workouts', 'calendar', 'period_vs_average'],
     args: (a) =>
       a.period
@@ -286,6 +319,14 @@ export const CASES: Case[] = [
     id: 'weight-none',
     user: 'sam',
     turns: ['How has my weight changed?'],
+    language: 'en',
+    tool: ['trend', null],
+    says: /log|track|enter|weigh|record|add/i,
+  },
+  {
+    id: 'weight-target-none',
+    user: 'sam',
+    turns: ['How long until my body weight reaches 150 lb?'],
     language: 'en',
     tool: ['trend', null],
     says: /log|track|enter|weigh|record|add/i,
