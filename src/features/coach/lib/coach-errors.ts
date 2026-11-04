@@ -7,7 +7,7 @@ import type { CoachError, CoachFailure } from './coach-client';
 
 /** The error sheet for a question without an answer; the ones worth another try offer it. */
 export function showCoachError(
-  reason: Exclude<CoachFailure, 'consent' | 'chatGone'>,
+  reason: Exclude<CoachFailure, 'chatGone'>,
   limit: CoachError['limit'],
   t: TFunction<'coach'>,
   retry: () => void,

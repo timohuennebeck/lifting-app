@@ -16,7 +16,6 @@ import { colors } from '@/shared/lib/theme';
 import { Gradient } from '@/shared/ui/gradient';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-import { Text } from '@/shared/ui/text';
 
 /** How far above the field the content fades out. */
 const FADE = 28;
@@ -28,8 +27,6 @@ export interface CoachComposerProps {
   /** While Kai answers: the field rests and the button stops the answer. */
   answering: boolean;
   onStop: () => void;
-  /** Before the first question: sending it is the consent, so the line says so. */
-  consentNote: boolean;
 }
 
 /** "Frag Kai …" with the microphone; it records, writes down what was said and adds it. */
@@ -41,7 +38,7 @@ export function CoachComposer(props: CoachComposerProps) {
   return <CoachComposerView {...props} voice={voice} />;
 }
 
-export interface CoachFieldProps extends Omit<CoachComposerProps, 'consentNote'> {
+export interface CoachFieldProps extends CoachComposerProps {
   voice: VoiceInput;
   inputRef?: Ref<TextInput>;
   /** While Kai answers, a tap on the resting field leads to the answer. */
@@ -118,13 +115,8 @@ export function CoachField({
   );
 }
 
-/** The chat's composer: the field, and above it the consent line until it is given. */
-export function CoachComposerView({
-  consentNote,
-  voice,
-  ...field
-}: CoachComposerProps & { voice: VoiceInput }) {
-  const { t } = useTranslation('coach');
+/** The chat's composer: the field, with what voice input has to say above it. */
+export function CoachComposerView({ voice, ...field }: CoachComposerProps & { voice: VoiceInput }) {
   return (
     // Solid, as the chat runs on behind it while the keyboard is open.
     <View className="bg-bg">
@@ -133,11 +125,6 @@ export function CoachComposerView({
         from="bottom"
         style={{ position: 'absolute', left: 0, right: 0, top: -FADE, height: FADE }}
       />
-      {consentNote ? (
-        <Text className="px-6 pt-2 text-center font-inter text-xs leading-4 text-dim">
-          {t('consent')}
-        </Text>
-      ) : null}
       <VoiceInputNotes voice={voice} />
       <View className="px-3 pt-2">
         <CoachField {...field} voice={voice} />

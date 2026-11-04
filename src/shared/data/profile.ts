@@ -66,7 +66,7 @@ export interface Profile {
   /** "About you", written by the user. */
   bio: string | null;
   onboardedAt: string | null;
-  /** When the user agreed to the coach sending their data to OpenAI; null: not (or withdrawn). */
+  /** When the user agreed to the coach sending their data to OpenAI: set at sign-up. */
   coachConsentAt: string | null;
   createdAt: string;
 }
@@ -171,5 +171,7 @@ export async function saveProfile(
     created_at: nowIso(),
     updated_at: nowIso(),
     ...columns,
+    // Signing up agrees to the coach sending the user's data to OpenAI.
+    coach_consent_at: nowIso(),
   });
 }

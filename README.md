@@ -361,8 +361,7 @@ what the question needs on top (a percentage, when a target is reached). The ans
 stream to the app as server-sent events; once complete, the question and answer are
 saved and sync to the app; the app shows the streamed answer until the saved one has synced
 (`src/features/coach/stores/coach-store.ts`). The screens follow the design "Coach Screens" and open
-over the tabs from the Training tab's card, which a flash runs across; Settings has a switch
-that withdraws the consent.
+over the tabs from the Training tab's card, which a flash runs across.
 
 - **Tools** (`supabase/functions/_shared/coach/tools.ts`): `trend`, `compare`,
   `period_vs_average`, `calendar` and `distribution` each draw a chart; `workouts` looks sessions
@@ -372,9 +371,10 @@ that withdraws the consent.
   card ("Was ist mein nächstes Training?"), the next one found as on the Training tab; it opens
   that routine. The values follow the app: the 1RM by Epley, bodyweight exercises with the latest body
   weight, sets per muscle with main muscles counting fully and helpers half, against 10 a week.
-- **Rules (server-side):** 16+ by the profile's birth date; consent: the start screen says that the
-  first question agrees to the training and body data going to OpenAI, and the function records it
-  in `profiles.coach_consent_at` before anything is sent (clearing it withdraws it); Pro, as for
+- **Rules (server-side):** 16+ by the profile's birth date; consent: a new profile sets
+  `profiles.coach_consent_at`, so signing up agrees to the training and body data going to OpenAI;
+  the app sends `consent: true` with every question, and the function records it for an account
+  without one before anything is sent; Pro, as for
   the progress check; at most 20 questions in 24 hours and 150 in 30 days (`COACH_DAILY_LIMIT`,
   `COACH_MONTHLY_LIMIT`).
 - **Secrets:** `OPENAI_API_KEY` as for the plans; `OPENAI_COACH_MODEL` (default `gpt-6.1-sol`) and
