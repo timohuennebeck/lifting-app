@@ -177,7 +177,11 @@ changes hourly, so new exercises ship without a release. Edit them with the serv
 - **`measures`:** what one set records, and so which boxes the workout screen shows:
   `{weight,reps}` (kg × reps, also bodyweight moves with added weight), `{reps}` (push-ups),
   `{seconds}` (planks) or `{weight,seconds}` (weighted holds).
-- **`image_path`:** a file in the public `exercise-media` bucket.
+- **`image_path`:** a photo in the public `exercise-media` bucket, `exercises/<id>-v<n>.webp`
+  (1600×1200), with its vertical thumbnail next to it as `exercises/<id>-v<n>-thumb.webp` (240×320).
+  Devices keep images they have downloaded until sign-out (on iOS with `plugins/keep-image-cache`;
+  the cache otherwise deletes them after a week), so a replaced image gets the next version in its
+  name and a new `image_path`; never overwrite a file.
 - **Equipment (`public.equipment`):** one row per piece of equipment with its `name` per language
   (English required), `in_gym` (a full gym has it: "Komplettes Studio" includes it), `at_home`
   (offered in the "Eigene Geräte" checklist) and `position` (its order there). `bodyweight` only

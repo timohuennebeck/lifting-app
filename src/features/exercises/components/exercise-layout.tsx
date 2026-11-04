@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { archiveCustomExercise } from '@/shared/data/custom-exercises';
 import {
+  type Exercise,
   useCustomExerciseStore,
   useEquipmentName,
   useExercise,
@@ -48,6 +49,7 @@ export function ExerciseLayout() {
   const { t, i18n } = useTranslation(['exercises', 'common']);
   const insets = useSafeAreaInsets();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [failedImage, setFailedImage] = useState<Exercise['image']>(null);
   const exercise = useExercise(exerciseId);
   const name = useExerciseName(exerciseId, i18n.language);
   const equipment = useEquipmentName(exercise?.equipment ?? '', i18n.language);
@@ -83,12 +85,14 @@ export function ExerciseLayout() {
   return (
     <View className="flex-1 bg-bg">
       <View className="h-85 overflow-hidden">
-        {exercise.image ? (
+        {/* A photo that can't load (no connection, not saved yet) falls back to the thumbnail. */}
+        {exercise.image && exercise.image !== failedImage ? (
           <Image
             source={exercise.image}
             contentFit="cover"
             contentPosition={{ left: '50%', top: '35%' }}
             style={[StyleSheet.absoluteFill, { bottom: 24 }]}
+            onError={() => setFailedImage(exercise.image)}
           />
         ) : (
           <ExerciseThumb

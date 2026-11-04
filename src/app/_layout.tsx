@@ -23,6 +23,7 @@ import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-stor
 import { CatalogOffline } from '@/shared/components/catalog-offline';
 import { CustomExerciseGate } from '@/shared/components/custom-exercise-gate';
 import { ErrorSheetHost } from '@/shared/components/error-sheet-host';
+import { ExerciseImagePreload } from '@/shared/components/exercise-image-preload';
 import { useCustomExerciseStore } from '@/shared/data/exercises';
 import { db } from '@/shared/data/powersync/database';
 import { queryClient } from '@/shared/data/query-client';
@@ -94,6 +95,7 @@ export default function RootLayout() {
                   exercises are there. */}
               {catalog.ready ? (
                 <CustomExerciseGate>
+                  <ExerciseImagePreload />
                   <Stack
                     screenOptions={{
                       headerShown: false,

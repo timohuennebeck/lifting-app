@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { useEffect } from 'react';
 
 import { resetCoach } from '@/features/coach/stores/coach-store';
@@ -66,6 +67,9 @@ export function useAuthListener() {
         // Progress-check photos are just as private; clearLocalPhotos also removes the drafts.
         useProgressCheckStore.getState().clear();
         clearLocalPhotos();
+        // Saved images hold the body check photos and screenshots viewed. Exercise images are
+        // downloaded again on the next launch.
+        void Image.clearDiskCache();
         // So is a plan import in progress (its photos and the detected plan).
         useImportStore.getState().reset();
         // The picked before/after checks belong to the account too.
