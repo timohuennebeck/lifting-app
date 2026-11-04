@@ -79,7 +79,9 @@ export function CoachField({
     setFocused(next);
     onFocusChange?.(next);
   };
-  const hintShown = !!hint && !value && !focused && !answering;
+  const hintShown = !!hint && !typed && !focused && !answering;
+  // iOS hides the placeholder once the field holds anything, even only empty lines.
+  const placeholderLost = !!value && !typed && !hintShown && !answering;
 
   if (voice.phase === 'recording') return <RecordingRow voice={voice} />;
   if (voice.phase === 'transcribing') return <TranscribingRow />;
@@ -111,6 +113,16 @@ export function CoachField({
           </Animated.Text>
         </View>
       ) : null}
+      {placeholderLost ? (
+        <Text
+          pointerEvents="none"
+          importantForAccessibility="no-hide-descendants"
+          numberOfLines={1}
+          className="absolute top-[15px] right-14 left-[18px] font-inter text-base leading-[22px] text-dim"
+        >
+          {t('composer.placeholder')}
+        </Text>
+      ) : null}
       {answering && onOpenAnswer ? (
         <Pressable
           accessibilityRole="button"
@@ -123,8 +135,7 @@ export function CoachField({
         ref={inputRef}
         accessibilityLabel={t('composer.placeholder')}
         value={answering ? '' : value}
-        // Spaces and empty lines before the text count as nothing, so the placeholder stays.
-        onChangeText={(text) => onChangeText(text.trimStart())}
+        onChangeText={onChangeText}
         editable={!answering}
         multiline
         maxLength={COACH_QUESTION_MAX}
