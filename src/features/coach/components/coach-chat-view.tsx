@@ -46,6 +46,7 @@ export function CoachChatView({ subtitle, items, pending, onBack, composer }: Co
   const { t } = useTranslation('coach');
   const footerInset = useFooterInset();
   const scrollRef = useRef<Animated.ScrollView>(null);
+  const positioned = useRef(false);
   const keyboardOffset = footerInset - 8;
   const rows = items.map((item) =>
     item.role === 'user' ? (
@@ -100,7 +101,11 @@ export function CoachChatView({ subtitle, items, pending, onBack, composer }: Co
           paddingTop: FADE,
           paddingBottom: 16,
         }}
-        onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
+        onContentSizeChange={() => {
+          // Opens at the last message; only an answer coming in scrolls visibly.
+          scrollRef.current?.scrollToEnd({ animated: positioned.current && !!pending });
+          if (rows.length) positioned.current = true;
+        }}
       >
         {rows}
       </KeyboardChatScrollView>
