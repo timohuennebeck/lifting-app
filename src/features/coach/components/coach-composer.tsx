@@ -123,7 +123,8 @@ export function CoachField({
         ref={inputRef}
         accessibilityLabel={t('composer.placeholder')}
         value={answering ? '' : value}
-        onChangeText={onChangeText}
+        // Spaces and empty lines before the text count as nothing, so the placeholder stays.
+        onChangeText={(text) => onChangeText(text.trimStart())}
         editable={!answering}
         multiline
         maxLength={COACH_QUESTION_MAX}
