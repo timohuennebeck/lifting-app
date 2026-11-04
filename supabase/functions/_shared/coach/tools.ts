@@ -1,7 +1,8 @@
 // The coach's tools: what the model can ask for and the code that answers. Each tool returns the
 // numbers for the model (`result`, which it quotes rather than computes) and, for the five chart
 // tools, the chart the app draws under the answer (`chart`; null without enough data). In the
-// same place, create_workout and show_workout give the workout the app shows as a card.
+// same place, create_workout and show_workout give the workout the app shows as a card, and
+// swap_exercises the plan change the user applies on its card.
 import { cut, MUSCLES } from '../plan-events.ts';
 import {
   addDays,
@@ -98,8 +99,26 @@ export interface WorkoutChart {
   exercises: WorkoutLine[];
 }
 
+/** A plan change on a card: per exercise the options the user picks from and then applies. */
+export interface SwapChart {
+  type: 'swap';
+  swaps: {
+    exerciseId: string;
+    /** The plan's workouts it is swapped in, in plan order. */
+    routineIds: string[];
+    /** 1 to 3 exercises that log the same (reps or seconds), best first. */
+    options: string[];
+  }[];
+}
+
 export type Chart =
-  TrendChart | CompareChart | PeriodChart | CalendarChart | DistributionChart | WorkoutChart;
+  | TrendChart
+  | CompareChart
+  | PeriodChart
+  | CalendarChart
+  | DistributionChart
+  | WorkoutChart
+  | SwapChart;
 
 export interface ToolResult {
   chart: Chart | null;
@@ -281,6 +300,40 @@ export const TOOLS = [
       'button that opens it to edit and start. Returns what is in it.',
     { routine_id: { type: 'string', description: 'A workout id from the context.' } },
   ),
+  tool(
+    'swap_exercises',
+    "Shows a change to the user's plan as a card under your answer: each exercise to replace " +
+      'with the options the user picks from, then applies. Nothing changes before they do; ' +
+      'sets, targets and rest stay. Returns what the card shows.',
+    {
+      swaps: {
+        type: 'array',
+        description: 'One per exercise to replace, at most 4.',
+        items: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['exercise_id', 'routine_id', 'options'],
+          properties: {
+            exercise_id: {
+              type: 'string',
+              description: "The exercise to replace, from the plan's workouts in the context.",
+            },
+            routine_id: {
+              type: ['string', 'null'],
+              description: 'Only in this workout. null: in every workout of the plan with it.',
+            },
+            options: {
+              type: 'array',
+              items: { type: 'string' },
+              description:
+                "1 to 3 exercise ids from find_exercises or the user's exercises, best first, " +
+                'that log the same as it (reps or seconds).',
+            },
+          },
+        },
+      },
+    },
+  ),
 ];
 
 export const CHART_TOOLS = new Set([
@@ -291,6 +344,7 @@ export const CHART_TOOLS = new Set([
   'distribution',
   'create_workout',
   'show_workout',
+  'swap_exercises',
 ]);
 
 /** Runs a tool the model called; a mistake in the call comes back as `error` for it to fix. */
@@ -313,6 +367,7 @@ const RUNNERS: Record<string, (args: Args, data: CoachData, user: CoachUser) => 
   find_exercises: findExercises,
   create_workout: createWorkout,
   show_workout: showWorkout,
+  swap_exercises: swapExercises,
 };
 
 // ---------- shared ----------
@@ -1057,5 +1112,91 @@ function showWorkout(args: Args, data: CoachData): ToolResult {
         target_max: e.targetMax,
       })),
     },
+  };
+}
+
+// ---------- swapping exercises in the plan ----------
+
+const MAX_SWAPS = 4;
+const MAX_OPTIONS = 3;
+
+/** An exercise's sets as the card writes them: "3 × 8–10", or "3 sets" without a target. */
+const setsText = ({ sets, targetMin, targetMax }: WorkoutLine) =>
+  targetMin == null || targetMax == null
+    ? `${sets} sets`
+    : `${sets} × ${targetMin === targetMax ? targetMin : `${targetMin}–${targetMax}`}`;
+
+/**
+ * The plan change for the card. Each exercise is swapped in the plan's workouts that have it (or
+ * the one named); options it can't take (unknown, cardio, another measure, already in such a
+ * workout) are left out. A swap without a workout or an option is named back in `skipped`, so one
+ * mistake doesn't cost the whole card.
+ */
+function swapExercises(args: Args, data: CoachData): ToolResult {
+  const catalog = new Map(data.catalog.map((e) => [e.id, e]));
+  const known = (id: string) => {
+    const own = data.exercises.get(id);
+    return own?.cardio ? undefined : (catalog.get(id) ?? own);
+  };
+  const nameOf = (id: string) => known(id)?.name ?? data.exercises.get(id)?.name ?? id;
+  const timed = (id: string) => known(id)?.measures.includes('seconds') ?? false;
+
+  const swaps: SwapChart['swaps'] = [];
+  const shown: Record<string, unknown>[] = [];
+  const skipped: string[] = [];
+  for (const swap of Array.isArray(args.swaps) ? (args.swaps as Args[]) : []) {
+    const id = String(swap.exercise_id);
+    const routineId = swap.routine_id == null ? null : String(swap.routine_id);
+    if (swaps.length >= MAX_SWAPS || swaps.some((s) => s.exerciseId === id)) {
+      skipped.push(`${id}: only one swap per exercise, at most ${MAX_SWAPS}`);
+      continue;
+    }
+    const routines = data.routines.filter(
+      (r) =>
+        (routineId ? r.id === routineId : r.status !== null) &&
+        r.exercises.some((e) => e.exerciseId === id),
+    );
+    if (!routines.length) {
+      skipped.push(
+        routineId
+          ? `${id}: not in workout ${routineId}`
+          : `${id}: not in a workout of the active plan`,
+      );
+      continue;
+    }
+    const options: string[] = [];
+    for (const option of Array.isArray(swap.options) ? swap.options.map(String) : []) {
+      const fits =
+        option !== id &&
+        !!known(option) &&
+        timed(option) === timed(id) &&
+        !options.includes(option) &&
+        !routines.some((r) => r.exercises.some((e) => e.exerciseId === option));
+      if (fits && options.length < MAX_OPTIONS) options.push(option);
+    }
+    if (!options.length) {
+      skipped.push(
+        `${id}: no option fits (known, not cardio, logs the same, not already in the workout)`,
+      );
+      continue;
+    }
+    const line = routines[0].exercises.find((e) => e.exerciseId === id)!;
+    swaps.push({ exerciseId: id, routineIds: routines.map((r) => r.id), options });
+    shown.push({
+      exercise: nameOf(id),
+      workouts: routines.map((r) => r.name),
+      sets: setsText(line),
+      options: options.map(nameOf),
+    });
+  }
+  if (!swaps.length) {
+    return failed(
+      `Nothing to show: ${skipped.join('; ') || 'no swaps'}. Use exercise ids from the ` +
+        "plan's workouts in the context and options from find_exercises.",
+    );
+  }
+  return {
+    chart: { type: 'swap', swaps },
+    result: { shown, ...(skipped.length ? { skipped } : {}) },
   };
 }

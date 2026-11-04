@@ -301,10 +301,17 @@ Deno.test('workouts: sessions newest first, sets as the app writes them', () => 
 });
 
 Deno.test('every tool is strict: all properties required, nothing else allowed', () => {
-  for (const tool of TOOLS) {
-    assertEquals(tool.parameters.required, Object.keys(tool.parameters.properties));
-    assertEquals(tool.parameters.additionalProperties, false);
-  }
+  // Objects in arrays (create_workout's exercises, swap_exercises' swaps) too.
+  const strict = (schema: Record<string, unknown>) => {
+    if (schema.type === 'object') {
+      const properties = schema.properties as Record<string, Record<string, unknown>>;
+      assertEquals(schema.required, Object.keys(properties));
+      assertEquals(schema.additionalProperties, false);
+      Object.values(properties).forEach(strict);
+    }
+    if (schema.items) strict(schema.items as Record<string, unknown>);
+  };
+  for (const tool of TOOLS) strict(tool.parameters);
 });
 
 Deno.test('the eval reads numbers as the language writes them', () => {
@@ -603,6 +610,64 @@ Deno.test('show_workout: gives the saved workout for the card and what is in it'
   assert(run('show_workout', { routine_id: 'nope' }).result.error);
 });
 
+Deno.test(
+  'swap_exercises: options for the plan workouts with the exercise, misfits left out',
+  () => {
+    const { chart, result } = run('swap_exercises', {
+      swaps: [
+        {
+          exercise_id: 'bench-press',
+          routine_id: null,
+          // Itself, one that logs seconds, cardio, unknown and a repeat are left out; 3 at most.
+          options: [
+            'dumbbell-press',
+            'bench-press',
+            'plank',
+            'treadmill',
+            'nope',
+            'dumbbell-press',
+            'cable-fly',
+            'squat',
+            'pull-up',
+          ],
+        },
+        { exercise_id: 'squat', routine_id: null, options: ['dumbbell-press'] },
+      ],
+    });
+    assertEquals(chart, {
+      type: 'swap',
+      swaps: [
+        {
+          exerciseId: 'bench-press',
+          routineIds: ['r-push'],
+          options: ['dumbbell-press', 'cable-fly', 'squat'],
+        },
+      ],
+    });
+    assertEquals(result.shown, [
+      {
+        exercise: 'bench-press',
+        workouts: ['Push'],
+        sets: '3 × 6–8',
+        options: ['dumbbell-press', 'cable-fly', 'squat'],
+      },
+    ]);
+    assertEquals(result.skipped, ['squat: not in a workout of the active plan']);
+
+    // A workout without the exercise, or no option that fits: nothing to show.
+    const empty = run('swap_exercises', {
+      swaps: [{ exercise_id: 'bench-press', routine_id: 'r-empty', options: ['dumbbell-press'] }],
+    });
+    assertEquals(empty.chart, null);
+    assert(String(empty.result.error).includes('bench-press: not in workout r-empty'));
+    const misfit = run('swap_exercises', {
+      swaps: [{ exercise_id: 'bench-press', routine_id: null, options: ['plank'] }],
+    });
+    assertEquals(misfit.chart, null);
+    assert(misfit.result.error);
+  },
+);
+
 Deno.test('coachRoutines: finds the next one as the Training tab does', () => {
   const row = (
     id: string,
@@ -686,7 +751,7 @@ Deno.test('contextText: lists the workouts with the next one marked', () => {
     ...DATA,
     routines: [...DATA.routines, { id: 'r-solo', name: 'Solo', status: null, exercises: [] }],
   });
-  assert(text.includes('- r-push · Push · next'));
+  assert(text.includes('- r-push · Push · next · bench-press (bench-press)'));
   assert(text.includes('- r-empty · Empty · open'));
   assert(text.includes('Saved workouts outside the plan (id · name):\n- r-solo · Solo'));
 });

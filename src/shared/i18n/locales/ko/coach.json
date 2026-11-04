@@ -15,6 +15,31 @@
   "workout": {
     "open": "개요 열기"
   },
+  "swap": {
+    "title": "플랜 변경",
+    "keepsMain": "{{muscle}}이(가) 주 근육으로 유지돼요",
+    "newMain": "주 근육: {{from}} 대신 {{to}}",
+    "toSwap_one": "운동 {{count}}개 교체",
+    "toSwap_other": "운동 {{count}}개 교체",
+    "keepAll": "모두 그대로 유지돼요",
+    "swapped_one": "운동 {{count}}개 교체됨",
+    "swapped_other": "운동 {{count}}개 교체됨",
+    "replaceWith": "교체할 운동",
+    "inPlan": "이제 플랜에 있어요",
+    "recommended": "추천",
+    "keep": "{{name}} 유지",
+    "apply": "적용",
+    "applyBoth": "둘 다 적용",
+    "applyAll": "모두 적용",
+    "viewPlan": "플랜 보기",
+    "appliedOne": "{{name}} 적용됨",
+    "fromNext": "다음 운동부터 적용돼요",
+    "undo": "되돌리기",
+    "notSwapped": "교체 안 함",
+    "gone": "{{name}}: 더 이상 {{workouts}}에 없어요.",
+    "goneFromPlan": "{{name}}: 더 이상 플랜에 없어요.",
+    "changed": "이 답변 이후에 플랜이 바뀌었어요."
+  },
   "values": {
     "reps_one": "{{count}}회",
     "reps_other": "{{count}}회",

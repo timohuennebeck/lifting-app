@@ -357,7 +357,8 @@ The coach answers questions about the user's own training ("Wie hat sich mein Ge
 workout when asked ("Bau mir ein Push-Training"). The app sends the
 question to the `coach-chat` Edge Function, where the model picks one of the coach's tools; the tool
 computes the numbers from the user's data, and the model writes the answer from them, working out
-what the question needs on top (a percentage, when a target is reached). The answer and its chart
+what the question needs on top (a percentage, when a target is reached). It also swaps exercises in
+the user's plan ("Mein Knie zwickt bei Kniebeugen"). The answer and its chart
 stream to the app as server-sent events; once complete, the question and answer are
 saved and sync to the app; the app shows the streamed answer until the saved one has synced
 (`src/features/coach/stores/coach-store.ts`). The screens follow the design "Coach Screens" and open
@@ -369,7 +370,12 @@ over the tabs from the Training tab's card, which a flash runs across.
   place. The card saves it to the library the first time it opens, under its answer's id, so
   until then nothing piles up there. `show_workout` shows a workout the user saved on the same
   card ("Was ist mein nächstes Training?"), the next one found as on the Training tab; it opens
-  that routine. The values follow the app: the 1RM by Epley, bodyweight exercises with the latest body
+  that routine. `swap_exercises` shows a plan change on such a card ("Planänderung"): per exercise
+  1 to 3 options logging the same (reps or seconds), which the user picks from (or keeps the exercise) before applying them
+  in the plan's workouts that have the exercise; sets, targets and rest stay. Nothing changes until
+  they tap Übernehmen; the card reads its state from the plan, so it then shows what is in the plan
+  with Rückgängig, or that the plan changed since. The context lists each plan workout's exercises
+  for it. The values follow the app: the 1RM by Epley, bodyweight exercises with the latest body
   weight, sets per muscle with main muscles counting fully and helpers half, against 10 a week.
 - **Rules (server-side):** 16+ by the profile's birth date; consent: a new profile sets
   `profiles.coach_consent_at`, so signing up agrees to the training and body data going to OpenAI;
@@ -396,7 +402,7 @@ over the tabs from the Training tab's card, which a flash runs across.
   one row per question, which the limits count, with the tool calls (replayed for follow-up
   questions) and the tokens it took. Deleting a chat deletes its tool calls; the rest of the run
   stays for the limits. Chats are kept until the user deletes them or the account.
-- **Testing:** `npm run coach:eval` (needs Deno and `OPENAI_API_KEY`) asks 45 questions about two
+- **Testing:** `npm run coach:eval` (needs Deno and `OPENAI_API_KEY`) asks 54 questions about two
   made-up users (`supabase/functions/_shared/coach/eval/`) and checks each answer: the tool and
   its arguments, only numbers the tools gave (unless the question needs them worked out), the
   question's language, at most 3 sentences and 50 words, and asking back only when the question

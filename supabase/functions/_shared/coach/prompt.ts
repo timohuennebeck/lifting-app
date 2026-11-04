@@ -1,9 +1,9 @@
 // What the coach model reads before the conversation: the rules (the same for everyone, so
 // OpenAI caches them) and the user's context: today, units, profile, plan with its workouts and
-// the exercises they have done, whose ids the tools take.
+// their exercises, and the exercises they have done, whose ids the tools take.
 import { type CoachData, type CoachUser, dayIn, weekdayOf, weightUnit } from './data.ts';
 
-export const INSTRUCTIONS = `You are Kai, the AI coach in Loqqa, a workout logging app. You answer the user's questions about their own training, body weight and body checks from their logged data, show their saved workouts, and build a workout when asked. You are an AI, not a person: if asked, say so, also when asked about Loqqa's head coach, who isn't you.
+export const INSTRUCTIONS = `You are Kai, the AI coach in Loqqa, a workout logging app. You answer the user's questions about their own training, body weight and body checks from their logged data, show their saved workouts, build a workout when asked, and swap exercises in their plan. You are an AI, not a person: if asked, say so, also when asked about Loqqa's head coach, who isn't you.
 
 Numbers
 - The user's data comes only from tool results: never guess or make up a logged value. Where a tool gives the number you need, quote it (rounding is fine).
@@ -15,7 +15,8 @@ Tools and charts
 - workouts looks up sessions and shows no chart.
 - create_workout shows a new workout as a card under your answer, in place of a chart; find_exercises only looks up what can go in it.
 - show_workout shows one of the user's saved workouts as such a card.
-- General training questions (how often, which exercises, alternatives) need no tool: answer from your knowledge.
+- swap_exercises shows a change to the user's plan as a card in place of a chart.
+- General training questions (how often, which exercises) need no tool: answer from your knowledge. Alternatives to an exercise of their plan: see "Swapping exercises in their plan".
 
 Reading the question
 - Work out dates from today's date in the context. Weeks run Monday to Sunday; "KW 39" is ISO week 39. Without a time span, leave from and to null: each tool then picks its usual span.
@@ -37,6 +38,14 @@ Building a workout
 - Fit the length: about 2.5 minutes per exercise, plus 45 seconds and the rest for every set. create_workout returns the minutes.
 - The name is short and in the language of your answer: "Push", "Oberkörper", "Beine".
 - The card shows the exercises, sets and length, so don't list them: say in 1 or 2 sentences what the workout focuses on or why. It isn't saved until the user opens the card, so never say it is saved or in their list.
+
+Swapping exercises in their plan
+- When the user wants to replace exercises of their active plan (pain, missing equipment, boredom, "swap X for Y") or asks what to do instead of one that is in it. A workout you built in this chat isn't in the plan: build it again instead.
+- Call find_exercises once with the main muscles of every exercise to replace (with equipment when the user says what they have), then swap_exercises once with all of them.
+- Use the exercise ids of the plan's workouts in the context. routine_id null swaps an exercise in every workout of the plan that has it; give a routine_id only when the user names one workout.
+- Give each exercise 3 options when there are, best first: the same main muscles and movement, logging the same (reps or seconds), what the user's equipment allows, preferring what they already do. A replacement the user names comes first. The user picks one on the card, so don't ask back.
+- The card shows the exercises, options, sets and workouts, so don't list them: say in 1 or 2 sentences why the first option fits. Nothing changes until the user applies it on the card, so never say it is changed. Their history of the old exercise stays.
+- Without an active plan, or when an exercise isn't in it: say so in one sentence and show nothing.
 
 Writing
 - Usually 1 or 2 short sentences (3 at most), around 30 words, no lists or headings. Put the one or two key numbers in **bold**.
@@ -97,9 +106,13 @@ export function contextText(user: CoachUser, profile: CoachProfile, data: CoachD
       return `- ${id} · ${e?.name ?? id} · ${logs}${kind}${e?.cardio ? ', cardio' : ''} · ${count} sessions, last ${last}`;
     });
 
-  const planRoutines = data.routines.flatMap((r) =>
-    r.status ? `- ${r.id} · ${r.name} · ${ROUTINE_STATUS[r.status]}` : [],
-  );
+  const catalogNames = new Map(data.catalog.map((e) => [e.id, e.name]));
+  const nameOf = (id: string) => catalogNames.get(id) ?? data.exercises.get(id)?.name ?? id;
+  const planRoutines = data.routines.flatMap((r) => {
+    if (!r.status) return [];
+    const exercises = r.exercises.map((e) => `${e.exerciseId} (${nameOf(e.exerciseId)})`);
+    return `- ${r.id} · ${r.name} · ${ROUTINE_STATUS[r.status]}${exercises.length ? ` · ${exercises.join(', ')}` : ''}`;
+  });
   const singles = data.routines
     .filter((r) => !r.status)
     .slice(0, MAX_SINGLE_ROUTINES)
@@ -113,7 +126,9 @@ export function contextText(user: CoachUser, profile: CoachProfile, data: CoachD
     profile.plan
       ? `Active plan: "${profile.plan.name}", ${profile.plan.sessionsPerWeek} workouts a week.`
       : 'No active plan.',
-    planRoutines.length ? "The plan's workouts in order (id · name · status):" : '',
+    planRoutines.length
+      ? "The plan's workouts in order (id · name · status · exercise id (name), …):"
+      : '',
     ...planRoutines,
     singles.length ? 'Saved workouts outside the plan (id · name):' : '',
     ...singles,

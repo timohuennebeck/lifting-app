@@ -15,6 +15,31 @@
   "workout": {
     "open": "Open overview"
   },
+  "swap": {
+    "title": "Plan change",
+    "keepsMain": "{{muscle}} stays the main muscle",
+    "newMain": "Main muscle: {{to}} instead of {{from}}",
+    "toSwap_one": "Swap {{count}} exercise",
+    "toSwap_other": "Swap {{count}} exercises",
+    "keepAll": "Everything stays as it is",
+    "swapped_one": "{{count}} exercise swapped",
+    "swapped_other": "{{count}} exercises swapped",
+    "replaceWith": "Replace with",
+    "inPlan": "Now in your plan",
+    "recommended": "Recommended",
+    "keep": "Keep {{name}}",
+    "apply": "Apply",
+    "applyBoth": "Apply both",
+    "applyAll": "Apply all",
+    "viewPlan": "View plan",
+    "appliedOne": "{{name}} swapped in",
+    "fromNext": "From your next workout",
+    "undo": "Undo",
+    "notSwapped": "Not swapped",
+    "gone": "{{name}}: no longer in {{workouts}}.",
+    "goneFromPlan": "{{name}}: no longer in your plan.",
+    "changed": "Your plan has changed since this answer."
+  },
   "values": {
     "reps_one": "{{count}} rep",
     "reps_other": "{{count}} reps",
