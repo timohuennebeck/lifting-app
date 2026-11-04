@@ -1,7 +1,7 @@
 import { router, useIsFocused } from 'expo-router';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Keyboard, type TextInput, View } from 'react-native';
+import { Keyboard, Pressable, type TextInput, View } from 'react-native';
 import Animated, { type CSSAnimationKeyframes, useReducedMotion } from 'react-native-reanimated';
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
 
@@ -13,6 +13,7 @@ import { COACH_QUESTION_MAX } from '@/shared/lib/limits';
 import { colors } from '@/shared/lib/theme';
 import { CoachMark } from '@/shared/ui/coach-mark';
 import { IconButton } from '@/shared/ui/icon-button';
+import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
 import { CoachError, timeZone } from '../lib/coach-client';
@@ -72,8 +73,8 @@ export interface AskCoachCardProps {
 
 /**
  * Where a chat with Kai starts (Training tab): typing or speaking a question sends it to a chat of
- * its own, and the clock opens earlier chats. A question that comes back without an answer returns
- * to the field. While an answer comes in, the field leads to it.
+ * its own, and the card or its clock opens earlier chats. A question that comes back without an
+ * answer returns to the field. While an answer comes in, the field leads to it.
  */
 export function AskCoachCard({ className }: AskCoachCardProps) {
   const { t } = useTranslation('coach');
@@ -135,8 +136,16 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
     }
   };
 
+  const openHistory = () => router.push('/coach/history');
+
   return (
-    <View className={className}>
+    // Not one element for VoiceOver, which would hide the field; the clock opens the chats there.
+    <PressableScale
+      accessible={false}
+      activeScale={0.98}
+      onPress={openHistory}
+      className={className}
+    >
       <View className="items-center gap-3 overflow-hidden rounded-[18px] bg-surface px-3.5 pt-7.5 pb-3.5">
         <CoachGlow paused={!focused} />
         <IconButton
@@ -144,7 +153,7 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
           size={40}
           iconSize={17}
           accessibilityLabel={t('history.title')}
-          onPress={() => router.push('/coach/history')}
+          onPress={openHistory}
           className="absolute top-2.5 right-2.5 z-10 bg-control"
         />
         <View className="size-19 items-center justify-center">
@@ -159,7 +168,12 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
           </Text>
         </View>
         <VoiceInputNotes voice={voice} />
-        <View className="self-stretch">
+        {/* A tap beside the text still means the field. */}
+        <Pressable
+          accessible={false}
+          onPress={() => inputRef.current?.focus()}
+          className="self-stretch"
+        >
           <CoachField
             inputRef={inputRef}
             value={draft}
@@ -172,9 +186,9 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
             hint={t(`card.hints.${HINTS[turns % HINTS.length]}`)}
             voice={voice}
           />
-        </View>
+        </Pressable>
       </View>
       {reducedMotion ? null : <ChaseBorder lap={lap} stopped={resting} />}
-    </View>
+    </PressableScale>
   );
 }
