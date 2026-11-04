@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { useRef } from 'react';
+import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
@@ -17,14 +18,21 @@ import { Text } from '@/shared/ui/text';
 import { saveCoachWorkout } from '../data/coach-workout';
 import type { WorkoutChart } from '../lib/charts';
 
-/** An exercise's sets with their target: "3 × 8–10", with the unit only for seconds: "3 × 30 s". */
-function setsLabel({ exerciseId, sets, targetMin, targetMax }: WorkoutChart['exercises'][number]) {
+/**
+ * An exercise's sets with their target: "3 × 8–10", with the unit only for seconds: "3 × 30 s";
+ * without a target just "3 Sätze".
+ */
+function setsLabel(
+  { exerciseId, sets, targetMin, targetMax }: WorkoutChart['exercises'][number],
+  t: TFunction<'coach'>,
+) {
+  if (targetMin === null || targetMax === null) return t('values.sets', { count: sets });
   if (isTimed(exerciseId)) return `${sets} × ${formatTargetLabel(targetMin, targetMax, true)}`;
   return `${sets} × ${targetMin === targetMax ? targetMin : `${targetMin}–${targetMax}`}`;
 }
 
 function WorkoutLine({ exercise }: { exercise: WorkoutChart['exercises'][number] }) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('coach');
   const name = useExerciseName(exercise.exerciseId, i18n.language);
   return (
     <View className="flex-row items-baseline justify-between gap-3">
@@ -36,26 +44,27 @@ function WorkoutLine({ exercise }: { exercise: WorkoutChart['exercises'][number]
         {name}
       </Text>
       <Text variant="caption" tone="subtle" className="font-inter-medium text-sm leading-5">
-        {setsLabel(exercise)}
+        {setsLabel(exercise, t)}
       </Text>
     </View>
   );
 }
 
 export interface WorkoutCardProps {
-  /** The answer it came with, whose id the saved routine takes. */
+  /** The answer it came with, whose id a workout Kai built takes once saved. */
   answerId: string;
   workout: WorkoutChart;
 }
 
 /**
- * A workout Kai built, as the Training tab's card with its exercises: a tap saves it to the library
- * and opens it to edit and start.
+ * A workout Kai built or the user saved, as the Training tab's card with its exercises: a tap opens
+ * it to edit and start, saving one Kai built to the library first.
  */
 export function WorkoutCard({ answerId, workout }: WorkoutCardProps) {
   const { t } = useTranslation(['coach', 'training', 'muscles']);
   const shares = muscleShares(workout.exercises);
   const top = shares.at(0);
+  const routineId = workout.routineId ?? answerId;
   // State isn't updated yet on a double tap, which would open it twice.
   const opening = useRef(false);
 
@@ -63,8 +72,8 @@ export function WorkoutCard({ answerId, workout }: WorkoutCardProps) {
     if (opening.current) return;
     opening.current = true;
     try {
-      await saveCoachWorkout(requireUserId(), answerId, workout);
-      router.push(`/routine/${answerId}`);
+      await saveCoachWorkout(requireUserId(), routineId, workout);
+      router.push(`/routine/${routineId}`);
     } catch (error) {
       haptics.error();
       console.error(error);
