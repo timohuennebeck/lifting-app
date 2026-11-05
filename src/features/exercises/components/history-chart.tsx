@@ -133,7 +133,7 @@ export function HistoryChart({ data, metric, format, oneRepMax }: HistoryChartPr
           className="mt-1"
           style={{ height: HEIGHT }}
           onLayout={onLayout}
-          accessibilityLabel={t('history.chartLabel')}
+          accessibilityLabel={t(`history.${metric}Chart`)}
         >
           {width > 0 ? (
             <Svg width={width} height={HEIGHT} style={{ overflow: 'visible' }}>
