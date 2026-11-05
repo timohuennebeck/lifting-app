@@ -102,7 +102,7 @@ export function ExportSheet({ visible, onClose, onRetry }: ExportSheetProps) {
     >
       {exporting || file ? (
         <View className="gap-4">
-          <View className="flex-row items-center gap-3.5 rounded-[22px] bg-control p-3.5">
+          <View className="flex-row items-center gap-3.5 px-1">
             <View className="size-11 items-center justify-center rounded-full bg-track">
               <Text className="font-inter-bold text-[11px] tracking-[0.4px] uppercase">
                 {t('settings.data.exportFormat')}
