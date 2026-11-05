@@ -2,7 +2,7 @@
 
 Versão: 1.3
 
-Última atualização: 2 de novembro de 2026
+Última atualização: 5 de novembro de 2026
 
 Esta é uma tradução. A versão em alemão é a juridicamente vinculante.
 
@@ -92,7 +92,7 @@ Só tratamos esses dados com o seu consentimento expresso (art. 9(2)(a) em conju
 
 - **Medidas corporais:** quando você cria sua conta, você consente expressamente, por meio do aviso logo acima do botão, que tratemos seus dados corporais para adaptar seu treino. Antes disso, peso e altura ficam no seu dispositivo.
 - **Check corporal:** antes de enviar suas fotos para avaliação, o app avisa você de que as fotos e os dados corporais serão transferidos para isso à OpenAI, nos EUA. Ao tocar em “Concluído”, você consente com isso.
-- **Coach:** para as respostas dele, o coach também usa seus registros de peso e os valores gerais dos seus checks corporais (seção 4.8). Antes de você enviar a ele a sua primeira pergunta, o app avisa você de que seus dados de treino e corporais serão transferidos à OpenAI, nos EUA, para as respostas. Ao enviar a primeira pergunta, você consente com isso. Nosso servidor salva a data e a hora do seu consentimento antes de transferir quaisquer dados à OpenAI.
+- **Coach:** para as respostas dele, o coach também usa seus registros de peso e os valores gerais dos seus checks corporais, e nosso servidor transfere para isso seus dados de treino e corporais à OpenAI, nos EUA (seção 4.8). Ao criar sua conta e aceitar esta Política de Privacidade, você consente com isso. Salvamos a data e a hora do seu consentimento. Só transferimos esses dados quando você faz uma pergunta ao coach.
 
 O check corporal e o coach são opcionais. Você pode revogar seus consentimentos a qualquer momento, com efeito para o futuro (seção 12).
 
@@ -153,13 +153,14 @@ Base legal: art. 6(1)(b) do RGPD para a importação, a criação de plano e os 
 
 ### 4.8 Kai · Coach IA
 
-Com o Loqqa Pro, você pode fazer perguntas ao Kai, o coach de IA do app, sobre o seu próprio treino, por exemplo “Como meu peso evoluiu?”. O coach responde em poucas frases, geralmente com um gráfico feito a partir dos seus dados. Ele também responde a perguntas gerais de treino, por exemplo com que frequência você deve treinar pernas ou que exercício você pode fazer se algo doer. Ele não faz diagnósticos. O Kai é uma IA, não uma pessoa. O coach é opcional e só está disponível a partir dos 16 anos. Para usá-lo, você precisa de conexão com a internet.
+Com o Loqqa Pro, você pode fazer perguntas ao Kai, o coach de IA do app, sobre o seu próprio treino, por exemplo “Como meu peso evoluiu?”. O coach responde em poucas frases, geralmente com um gráfico feito a partir dos seus dados. Ele também responde a perguntas gerais de treino, por exemplo com que frequência você deve treinar pernas ou que exercício você pode fazer se algo doer. A seu pedido, ele também monta um treino, mostra um dos seus treinos salvos ou sugere substituir exercícios do seu plano; seu plano só muda quando você confirmar no app. Ele não faz diagnósticos. O Kai é uma IA, não uma pessoa. O coach é opcional e só está disponível a partir dos 16 anos. Para usá-lo, você precisa de conexão com a internet.
 
 **Respostas por um modelo de IA da OpenAI:** o app transfere sua pergunta, junto com o idioma do app e o fuso horário do seu dispositivo, para o nosso servidor. O servidor repassa a pergunta a um modelo de IA da OpenAI. Se o modelo precisar de dados, ele os solicita ao nosso servidor: o servidor calcula os valores a partir dos seus dados salvos e transfere os resultados à OpenAI. A partir deles, o modelo escreve a resposta. A cada pergunta, nosso servidor transfere à OpenAI:
 
 - sua pergunta e as últimas perguntas deste chat, até seis, com as respectivas respostas e os dados consultados para elas
 - a data de hoje, suas unidades e o idioma do app
 - objetivo de treino, experiência de treino, equipamentos e grupos musculares em foco do seu perfil, além do nome e dos treinos por semana do seu plano ativo
+- os treinos do seu plano ativo com os respectivos exercícios e a situação deles nesta semana (feito, próximo ou em aberto), além dos nomes dos seus outros treinos salvos
 - o número dos seus treinos com a data do primeiro e do último, o número dos seus registros de peso com a data do primeiro e o número dos seus checks corporais
 - os exercícios que você fez, inclusive exercícios próprios: nome, como você os registra, em quantos treinos você os fez e quando os fez pela última vez
 
@@ -171,6 +172,8 @@ Dependendo da pergunta, nosso servidor também transfere o que calcula para ela 
 - os valores gerais dos seus checks corporais, sem fotos e sem valores individuais como o percentual de gordura corporal
 - treinos, séries, volume e tempo de treino por semana ou por mês, pausas no treino e os dias da semana dos seus treinos
 - séries por grupo muscular e por exercício
+- os exercícios, as séries e as metas de um treino salvo, quando o coach o mostra ou sugere uma alteração nele
+- exercícios do catálogo do app, quando o coach monta um treino ou sugere uma substituição, com os que você mais fez em primeiro lugar
 
 Não transferimos seu nome, seu endereço de e-mail, o ID da sua conta, sua data de nascimento e idade, seu sexo, sua altura, sua foto de perfil, seu texto “Sobre você”, as fotos do seu check corporal nem suas mensagens de suporte. Por favor, não escreva dados de outras pessoas nas suas perguntas. A OpenAI trata os dados nos EUA (seção 8). Configuramos a OpenAI para não armazenar a solicitação para consulta posterior. A OpenAI não usa dados da sua API para treinar seus modelos e os guarda por até 30 dias para detectar abusos; depois disso, eles são excluídos.
 
@@ -233,6 +236,8 @@ Gerenciamos compras e assinaturas por meio da RevenueCat. A RevenueCat verifica 
 
 Para que a RevenueCat possa vincular suas compras à sua conta, transferimos o ID da sua conta, um identificador aleatório sem nome nem endereço de e-mail. Se você comprar antes de criar sua conta, a RevenueCat atribui primeiro um identificador aleatório próprio e depois vincula a compra à sua conta. Além disso, a RevenueCat trata informações de compra e de assinatura da loja (por exemplo, produto, preço, moeda, datas de compra, renovação e expiração, período de teste e identificadores de transação), bem como informações técnicas como plataforma, tipo de dispositivo, versão do app e endereço IP.
 
+Além disso, a RevenueCat envia eventos sobre a sua assinatura à PostHog (seção 4.14), por exemplo um período de teste iniciado ou convertido, renovações e cancelamentos, cada um com a respectiva receita. Para isso, o app passa à RevenueCat o seu identificador da PostHog: antes de você criar a conta, um identificador aleatório; depois, o ID da sua conta.
+
 - Fornecedor: RevenueCat, Inc., 1032 E Brandon Blvd #3003, Brandon, FL 33511, EUA, como nosso operador
 - Local de armazenamento: EUA (Amazon Web Services); garantia, ver seção 8
 - Prazo de armazenamento: enquanto durar nosso contrato com a RevenueCat; solicitamos a exclusão dos dados da sua conta quando você exclui sua conta e não houver obrigações legais em contrário
@@ -249,7 +254,8 @@ Base legal: art. 6(1)(f) do RGPD; nosso legítimo interesse é um funcionamento 
 
 Para entender como o Loqqa é usado e para encontrar erros, usamos o PostHog. Para isso, o app envia:
 
-- **Eventos de uso:** quais telas você abre e determinadas etapas, por exemplo início da configuração inicial, planos criados ou importados, acessos à página do Loqqa Pro, compras, cadastro e login, início, fim ou interrupção de um treino, cada um com data e hora e métricas como número de exercícios ou séries, duração ou código de erro
+- **Eventos de uso:** quais telas você abre e determinadas etapas, por exemplo início da configuração inicial, planos criados ou importados, acessos à página do Loqqa Pro, compras, cadastro e login, início, fim ou interrupção de um treino, o fato de você ter feito uma pergunta ao coach e de ele ter respondido ou não (nunca o texto), a avaliação de um check corporal (nunca os valores), o salvamento de um registro de peso (nunca o peso), exercícios adicionados por voz, pedidos de avaliação na loja, cada um com data e hora e métricas como número de exercícios ou séries, duração ou código de erro
+- **Eventos de assinatura:** períodos de teste iniciados ou convertidos, renovações e cancelamentos com a respectiva receita, enviados pela RevenueCat (seção 4.12)
 - **Eventos do app:** abertura e fechamento do app, versão do app, tipo de dispositivo, sistema operacional e idioma
 - **Relatórios de erro:** mensagens de falha e de erro com detalhes técnicos
 - **Informações do perfil:** após o cadastro, objetivo, experiência, treinos por semana, divisão de treino (split), equipamentos, idioma, unidades, uma faixa etária (por exemplo, “25–34”) e se você tem o Loqqa Pro
@@ -369,7 +375,7 @@ Você pode revogar um consentimento a qualquer momento, com efeito para o futuro
 
 - **Medidas corporais:** por e-mail para support@useloqqa.com. Nesse caso, excluímos seu peso, sua altura e seus registros de peso. Sem essas informações, o app só consegue adaptar seu treino de forma limitada; em vez disso, você também pode excluir sua conta (seção 10).
 - **Check corporal:** exclua seus checks no app e não faça novos, ou escreva para nós; nesse caso, excluímos todas as fotos e todos os valores do check corporal.
-- **Coach:** desative o coach nas configurações do app. A partir daí, não transferimos mais dados à OpenAI, e você só pode voltar a usar o coach quando consentir novamente. Você pode excluir seus chats anteriores no app, ou escreva para nós; nesse caso, nós os excluímos.
+- **Coach:** por e-mail para support@useloqqa.com. Nesse caso, registramos a retirada do seu consentimento. Para o coach, só transferimos dados à OpenAI quando você faz uma pergunta a ele; por isso, depois de retirar o consentimento, não faça mais perguntas, pois uma nova pergunta conta como novo consentimento. Você pode excluir seus chats anteriores no app, ou escreva para nós; nesse caso, nós os excluímos.
 
 ## 13. Reclamação junto a uma autoridade de controle
 

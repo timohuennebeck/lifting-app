@@ -5,7 +5,8 @@ Version 1.1 of the privacy policy (DS) and the terms of use (NB) is published (O
 `20261025120100_legal_documents_v1_1_ko`). Version 1.2 of the privacy policy adds the device
 info of support requests, the OpenAI translation of support messages and what the support desk
 shows (`20261102120000_privacy_policy_v1_2`). Version 1.3 of the privacy policy and 1.2 of the
-terms add the AI coach; their migrations aren't generated yet (item 8). DS 1.3 also covers voice
+terms add the AI coach (5 November 2026, `20261105120000_privacy_policy_v1_3` and
+`20261105120100_terms_v1_2`). DS 1.3 also covers voice
 input: exercises said out loud (the operating system's speech recognition, then OpenAI matches
 the text; DS §4.7) and questions to the coach said out loud (the recording goes to OpenAI to be
 written down and isn't stored; DS §4.8), messages to support said out loud the same way (§4.9),
@@ -28,11 +29,16 @@ photos and AI parts.
 3. **Progress check consent without its own step.** One line above the camera's "Done"
    (`camera.consent`) names OpenAI and the USA; DS §4.6 and §8 rely on it, also for Art. 49(1)(a)
    GDPR.
-4. **Coach consent by sending the first question.** A notice on the coach's start screen says that
-   the training and body data go to OpenAI in the USA for the answers, and sending the first
-   question is the consent, like the body check's line above "Done". DS §4.4, §4.8 and §8 rely on
-   it, also for Art. 49(1)(a) GDPR. The server records it in `profiles.coach_consent_at` before
-   anything is sent. A separate confirmation step would be the safer form.
+4. **Coach consent by signing up, without a notice in the app.** Version 1.0 has no notice before
+   the first question and no switch in Settings. DS §4.4 says that creating the account and
+   accepting the policy is the consent to the coach sending training and body data to OpenAI in
+   the USA, and DS §4.8 and §8 rely on it, also for Art. 49(1)(a) GDPR. The sentence above the
+   sign-up button only names body data for tailoring the training, so in the app nothing but the
+   linked policy mentions the coach or OpenAI. `profiles.coach_consent_at` is set at sign-up, and
+   for an account without it, with its first question (the app always sends `consent: true`).
+   Whether this is an explicit, informed consent is for the lawyer; a notice in the app or a
+   separate confirmation step would be the safer form. The owner kept version 1.0 in review with
+   this on 5 November 2026; update 1.1 names the coach in the sign-up sentence (item 27).
 
 ## Before launch
 
@@ -42,23 +48,20 @@ photos and AI parts.
    also needs the terms and privacy policy for the store listings and Google's consent screen.
 7. **Data protection officer.** DS §2 says none is required. If a DPIA is required (health data,
    body photos, AI), § 38 BDSG requires one; check with the lawyer.
-8. **Effective date of DS 1.3 and NB 1.2.** Their "Stand" lines say 2 November 2026 as a
-   placeholder. Set both to the coach's release date, then generate the migrations
-   (`node scripts/legal-migration.mjs 1.3 <date> <name> --kind=privacy`, and `1.2 … --kind=terms`):
-   a pushed migration takes effect at once (the app shows the newest version whose `effective_at`
-   has passed), and its rows can't be changed. With the placeholder date, DS 1.3 would have the
-   same `effective_at` as DS 1.2, so the app could show either.
+8. **Effective date of DS 1.3 and NB 1.2.** Done: both are published, in effect from 5 November
+   2026, before version 1.0 goes live. A pushed migration takes effect at once (the app shows the
+   newest version whose `effective_at` has passed), and its rows can't be changed.
 9. **Coach from 16 (for the lawyer).** The coach sends health data (weight entries, body check
    scores) to OpenAI in the USA on the user's own consent from 16, also where the minimum age is
    lower (DS §4.8, §16; NB §2); the body check stays 18+. Check whether a 16-year-old's own consent
    is enough for that, under Art. 9(2)(a) and Art. 49(1)(a) GDPR. Also check that chats may stay
    after the consent is withdrawn until the user deletes them (DS §12).
-10. **Voice questions before the coach consent (for the lawyer).** A question can be said out loud
-    before the first one is sent, so the recording goes to OpenAI to be written down before the
-    coach consent is recorded. DS §4.8 bases that on Art. 6(1)(b) GDPR, as the user starts it. A
-    spoken question can hold health data ("I weigh 82 kg"): check whether that needs the consent
-    first (Art. 9(2)(a), Art. 49(1)(a)), e.g. the consent line naming spoken questions too and
-    coach-transcribe recording it, as coach-chat does.
+10. **Voice questions and the coach consent (for the lawyer).** The recording of a spoken question
+    goes to OpenAI to be written down without `coach-transcribe` looking at the coach consent. DS
+    §4.8 bases that on Art. 6(1)(b) GDPR, as the user starts it. A spoken question can hold health
+    data ("I weigh 82 kg"): check whether that needs the consent too (Art. 9(2)(a), Art.
+    49(1)(a)), e.g. DS §4.4 naming spoken questions and coach-transcribe checking it, as
+    coach-chat does.
 
 ## Manual processes the texts promise
 
@@ -68,7 +71,10 @@ photos and AI parts.
 13. Deleting PostHog persons and RevenueCat customers on request (DS §10, §4.14).
 14. Deleting progress-check photos left in storage after an offline delete (DS §4.6).
 15. Deleting closed support tickets on request (DS §4.9).
-16. Deleting coach chats on request, for example after the coach consent is withdrawn (DS §12).
+16. Withdrawing the coach consent (DS §12): the request comes by email, as the app has no switch.
+    Clear `profiles.coach_consent_at` and delete the chats if asked to. A new question sets it
+    again (the app always sends `consent: true`), which DS §12 tells the user; nothing stops the
+    question. Also deleting coach chats on request at any other time.
 
 ## Keep in sync with the app
 
@@ -80,10 +86,10 @@ photos and AI parts.
 19. **Brazil:** the ECA Digital (Law 15.211/2025, in force since 17 March 2026) asks apps likely used
     by minors for real age checks; a self-declared birth date may not be enough there.
 20. **Support reply time.** The chat says "24–48 hours"; NB §9 calls it a guideline.
-21. **Coach screens.** DS §4.4, §4.8 and §12 describe the notice above the first question
-    (`coach.consent`, on the start screen and in a chat while there is no consent) and the switch in
-    Settings that withdraws the consent (clearing `profiles.coach_consent_at`); both exist. The
-    notice names "an AI model by OpenAI": check with the lawyer that this shows the coach is an AI
+21. **Coach screens.** The app has no notice above the first question and no switch in Settings:
+    DS §4.4 and §12 describe consent at sign-up and withdrawal by email. If either comes back, or
+    the sign-up sentence changes, change the texts with it. With the notice gone, nothing in the
+    coach's screens names OpenAI: check with the lawyer that its name shows the coach is an AI
     (Art. 50(1) AI Act), and that it can't be taken for the paywall's head coach: the coach is called
     "Kai · KI-Coach" everywhere (card, screen, Settings, DS §4.8, NB), and Kai is also the head
     coach's first name (Kai Brooks, `paywall.json`). Asked, the coach says it is an AI. DS §4.8 and NB §4
@@ -102,4 +108,11 @@ photos and AI parts.
 25. **Korean law.** The texts follow the GDPR. Korea's PIPA has its own rules for privacy policies
     (for example a named privacy officer and details of transfers abroad); check whether they apply
     to users in Korea.
-26. **Website.** useloqqa.com/ko still shows the English texts.
+26. **Website.** Done: useloqqa.com/ko shows the Korean texts.
+
+## Update 1.1
+
+27. **Name the coach in the sign-up sentence.** `auth.json` in every language gets: "…to tailor
+    your training, and to Kai sending your training and body data to OpenAI in the USA." That
+    makes what DS §4.4 says visible at the moment of the consent (item 4). It reaches only
+    accounts created with 1.1 or later.
