@@ -204,6 +204,7 @@ export function useWorkoutStats() {
 }
 
 export interface ExerciseHistorySet extends SetValues {
+  /** Reps in reserve as entered in the number pad; null when none was. */
   rir: number | null;
   isPr: boolean;
 }
@@ -239,7 +240,7 @@ const exerciseHistoryQuery = (exerciseId: string, where?: SQL) =>
       weight_kg: workoutEntriesSets.weight_kg,
       reps: workoutEntriesSets.reps,
       seconds: workoutEntriesSets.seconds,
-      target_rir: workoutEntriesSets.target_rir,
+      rir: workoutEntriesSets.rir,
       is_pr: workoutEntriesSets.is_pr,
       score: setScoreSql(workoutEntriesSets, workoutEntriesExercises),
     })
@@ -264,7 +265,7 @@ function toExerciseHistory(rows: RowOf<typeof exerciseHistoryQuery>[]): Exercise
       weightKg: r.weight_kg,
       reps: r.reps,
       seconds: r.seconds,
-      rir: r.target_rir,
+      rir: r.rir,
       isPr: r.is_pr,
     };
     const entry = getOrInsert(map, r.workout_entries_id, () => ({

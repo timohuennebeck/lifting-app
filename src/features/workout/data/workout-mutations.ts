@@ -387,6 +387,7 @@ export async function swapWorkoutExercise(workoutExerciseId: string, exerciseId:
         weight_kg: null,
         reps: null,
         seconds: null,
+        rir: null,
         completed_at: null,
         is_pr: false,
         ...(targets && {

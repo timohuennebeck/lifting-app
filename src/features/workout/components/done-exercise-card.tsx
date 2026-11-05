@@ -24,7 +24,8 @@ export interface DoneExerciseCardProps {
 
 /**
  * An exercise of a finished workout, laid out like the training overview's: photo, name, each
- * done set with its RIR, a record with a star. Opens the exercise's page.
+ * done set with the RIR entered for it (none without), a record with a star. Opens the exercise's
+ * page.
  */
 export function DoneExerciseCard({ exerciseId, sets, units, recordSetId }: DoneExerciseCardProps) {
   const { t, i18n } = useTranslation('training');
@@ -45,7 +46,7 @@ export function DoneExerciseCard({ exerciseId, sets, units, recordSetId }: DoneE
         </Text>
         <View className="gap-1.5">
           {sets.map((set, i) => (
-            <NumberedSet key={set.id} number={i + 1} rir={set.targetRir}>
+            <NumberedSet key={set.id} number={i + 1} rir={set.rir}>
               {/* A record's star right after its value. */}
               <View className="flex-1 flex-row items-center gap-1.5">
                 <Text variant="body" className="text-sm text-fg-soft tabular-nums">
