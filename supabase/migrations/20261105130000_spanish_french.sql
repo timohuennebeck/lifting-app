@@ -1,7 +1,6 @@
 -- Spanish and French as app languages: profiles, legal documents and support-message translations
--- accept them, and the catalog gets Spanish and French names and instructions (installed apps
--- pick them up with the next catalog refresh via updated_at). Legal documents stay without a
--- Spanish or French version; the app shows the English ones.
+-- accept them, and the catalog gets Spanish and French names and instructions. This migration
+-- publishes no legal text; `scripts/legal-migration.mjs` generates those rows.
 
 alter table public.profiles drop constraint profiles_language_check;
 alter table public.profiles
@@ -238,7 +237,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Engancha una asa en D a la polea más baja y agárrala con una mano. Ponte de espaldas a la máquina y da un paso hacia delante hasta que el brazo quede por detrás del cuerpo."
+    "text": "Engancha un asa en D a la polea más baja y agárrala con una mano. Ponte de espaldas a la máquina y da un paso hacia delante hasta que el brazo quede por detrás del cuerpo."
    },
    {
     "title": "Curl",
@@ -306,7 +305,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate en el banco con los ojos bajo la barra. Junta los omóplatos y apoya bien los pies."
+    "text": "Acuéstate en el banco con los ojos bajo la barra. Junta los omóplatos y apoya bien los pies."
    },
    {
     "title": "Bajada",
@@ -340,7 +339,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca arriba con las manos suavemente detrás de la cabeza y despega del suelo los hombros y los pies."
+    "text": "Acuéstate boca arriba con las manos suavemente detrás de la cabeza y despega del suelo los hombros y los pies."
    },
    {
     "title": "Giro",
@@ -731,7 +730,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Pon un banco inclinado a 30-45° y túmbate boca abajo con el pecho en el respaldo y una mancuerna en cada mano."
+    "text": "Pon un banco inclinado a 30-45° y acuéstate boca abajo con el pecho en el respaldo y una mancuerna en cada mano."
    },
    {
     "title": "Tirón",
@@ -790,7 +789,7 @@ from jsonb_each($es${
    },
    {
     "title": "Recepción",
-    "text": "Métete en una sentadilla frontal completa y recibe la barra sobre los hombros con los codos altos. Sube de la sentadilla."
+    "text": "Métete en una sentadilla frontal completa y recibe la barra sobre los hombros con los codos altos. Ponte de pie."
    }
   ]
  },
@@ -816,7 +815,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate en el banco con los ojos bajo la barra y agárrala a la anchura de los hombros más o menos. Junta los omóplatos y apoya bien los pies."
+    "text": "Acuéstate en el banco con los ojos bajo la barra y agárrala a la anchura de los hombros más o menos. Junta los omóplatos y apoya bien los pies."
    },
    {
     "title": "Bajada",
@@ -867,7 +866,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate de lado junto a un banco, con el antebrazo bajo el hombro, y apoya en el banco la cara interna de la rodilla o del tobillo de arriba."
+    "text": "Acuéstate de lado junto a un banco, con el antebrazo bajo el hombro, y apoya en el banco la cara interna de la rodilla o del tobillo de arriba."
    },
    {
     "title": "Elevación",
@@ -884,7 +883,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca arriba con las rodillas flexionadas y los pies apoyados. Pon las yemas de los dedos suavemente detrás de las orejas."
+    "text": "Acuéstate boca arriba con las rodillas flexionadas y los pies apoyados. Pon las yemas de los dedos suavemente detrás de las orejas."
    },
    {
     "title": "Crunch",
@@ -918,7 +917,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca arriba con los brazos apuntando al techo y la cadera y las rodillas flexionadas a 90°. Presiona la zona lumbar contra el suelo."
+    "text": "Acuéstate boca arriba con los brazos apuntando al techo y la cadera y las rodillas flexionadas a 90°. Presiona la zona lumbar contra el suelo."
    },
    {
     "title": "Extensión",
@@ -1224,7 +1223,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate en un banco plano y sube las mancuernas sobre el pecho, con las palmas enfrentadas y los codos ligeramente flexionados."
+    "text": "Acuéstate en un banco plano y sube las mancuernas sobre el pecho, con las palmas enfrentadas y los codos ligeramente flexionados."
    },
    {
     "title": "Apertura",
@@ -1275,7 +1274,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate en un banco plano y sujeta una mancuerna sobre el pecho con las dos manos bajo el disco de arriba, con los codos ligeramente flexionados."
+    "text": "Acuéstate en un banco plano y sujeta una mancuerna sobre el pecho con las dos manos bajo el disco de arriba, con los codos ligeramente flexionados."
    },
    {
     "title": "Bajada",
@@ -1360,7 +1359,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate en un banco plano y sube dos mancuernas sobre los hombros, con las palmas enfrentadas."
+    "text": "Acuéstate en un banco plano y sube dos mancuernas sobre los hombros, con las palmas enfrentadas."
    },
    {
     "title": "Bajada",
@@ -1496,7 +1495,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate en el suelo dentro de un rack, con la barra sobre los hombros, las rodillas flexionadas y los pies apoyados. Agarre un poco más ancho que los hombros."
+    "text": "Acuéstate en el suelo dentro de un rack, con la barra sobre los hombros, las rodillas flexionadas y los pies apoyados. Agarre un poco más ancho que los hombros."
    },
    {
     "title": "Bajada",
@@ -1513,7 +1512,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate en un banco plano y sujeta una barra EZ o recta sobre los hombros con agarre prono estrecho y los brazos estirados."
+    "text": "Acuéstate en un banco plano y sujeta una barra EZ o recta sobre los hombros con agarre prono estrecho y los brazos estirados."
    },
    {
     "title": "Bajada",
@@ -1564,7 +1563,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca arriba con las rodillas flexionadas y los pies apoyados, a la anchura de las caderas. Apoya un peso sobre la cadera si quieres."
+    "text": "Acuéstate boca arriba con las rodillas flexionadas y los pies apoyados, a la anchura de las caderas. Apoya un peso sobre la cadera si quieres."
    },
    {
     "title": "Elevación",
@@ -1628,7 +1627,7 @@ from jsonb_each($es${
   ]
  },
  "good-morning": {
-  "name": "Buenos días",
+  "name": "Buenos días con barra",
   "instructions": [
    {
     "title": "Preparación",
@@ -1683,7 +1682,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Ponte erguido con la barra en agarre prono justo por fuera de los muslos. Inclina la cadera con la espalda recta hasta que la barra quede justo sobre las rodillas."
+    "text": "Ponte erguido con la barra en agarre prono justo por fuera de los muslos. Flexiona la cadera con la espalda recta hasta que la barra quede justo sobre las rodillas."
    },
    {
     "title": "Tirón",
@@ -1738,7 +1737,7 @@ from jsonb_each($es${
    },
    {
     "title": "Carrera",
-    "text": "Corre en el sitio, subiendo cada rodilla hasta la altura de la cadera mientras mueves los brazos."
+    "text": "Corre en el lugar, subiendo cada rodilla hasta la altura de la cadera mientras mueves los brazos."
    },
    {
     "title": "Continuar",
@@ -1836,7 +1835,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca arriba con los brazos sobre la cabeza. Presiona con firmeza la zona lumbar contra el suelo."
+    "text": "Acuéstate boca arriba con los brazos sobre la cabeza. Presiona con firmeza la zona lumbar contra el suelo."
    },
    {
     "title": "Elevación",
@@ -1853,7 +1852,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Pon el banco a 30-45° y túmbate con los ojos bajo la barra. Junta los omóplatos hacia atrás y abajo, con los pies bien apoyados."
+    "text": "Pon el banco a 30-45° y acuéstate con los ojos bajo la barra. Junta los omóplatos hacia atrás y abajo, con los pies bien apoyados."
    },
    {
     "title": "Bajada",
@@ -1976,7 +1975,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Pon una barra a la altura de la cintura en un rack o una máquina Smith. Túmbate debajo, agárrala con agarre prono y estira el cuerpo."
+    "text": "Pon una barra a la altura de la cintura en un rack o una máquina Smith. Acuéstate debajo, agárrala con agarre prono y estira el cuerpo."
    },
    {
     "title": "Tirón",
@@ -1993,7 +1992,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate en un banco plano y sujeta la barra con un agarre algo más estrecho que los hombros, con los brazos estirados sobre los hombros."
+    "text": "Acuéstate en un banco plano y sujeta la barra con un agarre algo más estrecho que los hombros, con los brazos estirados sobre los hombros."
    },
    {
     "title": "Bajada",
@@ -2074,11 +2073,11 @@ from jsonb_each($es${
   ]
  },
  "kelso-shrug": {
-  "name": "Encogimiento Kelso",
+  "name": "Encogimientos Kelso",
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca abajo en un banco inclinado a 30-45° con una mancuerna en cada mano y los brazos colgando rectos."
+    "text": "Acuéstate boca abajo en un banco inclinado a 30-45° con una mancuerna en cada mano y los brazos colgando rectos."
    },
    {
     "title": "Contracción",
@@ -2095,7 +2094,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Ponte con los pies un poco más abiertos que las caderas y la kettlebell algo por delante. Inclina la cadera, agarra el asa con las dos manos y báscula la pesa hacia ti."
+    "text": "Ponte con los pies un poco más abiertos que las caderas y la kettlebell algo por delante. Flexiona la cadera, agarra el asa con las dos manos y báscula la pesa hacia ti."
    },
    {
     "title": "Balanceo",
@@ -2108,7 +2107,7 @@ from jsonb_each($es${
   ]
  },
  "knee-push-up": {
-  "name": "Flexiones de rodillas",
+  "name": "Flexiones con rodillas apoyadas",
   "instructions": [
    {
     "title": "Plancha",
@@ -2154,7 +2153,7 @@ from jsonb_each($es${
    },
    {
     "title": "Bajada",
-    "text": "Baja la barra de vuelta al hombro con control. Mantén la cadera cuadrada y no te inclines hacia atrás."
+    "text": "Baja la barra de vuelta al hombro con control. Mantén la cadera mirando al frente y no te inclines hacia atrás."
    }
   ]
  },
@@ -2163,7 +2162,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate en el banco con los ojos bajo la barra. Estira las piernas y mantén los pies justo despegados del suelo."
+    "text": "Acuéstate en el banco con los ojos bajo la barra. Estira las piernas y mantén los pies justo despegados del suelo."
    },
    {
     "title": "Bajada",
@@ -2273,7 +2272,7 @@ from jsonb_each($es${
    },
    {
     "title": "Vuelta",
-    "text": "Deja que la plataforma vuelva despacio hasta estirar del todo los gemelos. Mantén los pies firmes en el borde."
+    "text": "Deja que la plataforma vuelva despacio hasta estirar del todo las pantorrillas. Mantén los pies firmes en el borde."
    }
   ]
  },
@@ -2312,11 +2311,11 @@ from jsonb_each($es${
   ]
  },
  "lying-leg-curl": {
-  "name": "Curl de piernas tumbado",
+  "name": "Curl de piernas acostado",
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca abajo con las rodillas justo pasado el borde de la almohadilla, alineadas con el eje, y el rodillo justo encima de los talones."
+    "text": "Acuéstate boca abajo con las rodillas justo pasado el borde de la almohadilla, alineadas con el eje, y el rodillo justo encima de los talones."
    },
    {
     "title": "Curl",
@@ -2329,11 +2328,11 @@ from jsonb_each($es${
   ]
  },
  "lying-leg-raise": {
-  "name": "Elevación de piernas tumbado",
+  "name": "Elevación de piernas acostado",
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca arriba con las piernas estiradas y las manos bajo la cadera o a los costados."
+    "text": "Acuéstate boca arriba con las piernas estiradas y las manos bajo la cadera o a los costados."
    },
    {
     "title": "Elevación",
@@ -2596,7 +2595,7 @@ from jsonb_each($es${
    },
    {
     "title": "Vuelta",
-    "text": "Trae el asa de vuelta al pecho con control, con la cadera y los hombros cuadrados. Cambia de lado al terminar la serie."
+    "text": "Trae el asa de vuelta al pecho con control, con la cadera y los hombros mirando al frente. Cambia de lado al terminar la serie."
    }
   ]
  },
@@ -2605,7 +2604,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate en el banco con los ojos bajo la barra. Junta los omóplatos y apoya bien los pies."
+    "text": "Acuéstate en el banco con los ojos bajo la barra. Junta los omóplatos y apoya bien los pies."
    },
    {
     "title": "Pausa",
@@ -2724,7 +2723,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Coloca los pines de seguridad del rack unos centímetros por encima del pecho y apoya la barra en ellos. Túmbate en el banco debajo."
+    "text": "Coloca los pines de seguridad del rack unos centímetros por encima del pecho y apoya la barra en ellos. Acuéstate en el banco debajo."
    },
    {
     "title": "Tensión",
@@ -2792,7 +2791,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca abajo con los brazos abiertos a los lados en forma de T, con los pulgares hacia arriba."
+    "text": "Acuéstate boca abajo con los brazos abiertos a los lados en forma de T, con los pulgares hacia arriba."
    },
    {
     "title": "Elevación",
@@ -2809,7 +2808,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca abajo con los brazos estirados sobre la cabeza en forma de Y, con los pulgares hacia arriba. Apoya la frente en una toalla doblada."
+    "text": "Acuéstate boca abajo con los brazos estirados sobre la cabeza en forma de Y, con los pulgares hacia arriba. Apoya la frente en una toalla doblada."
    },
    {
     "title": "Elevación",
@@ -2881,7 +2880,7 @@ from jsonb_each($es${
    },
    {
     "title": "Tensión",
-    "text": "Inclina la cadera con la espalda recta y los hombros ligeramente por delante de la barra. Toma aire y quita el juego a la barra."
+    "text": "Flexiona la cadera con la espalda recta y los hombros ligeramente por delante de la barra. Toma aire y quita el juego a la barra."
    },
    {
     "title": "Levantamiento",
@@ -2894,7 +2893,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca arriba con los brazos a los costados, la cadera y las rodillas flexionadas a 90° y las espinillas paralelas al suelo."
+    "text": "Acuéstate boca arriba con los brazos a los costados, la cadera y las rodillas flexionadas a 90° y las espinillas paralelas al suelo."
    },
    {
     "title": "Curl",
@@ -2928,7 +2927,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Inclina la cadera hasta que el torso quede casi paralelo al suelo, con la espalda recta. Deja que las mancuernas cuelguen bajo el pecho."
+    "text": "Flexiona la cadera hasta que el torso quede casi paralelo al suelo, con la espalda recta. Deja que las mancuernas cuelguen bajo el pecho."
    },
    {
     "title": "Elevación",
@@ -2962,7 +2961,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca abajo en la almohadilla con la cadera en el borde y agarra las asas. Engancha los tobillos en la correa o el rodillo."
+    "text": "Acuéstate boca abajo en la almohadilla con la cadera en el borde y agarra las asas. Engancha los tobillos en la correa o el rodillo."
    },
    {
     "title": "Elevación",
@@ -3013,7 +3012,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca abajo con los brazos a los costados y las palmas hacia abajo, y despega un poco del suelo las manos y el pecho."
+    "text": "Acuéstate boca abajo con los brazos a los costados y las palmas hacia abajo, y despega un poco del suelo las manos y el pecho."
    },
    {
     "title": "Barrido",
@@ -3132,7 +3131,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca abajo en un banco elevado lo bastante alto para que la barra cuelgue debajo a la distancia del brazo. Agárrala con agarre prono, a la anchura de los hombros."
+    "text": "Acuéstate boca abajo en un banco elevado lo bastante alto para que la barra cuelgue debajo a la distancia del brazo. Agárrala con agarre prono, a la anchura de los hombros."
    },
    {
     "title": "Tirón",
@@ -3336,7 +3335,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate de lado con el codo bajo el hombro y los pies apilados."
+    "text": "Acuéstate de lado con el codo bajo el hombro y los pies apilados."
    },
    {
     "title": "Elevación",
@@ -3357,7 +3356,7 @@ from jsonb_each($es${
    },
    {
     "title": "Tirón",
-    "text": "Lleva el asa hacia el costado, llevando el codo hacia atrás por detrás del torso. Mantén los hombros cuadrados."
+    "text": "Lleva el asa hacia el costado, llevando el codo hacia atrás por detrás del torso. Mantén los hombros mirando al frente."
    },
    {
     "title": "Vuelta",
@@ -3438,7 +3437,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca arriba con un pie apoyado cerca de los glúteos y la otra pierna estirada o recogida hacia el pecho."
+    "text": "Acuéstate boca arriba con un pie apoyado cerca de los glúteos y la otra pierna estirada o recogida hacia el pecho."
    },
    {
     "title": "Elevación",
@@ -3476,7 +3475,7 @@ from jsonb_each($es${
    },
    {
     "title": "Bisagra",
-    "text": "Inclínate hacia delante desde la cadera mientras la pierna libre se extiende hacia atrás, hasta que el torso quede casi paralelo al suelo. Mantén la cadera cuadrada."
+    "text": "Inclínate hacia delante desde la cadera mientras la pierna libre se extiende hacia atrás, hasta que el torso quede casi paralelo al suelo. Mantén la cadera mirando al frente."
    },
    {
     "title": "Vuelta",
@@ -3506,7 +3505,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca arriba con las rodillas flexionadas y los pies apoyados, sujetos bajo una almohadilla si hace falta. Cruza los brazos sobre el pecho."
+    "text": "Acuéstate boca arriba con las rodillas flexionadas y los pies apoyados, sujetos bajo una almohadilla si hace falta. Cruza los brazos sobre el pecho."
    },
    {
     "title": "Subida",
@@ -3514,7 +3513,7 @@ from jsonb_each($es${
    },
    {
     "title": "Bajada",
-    "text": "Vuelve a bajar rodando despacio hasta que los hombros toquen el suelo. No rebotes en el suelo para coger impulso."
+    "text": "Vuelve a bajar rodando despacio hasta que los hombros toquen el suelo. No rebotes en el suelo para tomar impulso."
    }
   ]
  },
@@ -3650,7 +3649,7 @@ from jsonb_each($es${
    },
    {
     "title": "Recepción",
-    "text": "Métete bajo la barra y lánzala sobre la cabeza, recibiéndola en una sentadilla profunda con los brazos bloqueados. Ponte de pie con la barra sobre la cabeza."
+    "text": "Métete bajo la barra y empújala sobre la cabeza, recibiéndola en una sentadilla profunda con los brazos bloqueados. Ponte de pie con la barra sobre la cabeza."
    }
   ]
  },
@@ -3659,7 +3658,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate con el pecho sobre un banco inclinado a unos 45°, con el pecho en el borde superior y los brazos colgando rectos hacia abajo."
+    "text": "Acuéstate con el pecho sobre un banco inclinado a unos 45°, con el pecho en el borde superior y los brazos colgando rectos hacia abajo."
    },
    {
     "title": "Curl",
@@ -3782,7 +3781,7 @@ from jsonb_each($es${
    },
    {
     "title": "Bajada",
-    "text": "Inclina la cadera con la espalda recta y baja la barra hacia el suelo hasta estirar por completo los isquiotibiales."
+    "text": "Flexiona la cadera con la espalda recta y baja la barra hacia el suelo hasta estirar por completo los isquiotibiales."
    },
    {
     "title": "Levantamiento",
@@ -3846,7 +3845,7 @@ from jsonb_each($es${
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca abajo con los brazos estirados al frente y las piernas rectas."
+    "text": "Acuéstate boca abajo con los brazos estirados al frente y las piernas rectas."
    },
    {
     "title": "Elevación",
@@ -4114,11 +4113,11 @@ from jsonb_each($es${
   ]
  },
  "y-raise": {
-  "name": "Elevación en Y en banco inclinado",
+  "name": "Elevación en Y",
   "instructions": [
    {
     "title": "Preparación",
-    "text": "Túmbate boca abajo en un banco inclinado a 30-45°, con una mancuerna ligera en cada mano, los brazos colgando y los pulgares hacia arriba."
+    "text": "Acuéstate boca abajo en un banco inclinado a 30-45°, con una mancuerna ligera en cada mano, los brazos colgando y los pulgares hacia arriba."
    },
    {
     "title": "Elevación",
@@ -4233,7 +4232,7 @@ from jsonb_each($fr${
   ]
  },
  "air-bike": {
-  "name": "Vélo d'assaut",
+  "name": "Air bike",
   "instructions": [
    {
     "title": "Installation",
@@ -4309,7 +4308,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Plie aux hanches et descends le buste, dos plat, jusqu'à sentir un étirement des ischio-jambiers."
+    "text": "Penche le buste depuis les hanches et descends, dos plat, jusqu'à sentir un étirement des ischio-jambiers."
    },
    {
     "title": "Montée",
@@ -4347,7 +4346,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends la barre lentement jusqu'à avoir les bras tendus. Ne te penche pas en arrière pour lancer la rép suivante."
+    "text": "Redescends la barre lentement jusqu'à avoir les bras tendus. Ne te penche pas en arrière pour lancer la répétition suivante."
    }
   ]
  },
@@ -4585,7 +4584,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Poussée",
-    "text": "Remonte en poussant dans le pied avant. Termine toutes les rép, puis change de jambe."
+    "text": "Remonte en poussant dans le pied avant. Termine toutes les répétitions, puis change de jambe."
    }
   ]
  },
@@ -4602,7 +4601,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Saut",
-    "text": "Relève-toi et saute de façon explosive en tapant des mains au-dessus de la tête. Réceptionne-toi en douceur et enchaîne directement la rép suivante."
+    "text": "Relève-toi et saute de façon explosive en tapant des mains au-dessus de la tête. Réceptionne-toi en douceur et enchaîne directement la répétition suivante."
    }
   ]
  },
@@ -4624,7 +4623,7 @@ from jsonb_each($fr${
   ]
  },
  "cable-crossover": {
-  "name": "Écartés poulie vis-à-vis",
+  "name": "Écartés à la poulie vis-à-vis",
   "instructions": [
    {
     "title": "Installation",
@@ -4721,7 +4720,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Retour",
-    "text": "Ramène la jambe vers l'avant lentement et de façon contrôlée. Termine toutes les rép, puis change de jambe."
+    "text": "Ramène la jambe vers l'avant lentement et de façon contrôlée. Termine toutes les répétitions, puis change de jambe."
    }
   ]
  },
@@ -4751,7 +4750,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Montée",
-    "text": "Lève le bras sur le côté jusqu'à hauteur d'épaule, en menant avec le coude et en le gardant légèrement fléchi."
+    "text": "Lève le bras sur le côté jusqu'à hauteur d'épaule, en guidant le mouvement avec le coude et en le gardant légèrement fléchi."
    },
    {
     "title": "Descente",
@@ -4802,7 +4801,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Tirage",
-    "text": "Mène avec les coudes et tire jusqu'à hauteur du bas de la poitrine. Les coudes restent au-dessus des mains."
+    "text": "Guide le mouvement avec les coudes et tire jusqu'à hauteur du bas de la poitrine. Les coudes restent au-dessus des mains."
    },
    {
     "title": "Descente",
@@ -4857,12 +4856,12 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends les jambes lentement jusqu'à ce qu'elles pendent à la verticale. Ne te balance pas pour enchaîner la rép suivante."
+    "text": "Redescends les jambes lentement jusqu'à ce qu'elles pendent à la verticale. Ne te balance pas pour enchaîner la répétition suivante."
    }
   ]
  },
  "chest-press-machine": {
-  "name": "Développé couché à la machine",
+  "name": "Développé assis à la machine",
   "instructions": [
    {
     "title": "Installation",
@@ -4925,12 +4924,12 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends lentement jusqu'à avoir les bras complètement tendus. Ne te balance pas pour enchaîner la rép suivante."
+    "text": "Redescends lentement jusqu'à avoir les bras complètement tendus. Ne te balance pas pour enchaîner la répétition suivante."
    }
   ]
  },
  "clean": {
-  "name": "Clean",
+  "name": "Épaulé",
   "instructions": [
    {
     "title": "Installation",
@@ -5010,7 +5009,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends lentement jusqu'à avoir le bras tendu. Termine toutes les rép avant de changer de bras."
+    "text": "Redescends lentement jusqu'à avoir le bras tendu. Termine toutes les répétitions avant de changer de bras."
    }
   ]
  },
@@ -5044,7 +5043,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends lentement jusqu'à ce que les omoplates touchent le sol, puis enchaîne la rép suivante."
+    "text": "Redescends lentement jusqu'à ce que les omoplates touchent le sol, puis enchaîne la répétition suivante."
    }
   ]
  },
@@ -5185,7 +5184,7 @@ from jsonb_each($fr${
   ]
  },
  "decline-sit-up": {
-  "name": "Relevés de buste inclinés",
+  "name": "Relevés de buste sur banc décliné",
   "instructions": [
    {
     "title": "Installation",
@@ -5197,7 +5196,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends lentement jusqu'à ce que le bas du dos touche le banc. Ne te laisse pas tomber pour enchaîner la rép suivante."
+    "text": "Redescends lentement jusqu'à ce que le bas du dos touche le banc. Ne te laisse pas tomber pour enchaîner la répétition suivante."
    }
   ]
  },
@@ -5383,7 +5382,7 @@ from jsonb_each($fr${
     "text": "Descends les poids sur les côtés en un large arc jusqu'à sentir un étirement des pectoraux. Garde la flexion des coudes fixe."
    },
    {
-    "title": "Fermeture",
+    "title": "Rapprochement",
     "text": "Remonte les haltères par le même arc, comme pour serrer un arbre dans tes bras, et arrête-toi juste avant qu'ils se touchent."
    }
   ]
@@ -5707,7 +5706,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Poussée",
-    "text": "Pousse dans toute la plante des pieds et mène avec les coudes pour que la barre ne roule pas vers l'avant."
+    "text": "Pousse dans toute la plante des pieds et guide le mouvement avec les coudes pour que la barre ne roule pas vers l'avant."
    }
   ]
  },
@@ -5758,7 +5757,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Retour",
-    "text": "Laisse la plaque revenir lentement jusqu'à ce que ton genou soit près de la poitrine. Termine toutes les rép, puis change de jambe."
+    "text": "Laisse la plaque revenir lentement jusqu'à ce que ton genou soit près de la poitrine. Termine toutes les répétitions, puis change de jambe."
    }
   ]
  },
@@ -5809,7 +5808,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Poussée",
-    "text": "Pousse dans toute la plante des pieds sans verrouiller les genoux, et remets les sécurités après ta dernière rép."
+    "text": "Pousse dans toute la plante des pieds sans verrouiller les genoux, et remets les sécurités après ta dernière répétition."
    }
   ]
  },
@@ -5835,7 +5834,7 @@ from jsonb_each($fr${
   "instructions": [
    {
     "title": "Installation",
-    "text": "Tiens-toi droit, barre en pronation juste à l'extérieur des cuisses. Plie aux hanches, dos plat, jusqu'à ce que la barre soit juste au-dessus des genoux."
+    "text": "Tiens-toi droit, barre en pronation juste à l'extérieur des cuisses. Penche le buste depuis les hanches, dos plat, jusqu'à ce que la barre soit juste au-dessus des genoux."
    },
    {
     "title": "Tirage",
@@ -5860,7 +5859,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends lentement les jambes jusqu'à ce qu'elles pendent à nouveau droit avant la rép suivante."
+    "text": "Redescends lentement les jambes jusqu'à ce qu'elles pendent à nouveau droit avant la répétition suivante."
    }
   ]
  },
@@ -5877,7 +5876,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends les jambes lentement sans te balancer. Marque une brève pause en bas avant la rép suivante."
+    "text": "Redescends les jambes lentement sans te balancer. Marque une brève pause en bas avant la répétition suivante."
    }
   ]
  },
@@ -5893,13 +5892,13 @@ from jsonb_each($fr${
     "text": "Cours sur place en montant chaque genou à hauteur de hanche et en balançant les bras."
    },
    {
-    "title": "Continuité",
+    "title": "Continue",
     "text": "Reste sur l'avant des pieds, buste droit. Garde un rythme élevé pendant toute la durée sans te pencher en arrière."
    }
   ]
  },
  "high-to-low-cable-fly": {
-  "name": "Écartés poulie haute vers bas",
+  "name": "Écartés à la poulie haute vers bas",
   "instructions": [
    {
     "title": "Installation",
@@ -6063,7 +6062,7 @@ from jsonb_each($fr${
     "text": "Descends les poids sur les côtés en un large arc, coudes légèrement fléchis, jusqu'à sentir un étirement du haut des pectoraux."
    },
    {
-    "title": "Fermeture",
+    "title": "Rapprochement",
     "text": "Remonte les haltères au-dessus du haut de la poitrine par le même arc. Garde les épaules basses et en arrière."
    }
   ]
@@ -6169,8 +6168,8 @@ from jsonb_each($fr${
     "text": "Fais tourner la corde avec les poignets et saute juste assez haut pour la passer, en te réceptionnant en douceur sur l'avant des pieds."
    },
    {
-    "title": "Continuité",
-    "text": "Garde un rythme régulier pendant toute la durée, genoux légèrement fléchis et épaules relâchées. Si tu t'accroches, repars tout de suite."
+    "title": "Continue",
+    "text": "Garde un rythme régulier pendant toute la durée, genoux légèrement fléchis et épaules relâchées. Si tu accroches la corde, repars tout de suite."
    }
   ]
  },
@@ -6187,7 +6186,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Saut",
-    "text": "Explose droit vers le haut, réceptionne-toi en douceur sur l'avant des pieds et enchaîne directement la rép suivante."
+    "text": "Explose droit vers le haut, réceptionne-toi en douceur sur l'avant des pieds et enchaîne directement la répétition suivante."
    }
   ]
  },
@@ -6203,7 +6202,7 @@ from jsonb_each($fr${
     "text": "Écarte les pieds plus large que les épaules d'un saut en levant les bras au-dessus de la tête, puis reviens au départ d'un saut."
    },
    {
-    "title": "Continuité",
+    "title": "Continue",
     "text": "Reste léger sur l'avant des pieds et garde un rythme régulier pendant toute la durée. Respire de façon régulière."
    }
   ]
@@ -6247,7 +6246,7 @@ from jsonb_each($fr${
   "instructions": [
    {
     "title": "Installation",
-    "text": "Tiens-toi pieds un peu plus écartés que les hanches, le kettlebell légèrement devant toi. Plie aux hanches, attrape la poignée à deux mains et incline-la vers toi."
+    "text": "Tiens-toi pieds un peu plus écartés que les hanches, le kettlebell légèrement devant toi. Penche le buste depuis les hanches, attrape la poignée à deux mains et incline-la vers toi."
    },
    {
     "title": "Swing",
@@ -6255,7 +6254,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Contrôle",
-    "text": "Laisse le kettlebell retomber et plie aux hanches quand il passe entre les jambes. Garde le dos plat et les talons au sol."
+    "text": "Laisse le kettlebell retomber et penche le buste depuis les hanches quand il passe entre les jambes. Garde le dos plat et les talons au sol."
    }
   ]
  },
@@ -6370,7 +6369,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Montée",
-    "text": "Lève les haltères à hauteur d'épaules en menant avec les coudes. Ne balance pas et ne hausse pas les épaules."
+    "text": "Lève les haltères à hauteur d'épaules en guidant le mouvement avec les coudes. Ne balance pas et ne hausse pas les épaules."
    },
    {
     "title": "Descente",
@@ -6430,7 +6429,7 @@ from jsonb_each($fr${
   ]
  },
  "low-to-high-cable-fly": {
-  "name": "Écartés poulie basse vers haut",
+  "name": "Écartés à la poulie basse vers haut",
   "instructions": [
    {
     "title": "Installation",
@@ -6544,7 +6543,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Retour",
-    "text": "Laisse les poignées remonter lentement jusqu'à avoir les bras tendus. Ne pose pas la charge entre les rép."
+    "text": "Laisse les poignées remonter lentement jusqu'à avoir les bras tendus. Ne pose pas la charge entre les répétitions."
    }
   ]
  },
@@ -6557,7 +6556,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Montée",
-    "text": "Lève les bras sur les côtés jusqu'à hauteur d'épaules en menant avec les coudes. Ne hausse pas les épaules."
+    "text": "Lève les bras sur les côtés jusqu'à hauteur d'épaules en guidant le mouvement avec les coudes. Ne hausse pas les épaules."
    },
    {
     "title": "Descente",
@@ -6629,7 +6628,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Reprise",
-    "text": "Remonte sur le box et recommence la rép suivante depuis le haut. Reste gainé en bas au lieu de te laisser tomber."
+    "text": "Remonte sur le box et recommence la répétition suivante depuis le haut. Reste gainé en bas au lieu de te laisser tomber."
    }
   ]
  },
@@ -6825,7 +6824,7 @@ from jsonb_each($fr${
   "instructions": [
    {
     "title": "Installation",
-    "text": "Barre au sol au-dessus du milieu du pied. Plie aux hanches jusqu'à ce que le buste soit presque parallèle au sol et attrape la barre en pronation, dos plat."
+    "text": "Barre au sol au-dessus du milieu du pied. Penche le buste depuis les hanches jusqu'à ce qu'il soit presque parallèle au sol et attrape la barre en pronation, dos plat."
    },
    {
     "title": "Tirage",
@@ -6833,7 +6832,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Reprise",
-    "text": "Redescends la barre au sol et laisse-la s'arrêter complètement. Replace ton gainage avant chaque rép."
+    "text": "Redescends la barre au sol et laisse-la s'arrêter complètement. Replace ton gainage avant chaque répétition."
    }
   ]
  },
@@ -6884,7 +6883,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Poussée",
-    "text": "Pousse depuis l'arrêt complet jusqu'au verrouillage, puis redescends la barre sur les sécurités et laisse-la se poser complètement avant la rép suivante."
+    "text": "Pousse depuis l'arrêt complet jusqu'au verrouillage, puis redescends la barre sur les sécurités et laisse-la se poser complètement avant la répétition suivante."
    }
   ]
  },
@@ -6969,7 +6968,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends les bras lentement et relâche brièvement avant la rép suivante."
+    "text": "Redescends les bras lentement et relâche brièvement avant la répétition suivante."
    }
   ]
  },
@@ -7033,7 +7032,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Gainage",
-    "text": "Plie aux hanches, dos plat, épaules légèrement devant la barre. Inspire et tends la barre pour enlever le jeu."
+    "text": "Penche le buste depuis les hanches, dos plat, épaules légèrement devant la barre. Inspire et tends la barre pour enlever le jeu."
    },
    {
     "title": "Soulevé",
@@ -7080,7 +7079,7 @@ from jsonb_each($fr${
   "instructions": [
    {
     "title": "Installation",
-    "text": "Plie aux hanches jusqu'à ce que le buste soit presque parallèle au sol, dos plat. Laisse les haltères pendre sous la poitrine."
+    "text": "Penche le buste depuis les hanches jusqu'à ce qu'il soit presque parallèle au sol, dos plat. Laisse les haltères pendre sous la poitrine."
    },
    {
     "title": "Montée",
@@ -7173,7 +7172,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Retour",
-    "text": "Ramène-les par le même chemin jusqu'aux hanches en serrant les omoplates. Ça fait une rép."
+    "text": "Ramène-les par le même chemin jusqu'aux hanches en serrant les omoplates. Ça fait une répétition."
    }
   ]
  },
@@ -7390,7 +7389,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Montée",
-    "text": "Lève les haltères à hauteur d'épaules en menant avec les coudes. Ne te penche pas et ne hausse pas les épaules."
+    "text": "Lève les haltères à hauteur d'épaules en guidant le mouvement avec les coudes. Ne te penche pas et ne hausse pas les épaules."
    },
    {
     "title": "Descente",
@@ -7530,7 +7529,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Ramène le poids à hauteur d'épaule de façon contrôlée. Termine toutes les rép d'un côté, puis change."
+    "text": "Ramène le poids à hauteur d'épaule de façon contrôlée. Termine toutes les répétitions d'un côté, puis change."
    }
   ]
  },
@@ -7547,7 +7546,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Retour",
-    "text": "Laisse ton bras remonter lentement et sens l'étirement sur le côté. Termine toutes les rép, puis change de bras."
+    "text": "Laisse ton bras remonter lentement et sens l'étirement sur le côté. Termine toutes les répétitions, puis change de bras."
    }
   ]
  },
@@ -7581,7 +7580,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends lentement le talon sous la marche pour un étirement complet. Termine toutes les rép, puis change de jambe."
+    "text": "Redescends lentement le talon sous la marche pour un étirement complet. Termine toutes les répétitions, puis change de jambe."
    }
   ]
  },
@@ -7598,7 +7597,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends lentement sans laisser les hanches basculer. Termine toutes les rép, puis change de jambe."
+    "text": "Redescends lentement sans laisser les hanches basculer. Termine toutes les répétitions, puis change de jambe."
    }
   ]
  },
@@ -7615,7 +7614,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Poussée",
-    "text": "Pousse dans toute la plante du pied sans verrouiller le genou. Termine toutes les rép, puis change de jambe."
+    "text": "Pousse dans toute la plante du pied sans verrouiller le genou. Termine toutes les répétitions, puis change de jambe."
    }
   ]
  },
@@ -7632,7 +7631,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Remontée",
-    "text": "Pousse la hanche d'appui vers l'avant pour te redresser. Termine toutes les rép, puis change de jambe."
+    "text": "Pousse la hanche d'appui vers l'avant pour te redresser. Termine toutes les répétitions, puis change de jambe."
    }
   ]
  },
@@ -7700,7 +7699,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends lentement les talons sous le bord pour un étirement complet. Raccroche la barre après ta dernière rép."
+    "text": "Redescends lentement les talons sous le bord pour un étirement complet. Raccroche la barre après ta dernière répétition."
    }
   ]
  },
@@ -7751,7 +7750,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Poussée",
-    "text": "Remonte en poussant dans le pied avant sans verrouiller complètement. Termine toutes les rép, puis change de jambe."
+    "text": "Remonte en poussant dans le pied avant sans verrouiller complètement. Termine toutes les répétitions, puis change de jambe."
    }
   ]
  },
@@ -7785,7 +7784,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Poussée",
-    "text": "Remonte en poussant dans toute la plante des pieds et retourne la barre sur les crochets après ta dernière rép."
+    "text": "Remonte en poussant dans toute la plante des pieds et retourne la barre sur les crochets après ta dernière répétition."
    }
   ]
  },
@@ -7836,7 +7835,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Poussée",
-    "text": "Remonte en poussant dans le pied avant, buste droit. Termine toutes les rép, puis change de jambe."
+    "text": "Remonte en poussant dans le pied avant, buste droit. Termine toutes les répétitions, puis change de jambe."
    }
   ]
  },
@@ -7875,7 +7874,7 @@ from jsonb_each($fr${
   ]
  },
  "stair-climber": {
-  "name": "Escalier mécanique",
+  "name": "Simulateur d'escalier",
   "instructions": [
    {
     "title": "Installation",
@@ -7904,7 +7903,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends lentement jusqu'à avoir la jambe presque tendue. Termine toutes les rép, puis change de jambe."
+    "text": "Redescends lentement jusqu'à avoir la jambe presque tendue. Termine toutes les répétitions, puis change de jambe."
    }
   ]
  },
@@ -7921,7 +7920,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends lentement avec la même jambe. Termine toutes les rép, puis change de côté."
+    "text": "Redescends lentement avec la même jambe. Termine toutes les répétitions, puis change de côté."
    }
   ]
  },
@@ -7934,7 +7933,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Plie aux hanches, dos plat, et descends la barre vers le sol jusqu'à étirer complètement les ischio-jambiers."
+    "text": "Penche le buste depuis les hanches, dos plat, et descends la barre vers le sol jusqu'à étirer complètement les ischio-jambiers."
    },
    {
     "title": "Remontée",
@@ -8040,7 +8039,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends les orteils lentement jusqu'à presque toucher le sol, puis enchaîne directement la rép suivante."
+    "text": "Redescends les orteils lentement jusqu'à presque toucher le sol, puis enchaîne directement la répétition suivante."
    }
   ]
  },
@@ -8057,7 +8056,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Descente",
-    "text": "Redescends les jambes de façon contrôlée et arrête le balancement avant la rép suivante."
+    "text": "Redescends les jambes de façon contrôlée et arrête le balancement avant la répétition suivante."
    }
   ]
  },
@@ -8074,7 +8073,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Retour",
-    "text": "Reviens lentement à la position de départ. Termine toutes les rép, puis règle la machine pour l'autre côté."
+    "text": "Reviens lentement à la position de départ. Termine toutes les répétitions, puis règle la machine pour l'autre côté."
    }
   ]
  },
@@ -8130,7 +8129,7 @@ from jsonb_each($fr${
   ]
  },
  "triceps-pushdown": {
-  "name": "Extension triceps poulie haute",
+  "name": "Extension triceps à la poulie haute",
   "instructions": [
    {
     "title": "Installation",
@@ -8189,7 +8188,7 @@ from jsonb_each($fr${
    },
    {
     "title": "Tirage",
-    "text": "Mène avec les coudes et monte la barre à hauteur du bas de la poitrine. Les coudes restent au-dessus des mains."
+    "text": "Guide le mouvement avec les coudes et monte la barre à hauteur du bas de la poitrine. Les coudes restent au-dessus des mains."
    },
    {
     "title": "Descente",
@@ -8232,7 +8231,7 @@ from jsonb_each($fr${
   ]
  },
  "wide-grip-cable-row": {
-  "name": "Rowing poulie prise large",
+  "name": "Rowing à la poulie prise large",
   "instructions": [
    {
     "title": "Installation",
