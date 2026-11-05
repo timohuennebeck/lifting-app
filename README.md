@@ -490,8 +490,12 @@ What the code expects:
 - **RevenueCat:** entitlement `pro` with both products; offering `default` (current) with the
   packages `$rc_monthly` → `loqqa_pro_monthly` and `$rc_annual` → `loqqa_pro_yearly`.
 - **Server check:** with `REVENUECAT_SECRET_KEY` (a v1 secret key, `sk_…`) in
-  `supabase/functions/.env`, the progress check assessment only runs for accounts with an active `pro`
-  entitlement. Without the key, or when RevenueCat can't be reached, it isn't checked.
+  `supabase/functions/.env` (in production, the project's secrets), the progress check
+  assessment, the coach and its voice input (`assess-progress`, `coach-chat`,
+  `coach-transcribe`) only run for accounts with an active `pro` entitlement. When RevenueCat
+  can't be reached, it isn't checked. Without the key the functions log an error and refuse
+  everyone, except on the local stack (`SUPABASE_URL` on `kong`, `localhost` or `127.0.0.1`),
+  where everyone counts as Pro. Production needs the key.
 - **Testing:** a development build on an iPhone, signed in to a sandbox tester under Settings →
   App Store → Sandbox Account.
 

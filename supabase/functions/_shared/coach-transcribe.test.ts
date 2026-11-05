@@ -8,6 +8,8 @@ const ALICE = '00000000-0000-0000-0000-00000000000a';
 let profile: Row | null = null;
 /** start_plan_request's answer: the slot's id, or null at the limit. */
 let slot: number | null = 7;
+/** Whether RevenueCat lists Alice's Pro entitlement. */
+let pro = true;
 // deno-lint-ignore no-explicit-any
 const rpcCalls: { name: string; body: any }[] = [];
 const deleted: string[] = [];
@@ -20,6 +22,7 @@ const json = (body: unknown, status = 200) =>
 function reset(birthDate: string | null = '1995-04-01') {
   profile = { birth_date: birthDate };
   slot = 7;
+  pro = true;
   rpcCalls.length = 0;
   deleted.length = 0;
   openAiForms.length = 0;
@@ -31,6 +34,9 @@ globalThis.fetch = async (input, init) => {
   if (url.hostname === 'api.openai.com') {
     openAiForms.push(init?.body as FormData);
     return openAiReplies.shift() ?? json({ error: 'no reply scripted' }, 500);
+  }
+  if (url.hostname === 'api.revenuecat.com') {
+    return json({ subscriber: { entitlements: pro ? { pro: { expires_date: null } } : {} } });
   }
   if (url.pathname === '/auth/v1/user') {
     const token = new Headers(init?.headers).get('Authorization')?.replace('Bearer ', '');
@@ -52,6 +58,7 @@ globalThis.fetch = async (input, init) => {
 Deno.env.set('SUPABASE_URL', 'http://supabase.test');
 Deno.env.set('SUPABASE_SERVICE_ROLE_KEY', 'service-key');
 Deno.env.set('OPENAI_API_KEY', 'test-key');
+Deno.env.set('REVENUECAT_SECRET_KEY', 'revenuecat-key');
 
 let handler: (req: Request) => Promise<Response> = () => Promise.reject();
 Object.defineProperty(Deno, 'serve', {
@@ -91,13 +98,18 @@ Deno.test('a recording comes back as text, with the coach topic as context', asy
   assertEquals(deleted, []);
 });
 
-Deno.test('only signed-in users of 16 and more with a known birth date get one', async () => {
+Deno.test('only signed-in Pro users of 16 and more with a known birth date get one', async () => {
   reset();
   assertEquals((await send({}, 'nobody')).status, 401);
   reset('2015-01-01');
   const young = await send({});
   assertEquals(young.status, 403);
   assertEquals(await young.json(), { error: 'too_young' });
+  reset();
+  pro = false;
+  const free = await send({});
+  assertEquals(free.status, 403);
+  assertEquals(await free.json(), { error: 'not_pro' });
   reset(null);
   assertEquals((await send({})).status, 403);
   assertEquals(openAiForms.length, 0);
