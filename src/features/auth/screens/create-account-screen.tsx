@@ -72,7 +72,7 @@ export function CreateAccountScreen() {
     setBusy(provider);
     setFailed(false);
     try {
-      // Creating the account accepts the documents linked below the buttons: the versions in
+      // Creating the account accepts the documents linked above the buttons: the versions in
       // effect now, loaded first because the provider makes the account at once, and no
       // account may exist without a record of them.
       const documents = await fetchCurrentDocuments(i18n.language);
@@ -109,6 +109,20 @@ export function CreateAccountScreen() {
       scroll
       footer={
         <View className="gap-3">
+          <Text
+            variant="caption"
+            tone="subtle"
+            className="px-4 text-center font-inter text-xs leading-4.25"
+          >
+            <Trans
+              t={t}
+              i18nKey="createAccount.terms"
+              components={{
+                terms: <LegalLink kind="terms" />,
+                privacy: <LegalLink kind="privacy" />,
+              }}
+            />
+          </Text>
           {failed ? (
             <Text
               variant="caption"
@@ -133,20 +147,6 @@ export function CreateAccountScreen() {
               disabled={!!busy}
             />
           )}
-          <Text
-            variant="caption"
-            tone="subtle"
-            className="px-4 text-center font-inter text-xs leading-4.25"
-          >
-            <Trans
-              t={t}
-              i18nKey="createAccount.terms"
-              components={{
-                terms: <LegalLink kind="terms" />,
-                privacy: <LegalLink kind="privacy" />,
-              }}
-            />
-          </Text>
         </View>
       }
     >
