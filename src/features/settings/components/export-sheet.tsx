@@ -24,7 +24,7 @@ export interface ExportSheetProps {
 }
 
 /**
- * The file to export, then its progress. The share sheet opens once this sheet has closed: iOS
+ * What will be exported; once "Export" is tapped, the file and its progress. The share sheet opens once this sheet has closed: iOS
  * can't show a second native modal beside one. Before the first sync the device may hold only part
  * of the history, so exporting waits for it.
  */
@@ -81,30 +81,35 @@ export function ExportSheet({ visible, onClose, onRetry }: ExportSheetProps) {
       title={t('settings.export.title')}
       subtitle={t('settings.export.subtitle')}
     >
-      <View className="flex-row items-center gap-3.5 rounded-[22px] bg-control p-3.5">
-        <View className="size-11 items-center justify-center rounded-full bg-track">
-          <Text className="font-inter-bold text-[11px] tracking-[0.4px] uppercase">
-            {t('settings.data.exportFormat')}
-          </Text>
-        </View>
-        <View className="min-w-0 flex-1 gap-0.5">
-          <Text variant="bodyStrong" numberOfLines={1}>
-            {exportFileName(new Date())}
-          </Text>
-          <Text tone="subtle" className="text-sm" numberOfLines={1}>
-            {detail}
-          </Text>
-        </View>
-      </View>
-
       {exporting ? (
-        <View className="gap-2.5 px-1 pt-4">
-          <Text tone="subtle" className="text-sm">
-            {t('settings.export.preparing')}
-          </Text>
-          <ProgressBar value={progress} className="flex-none" />
+        <View className="gap-4">
+          <View className="flex-row items-center gap-3.5 rounded-[22px] bg-control p-3.5">
+            <View className="size-11 items-center justify-center rounded-full bg-track">
+              <Text className="font-inter-bold text-[11px] tracking-[0.4px] uppercase">
+                {t('settings.data.exportFormat')}
+              </Text>
+            </View>
+            <View className="min-w-0 flex-1 gap-0.5">
+              <Text variant="bodyStrong" numberOfLines={1}>
+                {exportFileName(new Date())}
+              </Text>
+              <Text tone="subtle" className="text-sm" numberOfLines={1}>
+                {detail}
+              </Text>
+            </View>
+          </View>
+          <View className="gap-2.5 px-1">
+            <Text tone="subtle" className="text-sm">
+              {t('settings.export.preparing')}
+            </Text>
+            <ProgressBar value={progress} className="flex-none" />
+          </View>
         </View>
-      ) : null}
+      ) : (
+        <Text tone="subtle" className="px-1 text-sm">
+          {detail}
+        </Text>
+      )}
 
       <View className="pt-6">
         <Button
