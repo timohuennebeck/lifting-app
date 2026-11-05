@@ -32,23 +32,33 @@ const STEMS = [
   // Portuguese
   'supino agachamento remada rosca puxada levantamento elevacao afundo flexao prancha',
   'desenvolvimento panturrilha extensora flexora',
+  // Spanish
+  'sentadilla muerto jalon zancada elevacion plancha dominada aperturas',
+  // French
+  'developpe souleve tirage rowing elevation gainage ecarte mollet',
 ].flatMap((line) => line.split(' '));
 /** Short ones only count as whole words ("row", not "throw"). */
-const WORDS = new Set('row rows fly flys flyes dip dips pull pulls'.split(' '));
+const WORDS = new Set(
+  'row rows fly flys flyes dip dips pull pulls remo fondos prensa fente fentes pompe pompes traction tractions'.split(
+    ' ',
+  ),
+);
 
 /**
  * A routine's heading as plans write it: "Tag 1", "Day A: Push", a weekday ("Montag"), or a
  * split's name on its own.
  */
 const ROUTINE_PREFIX =
-  /^(tag|day|dia|training|trainingstag|workout|einheit|session|treino)( ?[0-9]{1,2}| [a-f])\b/;
+  /^(tag|day|dia|training|trainingstag|workout|einheit|session|treino|jour|seance|entrainement|entrenamiento|sesion)( ?[0-9]{1,2}| [a-f])\b/;
 const WEEKDAY =
-  /^(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag|monday|tuesday|wednesday|thursday|friday|saturday|sunday|segunda|terca|quarta|quinta|sexta|sabado|domingo)\b/;
+  /^(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag|monday|tuesday|wednesday|thursday|friday|saturday|sunday|segunda|terca|quarta|quinta|sexta|sabado|domingo|lunes|martes|miercoles|jueves|viernes|lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\b/;
 const SPLITS = new Set(
   [
     'push|pull|legs|leg day|upper|lower|upper body|lower body|full body|fullbody|chest|back|arms',
     'beine|oberkorper|unterkorper|ganzkorper|brust|rucken|schultern|shoulders|arme',
     'peito|costas|pernas|ombros|bracos|superiores|inferiores',
+    'pecho|espalda|piernas|hombros|brazos|tren superior|tren inferior|cuerpo completo',
+    'pectoraux|dos|jambes|epaules|bras|haut du corps|bas du corps|corps entier',
   ].flatMap((line) => line.split('|')),
 );
 

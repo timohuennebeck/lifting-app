@@ -48,7 +48,7 @@
       "side": "Gírate de lado",
       "back": "Date la vuelta, de espaldas a la cámara"
     },
-    "consent": "Al tocar «{{done}}» das tu consentimiento para que tus fotos y tus datos corporales se envíen a OpenAI (EE. UU.) para la evaluación.",
+    "consent": "Al tocar «{{done}}» das tu consentimiento para que tus fotos y tus datos corporales se envíen a OpenAI (EE. UU.) para la evaluación.",
     "unavailable": {
       "title": "La cámara no se inició",
       "message": "Cierra el control corporal y ábrelo de nuevo. Si no ayuda, reinicia la app."

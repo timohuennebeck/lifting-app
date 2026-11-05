@@ -116,6 +116,6 @@ photos and AI parts.
 ## Update 1.1
 
 27. **Name the coach in the sign-up sentence.** Done: `auth.json` in every language ends: "…to
-    tailor your training, and to Kai sending your training and body data to OpenAI in the USA."
+    tailor your training, and to Kai, the AI coach, sending your training and body data to OpenAI in the USA."
     That makes what DS §4.4 says visible at the moment of the consent (item 4). It reaches only
     accounts created with 1.1 or later; earlier accounts keep the consent they gave by signing up.
