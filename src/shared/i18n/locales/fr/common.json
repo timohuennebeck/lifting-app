@@ -26,7 +26,7 @@
     "reps_other": "{{count}} rép.",
     "repRange": "{{range}} rép.",
     "atMost": "jusqu'à {{value}}",
-    "minShort": "Min"
+    "minShort": "min"
   },
   "weekdays": {
     "short": ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
