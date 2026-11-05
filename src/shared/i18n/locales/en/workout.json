@@ -9,6 +9,28 @@
     "swap": "Swap",
     "more": "More"
   },
+  "plates": {
+    "title": "Plates",
+    "perSide": "Per side",
+    "onBar": "On the bar",
+    "onMachine": "On the machine",
+    "loaded": "{{weight}} loaded",
+    "barWeight": "Bar weight",
+    "sledWeight": "Sled weight",
+    "withoutBar": "No bar",
+    "withoutSled": "No sled",
+    "enterWeight": "Enter a weight",
+    "belowBar": "Lighter than the bar",
+    "belowSled": "Lighter than the sled",
+    "barOnly": "Just the bar",
+    "sledOnly": "Just the sled",
+    "noPlates": "No plates",
+    "open": "Plates and bar",
+    "fold": "Fold plates",
+    "unfold": "Show plates",
+    "lighter": "Lighter",
+    "heavier": "Heavier"
+  },
   "table": {
     "set": "SET",
     "suggested": "SUGGESTED",

@@ -24,6 +24,7 @@ import {
   type ExerciseMenuAction,
   ExerciseMenuSheet,
 } from '@/features/training/components/exercise-menu-sheet';
+import { useExercise } from '@/shared/data/exercises';
 import { heaviestRepTarget, restSecondsFor } from '@/shared/data/routines';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { moved } from '@/shared/lib/array';
@@ -45,6 +46,7 @@ import { removeWorkoutExercise, reorderWorkoutExercise } from '../data/workout-m
 import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
 import { useWorkoutActivity } from '../hooks/use-workout-activity';
+import { plateSetup } from '../lib/plates';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
 const SWIPE_DISTANCE = 70;
@@ -73,6 +75,11 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   const { abandon, finish, finishing } = useWorkoutActions(workout.id);
   const field = useWorkoutSessionStore((s) => s.field);
   const { exercise, exerciseIndex, selectedIndex } = live;
+  const exerciseId = exercise?.exerciseId ?? '';
+  const setup = plateSetup(exerciseId, useExercise(exerciseId)?.equipment ?? null);
+  // Plates for exercises loaded with them, when their sets record a weight.
+  const loadedWith = live.measures.includes('weight') ? setup : null;
+  const plates = loadedWith ? { exerciseId, setup: loadedWith } : null;
   const count = workout.exercises.length;
   const keypadOpen = selectedIndex >= 0;
   // Every set logged: "Finish workout" appears at the bottom.
@@ -317,6 +324,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
               withRir={live.measures.includes('reps')}
               rirTarget={exercise?.sets[selectedIndex]?.targetRir ?? null}
               onPickRir={live.pickRir}
+              plates={plates}
             />
           ) : null}
         </>

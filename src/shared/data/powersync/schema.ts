@@ -286,6 +286,17 @@ export const weightEntries = sqliteTable(
   (t) => [index('date').on(t.date)],
 );
 
+// How the user loads an exercise's bar; the id comes from user and exercise (`exerciseSettingId`).
+export const exerciseSettings = sqliteTable('exercise_settings', {
+  id: text().primaryKey(),
+  user_id: text().notNull(),
+  exercise_id: text().notNull(),
+  bar_kg: real().notNull(),
+  // Postgres boolean, synced as 0/1.
+  no_bar: integer({ mode: 'boolean' }).notNull(),
+  updated_at: text().notNull(),
+});
+
 // The AI coach's chats and their questions and answers. Only the coach-chat Edge Function writes
 // them; the app reads them and deletes chats (with their messages).
 export const coachChats = sqliteTable(
@@ -371,6 +382,7 @@ export const drizzleSchema = {
   legalAcceptances,
   customExercises,
   weightEntries,
+  exerciseSettings,
   coachChats,
   coachMessages,
   routinesRelations,
@@ -387,5 +399,6 @@ export type ProfileRecord = typeof profiles.$inferSelect;
 export type ProgressCheckRecord = typeof progressChecks.$inferSelect;
 export type CustomExerciseRecord = typeof customExercises.$inferSelect;
 export type WeightEntryRecord = typeof weightEntries.$inferSelect;
+export type ExerciseSettingRecord = typeof exerciseSettings.$inferSelect;
 export type TicketRecord = typeof tickets.$inferSelect;
 export type TicketEventRecord = typeof ticketEvents.$inferSelect;

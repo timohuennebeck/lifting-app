@@ -9,6 +9,28 @@
     "swap": "Cambiar",
     "more": "Más"
   },
+  "plates": {
+    "title": "Discos",
+    "perSide": "Por lado",
+    "onBar": "En la barra",
+    "onMachine": "En la máquina",
+    "loaded": "{{weight}} cargados",
+    "barWeight": "Peso de la barra",
+    "sledWeight": "Peso del carro",
+    "withoutBar": "Sin barra",
+    "withoutSled": "Sin carro",
+    "enterWeight": "Introduce un peso",
+    "belowBar": "Menos que la barra",
+    "belowSled": "Menos que el carro",
+    "barOnly": "Solo la barra",
+    "sledOnly": "Solo el carro",
+    "noPlates": "Sin discos",
+    "open": "Discos y barra",
+    "fold": "Contraer discos",
+    "unfold": "Mostrar discos",
+    "lighter": "Menos peso",
+    "heavier": "Más peso"
+  },
   "table": {
     "set": "SERIE",
     "suggested": "SUGERIDO",

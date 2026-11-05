@@ -49,6 +49,8 @@ interface WorkoutSessionState {
   closeKeypad: () => void;
   pressKey: (key: KeypadKey) => void;
   pressBackspace: () => void;
+  /** Puts a whole value in a box and focuses it, as if typed (the plates sheet's weight). */
+  setInput: (field: SetField, value: string) => void;
   startRest: (seconds: number) => void;
   addRest: (seconds: number) => void;
   skipRest: () => void;
@@ -112,6 +114,13 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
           input: { ...s.input, [s.field]: s.pristine ? '' : backspace(s.input[s.field]) },
           pristine: false,
           edited: withField(s.edited, s.field),
+        })),
+      setInput: (field, value) =>
+        set((s) => ({
+          field,
+          input: { ...s.input, [field]: value },
+          pristine: true,
+          edited: withField(s.edited, field),
         })),
       startRest: (seconds) =>
         set({ restEndsAt: Date.now() + seconds * 1000, restSeconds: seconds }),

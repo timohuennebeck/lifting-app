@@ -227,6 +227,19 @@ Documents are readable without an account (onboarding runs logged out) and writt
   onboarding weight becomes the first entry; bodyweight exercise scores and the progress check
   assessment use the latest one.
 
+## Plates
+
+- **In the live workout:** typing a weight shows the plates above the number pad for exercises
+  loaded with plates (`plateSetup` in `src/features/workout/lib/plates.ts`): every barbell
+  exercise, plus a list of catalog ids for special bars (EZ, trap, safety), the Smith machine,
+  plate-loaded machines and lifts loaded on one end (landmine, T-bar). The ⓘ opens the plates
+  sheet with the weight of the bar and an "Ohne Stange" switch.
+- **`exercise_settings`:** one row per user and exercise once they change the bar there: `bar_kg`
+  (always kg, two decimals) and `no_bar`. The id comes from user and exercise
+  (`private.exercise_setting_id`, in the app `exerciseSettingId`), so two devices write one row.
+  Without a row the app starts from the exercise: a barbell 20 kg or 45 lb, an EZ bar 10 kg, a
+  trap bar 25 kg, a safety bar 30 kg, machines and one-end lifts without a bar.
+
 ## Progress check assessment
 
 The app uploads the three photos (front, side, back) to the private `progress-photos` bucket and
