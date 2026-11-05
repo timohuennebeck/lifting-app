@@ -1,6 +1,6 @@
 # Política de Privacidad
 
-Versión: 1.3
+Versión: 1.4
 
 Última actualización: 5 de noviembre de 2026
 
@@ -77,7 +77,7 @@ Cuando creas una cuenta, guardamos tus datos de la configuración inicial como t
 - el idioma de tu app, para que nuestro soporte pueda responderte en tu idioma
 - opcional: una foto de perfil (la app la guarda como imagen cuadrada de 512 × 512 píxeles) y un breve texto “Sobre ti” de hasta 150 caracteres
 
-Para qué: necesitamos tu fecha de nacimiento para comprobar la edad mínima (sección 16) y los límites de edad del coach y del control corporal. Si pides que te creen un plan de entrenamiento, un modelo de IA de OpenAI lo crea a partir de tu objetivo de entrenamiento, enfoque, equipamiento, entrenamientos por semana, duración del entrenamiento y experiencia (sección 4.7). El coach también usa tu objetivo, experiencia, equipamiento, enfoque y unidades para sus respuestas (sección 4.8). La app usa el sexo, la edad, el peso y la estatura para tu nivel y tus sugerencias, así como para el control corporal (sección 4.6). Tu foto de perfil y “Sobre ti” solo se te muestran a ti en tu perfil.
+Para qué: necesitamos tu fecha de nacimiento para comprobar la edad mínima (sección 16) y los límites de edad del coach y del control corporal. Si pides que te creen un plan de entrenamiento, un modelo de IA de OpenAI lo crea a partir de tu objetivo de entrenamiento, enfoque, equipamiento, entrenamientos por semana, duración del entrenamiento y experiencia (sección 4.7). El coach también usa tu objetivo, experiencia, equipamiento, enfoque y unidades para sus respuestas (sección 4.8). La app usa el sexo, la edad, el peso y la estatura para el control corporal (sección 4.6). Tu foto de perfil y “Sobre ti” solo se te muestran a ti en tu perfil.
 
 Base jurídica: art. 6, apartado 1, letra b), del RGPD; para el peso corporal y la estatura, tu consentimiento (sección 4.4).
 
@@ -105,7 +105,7 @@ Cuando usas Loqqa, guardamos:
 - **Ejercicios personalizados** que creas tú o que se crean durante la importación de un plan
 - **Peso corporal:** los registros de peso que anotas, un valor por día
 
-Para qué: para que puedas registrar tus entrenamientos y tu peso y ver tu historial, tus récords, tu nivel y tu actividad. La app calcula en tu dispositivo las sugerencias para tus series y tu nivel. Si se lo preguntas al coach, este responde tu pregunta a partir de estos datos (sección 4.8).
+Para qué: para que puedas registrar tus entrenamientos y tu peso y ver tu historial, tus récords, tus series por músculo en el periodo que elijas y tu actividad. La app calcula en tu dispositivo las sugerencias para tus series y el número de tus series por músculo. Si se lo preguntas al coach, este responde tu pregunta a partir de estos datos (sección 4.8).
 
 Base jurídica: art. 6, apartado 1, letra b), del RGPD; para los registros de peso, tu consentimiento (sección 4.4).
 
@@ -387,7 +387,7 @@ Para una cuenta necesitamos tu cuenta de Google o tu cuenta de Apple. Sin una cu
 
 ## 15. Sin decisiones automatizadas
 
-La app crea planes, sugerencias, niveles, valores del control corporal y las respuestas del coach de forma automática; los planes que pides que te creen, los valores del control corporal y las respuestas del coach proceden de un modelo de IA de OpenAI (secciones 4.6 a 4.8). Son información, recomendaciones y estimaciones para tu entrenamiento. Las respuestas del coach pueden ser incorrectas y no son consejo médico. No tomamos decisiones que produzcan efectos jurídicos en ti o te afecten significativamente de modo similar (art. 22 del RGPD).
+La app crea planes, sugerencias, análisis como tus series por músculo, valores del control corporal y las respuestas del coach de forma automática; los planes que pides que te creen, los valores del control corporal y las respuestas del coach proceden de un modelo de IA de OpenAI (secciones 4.6 a 4.8). Son información, recomendaciones y estimaciones para tu entrenamiento. Las respuestas del coach pueden ser incorrectas y no son consejo médico. No tomamos decisiones que produzcan efectos jurídicos en ti o te afecten significativamente de modo similar (art. 22 del RGPD).
 
 ## 16. Niños y adolescentes
 

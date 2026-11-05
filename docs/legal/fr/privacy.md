@@ -1,6 +1,6 @@
 # Politique de confidentialité
 
-Version : 1.3
+Version : 1.4
 
 Dernière mise à jour : 5 novembre 2026
 
@@ -77,7 +77,7 @@ Lorsque tu crées un compte, nous enregistrons comme profil les informations que
 - la langue de ton application, afin que notre assistance puisse te répondre dans ta langue
 - facultatif : une photo de profil (l'application l'enregistre sous forme d'image carrée de 512 × 512 pixels) et un court texte « À propos de toi » de 150 caractères maximum
 
-Pourquoi : nous avons besoin de ta date de naissance pour vérifier l'âge minimum (section 16) et les limites d'âge pour le coach et le bilan corporel. Si tu fais créer un programme d'entraînement, un modèle d'IA d'OpenAI le crée à partir de ton objectif d'entraînement, de ta priorité, de ton équipement, du nombre de séances par semaine, de la durée des séances et de ton expérience (section 4.7). Le coach utilise aussi ton objectif, ton expérience, ton équipement, ta priorité et tes unités pour ses réponses (section 4.8). L'application utilise le sexe, l'âge, le poids et la taille pour ton niveau et tes suggestions ainsi que pour le bilan corporel (section 4.6). Ta photo de profil et « À propos de toi » ne sont affichés que pour toi dans ton profil.
+Pourquoi : nous avons besoin de ta date de naissance pour vérifier l'âge minimum (section 16) et les limites d'âge pour le coach et le bilan corporel. Si tu fais créer un programme d'entraînement, un modèle d'IA d'OpenAI le crée à partir de ton objectif d'entraînement, de ta priorité, de ton équipement, du nombre de séances par semaine, de la durée des séances et de ton expérience (section 4.7). Le coach utilise aussi ton objectif, ton expérience, ton équipement, ta priorité et tes unités pour ses réponses (section 4.8). L'application utilise le sexe, l'âge, le poids et la taille pour le bilan corporel (section 4.6). Ta photo de profil et « À propos de toi » ne sont affichés que pour toi dans ton profil.
 
 Base juridique : art. 6, paragraphe 1, point b), du RGPD ; pour le poids corporel et la taille, ton consentement (section 4.4).
 
@@ -105,7 +105,7 @@ Lorsque tu utilises Loqqa, nous enregistrons :
 - **Exercices personnalisés** que tu crées ou qui sont créés lors de l'importation d'un programme
 - **Poids corporel :** les entrées de poids que tu enregistres, une valeur par jour
 
-Pourquoi : pour que tu puisses enregistrer tes séances et ton poids et consulter ton historique, tes records, ton niveau et ton activité. L'application calcule sur ton appareil les suggestions pour tes séries et ton niveau. Si tu interroges le coach, il répond à ta question à partir de ces données (section 4.8).
+Pourquoi : pour que tu puisses enregistrer tes séances et ton poids et consulter ton historique, tes records, tes séries par muscle sur la période de ton choix et ton activité. L'application calcule sur ton appareil les suggestions pour tes séries et le nombre de tes séries par muscle. Si tu interroges le coach, il répond à ta question à partir de ces données (section 4.8).
 
 Base juridique : art. 6, paragraphe 1, point b), du RGPD ; pour les entrées de poids, ton consentement (section 4.4).
 
@@ -387,7 +387,7 @@ Pour un compte, nous avons besoin de ton compte Google ou de ton compte Apple. S
 
 ## 15. Pas de décisions automatisées
 
-L'application crée automatiquement des programmes, des suggestions, des niveaux, des valeurs de bilan corporel et les réponses du coach ; les programmes que tu fais créer, les valeurs du bilan corporel et les réponses du coach proviennent d'un modèle d'IA d'OpenAI (sections 4.6 à 4.8). Ce sont des informations, des recommandations et des estimations pour ton entraînement. Les réponses du coach peuvent être erronées et ne constituent pas un avis médical. Nous ne prenons aucune décision qui produise des effets juridiques te concernant ou t'affecte de manière significative de façon similaire (art. 22 du RGPD).
+L'application crée automatiquement des programmes, des suggestions, des analyses comme tes séries par muscle, des valeurs de bilan corporel et les réponses du coach ; les programmes que tu fais créer, les valeurs du bilan corporel et les réponses du coach proviennent d'un modèle d'IA d'OpenAI (sections 4.6 à 4.8). Ce sont des informations, des recommandations et des estimations pour ton entraînement. Les réponses du coach peuvent être erronées et ne constituent pas un avis médical. Nous ne prenons aucune décision qui produise des effets juridiques te concernant ou t'affecte de manière significative de façon similaire (art. 22 du RGPD).
 
 ## 16. Enfants et adolescents
 

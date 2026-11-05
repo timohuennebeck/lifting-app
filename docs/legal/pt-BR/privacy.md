@@ -1,6 +1,6 @@
 # Política de Privacidade
 
-Versão: 1.3
+Versão: 1.4
 
 Última atualização: 5 de novembro de 2026
 
@@ -77,7 +77,7 @@ Quando você cria uma conta, salvamos suas informações da configuração inici
 - o idioma do app, para que nosso suporte possa responder a você no seu idioma
 - opcionalmente: uma foto de perfil (o app a salva como imagem quadrada de 512 × 512 pixels) e um texto curto “Sobre você” com até 150 caracteres
 
-Para quê: precisamos da sua data de nascimento para verificar a idade mínima (seção 16) e os limites de idade do coach e do check corporal. A partir do objetivo de treino, foco, equipamentos, treinos por semana, duração do treino e experiência, um modelo de IA da OpenAI cria seu plano de treino, se você pedir que um seja criado (seção 4.7). O coach também usa seu objetivo, sua experiência, seus equipamentos, seu foco e suas unidades para as respostas dele (seção 4.8). O app usa sexo, idade, peso e altura para o seu nível e as suas sugestões, além do check corporal (seção 4.6). A foto de perfil e o texto “Sobre você” são exibidos apenas para você, no seu perfil.
+Para quê: precisamos da sua data de nascimento para verificar a idade mínima (seção 16) e os limites de idade do coach e do check corporal. A partir do objetivo de treino, foco, equipamentos, treinos por semana, duração do treino e experiência, um modelo de IA da OpenAI cria seu plano de treino, se você pedir que um seja criado (seção 4.7). O coach também usa seu objetivo, sua experiência, seus equipamentos, seu foco e suas unidades para as respostas dele (seção 4.8). O app usa sexo, idade, peso e altura para o check corporal (seção 4.6). A foto de perfil e o texto “Sobre você” são exibidos apenas para você, no seu perfil.
 
 Base legal: art. 6(1)(b) do RGPD; para peso corporal e altura, o seu consentimento (seção 4.4).
 
@@ -105,7 +105,7 @@ Quando você usa o Loqqa, salvamos:
 - **Exercícios próprios** que você cria ou que surgem na importação de plano
 - **Peso corporal:** os registros de peso que você faz, um valor por dia
 
-Para quê: para que você possa registrar seus treinos e seu peso e ver seu histórico, seus recordes, seu nível e sua atividade. O app calcula as sugestões para as suas séries e o seu nível no seu dispositivo. Se você fizer uma pergunta ao coach, ele a responde a partir desses dados (seção 4.8).
+Para quê: para que você possa registrar seus treinos e seu peso e ver seu histórico, seus recordes, suas séries por músculo em um período de sua escolha e sua atividade. O app calcula as sugestões para as suas séries e o número das suas séries por músculo no seu dispositivo. Se você fizer uma pergunta ao coach, ele a responde a partir desses dados (seção 4.8).
 
 Base legal: art. 6(1)(b) do RGPD; para os registros de peso, o seu consentimento (seção 4.4).
 
@@ -387,7 +387,7 @@ Para uma conta, precisamos da sua Conta do Google ou da sua Conta Apple. Sem con
 
 ## 15. Nenhuma decisão automatizada
 
-O app cria planos, sugestões, níveis, valores do check corporal e as respostas do coach automaticamente; os planos que você pede que sejam criados, os valores do check corporal e as respostas do coach vêm de um modelo de IA da OpenAI (seções 4.6 a 4.8). Trata-se de informações, recomendações e estimativas para o seu treino. As respostas do coach podem estar erradas e não são aconselhamento médico. Não tomamos decisões que produzam efeitos jurídicos em relação a você ou que o afetem significativamente de forma similar (art. 22 do RGPD).
+O app cria planos, sugestões, análises como as suas séries por músculo, valores do check corporal e as respostas do coach automaticamente; os planos que você pede que sejam criados, os valores do check corporal e as respostas do coach vêm de um modelo de IA da OpenAI (seções 4.6 a 4.8). Trata-se de informações, recomendações e estimativas para o seu treino. As respostas do coach podem estar erradas e não são aconselhamento médico. Não tomamos decisões que produzam efeitos jurídicos em relação a você ou que o afetem significativamente de forma similar (art. 22 do RGPD).
 
 ## 16. Crianças e adolescentes
 

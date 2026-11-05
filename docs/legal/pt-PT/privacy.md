@@ -1,6 +1,6 @@
 # Política de Privacidade
 
-Versão: 1.3
+Versão: 1.4
 
 Última atualização: 5 de novembro de 2026
 
@@ -77,7 +77,7 @@ Quando crias uma conta, guardamos os teus dados da configuração inicial como o
 - o idioma da tua app, para que o nosso suporte te possa responder no teu idioma
 - facultativamente: uma foto de perfil (a app guarda-a como imagem quadrada de 512 × 512 píxeis) e um pequeno texto “Sobre ti” com até 150 caracteres
 
-Para que fins: precisamos da tua data de nascimento para verificar a idade mínima (secção 16) e os limites de idade do coach e do check corporal. A partir do objetivo de treino, do foco, do equipamento, dos treinos por semana, da duração do treino e da experiência, um modelo de IA da OpenAI cria o teu plano de treino, se pedires que te seja criado um (secção 4.7). O coach também utiliza o teu objetivo, a tua experiência, o teu equipamento, o teu foco e as tuas unidades para as suas respostas (secção 4.8). A app utiliza o sexo, a idade, o peso e a altura para o teu nível e as tuas sugestões, bem como para o check corporal (secção 4.6). A foto de perfil e o texto “Sobre ti” só te são mostrados a ti, no teu perfil.
+Para que fins: precisamos da tua data de nascimento para verificar a idade mínima (secção 16) e os limites de idade do coach e do check corporal. A partir do objetivo de treino, do foco, do equipamento, dos treinos por semana, da duração do treino e da experiência, um modelo de IA da OpenAI cria o teu plano de treino, se pedires que te seja criado um (secção 4.7). O coach também utiliza o teu objetivo, a tua experiência, o teu equipamento, o teu foco e as tuas unidades para as suas respostas (secção 4.8). A app utiliza o sexo, a idade, o peso e a altura para o check corporal (secção 4.6). A foto de perfil e o texto “Sobre ti” só te são mostrados a ti, no teu perfil.
 
 Fundamento jurídico: art. 6.º, n.º 1, alínea b), do RGPD; para o peso corporal e a altura, o teu consentimento (secção 4.4).
 
@@ -105,7 +105,7 @@ Quando utilizas o Loqqa, guardamos:
 - **Exercícios próprios** que crias ou que surgem na importação de planos
 - **Peso corporal:** os registos de peso que introduzes, um valor por dia
 
-Para que fins: para que possas registar os teus treinos e o teu peso e ver o teu histórico, os teus melhores valores, o teu nível e a tua atividade. A app calcula no teu dispositivo as sugestões para as tuas séries e o teu nível. Se fizeres uma pergunta ao coach, ele responde-lhe a partir destes dados (secção 4.8).
+Para que fins: para que possas registar os teus treinos e o teu peso e ver o teu histórico, os teus melhores valores, as tuas séries por músculo num período à tua escolha e a tua atividade. A app calcula no teu dispositivo as sugestões para as tuas séries e o número das tuas séries por músculo. Se fizeres uma pergunta ao coach, ele responde-lhe a partir destes dados (secção 4.8).
 
 Fundamento jurídico: art. 6.º, n.º 1, alínea b), do RGPD; para os registos de peso, o teu consentimento (secção 4.4).
 
@@ -387,7 +387,7 @@ Para uma conta, precisamos da tua Conta Google ou da tua Conta Apple. Sem conta,
 
 ## 15. Sem decisões automatizadas
 
-A app cria automaticamente planos, sugestões, níveis, valores do check corporal e as respostas do coach; os planos que pedes que te sejam criados, os valores do check corporal e as respostas do coach provêm de um modelo de IA da OpenAI (secções 4.6 a 4.8). Trata-se de informações, recomendações e estimativas para o teu treino. As respostas do coach podem estar erradas e não constituem aconselhamento médico. Não tomamos decisões que produzam efeitos jurídicos que te digam respeito ou que te afetem significativamente de forma similar (art. 22.º do RGPD).
+A app cria automaticamente planos, sugestões, análises como as tuas séries por músculo, valores do check corporal e as respostas do coach; os planos que pedes que te sejam criados, os valores do check corporal e as respostas do coach provêm de um modelo de IA da OpenAI (secções 4.6 a 4.8). Trata-se de informações, recomendações e estimativas para o teu treino. As respostas do coach podem estar erradas e não constituem aconselhamento médico. Não tomamos decisões que produzam efeitos jurídicos que te digam respeito ou que te afetem significativamente de forma similar (art. 22.º do RGPD).
 
 ## 16. Crianças e adolescentes
 

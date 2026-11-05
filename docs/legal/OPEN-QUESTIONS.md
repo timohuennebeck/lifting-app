@@ -12,8 +12,10 @@ the text; DS §4.7) and questions to the coach said out loud (the recording goes
 written down and isn't stored; DS §4.8), messages to support said out loud the same way (§4.9),
 and it names the microphone among the permissions (§6), which 1.2 wrongly said the app doesn't ask
 for. NB 1.2 also names Korean among its languages. Spanish and French come with DS 1.3 and NB 1.3;
-NB 1.3 only adds them to its languages. German is the binding version; `en`, `pt-PT`, `pt-BR`, `ko`,
-`es` and `fr` are translations.
+NB 1.3 only adds them to its languages. Version 1.4 of both (5 November 2026, 18:00 UTC,
+`20261105180000_legal_documents_v1_4`) describes the Sätze tab, the sets per muscle over a chosen
+range, in place of the removed muscle levels (DS §4.3, §4.5 and §15, NB §4), without re-acceptance.
+German is the binding version; `en`, `pt-PT`, `pt-BR`, `ko`, `es` and `fr` are translations.
 
 The texts are not legal advice. A lawyer should review them, above all the health data, body
 photos and AI parts.
@@ -48,9 +50,11 @@ photos and AI parts.
    also needs the terms and privacy policy for the store listings and Google's consent screen.
 7. **Data protection officer.** DS §2 says none is required. If a DPIA is required (health data,
    body photos, AI), § 38 BDSG requires one; check with the lawyer.
-8. **Effective date of DS 1.3 and NB 1.2.** Done: both are published, in effect from 5 November
-   2026, before version 1.0 goes live. A pushed migration takes effect at once (the app shows the
-   newest version whose `effective_at` has passed), and its rows can't be changed.
+8. **Effective date of DS 1.4 and NB 1.4.** Done: both are published, in effect from 5 November
+   2026 (18:00 UTC), before version 1.0 goes live. A pushed migration takes effect at once (the app
+   shows the version with the latest `effective_at` that has passed), and its rows can't be
+   changed. The app orders by `effective_at`, not by version number, so a new version needs a later
+   one than the last: NB 1.3 is in effect from 12:00 UTC that day.
 9. **Coach from 16 (for the lawyer).** The coach sends health data (weight entries, body check
    scores) to OpenAI in the USA on the user's own consent from 16, also where the minimum age is
    lower (DS §4.8, §16; NB §2); the body check stays 18+. Check whether a 16-year-old's own consent
@@ -65,8 +69,8 @@ photos and AI parts.
 
 ## Manual processes the texts promise
 
-11. Withdrawing the body data consent (DS §12): delete `weight_kg`/`height_cm` and the weight
-    entries on request.
+11. Withdrawing the body data consent (DS §12): delete `height_cm` and the weight entries on
+    request.
 12. Data export within one month as JSON (DS §11).
 13. Deleting PostHog persons and RevenueCat customers on request (DS §10, §4.14).
 14. Deleting progress-check photos left in storage after an offline delete (DS §4.6).
