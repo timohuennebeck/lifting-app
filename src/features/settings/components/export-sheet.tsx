@@ -15,7 +15,7 @@ import { afterSheetClose, Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
 import { useExportSummary } from '../data/workout-export';
-import { exportFileName, shareAndRemove, writeWorkoutsCsv } from '../lib/export-workouts';
+import { shareAndRemove, writeWorkoutsCsv } from '../lib/export-workouts';
 
 export interface ExportSheetProps {
   visible: boolean;
@@ -25,7 +25,7 @@ export interface ExportSheetProps {
 }
 
 /**
- * What will be exported; once "Export" is tapped, the file and its progress, then "Download". The
+ * What will be exported; once "Export" is tapped, the progress, then the file and "Download". The
  * share sheet opens once this sheet has closed: iOS can't show a second native modal beside one.
  * Closing the sheet without downloading deletes the file. Before the first sync the device may
  * hold only part of the history, so exporting waits for it.
@@ -100,31 +100,28 @@ export function ExportSheet({ visible, onClose, onRetry }: ExportSheetProps) {
       title={t('settings.export.title')}
       subtitle={t('settings.export.subtitle')}
     >
-      {exporting || file ? (
-        <View className="gap-4">
-          <View className="flex-row items-center gap-3.5 px-1">
-            <View className="size-11 items-center justify-center rounded-full bg-track">
-              <Text className="font-inter-bold text-[11px] tracking-[0.4px] uppercase">
-                {t('settings.data.exportFormat')}
-              </Text>
-            </View>
-            <View className="min-w-0 flex-1 gap-0.5">
-              <Text variant="bodyStrong" numberOfLines={1}>
-                {file?.name ?? exportFileName(new Date())}
-              </Text>
-              <Text tone="subtle" className="text-sm" numberOfLines={1}>
-                {detail}
-              </Text>
-            </View>
+      {file ? (
+        <View className="flex-row items-center gap-3.5 px-1">
+          <View className="size-11 items-center justify-center rounded-full bg-track">
+            <Text className="font-inter-bold text-[11px] tracking-[0.4px] uppercase">
+              {t('settings.data.exportFormat')}
+            </Text>
           </View>
-          {exporting ? (
-            <View className="gap-2.5 px-1">
-              <Text tone="subtle" className="text-sm">
-                {t('settings.export.preparing')}
-              </Text>
-              <ProgressBar value={progress} className="flex-none" />
-            </View>
-          ) : null}
+          <View className="min-w-0 flex-1 gap-0.5">
+            <Text variant="bodyStrong" numberOfLines={1}>
+              {file.name}
+            </Text>
+            <Text tone="subtle" className="text-sm" numberOfLines={1}>
+              {detail}
+            </Text>
+          </View>
+        </View>
+      ) : exporting ? (
+        <View className="gap-2.5 px-1">
+          <Text tone="subtle" className="text-sm">
+            {t('settings.export.preparing')}
+          </Text>
+          <ProgressBar value={progress} className="flex-none" />
         </View>
       ) : (
         <Text tone="subtle" className="px-1 text-sm">
