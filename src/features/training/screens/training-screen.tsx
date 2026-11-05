@@ -30,6 +30,7 @@ import { RECENT_ROUTINES, RoutineRows, useRoutineMeta } from '../components/rout
 import { SectionTitle } from '../components/section-title';
 import { WeekStrip } from '../components/week-strip';
 import { reorderPlanRoutine } from '../data/routine-mutations';
+import { useCreateRoutine } from '../hooks/use-create-routine';
 import { useStartRoutine } from '../hooks/use-start-routine';
 import { useWeekWorkouts } from '../hooks/use-week-workouts';
 
@@ -66,6 +67,7 @@ export function TrainingScreen() {
   const meta = useRoutineMeta();
   // One starter for the whole screen, so two starts can't race.
   const { start, startingId } = useStartRoutine();
+  const { create: createRoutine } = useCreateRoutine();
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
 
   const planRoutines = plan ? routines.filter((r) => r.planId === plan.id) : [];
@@ -139,7 +141,7 @@ export function TrainingScreen() {
     <PlanPrompt
       title={t('home.emptyPlan.title')}
       body={t('home.emptyPlan.body')}
-      onPress={() => router.push({ pathname: '/routine/new', params: { planId: plan.id } })}
+      onPress={() => void createRoutine(plan.id)}
     />
   ) : null;
 

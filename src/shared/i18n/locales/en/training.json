@@ -38,12 +38,8 @@
     "planHint": "Have one made, import it or build it yourself",
     "createRoutine": "Create workout",
     "createPlan": "Create plan",
-    "emptyWorkoutName": "Workout"
-  },
-  "newRoutine": {
-    "title": "New workout",
-    "name": "Name",
-    "namePlaceholder": "e.g. Push"
+    "emptyWorkoutName": "Workout",
+    "untitledRoutine": "Untitled workout"
   },
   "overview": {
     "musclesWorked": "Muscles worked",

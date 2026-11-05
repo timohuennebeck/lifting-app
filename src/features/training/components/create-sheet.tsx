@@ -10,6 +10,7 @@ import { ChoiceSheet, glyphColor } from '@/shared/ui/choice-sheet';
 import { CoachDiamond } from '@/shared/ui/coach-mark';
 import { afterSheetClose } from '@/shared/ui/sheet';
 
+import { useCreateRoutine } from '../hooks/use-create-routine';
 import { PlanGlyph, RoutineGlyph } from './glyphs';
 
 type CreateKind = 'workout' | 'routine' | 'plan';
@@ -20,13 +21,14 @@ export interface CreateSheetProps {
 }
 
 /**
- * The tab bar's "+" sheet: an empty workout (or the running one, resumed), a new routine, or a
- * plan, which is made, imported or built (01·V·A·6).
+ * The tab bar's "+" sheet: an empty workout (or the running one, resumed), a new untitled
+ * routine, or a plan, which is made, imported or built (01·V·A·6).
  */
 export function CreateSheet({ visible, onClose }: CreateSheetProps) {
   const { t } = useTranslation('training');
   const { plan, profile } = useCurrentPlan();
   const [kind, setKind] = useResetOnOpen<CreateKind>(visible, 'workout');
+  const { create: createRoutine } = useCreateRoutine();
 
   const then = (go: () => void) => {
     onClose();
@@ -53,7 +55,7 @@ export function CreateSheet({ visible, onClose }: CreateSheetProps) {
       onChange={setKind}
       onConfirm={(value) => {
         if (value === 'workout') then(emptyWorkout);
-        else if (value === 'routine') then(() => router.push('/routine/new'));
+        else if (value === 'routine') then(() => void createRoutine());
         else then(() => openPlanFlow(profile, plan?.sessionsPerWeek));
       }}
       options={[

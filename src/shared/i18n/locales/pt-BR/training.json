@@ -38,12 +38,8 @@
     "planHint": "Peça um, importe ou monte você mesmo",
     "createRoutine": "Criar treino",
     "createPlan": "Criar plano",
-    "emptyWorkoutName": "Treino"
-  },
-  "newRoutine": {
-    "title": "Novo treino",
-    "name": "Nome",
-    "namePlaceholder": "ex.: Push"
+    "emptyWorkoutName": "Treino",
+    "untitledRoutine": "Treino sem nome"
   },
   "overview": {
     "musclesWorked": "Músculos trabalhados",

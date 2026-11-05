@@ -38,12 +38,8 @@
     "planHint": "자동으로 만들기, 가져오기 또는 직접 만들기",
     "createRoutine": "루틴 만들기",
     "createPlan": "플랜 만들기",
-    "emptyWorkoutName": "운동"
-  },
-  "newRoutine": {
-    "title": "새 루틴",
-    "name": "이름",
-    "namePlaceholder": "예: 푸시"
+    "emptyWorkoutName": "운동",
+    "untitledRoutine": "이름 없는 루틴"
   },
   "overview": {
     "musclesWorked": "사용 근육",
