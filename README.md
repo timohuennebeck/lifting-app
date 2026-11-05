@@ -203,7 +203,7 @@ Documents are readable without an account (onboarding runs logged out) and writt
   app writes them on sign-up (the versions in effect then) and when a user agrees to a version that
   requires re-acceptance; until then that version covers the app, showing what changed.
 - **In the app:** `/legal/terms` and `/legal/privacy` show the version in effect, in the app language
-  (else English, else `pt-BR`), linked from sign-up, the paywall and Settings.
+  (else English), linked from sign-up, the paywall and Settings.
   Write the text as Markdown: headings, paragraphs, `>` quotes, lists, `**bold**` and
   `[links](https://…)`.
 - **Publishing:** the texts live in `docs/legal/<locale>/` (German is binding; `en`, `pt-PT`,
@@ -306,10 +306,10 @@ What the user trains from, and what they logged:
   running workouts. One started from a plan's routine gets `plan_id` and `plan_week`, the week the
   plan is in then; free workouts and single routines have neither and don't count.
 - **Blocks (optional):** `block_weeks` is the length of a block with its deload, null for none;
-  blocks repeat from week 1 (`block_start_week`, always 1). Each week after a block's first takes
-  one rep off every set's saved RIR (never below 0); the deload keeps the first half of the sets
-  (rounded up) at RIR 4. Sets without RIR keep none. AI plans run in blocks of 4 + 1 weeks;
-  imported plans without blocks, with a weekly goal of their routine count.
+  blocks repeat from week 1. Each week after a block's first takes one rep off every set's saved
+  RIR (never below 0); the deload keeps the first half of the sets (rounded up) at RIR 4. Sets
+  without RIR keep none. AI plans run in blocks of 4 + 1 weeks; imported plans without blocks, with
+  a weekly goal of their routine count.
 
 ## Data export
 
@@ -359,11 +359,12 @@ the app says so and the user goes back a step.
   (`PLAN_GENERATE_IP_LIMIT`, default 10) and in total (`PLAN_GENERATE_DAILY_LIMIT`, default 1,000)
   per 24 hours, in `plan_requests` with `kind = 'generate'`.
 - **Testing:** `npm run plan:generate-eval` asks for 20 plans (goals, equipment, 2–6 workouts a
-  week, every split, 20–120 minutes, every experience level, with and without focus; German, English,
+  week, every split, 30–120 minutes, every experience level, with and without focus; German, English,
   Portuguese, Spanish, French) and checks each: routines, time, equipment, repeats, every major muscle group trained, push/pull
   balance, focus volume, reps for the goal, core work, limits for beginners. The checks are rules of thumb;
   the report in `scripts/plan-generate-eval/out/` has every plan to read. Set
-  `PLAN_GENERATE_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
+  `PLAN_GENERATE_IP_LIMIT=1000` in `supabase/functions/.env` locally first. It imports the rest and
+  time rules from `supabase/functions/_shared/`, so it needs Node 22.18 or newer.
 - **Prompt changes:** the model answers differently each time, so test a change with
   `npm run plan:generate-eval -- --repeat 3` before and after it, then
   `npm run plan:generate-compare`: how often each check passed in the last two runs, overall and
@@ -398,8 +399,8 @@ over the tabs from the Training tab's card, which a flash runs across.
   weight, sets per muscle with main muscles counting fully and helpers half, against 10 a week.
 - **Rules (server-side):** 16+ by the profile's birth date; consent: a new profile sets
   `profiles.coach_consent_at`, so signing up agrees to the training and body data going to OpenAI;
-  the app sends `consent: true` with every question, and the function records it for an account
-  without one before anything is sent; Pro, as for
+  asking is the consent too, so the function records it for an account without one (after a
+  withdrawal) before anything is sent; Pro, as for
   the progress check; at most 20 questions in 24 hours and 150 in 30 days (`COACH_DAILY_LIMIT`,
   `COACH_MONTHLY_LIMIT`).
 - **Secrets:** `OPENAI_API_KEY` as for the plans; `OPENAI_COACH_MODEL` (default `gpt-6.1-sol`) and
