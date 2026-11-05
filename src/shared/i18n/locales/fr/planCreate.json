@@ -17,9 +17,9 @@
     }
   },
   "focus": {
-    "title": "QUEL EST\nTON FOCUS ?",
+    "title": "QUELLE EST\nTA PRIORITÉ ?",
     "subtitle": "Choisis une ou plusieurs zones.",
-    "none": "Aucun focus",
+    "none": "Aucune priorité",
     "cta_one": "Continuer · {{count}} zone",
     "cta_other": "Continuer · {{count}} zones",
     "mapA11y": "Schéma du corps. Touche un muscle pour activer ou désactiver sa zone."
@@ -46,7 +46,7 @@
     "subtitle": "Touche tout ce avec quoi tu peux t'entraîner."
   },
   "sessions": {
-    "title": "COMBIEN DE SÉANCES\nVEUX-TU FAIRE ?",
+    "title": "COMBIEN\nDE SÉANCES ?",
     "perWeek": "PAR SEMAINE",
     "times": "{{count}}×"
   },
@@ -88,7 +88,7 @@
       "ppl_upper_lower": {
         "short": "PPL+",
         "title": "Push / Pull / Jambes + Haut / Bas",
-        "description": "PPL plus haut et bas"
+        "description": "PPL + haut et bas"
       },
       "bro": {
         "short": "BRO",
@@ -110,12 +110,12 @@
   "building": {
     "stages": [
       "On évalue ton objectif et ton expérience…",
-      "On choisit les exercices pour ton équipement…",
+      "On choisit les exercices pour ton matériel…",
       "On répartit en séances…",
       "On définit les séries et les répétitions…"
     ],
     "frequency": "{{count}} × {{minutes}} min",
-    "focus": "Focus : {{areas}}",
+    "focus": "Priorité : {{areas}}",
     "balanced": "Tous les groupes musculaires",
     "routineTag": "S{{n}}"
   },
@@ -151,6 +151,6 @@
   "equipmentShort": {
     "gym": "Salle",
     "home": "Maison",
-    "bodyweight": "Poids du corps"
+    "bodyweight": "Sans charge"
   }
 }

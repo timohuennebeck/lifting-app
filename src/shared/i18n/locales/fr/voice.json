@@ -1,9 +1,9 @@
 {
   "title": "Saisie vocale",
   "format": "Exercice · séries × répétitions",
-  "example": "« Développé couché barre, trois fois dix »",
+  "example": "« Développé couché, trois fois dix »",
   "tap": "Touche pour parler",
-  "listening": "Écoute…",
+  "listening": "Je t'écoute…",
   "more": "Touche pour continuer à parler",
   "missed": "Je n'ai pas compris. Touche pour réessayer",
   "cta": "Ajouter les exercices",
@@ -33,7 +33,7 @@
     },
     "failed": {
       "title": "Ajout impossible",
-      "message": "Réessaie. Nommer chaque exercice avec ses séries et ses répétitions aide."
+      "message": "Réessaie. Ça aide de nommer chaque exercice avec ses séries et ses répétitions."
     },
     "offline": {
       "title": "Pas de connexion",

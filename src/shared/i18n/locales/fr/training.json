@@ -55,10 +55,10 @@
     "addByVoice": "Ajouter des exercices à la voix",
     "more": "Plus d'options",
     "exerciseMenu": "Options pour {{name}}",
-    "exerciseInfo": "À propos de {{name}}",
+    "exerciseInfo": "Infos : {{name}}",
     "notFound": "Cette séance n'existe plus.",
     "swapTitle": "Remplacer l'exercice",
-    "partOf": "Fait partie de {{plan}}",
+    "partOf": "Dans {{plan}}",
     "new": "Nouveau"
   },
   "exerciseMenu": {

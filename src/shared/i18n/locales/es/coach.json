@@ -93,8 +93,8 @@
     "rest": "Sin entrenamiento"
   },
   "distribution": {
-    "reference_one": "{{count}} referencia",
-    "reference_other": "{{count}} referencias"
+    "reference_one": "Referencia: {{count}}",
+    "reference_other": "Referencia: {{count}}"
   },
   "history": {
     "title": "Chats anteriores",

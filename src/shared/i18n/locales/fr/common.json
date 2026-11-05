@@ -50,7 +50,7 @@
     "pickRank": "Exercice pour les rangs",
     "recent": "Faits récemment",
     "forMuscle": "Fait monter ton niveau : {{muscle}}",
-    "recordA11y": "Record personnel : {{value}}, dernier le {{date}}"
+    "recordA11y": "Record personnel : {{value}}, dernière fois le {{date}}"
   },
   "settings": "Réglages",
   "legal": {
@@ -63,8 +63,8 @@
       "titleTerms": "Nos conditions d'utilisation ont été mises à jour",
       "titlePrivacy": "Notre politique de confidentialité a été mise à jour",
       "titleBoth": "Nos textes juridiques ont été mis à jour",
-      "changes_one": "{{count}} partie a changé depuis ton dernier accord.",
-      "changes_other": "{{count}} parties ont changé depuis ton dernier accord.",
+      "changes_one": "{{count}} partie a changé depuis ta dernière acceptation.",
+      "changes_other": "{{count}} parties ont changé depuis ta dernière acceptation.",
       "subtitle": "Nous avons mis à jour nos textes juridiques. Lis la nouvelle version et accepte-la pour continuer à utiliser Loqqa.",
       "accept": "J'accepte",
       "signOut": "Se déconnecter",
@@ -122,7 +122,7 @@
         "message": "Pour transcrire ce que tu dis, il faut une connexion internet. Réessaie une fois en ligne, ou écris-le."
       },
       "limit": {
-        "title": "Ça suffit pour aujourd'hui",
+        "title": "C'est tout pour aujourd'hui",
         "message": "Tu as beaucoup utilisé la saisie vocale aujourd'hui. Écris-le ou réessaie demain."
       },
       "empty": {

@@ -51,7 +51,7 @@
     "title": "Tickets",
     "create": "Créer un ticket",
     "empty": "Aucun ticket pour l'instant",
-    "emptyHint": "Signale un bug ou propose une fonctionnalité. Nous répondons ici, dans le chat."
+    "emptyHint": "Signale un bug ou propose une fonctionnalité. Nous répondons ici, dans la discussion."
   },
   "chat": {
     "today": "Aujourd'hui",
@@ -62,8 +62,8 @@
     "justNow": "à l'instant",
     "todayAt": "aujourd'hui à {{time}}",
     "yesterdayAt": "hier à {{time}}",
-    "autoReply": "Merci, {{name}} ! Notre équipe te répondra sous 24 à 48 heures dans ce chat.",
-    "autoReplyNoName": "Merci ! Notre équipe te répondra sous 24 à 48 heures dans ce chat.",
+    "autoReply": "Merci, {{name}} ! Notre équipe te répondra ici sous 24 à 48 heures.",
+    "autoReplyNoName": "Merci ! Notre équipe te répondra ici sous 24 à 48 heures.",
     "priority": "Priorité",
     "translated": "Traduit",
     "showOriginal": "Voir l'original",

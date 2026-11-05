@@ -1,5 +1,5 @@
 {
-  "memberSince": "Membre depuis le {{date}}",
+  "memberSince": "Membre depuis {{date}}",
   "name": {
     "title": "Ton nom",
     "label": "Nom",
@@ -41,7 +41,7 @@
     "signOut": "Se déconnecter",
     "signOutConfirm": {
       "title": "Te déconnecter ?",
-      "titleNamed": "Te déconnecter en tant que {{name}} ?",
+      "titleNamed": "{{name}}, te déconnecter ?",
       "unsynced_one": "{{count}} modification n'est pas encore synchronisée. Te déconnecter quand même ? Elle sera perdue.",
       "unsynced_other": "{{count}} modifications ne sont pas encore synchronisées. Te déconnecter quand même ? Elles seront perdues."
     },

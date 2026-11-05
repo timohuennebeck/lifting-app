@@ -48,12 +48,12 @@
   "welcome": {
     "role": "Head Coach chez Loqqa",
     "aiBadge": "IA",
-    "aiNotice": "Peut inclure du contenu retouché par IA.",
+    "aiNotice": "Peut inclure du contenu modifié par IA.",
     "cta": "C'est parti",
     "captions": {
       "welcome": "Salut, ça fait plaisir de te voir ici.",
       "ready": "Ton programme est prêt.",
-      "built": "Il est construit autour de tes jours d'entraînement, de tes points faibles et de ton équipement.",
+      "built": "Il est construit autour de tes jours d'entraînement, de tes points faibles et de ton matériel.",
       "blocks": "Voici comment ça marche : tu t'entraînes par blocs.",
       "harder": "Chaque semaine est un peu plus exigeante.",
       "deload": "Après quelques semaines, tu auras une semaine de décharge.",

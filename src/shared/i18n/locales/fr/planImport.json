@@ -11,7 +11,7 @@
       "description": "PDF, Excel, CSV ou capture d'écran"
     },
     "noPlan": "Pas de programme sous la main ?",
-    "createOwn": "Le créer par moi-même",
+    "createOwn": "Le créer moi-même",
     "ownPlan": "Mon programme"
   },
   "read": "Lire le programme",
@@ -46,11 +46,11 @@
     "retake": "Reprendre la page {{count}}",
     "full": "Jusqu'à {{count}} pages par import",
     "permission": {
-      "title": "ACCÈS À L'APPAREIL PHOTO",
-      "body": "Pour photographier ton programme, Loqqa a besoin d'accéder à ton appareil photo. Les photos restent sur ton appareil jusqu'à ce que tu les importes.",
+      "title": "ACCÈS\nÀ L'APPAREIL PHOTO",
+      "body": "Pour photographier ton programme, Loqqa a besoin d'accéder à ton appareil photo. Les photos restent sur ton téléphone jusqu'à ce que tu les importes.",
       "allow": "Autoriser l'appareil photo"
     },
-    "access": "Pour que tu puisses photographier ton programme. Les photos restent sur ton appareil jusqu'à ce que tu les importes."
+    "access": "Pour que tu puisses photographier ton programme. Les photos restent sur ton téléphone jusqu'à ce que tu les importes."
   },
   "review": {
     "retake": "Reprendre la photo",
@@ -75,7 +75,7 @@
       },
       "limit": {
         "title": "Limite quotidienne atteinte",
-        "message": "Tu pourras réimporter demain. D'ici là, tu peux créer ton programme par toi-même."
+        "message": "Tu pourras réimporter demain. D'ici là, tu peux créer ton programme toi-même."
       },
       "notAPlan": {
         "title": "Aucun programme d'entraînement trouvé",
@@ -90,7 +90,7 @@
   "confirm": {
     "planName": "Nom du programme",
     "readAs": "Lu comme « {{raw}} »",
-    "correct": "Corriger",
+    "correct": "C'est bon",
     "add": "Ajouter un exercice",
     "swap": "Remplacer l'exercice",
     "cta": "Utiliser ce programme",

@@ -29,7 +29,7 @@
   "level": {
     "overview": "Resumen",
     "badge": "Nv.",
-    "toNext": "{{percent}}% para el Nv. {{next}}",
+    "toNext": "{{percent}}% hacia el Nv. {{next}}",
     "max": "Nivel máximo",
     "pause_one": "En pausa · {{count}} sem",
     "pause_other": "En pausa · {{count}} sem",

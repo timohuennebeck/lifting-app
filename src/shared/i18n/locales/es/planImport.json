@@ -90,7 +90,7 @@
   "confirm": {
     "planName": "Nombre del plan",
     "readAs": "Leído como «{{raw}}»",
-    "correct": "Corregir",
+    "correct": "Correcto",
     "add": "Añadir ejercicio",
     "swap": "Cambiar ejercicio",
     "cta": "Usar este plan",

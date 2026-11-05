@@ -18,7 +18,7 @@
     "chest": "Pectoraux",
     "arms": "Bras",
     "back": "Dos",
-    "core": "Core",
+    "core": "Abdos",
     "legs": "Jambes"
   },
   "camera": {
@@ -69,8 +69,8 @@
       "dark": "Trop sombre",
       "notFullBody": "Corps coupé",
       "wrongPose": "Mauvaise pose",
-      "noPerson": "Personne absente",
-      "clothing": "Corps masqué"
+      "noPerson": "Aucune personne",
+      "clothing": "Trop de vêtements"
     }
   },
   "assessment": {
@@ -105,7 +105,7 @@
         "message": "L'analyse fait partie de Loqqa Pro."
       },
       "refused": {
-        "title": "Photos inanalysables",
+        "title": "Analyse impossible",
         "message": "Reprends-les en tenue de sport ou en sous-vêtements."
       },
       "failed": {
@@ -130,15 +130,15 @@
       "definition": "Définition"
     },
     "bodyFat": {
-      "athletic": "Niveau athlétique",
+      "athletic": "Athlétique",
       "fit": "En forme",
-      "average": "Moyen",
-      "high": "Élevé"
+      "average": "Moyenne",
+      "high": "Élevée"
     },
     "tiers": {
-      "veryGood": "Très bon",
-      "good": "Bon",
-      "average": "Moyen",
+      "veryGood": "Très bien",
+      "good": "Bien",
+      "average": "Dans la moyenne",
       "low": "Marge de progrès"
     },
     "groups": "Groupes musculaires",
@@ -148,11 +148,11 @@
         "subtitle": "au-dessus de ta moyenne"
       },
       "mid": {
-        "title": "Moyen"
+        "title": "Dans la moyenne"
       },
       "focus": {
-        "title": "Focus",
-        "subtitle": "plus de séries dans ton programme"
+        "title": "Priorité",
+        "subtitle": "davantage de séries dans ton programme"
       }
     },
     "disclaimer": "Estimation à partir de photos, pas un avis médical.",

@@ -4,9 +4,9 @@
   "noSets": "Aucune série pour l'instant",
   "missing": "Cette séance n'est plus disponible.",
   "actions": {
-    "info": "Infos",
+    "info": "Info",
     "targets": "Objectifs",
-    "swap": "Remplacer",
+    "swap": "Changer",
     "more": "Plus"
   },
   "table": {
@@ -41,7 +41,7 @@
   },
   "menu": {
     "open": "Options de la séance",
-    "progress": "{{done}} séries sur {{total}} enregistrées",
+    "progress": "Séries enregistrées : {{done}} sur {{total}}",
     "finish": "Terminer la séance",
     "finishHint": "Enregistre au moins une série pour terminer.",
     "finishDescription": "Enregistre la séance dans ton historique",

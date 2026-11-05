@@ -41,7 +41,7 @@
   },
   "menu": {
     "open": "Opciones del entrenamiento",
-    "progress": "{{done}} de {{total}} series registradas",
+    "progress": "Series registradas: {{done}} de {{total}}",
     "finish": "Terminar entrenamiento",
     "finishHint": "Registra al menos una serie para terminar.",
     "finishDescription": "Guarda el entrenamiento en tu historial",

@@ -17,7 +17,7 @@
   "adultsOnly": {
     "title": "Verrouillé pour l'instant",
     "body": "Les photos du bilan corporel sont réservées aux personnes de 18 ans et plus.",
-    "unlocksOn": "Débloqué pour toi le {{date}}."
+    "unlocksOn": "Se débloque pour toi le {{date}}."
   },
   "compare": {
     "title": "Comparer",

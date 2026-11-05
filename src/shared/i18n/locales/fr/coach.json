@@ -1,8 +1,8 @@
 {
   "title": "Kai · coach IA",
-  "newChat": "Nouveau chat",
+  "newChat": "Nouvelle discussion",
   "card": {
-    "title": "Demande-moi tout sur ton entraînement.",
+    "title": "Pose-moi toutes tes questions sur ton entraînement.",
     "subtitle": "Kai répond avec des faits et des graphiques."
   },
   "composer": {
@@ -18,7 +18,7 @@
   "swap": {
     "title": "Changement de programme",
     "keepsMain": "Muscle principal : {{muscle}}, inchangé",
-    "newMain": "Muscle principal : {{to}} au lieu de {{from}}",
+    "newMain": "Muscle principal : {{to}} (avant : {{from}})",
     "toSwap_one": "Remplacer {{count}} exercice",
     "toSwap_other": "Remplacer {{count}} exercices",
     "keepAll": "Tout reste comme avant",
@@ -93,30 +93,30 @@
     "rest": "Pas de séance"
   },
   "distribution": {
-    "reference_one": "{{count}} repère",
-    "reference_other": "{{count}} repères"
+    "reference_one": "Repère : {{count}}",
+    "reference_other": "Repère : {{count}}"
   },
   "history": {
-    "title": "Chats précédents",
-    "selected_one": "{{count}} sélectionné",
-    "selected_other": "{{count}} sélectionnés",
+    "title": "Discussions précédentes",
+    "selected_one": "{{count}} sélectionnée",
+    "selected_other": "{{count}} sélectionnées",
     "deleteSheet": {
-      "title_one": "Supprimer le chat ?",
-      "title_other": "Supprimer {{count}} chats ?",
+      "title_one": "Supprimer la discussion ?",
+      "title_other": "Supprimer {{count}} discussions ?",
       "subtitle": "Cette action est irréversible.",
-      "option_one": "Supprimer le chat définitivement",
-      "option_other": "Supprimer les chats définitivement",
-      "body_one": "Tes questions et les réponses de Kai dans ce chat sont supprimées.",
-      "body_other": "Tes questions et les réponses de Kai dans ces {{count}} chats sont supprimées."
+      "option_one": "Supprimer la discussion définitivement",
+      "option_other": "Supprimer les discussions définitivement",
+      "body_one": "Tes questions et les réponses de Kai dans cette discussion sont supprimées.",
+      "body_other": "Tes questions et les réponses de Kai dans ces {{count}} discussions sont supprimées."
     },
-    "empty": "Aucun chat pour l'instant. Pose ta première question à Kai.",
+    "empty": "Aucune discussion pour l'instant. Pose ta première question à Kai.",
     "today": "Aujourd'hui",
     "thisWeek": "Cette semaine"
   },
   "errors": {
     "offline": {
       "title": "Pas de connexion",
-      "message": "Kai a besoin d'internet. Ta question reste dans le champ."
+      "message": "Kai a besoin d'internet. Ta question n'est pas effacée."
     },
     "limitDaily": {
       "title": "Limite quotidienne atteinte",

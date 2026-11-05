@@ -10,8 +10,8 @@
     "days_one": "{{count}} jour",
     "days_other": "{{count}} jours",
     "entries": "Entrées",
-    "belowTrend": "{{value}} sous la tendance",
-    "aboveTrend": "{{value}} sur la tendance",
+    "belowTrend": "{{value}} en dessous",
+    "aboveTrend": "{{value}} au-dessus",
     "onTrend": "pile sur la tendance",
     "delete": "Supprimer",
     "empty": "Enregistre ton poids pour voir ta tendance."
