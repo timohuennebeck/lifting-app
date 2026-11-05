@@ -15,7 +15,7 @@ export interface SetKeypadProps {
   /** Hides the pad; what was typed stays. */
   onDismiss: () => void;
   onLayout: (e: LayoutChangeEvent) => void;
-  /** Sets counted in reps get their reps in reserve picked above the keys. */
+  /** Sets counted in reps get their reps in reserve picked above the keys while reps are typed. */
   withRir: boolean;
   /** The row's target reps in reserve, shown as picked until one is. */
   rirTarget: number | null;
@@ -45,9 +45,10 @@ export function SetKeypad({
   const [sheetOpen, setSheetOpen] = useState(false);
   const [sheetWeight, setSheetWeight] = useState<number | null>(null);
 
-  // Plates only make sense for the weight, not for reps or seconds.
+  // Plates belong to the weight, reps in reserve to the reps.
   const platesShown = plates != null && field === 'weight';
-  const withAccessory = platesShown || withRir;
+  const rirShown = withRir && field === 'reps';
+  const withAccessory = platesShown || rirShown;
   const openSheet = () => {
     setSheetWeight(parseInput(useWorkoutSessionStore.getState().input.weight));
     setSheetOpen(true);
@@ -72,7 +73,7 @@ export function SetKeypad({
                   onOpenSheet={openSheet}
                 />
               ) : null}
-              {withRir ? <KeypadRir value={rir} target={rirTarget} onSelect={onPickRir} /> : null}
+              {rirShown ? <KeypadRir value={rir} target={rirTarget} onSelect={onPickRir} /> : null}
             </View>
           ) : undefined
         }
