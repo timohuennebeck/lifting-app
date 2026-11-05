@@ -1,0 +1,142 @@
+{
+  "actions": {
+    "continue": "Continuar",
+    "back": "Atrás",
+    "done": "Listo",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "rename": "Renombrar",
+    "clear": "Borrar",
+    "decrease": "Disminuir",
+    "increase": "Aumentar",
+    "close": "Cerrar",
+    "retry": "Reintentar",
+    "notNow": "Ahora no",
+    "gotIt": "Entendido",
+    "openSettings": "Abrir ajustes"
+  },
+  "progress": {
+    "stepOf": "{{current}} de {{total}}"
+  },
+  "units": {
+    "cm": "cm",
+    "sec": "s",
+    "reps_one": "{{count}} rep",
+    "reps_other": "{{count}} reps",
+    "repRange": "{{range}} reps",
+    "atMost": "hasta {{value}}",
+    "minShort": "Min"
+  },
+  "weekdays": {
+    "short": ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+    "narrow": ["L", "M", "X", "J", "V", "S", "D"]
+  },
+  "greeting": "Hola, {{name}}",
+  "errors": {
+    "generic": "Algo salió mal. Inténtalo de nuevo."
+  },
+  "tabs": {
+    "training": "Entreno",
+    "level": "Nivel",
+    "body": "Cuerpo",
+    "profile": "Perfil",
+    "create": "Nuevo"
+  },
+  "rangeDays": "{{count}} d",
+  "search": {
+    "open": "Buscar ejercicios",
+    "title": "Ejercicios",
+    "pickRank": "Ejercicio para los rangos",
+    "recent": "Entrenados recientemente",
+    "forMuscle": "Sube tu nivel de {{muscle}}",
+    "recordA11y": "Récord personal: {{value}}, último el {{date}}"
+  },
+  "settings": "Ajustes",
+  "legal": {
+    "terms": "Términos de Uso",
+    "privacy": "Política de Privacidad",
+    "meta": "Versión {{version}} · en vigor desde el {{date}}",
+    "unavailable": "Este documento todavía no está disponible.",
+    "loadFailed": "No se pudo cargar el documento. Revisa tu conexión e inténtalo de nuevo.",
+    "update": {
+      "titleTerms": "Hemos actualizado nuestros términos de uso",
+      "titlePrivacy": "Hemos actualizado nuestra política de privacidad",
+      "titleBoth": "Hemos actualizado nuestros textos legales",
+      "changes_one": "{{count}} apartado ha cambiado desde tu última aceptación.",
+      "changes_other": "{{count}} apartados han cambiado desde tu última aceptación.",
+      "subtitle": "Hemos actualizado nuestros textos legales. Lee la nueva versión y acéptala para seguir usando Loqqa.",
+      "accept": "Acepto",
+      "signOut": "Cerrar sesión",
+      "intro": "Introducción",
+      "section": "§ {{number}}",
+      "docSection": "{{doc}} § {{number}}",
+      "docShort": {
+        "terms": "Términos",
+        "privacy": "Privacidad"
+      },
+      "kinds": {
+        "added": "Nuevo",
+        "changed": "Cambiado",
+        "removed": "Eliminado"
+      }
+    },
+    "compare": {
+      "a11yNew": "Nuevo: {{text}}",
+      "a11yRemoved": "Eliminado: {{text}}"
+    }
+  },
+  "keypad": {
+    "close": "Ocultar teclado",
+    "decimal": "Separador decimal",
+    "backspace": "Borrar",
+    "confirm": "Confirmar"
+  },
+  "dateWheel": {
+    "day": "Día",
+    "month": "Mes",
+    "year": "Año"
+  },
+  "cameraAccess": {
+    "title": "Permitir cámara"
+  },
+  "catalogOffline": {
+    "title": "Sin conexión",
+    "body": "La primera vez que se abre, Loqqa descarga sus ejercicios. Revisa tu conexión a internet e inténtalo de nuevo."
+  },
+  "voiceInput": {
+    "start": "Dicta en vez de escribir",
+    "cancel": "Descartar grabación",
+    "done": "Terminar grabación",
+    "silent": "No oigo nada, sigue hablando",
+    "transcribing": "Transcribiendo …",
+    "noAccess": "Para dictar por voz, la app necesita acceso al micrófono.",
+    "settings": "Ajustes",
+    "errors": {
+      "failed": {
+        "title": "No ha funcionado",
+        "message": "No se pudo convertir lo que dijiste en texto. Inténtalo de nuevo o escríbelo."
+      },
+      "offline": {
+        "title": "Sin conexión",
+        "message": "Para transcribir lo que dices hace falta internet. Inténtalo de nuevo cuando tengas conexión o escríbelo."
+      },
+      "limit": {
+        "title": "Por hoy es suficiente",
+        "message": "Hoy has usado mucho el dictado por voz. Escríbelo o inténtalo de nuevo mañana."
+      },
+      "empty": {
+        "title": "No te he entendido",
+        "message": "No he entendido nada. Inténtalo de nuevo un poco más cerca del micrófono."
+      },
+      "notPro": {
+        "title": "Loqqa Pro no está activo",
+        "message": "El dictado por voz forma parte de Loqqa Pro. Tu cuenta no tiene ahora una suscripción activa."
+      },
+      "tooYoung": {
+        "title": "Desde los 16",
+        "message": "Puedes usar el dictado por voz a partir de los 16 años."
+      }
+    }
+  }
+}

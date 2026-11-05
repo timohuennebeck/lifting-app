@@ -1,0 +1,51 @@
+{
+  "title": "Dictado por voz",
+  "format": "Ejercicio · series × repeticiones",
+  "example": "«Press de banca tres por diez»",
+  "tap": "Toca para hablar",
+  "listening": "Escuchando …",
+  "more": "Toca para seguir hablando",
+  "missed": "No te he entendido. Toca para intentarlo de nuevo",
+  "cta": "Añadir ejercicios",
+  "heardAs": "Entendido como «{{raw}}»",
+  "stages": [
+    "Detectando ejercicios …",
+    "Buscando los ejercicios que coinciden …",
+    "Aplicando series y repeticiones …"
+  ],
+  "a11y": {
+    "start": "Empezar a hablar",
+    "stop": "Dejar de escuchar",
+    "text": "Tus ejercicios en texto"
+  },
+  "errors": {
+    "access": {
+      "title": "Se necesita el micrófono",
+      "message": "Para decir tus ejercicios, Loqqa necesita el micrófono y el reconocimiento de voz. También puedes escribirlos."
+    },
+    "unavailable": {
+      "title": "Dictado por voz no disponible",
+      "message": "Tu teléfono no puede convertir la voz en texto en este momento. Puedes escribir tus ejercicios."
+    },
+    "network": {
+      "title": "Sin conexión",
+      "message": "El reconocimiento de voz necesita internet. Revisa tu conexión e inténtalo de nuevo, o escribe tus ejercicios."
+    },
+    "failed": {
+      "title": "No se pudieron añadir los ejercicios",
+      "message": "Inténtalo de nuevo. Ayuda nombrar cada ejercicio con sus series y repeticiones."
+    },
+    "offline": {
+      "title": "Sin conexión",
+      "message": "Para añadir ejercicios por voz hace falta internet. Revisa tu conexión e inténtalo de nuevo."
+    },
+    "limit": {
+      "title": "Límite diario alcanzado",
+      "message": "Mañana podrás volver a añadir ejercicios por voz. Hasta entonces, añádelos con +."
+    },
+    "noExercises": {
+      "title": "No se oyó ningún ejercicio",
+      "message": "Nombra cada ejercicio con sus series y repeticiones, por ejemplo «press de banca, tres por diez»."
+    }
+  }
+}

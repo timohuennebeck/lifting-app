@@ -1,0 +1,84 @@
+{
+  "team": "Equipo de Loqqa",
+  "teamReplyTime": "Suele responder en 24–48 h.",
+  "kind": {
+    "bug": "Error",
+    "idea": "Idea"
+  },
+  "status": {
+    "open": "Abierto",
+    "closed": "Cerrado"
+  },
+  "ticketNumber": "Ticket n.º {{number}}",
+  "ticketPending": "Ticket nuevo",
+  "preview": {
+    "team": "Equipo de Loqqa: {{text}}",
+    "user": "Tú: {{text}}",
+    "screenshots_one": "Captura de pantalla",
+    "screenshots_other": "{{count}} capturas de pantalla"
+  },
+  "when": {
+    "justNow": "Hace un momento",
+    "yesterday": "Ayer"
+  },
+  "profile": {
+    "openTickets": "Tickets abiertos",
+    "allTickets": "Todos los tickets",
+    "create": "Crear ticket",
+    "empty": "No hay tickets abiertos. ¿Encontraste un error o tienes una idea? Cuéntanos."
+  },
+  "sheet": {
+    "bug": "Informar de un error",
+    "bugHint": "Algo no funciona",
+    "idea": "Pedir una función",
+    "ideaHint": "Falta algo en la app"
+  },
+  "form": {
+    "bugTitle": "Informar de un error",
+    "ideaTitle": "Pedir una función",
+    "bugPlaceholder": "Describe el error …",
+    "ideaPlaceholder": "Describe tu idea …",
+    "screenshots": "Capturas de pantalla",
+    "addScreenshot": "Añadir captura",
+    "removeScreenshot": "Quitar captura",
+    "importance": "¿Qué tan importante es para ti?",
+    "importanceLow": "Sería bueno",
+    "importanceHigh": "Imprescindible",
+    "importanceValue": "Importancia {{value}} de 5",
+    "send": "Enviar"
+  },
+  "list": {
+    "title": "Tickets",
+    "create": "Crear ticket",
+    "empty": "Aún no hay tickets",
+    "emptyHint": "Informa de un error o sugiere una función. Respondemos aquí mismo, en el chat."
+  },
+  "chat": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "created": "Ticket n.º {{number}} creado",
+    "createdPending": "Ticket creado",
+    "meta": "{{kind}} · {{when}}",
+    "justNow": "hace un momento",
+    "todayAt": "hoy {{time}}",
+    "yesterdayAt": "ayer {{time}}",
+    "autoReply": "¡Gracias, {{name}}! Nuestro equipo te responderá en este chat en un plazo de 24–48 horas.",
+    "autoReplyNoName": "¡Gracias! Nuestro equipo te responderá en este chat en un plazo de 24–48 horas.",
+    "priority": "Prioridad",
+    "translated": "Traducido",
+    "showOriginal": "Ver original",
+    "showTranslation": "Ver traducción",
+    "statusLine": "Estado: {{status}}",
+    "closed": "Ticket cerrado",
+    "reopened": "Ticket reabierto",
+    "placeholder": "Escríbenos",
+    "send": "Enviar",
+    "addScreenshot": "Añadir captura",
+    "doneTitle": "Este ticket está resuelto",
+    "doneBody": "Si el problema vuelve, puedes reabrirlo.",
+    "reopen": "Reabrir",
+    "newTicket": "Ticket nuevo",
+    "screenshot": "Captura de pantalla",
+    "notFound": "Este ticket ya no existe."
+  }
+}

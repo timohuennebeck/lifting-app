@@ -1,0 +1,111 @@
+{
+  "home": {
+    "single": "Entrenamientos sueltos",
+    "showAll": "Ver todos",
+    "planRoutines": "Entrenamientos · {{week}}",
+    "resumeActive": "Continuar {{name}}",
+    "noPlan": {
+      "title": "Aún no hay plan",
+      "body": "Toca para crear uno o importar el tuyo."
+    },
+    "emptyPlan": {
+      "title": "Plan sin entrenamientos",
+      "body": "Toca para añadir entrenamientos a tu plan."
+    }
+  },
+  "list": {
+    "start": "Empezar {{name}}",
+    "minutes": "{{count}} min",
+    "addRoutine": "Añadir entrenamiento",
+    "done": "Hecho",
+    "doneAt": "{{date}} a las {{time}}"
+  },
+  "card": {
+    "edit": "Editar"
+  },
+  "all": {
+    "recent": "Hechos recientemente",
+    "lastDone": "Último: {{date}}",
+    "all": "Todos"
+  },
+  "create": {
+    "workout": "Entrenamiento vacío",
+    "workoutHint": "Elige ejercicios y a entrenar",
+    "startWorkout": "Empezar entrenamiento vacío",
+    "routine": "Entrenamiento",
+    "routineHint": "Define ejercicios y series",
+    "plan": "Plan",
+    "planHint": "Pide que te creen uno, impórtalo o arma el tuyo",
+    "createRoutine": "Crear entrenamiento",
+    "createPlan": "Crear plan",
+    "emptyWorkoutName": "Entrenamiento",
+    "untitledRoutine": "Entrenamiento sin título"
+  },
+  "overview": {
+    "musclesWorked": "Músculos trabajados",
+    "musclesInfo": "Desglose muscular",
+    "exercises_one": "{{count}} ejercicio",
+    "exercises_other": "{{count}} ejercicios",
+    "noExercises": "Sin ejercicios",
+    "duration": "Duración estimada: {{minutes}} min.",
+    "emptyHint": "Toca + o el micrófono para añadir tus primeros ejercicios.",
+    "start": "Empezar entrenamiento",
+    "save": "Guardar entrenamiento",
+    "addExercise": "Añadir ejercicio",
+    "addByVoice": "Añadir ejercicios por voz",
+    "more": "Más opciones",
+    "exerciseMenu": "Opciones de {{name}}",
+    "exerciseInfo": "Acerca de {{name}}",
+    "notFound": "Este entrenamiento ya no existe.",
+    "swapTitle": "Cambiar ejercicio",
+    "partOf": "Parte de {{plan}}",
+    "new": "Nuevo"
+  },
+  "exerciseMenu": {
+    "editSets": "Editar series",
+    "swap": "Cambiar ejercicio",
+    "moveUp": "Subir",
+    "moveDown": "Bajar",
+    "remove": "Quitar ejercicio"
+  },
+  "options": {
+    "meta_one": "{{count}} ejercicio · {{minutes}} min.",
+    "meta_other": "{{count}} ejercicios · {{minutes}} min.",
+    "renameHint": "Ponle un nuevo nombre a {{name}}",
+    "delete": "Eliminar entrenamiento",
+    "deleteHint": "Elimina {{name}}. Los entrenamientos registrados se conservan.",
+    "renameTitle": "Renombrar entrenamiento",
+    "namePlaceholder": "Nombre del entrenamiento",
+    "copy": "Copiar",
+    "copyToPlan": "Añadir a {{plan}}",
+    "copyToPlanHint": "Copia el entrenamiento en tu plan; el original se queda aquí.",
+    "copyToLibrary": "Copiar a Entrenamientos sueltos",
+    "copyToLibraryHint": "Una copia fuera del plan; el original se queda en él."
+  },
+  "sets": {
+    "title": "Editar series",
+    "set": "Serie",
+    "min": "Mín.",
+    "max": "Máx.",
+    "minSeconds": "Mín. (s)",
+    "maxSeconds": "Máx. (s)",
+    "optional": "Opcional",
+    "orderError": "El máximo no puede ser menor que el mínimo.",
+    "orderErrorSeconds": "El máx. (s) no puede ser menor que el mín. (s).",
+    "rir": "RIR",
+    "addSet": "Añadir serie",
+    "removeSet": "Quitar serie",
+    "customRest": "Descanso personalizado",
+    "customRestHint": "Sustituye el descanso predeterminado de este ejercicio",
+    "minutes": "min",
+    "rirOption": "{{value}} repeticiones en reserva"
+  },
+  "empty": {
+    "routinesTitle": "Aún no hay entrenamientos",
+    "routinesBody": "Arma un entrenamiento con ejercicios. Lo encontrarás aquí y podrás añadirlo a tus planes."
+  },
+  "plan": {
+    "block": "Bloque {{n}}",
+    "deload": "Descarga"
+  }
+}

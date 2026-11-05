@@ -1,0 +1,75 @@
+{
+  "memberSince": "Miembro desde {{date}}",
+  "name": {
+    "title": "Tu nombre",
+    "label": "Nombre",
+    "placeholder": "Nombre",
+    "edit": "Cambiar nombre"
+  },
+  "about": {
+    "title": "Sobre ti",
+    "label": "Descripción",
+    "placeholder": "Cuéntales un poco sobre ti…",
+    "add": "Añadir una descripción",
+    "edit": "Editar descripción"
+  },
+  "activity": "Actividad",
+  "lastMonths": "Últimos 3 meses",
+  "history": "Historial",
+  "historyEntry": "<b>{{name}}</b> terminó <b>{{workout}}</b> en {{duration}}",
+  "historyEmpty": "Aquí aparecerán tus entrenamientos terminados.",
+  "showMore": "Ver más",
+  "when": {
+    "today": "Hoy, {{time}}",
+    "yesterday": "Ayer, {{time}}"
+  },
+  "settings": {
+    "language": "Idioma",
+    "units": "Unidades",
+    "kilograms": "Kilogramos",
+    "pounds": "Libras",
+    "notifications": {
+      "title": "Notificaciones",
+      "restSound": "Sonido al terminar el descanso"
+    },
+    "links": {
+      "help": "Ayuda",
+      "privacy": "Privacidad",
+      "terms": "Términos"
+    },
+    "version": "v{{version}}",
+    "signOut": "Cerrar sesión",
+    "signOutConfirm": {
+      "title": "¿Cerrar sesión?",
+      "titleNamed": "¿Cerrar la sesión de {{name}}?",
+      "unsynced_one": "{{count}} cambio aún no se ha sincronizado. ¿Cerrar sesión de todos modos? Se perderá.",
+      "unsynced_other": "{{count}} cambios aún no se han sincronizado. ¿Cerrar sesión de todos modos? Se perderán."
+    },
+    "deleteAccount": "Eliminar cuenta",
+    "deleteConfirm": {
+      "title": "¿Eliminar la cuenta?",
+      "subtitle": "Esta acción no se puede deshacer.",
+      "option": "Eliminar la cuenta para siempre",
+      "body": "Se eliminarán todos tus datos.",
+      "subscription": "Esto no cancela una suscripción activa. Cancélala en la tienda donde la compraste.",
+      "failed": {
+        "title": "Cuenta no eliminada",
+        "message": "Revisa tu conexión e inténtalo de nuevo."
+      }
+    }
+  },
+  "avatar": {
+    "change": "Cambiar foto de perfil",
+    "camera": "Tomar foto",
+    "library": "Elegir foto",
+    "remove": "Quitar foto",
+    "cameraDenied": {
+      "title": "Sin acceso a la cámara",
+      "message": "Permite el acceso a la cámara en Ajustes para tomar una foto de perfil."
+    },
+    "failed": {
+      "title": "Foto de perfil no guardada",
+      "message": "Revisa tu conexión e inténtalo de nuevo."
+    }
+  }
+}

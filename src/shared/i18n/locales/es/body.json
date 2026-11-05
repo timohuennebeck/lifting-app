@@ -1,0 +1,29 @@
+{
+  "subtitle": "Tu puntuación corporal a partir de tus fotos",
+  "sinceStart": "{{delta}} desde el inicio",
+  "checkLabel": "Control {{n}} · {{date}}",
+  "check": "Control {{n}}",
+  "baseline": "Punto de partida",
+  "startNow": "Empezar ahora",
+  "startShort": "Empezar",
+  "nextFrom": "Desde el {{date}}",
+  "weeklyNote": "Una vez por semana · desde el {{date}}",
+  "history": "Historial",
+  "start": "Iniciar control corporal",
+  "empty": {
+    "title": "Aún no hay controles corporales",
+    "body": "Haz tu primer control y compáralo más adelante."
+  },
+  "adultsOnly": {
+    "title": "Bloqueado por ahora",
+    "body": "Las fotos del control corporal solo están disponibles a partir de los 18 años.",
+    "unlocksOn": "Se desbloquea para ti el {{date}}."
+  },
+  "compare": {
+    "title": "Comparar",
+    "edit": "Cambiar comparación",
+    "pickFor": "Elige el control para {{side}}",
+    "daysBetween_one": "{{count}} día de diferencia",
+    "daysBetween_other": "{{count}} días de diferencia"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "names": {
+    "abs": "Abdominales",
+    "adductors": "Aductores",
+    "biceps": "Bíceps",
+    "calves": "Pantorrillas",
+    "chest": "Pecho",
+    "forearms": "Antebrazos",
+    "front_delts": "Deltoides anteriores",
+    "glutes": "Glúteos",
+    "hamstrings": "Isquiotibiales",
+    "lats": "Dorsales",
+    "lower_back": "Zona lumbar",
+    "neck": "Cuello",
+    "obliques": "Oblicuos",
+    "quads": "Cuádriceps",
+    "rear_delts": "Deltoides posteriores",
+    "side_delts": "Deltoides laterales",
+    "tibialis": "Espinillas",
+    "traps": "Trapecios",
+    "triceps": "Tríceps",
+    "upper_back": "Espalda alta"
+  },
+  "breakdown": {
+    "primary": "Principal",
+    "secondary": "Secundario",
+    "showMore": "Ver {{count}} más"
+  },
+  "level": {
+    "overview": "Resumen",
+    "badge": "Nv.",
+    "toNext": "{{percent}}% para el Nv. {{next}}",
+    "max": "Nivel máximo",
+    "pause_one": "En pausa · {{count}} sem",
+    "pause_other": "En pausa · {{count}} sem",
+    "new": "Nuevo",
+    "locked": "Sin nivel",
+    "tiers": {
+      "beginner": "Principiante",
+      "novice": "Novato",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado",
+      "elite": "Élite"
+    }
+  },
+  "ranks": {
+    "title": "Rangos",
+    "yours": "Tu rango",
+    "all": "Todos los rangos",
+    "levelShort": "Nv. {{level}}",
+    "levels": "Nv. {{from}}–{{to}}",
+    "toNext": "{{levels}} para {{tier}}",
+    "top": "Rango más alto",
+    "example": "p. ej. {{exercise}}",
+    "upTo": "hasta {{value}}",
+    "over": "más de {{value}}",
+    "between": "{{from}}–{{to}} {{unit}}",
+    "repsUnit": "reps",
+    "more": "+{{n}}",
+    "change": "Elige el ejercicio para los rangos",
+    "open": "Ver rangos",
+    "info": "Cómo funcionan los rangos",
+    "infoStandard": "Cada ejercicio tiene un estándar. Tu mejor serie se compara con él: el estándar es el nivel 50 y el doble es el nivel 100.",
+    "infoLevel": "Cada músculo obtiene su nivel de tus tres mejores ejercicios y tu nivel general, de los 13 músculos principales. Los músculos más grandes cuentan más.",
+    "infoFair": "Se tienen en cuenta el peso corporal y el sexo. Tras 12 semanas sin entrenar, el nivel baja poco a poco, pero nunca desaparece.",
+    "infoExample": "La línea bajo cada rango muestra más o menos lo que hace falta en un ejercicio, con tus repeticiones habituales: el que eliges sobre los rangos o, si no, el que más haces. Sin entrenamientos, muestra el press de banca como ejemplo."
+  }
+}
