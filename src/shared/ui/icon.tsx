@@ -67,6 +67,8 @@ const ICONS = {
   'arrow-right': { viewBox: '0 0 18 16', render: stroke('M1 8h15M10 2l6 6-6 6', 2.2) },
   'arrow-up': { viewBox: '0 0 16 16', render: stroke('M8 13V3M3.5 7.5L8 3l4.5 4.5', 2.2) },
   'arrow-down': { viewBox: '0 0 16 16', render: stroke('M8 3v10M3.5 8.5L8 13l4.5-4.5', 2.2) },
+  upload: { viewBox: '0 0 16 16', render: stroke('M8 10.5V2M4.5 5.5L8 2l3.5 3.5M2.5 14h11', 2) },
+  download: { viewBox: '0 0 16 16', render: stroke('M8 2v8.5M4.5 7L8 10.5 11.5 7M2.5 14h11', 2) },
   // Opens something outside the app (e.g. the store's subscription page).
   'arrow-up-right': { viewBox: '0 0 16 16', render: stroke('M4.5 11.5l7-7M6 4.5h5.5V10', 1.8) },
   // Swapping an exercise (or a file) for another: an arrow up beside an arrow down.
