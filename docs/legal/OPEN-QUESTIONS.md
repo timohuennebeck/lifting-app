@@ -24,10 +24,10 @@ photos and AI parts.
    opt-in. § 25(1) TDDDG requires consent for that in Germany; DS §4.14 names Art. 6(1)(f) GDPR and
    the right to object. Fix: an opt-in prompt before the SDK starts, or a mode without device
    storage.
-2. **Body data consent without a checkbox.** The line above "Create account" (`createAccount.terms`)
+2. **Body data consent without a checkbox.** The line above the sign-up buttons (`createAccount.terms`)
    states the explicit consent (DS §4.4). A separate checkbox would be the safer form of explicit
    consent (Art. 9(2)(a) GDPR).
-3. **Progress check consent without its own step.** One line above the camera's "Done"
+3. **Progress check consent without its own step.** One line below the camera's "Done"
    (`camera.consent`) names OpenAI and the USA; DS §4.6 and §8 rely on it, also for Art. 49(1)(a)
    GDPR.
 4. **Coach consent by signing up, without a notice in the app.** The first release has no notice
