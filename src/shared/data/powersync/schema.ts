@@ -40,8 +40,8 @@ export const profiles = sqliteTable('profiles', {
 });
 
 // A plan's routines come in order (`position`); `sessions_per_week` of its workouts make a plan
-// week. With `block_weeks` (deload included) the plan runs in blocks; `block_start_week` is a
-// plan week a block started in (any one: blocks repeat, see `blockWeekOf`).
+// week. With `block_weeks` (deload included) the plan runs in blocks from its first week (see
+// `blockWeekOf`).
 export const plans = sqliteTable(
   'plans',
   {
@@ -51,7 +51,6 @@ export const plans = sqliteTable(
     position: integer().notNull(),
     sessions_per_week: integer().notNull(),
     block_weeks: integer(),
-    block_start_week: integer().notNull(),
     created_at: text().notNull(),
   },
   (t) => [index('user').on(t.user_id)],
@@ -193,7 +192,7 @@ export const tickets = sqliteTable(
     created_at: text().notNull(),
     updated_at: text().notNull(),
     closed_at: text(),
-    // Where it was sent from, for the support desk; null on tickets from older app versions.
+    // Where it was sent from, for the support desk; null when the device doesn't report it.
     platform: text(),
     os_version: text(),
     device_model: text(),
@@ -211,8 +210,6 @@ export const ticketMessages = sqliteTable(
     author: text().notNull(),
     content: text().notNull(),
     attachments: text().notNull(),
-    // The language it was written in, once the server detected it (e.g. "de").
-    language: text(),
     created_at: text().notNull(),
   },
   (t) => [index('ticket').on(t.ticket_id, t.created_at)],

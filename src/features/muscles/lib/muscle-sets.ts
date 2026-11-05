@@ -6,7 +6,7 @@ export const SET_RANGES = [7, 14, 30, 90] as const;
 export type SetRange = (typeof SET_RANGES)[number];
 
 /** Days of sets loaded: the longest range and the same span before it, for the comparison. */
-export const SET_HISTORY_DAYS = 2 * SET_RANGES[SET_RANGES.length - 1];
+const SET_HISTORY_DAYS = 2 * SET_RANGES[SET_RANGES.length - 1];
 
 /** Shown only once they have a set: hardly anyone trains them on purpose. */
 export const RARE_MUSCLES: ReadonlySet<MuscleId> = new Set(['neck', 'tibialis']);
@@ -92,7 +92,7 @@ export interface MuscleExercise {
   sets: number;
 }
 
-export interface MuscleDetail {
+interface MuscleDetail {
   total: number;
   /** Sets in the same number of days before. */
   previous: number;

@@ -19,14 +19,12 @@ export interface FlashTextProps {
   text: string;
   /** One flash and the rest until the next. */
   periodMs: number;
-  /** Rests while paused, e.g. behind another tab. */
-  paused?: boolean;
   /** The letters' font and size. */
   className?: string;
 }
 
 /** A line with a light running across it from left to right, again and again. */
-export function FlashText({ text, periodMs, paused = false, className }: FlashTextProps) {
+export function FlashText({ text, periodMs, className }: FlashTextProps) {
   return (
     <View className="flex-row overflow-hidden" importantForAccessibility="no-hide-descendants">
       {Array.from(text).map((letter, i) => (
@@ -40,7 +38,6 @@ export function FlashText({ text, periodMs, paused = false, className }: FlashTe
             animationDelay: `${i * LETTER_MS}ms`,
             animationIterationCount: 'infinite',
             animationTimingFunction: 'linear',
-            animationPlayState: paused ? 'paused' : 'running',
           }}
         >
           {letter}

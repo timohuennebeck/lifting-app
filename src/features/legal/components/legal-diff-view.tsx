@@ -2,10 +2,10 @@ import { useTranslation } from 'react-i18next';
 import { type LayoutChangeEvent, Text as RNText, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
-import { MARKDOWN_HEADING, MarkdownBlockView } from '@/shared/ui/markdown';
 import { Text } from '@/shared/ui/text';
 
 import type { DiffBlock, DiffSection, DiffSegment } from '../lib/legal-diff';
+import { MARKDOWN_HEADING, MarkdownBlockView } from './markdown';
 import { MarkedText, type MarkedTextProps } from './marked-text';
 
 /** What a screen reader says for a changed passage: the changes named, not just coloured. */

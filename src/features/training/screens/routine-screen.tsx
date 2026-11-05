@@ -125,7 +125,6 @@ export function RoutineScreen() {
           onAdd={() => openPicker({ mode: 'add' })}
           onVoice={() => router.push({ pathname: '/routine/[id]/voice', params: { id } })}
           onOpen={openSets}
-          onEditSets={openSets}
           onSwap={(i) => openPicker({ mode: 'swap', routineExerciseId: exercises[i].id })}
           onRemove={(i) => void removeRoutineExercise(exercises[i].id)}
           onMove={(from, to) => void reorderRoutineExercise(exercises[from].id, to)}

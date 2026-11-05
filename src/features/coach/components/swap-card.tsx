@@ -6,13 +6,14 @@ import { View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
-import { MuscleStack } from '@/shared/components/muscle-stack';
+import { MuscleCardHeader } from '@/shared/components/muscle-card-header';
 import { useExerciseName } from '@/shared/data/exercises';
 import { type MuscleShare, muscleShares } from '@/shared/data/muscles';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
+import { CheckBadge } from '@/shared/ui/check-item';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
@@ -245,9 +246,7 @@ function AppliedNote({ swaps, onUndo }: { swaps: SwapView[]; onUndo: () => void 
       : t('swap.swapped', { count: applied.length });
   return (
     <View className="ml-1 flex-row items-center gap-2.5 rounded-[14px] bg-bg p-3">
-      <View className="size-5.5 items-center justify-center rounded-full bg-accent">
-        <Icon name="check" size={11} color={colors.onAccent} />
-      </View>
+      <CheckBadge size={22} glyph={11} />
       <View className="min-w-0 flex-1 gap-px">
         <Text variant="label" numberOfLines={2} className="text-sm leading-[19px]">
           {title}
@@ -342,20 +341,13 @@ export function SwapCard({ chart }: { chart: SwapChart }) {
 
   return (
     <View className="gap-3.5 rounded-[18px] bg-surface py-3.5 pr-3.5 pl-2.5">
-      <View className="flex-row items-center gap-3.5">
-        <MuscleStack shares={headShares(inPlanAfter)} highlight />
-        <View className="min-w-0 flex-1 gap-0.5">
-          <Text variant="bodyStrong" numberOfLines={1}>
-            {t('coach:swap.title')}
-          </Text>
-          <Text variant="caption" tone="accent" numberOfLines={1} className="font-inter-semibold">
-            {headline(status, swaps, inPlanAfter, swapping, t)}
-          </Text>
-          <Text variant="caption" tone="subtle" numberOfLines={1} className="font-inter-medium">
-            {names.join(' · ')}
-          </Text>
-        </View>
-      </View>
+      <MuscleCardHeader
+        shares={headShares(inPlanAfter)}
+        highlight
+        title={t('coach:swap.title')}
+        focus={headline(status, swaps, inPlanAfter, swapping, t)}
+        meta={names.join(' · ')}
+      />
       <View className={cn('gap-2 pb-0.5 pl-1', status === 'stale' && 'opacity-55')}>
         {swaps.map((swap, i) => (
           <View key={swap.exerciseId} className={i > 0 ? 'border-t border-line pt-2.5' : undefined}>

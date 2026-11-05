@@ -1,3 +1,5 @@
+import { clamp } from '@/shared/lib/math';
+
 /**
  * The coach's suggestions in the live workout (the Vorschlag column): each set's weight and reps
  * from the exercise's last workouts (double progression: reps up to the top of the range, then
@@ -28,7 +30,7 @@ export interface RuleSet {
   target: Target;
 }
 
-export interface RuleExercise {
+interface RuleExercise {
   kind: LoadKind;
   /** The weight step, in the user's unit. */
   step: number;
@@ -60,7 +62,6 @@ const round2 = (x: number) => Math.round(x * 100) / 100;
 const floorStep = (w: number, step: number) => round2(Math.floor(w / step + 1e-9) * step);
 const ceilStep = (w: number, step: number) => round2(Math.ceil(w / step - 1e-9) * step);
 const roundStep = (w: number, step: number) => round2(Math.floor(w / step + 0.5) * step);
-const clamp = (x: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, x));
 
 /** Estimated one-rep max (Epley) of `reps` with `rir` left. */
 const e1rm = (w: number, reps: number, rir: number) => w * (1 + (reps + rir) / 30);

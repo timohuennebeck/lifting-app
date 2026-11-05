@@ -229,7 +229,6 @@ export function ConfirmScreen() {
               // Not while the plan is still read into the routines.
               onVoice={reading ? undefined : () => router.push(step('/import/voice'))}
               onOpen={openSets}
-              onEditSets={openSets}
               onSwap={(i) => openPicker({ mode: 'swap', index: String(i) })}
               onRemove={(i) =>
                 editRoutine((r) => ({ ...r, exercises: r.exercises.filter((_, k) => k !== i) }))

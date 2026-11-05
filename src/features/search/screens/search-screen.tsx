@@ -1,11 +1,10 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { ExerciseSearchBar } from '@/features/exercises/components/exercise-search-bar';
 import { IconButton } from '@/shared/ui/icon-button';
-import { MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 
@@ -14,13 +13,10 @@ import { ExerciseResults } from '../components/exercise-results';
 /**
  * Search from the top bar of every tab: before typing it lists the recently trained exercises
  * with their records, then all others; the field sits at the bottom and is focused on arrival.
- * Laid out like the exercise picker, plus included (a custom exercise), without picking. Opened
- * for a `muscle`, its exercises come first, in its muscle group.
+ * Laid out like the exercise picker, plus included (a custom exercise), without picking.
  */
 export function SearchScreen() {
   const { t } = useTranslation(['common', 'exercises']);
-  const params = useLocalSearchParams<{ muscle?: string }>();
-  const muscle = MUSCLE_IDS.find((m): m is MuscleId => m === params.muscle) ?? null;
   const [query, setQuery] = useState('');
   const [barHeight, setBarHeight] = useState(0);
 
@@ -40,7 +36,7 @@ export function SearchScreen() {
       }
     >
       <View className="flex-1 px-4 pt-2">
-        <ExerciseResults query={query} bottomInset={barHeight} muscle={muscle} />
+        <ExerciseResults query={query} bottomInset={barHeight} />
       </View>
       <ExerciseSearchBar query={query} onChangeQuery={setQuery} onHeight={setBarHeight} />
     </Screen>

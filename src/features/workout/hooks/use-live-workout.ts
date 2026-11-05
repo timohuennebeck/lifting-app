@@ -3,13 +3,12 @@ import { useEffect } from 'react';
 import { isBodyweight, measuresOf } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { repTarget, restSecondsFor } from '@/shared/data/routines';
-import { useLastExerciseSession } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 
 import type { WorkoutDetail, WorkoutExercise } from '../data/workout-detail';
 import { logSet, saveOpenSetValues, saveSetRir, unlogSet } from '../data/workout-mutations';
-import { firstOpenSet, rowValues } from '../lib/row-values';
+import { rowValues } from '../lib/row-values';
 import { parseSetInput, toSetInput, typedValues } from '../lib/set-input';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 import { useSetSuggestions } from './use-set-suggestions';
@@ -24,7 +23,6 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   const { exercises } = workout;
   const exerciseIndex = Math.min(storedIndex, exercises.length - 1);
   const exercise = exercises[exerciseIndex];
-  const { data: last } = useLastExerciseSession(exercise?.exerciseId);
   const suggestions = useSetSuggestions(workout, units);
   /** The suggested values of each set of `target`, the boxes' prefill (none the first time). */
   const suggestedValues = (target: WorkoutExercise) => suggestions[target.id]?.map((s) => s.values);
@@ -32,7 +30,6 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   const allSets = exercises.flatMap((e) => e.sets);
   const doneSets = allSets.filter((s) => s.completedAt).length;
   const selectedIndex = exercise?.sets.findIndex((s) => s.id === selectedSetId) ?? -1;
-  const openIndex = firstOpenSet(exercise);
   const exerciseId = exercise?.exerciseId ?? '';
   const measures = measuresOf(exerciseId);
   const bodyweight = isBodyweight(exerciseId);
@@ -291,13 +288,11 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     exercise,
     measures,
     exerciseIndex,
-    last,
     suggestions,
     suggestedValues,
     doneSets,
     totalSets: allSets.length,
     selectedIndex,
-    openIndex,
     selectSet,
     pickRir,
     closeInput,

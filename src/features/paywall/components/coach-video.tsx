@@ -130,17 +130,15 @@ export function CoachVideo({ active }: CoachVideoProps) {
         }}
       >
         <View className="absolute inset-1 overflow-hidden rounded-3xl bg-surface">
-          {playback.hasVideo ? (
-            <VideoView
-              player={playback.player}
-              contentFit="cover"
-              nativeControls={false}
-              // Clipped to the rounded frame like any view (a surface view isn't).
-              surfaceType="textureView"
-              onFirstFrameRender={() => setFirstFrame(true)}
-              style={media}
-            />
-          ) : null}
+          <VideoView
+            player={playback.player}
+            contentFit="cover"
+            nativeControls={false}
+            // Clipped to the rounded frame like any view (a surface view isn't).
+            surfaceType="textureView"
+            onFirstFrameRender={() => setFirstFrame(true)}
+            style={media}
+          />
           {firstFrame ? null : <Image source={COACH_POSTER} contentFit="cover" style={media} />}
           <Gradient from="top" stops={SHADE} />
           <Pressable

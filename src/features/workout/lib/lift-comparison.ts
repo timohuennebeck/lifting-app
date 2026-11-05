@@ -3,7 +3,7 @@
  * user lifted the heaviest one the weight reaches. Weights in kg, typical and never more; each
  * with its clay render from `assets/images/lift-objects/` (all facing left, in one clay grey).
  */
-export const LIFT_OBJECTS = [
+const LIFT_OBJECTS = [
   {
     id: 'washingMachine',
     kg: 70,

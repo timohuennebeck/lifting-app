@@ -32,7 +32,7 @@ export interface CoachDiamondProps {
   size: number;
   color?: string;
   animation?: CoachMarkAnimation;
-  /** Each step turns the diamond half a turn (the card's question changing). */
+  /** Each step turns the diamond half a turn. */
   turns?: number;
 }
 
@@ -66,7 +66,7 @@ export interface CoachMarkProps {
   /** 28 beside an answer, 52 on the Training tab's card. */
   size?: number;
   animation?: CoachMarkAnimation;
-  /** Each step turns the diamond half a turn (the card's question changing); it rests between. */
+  /** Each step turns the diamond half a turn; it rests between. */
   turns?: number;
 }
 

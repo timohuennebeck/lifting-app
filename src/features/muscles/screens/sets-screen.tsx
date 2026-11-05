@@ -13,10 +13,7 @@ import { RARE_MUSCLES, SET_RANGES } from '../lib/muscle-sets';
 import { useSetRangeStore } from '../stores/set-range-store';
 
 const openMuscle = (muscle: MuscleId) =>
-  router.push({
-    pathname: '/muscle/[id]',
-    params: { id: muscle, range: String(useSetRangeStore.getState().range) },
-  });
+  router.push({ pathname: '/muscle/[id]', params: { id: muscle } });
 
 /** "Primär" or "Sekundär" with the mark its sets have in the bars. */
 function LegendItem({ label, primary }: { label: string; primary: boolean }) {

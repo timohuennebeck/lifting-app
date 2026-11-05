@@ -74,8 +74,7 @@
     "no": "Crea uno para mí"
   },
   "promise": {
-    "title": "HAZTE UNA\nPROMESA.",
-    "titleNamed": "{{name}}, HAZTE UNA\nPROMESA.",
+    "title": "{{name}}, HAZTE UNA\nPROMESA.",
     "stick": "Seguiré adelante, incluso cuando se ponga difícil.",
     "track": "Registraré cada serie.",
     "hold": "Mantén el pulgar presionado",

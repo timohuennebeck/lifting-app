@@ -84,7 +84,7 @@ export function AskCoachCard({ className }: AskCoachCardProps) {
   const draft = useCoachStore((s) => s.draft);
   const answering = useCoachStore((s) => isAnswering(s.pending));
   const focusCard = useCoachStore((s) => s.focusCard);
-  const voice = useVoiceInput(language, 'coach', (said) =>
+  const voice = useVoiceInput('coach', (said) =>
     setDraft(withSpoken(draft, said, COACH_QUESTION_MAX)),
   );
   const inputRef = useRef<TextInput>(null);

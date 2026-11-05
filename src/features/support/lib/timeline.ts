@@ -26,7 +26,7 @@ interface TimedItem {
   item: TimelineItem;
 }
 
-const ms = (iso: string | null) => (iso ? toMs(iso) || 0 : 0);
+const ms = (iso: string) => toMs(iso) || 0;
 const dayKey = (at: number) => new Date(at).toDateString();
 
 /**

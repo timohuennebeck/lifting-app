@@ -67,7 +67,7 @@ export function PromiseScreen() {
       }
     >
       <Animated.View style={uiStyle}>
-        <StepTitle title={name ? t('promise.titleNamed', { name }) : t('promise.title')} />
+        <StepTitle title={t('promise.title', { name })} />
         <View className="gap-0.5 px-6 pt-4.5">
           {/* Fixed commitments: always checked, not toggleable. */}
           {PROMISES.map((key) => (

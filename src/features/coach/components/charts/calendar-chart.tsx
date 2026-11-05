@@ -3,12 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 
+import { useWidth } from '@/shared/hooks/use-width';
 import { addDays, DAY_MS, fromIsoDate, startOfWeek, toIsoDate } from '@/shared/lib/date';
 import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 import { type CalendarChart as CalendarChartData, dateLabel, formatValue } from '../../lib/charts';
-import { holdGesture, monthLabel, useWidth } from './chart-parts';
+import { holdGesture, monthLabel } from './chart-parts';
 
 /** Column of weekday labels and the gap after it. */
 const LABELS = 23;
@@ -58,7 +59,7 @@ export function CalendarChart({ chart }: { chart: CalendarChartData }) {
   const [width, onLayout] = useWidth();
   const [picked, setPicked] = useState<number | null>(null);
   const days = new Map(chart.days.map((d) => [d.date, d]));
-  const most = Math.max(1, ...chart.days.map((d) => d.sets ?? d.value));
+  const most = Math.max(1, ...chart.days.map((d) => d.sets));
   const from = fromIsoDate(chart.from);
   const end = fromIsoDate(chart.to);
   const start = startOfWeek(from);
@@ -127,9 +128,7 @@ export function CalendarChart({ chart }: { chart: CalendarChartData }) {
                         width: cell,
                         height: cell,
                         borderRadius: Math.min(4, cell / 3),
-                        backgroundColor: trained
-                          ? dayColor((trained.sets ?? trained.value) / most)
-                          : colors.chip,
+                        backgroundColor: trained ? dayColor(trained.sets / most) : colors.chip,
                       }}
                     />
                   );

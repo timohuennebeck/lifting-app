@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { useProfile } from '@/shared/data/profile';
+import { useUnits } from '@/shared/data/profile';
 import { useAppLanguage } from '@/shared/hooks/use-app-language';
 import { formatDate } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
@@ -30,7 +30,6 @@ export interface ExportSheetProps {
  */
 export function ExportSheet({ visible, onClose, onRetry }: ExportSheetProps) {
   const { t } = useTranslation('profile');
-  const { profile } = useProfile();
   const { hasSynced } = useStatus();
   const language = useAppLanguage();
   const { data: summary } = useExportSummary(visible);
@@ -39,7 +38,7 @@ export function ExportSheet({ visible, onClose, onRetry }: ExportSheetProps) {
 
   const workouts = summary?.count ?? 0;
   const first = summary?.first;
-  const units = profile?.unitPreference ?? 'metric';
+  const units = useUnits();
 
   let detail = t('settings.export.empty');
   if (!hasSynced) detail = t('settings.export.loading');

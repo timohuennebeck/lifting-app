@@ -6,12 +6,14 @@ import Svg, { Path } from 'react-native-svg';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { useExerciseName } from '@/shared/data/exercises';
+import { useWidth } from '@/shared/hooks/use-width';
 import { cn } from '@/shared/lib/cn';
 import { daysBetween, fromIsoDate } from '@/shared/lib/date';
 import { linePath, nearestIndex, yScale } from '@/shared/lib/chart';
 import { formatShortDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { ChartGrid } from '@/shared/ui/chart-grid';
+import { HoldLine, Ring } from '@/shared/ui/chart-marks';
 import { Text } from '@/shared/ui/text';
 
 import {
@@ -20,7 +22,7 @@ import {
   formatChange,
   formatValue,
 } from '../../lib/charts';
-import { HoldLine, holdGesture, monthLabel, Ring, TimeAxis, useWidth } from './chart-parts';
+import { holdGesture, monthLabel, TimeAxis } from './chart-parts';
 
 const HEIGHT = 170;
 /** Right of the lines: each line's last value and name. */

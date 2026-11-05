@@ -48,7 +48,6 @@
     "open": "Search exercises",
     "title": "Exercises",
     "recent": "Recently trained",
-    "forMuscle": "Trains your {{muscle}}",
     "recordA11y": "Personal record: {{value}}, last on {{date}}"
   },
   "settings": "Settings",
@@ -56,7 +55,6 @@
     "terms": "Terms of Use",
     "privacy": "Privacy Policy",
     "meta": "Version {{version}} · effective {{date}}",
-    "unavailable": "This document isn't available yet.",
     "loadFailed": "Couldn't load the document. Check your connection and try again.",
     "update": {
       "titleTerms": "Our terms of use have been updated",

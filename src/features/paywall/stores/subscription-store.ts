@@ -37,10 +37,10 @@ export const useIsPro = () => useSubscriptionStore((s) => s.isPro);
 export const useIsLocked = () => useSubscriptionStore((s) => s.checked && !s.isPro);
 
 /** Trial end as a Date while the trial is still running, else null. */
-export function trialEnd(trialEndsAt: string | null, now = Date.now()) {
+export function trialEnd(trialEndsAt: string | null) {
   if (!trialEndsAt) return null;
   const end = new Date(trialEndsAt);
-  return end.getTime() > now ? end : null;
+  return end.getTime() > Date.now() ? end : null;
 }
 
 // Renewals, expiries and purchases on other devices while the app runs.

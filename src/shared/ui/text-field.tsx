@@ -1,4 +1,4 @@
-import { type Ref, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Pressable, TextInput, type TextInputProps, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -21,7 +21,6 @@ export interface TextFieldProps extends TextInputProps {
   /** 48pt instead of 56pt, e.g. the search bar, as tall as the button beside it. */
   compact?: boolean;
   className?: string;
-  ref?: Ref<TextInput>;
 }
 
 export function TextField({
@@ -37,17 +36,11 @@ export function TextField({
   onBlur,
   multiline,
   maxLength,
-  ref,
   ...props
 }: TextFieldProps) {
   const { t } = useTranslation();
   const [focused, setFocused] = useState(false);
-  const input = useRef<TextInput | null>(null);
-  const setInput = (node: TextInput | null) => {
-    input.current = node;
-    if (typeof ref === 'function') ref(node);
-    else if (ref) ref.current = node;
-  };
+  const input = useRef<TextInput>(null);
   const hasValue = !!value?.length;
   // Multi-line fields only round their corners: a pill that tall looks like a capsule.
   const radius = shape === 'pill' && !multiline ? 'rounded-full' : 'rounded-[18px]';
@@ -79,7 +72,7 @@ export function TextField({
         ) : null}
         {icon ? <Icon name={icon} size={16} color={colors.dim} /> : null}
         <TextInput
-          ref={setInput}
+          ref={input}
           value={value}
           onChangeText={onChangeText}
           placeholderTextColor={colors.dim}

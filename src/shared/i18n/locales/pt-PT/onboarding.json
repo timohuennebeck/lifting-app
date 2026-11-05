@@ -74,8 +74,7 @@
     "no": "Cria-me um plano"
   },
   "promise": {
-    "title": "PROMETE\nA TI MESMO.",
-    "titleNamed": "{{name}}, PROMETE\nA TI MESMO.",
+    "title": "{{name}}, PROMETE\nA TI MESMO.",
     "stick": "Não desisto, mesmo quando custar.",
     "track": "Registo cada série.",
     "hold": "Mantém o polegar pressionado",

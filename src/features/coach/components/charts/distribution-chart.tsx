@@ -2,13 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useExerciseName } from '@/shared/data/exercises';
+import { useWidth } from '@/shared/hooks/use-width';
 import { cn } from '@/shared/lib/cn';
 import { addDays } from '@/shared/lib/date';
 import { formatDate, formatNumber } from '@/shared/lib/format';
 import { Text } from '@/shared/ui/text';
 
 import type { DistributionChart as DistributionChartData } from '../../lib/charts';
-import { DashedLine, useWidth } from './chart-parts';
+import { DashedLine } from './chart-parts';
 
 /** Label column, value column and the 10pt gaps between them and the bar. */
 const LABEL = 104;

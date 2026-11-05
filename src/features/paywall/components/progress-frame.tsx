@@ -8,6 +8,7 @@ import Animated, {
 import Svg, { Path } from 'react-native-svg';
 
 import { framePath } from '@/shared/lib/frame-path';
+import { clamp } from '@/shared/lib/math';
 import { colors } from '@/shared/lib/theme';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
@@ -24,14 +25,13 @@ export function progressAt(x: number, y: number, width: number, height: number, 
   const top = w - 2 * r;
   const side = h - 2 * r;
   const arc = (Math.PI * r) / 2;
-  const clamp = (value: number, max: number) => Math.min(Math.max(value, 0), max);
   const distances = [y, width - x, height - y, x];
   const nearest = distances.indexOf(Math.min(...distances));
   const along = [
-    clamp(x - r, top),
-    top + arc + clamp(y - r, side),
-    top + side + 2 * arc + clamp(w - r - x, top),
-    2 * top + side + 3 * arc + clamp(h - r - y, side),
+    clamp(x - r, 0, top),
+    top + arc + clamp(y - r, 0, side),
+    top + side + 2 * arc + clamp(w - r - x, 0, top),
+    2 * top + side + 3 * arc + clamp(h - r - y, 0, side),
   ][nearest];
   return along / (2 * (top + side) + 4 * arc);
 }

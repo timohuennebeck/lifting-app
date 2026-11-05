@@ -1,4 +1,3 @@
-import { parseJson } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
 import {
   progressCheckPhotos,
@@ -14,8 +13,8 @@ import { progressCheckKeys } from './progress-check-keys';
 export interface ProgressCheck {
   id: string;
   score: number;
-  groupScores: Partial<GroupScores>;
-  metrics: Partial<ProgressCheckMetrics>;
+  groupScores: GroupScores;
+  metrics: ProgressCheckMetrics;
   createdAt: string;
 }
 
@@ -26,8 +25,8 @@ const toChecks = (rows: ProgressCheckRecord[]): ProgressCheck[] =>
   rows.map((r) => ({
     id: r.id,
     score: r.score,
-    groupScores: parseJson(r.group_scores, {}),
-    metrics: parseJson(r.metrics, {}),
+    groupScores: JSON.parse(r.group_scores) as GroupScores,
+    metrics: JSON.parse(r.metrics) as ProgressCheckMetrics,
     createdAt: r.created_at,
   }));
 

@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Svg, { Circle, Defs, Line, LinearGradient, Path, Stop } from 'react-native-svg';
+import { GestureDetector } from 'react-native-gesture-handler';
+import Svg, { Line, Path } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
 
-import { nearestIndex } from '@/shared/lib/chart';
+import { useWidth } from '@/shared/hooks/use-width';
+import { buildLineChart, chartBounds, type ChartInput, nearestIndex } from '@/shared/lib/chart';
 import { formatShortDate } from '@/shared/lib/format';
-import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
+import { scrubGesture } from '@/shared/lib/scrub-gesture';
 import { colors } from '@/shared/lib/theme';
+import { AreaLine } from '@/shared/ui/area-line';
 import { ChartGrid } from '@/shared/ui/chart-grid';
+import { Ring } from '@/shared/ui/chart-marks';
 import { Text } from '@/shared/ui/text';
-
-import { buildLineChart, chartBounds, type ChartInput } from '../lib/chart';
 
 /** Nine grid squares. */
 const HEIGHT = 126;
@@ -73,7 +74,7 @@ export interface HistoryChartProps {
  */
 export function HistoryChart({ data, metric, format, oneRepMax }: HistoryChartProps) {
   const { t } = useTranslation('exercises');
-  const [width, setWidth] = useState(0);
+  const [width, onLayout] = useWidth();
   const [hover, setHover] = useState<number | null>(null);
   const bounds = chartBounds(data, oneRepMax ?? []);
   const { points, line, area } = buildLineChart(data, width, HEIGHT, bounds);
@@ -87,18 +88,11 @@ export function HistoryChart({ data, metric, format, oneRepMax }: HistoryChartPr
   const shownEstimate = shown ? estimate.points.find((p) => p.time === shown.time) : undefined;
 
   const xs = points.map((p) => p.x);
-  const track = (x: number) => {
-    if (!points.length) return;
-    const index = nearestIndex(xs, x);
-    if (index !== hover) haptics.select();
-    setHover(index);
-  };
-  const scrub = Gesture.Pan()
-    .runOnJS(true)
-    .minDistance(0)
-    .onBegin((e) => track(e.x))
-    .onUpdate((e) => track(e.x))
-    .onFinalize(() => setHover(null));
+  const scrub = scrubGesture({
+    indexAt: (x) => (xs.length ? nearestIndex(xs, x) : null),
+    picked: hover,
+    onPick: setHover,
+  });
 
   return (
     <View className="gap-3">
@@ -138,29 +132,15 @@ export function HistoryChart({ data, metric, format, oneRepMax }: HistoryChartPr
         <View
           className="mt-1"
           style={{ height: HEIGHT }}
-          onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
+          onLayout={onLayout}
           accessibilityLabel={t('history.chartLabel')}
         >
           {width > 0 ? (
             <Svg width={width} height={HEIGHT} style={{ overflow: 'visible' }}>
               <ChartGrid id="history-grid" width={width} height={HEIGHT} />
-              <Defs>
-                <LinearGradient id="history-fill" x1="0" y1="0" x2="0" y2="1">
-                  <Stop offset="0" stopColor={colors.accent} stopOpacity={0.22} />
-                  <Stop offset="1" stopColor={colors.accent} stopOpacity={0} />
-                </LinearGradient>
-              </Defs>
               {points.length ? (
                 <>
-                  <Path d={area} fill="url(#history-fill)" />
-                  <Path
-                    d={line}
-                    fill="none"
-                    stroke={colors.accent}
-                    strokeWidth={2.5}
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                  />
+                  <AreaLine id="history-fill" line={line} area={area} />
                   {estimate.points.length ? (
                     <Path
                       d={estimate.line}
@@ -177,27 +157,17 @@ export function HistoryChart({ data, metric, format, oneRepMax }: HistoryChartPr
               {active ? (
                 <Path d={`M${active.x} 0 V${HEIGHT}`} stroke={colors.track} strokeWidth={1} />
               ) : null}
-              {shown ? (
-                <Circle
-                  cx={shown.x}
-                  cy={shown.y}
-                  r={5}
-                  fill={colors.bg}
-                  stroke={colors.accent}
-                  strokeWidth={2.5}
-                />
-              ) : null}
-              {shownEstimate ? (
-                <Circle
-                  cx={shownEstimate.x}
-                  cy={shownEstimate.y}
-                  r={4.5}
-                  fill={colors.bg}
-                  stroke={colors.fg}
-                  strokeWidth={2}
-                />
-              ) : null}
             </Svg>
+          ) : null}
+          {shown ? <Ring x={shown.x} y={shown.y} /> : null}
+          {shownEstimate ? (
+            <Ring
+              x={shownEstimate.x}
+              y={shownEstimate.y}
+              color={colors.fg}
+              radius={5.5}
+              border={2}
+            />
           ) : null}
         </View>
       </GestureDetector>

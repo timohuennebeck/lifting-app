@@ -12,7 +12,7 @@ const BANDS: GroupBand[] = ['top', 'mid', 'focus'];
 const TINT = { top: colors.accent, focus: WARN_COLOR, mid: null } as const;
 
 export interface GroupBandsProps {
-  scores: Partial<GroupScores>;
+  scores: GroupScores;
 }
 
 /** Muscle groups sorted into strengths, average and focus pills (design 08d-A). */
@@ -22,7 +22,7 @@ export function GroupBands({ scores }: GroupBandsProps) {
 
   return (
     <View className="px-5">
-      {BANDS.filter((band) => bands[band].length).map((band) => (
+      {BANDS.map((band) => (
         <View key={band} className="gap-2.5 py-3">
           <View className="flex-row items-baseline justify-between gap-3">
             <Text variant="label">{t(`result.bands.${band}.title`)}</Text>

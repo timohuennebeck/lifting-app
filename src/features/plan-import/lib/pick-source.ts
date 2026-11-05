@@ -19,7 +19,7 @@ const PLAN_FILE_TYPES = [
 ];
 
 /** Lets the user pick a PDF, spreadsheet, CSV or screenshot. Null when cancelled. */
-export async function pickPlanFile(): Promise<ImportFile | null> {
+async function pickPlanFile(): Promise<ImportFile | null> {
   const result = await DocumentPicker.getDocumentAsync({
     type: PLAN_FILE_TYPES,
     copyToCacheDirectory: true,

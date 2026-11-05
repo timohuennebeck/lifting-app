@@ -1,16 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
 import { useIsLocked } from '@/features/paywall/stores/subscription-store';
-import { ChatField } from '@/shared/components/chat-field';
-import {
-  MicButton,
-  RecordingRow,
-  TranscribingRow,
-  VoiceInputNotes,
-} from '@/shared/components/voice-input';
-import { useAppLanguage } from '@/shared/hooks/use-app-language';
+import { ChatField, ChatFooter } from '@/shared/components/chat-field';
 import { useVoiceInput, withSpoken } from '@/shared/hooks/use-voice-input';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
@@ -40,13 +33,14 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
   const draft = useScreenshotDraft();
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
-  const language = useAppLanguage();
   const locked = useIsLocked();
-  const voice = useVoiceInput(language, 'support', (said) =>
+  const voice = useVoiceInput('support', (said) =>
     setText((current) => withSpoken(current, said, TICKET_MESSAGE_MAX)),
   );
   const hasContent = text.trim().length > 0 || draft.shots.length > 0;
   const canSend = !!userId && hasContent && !draft.preparing && !sending;
+  // Without voice input send stands on its own, also before anything is typed.
+  const showSend = hasContent || locked;
 
   async function send() {
     if (!canSend || !userId) return;
@@ -69,37 +63,38 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
     setSending(false);
   }
 
-  let box = (
-    <ChatField
-      value={text}
-      onChangeText={setText}
-      maxLength={TICKET_MESSAGE_MAX}
-      placeholder={t('chat.placeholder')}
-      above={
-        draft.shots.length ? (
-          <ScreenshotTiles
-            draft={draft}
-            showAdd={false}
-            tileClassName="h-18 w-13"
-            className="px-2"
+  return (
+    <ChatFooter voice={voice}>
+      <ChatField
+        voice={voice}
+        mic={!locked}
+        value={text}
+        onChangeText={setText}
+        maxLength={TICKET_MESSAGE_MAX}
+        placeholder={t('chat.placeholder')}
+        above={
+          draft.shots.length ? (
+            <ScreenshotTiles
+              draft={draft}
+              showAdd={false}
+              tileClassName="h-18 w-13"
+              className="px-2"
+            />
+          ) : null
+        }
+        leading={
+          <IconButton
+            icon="plus"
+            size={40}
+            iconSize={14}
+            accessibilityLabel={t('chat.addScreenshot')}
+            disabled={!draft.canAdd}
+            onPress={draft.add}
+            className={cn(!draft.canAdd && 'opacity-35')}
           />
-        ) : null
-      }
-      leading={
-        <IconButton
-          icon="plus"
-          size={40}
-          iconSize={14}
-          accessibilityLabel={t('chat.addScreenshot')}
-          disabled={!draft.canAdd}
-          onPress={draft.add}
-          className={cn(!draft.canAdd && 'opacity-35')}
-        />
-      }
-      actions={
-        <>
-          {locked ? null : <MicButton voice={voice} alone={!hasContent} />}
-          {hasContent || locked ? (
+        }
+        actions={
+          showSend ? (
             <PressableScale
               haptic="press"
               accessibilityLabel={t('chat.send')}
@@ -117,19 +112,9 @@ export function ChatComposer({ ticketId }: ChatComposerProps) {
                 <Icon name="arrow-up" size={16} color={hasContent ? colors.onAccent : colors.dim} />
               )}
             </PressableScale>
-          ) : null}
-        </>
-      }
-    />
-  );
-  if (voice.phase === 'recording') box = <RecordingRow voice={voice} />;
-  else if (voice.phase === 'transcribing') box = <TranscribingRow />;
-
-  return (
-    // Solid, as the chat runs on behind it while the keyboard is open.
-    <View className="bg-bg">
-      <VoiceInputNotes voice={voice} />
-      <View className="px-3 pt-2">{box}</View>
-    </View>
+          ) : null
+        }
+      />
+    </ChatFooter>
   );
 }

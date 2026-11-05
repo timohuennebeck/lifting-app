@@ -42,7 +42,6 @@ export class CoachError extends Error {
 export type CoachEvent =
   /** First: the ids the saved chat, question and answer get. */
   | { type: 'start'; chatId: string; questionId: string; answerId: string }
-  | { type: 'searched'; of: 'workouts' | 'weights' | 'checks'; count: number }
   | { type: 'found'; chart: CoachChart | null }
   | { type: 'text'; text: string }
   /** The text so far wasn't the answer: drop it. */
@@ -86,16 +85,11 @@ export async function streamAnswer(
 ) {
   const { data } = await supabase.auth.getSession();
   if (!data.session) throw new CoachError('failed');
-  // Asking agrees to the data going to OpenAI, for accounts from before that came with sign-up.
-  const response = await postFunction(
-    'coach-chat',
-    { ...input, consent: true },
-    {
-      signal,
-      token: data.session.access_token,
-      offline: () => new CoachError('offline'),
-    },
-  );
+  const response = await postFunction('coach-chat', input, {
+    signal,
+    token: data.session.access_token,
+    offline: () => new CoachError('offline'),
+  });
   if (!response.ok || !response.body) {
     throw failureOf(response.status, await refusalOf<ErrorBody>('coach-chat', response));
   }

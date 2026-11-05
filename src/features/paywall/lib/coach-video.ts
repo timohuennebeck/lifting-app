@@ -5,10 +5,7 @@ export const COACH = {
   avatar: require('@/assets/images/coach-kai-avatar.jpg'),
 } as const;
 
-/**
- * The coach's thank-you video (bundled, English audio). Set it to null and the poster
- * stands in while a timer drives the progress ring and captions.
- */
+/** The coach's thank-you video (bundled, English audio). */
 export const COACH_VIDEO_SOURCE: VideoSource = require('@/assets/videos/coach-kai.mp4');
 export const COACH_POSTER = require('@/assets/images/coach-kai.jpg');
 /** Width / height of the video and poster (1080 × 1920). */
@@ -18,9 +15,6 @@ export const COACH_VIDEO_ASPECT = 9 / 16;
  * the top, the rest off the bottom, so Kai's head stays in view.
  */
 export const COACH_FOCUS_Y = 0.2;
-
-/** Length of the timer fallback; a real video reports its own duration. */
-export const COACH_FALLBACK_SECONDS = 30;
 
 /**
  * Caption cues (seconds from the start, where each spoken line begins) →

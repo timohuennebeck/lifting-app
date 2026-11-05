@@ -9,8 +9,8 @@ import { splitMuscles } from '@/shared/data/muscle-groups';
 import type { SetTarget } from '@/shared/data/routines';
 import { formatTargetLabel } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
+import { NumberedSet } from '@/shared/ui/numbered-set';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-import { RirBadge } from '@/shared/ui/rir-badge';
 import { Text } from '@/shared/ui/text';
 
 export interface RoutineExerciseCardProps {
@@ -110,17 +110,11 @@ export function RoutineExerciseCard({
         </View>
         <View className="gap-1.5">
           {sets.map((set, i) => (
-            <View key={i} className="flex-row items-center gap-2.5">
-              <View className="size-6 items-center justify-center rounded-full bg-elevated">
-                <Text variant="caption" className="text-xs">
-                  {i + 1}
-                </Text>
-              </View>
+            <NumberedSet key={i} number={i + 1} rir={set.rir}>
               <Text variant="body" className="flex-1 text-sm text-fg-soft">
                 {formatTargetLabel(set.targetMin, set.targetMax, timed) ?? '–'}
               </Text>
-              {set.rir != null ? <RirBadge rir={set.rir} /> : null}
-            </View>
+            </NumberedSet>
           ))}
         </View>
         <ExerciseMuscleChips exerciseId={exerciseId} />

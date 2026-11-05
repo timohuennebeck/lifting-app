@@ -22,7 +22,7 @@ const MILESTONES = new Set([5, 10, 25, 50, 100, 200]);
 /** Waits for the story to close, so the prompt opens over the home tab. */
 const DELAY_MS = 800;
 
-export interface ReviewMoment {
+interface ReviewMoment {
   /** Finished workouts, the one just finished included. */
   workoutCount: number;
   /** When the first workout started (ISO); null without one. */

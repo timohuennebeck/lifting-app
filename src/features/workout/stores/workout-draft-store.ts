@@ -15,7 +15,7 @@ import { moved } from '@/shared/lib/array';
  * A draft exercise; `key` stays with it when it is dragged to another place. One added by voice
  * that it wasn't sure about has what was heard (`raw`) and likely others until it is settled.
  */
-export type DraftExercise = ExerciseDraft & { key: string; raw?: string; alternatives?: string[] };
+type DraftExercise = ExerciseDraft & { key: string; raw?: string; alternatives?: string[] };
 
 interface WorkoutDraftState {
   name: string;

@@ -7,6 +7,7 @@ import {
   isTimed,
   targetsFor,
 } from '@/shared/data/exercises';
+import { DAY_MS } from '@/shared/lib/date';
 import {
   fromDisplayWeight,
   type SetValues,
@@ -26,8 +27,6 @@ import {
   type Target,
 } from './suggestion-rules';
 import { lightestWeight, weightStep } from './weight-step';
-
-const DAY_MS = 24 * 60 * 60 * 1000;
 
 /** What a set is suggested to be, compared with the same set last time. */
 export interface SetSuggestion {
@@ -52,15 +51,16 @@ interface TargetFields {
   targetRir: number | null;
 }
 
-/** A set's targets with the defaults of a new set where it has none. */
+/**
+ * A set's targets with the defaults of a new set where it has none; one end of the range set
+ * alone stands for both. Timed sets have no RIR target, and the rules don't read one for them.
+ */
 function targetOf(set: TargetFields, timed: boolean): Target {
   const fallback = targetsFor(timed);
-  const low = set.targetMin ?? set.targetMax ?? fallback.min ?? 8;
-  const high = set.targetMax ?? set.targetMin ?? fallback.max ?? low;
   return {
-    min: Math.min(low, high),
-    max: Math.max(low, high),
-    rir: set.targetRir ?? fallback.rir ?? 2,
+    min: set.targetMin ?? set.targetMax ?? fallback.min,
+    max: set.targetMax ?? set.targetMin ?? fallback.max,
+    rir: set.targetRir ?? fallback.rir ?? 0,
   };
 }
 

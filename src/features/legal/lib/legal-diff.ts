@@ -1,6 +1,6 @@
 import { diffArrays, diffWordsWithSpace } from 'diff';
 
-import { type MarkdownBlock, parseMarkdown, plainText } from '@/shared/ui/markdown';
+import { type MarkdownBlock, parseMarkdown, plainText } from '../components/markdown';
 
 /** A run of text in the comparison: unchanged, new in this version, or no longer in it. */
 export interface DiffSegment {

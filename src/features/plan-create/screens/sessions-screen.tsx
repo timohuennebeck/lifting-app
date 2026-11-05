@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 
 import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
-import { clampSessions, MAX_SESSIONS_PER_WEEK, MIN_SESSIONS_PER_WEEK } from '@/shared/data/plans';
+import { MAX_SESSIONS_PER_WEEK, MIN_SESSIONS_PER_WEEK } from '@/shared/data/plans';
 import { Button } from '@/shared/ui/button';
-import { NumberStepper } from '@/shared/ui/number-stepper';
 import { StepScreen } from '@/shared/ui/step-screen';
 
+import { NumberStepper } from '../components/number-stepper';
 import { useCreateStep } from '../hooks/use-create-step';
 import { chosenSplit } from '../lib/splits';
 
@@ -17,8 +17,6 @@ export function SessionsScreen() {
   const counter = useCreateStep('sessions');
   const { step } = usePlanFlow();
   const draft = useDraft();
-  // A draft from before the 2–6 range shows within it.
-  const sessionsPerWeek = clampSessions(draft.sessionsPerWeek);
   const update = useUpdateDraft();
 
   return (
@@ -29,15 +27,15 @@ export function SessionsScreen() {
         <Button
           label={t('common:actions.continue')}
           onPress={() => {
-            // Keeps the split picked before if it still suits, else the recommended one.
-            update({ sessionsPerWeek, split: chosenSplit({ ...draft, sessionsPerWeek }) });
+            // Keeps the split picked before while it suits the week, else none (the AI picks).
+            update({ split: chosenSplit(draft) });
             router.push(step('/create/split'));
           }}
         />
       }
     >
       <NumberStepper
-        value={sessionsPerWeek}
+        value={draft.sessionsPerWeek}
         min={MIN_SESSIONS_PER_WEEK}
         max={MAX_SESSIONS_PER_WEEK}
         onChange={(next) => update({ sessionsPerWeek: next })}

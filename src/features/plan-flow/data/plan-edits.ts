@@ -5,6 +5,7 @@ import { nowIso } from '@/shared/data/json';
 import { syncSessionsPerWeek } from '@/shared/data/plans';
 import { drizzle, type Executor, type Tx } from '@/shared/data/powersync/database';
 import { plans, routineExercises, routines, routineSets } from '@/shared/data/powersync/schema';
+import { writePositions } from '@/shared/data/reorder';
 import { type ExerciseDraft, insertRoutine, insertRoutineExercise } from '@/shared/data/routines';
 
 /** A plan's routines in their order, each with its exercises and their sets. */
@@ -124,11 +125,12 @@ export async function savePlanEdits(userId: string, planId: string, plan: Import
           .where(eq(routines.id, before.id));
       }
     }
-    for (const [i, routine] of others.entries()) {
-      const position = kept.length + i;
-      if (routine.position === position) continue;
-      await tx.update(routines).set({ position }).where(eq(routines.id, routine.id));
-    }
+    await writePositions(
+      others,
+      others.map((r) => r.id),
+      (id, position) => tx.update(routines).set({ position }).where(eq(routines.id, id)),
+      kept.length,
+    );
 
     const name = plan.name.trim() || current.name;
     if (name !== current.name) await tx.update(plans).set({ name }).where(eq(plans.id, planId));

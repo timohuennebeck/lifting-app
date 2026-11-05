@@ -74,8 +74,7 @@
     "no": "Create a plan for me"
   },
   "promise": {
-    "title": "PROMISE\nYOURSELF.",
-    "titleNamed": "{{name}}, PROMISE\nYOURSELF.",
+    "title": "{{name}}, PROMISE\nYOURSELF.",
     "stick": "I'll stick with it, even when it gets tough.",
     "track": "I'll track every set.",
     "hold": "Hold your thumb down",

@@ -33,7 +33,7 @@ export function withTrend(entries: WeightEntry[]): WeightPoint[] {
 
 /**
  * The trend on a day: that of the last weigh-in on or before it; undefined before the first.
- * `points` are oldest first, so a binary search finds it (the levels ask once per set).
+ * `points` are oldest first, so a binary search finds it (trendChange asks once per day).
  */
 export function trendOn(points: WeightPoint[], date: string) {
   let low = 0;

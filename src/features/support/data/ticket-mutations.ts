@@ -1,11 +1,11 @@
 import { eq } from 'drizzle-orm';
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
-import { Platform } from 'react-native';
 
 import { newId, nowIso } from '@/shared/data/json';
 import { drizzle, type Executor } from '@/shared/data/powersync/database';
 import { ticketEvents, ticketMessages, tickets } from '@/shared/data/powersync/schema';
+import { devicePlatform } from '@/shared/lib/platform';
 
 import { firstLine } from '../lib/ticket-format';
 import type { TicketKind } from './tickets';
@@ -39,7 +39,7 @@ async function insertMessage(executor: Executor, message: NewMessage, createdAt:
 /** The phone and app version a ticket is sent from, shown to the support desk. */
 function deviceInfo() {
   return {
-    platform: Platform.OS === 'ios' || Platform.OS === 'android' ? Platform.OS : null,
+    platform: devicePlatform,
     os_version: Device.osVersion?.slice(0, 40) ?? null,
     device_model: Device.modelName?.slice(0, 80) ?? null,
     app_version: Constants.expoConfig?.version?.slice(0, 40) ?? null,

@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next';
 
-import { formatDate, formatNumber, NBSP } from '@/shared/lib/format';
+import { formatDate, formatNumber, NBSP, signOf } from '@/shared/lib/format';
 
 // The chart under a coach answer, as the coach-chat Edge Function saves it with the answer: the
 // same shapes as Chart in supabase/functions/_shared/coach/tools.ts. Weights are already in the
@@ -22,7 +22,6 @@ export interface TrendChart {
   points: ChartPoint[];
   /** Body weight: the smoothed line through the measurements. */
   line: ChartPoint[] | null;
-  records: ChartPoint[] | null;
 }
 
 export interface CompareChart {
@@ -45,8 +44,9 @@ export interface PeriodChart {
   average: number | null;
 }
 
+/** A training day: its number of workouts (`value`) and of sets. */
 export interface CalendarDay extends ChartPoint {
-  sets?: number;
+  sets: number;
 }
 
 export interface CalendarChart {
@@ -59,7 +59,6 @@ export interface CalendarChart {
 export interface DistributionChart {
   type: 'distribution';
   by: 'muscle' | 'exercise' | 'weekday';
-  unit: string;
   reference: number | null;
   rows: { key: string; value: number }[];
 }
@@ -156,8 +155,7 @@ export const formatAxisValue = (value: number, unit: string) =>
 
 /** A signed change: "+4,6 kg", "−4,6 kg", "+23 %". */
 export function formatChange(change: number, unit: string, t: TFunction<'coach'>) {
-  const sign = change > 0 ? '+' : change < 0 ? '−' : '±';
-  return `${sign}${unit === '%' ? `${formatNumber(Math.abs(change), 0)}${NBSP}%` : formatValue(Math.abs(change), unit, t)}`;
+  return `${signOf(change)}${unit === '%' ? `${formatNumber(Math.abs(change), 0)}${NBSP}%` : formatValue(Math.abs(change), unit, t)}`;
 }
 
 /** The chart a chat is about, for the header under "Coach" ("Körpergewicht", "Vergleich"). */

@@ -1,7 +1,7 @@
 import { type WorkoutSummary, useWorkoutsInRange } from '@/shared/data/workouts';
 import { addDays, mondayIndex, startOfWeek } from '@/shared/lib/date';
 
-export interface WeekDay {
+interface WeekDay {
   date: Date;
   /** Most recent finished workout of that day. */
   workout: WorkoutSummary | null;
