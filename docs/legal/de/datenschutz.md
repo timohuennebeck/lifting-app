@@ -1,6 +1,6 @@
 # Datenschutzerklärung
 
-Version: 1.3
+Version: 1.4
 
 Stand: 5. November 2026
 
@@ -75,7 +75,7 @@ Wenn du ein Konto erstellst, speichern wir deine Angaben aus der Einrichtung als
 - deine App-Sprache, damit unser Support dir in deiner Sprache antworten kann
 - freiwillig: ein Profilfoto (die App speichert es als quadratisches Bild mit 512 × 512 Pixeln) und einen kurzen Text „Über dich“ mit bis zu 150 Zeichen
 
-Wofür: Dein Geburtsdatum brauchen wir, um das Mindestalter (Abschnitt 16) und die Altersgrenzen von Coach und Körpercheck zu prüfen. Aus Trainingsziel, Fokus, Ausstattung, Trainings pro Woche, Trainingsdauer und Erfahrung erstellt ein KI-Modell von OpenAI deinen Trainingsplan, wenn du dir einen erstellen lässt (Abschnitt 4.7). Ziel, Erfahrung, Ausstattung, Fokus und deine Einheiten nutzt auch der Coach für seine Antworten (Abschnitt 4.8). Geschlecht, Alter, Gewicht und Größe nutzt die App für dein Level und deine Vorschläge sowie für den Körpercheck (Abschnitt 4.6). Profilfoto und „Über dich“ werden nur dir in deinem Profil angezeigt.
+Wofür: Dein Geburtsdatum brauchen wir, um das Mindestalter (Abschnitt 16) und die Altersgrenzen von Coach und Körpercheck zu prüfen. Aus Trainingsziel, Fokus, Ausstattung, Trainings pro Woche, Trainingsdauer und Erfahrung erstellt ein KI-Modell von OpenAI deinen Trainingsplan, wenn du dir einen erstellen lässt (Abschnitt 4.7). Ziel, Erfahrung, Ausstattung, Fokus und deine Einheiten nutzt auch der Coach für seine Antworten (Abschnitt 4.8). Geschlecht, Alter, Gewicht und Größe nutzt die App für den Körpercheck (Abschnitt 4.6). Profilfoto und „Über dich“ werden nur dir in deinem Profil angezeigt.
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO; für Körpergewicht und Körpergröße deine Einwilligung (Abschnitt 4.4).
 
@@ -103,7 +103,7 @@ Wenn du Loqqa nutzt, speichern wir:
 - **Eigene Übungen**, die du anlegst oder die beim Plan-Import entstehen
 - **Körpergewicht:** die Gewichtseinträge, die du erfasst, je Tag ein Wert
 
-Wofür: damit du deine Trainings und dein Gewicht protokollieren und deine Historie, Bestwerte, dein Level und deine Aktivität sehen kannst. Vorschläge für deine Sätze und dein Level berechnet die App auf deinem Gerät. Fragst du den Coach, beantwortet er deine Frage aus diesen Daten (Abschnitt 4.8).
+Wofür: damit du deine Trainings und dein Gewicht protokollieren und deine Historie, Bestwerte, deine Sätze je Muskel in einem Zeitraum deiner Wahl und deine Aktivität sehen kannst. Vorschläge für deine Sätze und die Zahl deiner Sätze je Muskel berechnet die App auf deinem Gerät. Fragst du den Coach, beantwortet er deine Frage aus diesen Daten (Abschnitt 4.8).
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO; für die Gewichtseinträge deine Einwilligung (Abschnitt 4.4).
 
@@ -385,7 +385,7 @@ Für ein Konto brauchen wir dein Google-Konto oder deinen Apple Account. Ohne Ko
 
 ## 15. Keine automatisierten Entscheidungen
 
-Die App erstellt Pläne, Vorschläge, Level, Körpercheck-Werte und die Antworten des Coachs automatisch; Pläne, die du dir erstellen lässt, die Körpercheck-Werte und die Antworten des Coachs stammen von einem KI-Modell von OpenAI (Abschnitte 4.6 bis 4.8). Das sind Informationen, Empfehlungen und Schätzungen für dein Training. Die Antworten des Coachs können falsch sein und sind keine medizinische Beratung. Entscheidungen, die dir gegenüber rechtliche Wirkung entfalten oder dich in ähnlicher Weise erheblich beeinträchtigen (Art. 22 DSGVO), treffen wir nicht.
+Die App erstellt Pläne, Vorschläge, Auswertungen wie deine Sätze je Muskel, Körpercheck-Werte und die Antworten des Coachs automatisch; Pläne, die du dir erstellen lässt, die Körpercheck-Werte und die Antworten des Coachs stammen von einem KI-Modell von OpenAI (Abschnitte 4.6 bis 4.8). Das sind Informationen, Empfehlungen und Schätzungen für dein Training. Die Antworten des Coachs können falsch sein und sind keine medizinische Beratung. Entscheidungen, die dir gegenüber rechtliche Wirkung entfalten oder dich in ähnlicher Weise erheblich beeinträchtigen (Art. 22 DSGVO), treffen wir nicht.
 
 ## 16. Kinder und Jugendliche
 

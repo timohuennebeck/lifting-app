@@ -1,6 +1,6 @@
 # Privacy Policy
 
-Version: 1.3
+Version: 1.4
 
 Last updated: 5 November 2026
 
@@ -77,7 +77,7 @@ When you create an account, we store your information from setup as your profile
 - your app language, so that our support can reply to you in your language
 - optional: a profile photo (the app stores it as a square image of 512 × 512 pixels) and a short “About you” text of up to 150 characters
 
-Why: We need your date of birth to check the minimum age (section 16) and the age limits for the coach and the body check. If you have a training plan created for you, an AI model from OpenAI creates it from your training goal, focus, equipment, workouts per week, workout duration and experience (section 4.7). The coach also uses your goal, experience, equipment, focus and units for its answers (section 4.8). The app uses sex, age, weight and height for your level and your suggestions as well as for the body check (section 4.6). Your profile photo and “About you” are only shown to you in your profile.
+Why: We need your date of birth to check the minimum age (section 16) and the age limits for the coach and the body check. If you have a training plan created for you, an AI model from OpenAI creates it from your training goal, focus, equipment, workouts per week, workout duration and experience (section 4.7). The coach also uses your goal, experience, equipment, focus and units for its answers (section 4.8). The app uses sex, age, weight and height for the body check (section 4.6). Your profile photo and “About you” are only shown to you in your profile.
 
 Legal basis: Art. 6(1)(b) GDPR; for body weight and height, your consent (section 4.4).
 
@@ -105,7 +105,7 @@ When you use Loqqa, we store:
 - **Custom exercises** that you create or that are created during plan import
 - **Body weight:** the weight entries you record, one value per day
 
-Why: so that you can log your workouts and your weight and see your history, records, your level and your activity. The app calculates suggestions for your sets and your level on your device. If you ask the coach, it answers your question from this data (section 4.8).
+Why: so that you can log your workouts and your weight and see your history, records, your sets per muscle over a period you choose and your activity. The app calculates suggestions for your sets and the number of your sets per muscle on your device. If you ask the coach, it answers your question from this data (section 4.8).
 
 Legal basis: Art. 6(1)(b) GDPR; for the weight entries, your consent (section 4.4).
 
@@ -387,7 +387,7 @@ For an account, we need your Google account or your Apple Account. Without an ac
 
 ## 15. No automated decisions
 
-The app creates plans, suggestions, levels, body check values and the coach’s answers automatically; plans you have created for you, the body check values and the coach’s answers come from an AI model from OpenAI (sections 4.6 to 4.8). These are information, recommendations and estimates for your training. The coach’s answers can be wrong and are not medical advice. We do not make decisions that produce legal effects concerning you or similarly significantly affect you (Art. 22 GDPR).
+The app creates plans, suggestions, evaluations such as your sets per muscle, body check values and the coach’s answers automatically; plans you have created for you, the body check values and the coach’s answers come from an AI model from OpenAI (sections 4.6 to 4.8). These are information, recommendations and estimates for your training. The coach’s answers can be wrong and are not medical advice. We do not make decisions that produce legal effects concerning you or similarly significantly affect you (Art. 22 GDPR).
 
 ## 16. Children and teenagers
 

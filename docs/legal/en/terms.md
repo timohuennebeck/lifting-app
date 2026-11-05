@@ -1,6 +1,6 @@
 # Terms of Use
 
-Version: 1.3
+Version: 1.4
 
 Last updated: 5 November 2026
 
@@ -38,7 +38,7 @@ Loqqa supports you with strength training. This includes in particular:
 
 - a training plan that an AI model creates from your information, for example from goal, experience, equipment and workouts per week
 - importing an existing plan via photo or file
-- logging your workouts with weights, reps and times, your history, records, levels and suggestions for your sets
+- logging your workouts with weights, reps and times, your history, records, your sets per muscle over a period you choose and suggestions for your sets
 - recording your body weight
 - the body check with photos and estimated values (from age 18)
 - Kai, the AI coach: an AI model that answers your questions about your training, usually with a chart from your data, and on request puts together workouts and suggests replacing exercises (from age 16)

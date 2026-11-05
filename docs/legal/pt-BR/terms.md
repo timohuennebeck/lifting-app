@@ -1,6 +1,6 @@
 # Termos de Uso
 
-Versão: 1.3
+Versão: 1.4
 
 Última atualização: 5 de novembro de 2026
 
@@ -38,7 +38,7 @@ O Loqqa ajuda você no treino de força. Isso inclui, em especial:
 
 - um plano de treino que um modelo de IA cria a partir das suas informações, por exemplo objetivo, experiência, equipamentos e treinos por semana
 - a importação de um plano que você já tenha, por foto ou arquivo
-- o registro dos seus treinos com cargas, repetições e tempos, seu histórico, recordes, nível e sugestões para as suas séries
+- o registro dos seus treinos com cargas, repetições e tempos, seu histórico, recordes, suas séries por músculo em um período de sua escolha e sugestões para as suas séries
 - o registro do seu peso corporal
 - o check corporal com fotos e valores estimados (a partir dos 18 anos)
 - o Kai, o coach de IA: um modelo de IA que responde às suas perguntas sobre o seu treino, geralmente com um gráfico feito a partir dos seus dados, e que, a seu pedido, monta treinos e sugere a substituição de exercícios (a partir dos 16 anos)

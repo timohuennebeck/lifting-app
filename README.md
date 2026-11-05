@@ -209,7 +209,10 @@ Documents are readable without an account (onboarding runs logged out) and writt
 - **Publishing:** the texts live in `docs/legal/<locale>/` (German is binding; `en`, `pt-PT`,
   `pt-BR`, `ko`, `es` and `fr` are translations). `node scripts/legal-migration.mjs <version> <date> <name>`
   turns them into a migration with one row per kind and locale, which `supabase db push` publishes.
-  Locales after the name publish only those, e.g. a translation added to a version already out.
+  Locales after the name publish only those, e.g. a translation added to a version already out;
+  `--kind=terms` or `--kind=privacy` only that document; `--reaccept` sets `requires_reacceptance`.
+  The app shows the version with the latest `effective_at` that has passed, so a new version needs a
+  later one than the version before, e.g. `'2026-11-05 18:00:00+00'` after one from 12:00 that day.
   `docs/legal/OPEN-QUESTIONS.md` lists what is still open.
 
 ## Weight tracking

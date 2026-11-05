@@ -1,6 +1,6 @@
 # Nutzungsbedingungen
 
-Version: 1.3
+Version: 1.4
 
 Stand: 5. November 2026
 
@@ -36,7 +36,7 @@ Loqqa unterstützt dich beim Krafttraining. Dazu gehören insbesondere:
 
 - ein Trainingsplan, den ein KI-Modell aus deinen Angaben erstellt, zum Beispiel aus Ziel, Erfahrung, Ausstattung und Trainings pro Woche
 - der Import eines vorhandenen Plans per Foto oder Datei
-- das Protokollieren deiner Trainings mit Gewichten, Wiederholungen und Zeiten, deine Historie, Bestwerte, Level und Vorschläge für deine Sätze
+- das Protokollieren deiner Trainings mit Gewichten, Wiederholungen und Zeiten, deine Historie, Bestwerte, deine Sätze je Muskel in einem Zeitraum deiner Wahl und Vorschläge für deine Sätze
 - das Erfassen deines Körpergewichts
 - der Körpercheck mit Fotos und geschätzten Werten (ab 18 Jahren)
 - Kai, der KI-Coach: ein KI-Modell, das deine Fragen zu deinem Training beantwortet, meist mit einem Diagramm aus deinen Daten, und auf Wunsch Trainings zusammenstellt und den Austausch von Übungen vorschlägt (ab 16 Jahren)

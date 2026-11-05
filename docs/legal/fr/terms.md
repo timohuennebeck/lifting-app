@@ -1,6 +1,6 @@
 # Conditions d'utilisation
 
-Version : 1.3
+Version : 1.4
 
 Dernière mise à jour : 5 novembre 2026
 
@@ -38,7 +38,7 @@ Loqqa t'accompagne dans ta musculation. Cela comprend notamment :
 
 - un programme d'entraînement qu'un modèle d'IA crée à partir de tes informations, par exemple ton objectif, ton expérience, ton équipement et le nombre de séances par semaine
 - l'importation d'un programme existant par photo ou par fichier
-- l'enregistrement de tes séances avec les charges, les répétitions et les durées, ton historique, tes records, tes niveaux et des suggestions pour tes séries
+- l'enregistrement de tes séances avec les charges, les répétitions et les durées, ton historique, tes records, tes séries par muscle sur la période de ton choix et des suggestions pour tes séries
 - l'enregistrement de ton poids corporel
 - le bilan corporel avec des photos et des valeurs estimées (à partir de 18 ans)
 - Kai, le coach IA : un modèle d'IA qui répond à tes questions sur ton entraînement, le plus souvent avec un graphique issu de tes données, et qui, sur demande, compose des séances et propose de remplacer des exercices (à partir de 16 ans)
