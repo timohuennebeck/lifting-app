@@ -117,12 +117,14 @@ export function ExportSheet({ visible, onClose, onRetry }: ExportSheetProps) {
               </Text>
             </View>
           </View>
-          <View className="gap-2.5 px-1">
-            <Text tone="subtle" className="text-sm">
-              {t(file ? 'settings.export.ready' : 'settings.export.preparing')}
-            </Text>
-            <ProgressBar value={file ? 1 : progress} className="flex-none" />
-          </View>
+          {exporting ? (
+            <View className="gap-2.5 px-1">
+              <Text tone="subtle" className="text-sm">
+                {t('settings.export.preparing')}
+              </Text>
+              <ProgressBar value={progress} className="flex-none" />
+            </View>
+          ) : null}
         </View>
       ) : (
         <Text tone="subtle" className="px-1 text-sm">
