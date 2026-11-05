@@ -5,6 +5,7 @@ import { useWindowDimensions, View } from 'react-native';
 import Animated, { FadeIn, useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useIsLocked } from '@/features/paywall/stores/subscription-store';
 import { useUnits } from '@/shared/data/profile';
 import { useWorkoutStats, volumeKg } from '@/shared/data/workouts';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
@@ -54,6 +55,7 @@ export function WorkoutStory({ workoutId }: WorkoutStoryProps) {
   const { data: workout } = useWorkout(workoutId);
   const { data: records } = useWorkoutRecords(workoutId);
   const { data: stats } = useWorkoutStats();
+  const locked = useIsLocked();
   const [page, setPage] = useState(0);
   // A finger held on the page, and the page scrolled to read (it then waits for a tap).
   const [held, setHeld] = useState(false);
@@ -64,7 +66,8 @@ export function WorkoutStory({ workoutId }: WorkoutStoryProps) {
   const close = () => {
     if (router.canDismiss()) router.dismissAll();
     else router.replace('/');
-    if (stats) {
+    // Not when the subscription ran out during the workout: closing leads to the paywall then.
+    if (stats && !locked) {
       requestReviewAfterWorkout({
         workoutCount: stats.count,
         firstStartedAt: stats.first,
