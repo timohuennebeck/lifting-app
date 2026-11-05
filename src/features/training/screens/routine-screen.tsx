@@ -1,5 +1,5 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import Animated, { useAnimatedRef } from 'react-native-reanimated';
@@ -16,14 +16,19 @@ import { Text } from '@/shared/ui/text';
 
 import { EditableExerciseList } from '../components/editable-exercise-list';
 import { RoutineMenu, type RoutineMenuTarget } from '../components/routine-menu';
-import { removeRoutineExercise, reorderRoutineExercise } from '../data/routine-mutations';
+import {
+  deleteRoutineIfEmpty,
+  removeRoutineExercise,
+  reorderRoutineExercise,
+} from '../data/routine-mutations';
 import { useLastDefined } from '../hooks/use-last-defined';
 import { useStartRoutine } from '../hooks/use-start-routine';
 
 /**
  * Routine overview: its name on top with the plan it is in, the muscles, the editable exercise
  * list and the start CTA (03·0b). Just created (`?created=1`) the CTA saves it instead: changes
- * are kept as they are made, so it goes back. "⋯" renames, copies or deletes it.
+ * are kept as they are made, so it goes back; left without exercises, it is deleted. "⋯" renames,
+ * copies or deletes it.
  */
 export function RoutineScreen() {
   const { id, created } = useLocalSearchParams<{ id: string; created?: string }>();
@@ -37,6 +42,17 @@ export function RoutineScreen() {
   const { data: plans = [] } = usePlans();
   const planName = plans.find((p) => p.id === routine?.planId)?.name;
   const { start, startingId } = useStartRoutine();
+  const navigation = useNavigation();
+
+  // On leaving, not on unmount: Fast Refresh remounts without the user going anywhere. The picker
+  // and the set editor open on top, so they don't count as leaving.
+  useEffect(() => {
+    if (!created) return;
+    return navigation.addListener('beforeRemove', () => {
+      setLeaving(true);
+      void deleteRoutineIfEmpty(id);
+    });
+  }, [navigation, created, id]);
 
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const [menuFor, setMenuFor] = useState<RoutineMenuTarget | null>(null);
@@ -97,7 +113,7 @@ export function RoutineScreen() {
       <Animated.ScrollView
         ref={scrollRef}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + (empty && !created ? 40 : 130) }}
+        contentContainerStyle={{ paddingBottom: insets.bottom + (empty ? 40 : 130) }}
       >
         <EditableExerciseList
           title={routine.name}
@@ -116,14 +132,14 @@ export function RoutineScreen() {
         />
       </Animated.ScrollView>
 
-      {created ? (
+      {empty ? null : created ? (
         <BottomFade>
           <Button
             label={t('overview.save')}
             onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
           />
         </BottomFade>
-      ) : !empty ? (
+      ) : (
         <BottomFade>
           <Button
             label={t('overview.start')}
@@ -131,7 +147,7 @@ export function RoutineScreen() {
             onPress={() => start(routine)}
           />
         </BottomFade>
-      ) : null}
+      )}
 
       <RoutineMenu
         routine={menuFor}

@@ -130,6 +130,18 @@ export async function deleteRoutine(routineId: string) {
   await drizzle.transaction((tx) => deleteRoutineTx(tx, routineId));
 }
 
+/** Deletes a routine that has no exercises (one made and left untouched); else leaves it. */
+export async function deleteRoutineIfEmpty(routineId: string) {
+  await drizzle.transaction(async (tx) => {
+    const exercise = await tx
+      .select({ id: routineExercises.id })
+      .from(routineExercises)
+      .where(eq(routineExercises.routine_id, routineId))
+      .get();
+    if (!exercise) await deleteRoutineTx(tx, routineId);
+  });
+}
+
 /**
  * Copies a routine with its exercises and sets to the end of a plan, or of the library for
  * `null`; the original stays as it is. Returns the copy's id.

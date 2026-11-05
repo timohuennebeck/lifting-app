@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -6,12 +5,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLastDone, useRoutines } from '@/shared/data/routines';
 import { formatWeekdayDate } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
+import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 import { RECENT_ROUTINES, RoutineRows, useRoutineMeta } from '../components/routine-row';
 import { SectionTitle } from '../components/section-title';
+import { useCreateRoutine } from '../hooks/use-create-routine';
 import { useStartRoutine } from '../hooks/use-start-routine';
 
 /** A faint sketch of a routine card: photo, name, sets, chips, menu. */
@@ -51,7 +52,7 @@ function RoutineSketch() {
 }
 
 /** Before the first routine of their own: a sketch of one and a way to make it. */
-function NoRoutines() {
+function NoRoutines({ creating, onCreate }: { creating: boolean; onCreate: () => void }) {
   const { t } = useTranslation('training');
   return (
     <View className="flex-1 items-center justify-center px-8 pb-12">
@@ -65,7 +66,8 @@ function NoRoutines() {
       <Button
         label={t('create.createRoutine')}
         className="mt-6 h-12 px-7"
-        onPress={() => router.push('/routine/new')}
+        loading={creating}
+        onPress={onCreate}
       />
     </View>
   );
@@ -73,7 +75,8 @@ function NoRoutines() {
 
 /**
  * Einzeltrainings, opened from Training's "Alle anzeigen": the routines outside a plan, the ones
- * done most recently first (once there are more than three), then all of them A–Z.
+ * done most recently first (once there are more than three), then all of them A–Z. "+" makes a
+ * new one.
  */
 export function RoutinesScreen() {
   const { t, i18n } = useTranslation('training');
@@ -82,6 +85,7 @@ export function RoutinesScreen() {
   const { data: lastDone = {} } = useLastDone();
   const { start, startingId } = useStartRoutine();
   const meta = useRoutineMeta();
+  const { create, creating } = useCreateRoutine();
 
   const library = routines.filter((r) => r.planId === null);
   const all = [...library].sort((a, b) => a.name.localeCompare(b.name, i18n.language));
@@ -94,14 +98,28 @@ export function RoutinesScreen() {
       : [];
 
   return (
-    <Screen header={<ScreenHeader title={t('home.single')} />}>
+    <Screen
+      header={
+        <ScreenHeader
+          title={t('home.single')}
+          action={
+            <IconButton
+              icon="plus"
+              accessibilityLabel={t('create.createRoutine')}
+              disabled={creating}
+              onPress={() => void create()}
+            />
+          }
+        />
+      }
+    >
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 24 }}
       >
         {!library.length ? (
           isLoading ? null : (
-            <NoRoutines />
+            <NoRoutines creating={creating} onCreate={() => void create()} />
           )
         ) : (
           <>
@@ -122,14 +140,6 @@ export function RoutinesScreen() {
               <View className="h-3" />
             )}
             <RoutineRows routines={all} meta={meta} startingId={startingId} onStart={start} />
-            <Button
-              label={t('list.addRoutine')}
-              icon="plus"
-              size="sm"
-              variant="secondary"
-              className="mx-4 mt-3 self-start"
-              onPress={() => router.push('/routine/new')}
-            />
           </>
         )}
       </ScrollView>
