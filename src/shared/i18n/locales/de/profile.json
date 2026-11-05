@@ -1,11 +1,5 @@
 {
   "memberSince": "Mitglied seit {{date}}",
-  "name": {
-    "title": "Dein Name",
-    "label": "Name",
-    "placeholder": "Vorname",
-    "edit": "Name ändern"
-  },
   "about": {
     "title": "Über dich",
     "label": "Beschreibung",

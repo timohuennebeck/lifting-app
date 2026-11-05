@@ -38,7 +38,7 @@
   },
   "tabs": {
     "training": "Training",
-    "level": "Level",
+    "sets": "Sätze",
     "body": "Körper",
     "profile": "Profil",
     "create": "Neu"
@@ -47,9 +47,8 @@
   "search": {
     "open": "Übungen suchen",
     "title": "Übungen",
-    "pickRank": "Übung für Ränge",
     "recent": "Zuletzt trainiert",
-    "forMuscle": "Fürs Level · {{muscle}}",
+    "forMuscle": "Trainiert {{muscle}}",
     "recordA11y": "Bestleistung: {{value}}, zuletzt am {{date}}"
   },
   "settings": "Einstellungen",

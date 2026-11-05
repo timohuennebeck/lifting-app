@@ -1,11 +1,5 @@
 {
   "memberSince": "Member since {{date}}",
-  "name": {
-    "title": "Your name",
-    "label": "Name",
-    "placeholder": "First name",
-    "edit": "Change name"
-  },
   "about": {
     "title": "About you",
     "label": "Description",

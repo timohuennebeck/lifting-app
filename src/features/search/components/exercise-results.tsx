@@ -5,13 +5,16 @@ import { View } from 'react-native';
 import { ExerciseIndexList } from '@/features/exercises/components/exercise-index-list';
 import { ExerciseIndexRow } from '@/features/exercises/components/exercise-index-row';
 import type { ExerciseOption } from '@/features/exercises/hooks/use-exercise-search';
-import { levelShare } from '@/features/muscles/lib/levels';
-import { formatSet, useCatalogStore } from '@/shared/data/exercises';
+import {
+  formatSet,
+  getExercise,
+  useCatalogStore,
+  useCustomExerciseStore,
+} from '@/shared/data/exercises';
 import { groupOfMuscle } from '@/shared/data/muscle-groups';
 import { useUnits } from '@/shared/data/profile';
 import { formatShortDate, type UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
-import { CheckBadge } from '@/shared/ui/check-item';
 import { Icon } from '@/shared/ui/icon';
 import type { MuscleId } from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
@@ -55,35 +58,26 @@ function RecordSummary({ exerciseId, record, units }: RecordSummaryProps) {
 /** How many trained exercises are listed first, under "Recently trained". */
 const RECENT_EXERCISES = 5;
 
-/** Picking an exercise instead of opening it, e.g. the lift of the ranks screen. */
-export interface ExercisePick {
-  /** Marked with a check. */
-  selectedId: string | null;
-  /** Only these exercises are listed. */
-  allows: (exerciseId: string) => boolean;
-  onPick: (exerciseId: string) => void;
-}
-
 export interface ExerciseResultsProps {
   query: string;
   /** Height of the search bar over the foot of the list, so the last rows clear it. */
   bottomInset: number;
-  /** Opened for a muscle (from a Level card): the exercises making its level first. */
+  /** Opened for a muscle: the exercises working it first. */
   muscle?: MuscleId | null;
-  pick?: ExercisePick;
 }
 
 /**
  * The exercises matching the search and the muscle chip picked above them: the five trained
  * last first, last done on top, with their heaviest set (★); then the others A–Z with the letter
- * index, trained ones with theirs too. For a muscle, its exercises come first instead, those working it most on top. A tap
- * opens the exercise on its "Übung" tab, or with `pick` picks it (the picked one checked).
+ * index, trained ones with theirs too. For a muscle, its exercises come first instead, those
+ * working it most on top. A tap opens the exercise on its "Übung" tab.
  */
-export function ExerciseResults({ query, bottomInset, muscle, pick }: ExerciseResultsProps) {
+export function ExerciseResults({ query, bottomInset, muscle }: ExerciseResultsProps) {
   const { t } = useTranslation(['common', 'muscles']);
   const units = useUnits();
   const { data: records } = useExerciseRecords();
   const rows = useCatalogStore((s) => s.rows);
+  const custom = useCustomExerciseStore((s) => s.exercises);
   const withRecord = (o: ExerciseOption): ResultOption => ({ ...o, record: records?.get(o.id) });
 
   return (
@@ -91,10 +85,12 @@ export function ExerciseResults({ query, bottomInset, muscle, pick }: ExerciseRe
       query={query}
       bottomInset={bottomInset}
       initialGroup={muscle ? groupOfMuscle(muscle) : null}
-      split={(found) => {
-        const options = pick ? found.filter((o) => pick.allows(o.id)) : found;
+      split={(options) => {
         if (muscle) {
-          const share = (o: ExerciseOption) => (rows[o.id] ? levelShare(rows[o.id], muscle) : 0);
+          // Its weight in the catalog; a custom exercise's from the muscles the user picked.
+          const share = (o: ExerciseOption) =>
+            rows[o.id]?.muscles[muscle] ??
+            (custom[o.id] ? (getExercise(o.id)?.muscles[muscle] ?? 0) : 0);
           return {
             first: options
               .filter((o) => share(o) > 0)
@@ -116,29 +112,19 @@ export function ExerciseResults({ query, bottomInset, muscle, pick }: ExerciseRe
           rest: options.filter((o) => !listed.has(o.id)).map(withRecord),
         };
       }}
-      renderRow={(item) => {
-        const selected = pick?.selectedId === item.id;
-        return (
-          <ExerciseIndexRow
-            item={item}
-            activeScale={0.98}
-            accessibilityRole="button"
-            accessibilityState={pick ? { selected } : undefined}
-            onPress={() =>
-              pick
-                ? pick.onPick(item.id)
-                : router.push({ pathname: '/exercise/[id]', params: { id: item.id } })
-            }
-            trailing={
-              selected ? (
-                <CheckBadge size={28} glyph={13} />
-              ) : item.record ? (
-                <RecordSummary exerciseId={item.id} record={item.record} units={units} />
-              ) : null
-            }
-          />
-        );
-      }}
+      renderRow={(item) => (
+        <ExerciseIndexRow
+          item={item}
+          activeScale={0.98}
+          accessibilityRole="button"
+          onPress={() => router.push({ pathname: '/exercise/[id]', params: { id: item.id } })}
+          trailing={
+            item.record ? (
+              <RecordSummary exerciseId={item.id} record={item.record} units={units} />
+            ) : null
+          }
+        />
+      )}
     />
   );
 }

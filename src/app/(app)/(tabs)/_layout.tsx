@@ -25,8 +25,8 @@ export default function TabsLayout() {
           <NativeTabs.Trigger.Label>{t('tabs.training')}</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon sf="dumbbell.fill" md="fitness_center" />
         </NativeTabs.Trigger>
-        <NativeTabs.Trigger name="level" disableAutomaticContentInsets>
-          <NativeTabs.Trigger.Label>{t('tabs.level')}</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger name="sets" disableAutomaticContentInsets>
+          <NativeTabs.Trigger.Label>{t('tabs.sets')}</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
             sf={{ default: 'chart.bar', selected: 'chart.bar.fill' }}
             md="leaderboard"

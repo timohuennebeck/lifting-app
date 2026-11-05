@@ -29,7 +29,7 @@ import {
 } from '../lib/purchases-service';
 import { useIsPro } from '../stores/subscription-store';
 
-const BENEFITS = ['import', 'history', 'levels'] as const;
+const BENEFITS = ['import', 'history', 'sets'] as const;
 
 /** Loqqa Pro paywall: before/after header, benefits, plan picker. */
 export function PaywallScreen() {

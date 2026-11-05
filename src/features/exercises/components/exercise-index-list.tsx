@@ -25,7 +25,7 @@ export interface ExerciseIndexListProps<T extends ExerciseOption> {
   renderRow: (row: IndexedRow<T>) => ReactElement;
   /** Height of what covers the foot of the list (the search bar), so the last rows clear it. */
   bottomInset: number;
-  /** The muscle group picked when the list opens, e.g. from a Level card. */
+  /** The muscle group picked when the list opens, e.g. for a muscle. */
   initialGroup?: MuscleGroupId | null;
 }
 

@@ -128,13 +128,7 @@ export function ProfileScreen() {
             <Icon name="photo-camera" size={15} color={colors.fg} />
           </View>
         </PressableScale>
-        <PressableScale
-          haptic="tap"
-          activeScale={0.98}
-          accessibilityLabel={t('name.edit')}
-          onPress={() => router.push('/profile-name')}
-          className="mt-4.5 max-w-full flex-row items-center gap-2"
-        >
+        <View className="mt-4.5 max-w-full flex-row items-center gap-2">
           <Text
             numberOfLines={1}
             className="shrink font-inter-semibold text-[34px] leading-10 tracking-[-0.7px]"
@@ -147,7 +141,7 @@ export function ProfileScreen() {
               <Icon name="verified" size={26} color={colors.accent} />
             </View>
           ) : null}
-        </PressableScale>
+        </View>
         {profile?.createdAt ? (
           <Text tone="muted" className="mt-3 text-sm">
             {t('memberSince', {

@@ -1,11 +1,5 @@
 {
   "memberSince": "{{date}} 가입",
-  "name": {
-    "title": "이름",
-    "label": "이름",
-    "placeholder": "이름",
-    "edit": "이름 변경"
-  },
   "about": {
     "title": "자기소개",
     "label": "소개",

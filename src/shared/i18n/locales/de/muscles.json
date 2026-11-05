@@ -26,43 +26,16 @@
     "secondary": "Sekundär",
     "showMore": "{{count}} weitere anzeigen"
   },
-  "level": {
-    "overview": "Übersicht",
-    "badge": "Lv.",
-    "toNext": "{{percent}} % bis Lv. {{next}}",
-    "max": "Höchstes Level",
-    "pause_one": "Pause · {{count}} Wo.",
-    "pause_other": "Pause · {{count}} Wo.",
-    "new": "Neu",
-    "locked": "Kein Level vorhanden",
-    "tiers": {
-      "beginner": "Einsteiger",
-      "novice": "Fortgeschritten",
-      "intermediate": "Trainiert",
-      "advanced": "Erfahren",
-      "elite": "Elite"
-    }
-  },
-  "ranks": {
-    "title": "Ränge",
-    "yours": "Dein Rang",
-    "all": "Alle Ränge",
-    "levelShort": "Lvl {{level}}",
-    "levels": "Lvl {{from}}–{{to}}",
-    "toNext": "noch {{levels}} bis {{tier}}",
-    "top": "Höchster Rang",
-    "example": "z. B. {{exercise}}",
-    "upTo": "bis {{value}}",
-    "over": "über {{value}}",
-    "between": "{{from}}–{{to}} {{unit}}",
-    "repsUnit": "Wdh.",
-    "more": "+{{n}}",
-    "change": "Übung für die Ränge wählen",
-    "open": "Ränge ansehen",
-    "info": "So funktionieren Ränge",
-    "infoStandard": "Jede Übung hat einen Richtwert. Dein bester Satz wird damit verglichen: der Richtwert ist Level 50, das Doppelte Level 100.",
-    "infoLevel": "Jeder Muskel bekommt sein Level aus deinen drei besten Übungen, dein Gesamtlevel aus den 13 Hauptmuskeln. Große Muskeln zählen mehr.",
-    "infoFair": "Körpergewicht und Geschlecht werden berücksichtigt. Nach 12 Wochen Pause sinkt ein Level langsam, verschwindet aber nie.",
-    "infoExample": "Die Zeile unter jedem Rang zeigt, was er bei einer Übung ungefähr bedeutet, in deiner üblichen Wiederholungszahl: bei der Übung, die du über den Rängen wählst, sonst bei deiner meistgemachten. Ohne Trainings steht dort Bankdrücken als Beispiel."
+  "sets": {
+    "count_one": "{{count}} Satz",
+    "count_other": "{{count}} Sätze",
+    "inDays_one": "Sätze in {{count}} Tag",
+    "inDays_other": "Sätze in {{count}} Tagen",
+    "change": "{{change}} ggü. den {{days}} Tagen davor",
+    "today": "Heute",
+    "workouts_one": "{{count}} Workout",
+    "workouts_other": "{{count}} Workouts",
+    "empty": "Keine Sätze in dieser Zeit",
+    "rowA11y": "{{muscle}}: {{total}} Sätze, {{primary}} primär, {{secondary}} sekundär"
   }
 }

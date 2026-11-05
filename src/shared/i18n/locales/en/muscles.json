@@ -26,43 +26,16 @@
     "secondary": "Secondary",
     "showMore": "Show {{count}} more"
   },
-  "level": {
-    "overview": "Overview",
-    "badge": "Lv.",
-    "toNext": "{{percent}}% to Lv. {{next}}",
-    "max": "Top level",
-    "pause_one": "Paused · {{count}} wk",
-    "pause_other": "Paused · {{count}} wk",
-    "new": "New",
-    "locked": "No level",
-    "tiers": {
-      "beginner": "Beginner",
-      "novice": "Novice",
-      "intermediate": "Intermediate",
-      "advanced": "Advanced",
-      "elite": "Elite"
-    }
-  },
-  "ranks": {
-    "title": "Ranks",
-    "yours": "Your rank",
-    "all": "All ranks",
-    "levelShort": "Lvl {{level}}",
-    "levels": "Lvl {{from}}–{{to}}",
-    "toNext": "{{levels}} to {{tier}}",
-    "top": "Highest rank",
-    "example": "e.g. {{exercise}}",
-    "upTo": "up to {{value}}",
-    "over": "over {{value}}",
-    "between": "{{from}}–{{to}} {{unit}}",
-    "repsUnit": "reps",
-    "more": "+{{n}}",
-    "change": "Choose the exercise for the ranks",
-    "open": "View ranks",
-    "info": "How ranks work",
-    "infoStandard": "Every exercise has a standard. Your best set is compared with it: the standard is level 50, double it is level 100.",
-    "infoLevel": "Each muscle gets its level from your three best exercises, your overall level from the 13 main muscles. Bigger muscles count more.",
-    "infoFair": "Body weight and sex are taken into account. After 12 weeks off, a level drops slowly, but it never disappears.",
-    "infoExample": "The line under each rank shows roughly what it takes in one exercise, at your usual reps: the one you pick above the ranks, otherwise the one you do most. Without workouts it shows the bench press as an example."
+  "sets": {
+    "count_one": "{{count}} set",
+    "count_other": "{{count}} sets",
+    "inDays_one": "Sets in {{count}} day",
+    "inDays_other": "Sets in {{count}} days",
+    "change": "{{change}} vs. the {{days}} days before",
+    "today": "Today",
+    "workouts_one": "{{count}} workout",
+    "workouts_other": "{{count}} workouts",
+    "empty": "No sets in this time",
+    "rowA11y": "{{muscle}}: {{total}} sets, {{primary}} primary, {{secondary}} secondary"
   }
 }
