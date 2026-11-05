@@ -341,9 +341,9 @@ the app says so and the user goes back a step.
 - **Rules (server-side):** limited on their own, like imports: per network
   (`PLAN_GENERATE_IP_LIMIT`, default 10) and in total (`PLAN_GENERATE_DAILY_LIMIT`, default 1,000)
   per 24 hours, in `plan_requests` with `kind = 'generate'`.
-- **Testing:** `npm run plan:generate-eval` asks for 18 plans (goals, equipment, 2–6 workouts a
+- **Testing:** `npm run plan:generate-eval` asks for 20 plans (goals, equipment, 2–6 workouts a
   week, every split, 20–120 minutes, every experience level, with and without focus; German, English,
-  Portuguese) and checks each: routines, time, equipment, repeats, every major muscle group trained, push/pull
+  Portuguese, Spanish, French) and checks each: routines, time, equipment, repeats, every major muscle group trained, push/pull
   balance, focus volume, reps for the goal, core work, limits for beginners. The checks are rules of thumb;
   the report in `scripts/plan-generate-eval/out/` has every plan to read. Set
   `PLAN_GENERATE_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
