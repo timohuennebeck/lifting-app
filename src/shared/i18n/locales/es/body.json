@@ -6,10 +6,10 @@
   "baseline": "Punto de partida",
   "startNow": "Empezar ahora",
   "startShort": "Empezar",
-  "nextFrom": "Desde el {{date}}",
-  "weeklyNote": "Una vez por semana · desde el {{date}}",
+  "nextFrom": "A partir del {{date}}",
+  "weeklyNote": "Una vez por semana · a partir del {{date}}",
   "history": "Historial",
-  "start": "Iniciar control corporal",
+  "start": "Empezar control corporal",
   "empty": {
     "title": "Aún no hay controles corporales",
     "body": "Haz tu primer control y compáralo más adelante."

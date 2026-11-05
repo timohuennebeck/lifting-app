@@ -10,8 +10,8 @@
     "days_one": "{{count}} día",
     "days_other": "{{count}} días",
     "entries": "Registros",
-    "belowTrend": "{{value}} por debajo de la tendencia",
-    "aboveTrend": "{{value}} por encima de la tendencia",
+    "belowTrend": "{{value}} bajo tendencia",
+    "aboveTrend": "{{value}} sobre tendencia",
     "onTrend": "justo en la tendencia",
     "delete": "Eliminar",
     "empty": "Registra tu peso para ver tu tendencia."

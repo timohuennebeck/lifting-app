@@ -46,7 +46,7 @@
     "subtitle": "Toca todo lo que puedas usar para entrenar."
   },
   "sessions": {
-    "title": "¿CUÁNTAS VECES QUIERES\nENTRENAR?",
+    "title": "¿CUÁNTAS VECES\nQUIERES ENTRENAR?",
     "perWeek": "POR SEMANA",
     "times": "{{count}}×"
   },
@@ -77,17 +77,17 @@
       },
       "ppl": {
         "short": "PPL",
-        "title": "Push / Pull / Legs",
+        "title": "Push / Pull / Piernas",
         "description": "Empuje, tirón y piernas"
       },
       "ppl_arms": {
         "short": "PPL+B",
-        "title": "Push / Pull / Legs + Brazos",
+        "title": "Push / Pull / Piernas + Brazos",
         "description": "Un día extra para brazos y hombros"
       },
       "ppl_upper_lower": {
         "short": "PPL+",
-        "title": "Push / Pull / Legs + Torso / Pierna",
+        "title": "Push / Pull / Piernas + Torso / Pierna",
         "description": "PPL más torso y pierna"
       },
       "bro": {
@@ -97,22 +97,22 @@
       },
       "arnold": {
         "short": "ARN",
-        "title": "Arnold split",
+        "title": "División Arnold",
         "description": "Dos grupos musculares al día"
       }
     }
   },
   "duration": {
-    "title": "¿CUÁNTO DEBE DURAR\nUN ENTRENAMIENTO?",
+    "title": "¿CUÁNTO DURARÁ\nUN ENTRENAMIENTO?",
     "minutes": "MINUTOS",
     "hint": "Arrastra el anillo o toca un valor"
   },
   "building": {
     "stages": [
-      "Valorando tu objetivo y tu experiencia …",
-      "Eligiendo ejercicios para tu equipo …",
-      "Dividiendo en entrenamientos …",
-      "Ajustando series y repeticiones …"
+      "Valorando tu objetivo y tu experiencia…",
+      "Eligiendo ejercicios para tu equipamiento…",
+      "Dividiendo en entrenamientos…",
+      "Ajustando series y repeticiones…"
     ],
     "frequency": "{{count}} × {{minutes}} min",
     "focus": "Enfoque: {{areas}}",
@@ -120,7 +120,7 @@
     "routineTag": "E{{n}}"
   },
   "generate": {
-    "making": "Creando tu plan …",
+    "making": "Creando tu plan…",
     "errors": {
       "failed": {
         "title": "No se pudo crear tu plan",
@@ -146,11 +146,11 @@
   "goalShort": {
     "hypertrophy": "Crecimiento muscular",
     "strength": "Fuerza",
-    "strength_hypertrophy": "Powerbuilding"
+    "strength_hypertrophy": "Fuerza y masa"
   },
   "equipmentShort": {
-    "gym": "Gimnasio completo",
-    "home": "Gimnasio en casa",
+    "gym": "Gimnasio",
+    "home": "En casa",
     "bodyweight": "Peso corporal"
   }
 }

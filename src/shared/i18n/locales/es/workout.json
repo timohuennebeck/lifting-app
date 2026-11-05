@@ -65,7 +65,7 @@
     "hint": "Toca + para añadir tu primer ejercicio."
   },
   "summary": {
-    "title": "{{name}} terminado.",
+    "title": "Terminaste {{name}}.",
     "records_one": "{{count}} récord nuevo",
     "records_other": "{{count}} récords nuevos",
     "noRecords": "Bien hecho",
@@ -77,8 +77,8 @@
     "story": {
       "next": "Continuar",
       "page": "Página {{current}} de {{total}}",
-      "liftedToday": "Hoy levantaste",
-      "moved": "{{unit}} movidos",
+      "liftedToday": "Hoy has levantado",
+      "moved": "{{unit}} en total",
       "objects": {
         "washingMachine": "una <accent>lavadora</accent>.",
         "motorbike": "una <accent>moto</accent>.",
@@ -93,7 +93,7 @@
         "privateJet": "un <accent>jet privado</accent>.",
         "bus": "un <accent>autobús urbano</accent>.",
         "fireTruck": "un <accent>camión de bomberos</accent>.",
-        "motorYacht": "un <accent>yate a motor</accent>.",
+        "motorYacht": "un <accent>yate de motor</accent>.",
         "container": "un <accent>contenedor cargado</accent>.",
         "passengerJet": "un <accent>avión de pasajeros</accent>.",
         "spaceShuttle": "un <accent>transbordador espacial</accent>."
@@ -101,7 +101,7 @@
       "trainedFor": "Entrenaste {{minutes}} min",
       "groupsOne": "<accent>{{first}}</accent>.",
       "groupsTwo": "<accent>{{first}}</accent> y {{second}}.",
-      "recordsOverline": "Nueva marca personal",
+      "recordsOverline": "Nuevo récord personal",
       "recordsTitle_one": "<accent>{{count}} récord</accent>\nbatido.",
       "recordsTitle_other": "<accent>{{count}} récords</accent>\nbatidos."
     }

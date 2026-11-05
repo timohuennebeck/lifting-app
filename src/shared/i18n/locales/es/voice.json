@@ -3,15 +3,15 @@
   "format": "Ejercicio · series × repeticiones",
   "example": "«Press de banca tres por diez»",
   "tap": "Toca para hablar",
-  "listening": "Escuchando …",
+  "listening": "Escuchando…",
   "more": "Toca para seguir hablando",
-  "missed": "No te he entendido. Toca para intentarlo de nuevo",
+  "missed": "No te entendí. Toca para intentarlo de nuevo",
   "cta": "Añadir ejercicios",
   "heardAs": "Entendido como «{{raw}}»",
   "stages": [
-    "Detectando ejercicios …",
-    "Buscando los ejercicios que coinciden …",
-    "Aplicando series y repeticiones …"
+    "Detectando ejercicios…",
+    "Buscando los ejercicios que coinciden…",
+    "Aplicando series y repeticiones…"
   ],
   "a11y": {
     "start": "Empezar a hablar",

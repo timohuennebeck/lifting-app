@@ -37,7 +37,7 @@
     "generic": "Algo salió mal. Inténtalo de nuevo."
   },
   "tabs": {
-    "training": "Entreno",
+    "training": "Entrenar",
     "level": "Nivel",
     "body": "Cuerpo",
     "profile": "Perfil",
@@ -109,12 +109,12 @@
     "cancel": "Descartar grabación",
     "done": "Terminar grabación",
     "silent": "No oigo nada, sigue hablando",
-    "transcribing": "Transcribiendo …",
+    "transcribing": "Transcribiendo…",
     "noAccess": "Para dictar por voz, la app necesita acceso al micrófono.",
     "settings": "Ajustes",
     "errors": {
       "failed": {
-        "title": "No ha funcionado",
+        "title": "No funcionó",
         "message": "No se pudo convertir lo que dijiste en texto. Inténtalo de nuevo o escríbelo."
       },
       "offline": {
@@ -126,12 +126,12 @@
         "message": "Hoy has usado mucho el dictado por voz. Escríbelo o inténtalo de nuevo mañana."
       },
       "empty": {
-        "title": "No te he entendido",
-        "message": "No he entendido nada. Inténtalo de nuevo un poco más cerca del micrófono."
+        "title": "No te entendí",
+        "message": "No entendí nada. Inténtalo de nuevo un poco más cerca del micrófono."
       },
       "notPro": {
         "title": "Loqqa Pro no está activo",
-        "message": "El dictado por voz forma parte de Loqqa Pro. Tu cuenta no tiene ahora una suscripción activa."
+        "message": "El dictado por voz forma parte de Loqqa Pro. En este momento, tu cuenta no tiene una suscripción activa."
       },
       "tooYoung": {
         "title": "Desde los 16",

@@ -9,7 +9,7 @@
   "about": {
     "title": "Sobre ti",
     "label": "Descripción",
-    "placeholder": "Cuéntales un poco sobre ti…",
+    "placeholder": "Cuenta algo sobre ti…",
     "add": "Añadir una descripción",
     "edit": "Editar descripción"
   },
@@ -65,7 +65,7 @@
     "remove": "Quitar foto",
     "cameraDenied": {
       "title": "Sin acceso a la cámara",
-      "message": "Permite el acceso a la cámara en Ajustes para tomar una foto de perfil."
+      "message": "Permite el acceso a la cámara en los ajustes del teléfono para tomar una foto de perfil."
     },
     "failed": {
       "title": "Foto de perfil no guardada",

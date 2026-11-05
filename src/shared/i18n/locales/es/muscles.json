@@ -6,7 +6,7 @@
     "calves": "Pantorrillas",
     "chest": "Pecho",
     "forearms": "Antebrazos",
-    "front_delts": "Deltoides anteriores",
+    "front_delts": "Deltoides anterior",
     "glutes": "Glúteos",
     "hamstrings": "Isquiotibiales",
     "lats": "Dorsales",
@@ -14,8 +14,8 @@
     "neck": "Cuello",
     "obliques": "Oblicuos",
     "quads": "Cuádriceps",
-    "rear_delts": "Deltoides posteriores",
-    "side_delts": "Deltoides laterales",
+    "rear_delts": "Deltoides posterior",
+    "side_delts": "Deltoides lateral",
     "tibialis": "Espinillas",
     "traps": "Trapecios",
     "triceps": "Tríceps",
@@ -37,7 +37,7 @@
     "locked": "Sin nivel",
     "tiers": {
       "beginner": "Principiante",
-      "novice": "Novato",
+      "novice": "En progreso",
       "intermediate": "Intermedio",
       "advanced": "Avanzado",
       "elite": "Élite"
@@ -49,7 +49,7 @@
     "all": "Todos los rangos",
     "levelShort": "Nv. {{level}}",
     "levels": "Nv. {{from}}–{{to}}",
-    "toNext": "{{levels}} para {{tier}}",
+    "toNext": "{{levels}} Nv. para {{tier}}",
     "top": "Rango más alto",
     "example": "p. ej. {{exercise}}",
     "upTo": "hasta {{value}}",
@@ -63,6 +63,6 @@
     "infoStandard": "Cada ejercicio tiene un estándar. Tu mejor serie se compara con él: el estándar es el nivel 50 y el doble es el nivel 100.",
     "infoLevel": "Cada músculo obtiene su nivel de tus tres mejores ejercicios y tu nivel general, de los 13 músculos principales. Los músculos más grandes cuentan más.",
     "infoFair": "Se tienen en cuenta el peso corporal y el sexo. Tras 12 semanas sin entrenar, el nivel baja poco a poco, pero nunca desaparece.",
-    "infoExample": "La línea bajo cada rango muestra más o menos lo que hace falta en un ejercicio, con tus repeticiones habituales: el que eliges sobre los rangos o, si no, el que más haces. Sin entrenamientos, muestra el press de banca como ejemplo."
+    "infoExample": "La línea bajo cada rango muestra más o menos lo que hace falta en un ejercicio, con tus repeticiones habituales: el que eliges encima de los rangos o, si no, el que más haces. Sin entrenamientos, muestra el press de banca como ejemplo."
   }
 }

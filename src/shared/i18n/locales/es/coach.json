@@ -6,18 +6,18 @@
     "subtitle": "Kai responde con datos y gráficos."
   },
   "composer": {
-    "placeholder": "Pregunta a Kai …",
-    "answering": "Kai está respondiendo …",
+    "placeholder": "Pregúntale a Kai…",
+    "answering": "Kai está respondiendo…",
     "send": "Enviar",
     "stop": "Detener la respuesta"
   },
-  "thinking": "Kai está pensando …",
+  "thinking": "Kai está pensando…",
   "workout": {
     "open": "Abrir resumen"
   },
   "swap": {
     "title": "Cambio en el plan",
-    "keepsMain": "{{muscle}} sigue siendo el músculo principal",
+    "keepsMain": "Músculo principal: {{muscle}}, sin cambios",
     "newMain": "Músculo principal: {{to}} en lugar de {{from}}",
     "toSwap_one": "Cambiar {{count}} ejercicio",
     "toSwap_other": "Cambiar {{count}} ejercicios",
@@ -72,7 +72,7 @@
     "metric": {
       "body_weight": "Tendencia",
       "e1rm": "1RM estimado",
-      "top_weight": "Peso más alto",
+      "top_weight": "Peso máximo",
       "reps": "Reps",
       "seconds": "Tiempo de aguante",
       "volume": "Volumen",
@@ -116,11 +116,11 @@
   "errors": {
     "offline": {
       "title": "Sin conexión",
-      "message": "Kai necesita internet. Tu pregunta se queda en el campo."
+      "message": "Kai necesita internet. Tu pregunta no se borra."
     },
     "limitDaily": {
       "title": "Límite diario alcanzado",
-      "message": "Hoy has hecho {{count}} preguntas. Podrás volver a preguntar a partir de las {{time}}."
+      "message": "Hoy has hecho {{count}} preguntas. Podrás volver a preguntar a esta hora: {{time}}."
     },
     "limitMonthly": {
       "title": "Límite mensual alcanzado",
@@ -128,11 +128,11 @@
     },
     "failed": {
       "title": "Sin respuesta",
-      "message": "Kai no ha podido responder en este momento. Inténtalo de nuevo."
+      "message": "Kai no pudo responder en este momento. Inténtalo de nuevo."
     },
     "refused": {
       "title": "Sin respuesta",
-      "message": "Kai no puede responder esta pregunta. Prueba a formularla de otra manera."
+      "message": "Kai no puede responder esta pregunta. Intenta formularla de otra manera."
     },
     "tooYoung": {
       "title": "Desde los 16",
@@ -140,7 +140,7 @@
     },
     "notPro": {
       "title": "Loqqa Pro no está activo",
-      "message": "Kai forma parte de Loqqa Pro. Tu cuenta no tiene ahora una suscripción activa."
+      "message": "Kai forma parte de Loqqa Pro. En este momento, tu cuenta no tiene una suscripción activa."
     }
   }
 }

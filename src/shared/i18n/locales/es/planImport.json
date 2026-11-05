@@ -11,7 +11,7 @@
       "description": "PDF, Excel, CSV o captura de pantalla"
     },
     "noPlan": "¿No tienes un plan a mano?",
-    "createOwn": "Crearlo yo mismo",
+    "createOwn": "Crearlo por mi cuenta",
     "ownPlan": "Mi plan"
   },
   "read": "Leer plan",
@@ -23,7 +23,7 @@
   "sheets": {
     "title": "¿QUÉ HOJAS?",
     "subtitle": "{{name}} tiene {{count}} hojas. Elige las que forman parte de tu plan.",
-    "recommended": "Recomendado",
+    "recommended": "Recomendada",
     "routines_one": "{{count}} entrenamiento",
     "routines_other": "{{count}} entrenamientos",
     "exercises_one": "{{count}} ejercicio",
@@ -39,10 +39,10 @@
   },
   "camera": {
     "page": "Página {{count}}",
-    "hint": "Fotografía página por página y toca Listo",
+    "hint": "Toma una foto de cada página y toca Listo",
     "torch": "Flash",
     "shutter": "Tomar foto",
-    "library": "Elegir de la fototeca",
+    "library": "Elegir de tus fotos",
     "retake": "Repetir la página {{count}}",
     "full": "Hasta {{count}} páginas por importación",
     "permission": {
@@ -59,10 +59,10 @@
   },
   "reading": {
     "stages": [
-      "Leyendo la letra a mano …",
-      "Detectando ejercicios …",
-      "Ordenando los entrenamientos …",
-      "Aplicando series y repeticiones …"
+      "Leyendo la letra a mano…",
+      "Detectando ejercicios…",
+      "Ordenando los entrenamientos…",
+      "Aplicando series y repeticiones…"
     ],
     "errors": {
       "failed": {
@@ -75,7 +75,7 @@
       },
       "limit": {
         "title": "Límite diario alcanzado",
-        "message": "Mañana podrás volver a importar. Hasta entonces, puedes armar tu plan tú mismo."
+        "message": "Mañana podrás volver a importar. Hasta entonces, puedes crear tu plan por tu cuenta."
       },
       "notAPlan": {
         "title": "No se encontró ningún plan de entrenamiento",
@@ -94,7 +94,7 @@
     "add": "Añadir ejercicio",
     "swap": "Cambiar ejercicio",
     "cta": "Usar este plan",
-    "reading": "Leyendo tu plan …",
+    "reading": "Leyendo tu plan…",
     "check_one": "Revisar {{count}} elemento",
     "check_other": "Revisar {{count}} elementos",
     "empty": "Aún no hay ejercicios. Añade alguno con + o con el micrófono.",

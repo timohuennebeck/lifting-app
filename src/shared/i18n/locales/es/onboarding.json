@@ -19,7 +19,7 @@
   },
   "sex": {
     "title": "¿CUÁL ES\nTU SEXO\nBIOLÓGICO?",
-    "subtitle": "Nos ayuda a estimar pesos iniciales y una recuperación realistas.",
+    "subtitle": "Nos ayuda a estimar de forma realista tus pesos iniciales y tu recuperación.",
     "male": "Hombre",
     "female": "Mujer",
     "unspecified": "Prefiero no decirlo"
@@ -44,17 +44,17 @@
     "title": "¿CUÁNTO\nMIDES?"
   },
   "actionButton": {
-    "title": "UNA PULSACIÓN\nY QUEDA REGISTRADO",
+    "title": "UNA PULSACIÓN\nY REGISTRADO",
     "subtitle": "Pon Loqqa en el botón de acción de tu iPhone. Con una pulsación se abre tu peso al instante.",
     "action": "Acción",
     "steps": {
-      "settings": "Abre Ajustes › Botón de acción",
+      "settings": "Abre Ajustes (Configuración) › Botón de acción",
       "shortcut": "Desliza hasta <b>Atajo</b>",
       "pick": "Elige <b>Loqqa: Registrar peso</b>"
     },
     "later": "Luego",
     "done": "Listo",
-    "openAgain": "Abrir Ajustes de nuevo"
+    "openAgain": "Abrir ajustes de nuevo"
   },
   "experience": {
     "title": "¿QUÉ EXPERIENCIA\nTIENES?",
@@ -79,7 +79,7 @@
     "stick": "Seguiré adelante, incluso cuando se ponga difícil.",
     "track": "Registraré cada serie.",
     "hold": "Mantén el pulgar presionado",
-    "holding": "Sigue manteniendo …",
+    "holding": "No sueltes…",
     "sealed": "Hecho.",
     "holdLabel": "Mantén para comprometerte"
   },

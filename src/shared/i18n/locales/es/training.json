@@ -18,7 +18,7 @@
     "minutes": "{{count}} min",
     "addRoutine": "Añadir entrenamiento",
     "done": "Hecho",
-    "doneAt": "{{date}} a las {{time}}"
+    "doneAt": "{{date}}, {{time}}"
   },
   "card": {
     "edit": "Editar"
@@ -35,7 +35,7 @@
     "routine": "Entrenamiento",
     "routineHint": "Define ejercicios y series",
     "plan": "Plan",
-    "planHint": "Pide que te creen uno, impórtalo o arma el tuyo",
+    "planHint": "Pide uno, impórtalo o créalo tú",
     "createRoutine": "Crear entrenamiento",
     "createPlan": "Crear plan",
     "emptyWorkoutName": "Entrenamiento",
@@ -98,11 +98,11 @@
     "customRest": "Descanso personalizado",
     "customRestHint": "Sustituye el descanso predeterminado de este ejercicio",
     "minutes": "min",
-    "rirOption": "{{value}} repeticiones en reserva"
+    "rirOption": "Repeticiones en reserva: {{value}}"
   },
   "empty": {
     "routinesTitle": "Aún no hay entrenamientos",
-    "routinesBody": "Arma un entrenamiento con ejercicios. Lo encontrarás aquí y podrás añadirlo a tus planes."
+    "routinesBody": "Crea un entrenamiento con ejercicios. Lo encontrarás aquí y podrás añadirlo a tus planes."
   },
   "plan": {
     "block": "Bloque {{n}}",

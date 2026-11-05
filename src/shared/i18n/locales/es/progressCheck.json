@@ -67,7 +67,7 @@
     "issues": {
       "blurry": "Borrosa",
       "dark": "Muy oscura",
-      "notFullBody": "No cabe entera",
+      "notFullBody": "Cuerpo incompleto",
       "wrongPose": "Pose incorrecta",
       "noPerson": "No se ve a nadie",
       "clothing": "La ropa tapa el cuerpo"
@@ -114,9 +114,9 @@
       }
     },
     "row": {
-      "done": "Captado",
-      "active": "Midiendo tu cuerpo …",
-      "waiting": "En espera …"
+      "done": "Capturado",
+      "active": "Midiendo tu cuerpo…",
+      "waiting": "En espera…"
     }
   },
   "result": {
@@ -130,7 +130,7 @@
       "definition": "Definición"
     },
     "bodyFat": {
-      "athletic": "Atlético",
+      "athletic": "Nivel atlético",
       "fit": "En forma",
       "average": "Promedio",
       "high": "Alta"

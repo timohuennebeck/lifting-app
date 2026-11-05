@@ -1,6 +1,6 @@
 {
   "restore": "Restaurar compras",
-  "restoring": "Restaurando …",
+  "restoring": "Restaurando…",
   "paywall": {
     "before": "Antes",
     "after": "Después",
@@ -36,22 +36,22 @@
     "yearly": {
       "label": "Anual",
       "price": "{{price}} / año",
-      "note": "se cobra una vez al año",
+      "note": "pago anual",
       "savings": "Ahorra un {{percent}}%"
     },
     "monthly": {
       "label": "Mensual",
       "price": "{{price}} / mes",
-      "note": "cancela cuando quieras"
+      "note": "cancela cuando sea"
     }
   },
   "welcome": {
     "role": "Head coach de Loqqa",
     "aiBadge": "IA",
-    "aiNotice": "Puede contener contenido editado con IA.",
+    "aiNotice": "Puede incluir contenido editado con IA.",
     "cta": "Vamos",
     "captions": {
-      "welcome": "Hola, qué bueno tenerte aquí.",
+      "welcome": "Hola, me alegra tenerte aquí.",
       "ready": "Tu plan está listo.",
       "built": "Está pensado para tus días de entrenamiento, tus puntos débiles y tu equipamiento.",
       "blocks": "Así funciona: entrenas por bloques.",
@@ -62,7 +62,7 @@
       "appDoesIt": "La app lo hace por ti.",
       "howTo": "Solo ábrela, empieza tu próximo entrenamiento y regístralo.",
       "rest": "Del resto nos ocupamos nosotros.",
-      "start": "Cuando estés listo, empezamos."
+      "start": "Cuando quieras, empezamos."
     },
     "a11y": {
       "subtitles": "Subtítulos",
