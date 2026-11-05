@@ -41,7 +41,9 @@
       "empty": "Ainda não há treinos",
       "loading": "Seus treinos ainda estão carregando",
       "preparing": "Preparando o arquivo…",
+      "ready": "Seu arquivo está pronto",
       "cta": "Exportar",
+      "download": "Baixar",
       "failed": {
         "title": "Falha ao exportar",
         "message": "Não foi possível criar o arquivo. Tente de novo."
