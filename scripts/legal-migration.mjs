@@ -1,7 +1,7 @@
 // Writes a migration that publishes the legal texts in docs/legal, one legal_documents row per kind
 // and locale. Rows can't be changed, so a new version needs a new migration and an effective time
 // after the last one's (the app shows the latest in effect), e.g.
-//   node scripts/legal-migration.mjs 1.4 '2026-11-05 18:00:00+00' 20261105180000_legal_documents_v1_4
+//   node scripts/legal-migration.mjs 1.4 '2026-11-05 18:00:00+00' 20261106100000_legal_documents_v1_4
 // Locales after the name publish only those (a translation of a version already out); --kind=terms
 // or --kind=privacy only that document; --reaccept has users of an older version accept again.
 import { readFileSync, writeFileSync } from 'node:fs';

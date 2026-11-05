@@ -13,7 +13,7 @@ written down and isn't stored; DS §4.8), messages to support said out loud the 
 and it names the microphone among the permissions (§6), which 1.2 wrongly said the app doesn't ask
 for. NB 1.2 also names Korean among its languages. Spanish and French come with DS 1.3 and NB 1.3;
 NB 1.3 only adds them to its languages. Version 1.4 of both (5 November 2026, 18:00 UTC,
-`20261105180000_legal_documents_v1_4`) describes the Sätze tab, the sets per muscle over a chosen
+`20261106100000_legal_documents_v1_4`) describes the Sätze tab, the sets per muscle over a chosen
 range, in place of the removed muscle levels (DS §4.3, §4.5 and §15, NB §4), without re-acceptance.
 German is the binding version; `en`, `pt-PT`, `pt-BR`, `ko`, `es` and `fr` are translations.
 
