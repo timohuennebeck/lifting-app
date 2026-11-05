@@ -67,6 +67,7 @@ ESLint forbids `obj.x++` (miscompiled).
 npx tsc --noEmit -p .
 npm run lint
 npm run -s compiler:check   # must list no skipped components or hooks
+npm run i18n:check
 npx prettier --check <changed files>
 ```
 
