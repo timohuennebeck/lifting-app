@@ -14,6 +14,8 @@ let openAiReplies: Response[] = [];
 /** Runs as OpenAI is asked, e.g. to delete the chat while its answer is written. */
 let whileAnswering = () => {};
 let slot: Row = { run: 'run-1' };
+/** Whether RevenueCat lists Alice's Pro entitlement. */
+let pro = true;
 
 const ALICE = '00000000-0000-0000-0000-00000000000a';
 const CHAT = '10000000-0000-0000-0000-000000000001';
@@ -51,6 +53,7 @@ function reset({ birthDate = '1995-04-01', consent = '2026-10-01T00:00:00Z' } = 
   openAiReplies = [];
   whileAnswering = () => {};
   slot = { run: 'run-1' };
+  pro = true;
   db.profiles = [
     {
       id: ALICE,
@@ -128,6 +131,9 @@ globalThis.fetch = async (input, init) => {
     whileAnswering();
     return openAiReplies.shift() ?? json({ error: 'no reply scripted' }, 500);
   }
+  if (url.hostname === 'api.revenuecat.com') {
+    return json({ subscriber: { entitlements: pro ? { pro: { expires_date: null } } : {} } });
+  }
   if (url.pathname === '/auth/v1/user') {
     const token = new Headers(init?.headers).get('Authorization')?.replace('Bearer ', '');
     return token === 'alice-token' ? json({ id: ALICE }) : json({ message: 'invalid' }, 401);
@@ -191,6 +197,7 @@ globalThis.fetch = async (input, init) => {
 Deno.env.set('SUPABASE_URL', 'http://supabase.test');
 Deno.env.set('SUPABASE_SERVICE_ROLE_KEY', 'service-key');
 Deno.env.set('OPENAI_API_KEY', 'test-key');
+Deno.env.set('REVENUECAT_SECRET_KEY', 'revenuecat-key');
 
 // The function registers its handler with Deno.serve when imported; keep it instead.
 let handler: (req: Request) => Promise<Response> = () => Promise.reject();
@@ -220,7 +227,7 @@ async function eventsOf(response: Response) {
 }
 
 Deno.test(
-  'refuses before anything reaches OpenAI: sign-in, question, age, consent, limits',
+  'refuses before anything reaches OpenAI: sign-in, question, age, consent, Pro, limits',
   async () => {
     reset();
     assertEquals((await ask({ question: 'Hallo' }, 'wrong')).status, 401);
@@ -231,6 +238,9 @@ Deno.test(
     assertEquals(await (await ask({ question: 'Hallo' })).json(), { error: 'too_young' });
     reset({ consent: null as unknown as string });
     assertEquals(await (await ask({ question: 'Hallo' })).json(), { error: 'consent_required' });
+    reset();
+    pro = false;
+    assertEquals(await (await ask({ question: 'Hallo' })).json(), { error: 'not_pro' });
     reset();
     assertEquals((await ask({ question: 'Hallo', chatId: CHAT })).status, 404);
     slot = { limit: 'daily', retry_at: '2026-11-03T14:30:00+00:00' };
