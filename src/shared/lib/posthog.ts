@@ -48,6 +48,8 @@ export interface AnalyticsEvents {
     pr_count: number;
   };
   'workout:discard': { duration_min: number; completed_set_count: number };
+  /** The store's review prompt asked for; the store decides whether it shows. */
+  'review:request': { workout_count: number; record_count: number };
 }
 
 export type AnalyticsEvent = keyof AnalyticsEvents;
