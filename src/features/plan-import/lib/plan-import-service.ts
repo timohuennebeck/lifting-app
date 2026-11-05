@@ -69,10 +69,21 @@ interface StreamPlanInput {
 export type ImportFailure = 'offline' | 'limit' | 'notAPlan' | 'tooLarge' | 'failed';
 
 export class ImportError extends Error {
-  constructor(readonly reason: ImportFailure) {
+  /** Where it broke, for analytics: e.g. "http_429_limit", "stream_not_a_plan", "stream_incomplete". */
+  readonly detail: string;
+
+  constructor(
+    readonly reason: ImportFailure,
+    detail?: string,
+  ) {
     super(`Plan import failed: ${reason}`);
+    this.detail = detail ?? reason;
   }
 }
+
+/** A server error code as analytics detail; anything else (free text) is left out. */
+const codeOf = (error: string | undefined) =>
+  error && /^[a-z_]{1,40}$/.test(error) ? `_${error}` : '';
 
 const SERVER_ERRORS: Record<string, ImportFailure> = {
   limit: 'limit',
@@ -163,11 +174,14 @@ export async function streamPlan(
   const response = await postFunction(
     fn,
     { ...request, language },
-    { signal, offline: () => new ImportError('offline') },
+    { signal, offline: () => new ImportError('offline', 'no_connection') },
   );
   if (!response.ok || !response.body) {
     const { error } = await refusalOf(fn, response);
-    throw new ImportError(SERVER_ERRORS[error ?? ''] ?? 'failed');
+    throw new ImportError(
+      SERVER_ERRORS[error ?? ''] ?? 'failed',
+      `http_${response.status}${codeOf(error)}`,
+    );
   }
 
   const done = await readServerEvents<
@@ -178,18 +192,21 @@ export async function streamPlan(
       if (event.type === 'done') return true;
       if (event.type === 'error') {
         console.warn(`${fn} stopped: ${event.error}`);
-        throw new ImportError(SERVER_ERRORS[event.error] ?? 'failed');
+        throw new ImportError(
+          SERVER_ERRORS[event.error] ?? 'failed',
+          `stream${codeOf(event.error) || '_error'}`,
+        );
       }
       onEvent(event);
     },
     (error) => {
       stopIfAborted(signal);
       console.warn(`${fn} broke off`, error);
-      throw new ImportError('offline');
+      throw new ImportError('offline', 'stream_broken');
     },
   );
   // Ended without "done": the function stopped halfway.
-  if (!done) throw new ImportError('failed');
+  if (!done) throw new ImportError('failed', 'stream_incomplete');
 }
 
 /**

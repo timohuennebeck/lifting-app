@@ -6,6 +6,7 @@ import { uploadsDone } from '@/shared/data/powersync/upload-queue';
 import { supabase } from '@/shared/data/supabase';
 import { uploadJpeg } from '@/shared/data/supabase-storage';
 import { averageBrightness } from '@/shared/lib/jpeg';
+import { track } from '@/shared/lib/posthog';
 
 import { PHOTO_BUCKET, type StoredPhoto, storagePathOf } from './photo-files';
 import { POSES, type CheckGroup, type Pose } from './poses';
@@ -123,6 +124,27 @@ const profileUploaded = () => uploadsDone(PROFILE_UPLOAD_TIMEOUT_MS, 'profiles')
  * connection; throws an AssessmentError with the reason otherwise.
  */
 export async function assessProgress(
+  checkId: string,
+  userId: string,
+  photos: Record<Pose, StoredPhoto>,
+): Promise<AssessmentOutcome> {
+  const startedAt = Date.now();
+  try {
+    const outcome = await runAssessment(checkId, userId, photos);
+    if (outcome.status === 'ok') {
+      track('progress_check:assess_complete', { duration_ms: Date.now() - startedAt });
+    } else {
+      track('progress_check:assess_retake', { issue_count: outcome.issues.length });
+    }
+    return outcome;
+  } catch (error) {
+    const reason = error instanceof AssessmentError ? error.reason : 'failed';
+    track('progress_check:assess_fail', { error_code: reason });
+    throw error;
+  }
+}
+
+async function runAssessment(
   checkId: string,
   userId: string,
   photos: Record<Pose, StoredPhoto>,

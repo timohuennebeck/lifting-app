@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 import { db } from '@/shared/data/powersync/database';
 import { uploadsDone } from '@/shared/data/powersync/upload-queue';
+import { track } from '@/shared/lib/posthog';
 
 import { type CoachChart, toChart } from '../lib/charts';
 import { CoachError, type CoachEvent, type CoachQuestion, streamAnswer } from '../lib/coach-client';
@@ -83,17 +84,29 @@ export async function ask(input: CoachQuestion, screen: string) {
       done: false,
     },
   });
+  const is_new_chat = input.chatId === null;
+  const startedAt = Date.now();
+  track('coach:question_submit', { is_new_chat });
   // A workout just logged should be on the server for the answer; offline, the call says so.
   if (db.currentStatus.connected) await uploadsDone(UPLOAD_WAIT_MS);
   try {
     if (stop.signal.aborted) throw new CoachError('failed');
     await streamAnswer(input, apply, stop.signal);
     update({ done: true });
+    const has_chart = !!useCoachStore.getState().pending?.chart;
+    track('coach:answer_complete', { is_new_chat, has_chart, duration_ms: Date.now() - startedAt });
     return 'answered';
   } catch (error) {
     useCoachStore.setState({ pending: null });
-    if (stop.signal.aborted) return 'stopped';
-    return error instanceof CoachError ? error : new CoachError('failed');
+    const is_cancelled = stop.signal.aborted;
+    const failure = error instanceof CoachError ? error : new CoachError('failed');
+    track('coach:answer_fail', {
+      is_new_chat,
+      error_code: is_cancelled ? 'stopped' : failure.reason,
+      is_cancelled,
+    });
+    if (is_cancelled) return 'stopped';
+    return failure;
   } finally {
     if (controller === stop) controller = null;
   }

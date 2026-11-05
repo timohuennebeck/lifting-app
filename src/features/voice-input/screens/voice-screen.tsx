@@ -6,6 +6,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { wait } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
+import { track, type VoiceContext } from '@/shared/lib/posthog';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -20,6 +21,7 @@ import {
   MAX_SPOKEN,
   readSpokenExercises,
   showSpokenFailure,
+  SpokenError,
   type SpokenExercises,
 } from '../lib/spoken-exercises';
 
@@ -31,6 +33,8 @@ const MIN_PROCESSING_MS = 2500;
 export interface VoiceScreenProps {
   /** Adds the exercises to the workout being edited; the screen closes once it is done. */
   onAdd: (spoken: SpokenExercises) => Promise<void> | void;
+  /** What the exercises are added to, for analytics. */
+  context: VoiceContext;
 }
 
 /**
@@ -38,7 +42,7 @@ export interface VoiceScreenProps {
  * until the next one and adds to the text, which can be corrected by hand in between; "Add"
  * matches them to the catalog with their sets and reps, and hands them to `onAdd`.
  */
-export function VoiceScreen({ onAdd }: VoiceScreenProps) {
+export function VoiceScreen({ onAdd, context }: VoiceScreenProps) {
   const { t, i18n } = useTranslation('voice');
   const speech = useSpeechInput(i18n.language);
   const scroller = useRef<ScrollView>(null);
@@ -67,12 +71,22 @@ export function VoiceScreen({ onAdd }: VoiceScreenProps) {
         await wait(MIN_PROCESSING_MS - (Date.now() - startedAt));
         if (controller.signal.aborted) return;
         await onAdd(spoken);
+        track('voice:add_complete', {
+          context,
+          exercise_count: spoken.exercises.length,
+          unmatched_count: spoken.newExercises.length,
+          duration_ms: Date.now() - startedAt,
+        });
         haptics.success();
         router.back();
       })
       .catch((error: unknown) => {
         if (controller.signal.aborted) return;
         console.warn('Adding spoken exercises failed', error);
+        track('voice:add_fail', {
+          context,
+          error_code: error instanceof SpokenError ? error.reason : 'failed',
+        });
         setProcessing(false);
         showSpokenFailure(error);
       });

@@ -8,5 +8,5 @@ import { useWorkoutDraftStore } from '../stores/workout-draft-store';
  */
 export function BuilderVoiceScreen() {
   const addSpoken = useWorkoutDraftStore((s) => s.addSpoken);
-  return <VoiceScreen onAdd={addSpoken} />;
+  return <VoiceScreen context="workout" onAdd={addSpoken} />;
 }
