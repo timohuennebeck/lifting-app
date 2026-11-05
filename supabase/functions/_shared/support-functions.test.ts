@@ -55,7 +55,8 @@ function openAi(body: { instructions: string; input: { content: { text: string }
   const text = body.input[0].content[0].text;
   const target = /into (\w+)/.exec(body.instructions)?.[1] ?? '?';
   const source = /[가-힣]/.test(text) ? 'ko' : /[äöüß]|Bitte|Danke/.test(text) ? 'de' : 'en';
-  const sameAsTarget = { German: 'de', Korean: 'ko', English: 'en' }[target] === source;
+  const sameAsTarget =
+    { German: 'de', Korean: 'ko', English: 'en', Spanish: 'es', French: 'fr' }[target] === source;
   const answer = {
     source_language: source,
     translation: sameAsTarget ? text : `[${target}] ${text}`,
@@ -223,7 +224,7 @@ Deno.test('the desk asks for its language and gets the translations back', async
     (
       await post(
         translate,
-        { message_ids: [M1], language: 'fr' },
+        { message_ids: [M1], language: 'it' },
         { Authorization: 'Bearer support-token' },
       )
     ).status,
@@ -262,6 +263,30 @@ Deno.test("a team reply is saved with the user's translation in one call", async
     ).status,
     400,
   );
+});
+
+Deno.test("a team reply is saved with a Spanish user's translation", async () => {
+  reset();
+  db.profiles = [{ id: ALICE, language: 'es' }];
+  await post(
+    sendReply,
+    { ticket_id: TICKET, content: 'Danke, wir prüfen das!' },
+    { Authorization: 'Bearer support-token' },
+  );
+  const rpc = calls.find((c) => c.table === 'rpc:insert_team_reply');
+  assertEquals(rpc?.body.p_translation_language, 'es');
+});
+
+Deno.test("a team reply is saved with a French user's translation", async () => {
+  reset();
+  db.profiles = [{ id: ALICE, language: 'fr' }];
+  await post(
+    sendReply,
+    { ticket_id: TICKET, content: 'Danke, wir prüfen das!' },
+    { Authorization: 'Bearer support-token' },
+  );
+  const rpc = calls.find((c) => c.table === 'rpc:insert_team_reply');
+  assertEquals(rpc?.body.p_translation_language, 'fr');
 });
 
 Deno.test('a reply already in the user language is saved without a translation', async () => {

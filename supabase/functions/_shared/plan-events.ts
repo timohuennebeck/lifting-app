@@ -4,7 +4,7 @@
 // and how the names in them are tidied.
 
 /** The app languages (its AppLanguage). */
-export const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR', 'ko'] as const;
+export const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR', 'ko', 'es', 'fr'] as const;
 export type AppLanguage = (typeof LANGUAGES)[number];
 
 export const isAppLanguage = (value: unknown): value is AppLanguage =>

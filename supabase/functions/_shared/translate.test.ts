@@ -1,9 +1,10 @@
 // deno test --allow-env supabase/functions/_shared/translate.test.ts
 // The OpenAI call is faked: the tests check the request sent and how answers are read.
-import { assertEquals, assertMatch } from 'jsr:@std/assert@1';
+import { assert, assertEquals, assertMatch, assertStringIncludes } from 'jsr:@std/assert@1';
 
 Deno.env.set('OPENAI_API_KEY', 'test-key');
-const { sameLanguage, translateText } = await import('./translate.ts');
+import { isAppLanguage } from './plan-events.ts';
+const { instructions, sameLanguage, translateText } = await import('./translate.ts');
 
 interface Sent {
   model: string;
@@ -69,4 +70,23 @@ Deno.test('failures leave the message untranslated', async () => {
   assertEquals(await translateText('Hallo', 'en'), null);
   globalThis.fetch = () => Promise.reject(new Error('network down'));
   assertEquals(await translateText('Hallo', 'en'), null);
+});
+
+Deno.test('es and fr are app languages', () => {
+  assert(isAppLanguage('es'));
+  assert(isAppLanguage('fr'));
+  assert(!isAppLanguage('it'));
+});
+
+Deno.test('a regional tag is the same language', () => {
+  assertEquals(sameLanguage('es-419', 'es'), true);
+  assertEquals(sameLanguage('fr-CA', 'fr'), true);
+  assertEquals(sameLanguage('es', 'fr'), false);
+});
+
+Deno.test('the translator is told the tone in Spanish and French', () => {
+  assertStringIncludes(instructions('es'), 'Spanish');
+  assertStringIncludes(instructions('es'), '"tú"');
+  assertStringIncludes(instructions('fr'), 'French');
+  assertStringIncludes(instructions('fr'), '"tu"');
 });

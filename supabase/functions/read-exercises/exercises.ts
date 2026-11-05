@@ -21,7 +21,7 @@ ${EXERCISE_RULES}
 
 Speech:
 - raw: the exercise's words as recognized, without the sets and reps.
-- Numbers come as words: "drei mal zwölf" or "three by twelve" = 3 sets of 12; "vier Sätze acht bis zwölf Wiederholungen" = 4 sets of 8 to 12; "três séries de dez" = 3 sets of 10; Korean names the reps before the sets: "15회 3세트" or "열다섯 개씩 세 세트" = 3 sets of 15.
+- Numbers come as words: "drei mal zwölf" or "three by twelve" = 3 sets of 12; "vier Sätze acht bis zwölf Wiederholungen" = 4 sets of 8 to 12; "três séries de dez" = 3 sets of 10; "tres series de doce" = 3 sets of 12; "trois séries de douze" = 3 sets of 12; French counts in words such as "soixante-dix" and "quatre-vingts" are numbers too; Korean names the reps before the sets: "15회 3세트" or "열다섯 개씩 세 세트" = 3 sets of 15.
 - Speech recognition gets exercise names wrong, above all English gym terms said in another language ("Bänsch Press" = bench press, "Lett Pull Down" = lat pulldown, "벤치 프레스" = bench press). Match what sounds alike and fits a workout; such an exercise is certain unless it could be more than one catalog exercise.
 
 If no exercise is named at all, return no exercises.`;
