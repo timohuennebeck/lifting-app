@@ -1,0 +1,156 @@
+{
+  "goal": {
+    "title": "QUEL EST\nTON OBJECTIF ?",
+    "options": {
+      "hypertrophy": {
+        "title": "Hypertrophie",
+        "description": "Prendre du muscle, en général 8–12 répétitions"
+      },
+      "strength": {
+        "title": "Force maximale",
+        "description": "Soulever plus lourd, en général 3–6 répétitions"
+      },
+      "strength_hypertrophy": {
+        "title": "Force et hypertrophie",
+        "description": "Les deux à la fois, 4–10 répétitions"
+      }
+    }
+  },
+  "focus": {
+    "title": "QUELLE EST\nTA PRIORITÉ ?",
+    "subtitle": "Choisis une ou plusieurs zones.",
+    "none": "Aucune priorité",
+    "cta_one": "Continuer · {{count}} zone",
+    "cta_other": "Continuer · {{count}} zones",
+    "mapA11y": "Schéma du corps. Touche un muscle pour activer ou désactiver sa zone."
+  },
+  "equipment": {
+    "title": "AVEC QUOI\nT'ENTRAÎNES-TU ?",
+    "options": {
+      "gym": {
+        "title": "Salle complète",
+        "description": "Machines, poulies, poids libres"
+      },
+      "home": {
+        "title": "Ton matériel",
+        "description": "À la maison, par ex. des haltères ou un banc"
+      },
+      "bodyweight": {
+        "title": "Sans matériel",
+        "description": "Poids du corps uniquement"
+      }
+    }
+  },
+  "homeEquipment": {
+    "title": "QU'AS-TU\nCHEZ TOI ?",
+    "subtitle": "Touche tout ce avec quoi tu peux t'entraîner."
+  },
+  "sessions": {
+    "title": "COMBIEN\nDE SÉANCES ?",
+    "perWeek": "PAR SEMAINE",
+    "times": "{{count}}×"
+  },
+  "split": {
+    "title": "QUEL SPLIT\nVEUX-TU ?",
+    "subtitle_one": "Ceux qui conviennent à {{count}} séance par semaine.",
+    "subtitle_other": "Ceux qui conviennent à {{count}} séances par semaine.",
+    "options": {
+      "none": {
+        "short": "IA",
+        "title": "Pas de préférence",
+        "description": "L'IA choisit pour toi"
+      },
+      "full_body": {
+        "short": "FB",
+        "title": "Full body",
+        "description": "Tout le corps à chaque séance"
+      },
+      "upper_lower": {
+        "short": "HB",
+        "title": "Haut / Bas",
+        "description": "Haut et bas en alternance"
+      },
+      "upper_lower_full": {
+        "short": "HBF",
+        "title": "Haut / Bas / Full body",
+        "description": "Haut, bas, puis tout le corps"
+      },
+      "ppl": {
+        "short": "PPL",
+        "title": "Push / Pull / Jambes",
+        "description": "Poussée, tirage, jambes"
+      },
+      "ppl_arms": {
+        "short": "PPL+B",
+        "title": "Push / Pull / Jambes + Bras",
+        "description": "Un jour en plus pour bras et épaules"
+      },
+      "ppl_upper_lower": {
+        "short": "PPL+",
+        "title": "Push / Pull / Jambes + Haut / Bas",
+        "description": "PPL + haut et bas"
+      },
+      "bro": {
+        "short": "BRO",
+        "title": "Bro split",
+        "description": "Un muscle par jour, 1× par semaine"
+      },
+      "arnold": {
+        "short": "ARN",
+        "title": "Split Arnold",
+        "description": "Deux groupes musculaires par jour"
+      }
+    }
+  },
+  "duration": {
+    "title": "COMBIEN DE TEMPS\nPAR SÉANCE ?",
+    "minutes": "MINUTES",
+    "hint": "Fais glisser l'anneau ou touche une valeur"
+  },
+  "building": {
+    "stages": [
+      "On évalue ton objectif et ton expérience…",
+      "On choisit les exercices pour ton matériel…",
+      "On répartit en séances…",
+      "On définit les séries et les répétitions…"
+    ],
+    "frequency": "{{count}} × {{minutes}} min",
+    "focus": "Priorité : {{areas}}",
+    "balanced": "Tous les groupes musculaires",
+    "routineTag": "S{{n}}"
+  },
+  "generate": {
+    "making": "Création de ton programme…",
+    "errors": {
+      "failed": {
+        "title": "Création impossible",
+        "message": "Réessaie."
+      },
+      "offline": {
+        "title": "Pas de connexion",
+        "message": "Pour créer ton programme, il faut une connexion internet. Vérifie ta connexion et réessaie."
+      },
+      "limit": {
+        "title": "Limite quotidienne atteinte",
+        "message": "Tu pourras créer de nouveaux programmes demain. D'ici là, tu peux importer ton programme."
+      }
+    }
+  },
+  "planName": {
+    "title": "COMMENT S'APPELLE\nTON PROGRAMME ?",
+    "label": "Nom du programme",
+    "placeholder": "par ex. Mon programme full body",
+    "suggestions": "Suggestions",
+    "myPlan": "Mon programme"
+  },
+  "goalShort": {
+    "hypertrophy": "Prise de muscle",
+    "strength": "Force",
+    "strength_hypertrophy": "Force et masse"
+  },
+  "equipmentShort": {
+    "gym": "Salle",
+    "home": "Maison",
+    "bodyweight": "Sans charge"
+  }
+}

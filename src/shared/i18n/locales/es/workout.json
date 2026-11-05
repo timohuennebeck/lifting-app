@@ -1,0 +1,112 @@
+{
+  "addExercise": "Añadir ejercicio",
+  "setOf": "Serie {{current}} de {{total}}",
+  "noSets": "Aún no hay series",
+  "missing": "Este entrenamiento ya no está disponible.",
+  "actions": {
+    "info": "Info",
+    "targets": "Objetivos",
+    "swap": "Cambiar",
+    "more": "Más"
+  },
+  "table": {
+    "set": "SERIE",
+    "suggested": "SUGERIDO",
+    "targets": "OBJETIVO",
+    "last": "ÚLTIMA",
+    "reps": "REPS",
+    "seconds": "SEG",
+    "toggleColumn": "Alternar entre sugerido, objetivo y la última vez",
+    "setLabel": "Serie {{n}}",
+    "weightCell": "Peso",
+    "repsCell": "Reps",
+    "secondsCell": "Segundos",
+    "done": "Serie hecha",
+    "doneAll": "Todas las series hechas",
+    "addSet": "Añadir serie"
+  },
+  "rest": {
+    "title": "Descanso",
+    "minus": "−{{seconds}} s",
+    "plus": "+{{seconds}} s",
+    "restart": "Reiniciar temporizador",
+    "stop": "Detener temporizador",
+    "restartDefault": "Reiniciar con el descanso predeterminado",
+    "restartWith": "Reiniciar con {{time}}"
+  },
+  "activity": {
+    "skipRest": "Saltar descanso",
+    "logSet": "Registrar serie",
+    "reps": "reps"
+  },
+  "menu": {
+    "open": "Opciones del entrenamiento",
+    "progress": "Series registradas: {{done}} de {{total}}",
+    "finish": "Terminar entrenamiento",
+    "finishHint": "Registra al menos una serie para terminar.",
+    "finishDescription": "Guarda el entrenamiento en tu historial",
+    "discard": "Descartar entrenamiento",
+    "discardDescription": "Elimina el entrenamiento y todas las series registradas"
+  },
+  "swap": {
+    "title": "Cambiar ejercicio",
+    "confirmTitle": "¿Cambiar el ejercicio?",
+    "confirmMessage": "Se borrarán las series que ya registraste para este ejercicio.",
+    "confirm": "Cambiar"
+  },
+  "remove": {
+    "confirmTitle": "¿Quitar el ejercicio?",
+    "confirmMessage": "Se eliminarán las series que ya registraste para este ejercicio.",
+    "confirm": "Quitar"
+  },
+  "empty": {
+    "title": "Sin ejercicios",
+    "duration": "Duración estimada: {{minutes}} min",
+    "hint": "Toca + para añadir tu primer ejercicio."
+  },
+  "summary": {
+    "title": "Terminaste {{name}}.",
+    "records_one": "{{count}} récord nuevo",
+    "records_other": "{{count}} récords nuevos",
+    "noRecords": "Bien hecho",
+    "newRecord": "NUEVO RÉCORD",
+    "previously": "antes {{value}}",
+    "more": "Más",
+    "delete": "Eliminar entrenamiento",
+    "deleteHint": "Elimina {{name}} del {{date}} con todas sus series. Esta acción no se puede deshacer.",
+    "story": {
+      "next": "Continuar",
+      "page": "Página {{current}} de {{total}}",
+      "liftedToday": "Hoy has levantado",
+      "moved": "{{unit}} en total",
+      "objects": {
+        "washingMachine": "una <accent>lavadora</accent>.",
+        "motorbike": "una <accent>moto</accent>.",
+        "jetSki": "una <accent>moto acuática</accent>.",
+        "smallCar": "un <accent>auto pequeño</accent>.",
+        "hippo": "un <accent>hipopótamo</accent>.",
+        "pickupTruck": "una <accent>camioneta</accent>.",
+        "camperVan": "una <accent>autocaravana</accent>.",
+        "miniExcavator": "una <accent>miniexcavadora</accent>.",
+        "tractor": "un <accent>tractor</accent>.",
+        "tRex": "un <accent>T. rex</accent>.",
+        "privateJet": "un <accent>jet privado</accent>.",
+        "bus": "un <accent>autobús urbano</accent>.",
+        "fireTruck": "un <accent>camión de bomberos</accent>.",
+        "motorYacht": "un <accent>yate de motor</accent>.",
+        "container": "un <accent>contenedor cargado</accent>.",
+        "passengerJet": "un <accent>avión de pasajeros</accent>.",
+        "spaceShuttle": "un <accent>transbordador espacial</accent>."
+      },
+      "trainedFor": "Entrenaste {{minutes}} min",
+      "groupsOne": "<accent>{{first}}</accent>.",
+      "groupsTwo": "<accent>{{first}}</accent> y {{second}}.",
+      "recordsOverline": "Nuevo récord personal",
+      "recordsTitle_one": "<accent>{{count}} récord</accent>\nbatido.",
+      "recordsTitle_other": "<accent>{{count}} récords</accent>\nbatidos."
+    }
+  },
+  "builder": {
+    "title": "Entrenamiento vacío"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "memberSince": "Membre depuis {{date}}",
+  "name": {
+    "title": "Ton nom",
+    "label": "Nom",
+    "placeholder": "Prénom",
+    "edit": "Modifier le nom"
+  },
+  "about": {
+    "title": "À propos de toi",
+    "label": "Description",
+    "placeholder": "Parle un peu de toi…",
+    "add": "Ajouter une description",
+    "edit": "Modifier la description"
+  },
+  "activity": "Activité",
+  "lastMonths": "3 derniers mois",
+  "history": "Historique",
+  "historyEntry": "<b>{{name}}</b> a terminé <b>{{workout}}</b> en {{duration}}",
+  "historyEmpty": "Tes séances terminées apparaîtront ici.",
+  "showMore": "Voir plus",
+  "when": {
+    "today": "Aujourd'hui, {{time}}",
+    "yesterday": "Hier, {{time}}"
+  },
+  "settings": {
+    "language": "Langue",
+    "units": "Unités",
+    "kilograms": "Kilogrammes",
+    "pounds": "Livres",
+    "notifications": {
+      "title": "Notifications",
+      "restSound": "Son à la fin du repos"
+    },
+    "links": {
+      "help": "Aide",
+      "privacy": "Confidentialité",
+      "terms": "Conditions"
+    },
+    "version": "v{{version}}",
+    "signOut": "Se déconnecter",
+    "signOutConfirm": {
+      "title": "Te déconnecter ?",
+      "titleNamed": "{{name}}, te déconnecter ?",
+      "unsynced_one": "{{count}} modification n'est pas encore synchronisée. Te déconnecter quand même ? Elle sera perdue.",
+      "unsynced_other": "{{count}} modifications ne sont pas encore synchronisées. Te déconnecter quand même ? Elles seront perdues."
+    },
+    "deleteAccount": "Supprimer le compte",
+    "deleteConfirm": {
+      "title": "Supprimer le compte ?",
+      "subtitle": "Cette action est irréversible.",
+      "option": "Supprimer le compte définitivement",
+      "body": "Toutes tes données seront supprimées.",
+      "subscription": "Cela ne met pas fin à un abonnement actif. Résilie-le dans la boutique où tu l'as souscrit.",
+      "failed": {
+        "title": "Compte non supprimé",
+        "message": "Vérifie ta connexion et réessaie."
+      }
+    }
+  },
+  "avatar": {
+    "change": "Changer la photo de profil",
+    "camera": "Prendre une photo",
+    "library": "Choisir une photo",
+    "remove": "Supprimer la photo",
+    "cameraDenied": {
+      "title": "Pas d'accès à l'appareil photo",
+      "message": "Autorise l'accès à l'appareil photo dans les réglages du téléphone pour prendre une photo de profil."
+    },
+    "failed": {
+      "title": "Photo de profil non enregistrée",
+      "message": "Vérifie ta connexion et réessaie."
+    }
+  }
+}

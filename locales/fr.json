@@ -1,0 +1,8 @@
+{
+  "ios": {
+    "NSCameraUsageDescription": "Loqqa utilise l'appareil photo pour photographier ton programme d'entraînement, prendre les photos de ton bilan corporel et ta photo de profil.",
+    "NSPhotoLibraryUsageDescription": "Loqqa te permet d'importer un programme d'entraînement depuis tes photos, de joindre des captures d'écran à des tickets d'assistance et de choisir une photo de profil.",
+    "NSMicrophoneUsageDescription": "Loqqa utilise le micro pour que tu puisses dicter ton programme d'entraînement, tes questions à Kai et tes messages à l'assistance au lieu de les taper.",
+    "NSSpeechRecognitionUsageDescription": "Loqqa convertit en texte le programme d'entraînement que tu dictes, afin de le créer dans l'app."
+  }
+}

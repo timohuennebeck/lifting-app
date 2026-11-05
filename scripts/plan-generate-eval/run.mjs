@@ -1,11 +1,11 @@
-// Tests the plan generation (the generate-plan Edge Function) with 18 sets of onboarding answers
+// Tests the plan generation (the generate-plan Edge Function) with 20 sets of onboarding answers
 // and checks each plan it makes: a routine per workout a week, sessions that fit the chosen length,
 // only exercises the equipment allows, no exercise twice a routine, every major muscle group trained,
 // pushing and pulling about even, focus muscles trained more, sets and reps that suit the goal and
 // the experience, core work only where the goal or focus asks for it and no timed holds. The checks are rules of thumb; read the plans in the report as well.
 //
 // Needs the function with an OpenAI key at EXPO_PUBLIC_SUPABASE_URL from .env.local: locally
-// `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 18 plans, so
+// `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 20 plans, so
 // set PLAN_GENERATE_IP_LIMIT=1000 there first, then restart Supabase), or the deployed project.
 // Usage: npm run plan:generate-eval                    all profiles
 //        npm run plan:generate-eval -- 03 11           only these
@@ -74,6 +74,8 @@ const PROFILES = [
   ['16', 'de', 'hypertrophy', 'gym', 4, 'upper_lower', 60, 'intermediate', []],
   ['17', 'en', 'hypertrophy', 'gym', 6, 'arnold', 60, 'intermediate', []],
   ['18', 'de', 'hypertrophy', 'gym', 4, 'ppl_arms', 60, 'intermediate', ['biceps']],
+  ['19', 'es', 'hypertrophy', 'gym', 3, 'full_body', 60, 'beginner', []],
+  ['20', 'fr', 'strength', 'gym', 4, 'upper_lower', 75, 'intermediate', []],
 ].map(
   ([id, language, goal, equipment, sessionsPerWeek, split, sessionMinutes, experience, focus]) => ({
     id,

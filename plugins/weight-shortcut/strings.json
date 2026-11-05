@@ -38,5 +38,25 @@
       "Log weight in ${applicationName}": "${applicationName}에 체중 기록",
       "Log my weight in ${applicationName}": "${applicationName}에 내 체중 기록"
     }
+  },
+  "es": {
+    "Localizable.strings": {
+      "Log weight": "Registrar peso",
+      "Opens today's weight entry.": "Abre el registro de peso de hoy."
+    },
+    "AppShortcuts.strings": {
+      "Log weight in ${applicationName}": "Registrar peso en ${applicationName}",
+      "Log my weight in ${applicationName}": "Registrar mi peso en ${applicationName}"
+    }
+  },
+  "fr": {
+    "Localizable.strings": {
+      "Log weight": "Enregistrer le poids",
+      "Opens today's weight entry.": "Ouvre la saisie du poids du jour."
+    },
+    "AppShortcuts.strings": {
+      "Log weight in ${applicationName}": "Enregistrer le poids dans ${applicationName}",
+      "Log my weight in ${applicationName}": "Enregistrer mon poids dans ${applicationName}"
+    }
   }
 }

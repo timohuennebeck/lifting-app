@@ -1,0 +1,34 @@
+{
+  "open": "Poids",
+  "history": {
+    "title": "Historique",
+    "calendar": "Calendrier",
+    "add": "Enregistrer le poids",
+    "trend": "Tendance",
+    "difference": "Écart",
+    "changes": "Évolution · Tendance",
+    "days_one": "{{count}} jour",
+    "days_other": "{{count}} jours",
+    "entries": "Entrées",
+    "belowTrend": "{{value}} en dessous",
+    "aboveTrend": "{{value}} au-dessus",
+    "onTrend": "pile sur la tendance",
+    "delete": "Supprimer",
+    "empty": "Enregistre ton poids pour voir ta tendance."
+  },
+  "calendar": {
+    "title": "Calendrier",
+    "entries_one": "{{count}} entrée",
+    "entries_other": "{{count}} entrées"
+  },
+  "entry": {
+    "title": "Poids",
+    "history": "Historique",
+    "today": "Aujourd'hui, {{date}}",
+    "yesterday": "Hier, {{date}}",
+    "since": "{{value}} depuis le {{date}}",
+    "none": "Aucune entrée pour l'instant",
+    "delete": "Supprimer l'entrée",
+    "date": "Date"
+  }
+}

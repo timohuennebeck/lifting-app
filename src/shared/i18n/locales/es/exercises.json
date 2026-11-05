@@ -1,0 +1,63 @@
+{
+  "picker": {
+    "search": "Buscar ejercicios",
+    "empty": "No se encontraron ejercicios",
+    "index": "Índice alfabético",
+    "selected": "Seleccionado"
+  },
+  "groups": {
+    "chest": "Pecho",
+    "back": "Espalda",
+    "shoulders": "Hombros",
+    "arms": "Brazos",
+    "core": "Core",
+    "glutes": "Glúteos",
+    "legs": "Piernas"
+  },
+  "detail": {
+    "tabs": {
+      "exercise": "Ejercicio",
+      "history": "Historial"
+    },
+    "technique": "Técnica"
+  },
+  "custom": {
+    "label": "Ejercicio personalizado",
+    "create": "Crear ejercicio personalizado",
+    "title": "Ejercicio personalizado",
+    "editTitle": "Editar ejercicio",
+    "menu": "Opciones del ejercicio",
+    "edit": "Editar",
+    "save": "Guardar",
+    "namePlaceholder": "Nombre del ejercicio",
+    "nameTaken": "Este ejercicio ya existe.",
+    "tapMuscle": "Toca un músculo",
+    "showBack": "Ver espalda",
+    "showFront": "Ver frente",
+    "primary": "Principal",
+    "secondary": "Secundario",
+    "roleHint": "Toca un músculo para cambiar entre principal y secundario.",
+    "noMuscles": "Toca en la figura los músculos que trabaja el ejercicio.",
+    "logs": "¿Qué se registra?",
+    "reps": "Repeticiones",
+    "time": "Tiempo",
+    "weight": "Con peso",
+    "locked": "Ya hay registros: lo que registra este ejercicio no se puede cambiar.",
+    "rest": "Descanso entre series"
+  },
+  "history": {
+    "topWeight": "Peso máximo por entrenamiento",
+    "topWeightShort": "Peso máximo",
+    "leastAssistance": "Menor asistencia por entrenamiento",
+    "leastAssistanceShort": "Menor asistencia",
+    "topReps": "Más repeticiones por entrenamiento",
+    "topRepsShort": "Más repeticiones",
+    "topSeconds": "Mayor tiempo de aguante por entrenamiento",
+    "topSecondsShort": "Mayor aguante",
+    "chartLabel": "Gráfico del peso máximo, mantén presionado y arrastra para ver un entrenamiento",
+    "emptyRange": "No hay entrenamientos en este período.",
+    "empty": "Aún no hay entrenamientos. Termina un entrenamiento con este ejercicio para ver tu progreso.",
+    "weight": "Peso",
+    "oneRepMax": "1RM"
+  }
+}

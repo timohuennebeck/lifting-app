@@ -32,6 +32,40 @@ import enTraining from './locales/en/training.json';
 import enVoice from './locales/en/voice.json';
 import enWeight from './locales/en/weight.json';
 import enWorkout from './locales/en/workout.json';
+import esAuth from './locales/es/auth.json';
+import esBody from './locales/es/body.json';
+import esCoach from './locales/es/coach.json';
+import esCommon from './locales/es/common.json';
+import esExercises from './locales/es/exercises.json';
+import esMuscles from './locales/es/muscles.json';
+import esOnboarding from './locales/es/onboarding.json';
+import esPaywall from './locales/es/paywall.json';
+import esPlanCreate from './locales/es/planCreate.json';
+import esPlanImport from './locales/es/planImport.json';
+import esProfile from './locales/es/profile.json';
+import esProgressCheck from './locales/es/progressCheck.json';
+import esSupport from './locales/es/support.json';
+import esTraining from './locales/es/training.json';
+import esVoice from './locales/es/voice.json';
+import esWeight from './locales/es/weight.json';
+import esWorkout from './locales/es/workout.json';
+import frAuth from './locales/fr/auth.json';
+import frBody from './locales/fr/body.json';
+import frCoach from './locales/fr/coach.json';
+import frCommon from './locales/fr/common.json';
+import frExercises from './locales/fr/exercises.json';
+import frMuscles from './locales/fr/muscles.json';
+import frOnboarding from './locales/fr/onboarding.json';
+import frPaywall from './locales/fr/paywall.json';
+import frPlanCreate from './locales/fr/planCreate.json';
+import frPlanImport from './locales/fr/planImport.json';
+import frProfile from './locales/fr/profile.json';
+import frProgressCheck from './locales/fr/progressCheck.json';
+import frSupport from './locales/fr/support.json';
+import frTraining from './locales/fr/training.json';
+import frVoice from './locales/fr/voice.json';
+import frWeight from './locales/fr/weight.json';
+import frWorkout from './locales/fr/workout.json';
 import koAuth from './locales/ko/auth.json';
 import koBody from './locales/ko/body.json';
 import koCoach from './locales/ko/coach.json';
@@ -181,6 +215,44 @@ export const resources = {
     exercises: koExercises,
     weight: koWeight,
   },
+  es: {
+    common: esCommon,
+    paywall: esPaywall,
+    support: esSupport,
+    progressCheck: esProgressCheck,
+    planCreate: esPlanCreate,
+    planImport: esPlanImport,
+    auth: esAuth,
+    onboarding: esOnboarding,
+    training: esTraining,
+    voice: esVoice,
+    workout: esWorkout,
+    muscles: esMuscles,
+    body: esBody,
+    coach: esCoach,
+    profile: esProfile,
+    exercises: esExercises,
+    weight: esWeight,
+  },
+  fr: {
+    common: frCommon,
+    paywall: frPaywall,
+    support: frSupport,
+    progressCheck: frProgressCheck,
+    planCreate: frPlanCreate,
+    planImport: frPlanImport,
+    auth: frAuth,
+    onboarding: frOnboarding,
+    training: frTraining,
+    voice: frVoice,
+    workout: frWorkout,
+    muscles: frMuscles,
+    body: frBody,
+    coach: frCoach,
+    profile: frProfile,
+    exercises: frExercises,
+    weight: frWeight,
+  },
 } as const;
 
 export type AppLanguage = keyof typeof resources;
@@ -193,4 +265,6 @@ export const LANGUAGE_NAMES: Record<AppLanguage, string> = {
   'pt-PT': 'Português',
   'pt-BR': 'Português (Brasil)',
   ko: '한국어',
+  es: 'Español',
+  fr: 'Français',
 };

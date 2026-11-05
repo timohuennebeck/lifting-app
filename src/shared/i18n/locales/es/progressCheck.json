@@ -1,0 +1,173 @@
+{
+  "poses": {
+    "front": {
+      "short": "Frente",
+      "name": "Frente"
+    },
+    "side": {
+      "short": "Perfil",
+      "name": "Perfil"
+    },
+    "back": {
+      "short": "Espalda",
+      "name": "Espalda"
+    }
+  },
+  "groups": {
+    "shoulders": "Hombros",
+    "chest": "Pecho",
+    "arms": "Brazos",
+    "back": "Espalda",
+    "core": "Core",
+    "legs": "Piernas"
+  },
+  "camera": {
+    "permission": {
+      "title": "Permitir cámara",
+      "body": "El control corporal necesita tu cámara. Tus fotos son privadas.",
+      "allow": "Permitir cámara"
+    },
+    "auto": "Auto",
+    "autoA11y": "Automático: con un toque se toman todas las fotos una tras otra",
+    "timer": "Temporizador {{value}}",
+    "timerOff": "apagado",
+    "seconds": "{{value}} s",
+    "timerA11y": "Cambiar el temporizador",
+    "flip": "Cambiar de cámara",
+    "shutter": "Tomar foto",
+    "cancelTimer": "Cancelar temporizador",
+    "error": {
+      "title": "Foto no guardada",
+      "message": "Inténtalo de nuevo."
+    },
+    "access": "Para las fotos de tu control corporal. Son privadas.",
+    "tapToCancel": "Toca para cancelar",
+    "turn": {
+      "next": "Siguiente pose",
+      "front": "Mira a la cámara",
+      "side": "Gírate de lado",
+      "back": "Date la vuelta, de espaldas a la cámara"
+    },
+    "consent": "Al tocar «{{done}}» das tu consentimiento para que tus fotos y tus datos corporales se envíen a OpenAI (EE. UU.) para la evaluación.",
+    "unavailable": {
+      "title": "La cámara no se inició",
+      "message": "Cierra el control corporal y ábrelo de nuevo. Si no ayuda, reinicia la app."
+    }
+  },
+  "discard": {
+    "title": "¿Descartar el control corporal?",
+    "message": "Tus fotos se eliminarán.",
+    "keep": "Seguir",
+    "confirm": "Descartar"
+  },
+  "photo": {
+    "ok": "La foto se ve bien",
+    "retake": "Repetir foto",
+    "remove": "Quitar foto de {{pose}}",
+    "issues": {
+      "blurry": "Borrosa",
+      "dark": "Muy oscura",
+      "notFullBody": "Cuerpo incompleto",
+      "wrongPose": "Pose incorrecta",
+      "noPerson": "No se ve a nadie",
+      "clothing": "La ropa tapa el cuerpo"
+    }
+  },
+  "assessment": {
+    "title": "Control corporal",
+    "stages": ["Alineando las fotos", "Captando la forma del cuerpo", "Calculando los valores"],
+    "finalStage": {
+      "first": "Creando tu punto de partida",
+      "next": "Creando tu resultado"
+    },
+    "done": "Tus resultados están listos",
+    "keepOpen": "Mantén la app abierta",
+    "cta": "Ver resultado",
+    "errors": {
+      "offline": {
+        "title": "Sin conexión",
+        "message": "El análisis necesita internet. Tus fotos se conservan."
+      },
+      "limit": {
+        "title": "Límite diario alcanzado",
+        "message": "Hoy has iniciado varios análisis. Puedes continuar mañana."
+      },
+      "weekly": {
+        "title": "Un control por semana",
+        "message": "Tu último control fue hace menos de una semana. El siguiente se abre 7 días después."
+      },
+      "notAdult": {
+        "title": "Solo desde los 18",
+        "message": "El control corporal solo está disponible a partir de los 18 años."
+      },
+      "notPro": {
+        "title": "Se necesita Loqqa Pro",
+        "message": "El análisis forma parte de Loqqa Pro."
+      },
+      "refused": {
+        "title": "No se pueden analizar las fotos",
+        "message": "Vuelve a tomarlas con ropa deportiva o ropa interior."
+      },
+      "failed": {
+        "title": "El análisis no funcionó",
+        "message": "Tus fotos se conservan. Inténtalo de nuevo."
+      }
+    },
+    "row": {
+      "done": "Capturado",
+      "active": "Midiendo tu cuerpo…",
+      "waiting": "En espera…"
+    }
+  },
+  "result": {
+    "baselineOn": "Tu punto de partida · {{date}}",
+    "scoreOn": "Tu puntuación corporal · {{date}}",
+    "check": "Control {{n}}",
+    "basis": "Base de esta puntuación",
+    "metrics": {
+      "bodyFat": "Grasa corporal",
+      "proportions": "Proporciones",
+      "definition": "Definición"
+    },
+    "bodyFat": {
+      "athletic": "Nivel atlético",
+      "fit": "En forma",
+      "average": "Promedio",
+      "high": "Alta"
+    },
+    "tiers": {
+      "veryGood": "Muy bien",
+      "good": "Bien",
+      "average": "Promedio",
+      "low": "Margen de mejora"
+    },
+    "groups": "Grupos musculares",
+    "bands": {
+      "top": {
+        "title": "Top",
+        "subtitle": "por encima de tu promedio"
+      },
+      "mid": {
+        "title": "Promedio"
+      },
+      "focus": {
+        "title": "Enfoque",
+        "subtitle": "más series en tu plan"
+      }
+    },
+    "disclaimer": "Estimación a partir de fotos, no una evaluación médica.",
+    "saveBaseline": "Guardar punto de partida",
+    "saveResult": "Guardar resultado",
+    "saved": "Guardado",
+    "share": "Compartir",
+    "more": "Más opciones",
+    "delete": "Eliminar control",
+    "deleteHint": "Las fotos y los valores de este control se eliminan para siempre.",
+    "shareMessage": "Mi puntuación corporal en Loqqa: {{score}}/100",
+    "notFound": "Este control corporal ya no existe.",
+    "saveFailed": {
+      "title": "Control corporal no guardado",
+      "message": "Tus fotos y tu resultado siguen aquí. Inténtalo de nuevo."
+    }
+  }
+}

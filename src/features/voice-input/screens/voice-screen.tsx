@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, TextInput, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
+import type { AppLanguage } from '@/shared/i18n/resources';
 import { wait } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { track, type VoiceContext } from '@/shared/lib/posthog';
@@ -44,7 +45,7 @@ export interface VoiceScreenProps {
  */
 export function VoiceScreen({ onAdd, context }: VoiceScreenProps) {
   const { t, i18n } = useTranslation('voice');
-  const speech = useSpeechInput(i18n.language);
+  const speech = useSpeechInput(i18n.language as AppLanguage);
   const scroller = useRef<ScrollView>(null);
   const reading = useRef<AbortController | null>(null);
   const [processing, setProcessing] = useState(false);

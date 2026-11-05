@@ -1,0 +1,95 @@
+{
+  "welcome": {
+    "headline": "TU PLAN.",
+    "headlineAccent": "TU PROGRESO.",
+    "subtitle": "Importa tu plan o crea uno nuevo.\nSin escribir.",
+    "start": "Vamos",
+    "haveAccount": "Ya tengo una cuenta · ",
+    "signIn": "Iniciar sesión",
+    "language": "Idioma",
+    "features": {
+      "import": "Importa un plan desde una foto",
+      "create": "Crea un plan",
+      "progress": "Sigue tu progreso"
+    }
+  },
+  "name": {
+    "title": "¿CÓMO TE LLAMAS?",
+    "placeholder": "Nombre"
+  },
+  "sex": {
+    "title": "¿CUÁL ES\nTU SEXO\nBIOLÓGICO?",
+    "subtitle": "Nos ayuda a estimar de forma realista tus pesos iniciales y tu recuperación.",
+    "male": "Hombre",
+    "female": "Mujer",
+    "unspecified": "Prefiero no decirlo"
+  },
+  "birthDate": {
+    "title": "¿CUÁNDO ES\nTU CUMPLEAÑOS?",
+    "age_one": "{{count}} año",
+    "age_other": "{{count}} años",
+    "tooYoung": "Loqqa es para personas de {{min}} años o más."
+  },
+  "units": {
+    "title": "¿QUÉ UNIDADES\nUSAS?",
+    "metric": "Kilogramos",
+    "metricHint": "Métrico · km, cm",
+    "imperial": "Libras",
+    "imperialHint": "Imperial · mi, in"
+  },
+  "weight": {
+    "title": "¿CUÁNTO\nPESAS?"
+  },
+  "height": {
+    "title": "¿CUÁNTO\nMIDES?"
+  },
+  "actionButton": {
+    "title": "UNA PULSACIÓN\nY REGISTRADO",
+    "subtitle": "Pon Loqqa en el botón de acción de tu iPhone. Con una pulsación se abre tu peso al instante.",
+    "action": "Acción",
+    "steps": {
+      "settings": "Abre los ajustes › Botón de acción",
+      "shortcut": "Desliza hasta <b>Atajo</b>",
+      "pick": "Elige <b>Loqqa: Registrar peso</b>"
+    },
+    "later": "Luego",
+    "done": "Listo",
+    "openAgain": "Abrir ajustes de nuevo"
+  },
+  "experience": {
+    "title": "¿QUÉ EXPERIENCIA\nTIENES?",
+    "none": "Ninguna",
+    "noneHint": "Nunca he entrenado",
+    "beginner": "Principiante",
+    "beginnerHint": "Menos de 6 meses entrenando",
+    "intermediate": "Intermedio",
+    "intermediateHint": "De 6 meses a 2 años",
+    "advanced": "Avanzado",
+    "advancedHint": "Más de 2 años, con buena técnica"
+  },
+  "hasPlan": {
+    "title": "¿SIGUES UN PLAN\nAHORA?",
+    "formats": "Foto, PDF u hoja de cálculo",
+    "yes": "Tengo uno",
+    "no": "Crea uno para mí"
+  },
+  "promise": {
+    "title": "HAZTE UNA\nPROMESA.",
+    "titleNamed": "{{name}}, HAZTE UNA\nPROMESA.",
+    "stick": "Seguiré adelante, incluso cuando se ponga difícil.",
+    "track": "Registraré cada serie.",
+    "hold": "Mantén el pulgar presionado",
+    "holding": "No sueltes…",
+    "sealed": "Hecho.",
+    "holdLabel": "Mantén para comprometerte"
+  },
+  "progressCheck": {
+    "title": "¿HACEMOS UN CONTROL CORPORAL?",
+    "subtitle": "Con tus fotos adaptamos el plan a tus puntos débiles.",
+    "light": "Buena luz",
+    "clothes": "Ropa interior",
+    "framing": "Cuerpo entero en el encuadre",
+    "now": "Tomar fotos ahora",
+    "later": "Luego"
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "goal": {
+    "title": "¿CUÁL ES\nTU OBJETIVO?",
+    "options": {
+      "hypertrophy": {
+        "title": "Hipertrofia",
+        "description": "Ganar masa muscular, normalmente con 8–12 repeticiones"
+      },
+      "strength": {
+        "title": "Fuerza máxima",
+        "description": "Levantar más peso, normalmente con 3–6 repeticiones"
+      },
+      "strength_hypertrophy": {
+        "title": "Fuerza e hipertrofia",
+        "description": "Las dos combinadas, con 4–10 repeticiones"
+      }
+    }
+  },
+  "focus": {
+    "title": "¿EN QUÉ TE\nQUIERES ENFOCAR?",
+    "subtitle": "Elige una o más zonas.",
+    "none": "Sin enfoque",
+    "cta_one": "Continuar · {{count}} zona",
+    "cta_other": "Continuar · {{count}} zonas",
+    "mapA11y": "Mapa corporal. Toca un músculo para activar o desactivar su zona."
+  },
+  "equipment": {
+    "title": "¿CON QUÉ\nENTRENAS?",
+    "options": {
+      "gym": {
+        "title": "Gimnasio completo",
+        "description": "Máquinas, poleas y pesos libres"
+      },
+      "home": {
+        "title": "Equipo propio",
+        "description": "En casa, p. ej. mancuernas o un banco"
+      },
+      "bodyweight": {
+        "title": "Sin equipo",
+        "description": "Solo peso corporal"
+      }
+    }
+  },
+  "homeEquipment": {
+    "title": "¿QUÉ TIENES\nEN CASA?",
+    "subtitle": "Toca todo lo que puedas usar para entrenar."
+  },
+  "sessions": {
+    "title": "¿CUÁNTAS VECES\nQUIERES ENTRENAR?",
+    "perWeek": "POR SEMANA",
+    "times": "{{count}}×"
+  },
+  "split": {
+    "title": "¿QUÉ DIVISIÓN\nPREFIERES?",
+    "subtitle_one": "Las que encajan con {{count}} entrenamiento a la semana.",
+    "subtitle_other": "Las que encajan con {{count}} entrenamientos a la semana.",
+    "options": {
+      "none": {
+        "short": "IA",
+        "title": "Sin preferencia",
+        "description": "La IA elige por ti"
+      },
+      "full_body": {
+        "short": "FB",
+        "title": "Full body",
+        "description": "Todo el cuerpo cada vez"
+      },
+      "upper_lower": {
+        "short": "TP",
+        "title": "Torso / Pierna",
+        "description": "Torso y pierna por turnos"
+      },
+      "upper_lower_full": {
+        "short": "TPF",
+        "title": "Torso / Pierna / Full body",
+        "description": "Torso, pierna y luego todo"
+      },
+      "ppl": {
+        "short": "PPL",
+        "title": "Push / Pull / Piernas",
+        "description": "Empuje, tirón y piernas"
+      },
+      "ppl_arms": {
+        "short": "PPL+B",
+        "title": "Push / Pull / Piernas + Brazos",
+        "description": "Un día extra para brazos y hombros"
+      },
+      "ppl_upper_lower": {
+        "short": "PPL+",
+        "title": "Push / Pull / Piernas + Torso / Pierna",
+        "description": "PPL más torso y pierna"
+      },
+      "bro": {
+        "short": "BRO",
+        "title": "Bro split",
+        "description": "Un músculo al día, 1× por semana"
+      },
+      "arnold": {
+        "short": "ARN",
+        "title": "División Arnold",
+        "description": "Dos grupos musculares al día"
+      }
+    }
+  },
+  "duration": {
+    "title": "¿CUÁNTO DURARÁ\nUN ENTRENAMIENTO?",
+    "minutes": "MINUTOS",
+    "hint": "Arrastra el anillo o toca un valor"
+  },
+  "building": {
+    "stages": [
+      "Valorando tu objetivo y tu experiencia…",
+      "Eligiendo ejercicios para tu equipamiento…",
+      "Dividiendo en entrenamientos…",
+      "Ajustando series y repeticiones…"
+    ],
+    "frequency": "{{count}} × {{minutes}} min",
+    "focus": "Enfoque: {{areas}}",
+    "balanced": "Todos los grupos musculares",
+    "routineTag": "E{{n}}"
+  },
+  "generate": {
+    "making": "Creando tu plan…",
+    "errors": {
+      "failed": {
+        "title": "No se pudo crear tu plan",
+        "message": "Inténtalo de nuevo."
+      },
+      "offline": {
+        "title": "Sin conexión",
+        "message": "Para crear tu plan hace falta internet. Revisa tu conexión e inténtalo de nuevo."
+      },
+      "limit": {
+        "title": "Límite diario alcanzado",
+        "message": "Mañana podrás volver a crear planes. Hasta entonces, puedes importar el tuyo."
+      }
+    }
+  },
+  "planName": {
+    "title": "¿CÓMO SE LLAMARÁ\nTU PLAN?",
+    "label": "Nombre del plan",
+    "placeholder": "p. ej. Mi plan full body",
+    "suggestions": "Sugerencias",
+    "myPlan": "Mi plan"
+  },
+  "goalShort": {
+    "hypertrophy": "Crecimiento muscular",
+    "strength": "Fuerza",
+    "strength_hypertrophy": "Fuerza y masa"
+  },
+  "equipmentShort": {
+    "gym": "Gimnasio",
+    "home": "En casa",
+    "bodyweight": "Sin equipo"
+  }
+}

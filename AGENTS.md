@@ -44,8 +44,8 @@ the production app (`APP_VARIANT=production`, `eas.json`), whose values live in 
 ## i18n
 
 Texts live in `src/shared/i18n/locales/<lang>/<namespace>.json`. `en` is the source and its keys
-are type-checked; `en`, `de`, `pt-PT`, `pt-BR` and `ko` keep identical keys, so add each key to all
-five. Run `npx prettier --write` on edited JSON. Keys read with `returnObjects` look unused to
+are type-checked; `en`, `de`, `pt-PT`, `pt-BR`, `ko`, `es` and `fr` keep identical keys, so add each key to all
+seven. Run `npx prettier --write` on edited JSON. Keys read with `returnObjects` look unused to
 scanners.
 
 ## Conventions
@@ -67,6 +67,7 @@ ESLint forbids `obj.x++` (miscompiled).
 npx tsc --noEmit -p .
 npm run lint
 npm run -s compiler:check   # must list no skipped components or hooks
+npm run i18n:check
 npx prettier --check <changed files>
 ```
 

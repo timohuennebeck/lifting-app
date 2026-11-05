@@ -1,0 +1,84 @@
+{
+  "team": "Équipe Loqqa",
+  "teamReplyTime": "Répond généralement sous 24 à 48 h.",
+  "kind": {
+    "bug": "Bug",
+    "idea": "Idée"
+  },
+  "status": {
+    "open": "Ouvert",
+    "closed": "Fermé"
+  },
+  "ticketNumber": "Ticket n° {{number}}",
+  "ticketPending": "Nouveau ticket",
+  "preview": {
+    "team": "Équipe Loqqa : {{text}}",
+    "user": "Toi : {{text}}",
+    "screenshots_one": "Capture d'écran",
+    "screenshots_other": "{{count}} captures d'écran"
+  },
+  "when": {
+    "justNow": "À l'instant",
+    "yesterday": "Hier"
+  },
+  "profile": {
+    "openTickets": "Tickets ouverts",
+    "allTickets": "Tous les tickets",
+    "create": "Créer un ticket",
+    "empty": "Aucun ticket ouvert. Un bug ou une idée ? Dis-le-nous."
+  },
+  "sheet": {
+    "bug": "Signaler un bug",
+    "bugHint": "Quelque chose ne fonctionne pas",
+    "idea": "Proposer une fonctionnalité",
+    "ideaHint": "Il manque quelque chose dans l'app"
+  },
+  "form": {
+    "bugTitle": "Signaler un bug",
+    "ideaTitle": "Proposer une fonctionnalité",
+    "bugPlaceholder": "Décris le bug…",
+    "ideaPlaceholder": "Décris ton idée…",
+    "screenshots": "Captures d'écran",
+    "addScreenshot": "Ajouter une capture",
+    "removeScreenshot": "Supprimer la capture",
+    "importance": "Quelle importance cela a-t-il pour toi ?",
+    "importanceLow": "Un plus",
+    "importanceHigh": "Essentiel",
+    "importanceValue": "Importance : {{value}} sur 5",
+    "send": "Envoyer"
+  },
+  "list": {
+    "title": "Tickets",
+    "create": "Créer un ticket",
+    "empty": "Aucun ticket pour l'instant",
+    "emptyHint": "Signale un bug ou propose une fonctionnalité. Nous répondons ici, dans la discussion."
+  },
+  "chat": {
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "created": "Ticket n° {{number}} créé",
+    "createdPending": "Ticket créé",
+    "meta": "{{kind}} · {{when}}",
+    "justNow": "à l'instant",
+    "todayAt": "aujourd'hui à {{time}}",
+    "yesterdayAt": "hier à {{time}}",
+    "autoReply": "Merci, {{name}} ! Notre équipe te répondra ici sous 24 à 48 heures.",
+    "autoReplyNoName": "Merci ! Notre équipe te répondra ici sous 24 à 48 heures.",
+    "priority": "Priorité",
+    "translated": "Traduit",
+    "showOriginal": "Voir l'original",
+    "showTranslation": "Voir la traduction",
+    "statusLine": "Statut : {{status}}",
+    "closed": "Ticket fermé",
+    "reopened": "Ticket rouvert",
+    "placeholder": "Écris-nous",
+    "send": "Envoyer",
+    "addScreenshot": "Ajouter une capture",
+    "doneTitle": "Ce ticket est clos",
+    "doneBody": "Si le problème revient, tu peux le rouvrir.",
+    "reopen": "Rouvrir",
+    "newTicket": "Nouveau ticket",
+    "screenshot": "Capture d'écran",
+    "notFound": "Ce ticket n'existe plus."
+  }
+}

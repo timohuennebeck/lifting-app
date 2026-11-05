@@ -4,6 +4,7 @@ import { Keyboard, Platform } from 'react-native';
 import { useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { i18n } from '@/shared/i18n';
+import type { AppLanguage } from '@/shared/i18n/resources';
 import { clamp } from '@/shared/lib/math';
 import { resetAudioMode } from '@/shared/lib/sounds';
 import { showError, showSettingsError } from '@/shared/stores/error-sheet-store';
@@ -17,12 +18,14 @@ import {
 } from '../lib/transcript';
 
 /** Recognition locales of the app languages. */
-const LOCALES: Record<string, string> = {
+const LOCALES: Record<AppLanguage, string> = {
   de: 'de-DE',
   en: 'en-US',
   'pt-PT': 'pt-PT',
   'pt-BR': 'pt-BR',
   ko: 'ko-KR',
+  es: 'es-ES',
+  fr: 'fr-FR',
 };
 
 /** Errors that only mean nothing (more) was heard: the text stays as it is. */
@@ -72,7 +75,7 @@ function showUnavailable(offline: boolean) {
  * a recognition iOS ends by itself (after about a minute) is followed by the next, with the
  * audio session kept, so the app isn't suspended. Leaving the screen ends it.
  */
-export function useSpeechInput(language: string) {
+export function useSpeechInput(language: AppLanguage) {
   const [transcript, setTranscript] = useState<Transcript>(EMPTY_TRANSCRIPT);
   const [listening, setListening] = useState(false);
   /** A recognition ran since the text was last edited. */
@@ -89,7 +92,7 @@ export function useSpeechInput(language: string) {
     startedAt.current = Date.now();
     setTranscript(continueTranscript);
     ExpoSpeechRecognitionModule.start({
-      lang: LOCALES[language] ?? 'en-US',
+      lang: LOCALES[language],
       interimResults: true,
       // Runs until stopped, through the pauses between exercises.
       continuous: true,

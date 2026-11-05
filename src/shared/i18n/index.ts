@@ -1,3 +1,6 @@
+// Hermes has no Intl.PluralRules, and i18next needs it to pick plural forms.
+import 'intl-pluralrules';
+
 import { getLocales } from 'expo-localization';
 import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
@@ -11,6 +14,8 @@ export function detectLanguage(): AppLanguage {
   if (languageCode === 'pt') return regionCode === 'BR' ? 'pt-BR' : 'pt-PT';
   if (languageCode === 'de') return 'de';
   if (languageCode === 'ko') return 'ko';
+  if (languageCode === 'es') return 'es';
+  if (languageCode === 'fr') return 'fr';
   return 'en';
 }
 

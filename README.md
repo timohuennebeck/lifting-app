@@ -15,7 +15,7 @@ history. The original design handoff is in git history (`git show 48b667e:design
 - **Drizzle ORM** (`@powersync/drizzle-driver`) for typed queries; `src/shared/data/powersync/schema.ts` is the client schema
 - **Uniwind** (Tailwind v4) with `tailwind-merge` via `cn()`
 - **Zustand** + **MMKV** for global and persisted client state
-- **i18next** with `en` (source), `de`, `pt-PT`, `pt-BR`, `ko`
+- **i18next** with `en` (source), `de`, `pt-PT`, `pt-BR`, `ko`, `es`, `fr`
 - **RevenueCat** for the Pro subscription
 
 ## Getting started
@@ -94,6 +94,7 @@ AI agents: see `AGENTS.md`.
 
 - `npm run typecheck` (regenerates Uniwind's types first), `npm run lint`, `npm run format` /
   `npm run format:check`
+- `npm run i18n:check`: the app languages have the same keys, and each is in `app.json`
 - `npm run compiler:check`: lists components and hooks the React Compiler skips (ESLint's compiler
   rules catch most of these, not all)
 - `npm run supabase:keys`, `supabase:start`, `supabase:stop`, `supabase:reset`;
@@ -164,7 +165,7 @@ changes hourly, so new exercises ship without a release. Edit them with the serv
 
 - **`id`:** a slug such as `bench-press`. Workouts store it, so never rename or delete an exercise; set
   `is_active = false` to hide it from the picker while history keeps its name.
-- **`name` / `instructions`:** per language (`en`, `de`, `pt-PT`, `pt-BR`, `ko`); English is required
+- **`name` / `instructions`:** per language (`en`, `de`, `pt-PT`, `pt-BR`, `ko`, `es`, `fr`); English is required
   and the fallback. Instructions are a list of `{ "title", "text" }` steps.
 - **`equipment`:** what the app shows with the exercise ("Langhantel · Brust"), an id in
   `public.equipment`.
@@ -206,7 +207,7 @@ Documents are readable without an account (onboarding runs logged out) and writt
   Write the text as Markdown: headings, paragraphs, `>` quotes, lists, `**bold**` and
   `[links](https://…)`.
 - **Publishing:** the texts live in `docs/legal/<locale>/` (German is binding; `en`, `pt-PT`,
-  `pt-BR` and `ko` are translations). `node scripts/legal-migration.mjs <version> <date> <name>`
+  `pt-BR`, `ko`, `es` and `fr` are translations). `node scripts/legal-migration.mjs <version> <date> <name>`
   turns them into a migration with one row per kind and locale, which `supabase db push` publishes.
   Locales after the name publish only those, e.g. a translation added to a version already out.
   `docs/legal/OPEN-QUESTIONS.md` lists what is still open.
@@ -261,11 +262,11 @@ alternatives for the user to review.
 - **Rules (server-side):** it also runs before there is an account, so imports are limited per network
   (`PLAN_IMPORT_IP_LIMIT`, default 10) and in total (`PLAN_IMPORT_DAILY_LIMIT`, default 1,000) per
   24 hours. `plan_requests` keeps a keyed hash of the IP, never the IP itself.
-- **Testing:** `npm run plan:eval` sends the 19 test plans in `scripts/plan-import-eval/fixtures`
+- **Testing:** `npm run plan:eval` sends the 21 test plans in `scripts/plan-import-eval/fixtures`
   (typed, spreadsheet, handwritten, whiteboard, screenshot, spoken; German, English, Portuguese,
-  Korean) to the functions and scores what it read against `cases.json`, with the time to the first exercise and
+  Spanish, French, Korean) to the functions and scores what it read against `cases.json`, with the time to the first exercise and
   to the whole plan. `npm run plan:eval -- --dir <folder>` reads your own photos and files and
-  prints what it found. One run is 15 imports (the 4 spoken cases go to read-exercises), so set
+  prints what it found. One run is 15 imports (the 6 spoken cases go to read-exercises), so set
   `PLAN_IMPORT_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
 
 ## Voice input
@@ -282,8 +283,8 @@ added to the workout shown.
 - **Matching:** the `read-exercises` Edge Function gets the text (at most 4,000 characters) with
   the app language and answers the exercises with their sets at once (not streamed). It reads each
   exercise exactly as `read-plan` reads a plan's line (`_shared/exercise-reading.ts`: the rules,
-  the catalog, the answer shape, the clean-up), plus rules for speech: numbers as words (Korean
-  names the reps first), misheard names, corrections.
+  the catalog, the answer shape, the clean-up), plus rules for speech: numbers as words (French
+  counts such as "soixante-dix" too; Korean names the reps first), misheard names, corrections.
 - **Adding:** in a plan being set up and in the workout builder, unsure matches show "Gehört
   als …" to confirm or swap, and exercises the catalog lacks are created with the plan or when the
   workout starts (only those still in it). A saved routine takes them at once, best match first.
@@ -340,9 +341,9 @@ the app says so and the user goes back a step.
 - **Rules (server-side):** limited on their own, like imports: per network
   (`PLAN_GENERATE_IP_LIMIT`, default 10) and in total (`PLAN_GENERATE_DAILY_LIMIT`, default 1,000)
   per 24 hours, in `plan_requests` with `kind = 'generate'`.
-- **Testing:** `npm run plan:generate-eval` asks for 18 plans (goals, equipment, 2–6 workouts a
+- **Testing:** `npm run plan:generate-eval` asks for 20 plans (goals, equipment, 2–6 workouts a
   week, every split, 20–120 minutes, every experience level, with and without focus; German, English,
-  Portuguese) and checks each: routines, time, equipment, repeats, every major muscle group trained, push/pull
+  Portuguese, Spanish, French) and checks each: routines, time, equipment, repeats, every major muscle group trained, push/pull
   balance, focus volume, reps for the goal, core work, limits for beginners. The checks are rules of thumb;
   the report in `scripts/plan-generate-eval/out/` has every plan to read. Set
   `PLAN_GENERATE_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
@@ -513,9 +514,9 @@ development build is needed after pulling.
 
 ## Languages
 
-`en` (source), `de`, `pt-PT`, `pt-BR` and `ko`. App texts are in
+`en` (source), `de`, `pt-PT`, `pt-BR`, `ko`, `es` and `fr`. App texts are in
 `src/shared/i18n/locales/<language>/<namespace>.json` (every language has the same keys), the iOS
 permission texts in `locales/`, and exercise and equipment names in the catalog rows. Legal
-documents are per language too, in all five.
+documents are per language too, in all seven.
 
 The app language is mirrored to `profiles.language` (for the team).

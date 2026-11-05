@@ -1,0 +1,142 @@
+{
+  "actions": {
+    "continue": "Continuer",
+    "back": "Retour",
+    "done": "Terminé",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "rename": "Renommer",
+    "clear": "Effacer",
+    "decrease": "Diminuer",
+    "increase": "Augmenter",
+    "close": "Fermer",
+    "retry": "Réessayer",
+    "notNow": "Pas maintenant",
+    "gotIt": "Compris",
+    "openSettings": "Ouvrir les réglages"
+  },
+  "progress": {
+    "stepOf": "{{current}} sur {{total}}"
+  },
+  "units": {
+    "cm": "cm",
+    "sec": "s",
+    "reps_one": "{{count}} rép.",
+    "reps_other": "{{count}} rép.",
+    "repRange": "{{range}} rép.",
+    "atMost": "jusqu'à {{value}}",
+    "minShort": "Min"
+  },
+  "weekdays": {
+    "short": ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
+    "narrow": ["L", "M", "M", "J", "V", "S", "D"]
+  },
+  "greeting": "Salut {{name}}",
+  "errors": {
+    "generic": "Une erreur s'est produite. Réessaie."
+  },
+  "tabs": {
+    "training": "Séances",
+    "level": "Niveau",
+    "body": "Corps",
+    "profile": "Profil",
+    "create": "Créer"
+  },
+  "rangeDays": "{{count}} j",
+  "search": {
+    "open": "Rechercher des exercices",
+    "title": "Exercices",
+    "pickRank": "Exercice pour les rangs",
+    "recent": "Faits récemment",
+    "forMuscle": "Fait monter ton niveau : {{muscle}}",
+    "recordA11y": "Record personnel : {{value}}, dernière fois le {{date}}"
+  },
+  "settings": "Réglages",
+  "legal": {
+    "terms": "Conditions d'utilisation",
+    "privacy": "Politique de confidentialité",
+    "meta": "Version {{version}} · en vigueur depuis le {{date}}",
+    "unavailable": "Ce document n'est pas encore disponible.",
+    "loadFailed": "Impossible de charger le document. Vérifie ta connexion et réessaie.",
+    "update": {
+      "titleTerms": "Nos conditions d'utilisation ont été mises à jour",
+      "titlePrivacy": "Notre politique de confidentialité a été mise à jour",
+      "titleBoth": "Nos textes juridiques ont été mis à jour",
+      "changes_one": "{{count}} partie a changé depuis ta dernière acceptation.",
+      "changes_other": "{{count}} parties ont changé depuis ta dernière acceptation.",
+      "subtitle": "Nous avons mis à jour nos textes juridiques. Lis la nouvelle version et accepte-la pour continuer à utiliser Loqqa.",
+      "accept": "J'accepte",
+      "signOut": "Se déconnecter",
+      "intro": "Introduction",
+      "section": "§ {{number}}",
+      "docSection": "{{doc}} § {{number}}",
+      "docShort": {
+        "terms": "Conditions",
+        "privacy": "Confidentialité"
+      },
+      "kinds": {
+        "added": "Nouveau",
+        "changed": "Modifié",
+        "removed": "Supprimé"
+      }
+    },
+    "compare": {
+      "a11yNew": "Nouveau : {{text}}",
+      "a11yRemoved": "Supprimé : {{text}}"
+    }
+  },
+  "keypad": {
+    "close": "Masquer le clavier",
+    "decimal": "Séparateur décimal",
+    "backspace": "Effacer",
+    "confirm": "Valider"
+  },
+  "dateWheel": {
+    "day": "Jour",
+    "month": "Mois",
+    "year": "Année"
+  },
+  "cameraAccess": {
+    "title": "Autoriser l'appareil photo"
+  },
+  "catalogOffline": {
+    "title": "Pas de connexion",
+    "body": "Au premier lancement, Loqqa télécharge ses exercices. Vérifie ta connexion internet et réessaie."
+  },
+  "voiceInput": {
+    "start": "Dicter au lieu de taper",
+    "cancel": "Supprimer l'enregistrement",
+    "done": "Terminer l'enregistrement",
+    "silent": "Je n'entends rien – continue de parler",
+    "transcribing": "Transcription…",
+    "noAccess": "Pour la saisie vocale, l'app a besoin d'accéder au micro.",
+    "settings": "Réglages",
+    "errors": {
+      "failed": {
+        "title": "Ça n'a pas marché",
+        "message": "Ce que tu as dit n'a pas pu être converti en texte. Réessaie ou écris-le."
+      },
+      "offline": {
+        "title": "Pas de connexion",
+        "message": "Pour transcrire ce que tu dis, il faut une connexion internet. Réessaie une fois en ligne, ou écris-le."
+      },
+      "limit": {
+        "title": "C'est tout pour aujourd'hui",
+        "message": "Tu as beaucoup utilisé la saisie vocale aujourd'hui. Écris-le ou réessaie demain."
+      },
+      "empty": {
+        "title": "Pas compris",
+        "message": "Je n'ai rien compris. Réessaie en te rapprochant un peu du micro."
+      },
+      "notPro": {
+        "title": "Loqqa Pro inactif",
+        "message": "La saisie vocale fait partie de Loqqa Pro. Pour le moment, ton compte n'a pas d'abonnement actif."
+      },
+      "tooYoung": {
+        "title": "Dès 16 ans",
+        "message": "Tu peux utiliser la saisie vocale à partir de 16 ans."
+      }
+    }
+  }
+}

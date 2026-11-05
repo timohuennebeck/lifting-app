@@ -67,7 +67,15 @@ export function WeightHistoryScreen() {
           <Text variant="overline" tone="subtle" className={`w-18 text-right ${OVERLINE}`}>
             {weightUnit(units)}
           </Text>
-          <Text variant="overline" tone="accent" className={`w-18 text-right ${OVERLINE}`}>
+          {/* The padding keeps the shrunk label off the weight header. */}
+          <Text
+            variant="overline"
+            tone="accent"
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.6}
+            className={`w-18 pl-1.5 text-right ${OVERLINE}`}
+          >
             {t('history.trend')}
           </Text>
           <View className="w-13.5" />

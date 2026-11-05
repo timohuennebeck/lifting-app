@@ -1,0 +1,112 @@
+{
+  "addExercise": "Ajouter un exercice",
+  "setOf": "Série {{current}} sur {{total}}",
+  "noSets": "Aucune série pour l'instant",
+  "missing": "Cette séance n'est plus disponible.",
+  "actions": {
+    "info": "Info",
+    "targets": "Objectifs",
+    "swap": "Changer",
+    "more": "Plus"
+  },
+  "table": {
+    "set": "SÉRIE",
+    "suggested": "SUGGÉRÉ",
+    "targets": "OBJECTIF",
+    "last": "AVANT",
+    "reps": "RÉP.",
+    "seconds": "SEC",
+    "toggleColumn": "Basculer entre suggéré, objectif et dernière fois",
+    "setLabel": "Série {{n}}",
+    "weightCell": "Poids",
+    "repsCell": "Répétitions",
+    "secondsCell": "Secondes",
+    "done": "Série terminée",
+    "doneAll": "Toutes les séries terminées",
+    "addSet": "Ajouter une série"
+  },
+  "rest": {
+    "title": "Repos",
+    "minus": "−{{seconds}} s",
+    "plus": "+{{seconds}} s",
+    "restart": "Relancer le minuteur",
+    "stop": "Arrêter le minuteur",
+    "restartDefault": "Relancer avec le repos par défaut",
+    "restartWith": "Relancer avec {{time}}"
+  },
+  "activity": {
+    "skipRest": "Passer le repos",
+    "logSet": "Valider la série",
+    "reps": "rép."
+  },
+  "menu": {
+    "open": "Options de la séance",
+    "progress": "Séries enregistrées : {{done}} sur {{total}}",
+    "finish": "Terminer la séance",
+    "finishHint": "Enregistre au moins une série pour terminer.",
+    "finishDescription": "Enregistre la séance dans ton historique",
+    "discard": "Abandonner la séance",
+    "discardDescription": "Supprime la séance et toutes les séries enregistrées"
+  },
+  "swap": {
+    "title": "Remplacer l'exercice",
+    "confirmTitle": "Remplacer l'exercice ?",
+    "confirmMessage": "Les séries déjà enregistrées pour cet exercice seront effacées.",
+    "confirm": "Remplacer"
+  },
+  "remove": {
+    "confirmTitle": "Retirer l'exercice ?",
+    "confirmMessage": "Les séries déjà enregistrées pour cet exercice seront supprimées.",
+    "confirm": "Retirer"
+  },
+  "empty": {
+    "title": "Aucun exercice",
+    "duration": "Durée estimée : {{minutes}} min",
+    "hint": "Touche + pour ajouter ton premier exercice."
+  },
+  "summary": {
+    "title": "{{name}}, c'est fait.",
+    "records_one": "{{count}} nouveau record",
+    "records_other": "{{count}} nouveaux records",
+    "noRecords": "Bien joué",
+    "newRecord": "NOUVEAU RECORD",
+    "previously": "avant : {{value}}",
+    "more": "Plus",
+    "delete": "Supprimer la séance",
+    "deleteHint": "Supprime {{name}} du {{date}} avec toutes ses séries. Cette action est irréversible.",
+    "story": {
+      "next": "Continuer",
+      "page": "Page {{current}} sur {{total}}",
+      "liftedToday": "Aujourd'hui, tu as soulevé",
+      "moved": "{{unit}} au total",
+      "objects": {
+        "washingMachine": "un <accent>lave-linge</accent>.",
+        "motorbike": "une <accent>moto</accent>.",
+        "jetSki": "un <accent>jet-ski</accent>.",
+        "smallCar": "une <accent>petite voiture</accent>.",
+        "hippo": "un <accent>hippopotame</accent>.",
+        "pickupTruck": "un <accent>pick-up</accent>.",
+        "camperVan": "un <accent>camping-car</accent>.",
+        "miniExcavator": "une <accent>mini-pelle</accent>.",
+        "tractor": "un <accent>tracteur</accent>.",
+        "tRex": "un <accent>T. rex</accent>.",
+        "privateJet": "un <accent>jet privé</accent>.",
+        "bus": "un <accent>bus de ville</accent>.",
+        "fireTruck": "un <accent>camion de pompiers</accent>.",
+        "motorYacht": "un <accent>yacht à moteur</accent>.",
+        "container": "un <accent>conteneur chargé</accent>.",
+        "passengerJet": "un <accent>avion de ligne</accent>.",
+        "spaceShuttle": "une <accent>navette spatiale</accent>."
+      },
+      "trainedFor": "{{minutes}} min d'entraînement",
+      "groupsOne": "<accent>{{first}}</accent>.",
+      "groupsTwo": "<accent>{{first}}</accent> et {{second}}.",
+      "recordsOverline": "Nouveau record personnel",
+      "recordsTitle_one": "<accent>{{count}} record</accent>\nbattu.",
+      "recordsTitle_other": "<accent>{{count}} records</accent>\nbattus."
+    }
+  },
+  "builder": {
+    "title": "Séance vide"
+  }
+}
