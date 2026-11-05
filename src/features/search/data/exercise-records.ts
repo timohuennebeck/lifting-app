@@ -1,7 +1,6 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { and, eq, inArray, isNotNull, sql } from 'drizzle-orm';
+import { and, eq, isNotNull, sql } from 'drizzle-orm';
 
-import { assistedExerciseIds } from '@/shared/data/exercises';
 import { drizzle } from '@/shared/data/powersync/database';
 import {
   workoutEntriesExercises,
@@ -9,22 +8,21 @@ import {
   workoutEntriesSets,
 } from '@/shared/data/powersync/schema';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
-import { hasKnownWeight } from '@/shared/data/workouts';
+import { hasKnownWeight, setScoreSql } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 
 const searchKeys = createQueryKeys('search', { records: null });
 
 export interface ExerciseRecord {
-  /** The heaviest set (the least assisted one), then most reps, then most seconds. */
+  /** The best set by `setScoreSql` (estimated 1RM), as the exercise history's top sets and PRs. */
   best: SetValues;
   /** Start of the last finished workout with this exercise. */
   lastAt: string;
 }
 
-// Sets of finished workouts, ranked per exercise by weight (on an assisted machine less is
-// better), then reps, then seconds (a missing value counts as -1, so exercises without weight
-// start at reps); ties keep any one of them. Built per call: the conditions read the current
-// exercise catalog.
+// Sets of finished workouts, ranked per exercise by `setScoreSql` like the exercise history. Of
+// equal scores the earliest set wins: a later one doesn't beat it, so it is the one marked PR.
+// Built per call: the conditions read the current exercise catalog.
 const rankedSets = () =>
   drizzle
     .select({
@@ -37,9 +35,8 @@ const rankedSets = () =>
     )`.as('last_at'),
       rank: sql<number>`row_number() over (
       partition by ${workoutEntriesExercises.exercise_id}
-      order by case when ${inArray(workoutEntriesExercises.exercise_id, assistedExerciseIds())}
-        then -${workoutEntriesSets.weight_kg} else coalesce(${workoutEntriesSets.weight_kg}, -1) end desc,
-        coalesce(${workoutEntriesSets.reps}, -1) desc, coalesce(${workoutEntriesSets.seconds}, -1) desc
+      order by ${setScoreSql(workoutEntriesSets, workoutEntriesExercises)} desc,
+        ${workoutEntries.started_at}, ${workoutEntriesExercises.position}, ${workoutEntriesSets.position}
     )`.as('rank'),
     })
     .from(workoutEntriesSets)
@@ -84,7 +81,7 @@ function toRecords(rows: RowOf<typeof recordsQuery>[]) {
   return records;
 }
 
-/** Each trained exercise's heaviest set and when it was last done, from finished workouts. */
+/** Each trained exercise's best set and when it was last done, from finished workouts. */
 export function useExerciseRecords() {
   return useDrizzleQuery({
     queryKey: searchKeys.records.queryKey,

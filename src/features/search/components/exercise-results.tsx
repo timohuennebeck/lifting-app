@@ -32,7 +32,7 @@ interface RecordSummaryProps {
   units: UnitSystem;
 }
 
-/** A trained exercise's heaviest set and when it was last done, at the end of its row. */
+/** A trained exercise's best set and when it was last done, at the end of its row. */
 function RecordSummary({ exerciseId, record, units }: RecordSummaryProps) {
   const { t } = useTranslation('common');
   const value = formatSet(exerciseId, record.best, units);
@@ -68,7 +68,7 @@ export interface ExerciseResultsProps {
 
 /**
  * The exercises matching the search and the muscle chip picked above them: the five trained
- * last first, last done on top, with their heaviest set (★); then the others A–Z with the letter
+ * last first, last done on top, with their best set (★); then the others A–Z with the letter
  * index, trained ones with theirs too. For a muscle, its exercises come first instead, those
  * working it most on top. A tap opens the exercise on its "Übung" tab.
  */
