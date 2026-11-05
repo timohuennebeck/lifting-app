@@ -15,9 +15,9 @@
         "title": "운동 기록과 PR",
         "detail": "모든 운동 종목별로"
       },
-      "levels": {
-        "title": "근육 레벨",
-        "detail": "모든 근육별로"
+      "sets": {
+        "title": "근육별 세트",
+        "detail": "바디 맵에서 한눈에"
       }
     },
     "startTrial": "무료 체험 시작",

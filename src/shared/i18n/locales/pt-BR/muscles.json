@@ -26,43 +26,16 @@
     "secondary": "Secundários",
     "showMore": "Mostrar mais {{count}}"
   },
-  "level": {
-    "overview": "Visão geral",
-    "badge": "Nv.",
-    "toNext": "{{percent}}% até Nv. {{next}}",
-    "max": "Nível máximo",
-    "pause_one": "Pausa · {{count}} sem.",
-    "pause_other": "Pausa · {{count}} sem.",
-    "new": "Novo",
-    "locked": "Sem nível",
-    "tiers": {
-      "beginner": "Iniciante",
-      "novice": "Em evolução",
-      "intermediate": "Intermediário",
-      "advanced": "Avançado",
-      "elite": "Elite"
-    }
-  },
-  "ranks": {
-    "title": "Categorias",
-    "yours": "Sua categoria",
-    "all": "Todas as categorias",
-    "levelShort": "Nv. {{level}}",
-    "levels": "Nv. {{from}}–{{to}}",
-    "toNext": "faltam {{levels}} para {{tier}}",
-    "top": "Categoria máxima",
-    "example": "ex.: {{exercise}}",
-    "upTo": "até {{value}}",
-    "over": "acima de {{value}}",
-    "between": "{{from}}–{{to}} {{unit}}",
-    "repsUnit": "rep.",
-    "more": "+{{n}}",
-    "change": "Escolher o exercício das categorias",
-    "open": "Ver categorias",
-    "info": "Como funcionam as categorias",
-    "infoStandard": "Cada exercício tem um valor de referência. Sua melhor série é comparada com ele: a referência é o nível 50, o dobro é o nível 100.",
-    "infoLevel": "Cada músculo recebe o nível dos seus três melhores exercícios e o nível geral vem dos 13 músculos principais. Músculos grandes contam mais.",
-    "infoFair": "Peso corporal e sexo são levados em conta. Depois de 12 semanas de pausa, o nível cai devagar, mas nunca some.",
-    "infoExample": "A linha abaixo de cada categoria mostra, aproximadamente, o que ela exige em um exercício, com suas repetições de sempre: o que você escolhe acima das categorias, ou então o que você mais faz. Sem treinos, aparece o supino como exemplo."
+  "sets": {
+    "count_one": "{{count}} série",
+    "count_other": "{{count}} séries",
+    "inDays_one": "Séries em {{count}} dia",
+    "inDays_other": "Séries em {{count}} dias",
+    "change": "{{change}} em relação aos {{days}} dias anteriores",
+    "today": "Hoje",
+    "workouts_one": "{{count}} treino",
+    "workouts_other": "{{count}} treinos",
+    "empty": "Nenhuma série neste período",
+    "rowA11y": "{{muscle}}: {{total}} séries, {{primary}} primárias, {{secondary}} secundárias"
   }
 }

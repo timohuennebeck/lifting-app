@@ -15,9 +15,9 @@
         "title": "History and PRs",
         "detail": "for every exercise"
       },
-      "levels": {
-        "title": "Muscle levels",
-        "detail": "for every muscle"
+      "sets": {
+        "title": "Sets per muscle",
+        "detail": "on the body map"
       }
     },
     "startTrial": "Start free trial",

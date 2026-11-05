@@ -15,9 +15,9 @@
         "title": "Historie und Bestwerte",
         "detail": "für jede Übung"
       },
-      "levels": {
-        "title": "Muskel-Level",
-        "detail": "für jeden Muskel"
+      "sets": {
+        "title": "Sätze pro Muskel",
+        "detail": "auf der Körperkarte"
       }
     },
     "startTrial": "Probephase starten",

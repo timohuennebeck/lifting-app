@@ -235,7 +235,8 @@ function fromCustom(custom: CustomExercise): Exercise {
   return exercise;
 }
 
-const exerciseOf = (row: ExerciseRow | undefined, custom: CustomExercise | undefined) =>
+/** The exercise of a catalog row or else of the user's own one, e.g. from store snapshots. */
+export const exerciseOf = (row: ExerciseRow | undefined, custom: CustomExercise | undefined) =>
   row ? toExercise(row) : custom ? fromCustom(custom) : undefined;
 
 export const getExercise = (id: string): Exercise | undefined =>

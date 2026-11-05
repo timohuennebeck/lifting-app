@@ -38,7 +38,7 @@
   },
   "tabs": {
     "training": "Training",
-    "level": "Level",
+    "sets": "Sets",
     "body": "Body",
     "profile": "Profile",
     "create": "New"
@@ -47,9 +47,8 @@
   "search": {
     "open": "Search exercises",
     "title": "Exercises",
-    "pickRank": "Exercise for ranks",
     "recent": "Recently trained",
-    "forMuscle": "Builds your {{muscle}} level",
+    "forMuscle": "Trains your {{muscle}}",
     "recordA11y": "Personal record: {{value}}, last on {{date}}"
   },
   "settings": "Settings",
