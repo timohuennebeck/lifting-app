@@ -63,7 +63,7 @@ export function MuscleSetsScreen() {
         contentContainerStyle={{ paddingBottom: insets.bottom + 30 }}
         showsVerticalScrollIndicator={false}
       >
-        <Text variant="caption" tone="subtle">
+        <Text variant="overline" tone="subtle" className="text-[11px]">
           {t('sets.inDays', { count: range })}
         </Text>
         <Text className="mt-1 font-inter-semibold text-[44px] leading-[52px] tabular-nums">
