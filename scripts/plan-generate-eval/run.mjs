@@ -104,10 +104,23 @@ const equipmentOf = ({ equipment, homeEquipment }) =>
 /** An exercise fits when each of its needs is met by one of the user's items. */
 const fits = (needs, have) => needs.every((items) => items.some((id) => have.has(id)));
 
+/**
+ * The rest the app gives after a set (restSecondsFor): the exercise's own, a quarter more for 6–7
+ * reps and half for 5 or fewer. Generated plans store none.
+ */
+function restOf(row, { targetMin: min, targetMax: max }) {
+  const rest = row?.rest_seconds ?? 90;
+  const reps = min == null ? max : max == null ? min : (min + max) / 2;
+  if (reps == null || isTimed(row)) return rest;
+  return Math.round((rest * (reps <= 5 ? 1.5 : reps < 8 ? 1.25 : 1)) / 15) * 15;
+}
+
 /** The app's session estimate (estimateMinutes): set-up per exercise, per set its work and rest. */
-const minutesOf = (routine) =>
-  routine.exercises.reduce((s, e) => s + 150 + e.sets.length * (45 + (e.restSeconds ?? 90)), 0) /
-  60;
+const minutesOf = (routine, catalog) =>
+  routine.exercises.reduce((s, e) => {
+    const row = catalog.get(e.exerciseId);
+    return s + 150 + e.sets.reduce((t, set) => t + 45 + (e.restSeconds ?? restOf(row, set)), 0);
+  }, 0) / 60;
 
 /** Each is trained at least once a week, and in as many routines as the split trains it (up to 2). */
 const GROUPS = {
@@ -173,9 +186,9 @@ const CHECKS = {
     plan.routines.length === answers.sessionsPerWeek
       ? []
       : [`${plan.routines.length} routines for ${answers.sessionsPerWeek} workouts a week`],
-  time: ({ answers }, plan) =>
+  time: ({ answers }, plan, catalog) =>
     plan.routines.flatMap((r) => {
-      const minutes = minutesOf(r);
+      const minutes = minutesOf(r, catalog);
       if (minutes > answers.sessionMinutes * 1.1)
         return [`${r.name}: ${Math.round(minutes)} min, more than ${answers.sessionMinutes}`];
       // A routine that leaves a third of the time unused, unless it is already full.
@@ -278,14 +291,14 @@ const CHECKS = {
 function describePlan(plan, catalog, language) {
   const lines = [plan.name];
   for (const routine of plan.routines) {
-    lines.push(`  ${routine.name} · ~${Math.round(minutesOf(routine))} min`);
+    lines.push(`  ${routine.name} · ~${Math.round(minutesOf(routine, catalog))} min`);
     for (const e of routine.exercises) {
       const row = catalog.get(e.exerciseId);
       const { targetMin: min, targetMax: max, rir } = e.sets[0];
       const target = (min === max ? `${min}` : `${min}–${max}`) + (isTimed(row) ? ' s' : '');
       const name = row?.name?.[language] ?? row?.name?.en ?? e.exerciseId;
       lines.push(
-        `    ${name}  ${e.sets.length} × ${target}${rir != null ? `  RIR ${rir}` : ''}  rest ${e.restSeconds} s`,
+        `    ${name}  ${e.sets.length} × ${target}${rir != null ? `  RIR ${rir}` : ''}  rest ${e.restSeconds ?? restOf(row, e.sets[0])} s`,
       );
     }
   }
@@ -328,7 +341,7 @@ const catalog = await loadCatalog(
   SUPABASE_URL,
   KEY,
   'exercises',
-  'id,name,measures,needs,muscles,cardio',
+  'id,name,measures,needs,muscles,cardio,rest_seconds',
 );
 const EQUIPMENT = await loadCatalog(SUPABASE_URL, KEY, 'equipment', 'id,in_gym,is_active');
 for (const [id, e] of EQUIPMENT) if (!e.is_active) EQUIPMENT.delete(id);

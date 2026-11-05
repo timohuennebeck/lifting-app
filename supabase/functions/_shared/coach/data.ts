@@ -31,6 +31,8 @@ export interface CoachCatalogExercise {
   measures: Measure[];
   /** Share of the training stimulus per muscle. */
   muscles: Record<string, number>;
+  /** Rest between sets of 8 reps or more; heavier sets get longer (see `restAfterSet`). */
+  restSeconds: number;
   /** The equipment in the user's profile allows it. */
   usable: boolean;
 }

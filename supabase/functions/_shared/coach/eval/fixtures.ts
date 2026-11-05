@@ -270,6 +270,29 @@ const EQUIPMENT: Record<string, string> = {
   'bent-over-dumbbell-row': 'dumbbell',
 };
 
+/** Rest between sets as the catalog has it. */
+const REST: Record<string, number> = {
+  'bench-press': 150,
+  squat: 180,
+  deadlift: 180,
+  'overhead-press': 150,
+  'barbell-row': 120,
+  'lat-pulldown': 120,
+  'barbell-curl': 75,
+  'triceps-pushdown': 60,
+  'lying-leg-curl': 90,
+  'leg-press': 150,
+  'calf-raise': 60,
+  'face-pull': 60,
+  'lateral-raise': 60,
+  plank: 60,
+  'pull-up': 120,
+  'push-up': 75,
+  'goblet-squat': 120,
+  'dumbbell-bench-press': 120,
+  'bent-over-dumbbell-row': 120,
+};
+
 /** The catalog, with what the user's equipment allows (all of it for null). */
 const catalogOf = (language: 'de' | 'en', have: string[] | null): CoachCatalogExercise[] =>
   Object.entries(CATALOG).map(([id, row]) => ({
@@ -278,6 +301,7 @@ const catalogOf = (language: 'de' | 'en', have: string[] | null): CoachCatalogEx
     equipment: EQUIPMENT[id],
     measures: row.measures,
     muscles: row.shares,
+    restSeconds: REST[id],
     usable: !have || have.includes(EQUIPMENT[id]),
   }));
 

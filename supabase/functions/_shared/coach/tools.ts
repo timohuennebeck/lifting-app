@@ -4,6 +4,7 @@
 // same place, create_workout and show_workout give the workout the app shows as a card, and
 // swap_exercises the plan change the user applies on its card.
 import { cut, MUSCLES } from '../plan-events.ts';
+import { DEFAULT_REST, exerciseSeconds, repTarget, restAfterSet } from '../rest.ts';
 import {
   addDays,
   type CoachData,
@@ -275,7 +276,7 @@ export const TOOLS = [
         items: {
           type: 'object',
           additionalProperties: false,
-          required: ['exercise_id', 'sets', 'target_min', 'target_max', 'rir', 'rest_seconds'],
+          required: ['exercise_id', 'sets', 'target_min', 'target_max', 'rir'],
           properties: {
             exercise_id: {
               type: 'string',
@@ -288,7 +289,6 @@ export const TOOLS = [
             },
             target_max: { type: 'integer', description: 'Equal to target_min for a fixed number.' },
             rir: { type: ['integer', 'null'], description: 'Reps in reserve.' },
-            rest_seconds: { type: 'integer' },
           },
         },
       },
@@ -1027,12 +1027,6 @@ const MAX_REPS = 30;
 /** The database's limit on a target, which in seconds is a long hold. */
 const MAX_SECONDS = 600;
 const MAX_RIR = 5;
-const MIN_REST = 30;
-const MAX_REST = 300;
-// The app's estimate (estimateMinutes in src/shared/data/routines.ts): set-up per exercise, and
-// per set its work and its rest.
-const EXERCISE_SECONDS = 150;
-const SET_SECONDS = 45;
 
 const clamp = (value: unknown, min: number, max: number) => {
   const number = Math.round(Number(value));
@@ -1042,14 +1036,16 @@ const clamp = (value: unknown, min: number, max: number) => {
 /**
  * The workout for the card, its values kept to what the app and the database take. Exercises it
  * doesn't know (or cardio) and repeats are left out, and named back in `skipped`, so one wrong id
- * doesn't cost the whole workout.
+ * doesn't cost the whole workout. It stores no rest: the app gives each exercise its own, which
+ * the minutes count with (the user's own exercises with the app's default).
  */
 function createWorkout(args: Args, data: CoachData): ToolResult {
   const name = typeof args.name === 'string' ? cut(args.name, NAME_MAX) : '';
   if (!name) return failed('The workout needs a name.');
   const catalog = new Map(data.catalog.map((e) => [e.id, e]));
-  const exercises: (WorkoutLine & { restSeconds: number })[] = [];
+  const exercises: WorkoutLine[] = [];
   const skipped: string[] = [];
+  let seconds = 0;
   for (const line of Array.isArray(args.exercises) ? (args.exercises as Args[]) : []) {
     const id = String(line.exercise_id);
     const own = data.exercises.get(id);
@@ -1065,22 +1061,26 @@ function createWorkout(args: Args, data: CoachData): ToolResult {
     const most = known.measures.includes('seconds') ? MAX_SECONDS : MAX_REPS;
     const low = clamp(line.target_min, 1, most);
     const high = clamp(line.target_max, 1, most);
+    const sets = clamp(line.sets, 1, MAX_SETS);
+    const targetMin = Math.min(low, high);
+    const targetMax = Math.max(low, high);
+    const rest = catalog.get(id)?.restSeconds ?? DEFAULT_REST;
+    seconds += exerciseSeconds(
+      sets,
+      restAfterSet(rest, known.measures, repTarget(targetMin, targetMax)),
+    );
     exercises.push({
       exerciseId: id,
-      sets: clamp(line.sets, 1, MAX_SETS),
-      targetMin: Math.min(low, high),
-      targetMax: Math.max(low, high),
+      sets,
+      targetMin,
+      targetMax,
       rir: line.rir == null ? null : clamp(line.rir, 0, MAX_RIR),
-      restSeconds: clamp(line.rest_seconds, MIN_REST, MAX_REST),
+      restSeconds: null,
     });
   }
   if (!exercises.length) {
     return failed("Unknown exercise ids: use ids from find_exercises or the user's exercises.");
   }
-  const seconds = exercises.reduce(
-    (sum, e) => sum + EXERCISE_SECONDS + e.sets * (SET_SECONDS + e.restSeconds),
-    0,
-  );
   return {
     chart: { type: 'workout', name, exercises },
     result: {
