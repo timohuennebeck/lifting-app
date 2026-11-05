@@ -96,7 +96,7 @@ export function KeypadPlates({ exerciseId, setup, onOpenSheet }: KeypadPlatesPro
           <Text className={CAPTION}>
             {caption}
             {shortOf != null ? (
-              <Text className="text-amber">
+              <Text className={cn(CAPTION, 'text-amber')}>
                 {` · ${t('plates.loaded', { weight: `${formatNumber(shortOf, 2)} ${unit}` })}`}
               </Text>
             ) : null}

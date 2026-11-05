@@ -116,7 +116,7 @@ function PlatesSheetBody({
       <Text className={cn(CAPTION, 'px-1')}>
         {t(`plates.${plateCaption(setup)}`)}
         {shortOf != null ? (
-          <Text className="text-amber">
+          <Text className={cn(CAPTION, 'text-amber')}>
             {` · ${t('plates.loaded', { weight: `${formatNumber(shortOf, 2)} ${unit}` })}`}
           </Text>
         ) : null}
