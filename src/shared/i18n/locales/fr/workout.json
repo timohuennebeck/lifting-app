@@ -9,6 +9,28 @@
     "swap": "Changer",
     "more": "Plus"
   },
+  "plates": {
+    "title": "Disques",
+    "perSide": "Par côté",
+    "onBar": "Sur la barre",
+    "onMachine": "Sur la machine",
+    "loaded": "{{weight}} chargés",
+    "barWeight": "Poids de la barre",
+    "sledWeight": "Poids du chariot",
+    "withoutBar": "Sans barre",
+    "withoutSled": "Sans chariot",
+    "enterWeight": "Saisis un poids",
+    "belowBar": "Plus léger que la barre",
+    "belowSled": "Plus léger que le chariot",
+    "barOnly": "Barre seule",
+    "sledOnly": "Chariot seul",
+    "noPlates": "Aucun disque",
+    "open": "Disques et barre",
+    "fold": "Réduire les disques",
+    "unfold": "Afficher les disques",
+    "lighter": "Plus léger",
+    "heavier": "Plus lourd"
+  },
   "table": {
     "set": "SÉRIE",
     "suggested": "SUGGÉRÉ",

@@ -9,6 +9,28 @@
     "swap": "Tauschen",
     "more": "Mehr"
   },
+  "plates": {
+    "title": "Scheiben",
+    "perSide": "Pro Seite",
+    "onBar": "Auf der Stange",
+    "onMachine": "Am Gerät",
+    "loaded": "{{weight}} geladen",
+    "barWeight": "Gewicht der Stange",
+    "sledWeight": "Gewicht des Schlittens",
+    "withoutBar": "Ohne Stange",
+    "withoutSled": "Ohne Schlitten",
+    "enterWeight": "Gewicht eingeben",
+    "belowBar": "Leichter als die Stange",
+    "belowSled": "Leichter als der Schlitten",
+    "barOnly": "Nur die Stange",
+    "sledOnly": "Nur der Schlitten",
+    "noPlates": "Keine Scheiben",
+    "open": "Scheiben und Stange",
+    "fold": "Scheiben einklappen",
+    "unfold": "Scheiben aufklappen",
+    "lighter": "Leichter",
+    "heavier": "Schwerer"
+  },
   "table": {
     "set": "SATZ",
     "suggested": "VORSCHLAG",

@@ -9,6 +9,28 @@
     "swap": "Trocar",
     "more": "Mais"
   },
+  "plates": {
+    "title": "Anilhas",
+    "perSide": "Por lado",
+    "onBar": "Na barra",
+    "onMachine": "Na máquina",
+    "loaded": "{{weight}} carregados",
+    "barWeight": "Peso da barra",
+    "sledWeight": "Peso do carrinho",
+    "withoutBar": "Sem barra",
+    "withoutSled": "Sem carrinho",
+    "enterWeight": "Digite um peso",
+    "belowBar": "Mais leve que a barra",
+    "belowSled": "Mais leve que o carrinho",
+    "barOnly": "Só a barra",
+    "sledOnly": "Só o carrinho",
+    "noPlates": "Sem anilhas",
+    "open": "Anilhas e barra",
+    "fold": "Recolher anilhas",
+    "unfold": "Mostrar anilhas",
+    "lighter": "Mais leve",
+    "heavier": "Mais pesado"
+  },
   "table": {
     "set": "SÉRIE",
     "suggested": "SUGESTÃO",

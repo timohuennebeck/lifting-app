@@ -320,12 +320,29 @@ const ICONS = {
       </>
     ),
   },
-  // An open book: the exercise's technique and history.
-  book: {
+  // A page with lines of text: the exercise's technique and history.
+  page: {
     viewBox: '0 0 14 14',
-    render: stroke(
-      'M7 3.7C5.6 2.7 3.6 2.4 1.5 2.7v8.3c2.1-.3 4.1 0 5.5 1 1.4-1 3.4-1.3 5.5-1V2.7c-2.1-.3-4.1 0-5.5 1zM7 3.7V12',
-      1.6,
+    render: (c) => (
+      <>
+        <Rect
+          x={2.5}
+          y={1.25}
+          width={9}
+          height={11.5}
+          rx={2.4}
+          stroke={c}
+          strokeWidth={1.6}
+          fill="none"
+        />
+        <Path
+          d="M5 4.6h4M5 7h4M5 9.4h2.2"
+          stroke={c}
+          strokeWidth={1.6}
+          strokeLinecap="round"
+          fill="none"
+        />
+      </>
     ),
   },
   // The "i" alone, for a round button that is its circle.

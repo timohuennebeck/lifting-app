@@ -9,6 +9,28 @@
     "swap": "바꾸기",
     "more": "더 보기"
   },
+  "plates": {
+    "title": "원판",
+    "perSide": "한쪽",
+    "onBar": "바에",
+    "onMachine": "기구에",
+    "loaded": "{{weight}} 장착",
+    "barWeight": "바 무게",
+    "sledWeight": "슬레드 무게",
+    "withoutBar": "바 없음",
+    "withoutSled": "슬레드 없음",
+    "enterWeight": "무게를 입력하세요",
+    "belowBar": "바보다 가벼움",
+    "belowSled": "슬레드보다 가벼움",
+    "barOnly": "바만",
+    "sledOnly": "슬레드만",
+    "noPlates": "원판 없음",
+    "open": "원판과 바",
+    "fold": "원판 접기",
+    "unfold": "원판 펼치기",
+    "lighter": "가볍게",
+    "heavier": "무겁게"
+  },
   "table": {
     "set": "세트",
     "suggested": "추천",
