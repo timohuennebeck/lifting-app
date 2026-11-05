@@ -44,8 +44,8 @@ the production app (`APP_VARIANT=production`, `eas.json`), whose values live in 
 ## i18n
 
 Texts live in `src/shared/i18n/locales/<lang>/<namespace>.json`. `en` is the source and its keys
-are type-checked; `en`, `de`, `pt-PT`, `pt-BR` and `ko` keep identical keys, so add each key to all
-five. Run `npx prettier --write` on edited JSON. Keys read with `returnObjects` look unused to
+are type-checked; `en`, `de`, `pt-PT`, `pt-BR`, `ko`, `es` and `fr` keep identical keys, so add each key to all
+seven. Run `npx prettier --write` on edited JSON. Keys read with `returnObjects` look unused to
 scanners.
 
 ## Conventions

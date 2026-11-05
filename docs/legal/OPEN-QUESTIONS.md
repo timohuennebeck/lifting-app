@@ -32,13 +32,16 @@ photos and AI parts.
 4. **Coach consent by signing up, without a notice in the app.** Version 1.0 has no notice before
    the first question and no switch in Settings. DS §4.4 says that creating the account and
    accepting the policy is the consent to the coach sending training and body data to OpenAI in
-   the USA, and DS §4.8 and §8 rely on it, also for Art. 49(1)(a) GDPR. The sentence above the
-   sign-up button only names body data for tailoring the training, so in the app nothing but the
-   linked policy mentions the coach or OpenAI. `profiles.coach_consent_at` is set at sign-up, and
+   the USA, and DS §4.8 and §8 rely on it, also for Art. 49(1)(a) GDPR. In 1.0 the sentence above
+   the sign-up button only names body data for tailoring the training, so in the app nothing but
+   the linked policy mentions the coach or OpenAI. Accounts created from 1.1 on see the coach
+   named in that sentence (item 27); accounts created before keep the consent they gave by
+   signing up. `profiles.coach_consent_at` is set at sign-up, and
    for an account without it, with its first question (the app always sends `consent: true`).
    Whether this is an explicit, informed consent is for the lawyer; a notice in the app or a
    separate confirmation step would be the safer form. The owner kept version 1.0 in review with
-   this on 5 November 2026; update 1.1 names the coach in the sign-up sentence (item 27).
+   this on 5 November 2026: the coach consent stays by signing up in 1.0, and 1.1 adds the clause
+   to the sign-up sentence.
 
 ## Before launch
 
@@ -112,7 +115,7 @@ photos and AI parts.
 
 ## Update 1.1
 
-27. **Name the coach in the sign-up sentence.** `auth.json` in every language gets: "…to tailor
-    your training, and to Kai sending your training and body data to OpenAI in the USA." That
-    makes what DS §4.4 says visible at the moment of the consent (item 4). It reaches only
-    accounts created with 1.1 or later.
+27. **Name the coach in the sign-up sentence.** Done: `auth.json` in every language ends: "…to
+    tailor your training, and to Kai sending your training and body data to OpenAI in the USA."
+    That makes what DS §4.4 says visible at the moment of the consent (item 4). It reaches only
+    accounts created with 1.1 or later; earlier accounts keep the consent they gave by signing up.
