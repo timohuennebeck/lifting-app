@@ -18,7 +18,7 @@ export interface AnalyticsEvents {
     split: string;
     routine_count: number;
   };
-  'plan:generate_fail': { error_code: string };
+  'plan:generate_fail': PlanFailureProperties;
   'plan_import:read_complete': {
     source: 'photos' | 'file';
     exercise_count: number;
@@ -26,7 +26,7 @@ export interface AnalyticsEvents {
     unmatched_count: number;
     duration_ms: number;
   };
-  'plan_import:read_fail': { source: 'photos' | 'file'; error_code: string };
+  'plan_import:read_fail': PlanFailureProperties & { source: 'photos' | 'file' };
   'paywall:view': { placement: PaywallPlacement };
   'paywall:purchase_complete': { package: string; has_trial: boolean };
   'paywall:purchase_fail': { package: string; error_code: string; is_cancelled: boolean };
@@ -50,7 +50,38 @@ export interface AnalyticsEvents {
   'workout:discard': { duration_min: number; completed_set_count: number };
   /** The store's review prompt asked for; the store decides whether it shows. */
   'review:request': { workout_count: number; record_count: number };
+  /** A question to Kai sent (never its text). */
+  'coach:question_submit': { is_new_chat: boolean };
+  'coach:answer_complete': { is_new_chat: boolean; has_chart: boolean; duration_ms: number };
+  /** No answer; `is_cancelled` when the user stopped it. */
+  'coach:answer_fail': { is_new_chat: boolean; error_code: string; is_cancelled: boolean };
+  /** The photos scored (never the scores). */
+  'progress_check:assess_complete': { duration_ms: number };
+  /** The photos couldn't be judged and go back to the camera. */
+  'progress_check:assess_retake': { issue_count: number };
+  'progress_check:assess_fail': { error_code: string };
+  /** A day's body weight saved (never the weight). */
+  'weight:entry_save': { is_edit: boolean; is_today: boolean };
+  /** Exercises said out loud added to a routine, a plan being imported or a new workout. */
+  'voice:add_complete': {
+    context: VoiceContext;
+    exercise_count: number;
+    unmatched_count: number;
+    duration_ms: number;
+  };
+  'voice:add_fail': { context: VoiceContext; error_code: string };
 }
+
+/**
+ * Why no plan came: `error_code` the reason the user is shown, `error_detail` where it broke
+ * (e.g. "http_429_limit", "stream_incomplete", "client_TypeError").
+ */
+export interface PlanFailureProperties {
+  error_code: string;
+  error_detail: string;
+}
+
+export type VoiceContext = 'routine' | 'plan_import' | 'workout';
 
 export type AnalyticsEvent = keyof AnalyticsEvents;
 
@@ -109,6 +140,11 @@ export function track<E extends AnalyticsEvent>(
 /** Ties the device's events, those from before sign-up too, to the account. */
 export function identify(userId: string, person?: PersonProperties) {
   posthog?.identify(userId, person as Properties);
+}
+
+/** The id events are sent under now: anonymous before sign-up, the account's id after. */
+export function analyticsId() {
+  return posthog?.getDistinctId() ?? null;
 }
 
 /** A new anonymous id after sign-out, so the next account starts clean. */

@@ -7,6 +7,8 @@ import Purchases, {
   type PurchasesStoreProduct,
 } from 'react-native-purchases';
 
+import { analyticsId } from '@/shared/lib/posthog';
+
 import {
   type CustomerInfo,
   NO_PRO,
@@ -50,6 +52,17 @@ function toCustomerInfo(info: StoreCustomerInfo): CustomerInfo {
   };
 }
 
+/**
+ * Ties RevenueCat's server events (trial started and converted, renewals, cancellations) to the
+ * PostHog person: its PostHog integration sends them under `$posthogUserId`.
+ */
+function linkAnalytics(distinctId: string | null) {
+  if (!distinctId) return;
+  Purchases.setAttributes({ $posthogUserId: distinctId }).catch((error: unknown) =>
+    console.warn('Linking RevenueCat to PostHog failed', error),
+  );
+}
+
 const isCancel = (error: unknown) => {
   const { code, userCancelled } = (error ?? {}) as { code?: string; userCancelled?: boolean };
   return userCancelled === true || code === PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR;
@@ -68,6 +81,7 @@ export function createRevenueCatPurchases(apiKey: string): PurchasesService {
       listeners.forEach((listener) => listener(mapped));
     });
     configured = true;
+    linkAnalytics(appUserID);
   };
 
   const currentOffering = async () => {
@@ -84,8 +98,10 @@ export function createRevenueCatPurchases(apiKey: string): PurchasesService {
         return;
       }
       // Logging in also moves purchases made before sign-up (during onboarding) to the account.
-      if (userId) await Purchases.logIn(userId);
-      else if (!(await Purchases.isAnonymous())) await Purchases.logOut();
+      if (userId) {
+        await Purchases.logIn(userId);
+        linkAnalytics(userId);
+      } else if (!(await Purchases.isAnonymous())) await Purchases.logOut();
     },
     async getCustomerInfo() {
       configure();
@@ -120,6 +136,8 @@ export function createRevenueCatPurchases(apiKey: string): PurchasesService {
     async purchase(planId) {
       const pkg = packageOf(await currentOffering(), planId);
       if (!pkg) throw new Error(`The current offering has no ${planId} package`);
+      // Before sign-up this is the anonymous id, which joins the account once it is identified.
+      linkAnalytics(analyticsId());
       try {
         const { customerInfo } = await Purchases.purchasePackage(pkg);
         return toCustomerInfo(customerInfo);

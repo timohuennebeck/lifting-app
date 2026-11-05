@@ -494,6 +494,15 @@ properties are typed in `src/shared/lib/posthog.ts` (`AnalyticsEvents`), named
   onboarding and purchase events join the person, and `reset` on sign-out.
 - **Training:** `workout:start`, `workout:finish`, `workout:discard`, with the plan week, sets and
   records from the local database.
+- **Features:** `coach:question_submit` and `coach:answer_complete` / `_fail` (never the text),
+  `progress_check:assess_complete` / `_retake` / `_fail` (never the photos or scores),
+  `weight:entry_save` (never the weight), `voice:add_complete` / `_fail` (with what it adds to).
+- **Plan failures** carry `error_detail` besides `error_code`: where it broke, e.g.
+  `http_429_limit`, `stream_incomplete` or `client_TypeError`.
+- **Subscriptions** come from RevenueCat's PostHog integration (`rc_…` events: trial started and
+  converted, renewals, cancellations, with revenue). The app sets RevenueCat's `$posthogUserId`
+  to the PostHog id before a purchase and after sign-in, so these land on the same person; the
+  integration itself is switched on in the RevenueCat dashboard.
 - **Automatic:** a `$screen` per route (`/workout/[id]`, ids left out), uncaught errors and
   unhandled rejections as `$exception`, app lifecycle events.
 

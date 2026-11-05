@@ -15,6 +15,7 @@ import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 import { addDays, fromIsoDate, toIsoDate } from '@/shared/lib/date';
 import { formatNumber, formatShortDate, type UnitSystem, weightUnit } from '@/shared/lib/format';
 import { clamp } from '@/shared/lib/math';
+import { track } from '@/shared/lib/posthog';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -146,10 +147,12 @@ function EntryForm({ initialDate, adding, entries, units, initialKg }: EntryForm
     setSaving(true);
     // Moving the entry this screen opened on to an empty day; a day with its own is edited.
     const moved = own ? null : original;
+    const saved = { is_edit: !!(own ?? original), is_today: date === today };
     // No `finally`, and nothing conditional inside the try: the React Compiler can't compile a
     // component with either.
     try {
       await saveWeightEntryMoved(userId, date, kg, moved);
+      track('weight:entry_save', saved);
       // The button's own tap is the only haptic: the save is instant, and a success pattern
       // right after it merged into one long buzz.
       router.back();

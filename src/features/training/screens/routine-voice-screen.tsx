@@ -8,5 +8,10 @@ import { addSpokenExercises } from '../data/routine-mutations';
 /** Voice input for a routine: what the user says is added to its exercises. */
 export function RoutineVoiceScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  return <VoiceScreen onAdd={(spoken) => addSpokenExercises(requireUserId(), id, spoken)} />;
+  return (
+    <VoiceScreen
+      context="routine"
+      onAdd={(spoken) => addSpokenExercises(requireUserId(), id, spoken)}
+    />
+  );
 }

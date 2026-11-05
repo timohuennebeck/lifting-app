@@ -200,8 +200,15 @@ export const useImportStore = create<ImportState>()((set, get) => ({
         if (controller.signal.aborted) return;
         const reason = error instanceof ImportError ? error.reason : 'failed';
         set({ reading: false, failure: { run, reason } });
-        if (source.kind === 'answers') track('plan:generate_fail', { error_code: reason });
-        else track('plan_import:read_fail', { source: source.kind, error_code: reason });
+        const failure = {
+          error_code: reason,
+          error_detail:
+            error instanceof ImportError
+              ? error.detail
+              : `client_${error instanceof Error ? error.name : 'unknown'}`,
+        };
+        if (source.kind === 'answers') track('plan:generate_fail', failure);
+        else track('plan_import:read_fail', { ...failure, source: source.kind });
       });
     return run;
   },
