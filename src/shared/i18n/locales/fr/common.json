@@ -38,7 +38,7 @@
   },
   "tabs": {
     "training": "Séances",
-    "level": "Niveau",
+    "sets": "Séries",
     "body": "Corps",
     "profile": "Profil",
     "create": "Créer"
@@ -47,9 +47,8 @@
   "search": {
     "open": "Rechercher des exercices",
     "title": "Exercices",
-    "pickRank": "Exercice pour les rangs",
     "recent": "Faits récemment",
-    "forMuscle": "Fait monter ton niveau : {{muscle}}",
+    "forMuscle": "Travaillent : {{muscle}}",
     "recordA11y": "Record personnel : {{value}}, dernière fois le {{date}}"
   },
   "settings": "Réglages",

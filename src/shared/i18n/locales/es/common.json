@@ -38,7 +38,7 @@
   },
   "tabs": {
     "training": "Entrenar",
-    "level": "Nivel",
+    "sets": "Series",
     "body": "Cuerpo",
     "profile": "Perfil",
     "create": "Nuevo"
@@ -47,9 +47,8 @@
   "search": {
     "open": "Buscar ejercicios",
     "title": "Ejercicios",
-    "pickRank": "Ejercicio para los rangos",
     "recent": "Entrenados recientemente",
-    "forMuscle": "Sube tu nivel de {{muscle}}",
+    "forMuscle": "Trabajan {{muscle}}",
     "recordA11y": "Récord personal: {{value}}, último el {{date}}"
   },
   "settings": "Ajustes",

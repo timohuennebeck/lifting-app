@@ -15,9 +15,9 @@
         "title": "Historique et records",
         "detail": "pour chaque exercice"
       },
-      "levels": {
-        "title": "Niveaux musculaires",
-        "detail": "pour chaque muscle"
+      "sets": {
+        "title": "Séries par muscle",
+        "detail": "sur la carte du corps"
       }
     },
     "startTrial": "Démarrer l'essai gratuit",
