@@ -45,7 +45,7 @@
   },
   "actionButton": {
     "title": "UNE PRESSION,\nC'EST NOTÉ",
-    "subtitle": "Mets Loqqa sur le bouton Action de ton iPhone. Une pression ouvre directement ton poids.",
+    "subtitle": "Mets Loqqa sur le bouton Action de ton iPhone. Un appui ouvre ton poids.",
     "action": "Action",
     "steps": {
       "settings": "Ouvre Réglages › Bouton Action",
