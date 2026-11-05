@@ -12,6 +12,7 @@ import {
   type PlanExercise,
 } from '../_shared/plan-events.ts';
 import type { CatalogRow, EquipmentRow } from '../_shared/plans.ts';
+import { exerciseSeconds, repTarget, restAfterSet } from '../_shared/rest.ts';
 
 export const GOALS = ['hypertrophy', 'strength', 'strength_hypertrophy'] as const;
 export const EQUIPMENT_ACCESS = ['gym', 'home', 'bodyweight'] as const;
@@ -127,11 +128,6 @@ export function usableExercises(catalog: CatalogRow[], have: Set<string>, answer
   );
 }
 
-// The app's estimate (estimateMinutes in src/shared/data/routines.ts): set-up per exercise, and
-// per set its work and its rest.
-const EXERCISE_SECONDS = 150;
-const SET_SECONDS = 45;
-
 export const INSTRUCTIONS = `You are a strength coach writing a training plan for a gym app. The user answered a few questions; build the plan from them, using only exercises from the catalog below, by id.
 
 Routines:
@@ -149,7 +145,7 @@ Routines:
 - Routines that train the same muscles should not follow each other in the order.
 
 Each routine:
-- Fits the session length. A session takes about 2.5 minutes per exercise to set up, plus for every set 45 seconds of work and its rest. Rather leave out an isolation exercise than go below 2 sets.
+- Fits the session length. A session takes about 2.5 minutes per exercise to set up, plus for every set 45 seconds of work and its rest: the exercise's rest from the catalog, a quarter more for 6-7 reps and half as long again for 5 reps or fewer. Rather leave out an isolation exercise than go below 2 sets.
 - Uses that length too: at least about 80% of it, within the sets and exercises the experience allows. With long sessions, first give the main exercises more sets (up to 5), then add exercises.
 - Every exercise should build muscle or strength. Low-load drills (bird dog, donkey kick, fire hydrant, tibialis raise and the like) are no filler: only when the equipment leaves nothing better for that muscle.
 - Starts with the big compound lifts, then accessories, then isolation work.
@@ -169,15 +165,14 @@ Experience:
 Little equipment (bodyweight, kettlebell, bands): these can't be loaded heavily, so whatever the goal:
 - Use everything the user has: with a kettlebell, goblet squats, Romanian deadlifts, rows, presses and lunges, not only swings.
 - Harder variations over easy ones: lunges, split squats and single-leg work over air squats once the experience isn't none or beginner.
-- Bodyweight exercises 10-20 reps, rest 60-90 s.
-- Short sessions (30 minutes or less): rest 60-90 s and 2-3 sets, so that at least 3 exercises fit.
+- Bodyweight exercises 10-20 reps.
+- Short sessions (30 minutes or less): 2-3 sets, so that at least 3 exercises fit.
 
 Sets:
 - target_min and target_max are the rep range of every set (equal for a fixed number); rir is the reps in reserve in the first week.
 - The app runs the plan in blocks of 5 weeks: each week after the first takes one rep off the reserve (never below 0), and the fifth week is a lighter deload. So rir is where a block starts.
 - hypertrophy: compounds 6-10 reps, isolation 10-15, rir 3. strength: main lifts 3-6 reps at rir 3-4, compound accessories 6-10 and isolation 8-15 at rir 3. strength_hypertrophy: compounds 4-8, isolation 8-12, rir 3. none and beginner: rir 4 on compounds, 3 on isolation.
 - strength: build each routine around one or two main lifts (squat, bench press, deadlift, overhead press, barbell row or pull-up; their closest variant the equipment allows), then 2-4 accessories that support them. Fewer exercises with more sets rather than many isolation exercises.
-- rest_seconds: squats and deadlifts 180; barbell presses, Romanian deadlifts and leg presses 150; other compounds 120; isolation 60-90 (90 for quads and hamstrings). A quarter more for 6-7 reps, half as long again for 5 reps or fewer.
 
 Names, in the app language given below: each routine a short name (at most 24 characters), e.g. "Push", "Oberkörper A", "Beine"; the plan a short name for the split (at most 30 characters), e.g. "Push Pull Beine", "Ganzkörper 3×".`;
 
@@ -224,7 +219,7 @@ export function contextText(
 ) {
   const lines = catalog.map((e) => {
     const names = catalogNames(e.name, language);
-    return `${e.id} | ${names} | ${e.equipment} | ${mainMuscles(e.muscles)}`;
+    return `${e.id} | ${names} | ${e.equipment} | ${mainMuscles(e.muscles)} | ${e.rest_seconds}`;
   });
   return [
     `App language: ${language}.`,
@@ -241,7 +236,7 @@ export function contextText(
       ? ['', 'Focus exercises:', ...focusExercises(answers.focus, catalog)]
       : []),
     '',
-    'Catalog (id | names | equipment | main muscles):',
+    'Catalog (id | names | equipment | main muscles | rest in seconds):',
     ...lines,
   ].join('\n');
 }
@@ -253,14 +248,13 @@ export function buildSchema(ids: string[]) {
   const exercise = {
     type: 'object',
     additionalProperties: false,
-    required: ['exercise_id', 'sets', 'target_min', 'target_max', 'rir', 'rest_seconds'],
+    required: ['exercise_id', 'sets', 'target_min', 'target_max', 'rir'],
     properties: {
       exercise_id: { type: 'string', enum: ids },
       sets: integer,
       target_min: integer,
       target_max: integer,
       rir: { anyOf: [integer, { type: 'null' }] },
-      rest_seconds: integer,
     },
   };
   return {
@@ -291,7 +285,6 @@ export interface ModelExercise {
   target_min: number;
   target_max: number;
   rir: number | null;
-  rest_seconds: number;
 }
 
 /** A routine of the model's answer, forced by `buildSchema`. */
@@ -314,8 +307,8 @@ const clamp = (value: number, min: number, max: number) =>
 /**
  * Turns the model's answer into the app's plan, part by part as it streams in. Routines past the
  * workouts a week are dropped. A routine leaves out repeated exercises and, once it has its
- * first two, those that would take it past the session length.
- * Sets, targets, RIR and rest are kept in sensible ranges.
+ * first two, those that would take it past the session length (with the rest the app will give).
+ * Sets, targets and RIR are kept in sensible ranges; rest is left to the exercise.
  */
 export function planBuilder(answers: PlanAnswers, catalog: CatalogRow[]) {
   const byId = new Map(catalog.map((e) => [e.id, e]));
@@ -340,20 +333,20 @@ export function planBuilder(answers: PlanAnswers, catalog: CatalogRow[]) {
       if (!row || routineIndex >= answers.sessionsPerWeek || used.has(row.id)) return null;
       if (used.size >= MAX_EXERCISES) return null;
       const sets = clamp(line.sets, MIN_SETS, MAX_SETS);
-      const rest = clamp(line.rest_seconds, 30, 300);
-      const takes = EXERCISE_SECONDS + sets * (SET_SECONDS + rest);
-      if (used.size >= MIN_EXERCISES && seconds + takes > budget) return null;
-      used.add(row.id);
-      seconds += takes;
       let min = clamp(line.target_min, 1, 30);
       let max = clamp(line.target_max, 1, 30);
       if (min > max) [min, max] = [max, min];
+      const rest = restAfterSet(row.rest_seconds, row.measures, repTarget(min, max));
+      const takes = exerciseSeconds(sets, rest);
+      if (used.size >= MIN_EXERCISES && seconds + takes > budget) return null;
+      used.add(row.id);
+      seconds += takes;
       const rir = line.rir == null ? null : clamp(line.rir, 0, 4);
       return {
         exercise: {
           exerciseId: row.id,
           sets: Array.from({ length: sets }, () => ({ targetMin: min, targetMax: max, rir })),
-          restSeconds: rest,
+          restSeconds: null,
         },
       };
     },

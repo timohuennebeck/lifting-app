@@ -217,6 +217,7 @@ export function coachCatalog(
       equipment: e.equipment,
       measures: e.measures as Measure[],
       muscles: e.muscles,
+      restSeconds: e.rest_seconds,
       usable: fits(e.needs, have),
     }));
 }

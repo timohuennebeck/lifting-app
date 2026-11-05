@@ -53,6 +53,7 @@ const catalogExercise = (
   equipment,
   measures: ['weight', 'reps'],
   muscles,
+  restSeconds: 90,
   usable,
 });
 
@@ -72,7 +73,14 @@ const DATA: CoachData = {
   ),
   catalog: [
     catalogExercise('dumbbell-press', 'dumbbell', { chest: 0.75, triceps: 0.25 }),
-    catalogExercise('bench-press', 'barbell', { chest: 0.6, triceps: 0.25, front_delts: 0.15 }),
+    {
+      ...catalogExercise('bench-press', 'barbell', {
+        chest: 0.6,
+        triceps: 0.25,
+        front_delts: 0.15,
+      }),
+      restSeconds: 120,
+    },
     catalogExercise('cable-fly', 'cable', { chest: 1 }, false),
     catalogExercise('squat', 'barbell', { quads: 0.6, glutes: 0.4 }),
     { ...catalogExercise('plank', 'bodyweight', { abs: 1 }), measures: ['seconds'] },
@@ -497,7 +505,6 @@ Deno.test('create_workout: keeps values in range and leaves out what the app can
     target_min: 6,
     target_max: 8,
     rir: 2,
-    rest_seconds: 120,
     ...values,
   });
   const { chart, result } = run('create_workout', {
@@ -507,7 +514,7 @@ Deno.test('create_workout: keeps values in range and leaves out what the app can
       line('bench-press'),
       line('no-such-exercise'),
       line('treadmill'),
-      line('plank', { sets: 9, target_min: 45, target_max: 60, rir: null, rest_seconds: 10 }),
+      line('plank', { sets: 9, target_min: 45, target_max: 60, rir: null }),
     ],
   });
   assertEquals((chart as WorkoutChart).exercises, [
@@ -517,16 +524,18 @@ Deno.test('create_workout: keeps values in range and leaves out what the app can
       targetMin: 6,
       targetMax: 8,
       rir: 2,
-      restSeconds: 120,
+      restSeconds: null,
     },
-    { exerciseId: 'plank', sets: 6, targetMin: 45, targetMax: 60, rir: null, restSeconds: 30 },
+    { exerciseId: 'plank', sets: 6, targetMin: 45, targetMax: 60, rir: null, restSeconds: null },
   ]);
-  // (150 + 3 × (45 + 120)) + (150 + 6 × (45 + 30)) seconds, as the app estimates it.
+  // No rest stored: the app gives the exercise's. Bench press rests 2:00 a quarter longer for 7
+  // reps, the plank its 1:30 (its targets are seconds): (150 + 3 × (45 + 150)) + (150 + 6 × (45 +
+  // 90)) seconds.
   assertEquals(result, {
     created: 'Push',
     exercises: 2,
     sets: 9,
-    minutes: 21,
+    minutes: 28,
     skipped: ['bench-press', 'no-such-exercise', 'treadmill'],
   });
 

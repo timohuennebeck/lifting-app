@@ -334,7 +334,8 @@ the app says so and the user goes back a step.
 - **Checked server-side** (`planBuilder` in `generate.ts`), as the plan streams: one routine per
   workout a week, in the order they are done, no exercise twice in a routine, at most 10 a
   routine, each within the session length (the app's estimate, plus 10 %), sets 1–6, reps 1–30,
-  RIR 0–4 (the first week of a block), rest 30–300 s.
+  RIR 0–4 (the first week of a block). No rest is stored: the app gives each exercise its own,
+  longer for sets of 7 reps or fewer (`restSecondsFor`), and the session length counts with that.
 - **Secrets and speed:** as the plan import; `PLAN_GENERATE_FAST=false` turns Fast mode off.
 - **Rules (server-side):** limited on their own, like imports: per network
   (`PLAN_GENERATE_IP_LIMIT`, default 10) and in total (`PLAN_GENERATE_DAILY_LIMIT`, default 1,000)
