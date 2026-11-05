@@ -3,7 +3,7 @@
 
 import type { SheetCell, WorkbookSheet } from './workbook';
 
-export type SheetKind =
+type SheetKind =
   | { kind: 'plan'; routines: number; exercises: number }
   | { kind: 'log'; entries: number }
   /** Numbers, but nothing that reads as an exercise (e.g. nutrition). */

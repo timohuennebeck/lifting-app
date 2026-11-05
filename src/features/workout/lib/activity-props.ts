@@ -11,13 +11,13 @@ import type { WorkoutExercise } from '../data/workout-detail';
 import { valueOf } from './set-input';
 
 /** A number with its unit, e.g. "80" "kg"; the unit is empty for reps after a weight. */
-export interface ActivityValue {
+interface ActivityValue {
   value: string;
   unit: string;
 }
 
 /** The set the Live Activity offers to log. */
-export interface ActivitySet {
+interface ActivitySet {
   exerciseIndex: number;
   setIndex: number;
   exercise: string;
@@ -29,7 +29,7 @@ export interface ActivitySet {
 }
 
 /** Texts in the app language: the widget runtime has no i18n. */
-export interface ActivityTexts {
+interface ActivityTexts {
   rest: string;
   /** Read out for the ±10 s buttons, which show icons. */
   minus: string;

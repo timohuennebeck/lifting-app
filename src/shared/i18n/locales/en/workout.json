@@ -16,7 +16,7 @@
     "last": "LAST",
     "reps": "REPS",
     "seconds": "SEC",
-    "toggleColumn": "Switch between suggested, targets and last time",
+    "toggleColumn": "Switch between suggested and last time",
     "setLabel": "Set {{n}}",
     "weightCell": "Weight",
     "repsCell": "Reps",

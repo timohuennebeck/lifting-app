@@ -34,7 +34,6 @@ export interface ExerciseRow {
   muscles: Record<string, number>;
   rest_seconds: number;
   image_path: string | null;
-  video_path: string | null;
   /** Left out of the muscle stats. */
   cardio: boolean;
   /** The weight is assistance: less is harder. */
@@ -386,14 +385,21 @@ export interface SetTargets {
   rir: number | null;
 }
 
+/** Targets with both ends of the range set. */
+interface DefaultTargets extends SetTargets {
+  min: number;
+  max: number;
+}
+
 /** Targets of a new set: 8–12 reps at 2 RIR, or a 30–45 s hold (RIR is about reps). */
-export const targetsFor = (timed: boolean): SetTargets =>
+export const targetsFor = (timed: boolean): DefaultTargets =>
   timed ? { min: 30, max: 45, rir: null } : { min: 8, max: 12, rir: 2 };
 
-export const defaultTargets = (exerciseId: string): SetTargets => targetsFor(isTimed(exerciseId));
+export const defaultTargets = (exerciseId: string): DefaultTargets =>
+  targetsFor(isTimed(exerciseId));
 
 /** `count` new plan sets at the exercise's default targets. */
-export function defaultSetDrafts(exerciseId: string, count: number): SetTarget[] {
+function defaultSetDrafts(exerciseId: string, count: number): SetTarget[] {
   const { min, max, rir } = defaultTargets(exerciseId);
   return Array.from({ length: count }, () => ({ targetMin: min, targetMax: max, rir }));
 }

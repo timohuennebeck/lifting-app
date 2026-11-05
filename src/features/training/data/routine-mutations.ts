@@ -2,11 +2,12 @@ import { asc, eq, inArray } from 'drizzle-orm';
 
 import type { SpokenExercises } from '@/features/voice-input/lib/spoken-exercises';
 import { insertCustomExercises } from '@/shared/data/custom-exercises';
-import { newExerciseDraft, swapTargets } from '@/shared/data/exercises';
+import { newExerciseDraft } from '@/shared/data/exercises';
 import { nowIso } from '@/shared/data/json';
 import { syncSessionsPerWeek } from '@/shared/data/plans';
 import { nextPosition } from '@/shared/data/positions';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
+import { writePositions } from '@/shared/data/reorder';
 import { moved } from '@/shared/lib/array';
 import {
   routineExercises,
@@ -19,6 +20,7 @@ import {
   insertRoutineExercise,
   insertRoutineSets,
   type SetTarget,
+  swapInRoutines,
 } from '@/shared/data/routines';
 
 async function touchRoutine(tx: Tx, routineId: string) {
@@ -59,31 +61,29 @@ async function deleteRoutineTx(tx: Tx, routineId: string) {
   if (routine?.plan_id) await syncSessionsPerWeek(tx, routine.plan_id);
 }
 
-async function setExercisePosition(tx: Tx, routineExerciseId: string, position: number) {
-  await tx
-    .update(routineExercises)
-    .set({ position })
-    .where(eq(routineExercises.id, routineExerciseId));
-}
-
-/** Closes gaps in the exercise positions. Returns the ids in order (index = position). */
-async function renumberExercises(tx: Tx, routineId: string) {
-  const rows = await tx
+/** A routine's exercises with their stored positions, in order. */
+const exercisePositions = (tx: Tx, routineId: string) =>
+  tx
     .select({ id: routineExercises.id, position: routineExercises.position })
     .from(routineExercises)
     .where(eq(routineExercises.routine_id, routineId))
     .orderBy(routineExercises.position);
-  for (const [position, row] of rows.entries()) {
-    // Only rows that are off: every write is queued for upload.
-    if (row.position !== position) await setExercisePosition(tx, row.id, position);
-  }
-  return rows.map((r) => r.id);
+
+/** Saves a routine's exercises (`rows`) in `order`, closing gaps in their positions too. */
+async function writeExerciseOrder(
+  tx: Tx,
+  rows: { id: string; position: number }[],
+  order: string[],
+) {
+  await writePositions(rows, order, (id, position) =>
+    tx.update(routineExercises).set({ position }).where(eq(routineExercises.id, id)),
+  );
 }
 
 /** A new empty routine at the end of a plan, or of the library for `null`. */
 export async function createRoutine(userId: string, name: string, planId: string | null) {
   return drizzle.transaction(async (tx) => {
-    const id = await insertRoutine(tx, userId, planId, name.trim());
+    const id = await insertRoutine(tx, userId, planId, name);
     if (planId) await syncSessionsPerWeek(tx, planId);
     return id;
   });
@@ -113,16 +113,12 @@ export async function reorderPlanRoutine(routineId: string, target: number) {
       .from(routines)
       .where(eq(routines.plan_id, routine.plan_id))
       .orderBy(routines.position);
-    const order = rows.map((r) => r.id).filter((id) => id !== routineId);
-    if (target < 0 || target > order.length) return;
-    order.splice(target, 0, routineId);
-    const before = new Map(rows.map((r) => [r.id, r.position]));
-    for (const [position, id] of order.entries()) {
-      // Only rows that are off: every write is queued for upload.
-      if (before.get(id) !== position) {
-        await tx.update(routines).set({ position }).where(eq(routines.id, id));
-      }
-    }
+    const ids = rows.map((r) => r.id);
+    const from = ids.indexOf(routineId);
+    if (from < 0 || target < 0 || target >= ids.length) return;
+    await writePositions(rows, moved(ids, from, target), (id, position) =>
+      tx.update(routines).set({ position }).where(eq(routines.id, id)),
+    );
   });
 }
 
@@ -213,17 +209,7 @@ export async function swapRoutineExercise(routineExerciseId: string, exerciseId:
       .from(routineExercises)
       .where(eq(routineExercises.id, routineExerciseId))
       .get();
-    await tx
-      .update(routineExercises)
-      .set({ exercise_id: exerciseId })
-      .where(eq(routineExercises.id, routineExerciseId));
-    const targets = swapTargets(previous?.exercise_id ?? '', exerciseId);
-    if (targets) {
-      await tx
-        .update(routineSets)
-        .set({ target_min: targets.min, target_max: targets.max, rir: targets.rir })
-        .where(eq(routineSets.routine_exercise_id, routineExerciseId));
-    }
+    await swapInRoutines(tx, [routineExerciseId], previous?.exercise_id ?? '', exerciseId);
     await touchRoutine(tx, await routineOf(tx, routineExerciseId));
   });
 }
@@ -233,7 +219,10 @@ export async function removeRoutineExercise(routineExerciseId: string) {
     const routineId = await routineOf(tx, routineExerciseId);
     await tx.delete(routineSets).where(eq(routineSets.routine_exercise_id, routineExerciseId));
     await tx.delete(routineExercises).where(eq(routineExercises.id, routineExerciseId));
-    await renumberExercises(tx, routineId);
+    // Closes the gap it leaves.
+    const rows = await exercisePositions(tx, routineId);
+    const ids = rows.map((r) => r.id);
+    await writeExerciseOrder(tx, rows, ids);
     await touchRoutine(tx, routineId);
   });
 }
@@ -245,13 +234,13 @@ export async function removeRoutineExercise(routineExerciseId: string) {
 export async function reorderRoutineExercise(routineExerciseId: string, target: number) {
   await drizzle.transaction(async (tx) => {
     const routineId = await routineOf(tx, routineExerciseId);
-    const ids = await renumberExercises(tx, routineId);
+    const rows = await exercisePositions(tx, routineId);
+    const ids = rows.map((r) => r.id);
     const from = ids.indexOf(routineExerciseId);
-    if (from < 0 || target === from || target < 0 || target >= ids.length) return;
-    for (const [position, id] of moved(ids, from, target).entries()) {
-      if (ids[position] !== id) await setExercisePosition(tx, id, position);
-    }
-    await touchRoutine(tx, routineId);
+    const move = from >= 0 && target !== from && target >= 0 && target < ids.length;
+    // Gaps in the positions close either way.
+    await writeExerciseOrder(tx, rows, move ? moved(ids, from, target) : ids);
+    if (move) await touchRoutine(tx, routineId);
   });
 }
 

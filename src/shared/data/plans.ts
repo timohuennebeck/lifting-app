@@ -90,7 +90,6 @@ export async function insertPlan(
     position: nextPosition(plans.position, eq(plans.user_id, userId)),
     sessions_per_week: clampSessions(plan.sessionsPerWeek),
     block_weeks: plan.blockWeeks,
-    block_start_week: 1,
     created_at: nowIso(),
   });
   for (const [index, routine] of plan.routines.entries()) {
@@ -107,7 +106,6 @@ export interface PlanSummary {
   name: string;
   sessionsPerWeek: number;
   blockWeeks: number | null;
-  blockStartWeek: number;
 }
 
 const planListQuery = () =>
@@ -117,7 +115,6 @@ const planListQuery = () =>
       name: plans.name,
       sessions_per_week: plans.sessions_per_week,
       block_weeks: plans.block_weeks,
-      block_start_week: plans.block_start_week,
     })
     .from(plans)
     .orderBy(plans.position);
@@ -128,7 +125,6 @@ const toPlans = (rows: RowOf<typeof planListQuery>[]) =>
     name: r.name,
     sessionsPerWeek: r.sessions_per_week,
     blockWeeks: r.block_weeks,
-    blockStartWeek: r.block_start_week,
   }));
 
 /** All of the user's plans, in their order. */
@@ -180,16 +176,11 @@ function planWeekFrom(latest: LatestWeek | undefined, sessionsPerWeek: number): 
 
 /**
  * Week of the block a plan week falls in (1 to `blockWeeks`, the last one the deload), or null
- * for a plan without blocks.
+ * for a plan without blocks. Blocks repeat from the plan's first week.
  */
-export function blockWeekOf(
-  planWeek: number,
-  plan: Pick<PlanSummary, 'blockWeeks' | 'blockStartWeek'>,
-) {
-  const { blockWeeks, blockStartWeek } = plan;
+export function blockWeekOf(planWeek: number, { blockWeeks }: Pick<PlanSummary, 'blockWeeks'>) {
   if (!blockWeeks) return null;
-  const offset = (planWeek - blockStartWeek) % blockWeeks;
-  return ((offset + blockWeeks) % blockWeeks) + 1;
+  return ((planWeek - 1) % blockWeeks) + 1;
 }
 
 const isDeloadWeek = (blockWeek: number | null, plan: Pick<PlanSummary, 'blockWeeks'>) =>

@@ -48,7 +48,6 @@
     "open": "Übungen suchen",
     "title": "Übungen",
     "recent": "Zuletzt trainiert",
-    "forMuscle": "Trainiert {{muscle}}",
     "recordA11y": "Bestleistung: {{value}}, zuletzt am {{date}}"
   },
   "settings": "Einstellungen",
@@ -56,7 +55,6 @@
     "terms": "Nutzungsbedingungen",
     "privacy": "Datenschutzerklärung",
     "meta": "Version {{version}} · gültig ab {{date}}",
-    "unavailable": "Dieses Dokument ist noch nicht verfügbar.",
     "loadFailed": "Das Dokument konnte nicht geladen werden. Prüf deine Verbindung und versuch es noch einmal.",
     "update": {
       "titleTerms": "Unsere Nutzungsbedingungen wurden aktualisiert",

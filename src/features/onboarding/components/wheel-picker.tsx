@@ -5,8 +5,8 @@ import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { clamp } from '@/shared/lib/math';
 
-import { Gradient, type GradientStop } from './gradient';
-import { Text } from './text';
+import { Gradient, type GradientStop } from '@/shared/ui/gradient';
+import { Text } from '@/shared/ui/text';
 
 // Row height and five visible rows, as on the iOS wheels; the selected row is the middle one.
 const ROW = 44;

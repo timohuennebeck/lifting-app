@@ -17,6 +17,7 @@ import {
   transcribeSpeech,
   type VoiceTopic,
 } from '@/shared/data/transcribe-client';
+import { useAppLanguage } from '@/shared/hooks/use-app-language';
 import { i18n } from '@/shared/i18n';
 import { clamp } from '@/shared/lib/math';
 import { resetAudioMode } from '@/shared/lib/sounds';
@@ -37,7 +38,7 @@ const TICK_MS = 100;
 /** Levels kept for the wave: more than the widest field shows. */
 const HISTORY = 80;
 /** A recording is at most this long; then it is written down by itself. */
-export const MAX_RECORDING_MS = 120_000;
+const MAX_RECORDING_MS = 120_000;
 /** This long without speaking brings up the hint that nothing is heard. */
 const SILENCE_MS = 2000;
 /** Shorter than this was a slip of the finger: there is nothing to write down. */
@@ -48,7 +49,7 @@ export const SPEAKING = 0.2;
 /** The recorder's metering (dB, about -55 in a quiet room, -10 loud) as a level from 0 to 1. */
 const levelOf = (db: number | undefined) => (db === undefined ? 0 : clamp((db + 55) / 45, 0, 1));
 
-export type VoicePhase = 'idle' | 'recording' | 'transcribing';
+type VoicePhase = 'idle' | 'recording' | 'transcribing';
 
 function showFailure(reason: TranscribeFailure | 'empty') {
   showError({
@@ -80,10 +81,12 @@ export const withSpoken = (draft: string, said: string, max: number) =>
 
 /**
  * Voice input for a chat's field (design "Spracheingabe"): records with the levels for the wave
- * and the time, notices silence, and has the recording written down; the text goes to `onText`.
- * `denied` stays up until access is given in the settings. Leaving the screen drops a recording.
+ * and the time, notices silence, and has the recording written down in the app language; the text
+ * goes to `onText`. `denied` stays up until access is given in the settings. Leaving the screen
+ * drops a recording.
  */
-export function useVoiceInput(language: string, topic: VoiceTopic, onText: (text: string) => void) {
+export function useVoiceInput(topic: VoiceTopic, onText: (text: string) => void) {
+  const language = useAppLanguage();
   const recorder = useAudioRecorder(RECORDING);
   const [phase, setPhase] = useState<VoicePhase>('idle');
   const [levels, setLevels] = useState<readonly number[]>([]);

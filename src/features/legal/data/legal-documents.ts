@@ -28,16 +28,12 @@ export const legalKeys = createQueryKeys('legalDocuments', {
   pending: (language: string, acceptedIds: string[]) => [language, ...acceptedIds],
 });
 
-/** The terms and the privacy policy in effect now; a kind with nothing published is left out. */
-export async function fetchCurrentDocuments(language: string) {
-  const documents = await Promise.all(
-    LEGAL_KINDS.map((kind) => fetchCurrentDocument(kind, language)),
-  );
-  return documents.filter((d): d is LegalDocument => d !== null);
-}
+/** The terms and the privacy policy in effect now. */
+export const fetchCurrentDocuments = (language: string) =>
+  Promise.all(LEGAL_KINDS.map((kind) => fetchCurrentDocument(kind, language)));
 
-/** The app language first; English, then pt-BR, when the document isn't translated into it. */
-const localesFor = (language: string) => [...new Set([language, 'en', 'pt-BR'])];
+/** The app language first; English, which has every version, when it isn't translated into it. */
+const localesFor = (language: string) => [...new Set([language, 'en'])];
 
 const COLUMNS = 'id, kind, locale, version, content_md, effective_at, requires_reacceptance';
 
@@ -48,7 +44,7 @@ interface LegalDocumentRow {
   version: string;
   content_md: string;
   effective_at: string;
-  requires_reacceptance: boolean | null;
+  requires_reacceptance: boolean;
 }
 
 /** The first row of a query's answer as a document; null without one. */
@@ -63,15 +59,15 @@ function firstDocument(answer: { data: unknown[] | null; error: unknown }): Lega
     version: row.version,
     contentMd: row.content_md,
     effectiveAt: row.effective_at,
-    requiresReacceptance: !!row.requires_reacceptance,
+    requiresReacceptance: row.requires_reacceptance,
   };
 }
 
 /**
  * The version of a document in effect now, from `public.legal_documents` (readable logged out,
- * so the links in onboarding work). Null when none has been published.
+ * so the links in onboarding work). Throws when none is in effect.
  */
-async function fetchCurrentDocument(kind: LegalKind, language: string) {
+async function fetchCurrentDocument(kind: LegalKind, language: string): Promise<LegalDocument> {
   const now = new Date().toISOString();
   // Only the newest version, one locale at a time: usually the app language already has it, so
   // older versions and other languages are never downloaded.
@@ -88,7 +84,7 @@ async function fetchCurrentDocument(kind: LegalKind, language: string) {
     );
     if (document) return document;
   }
-  return null;
+  throw new Error(`No ${kind} document in effect`);
 }
 
 /** One version of a document in one language, or null when it doesn't exist there. */

@@ -1,9 +1,15 @@
 // What the AI functions check about the user before calling OpenAI: their age and whether they
-// have Loqqa Pro (assess-progress, coach-chat). Importing it touches no Deno API, so the plain
-// modules that only need `ageFrom` stay testable outside the Edge runtime.
+// have Loqqa Pro (assess-progress, coach-chat, coach-transcribe). Importing it touches no Deno
+// API, so the plain modules that only need `ageFrom` stay testable outside the Edge runtime.
 
 /** RevenueCat entitlement that unlocks Loqqa Pro (same as the app). */
 const PRO_ENTITLEMENT = 'pro';
+
+/**
+ * The coach's questions and recordings go to OpenAI with the user's training and body data, on
+ * their own consent: from 16 (GDPR, Germany).
+ */
+export const COACH_MIN_AGE = 16;
 
 /**
  * Whole years someone born on `birthDate` (YYYY-MM-DD) is on `today`, as the app counts them
@@ -15,6 +21,10 @@ export function ageFrom(birthDate: string, today: Date) {
   const hadBirthday = todayMonth > month || (todayMonth === month && today.getUTCDate() >= day);
   return today.getUTCFullYear() - year - (hadBirthday ? 0 : 1);
 }
+
+/** Whether someone born on `birthDate` is `minAge` or older today; an unknown birth date is not. */
+export const isOldEnough = (birthDate: string | null | undefined, minAge: number) =>
+  !!birthDate && ageFrom(birthDate, new Date()) >= minAge;
 
 /**
  * Whether RevenueCat lists an active Pro entitlement for the user. Without a key (local

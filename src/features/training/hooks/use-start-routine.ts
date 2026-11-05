@@ -1,11 +1,6 @@
-import { router } from 'expo-router';
-import { useRef, useState } from 'react';
-
 import { startWorkout } from '@/features/workout/data/workout-mutations';
-import { trackWorkoutStart } from '@/features/workout/lib/workout-analytics';
+import { useStartWorkout } from '@/features/workout/hooks/use-start-workout';
 import type { RoutineSummary } from '@/shared/data/routines';
-import { getActiveWorkoutId } from '@/shared/data/workouts';
-import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 
 /**
@@ -13,31 +8,10 @@ import { requireUserId } from '@/shared/stores/session-store';
  * (An empty workout is put together in the builder first.)
  */
 export function useStartRoutine() {
-  const [startingId, setStartingId] = useState<string | null>(null);
-  // State isn't updated yet on a double tap, which would start two workouts.
-  const starting = useRef(false);
+  const { start, startingKey } = useStartWorkout('push');
 
-  const start = async (routine: Pick<RoutineSummary, 'id' | 'name'>) => {
-    if (starting.current) return;
-    starting.current = true;
-    setStartingId(routine.id);
-    try {
-      // Only one workout runs at a time; a second one would be orphaned unfinished.
-      let workoutId = await getActiveWorkoutId();
-      // Not `??`, which the React Compiler can't compile inside a try.
-      if (workoutId === null) {
-        workoutId = await startWorkout(requireUserId(), routine.name, routine.id);
-        void trackWorkoutStart(workoutId);
-      }
-      haptics.success();
-      router.push(`/workout/${workoutId}`);
-    } catch (error) {
-      haptics.error();
-      console.error(error);
-    }
-    starting.current = false;
-    setStartingId(null);
-  };
+  const startRoutine = (routine: Pick<RoutineSummary, 'id' | 'name'>) =>
+    start(routine.id, () => startWorkout(requireUserId(), routine.name, routine.id));
 
-  return { start, startingId };
+  return { start: startRoutine, startingId: startingKey };
 }

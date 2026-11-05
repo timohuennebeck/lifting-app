@@ -74,8 +74,7 @@
     "no": "Crie um plano para mim"
   },
   "promise": {
-    "title": "PROMETA\nA SI MESMO.",
-    "titleNamed": "{{name}}, PROMETA\nA SI MESMO.",
+    "title": "{{name}}, PROMETA\nA SI MESMO.",
     "stick": "Vou continuar, mesmo quando ficar difícil.",
     "track": "Vou registrar cada série.",
     "hold": "Mantenha o polegar pressionado",

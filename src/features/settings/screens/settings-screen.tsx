@@ -12,7 +12,7 @@ import { useUploadQueueStore } from '@/features/support/stores/upload-queue-stor
 import { LanguageSheet } from '@/shared/components/language-sheet';
 import { ProfileAvatar } from '@/shared/components/profile-avatar';
 import { db } from '@/shared/data/powersync/database';
-import { saveProfile, useProfile } from '@/shared/data/profile';
+import { saveProfile, useProfile, useUnits } from '@/shared/data/profile';
 import { supabase } from '@/shared/data/supabase';
 import { useAppLanguage } from '@/shared/hooks/use-app-language';
 import { LANGUAGE_NAMES } from '@/shared/i18n/resources';
@@ -60,7 +60,7 @@ export function SettingsScreen() {
   const [unsynced, setUnsynced] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
-  const units = profile?.unitPreference ?? 'metric';
+  const units = useUnits();
   const close = () => setSheet(null);
 
   const signOut = () => {

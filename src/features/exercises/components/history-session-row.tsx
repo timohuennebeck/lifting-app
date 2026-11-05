@@ -7,7 +7,7 @@ import { formatDate, formatVolume, type UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon, type IconName } from '@/shared/ui/icon';
 import { ListRow } from '@/shared/ui/list-row';
-import { RirBadge } from '@/shared/ui/rir-badge';
+import { NumberedSet } from '@/shared/ui/numbered-set';
 import { Text } from '@/shared/ui/text';
 
 interface StatProps {
@@ -90,17 +90,11 @@ export function HistorySessionRow({
       {open ? (
         <Animated.View entering={FadeIn.duration(180)} className="gap-0.5 px-1 pb-2.5">
           {session.sets.map((set, i) => (
-            <View key={i} className="h-11 flex-row items-center gap-3">
-              <View className="size-7 items-center justify-center rounded-full bg-elevated">
-                <Text variant="caption" className="tabular-nums">
-                  {i + 1}
-                </Text>
-              </View>
+            <NumberedSet key={i} number={i + 1} rir={set.rir} large>
               <Text variant="bodyStrong" className="flex-1 text-lg leading-5.5 tabular-nums">
                 {formatSet(exerciseId, set, units)}
               </Text>
-              {set.rir != null ? <RirBadge rir={set.rir} size={24} /> : null}
-            </View>
+            </NumberedSet>
           ))}
         </Animated.View>
       ) : null}

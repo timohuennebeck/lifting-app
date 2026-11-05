@@ -18,7 +18,7 @@ const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 
 function reset(birthDate: string | null = '1995-04-01') {
-  profile = { birth_date: birthDate, language: 'de' };
+  profile = { birth_date: birthDate };
   slot = 7;
   rpcCalls.length = 0;
   deleted.length = 0;
@@ -104,11 +104,15 @@ Deno.test('only signed-in users of 16 and more with a known birth date get one',
   assertEquals(rpcCalls.length, 0);
 });
 
-Deno.test('a recording of an unknown kind or without audio is refused', async () => {
+Deno.test('a recording of an unknown kind, without audio or language is refused', async () => {
   reset();
   assertEquals((await send({ mimeType: 'video/mp4' })).status, 400);
+  assertEquals((await send({ mimeType: 'audio/webm' })).status, 400);
   assertEquals((await send({ audio: '' })).status, 400);
+  assertEquals((await send({ language: undefined })).status, 400);
+  assertEquals((await send({ language: 'it' })).status, 400);
   assertEquals(openAiForms.length, 0);
+  assertEquals(rpcCalls.length, 0);
 });
 
 Deno.test('at the day limit the user is told so and OpenAI is not asked', async () => {
@@ -126,14 +130,4 @@ Deno.test('a transcription OpenAI fails hands its slot back', async () => {
   const response = await send({});
   assertEquals(response.status, 502);
   assertEquals(deleted, ['eq.7']);
-});
-
-Deno.test('a prompt OpenAI refuses is left out on the second try', async () => {
-  reset();
-  openAiReplies = [json({ error: 'unknown parameter' }, 400), json({ text: 'Wie viel?' })];
-  const response = await send({});
-  assertEquals(await response.json(), { text: 'Wie viel?' });
-  assertEquals(openAiForms.length, 2);
-  assert(openAiForms[0].has('prompt'));
-  assert(!openAiForms[1].has('prompt'));
 });

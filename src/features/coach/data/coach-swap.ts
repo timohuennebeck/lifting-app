@@ -1,9 +1,9 @@
 import { and, asc, eq, inArray } from 'drizzle-orm';
 
-import { swapTargets } from '@/shared/data/exercises';
 import { nowIso } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
-import { routineExercises, routines, routineSets } from '@/shared/data/powersync/schema';
+import { routineExercises, routines } from '@/shared/data/powersync/schema';
+import { swapInRoutines } from '@/shared/data/routines';
 import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 
 import type { SwapRoutine } from '../lib/swap';
@@ -76,17 +76,7 @@ export async function swapInPlan(swaps: PlanSwap[]) {
         );
       if (!rows.length) continue;
       const ids = rows.map((r) => r.id);
-      await tx
-        .update(routineExercises)
-        .set({ exercise_id: to })
-        .where(inArray(routineExercises.id, ids));
-      const targets = swapTargets(from, to);
-      if (targets) {
-        await tx
-          .update(routineSets)
-          .set({ target_min: targets.min, target_max: targets.max, rir: targets.rir })
-          .where(inArray(routineSets.routine_exercise_id, ids));
-      }
+      await swapInRoutines(tx, ids, from, to);
       for (const row of rows) touched.add(row.routineId);
     }
     for (const id of touched) {

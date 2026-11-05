@@ -79,11 +79,6 @@ export const useOnboardingStore = create<OnboardingState>()(
     {
       name: 'onboarding',
       storage: createJSONStorage(() => mmkvStorage),
-      // A saved draft takes the defaults for fields it doesn't have.
-      merge: (persisted, current) => {
-        const saved = persisted as Partial<OnboardingState> | undefined;
-        return { ...current, ...saved, draft: { ...current.draft, ...saved?.draft } };
-      },
     },
   ),
 );

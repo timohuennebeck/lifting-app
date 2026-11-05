@@ -2,7 +2,7 @@
 // each exercise can go to the app as soon as it is complete. Plain TypeScript without Deno APIs.
 
 /** A finished part of the answer, in the order the model writes them. */
-export type PlanPiece<Routine, Exercise> =
+type PlanPiece<Routine, Exercise> =
   /** Everything before "routines": whether it is a plan (when the answer says), and its name. */
   | { kind: 'start'; isPlan: boolean; name: string }
   /** A routine's fields before its "exercises" (e.g. heading, name). */

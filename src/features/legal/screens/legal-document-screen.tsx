@@ -7,12 +7,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatDate } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
-import { Markdown, parseMarkdown } from '@/shared/ui/markdown';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 import { Text } from '@/shared/ui/text';
 
 import { LegalDiffView } from '../components/legal-diff-view';
+import { Markdown, parseMarkdown } from '../components/markdown';
 import {
   isLegalKind,
   type LegalKind,
@@ -50,13 +50,7 @@ interface LegalDocumentBodyProps {
 function LegalDocumentBody({ kind, compareId, section }: LegalDocumentBodyProps) {
   const { t, i18n } = useTranslation();
   const insets = useSafeAreaInsets();
-  const {
-    data: doc,
-    isPending,
-    isError,
-    isRefetching,
-    refetch,
-  } = useLegalDocument(kind, i18n.language);
+  const { data: doc, isPending, isRefetching, refetch } = useLegalDocument(kind, i18n.language);
   const blocks = doc ? parseMarkdown(doc.contentMd) : [];
   const { data: previous } = useLegalDocumentById(compareId);
   const diff = useMemo(
@@ -95,16 +89,14 @@ function LegalDocumentBody({ kind, compareId, section }: LegalDocumentBodyProps)
     return (
       <View className="flex-1 items-center justify-center gap-5 px-8">
         <Text variant="paragraph" tone="subtle" className="text-center">
-          {isError ? t('legal.loadFailed') : t('legal.unavailable')}
+          {t('legal.loadFailed')}
         </Text>
-        {isError ? (
-          <Button
-            label={t('actions.retry')}
-            variant="secondary"
-            loading={isRefetching}
-            onPress={() => refetch()}
-          />
-        ) : null}
+        <Button
+          label={t('actions.retry')}
+          variant="secondary"
+          loading={isRefetching}
+          onPress={() => refetch()}
+        />
       </View>
     );
   }

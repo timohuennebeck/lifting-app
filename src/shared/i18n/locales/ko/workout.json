@@ -16,7 +16,7 @@
     "last": "지난번",
     "reps": "반복",
     "seconds": "초",
-    "toggleColumn": "추천, 목표, 지난번 기록 사이 전환",
+    "toggleColumn": "추천과 지난번 기록 사이 전환",
     "setLabel": "{{n}}세트",
     "weightCell": "무게",
     "repsCell": "반복 수",

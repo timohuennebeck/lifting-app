@@ -92,11 +92,11 @@ export function SetTable({
 
   // Without suggestions (the first time, or cardio) there is nothing to switch: the column
   // shows the same set last time, or the first time the set's targets.
-  let shown: MiddleColumn | 'targets' = column === 'last' ? 'last' : 'suggested';
+  let shown: MiddleColumn | 'targets' = column;
   if (!suggestions) shown = last ? 'last' : 'targets';
   const suggestedShown = shown === 'suggested';
   const toggleColumn = () => {
-    showColumn(column === 'last' ? 'suggested' : 'last');
+    showColumn(column === 'suggested' ? 'last' : 'suggested');
     // To the next full turn, so a tap during the last one doesn't leave the arrow askew.
     turn.set(withTiming((Math.floor(turn.get() / 360) + 1) * 360, TURN));
   };

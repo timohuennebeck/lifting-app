@@ -66,10 +66,8 @@ export interface CoachProfile {
 
 const MEASURES: Record<string, string> = {
   'weight,reps': 'weight × reps',
-  'reps,weight': 'weight × reps',
   reps: 'reps',
   seconds: 'seconds',
-  'seconds,weight': 'weight × seconds',
   'weight,seconds': 'weight × seconds',
 };
 

@@ -64,24 +64,17 @@ export function SettingsRow({ label, value, trailing, onPress, onLongPress }: Se
 
 export interface SettingsToggleRowProps {
   label: string;
-  /** A line or two under the label: what the switch does. */
-  description?: string;
   value: boolean;
   onChange: (value: boolean) => void;
 }
 
 /** A row inside a SettingsSection with an on/off switch. */
-export function SettingsToggleRow({ label, description, value, onChange }: SettingsToggleRowProps) {
+export function SettingsToggleRow({ label, value, onChange }: SettingsToggleRowProps) {
   return (
     <View className="min-h-15 flex-row items-center gap-3 px-4 py-3">
-      <View className="flex-1 gap-1">
-        <Text variant="label">{label}</Text>
-        {description ? (
-          <Text tone="subtle" className="text-sm">
-            {description}
-          </Text>
-        ) : null}
-      </View>
+      <Text variant="label" className="flex-1">
+        {label}
+      </Text>
       <ToggleSwitch value={value} onChange={onChange} accessibilityLabel={label} />
     </View>
   );

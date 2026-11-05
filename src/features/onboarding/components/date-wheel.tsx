@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { daysInMonth, isoDate } from '@/shared/lib/date';
-import { dateFieldOrder, formatMonthName } from '@/shared/lib/format';
+import { dateFieldOrder, formatMonthName } from '../lib/date-fields';
 import { clamp } from '@/shared/lib/math';
 
 import { WheelGroup, WheelPicker } from './wheel-picker';

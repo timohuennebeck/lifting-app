@@ -7,7 +7,7 @@ module.exports = defineConfig([
   expoConfig,
   prettierRecommended,
   {
-    ignores: ['dist/*', 'supabase/*', 'powersync/*', 'src/uniwind-types.d.ts'],
+    ignores: ['supabase/*', 'powersync/*', 'src/uniwind-types.d.ts'],
   },
   {
     rules: {

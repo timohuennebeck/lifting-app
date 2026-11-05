@@ -6,10 +6,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors } from '@/shared/lib/theme';
 import { IconButton } from '@/shared/ui/icon-button';
-import { type SwipeStep, ZoomableView } from '@/shared/ui/zoomable-view';
 
 import { CheckPhoto } from '../components/check-photo';
 import { PoseChips } from '../components/pose-chips';
+import { type SwipeStep, ZoomableView } from '../components/zoomable-view';
 import { useProgressCheckPhotos, useProgressChecks } from '../data/progress-checks';
 import { POSES, type Pose } from '../lib/poses';
 import { useProgressCheckStore } from '../stores/progress-check-store';

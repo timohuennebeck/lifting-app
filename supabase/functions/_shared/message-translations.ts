@@ -14,10 +14,15 @@ export interface MessageRow {
 
 export const MESSAGE_COLUMNS = 'id, user_id, author, content, language';
 
-/** The language the team reads user messages in first (the desk asks for others itself). */
+/**
+ * The language the team reads user messages in first (the desk asks for others itself):
+ * SUPPORT_LANGUAGE, German when unset or not an app language.
+ */
 export const TEAM_LANGUAGE: AppLanguage = (() => {
   const value = Deno.env.get('SUPPORT_LANGUAGE');
-  return isAppLanguage(value) ? value : 'de';
+  if (isAppLanguage(value)) return value;
+  if (value) console.error(`SUPPORT_LANGUAGE "${value}" is not an app language; using de`);
+  return 'de';
 })();
 
 /** A user's app language, or English when they never picked one. */

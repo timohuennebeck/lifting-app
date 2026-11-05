@@ -34,8 +34,10 @@ import {
   workoutEntriesExercises,
   workoutEntriesSets,
 } from '@/shared/data/powersync/schema';
+import { writePositions } from '@/shared/data/reorder';
 import type { ExerciseDraft } from '@/shared/data/routines';
 import { hasKnownWeight, setScoreSql } from '@/shared/data/workouts';
+import { moved } from '@/shared/lib/array';
 import type { SetValues } from '@/shared/lib/format';
 import { clamp } from '@/shared/lib/math';
 
@@ -57,8 +59,9 @@ export async function workoutStats(workoutId: string) {
       routineId: workoutEntries.routine_id,
       planWeek: workoutEntries.plan_week,
       startedAt: workoutEntries.started_at,
+      // Null when the plan is gone.
+      planId: plans.id,
       blockWeeks: plans.block_weeks,
-      blockStartWeek: plans.block_start_week,
     })
     .from(workoutEntries)
     .leftJoin(plans, eq(plans.id, workoutEntries.plan_id))
@@ -90,13 +93,9 @@ export async function workoutStats(workoutId: string) {
       ),
     )
     .get();
-  const inPlan = entry.planWeek !== null && entry.blockStartWeek !== null;
-  const blockWeek = inPlan
-    ? blockWeekOf(entry.planWeek ?? 1, {
-        blockWeeks: entry.blockWeeks,
-        blockStartWeek: entry.blockStartWeek ?? 1,
-      })
-    : null;
+  const planWeek = entry.planId !== null ? entry.planWeek : null;
+  const inPlan = planWeek !== null;
+  const blockWeek = inPlan ? blockWeekOf(planWeek, entry) : null;
   let source: 'plan' | 'single' | 'empty' = 'empty';
   if (entry.routineId) source = inPlan ? 'plan' : 'single';
   return {
@@ -126,7 +125,7 @@ export async function startDraftWorkout(
   userId: string,
   name: string,
   exercises: ExerciseDraft[],
-  newExercises: CustomExercise[] = [],
+  newExercises: CustomExercise[],
 ) {
   const used = new Set(exercises.map((e) => e.exerciseId));
   return drizzle.transaction(async (tx) => {
@@ -150,7 +149,6 @@ async function planOf(tx: Tx, routineId: string) {
       id: plans.id,
       sessionsPerWeek: plans.sessions_per_week,
       blockWeeks: plans.block_weeks,
-      blockStartWeek: plans.block_start_week,
     })
     .from(routines)
     .innerJoin(plans, eq(plans.id, routines.plan_id))
@@ -251,7 +249,7 @@ async function insertWorkoutExercise(
     workout_entries_id: workoutId,
     exercise_id: exercise.exerciseId,
     position,
-    rest_seconds: exercise.restSeconds ?? null,
+    rest_seconds: exercise.restSeconds,
   });
   for (const [k, set] of exercise.sets.entries()) {
     await insertWorkoutSet(tx, userId, id, k, {
@@ -513,17 +511,16 @@ export async function reorderWorkoutExercise(
       .where(eq(workoutEntriesExercises.workout_entries_id, workoutId))
       .orderBy(asc(workoutEntriesExercises.position));
     const ids = rows.map((r) => r.id);
-    if (!ids.includes(workoutExerciseId)) return;
-    const order = ids.filter((id) => id !== workoutExerciseId);
-    order.splice(clamp(toIndex, 0, order.length), 0, workoutExerciseId);
-    // Only rows whose position changes: every write is queued for upload.
-    const stored = new Map(rows.map((r) => [r.id, r.position]));
-    for (const [position, id] of order.entries()) {
-      if (stored.get(id) === position) continue;
-      await tx
-        .update(workoutEntriesExercises)
-        .set({ position })
-        .where(eq(workoutEntriesExercises.id, id));
-    }
+    const from = ids.indexOf(workoutExerciseId);
+    if (from < 0) return;
+    await writePositions(
+      rows,
+      moved(ids, from, clamp(toIndex, 0, ids.length - 1)),
+      (id, position) =>
+        tx
+          .update(workoutEntriesExercises)
+          .set({ position })
+          .where(eq(workoutEntriesExercises.id, id)),
+    );
   });
 }

@@ -5,10 +5,10 @@ import { View } from 'react-native';
 
 import { ageFrom } from '@/shared/data/profile';
 import { Button } from '@/shared/ui/button';
-import { DateWheel } from '@/shared/ui/date-wheel';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
+import { DateWheel } from '../components/date-wheel';
 import { ABOUT_STEPS } from '../lib/flow';
 import { minimumAge } from '../lib/minimum-age';
 import { useDraft, useUpdateDraft } from '../stores/onboarding-store';

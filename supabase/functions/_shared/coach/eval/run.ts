@@ -8,9 +8,9 @@
 //        npm run coach:eval -- --fast                          OpenAI's Fast mode (2× the price)
 //        npm run coach:eval -- --repeat 3 weight bench        cases whose id contains a word
 // Writes the answers with their checks to eval/out/ (JSON, and Markdown for reading).
+import { DEFAULT_MODEL } from '../../openai.ts';
 import { askCoach, type CoachCall, type CoachTurn, type CoachUsage } from '../chat.ts';
 import { contextText } from '../prompt.ts';
-import { CHART_TOOLS } from '../tools.ts';
 import { type Case, CASES } from './cases.ts';
 import { FIXTURES } from './fixtures.ts';
 import { languageOf, numbersOf, sentenceCount, unmatchedNumbers } from './grade.ts';
@@ -21,13 +21,24 @@ const PRICES: Record<string, [number, number, number]> = {
   'gpt-6-luna': [0.1, 0.01, 0.5],
 };
 const TIMEOUT_MS = 120_000;
+/** The tools that draw a chart or a card: the one behind an answer, where it called several. */
+const CHART_TOOLS = new Set([
+  'trend',
+  'compare',
+  'period_vs_average',
+  'calendar',
+  'distribution',
+  'create_workout',
+  'show_workout',
+  'swap_exercises',
+]);
 const MAX_SENTENCES = 3;
 /** The design's answers have 20–30 words. */
 const MAX_WORDS = 50;
 
 function options(args: string[]) {
   const opts = {
-    model: Deno.env.get('OPENAI_COACH_MODEL') ?? 'gpt-6.1-sol',
+    model: Deno.env.get('OPENAI_COACH_MODEL') ?? DEFAULT_MODEL,
     // "default": send none, the model's own.
     effort: 'low' as string | null,
     repeat: 1,

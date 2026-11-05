@@ -4,8 +4,8 @@ import { View } from 'react-native';
 import { cn } from '@/shared/lib/cn';
 import { clamp } from '@/shared/lib/math';
 
-import { IconButton } from './icon-button';
-import { Text } from './text';
+import { IconButton } from '@/shared/ui/icon-button';
+import { Text } from '@/shared/ui/text';
 
 export interface NumberStepperProps {
   value: number;

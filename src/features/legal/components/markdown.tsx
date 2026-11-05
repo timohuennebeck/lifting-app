@@ -4,7 +4,7 @@ import { Linking, Text as RNText, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 
-import { Text } from './text';
+import { Text } from '@/shared/ui/text';
 
 interface ListBlock {
   type: 'list';

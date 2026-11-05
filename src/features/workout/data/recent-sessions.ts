@@ -15,7 +15,7 @@ import { getOrInsert } from '@/shared/lib/map';
 /** Workouts per exercise the suggestions look back on. */
 const RECENT_WORKOUTS = 3;
 
-export interface RecentSet extends SetValues {
+interface RecentSet extends SetValues {
   targetMin: number | null;
   targetMax: number | null;
   targetRir: number | null;

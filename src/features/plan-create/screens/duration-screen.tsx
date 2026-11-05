@@ -6,10 +6,10 @@ import { useDraft, useUpdateDraft } from '@/features/onboarding/stores/onboardin
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
-import { DialRing } from '@/shared/ui/dial-ring';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
+import { DialRing } from '../components/dial-ring';
 import { useCreateStep } from '../hooks/use-create-step';
 import { clampMinutes, SESSION_MINUTES as DURATION } from '../lib/plan-answers';
 
@@ -17,8 +17,7 @@ export function DurationScreen() {
   const { t } = useTranslation(['planCreate', 'common']);
   const counter = useCreateStep('duration');
   const { step } = usePlanFlow();
-  // A length saved before the 30-minute minimum shows within the range.
-  const sessionMinutes = clampMinutes(useDraft().sessionMinutes);
+  const { sessionMinutes } = useDraft();
   const update = useUpdateDraft();
 
   function set(minutes: number) {
@@ -47,10 +46,7 @@ export function DurationScreen() {
       footer={
         <Button
           label={t('common:actions.continue')}
-          onPress={() => {
-            update({ sessionMinutes });
-            router.push(step('/create/building'));
-          }}
+          onPress={() => router.push(step('/create/building'))}
         />
       }
     >

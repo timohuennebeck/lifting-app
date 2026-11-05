@@ -5,6 +5,7 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { cn } from '@/shared/lib/cn';
+import { signOf } from '@/shared/lib/format';
 import { MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
 import { RangeTabs } from '@/shared/ui/range-tabs';
 import { Screen } from '@/shared/ui/screen';
@@ -16,9 +17,6 @@ import { SetsChart } from '../components/sets-chart';
 import { useMuscleDetail } from '../hooks/use-muscle-sets';
 import { type MuscleExercise, SET_RANGES, type SetRange } from '../lib/muscle-sets';
 import { useSetRangeStore } from '../stores/set-range-store';
-
-/** "+1", "±0" or "−5": a minus sign, not a hyphen. */
-const signed = (n: number) => (n > 0 ? `+${n}` : n < 0 ? `−${-n}` : '±0');
 
 interface ExerciseGroupProps {
   label: string;
@@ -48,11 +46,9 @@ function ExerciseGroup({ label, exercises }: ExerciseGroupProps) {
 export function MuscleSetsScreen() {
   const { t } = useTranslation('muscles');
   const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams<{ id: string; range?: string }>();
+  const params = useLocalSearchParams<{ id: string }>();
   const muscle = MUSCLE_IDS.find((m): m is MuscleId => m === params.id) ?? 'chest';
-  const [range, setRange] = useState<SetRange>(
-    () => SET_RANGES.find((r) => String(r) === params.range) ?? useSetRangeStore.getState().range,
-  );
+  const [range, setRange] = useState<SetRange>(() => useSetRangeStore.getState().range);
   const { detail, isLoading } = useMuscleDetail(muscle, range);
   const change = detail.total - detail.previous;
 
@@ -70,7 +66,9 @@ export function MuscleSetsScreen() {
           {isLoading ? ' ' : detail.total}
         </Text>
         <Text variant="caption" className={cn(change > 0 ? 'text-accent' : 'text-subtle')}>
-          {isLoading ? ' ' : t('sets.change', { change: signed(change), days: range })}
+          {isLoading
+            ? ' '
+            : t('sets.change', { change: `${signOf(change)}${Math.abs(change)}`, days: range })}
         </Text>
         {/* A new range starts without a picked bar. */}
         <View className="pt-6">

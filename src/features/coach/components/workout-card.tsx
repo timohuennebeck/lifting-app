@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { MuscleStack } from '@/shared/components/muscle-stack';
+import { MuscleCardHeader } from '@/shared/components/muscle-card-header';
 import { useExerciseName } from '@/shared/data/exercises';
 import { muscleShares } from '@/shared/data/muscles';
 import { estimateMinutes, repTarget } from '@/shared/data/routines';
@@ -76,22 +76,13 @@ export function WorkoutCard({ answerId, workout }: WorkoutCardProps) {
       onPress={() => void open()}
       className="gap-3.5 rounded-[18px] bg-surface py-3.5 pr-3.5 pl-2.5"
     >
-      <View className="flex-row items-center gap-3.5">
-        <MuscleStack shares={shares} highlight />
-        <View className="min-w-0 flex-1 gap-0.5">
-          <Text variant="bodyStrong" numberOfLines={1}>
-            {workout.name}
-          </Text>
-          {top ? (
-            <Text variant="caption" tone="accent" numberOfLines={1} className="font-inter-semibold">
-              {`${t(`muscles:names.${top.muscle}`)} ${top.percent} %`}
-            </Text>
-          ) : null}
-          <Text variant="caption" tone="subtle" numberOfLines={1} className="font-inter-medium">
-            {`${t('training:list.minutes', { count: minutes })} · ${t('training:overview.exercises', { count: workout.exercises.length })}`}
-          </Text>
-        </View>
-      </View>
+      <MuscleCardHeader
+        shares={shares}
+        highlight
+        title={workout.name}
+        focus={top ? `${t(`muscles:names.${top.muscle}`)} ${top.percent} %` : undefined}
+        meta={`${t('training:list.minutes', { count: minutes })} · ${t('training:overview.exercises', { count: workout.exercises.length })}`}
+      />
       <View className="gap-2 pb-0.5 pl-1">
         {workout.exercises.map((exercise) => (
           <WorkoutLine key={exercise.exerciseId} exercise={exercise} />

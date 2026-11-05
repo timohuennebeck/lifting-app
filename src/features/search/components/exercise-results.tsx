@@ -5,18 +5,11 @@ import { View } from 'react-native';
 import { ExerciseIndexList } from '@/features/exercises/components/exercise-index-list';
 import { ExerciseIndexRow } from '@/features/exercises/components/exercise-index-row';
 import type { ExerciseOption } from '@/features/exercises/hooks/use-exercise-search';
-import {
-  formatSet,
-  getExercise,
-  useCatalogStore,
-  useCustomExerciseStore,
-} from '@/shared/data/exercises';
-import { groupOfMuscle } from '@/shared/data/muscle-groups';
+import { formatSet } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { formatShortDate, type UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
-import type { MuscleId } from '@/shared/ui/muscle-map';
 import { Text } from '@/shared/ui/text';
 
 import { type ExerciseRecord, useExerciseRecords } from '../data/exercise-records';
@@ -62,44 +55,24 @@ export interface ExerciseResultsProps {
   query: string;
   /** Height of the search bar over the foot of the list, so the last rows clear it. */
   bottomInset: number;
-  /** Opened for a muscle: the exercises working it first. */
-  muscle?: MuscleId | null;
 }
 
 /**
  * The exercises matching the search and the muscle chip picked above them: the five trained
  * last first, last done on top, with their heaviest set (★); then the others A–Z with the letter
- * index, trained ones with theirs too. For a muscle, its exercises come first instead, those
- * working it most on top. A tap opens the exercise on its "Übung" tab.
+ * index, trained ones with theirs too. A tap opens the exercise on its "Übung" tab.
  */
-export function ExerciseResults({ query, bottomInset, muscle }: ExerciseResultsProps) {
-  const { t } = useTranslation(['common', 'muscles']);
+export function ExerciseResults({ query, bottomInset }: ExerciseResultsProps) {
+  const { t } = useTranslation('common');
   const units = useUnits();
   const { data: records } = useExerciseRecords();
-  const rows = useCatalogStore((s) => s.rows);
-  const custom = useCustomExerciseStore((s) => s.exercises);
   const withRecord = (o: ExerciseOption): ResultOption => ({ ...o, record: records?.get(o.id) });
 
   return (
     <ExerciseIndexList<ResultOption>
       query={query}
       bottomInset={bottomInset}
-      initialGroup={muscle ? groupOfMuscle(muscle) : null}
       split={(options) => {
-        if (muscle) {
-          // Its weight in the catalog; a custom exercise's from the muscles the user picked.
-          const share = (o: ExerciseOption) =>
-            rows[o.id]?.muscles[muscle] ??
-            (custom[o.id] ? (getExercise(o.id)?.muscles[muscle] ?? 0) : 0);
-          return {
-            first: options
-              .filter((o) => share(o) > 0)
-              .sort((a, b) => share(b) - share(a))
-              .map(withRecord),
-            title: t('search.forMuscle', { muscle: t(`muscles:names.${muscle}`) }),
-            rest: options.filter((o) => share(o) === 0),
-          };
-        }
         const recent = options
           .filter((o) => records?.has(o.id))
           .map(withRecord)

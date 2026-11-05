@@ -1,9 +1,9 @@
 // The AI coach's chat (README, "Coach"). The app sends a question; this function checks the user
-// (signed in, 16+, consent, Pro, limits), lets the coach answer from the user's data and streams
+// (signed in, 16+, Pro, limits), lets the coach answer from the user's data and streams
 // the answer back as server-sent events: the design's steps, the chart and the text. Only a
 // complete answer is saved, with its question (coach_chats, coach_messages); PowerSync brings
 // both to the app. Every question takes a row in coach_runs first, which the limits count.
-import { ageFrom, hasPro } from '../_shared/account.ts';
+import { COACH_MIN_AGE, hasPro, isOldEnough } from '../_shared/account.ts';
 import { askCoach, type CoachEvent, type CoachUsage } from '../_shared/coach/chat.ts';
 import { type CoachUser, dayIn } from '../_shared/coach/data.ts';
 import {
@@ -19,21 +19,27 @@ import {
   type RoutineRow,
 } from '../_shared/coach/load.ts';
 import { contextText } from '../_shared/coach/prompt.ts';
-import { admin, envLimit, isUuid, refuseAiRequest, reply, requestUser } from '../_shared/common.ts';
+import {
+  admin,
+  envFlag,
+  envLimit,
+  isUuid,
+  refuseAiRequest,
+  reply,
+  requestUser,
+} from '../_shared/common.ts';
 import { eventStream } from '../_shared/event-stream.ts';
-import { isAppLanguage } from '../_shared/plan-events.ts';
+import { DEFAULT_MODEL } from '../_shared/openai.ts';
+import { type AppLanguage, isAppLanguage } from '../_shared/plan-events.ts';
 import { loadCatalog, loadEquipment } from '../_shared/plans.ts';
 
 /** The app's COACH_QUESTION_MAX (src/shared/lib/limits.ts), as the database checks it. */
 const QUESTION_MAX = 500;
-/** Training and body data go to OpenAI on the user's own consent: from 16 (GDPR, Germany). */
-const MIN_AGE = 16;
-const setting = (name: string, fallback: string) => Deno.env.get(name) || fallback;
-const MODEL = setting('OPENAI_COACH_MODEL', 'gpt-6.1-sol');
-const EFFORT = setting('OPENAI_COACH_REASONING_EFFORT', 'low');
-const FAST = setting('COACH_FAST', 'true') !== 'false';
+const MODEL = Deno.env.get('OPENAI_COACH_MODEL') || DEFAULT_MODEL;
+const EFFORT = Deno.env.get('OPENAI_COACH_REASONING_EFFORT') || 'low';
+const FAST = envFlag('COACH_FAST');
 const DAILY_LIMIT = envLimit('COACH_DAILY_LIMIT', 20);
-const MONTHLY_LIMIT = Number(setting('COACH_MONTHLY_LIMIT', '150'));
+const MONTHLY_LIMIT = envLimit('COACH_MONTHLY_LIMIT', 150);
 const TIMEOUT_MS = 60_000;
 /** Earlier questions the model reads back with their answers and tool calls. */
 const HISTORY_TURNS = 6;
@@ -59,7 +65,7 @@ interface Job {
   chatId: string | null;
   profile: ProfileRow;
   timeZone: string;
-  language: string;
+  language: AppLanguage;
 }
 
 /** The phone's time zone, which decides what "today" and "this week" are; UTC if unknown. */
@@ -248,18 +254,24 @@ Deno.serve(async (req) => {
   const body = await req.json().catch(() => ({}));
   const question = typeof body.question === 'string' ? body.question.trim() : '';
   const chatId = body.chatId ?? null;
-  if (!question || question.length > QUESTION_MAX || (chatId !== null && !isUuid(chatId))) {
+  const language = body.language;
+  if (
+    !question ||
+    question.length > QUESTION_MAX ||
+    (chatId !== null && !isUuid(chatId)) ||
+    !isAppLanguage(language)
+  ) {
     return reply(400, { error: 'bad_request' });
   }
 
-  // Started together; the answers are checked in order (age, consent, Pro, chat).
+  // Started together; the answers are checked in order (age, Pro, chat).
   const pro = hasPro(userId);
   const [{ data: profile }, chat] = await Promise.all([
     admin
       .from('profiles')
       .select(
         'birth_date, unit_preference, goal, experience, focus, equipment, home_equipment, ' +
-          'active_plan_id, language, coach_consent_at',
+          'active_plan_id, coach_consent_at',
       )
       .eq('id', userId)
       .maybeSingle<ProfileRow>(),
@@ -267,12 +279,8 @@ Deno.serve(async (req) => {
       ? admin.from('coach_chats').select('id').eq('id', chatId).eq('user_id', userId).maybeSingle()
       : Promise.resolve({ data: null }),
   ]);
-  // An unknown birth date counts as too young, like the body check's.
-  const age = profile?.birth_date ? ageFrom(profile.birth_date, new Date()) : 0;
-  if (!profile || age < MIN_AGE) return reply(403, { error: 'too_young' });
-  // Sending the first question is the consent.
-  if (!profile.coach_consent_at && body.consent !== true) {
-    return reply(403, { error: 'consent_required' });
+  if (!profile || !isOldEnough(profile.birth_date, COACH_MIN_AGE)) {
+    return reply(403, { error: 'too_young' });
   }
   if (!(await pro)) return reply(403, { error: 'not_pro' });
   if (chatId && !chat.data) return reply(404, { error: 'chat_not_found' });
@@ -292,7 +300,7 @@ Deno.serve(async (req) => {
     return reply(429, { error: 'limit', limit: slot.limit, count, retryAt: slot.retry_at });
   }
 
-  // Recorded before any of the user's data goes to OpenAI.
+  // Asking is the consent, also after a withdrawal; recorded before any data goes to OpenAI.
   if (!profile.coach_consent_at) {
     const { error: consentError } = await admin
       .from('profiles')
@@ -304,7 +312,6 @@ Deno.serve(async (req) => {
       return reply(500, { error: 'failed' });
     }
   }
-  const language = [body.language, profile.language].find(isAppLanguage) ?? 'en';
   return eventResponse({
     userId,
     runId: slot.run,

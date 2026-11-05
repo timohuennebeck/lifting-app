@@ -5,7 +5,7 @@ import type Animated from 'react-native-reanimated';
 import type { AnimatedRef } from 'react-native-reanimated';
 import Sortable from 'react-native-sortables';
 
-import { MuscleStack } from '@/shared/components/muscle-stack';
+import { MuscleCardHeader } from '@/shared/components/muscle-card-header';
 import { muscleShares } from '@/shared/data/muscles';
 import type { ExerciseItem, RoutineSummary } from '@/shared/data/routines';
 import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
@@ -14,7 +14,6 @@ import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-import { Text } from '@/shared/ui/text';
 
 /**
  * Routines outside a plan listed as done most recently: Training shows this many ("Alle
@@ -77,7 +76,6 @@ function RoutineRow({
   next,
 }: RoutineRowProps) {
   const { t } = useTranslation('training');
-  const shares = muscleShares(items);
 
   return (
     <PressableScale
@@ -95,32 +93,15 @@ function RoutineRow({
         next ? 'pr-3.5' : 'flex-row items-center pr-3',
       )}
     >
-      <View
-        className={cn(
-          'min-w-0 flex-row items-center gap-3.5',
-          !next && 'flex-1',
-          done && 'opacity-45',
-        )}
-      >
-        <MuscleStack shares={shares} highlight={next} />
-        <View className="min-w-0 flex-1 gap-0.5">
-          <Text
-            variant="bodyStrong"
-            numberOfLines={1}
-            className={cn(next && 'text-[19px] leading-6')}
-          >
-            {name}
-          </Text>
-          {focus ? (
-            <Text variant="caption" tone="accent" numberOfLines={1} className="font-inter-semibold">
-              {focus}
-            </Text>
-          ) : null}
-          <Text variant="caption" tone="subtle" numberOfLines={1} className="font-inter-medium">
-            {meta}
-          </Text>
-        </View>
-      </View>
+      <MuscleCardHeader
+        shares={muscleShares(items)}
+        highlight={next}
+        title={name}
+        focus={focus}
+        meta={meta}
+        large={next}
+        className={cn('min-w-0', !next && 'flex-1', done && 'opacity-45')}
+      />
       {next ? (
         <Button
           label={t('overview.start')}

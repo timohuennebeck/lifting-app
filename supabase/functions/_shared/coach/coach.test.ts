@@ -393,7 +393,7 @@ Deno.test(
     assert('answer' in reply);
     assertEquals(reply.answer, 'At **115.5 kg**.');
     assertEquals(reply.chart?.type, 'trend');
-    assertEquals(events, ['searched', 'found', 'text']);
+    assertEquals(events, ['found', 'text']);
     const { waits, ...totals } = reply.usage;
     assertEquals(waits.length, 2);
     assertEquals(totals, {

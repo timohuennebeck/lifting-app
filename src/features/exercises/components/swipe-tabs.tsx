@@ -12,7 +12,7 @@ interface TabRoute {
 }
 
 /** What the material top tabs hand their tab bar (typed loosely by the navigator). */
-export interface TopTabBarProps {
+interface TopTabBarProps {
   state: { index: number; routes: TabRoute[] };
   navigation: {
     emit: (event: { type: 'tabPress'; target: string; canPreventDefault: true }) => {

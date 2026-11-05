@@ -3,8 +3,10 @@
 // tools, the chart the app draws under the answer (`chart`; null without enough data). In the
 // same place, create_workout and show_workout give the workout the app shows as a card, and
 // swap_exercises the plan change the user applies on its card.
+import { clampInt } from '../numbers.ts';
 import { cut, MUSCLES } from '../plan-events.ts';
 import { DEFAULT_REST, exerciseSeconds, repTarget, restAfterSet } from '../rest.ts';
+import { weightTrend } from '../weight-trend.ts';
 import {
   addDays,
   type CoachData,
@@ -34,15 +36,15 @@ import {
   type WorkoutLine,
 } from './data.ts';
 
-export interface Point {
+interface Point {
   date: string;
   value: number;
 }
 
-export type TrendMetric = ExerciseMetric | 'body_weight' | 'body_score';
-export type PeriodMetric = 'volume' | 'sets' | 'workouts' | 'minutes';
-export type Period = 'week' | 'month';
-export type DistributionBy = 'muscle' | 'exercise' | 'weekday';
+type TrendMetric = ExerciseMetric | 'body_weight' | 'body_score';
+type PeriodMetric = 'volume' | 'sets' | 'workouts' | 'minutes';
+type Period = 'week' | 'month';
+type DistributionBy = 'muscle' | 'exercise' | 'weekday';
 
 export interface TrendChart {
   type: 'trend';
@@ -52,11 +54,9 @@ export interface TrendChart {
   points: Point[];
   /** Body weight: the smoothed line through the measurements. */
   line: Point[] | null;
-  /** Each new all-time best, when asked for. */
-  records: Point[] | null;
 }
 
-export interface CompareChart {
+interface CompareChart {
   type: 'compare';
   metric: ExerciseMetric;
   unit: string;
@@ -75,7 +75,7 @@ export interface PeriodChart {
   average: number | null;
 }
 
-export interface CalendarChart {
+interface CalendarChart {
   type: 'calendar';
   from: string;
   to: string;
@@ -83,10 +83,9 @@ export interface CalendarChart {
   days: (Point & { sets: number })[];
 }
 
-export interface DistributionChart {
+interface DistributionChart {
   type: 'distribution';
   by: DistributionBy;
-  unit: string;
   /** The guideline line (10 sets a week per muscle). */
   reference: number | null;
   rows: { key: string; value: number }[];
@@ -101,7 +100,7 @@ export interface WorkoutChart {
 }
 
 /** A plan change on a card: per exercise the options the user picks from and then applies. */
-export interface SwapChart {
+interface SwapChart {
   type: 'swap';
   swaps: {
     exerciseId: string;
@@ -121,7 +120,7 @@ export type Chart =
   | WorkoutChart
   | SwapChart;
 
-export interface ToolResult {
+interface ToolResult {
   chart: Chart | null;
   result: Record<string, unknown>;
 }
@@ -336,17 +335,6 @@ export const TOOLS = [
   ),
 ];
 
-export const CHART_TOOLS = new Set([
-  'trend',
-  'compare',
-  'period_vs_average',
-  'calendar',
-  'distribution',
-  'create_workout',
-  'show_workout',
-  'swap_exercises',
-]);
-
 /** Runs a tool the model called; a mistake in the call comes back as `error` for it to fix. */
 export function runTool(name: string, args: unknown, data: CoachData, user: CoachUser): ToolResult {
   const run = RUNNERS[name];
@@ -546,21 +534,9 @@ function trend(args: Args, data: CoachData, user: CoachUser): ToolResult {
       exerciseId: exercise?.id ?? null,
       points: thin(points, CHART_POINTS),
       line: null,
-      records,
     },
     result,
   };
-}
-
-/** Each entry pulls the trend line 10 % of the way per day since the last one. */
-function smoothed(entries: CoachData['weights']) {
-  let value = entries[0]?.kg ?? 0;
-  let previous = entries[0]?.date ?? '';
-  return entries.map(({ date, kg }) => {
-    value += (1 - 0.9 ** Math.max(1, daysBetween(previous, date))) * (kg - value);
-    previous = date;
-    return { date, value };
-  });
 }
 
 function bodyWeight(args: Args, data: CoachData, user: CoachUser): ToolResult {
@@ -570,7 +546,7 @@ function bodyWeight(args: Args, data: CoachData, user: CoachUser): ToolResult {
   const points = data.weights
     .filter((w) => inRange(w.date, range))
     .map((w) => toPoint({ date: w.date, value: w.kg }));
-  const line = smoothed(data.weights)
+  const line = weightTrend(data.weights)
     .filter((p) => inRange(p.date, range))
     .map(toPoint);
   const unit = weightUnit(user.units);
@@ -601,7 +577,6 @@ function bodyWeight(args: Args, data: CoachData, user: CoachUser): ToolResult {
       exerciseId: null,
       points: thin(points, CHART_DOTS),
       line: thin(line, CHART_POINTS),
-      records: null,
     },
     result,
   };
@@ -910,7 +885,7 @@ function distribution(args: Args, data: CoachData, user: CoachUser): ToolResult 
   const unit = perWeek ? 'sets_per_week' : 'workouts';
   const reference = by === 'muscle' ? SETS_GUIDELINE : null;
   return {
-    chart: inside.length ? { type: 'distribution', by, unit, reference, rows } : null,
+    chart: inside.length ? { type: 'distribution', by, reference, rows } : null,
     result: {
       by,
       ...range,
@@ -1028,11 +1003,6 @@ const MAX_REPS = 30;
 const MAX_SECONDS = 600;
 const MAX_RIR = 5;
 
-const clamp = (value: unknown, min: number, max: number) => {
-  const number = Math.round(Number(value));
-  return Math.min(max, Math.max(min, Number.isFinite(number) ? number : min));
-};
-
 /**
  * The workout for the card, its values kept to what the app and the database take. Exercises it
  * doesn't know (or cardio) and repeats are left out, and named back in `skipped`, so one wrong id
@@ -1059,9 +1029,9 @@ function createWorkout(args: Args, data: CoachData): ToolResult {
       continue;
     }
     const most = known.measures.includes('seconds') ? MAX_SECONDS : MAX_REPS;
-    const low = clamp(line.target_min, 1, most);
-    const high = clamp(line.target_max, 1, most);
-    const sets = clamp(line.sets, 1, MAX_SETS);
+    const low = clampInt(line.target_min, 1, most);
+    const high = clampInt(line.target_max, 1, most);
+    const sets = clampInt(line.sets, 1, MAX_SETS);
     const targetMin = Math.min(low, high);
     const targetMax = Math.max(low, high);
     const rest = catalog.get(id)?.restSeconds ?? DEFAULT_REST;
@@ -1074,7 +1044,7 @@ function createWorkout(args: Args, data: CoachData): ToolResult {
       sets,
       targetMin,
       targetMax,
-      rir: line.rir == null ? null : clamp(line.rir, 0, MAX_RIR),
+      rir: line.rir == null ? null : clampInt(line.rir, 0, MAX_RIR),
       restSeconds: null,
     });
   }

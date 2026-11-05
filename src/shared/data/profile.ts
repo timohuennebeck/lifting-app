@@ -66,8 +66,6 @@ export interface Profile {
   /** "About you", written by the user. */
   bio: string | null;
   onboardedAt: string | null;
-  /** When the user agreed to the coach sending their data to OpenAI: set at sign-up. */
-  coachConsentAt: string | null;
   createdAt: string;
 }
 
@@ -91,7 +89,6 @@ function toProfile(r: ProfileRecord): Profile {
     avatarPath: r.avatar_path,
     bio: r.bio,
     onboardedAt: r.onboarded_at,
-    coachConsentAt: r.coach_consent_at,
     createdAt: r.created_at,
   };
 }
@@ -140,7 +137,6 @@ const toColumns = (p: ProfilePatch) => ({
   avatar_path: p.avatarPath,
   bio: p.bio,
   onboarded_at: p.onboardedAt,
-  coach_consent_at: p.coachConsentAt,
 });
 
 /**

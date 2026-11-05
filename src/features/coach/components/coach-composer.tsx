@@ -2,23 +2,12 @@ import type { Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type TextInput, View } from 'react-native';
 
-import { ChatField } from '@/shared/components/chat-field';
-import {
-  MicButton,
-  RecordingRow,
-  TranscribingRow,
-  VoiceInputNotes,
-} from '@/shared/components/voice-input';
-import { useAppLanguage } from '@/shared/hooks/use-app-language';
+import { ChatField, ChatFooter } from '@/shared/components/chat-field';
 import { useVoiceInput, type VoiceInput, withSpoken } from '@/shared/hooks/use-voice-input';
 import { COACH_QUESTION_MAX } from '@/shared/lib/limits';
 import { colors } from '@/shared/lib/theme';
-import { Gradient } from '@/shared/ui/gradient';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-
-/** How far above the field the content fades out. */
-const FADE = 28;
 
 export interface CoachComposerProps {
   value: string;
@@ -29,13 +18,16 @@ export interface CoachComposerProps {
   onStop: () => void;
 }
 
-/** "Frag Kai …" with the microphone; it records, writes down what was said and adds it. */
+/** The chat's composer: "Frag Kai …" with the microphone, and what voice input says above it. */
 export function CoachComposer(props: CoachComposerProps) {
-  const language = useAppLanguage();
-  const voice = useVoiceInput(language, 'coach', (said) =>
+  const voice = useVoiceInput('coach', (said) =>
     props.onChangeText(withSpoken(props.value, said, COACH_QUESTION_MAX)),
   );
-  return <CoachComposerView {...props} voice={voice} />;
+  return (
+    <ChatFooter voice={voice} fade>
+      <CoachField {...props} voice={voice} />
+    </ChatFooter>
+  );
 }
 
 export interface CoachFieldProps extends CoachComposerProps {
@@ -68,13 +60,10 @@ export function CoachField({
 }: CoachFieldProps) {
   const { t } = useTranslation('coach');
   const typed = value.trim().length > 0;
-
-  if (voice.phase === 'recording')
-    return <RecordingRow voice={voice} className={radiusClassName} />;
-  if (voice.phase === 'transcribing') return <TranscribingRow className={radiusClassName} />;
-
   return (
     <ChatField
+      voice={voice}
+      mic={!answering}
       value={answering ? '' : value}
       onChangeText={onChangeText}
       maxLength={COACH_QUESTION_MAX}
@@ -95,40 +84,17 @@ export function CoachField({
           >
             <View className="size-3 rounded-[3px] bg-bg" />
           </PressableScale>
-        ) : (
-          <>
-            <MicButton voice={voice} alone={!typed} />
-            {typed ? (
-              <PressableScale
-                haptic="press"
-                accessibilityLabel={t('composer.send')}
-                onPress={onSend}
-                className="size-10 items-center justify-center rounded-full bg-accent"
-              >
-                <Icon name="arrow-up" size={16} color={colors.onAccent} />
-              </PressableScale>
-            ) : null}
-          </>
-        )
+        ) : typed ? (
+          <PressableScale
+            haptic="press"
+            accessibilityLabel={t('composer.send')}
+            onPress={onSend}
+            className="size-10 items-center justify-center rounded-full bg-accent"
+          >
+            <Icon name="arrow-up" size={16} color={colors.onAccent} />
+          </PressableScale>
+        ) : null
       }
     />
-  );
-}
-
-/** The chat's composer: the field, with what voice input has to say above it. */
-export function CoachComposerView({ voice, ...field }: CoachComposerProps & { voice: VoiceInput }) {
-  return (
-    // Solid, as the chat runs on behind it while the keyboard is open.
-    <View className="bg-bg">
-      {/* The chat above fades into the page instead of ending at a hard edge. */}
-      <Gradient
-        from="bottom"
-        style={{ position: 'absolute', left: 0, right: 0, top: -FADE, height: FADE }}
-      />
-      <VoiceInputNotes voice={voice} />
-      <View className="px-3 pt-2">
-        <CoachField {...field} voice={voice} />
-      </View>
-    </View>
   );
 }

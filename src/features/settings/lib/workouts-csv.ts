@@ -29,7 +29,7 @@ const LINE_END = '\r\n';
 const pad = (value: number) => String(value).padStart(2, '0');
 
 /** An instant in the device's time zone with its offset: "2026-11-03T18:12:00+01:00". */
-export function toLocalIso(iso: string) {
+function toLocalIso(iso: string) {
   const date = new Date(iso);
   const offset = -date.getTimezoneOffset();
   const sign = offset < 0 ? '-' : '+';

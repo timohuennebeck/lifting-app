@@ -5,9 +5,11 @@ export type UnitSystem = 'metric' | 'imperial';
 
 const KG_PER_LB = 0.45359237;
 
-/** Between a number and its unit, so a line never breaks between them. */
 /** A space a line never breaks at: between a number and its unit. */
 export const NBSP = '\u00a0';
+
+/** The sign of a change: "+", "±" for none, or "−" (a minus sign, not a hyphen). */
+export const signOf = (n: number) => (n > 0 ? '+' : n < 0 ? '−' : '±');
 
 /** The weight unit's label, "kg" or "lb", the same in every app language. */
 export const weightUnit = (units: UnitSystem) => (units === 'imperial' ? 'lb' : 'kg');
@@ -110,21 +112,6 @@ export function formatShortDate(date: Date | number | string) {
   const otherYear = d.getFullYear() !== new Date().getFullYear();
   return formatDate(d, { day: 'numeric', month: 'short', ...(otherYear && { year: 'numeric' }) });
 }
-
-const SAMPLE_DATE = new Date(2001, 10, 22);
-const SAMPLE_PARTS = { day: '22', month: '11', year: '2001' } as const;
-
-/** The app language's order of day, month and year, as in "22.11.2001" or "11/22/2001". */
-export function dateFieldOrder() {
-  const text = formatDate(SAMPLE_DATE, { day: '2-digit', month: '2-digit', year: 'numeric' });
-  return (['day', 'month', 'year'] as const)
-    .slice()
-    .sort((a, b) => text.indexOf(SAMPLE_PARTS[a]) - text.indexOf(SAMPLE_PARTS[b]));
-}
-
-/** "September", "September" or "setembro" for a month (1–12). */
-export const formatMonthName = (month: number) =>
-  formatDate(new Date(2000, month - 1, 1), { month: 'long' });
 
 /** "Oktober", or "Oktober 2025" when it is not in `currentYear`. */
 export const formatMonthYear = (date: Date, currentYear: number) =>

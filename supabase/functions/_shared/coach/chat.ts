@@ -38,8 +38,6 @@ export interface CoachUsage {
 
 /** What the app shows while the answer comes: the design's steps, the chart, the text. */
 export type CoachEvent =
-  /** The model looks something up: "142 Trainings durchsucht". */
-  | { type: 'searched'; tool: string; of: 'workouts' | 'weights' | 'checks'; count: number }
   /** The data is ready ("Passende Daten gefunden"), with the chart it draws, if any. */
   | { type: 'found'; chart: Chart | null }
   /** More of the answer's text. */
@@ -47,7 +45,7 @@ export type CoachEvent =
   /** The text so far led into tool calls and isn't the answer: the app drops it. */
   | { type: 'reset' };
 
-export interface CoachRequest {
+interface CoachRequest {
   question: string;
   history: CoachTurn[];
   /** contextText() of the user. */
@@ -65,7 +63,7 @@ export interface CoachRequest {
   onEvent?: (event: CoachEvent) => void;
 }
 
-export type CoachReply =
+type CoachReply =
   | { answer: string; chart: Chart | null; calls: CoachCall[]; usage: CoachUsage }
   | {
       /** upstream: OpenAI rejected a request (`usage.requests` says whether one went through). */
@@ -111,18 +109,6 @@ function parseArgs(json: unknown) {
   } catch {
     return null;
   }
-}
-
-/** Which data a tool call searches, for the app's "142 Trainings durchsucht". */
-function searched(name: string, args: unknown, data: CoachData): CoachEvent {
-  const metric = (args as { metric?: unknown } | null)?.metric;
-  if (name === 'trend' && metric === 'body_weight') {
-    return { type: 'searched', tool: name, of: 'weights', count: data.weights.length };
-  }
-  if (name === 'trend' && metric === 'body_score') {
-    return { type: 'searched', tool: name, of: 'checks', count: data.checks.length };
-  }
-  return { type: 'searched', tool: name, of: 'workouts', count: data.workouts.length };
 }
 
 function addUsage(
@@ -200,7 +186,6 @@ export async function askCoach(req: CoachRequest): Promise<CoachReply> {
     input.push(...reply.output);
     for (const call of toolCalls) {
       const args = parseArgs(call.arguments);
-      req.onEvent?.(searched(String(call.name), args, req.data));
       const { chart: drawn, result } = runTool(String(call.name), args, req.data, req.user);
       // One chart per answer: the last one drawn.
       if (drawn) chart = drawn;

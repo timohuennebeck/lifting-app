@@ -37,7 +37,7 @@ photos and AI parts.
    sign-up button names this (item 27). TestFlight accounts from earlier builds saw a sentence
    that only named body data for tailoring the training, and keep the consent they gave by signing
    up. `profiles.coach_consent_at` is set at sign-up, and for an account without it, with its first
-   question (the app always sends `consent: true`). Whether this is an explicit, informed consent
+   question (`coach-chat` records it). Whether this is an explicit, informed consent
    is for the lawyer; a notice in the app or a separate confirmation step would be the safer form.
 
 ## Before launch
@@ -73,8 +73,7 @@ photos and AI parts.
 15. Deleting closed support tickets on request (DS §4.9).
 16. Withdrawing the coach consent (DS §12): the request comes by email, as the app has no switch.
     Clear `profiles.coach_consent_at` and delete the chats if asked to. A new question sets it
-    again (the app always sends `consent: true`), which DS §12 tells the user; nothing stops the
-    question. Also deleting coach chats on request at any other time.
+    again (`coach-chat` records it), which DS §12 tells the user; nothing stops the question. Also deleting coach chats on request at any other time.
 
 ## Keep in sync with the app
 

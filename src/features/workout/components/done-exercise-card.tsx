@@ -8,7 +8,7 @@ import type { UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
-import { RirBadge } from '@/shared/ui/rir-badge';
+import { NumberedSet } from '@/shared/ui/numbered-set';
 import { Text } from '@/shared/ui/text';
 
 import type { WorkoutSet } from '../data/workout-detail';
@@ -45,12 +45,7 @@ export function DoneExerciseCard({ exerciseId, sets, units, recordSetId }: DoneE
         </Text>
         <View className="gap-1.5">
           {sets.map((set, i) => (
-            <View key={set.id} className="flex-row items-center gap-2.5">
-              <View className="size-6 items-center justify-center rounded-full bg-elevated">
-                <Text variant="caption" className="text-xs">
-                  {i + 1}
-                </Text>
-              </View>
+            <NumberedSet key={set.id} number={i + 1} rir={set.targetRir}>
               {/* A record's star right after its value. */}
               <View className="flex-1 flex-row items-center gap-1.5">
                 <Text variant="body" className="text-sm text-fg-soft tabular-nums">
@@ -60,8 +55,7 @@ export function DoneExerciseCard({ exerciseId, sets, units, recordSetId }: DoneE
                   <Icon name="star" size={13} color={colors.accent} />
                 ) : null}
               </View>
-              {set.targetRir != null ? <RirBadge rir={set.targetRir} /> : null}
-            </View>
+            </NumberedSet>
           ))}
         </View>
       </View>

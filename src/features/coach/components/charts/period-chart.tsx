@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Svg from 'react-native-svg';
 
+import { useWidth } from '@/shared/hooks/use-width';
 import { nearestIndex } from '@/shared/lib/chart';
 import { cn } from '@/shared/lib/cn';
 import { addDays, DAY_MS, fromIsoDate, startOfWeek } from '@/shared/lib/date';
@@ -11,7 +12,7 @@ import { ChartGrid } from '@/shared/ui/chart-grid';
 import { Text } from '@/shared/ui/text';
 
 import { formatChange, formatValue, type PeriodChart as PeriodChartData } from '../../lib/charts';
-import { DashedLine, Headline, holdGesture, monthLabel, useWidth } from './chart-parts';
+import { DashedLine, Headline, holdGesture, monthLabel } from './chart-parts';
 
 /** The chart, its tallest bar (the current one's value sits above that) and a bar's width. */
 const HEIGHT = 150;

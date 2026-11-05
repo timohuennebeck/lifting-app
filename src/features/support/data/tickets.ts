@@ -17,11 +17,9 @@ import { useAppLanguage } from '@/shared/hooks/use-app-language';
 import { supportKeys } from './support-keys';
 
 export type TicketKind = 'bug' | 'idea';
+/** Open tickets still await the team; closed ones are done. */
 export type TicketStatus = 'open' | 'closed';
 type MessageAuthor = 'user' | 'team';
-
-/** Open tickets still await the team; closed ones are done. */
-export const isTicketActive = (status: TicketStatus) => status === 'open';
 
 export interface Ticket {
   id: string;
@@ -37,7 +35,6 @@ export interface Ticket {
 
 export interface TicketMessage {
   id: string;
-  ticketId: string;
   author: MessageAuthor;
   content: string;
   /** Storage paths in the ticket-attachments bucket. */
@@ -158,7 +155,6 @@ const messagesQuery = (ticketId: string, language: string) =>
 const toMessages = (rows: RowOf<typeof messagesQuery>[]): TicketMessage[] =>
   rows.map((r) => ({
     id: r.id,
-    ticketId: r.ticket_id,
     author: r.author === 'team' ? 'team' : 'user',
     content: r.content,
     attachments: parseJson<string[]>(r.attachments, []),

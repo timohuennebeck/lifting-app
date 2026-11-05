@@ -4,6 +4,7 @@
 // sets the database accepts. Plain TypeScript without Deno APIs, so it can be tested outside the
 // Edge runtime.
 
+import { clampInt } from './numbers.ts';
 import {
   catalogNames,
   cut,
@@ -14,12 +15,12 @@ import {
   type SetTarget,
 } from './plan-events.ts';
 import type { CatalogRow } from './plans.ts';
+import { DEFAULT_REST } from './rest.ts';
 
 type Muscle = (typeof MUSCLES)[number];
 
 const MAX_SETS = 10;
 const DEFAULT_SETS = 3;
-const DEFAULT_REST_SECONDS = 90;
 
 /** What the model writes for each exercise, as part of either function's instructions. */
 export const EXERCISE_RULES = `For each exercise:
@@ -33,7 +34,7 @@ export const EXERCISE_RULES = `For each exercise:
 - rest_seconds: rest if written ("90s", "2 min"), else null. Ignore weights in kg or lb.`;
 
 /** The catalog as the model reads it: one line per exercise with its names in a few languages. */
-export function catalogText(catalog: CatalogRow[], language: string) {
+function catalogText(catalog: CatalogRow[], language: string) {
   return catalog
     .map((e) => {
       const names = catalogNames(e.name, language);
@@ -122,8 +123,9 @@ export interface ModelExercise {
   rest_seconds: number | null;
 }
 
-const clampInt = (value: number | null, min: number, max: number) =>
-  value == null || !Number.isFinite(value) ? null : Math.min(max, Math.max(min, Math.round(value)));
+/** A whole number within min…max (see clampInt); null when there is none. */
+const clampOrNull = (value: number | null, min: number, max: number) =>
+  value == null || !Number.isFinite(value) ? null : clampInt(value, min, max);
 
 /** The app's target editor (and the database) take up to 60 reps or 600 seconds. */
 const MAX_REPS = 60;
@@ -133,13 +135,13 @@ const MAX_SECONDS = 600;
 function setTarget(line: ModelExercise, timed: boolean): SetTarget {
   if (timed) {
     // "3x30" on a plank means seconds.
-    const seconds = clampInt(line.seconds ?? line.reps_max ?? line.reps_min, 1, MAX_SECONDS);
+    const seconds = clampOrNull(line.seconds ?? line.reps_max ?? line.reps_min, 1, MAX_SECONDS);
     return { targetMin: seconds, targetMax: seconds, rir: null };
   }
-  let min = clampInt(line.reps_min ?? line.reps_max, 1, MAX_REPS);
-  let max = clampInt(line.reps_max ?? line.reps_min, 1, MAX_REPS);
+  let min = clampOrNull(line.reps_min ?? line.reps_max, 1, MAX_REPS);
+  let max = clampOrNull(line.reps_max ?? line.reps_min, 1, MAX_REPS);
   if (min != null && max != null && min > max) [min, max] = [max, min];
-  return { targetMin: min, targetMax: max, rir: clampInt(line.rir, 0, 5) };
+  return { targetMin: min, targetMax: max, rir: clampOrNull(line.rir, 0, 5) };
 }
 
 /**
@@ -169,7 +171,7 @@ export function exerciseReader(catalog: CatalogRow[], newId: () => string) {
       primary: [...new Set(primary)] as Muscle[],
       secondary: [...new Set(secondary)].filter((m) => !primary.includes(m)) as Muscle[],
       measures: [...(weighted ? ['weight'] : []), timed ? 'seconds' : 'reps'],
-      restSeconds: DEFAULT_REST_SECONDS,
+      restSeconds: DEFAULT_REST,
     };
     created.set(key, fresh);
     return { fresh, first: true };
@@ -186,10 +188,10 @@ export function exerciseReader(catalog: CatalogRow[], newId: () => string) {
     const target = setTarget(line, timed);
     const exercise: ImportedExercise = {
       exerciseId: id,
-      sets: Array.from({ length: clampInt(line.sets, 1, MAX_SETS) ?? DEFAULT_SETS }, () => ({
+      sets: Array.from({ length: clampOrNull(line.sets, 1, MAX_SETS) ?? DEFAULT_SETS }, () => ({
         ...target,
       })),
-      restSeconds: clampInt(line.rest_seconds, 0, 600),
+      restSeconds: clampOrNull(line.rest_seconds, 0, 600),
       ...(line.certain
         ? {}
         : {

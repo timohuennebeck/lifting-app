@@ -235,35 +235,31 @@ export function ResultScreen() {
         </View>
 
         <View className="px-5 pt-2.5">
-          {bodyFat !== undefined ? (
-            <MetricRow
-              label={t('result.metrics.bodyFat')}
-              note={t(`result.bodyFat.${bodyFatTier(bodyFatShare(bodyFat, profile?.sex))}`)}
-              value={`~${Math.round(bodyFat)}`}
-              unit=" %"
-              position={bodyFatShare(bodyFat, profile?.sex)}
-              min={`${fatRange.min} %`}
-              max={`${fatRange.max} %`}
-            />
-          ) : null}
+          <MetricRow
+            label={t('result.metrics.bodyFat')}
+            note={t(`result.bodyFat.${bodyFatTier(bodyFatShare(bodyFat, profile?.sex))}`)}
+            value={`~${Math.round(bodyFat)}`}
+            unit=" %"
+            position={bodyFatShare(bodyFat, profile?.sex)}
+            min={`${fatRange.min} %`}
+            max={`${fatRange.max} %`}
+          />
           {(
             [
               ['proportions', proportions],
               ['definition', definition],
             ] as const
-          ).map(([key, value]) =>
-            value !== undefined ? (
-              <MetricRow
-                key={key}
-                label={t(`result.metrics.${key}`)}
-                note={t(`result.tiers.${scoreTier(value)}`)}
-                value={String(value)}
-                position={value / 100}
-                min="0"
-                max="100"
-              />
-            ) : null,
-          )}
+          ).map(([key, value]) => (
+            <MetricRow
+              key={key}
+              label={t(`result.metrics.${key}`)}
+              note={t(`result.tiers.${scoreTier(value)}`)}
+              value={String(value)}
+              position={value / 100}
+              min="0"
+              max="100"
+            />
+          ))}
         </View>
 
         <Text variant="overline" tone="subtle" className="px-5 pt-7 pb-1 text-xs tracking-[1px]">

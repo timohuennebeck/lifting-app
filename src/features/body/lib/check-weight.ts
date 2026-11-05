@@ -9,7 +9,7 @@ const MAX_DAYS_BEFORE = 7;
  * The weight at a check taken at `createdAt`: that day's entry, else the latest of the week
  * before; undefined without one. `entries` oldest first.
  */
-export function weightAt(entries: WeightEntry[], createdAt: string) {
+function weightAt(entries: WeightEntry[], createdAt: string) {
   const taken = new Date(createdAt);
   const day = toIsoDate(taken);
   const from = toIsoDate(addDays(taken, -MAX_DAYS_BEFORE));

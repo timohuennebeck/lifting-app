@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui/button';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
-import { isTicketActive, useTickets } from '../data/tickets';
+import { useTickets } from '../data/tickets';
 import { FeedbackSheet } from './feedback-sheet';
 import { OpenTicketRow } from './open-ticket-row';
 
@@ -18,7 +18,7 @@ export function OpenTicketsSection() {
   const { t } = useTranslation('support');
   const { data: tickets = [] } = useTickets();
   const [sheetOpen, setSheetOpen] = useState(false);
-  const open = tickets.filter((ticket) => isTicketActive(ticket.status));
+  const open = tickets.filter((ticket) => ticket.status === 'open');
 
   return (
     <View className="mt-8.5">

@@ -74,8 +74,7 @@
     "no": "Crée-moi un programme"
   },
   "promise": {
-    "title": "FAIS-TOI\nUNE PROMESSE.",
-    "titleNamed": "{{name}}, FAIS-TOI\nUNE PROMESSE.",
+    "title": "{{name}}, FAIS-TOI\nUNE PROMESSE.",
     "stick": "Je vais m'y tenir, même quand ce sera dur.",
     "track": "J'enregistrerai chaque série.",
     "hold": "Garde ton pouce appuyé",

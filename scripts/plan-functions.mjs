@@ -13,14 +13,18 @@ export function supabaseEnv() {
   return { url, key };
 }
 
-/**
- * One request to a plan function (read-plan, generate-plan). It streams the plan as server-sent
- * events (PlanEvent in supabase/functions/_shared/plan-events.ts); they are put together like the
- * app does. `first` is when the first exercise arrived, `seconds` the end.
- */
-export async function streamPlan(url, key, body) {
+/** A clock: the seconds since it was started. */
+function stopwatch() {
   const started = performance.now();
-  const seconds = () => (performance.now() - started) / 1000;
+  return () => (performance.now() - started) / 1000;
+}
+
+/**
+ * Posts `body` to a function as the app does. Resolves with the response when it is ok, else with
+ * the failed request's result: no plan, the status (0 without a connection), the error and
+ * OpenAI's status.
+ */
+async function post(url, key, body, seconds) {
   let response;
   try {
     response = await fetch(url, {
@@ -29,20 +33,38 @@ export async function streamPlan(url, key, body) {
       body: JSON.stringify(body),
     });
   } catch (error) {
-    return { status: 0, seconds: seconds(), plan: null, error: error.cause?.code ?? error.message };
+    const failed = {
+      status: 0,
+      seconds: seconds(),
+      plan: null,
+      error: error.cause?.code ?? error.message,
+    };
+    return { failed };
   }
-  if (!response.ok) {
-    const answer = await response.json().catch(() => ({}));
-    // The function answers { error }; the runtime and gateway { code, message } or { message }.
-    const error = answer.error ?? [answer.code, answer.message].filter(Boolean).join(': ');
-    return {
+  if (response.ok) return { response };
+  const answer = await response.json().catch(() => ({}));
+  // The function answers { error }; the runtime and gateway { code, message } or { message }.
+  const error = answer.error ?? [answer.code, answer.message].filter(Boolean).join(': ');
+  return {
+    failed: {
       status: response.status,
       seconds: seconds(),
       plan: null,
       error,
       upstream: answer.upstream,
-    };
-  }
+    },
+  };
+}
+
+/**
+ * One request to a plan function (read-plan, generate-plan). It streams the plan as server-sent
+ * events (PlanEvent in supabase/functions/_shared/plan-events.ts); they are put together like the
+ * app does. `first` is when the first exercise arrived, `seconds` the end.
+ */
+export async function streamPlan(url, key, body) {
+  const seconds = stopwatch();
+  const { response, failed } = await post(url, key, body, seconds);
+  if (failed) return failed;
   let plan = null;
   let first = null;
   let error = 'cut_off';
@@ -79,29 +101,10 @@ export async function streamPlan(url, key, body) {
  * into the plan shape streamPlan returns, as one routine, so both are scored alike.
  */
 export async function readExercises(url, key, body) {
-  const started = performance.now();
-  const seconds = () => (performance.now() - started) / 1000;
-  let response;
-  try {
-    response = await fetch(url, {
-      method: 'POST',
-      headers: { apikey: key, 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-  } catch (error) {
-    return { status: 0, seconds: seconds(), plan: null, error: error.cause?.code ?? error.message };
-  }
+  const seconds = stopwatch();
+  const { response, failed } = await post(url, key, body, seconds);
+  if (failed) return failed;
   const answer = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    const error = answer.error ?? [answer.code, answer.message].filter(Boolean).join(': ');
-    return {
-      status: response.status,
-      seconds: seconds(),
-      plan: null,
-      error,
-      upstream: answer.upstream,
-    };
-  }
   const plan = {
     name: '',
     routines: [{ name: '', exercises: answer.exercises }],
@@ -148,6 +151,30 @@ export function untilStopped(call) {
       return stopped ? null : result;
     },
   };
+}
+
+/**
+ * After a run stopped early (see untilStopped): what wasn't sent and why, and what to do about it,
+ * printed and returned; '' when it ran to the end. `skipped` are the ids not run; `fn` is the
+ * function, `what` what it makes ("import", "plan"), `kind` its plan_requests kind and `limit` the
+ * setting that raises its limit per network.
+ */
+export function reportStop(stopped, skipped, { fn, what, kind, limit }) {
+  if (!stopped) return '';
+  const notRun = skipped.length ? `; not run: ${skipped.join(', ')}` : '';
+  const text = stopped.limit
+    ? `The ${what} limit was reached${notRun}. For a local run set ${limit}=1000 in ` +
+      'supabase/functions/.env and restart Supabase (npx supabase stop, then npx supabase ' +
+      'start). To reset the count right away, run `delete from public.plan_requests where kind = ' +
+      `'${kind}';\` in Supabase Studio.`
+    : stopped.hint
+      ? `${fn} can't make plans (${stopped.down})${notRun}. ${stopped.hint}`
+      : `${fn} didn't answer (${stopped.down})${notRun}. Locally, npx supabase start ` +
+        'serves the functions; stopping `npx supabase functions serve` takes them down until you ' +
+        'run npx supabase stop and npx supabase start again. A BOOT_ERROR means the function ' +
+        "didn't start: keep `npx supabase functions serve` running in another terminal to see why.";
+  console.error(`\n${text}`);
+  return text;
 }
 
 /** A failed request's status and error, e.g. "(500 failed)"; empty for a plan. */

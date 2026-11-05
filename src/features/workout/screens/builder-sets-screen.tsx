@@ -16,7 +16,7 @@ export function BuilderSetsScreen() {
         exercise && {
           exerciseId: exercise.exerciseId,
           sets: exercise.sets.map((set, k) => ({ ...set, key: String(k) })),
-          restSeconds: exercise.restSeconds ?? null,
+          restSeconds: exercise.restSeconds,
         }
       }
       onSave={(sets, rest) =>

@@ -20,13 +20,7 @@ import { ChatMessage } from '../components/chat-message';
 import { ClosedBanner } from '../components/closed-banner';
 import { FeedbackSheet } from '../components/feedback-sheet';
 import { TeamAvatar } from '../components/team-avatar';
-import {
-  isTicketActive,
-  type Ticket,
-  useTicket,
-  useTicketEvents,
-  useTicketMessages,
-} from '../data/tickets';
+import { type Ticket, useTicket, useTicketEvents, useTicketMessages } from '../data/tickets';
 import { useTicketFormat } from '../hooks/use-ticket-format';
 import { buildTimeline, type TimelineItem } from '../lib/timeline';
 import { useSeenStore } from '../stores/seen-store';
@@ -59,7 +53,7 @@ export function TicketChatScreen() {
   }, [focused, lastAt, ticketId, markSeen]);
 
   const items = ticket ? buildTimeline(ticket, messages, events) : [];
-  const done = !!ticket && !isTicketActive(ticket.status);
+  const done = !!ticket && ticket.status !== 'open';
   // The composer keeps 8pt above the keyboard instead of its safe-area padding.
   const keyboardOffset = footerInset - 8;
 
@@ -110,7 +104,7 @@ export function TicketChatScreen() {
         );
       case 'status':
         // Notes are shown as written; what a change means comes in the team's (translated) reply.
-        return isTicketActive(item.status) ? (
+        return item.status === 'open' ? (
           <SystemLine
             key={item.key}
             highlight

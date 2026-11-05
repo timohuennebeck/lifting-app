@@ -36,14 +36,9 @@ interface BandEntry {
 }
 
 /** Highest two groups are "top", lowest two "focus", the rest "mid" (design 08d-A). */
-export function groupBands(scores: Partial<GroupScores>): Record<GroupBand, BandEntry[]> {
-  const sorted = GROUPS.filter((g) => scores[g] !== undefined)
-    .map((group) => ({ group, value: scores[group] ?? 0 }))
-    .sort((a, b) => b.value - a.value);
-  const focusFrom = Math.max(2, sorted.length - 2);
-  return {
-    top: sorted.slice(0, 2),
-    mid: sorted.slice(2, focusFrom),
-    focus: sorted.slice(focusFrom),
-  };
+export function groupBands(scores: GroupScores): Record<GroupBand, BandEntry[]> {
+  const sorted = GROUPS.map((group) => ({ group, value: scores[group] })).sort(
+    (a, b) => b.value - a.value,
+  );
+  return { top: sorted.slice(0, 2), mid: sorted.slice(2, -2), focus: sorted.slice(-2) };
 }

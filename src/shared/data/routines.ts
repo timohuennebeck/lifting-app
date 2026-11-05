@@ -1,8 +1,20 @@
-import { and, asc, count, eq, isNotNull, isNull, max, min, type SQL, sql } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  count,
+  eq,
+  inArray,
+  isNotNull,
+  isNull,
+  max,
+  min,
+  type SQL,
+  sql,
+} from 'drizzle-orm';
 
 import { getOrInsert } from '@/shared/lib/map';
 
-import { getExercise } from './exercises';
+import { getExercise, swapTargets } from './exercises';
 import { newId, nowIso } from './json';
 import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
@@ -64,10 +76,33 @@ export async function insertRoutineExercise(
     routine_id: routineId,
     exercise_id: exercise.exerciseId,
     position,
-    rest_seconds: exercise.restSeconds ?? null,
+    rest_seconds: exercise.restSeconds,
   });
   await insertRoutineSets(tx, userId, id, exercise.sets);
   return id;
+}
+
+/**
+ * Puts exercise `to` in place of `from` in the routine exercises `routineExerciseIds`. Their sets
+ * and rest stay; the targets reset only between reps and seconds (`swapTargets`).
+ */
+export async function swapInRoutines(
+  tx: Tx,
+  routineExerciseIds: string[],
+  from: string,
+  to: string,
+) {
+  await tx
+    .update(routineExercises)
+    .set({ exercise_id: to })
+    .where(inArray(routineExercises.id, routineExerciseIds));
+  const targets = swapTargets(from, to);
+  if (targets) {
+    await tx
+      .update(routineSets)
+      .set({ target_min: targets.min, target_max: targets.max, rir: targets.rir })
+      .where(inArray(routineSets.routine_exercise_id, routineExerciseIds));
+  }
 }
 
 /** Routines in a plan, or the library's (without a plan) for `null` (SQL `IS`). */

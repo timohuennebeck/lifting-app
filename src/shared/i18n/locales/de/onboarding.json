@@ -74,8 +74,7 @@
     "no": "Erstell mir einen Plan"
   },
   "promise": {
-    "title": "VERSPRICH\nES DIR SELBST.",
-    "titleNamed": "{{name}}, VERSPRICH\nES DIR SELBST.",
+    "title": "{{name}}, VERSPRICH\nES DIR SELBST.",
     "stick": "Ich bleibe dran, auch wenn es zäh wird.",
     "track": "Ich tracke jeden Satz.",
     "hold": "Halte deinen Daumen gedrückt",

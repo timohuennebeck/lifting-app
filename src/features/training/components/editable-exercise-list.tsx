@@ -34,10 +34,8 @@ export interface EditableExerciseListProps<T extends ExerciseDraft> {
   onAdd: () => void;
   /** The microphone next to "+": adds exercises by voice. */
   onVoice?: () => void;
-  /** A tap on a card. */
+  /** A tap on a card, or the menu's "edit sets". */
   onOpen: (index: number) => void;
-  /** The menu's "edit sets"; without it the menu leaves that out. */
-  onEditSets?: (index: number) => void;
   onSwap: (index: number) => void;
   onRemove: (index: number) => void;
   /** An exercise dragged to another place, or moved up or down with the menu. */
@@ -69,7 +67,6 @@ export function EditableExerciseList<T extends ExerciseDraft>({
   onAdd,
   onVoice,
   onOpen,
-  onEditSets,
   onSwap,
   onRemove,
   onMove,
@@ -126,7 +123,7 @@ export function EditableExerciseList<T extends ExerciseDraft>({
     const at = menuFor;
     setMenuFor(null);
     if (at === null) return;
-    if (action === 'editSets') afterSheetClose(() => onEditSets?.(at));
+    if (action === 'editSets') afterSheetClose(() => onOpen(at));
     else if (action === 'swap') afterSheetClose(() => onSwap(at));
     else if (action === 'remove') onRemove(at);
     else onMove(at, at + (action === 'moveUp' ? -1 : 1));
@@ -182,7 +179,6 @@ export function EditableExerciseList<T extends ExerciseDraft>({
       <ExerciseMenuSheet
         visible={menuFor !== null}
         onClose={() => setMenuFor(null)}
-        hidden={onEditSets ? [] : ['editSets']}
         canMoveUp={(menuShown ?? 0) > 0}
         canMoveDown={menuShown !== null && menuShown < exercises.length - 1}
         onAction={onAction}

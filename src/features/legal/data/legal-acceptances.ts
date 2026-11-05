@@ -2,7 +2,7 @@ import { useStatus } from '@powersync/react-native';
 import { useQuery } from '@tanstack/react-query';
 import Constants from 'expo-constants';
 import { useEffect } from 'react';
-import { AppState, Platform } from 'react-native';
+import { AppState } from 'react-native';
 
 import { newId } from '@/shared/data/json';
 import { drizzle } from '@/shared/data/powersync/database';
@@ -10,6 +10,7 @@ import { legalAcceptances } from '@/shared/data/powersync/schema';
 import { supabase } from '@/shared/data/supabase';
 import { useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 import { HOUR_MS } from '@/shared/lib/date';
+import { devicePlatform } from '@/shared/lib/platform';
 import { storage } from '@/shared/lib/storage';
 
 import {
@@ -32,7 +33,6 @@ export async function acceptDocuments(userId: string, documents: LegalDocument[]
   const accepted = new Set(toSortedIds(await acceptedQuery()));
   const fresh = documents.filter((d) => !accepted.has(d.id));
   if (!fresh.length) return;
-  const platform = Platform.OS === 'ios' || Platform.OS === 'android' ? Platform.OS : null;
   // One row per write: a row the server already has (local data not synced yet) is rejected
   // and dropped on its own, without taking the others with it.
   for (const d of fresh) {
@@ -42,7 +42,7 @@ export async function acceptDocuments(userId: string, documents: LegalDocument[]
       document_id: d.id,
       accepted_at: null,
       app_version: Constants.expoConfig?.version ?? null,
-      platform,
+      platform: devicePlatform,
     });
   }
 }

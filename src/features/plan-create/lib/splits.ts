@@ -1,5 +1,4 @@
 import type { OnboardingDraft } from '@/features/onboarding/stores/onboarding-store';
-import { clampSessions } from '@/shared/data/plans';
 import type { Experience, Split } from '@/shared/data/profile';
 
 /**
@@ -23,7 +22,7 @@ export function splitsFor(sessionsPerWeek: number, experience: Experience | null
   if (sessionsPerWeek === 3 && SEASONED.includes(experience)) {
     return ['upper_lower_full', 'full_body', 'ppl'];
   }
-  return BY_SESSIONS[clampSessions(sessionsPerWeek)];
+  return BY_SESSIONS[sessionsPerWeek];
 }
 
 /**

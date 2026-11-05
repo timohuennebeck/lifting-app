@@ -5,7 +5,13 @@ import { encodeHex } from 'jsr:@std/encoding@1/hex';
 
 import { admin, reply } from './common.ts';
 import { eventStream } from './event-stream.ts';
-import { PASSING_STATUSES, type StructuredRequest, streamStructured } from './openai.ts';
+import {
+  ATTEMPTS,
+  PASSING_STATUSES,
+  RETRY_PAUSE_MS,
+  type StructuredRequest,
+  streamStructured,
+} from './openai.ts';
 import {
   type ImportedRoutine,
   type PlanEvent,
@@ -130,7 +136,7 @@ export async function takePlanRequest(
 }
 
 /** How a plan function turns the model's routines and exercises (see PlanStream) into the app's. */
-export interface PlanReader<Routine extends { exercises: unknown[] }, Exercise> {
+interface PlanReader<Routine extends { exercises: unknown[] }, Exercise> {
   /** The next routine, or null when the plan is complete without it. */
   routine: (routine: Omit<Routine, 'exercises'>) => ImportedRoutine | null;
   /** The exercise for the current routine, or null to leave the line out. */
@@ -138,7 +144,7 @@ export interface PlanReader<Routine extends { exercises: unknown[] }, Exercise> 
 }
 
 /** The model request for a plan and what the function does with the answer. */
-export interface PlanAnswer<Routine extends { exercises: unknown[] }, Exercise> {
+interface PlanAnswer<Routine extends { exercises: unknown[] }, Exercise> {
   /** Its `timeoutMs` covers every attempt together. */
   request: StructuredRequest;
   /** A new reader for each attempt. */
@@ -151,11 +157,8 @@ export interface PlanAnswer<Routine extends { exercises: unknown[] }, Exercise> 
   label: string;
 }
 
-/** A second attempt runs when the first fails for a passing reason before the app got an exercise. */
-const ATTEMPTS = 2;
 /** Time a second attempt needs at least; with less left the failure stands. */
 const MIN_RETRY_MS = 60_000;
-const RETRY_PAUSE_MS = 1000;
 /** Ends of a streamed answer worth another attempt (see streamedAnswer); not e.g. "incomplete". */
 const PASSING_ENDS = new Set(['failed', 'error', 'cut_off']);
 

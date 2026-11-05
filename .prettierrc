@@ -4,5 +4,5 @@
   "printWidth": 100,
   "plugins": ["prettier-plugin-tailwindcss"],
   "tailwindStylesheet": "./src/global.css",
-  "tailwindFunctions": ["cn", "tv"]
+  "tailwindFunctions": ["cn"]
 }
