@@ -1,0 +1,100 @@
+{
+  "restore": "Restaurer les achats",
+  "restoring": "Restauration…",
+  "paywall": {
+    "before": "Avant",
+    "after": "Après",
+    "title": "TON PROGRAMME EST <accent>PRÊT</accent>",
+    "subtitle": "Ton programme importé, chaque série suivie, tous tes progrès visibles.",
+    "benefits": {
+      "import": {
+        "title": "Importer des programmes",
+        "detail": "par photo ou fichier"
+      },
+      "history": {
+        "title": "Historique et records",
+        "detail": "pour chaque exercice"
+      },
+      "levels": {
+        "title": "Niveaux musculaires",
+        "detail": "pour chaque muscle"
+      }
+    },
+    "startTrial": "Démarrer l'essai gratuit",
+    "trialDays_one": "{{count}} jour gratuit",
+    "trialDays_other": "{{count}} jours gratuits",
+    "fine": {
+      "year": "{{trial}}, puis {{price}} par an ({{perMonth}} / mois) · résiliable à tout moment",
+      "month": "{{trial}}, puis {{price}} par mois · résiliable à tout moment"
+    },
+    "fineNoTrial": {
+      "year": "{{price}} par an ({{perMonth}} / mois) · résiliable à tout moment",
+      "month": "{{price}} par mois · résiliable à tout moment"
+    }
+  },
+  "plans": {
+    "yearly": {
+      "label": "Annuel",
+      "price": "{{price}} / an",
+      "note": "paiement annuel",
+      "savings": "Économise {{percent}} %"
+    },
+    "monthly": {
+      "label": "Mensuel",
+      "price": "{{price}} / mois",
+      "note": "sans engagement"
+    }
+  },
+  "welcome": {
+    "role": "Head Coach chez Loqqa",
+    "aiBadge": "IA",
+    "aiNotice": "Peut inclure du contenu retouché par IA.",
+    "cta": "C'est parti",
+    "captions": {
+      "welcome": "Salut, ça fait plaisir de te voir ici.",
+      "ready": "Ton programme est prêt.",
+      "built": "Il est construit autour de tes jours d'entraînement, de tes points faibles et de ton équipement.",
+      "blocks": "Voici comment ça marche : tu t'entraînes par blocs.",
+      "harder": "Chaque semaine est un peu plus exigeante.",
+      "deload": "Après quelques semaines, tu auras une semaine de décharge.",
+      "recover": "C'est une semaine plus légère, pour que ton corps récupère.",
+      "noPlanning": "Tu n'as donc rien à planifier.",
+      "appDoesIt": "L'app s'en charge pour toi.",
+      "howTo": "Ouvre-la, lance ta prochaine séance et enregistre-la.",
+      "rest": "On s'occupe du reste.",
+      "start": "Quand tu veux, on commence."
+    },
+    "a11y": {
+      "subtitles": "Sous-titres",
+      "mute": "Couper le son",
+      "unmute": "Réactiver le son",
+      "play": "Lecture",
+      "pause": "Pause"
+    }
+  },
+  "restoreResult": {
+    "successTitle": "Achats restaurés",
+    "successBody": "Loqqa Pro est de nouveau actif.",
+    "emptyTitle": "Rien à restaurer",
+    "emptyBody": "Nous n'avons trouvé aucun abonnement actif pour ce compte."
+  },
+  "settings": {
+    "section": "Abonnement",
+    "title": "Loqqa Pro",
+    "upgrade": "Passer à Pro",
+    "trialUntil": "Essai jusqu'au {{date}}",
+    "manage": "Gérer l'abonnement",
+    "planMonthly": "Pro · mensuel",
+    "planYearly": "Pro · annuel"
+  },
+  "errors": {
+    "purchase": {
+      "title": "L'achat a échoué",
+      "message": "Réessaie. Si le problème persiste, redémarre l'app."
+    },
+    "restore": {
+      "title": "Restauration impossible",
+      "message": "Vérifie ta connexion et réessaie."
+    }
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "title": "Kai · coach IA",
+  "newChat": "Nouveau chat",
+  "card": {
+    "title": "Demande-moi tout sur ton entraînement.",
+    "subtitle": "Kai répond avec des faits et des graphiques."
+  },
+  "composer": {
+    "placeholder": "Demande à Kai…",
+    "answering": "Kai répond…",
+    "send": "Envoyer",
+    "stop": "Arrêter la réponse"
+  },
+  "thinking": "Kai réfléchit…",
+  "workout": {
+    "open": "Ouvrir l'aperçu"
+  },
+  "swap": {
+    "title": "Changement de programme",
+    "keepsMain": "Muscle principal : {{muscle}}, inchangé",
+    "newMain": "Muscle principal : {{to}} au lieu de {{from}}",
+    "toSwap_one": "Remplacer {{count}} exercice",
+    "toSwap_other": "Remplacer {{count}} exercices",
+    "keepAll": "Tout reste comme avant",
+    "swapped_one": "{{count}} exercice remplacé",
+    "swapped_other": "{{count}} exercices remplacés",
+    "replaceWith": "Remplacer par",
+    "inPlan": "Dans ton programme",
+    "recommended": "Recommandé",
+    "keep": "Garder {{name}}",
+    "apply": "Appliquer",
+    "applyBoth": "Appliquer les deux",
+    "applyAll": "Tout appliquer",
+    "viewPlan": "Voir le programme",
+    "appliedOne": "{{name}} est maintenant dans ton programme",
+    "fromNext": "Dès ta prochaine séance",
+    "undo": "Annuler",
+    "notSwapped": "Pas remplacé",
+    "gone": "{{name}} : n'est plus dans {{workouts}}.",
+    "goneFromPlan": "{{name}} : n'est plus dans ton programme.",
+    "changed": "Ton programme a changé depuis cette réponse."
+  },
+  "values": {
+    "reps_one": "{{count}} rép.",
+    "reps_other": "{{count}} rép.",
+    "points_one": "{{count}} point",
+    "points_other": "{{count}} points",
+    "sets_one": "{{count}} série",
+    "sets_other": "{{count}} séries",
+    "workouts_one": "{{count}} séance",
+    "workouts_other": "{{count}} séances"
+  },
+  "topics": {
+    "bodyWeight": "Poids corporel",
+    "bodyScore": "Score corporel",
+    "progress": "Progression",
+    "compare": "Comparaison",
+    "volume": "Volume",
+    "sets": "Séries",
+    "workouts": "Séances",
+    "minutes": "Durée d'entraînement",
+    "consistency": "Régularité",
+    "by": {
+      "muscle": "Groupes musculaires",
+      "exercise": "Exercices",
+      "weekday": "Jours de la semaine"
+    }
+  },
+  "trend": {
+    "bodyWeight": "Tendance actuelle · depuis {{since}}",
+    "since": "{{what}} · depuis {{since}}",
+    "metric": {
+      "body_weight": "Tendance",
+      "e1rm": "1RM estimé",
+      "top_weight": "Poids max",
+      "reps": "Répétitions",
+      "seconds": "Durée de maintien",
+      "volume": "Volume",
+      "body_score": "Score corporel"
+    }
+  },
+  "period": {
+    "week": "S{{week}}",
+    "average": "Ø {{value}}",
+    "caption": {
+      "week_one": "{{metric}} cette semaine · vs Ø {{count}} semaine",
+      "week_other": "{{metric}} cette semaine · vs Ø {{count}} semaines",
+      "month_one": "{{metric}} ce mois-ci · vs Ø {{count}} mois",
+      "month_other": "{{metric}} ce mois-ci · vs Ø {{count}} mois"
+    }
+  },
+  "calendar": {
+    "rest": "Pas de séance"
+  },
+  "distribution": {
+    "reference_one": "{{count}} repère",
+    "reference_other": "{{count}} repères"
+  },
+  "history": {
+    "title": "Chats précédents",
+    "selected_one": "{{count}} sélectionné",
+    "selected_other": "{{count}} sélectionnés",
+    "deleteSheet": {
+      "title_one": "Supprimer le chat ?",
+      "title_other": "Supprimer {{count}} chats ?",
+      "subtitle": "Cette action est irréversible.",
+      "option_one": "Supprimer le chat définitivement",
+      "option_other": "Supprimer les chats définitivement",
+      "body_one": "Tes questions et les réponses de Kai dans ce chat sont supprimées.",
+      "body_other": "Tes questions et les réponses de Kai dans ces {{count}} chats sont supprimées."
+    },
+    "empty": "Aucun chat pour l'instant. Pose ta première question à Kai.",
+    "today": "Aujourd'hui",
+    "thisWeek": "Cette semaine"
+  },
+  "errors": {
+    "offline": {
+      "title": "Pas de connexion",
+      "message": "Kai a besoin d'internet. Ta question reste dans le champ."
+    },
+    "limitDaily": {
+      "title": "Limite quotidienne atteinte",
+      "message": "Tu as posé {{count}} questions aujourd'hui. Tu pourras en poser de nouveau à partir de {{time}}."
+    },
+    "limitMonthly": {
+      "title": "Limite mensuelle atteinte",
+      "message": "Tu as posé {{count}} questions ces 30 derniers jours. Tu pourras en poser de nouveau à partir du {{date}}."
+    },
+    "failed": {
+      "title": "Pas de réponse",
+      "message": "Kai n'a pas pu répondre à l'instant. Réessaie."
+    },
+    "refused": {
+      "title": "Pas de réponse",
+      "message": "Kai ne peut pas répondre à cette question. Essaie de la formuler autrement."
+    },
+    "tooYoung": {
+      "title": "Dès 16 ans",
+      "message": "Tu peux utiliser Kai à partir de 16 ans."
+    },
+    "notPro": {
+      "title": "Loqqa Pro inactif",
+      "message": "Kai fait partie de Loqqa Pro. Pour le moment, ton compte n'a pas d'abonnement actif."
+    }
+  }
+}

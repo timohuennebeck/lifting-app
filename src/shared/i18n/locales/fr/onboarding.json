@@ -1,0 +1,95 @@
+{
+  "welcome": {
+    "headline": "TON PROGRAMME.",
+    "headlineAccent": "TES PROGRÈS.",
+    "subtitle": "Importe ton programme ou crées-en un nouveau.\nSans rien taper.",
+    "start": "C'est parti",
+    "haveAccount": "J'ai déjà un compte · ",
+    "signIn": "Se connecter",
+    "language": "Langue",
+    "features": {
+      "import": "Importer un programme depuis une photo",
+      "create": "Créer un programme",
+      "progress": "Suivre tes progrès"
+    }
+  },
+  "name": {
+    "title": "TON PRÉNOM ?",
+    "placeholder": "Prénom"
+  },
+  "sex": {
+    "title": "TON SEXE\nBIOLOGIQUE ?",
+    "subtitle": "Nous aide à estimer des poids de départ réalistes et ta récupération.",
+    "male": "Homme",
+    "female": "Femme",
+    "unspecified": "Ne pas préciser"
+  },
+  "birthDate": {
+    "title": "TA DATE DE\nNAISSANCE ?",
+    "age_one": "{{count}} an",
+    "age_other": "{{count}} ans",
+    "tooYoung": "Loqqa est réservé aux personnes de {{min}} ans et plus."
+  },
+  "units": {
+    "title": "QUELLES\nUNITÉS ?",
+    "metric": "Kilogrammes",
+    "metricHint": "Métrique · km, cm",
+    "imperial": "Livres",
+    "imperialHint": "Impérial · mi, in"
+  },
+  "weight": {
+    "title": "QUEL EST\nTON POIDS ?"
+  },
+  "height": {
+    "title": "QUELLE EST\nTA TAILLE ?"
+  },
+  "actionButton": {
+    "title": "UNE PRESSION,\nC'EST NOTÉ",
+    "subtitle": "Mets Loqqa sur le bouton Action de ton iPhone. Une pression ouvre directement ton poids.",
+    "action": "Action",
+    "steps": {
+      "settings": "Ouvre Réglages › Bouton Action",
+      "shortcut": "Fais défiler jusqu'à <b>Raccourci</b>",
+      "pick": "Choisis <b>Loqqa : Enregistrer le poids</b>"
+    },
+    "later": "Plus tard",
+    "done": "Terminé",
+    "openAgain": "Rouvrir les réglages"
+  },
+  "experience": {
+    "title": "QUELLE EXPÉRIENCE\nAS-TU ?",
+    "none": "Aucune",
+    "noneHint": "Aucun entraînement jusqu'ici",
+    "beginner": "Un peu",
+    "beginnerHint": "Moins de 6 mois d'entraînement",
+    "intermediate": "Moyenne",
+    "intermediateHint": "De 6 mois à 2 ans",
+    "advanced": "Solide",
+    "advancedHint": "Plus de 2 ans, bonne technique"
+  },
+  "hasPlan": {
+    "title": "SUIS-TU UN\nPROGRAMME ?",
+    "formats": "Photo, PDF ou tableur",
+    "yes": "J'en ai un",
+    "no": "Crée-moi un programme"
+  },
+  "promise": {
+    "title": "PROMETS-LE\nÀ TOI-MÊME.",
+    "titleNamed": "{{name}}, PROMETS-LE\nÀ TOI-MÊME.",
+    "stick": "Je vais m'y tenir, même quand ce sera dur.",
+    "track": "J'enregistrerai chaque série.",
+    "hold": "Maintiens ton pouce appuyé",
+    "holding": "Continue de maintenir…",
+    "sealed": "C'est scellé.",
+    "holdLabel": "Maintiens pour t'engager"
+  },
+  "progressCheck": {
+    "title": "FAIRE UN BILAN\nCORPOREL ?",
+    "subtitle": "À partir de tes photos, nous adaptons le programme à tes points faibles.",
+    "light": "Lumière vive",
+    "clothes": "Sous-vêtements",
+    "framing": "Corps entier dans le cadre",
+    "now": "Prendre les photos",
+    "later": "Plus tard"
+  }
+}

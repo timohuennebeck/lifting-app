@@ -1,0 +1,29 @@
+{
+  "subtitle": "Ton score corporel à partir de tes photos",
+  "sinceStart": "{{delta}} depuis le début",
+  "checkLabel": "Bilan {{n}} · {{date}}",
+  "check": "Bilan {{n}}",
+  "baseline": "Point de départ",
+  "startNow": "Commencer maintenant",
+  "startShort": "Commencer",
+  "nextFrom": "À partir du {{date}}",
+  "weeklyNote": "Une fois par semaine · à partir du {{date}}",
+  "history": "Historique",
+  "start": "Commencer le bilan corporel",
+  "empty": {
+    "title": "Aucun bilan corporel",
+    "body": "Fais ton premier bilan et compare plus tard."
+  },
+  "adultsOnly": {
+    "title": "Verrouillé pour l'instant",
+    "body": "Les photos du bilan corporel sont réservées aux personnes de 18 ans et plus.",
+    "unlocksOn": "Débloqué pour toi le {{date}}."
+  },
+  "compare": {
+    "title": "Comparer",
+    "edit": "Modifier la comparaison",
+    "pickFor": "Choisir le bilan pour {{side}}",
+    "daysBetween_one": "{{count}} jour d'écart",
+    "daysBetween_other": "{{count}} jours d'écart"
+  }
+}

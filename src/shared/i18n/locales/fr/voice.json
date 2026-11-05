@@ -1,0 +1,51 @@
+{
+  "title": "Saisie vocale",
+  "format": "Exercice · séries × répétitions",
+  "example": "« Développé couché barre, trois fois dix »",
+  "tap": "Touche pour parler",
+  "listening": "Écoute…",
+  "more": "Touche pour continuer à parler",
+  "missed": "Je n'ai pas compris. Touche pour réessayer",
+  "cta": "Ajouter les exercices",
+  "heardAs": "Compris comme « {{raw}} »",
+  "stages": [
+    "Détection des exercices…",
+    "Recherche des exercices correspondants…",
+    "Application des séries et des répétitions…"
+  ],
+  "a11y": {
+    "start": "Commencer à parler",
+    "stop": "Arrêter d'écouter",
+    "text": "Tes exercices sous forme de texte"
+  },
+  "errors": {
+    "access": {
+      "title": "Micro nécessaire",
+      "message": "Pour dicter tes exercices, Loqqa a besoin du micro et de la reconnaissance vocale. Tu peux aussi les taper."
+    },
+    "unavailable": {
+      "title": "Saisie vocale indisponible",
+      "message": "Ton téléphone ne peut pas convertir la voix en texte pour le moment. Tu peux taper tes exercices à la place."
+    },
+    "network": {
+      "title": "Pas de connexion",
+      "message": "La reconnaissance vocale nécessite une connexion internet. Vérifie ta connexion et réessaie, ou tape tes exercices."
+    },
+    "failed": {
+      "title": "Ajout impossible",
+      "message": "Réessaie. Nommer chaque exercice avec ses séries et ses répétitions aide."
+    },
+    "offline": {
+      "title": "Pas de connexion",
+      "message": "Ajouter des exercices à la voix nécessite une connexion internet. Vérifie ta connexion et réessaie."
+    },
+    "limit": {
+      "title": "Limite quotidienne atteinte",
+      "message": "Tu pourras de nouveau ajouter des exercices à la voix demain. D'ici là, ajoute-les avec +."
+    },
+    "noExercises": {
+      "title": "Aucun exercice entendu",
+      "message": "Nomme chaque exercice avec ses séries et ses répétitions, par ex. « développé couché, trois fois dix »."
+    }
+  }
+}

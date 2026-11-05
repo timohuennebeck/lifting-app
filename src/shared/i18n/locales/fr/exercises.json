@@ -1,0 +1,63 @@
+{
+  "picker": {
+    "search": "Rechercher des exercices",
+    "empty": "Aucun exercice trouvé",
+    "index": "Index alphabétique",
+    "selected": "Sélectionné"
+  },
+  "groups": {
+    "chest": "Pectoraux",
+    "back": "Dos",
+    "shoulders": "Épaules",
+    "arms": "Bras",
+    "core": "Core",
+    "glutes": "Fessiers",
+    "legs": "Jambes"
+  },
+  "detail": {
+    "tabs": {
+      "exercise": "Exercice",
+      "history": "Historique"
+    },
+    "technique": "Technique"
+  },
+  "custom": {
+    "label": "Exercice perso",
+    "create": "Créer un exercice perso",
+    "title": "Exercice perso",
+    "editTitle": "Modifier l'exercice",
+    "menu": "Options de l'exercice",
+    "edit": "Modifier",
+    "save": "Enregistrer",
+    "namePlaceholder": "Nom de l'exercice",
+    "nameTaken": "Cet exercice existe déjà.",
+    "tapMuscle": "Touche un muscle",
+    "showBack": "Voir le dos",
+    "showFront": "Voir l'avant",
+    "primary": "Principal",
+    "secondary": "Secondaire",
+    "roleHint": "Touche un muscle pour passer de principal à secondaire.",
+    "noMuscles": "Touche sur la figure les muscles que l'exercice sollicite.",
+    "logs": "Que faut-il enregistrer ?",
+    "reps": "Répétitions",
+    "time": "Durée",
+    "weight": "Avec charge",
+    "locked": "Déjà enregistré : ce que cet exercice mesure ne change plus.",
+    "rest": "Repos entre les séries"
+  },
+  "history": {
+    "topWeight": "Poids max par séance",
+    "topWeightShort": "Poids max",
+    "leastAssistance": "Assistance min. par séance",
+    "leastAssistanceShort": "Assistance min.",
+    "topReps": "Max de répétitions par séance",
+    "topRepsShort": "Max rép.",
+    "topSeconds": "Plus long maintien par séance",
+    "topSecondsShort": "Maintien max",
+    "chartLabel": "Graphique du poids max, maintiens appuyé et fais glisser pour lire une séance",
+    "emptyRange": "Aucune séance sur cette période.",
+    "empty": "Aucune séance pour l'instant. Termine une séance avec cet exercice pour voir ta progression.",
+    "weight": "Poids",
+    "oneRepMax": "1RM"
+  }
+}

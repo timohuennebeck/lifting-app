@@ -1,0 +1,173 @@
+{
+  "poses": {
+    "front": {
+      "short": "Face",
+      "name": "Face"
+    },
+    "side": {
+      "short": "Profil",
+      "name": "Profil"
+    },
+    "back": {
+      "short": "Dos",
+      "name": "Dos"
+    }
+  },
+  "groups": {
+    "shoulders": "Épaules",
+    "chest": "Pectoraux",
+    "arms": "Bras",
+    "back": "Dos",
+    "core": "Core",
+    "legs": "Jambes"
+  },
+  "camera": {
+    "permission": {
+      "title": "Autoriser l'appareil photo",
+      "body": "Le bilan corporel a besoin de ton appareil photo. Tes photos restent privées.",
+      "allow": "Autoriser l'appareil photo"
+    },
+    "auto": "Auto",
+    "autoA11y": "Automatique : une pression prend toutes les photos à la suite",
+    "timer": "Minuteur {{value}}",
+    "timerOff": "désactivé",
+    "seconds": "{{value}} s",
+    "timerA11y": "Changer le minuteur",
+    "flip": "Changer de caméra",
+    "shutter": "Prendre la photo",
+    "cancelTimer": "Annuler le minuteur",
+    "error": {
+      "title": "Photo non enregistrée",
+      "message": "Réessaie."
+    },
+    "access": "Pour les photos de ton bilan corporel. Elles restent privées.",
+    "tapToCancel": "Touche pour annuler",
+    "turn": {
+      "next": "Pose suivante",
+      "front": "Mets-toi face à l'appareil",
+      "side": "Mets-toi de profil",
+      "back": "Mets-toi de dos"
+    },
+    "consent": "En touchant « {{done}} », tu consens à l'envoi de tes photos et de tes données corporelles à OpenAI (États-Unis) pour l'évaluation.",
+    "unavailable": {
+      "title": "L'appareil photo n'a pas démarré",
+      "message": "Ferme le bilan corporel et rouvre-le. Si ça ne règle rien, redémarre l'app."
+    }
+  },
+  "discard": {
+    "title": "Abandonner le bilan corporel ?",
+    "message": "Tes photos seront supprimées.",
+    "keep": "Continuer",
+    "confirm": "Abandonner"
+  },
+  "photo": {
+    "ok": "La photo est bonne",
+    "retake": "Reprendre la photo",
+    "remove": "Supprimer la photo : {{pose}}",
+    "issues": {
+      "blurry": "Floue",
+      "dark": "Trop sombre",
+      "notFullBody": "Corps coupé",
+      "wrongPose": "Mauvaise pose",
+      "noPerson": "Personne absente",
+      "clothing": "Corps masqué"
+    }
+  },
+  "assessment": {
+    "title": "Bilan corporel",
+    "stages": ["Alignement des photos", "Analyse de la morphologie", "Calcul des valeurs"],
+    "finalStage": {
+      "first": "Création de ton point de départ",
+      "next": "Création de ton résultat"
+    },
+    "done": "Tes résultats sont prêts",
+    "keepOpen": "Garde l'app ouverte",
+    "cta": "Voir le résultat",
+    "errors": {
+      "offline": {
+        "title": "Pas de connexion",
+        "message": "L'analyse nécessite internet. Tes photos sont conservées."
+      },
+      "limit": {
+        "title": "Limite quotidienne atteinte",
+        "message": "Tu as lancé plusieurs analyses aujourd'hui. Tu pourras continuer demain."
+      },
+      "weekly": {
+        "title": "Un bilan par semaine",
+        "message": "Ton dernier bilan date de moins d'une semaine. Le prochain s'ouvre 7 jours après."
+      },
+      "notAdult": {
+        "title": "Dès 18 ans",
+        "message": "Le bilan corporel est réservé aux personnes de 18 ans et plus."
+      },
+      "notPro": {
+        "title": "Loqqa Pro requis",
+        "message": "L'analyse fait partie de Loqqa Pro."
+      },
+      "refused": {
+        "title": "Photos inanalysables",
+        "message": "Reprends-les en tenue de sport ou en sous-vêtements."
+      },
+      "failed": {
+        "title": "L'analyse a échoué",
+        "message": "Tes photos sont conservées. Réessaie."
+      }
+    },
+    "row": {
+      "done": "Capturé",
+      "active": "Mesure de ton corps…",
+      "waiting": "En attente…"
+    }
+  },
+  "result": {
+    "baselineOn": "Ton point de départ · {{date}}",
+    "scoreOn": "Ton score corporel · {{date}}",
+    "check": "Bilan {{n}}",
+    "basis": "Base de ce score",
+    "metrics": {
+      "bodyFat": "Masse grasse",
+      "proportions": "Proportions",
+      "definition": "Définition"
+    },
+    "bodyFat": {
+      "athletic": "Niveau athlétique",
+      "fit": "En forme",
+      "average": "Moyen",
+      "high": "Élevé"
+    },
+    "tiers": {
+      "veryGood": "Très bon",
+      "good": "Bon",
+      "average": "Moyen",
+      "low": "Marge de progrès"
+    },
+    "groups": "Groupes musculaires",
+    "bands": {
+      "top": {
+        "title": "Top",
+        "subtitle": "au-dessus de ta moyenne"
+      },
+      "mid": {
+        "title": "Moyen"
+      },
+      "focus": {
+        "title": "Focus",
+        "subtitle": "plus de séries dans ton programme"
+      }
+    },
+    "disclaimer": "Estimation à partir de photos, pas un avis médical.",
+    "saveBaseline": "Enregistrer le point de départ",
+    "saveResult": "Enregistrer le résultat",
+    "saved": "Enregistré",
+    "share": "Partager",
+    "more": "Plus d'options",
+    "delete": "Supprimer le bilan",
+    "deleteHint": "Les photos et les valeurs de ce bilan sont supprimées définitivement.",
+    "shareMessage": "Mon score corporel dans Loqqa : {{score}}/100",
+    "notFound": "Ce bilan corporel n'existe plus.",
+    "saveFailed": {
+      "title": "Bilan corporel non enregistré",
+      "message": "Tes photos et ton résultat sont toujours là. Réessaie."
+    }
+  }
+}

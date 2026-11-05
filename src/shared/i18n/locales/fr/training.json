@@ -1,0 +1,111 @@
+{
+  "home": {
+    "single": "Séances individuelles",
+    "showAll": "Tout afficher",
+    "planRoutines": "Séances · {{week}}",
+    "resumeActive": "Reprendre {{name}}",
+    "noPlan": {
+      "title": "Pas encore de programme",
+      "body": "Touche pour en faire créer un ou importer le tien."
+    },
+    "emptyPlan": {
+      "title": "Programme sans séances",
+      "body": "Touche pour ajouter des séances à ton programme."
+    }
+  },
+  "list": {
+    "start": "Démarrer {{name}}",
+    "minutes": "{{count}} min",
+    "addRoutine": "Ajouter une séance",
+    "done": "Fait",
+    "doneAt": "{{date}}, {{time}}"
+  },
+  "card": {
+    "edit": "Modifier"
+  },
+  "all": {
+    "recent": "Faites récemment",
+    "lastDone": "Dernière : {{date}}",
+    "all": "Toutes"
+  },
+  "create": {
+    "workout": "Séance vide",
+    "workoutHint": "Choisis des exercices et lance-toi",
+    "startWorkout": "Démarrer une séance vide",
+    "routine": "Séance",
+    "routineHint": "Définis les exercices et les séries",
+    "plan": "Programme",
+    "planHint": "Fais-en créer un, importe-le ou crée-le toi-même",
+    "createRoutine": "Créer une séance",
+    "createPlan": "Créer un programme",
+    "emptyWorkoutName": "Séance",
+    "untitledRoutine": "Séance sans titre"
+  },
+  "overview": {
+    "musclesWorked": "Muscles sollicités",
+    "musclesInfo": "Répartition musculaire",
+    "exercises_one": "{{count}} exercice",
+    "exercises_other": "{{count}} exercices",
+    "noExercises": "Aucun exercice",
+    "duration": "Durée estimée : {{minutes}} min.",
+    "emptyHint": "Touche + ou le micro pour ajouter tes premiers exercices.",
+    "start": "Démarrer la séance",
+    "save": "Enregistrer la séance",
+    "addExercise": "Ajouter un exercice",
+    "addByVoice": "Ajouter des exercices à la voix",
+    "more": "Plus d'options",
+    "exerciseMenu": "Options pour {{name}}",
+    "exerciseInfo": "À propos de {{name}}",
+    "notFound": "Cette séance n'existe plus.",
+    "swapTitle": "Remplacer l'exercice",
+    "partOf": "Fait partie de {{plan}}",
+    "new": "Nouveau"
+  },
+  "exerciseMenu": {
+    "editSets": "Modifier les séries",
+    "swap": "Remplacer l'exercice",
+    "moveUp": "Monter",
+    "moveDown": "Descendre",
+    "remove": "Retirer l'exercice"
+  },
+  "options": {
+    "meta_one": "{{count}} exercice · {{minutes}} min.",
+    "meta_other": "{{count}} exercices · {{minutes}} min.",
+    "renameHint": "Donne un nouveau nom à {{name}}",
+    "delete": "Supprimer la séance",
+    "deleteHint": "Supprime {{name}}. Les séances enregistrées restent.",
+    "renameTitle": "Renommer la séance",
+    "namePlaceholder": "Nom de la séance",
+    "copy": "Copier",
+    "copyToPlan": "Ajouter à {{plan}}",
+    "copyToPlanHint": "Copie la séance dans ton programme ; l'original reste ici.",
+    "copyToLibrary": "Copier dans Séances individuelles",
+    "copyToLibraryHint": "Une copie hors du programme ; l'original y reste."
+  },
+  "sets": {
+    "title": "Modifier les séries",
+    "set": "Série",
+    "min": "Min",
+    "max": "Max",
+    "minSeconds": "Min (s)",
+    "maxSeconds": "Max (s)",
+    "optional": "Facultatif",
+    "orderError": "Max ne peut pas être inférieur à min.",
+    "orderErrorSeconds": "Max (s) ne peut pas être inférieur à min (s).",
+    "rir": "RIR",
+    "addSet": "Ajouter une série",
+    "removeSet": "Supprimer la série",
+    "customRest": "Temps de repos personnalisé",
+    "customRestHint": "Remplace le repos par défaut de cet exercice",
+    "minutes": "min",
+    "rirOption": "Répétitions en réserve : {{value}}"
+  },
+  "empty": {
+    "routinesTitle": "Aucune séance pour l'instant",
+    "routinesBody": "Compose une séance à partir d'exercices. Tu la retrouveras ici et pourras l'ajouter à des programmes."
+  },
+  "plan": {
+    "block": "Bloc {{n}}",
+    "deload": "Décharge"
+  }
+}
