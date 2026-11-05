@@ -1,6 +1,6 @@
 # Terms of Use
 
-Version: 1.2
+Version: 1.3
 
 Last updated: 5 November 2026
 
@@ -138,5 +138,5 @@ We may change these terms, for example when we introduce new features or the leg
 - **Applicable law:** The law of the Federal Republic of Germany applies, excluding the UN Convention on Contracts for the International Sale of Goods (CISG). As a consumer, you retain the protection of the mandatory provisions of the country in which you have your habitual residence.
 - **Place of jurisdiction:** For merchants, legal entities under public law and special funds under public law, Munich is the place of jurisdiction. For consumers, the statutory places of jurisdiction apply.
 - **Consumer dispute resolution:** We are neither willing nor obliged to participate in dispute resolution proceedings before a consumer arbitration board.
-- **Language:** These terms are available in German, English, Portuguese and Korean. The German version is authoritative; the others are translations.
+- **Language:** These terms are available in German, English, Portuguese, Korean, Spanish and French. The German version is authoritative; the others are translations.
 - **Invalid provisions:** If a provision of these terms is invalid, the rest of the contract remains valid. The statutory provisions take the place of the invalid provision.

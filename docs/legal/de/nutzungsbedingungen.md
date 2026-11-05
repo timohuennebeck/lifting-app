@@ -1,6 +1,6 @@
 # Nutzungsbedingungen
 
-Version: 1.2
+Version: 1.3
 
 Stand: 5. November 2026
 
@@ -136,5 +136,5 @@ Wir können diese Bedingungen ändern, zum Beispiel wenn wir neue Funktionen ein
 - **Anwendbares Recht:** Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts. Als Verbraucher behältst du den Schutz der zwingenden Vorschriften des Staates, in dem du deinen gewöhnlichen Aufenthalt hast.
 - **Gerichtsstand:** Für Kaufleute, juristische Personen des öffentlichen Rechts und öffentlich-rechtliche Sondervermögen ist München Gerichtsstand. Für Verbraucher gelten die gesetzlichen Gerichtsstände.
 - **Verbraucherstreitbeilegung:** Wir sind weder bereit noch verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
-- **Sprache:** Diese Bedingungen gibt es auf Deutsch, Englisch, Portugiesisch und Koreanisch. Maßgeblich ist die deutsche Fassung; die anderen sind Übersetzungen.
+- **Sprache:** Diese Bedingungen gibt es auf Deutsch, Englisch, Portugiesisch, Koreanisch, Spanisch und Französisch. Maßgeblich ist die deutsche Fassung; die anderen sind Übersetzungen.
 - **Unwirksame Bestimmungen:** Ist eine Bestimmung dieser Bedingungen unwirksam, bleibt der Vertrag im Übrigen wirksam. An die Stelle der unwirksamen Bestimmung treten die gesetzlichen Vorschriften.

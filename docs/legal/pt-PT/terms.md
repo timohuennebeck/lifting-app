@@ -1,6 +1,6 @@
 # Termos de Utilização
 
-Versão: 1.2
+Versão: 1.3
 
 Última atualização: 5 de novembro de 2026
 
@@ -138,5 +138,5 @@ Podemos alterar estes termos, por exemplo quando introduzimos novas funções ou
 - **Lei aplicável:** aplica-se o direito da República Federal da Alemanha, com exclusão da Convenção das Nações Unidas sobre os Contratos de Compra e Venda Internacional de Mercadorias. Enquanto consumidor, manténs a proteção das disposições imperativas do Estado em que tens a tua residência habitual.
 - **Foro competente:** para comerciantes, pessoas coletivas de direito público e patrimónios autónomos de direito público, o foro competente é Munique. Para os consumidores, aplicam-se os foros legalmente previstos.
 - **Resolução de litígios de consumo:** não estamos dispostos nem obrigados a participar em procedimentos de resolução de litígios perante uma entidade de resolução alternativa de litígios de consumo.
-- **Idioma:** estes termos existem em alemão, inglês, português e coreano. A versão determinante é a alemã; as outras são traduções.
+- **Idioma:** estes termos existem em alemão, inglês, português, coreano, espanhol e francês. A versão determinante é a alemã; as outras são traduções.
 - **Disposições inválidas:** se uma disposição destes termos for inválida, o resto do contrato mantém-se válido. A disposição inválida é substituída pelas disposições legais.
