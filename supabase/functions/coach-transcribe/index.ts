@@ -37,6 +37,8 @@ const CONTEXT: Record<AppLanguage, string> = {
   'pt-BR':
     'Uma pergunta ao treinador de um app de academia, por exemplo sobre supino, agachamento, levantamento terra, séries, repetições, RIR, volume, peso corporal ou o plano de treino.',
   ko: '피트니스 앱의 트레이닝 코치에게 하는 질문입니다. 예: 벤치프레스, 스쿼트, 데드리프트, 세트, 반복 횟수, RIR, 볼륨, 체중, 운동 계획.',
+  es: 'Una pregunta al entrenador de una app de fitness, por ejemplo sobre press de banca, sentadillas, peso muerto, series, repeticiones, RIR, volumen, peso corporal o el plan de entrenamiento.',
+  fr: "Une question au coach d'une appli de fitness, par exemple sur le développé couché, les squats, le soulevé de terre, les séries, les répétitions, le RIR, le volume, le poids corporel ou le programme d'entraînement.",
 };
 
 /** The same for a message to support (`topic: 'support'`), where a question's terms would mislead. */
@@ -48,6 +50,8 @@ const SUPPORT_CONTEXT: Record<AppLanguage, string> = {
   'pt-BR':
     'Uma mensagem para o suporte de um app de academia, por exemplo sobre um erro, uma ideia, a assinatura ou o plano de treino.',
   ko: '피트니스 앱 고객 지원팀에 보내는 메시지입니다. 예: 오류, 아이디어, 구독, 운동 계획.',
+  es: 'Un mensaje al soporte de una app de fitness, por ejemplo sobre un error, una idea, la suscripción o el plan de entrenamiento.',
+  fr: "Un message au support d'une appli de fitness, par exemple sur un bug, une idée, l'abonnement ou le programme d'entraînement.",
 };
 
 Deno.serve(async (req) => {
