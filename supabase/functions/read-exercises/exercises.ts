@@ -13,7 +13,7 @@ import type { CatalogRow } from '../_shared/plans.ts';
 
 export { contextText } from '../_shared/exercise-reading.ts';
 
-export const INSTRUCTIONS = `You turn what a user said into exercises for a strength and bodybuilding app. The input is what speech recognition made of the user naming exercises for one workout, in their own words and with little or no punctuation, in German, English, Portuguese, Korean or a mix, with gym slang.
+export const INSTRUCTIONS = `You turn what a user said into exercises for a strength and bodybuilding app. The input is what speech recognition made of the user naming exercises for one workout, in their own words and with little or no punctuation, in any language or a mix, with gym slang.
 
 Return every exercise in the order said. Leave out filler words and anything that is not an exercise. When the user corrects themselves ("drei, nein, vier Sätze"), take the correction.
 

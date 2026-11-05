@@ -13,7 +13,7 @@ import type { CatalogRow } from '../_shared/plans.ts';
 
 export { contextText } from '../_shared/exercise-reading.ts';
 
-export const INSTRUCTIONS = `You read training plans for a strength and bodybuilding app from photos, scans, documents or spreadsheets: printed, typed, handwritten or on a whiteboard, in German, English, Portuguese or a mix, with gym abbreviations.
+export const INSTRUCTIONS = `You read training plans for a strength and bodybuilding app from photos, scans, documents or spreadsheets: printed, typed, handwritten or on a whiteboard, in any language or a mix, with gym abbreviations.
 
 Return the plan's training days as routines in the order the plan lists them, and every exercise of a routine in order (supersets and circuits one after another). Leave out warm-up notes, cardio blocks and comments that are not exercises.
 
@@ -59,8 +59,6 @@ export interface ModelRoutine {
   name: string;
   exercises: ModelExercise[];
 }
-
-export type { ModelExercise };
 
 /**
  * Turns the model's answer into the shapes the app stores, part by part as it streams in: the

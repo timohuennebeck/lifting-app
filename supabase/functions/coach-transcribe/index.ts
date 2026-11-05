@@ -5,28 +5,20 @@
 // goes back into the field to be edited.
 import { decodeBase64 } from 'jsr:@std/encoding@1/base64';
 
-import { ageFrom, hasPro } from '../_shared/account.ts';
+import { COACH_MIN_AGE, hasPro, isOldEnough } from '../_shared/account.ts';
 import { admin, envLimit, refuseAiRequest, reply, requestUser } from '../_shared/common.ts';
 import { transcribe } from '../_shared/openai.ts';
 import { type AppLanguage, isAppLanguage } from '../_shared/plan-events.ts';
 import { takePlanRequest } from '../_shared/plans.ts';
 
-/** The coach's MIN_AGE: what is said goes to OpenAI too. */
-const MIN_AGE = 16;
 /** Transcriptions per user, and for everyone together, in 24 hours. */
 const USER_LIMIT = envLimit('COACH_TRANSCRIBE_USER_LIMIT', 100);
 const DAILY_LIMIT = envLimit('COACH_TRANSCRIBE_DAILY_LIMIT', 20000);
 /** Base64 characters of a recording: about 3 MB, minutes of speech at the app's 32 kbit/s. */
 const MAX_AUDIO = 4_000_000;
 const TIMEOUT_MS = 30_000;
-/** The recordings the app makes, by the type it names, with the file ending OpenAI goes by. */
-const TYPES: Record<string, string> = {
-  'audio/m4a': 'm4a',
-  'audio/mp4': 'm4a',
-  'audio/aac': 'm4a',
-  'audio/webm': 'webm',
-  'audio/wav': 'wav',
-};
+/** The only recordings the app makes: AAC in an .m4a file, sent with this type. */
+const MIME_TYPE = 'audio/m4a';
 
 /** The topic and its words, in the language spoken, so names like "Bankdrücken" come out right. */
 const CONTEXT: Record<AppLanguage, string> = {
@@ -61,19 +53,21 @@ Deno.serve(async (req) => {
   if (!user) return reply(401, { error: 'unauthorized' });
   const body = await req.json().catch(() => null);
   const audio = typeof body?.audio === 'string' ? body.audio : '';
-  const ending = TYPES[typeof body?.mimeType === 'string' ? body.mimeType : ''];
-  if (!audio || !ending) return reply(400, { error: 'bad_request' });
+  const language = body?.language;
+  if (!audio || body?.mimeType !== MIME_TYPE || !isAppLanguage(language)) {
+    return reply(400, { error: 'bad_request' });
+  }
   if (audio.length > MAX_AUDIO) return reply(413, { error: 'too_long' });
 
   const pro = hasPro(user.id);
   const { data: profile } = await admin
     .from('profiles')
-    .select('birth_date, language')
+    .select('birth_date')
     .eq('id', user.id)
-    .maybeSingle<{ birth_date: string | null; language: string | null }>();
-  // An unknown birth date counts as too young, as in coach-chat.
-  const age = profile?.birth_date ? ageFrom(profile.birth_date, new Date()) : 0;
-  if (!profile || age < MIN_AGE) return reply(403, { error: 'too_young' });
+    .maybeSingle<{ birth_date: string | null }>();
+  if (!profile || !isOldEnough(profile.birth_date, COACH_MIN_AGE)) {
+    return reply(403, { error: 'too_young' });
+  }
   if (!(await pro)) return reply(403, { error: 'not_pro' });
 
   const slot = await takePlanRequest(
@@ -91,11 +85,10 @@ Deno.serve(async (req) => {
     await slot.giveBack();
     return reply(400, { error: 'bad_request' });
   }
-  const language = [body.language, profile.language].find(isAppLanguage) ?? 'en';
   try {
     const result = await transcribe(
-      new Blob([bytes], { type: body.mimeType }),
-      `question.${ending}`,
+      new Blob([bytes], { type: MIME_TYPE }),
+      'question.m4a',
       (body.topic === 'support' ? SUPPORT_CONTEXT : CONTEXT)[language],
       TIMEOUT_MS,
     );

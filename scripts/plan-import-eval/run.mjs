@@ -31,6 +31,7 @@ import {
   loadCatalog,
   pool,
   readExercises,
+  reportStop,
   streamPlan,
   supabaseEnv,
   timing,
@@ -128,6 +129,8 @@ const requests = untilStopped((body) =>
     ? readExercises(`${SUPABASE_URL}/functions/v1/read-exercises`, KEY, body)
     : streamPlan(`${SUPABASE_URL}/functions/v1/read-plan`, KEY, body),
 );
+/** What reportStop says about the function. */
+const FUNCTION = { fn: 'read-plan', what: 'import', kind: 'import', limit: 'PLAN_IMPORT_IP_LIMIT' };
 
 // ---------- reading a plan ----------
 
@@ -312,26 +315,6 @@ const percent = (c) => (c.total ? `${Math.round((c.ok / c.total) * 100)} %` : 'â
 
 // ---------- runs ----------
 
-/** After a run: what wasn't sent and why, and what to do about it. */
-function reportStop(skipped) {
-  const stopped = requests.stopped();
-  if (!stopped) return '';
-  const notRun = skipped.length ? `; not run: ${skipped.join(', ')}` : '';
-  const text = stopped.limit
-    ? `The import limit was reached${notRun}. For a local run set PLAN_IMPORT_IP_LIMIT=1000 in ` +
-      'supabase/functions/.env and restart Supabase (npx supabase stop, then npx supabase ' +
-      'start). To reset the count right away, run `delete from public.plan_requests where kind = ' +
-      "'import';` in Supabase Studio."
-    : stopped.hint
-      ? `read-plan can't make plans (${stopped.down})${notRun}. ${stopped.hint}`
-      : `read-plan didn't answer (${stopped.down})${notRun}. Locally, npx supabase start ` +
-        'serves the functions; stopping `npx supabase functions serve` takes them down until you ' +
-        'run npx supabase stop and npx supabase start again. A BOOT_ERROR means the function ' +
-        "didn't start: keep `npx supabase functions serve` running in another terminal to see why.";
-  console.error(`\n${text}`);
-  return text;
-}
-
 function writeReport(name, text, results) {
   const out = join(HERE, 'out', new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19));
   mkdirSync(out, { recursive: true });
@@ -359,7 +342,9 @@ async function runFixtures() {
     () => !!requests.stopped(),
   );
   const stopNote = reportStop(
+    requests.stopped(),
     cases.filter((c) => !results.some((r) => r.case === c)).map((c) => c.id),
+    FUNCTION,
   );
   if (!results.length) process.exit(1);
 
@@ -437,7 +422,11 @@ async function runDir() {
     PARALLEL,
     () => !!requests.stopped(),
   );
-  reportStop(imports.filter((i) => !results.some((r) => r.import === i)).map((i) => i.id));
+  reportStop(
+    requests.stopped(),
+    imports.filter((i) => !results.some((r) => r.import === i)).map((i) => i.id),
+    FUNCTION,
+  );
   if (!results.length) process.exit(1);
   writeReport(
     'read',

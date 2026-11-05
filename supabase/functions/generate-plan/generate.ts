@@ -3,6 +3,7 @@
 // sets and reps in sensible ranges. Plain TypeScript without Deno APIs, so it can be tested outside the
 // Edge runtime.
 
+import { clampInt } from '../_shared/numbers.ts';
 import {
   catalogNames,
   cut,
@@ -14,11 +15,11 @@ import {
 import type { CatalogRow, EquipmentRow } from '../_shared/plans.ts';
 import { exerciseSeconds, repTarget, restAfterSet } from '../_shared/rest.ts';
 
-export const GOALS = ['hypertrophy', 'strength', 'strength_hypertrophy'] as const;
-export const EQUIPMENT_ACCESS = ['gym', 'home', 'bodyweight'] as const;
-export const EXPERIENCE_LEVELS = ['none', 'beginner', 'intermediate', 'advanced'] as const;
+const GOALS = ['hypertrophy', 'strength', 'strength_hypertrophy'] as const;
+const EQUIPMENT_ACCESS = ['gym', 'home', 'bodyweight'] as const;
+const EXPERIENCE_LEVELS = ['none', 'beginner', 'intermediate', 'advanced'] as const;
 /** How the routines divide the body; the app offers those that suit the workouts a week. */
-export const SPLITS = [
+const SPLITS = [
   'full_body',
   'upper_lower',
   'upper_lower_full',
@@ -301,9 +302,6 @@ const MAX_EXERCISES = 10;
 /** How far past the session length a routine may run before it takes no further exercises. */
 const TIME_SLACK = 1.1;
 
-const clamp = (value: number, min: number, max: number) =>
-  Math.min(max, Math.max(min, Math.round(Number.isFinite(value) ? value : min)));
-
 /**
  * Turns the model's answer into the app's plan, part by part as it streams in. Routines past the
  * workouts a week are dropped. A routine leaves out repeated exercises and, once it has its
@@ -332,16 +330,16 @@ export function planBuilder(answers: PlanAnswers, catalog: CatalogRow[]) {
       const row = byId.get(line.exercise_id);
       if (!row || routineIndex >= answers.sessionsPerWeek || used.has(row.id)) return null;
       if (used.size >= MAX_EXERCISES) return null;
-      const sets = clamp(line.sets, MIN_SETS, MAX_SETS);
-      let min = clamp(line.target_min, 1, 30);
-      let max = clamp(line.target_max, 1, 30);
+      const sets = clampInt(line.sets, MIN_SETS, MAX_SETS);
+      let min = clampInt(line.target_min, 1, 30);
+      let max = clampInt(line.target_max, 1, 30);
       if (min > max) [min, max] = [max, min];
       const rest = restAfterSet(row.rest_seconds, row.measures, repTarget(min, max));
       const takes = exerciseSeconds(sets, rest);
       if (used.size >= MIN_EXERCISES && seconds + takes > budget) return null;
       used.add(row.id);
       seconds += takes;
-      const rir = line.rir == null ? null : clamp(line.rir, 0, 4);
+      const rir = line.rir == null ? null : clampInt(line.rir, 0, 4);
       return {
         exercise: {
           exerciseId: row.id,

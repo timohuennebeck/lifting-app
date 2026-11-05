@@ -17,7 +17,7 @@ import {
 } from '../data.ts';
 import type { CoachProfile } from '../prompt.ts';
 
-export interface Fixture {
+interface Fixture {
   user: CoachUser;
   profile: CoachProfile;
   data: CoachData;

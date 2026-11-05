@@ -4,7 +4,7 @@
 // the app as the import's does (see PlanEvent), checked part by part (planBuilder). It also runs
 // before there is an account, so plans are limited per network and in total per day
 // (start_plan_request, kind "generate").
-import { envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
+import { envFlag, envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
 import { isAppLanguage } from '../_shared/plan-events.ts';
 import {
   loadCatalog,
@@ -28,16 +28,16 @@ const OPENAI_TIMEOUT_MS = 120_000;
 const IP_LIMIT = envLimit('PLAN_GENERATE_IP_LIMIT', 10);
 const DAILY_LIMIT = envLimit('PLAN_GENERATE_DAILY_LIMIT', 1000);
 /** OpenAI's Fast mode (twice the token price); PLAN_GENERATE_FAST=false turns it off. */
-const FAST = Deno.env.get('PLAN_GENERATE_FAST') !== 'false';
+const FAST = envFlag('PLAN_GENERATE_FAST');
 
 Deno.serve(async (req) => {
   const refused = refuseAiRequest(req);
   if (refused) return refused;
 
   const body = await req.json().catch(() => null);
-  const language = isAppLanguage(body?.language) ? body.language : 'de';
+  const language = body?.language;
   const answers = parseAnswers(body?.answers);
-  if (!answers) return reply(400, { error: 'bad_request' });
+  if (!answers || !isAppLanguage(language)) return reply(400, { error: 'bad_request' });
 
   const taken = await takePlanRequest(req, 'generate', {
     perNetwork: IP_LIMIT,

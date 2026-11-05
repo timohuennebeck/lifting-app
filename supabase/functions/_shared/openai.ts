@@ -3,13 +3,18 @@
 // request can name its own model instead (translations use a small one).
 const OPENAI_URL = 'https://api.openai.com/v1/responses';
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
-const OPENAI_MODEL = Deno.env.get('OPENAI_MODEL') ?? 'gpt-6.1-sol';
+/** The model when OPENAI_MODEL (or the coach's OPENAI_COACH_MODEL) names none. */
+export const DEFAULT_MODEL = 'gpt-6.1-sol';
+const OPENAI_MODEL = Deno.env.get('OPENAI_MODEL') ?? DEFAULT_MODEL;
 const OPENAI_REASONING_EFFORT = Deno.env.get('OPENAI_REASONING_EFFORT');
 
 export const openAiConfigured = () => !!OPENAI_API_KEY;
 
 /** OpenAI's HTTP statuses worth another attempt: timeout, conflict, rate limit, overload. */
 export const PASSING_STATUSES = new Set([408, 409, 429, 500, 502, 503, 504]);
+/** A call that fails for a passing reason gets one more attempt, after a short pause. */
+export const ATTEMPTS = 2;
+export const RETRY_PAUSE_MS = 1000;
 
 const TRANSCRIBE_URL = 'https://api.openai.com/v1/audio/transcriptions';
 const TRANSCRIBE_MODEL = Deno.env.get('OPENAI_TRANSCRIBE_MODEL') ?? 'gpt-transcribe';
@@ -17,8 +22,7 @@ const TRANSCRIBE_MODEL = Deno.env.get('OPENAI_TRANSCRIBE_MODEL') ?? 'gpt-transcr
 /**
  * Speech to text: what is said in `audio`, with `prompt` as context for the words to expect (it
  * tells the model the topic and its terms). Resolves with the text, or OpenAI's HTTP status;
- * throws on timeouts and network errors. A request OpenAI refuses as malformed goes once more
- * without the prompt, so a model without that parameter still answers.
+ * throws on timeouts and network errors.
  */
 export async function transcribe(
   audio: Blob,
@@ -26,24 +30,16 @@ export async function transcribe(
   prompt: string,
   timeoutMs: number,
 ): Promise<{ text: string } | { upstream: number }> {
-  const signal = AbortSignal.timeout(timeoutMs);
-  const send = (withPrompt: boolean) => {
-    const form = new FormData();
-    form.append('model', TRANSCRIBE_MODEL);
-    form.append('file', audio, fileName);
-    if (withPrompt) form.append('prompt', prompt);
-    return fetch(TRANSCRIBE_URL, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${OPENAI_API_KEY}` },
-      body: form,
-      signal,
-    });
-  };
-  let response = await send(true);
-  if (response.status === 400) {
-    console.error('OpenAI refused the transcription with its prompt', await response.text());
-    response = await send(false);
-  }
+  const form = new FormData();
+  form.append('model', TRANSCRIBE_MODEL);
+  form.append('file', audio, fileName);
+  form.append('prompt', prompt);
+  const response = await fetch(TRANSCRIBE_URL, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${OPENAI_API_KEY}` },
+    body: form,
+    signal: AbortSignal.timeout(timeoutMs),
+  });
   if (!response.ok) {
     console.error('OpenAI transcription failed', response.status, await response.text());
     return { upstream: response.status };
@@ -207,7 +203,7 @@ export async function respondStream(
 }
 
 /** A step of a streamed answer: more of its text, or how it ended. */
-export type StreamedAnswer =
+type StreamedAnswer =
   { text: string } | { refusal: true } | { done: true } | { incomplete: string };
 
 /**

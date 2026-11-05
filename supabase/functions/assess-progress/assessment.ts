@@ -2,6 +2,7 @@
 // Deno APIs, so it can be tested outside the Edge runtime.
 
 import { ageFrom } from '../_shared/account.ts';
+import { weightTrend } from '../_shared/weight-trend.ts';
 
 export const POSES = ['front', 'side', 'back'] as const;
 type Pose = (typeof POSES)[number];
@@ -45,8 +46,8 @@ interface Metrics {
 export interface PreviousCheck {
   id: string;
   created_at: string;
-  group_scores: Partial<Record<Group, number>>;
-  metrics: Partial<Metrics>;
+  group_scores: Record<Group, number>;
+  metrics: Metrics;
 }
 
 interface CheckResult {
@@ -132,23 +133,16 @@ const dayNumber = (date: string) => Math.round(Date.parse(`${date}T00:00:00Z`) /
 const kg = (value: number) => `${Math.round(value * 10) / 10} kg`;
 
 /**
- * The latest weigh-in and how the smoothed trend moved over the last 30 days, as the app's
- * weight history shows it: each weigh-in moves the trend 10 % toward the scale, a gap of n days
- * counting n times.
+ * The latest weigh-in and how the smoothed trend (weightTrend) moved over the last 30 days, as
+ * the app's weight history shows it.
  */
-export function weightText(entries: WeightEntryRow[], now: Date) {
+function weightText(entries: WeightEntryRow[], now: Date) {
   const last = entries.at(-1);
   if (!last) return null;
   const since = Math.round(now.getTime() / DAY_MS) - WEIGHT_TREND_DAYS;
-  let trend = entries[0].weight_kg;
-  let trendAtStart: number | null = null;
-  entries.forEach((e, i) => {
-    if (i) {
-      const days = Math.max(1, dayNumber(e.date) - dayNumber(entries[i - 1].date));
-      trend += (1 - 0.9 ** days) * (e.weight_kg - trend);
-    }
-    if (dayNumber(e.date) <= since) trendAtStart = trend;
-  });
+  const line = weightTrend(entries.map((e) => ({ date: e.date, kg: e.weight_kg })));
+  const trend = line.at(-1)!.value;
+  const trendAtStart = line.findLast((p) => dayNumber(p.date) <= since)?.value ?? null;
   const change =
     trendAtStart === null
       ? ''
@@ -175,13 +169,11 @@ export function contextText(
     const days = Math.round((now.getTime() - Date.parse(previous.created_at)) / DAY_MS);
     const { bodyFat, proportions, definition } = previous.metrics;
     const values = [
-      bodyFat !== undefined ? `body fat ${bodyFat} %` : null,
-      proportions !== undefined ? `proportions ${proportions}` : null,
-      definition !== undefined ? `definition ${definition}` : null,
-      ...GROUPS.map((g) =>
-        previous.group_scores[g] !== undefined ? `${g} ${previous.group_scores[g]}` : null,
-      ),
-    ].filter(Boolean);
+      `body fat ${bodyFat} %`,
+      `proportions ${proportions}`,
+      `definition ${definition}`,
+      ...GROUPS.map((g) => `${g} ${previous.group_scores[g]}`),
+    ];
     lines.push(`Previous check, ${days} days ago: ${values.join(', ')}.`);
   } else {
     lines.push('This is the first check.');

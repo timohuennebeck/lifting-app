@@ -191,7 +191,6 @@ export interface ProfileRow {
   equipment: string | null;
   home_equipment: string[] | null;
   active_plan_id: string | null;
-  language: string | null;
   coach_consent_at: string | null;
 }
 

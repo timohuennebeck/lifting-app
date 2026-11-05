@@ -4,8 +4,14 @@
 // the exercises the app adds (with their sets, and the ones the catalog lacks). It also runs
 // before there is an account (a plan set up in onboarding), so requests are limited per network
 // and in total per day (start_plan_request, kind "voice").
-import { envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
-import { askStructured, PASSING_STATUSES, type StructuredRequest } from '../_shared/openai.ts';
+import { envFlag, envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
+import {
+  askStructured,
+  ATTEMPTS,
+  PASSING_STATUSES,
+  RETRY_PAUSE_MS,
+  type StructuredRequest,
+} from '../_shared/openai.ts';
 import { isAppLanguage } from '../_shared/plan-events.ts';
 import { type CatalogRow, loadCatalog, takePlanRequest } from '../_shared/plans.ts';
 import {
@@ -22,7 +28,7 @@ const OPENAI_TIMEOUT_MS = 45_000;
 const IP_LIMIT = envLimit('PLAN_VOICE_IP_LIMIT', 60);
 const DAILY_LIMIT = envLimit('PLAN_VOICE_DAILY_LIMIT', 5000);
 /** OpenAI's Fast mode (twice the token price); PLAN_VOICE_FAST=false turns it off. */
-const FAST = Deno.env.get('PLAN_VOICE_FAST') !== 'false';
+const FAST = envFlag('PLAN_VOICE_FAST');
 /** Characters of text (the app's MAX_SPOKEN). */
 const MAX_TEXT = 4000;
 
@@ -35,9 +41,9 @@ async function ask(request: StructuredRequest) {
     const answer = await askStructured(request).catch((error: unknown) => ({ error }));
     const passing =
       'error' in answer || ('upstream' in answer && PASSING_STATUSES.has(answer.upstream));
-    if (!passing || attempt === 2) return answer;
-    console.error('Reading the exercises failed (attempt 1)', answer);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    if (!passing || attempt === ATTEMPTS) return answer;
+    console.error(`Reading the exercises failed (attempt ${attempt})`, answer);
+    await new Promise((resolve) => setTimeout(resolve, RETRY_PAUSE_MS));
   }
 }
 
@@ -46,9 +52,9 @@ Deno.serve(async (req) => {
   if (refused) return refused;
 
   const body = await req.json().catch(() => null);
-  const language = isAppLanguage(body?.language) ? body.language : 'de';
+  const language = body?.language;
   const text = typeof body?.text === 'string' ? body.text.trim() : '';
-  if (!text) return reply(400, { error: 'bad_request' });
+  if (!text || !isAppLanguage(language)) return reply(400, { error: 'bad_request' });
   if (text.length > MAX_TEXT) return reply(413, { error: 'too_large' });
 
   const taken = await takePlanRequest(req, 'voice', { perNetwork: IP_LIMIT, perDay: DAILY_LIMIT });

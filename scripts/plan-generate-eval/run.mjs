@@ -16,10 +16,18 @@ import { execSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { fits } from '../../supabase/functions/_shared/plan-events.ts';
+import {
+  DEFAULT_REST,
+  exerciseSeconds,
+  repTarget,
+  restAfterSet,
+} from '../../supabase/functions/_shared/rest.ts';
 import {
   failure,
   loadCatalog,
   pool,
+  reportStop,
   streamPlan,
   supabaseEnv,
   timing,
@@ -103,25 +111,22 @@ const equipmentOf = ({ equipment, homeEquipment }) =>
       : homeEquipment.filter((id) => EQUIPMENT.has(id)),
   );
 
-/** An exercise fits when each of its needs is met by one of the user's items. */
-const fits = (needs, have) => needs.every((items) => items.some((id) => have.has(id)));
+/** The rest the app gives after a set (restSecondsFor); generated plans store none. */
+const restOf = (row, { targetMin, targetMax }) =>
+  restAfterSet(
+    row?.rest_seconds ?? DEFAULT_REST,
+    row?.measures ?? [],
+    repTarget(targetMin, targetMax),
+  );
 
 /**
- * The rest the app gives after a set (restSecondsFor): the exercise's own, a quarter more for 6–7
- * reps and half for 5 or fewer. Generated plans store none.
+ * The app's session estimate (estimateMinutes): set-up per exercise, per set its work and rest.
+ * The sets of a generated exercise share their targets, so the first one's rest is every set's.
  */
-function restOf(row, { targetMin: min, targetMax: max }) {
-  const rest = row?.rest_seconds ?? 90;
-  const reps = min == null ? max : max == null ? min : (min + max) / 2;
-  if (reps == null || isTimed(row)) return rest;
-  return Math.round((rest * (reps <= 5 ? 1.5 : reps < 8 ? 1.25 : 1)) / 15) * 15;
-}
-
-/** The app's session estimate (estimateMinutes): set-up per exercise, per set its work and rest. */
 const minutesOf = (routine, catalog) =>
   routine.exercises.reduce((s, e) => {
-    const row = catalog.get(e.exerciseId);
-    return s + 150 + e.sets.reduce((t, set) => t + 45 + (e.restSeconds ?? restOf(row, set)), 0);
+    const rest = e.restSeconds ?? restOf(catalog.get(e.exerciseId), e.sets[0]);
+    return s + exerciseSeconds(e.sets.length, rest);
   }, 0) / 60;
 
 /** Each is trained at least once a week, and in as many routines as the split trains it (up to 2). */
@@ -320,25 +325,6 @@ const describeAnswers = ({
   `${goal}, ${equipment}${homeEquipment.length ? ` (${homeEquipment.join(', ')})` : ''}, ${sessionsPerWeek}× a week ${split}, ${sessionMinutes} min, ` +
   `${experience ?? 'experience unknown'}${focus.length ? `, focus ${focus.join(' + ')}` : ''}`;
 
-/** After a run: what wasn't sent and why, and what to do about it. */
-function reportStop(skipped) {
-  const stopped = requests.stopped();
-  if (!stopped) return '';
-  const notRun = skipped.length ? `; not run: ${skipped.join(', ')}` : '';
-  const text = stopped.limit
-    ? `The plan limit was reached${notRun}. For a local run set PLAN_GENERATE_IP_LIMIT=1000 in ` +
-      'supabase/functions/.env and restart Supabase (npx supabase stop, then npx supabase ' +
-      'start). To reset the count right away, run `delete from public.plan_requests where kind = ' +
-      "'generate';` in Supabase Studio."
-    : stopped.hint
-      ? `generate-plan can't make plans (${stopped.down})${notRun}. ${stopped.hint}`
-      : `generate-plan didn't answer (${stopped.down})${notRun}. Locally, npx supabase start ` +
-        'serves the functions. A BOOT_ERROR means the function did not start: keep ' +
-        '`npx supabase functions serve` running in another terminal to see why.';
-  console.error(`\n${text}`);
-  return text;
-}
-
 const catalog = await loadCatalog(
   SUPABASE_URL,
   KEY,
@@ -383,7 +369,9 @@ const results = await pool(
   () => !!requests.stopped(),
 );
 const stopNote = reportStop(
+  requests.stopped(),
   profiles.filter((p) => !results.some((r) => r.profile === p)).map((p) => p.id),
+  { fn: 'generate-plan', what: 'plan', kind: 'generate', limit: 'PLAN_GENERATE_IP_LIMIT' },
 );
 if (!results.length) process.exit(1);
 

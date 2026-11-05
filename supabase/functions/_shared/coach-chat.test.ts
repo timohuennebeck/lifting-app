@@ -61,7 +61,6 @@ function reset({ birthDate = '1995-04-01', consent = '2026-10-01T00:00:00Z' } = 
       focus: ['chest'],
       equipment: 'gym',
       active_plan_id: null,
-      language: 'de',
       coach_consent_at: consent,
     },
   ];
@@ -220,17 +219,19 @@ async function eventsOf(response: Response) {
 }
 
 Deno.test(
-  'refuses before anything reaches OpenAI: sign-in, question, age, consent, limits',
+  'refuses before anything reaches OpenAI: sign-in, question, language, age, limits',
   async () => {
     reset();
     assertEquals((await ask({ question: 'Hallo' }, 'wrong')).status, 401);
     assertEquals((await ask({ question: '' })).status, 400);
     assertEquals((await ask({ question: 'x'.repeat(501) })).status, 400);
     assertEquals((await ask({ question: 'Hallo', chatId: 'nope' })).status, 400);
+    assertEquals((await ask({ question: 'Hallo', language: undefined })).status, 400);
+    assertEquals((await ask({ question: 'Hallo', language: 'it' })).status, 400);
     reset({ birthDate: '2011-01-01' });
     assertEquals(await (await ask({ question: 'Hallo' })).json(), { error: 'too_young' });
-    reset({ consent: null as unknown as string });
-    assertEquals(await (await ask({ question: 'Hallo' })).json(), { error: 'consent_required' });
+    reset({ birthDate: null as unknown as string });
+    assertEquals(await (await ask({ question: 'Hallo' })).json(), { error: 'too_young' });
     reset();
     assertEquals((await ask({ question: 'Hallo', chatId: CHAT })).status, 404);
     slot = { limit: 'daily', retry_at: '2026-11-03T14:30:00+00:00' };
@@ -260,8 +261,8 @@ Deno.test(
       }),
       answers('Dein 1RM liegt bei **122,5 kg**.'),
     ];
-    // Sending the first question with consent records it.
-    const response = await ask({ question: 'Wie läuft mein Bankdrücken?', consent: true });
+    // Without a recorded consent (none yet, or withdrawn), asking is the consent.
+    const response = await ask({ question: 'Wie läuft mein Bankdrücken?' });
     assertEquals(response.headers.get('Content-Type'), 'text/event-stream');
     const events = await eventsOf(response);
     assert(db.profiles[0].coach_consent_at);
@@ -270,11 +271,11 @@ Deno.test(
     assertEquals(start.type, 'start');
     assertEquals(
       rest.map((e) => e.type),
-      ['searched', 'found', 'text', 'text', 'done'],
+      ['found', 'text', 'text', 'done'],
     );
-    assertEquals(rest[0], { type: 'searched', tool: 'trend', of: 'workouts', count: 3 });
-    assertEquals(rest[1].chart.type, 'trend');
-    assertEquals(rest[2].text + rest[3].text, 'Dein 1RM liegt bei **122,5 kg**.');
+    assertEquals(rest[0].chart.type, 'trend');
+    assertEquals(rest[0].chart.records, undefined);
+    assertEquals(rest[1].text + rest[2].text, 'Dein 1RM liegt bei **122,5 kg**.');
 
     // The model got the settings, the German exercise name and the tool result.
     assertEquals(openAiRequests[0].model, 'gpt-6.1-sol');

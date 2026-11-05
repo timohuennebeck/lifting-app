@@ -6,7 +6,7 @@
 // total per day (start_plan_request).
 import { decodeBase64 } from 'jsr:@std/encoding@1/base64';
 
-import { envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
+import { envFlag, envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
 import { isAppLanguage } from '../_shared/plan-events.ts';
 import {
   type CatalogRow,
@@ -22,7 +22,7 @@ const OPENAI_TIMEOUT_MS = 120_000;
 const IP_LIMIT = envLimit('PLAN_IMPORT_IP_LIMIT', 10);
 const DAILY_LIMIT = envLimit('PLAN_IMPORT_DAILY_LIMIT', 1000);
 /** OpenAI's Fast mode for the import (twice the token price); PLAN_IMPORT_FAST=false turns it off. */
-const FAST = Deno.env.get('PLAN_IMPORT_FAST') !== 'false';
+const FAST = envFlag('PLAN_IMPORT_FAST');
 const MAX_PHOTOS = 10;
 /** Decoded sizes; the app shrinks photos to well below this. */
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
@@ -102,11 +102,11 @@ Deno.serve(async (req) => {
   if (refused) return refused;
 
   const body = await req.json().catch(() => null);
-  const language = isAppLanguage(body?.language) ? body.language : 'de';
+  const language = body?.language;
   const photos: unknown = body?.photos;
   const file: PlanFile | undefined = body?.file;
   const hasPhotos = Array.isArray(photos) && photos.length > 0;
-  if (hasPhotos === !!file) return reply(400, { error: 'bad_request' });
+  if (hasPhotos === !!file || !isAppLanguage(language)) return reply(400, { error: 'bad_request' });
   if (hasPhotos) {
     if (photos.length > MAX_PHOTOS || !photos.every(isBase64)) {
       return reply(400, { error: 'bad_request' });
