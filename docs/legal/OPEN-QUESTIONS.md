@@ -11,8 +11,9 @@ input: exercises said out loud (the operating system's speech recognition, then 
 the text; DS §4.7) and questions to the coach said out loud (the recording goes to OpenAI to be
 written down and isn't stored; DS §4.8), messages to support said out loud the same way (§4.9),
 and it names the microphone among the permissions (§6), which 1.2 wrongly said the app doesn't ask
-for. NB 1.2 also names Korean among its languages. German is the
-binding version; `en`, `pt-PT`, `pt-BR` and `ko` are translations.
+for. NB 1.2 also names Korean among its languages. Spanish and French come with DS 1.3 and NB 1.3;
+NB 1.3 only adds them to its languages. German is the binding version; `en`, `pt-PT`, `pt-BR`, `ko`,
+`es` and `fr` are translations.
 
 The texts are not legal advice. A lawyer should review them, above all the health data, body
 photos and AI parts.
@@ -116,3 +117,11 @@ photos and AI parts.
     in the USA." That makes what DS §4.4 says visible at the moment of the consent (item 4). The
     owner took version 1.0 out of review on 5 November 2026 to ship this and Spanish and French in
     the first release, so it reaches every account made with the App Store version.
+
+## Spanish and French
+
+28. **Review.** The Spanish and French DS 1.3 and NB 1.3 were translated from the English and
+    checked by AI against the German. Neither has been read by a native speaker or a lawyer.
+29. **Local law.** The texts follow German law and the GDPR, and name German as the binding version.
+    Whether that holds for consumers in France and Spain, and whether local rules need anything
+    further, is for the lawyer.

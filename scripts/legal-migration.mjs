@@ -24,6 +24,8 @@ const FILES = {
   'pt-PT': { terms: 'pt-PT/terms.md', privacy: 'pt-PT/privacy.md' },
   'pt-BR': { terms: 'pt-BR/terms.md', privacy: 'pt-BR/privacy.md' },
   ko: { terms: 'ko/terms.md', privacy: 'ko/privacy.md' },
+  es: { terms: 'es/terms.md', privacy: 'es/privacy.md' },
+  fr: { terms: 'fr/terms.md', privacy: 'fr/privacy.md' },
 };
 
 const unknown = only.filter((locale) => !(locale in FILES));

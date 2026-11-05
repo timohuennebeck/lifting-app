@@ -1,6 +1,6 @@
 # Termos de Uso
 
-Versão: 1.2
+Versão: 1.3
 
 Última atualização: 5 de novembro de 2026
 
@@ -138,5 +138,5 @@ Podemos alterar estes termos, por exemplo quando introduzirmos novas funções o
 - **Lei aplicável:** aplica-se o direito da República Federal da Alemanha, com exclusão da Convenção das Nações Unidas sobre Contratos de Compra e Venda Internacional de Mercadorias (CISG). Como consumidor, você mantém a proteção das disposições imperativas do país em que tem sua residência habitual.
 - **Foro:** para comerciantes, pessoas jurídicas de direito público e patrimônios especiais de direito público, o foro é Munique. Para consumidores, aplicam-se os foros legais.
 - **Resolução de litígios de consumo:** não estamos dispostos nem somos obrigados a participar de procedimentos de resolução de litígios perante um órgão de conciliação de consumo.
-- **Idioma:** estes termos existem em alemão, inglês, português e coreano. Prevalece a versão em alemão; as demais são traduções.
+- **Idioma:** estes termos existem em alemão, inglês, português, coreano, espanhol e francês. Prevalece a versão em alemão; as demais são traduções.
 - **Disposições inválidas:** se uma disposição destes termos for inválida, o restante do contrato continua válido. A disposição inválida é substituída pelas disposições legais.
