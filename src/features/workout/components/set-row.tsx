@@ -143,10 +143,7 @@ export function SetRow({
         >
           {/* Reps in reserve belong to the reps box. */}
           {cell.field === 'reps' && rir != null ? (
-            <RirBadge
-              rir={rir}
-              className={cn('absolute -right-1.75 -bottom-1.75', rirIsTarget && 'opacity-40')}
-            />
+            <RirBadge rir={rir} faded={rirIsTarget} className="absolute -right-1.75 -bottom-1.75" />
           ) : null}
         </InputCell>
       ))}
