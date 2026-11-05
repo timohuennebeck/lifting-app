@@ -1481,5 +1481,75 @@
         }
       ]
     }
+  },
+  {
+    "id": "20-voice-list-es",
+    "title": "Spoken Spanish exercise list, numbers as words (setenta y cinco)",
+    "files": ["20-voice-list-es.txt"],
+    "as": "voice",
+    "language": "es",
+    "expect": {
+      "routines": [
+        {
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["lat-pulldown"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["barbell-row"],
+              "sets": 3,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["leg-press"],
+              "sets": 3,
+              "reps": [15, 15]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "21-voice-list-fr",
+    "title": "Spoken French exercise list, numbers as words (quatre-vingts, soixante-dix, trois séries de douze)",
+    "files": ["21-voice-list-fr.txt"],
+    "as": "voice",
+    "language": "fr",
+    "expect": {
+      "routines": [
+        {
+          "exercises": [
+            {
+              "ex": ["bench-press"],
+              "sets": 4,
+              "reps": [10, 10]
+            },
+            {
+              "ex": ["lat-pulldown"],
+              "sets": 3,
+              "reps": [12, 12]
+            },
+            {
+              "ex": ["barbell-row"],
+              "sets": 3,
+              "reps": [8, 8]
+            },
+            {
+              "ex": ["leg-press"],
+              "sets": 3,
+              "reps": [15, 15]
+            }
+          ]
+        }
+      ]
+    }
   }
 ]

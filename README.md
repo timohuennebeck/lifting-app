@@ -262,11 +262,11 @@ alternatives for the user to review.
 - **Rules (server-side):** it also runs before there is an account, so imports are limited per network
   (`PLAN_IMPORT_IP_LIMIT`, default 10) and in total (`PLAN_IMPORT_DAILY_LIMIT`, default 1,000) per
   24 hours. `plan_requests` keeps a keyed hash of the IP, never the IP itself.
-- **Testing:** `npm run plan:eval` sends the 19 test plans in `scripts/plan-import-eval/fixtures`
+- **Testing:** `npm run plan:eval` sends the 21 test plans in `scripts/plan-import-eval/fixtures`
   (typed, spreadsheet, handwritten, whiteboard, screenshot, spoken; German, English, Portuguese,
-  Korean) to the functions and scores what it read against `cases.json`, with the time to the first exercise and
+  Spanish, French, Korean) to the functions and scores what it read against `cases.json`, with the time to the first exercise and
   to the whole plan. `npm run plan:eval -- --dir <folder>` reads your own photos and files and
-  prints what it found. One run is 15 imports (the 4 spoken cases go to read-exercises), so set
+  prints what it found. One run is 15 imports (the 6 spoken cases go to read-exercises), so set
   `PLAN_IMPORT_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
 
 ## Voice input
