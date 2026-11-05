@@ -35,11 +35,11 @@ const STEMS = [
   // Spanish
   'sentadilla muerto jalon zancada elevacion plancha dominada aperturas',
   // French
-  'developpe souleve tirage rowing elevation gainage ecarte mollet',
+  'developpe souleve tirage elevation gainage ecarte mollet',
 ].flatMap((line) => line.split(' '));
 /** Short ones only count as whole words ("row", not "throw"). */
 const WORDS = new Set(
-  'row rows fly flys flyes dip dips pull pulls remo fondos prensa fente fentes pompe pompes traction tractions'.split(
+  'row rows fly flys flyes dip dips pull pulls remo fondos prensa fente fentes pompe pompes traction tractions rowing'.split(
     ' ',
   ),
 );
