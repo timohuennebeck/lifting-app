@@ -32,6 +32,27 @@
       "title": "Benachrichtigungen",
       "restSound": "Ton bei Pausenende"
     },
+    "data": {
+      "title": "Daten",
+      "import": "Importieren",
+      "importFormats": "CSV, Strong…",
+      "export": "Exportieren",
+      "exportFormat": "CSV"
+    },
+    "export": {
+      "title": "Daten exportieren",
+      "subtitle": "Exportiere alle deine Trainings als CSV-Datei.",
+      "summary_one": "{{count}} Training seit {{date}}",
+      "summary_other": "{{count}} Trainings seit {{date}}",
+      "empty": "Noch keine Trainings",
+      "loading": "Deine Trainings werden noch geladen",
+      "preparing": "Datei wird vorbereitet …",
+      "cta": "Exportieren",
+      "failed": {
+        "title": "Export fehlgeschlagen",
+        "message": "Die Datei konnte nicht erstellt werden. Versuch es noch einmal."
+      }
+    },
     "links": {
       "help": "Hilfe",
       "privacy": "Datenschutz",

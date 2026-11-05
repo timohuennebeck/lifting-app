@@ -1,7 +1,7 @@
 import * as Application from 'expo-application';
 import Constants from 'expo-constants';
 import { type Href, router, Stack } from 'expo-router';
-import { type ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -29,7 +29,9 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
+import { DataSection } from '../components/data-section';
 import { NotificationsSection } from '../components/notifications-section';
+import { PreferenceCard } from '../components/preference-card';
 import { ProSection } from '../components/pro-section';
 import { SignOutSheet } from '../components/sign-out-sheet';
 import { UnitBadge } from '../components/unit-badge';
@@ -138,6 +140,8 @@ export function SettingsScreen() {
         </View>
       </View>
 
+      <DataSection />
+
       <NotificationsSection />
 
       <ProSection />
@@ -204,39 +208,5 @@ export function SettingsScreen() {
         onDelete={removeAccount}
       />
     </Screen>
-  );
-}
-
-interface PreferenceCardProps {
-  label: string;
-  value: string;
-  icon: ReactNode;
-  onPress: () => void;
-}
-
-/** Half-width card: an icon, then the setting and its value (language, units). */
-function PreferenceCard({ label, value, icon, onPress }: PreferenceCardProps) {
-  return (
-    // A plain slot takes the half: a card's own padding would skew the widths.
-    <View className="min-w-0 flex-1">
-      <PressableScale
-        haptic="tap"
-        activeScale={0.98}
-        accessibilityRole="button"
-        accessibilityLabel={`${label}, ${value}`}
-        onPress={onPress}
-        className="gap-3.5 rounded-[22px] bg-surface p-4"
-      >
-        {icon}
-        <View className="gap-0.5">
-          <Text tone="subtle" className="text-sm">
-            {label}
-          </Text>
-          <Text variant="bodyStrong" numberOfLines={1}>
-            {value}
-          </Text>
-        </View>
-      </PressableScale>
-    </View>
   );
 }

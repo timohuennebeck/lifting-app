@@ -32,6 +32,27 @@
       "title": "Notificações",
       "restSound": "Som no fim do descanso"
     },
+    "data": {
+      "title": "Dados",
+      "import": "Importar",
+      "importFormats": "CSV, Strong…",
+      "export": "Exportar",
+      "exportFormat": "CSV"
+    },
+    "export": {
+      "title": "Exportar dados",
+      "subtitle": "Exporte todos os seus treinos como arquivo CSV.",
+      "summary_one": "{{count}} treino desde {{date}}",
+      "summary_other": "{{count}} treinos desde {{date}}",
+      "empty": "Ainda não há treinos",
+      "loading": "Seus treinos ainda estão carregando",
+      "preparing": "Preparando o arquivo…",
+      "cta": "Exportar",
+      "failed": {
+        "title": "Falha ao exportar",
+        "message": "Não foi possível criar o arquivo. Tente de novo."
+      }
+    },
     "links": {
       "help": "Ajuda",
       "privacy": "Privacidade",

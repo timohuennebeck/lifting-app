@@ -32,6 +32,27 @@
       "title": "Notifications",
       "restSound": "Son à la fin du repos"
     },
+    "data": {
+      "title": "Données",
+      "import": "Importer",
+      "importFormats": "CSV, Strong…",
+      "export": "Exporter",
+      "exportFormat": "CSV"
+    },
+    "export": {
+      "title": "Exporter les données",
+      "subtitle": "Exporte toutes tes séances dans un fichier CSV.",
+      "summary_one": "{{count}} séance depuis {{date}}",
+      "summary_other": "{{count}} séances depuis {{date}}",
+      "empty": "Pas encore de séance",
+      "loading": "Tes séances sont encore en cours de chargement",
+      "preparing": "Préparation du fichier…",
+      "cta": "Exporter",
+      "failed": {
+        "title": "Échec de l'export",
+        "message": "Le fichier n'a pas pu être créé. Réessaie."
+      }
+    },
     "links": {
       "help": "Aide",
       "privacy": "Confidentialité",

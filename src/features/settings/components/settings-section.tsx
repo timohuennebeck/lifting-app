@@ -12,13 +12,20 @@ export interface SettingsSectionProps {
   children: ReactNode;
 }
 
+/** A section's title, over a group or a row of cards. */
+export function SettingsOverline({ title }: { title: string }) {
+  return (
+    <Text variant="overline" tone="subtle" className="px-1 text-[11px]">
+      {title}
+    </Text>
+  );
+}
+
 /** Overline title plus a rounded group. */
 export function SettingsSection({ title, children }: SettingsSectionProps) {
   return (
     <View className="gap-2.5 px-4 pt-7">
-      <Text variant="overline" tone="subtle" className="px-1 text-[11px]">
-        {title}
-      </Text>
+      <SettingsOverline title={title} />
       <View className="overflow-hidden rounded-[22px] bg-surface">{children}</View>
     </View>
   );

@@ -32,6 +32,27 @@
       "title": "Notifications",
       "restSound": "Sound when rest ends"
     },
+    "data": {
+      "title": "Data",
+      "import": "Import",
+      "importFormats": "CSV, Strong…",
+      "export": "Export",
+      "exportFormat": "CSV"
+    },
+    "export": {
+      "title": "Export data",
+      "subtitle": "Export all your workouts as a CSV file.",
+      "summary_one": "{{count}} workout since {{date}}",
+      "summary_other": "{{count}} workouts since {{date}}",
+      "empty": "No workouts yet",
+      "loading": "Your workouts are still loading",
+      "preparing": "Preparing file…",
+      "cta": "Export",
+      "failed": {
+        "title": "Export failed",
+        "message": "The file couldn't be created. Try again."
+      }
+    },
     "links": {
       "help": "Help",
       "privacy": "Privacy",

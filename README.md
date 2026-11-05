@@ -311,6 +311,23 @@ What the user trains from, and what they logged:
   (rounded up) at RIR 4. Sets without RIR keep none. AI plans run in blocks of 4 + 1 weeks;
   imported plans without blocks, with a weekly goal of their routine count.
 
+## Data export
+
+Settings → "Daten" holds "Importieren" (not built yet, the card does nothing) and "Exportieren": a
+CSV file made on the device, handed to the system's share sheet and removed from the cache afterwards.
+It works offline, but waits for the first sync, since the device may not hold the whole history before.
+
+The file has one row per completed set of a finished workout, oldest first; workouts without a
+completed set have none. Body weight, plans, progress checks and coach chats aren't in it; the
+JSON copy the privacy policy promises under Art. 20 GDPR is separate.
+
+- **Format:** UTF-8 with a byte order mark, commas, decimal points and English headers in every app
+  language. Names starting with `=`, `+`, `-` or `@` get a leading `'`, so a spreadsheet doesn't run them.
+- **Columns:** `started_at`, `finished_at` (device time zone, with offset), `workout`, `plan`, `plan_week`,
+  `exercise_order`, `exercise` (in the app language), `exercise_id`, `set`, `weight_kg` or `weight_lb` (the
+  user's unit, as the app shows it), `reps`, `duration_seconds`, `rir`, `is_pr`, `target_min`, `target_max`,
+  `target_rir`, `rest_seconds`. Empty means not logged, not 0.
+
 ## Plan generation
 
 "Erstell mir einen Plan" (in onboarding, and in the app from "+" or Training) sends the flow's answers to the
