@@ -1,4 +1,5 @@
 import { useStatus } from '@powersync/react-native';
+import type { File } from 'expo-file-system';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -24,9 +25,10 @@ export interface ExportSheetProps {
 }
 
 /**
- * What will be exported; once "Export" is tapped, the file and its progress. The share sheet opens once this sheet has closed: iOS
- * can't show a second native modal beside one. Before the first sync the device may hold only part
- * of the history, so exporting waits for it.
+ * What will be exported; once "Export" is tapped, the file and its progress, then "Download". The
+ * share sheet opens once this sheet has closed: iOS can't show a second native modal beside one.
+ * Closing the sheet without downloading deletes the file. Before the first sync the device may
+ * hold only part of the history, so exporting waits for it.
  */
 export function ExportSheet({ visible, onClose, onRetry }: ExportSheetProps) {
   const { t } = useTranslation('profile');
@@ -35,6 +37,8 @@ export function ExportSheet({ visible, onClose, onRetry }: ExportSheetProps) {
   const { data: summary } = useExportSummary(visible);
   const [exporting, setExporting] = useState(false);
   const [progress, setProgress] = useState(0);
+  /** Written and waiting for "Download". */
+  const [file, setFile] = useState<File | null>(null);
 
   const workouts = summary?.count ?? 0;
   const first = summary?.first;
@@ -69,19 +73,34 @@ export function ExportSheet({ visible, onClose, onRetry }: ExportSheetProps) {
     setProgress(0);
     setExporting(true);
     writeWorkoutsCsv({ units, language, onProgress: setProgress }).then(
-      (file) => finish(() => void shareAndRemove(file).catch(fail)),
+      (written) => {
+        setExporting(false);
+        setFile(written);
+        haptics.success();
+      },
       (error) => finish(() => fail(error)),
     );
+  };
+
+  const download = (ready: File) => {
+    setFile(null);
+    finish(() => void shareAndRemove(ready).catch(fail));
+  };
+
+  const close = () => {
+    if (file?.exists) file.delete();
+    setFile(null);
+    onClose();
   };
 
   return (
     <Sheet
       visible={visible}
-      onClose={exporting ? () => {} : onClose}
+      onClose={exporting ? () => {} : close}
       title={t('settings.export.title')}
       subtitle={t('settings.export.subtitle')}
     >
-      {exporting ? (
+      {exporting || file ? (
         <View className="gap-4">
           <View className="flex-row items-center gap-3.5 rounded-[22px] bg-control p-3.5">
             <View className="size-11 items-center justify-center rounded-full bg-track">
@@ -91,7 +110,7 @@ export function ExportSheet({ visible, onClose, onRetry }: ExportSheetProps) {
             </View>
             <View className="min-w-0 flex-1 gap-0.5">
               <Text variant="bodyStrong" numberOfLines={1}>
-                {exportFileName(new Date())}
+                {file?.name ?? exportFileName(new Date())}
               </Text>
               <Text tone="subtle" className="text-sm" numberOfLines={1}>
                 {detail}
@@ -100,9 +119,9 @@ export function ExportSheet({ visible, onClose, onRetry }: ExportSheetProps) {
           </View>
           <View className="gap-2.5 px-1">
             <Text tone="subtle" className="text-sm">
-              {t('settings.export.preparing')}
+              {t(file ? 'settings.export.ready' : 'settings.export.preparing')}
             </Text>
-            <ProgressBar value={progress} className="flex-none" />
+            <ProgressBar value={file ? 1 : progress} className="flex-none" />
           </View>
         </View>
       ) : (
@@ -112,12 +131,16 @@ export function ExportSheet({ visible, onClose, onRetry }: ExportSheetProps) {
       )}
 
       <View className="pt-6">
-        <Button
-          label={t('settings.export.cta')}
-          variant={exporting ? 'secondary' : 'primary'}
-          disabled={exporting || !hasSynced || workouts === 0}
-          onPress={startExport}
-        />
+        {file ? (
+          <Button label={t('settings.export.download')} onPress={() => download(file)} />
+        ) : (
+          <Button
+            label={t('settings.export.cta')}
+            variant={exporting ? 'secondary' : 'primary'}
+            disabled={exporting || !hasSynced || workouts === 0}
+            onPress={startExport}
+          />
+        )}
       </View>
     </Sheet>
   );

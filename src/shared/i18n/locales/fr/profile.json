@@ -41,7 +41,9 @@
       "empty": "Pas encore de séance",
       "loading": "Tes séances sont encore en cours de chargement",
       "preparing": "Préparation du fichier…",
+      "ready": "Ton fichier est prêt",
       "cta": "Exporter",
+      "download": "Télécharger",
       "failed": {
         "title": "Échec de l'export",
         "message": "Le fichier n'a pas pu être créé. Réessaie."
