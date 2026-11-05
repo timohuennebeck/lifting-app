@@ -5,8 +5,9 @@ import { useWindowDimensions, View } from 'react-native';
 import Animated, { FadeIn, useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useIsLocked } from '@/features/paywall/stores/subscription-store';
 import { useUnits } from '@/shared/data/profile';
-import { volumeKg } from '@/shared/data/workouts';
+import { useWorkoutStats, volumeKg } from '@/shared/data/workouts';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
@@ -17,6 +18,7 @@ import { useWorkoutRecords } from '../../data/workout-records';
 import { useScreenReader } from '../../hooks/use-screen-reader';
 import { useStoryTimer } from '../../hooks/use-story-timer';
 import { liftObjectFor } from '../../lib/lift-comparison';
+import { requestReviewAfterWorkout } from '../../lib/review-prompt';
 import { FinishConfetti } from '../finish-confetti';
 import { LiftedPage } from './lifted-page';
 import { RecordsPage } from './records-page';
@@ -40,7 +42,8 @@ export interface WorkoutStoryProps {
  * outweighs, left out below the lightest), what it trained with its exercises, then its new
  * records, if any. Each page goes on by itself when its bar is full (the last one stays); a tap
  * on the right or "Continue" goes on, a tap on the left or Android's back goes back. A finger
- * held on the page, scrolling it, another screen or a screen reader holds the time. The X, or "Done" on the last page, closes it. Confetti as it opens.
+ * held on the page, scrolling it, another screen or a screen reader holds the time. The X, or
+ * "Done" on the last page, closes it, which may ask for a store review. Confetti as it opens.
  */
 export function WorkoutStory({ workoutId }: WorkoutStoryProps) {
   const { t } = useTranslation(['workout', 'common']);
@@ -51,6 +54,8 @@ export function WorkoutStory({ workoutId }: WorkoutStoryProps) {
   const units = useUnits();
   const { data: workout } = useWorkout(workoutId);
   const { data: records } = useWorkoutRecords(workoutId);
+  const { data: stats } = useWorkoutStats();
+  const locked = useIsLocked();
   const [page, setPage] = useState(0);
   // A finger held on the page, and the page scrolled to read (it then waits for a tap).
   const [held, setHeld] = useState(false);
@@ -61,6 +66,14 @@ export function WorkoutStory({ workoutId }: WorkoutStoryProps) {
   const close = () => {
     if (router.canDismiss()) router.dismissAll();
     else router.replace('/');
+    // Not when the subscription ran out during the workout: closing leads to the paywall then.
+    if (stats && !locked) {
+      requestReviewAfterWorkout({
+        workoutCount: stats.count,
+        firstStartedAt: stats.first,
+        recordCount: records?.length ?? 0,
+      });
+    }
   };
 
   const lifted = (workout?.exercises ?? []).reduce(
