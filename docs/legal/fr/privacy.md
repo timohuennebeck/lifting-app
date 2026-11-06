@@ -1,6 +1,6 @@
 # Politique de confidentialité
 
-Version : 1.5
+Version : 1.6
 
 Dernière mise à jour : 6 novembre 2026
 
@@ -51,9 +51,9 @@ Base juridique : art. 6, paragraphe 1, point b), du RGPD (fourniture de l'appli
 
 ### 4.2 Ton compte
 
-À la fin de la configuration, tu crées un compte en te connectant avec ton compte Google ou, sur les appareils Apple, ton compte Apple. Il n'y a pas de mot de passe Loqqa. Dans ce cadre, nous traitons :
+À la fin de la configuration, tu crées un compte : avec ton compte Google, sur les appareils Apple avec ton compte Apple, ou avec ton adresse e-mail et un mot de passe. Dans ce cadre, nous traitons :
 
-- les informations que Google ou Apple nous transmet lors de ta connexion, y compris ton adresse e-mail (voir ci-dessous)
+- ton adresse e-mail et, si tu t'inscris avec elle, ton mot de passe, sinon les informations que Google ou Apple nous transmet lors de ta connexion (voir ci-dessous)
 - ton prénom, afin que l'application puisse le préremplir après ta connexion sur un nouvel appareil
 - des données techniques du compte telles que la date et l'heure de l'inscription et de la dernière connexion, ainsi que des jetons de connexion
 
@@ -63,7 +63,9 @@ Pour te garder connecté, l'application enregistre ta session de connexion sur t
 
 **Connexion avec Apple** (uniquement sur les appareils Apple) : lorsque tu te connectes avec Apple, la connexion Apple s'ouvre sur ton appareil. Apple nous confirme ensuite ta connexion et nous transmet un identifiant de ton compte Apple et ton adresse e-mail. Tu peux à la place choisir une adresse générée par Apple qui te transfère les e-mails (« Masquer mon adresse e-mail »). Lors de la première connexion, Apple transmet aussi ton nom si tu le partages. Nous enregistrons ces informations avec ton compte. Apple Distribution International Limited, Hollyhill Industrial Estate, Hollyhill, Cork, Irlande, est responsable du traitement, à titre indépendant, pour la connexion via ton compte Apple ; l'[Engagement de confidentialité d'Apple](https://www.apple.com/legal/privacy/fr-ww/) s'applique.
 
-Les comptes ne sont créés qu'à la fin de la configuration. Si la connexion via « Se connecter » sur l'écran d'accueil devait créer un nouveau compte, l'application le supprime immédiatement et t'indique qu'il n'existe pas encore de compte.
+**Connexion avec e-mail et mot de passe :** si tu t'inscris avec ton adresse e-mail et un mot de passe, nous enregistrons l'adresse avec ton compte et le mot de passe uniquement sous forme de hachage, à partir duquel il ne peut pas être reconstitué ; nous ne connaissons pas le mot de passe lui-même. Selon les paramètres, nous t'envoyons un e-mail qui te permet de confirmer ton adresse. Si tu as oublié ton mot de passe, nous t'envoyons à ta demande, à ton adresse e-mail, un code à six chiffres qui te permet de définir un nouveau mot de passe.
+
+Les comptes ne sont créés qu'à la fin de la configuration. Si la connexion avec Google ou Apple via « Se connecter » sur l'écran d'accueil devait créer un nouveau compte, l'application le supprime immédiatement et t'indique qu'il n'existe pas encore de compte.
 
 Base juridique : art. 6, paragraphe 1, point b), du RGPD.
 
@@ -90,8 +92,8 @@ Certaines informations peuvent permettre de tirer des conclusions sur ta santé.
 
 Nous ne traitons ces données qu'avec ton consentement explicite (art. 9, paragraphe 2, point a), en combinaison avec l'art. 6, paragraphe 1, point a), du RGPD) :
 
-- **Données corporelles :** lors de la création de ton compte, tu consens explicitement, par la mention placée directement au-dessus du bouton, à ce que nous traitions tes données corporelles pour adapter ton entraînement. Avant cela, le poids et la taille restent sur ton appareil.
-- **Bilan corporel :** avant que l'application envoie tes photos pour évaluation, elle t'informe que les photos et les données corporelles seront transmises à cet effet à OpenAI aux États-Unis. En touchant « Terminé », tu y consens.
+- **Données corporelles :** en créant ton compte et en acceptant cette Politique de confidentialité, tu consens explicitement à ce que nous traitions tes données corporelles pour adapter ton entraînement. Avant cela, le poids et la taille restent sur ton appareil.
+- **Bilan corporel :** pour l'évaluation, notre serveur transmet tes photos du bilan corporel et tes données corporelles à OpenAI aux États-Unis (section 4.6). En créant ton compte et en acceptant cette Politique de confidentialité, tu y consens. Nous ne transmettons ces données que lorsque tu fais évaluer un bilan corporel.
 - **Coach :** pour ses réponses, le coach utilise aussi tes entrées de poids et les scores corporels de tes bilans, et notre serveur transmet à cette fin tes données d'entraînement et tes données corporelles à OpenAI aux États-Unis (section 4.8). En créant ton compte et en acceptant cette Politique de confidentialité, tu y consens. Nous enregistrons la date et l'heure de ton consentement. Nous ne transmettons ces données que lorsque tu poses une question au coach.
 
 Le bilan corporel et le coach sont facultatifs. Tu peux retirer chacun de tes consentements à tout moment avec effet pour l'avenir (section 12).
@@ -208,7 +210,7 @@ Tu peux nous écrire directement dans l'application via « Signaler un bug » 
 
 **Messages par la voix :** tu peux aussi dicter ton message. Cela fonctionne comme pour les questions au coach (section 4.8) : l'application enregistre jusqu'à ce que tu termines l'enregistrement, pendant deux minutes au maximum. Notre serveur transmet l'enregistrement, avec une courte note sur le sujet, à un modèle de reconnaissance vocale d'OpenAI. L'application affiche le texte dans le champ de saisie, où tu peux le modifier ; il ne devient ton message que lorsque tu l'envoies. Nous ne conservons pas ton enregistrement. Là aussi, notre serveur vérifie ton âge et si ton compte dispose de Loqqa Pro, et la même limite s'applique.
 
-**Qui voit ta demande :** nous traitons les demandes dans un espace d'assistance interne, dans le navigateur, auquel seul Jan Timo Hünnebeck a accès, avec ses propres identifiants. Pour ta demande, l'espace d'assistance affiche aussi ton adresse e-mail, si tu te connectes avec Apple ou Google, l'identifiant de ton compte, la date de création de ton compte et de ta dernière activité, la langue de ton application et tes demandes antérieures.
+**Qui voit ta demande :** nous traitons les demandes dans un espace d'assistance interne, dans le navigateur, auquel seul Jan Timo Hünnebeck a accès, avec ses propres identifiants. Pour ta demande, l'espace d'assistance affiche aussi ton adresse e-mail, si tu te connectes avec Apple, Google ou ton adresse e-mail, l'identifiant de ton compte, la date de création de ton compte et de ta dernière activité, la langue de ton application et tes demandes antérieures.
 
 L'application enregistre d'abord les captures d'écran sur ton appareil, puis les téléverse en arrière-plan. Tu ne peux pas supprimer toi-même les messages et les demandes, afin que l'historique reste traçable. Ils sont supprimés avec ton compte ; sur demande, nous supprimons aussi plus tôt les demandes closes. Nous conservons les e-mails aussi longtemps que nous en avons besoin pour ta demande.
 
@@ -405,7 +407,7 @@ Nous protégeons tes données par des mesures techniques et organisationnelles, 
 - des règles d'accès dans la base de données par lesquelles chaque compte ne peut lire et modifier que ses propres données
 - des espaces de stockage non publics pour les photos de profil, les photos du bilan corporel et les captures d'écran, dans lesquels chaque compte ne peut accéder qu'à son propre dossier
 - des liens à durée limitée pour l'affichage des photos : une heure pour les photos du bilan corporel et les captures d'écran, 24 heures pour les photos de profil
-- la connexion via Google ou Apple, de sorte que nous n'enregistrons aucun mot de passe
+- des mots de passe que nous enregistrons uniquement sous forme de hachage, jamais en clair
 
 Aucun système n'est totalement sûr. Comme l'application enregistre des données sur ton appareil, protège ton appareil par un verrouillage d'écran.
 

@@ -1,6 +1,6 @@
 # Política de Privacidade
 
-Versão: 1.5
+Versão: 1.6
 
 Última atualização: 6 de novembro de 2026
 
@@ -51,9 +51,9 @@ Base legal: art. 6(1)(b) do RGPD (disponibilização do app que você deseja usa
 
 ### 4.2 Sua conta
 
-No final da configuração inicial, você cria uma conta ao entrar com sua Conta do Google ou, em dispositivos Apple, com sua Conta Apple. Não existe senha do Loqqa. Nesse processo, tratamos:
+No final da configuração inicial, você cria uma conta: com sua Conta do Google, em dispositivos Apple com sua Conta Apple, ou com seu endereço de e-mail e uma senha. Nesse processo, tratamos:
 
-- as informações que o Google ou a Apple nos transmitem no login, incluindo seu endereço de e-mail (veja abaixo)
+- seu endereço de e-mail e, se você se cadastrar com ele, sua senha; caso contrário, as informações que o Google ou a Apple nos transmitem no login (veja abaixo)
 - seu nome, para que o app possa preenchê-lo novamente depois de um login em um novo dispositivo
 - dados técnicos da conta, como a data e a hora do cadastro e do último login, além de tokens de login
 
@@ -63,7 +63,9 @@ Para que você continue logado, o app salva sua sessão de login no seu disposit
 
 **Login com a Apple** (somente em dispositivos Apple): quando você entra com a Apple, o login da Apple é aberto no seu dispositivo. Em seguida, a Apple nos confirma seu login e nos transfere um identificador da sua Conta Apple e seu endereço de e-mail. Em vez disso, você pode escolher um endereço gerado pela Apple que encaminha os e-mails para você (“Ocultar Meu E-mail”). No primeiro login, a Apple também transfere seu nome, se você autorizar. Salvamos essas informações na sua conta. Pelo login com a sua Conta Apple, a Apple Distribution International Limited, Hollyhill Industrial Estate, Hollyhill, Cork, Irlanda, é controladora independente; aplica-se a [Política de Privacidade da Apple](https://www.apple.com/br/legal/privacy/).
 
-Contas só são criadas no final da configuração inicial. Se um login por “Entrar” na tela inicial criar uma nova conta, o app a exclui imediatamente e avisa você de que ainda não existe uma conta.
+**Login com e-mail e senha:** se você se cadastrar com seu endereço de e-mail e uma senha, salvamos o endereço na sua conta e a senha apenas como valor de hash, a partir do qual ela não pode ser reconstruída; não conhecemos a senha em si. Dependendo da configuração, enviamos a você um e-mail com o qual você confirma seu endereço. Se você esqueceu sua senha, enviamos, a seu pedido, um código de seis dígitos ao seu endereço de e-mail, com o qual você define uma nova senha.
+
+Contas só são criadas no final da configuração inicial. Se um login com o Google ou a Apple por “Entrar” na tela inicial criar uma nova conta, o app a exclui imediatamente e avisa você de que ainda não existe uma conta.
 
 Base legal: art. 6(1)(b) do RGPD.
 
@@ -90,8 +92,8 @@ Algumas informações podem permitir conclusões sobre a sua saúde. Por isso, n
 
 Só tratamos esses dados com o seu consentimento expresso (art. 9(2)(a) em conjunto com o art. 6(1)(a) do RGPD):
 
-- **Medidas corporais:** quando você cria sua conta, você consente expressamente, por meio do aviso logo acima do botão, que tratemos seus dados corporais para adaptar seu treino. Antes disso, peso e altura ficam no seu dispositivo.
-- **Check corporal:** antes de enviar suas fotos para avaliação, o app avisa você de que as fotos e os dados corporais serão transferidos para isso à OpenAI, nos EUA. Ao tocar em “Concluído”, você consente com isso.
+- **Medidas corporais:** ao criar sua conta e aceitar esta Política de Privacidade, você consente expressamente que tratemos seus dados corporais para adaptar seu treino. Antes disso, peso e altura ficam no seu dispositivo.
+- **Check corporal:** para a avaliação, nosso servidor transfere as fotos do seu check corporal e seus dados corporais à OpenAI, nos EUA (seção 4.6). Ao criar sua conta e aceitar esta Política de Privacidade, você consente com isso. Só transferimos esses dados quando você pede a avaliação de um check corporal.
 - **Coach:** para as respostas dele, o coach também usa seus registros de peso e os valores gerais dos seus checks corporais, e nosso servidor transfere para isso seus dados de treino e corporais à OpenAI, nos EUA (seção 4.8). Ao criar sua conta e aceitar esta Política de Privacidade, você consente com isso. Salvamos a data e a hora do seu consentimento. Só transferimos esses dados quando você faz uma pergunta ao coach.
 
 O check corporal e o coach são opcionais. Você pode revogar seus consentimentos a qualquer momento, com efeito para o futuro (seção 12).
@@ -208,7 +210,7 @@ Por meio de “Relatar erro” e “Sugerir recurso”, você pode escrever para
 
 **Mensagens por voz:** Você também pode falar sua mensagem. Funciona como nas perguntas ao coach (seção 4.8): o app grava até você encerrar a gravação, por no máximo dois minutos. Nosso servidor repassa a gravação, com uma breve indicação do tema, a um modelo de reconhecimento de fala da OpenAI. O app mostra o texto no campo de entrada, onde você pode alterá-lo; ele só se torna sua mensagem quando você o envia. Não armazenamos sua gravação. Aqui também nosso servidor verifica sua idade e se sua conta tem o Loqqa Pro, e vale o mesmo limite.
 
-**Quem vê sua solicitação:** tratamos as solicitações em uma área de suporte interna no navegador, que só Jan Timo Hünnebeck pode acessar, com um acesso próprio. Junto com a sua solicitação, essa área mostra também seu endereço de e-mail, se você entra com a Apple ou com o Google, o ID da sua conta, a data de criação da sua conta e da sua última atividade, o idioma do app e suas solicitações anteriores.
+**Quem vê sua solicitação:** tratamos as solicitações em uma área de suporte interna no navegador, que só Jan Timo Hünnebeck pode acessar, com um acesso próprio. Junto com a sua solicitação, essa área mostra também seu endereço de e-mail, se você entra com a Apple, com o Google ou com seu endereço de e-mail, o ID da sua conta, a data de criação da sua conta e da sua última atividade, o idioma do app e suas solicitações anteriores.
 
 O app salva as capturas de tela primeiro no seu dispositivo e depois as envia em segundo plano. Você não pode excluir mensagens e solicitações por conta própria, para que o histórico continue rastreável. Elas são excluídas junto com a sua conta; se você quiser, excluímos solicitações encerradas também antes disso. Guardamos e-mails pelo tempo em que precisarmos deles para o seu assunto.
 
@@ -405,7 +407,7 @@ Protegemos seus dados com medidas técnicas e organizacionais, entre elas:
 - regras de acesso no banco de dados, pelas quais cada conta só pode ler e alterar os seus próprios dados
 - áreas de armazenamento não públicas para fotos de perfil, fotos do check corporal e capturas de tela, nas quais cada conta só pode acessar a sua própria pasta
 - links com validade limitada para exibir fotos: uma hora para fotos do check corporal e capturas de tela, 24 horas para fotos de perfil
-- o login pelo Google ou pela Apple, para que não salvemos senhas
+- senhas que salvamos apenas como valor de hash, nunca em texto simples
 
 Nenhum sistema é totalmente seguro. Como o app salva dados no seu dispositivo, proteja seu dispositivo, por favor, com um bloqueio de tela.
 

@@ -245,6 +245,12 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
+# "Passwort vergessen?" in the app asks for the 6-digit code, so the email shows {{ .Token }}.
+# In production: Authentication → Email Templates → Reset Password, with the same body.
+[auth.email.template.recovery]
+subject = "Dein Code für ein neues Passwort"
+content_path = "./supabase/templates/recovery.html"
+
 # Uncomment to customize email template
 # [auth.email.template.invite]
 # subject = "You have been invited"

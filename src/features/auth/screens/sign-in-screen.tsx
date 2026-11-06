@@ -4,13 +4,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import {
-  adoptSignUpName,
-  isOnboardedAfterSync,
-} from '@/features/onboarding/lib/persist-onboarding';
-import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
+import { isOnboardedAfterSync } from '@/features/onboarding/lib/persist-onboarding';
 import { haptics } from '@/shared/lib/haptics';
-import { type AuthMethod, identify, track } from '@/shared/lib/posthog';
+import type { AuthMethod } from '@/shared/lib/posthog';
 import { Button } from '@/shared/ui/button';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
@@ -19,6 +15,7 @@ import { TextButton } from '@/shared/ui/text-button';
 import { EmailDivider, EmailFields } from '../components/email-fields';
 import { SocialSignIn } from '../components/social-sign-in';
 import { EmailAuthError, type EmailAuthReason, isEmail, signInWithEmail } from '../lib/email-auth';
+import { enterAccount } from '../lib/enter-account';
 import {
   discardNewAccount,
   isNewAccount,
@@ -55,16 +52,8 @@ export function SignInScreen() {
       await discardNewAccount(method);
       return fail('noAccount');
     }
-    haptics.success();
-    identify(user.id);
-    track('account:sign_in_complete', { method, is_onboarded: onboarded });
-    const store = useOnboardingStore.getState();
-    // The root guard switches to the app once onboarding is marked complete.
-    if (onboarded) return store.complete();
-    adoptSignUpName(user);
+    await enterAccount(user, method, onboarded);
     setPhase('idle');
-    // A finished draft goes to account creation, which then shows "Continue" and saves it.
-    router.replace(store.draft.plan ? '/create-account' : '/name');
   };
 
   const social = async (provider: SocialProvider) => {
@@ -145,6 +134,7 @@ export function SignInScreen() {
           onChangeEmail={setEmail}
           onChangePassword={setPassword}
           onSubmit={signIn}
+          onForgot={() => router.push({ pathname: '/forgot-password', params: { email } })}
           editable={!busy}
         />
       </View>

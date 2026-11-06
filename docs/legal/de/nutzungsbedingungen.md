@@ -1,6 +1,6 @@
 # Nutzungsbedingungen
 
-Version: 1.5
+Version: 1.6
 
 Stand: 6. November 2026
 
@@ -25,9 +25,9 @@ Bist du noch nicht volljährig, brauchst du für den Kauf von Loqqa Pro die Zust
 
 ## 3. Dein Konto
 
-- Um Loqqa nach der Einrichtung zu nutzen, brauchst du ein Konto. Du erstellst es am Ende der Einrichtung mit deinem Google-Konto oder, auf Apple-Geräten, mit deinem Apple Account. Der Vertrag über die Nutzung von Loqqa kommt zustande, wenn du dein Konto erstellst.
+- Um Loqqa nach der Einrichtung zu nutzen, brauchst du ein Konto. Du erstellst es am Ende der Einrichtung mit deinem Google-Konto, auf Apple-Geräten mit deinem Apple Account oder mit deiner E-Mail-Adresse und einem Passwort. Der Vertrag über die Nutzung von Loqqa kommt zustande, wenn du dein Konto erstellst.
 - Mache bei der Einrichtung wahre Angaben.
-- Schütze den Zugang zu deinem Google-Konto bzw. Apple Account. Wenn du vermutest, dass jemand anderes dein Konto nutzt, informiere uns.
+- Schütze den Zugang zu deinem Google-Konto bzw. Apple Account und halte dein Passwort geheim. Wenn du vermutest, dass jemand anderes dein Konto nutzt, informiere uns.
 - Dein Konto ist persönlich und nicht übertragbar.
 
 ## 4. Was Loqqa bietet

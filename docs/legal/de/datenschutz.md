@@ -1,6 +1,6 @@
 # Datenschutzerklärung
 
-Version: 1.5
+Version: 1.6
 
 Stand: 6. November 2026
 
@@ -49,9 +49,9 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der App, die du nutz
 
 ### 4.2 Dein Konto
 
-Am Ende der Einrichtung erstellst du ein Konto, indem du dich mit deinem Google-Konto oder, auf Apple-Geräten, mit deinem Apple Account anmeldest. Ein Passwort für Loqqa gibt es nicht. Dabei verarbeiten wir:
+Am Ende der Einrichtung erstellst du ein Konto: mit deinem Google-Konto, auf Apple-Geräten mit deinem Apple Account oder mit deiner E-Mail-Adresse und einem Passwort. Dabei verarbeiten wir:
 
-- die Angaben, die Google bzw. Apple uns bei der Anmeldung übermitteln, darunter deine E-Mail-Adresse (siehe unten)
+- deine E-Mail-Adresse und, wenn du dich mit ihr registrierst, dein Passwort, sonst die Angaben, die Google bzw. Apple uns bei der Anmeldung übermitteln (siehe unten)
 - deinen Vornamen, damit die App ihn nach einer Anmeldung auf einem neuen Gerät wieder eintragen kann
 - technische Kontodaten wie den Zeitpunkt der Registrierung und der letzten Anmeldung sowie Anmelde-Tokens
 
@@ -61,7 +61,9 @@ Damit du angemeldet bleibst, speichert die App deine Anmeldesitzung auf deinem G
 
 **Anmeldung mit Apple** (nur auf Apple-Geräten): Wenn du dich mit Apple anmeldest, öffnet sich die Anmeldung von Apple auf deinem Gerät. Apple bestätigt uns danach deine Anmeldung und übermittelt uns eine Kennung deines Apple Accounts und deine E-Mail-Adresse. Du kannst stattdessen eine von Apple erzeugte Adresse wählen, die E-Mails an dich weiterleitet („E-Mail-Adresse verbergen“). Bei der ersten Anmeldung übermittelt Apple auch deinen Namen, wenn du ihn freigibst. Diese Angaben speichern wir zu deinem Konto. Für die Anmeldung über deinen Apple Account ist Apple Distribution International Limited, Hollyhill Industrial Estate, Hollyhill, Cork, Irland, eigenständig verantwortlich; es gilt die [Datenschutzrichtlinie von Apple](https://www.apple.com/legal/privacy/de-ww/).
 
-Konten entstehen nur am Ende der Einrichtung. Würde eine Anmeldung über „Anmelden“ auf dem Startbildschirm ein neues Konto anlegen, löscht die App es sofort wieder und weist dich darauf hin, dass es noch kein Konto gibt.
+**Anmeldung mit E-Mail und Passwort:** Registrierst du dich mit deiner E-Mail-Adresse und einem Passwort, speichern wir die Adresse zu deinem Konto und das Passwort nur als Hashwert, aus dem es sich nicht zurückrechnen lässt; das Passwort selbst kennen wir nicht. Je nach Einstellung schicken wir dir eine E-Mail, mit der du deine Adresse bestätigst. Hast du dein Passwort vergessen, schicken wir dir auf deine Anfrage einen sechsstelligen Code an deine E-Mail-Adresse, mit dem du ein neues Passwort setzt.
+
+Konten entstehen nur am Ende der Einrichtung. Würde eine Anmeldung mit Google oder Apple über „Anmelden“ auf dem Startbildschirm ein neues Konto anlegen, löscht die App es sofort wieder und weist dich darauf hin, dass es noch kein Konto gibt.
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.
 
@@ -88,8 +90,8 @@ Einige Angaben können Rückschlüsse auf deine Gesundheit zulassen. Wir behande
 
 Diese Daten verarbeiten wir nur mit deiner ausdrücklichen Einwilligung (Art. 9 Abs. 2 lit. a in Verbindung mit Art. 6 Abs. 1 lit. a DSGVO):
 
-- **Körpermaße:** Wenn du dein Konto erstellst, willigst du mit dem Hinweis direkt über der Schaltfläche ausdrücklich ein, dass wir deine Körperdaten verarbeiten, um dein Training anzupassen. Vorher bleiben Gewicht und Größe auf deinem Gerät.
-- **Körpercheck:** Bevor die App deine Fotos zur Auswertung sendet, weist sie dich darauf hin, dass Fotos und Körperdaten dafür an OpenAI in den USA übermittelt werden. Mit „Fertig“ willigst du darin ein.
+- **Körpermaße:** Mit dem Erstellen deines Kontos und der Annahme dieser Datenschutzerklärung willigst du ausdrücklich ein, dass wir deine Körperdaten verarbeiten, um dein Training anzupassen. Vorher bleiben Gewicht und Größe auf deinem Gerät.
+- **Körpercheck:** Für die Auswertung übermittelt unser Server deine Körpercheck-Fotos und Körperdaten an OpenAI in den USA (Abschnitt 4.6). Mit dem Erstellen deines Kontos und der Annahme dieser Datenschutzerklärung willigst du darin ein. Diese Daten übermitteln wir nur, wenn du einen Körpercheck auswerten lässt.
 - **Coach:** Der Coach nutzt für seine Antworten auch deine Gewichtseinträge und die Gesamtwerte deiner Körperchecks, und unser Server übermittelt dafür deine Trainings- und Körperdaten an OpenAI in den USA (Abschnitt 4.8). Mit dem Erstellen deines Kontos und der Annahme dieser Datenschutzerklärung willigst du darin ein. Den Zeitpunkt deiner Einwilligung speichern wir. Diese Daten übermitteln wir nur, wenn du dem Coach eine Frage stellst.
 
 Körpercheck und Coach sind freiwillig. Deine Einwilligungen kannst du jederzeit mit Wirkung für die Zukunft widerrufen (Abschnitt 12).
@@ -206,7 +208,7 @@ Rechtsgrundlage: deine ausdrückliche Einwilligung (Abschnitt 4.4), auch für di
 
 **Nachrichten per Sprache:** Du kannst deine Nachricht auch einsprechen. Das funktioniert wie bei den Fragen an den Coach (Abschnitt 4.8): Die App nimmt auf, bis du die Aufnahme beendest, höchstens zwei Minuten lang. Unser Server gibt die Aufnahme mit einem kurzen Hinweis auf das Thema an ein Spracherkennungsmodell von OpenAI weiter. Den Text zeigt die App im Eingabefeld, wo du ihn ändern kannst; erst wenn du ihn sendest, wird er zu deiner Nachricht. Deine Aufnahme speichern wir nicht. Auch hierfür prüft unser Server dein Alter und ob dein Konto Loqqa Pro hat, und es gilt dieselbe Begrenzung.
 
-**Wer deine Anfrage sieht:** Wir bearbeiten Anfragen in einem internen Support-Bereich im Browser, auf den nur Jan Timo Hünnebeck mit einem eigenen Zugang zugreifen kann. Der Support-Bereich zeigt zu deiner Anfrage auch deine E-Mail-Adresse, ob du dich mit Apple oder Google anmeldest, deine Konto-ID, wann du dein Konto erstellt hast und zuletzt aktiv warst, deine App-Sprache und deine früheren Anfragen.
+**Wer deine Anfrage sieht:** Wir bearbeiten Anfragen in einem internen Support-Bereich im Browser, auf den nur Jan Timo Hünnebeck mit einem eigenen Zugang zugreifen kann. Der Support-Bereich zeigt zu deiner Anfrage auch deine E-Mail-Adresse, ob du dich mit Apple, Google oder deiner E-Mail-Adresse anmeldest, deine Konto-ID, wann du dein Konto erstellt hast und zuletzt aktiv warst, deine App-Sprache und deine früheren Anfragen.
 
 Screenshots speichert die App zuerst auf deinem Gerät und lädt sie dann im Hintergrund hoch. Nachrichten und Anfragen kannst du nicht selbst löschen, damit der Verlauf nachvollziehbar bleibt. Sie werden mit deinem Konto gelöscht; auf Wunsch löschen wir abgeschlossene Anfragen auch vorher. E-Mails bewahren wir so lange auf, wie wir sie für dein Anliegen brauchen.
 
@@ -403,7 +405,7 @@ Wir schützen deine Daten mit technischen und organisatorischen Maßnahmen, unte
 - Zugriffsregeln in der Datenbank, durch die jedes Konto nur seine eigenen Daten lesen und ändern kann
 - nicht öffentlichen Speicherbereichen für Profilfotos, Körpercheck-Fotos und Screenshots, in denen jedes Konto nur auf seinen eigenen Ordner zugreifen kann
 - zeitlich begrenzten Links zur Anzeige von Fotos: eine Stunde für Körpercheck-Fotos und Screenshots, 24 Stunden für Profilfotos
-- der Anmeldung über Google oder Apple, sodass wir keine Passwörter speichern
+- Passwörtern, die wir nur als Hashwert speichern, nie im Klartext
 
 Kein System ist vollkommen sicher. Da die App Daten auf deinem Gerät speichert, schütze dein Gerät bitte mit einer Bildschirmsperre.
 

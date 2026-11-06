@@ -7,6 +7,7 @@ import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
+import { TextButton } from '@/shared/ui/text-button';
 import { TextField } from '@/shared/ui/text-field';
 
 import { passwordStrength } from '../lib/email-auth';
@@ -38,10 +39,87 @@ export interface EmailFieldsProps {
   isNew?: boolean;
   /** Return on the password's keyboard. */
   onSubmit: () => void;
+  /** Signing in: "Passwort vergessen?" under the password. */
+  onForgot?: () => void;
   editable?: boolean;
 }
 
-/** Email and password, the password with a show/hide eye; for a new one, how strong it is. */
+export interface PasswordFieldProps {
+  value: string;
+  onChange: (password: string) => void;
+  /** A new password: the strength bars under it. */
+  isNew?: boolean;
+  onSubmit: () => void;
+  editable?: boolean;
+  autoFocus?: boolean;
+}
+
+/** A password with a show/hide eye; a new one shows how strong it is. */
+export function PasswordField({
+  value,
+  onChange,
+  isNew,
+  onSubmit,
+  editable = true,
+  autoFocus,
+}: PasswordFieldProps) {
+  const { t } = useTranslation('auth');
+  const [shown, setShown] = useState(false);
+  const strength = passwordStrength(value);
+
+  return (
+    <View className="gap-2.5">
+      <TextField
+        label={t('password.label')}
+        value={value}
+        onChangeText={onChange}
+        placeholder={isNew ? t('password.newPlaceholder') : t('password.placeholder')}
+        secureTextEntry={!shown}
+        autoCapitalize="none"
+        autoCorrect={false}
+        autoComplete={isNew ? 'new-password' : 'current-password'}
+        textContentType={isNew ? 'newPassword' : 'password'}
+        returnKeyType="go"
+        onSubmitEditing={onSubmit}
+        editable={editable}
+        autoFocus={autoFocus}
+        trailing={
+          <PressableScale
+            haptic="select"
+            accessibilityRole="button"
+            accessibilityLabel={shown ? t('password.hide') : t('password.show')}
+            onPress={() => setShown((s) => !s)}
+            className="size-10 items-center justify-center"
+          >
+            <Icon name={shown ? 'eye-off' : 'eye'} size={20} color={colors.subtle} />
+          </PressableScale>
+        }
+      />
+      {isNew ? (
+        <View className="gap-2">
+          <View className="flex-row gap-1.5">
+            {[1, 2, 3, 4].map((step) => (
+              <View
+                key={step}
+                className={cn(
+                  'h-1 flex-1 rounded-full',
+                  step <= strength ? TINTS[strength] : 'bg-control',
+                )}
+              />
+            ))}
+          </View>
+          <Text variant="caption" tone="subtle" className="px-1 font-inter">
+            {value
+              ? `${t('password.strength')} · ${t(`password.levels.${LEVELS[strength - 1]}`)}`
+              : t('password.strength')}
+          </Text>
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+/** Email and password; signing in, "Passwort vergessen?" under the password. */
 export function EmailFields({
   email,
   password,
@@ -49,12 +127,10 @@ export function EmailFields({
   onChangePassword,
   isNew,
   onSubmit,
+  onForgot,
   editable = true,
 }: EmailFieldsProps) {
   const { t } = useTranslation('auth');
-  const [shown, setShown] = useState(false);
-  const strength = passwordStrength(password);
-
   return (
     <View className="gap-5">
       <TextField
@@ -70,51 +146,22 @@ export function EmailFields({
         returnKeyType="next"
         editable={editable}
       />
-      <View className="gap-2.5">
-        <TextField
-          label={t('password.label')}
+      <View className="gap-1">
+        <PasswordField
           value={password}
-          onChangeText={onChangePassword}
-          placeholder={isNew ? t('password.newPlaceholder') : t('password.placeholder')}
-          secureTextEntry={!shown}
-          autoCapitalize="none"
-          autoCorrect={false}
-          autoComplete={isNew ? 'new-password' : 'current-password'}
-          textContentType={isNew ? 'newPassword' : 'password'}
-          returnKeyType="go"
-          onSubmitEditing={onSubmit}
+          onChange={onChangePassword}
+          isNew={isNew}
+          onSubmit={onSubmit}
           editable={editable}
-          trailing={
-            <PressableScale
-              haptic="select"
-              accessibilityRole="button"
-              accessibilityLabel={shown ? t('password.hide') : t('password.show')}
-              onPress={() => setShown((s) => !s)}
-              className="size-10 items-center justify-center"
-            >
-              <Icon name={shown ? 'eye-off' : 'eye'} size={20} color={colors.subtle} />
-            </PressableScale>
-          }
         />
-        {isNew ? (
-          <View className="gap-2">
-            <View className="flex-row gap-1.5">
-              {[1, 2, 3, 4].map((step) => (
-                <View
-                  key={step}
-                  className={cn(
-                    'h-1 flex-1 rounded-full',
-                    step <= strength ? TINTS[strength] : 'bg-control',
-                  )}
-                />
-              ))}
-            </View>
-            <Text variant="caption" tone="subtle" className="px-1 font-inter">
-              {password
-                ? `${t('password.strength')} · ${t(`password.levels.${LEVELS[strength - 1]}`)}`
-                : t('password.strength')}
-            </Text>
-          </View>
+        {onForgot ? (
+          <TextButton
+            label={t('forgot.link')}
+            tone="muted"
+            className="min-h-10 self-end px-1"
+            textClassName="font-inter-medium text-sm"
+            onPress={onForgot}
+          />
         ) : null}
       </View>
     </View>

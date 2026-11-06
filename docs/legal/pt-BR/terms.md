@@ -1,6 +1,6 @@
 # Termos de Uso
 
-Versão: 1.5
+Versão: 1.6
 
 Última atualização: 6 de novembro de 2026
 
@@ -27,9 +27,9 @@ Se você ainda não for maior de idade, precisa do consentimento dos seus respon
 
 ## 3. Sua conta
 
-- Para usar o Loqqa após a configuração inicial, você precisa de uma conta. Você a cria no final da configuração inicial com sua Conta do Google ou, em dispositivos Apple, com sua Conta Apple. O contrato de uso do Loqqa é celebrado quando você cria sua conta.
+- Para usar o Loqqa após a configuração inicial, você precisa de uma conta. Você a cria no final da configuração inicial com sua Conta do Google, em dispositivos Apple com sua Conta Apple ou com seu endereço de e-mail e uma senha. O contrato de uso do Loqqa é celebrado quando você cria sua conta.
 - Forneça informações verdadeiras na configuração inicial.
-- Proteja o acesso à sua Conta do Google ou Conta Apple. Se suspeitar que outra pessoa está usando sua conta, nos informe.
+- Proteja o acesso à sua Conta do Google ou Conta Apple e mantenha sua senha em segredo. Se suspeitar que outra pessoa está usando sua conta, nos informe.
 - Sua conta é pessoal e intransferível.
 
 ## 4. O que o Loqqa oferece

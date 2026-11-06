@@ -1,6 +1,6 @@
 # Terms of Use
 
-Version: 1.5
+Version: 1.6
 
 Last updated: 6 November 2026
 
@@ -27,9 +27,9 @@ If you are not yet of legal age, you need the consent of your parents or legal g
 
 ## 3. Your account
 
-- To use Loqqa after setup, you need an account. You create it at the end of setup with your Google account or, on Apple devices, your Apple Account. The contract for the use of Loqqa is concluded when you create your account.
+- To use Loqqa after setup, you need an account. You create it at the end of setup with your Google account, on Apple devices with your Apple Account, or with your email address and a password. The contract for the use of Loqqa is concluded when you create your account.
 - Provide truthful information during setup.
-- Protect access to your Google account or Apple Account. If you suspect that someone else is using your account, let us know.
+- Protect access to your Google account or Apple Account and keep your password secret. If you suspect that someone else is using your account, let us know.
 - Your account is personal and not transferable.
 
 ## 4. What Loqqa offers

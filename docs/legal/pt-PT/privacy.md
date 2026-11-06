@@ -1,6 +1,6 @@
 # Política de Privacidade
 
-Versão: 1.5
+Versão: 1.6
 
 Última atualização: 6 de novembro de 2026
 
@@ -51,9 +51,9 @@ Fundamento jurídico: art. 6.º, n.º 1, alínea b), do RGPD (disponibilização
 
 ### 4.2 A tua conta
 
-No final da configuração inicial, crias uma conta ao iniciares sessão com a tua Conta Google ou, em dispositivos Apple, com a tua Conta Apple. Não existe palavra-passe do Loqqa. Nesse contexto, tratamos:
+No final da configuração inicial, crias uma conta: com a tua Conta Google, em dispositivos Apple com a tua Conta Apple, ou com o teu endereço de e-mail e uma palavra-passe. Nesse contexto, tratamos:
 
-- os dados que a Google ou a Apple nos transmitem no início de sessão, incluindo o teu endereço de e-mail (ver abaixo)
+- o teu endereço de e-mail e, se te registares com ele, a tua palavra-passe; caso contrário, os dados que a Google ou a Apple nos transmitem no início de sessão (ver abaixo)
 - o teu nome próprio, para que a app o possa voltar a preencher depois de iniciares sessão num novo dispositivo
 - dados técnicos da conta, como a data e hora do registo e do último início de sessão, bem como tokens de início de sessão
 
@@ -63,7 +63,9 @@ Para que a tua sessão se mantenha iniciada, a app guarda a tua sessão no teu d
 
 **Início de sessão com a Apple** (apenas em dispositivos Apple): se iniciares sessão com a Apple, abre-se no teu dispositivo o início de sessão da Apple. Depois, a Apple confirma-nos o teu início de sessão e transmite-nos um identificador da tua Conta Apple e o teu endereço de e-mail. Em alternativa, podes escolher um endereço gerado pela Apple que te reencaminha os e-mails (“Ocultar o meu e-mail”). No primeiro início de sessão, a Apple transmite-nos também o teu nome, se o partilhares. Guardamos estes dados na tua conta. A Apple Distribution International Limited, Hollyhill Industrial Estate, Hollyhill, Cork, Irlanda, é responsável autónoma pelo tratamento no início de sessão através da tua Conta Apple; aplica-se a [Política de Privacidade da Apple](https://www.apple.com/legal/privacy/pt-ww/).
 
-As contas só são criadas no final da configuração inicial. Se um início de sessão através de “Iniciar sessão” no ecrã inicial fosse criar uma nova conta, a app elimina-a de imediato e informa-te de que ainda não existe nenhuma conta.
+**Início de sessão com e-mail e palavra-passe:** se te registares com o teu endereço de e-mail e uma palavra-passe, guardamos o endereço na tua conta e a palavra-passe apenas como valor de hash, a partir do qual não pode ser reconstruída; não conhecemos a palavra-passe propriamente dita. Consoante a configuração, enviamos-te um e-mail com o qual confirmas o teu endereço. Se te esqueceres da tua palavra-passe, enviamos-te, a teu pedido, um código de seis dígitos para o teu endereço de e-mail, com o qual defines uma nova palavra-passe.
+
+As contas só são criadas no final da configuração inicial. Se um início de sessão com a Google ou a Apple através de “Iniciar sessão” no ecrã inicial fosse criar uma nova conta, a app elimina-a de imediato e informa-te de que ainda não existe nenhuma conta.
 
 Fundamento jurídico: art. 6.º, n.º 1, alínea b), do RGPD.
 
@@ -90,8 +92,8 @@ Alguns dados podem permitir tirar conclusões sobre a tua saúde. Por isso, trat
 
 Só tratamos estes dados com o teu consentimento explícito (art. 9.º, n.º 2, alínea a), em conjugação com o art. 6.º, n.º 1, alínea a), do RGPD):
 
-- **Medidas corporais:** quando crias a tua conta, consentes explicitamente, através da indicação que se encontra diretamente acima do botão, que tratemos os teus dados corporais para adaptar o teu treino. Até lá, o peso e a altura ficam no teu dispositivo.
-- **Check corporal:** antes de a app enviar as tuas fotos para avaliação, informa-te de que as fotos e os dados corporais são transmitidos para esse efeito à OpenAI, nos EUA. Ao tocares em “Concluído”, dás o teu consentimento para isso.
+- **Medidas corporais:** ao criares a tua conta e aceitares esta Política de Privacidade, consentes explicitamente que tratemos os teus dados corporais para adaptar o teu treino. Até lá, o peso e a altura ficam no teu dispositivo.
+- **Check corporal:** para a avaliação, o nosso servidor transmite as fotos do teu check corporal e os teus dados corporais à OpenAI, nos EUA (secção 4.6). Ao criares a tua conta e aceitares esta Política de Privacidade, dás o teu consentimento para isso. Só transmitimos estes dados quando pedes a avaliação de um check corporal.
 - **Coach:** para as suas respostas, o coach utiliza também os teus registos de peso e os valores globais dos teus checks corporais, e o nosso servidor transmite para isso os teus dados de treino e corporais à OpenAI, nos EUA (secção 4.8). Ao criares a tua conta e aceitares esta Política de Privacidade, dás o teu consentimento para isso. Guardamos a data e hora do teu consentimento. Só transmitimos estes dados quando fazes uma pergunta ao coach.
 
 O check corporal e o coach são facultativos. Podes retirar os teus consentimentos a qualquer momento, com efeitos para o futuro (secção 12).
@@ -208,7 +210,7 @@ Através de “Reportar erro” e “Sugerir funcionalidade”, podes escrever-n
 
 **Mensagens por voz:** Também podes dizer a tua mensagem em voz alta. Funciona como nas perguntas ao coach (secção 4.8): a app grava até terminares a gravação, no máximo durante dois minutos. O nosso servidor transmite a gravação, com uma breve indicação do tema, a um modelo de reconhecimento de voz da OpenAI. A app mostra o texto no campo de introdução, onde o podes alterar; só se torna a tua mensagem quando a enviares. Não guardamos a tua gravação. Também aqui o nosso servidor verifica a tua idade e se a tua conta tem Loqqa Pro, e aplica-se o mesmo limite.
 
-**Quem vê o teu pedido:** tratamos os pedidos numa área de suporte interna no navegador, à qual só Jan Timo Hünnebeck tem acesso, com um acesso próprio. Junto ao teu pedido, essa área mostra também o teu endereço de e-mail, se inicias sessão com a Apple ou com a Google, o ID da tua conta, a data de criação da tua conta e da tua última atividade, o idioma da tua app e os teus pedidos anteriores.
+**Quem vê o teu pedido:** tratamos os pedidos numa área de suporte interna no navegador, à qual só Jan Timo Hünnebeck tem acesso, com um acesso próprio. Junto ao teu pedido, essa área mostra também o teu endereço de e-mail, se inicias sessão com a Apple, com a Google ou com o teu endereço de e-mail, o ID da tua conta, a data de criação da tua conta e da tua última atividade, o idioma da tua app e os teus pedidos anteriores.
 
 A app guarda primeiro as capturas de ecrã no teu dispositivo e depois carrega-as em segundo plano. Não podes eliminar tu próprio as mensagens e os pedidos, para que o histórico se mantenha rastreável. São eliminados juntamente com a tua conta; a teu pedido, eliminamos também antes disso os pedidos já encerrados. Conservamos os e-mails enquanto deles precisarmos para tratar do teu assunto.
 
@@ -405,7 +407,7 @@ Protegemos os teus dados com medidas técnicas e organizativas, entre outras:
 - regras de acesso na base de dados, através das quais cada conta só pode ler e alterar os seus próprios dados
 - áreas de armazenamento não públicas para fotos de perfil, fotos do check corporal e capturas de ecrã, nas quais cada conta só pode aceder à sua própria pasta
 - ligações com validade limitada para a visualização de fotos: uma hora para fotos do check corporal e capturas de ecrã, 24 horas para fotos de perfil
-- o início de sessão através da Google ou da Apple, para que não guardemos palavras-passe
+- palavras-passe que guardamos apenas como valor de hash, nunca em texto simples
 
 Nenhum sistema é totalmente seguro. Como a app guarda dados no teu dispositivo, protege-o, por favor, com um bloqueio de ecrã.
 
