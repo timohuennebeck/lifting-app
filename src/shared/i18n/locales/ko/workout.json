@@ -15,6 +15,7 @@
     "onBar": "바에",
     "onMachine": "기구에",
     "loaded": "{{weight}} 장착",
+    "available": "사용 가능한 원판",
     "barWeight": "바 무게",
     "sledWeight": "슬레드 무게",
     "withoutBar": "바 없음",

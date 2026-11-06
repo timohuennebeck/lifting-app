@@ -15,7 +15,7 @@ const FATAL_RESPONSE_CODES = [/^22...$/, /^23...$/, /^42501$/, /^P0001$/, /^PGRS
 // jsonb columns are stored locally as JSON text. Upload them as JSON values, otherwise
 // Postgres stores a jsonb *string* that syncs back double-encoded.
 const JSON_COLUMNS: Record<string, readonly string[]> = {
-  profiles: ['focus', 'home_equipment'],
+  profiles: ['focus', 'home_equipment', 'plates_kg', 'plates_lb'],
   progress_checks: ['group_scores', 'metrics'],
   ticket_messages: ['attachments'],
   custom_exercises: ['primary_muscles', 'secondary_muscles', 'measures'],

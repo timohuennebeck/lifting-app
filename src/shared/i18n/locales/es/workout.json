@@ -15,6 +15,7 @@
     "onBar": "En la barra",
     "onMachine": "En la máquina",
     "loaded": "{{weight}} cargados",
+    "available": "Discos disponibles",
     "barWeight": "Peso de la barra",
     "sledWeight": "Peso del carro",
     "withoutBar": "Sin barra",
