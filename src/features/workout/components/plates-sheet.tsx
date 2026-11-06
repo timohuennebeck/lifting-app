@@ -66,14 +66,14 @@ interface AvailablePlatesProps {
   available: number[];
 }
 
-/** The plates the gym has, one toggle each; the last one on stays on. */
+/** The plates the gym has, a round toggle each, in the accent while on; the last one stays on. */
 function AvailablePlates({ unit, available }: AvailablePlatesProps) {
   const { t } = useTranslation('workout');
   const togglePlate = usePlatesStore((s) => s.togglePlate);
   return (
     <View className="gap-2.5 pb-6.5">
       <Text className={cn(CAPTION, 'px-1')}>{t('plates.available')}</Text>
-      <View className="flex-row gap-1.5">
+      <View className="flex-row justify-between gap-1.5">
         {PLATE_WEIGHTS[unit].map((plate) => {
           const on = available.includes(plate);
           const last = on && available.length === 1;
@@ -88,15 +88,15 @@ function AvailablePlates({ unit, available }: AvailablePlatesProps) {
               disabled={last}
               onPress={() => togglePlate(unit, plate)}
               className={cn(
-                'h-10 min-w-0 flex-1 items-center justify-center rounded-full border-[1.5px]',
-                on ? 'border-raised bg-raised' : 'border-track',
+                'aspect-square max-w-14 min-w-0 flex-1 items-center justify-center rounded-full',
+                on ? 'bg-accent' : 'bg-raised',
               )}
             >
               <Text
                 numberOfLines={1}
                 className={cn(
                   'font-inter-semibold text-[15px] leading-5 tabular-nums',
-                  on ? 'text-fg' : 'text-dim',
+                  on ? 'text-on-accent' : 'text-fg',
                 )}
               >
                 {formatNumber(plate, 2)}
