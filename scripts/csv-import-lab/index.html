@@ -215,6 +215,9 @@
         background: var(--accent);
         border-color: var(--accent);
       }
+      .card td.num {
+        white-space: nowrap;
+      }
       .card .title {
         font-weight: 700;
         font-size: 16px;
@@ -329,6 +332,9 @@
       }
       .stage-plan {
         background: var(--amber);
+      }
+      .stage-routines {
+        background: var(--fg);
       }
       .stage-error {
         background: var(--red);
@@ -516,7 +522,9 @@
           <span><i class="stage-classify"></i>categorise</span
           ><span><i class="stage-mapping"></i>exercise mapping</span
           ><span><i class="stage-history"></i>history</span
-          ><span><i class="stage-plan"></i>plan</span><span><i class="stage-error"></i>failed</span>
+          ><span><i class="stage-plan"></i>plan</span
+          ><span><i class="stage-routines"></i>routine names</span
+          ><span><i class="stage-error"></i>failed</span>
         </div>
         <div id="waterfall" class="wf"><span class="dim small">No calls yet.</span></div>
       </section>
@@ -526,11 +534,13 @@
         <div class="tabs" id="tabs">
           <button data-tab="mapping" class="on">Exercise mapping</button>
           <button data-tab="history">History</button>
+          <button data-tab="routines">Routines</button>
           <button data-tab="plan">Plan</button>
           <button data-tab="log">Call log</button>
         </div>
         <div id="tab-mapping"></div>
         <div id="tab-history" class="hidden"></div>
+        <div id="tab-routines" class="hidden"></div>
         <div id="tab-plan" class="hidden"></div>
         <div id="tab-log" class="hidden"></div>
       </section>
@@ -1511,6 +1521,209 @@ ${EXERCISE_RULES}
         return [...byName.values()];
       }
 
+      // ---------- routines: workouts grouped by their exercises ----------
+
+      /** A workout joins a routine when at least this share of its exercises were in that routine before. */
+      const ROUTINE_MATCH = 0.5;
+      const RECENT_SESSIONS = 5;
+      /** The current plan: what the user trained in the last 6 weeks of the file. */
+      const PLAN_WINDOW_DAYS = 42;
+      /** A group that starts at most this long after another stops can be its continuation. */
+      const CONTINUE_DAYS = 42;
+      const DAY_MS = 86_400_000;
+
+      /** An exercise as the grouping sees it: its catalog id, else its new or raw name. */
+      function exerciseKey(raw, byRaw) {
+        const m = byRaw.get(raw);
+        if (m?.catalog_id && !m.invalid_id) return m.catalog_id;
+        if (m?.new_exercise?.name) return `new:${m.new_exercise.name.toLowerCase()}`;
+        return `raw:${raw.toLowerCase()}`;
+      }
+      const keyLabel = (key) =>
+        key.startsWith('new:') || key.startsWith('raw:') ? key.slice(4) : nameOf(key);
+
+      /** Sessions oldest first; an undated one takes the time of the dated one before it in the file. */
+      function orderSessions(sessions) {
+        let last = null;
+        return sessions
+          .map((s, i) => {
+            const parsed = s.date ? Date.parse(s.date) : NaN;
+            const dated = !Number.isNaN(parsed);
+            if (dated) last = parsed;
+            return { s, i, dated, t: dated ? parsed : last };
+          })
+          .sort((a, b) => (a.t ?? -Infinity) - (b.t ?? -Infinity) || a.i - b.i);
+      }
+
+      const median = (values) => {
+        const v = values.filter((x) => x != null).sort((a, b) => a - b);
+        return v.length ? v[Math.floor((v.length - 1) / 2)] : null;
+      };
+      const quantile = (values, q) => {
+        const v = values.filter((x) => x != null).sort((a, b) => a - b);
+        return v.length ? v[Math.round((v.length - 1) * q)] : null;
+      };
+
+      /**
+       * Groups the workouts into routines by their exercises alone (the names in the file are only
+       * used to check the result and to name the groups), then reads the current plan from the
+       * last 6 weeks: per routine the exercises done in at least half of its workouts there.
+       */
+      async function findRoutines(sessions, mapping, signal) {
+        const byRaw = new Map((mapping || []).map((m) => [m.raw, m]));
+        const routines = [];
+        for (const o of orderSessions(sessions)) {
+          const keys = [...new Set(o.s.exercises.map((e) => exerciseKey(e.raw, byRaw)))];
+          if (!keys.length) continue;
+          let best = null;
+          let score = 0;
+          for (const r of routines) {
+            const overlap = keys.filter((k) => r.keys.has(k)).length / keys.length;
+            if (overlap > score) [best, score] = [r, overlap];
+          }
+          const entry = { ...o, keys };
+          if (best && score >= ROUTINE_MATCH) {
+            best.sessions.push(entry);
+            for (const k of keys) best.keys.add(k);
+          } else routines.push({ sessions: [entry], keys: new Set(keys), changes: 0 });
+        }
+
+        // A training block that swaps most of a day's exercises at once starts a new group just as
+        // the old one stops. Join it to the group it continues: the one that stopped at most 6
+        // weeks before and shares the most exercises with its start (at least two).
+        const keysOf = (list) => new Set(list.flatMap((x) => x.keys));
+        for (const r of routines) {
+          r.from = r.sessions[0].t;
+          r.to = r.sessions[r.sessions.length - 1].t;
+        }
+        const byStart = [...routines].sort((a, b) => (a.from ?? 0) - (b.from ?? 0));
+        const joined = new Set();
+        for (const next of byStart) {
+          if (next.from == null) continue;
+          const head = keysOf(next.sessions.slice(0, RECENT_SESSIONS));
+          let into = null;
+          let shared = 1;
+          for (const prev of byStart) {
+            if (prev === next || joined.has(prev) || prev.to == null) continue;
+            if (prev.to > next.from || next.from - prev.to > CONTINUE_DAYS * DAY_MS) continue;
+            const tail = keysOf(prev.sessions.slice(-RECENT_SESSIONS));
+            const n = [...head].filter((k) => tail.has(k)).length;
+            if (n > shared) [into, shared] = [prev, n];
+          }
+          if (!into) continue;
+          into.sessions.push(...next.sessions);
+          into.to = next.to;
+          into.changes += 1 + next.changes;
+          joined.add(next);
+        }
+        routines.splice(0, routines.length, ...routines.filter((r) => !joined.has(r)));
+
+        // Check against the names in the file, where it has them.
+        const withNames = sessions.filter((s) => s.name).length;
+        let agree = 0;
+        for (const r of routines) {
+          const names = new Map();
+          for (const x of r.sessions)
+            if (x.s.name) names.set(x.s.name, (names.get(x.s.name) || 0) + 1);
+          r.names = [...names.entries()].sort((a, b) => b[1] - a[1]);
+          r.fileName = r.names[0]?.[0] ?? null;
+          agree += r.names[0]?.[1] ?? 0;
+          r.exerciseCount = keysOf(r.sessions).size;
+        }
+        routines.sort((a, b) => b.sessions.length - a.sessions.length);
+        const nameSplits = new Map();
+        for (const r of routines)
+          for (const [name, n] of r.names)
+            nameSplits.set(name, [...(nameSplits.get(name) || []), n]);
+
+        // The current plan.
+        const end = Math.max(...routines.map((r) => r.to ?? -Infinity));
+        const windowStart = end - PLAN_WINDOW_DAYS * DAY_MS;
+        const plan = [];
+        for (const r of routines) {
+          const recent = r.sessions.filter((x) => x.t != null && x.t >= windowStart);
+          if (recent.length < 2) continue;
+          const counts = new Map();
+          for (const x of recent) for (const k of x.keys) counts.set(k, (counts.get(k) || 0) + 1);
+          const exercises = [...counts.entries()]
+            .filter(([, n]) => n >= recent.length / 2)
+            .map(([key, n]) => {
+              const entries = recent.flatMap((x) =>
+                x.s.exercises
+                  .map((e, position) => ({ e, position }))
+                  .filter(({ e }) => exerciseKey(e.raw, byRaw) === key),
+              );
+              const sets = entries.flatMap(({ e }) => e.sets);
+              return {
+                key,
+                label: keyLabel(key),
+                share: n / recent.length,
+                position: median(entries.map((x) => x.position)),
+                sets: median(entries.map(({ e }) => e.sets.length)),
+                repsMin: quantile(
+                  sets.map((s) => s.reps),
+                  0.25,
+                ),
+                repsMax: quantile(
+                  sets.map((s) => s.reps),
+                  0.75,
+                ),
+                seconds: median(sets.map((s) => s.seconds)),
+                weight: median(
+                  entries.map(({ e }) => Math.max(...e.sets.map((s) => s.weight ?? -1))),
+                ),
+              };
+            })
+            .sort((a, b) => a.position - b.position);
+          plan.push({
+            routine: r,
+            workouts: recent.length,
+            perWeek: recent.length / (PLAN_WINDOW_DAYS / 7),
+            exercises,
+          });
+        }
+
+        // Names: the file's own where it has them, else one model call.
+        const unnamed = routines.filter((r) => !r.fileName);
+        if (unnamed.length) {
+          const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+          const describe = (r, i) =>
+            `${i + 1}. ${r.sessions.length} workouts: ${[...new Set(r.sessions.slice(-RECENT_SESSIONS).flatMap((x) => x.keys))].slice(0, 8).map(keyLabel).join(', ')}`;
+          try {
+            const answer = await ask({
+              stage: 'routines',
+              label: `name ${unnamed.length} routines`,
+              instructions:
+                'You name the routines (training days) a lifter repeats, from their exercises, the way a lifter would: "Push", "Pull", "Legs", "Upper", "Lower", "Full Body A". Short, in the app language, one name per routine in the order given, no two the same.',
+              input: `App language: ${$('lang').value}.\n\nRoutines:\n${unnamed.map(describe).join('\n')}`,
+              name: 'routine_names',
+              schema: obj({ names: arr({ type: 'string' }) }),
+              mock: () => ({ names: unnamed.map((_, i) => `Routine ${letters[i % 26]}`) }),
+              signal,
+            });
+            unnamed.forEach((r, i) => (r.label = answer.names[i] || `Routine ${letters[i % 26]}`));
+          } catch (error) {
+            if (error.name === 'AbortError') throw error;
+            unnamed.forEach((r, i) => (r.label = `Routine ${letters[i % 26]}`));
+          }
+        }
+        for (const r of routines) r.label ??= r.fileName;
+
+        return {
+          routines,
+          plan,
+          windowStart,
+          end,
+          check: withNames
+            ? {
+                agree,
+                total: withNames,
+                splitNames: [...nameSplits.entries()].filter(([, ns]) => ns.length > 1),
+              }
+            : null,
+        };
+      }
+
       function distinctExercises(sessions) {
         const counts = new Map();
         for (const s of sessions)
@@ -1578,6 +1791,9 @@ ${EXERCISE_RULES}
                 );
                 const names = distinctExercises(run.sessions);
                 run.mapping = await stage('mapping', () => mapExercises(names, signal));
+                run.found = await stage('routines', () =>
+                  findRoutines(run.sessions, run.mapping, signal),
+                );
               })()
             : Promise.resolve();
           const planJob = wantPlan
@@ -1612,6 +1828,19 @@ ${EXERCISE_RULES}
           mapping: run.mapping,
           sessions: run.sessions,
           routines: run.routines,
+          foundRoutines: run.found && {
+            routines: run.found.routines.map((r) => ({
+              name: r.label,
+              workouts: r.sessions.length,
+              namesInFile: r.names,
+            })),
+            plan: run.found.plan.map((p) => ({
+              routine: p.routine.label,
+              perWeek: p.perWeek,
+              exercises: p.exercises,
+            })),
+            check: run.found.check,
+          },
         };
         const filename = `import-lab-${state.file.name.replace(/\.\w+$/, '')}-${Date.now()}.json`;
         const json = JSON.stringify(data, null, 2);
@@ -1635,8 +1864,13 @@ ${EXERCISE_RULES}
 
       function mockClassification() {
         const lower = state.headers.map((h) => h.toLowerCase());
-        const find = (...words) =>
-          state.headers[lower.findIndex((h) => words.some((w) => h.includes(w)))] ?? null;
+        // A header that is one of the words wins over one that only contains it (title vs exercise_title).
+        const find = (...words) => {
+          const exact = lower.findIndex((h) => words.includes(h));
+          const index =
+            exact >= 0 ? exact : lower.findIndex((h) => words.some((w) => h.includes(w)));
+          return state.headers[index] ?? null;
+        };
         const date = find('date', 'start_time', 'datum', 'fecha', '날짜');
         const exercise = find('exercise', 'übung', 'uebung', 'ejercicio', 'exercice', '운동');
         const dateIdx = colIndex(date);
@@ -1665,7 +1899,9 @@ ${EXERCISE_RULES}
           reason: 'Mock answer from header names (no model call).',
           columns: {
             date,
-            workout_name: find('workout name', 'workout', 'routine', 'title'),
+            workout_name: [find('workout name', 'workout', 'routine', 'title')].map((h) =>
+              h === exercise ? null : h,
+            )[0],
             exercise,
             set_order: find('set order', 'set_index', 'set #', 'satz'),
             weight: find('weight', 'gewicht', 'kg', 'peso', 'poids'),
@@ -1814,7 +2050,7 @@ ${EXERCISE_RULES}
           ? `<span class="pill ${run.status === 'done' ? 'ok' : 'err'}">${esc(run.status)}</span> ${esc(run.error ?? '')}`
           : `Running… ${fmtMs(elapsed)} · ${done}/${state.calls.length} calls answered`;
         const t = totals(state.calls);
-        const stageRows = ['history', 'mapping', 'plan']
+        const stageRows = ['history', 'mapping', 'routines', 'plan']
           .filter((k) => run.stages[k])
           .map((k) => {
             const s = run.stages[k];
@@ -1864,7 +2100,7 @@ ${EXERCISE_RULES}
         b.onclick = () => {
           tab = b.dataset.tab;
           for (const x of $('tabs').querySelectorAll('button')) x.classList.toggle('on', x === b);
-          for (const t of ['mapping', 'history', 'plan', 'log'])
+          for (const t of ['mapping', 'history', 'routines', 'plan', 'log'])
             $(`tab-${t}`).classList.toggle('hidden', t !== tab);
           renderResults();
         };
@@ -1874,6 +2110,7 @@ ${EXERCISE_RULES}
         if (!run) return;
         if (tab === 'mapping') renderMapping(run);
         if (tab === 'history') renderHistory(run);
+        if (tab === 'routines') renderRoutines(run);
         if (tab === 'plan') renderPlan(run);
         if (tab === 'log') renderLog();
       }
@@ -1985,6 +2222,69 @@ ${EXERCISE_RULES}
             </table></div>`,
           )
           .join('');
+      }
+
+      function renderRoutines(run) {
+        const found = run.found;
+        if (!found)
+          return ($('tab-routines').innerHTML =
+            `<p class="muted">${run.stages.routines ? 'Grouping workouts…' : 'Routines are found from the history once its exercises are mapped.'}</p>`);
+        const { routines, plan, check } = found;
+        const dated = routines.flatMap((r) => r.sessions).filter((x) => x.t != null);
+        const t0 = Math.min(...dated.map((x) => x.t));
+        const t1 = Math.max(...dated.map((x) => x.t), t0 + DAY_MS);
+        const day = (t) => (t == null ? '–' : isoDay(new Date(t)));
+        const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
+        const strip = (r) =>
+          `<div style="position:relative;height:14px;background:var(--chip);border-radius:4px;min-width:120px">${r.sessions
+            .filter((x) => x.t != null)
+            .map(
+              (x) =>
+                `<span style="position:absolute;left:${((x.t - t0) / (t1 - t0)) * 100}%;top:3px;width:2px;height:8px;background:var(--accent);opacity:.7"></span>`,
+            )
+            .join('')}</div>`;
+        const checkHtml = check
+          ? `<div class="stat"><b>${pct(check.agree, check.total)}%</b><span>of workouts match the name in the file</span></div>
+             <div class="stat"><b>${check.splitNames.length}</b><span>names split over several groups</span></div>`
+          : `<div class="stat"><b>–</b><span>the file names no workouts: nothing to check against</span></div>`;
+        const splitHtml = check?.splitNames.length
+          ? `<p class="small" style="color:var(--amber)">Split: ${check.splitNames.map(([name, ns]) => `${esc(name)} (${ns.join(' + ')})`).join(' · ')}. Usually a training block that swapped most of a day's exercises at once.</p>`
+          : '';
+        $('tab-routines').innerHTML = `
+          <p class="small muted">Grouped by exercises only: a workout joins a routine when at least ${ROUTINE_MATCH * 100}% of its exercises were in that routine before. A group that starts within ${CONTINUE_DAYS / 7} weeks of another one stopping, sharing at least 2 exercises with it, continues it (a big change). The workout names in the file are only used to check and to name the groups.</p>
+          <div class="stats" style="margin:12px 0">
+            <div class="stat"><b>${routines.length}</b><span>routines found</span></div>
+            ${checkHtml}
+          </div>
+          ${splitHtml}
+          <h3>Routines over time</h3>
+          <div class="scroll"><table>
+            <tr><th>routine</th><th>names in file</th><th class="num">workouts</th><th>first → last</th><th class="num">exercises used</th><th class="num">big changes</th><th style="width:40%">workouts over time</th></tr>
+            ${routines
+              .map(
+                (r) =>
+                  `<tr><td><b>${esc(r.label)}</b></td><td class="small muted">${r.names.map(([n, c]) => `${esc(n)} ${c}`).join(', ') || '–'}</td><td class="num">${r.sessions.length}</td><td class="small">${day(r.from)} → ${day(r.to)}</td><td class="num">${r.exerciseCount}</td><td class="num">${r.changes}</td><td>${strip(r)}</td></tr>`,
+              )
+              .join('')}
+          </table></div>
+          <h3>Current plan (${day(found.windowStart)} → ${day(found.end)}, the last ${PLAN_WINDOW_DAYS / 7} weeks)</h3>
+          ${
+            plan.length
+              ? `<div class="cards">${plan
+                  .map(
+                    (p) => `<div class="card on" style="cursor:default">
+                      <div class="title">${esc(p.routine.label)}</div>
+                      <div class="muted small" style="margin-bottom:8px">${p.workouts} workouts · ${p.perWeek.toFixed(1)}× a week</div>
+                      <table>${p.exercises
+                        .map(
+                          (e) =>
+                            `<tr><td>${esc(e.label)}${e.share < 1 ? ` <span class="dim small">${Math.round(e.share * 100)}%</span>` : ''}</td><td class="num small">${e.sets ?? '–'} × ${e.seconds != null ? `${e.seconds}s` : `${e.repsMin ?? '–'}${e.repsMax != null && e.repsMax !== e.repsMin ? `–${e.repsMax}` : ''}`}</td><td class="num small muted">${e.weight > 0 ? `${e.weight} kg` : ''}</td></tr>`,
+                        )
+                        .join('')}</table></div>`,
+                  )
+                  .join('')}</div>`
+              : '<p class="muted">No routine has two or more workouts in the last 6 weeks.</p>'
+          }`;
       }
 
       function renderLog() {

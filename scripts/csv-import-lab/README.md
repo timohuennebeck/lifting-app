@@ -21,8 +21,12 @@ build and no server: it calls the OpenAI Responses API directly from the browser
    - Exercise mapping: the distinct exercise names, in batches, against the catalog (same rules as
      `supabase/functions/_shared/exercise-reading.ts`).
    - Plan: the plan rows with the catalog, as `read-plan` does.
-5. **Results:** mapping table, workouts (dated and undated), plan routines, and a log of every
-   request and answer. **Export results JSON** saves all of it with the timings.
+5. **Results:** mapping table, workouts (dated and undated), routines, plan routines, and a log
+   of every request and answer.
+   - Routines: the workouts grouped by their exercises alone (a workout joins a routine when at
+     least half its exercises were in it before; a group that starts as another stops and shares 2+
+     exercises continues it). Names in the file are only used to check the groups and name them;
+     without names, one model call names them. The current plan is read from the last 6 weeks. **Export results JSON** saves all of it with the timings.
 
 Enter the model's token prices to get the cost per import. With a key, the key is only saved if
 "Remember key" is ticked (browser `localStorage`).
