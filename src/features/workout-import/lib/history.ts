@@ -83,6 +83,22 @@ const MAX_NAME = 120;
 
 const positive = (value: number | null) => (value != null && value > 0 ? value : null);
 
+/** Lower case, spaces collapsed: how a header the model names is matched. */
+const headerKey = (text: string) => text.trim().replace(/\s+/g, ' ').toLowerCase();
+
+/**
+ * The column the model named: the header with that text, regardless of case and spacing (the
+ * model may not copy it exactly; a long one it saw cut to 200 characters with "…"); -1 for none.
+ */
+function columnAt(header: string[], name: string | null) {
+  if (!name) return -1;
+  const key = headerKey(name.replace(/…$/, ''));
+  const exact = header.findIndex((h) => headerKey(h) === key);
+  return exact >= 0 || !name.endsWith('…')
+    ? exact
+    : header.findIndex((h) => headerKey(h).startsWith(key));
+}
+
 /**
  * The rows of a sheet split into workouts (as `LoggedWorkout`s, in file order) and, for a sheet
  * with a plan and a log, the plan's rows (header first) for read-plan.
@@ -93,14 +109,11 @@ export function readLog(table: ImportTable, reading: SheetReading) {
   if (reading.kind === 'plan' || reading.kind === 'none') {
     return { workouts: [], planRows: reading.kind === 'plan' ? table.rows : [] };
   }
-  const index = (key: ColumnKey) => {
-    const name = reading.columns[key];
-    return name ? header.indexOf(name) : -1;
-  };
+  const index = (key: ColumnKey) => columnAt(header, reading.columns[key]);
   const col = Object.fromEntries(
     (Object.keys(reading.columns) as ColumnKey[]).map((key) => [key, index(key)]),
   ) as Record<ColumnKey, number>;
-  const splitAt = reading.split_column ? header.indexOf(reading.split_column) : -1;
+  const splitAt = columnAt(header, reading.split_column);
   const planValues = new Set(reading.plan_values.map((v) => v.trim().toLowerCase()));
   const poundsHeader = /\b(lb|lbs|pounds?)\b/i.test(reading.columns.weight ?? '');
 
@@ -214,11 +227,14 @@ const DAY_MS = 86_400_000;
 
 /**
  * Gives the workouts without a date one, spread evenly between the dated workouts around them in
- * the file (before the first one, or up to today, every two days), marked `estimated`. In file
- * order, so a tracker's undated workouts land between the right dates.
+ * the file (past the newest one every two days up to today, before the oldest every two days
+ * back), marked `estimated`. In file order, so a tracker's undated workouts land between the
+ * right dates, whether the file lists the newest or the oldest first.
  */
 export function spreadUndated(workouts: LoggedWorkout[]): LoggedWorkout[] {
   const inOrder = [...workouts].sort((a, b) => a.line - b.line);
+  const dated = inOrder.flatMap((w) => (w.start ? [w.start.getTime()] : []));
+  const newestFirst = dated.length > 1 && dated[0] > dated[dated.length - 1];
   const result: LoggedWorkout[] = [];
   let i = 0;
   while (i < inOrder.length) {
@@ -231,21 +247,18 @@ export function spreadUndated(workouts: LoggedWorkout[]): LoggedWorkout[] {
     const run = inOrder.slice(i, j);
     const before = result.length ? result[result.length - 1].start : null;
     const after = j < inOrder.length ? inOrder[j].start : null;
-    // Files list newest first or oldest first: spread between the two dates, whichever is earlier.
-    const from = before && after ? Math.min(before.getTime(), after.getTime()) : null;
-    const to = before && after ? Math.max(before.getTime(), after.getTime()) : null;
+    const older = (newestFirst ? after : before)?.getTime() ?? null;
+    const newer = (newestFirst ? before : after)?.getTime() ?? null;
     run.forEach((w, k) => {
+      // Its place counted from the oldest of the run.
+      const rank = newestFirst ? run.length - 1 - k : k;
       let time: number;
-      if (from != null && to != null) time = from + ((to - from) * (k + 1)) / (run.length + 1);
-      else if (before || after) {
-        const edge = (before ?? after)!.getTime();
-        // Past the last dated workout: later, up to today; before the first: earlier.
-        time = before
-          ? Math.min(Date.now(), edge + (k + 1) * 2 * DAY_MS)
-          : edge - (run.length - k) * 2 * DAY_MS;
-      } else time = Date.now() - (run.length - k) * 2 * DAY_MS;
-      const start = new Date(time);
-      result.push({ ...w, start, end: null, estimated: true });
+      if (older !== null && newer !== null) {
+        const [from, to] = older <= newer ? [older, newer] : [newer, older];
+        time = from + ((to - from) * (rank + 1)) / (run.length + 1);
+      } else if (older !== null) time = Math.min(Date.now(), older + (rank + 1) * 2 * DAY_MS);
+      else time = (newer ?? Date.now()) - (run.length - rank) * 2 * DAY_MS;
+      result.push({ ...w, start: new Date(time), end: null, estimated: true });
     });
     i = j;
   }

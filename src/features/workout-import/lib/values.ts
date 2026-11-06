@@ -1,7 +1,7 @@
 // Reads the values of a workout file as other apps and spreadsheets write them: dates (ISO,
 // 31.12.2025, 12/31/2025, "1 Nov 2025, 18:05", month names in the app's languages, Excel's day
 // numbers, Unix time), durations ("1h 5m", "1:05:00") and numbers ("82,5 kg"). Times without a
-// zone are the user's local time. Plain TypeScript, tested in values.test.ts.
+// zone are the user's local time. Plain TypeScript, without the app's imports.
 
 /** How a sheet writes dates whose day and month are both numbers (read-history says). */
 export type DayOrder = 'day_first' | 'month_first' | 'year_first';
@@ -39,10 +39,13 @@ const MONTHS: Record<string, number> = {
   dic: 11,
 };
 
-/** The month a word names, if any; French "juin" and "juil." need their fourth letter. */
+/**
+ * The month a word names, if any; French "juin" and "juil." need their fourth letter. Tuesday
+ * ("martes", "mardi") starts like March and is none.
+ */
 function monthOf(word: string) {
   const w = fold(word).replace(/\.$/, '');
-  if (w.length < 3) return undefined;
+  if (w.length < 3 || /^mar(tes|di)$/.test(w)) return undefined;
   if (w.startsWith('juil')) return 6;
   if (w.startsWith('juin')) return 5;
   if (w.startsWith('janv')) return 0;
@@ -109,7 +112,13 @@ export function parseDate(raw: string, order: DayOrder | null = null): Date | nu
   );
   if (iso) {
     if (iso[8]) {
-      const zoned = Date.parse(text.replace(' ', 'T'));
+      // Rebuilt as strict ISO ("+0100" → "+01:00", no spaces): Hermes parses nothing looser.
+      const two = (n: string | undefined) => (n ?? '0').padStart(2, '0');
+      const zone =
+        iso[8].toUpperCase() === 'Z' ? 'Z' : iso[8].replace(/^([+-]\d{2}):?(\d{2})$/, '$1:$2');
+      const zoned = Date.parse(
+        `${iso[1]}-${two(iso[2])}-${two(iso[3])}T${two(iso[4])}:${two(iso[5])}:${two(iso[6])}${iso[7] ?? ''}${zone}`,
+      );
       return Number.isNaN(zoned) ? null : new Date(zoned);
     }
     return make(+iso[1], +iso[2] - 1, +iso[3], +(iso[4] ?? 0), +(iso[5] ?? 0), +(iso[6] ?? 0));
@@ -169,7 +178,9 @@ export function parseMinutes(raw: string): number | null {
       : +clock[1] * 60 + +clock[2];
   }
   const hours = text.match(/(\d+(?:[.,]\d+)?)\s*(h|std|hr|hour)/);
-  const minutes = text.match(/(\d+)\s*(m(?!s)|min)/);
+  // "1h 30": a bare number after the hours is minutes.
+  const minutes =
+    text.match(/(\d+)\s*(m(?!s)|min)/) ?? text.match(/(?:h|std|hrs?|hours?)\.?\s+(\d{1,2})$/);
   const seconds = text.match(/(\d+)\s*(s|sec|sek)\b/);
   if (hours || minutes || seconds) {
     return (
