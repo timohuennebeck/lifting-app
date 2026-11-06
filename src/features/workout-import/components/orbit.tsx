@@ -120,19 +120,10 @@ function Ring({
 
 function Chip({ label, accent }: { label: string; accent?: boolean }) {
   return (
-    // Solid fill and a fine edge, so they never read as see-through on the dark ground.
+    // A plain solid fill: no shadow (on iOS it could let the dark ground through).
     <View
       className="h-7.5 justify-center rounded-full px-3"
-      style={
-        accent
-          ? { backgroundColor: colors.accent }
-          : {
-              backgroundColor: PILL,
-              borderWidth: 1,
-              borderColor: colors.line,
-              boxShadow: '0 10px 24px rgba(0,0,0,0.5)',
-            }
-      }
+      style={{ backgroundColor: accent ? colors.accent : PILL, opacity: 1 }}
     >
       <Text
         numberOfLines={1}

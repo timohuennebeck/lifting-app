@@ -1,4 +1,4 @@
-import { router, Stack } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -12,22 +12,24 @@ import { useNow } from '@/shared/hooks/use-now';
 import { weightUnit } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
+import { DeleteSheet } from '@/shared/ui/delete-sheet';
+import { IconButton } from '@/shared/ui/icon-button';
 import { Text } from '@/shared/ui/text';
 
 import { Orbit } from '../components/orbit';
 import { showImportFailure, showNothingFound } from '../lib/import-failure';
 import type { ImportFile, ReadFile } from '../lib/read-file';
-import { useWorkoutImportStore } from '../stores/workout-import-store';
 import { CTA_STYLE } from '../lib/steps';
+import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 /** How long "Fertig" shows before the found screen opens. */
 const ADVANCE_MS = 800;
 
 /**
  * 13m31: reads the file (see the store's runImport) behind chips popping in and circling, then
- * shows "Fertig" and goes on to what was found by itself. No way back while it reads. A file with
- * nothing to import goes back to the start with 13ie; another failure goes back with the error
- * sheet.
+ * shows "Fertig" and goes on to what was found by itself. No swiping back while it reads: its X
+ * (and Android's back) asks before it stops. A file with nothing to import goes back to the start
+ * with 13ie; another failure goes back with the error sheet.
  */
 export function ReadingScreen() {
   const { t, i18n } = useTranslation(['workoutImport', 'common']);
@@ -40,7 +42,9 @@ export function ReadingScreen() {
   const stage = useWorkoutImportStore((s) => s.stage);
   const failure = useWorkoutImportStore((s) => s.failure);
   const setFile = useWorkoutImportStore((s) => s.setFile);
+  const navigation = useNavigation();
   const [startedAt] = useState(Date.now);
+  const [cancelling, setCancelling] = useState(false);
   const now = useNow(1000, status === 'reading');
   const left = useRef(false);
   const advanced = useRef(false);
@@ -57,8 +61,21 @@ export function ReadingScreen() {
     return () => useWorkoutImportStore.getState().stop(run);
   }, [i18n.language, derive]);
 
-  // Android's back does nothing while reading, like the swipe.
-  useHardwareBack(() => undefined, status === 'reading');
+  // In the app the plan flow is a screen of its own: its swipe would leave from here too.
+  useEffect(() => {
+    const parent = navigation.getParent();
+    parent?.setOptions({ gestureEnabled: false });
+    return () => parent?.setOptions({ gestureEnabled: true });
+  }, [navigation]);
+
+  // Android's back asks first, like the X.
+  useHardwareBack(() => setCancelling(true), status === 'reading');
+
+  /** Stops reading (leaving stops the run) and goes back to the file. */
+  function cancel() {
+    setCancelling(false);
+    router.back();
+  }
 
   // Read: a tick and "Fertig", then on to what was found by itself (the button skips the wait).
   useEffect(() => {
@@ -95,8 +112,6 @@ export function ReadingScreen() {
 
   return (
     <View className="flex-1 bg-bg">
-      {/* No swiping back mid-read: a failure goes back on its own. */}
-      <Stack.Screen options={{ animation: 'fade', gestureEnabled: false }} />
       <Orbit
         // Short names of well-known lifts: catalog names can be too long for a chip.
         inner={[
@@ -120,6 +135,15 @@ export function ReadingScreen() {
         }
         done={ready}
       />
+      {ready ? null : (
+        <View className="absolute left-4" style={{ top: insets.top + 6 }}>
+          <IconButton
+            icon="close"
+            accessibilityLabel={t('workoutImport:reading.cancel.title')}
+            onPress={() => setCancelling(true)}
+          />
+        </View>
+      )}
       <View className="absolute inset-x-4" style={{ bottom: Math.max(insets.bottom, 30) }}>
         {ready ? (
           <Button {...CTA_STYLE} label={t('workoutImport:reading.done')} onPress={goOn} />
@@ -132,6 +156,15 @@ export function ReadingScreen() {
           </View>
         )}
       </View>
+      <DeleteSheet
+        visible={cancelling}
+        onClose={() => setCancelling(false)}
+        title={t('workoutImport:reading.cancel.title')}
+        option={t('workoutImport:reading.cancel.option')}
+        description={t('workoutImport:reading.cancel.description')}
+        cta={t('workoutImport:reading.cancel.cta')}
+        onDelete={cancel}
+      />
     </View>
   );
 }

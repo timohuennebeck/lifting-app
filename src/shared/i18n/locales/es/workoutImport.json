@@ -13,7 +13,7 @@
     "sheets_one": "{{size}} · {{count}} hoja",
     "sheets_other": "{{size}} · {{count}} hojas",
     "replace": "Cambiar",
-    "read": "Empezar a ordenar",
+    "read": "Leer archivo",
     "next": "Siguiente"
   },
   "sheets": {
@@ -50,6 +50,12 @@
       "squat": "Sentadilla",
       "deadlift": "Peso muerto",
       "press": "Press militar"
+    },
+    "cancel": {
+      "title": "¿Cancelar la importación?",
+      "option": "Dejar de leer",
+      "description": "Tu archivo no se seguirá leyendo. Después puedes volver a elegirlo.",
+      "cta": "Cancelar importación"
     }
   },
   "found": {

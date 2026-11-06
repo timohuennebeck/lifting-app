@@ -13,7 +13,7 @@
     "sheets_one": "{{size}} · 시트 {{count}}개",
     "sheets_other": "{{size}} · 시트 {{count}}개",
     "replace": "바꾸기",
-    "read": "정리 시작",
+    "read": "파일 읽기",
     "next": "다음"
   },
   "sheets": {
@@ -50,6 +50,12 @@
       "squat": "스쿼트",
       "deadlift": "데드리프트",
       "press": "오버헤드 프레스"
+    },
+    "cancel": {
+      "title": "가져오기를 취소할까요?",
+      "option": "읽기 중단",
+      "description": "파일 읽기를 멈춰요. 나중에 다시 선택할 수 있어요.",
+      "cta": "가져오기 취소"
     }
   },
   "found": {

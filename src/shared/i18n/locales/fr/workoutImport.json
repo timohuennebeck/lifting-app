@@ -13,7 +13,7 @@
     "sheets_one": "{{size}} · {{count}} feuille",
     "sheets_other": "{{size}} · {{count}} feuilles",
     "replace": "Remplacer",
-    "read": "Lancer le tri",
+    "read": "Lire le fichier",
     "next": "Suivant"
   },
   "sheets": {
@@ -50,6 +50,12 @@
       "squat": "Squat",
       "deadlift": "Soulevé de terre",
       "press": "Développé militaire"
+    },
+    "cancel": {
+      "title": "Annuler l’import ?",
+      "option": "Arrêter la lecture",
+      "description": "Ton fichier ne sera plus lu. Tu pourras le choisir à nouveau ensuite.",
+      "cta": "Annuler l’import"
     }
   },
   "found": {

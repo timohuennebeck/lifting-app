@@ -22,7 +22,7 @@ import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 const month = (iso: string) => formatDate(new Date(iso), { month: 'short', year: 'numeric' });
 
-/** An imported exercise: how often, its best set; opens its page on "Historie". */
+/** An imported exercise, sized like the search's rows: how often, its best set; opens "Historie". */
 function ExerciseRow({ item, units }: { item: ImportedExercise; units: UnitSystem }) {
   const { t, i18n } = useTranslation('workoutImport');
   const name = useExerciseName(item.exerciseId, i18n.language);
@@ -34,9 +34,9 @@ function ExerciseRow({ item, units }: { item: ImportedExercise; units: UnitSyste
         router.push({ pathname: '/exercise/[id]/history', params: { id: item.exerciseId } })
       }
       accessibilityRole="button"
-      className="flex-row items-center gap-3 py-2.25"
+      className="h-19.5 flex-row items-center gap-3.5"
     >
-      <ExerciseThumb exerciseId={item.exerciseId} name={name} className="h-13.5 w-10" />
+      <ExerciseThumb exerciseId={item.exerciseId} name={name} />
       <View className="min-w-0 flex-1 gap-0.75">
         <View className="flex-row items-center gap-2">
           <Text

@@ -13,7 +13,7 @@
     "sheets_one": "{{size}} · {{count}} sheet",
     "sheets_other": "{{size}} · {{count}} sheets",
     "replace": "Replace",
-    "read": "Start sorting",
+    "read": "Read file",
     "next": "Next"
   },
   "sheets": {
@@ -50,6 +50,12 @@
       "squat": "Squat",
       "deadlift": "Deadlift",
       "press": "Overhead press"
+    },
+    "cancel": {
+      "title": "Cancel the import?",
+      "option": "Stop reading",
+      "description": "Your file won’t be read any further. You can choose it again afterwards.",
+      "cta": "Cancel import"
     }
   },
   "found": {

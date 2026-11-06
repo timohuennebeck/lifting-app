@@ -13,7 +13,7 @@
     "sheets_one": "{{size}} · {{count}} aba",
     "sheets_other": "{{size}} · {{count}} abas",
     "replace": "Trocar",
-    "read": "Começar a organizar",
+    "read": "Ler arquivo",
     "next": "Continuar"
   },
   "sheets": {
@@ -50,6 +50,12 @@
       "squat": "Agachamento",
       "deadlift": "Levantamento terra",
       "press": "Desenvolvimento"
+    },
+    "cancel": {
+      "title": "Cancelar a importação?",
+      "option": "Parar de ler",
+      "description": "Seu arquivo não será mais lido. Depois você pode escolhê-lo de novo.",
+      "cta": "Cancelar importação"
     }
   },
   "found": {

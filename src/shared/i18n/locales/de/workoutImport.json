@@ -13,7 +13,7 @@
     "sheets_one": "{{size}} · {{count}} Tabellenblatt",
     "sheets_other": "{{size}} · {{count}} Tabellenblätter",
     "replace": "Ersetzen",
-    "read": "Kategorisierung starten",
+    "read": "Datei einlesen",
     "next": "Weiter"
   },
   "sheets": {
@@ -43,13 +43,19 @@
     "elapsed_one": "{{count}} s vergangen",
     "elapsed_other": "{{count}} s vergangen",
     "done": "Fertig",
-    "took_one": "Alles gelesen in {{count}} s",
-    "took_other": "Alles gelesen in {{count}} s",
+    "took_one": "In {{count}}s alles gelesen",
+    "took_other": "In {{count}}s alles gelesen",
     "lifts": {
       "bench": "Bankdrücken",
       "squat": "Kniebeugen",
       "deadlift": "Kreuzheben",
       "press": "Schulterdrücken"
+    },
+    "cancel": {
+      "title": "Import abbrechen?",
+      "option": "Einlesen abbrechen",
+      "description": "Deine Datei wird nicht weiter gelesen. Du kannst sie danach noch einmal wählen.",
+      "cta": "Import abbrechen"
     }
   },
   "found": {

@@ -13,7 +13,13 @@ export default function PlanLayout() {
           animation: 'slide_from_right',
           contentStyle: { backgroundColor: colors.bg },
         }}
-      />
+      >
+        {/* Reading a file: no swiping back; its X asks before it stops. */}
+        <Stack.Screen
+          name="import/reading"
+          options={{ animation: 'fade', gestureEnabled: false }}
+        />
+      </Stack>
     </InAppPlanFlow>
   );
 }
