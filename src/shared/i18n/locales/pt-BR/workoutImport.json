@@ -37,9 +37,7 @@
     "took_other": "Tudo lido em {{count}} s",
     "lifts": {
       "bench": "Supino",
-      "squat": "Agachamento",
-      "deadlift": "Levantamento terra",
-      "press": "Desenvolvimento"
+      "squat": "Agachamento"
     },
     "cancel": {
       "title": "Cancelar a importação?",
@@ -122,5 +120,19 @@
       "title": "Não foi possível salvar seu histórico",
       "message": "Verifique sua conexão e tente novamente."
     }
+  },
+  "choice": {
+    "title": "E O SEU\nPLANO?",
+    "subtitle": "A IA já conhece seu treino. Escolha como seu plano será criado.",
+    "training": {
+      "title": "A partir do meu treino",
+      "hint": "A IA usa seus exercícios e cargas"
+    },
+    "questions": {
+      "title": "Com algumas perguntas",
+      "hint": "A IA planeja por objetivo, dias e equipamentos"
+    },
+    "create": "Criar plano",
+    "toQuestions": "Ir às perguntas"
   }
 }

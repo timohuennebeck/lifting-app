@@ -11,11 +11,18 @@ export const afterPick = (read: ReadFile) =>
 /**
  * The import's counter: in the app the start screen is its first step (in onboarding it ends the
  * questions about the user), then maybe the sheets, the dates when workouts have none
- * (`withDates`), and "Importiert" last. `offset` is added to the sheets' number.
+ * (`withDates`), "Importiert", and how the plan is made (`withChoice`). `offset` is added to the
+ * sheets' number.
  */
-export function flowSteps(read: ReadFile | null, inApp: boolean, withDates = false) {
+export function flowSteps(
+  read: ReadFile | null,
+  inApp: boolean,
+  withDates = false,
+  withChoice = false,
+) {
   const offset = inApp ? 1 : 0;
-  return { offset, total: offset + (asksSheets(read) ? 1 : 0) + (withDates ? 1 : 0) + 1 };
+  const after = (withDates ? 1 : 0) + 1 + (withChoice ? 1 : 0);
+  return { offset, total: offset + (asksSheets(read) ? 1 : 0) + after };
 }
 
 /** The file's name without its type: "past_workouts". */

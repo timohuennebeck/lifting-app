@@ -37,9 +37,7 @@
     "took_other": "Todo leído en {{count}} s",
     "lifts": {
       "bench": "Press banca",
-      "squat": "Sentadilla",
-      "deadlift": "Peso muerto",
-      "press": "Press militar"
+      "squat": "Sentadilla"
     },
     "cancel": {
       "title": "¿Cancelar la importación?",
@@ -122,5 +120,19 @@
       "title": "No se pudo guardar tu historial",
       "message": "Revisa tu conexión e inténtalo de nuevo."
     }
+  },
+  "choice": {
+    "title": "¿Y TU\nPLAN?",
+    "subtitle": "La IA ya conoce tu entrenamiento. Elige cómo se crea tu plan.",
+    "training": {
+      "title": "Desde mi entrenamiento",
+      "hint": "La IA usa tus ejercicios y pesos"
+    },
+    "questions": {
+      "title": "Con unas preguntas",
+      "hint": "La IA planifica según objetivo, días y equipo"
+    },
+    "create": "Crear plan",
+    "toQuestions": "Ir a las preguntas"
   }
 }

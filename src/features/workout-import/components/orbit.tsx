@@ -9,26 +9,18 @@ import { Text } from '@/shared/ui/text';
 
 import { OrbitFile } from './file-art';
 
-const SPIN: CSSAnimationKeyframes = {
-  from: { transform: [{ rotate: '0deg' }] },
-  to: { transform: [{ rotate: '360deg' }] },
-};
-const SPIN_BACK: CSSAnimationKeyframes = {
-  from: { transform: [{ rotate: '0deg' }] },
-  to: { transform: [{ rotate: '-360deg' }] },
-};
 const FLOAT: CSSAnimationKeyframes = {
   '0%': { transform: [{ translateY: 0 }] },
   '50%': { transform: [{ translateY: -8 }] },
   '100%': { transform: [{ translateY: 0 }] },
 };
-/** A satellite popping in, a little past its size and back. */
+/** A chip or file popping in, a little past its size and back. */
 const POP: CSSAnimationKeyframes = {
   '0%': { opacity: 0, transform: [{ scale: 0.3 }] },
   '60%': { opacity: 1, transform: [{ scale: 1.12 }] },
   '100%': { opacity: 1, transform: [{ scale: 1 }] },
 };
-/** The seconds between satellites popping in, across the rings in turn. */
+/** The seconds between chips and files popping in. */
 const POP_STEP = 0.45;
 const TWINKLE: CSSAnimationKeyframes = {
   '0%': { opacity: 0, transform: [{ scale: 0.3 }, { rotate: '0deg' }] },
@@ -36,23 +28,13 @@ const TWINKLE: CSSAnimationKeyframes = {
   '100%': { opacity: 0, transform: [{ scale: 0.3 }, { rotate: '0deg' }] },
 };
 
-const loop = (name: CSSAnimationKeyframes, seconds: number, linear?: boolean, delay = 0) => ({
+const loop = (name: CSSAnimationKeyframes, seconds: number, delay = 0) => ({
   animationName: name,
   animationDuration: `${seconds}s` as const,
   animationDelay: `${delay}s` as const,
   animationIterationCount: 'infinite' as const,
-  animationTimingFunction: linear ? ('linear' as const) : ('ease-in-out' as const),
+  animationTimingFunction: 'ease-in-out' as const,
 });
-
-/**
- * Something on a ring: a chip, a small file or a dot; `float` is its bob in seconds, `order` its
- * place in the popping in.
- */
-interface Satellite {
-  node: ReactNode;
-  order: number;
-  float?: number;
-}
 
 /** The ✦ sparkles twinkling around the rings, placed as shares of the screen. */
 const STARS = [
@@ -64,70 +46,51 @@ const STARS = [
   { x: 0.7, y: 0.78, size: 11, delay: 1.5 },
 ] as const;
 
-/** Room a satellite is centred in: text is measured against it (no percent translate in RN). */
+/** Room a chip is centred in: text is measured against it (no percent translate in RN). */
 const SLOT = { width: 200, height: 80 };
 
-/** A ring turning around the centre once per `seconds`; its satellites stay upright. */
-function Ring({
-  radius,
-  seconds,
-  reverse,
-  items,
+/**
+ * A chip or file at its place, as shares of the screen (`x`, `y` its centre): it pops in as
+ * `order` says and then bobs in place every `float` seconds, from `phase` on.
+ */
+function Floating({
+  x,
+  y,
+  order,
+  float,
+  phase,
+  children,
 }: {
-  radius: number;
-  seconds: number;
-  reverse?: boolean;
-  items: Satellite[];
+  x: number;
+  y: number;
+  order: number;
+  float: number;
+  phase: number;
+  children: ReactNode;
 }) {
+  const { width, height } = useWindowDimensions();
   return (
-    <Animated.View
-      collapsable={false}
-      className="absolute top-1/2 left-1/2 size-0"
-      style={loop(reverse ? SPIN_BACK : SPIN, seconds, true)}
+    <View
+      className="absolute items-center justify-center"
+      style={{ ...SLOT, left: x * width - SLOT.width / 2, top: y * height - SLOT.height / 2 }}
     >
-      {items.map((item, i) => {
-        const angle = (2 * Math.PI * i) / items.length;
-        return (
-          <View
-            key={i}
-            className="absolute items-center justify-center"
-            style={{
-              ...SLOT,
-              left: radius * Math.cos(angle) - SLOT.width / 2,
-              top: radius * Math.sin(angle) - SLOT.height / 2,
-            }}
-          >
-            <Animated.View
-              collapsable={false}
-              style={loop(reverse ? SPIN : SPIN_BACK, seconds, true)}
-            >
-              <Animated.View
-                collapsable={false}
-                style={{
-                  animationName: POP,
-                  animationDuration: '0.5s',
-                  animationDelay: `${0.3 + item.order * POP_STEP}s` as const,
-                  animationFillMode: 'backwards',
-                  animationTimingFunction: 'ease-out',
-                }}
-              >
-                <Animated.View
-                  collapsable={false}
-                  style={item.float ? loop(FLOAT, item.float) : undefined}
-                >
-                  {item.node}
-                </Animated.View>
-              </Animated.View>
-            </Animated.View>
-          </View>
-        );
-      })}
-    </Animated.View>
+      <Animated.View
+        collapsable={false}
+        style={{
+          animationName: POP,
+          animationDuration: '0.5s',
+          animationDelay: `${0.3 + order * POP_STEP}s` as const,
+          animationFillMode: 'backwards',
+          animationTimingFunction: 'ease-out',
+        }}
+      >
+        <Animated.View collapsable={false} style={loop(FLOAT, float, phase)}>
+          {children}
+        </Animated.View>
+      </Animated.View>
+    </View>
   );
 }
-
-/** A chip's bob in seconds, as the design times it. */
-const bob = (label: string) => 2 + (label.length % 3) * 0.4;
 
 function Chip({ label, accent }: { label: string; accent?: boolean }) {
   return (
@@ -201,10 +164,8 @@ function SpinnerGlyph() {
 }
 
 export interface OrbitProps {
-  /** Chips of the inner ring: an exercise, a weight, an exercise, sets × reps. */
-  inner: readonly [string, string, string, string];
-  /** Chips of the outer ring: an exercise, "PR", reps, an exercise, a weight. */
-  outer: readonly [string, string, string, string, string];
+  /** The chips: an exercise, a weight, sets × reps, an exercise, reps. */
+  chips: readonly [string, string, string, string, string];
   /** What is being done, and how long it has taken. */
   label: string;
   caption: string;
@@ -212,14 +173,17 @@ export interface OrbitProps {
   done?: boolean;
 }
 
-/** 13m31: chips and files circling the centre while the file is read, sparkles around them. */
-export function Orbit({ inner, outer, label, caption, done }: OrbitProps) {
+/**
+ * 13m31: chips and files floating in place above and below the centre while the file is read,
+ * sparkles around them. Their places stay inside the screen and apart from each other (L5).
+ */
+export function Orbit({ chips, label, caption, done }: OrbitProps) {
   const { width, height } = useWindowDimensions();
+  const [lift, weight, sets, otherLift, reps] = chips;
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none" accessibilityElementsHidden>
       <View
         className="absolute inset-x-0 h-37.5 items-center justify-center gap-1.5"
-        // Below the rings: chips pass over what is being done.
         style={{ top: height / 2 - 75 }}
       >
         <Svg
@@ -250,33 +214,6 @@ export function Orbit({ inner, outer, label, caption, done }: OrbitProps) {
         </Text>
         <Text className="font-inter text-xs text-subtle">{caption}</Text>
       </View>
-      <Ring
-        radius={116}
-        seconds={34}
-        items={[
-          { node: <Chip label={inner[0]} />, order: 0, float: bob(inner[0]) },
-          { node: <Chip label={inner[1]} accent />, order: 3, float: bob(inner[1]) },
-          { node: <Chip label={inner[2]} />, order: 6, float: bob(inner[2]) },
-          { node: <Chip label={inner[3]} />, order: 9, float: bob(inner[3]) },
-        ]}
-      />
-      <Ring
-        radius={220}
-        seconds={44}
-        reverse
-        items={[
-          // The files share the ring with the chips, between them: on a ring of their own they
-          // crossed the chips. The radii keep them clear of the inner ring's chips.
-          { node: <Chip label={outer[0]} />, order: 1, float: bob(outer[0]) },
-          { node: <OrbitFile label="CSV" />, order: 2, float: 1.8 },
-          { node: <Chip label={outer[1]} accent />, order: 4, float: bob(outer[1]) },
-          { node: <OrbitFile label="XLSX" />, order: 8, float: 1.8 },
-          { node: <Chip label={outer[2]} />, order: 7, float: bob(outer[2]) },
-          { node: <Chip label={outer[3]} />, order: 10, float: bob(outer[3]) },
-          { node: <OrbitFile label="CSV" />, order: 13, float: 1.8 },
-          { node: <Chip label={outer[4]} />, order: 12, float: bob(outer[4]) },
-        ]}
-      />
       {STARS.map((star, i) => (
         <Animated.View
           collapsable={false}
@@ -285,7 +222,7 @@ export function Orbit({ inner, outer, label, caption, done }: OrbitProps) {
           style={{
             left: star.x * width,
             top: star.y * height,
-            ...loop(TWINKLE, 2.4, false, star.delay),
+            ...loop(TWINKLE, 2.4, star.delay),
           }}
         >
           <Text
@@ -296,6 +233,35 @@ export function Orbit({ inner, outer, label, caption, done }: OrbitProps) {
           </Text>
         </Animated.View>
       ))}
+      {/* Above the centre */}
+      <Floating x={0.28} y={0.24} order={0} float={2.6} phase={0.3}>
+        <Chip label={lift} />
+      </Floating>
+      <Floating x={0.73} y={0.28} order={1} float={2.4} phase={1.1}>
+        <Chip label={weight} accent />
+      </Floating>
+      <Floating x={0.18} y={0.37} order={2} float={1.8} phase={0.6}>
+        <OrbitFile label="CSV" />
+      </Floating>
+      <Floating x={0.82} y={0.39} order={3} float={2} phase={0.2}>
+        <OrbitFile label="XLSX" />
+      </Floating>
+      {/* Below it */}
+      <Floating x={0.24} y={0.66} order={4} float={2.2} phase={0.9}>
+        <Chip label={sets} />
+      </Floating>
+      <Floating x={0.74} y={0.64} order={5} float={2.8} phase={0.4}>
+        <Chip label={otherLift} />
+      </Floating>
+      <Floating x={0.5} y={0.76} order={6} float={2} phase={1.4}>
+        <Chip label="PR" accent />
+      </Floating>
+      <Floating x={0.82} y={0.77} order={7} float={1.9} phase={0.8}>
+        <OrbitFile label="CSV" />
+      </Floating>
+      <Floating x={0.2} y={0.78} order={8} float={2.5} phase={0.1}>
+        <Chip label={reps} />
+      </Floating>
     </View>
   );
 }

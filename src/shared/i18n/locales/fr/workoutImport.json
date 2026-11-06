@@ -37,9 +37,7 @@
     "took_other": "Tout lu en {{count}} s",
     "lifts": {
       "bench": "Développé couché",
-      "squat": "Squat",
-      "deadlift": "Soulevé de terre",
-      "press": "Développé militaire"
+      "squat": "Squat"
     },
     "cancel": {
       "title": "Annuler l’import ?",
@@ -122,5 +120,19 @@
       "title": "Impossible d'enregistrer ton historique",
       "message": "Vérifie ta connexion et réessaie."
     }
+  },
+  "choice": {
+    "title": "ET TON\nPROGRAMME ?",
+    "subtitle": "L'IA connaît maintenant ton entraînement. Choisis comment ton programme est créé.",
+    "training": {
+      "title": "À partir de mon entraînement",
+      "hint": "L'IA reprend tes exercices et tes charges"
+    },
+    "questions": {
+      "title": "Avec quelques questions",
+      "hint": "L'IA planifie selon objectif, jours et matériel"
+    },
+    "create": "Créer le programme",
+    "toQuestions": "Aux questions"
   }
 }

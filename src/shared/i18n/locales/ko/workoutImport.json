@@ -37,9 +37,7 @@
     "took_other": "{{count}}초 만에 모두 읽었어요",
     "lifts": {
       "bench": "벤치프레스",
-      "squat": "스쿼트",
-      "deadlift": "데드리프트",
-      "press": "오버헤드 프레스"
+      "squat": "스쿼트"
     },
     "cancel": {
       "title": "가져오기를 취소할까요?",
@@ -122,5 +120,19 @@
       "title": "운동 기록을 저장하지 못했어요",
       "message": "연결을 확인하고 다시 시도해 주세요."
     }
+  },
+  "choice": {
+    "title": "이제\n플랜은?",
+    "subtitle": "이제 AI가 운동 기록을 알고 있어요. 플랜을 어떻게 만들지 골라 주세요.",
+    "training": {
+      "title": "내 운동 기록으로",
+      "hint": "AI가 하던 운동과 무게를 그대로 써요"
+    },
+    "questions": {
+      "title": "몇 가지 질문으로",
+      "hint": "AI가 목표, 운동일, 장비에 맞춰 짜요"
+    },
+    "create": "플랜 만들기",
+    "toQuestions": "질문으로 가기"
   }
 }

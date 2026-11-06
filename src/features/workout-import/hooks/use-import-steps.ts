@@ -10,6 +10,7 @@ import { requireUserId } from '@/shared/stores/session-store';
 
 import { keepForSignUp, sendHistory, toRows } from '../lib/save-history';
 import {
+  choosesPlan,
   decidedImport,
   reviewsToShow,
   undatedCount,
@@ -47,7 +48,8 @@ async function send(
 /**
  * The steps after reading the file: a check per unsure name (15a), the dates (18a) when
  * workouts have none, then the history is saved (in onboarding at sign-up) and "Importiert" shows
- * it. `next` goes on from there: the plan opens in the editor, or the flow ends without one.
+ * it. `next` goes on from there: the file's plan opens in the editor, the user picks how a plan is
+ * made (from the history or the questions), or the flow ends without one.
  */
 export function useImportSteps() {
   const { inApp, step, done } = usePlanFlow();
@@ -57,12 +59,15 @@ export function useImportSteps() {
   // Straight from the reading screen, it is replaced: going back must not read again.
   const go = (href: Href, replace: boolean) => (replace ? router.replace(href) : router.push(href));
 
-  /** Whether the editor opens with a plan at the end. */
-  const withPlan = () =>
-    useWorkoutImportStore.getState().take.plan && !!useImportStore.getState().plan;
+  /** Whether the editor opens with the file's plan at the end. */
+  const withPlan = () => {
+    const s = useWorkoutImportStore.getState();
+    return s.planFrom === 'file' && s.take.plan && !!useImportStore.getState().plan;
+  };
 
   function next(replace = false) {
     if (withPlan()) go(step('/import/confirm'), replace);
+    else if (choosesPlan(useWorkoutImportStore.getState())) go(step('/import/plan'), replace);
     else done();
   }
 

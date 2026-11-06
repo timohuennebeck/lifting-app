@@ -37,9 +37,7 @@
     "took_other": "All read in {{count}} s",
     "lifts": {
       "bench": "Bench press",
-      "squat": "Squat",
-      "deadlift": "Deadlift",
-      "press": "Overhead press"
+      "squat": "Squat"
     },
     "cancel": {
       "title": "Cancel the import?",
@@ -122,5 +120,19 @@
       "title": "Couldn't save your history",
       "message": "Check your connection and try again."
     }
+  },
+  "choice": {
+    "title": "AND YOUR\nPLAN?",
+    "subtitle": "The AI now knows your training. Choose how your plan is made.",
+    "training": {
+      "title": "From my training",
+      "hint": "The AI takes your exercises and weights"
+    },
+    "questions": {
+      "title": "From a few questions",
+      "hint": "The AI plans by goal, days and equipment"
+    },
+    "create": "Create plan",
+    "toQuestions": "To the questions"
   }
 }

@@ -65,6 +65,8 @@ interface WorkoutImportState {
   names: Record<string, MappedName>;
   /** Where the plan in the editor comes from; null when there is none. */
   planFrom: 'file' | 'history' | null;
+  /** Whether a plan may come from the history (see `start`): then the user picks how it's made. */
+  derivePlan: boolean;
   reviews: ReviewItem[];
   decisions: Record<string, Decision>;
   /** What is taken over: the history when the file has one, the plan when there is one. */
@@ -106,6 +108,7 @@ const EMPTY: Session = {
   workouts: [],
   names: {},
   planFrom: null,
+  derivePlan: false,
   reviews: [],
   decisions: {},
   take: { history: true, plan: true },
@@ -315,7 +318,7 @@ export const useWorkoutImportStore = create<WorkoutImportState>()((set, get) => 
     running = controller;
     const { file, read, sheets, run: last } = get();
     const run = last + 1;
-    set({ ...EMPTY, file, read, sheets, run, status: 'reading' });
+    set({ ...EMPTY, file, read, sheets, run, status: 'reading', derivePlan });
     // The plan editor starts with this import's plan, or none.
     useImportStore.getState().reset();
     const tables = (read?.tables ?? []).filter(
@@ -375,6 +378,14 @@ export const useWorkoutImportStore = create<WorkoutImportState>()((set, get) => 
 /** The checks (15a) for what the user takes over. */
 export const reviewsToShow = (s: Pick<WorkoutImportState, 'reviews' | 'take'>) =>
   s.reviews.filter((r) => (s.take.history && r.workouts > 0) || (s.take.plan && r.inPlan));
+
+/**
+ * After "Importiert", the user picks how the plan is made (from the history or from the questions):
+ * the file has no plan of its own, a plan may come from the history, and it has workouts.
+ */
+export const choosesPlan = (
+  s: Pick<WorkoutImportState, 'derivePlan' | 'planFrom' | 'take' | 'workouts'>,
+) => s.derivePlan && s.planFrom !== 'file' && s.take.history && s.workouts.length > 0;
 
 /** Workouts without a date the user takes over (18a asks about them). */
 export const undatedCount = (s: Pick<WorkoutImportState, 'workouts' | 'take'>) =>

@@ -32,7 +32,9 @@ Enter the model's token prices to get the cost per import. With a key, the key i
 "Remember key" is ticked (browser `localStorage`).
 
 `samples/` holds made-up files: `history-strong-style.csv` (146 workouts as a tracker-app export,
-about a quarter without a date), `plan-and-log-de.csv` (a German plan on top of a short log), and
+about a quarter without a date), `plan-and-log-de.csv` (a German plan on top of a short log), `plan-only-de.csv` (only a
+plan, no workouts: a coach's 4-day upper/lower split with abbreviations, rep ranges, RIR, rest,
+supersets and an optional cardio day), and
 `history-1y.csv`, `history-2y.csv`, `history-5y.csv` (about 3.5 workouts a week; every ~4 months
 some exercises change, so the names grow from 39 to 74):
 

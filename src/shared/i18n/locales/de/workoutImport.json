@@ -37,9 +37,7 @@
     "took_other": "In {{count}}s alles gelesen",
     "lifts": {
       "bench": "Bankdrücken",
-      "squat": "Kniebeugen",
-      "deadlift": "Kreuzheben",
-      "press": "Schulterdrücken"
+      "squat": "Kniebeugen"
     },
     "cancel": {
       "title": "Import abbrechen?",
@@ -122,5 +120,19 @@
       "title": "Verlauf nicht gespeichert",
       "message": "Prüfe deine Verbindung und versuche es noch einmal."
     }
+  },
+  "choice": {
+    "title": "UND DEIN PLAN?",
+    "subtitle": "Die KI kennt jetzt dein Training. Wähle, wie dein Plan entsteht.",
+    "training": {
+      "title": "Aus meinem Training",
+      "hint": "Die KI nimmt deine Übungen und Gewichte"
+    },
+    "questions": {
+      "title": "Aus ein paar Fragen",
+      "hint": "Die KI plant nach Ziel, Tagen und Geräten"
+    },
+    "create": "Plan erstellen",
+    "toQuestions": "Zu den Fragen"
   }
 }

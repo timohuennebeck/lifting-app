@@ -107,18 +107,12 @@ export function ReadingScreen() {
     <View className="flex-1 bg-bg">
       <Orbit
         // Short names of well-known lifts: catalog names can be too long for a chip.
-        inner={[
+        chips={[
           t('workoutImport:reading.lifts.bench'),
           weight(80, 185),
-          t('workoutImport:reading.lifts.squat'),
           '3 × 8',
-        ]}
-        outer={[
-          t('workoutImport:reading.lifts.deadlift'),
-          'PR',
+          t('workoutImport:reading.lifts.squat'),
           t('common:units.reps', { count: 12 }),
-          t('workoutImport:reading.lifts.press'),
-          weight(100, 225),
         ]}
         label={ready ? t('workoutImport:reading.sorted') : t('workoutImport:reading.understand')}
         caption={
