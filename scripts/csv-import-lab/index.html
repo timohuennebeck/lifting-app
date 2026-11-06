@@ -347,6 +347,13 @@
         border-radius: 3px;
         display: inline-block;
       }
+      .note {
+        background: var(--chip);
+        border: 1px solid var(--amber);
+        border-radius: 12px;
+        padding: 10px 14px;
+        margin: 0 0 16px;
+      }
       .hidden {
         display: none !important;
       }
@@ -375,6 +382,12 @@
         plan, a workout history or both (the "found data" screen), then the full import runs in the
         background (exercise mapping to the catalog, history, plan) and every call is timed.
         Everything runs in this browser; the key goes only to OpenAI.
+      </p>
+
+      <p id="hostedNote" class="note hidden">
+        On claude.ai this page can't call OpenAI or Supabase, so <b>Mock model</b> is on and the
+        app's catalog is built in. For live runs with a key, open
+        <code>scripts/csv-import-lab/index.html</code> from the repo on a computer.
       </p>
 
       <section>
@@ -442,10 +455,13 @@
       <section>
         <h2>2 · CSV file</h2>
         <div id="drop" class="drop">
-          Drop a CSV here or click to choose one
+          Drop a CSV here or tap to choose one
           <div class="small dim" style="margin-top: 6px">
             Samples in scripts/csv-import-lab/samples/
           </div>
+        </div>
+        <div id="samples" class="row hidden" style="margin-top: 10px">
+          <span class="muted small">Or try a made-up file:</span>
         </div>
         <input id="file" type="file" accept=".csv,.tsv,.txt,text/csv" class="hidden" />
         <div id="fileInfo" class="hidden" style="margin-top: 14px"></div>
@@ -736,7 +752,10 @@ ${EXERCISE_RULES}
       $('loadCatalog').onclick = async () => {
         const url = $('sbUrl').value.trim().replace(/\/$/, '');
         const key = $('sbKey').value.trim();
-        if (!url || !key) return alert('Enter the Supabase URL and its publishable key.');
+        if (!url || !key) {
+          $('catalogStatus').textContent = 'Enter the Supabase URL and its publishable key first.';
+          return;
+        }
         $('catalogStatus').textContent = 'Loading…';
         try {
           const res = await fetch(
@@ -758,7 +777,8 @@ ${EXERCISE_RULES}
           const data = JSON.parse(await f.text());
           setCatalog(Array.isArray(data) ? data : data.exercises || [], f.name);
         } catch (error) {
-          alert('Not a catalog JSON: ' + error.message);
+          $('catalogStatus').innerHTML =
+            `<span class="pill err">Not a catalog JSON</span> ${esc(error.message)}`;
         }
       };
 
@@ -983,12 +1003,22 @@ ${EXERCISE_RULES}
           if (!key) throw new Error('No OpenAI key (or tick "Mock model").');
           for (let attempt = 1; ; attempt++) {
             record.attempts = attempt;
-            const res = await fetch(OPENAI_URL, {
-              method: 'POST',
-              headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-              body: JSON.stringify(body),
-              signal,
-            });
+            let res;
+            try {
+              res = await fetch(OPENAI_URL, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+                signal,
+              });
+            } catch (error) {
+              if (error.name === 'AbortError') throw error;
+              throw new Error(
+                window.LAB_HOSTED
+                  ? 'This page cannot reach OpenAI where it is hosted (claude.ai blocks calls to other sites). Open index.html from the repo for live runs, or tick "Mock model".'
+                  : `Could not reach OpenAI: ${error.message}`,
+              );
+            }
             if (!res.ok) {
               const text = await res.text();
               if (RETRY_STATUSES.has(res.status) && attempt < ATTEMPTS) {
@@ -1563,12 +1593,23 @@ ${EXERCISE_RULES}
           sessions: run.sessions,
           routines: run.routines,
         };
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const filename = `import-lab-${state.file.name.replace(/\.\w+$/, '')}-${Date.now()}.json`;
+        const json = JSON.stringify(data, null, 2);
+        // On claude.ai a page can only offer a file through the downloads capability.
+        if (downloads) {
+          downloads.save({ filename, data: json }).catch(() => {});
+          return;
+        }
         const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `import-lab-${state.file.name.replace(/\.\w+$/, '')}-${Date.now()}.json`;
+        a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+        a.download = filename;
         a.click();
       };
+      let downloads = null;
+      window.claude?.use?.('downloads').then(
+        (d) => (downloads = d),
+        () => {},
+      );
 
       // ---------- mock answers (no key) ----------
 
@@ -1689,20 +1730,18 @@ ${EXERCISE_RULES}
           if (!routines.has(name)) routines.set(name, { name, exercises: [] });
           const raw = ex >= 0 ? r[ex] : r.join(' ');
           const m = mockMap(raw);
-          routines
-            .get(name)
-            .exercises.push({
-              raw,
-              catalog_id: m.catalog_id,
-              certain: m.certain,
-              new_exercise_name: m.new_exercise?.name ?? null,
-              sets: 3,
-              reps_min: 8,
-              reps_max: 12,
-              seconds: null,
-              rir: null,
-              rest_seconds: null,
-            });
+          routines.get(name).exercises.push({
+            raw,
+            catalog_id: m.catalog_id,
+            certain: m.certain,
+            new_exercise_name: m.new_exercise?.name ?? null,
+            sets: 3,
+            reps_min: 8,
+            reps_max: 12,
+            seconds: null,
+            rir: null,
+            rest_seconds: null,
+          });
         }
         return { routines: [...routines.values()] };
       }
@@ -1942,6 +1981,26 @@ ${EXERCISE_RULES}
       }
 
       loadSettings();
+
+      // A published copy carries the catalog and the sample files (it cannot fetch them).
+      if (window.LAB_CATALOG) setCatalog(window.LAB_CATALOG, 'the app (built in)');
+      if (window.LAB_SAMPLES) {
+        $('samples').classList.remove('hidden');
+        for (const [name, text] of Object.entries(window.LAB_SAMPLES)) {
+          const button = document.createElement('button');
+          button.textContent = name;
+          button.onclick = () => readCsv(new File([text], name, { type: 'text/csv' }));
+          $('samples').append(button);
+        }
+      }
+      if (window.LAB_HOSTED) {
+        $('hostedNote').classList.remove('hidden');
+        try {
+          if (localStorage.getItem('csvlab') == null) $('mock').checked = true;
+        } catch {
+          $('mock').checked = true;
+        }
+      }
     </script>
   </body>
 </html>
