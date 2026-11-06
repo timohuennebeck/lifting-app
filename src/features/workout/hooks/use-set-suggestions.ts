@@ -9,7 +9,7 @@ import { useWorkoutSessionStore } from '../stores/workout-session-store';
 export function useSetSuggestions(workout: WorkoutDetail, units: UnitSystem) {
   const { data: recent } = useRecentSessions(workout.exercises.map((e) => e.exerciseId));
   const logged = useWorkoutSessionStore((s) => s.logged);
-  const out: Record<string, SetSuggestion[] | null> = {};
+  const out: Record<string, (SetSuggestion | null)[] | null> = {};
   for (const exercise of workout.exercises) {
     const sessions = recent?.[exercise.exerciseId] ?? [];
     out[exercise.id] = suggestionsFor(exercise, sessions, logged, workout.startedAt, units);

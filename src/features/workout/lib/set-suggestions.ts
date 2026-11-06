@@ -18,15 +18,17 @@ import {
 import type { WorkoutExercise } from '../data/workout-detail';
 import type { RecentSession } from '../data/recent-sessions';
 import type { LoggedValues } from '../stores/workout-session-store';
+import { adaptRepSets, planRepSets } from './rep-progression';
 import {
   adaptSets,
   type LoadKind,
   planSets,
+  type RuleExercise,
   type RuleSet,
   type Suggested,
   type Target,
 } from './suggestion-rules';
-import { lightestWeight, weightStep } from './weight-step';
+import { lightestWeight, roundedStep, weightStep } from './weight-step';
 
 /** What a set is suggested to be, compared with the same set last time. */
 export interface SetSuggestion {
@@ -66,8 +68,9 @@ function targetOf(set: TargetFields, timed: boolean): Target {
 
 /**
  * Suggestions for each set of one exercise of the live workout from its last workouts
- * (`sessions`, newest first) and the sets logged so far; null the first time it is done, and
- * for cardio.
+ * (`sessions`, newest first) and the sets logged so far; null for a set without one. Null for
+ * cardio, and the first time until a logged set shows something (weighted exercises) or for the
+ * whole workout (the others).
  */
 export function suggestionsFor(
   exercise: WorkoutExercise,
@@ -75,21 +78,29 @@ export function suggestionsFor(
   logged: Record<string, LoggedValues>,
   startedAt: string,
   units: UnitSystem,
-): SetSuggestion[] | null {
+): (SetSuggestion | null)[] | null {
   const { exerciseId } = exercise;
-  if (!sessions.length || !exercise.sets.length || isCardio(exerciseId)) return null;
+  if (!exercise.sets.length || isCardio(exerciseId)) return null;
   const kind = loadKind(exerciseId);
+  if (!sessions.length && kind !== 'load') return null;
   const timed = kind === 'timed';
   const weighted = hasMeasure(exerciseId, 'weight');
 
+  const toWeight = (kg: number | null) => (weighted ? toDisplayWeight(kg ?? 0, units) : null);
   const toRule = (values: SetValues & { rir?: number | null }, target: Target): RuleSet | null => {
     const amount = timed ? values.seconds : values.reps;
     if (amount == null || amount <= 0) return null;
-    const weight = weighted ? toDisplayWeight(values.weightKg ?? 0, units) : null;
-    return { weight, reps: amount, rir: values.rir ?? null, target };
+    return { weight: toWeight(values.weightKg), reps: amount, rir: values.rir ?? null, target };
+  };
+  const toSuggested = (values: SetValues | null): Suggested | null => {
+    const amount = timed ? values?.seconds : values?.reps;
+    return values && amount != null ? { weight: toWeight(values.weightKg), reps: amount } : null;
   };
   const history = sessions.map((session) =>
-    session.sets.flatMap((s) => toRule(s, targetOf(s, timed)) ?? []),
+    session.sets.flatMap((s) => {
+      const set = toRule(s, targetOf(s, timed));
+      return set ? { ...set, suggested: toSuggested(s.suggested) } : [];
+    }),
   );
   const targets = exercise.sets.map((s) => targetOf(s, timed));
   const done = exercise.sets.map((s, i) => {
@@ -97,25 +108,38 @@ export function suggestionsFor(
     return values && toRule({ ...values, rir: values.rir ?? s.rir }, targets[i]);
   });
 
-  const last = history.find((sets) => sets.length);
-  if (!last) return null;
-  const weights = [...history.flat(), ...done.flatMap((s) => s ?? [])].flatMap((s) =>
-    s.weight == null ? [] : [s.weight],
-  );
+  const last = history.find((sets) => sets.length) ?? [];
+  if (!last.length && kind !== 'load') return null;
+  const loggedSets = [...history.flat(), ...done.flatMap((s) => s ?? [])];
+  const weights = loggedSets.flatMap((s) => (s.weight == null ? [] : [s.weight]));
   const equipment = getExercise(exerciseId)?.equipment ?? undefined;
-  const rules = {
+  const step = weightStep(equipment, weights, loggedSets[0]?.weight ?? null, units);
+  const rounding = loggedSets.map((s) => ({
+    weight: s.weight ?? 0,
+    suggested: s.suggested?.weight ?? null,
+  }));
+  const rules: RuleExercise = {
     kind,
-    step: weightStep(equipment, weights, last[0].weight, units),
+    step: roundedStep(step, rounding, units),
     floor: lightestWeight(equipment, units),
   };
-  const days = (Date.parse(startedAt) - Date.parse(sessions[0].startedAt)) / DAY_MS;
-  const planned = planSets(rules, targets, history, days);
-  if (!planned) return null;
-  const sets = adaptSets(rules, targets, planned, done);
+  const days = sessions.length
+    ? (Date.parse(startedAt) - Date.parse(sessions[0].startedAt)) / DAY_MS
+    : 0;
+  let sets: (Suggested | null)[];
+  if (kind === 'load') {
+    sets = adaptSets(rules, targets, planSets(rules, targets, history, days), done, history);
+    if (sets.every((s) => s == null)) return null;
+  } else {
+    const planned = planRepSets(rules, targets, history, days);
+    if (!planned) return null;
+    sets = adaptRepSets(rules, targets, planned, done);
+  }
 
   const toKg = (w: number) => fromDisplayWeight(w, units);
-  const compare = (s: Suggested, i: number): SetSuggestion => {
-    const before = last[Math.min(i, last.length - 1)];
+  const compare = (s: Suggested | null, i: number): SetSuggestion | null => {
+    if (!s) return null;
+    const before = last.length ? last[Math.min(i, last.length - 1)] : null;
     let weight: SetSuggestion['weight'] = null;
     if (before?.weight != null && s.weight != null && s.weight !== before.weight) {
       const heavier = s.weight > before.weight;
