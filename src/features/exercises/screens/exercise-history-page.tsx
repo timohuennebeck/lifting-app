@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { SectionList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useImportedHistory } from '@/features/workout-import/hooks/use-imported-history';
 import { hasMeasure, isAssisted, isBodyweight, isTimed } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
 import { type ExerciseHistoryEntry, useExerciseHistory } from '@/shared/data/workouts';
@@ -37,7 +38,10 @@ export function ExerciseHistoryPage() {
   const insets = useSafeAreaInsets();
   const units = useUnits();
   const now = useNow(MINUTE_MS);
-  const { data: sessions = [], isLoading } = useExerciseHistory(exerciseId);
+  const { data: stored = [], isLoading } = useExerciseHistory(exerciseId);
+  // Right after an import, its workouts until the account has them (onboarding, the next sync).
+  const imported = useImportedHistory(exerciseId);
+  const sessions = stored.length ? stored : imported;
   const [range, setRange] = useState<DayRange>(30);
   // undefined = default (latest session open), null = all collapsed.
   const [openId, setOpenId] = useState<string | null>();

@@ -8,11 +8,10 @@ import { getActiveWorkoutId } from '@/shared/data/workouts';
 import { useResetOnOpen } from '@/shared/hooks/use-reset-on-open';
 import { ChoiceSheet, glyphColor } from '@/shared/ui/choice-sheet';
 import { CoachDiamond } from '@/shared/ui/coach-mark';
-import { Icon } from '@/shared/ui/icon';
 import { afterSheetClose } from '@/shared/ui/sheet';
 
 import { useCreateRoutine } from '../hooks/use-create-routine';
-import { PlanGlyph, RoutineGlyph } from './glyphs';
+import { PencilGlyph, PlanGlyph, RoutineGlyph } from './glyphs';
 
 type CreateKind = 'workout' | 'routine' | 'plan' | 'ownPlan';
 
@@ -93,7 +92,7 @@ export function CreateSheet({ visible, onClose }: CreateSheetProps) {
           title: t('create.ownPlan'),
           description: t('create.ownPlanHint'),
           cta: t('create.createOwnPlan'),
-          renderIcon: (active) => <Icon name="pencil" size={16} color={glyphColor(active)} />,
+          renderIcon: (active) => <PencilGlyph color={glyphColor(active)} />,
         },
       ]}
     />

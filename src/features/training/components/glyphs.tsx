@@ -1,4 +1,5 @@
 import { Text as RNText, View } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 
 interface GlyphProps {
   color: string;
@@ -31,6 +32,18 @@ export function PlanGlyph({ color }: GlyphProps) {
         />
       ))}
     </View>
+  );
+}
+
+/** A filled pencil: a plan built by hand. */
+export function PencilGlyph({ color }: GlyphProps) {
+  return (
+    <Svg width={17} height={17} viewBox="0 0 16 16">
+      <Path
+        d="M11.4 1.7a1.7 1.7 0 0 1 2.4 0l.5.5a1.7 1.7 0 0 1 0 2.4L5.6 13.3l-3.9 1 1-3.9z"
+        fill={color}
+      />
+    </Svg>
   );
 }
 

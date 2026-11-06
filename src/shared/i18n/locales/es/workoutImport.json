@@ -42,7 +42,15 @@
     "plan": "Leyendo tu plan…",
     "elapsed_one": "{{count}} s transcurrido",
     "elapsed_other": "{{count}} s transcurridos",
-    "done": "Listo"
+    "done": "Listo",
+    "took_one": "Todo leído en {{count}} s",
+    "took_other": "Todo leído en {{count}} s",
+    "lifts": {
+      "bench": "Press banca",
+      "squat": "Sentadilla",
+      "deadlift": "Peso muerto",
+      "press": "Press militar"
+    }
   },
   "found": {
     "title": "ESTO ES LO QUE\nHEMOS ENCONTRADO",
@@ -79,6 +87,19 @@
     "spread": "Repartidos · {{count}}",
     "keep": "Así está bien",
     "drop": "Dejarlos fuera"
+  },
+  "imported": {
+    "title": "TU ENTRENAMIENTO\nYA ESTÁ AQUÍ",
+    "subtitle_one": "{{count}} entrenamiento importado. Toca un ejercicio para ver su historial.",
+    "subtitle_other": "{{count}} entrenamientos importados. Toca un ejercicio para ver su historial.",
+    "exercises": "EJERCICIOS · {{n}}",
+    "range": "{{from}} a {{to}}",
+    "workouts_one": "{{count}} entrenamiento",
+    "workouts_other": "{{count}} entrenamientos",
+    "new": "Nuevo",
+    "toPlan": "Continuar al plan",
+    "next": "Continuar",
+    "done": "Listo"
   },
   "plan": {
     "fromHistory": "De tu historial",

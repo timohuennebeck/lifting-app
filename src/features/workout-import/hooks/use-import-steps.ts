@@ -46,8 +46,8 @@ async function send(
 
 /**
  * The steps after "Import starten" (13p): a check per unsure name (15a), the dates (18a) when
- * workouts have none, then the end: the history is saved (in onboarding at sign-up) and the plan
- * opens in the editor, or the flow ends without one.
+ * workouts have none, then the history is saved (in onboarding at sign-up) and "Importiert" shows
+ * it. `next` goes on from there: the plan opens in the editor, or the flow ends without one.
  */
 export function useImportSteps() {
   const { inApp, step, done } = usePlanFlow();
@@ -55,19 +55,26 @@ export function useImportSteps() {
 
   const checks = () => reviewsToShow(useWorkoutImportStore.getState()).length;
 
-  function leave() {
-    const { take } = useWorkoutImportStore.getState();
-    if (take.plan && useImportStore.getState().plan) router.push(step('/import/confirm'));
+  /** Whether the editor opens with a plan at the end. */
+  const withPlan = () =>
+    useWorkoutImportStore.getState().take.plan && !!useImportStore.getState().plan;
+
+  function next() {
+    if (withPlan()) router.push(step('/import/confirm'));
     else done();
   }
 
   function finish() {
     const { workouts, custom } = decidedImport();
     const rows = toRows(workouts);
-    if (!rows.length) return leave();
-    if (inApp) return void send(rows, custom, setSaving, leave);
+    if (!rows.length) return next();
+    useWorkoutImportStore
+      .getState()
+      .setImported({ workouts: rows, created: custom.map((c) => c.id) });
+    const show = () => router.push(step('/import/imported'));
+    if (inApp) return void send(rows, custom, setSaving, show);
     keepForSignUp(rows, custom);
-    leave();
+    show();
   }
 
   /** After the checks: the dates, or the end. */
@@ -89,5 +96,5 @@ export function useImportSteps() {
     } else afterChecks();
   }
 
-  return { afterFound, afterCheck, finish, saving };
+  return { afterFound, afterCheck, finish, next, withPlan, saving };
 }

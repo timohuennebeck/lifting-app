@@ -42,7 +42,15 @@
     "plan": "Reading your plan …",
     "elapsed_one": "{{count}} s passed",
     "elapsed_other": "{{count}} s passed",
-    "done": "Done"
+    "done": "Done",
+    "took_one": "All read in {{count}} s",
+    "took_other": "All read in {{count}} s",
+    "lifts": {
+      "bench": "Bench press",
+      "squat": "Squat",
+      "deadlift": "Deadlift",
+      "press": "Overhead press"
+    }
   },
   "found": {
     "title": "HERE'S WHAT\nWE FOUND",
@@ -79,6 +87,19 @@
     "spread": "Spread · {{count}}",
     "keep": "Looks good",
     "drop": "Leave them out"
+  },
+  "imported": {
+    "title": "YOUR TRAINING\nIS HERE",
+    "subtitle_one": "{{count}} workout taken over. Tap an exercise to see its history.",
+    "subtitle_other": "{{count}} workouts taken over. Tap an exercise to see its history.",
+    "exercises": "EXERCISES · {{n}}",
+    "range": "{{from}} to {{to}}",
+    "workouts_one": "{{count}} workout",
+    "workouts_other": "{{count}} workouts",
+    "new": "New",
+    "toPlan": "Continue to plan",
+    "next": "Next",
+    "done": "Done"
   },
   "plan": {
     "fromHistory": "From your history",

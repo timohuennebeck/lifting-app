@@ -13,7 +13,7 @@ import { Text } from '@/shared/ui/text';
 
 import { PickedFile } from '../components/file-art';
 import { chooseImportFile } from '../lib/read-file';
-import { asksSheets, CTA_STYLE, fileLabel, importSteps, TITLE_STYLE } from '../lib/steps';
+import { asksSheets, CTA_STYLE, fileLabel, flowSteps, TITLE_STYLE } from '../lib/steps';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 const KB = 1024;
@@ -28,13 +28,14 @@ function formatFileSize(bytes: number) {
 /** 13l: the picked file with "Ersetzen", before its sheets (a workbook) or reading it. */
 export function FileScreen() {
   const { t } = useTranslation('workoutImport');
-  const { step } = usePlanFlow();
+  const { inApp, step } = usePlanFlow();
   const file = useWorkoutImportStore((s) => s.file);
   const read = useWorkoutImportStore((s) => s.read);
   const setFile = useWorkoutImportStore((s) => s.setFile);
   if (!file || !read) return <Redirect href={step('/import')} />;
 
   const sheets = asksSheets(read);
+  const counter = flowSteps(read, inApp);
   const size = file.size ? formatFileSize(file.size) : null;
   // A workbook's sheets too: "214 KB · 3 Tabellenblätter".
   const caption =
@@ -43,8 +44,8 @@ export function FileScreen() {
   return (
     <StepScreen
       {...TITLE_STYLE}
-      step={1}
-      total={importSteps(read)}
+      step={counter.offset + 1}
+      total={counter.total}
       title={t('file.title')}
       footer={
         <Button

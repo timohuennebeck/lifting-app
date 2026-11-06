@@ -11,7 +11,7 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { FileCards, PlanCards } from '../components/file-art';
 import { FoundCard } from '../components/found-card';
 import { useImportSteps } from '../hooks/use-import-steps';
-import { CTA_STYLE, importSteps, TITLE_STYLE } from '../lib/steps';
+import { CTA_STYLE, flowSteps, importSteps, TITLE_STYLE } from '../lib/steps';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 const month = (date: Date) => formatDate(date, { month: 'short', year: 'numeric' });
@@ -19,7 +19,7 @@ const month = (date: Date) => formatDate(date, { month: 'short', year: 'numeric'
 /** 13p: the history and the plan the file holds (or the history makes), to import or not. */
 export function FoundScreen() {
   const { t } = useTranslation('workoutImport');
-  const { step } = usePlanFlow();
+  const { inApp, step } = usePlanFlow();
   const status = useWorkoutImportStore((s) => s.status);
   const read = useWorkoutImportStore((s) => s.read);
   const workouts = useWorkoutImportStore((s) => s.workouts);
@@ -49,7 +49,8 @@ export function FoundScreen() {
       ? t('found.fromHistory', { days: t('sheets.days', { count: days }) })
       : t('found.days', { count: days, names: routines?.map((r) => r.name).join(', ') ?? '' });
 
-  const steps = importSteps(read);
+  const counter = flowSteps(read, inApp);
+  const steps = counter.offset + importSteps(read);
   const historyOn = take.history && workouts.length > 0;
   const planOn = take.plan && hasPlan;
 
@@ -57,7 +58,7 @@ export function FoundScreen() {
     <StepScreen
       {...TITLE_STYLE}
       step={steps}
-      total={steps}
+      total={counter.total}
       title={t('found.title')}
       subtitle={t('found.subtitle')}
       footer={

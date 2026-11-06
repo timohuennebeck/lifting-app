@@ -14,7 +14,7 @@ import { TextButton } from '@/shared/ui/text-button';
 import { FileCards } from '../components/file-art';
 import { chooseImportFile, type ImportFile, type ReadFile } from '../lib/read-file';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
-import { CTA_STYLE, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
+import { CTA_STYLE, flowSteps, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
 
 const LOGOS = [
   require('@/assets/images/import/hevy.png'),
@@ -39,8 +39,10 @@ export function StartScreen() {
   return (
     <StepScreen
       {...TITLE_STYLE}
-      // The last question about the user in onboarding; in the app the flow starts here.
-      {...(!inApp && { step: ABOUT_STEPS, total: ABOUT_STEPS })}
+      // The last question about the user in onboarding; in the app the import's first step.
+      {...(inApp
+        ? { step: 1, total: flowSteps(null, true).total }
+        : { step: ABOUT_STEPS, total: ABOUT_STEPS })}
       title={t('start.title')}
       subtitle={t('start.subtitle')}
       footer={

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
-import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
+import Svg, { Defs, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
@@ -22,6 +22,14 @@ const FLOAT: CSSAnimationKeyframes = {
   '50%': { transform: [{ translateY: -8 }] },
   '100%': { transform: [{ translateY: 0 }] },
 };
+/** A satellite popping in, a little past its size and back. */
+const POP: CSSAnimationKeyframes = {
+  '0%': { opacity: 0, transform: [{ scale: 0.3 }] },
+  '60%': { opacity: 1, transform: [{ scale: 1.12 }] },
+  '100%': { opacity: 1, transform: [{ scale: 1 }] },
+};
+/** The seconds between satellites popping in, across the rings in turn. */
+const POP_STEP = 0.45;
 const TWINKLE: CSSAnimationKeyframes = {
   '0%': { opacity: 0, transform: [{ scale: 0.3 }, { rotate: '0deg' }] },
   '50%': { opacity: 1, transform: [{ scale: 1 }, { rotate: '90deg' }] },
@@ -36,9 +44,13 @@ const loop = (name: CSSAnimationKeyframes, seconds: number, linear?: boolean, de
   animationTimingFunction: linear ? ('linear' as const) : ('ease-in-out' as const),
 });
 
-/** Something on a ring: a chip, a small file or a dot; `float` is its bob in seconds. */
+/**
+ * Something on a ring: a chip, a small file or a dot; `float` is its bob in seconds, `order` its
+ * place in the popping in.
+ */
 interface Satellite {
   node: ReactNode;
+  order: number;
   float?: number;
 }
 
@@ -85,8 +97,18 @@ function Ring({
             }}
           >
             <Animated.View style={loop(reverse ? SPIN : SPIN_BACK, seconds, true)}>
-              <Animated.View style={item.float ? loop(FLOAT, item.float) : undefined}>
-                {item.node}
+              <Animated.View
+                style={{
+                  animationName: POP,
+                  animationDuration: '0.5s',
+                  animationDelay: `${0.3 + item.order * POP_STEP}s` as const,
+                  animationFillMode: 'backwards',
+                  animationTimingFunction: 'ease-out',
+                }}
+              >
+                <Animated.View style={item.float ? loop(FLOAT, item.float) : undefined}>
+                  {item.node}
+                </Animated.View>
               </Animated.View>
             </Animated.View>
           </View>
@@ -98,9 +120,19 @@ function Ring({
 
 function Chip({ label, accent }: { label: string; accent?: boolean }) {
   return (
+    // Solid fill and a fine edge, so they never read as see-through on the dark ground.
     <View
-      className={cn('h-7.5 justify-center rounded-full px-3', accent ? 'bg-accent' : 'bg-pill')}
-      style={accent ? undefined : { boxShadow: '0 10px 24px rgba(0,0,0,0.5)' }}
+      className="h-7.5 justify-center rounded-full px-3"
+      style={
+        accent
+          ? { backgroundColor: colors.accent }
+          : {
+              backgroundColor: PILL,
+              borderWidth: 1,
+              borderColor: colors.line,
+              boxShadow: '0 10px 24px rgba(0,0,0,0.5)',
+            }
+      }
     >
       <Text
         numberOfLines={1}
@@ -111,6 +143,9 @@ function Chip({ label, accent }: { label: string; accent?: boolean }) {
     </View>
   );
 }
+
+/** The chips' fill (--color-pill). */
+const PILL = '#1C1C1C';
 
 const Dot = ({ size, color }: { size: number; color: string }) => (
   <View className="rounded-full" style={{ width: size, height: size, backgroundColor: color }} />
@@ -124,10 +159,12 @@ export interface OrbitProps {
   /** What is being done, and how long it has taken. */
   label: string;
   caption: string;
+  /** Everything is read: a tick pops up in place of the sparkle. */
+  done?: boolean;
 }
 
 /** 13m31: chips and files circling the centre while the file is read, sparkles around them. */
-export function Orbit({ inner, outer, label, caption }: OrbitProps) {
+export function Orbit({ inner, outer, label, caption, done }: OrbitProps) {
   const { width, height } = useWindowDimensions();
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none" accessibilityElementsHidden>
@@ -135,10 +172,10 @@ export function Orbit({ inner, outer, label, caption }: OrbitProps) {
         radius={128}
         seconds={34}
         items={[
-          { node: <Chip label={inner[0]} />, float: 2.8 },
-          { node: <Chip label={inner[1]} accent />, float: 2.8 },
-          { node: <Chip label={inner[2]} />, float: 2.4 },
-          { node: <Chip label={inner[3]} />, float: 2.8 },
+          { node: <Chip label={inner[0]} />, order: 0, float: 2.8 },
+          { node: <Chip label={inner[1]} accent />, order: 3, float: 2.8 },
+          { node: <Chip label={inner[2]} />, order: 6, float: 2.4 },
+          { node: <Chip label={inner[3]} />, order: 9, float: 2.8 },
         ]}
       />
       <Ring
@@ -146,11 +183,11 @@ export function Orbit({ inner, outer, label, caption }: OrbitProps) {
         seconds={44}
         reverse
         items={[
-          { node: <Chip label={outer[0]} />, float: 2.4 },
-          { node: <Chip label={outer[1]} accent />, float: 2.8 },
-          { node: <Chip label={outer[2]} />, float: 2.4 },
-          { node: <Chip label={outer[3]} />, float: 2 },
-          { node: <Chip label={outer[4]} />, float: 2 },
+          { node: <Chip label={outer[0]} />, order: 1, float: 2.4 },
+          { node: <Chip label={outer[1]} accent />, order: 4, float: 2.8 },
+          { node: <Chip label={outer[2]} />, order: 7, float: 2.4 },
+          { node: <Chip label={outer[3]} />, order: 10, float: 2 },
+          { node: <Chip label={outer[4]} />, order: 12, float: 2 },
         ]}
       />
       {STARS.map((star, i) => (
@@ -176,17 +213,18 @@ export function Orbit({ inner, outer, label, caption }: OrbitProps) {
         seconds={30}
         reverse
         items={[
-          { node: <OrbitFile label="CSV" />, float: 1.8 },
-          { node: <Dot size={6} color={colors.accent} /> },
-          { node: <OrbitFile label="XLSX" />, float: 1.8 },
-          { node: <Dot size={8} color="#2E2E2B" /> },
-          { node: <OrbitFile label="CSV" />, float: 1.8 },
-          { node: <Dot size={4} color={colors.accent} /> },
+          { node: <OrbitFile label="CSV" />, order: 2, float: 1.8 },
+          { node: <Dot size={6} color={colors.accent} />, order: 5 },
+          { node: <OrbitFile label="XLSX" />, order: 8, float: 1.8 },
+          { node: <Dot size={8} color="#2E2E2B" />, order: 11 },
+          { node: <OrbitFile label="CSV" />, order: 13, float: 1.8 },
+          { node: <Dot size={4} color={colors.accent} />, order: 14 },
         ]}
       />
       <View
         className="absolute inset-x-0 h-37.5 items-center justify-center gap-1.5"
-        style={{ top: height / 2 - 75 }}
+        // Above the rings: chips pass behind what is being done.
+        style={{ top: height / 2 - 75, zIndex: 10 }}
       >
         <Svg
           width={150}
@@ -201,11 +239,33 @@ export function Orbit({ inner, outer, label, caption }: OrbitProps) {
           </Defs>
           <Rect width={150} height={150} fill="url(#orbit-centre)" />
         </Svg>
-        <Animated.View style={loop(FLOAT, 2.4)}>
-          <Text className="text-center font-inter-bold text-[52px] leading-[52px] text-accent">
-            ✢
-          </Text>
-        </Animated.View>
+        {done ? (
+          <Animated.View
+            className="size-14 items-center justify-center rounded-full bg-accent"
+            style={{
+              animationName: POP,
+              animationDuration: '0.5s',
+              animationTimingFunction: 'ease-out',
+            }}
+          >
+            <Svg width={24} height={18} viewBox="0 0 13 10">
+              <Path
+                d="M1.5 5l3.5 3.5L11.5 1.5"
+                stroke={colors.onAccent}
+                strokeWidth={2}
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </Svg>
+          </Animated.View>
+        ) : (
+          <Animated.View style={loop(FLOAT, 2.4)}>
+            <Text className="text-center font-inter-bold text-[52px] leading-[52px] text-accent">
+              ✢
+            </Text>
+          </Animated.View>
+        )}
         <Text numberOfLines={1} className="font-inter-semibold text-[15px] text-fg">
           {label}
         </Text>

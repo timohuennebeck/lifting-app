@@ -47,7 +47,7 @@ import {
 } from '../lib/review';
 import { currentRoutines, findRoutines, type ResolvedWorkout } from '../lib/routines';
 import { sheetSample } from '../lib/samples';
-import type { WorkoutToSave } from '../lib/save-history';
+import type { WorkoutRow, WorkoutToSave } from '../lib/save-history';
 
 /** What the reading screen shows as done. */
 export type ReadingStage = 'understand' | 'exercises' | 'plan' | 'done';
@@ -75,6 +75,8 @@ interface WorkoutImportState {
   take: { history: boolean; plan: boolean };
   /** Workouts without a date get one (18a), or are left out. */
   keepUndated: boolean;
+  /** What the import took over once finished: the workouts as saved, and the exercises it made. */
+  imported: { workouts: WorkoutRow[]; created: string[] } | null;
   /** The import of a new file starts; a workbook's sheets are read, a CSV file is one. */
   setFile: (file: ImportFile, read: ReadFile) => void;
   pickSheets: (sheets: string[]) => void;
@@ -83,6 +85,7 @@ interface WorkoutImportState {
   setTake: (take: { history: boolean; plan: boolean }) => void;
   decide: (name: string, decision: Decision) => void;
   setKeepUndated: (keep: boolean) => void;
+  setImported: (imported: { workouts: WorkoutRow[]; created: string[] }) => void;
   /** Stops run `run` if it is still reading (the user left the reading screen). */
   stop: (run: number) => void;
   reset: () => void;
@@ -90,7 +93,15 @@ interface WorkoutImportState {
 
 type Session = Omit<WorkoutImportState, 'run' | ActionKeys>;
 type ActionKeys =
-  'setFile' | 'pickSheets' | 'start' | 'setTake' | 'decide' | 'setKeepUndated' | 'stop' | 'reset';
+  | 'setFile'
+  | 'pickSheets'
+  | 'start'
+  | 'setTake'
+  | 'decide'
+  | 'setKeepUndated'
+  | 'setImported'
+  | 'stop'
+  | 'reset';
 
 const EMPTY: Session = {
   file: null,
@@ -106,6 +117,7 @@ const EMPTY: Session = {
   decisions: {},
   take: { history: true, plan: true },
   keepUndated: true,
+  imported: null,
 };
 
 /** The run in progress, stopped when another one starts or the user leaves. */
@@ -357,6 +369,7 @@ export const useWorkoutImportStore = create<WorkoutImportState>()((set, get) => 
   decide: (name, decision) =>
     set((s) => ({ decisions: { ...s.decisions, [nameKey(name)]: decision } })),
   setKeepUndated: (keepUndated) => set({ keepUndated }),
+  setImported: (imported) => set({ imported }),
   stop: (run) => {
     if (get().run !== run || get().status !== 'reading') return;
     running?.abort();

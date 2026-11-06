@@ -42,7 +42,15 @@
     "plan": "Lecture de ton programme…",
     "elapsed_one": "{{count}} s écoulée",
     "elapsed_other": "{{count}} s écoulées",
-    "done": "Terminé"
+    "done": "Terminé",
+    "took_one": "Tout lu en {{count}} s",
+    "took_other": "Tout lu en {{count}} s",
+    "lifts": {
+      "bench": "Développé couché",
+      "squat": "Squat",
+      "deadlift": "Soulevé de terre",
+      "press": "Développé militaire"
+    }
   },
   "found": {
     "title": "VOICI CE QU'ON\nA TROUVÉ",
@@ -79,6 +87,19 @@
     "spread": "Réparties · {{count}}",
     "keep": "Ça me va",
     "drop": "Les laisser de côté"
+  },
+  "imported": {
+    "title": "TON ENTRAÎNEMENT\nEST LÀ",
+    "subtitle_one": "{{count}} séance importée. Touche un exercice pour voir son historique.",
+    "subtitle_other": "{{count}} séances importées. Touche un exercice pour voir son historique.",
+    "exercises": "EXERCICES · {{n}}",
+    "range": "{{from}} à {{to}}",
+    "workouts_one": "{{count}} séance",
+    "workouts_other": "{{count}} séances",
+    "new": "Nouveau",
+    "toPlan": "Continuer vers le programme",
+    "next": "Continuer",
+    "done": "Terminé"
   },
   "plan": {
     "fromHistory": "D'après ton historique",

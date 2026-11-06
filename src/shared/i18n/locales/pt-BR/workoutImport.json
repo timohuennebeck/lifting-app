@@ -42,7 +42,15 @@
     "plan": "Lendo seu plano …",
     "elapsed_one": "{{count}} s decorrido",
     "elapsed_other": "{{count}} s decorridos",
-    "done": "Pronto"
+    "done": "Pronto",
+    "took_one": "Tudo lido em {{count}} s",
+    "took_other": "Tudo lido em {{count}} s",
+    "lifts": {
+      "bench": "Supino",
+      "squat": "Agachamento",
+      "deadlift": "Levantamento terra",
+      "press": "Desenvolvimento"
+    }
   },
   "found": {
     "title": "VEJA O QUE\nENCONTRAMOS",
@@ -79,6 +87,19 @@
     "spread": "Distribuídos · {{count}}",
     "keep": "Está bom assim",
     "drop": "Deixar de fora"
+  },
+  "imported": {
+    "title": "SEU TREINO\nCHEGOU",
+    "subtitle_one": "{{count}} treino importado. Toque em um exercício para ver o histórico.",
+    "subtitle_other": "{{count}} treinos importados. Toque em um exercício para ver o histórico.",
+    "exercises": "EXERCÍCIOS · {{n}}",
+    "range": "{{from}} a {{to}}",
+    "workouts_one": "{{count}} treino",
+    "workouts_other": "{{count}} treinos",
+    "new": "Novo",
+    "toPlan": "Continuar para o plano",
+    "next": "Continuar",
+    "done": "Pronto"
   },
   "plan": {
     "fromHistory": "Do seu histórico",

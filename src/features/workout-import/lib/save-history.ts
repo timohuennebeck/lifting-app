@@ -20,7 +20,7 @@ export interface WorkoutToSave {
 }
 
 /** A workout as public.import_workouts takes it (see its migration). */
-interface WorkoutRow {
+export interface WorkoutRow {
   id: string;
   name: string;
   started_at: string;

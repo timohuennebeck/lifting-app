@@ -4,8 +4,18 @@ import type { ReadFile } from './read-file';
 export const asksSheets = (read: ReadFile | null) =>
   (read?.summaries?.filter((s) => s.kind !== 'empty').length ?? 0) > 1;
 
-/** The import's steps up to 13p, for its counter: the file, maybe its sheets, what was found. */
+/** The import's steps up to 13p: the file, maybe its sheets, what was found. */
 export const importSteps = (read: ReadFile | null) => (asksSheets(read) ? 3 : 2);
+
+/**
+ * The import's counter: in the app the start screen is its first step (in onboarding it ends the
+ * questions about the user), then the steps up to 13p and "Importiert" last. `offset` is added
+ * to a step's number up to 13p.
+ */
+export function flowSteps(read: ReadFile | null, inApp: boolean) {
+  const offset = inApp ? 1 : 0;
+  return { offset, total: offset + importSteps(read) + 1 };
+}
 
 /** The file's type as its card shows it: "CSV", "XLSX". */
 export const fileLabel = (name: string) =>

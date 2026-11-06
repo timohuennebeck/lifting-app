@@ -42,7 +42,15 @@
     "plan": "Plan wird gelesen …",
     "elapsed_one": "{{count}} s vergangen",
     "elapsed_other": "{{count}} s vergangen",
-    "done": "Fertig"
+    "done": "Fertig",
+    "took_one": "Alles gelesen in {{count}} s",
+    "took_other": "Alles gelesen in {{count}} s",
+    "lifts": {
+      "bench": "Bankdrücken",
+      "squat": "Kniebeugen",
+      "deadlift": "Kreuzheben",
+      "press": "Schulterdrücken"
+    }
   },
   "found": {
     "title": "DAS HABEN WIR\nGEFUNDEN",
@@ -79,6 +87,19 @@
     "spread": "Verteilt · {{count}}",
     "keep": "Passt so",
     "drop": "Ohne Datum weglassen"
+  },
+  "imported": {
+    "title": "DEIN TRAINING\nIST DA",
+    "subtitle_one": "{{count}} Training übernommen. Tippe auf eine Übung, um ihren Verlauf zu sehen.",
+    "subtitle_other": "{{count}} Trainings übernommen. Tippe auf eine Übung, um ihren Verlauf zu sehen.",
+    "exercises": "ÜBUNGEN · {{n}}",
+    "range": "{{from}} bis {{to}}",
+    "workouts_one": "{{count}} Training",
+    "workouts_other": "{{count}} Trainings",
+    "new": "Neu",
+    "toPlan": "Weiter zum Plan",
+    "next": "Weiter",
+    "done": "Fertig"
   },
   "plan": {
     "fromHistory": "Aus deinem Verlauf",

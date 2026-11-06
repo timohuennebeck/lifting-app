@@ -42,7 +42,15 @@
     "plan": "플랜을 읽는 중 …",
     "elapsed_one": "{{count}}초 경과",
     "elapsed_other": "{{count}}초 경과",
-    "done": "완료"
+    "done": "완료",
+    "took_one": "{{count}}초 만에 모두 읽었어요",
+    "took_other": "{{count}}초 만에 모두 읽었어요",
+    "lifts": {
+      "bench": "벤치프레스",
+      "squat": "스쿼트",
+      "deadlift": "데드리프트",
+      "press": "오버헤드 프레스"
+    }
   },
   "found": {
     "title": "이런 내용을\n찾았어요",
@@ -79,6 +87,19 @@
     "spread": "나눠 배치 · {{count}}",
     "keep": "이대로 좋아요",
     "drop": "날짜 없는 운동 빼기"
+  },
+  "imported": {
+    "title": "운동 기록을\n가져왔어요",
+    "subtitle_one": "운동 {{count}}회를 가져왔어요. 운동을 탭하면 기록을 볼 수 있어요.",
+    "subtitle_other": "운동 {{count}}회를 가져왔어요. 운동을 탭하면 기록을 볼 수 있어요.",
+    "exercises": "운동 · {{n}}",
+    "range": "{{from}} ~ {{to}}",
+    "workouts_one": "{{count}}회",
+    "workouts_other": "{{count}}회",
+    "new": "새 운동",
+    "toPlan": "플랜으로 계속",
+    "next": "계속",
+    "done": "완료"
   },
   "plan": {
     "fromHistory": "운동 기록 기반 플랜",

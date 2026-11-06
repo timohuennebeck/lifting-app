@@ -25,6 +25,7 @@ type PlanStep =
   | '/import/found'
   | '/import/check'
   | '/import/dates'
+  | '/import/imported'
   | '/import/voice'
   | '/import/confirm'
   | '/import/picker'
