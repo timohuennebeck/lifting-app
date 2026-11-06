@@ -202,7 +202,7 @@ export interface NameSample {
 }
 
 /** Names per map request; the app sends more in several. */
-export const MAX_NAMES = 80;
+const MAX_NAMES = 80;
 
 /** The names of a map request, or null when they aren't what the app sends. */
 export function nameSamples(value: unknown): NameSample[] | null {
@@ -273,9 +273,7 @@ export function mappedNames(
     if (!line) return { name, exerciseId: null, certain: false, alternatives: [] };
     const catalogId = line.catalog_id && ids.has(line.catalog_id) ? line.catalog_id : null;
     const { fresh } =
-      !catalogId && line.new_exercise
-        ? newExercise(line.new_exercise, name)
-        : { fresh: undefined };
+      !catalogId && line.new_exercise ? newExercise(line.new_exercise, name) : { fresh: undefined };
     const exerciseId = catalogId ?? fresh?.id ?? null;
     return {
       name,

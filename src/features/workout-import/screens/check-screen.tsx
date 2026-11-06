@@ -121,10 +121,9 @@ export function CheckScreen() {
   );
   // An exercise found with "Andere Übung suchen" is picked, and listed with the others.
   const decided = item ? decisions[nameKey(item.name)] : undefined;
-  const searched =
-    item && decided?.kind === 'exercise' && !item.options.includes(decided.exerciseId)
-      ? decided.exerciseId
-      : null;
+  const decidedId = decided?.kind === 'exercise' ? decided.exerciseId : null;
+  const listed = !item || decidedId === null || item.options.includes(decidedId);
+  const searched = listed ? null : decidedId;
   // Back from the search: its exercise becomes the choice (set while rendering, not in an effect).
   const [seenSearch, setSeenSearch] = useState(searched);
   if (searched !== seenSearch) {

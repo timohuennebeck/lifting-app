@@ -52,10 +52,16 @@ export function MuscleSetsScreen() {
   const [range, setRange] = useState<Period>(() => useSetRangeStore.getState().range);
   const { detail, isLoading } = useMuscleDetail(muscle, range);
   // The whole history has nothing before it to compare with.
-  const change =
-    range === 'all' || detail.previous === null
-      ? null
-      : { period: range, sets: detail.total - detail.previous };
+  const comparable = range !== 'all' && detail.previous !== null;
+  const change = comparable ? { period: range, sets: detail.total - (detail.previous ?? 0) } : null;
+  const gained = change !== null && change.sets > 0;
+  let changeText = ' ';
+  if (!isLoading && change) {
+    changeText = t(`sets.change.${change.period}`, {
+      change: `${signOf(change.sets)}${Math.abs(change.sets)}`,
+    });
+  }
+  const empty = !isLoading && !detail.primary.length && !detail.secondary.length;
 
   return (
     <Screen header={<ScreenHeader title={t(`names.${muscle}`)} />}>
@@ -70,15 +76,8 @@ export function MuscleSetsScreen() {
         <Text className="mt-1 font-inter-semibold text-[44px] leading-[52px] tabular-nums">
           {isLoading ? ' ' : detail.total}
         </Text>
-        <Text
-          variant="caption"
-          className={cn(change && change.sets > 0 ? 'text-accent' : 'text-subtle')}
-        >
-          {isLoading || !change
-            ? ' '
-            : t(`sets.change.${change.period}`, {
-                change: `${signOf(change.sets)}${Math.abs(change.sets)}`,
-              })}
+        <Text variant="caption" className={cn(gained ? 'text-accent' : 'text-subtle')}>
+          {changeText}
         </Text>
         {/* A new range starts without a picked bar. */}
         <View className="pt-6">
@@ -86,7 +85,7 @@ export function MuscleSetsScreen() {
         </View>
         <RangeTabs value={range} onChange={setRange} className="mt-6" />
         <View className="gap-7 pt-8">
-          {!isLoading && !detail.primary.length && !detail.secondary.length ? (
+          {empty ? (
             <Text tone="subtle" className="text-sm">
               {t('sets.empty')}
             </Text>

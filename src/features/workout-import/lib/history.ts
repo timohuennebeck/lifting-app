@@ -78,6 +78,9 @@ function parseSeconds(raw: string) {
   return parseNumber(raw);
 }
 
+/** Characters of an exercise name kept: a cell can hold a note. */
+const MAX_NAME = 120;
+
 const positive = (value: number | null) => (value != null && value > 0 ? value : null);
 
 /**
@@ -120,7 +123,8 @@ export function readLog(table: ImportTable, reading: SheetReading) {
         return;
       }
     }
-    const exerciseName = get('exercise');
+    // Capped: a cell can hold a note, and read-history takes names of up to 200 characters.
+    const exerciseName = get('exercise').slice(0, MAX_NAME);
     if (!exerciseName) return;
     if (/warm|aufw[aä]rm|echauff|calenta|aquec/i.test(get('set_type'))) return;
 

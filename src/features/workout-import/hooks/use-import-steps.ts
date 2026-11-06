@@ -66,8 +66,11 @@ export function useImportSteps() {
   };
 
   function next(replace = false) {
+    const s = useWorkoutImportStore.getState();
+    // Only once workouts were saved: the choice builds on them.
+    const choose = choosesPlan(s) && !!s.imported?.workouts.length;
     if (withPlan()) go(step('/import/confirm'), replace);
-    else if (choosesPlan(useWorkoutImportStore.getState())) go(step('/import/plan'), replace);
+    else if (choose) go(step('/import/plan'), replace);
     else done();
   }
 

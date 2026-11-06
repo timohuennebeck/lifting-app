@@ -12,7 +12,7 @@ import type { SetValues } from '@/shared/lib/format';
 import type { WorkoutRow } from './save-history';
 
 /** How good a set is, as the app ranks top sets and records (setScoreSql, without body weight). */
-export function setScore({ weightKg, reps, seconds }: SetValues) {
+function setScore({ weightKg, reps, seconds }: SetValues) {
   if (seconds != null) return (weightKg ?? 1) * seconds;
   if (reps == null) return 0;
   if (weightKg == null) return reps;
@@ -67,7 +67,8 @@ export function importedExercises(workouts: WorkoutRow[], created: string[]): Im
 
 /**
  * One exercise's sessions of the import, newest first, as useExerciseHistory gives them: a set
- * that beats every earlier one of the exercise is a record.
+ * that beats every earlier one of the exercise, in the same workout too, is a record (as
+ * import_workouts marks them).
  */
 export function importedHistory(
   workouts: WorkoutRow[],
@@ -87,13 +88,13 @@ export function importedHistory(
       const values = valuesOf(s);
       const score = setScore(values);
       const set = { ...values, rir: s.rir, isPr: best > -Infinity && score > best + 0.01 };
+      best = Math.max(best, score);
       if (score > topScore) {
         top = set;
         topScore = score;
       }
       return set;
     });
-    best = Math.max(best, ...history.map(setScore));
     return {
       workoutId: w.id,
       name: w.name,

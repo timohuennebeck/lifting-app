@@ -85,7 +85,7 @@ export const ceilStep = (w: number, step: number) => round2(Math.ceil(w / step -
 /** Estimated one-rep max (Epley) of `reps` with `rir` left. */
 export const e1rm = (w: number, reps: number, rir: number) => w * (1 + (reps + rir) / 30);
 /** Reps doable at weight `w` leaving `rir`, for an estimated max `e`. */
-export const repsAt = (e: number, w: number, rir: number) => 30 * (e / w - 1) - rir;
+const repsAt = (e: number, w: number, rir: number) => 30 * (e / w - 1) - rir;
 
 const sameRange = (a: Target, b: Target) => a.min === b.min && a.max === b.max;
 const minWeight = (ex: RuleExercise, w: number) => Math.max(w, ex.floor, ex.step);

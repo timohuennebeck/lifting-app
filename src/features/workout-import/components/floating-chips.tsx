@@ -7,7 +7,7 @@ import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
-import { OrbitFile } from './file-art';
+import { FloatingFile } from './file-art';
 
 const FLOAT: CSSAnimationKeyframes = {
   '0%': { transform: [{ translateY: 0 }] },
@@ -163,7 +163,7 @@ function SpinnerGlyph() {
   return <SparkGlyph kind={SPARKS[tick % SPARKS.length]} />;
 }
 
-export interface OrbitProps {
+export interface FloatingChipsProps {
   /** The chips: an exercise, a weight, sets × reps, an exercise, reps. */
   chips: readonly [string, string, string, string, string];
   /** What is being done, and how long it has taken. */
@@ -177,7 +177,7 @@ export interface OrbitProps {
  * 13m31: chips and files floating in place above and below the centre while the file is read,
  * sparkles around them. Their places stay inside the screen and apart from each other (L5).
  */
-export function Orbit({ chips, label, caption, done }: OrbitProps) {
+export function FloatingChips({ chips, label, caption, done }: FloatingChipsProps) {
   const { width, height } = useWindowDimensions();
   const [lift, weight, sets, otherLift, reps] = chips;
   return (
@@ -192,12 +192,12 @@ export function Orbit({ chips, label, caption, done }: OrbitProps) {
           style={{ position: 'absolute', top: 0, left: width / 2 - 75 }}
         >
           <Defs>
-            <RadialGradient id="orbit-centre" cx="50%" cy="50%" r="50%">
+            <RadialGradient id="floating-centre" cx="50%" cy="50%" r="50%">
               <Stop offset="0.55" stopColor={colors.bg} stopOpacity={1} />
               <Stop offset="0.72" stopColor={colors.bg} stopOpacity={0} />
             </RadialGradient>
           </Defs>
-          <Rect width={150} height={150} fill="url(#orbit-centre)" />
+          <Rect width={150} height={150} fill="url(#floating-centre)" />
         </Svg>
         {done ? (
           <SparkGlyph kind="cross" />
@@ -241,10 +241,10 @@ export function Orbit({ chips, label, caption, done }: OrbitProps) {
         <Chip label={weight} accent />
       </Floating>
       <Floating x={0.18} y={0.37} order={2} float={1.8} phase={0.6}>
-        <OrbitFile label="CSV" />
+        <FloatingFile label="CSV" />
       </Floating>
       <Floating x={0.82} y={0.39} order={3} float={2} phase={0.2}>
-        <OrbitFile label="XLSX" />
+        <FloatingFile label="XLSX" />
       </Floating>
       {/* Below it */}
       <Floating x={0.24} y={0.66} order={4} float={2.2} phase={0.9}>
@@ -257,7 +257,7 @@ export function Orbit({ chips, label, caption, done }: OrbitProps) {
         <Chip label="PR" accent />
       </Floating>
       <Floating x={0.82} y={0.77} order={7} float={1.9} phase={0.8}>
-        <OrbitFile label="CSV" />
+        <FloatingFile label="CSV" />
       </Floating>
       <Floating x={0.2} y={0.78} order={8} float={2.5} phase={0.1}>
         <Chip label={reps} />

@@ -1,7 +1,7 @@
 import type { ReadFile } from './read-file';
 
 /** A workbook with more than one sheet to read asks which ones (13s). */
-export const asksSheets = (read: ReadFile | null) =>
+const asksSheets = (read: ReadFile | null) =>
   (read?.summaries?.filter((s) => s.kind !== 'empty').length ?? 0) > 1;
 
 /** Where a picked file goes: its sheets (a workbook with several), else straight to reading. */

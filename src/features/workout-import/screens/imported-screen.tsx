@@ -92,11 +92,9 @@ export function ImportedScreen() {
   const starts = imported.workouts.map((w) => w.started_at).sort();
   const { total } = flowSteps(read, inApp, withDates, withChoice);
   const plan = withPlan();
-  const cta = plan
-    ? t('imported.toPlan')
-    : withChoice || !inApp
-      ? t('imported.next')
-      : t('imported.done');
+  // Onward to how the plan is made, or on in onboarding; the app's import ends here.
+  const goesOn = withChoice || !inApp;
+  const cta = plan ? t('imported.toPlan') : goesOn ? t('imported.next') : t('imported.done');
 
   return (
     <StepScreen

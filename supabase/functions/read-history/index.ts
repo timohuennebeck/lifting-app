@@ -166,5 +166,12 @@ Deno.serve(async (req) => {
     console.error(`Reading the history (${step.step}) failed`, answer);
     return reply(502, { error: 'failed' });
   }
-  return reply(200, result(step, JSON.parse(answer.text), catalog));
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(answer.text);
+  } catch (error) {
+    console.error(`Reading the history (${step.step}): no JSON in the answer`, error);
+    return reply(502, { error: 'failed' });
+  }
+  return reply(200, result(step, parsed, catalog));
 });

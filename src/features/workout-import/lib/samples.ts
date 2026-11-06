@@ -9,6 +9,8 @@ import type { ImportTable } from './history';
 /** Characters of one value in the statistics and sample. */
 const CELL = 60;
 /** Columns described; read-history takes no more. */
+/** Sheets read at once; read-history takes up to 20. */
+export const MAX_SHEETS = 20;
 const MAX_COLUMNS = 80;
 
 const cut = (value: string, max = CELL) => (value.length > max ? `${value.slice(0, max)}…` : value);

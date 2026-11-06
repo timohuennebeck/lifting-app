@@ -13,7 +13,7 @@ const PAGE_SIZE = 500;
 /** The preparing state stays this long, so a small export doesn't only flash by. */
 const MIN_PREPARING_MS = 900;
 
-export const exportFileName = (date: Date) => `loqqa-export-${toIsoDate(date)}.csv`;
+const exportFileName = (date: Date) => `loqqa-export-${toIsoDate(date)}.csv`;
 
 interface WriteOptions {
   units: UnitSystem;

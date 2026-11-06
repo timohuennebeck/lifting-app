@@ -46,7 +46,7 @@ import {
   reviewItems,
 } from '../lib/review';
 import { currentRoutines, findRoutines, type ResolvedWorkout } from '../lib/routines';
-import { sheetSample } from '../lib/samples';
+import { MAX_SHEETS, sheetSample } from '../lib/samples';
 import type { WorkoutRow, WorkoutToSave } from '../lib/save-history';
 
 interface WorkoutImportState {
@@ -321,9 +321,9 @@ export const useWorkoutImportStore = create<WorkoutImportState>()((set, get) => 
     set({ ...EMPTY, file, read, sheets, run, status: 'reading', derivePlan });
     // The plan editor starts with this import's plan, or none.
     useImportStore.getState().reset();
-    const tables = (read?.tables ?? []).filter(
-      (t) => (!sheets || sheets.includes(t.name)) && t.rows.length >= 2,
-    );
+    const tables = (read?.tables ?? [])
+      .filter((t) => (!sheets || sheets.includes(t.name)) && t.rows.length >= 2)
+      .slice(0, MAX_SHEETS);
     const startedAt = Date.now();
     const live = (patch: Partial<WorkoutImportState>) =>
       !controller.signal.aborted && get().run === run && set(patch);

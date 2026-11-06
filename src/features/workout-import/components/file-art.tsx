@@ -89,8 +89,8 @@ export function FileCards({ labels = ['TSV', 'CSV', 'XLSX'], scale = 1 }: FileCa
   );
 }
 
-/** A small file card that circles the reading screen (13m31), 42 × 54. */
-export function OrbitFile({ label }: { label: string }) {
+/** A small file card that floats on the reading screen (13m31), 42 × 54. */
+export function FloatingFile({ label }: { label: string }) {
   return (
     <View
       className="h-13.5 w-10.5 gap-1 rounded-[9px] bg-raised p-1.75"

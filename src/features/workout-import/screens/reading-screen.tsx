@@ -15,7 +15,7 @@ import { Button } from '@/shared/ui/button';
 import { DeleteSheet } from '@/shared/ui/delete-sheet';
 import { Text } from '@/shared/ui/text';
 
-import { Orbit } from '../components/orbit';
+import { FloatingChips } from '../components/floating-chips';
 import { showImportFailure, showNothingFound } from '../lib/import-failure';
 import type { ImportFile, ReadFile } from '../lib/read-file';
 import { useImportSteps } from '../hooks/use-import-steps';
@@ -23,8 +23,8 @@ import { afterPick, CTA_STYLE } from '../lib/steps';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 /**
- * 13m31: reads the file (see the store's runImport) behind chips popping in and circling, then
- * shows "Fertig" and goes on by itself (useImportSteps: checks, dates, "Importiert"). No swiping
+ * 13m31: reads the file (see the store's runImport) behind chips popping in and floating, then
+ * shows "Fertig", which goes on (useImportSteps: checks, dates, "Importiert"). No swiping
  * back while it reads; Android's back asks before it stops. A file with nothing to import goes
  * back to the start with 13ie; another failure goes back with the error sheet.
  */
@@ -105,7 +105,7 @@ export function ReadingScreen() {
 
   return (
     <View className="flex-1 bg-bg">
-      <Orbit
+      <FloatingChips
         // Short names of well-known lifts: catalog names can be too long for a chip.
         chips={[
           t('workoutImport:reading.lifts.bench'),

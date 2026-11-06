@@ -4,18 +4,25 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
+import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
 import { StepScreen } from '@/shared/ui/step-screen';
 
 import { SheetRow } from '../components/sheet-row';
+import { MAX_SHEETS } from '../lib/samples';
 import type { SheetSummary } from '../lib/sheet-summary';
 import { baseName, CTA_STYLE, flowSteps, TITLE_STYLE } from '../lib/steps';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
 
-/** Sheets that seem to hold workouts or a plan; all that aren't empty when none do. */
+/**
+ * Sheets that seem to hold workouts or a plan; all that aren't empty when none do. At most as
+ * many as are read at once.
+ */
 function recommended(sheets: SheetSummary[]) {
   const likely = sheets.filter((s) => s.kind === 'log' || s.kind === 'plan');
-  return (likely.length ? likely : sheets.filter((s) => s.kind !== 'empty')).map((s) => s.name);
+  return (likely.length ? likely : sheets.filter((s) => s.kind !== 'empty'))
+    .slice(0, MAX_SHEETS)
+    .map((s) => s.name);
 }
 
 /** 13s: a workbook's sheets, to read only those with the training in them. */
@@ -39,6 +46,11 @@ export function SheetsScreen() {
   );
 
   function toggle(name: string) {
+    // No more than are read at once: the tap only shakes.
+    if (!picked.has(name) && picked.size >= MAX_SHEETS) {
+      haptics.error();
+      return;
+    }
     setPicked((current) => {
       const next = new Set(current);
       if (!next.delete(name)) next.add(name);
