@@ -1,7 +1,6 @@
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { startProgressCheck } from '@/features/progress-check/stores/progress-check-store';
 import { Button } from '@/shared/ui/button';
@@ -14,11 +13,6 @@ import { START_STEPS } from '../lib/flow';
 import { useOnboardingStore } from '../stores/onboarding-store';
 
 const TIPS = ['light', 'clothes', 'framing'] as const;
-/**
- * The person in the upper 60 % of a wide wall-and-floor backdrop: the card crops only the
- * sides, so the whole body stays in view and the tips sit on the floor below the feet.
- */
-const PHOTO = require('@/assets/images/progress-check.jpg');
 
 /** Ends onboarding; the root guard then swaps to the app. */
 function finish(openProgressCheck: boolean) {
@@ -29,8 +23,8 @@ function finish(openProgressCheck: boolean) {
 }
 
 /**
- * 08·0A: the progress check offer as the onboarding's last step, with the tips as pills over a
- * full-width photo card. The card shrinks on short screens, so the buttons always stay in view.
+ * 08·0A: the progress check offer as the onboarding's last step, with the tips as pills below
+ * the title.
  */
 export function ProgressCheckPromptScreen() {
   const { t } = useTranslation(['onboarding', 'progressCheck']);
@@ -53,13 +47,10 @@ export function ProgressCheckPromptScreen() {
         </View>
       }
     >
-      <View className="mx-4 mt-5 mb-3 flex-1 overflow-hidden rounded-[22px] bg-surface">
-        <Image source={PHOTO} contentFit="cover" style={StyleSheet.absoluteFill} />
-        <View className="absolute inset-x-3.5 bottom-3.5 flex-row flex-wrap gap-2">
-          {TIPS.map((tip) => (
-            <CheckChip key={tip} label={t(`progressCheck.${tip}`)} />
-          ))}
-        </View>
+      <View className="flex-row flex-wrap gap-2 px-4 pt-5">
+        {TIPS.map((tip) => (
+          <CheckChip key={tip} label={t(`progressCheck.${tip}`)} />
+        ))}
       </View>
       <CameraAccessSheet {...camera.sheet} body={t('progressCheck:camera.access')} />
     </StepScreen>

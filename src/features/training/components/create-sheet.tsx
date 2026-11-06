@@ -92,7 +92,7 @@ export function CreateSheet({ visible, onClose }: CreateSheetProps) {
           title: t('create.ownPlan'),
           description: t('create.ownPlanHint'),
           cta: t('create.createOwnPlan'),
-          renderIcon: (active) => <PencilGlyph color={glyphColor(active)} />,
+          renderIcon: (active) => <PencilGlyph color={glyphColor(active)} filled={active} />,
         },
       ]}
     />

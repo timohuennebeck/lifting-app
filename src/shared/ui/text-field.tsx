@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 import { Pressable, TextInput, type TextInputProps, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -20,6 +20,8 @@ export interface TextFieldProps extends TextInputProps {
   shape?: 'rounded' | 'pill';
   /** 48pt instead of 56pt, e.g. the search bar, as tall as the button beside it. */
   compact?: boolean;
+  /** At the field's end, e.g. a password's show/hide button. */
+  trailing?: ReactNode;
   className?: string;
 }
 
@@ -29,6 +31,7 @@ export function TextField({
   icon,
   shape = 'rounded',
   compact,
+  trailing,
   className,
   value,
   onChangeText,
@@ -112,6 +115,7 @@ export function TextField({
             <Icon name="close" size={12} />
           </PressableScale>
         ) : null}
+        {trailing}
       </Pressable>
       {maxLength ? <CharCount length={value?.length ?? 0} max={maxLength} /> : null}
     </View>

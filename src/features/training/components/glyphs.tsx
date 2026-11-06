@@ -1,6 +1,8 @@
 import { Text as RNText, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
+import { colors } from '@/shared/lib/theme';
+
 interface GlyphProps {
   color: string;
 }
@@ -35,17 +37,25 @@ export function PlanGlyph({ color }: GlyphProps) {
   );
 }
 
-/** An outline pencil (pencil-simple): a plan built by hand. */
-export function PencilGlyph({ color }: GlyphProps) {
+/**
+ * A pencil (pencil-simple): a plan built by hand. An outline; filled when its option is selected,
+ * the line by the tip then cut out in the accent behind it.
+ */
+export function PencilGlyph({ color, filled }: GlyphProps & { filled?: boolean }) {
   return (
     <Svg width={17} height={17} viewBox="0 0 256 256">
       <Path
-        d="M92.7 216H48a8 8 0 0 1-8-8v-44.7a8 8 0 0 1 2.3-5.6L165.7 34.3a8 8 0 0 1 11.3 0L221.7 79a8 8 0 0 1 0 11.3L98.3 213.7a8 8 0 0 1-5.6 2.3zM136 64l56 56"
+        d="M92.7 216H48a8 8 0 0 1-8-8v-44.7a8 8 0 0 1 2.3-5.6L165.7 34.3a8 8 0 0 1 11.3 0L221.7 79a8 8 0 0 1 0 11.3L98.3 213.7a8 8 0 0 1-5.6 2.3z"
+        fill={filled ? color : 'none'}
         stroke={color}
         strokeWidth={24}
-        strokeLinecap="round"
         strokeLinejoin="round"
-        fill="none"
+      />
+      <Path
+        d="M136 64l56 56"
+        stroke={filled ? colors.accent : color}
+        strokeWidth={filled ? 16 : 24}
+        strokeLinecap="round"
       />
     </Svg>
   );

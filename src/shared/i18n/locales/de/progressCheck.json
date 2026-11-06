@@ -48,7 +48,6 @@
       "side": "Dreh dich zur Seite",
       "back": "Dreh dich mit dem Rücken zur Kamera"
     },
-    "consent": "Mit „{{done}}“ willigst du ein, dass deine Fotos und Körperdaten zur Auswertung an OpenAI (USA) übermittelt werden.",
     "unavailable": {
       "title": "Kamera startet nicht",
       "message": "Schließe den Körpercheck und öffne ihn erneut. Wenn es weiter nicht klappt, starte die App neu."

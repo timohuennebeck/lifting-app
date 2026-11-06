@@ -10,7 +10,7 @@ history. The original design handoff is in git history (`git show 48b667e:design
 ## Stack
 
 - **Expo SDK 57** with Expo Router (typed routes), protected routes, native tabs and the React Compiler
-- **Supabase** for auth (Sign in with Apple and Google; no email sign-in), Postgres, storage and the Edge Functions (Deno; the plan, progress-check and coach functions call OpenAI)
+- **Supabase** for auth (Sign in with Apple and Google, or email and password), Postgres, storage and the Edge Functions (Deno; the plan, progress-check and coach functions call OpenAI)
 - **PowerSync** for local-first SQLite sync, read through **TanStack Query** (`@powersync/tanstack-react-query`)
 - **Drizzle ORM** (`@powersync/drizzle-driver`) for typed queries; `src/shared/data/powersync/schema.ts` is the client schema
 - **Uniwind** (Tailwind v4) with `tailwind-merge` via `cn()`

@@ -48,7 +48,6 @@
       "side": "Turn to the side",
       "back": "Turn your back to the camera"
     },
-    "consent": "By tapping “{{done}}” you consent to your photos and body data being sent to OpenAI (USA) for the assessment.",
     "unavailable": {
       "title": "Camera didn't start",
       "message": "Close the body check and open it again. If that doesn't help, restart the app."

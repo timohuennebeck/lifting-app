@@ -101,7 +101,7 @@ export type VoiceContext = 'routine' | 'plan_import' | 'workout';
 
 export type AnalyticsEvent = keyof AnalyticsEvents;
 
-export type AuthMethod = 'apple' | 'google';
+export type AuthMethod = 'apple' | 'google' | 'email';
 
 /** Where the paywall shows: in onboarding, opened in the app, or in front of a locked app. */
 export type PaywallPlacement = 'onboarding' | 'in_app' | 'locked';

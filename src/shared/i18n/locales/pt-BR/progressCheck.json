@@ -48,7 +48,6 @@
       "side": "Vire de lado",
       "back": "Fique de costas para a câmera"
     },
-    "consent": "Ao tocar em “{{done}}”, você consente que suas fotos e dados corporais sejam enviados à OpenAI (EUA) para a avaliação.",
     "unavailable": {
       "title": "A câmera não iniciou",
       "message": "Feche o check corporal e abra de novo. Se não resolver, reinicie o app."

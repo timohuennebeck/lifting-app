@@ -77,6 +77,21 @@ const ICONS = {
     render: stroke('M4.5 12.5v-10M2 5l2.5-2.5L7 5M9.5 1.5v10M7 9l2.5 2.5L12 9', 1.6),
   },
   refresh: { viewBox: '0 0 14 14', render: stroke('M12 7a5 5 0 1 1-1.5-3.6M12 1.5v3h-3', 1.6) },
+  // A password shown or hidden.
+  eye: {
+    viewBox: '0 0 20 20',
+    render: stroke(
+      'M1.5 10S4.5 4 10 4s8.5 6 8.5 6-3 6-8.5 6-8.5-6-8.5-6zM10 7.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z',
+      1.6,
+    ),
+  },
+  'eye-off': {
+    viewBox: '0 0 20 20',
+    render: stroke(
+      'M1.5 10S4.5 4 10 4s8.5 6 8.5 6-3 6-8.5 6-8.5-6-8.5-6zM10 7.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 3l14 14',
+      1.6,
+    ),
+  },
   // Two arrows round a circle: replace with another one ("Ersetzen").
   sync: {
     viewBox: '0 0 16 16',

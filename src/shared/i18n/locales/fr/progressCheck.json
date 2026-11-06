@@ -48,7 +48,6 @@
       "side": "Mets-toi de profil",
       "back": "Mets-toi de dos"
     },
-    "consent": "En touchant « {{done}} », tu consens à l'envoi de tes photos et de tes données corporelles à OpenAI (États-Unis) pour l'évaluation.",
     "unavailable": {
       "title": "L'appareil photo n'a pas démarré",
       "message": "Ferme le bilan corporel et rouvre-le. Si ça ne règle rien, redémarre l'app."

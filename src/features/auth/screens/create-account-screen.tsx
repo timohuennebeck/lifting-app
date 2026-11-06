@@ -17,30 +17,44 @@ import { type AuthMethod, identify, track } from '@/shared/lib/posthog';
 import { haptics } from '@/shared/lib/haptics';
 import { useSessionStore } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
-import { CheckItem } from '@/shared/ui/check-item';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 
+import { EmailDivider, EmailFields } from '../components/email-fields';
 import { SocialSignIn } from '../components/social-sign-in';
+import {
+  EmailAuthError,
+  type EmailAuthReason,
+  isEmail,
+  MIN_PASSWORD,
+  signUpWithEmail,
+} from '../lib/email-auth';
 import { signInWith, type SocialProvider } from '../lib/social-sign-in';
 
-/** What the account backs up, listed above the sign-in buttons. */
-const BACKUP = ['plan', 'history', 'body'] as const;
+/** What the screen says below the fields: a failure, or that the email needs confirming. */
+type Notice = EmailAuthReason | 'checkInbox';
 
+/**
+ * The account at the end of onboarding: Google or Apple, or email and password. Creating it
+ * accepts the terms and the privacy policy linked under the button.
+ */
 export function CreateAccountScreen() {
   const { t } = useTranslation('auth');
   const { t: tc } = useTranslation();
   const session = useSessionStore((s) => s.session);
-  const [busy, setBusy] = useState<SocialProvider | 'continue' | null>(null);
-  const [failed, setFailed] = useState(false);
+  const [busy, setBusy] = useState<SocialProvider | 'email' | 'continue' | null>(null);
+  const [notice, setNotice] = useState<Notice | null>(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   // Already signed in (e.g. came back from the next step): just save and continue.
   const signedIn = !!session;
+  const ready = isEmail(email) && password.length >= MIN_PASSWORD;
 
-  const fail = (method: AuthMethod) => {
+  const fail = (method: AuthMethod, reason: EmailAuthReason = 'generic') => {
     haptics.error();
-    setFailed(true);
-    track('account:sign_up_fail', { method, error_code: 'generic' });
+    setNotice(reason);
+    track('account:sign_up_fail', { method, error_code: reason });
   };
 
   /** Saves the onboarding answers to the new account with the accepted documents, then goes on. */
@@ -68,9 +82,9 @@ export function CreateAccountScreen() {
   const social = async (provider: SocialProvider) => {
     if (busy) return;
     setBusy(provider);
-    setFailed(false);
+    setNotice(null);
     try {
-      // Creating the account accepts the documents linked above the buttons: the versions in
+      // Creating the account accepts the documents linked under the button: the versions in
       // effect now, loaded first because the provider makes the account at once, and no
       // account may exist without a record of them.
       const documents = await fetchCurrentDocuments(i18n.language);
@@ -82,12 +96,29 @@ export function CreateAccountScreen() {
     setBusy(null);
   };
 
+  /** A new account with email and password; when the email needs confirming first, says so. */
+  const signUp = async () => {
+    if (busy || !ready) return;
+    setBusy('email');
+    setNotice(null);
+    try {
+      const documents = await fetchCurrentDocuments(i18n.language);
+      const user = await signUpWithEmail(email, password);
+      if (user) await finish(user.id, documents, 'email');
+      else setNotice('checkInbox');
+    } catch (error) {
+      fail('email', error instanceof EmailAuthError ? error.reason : 'generic');
+    }
+    setBusy(null);
+  };
+
   /** Signed in already: saves the answers to that account and goes on. */
   const continueSignedIn = async () => {
     if (!session || busy) return;
-    const method: AuthMethod = session.user.app_metadata.provider === 'apple' ? 'apple' : 'google';
+    const provider = session.user.app_metadata.provider;
+    const method: AuthMethod = provider === 'apple' || provider === 'google' ? provider : 'email';
     setBusy('continue');
-    setFailed(false);
+    setNotice(null);
     try {
       const documents = await fetchCurrentDocuments(i18n.language);
       await finish(session.user.id, documents, method);
@@ -103,10 +134,33 @@ export function CreateAccountScreen() {
       total={START_STEPS}
       title={t('createAccount.title')}
       subtitle={t('createAccount.subtitle')}
-      titleClassName="pt-5.5"
       scroll
       footer={
         <View className="gap-3">
+          {notice ? (
+            <Text
+              variant="caption"
+              tone={notice === 'checkInbox' ? 'muted' : 'danger'}
+              className="px-1 text-center"
+              accessibilityLiveRegion="assertive"
+            >
+              {notice === 'checkInbox' ? t('createAccount.checkInbox') : t(`errors.${notice}`)}
+            </Text>
+          ) : null}
+          {signedIn ? (
+            <Button
+              label={tc('actions.continue')}
+              loading={busy === 'continue'}
+              onPress={continueSignedIn}
+            />
+          ) : (
+            <Button
+              label={t('createAccount.cta')}
+              loading={busy === 'email'}
+              disabled={!ready || !!busy}
+              onPress={signUp}
+            />
+          )}
           <Text
             variant="caption"
             tone="subtle"
@@ -121,40 +175,28 @@ export function CreateAccountScreen() {
               }}
             />
           </Text>
-          {failed ? (
-            <Text
-              variant="caption"
-              tone="danger"
-              className="px-1 text-center"
-              accessibilityLiveRegion="assertive"
-            >
-              {t('errors.generic')}
-            </Text>
-          ) : null}
-          {signedIn ? (
-            <Button
-              label={tc('actions.continue')}
-              loading={busy === 'continue'}
-              onPress={continueSignedIn}
-            />
-          ) : (
-            <SocialSignIn
-              action="continue"
-              onSignIn={social}
-              busy={busy === 'continue' ? null : busy}
-              disabled={!!busy}
-            />
-          )}
         </View>
       }
     >
-      <View className="gap-4 px-5 pt-8">
-        {BACKUP.map((item) => (
-          <CheckItem key={item} size="sm" textClassName="font-inter-medium text-fg-mid">
-            {t(`createAccount.backup.${item}`)}
-          </CheckItem>
-        ))}
-      </View>
+      {signedIn ? null : (
+        <View className="gap-5 px-4 pt-6">
+          <SocialSignIn
+            onSignIn={social}
+            busy={busy === 'google' || busy === 'apple' ? busy : null}
+            disabled={!!busy}
+          />
+          <EmailDivider />
+          <EmailFields
+            isNew
+            email={email}
+            password={password}
+            onChangeEmail={setEmail}
+            onChangePassword={setPassword}
+            onSubmit={signUp}
+            editable={!busy}
+          />
+        </View>
+      )}
     </StepScreen>
   );
 }
