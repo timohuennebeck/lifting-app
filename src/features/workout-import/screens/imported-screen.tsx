@@ -19,7 +19,7 @@ import { TextButton } from '@/shared/ui/text-button';
 import { useImportSteps } from '../hooks/use-import-steps';
 import { type ImportedExercise, importedExercises } from '../lib/imported';
 import { CTA_STYLE, flowSteps, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
-import { useWorkoutImportStore } from '../stores/workout-import-store';
+import { undatedCount, useWorkoutImportStore } from '../stores/workout-import-store';
 
 const month = (iso: string) => formatDate(new Date(iso), { month: 'short', year: 'numeric' });
 
@@ -80,13 +80,15 @@ export function ImportedScreen() {
   const draftUnits = useDraft().unitPreference;
   const imported = useWorkoutImportStore((s) => s.imported);
   const read = useWorkoutImportStore((s) => s.read);
+  // Workouts without a date were asked about (18a): one step more.
+  const withDates = useWorkoutImportStore((s) => undatedCount(s) > 0);
   const { next, withPlan } = useImportSteps();
   if (!imported) return <Redirect href={step('/import')} />;
 
   const units = inApp ? profileUnits : draftUnits;
   const exercises = importedExercises(imported.workouts, imported.created);
   const starts = imported.workouts.map((w) => w.started_at).sort();
-  const { total } = flowSteps(read, inApp);
+  const { total } = flowSteps(read, inApp, withDates);
   const plan = withPlan();
   const cta = plan ? t('imported.toPlan') : inApp ? t('imported.done') : t('imported.next');
 

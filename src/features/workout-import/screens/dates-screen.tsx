@@ -11,7 +11,7 @@ import { UndatedChart } from '../components/undated-chart';
 import { useImportSteps } from '../hooks/use-import-steps';
 import { monthBars } from '../lib/month-bars';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
-import { CTA_STYLE, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
+import { CTA_STYLE, flowSteps, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
 
 /**
  * 18a: workouts of the file without a date get one between their neighbours (spreadUndated);
@@ -19,12 +19,14 @@ import { CTA_STYLE, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
  */
 export function DatesScreen() {
   const { t } = useTranslation('workoutImport');
-  const { step } = usePlanFlow();
+  const { inApp, step } = usePlanFlow();
+  const read = useWorkoutImportStore((s) => s.read);
   const workouts = useWorkoutImportStore((s) => s.workouts);
   const setKeepUndated = useWorkoutImportStore((s) => s.setKeepUndated);
   const { finish, saving } = useImportSteps();
   const undated = workouts.filter((w) => !w.start).length;
   if (!undated) return <Redirect href={step('/import')} />;
+  const { total } = flowSteps(read, inApp, true);
 
   function go(keep: boolean) {
     setKeepUndated(keep);
@@ -34,6 +36,8 @@ export function DatesScreen() {
   return (
     <StepScreen
       {...TITLE_STYLE}
+      step={total - 1}
+      total={total}
       title={t('dates.title')}
       subtitle={t('dates.body', { count: undated, total: workouts.length })}
       footer={

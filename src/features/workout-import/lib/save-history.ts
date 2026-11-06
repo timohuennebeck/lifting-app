@@ -110,7 +110,7 @@ export function toRows(workouts: WorkoutToSave[]): WorkoutRow[] {
 }
 
 /** Workouts per call; public.import_workouts takes up to 200. */
-const BATCH = 100;
+const BATCH = 50;
 
 /**
  * Saves the workouts to the user's account: their own exercises first (on the device, uploaded by

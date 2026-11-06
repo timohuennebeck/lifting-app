@@ -157,7 +157,7 @@ export function CheckScreen() {
           </Text>
           <Text
             accessibilityRole="header"
-            className="font-inter-semibold text-[30px] leading-[31.5px] text-fg uppercase"
+            className="font-inter-semibold text-[30px] leading-9 text-fg uppercase"
           >
             {item.name}
           </Text>

@@ -9,12 +9,12 @@ export const importSteps = (read: ReadFile | null) => (asksSheets(read) ? 2 : 1)
 
 /**
  * The import's counter: in the app the start screen is its first step (in onboarding it ends the
- * questions about the user), then the file, maybe its sheets, and "Importiert" last. `offset` is
- * added to the file's and the sheets' step numbers.
+ * questions about the user), then the file, maybe its sheets, the dates when workouts have none
+ * (`withDates`), and "Importiert" last. `offset` is added to the file's and the sheets' numbers.
  */
-export function flowSteps(read: ReadFile | null, inApp: boolean) {
+export function flowSteps(read: ReadFile | null, inApp: boolean, withDates = false) {
   const offset = inApp ? 1 : 0;
-  return { offset, total: offset + importSteps(read) + 1 };
+  return { offset, total: offset + importSteps(read) + (withDates ? 1 : 0) + 1 };
 }
 
 /** The file's type as its card shows it: "CSV", "XLSX". */
@@ -24,11 +24,11 @@ export const fileLabel = (name: string) =>
 /** The file's name without its type: "past_workouts". */
 export const baseName = (name: string) => name.replace(/\.[^.]+$/, '') || name;
 
-/** The import's titles as its design sets them: lines 30pt apart, the subtitle 12pt below. */
-export const TITLE_STYLE = {
-  titleTextClassName: 'leading-[30px]',
-  subtitleClassName: 'mt-3 leading-[22.5px]',
-} as const;
+/**
+ * The import's subtitles as its design sets them: 12pt below the title. The title keeps the app's
+ * line height: tighter, iOS cuts off the dots of Ü, Ä and Ö.
+ */
+export const TITLE_STYLE = { subtitleClassName: 'mt-3 leading-[22.5px]' } as const;
 
 /** The import's main button as its design sizes it: 56pt high, a 16pt label. */
 export const CTA_STYLE = { className: 'h-14', textClassName: 'text-base' } as const;
