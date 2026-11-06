@@ -8,6 +8,9 @@ import { Platform } from 'react-native';
 const major = Number(/^iPhone(\d+),/.exec(Device.modelId ?? '')?.[1] ?? 0);
 export const HAS_ACTION_BUTTON = Platform.OS === 'ios' && (!Device.isDevice || major >= 16);
 
-/** Step counts per onboarding phase ("About you" and "Let's go"). */
-export const ABOUT_STEPS = HAS_ACTION_BUTTON ? 9 : 8;
-export const START_STEPS = 3;
+/**
+ * Step counts per onboarding phase ("About you" and "Let's go"); the weight shortcut comes after
+ * sign-up, on iPhones with an Action button.
+ */
+export const ABOUT_STEPS = 8;
+export const START_STEPS = HAS_ACTION_BUTTON ? 4 : 3;

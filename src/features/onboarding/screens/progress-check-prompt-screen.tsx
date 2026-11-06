@@ -38,7 +38,7 @@ export function ProgressCheckPromptScreen() {
 
   return (
     <StepScreen
-      step={3}
+      step={START_STEPS}
       total={START_STEPS}
       title={t('progressCheck.title')}
       subtitle={t('progressCheck.subtitle')}

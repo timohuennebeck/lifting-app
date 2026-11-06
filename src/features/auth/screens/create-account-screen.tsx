@@ -1,12 +1,11 @@
-import { router } from 'expo-router';
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { isProgressCheckAge } from '@/features/progress-check/lib/eligibility';
 import { LegalLink } from '@/features/legal/components/legal-link';
 import { acceptDocuments } from '@/features/legal/data/legal-acceptances';
 import { fetchCurrentDocuments, type LegalDocument } from '@/features/legal/data/legal-documents';
+import { afterAccount } from '@/features/onboarding/lib/after-account';
 import { START_STEPS } from '@/features/onboarding/lib/flow';
 import {
   isOnboardedAfterSync,
@@ -62,9 +61,8 @@ export function CreateAccountScreen() {
     identify(userId);
     track('account:sign_up_complete', { method });
     haptics.success();
-    // The progress check is for adults only; younger users go straight to the app.
-    if (isProgressCheckAge(draft.birthDate)) router.push('/progress-check');
-    else useOnboardingStore.getState().complete();
+    // The weight shortcut (iPhones with an Action button), the progress check (adults), the app.
+    afterAccount('account');
   };
 
   const social = async (provider: SocialProvider) => {

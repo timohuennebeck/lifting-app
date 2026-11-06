@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Linking, View } from 'react-native';
@@ -9,11 +8,12 @@ import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
 import { ActionButtonPreview } from '../components/action-button-preview';
-import { ABOUT_STEPS } from '../lib/flow';
+import { afterAccount } from '../lib/after-account';
+import { START_STEPS } from '../lib/flow';
 
 const STEPS = ['settings', 'shortcut', 'pick'] as const;
 
-const next = () => router.push('/experience');
+const next = () => afterAccount('actionButton');
 
 /**
  * The Settings app's first page: there is no public link to the Action button's, so the steps
@@ -24,8 +24,8 @@ function openSettings() {
 }
 
 /**
- * Only on iPhones with an Action button (HAS_ACTION_BUTTON): how to put the "Log weight" shortcut
- * on it, which opens today's weight entry. Once Settings was opened the main button says "Done"
+ * Only on iPhones with an Action button (HAS_ACTION_BUTTON), right after sign-up: how to put the
+ * "Log weight" shortcut on it, which opens today's weight entry. Once Settings was opened the main button says "Done"
  * and goes on, so the steps are still there to look at; Settings can be opened again below it.
  */
 export function ActionButtonScreen() {
@@ -34,8 +34,8 @@ export function ActionButtonScreen() {
 
   return (
     <StepScreen
-      step={7}
-      total={ABOUT_STEPS}
+      step={3}
+      total={START_STEPS}
       title={t('actionButton.title')}
       subtitle={t('actionButton.subtitle')}
       footer={
