@@ -53,37 +53,18 @@ function FileCard({ label, raised }: { label: string; raised?: boolean }) {
   );
 }
 
-export interface FileCardsProps {
-  /** Left, middle (raised) and right card. */
-  labels?: readonly [string, string, string];
-  /** Of the 280 × 180 fan. */
-  scale?: number;
-}
-
-/** 13ia: three fanned export files, the middle one raised. */
-export function FileCards({ labels = ['TSV', 'CSV', 'XLSX'], scale = 1 }: FileCardsProps) {
+/** 13ia: three fanned export files (TSV, CSV raised in the middle, XLSX), 280 × 180. */
+export function FileCards() {
   return (
-    <View style={{ width: 280 * scale, height: 180 * scale }} accessibilityElementsHidden>
-      <View
-        style={{
-          width: 280,
-          height: 180,
-          transform: [
-            { translateX: -140 * (1 - scale) },
-            { translateY: -90 * (1 - scale) },
-            { scale },
-          ],
-        }}
-      >
-        <View className="absolute top-6 left-0" style={{ transform: [{ rotate: '-9deg' }] }}>
-          <FileCard label={labels[0]} />
-        </View>
-        <View className="absolute top-6 right-0" style={{ transform: [{ rotate: '9deg' }] }}>
-          <FileCard label={labels[2]} />
-        </View>
-        <View className="absolute top-0 left-21.25">
-          <FileCard label={labels[1]} raised />
-        </View>
+    <View style={{ width: 280, height: 180 }} accessibilityElementsHidden>
+      <View className="absolute top-6 left-0" style={{ transform: [{ rotate: '-9deg' }] }}>
+        <FileCard label="TSV" />
+      </View>
+      <View className="absolute top-6 right-0" style={{ transform: [{ rotate: '9deg' }] }}>
+        <FileCard label="XLSX" />
+      </View>
+      <View className="absolute top-0 left-21.25">
+        <FileCard label="CSV" raised />
       </View>
     </View>
   );

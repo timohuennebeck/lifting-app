@@ -9,6 +9,7 @@ import {
   NAME_RULES,
   nameSchema,
   newExerciseMaker,
+  nullable,
 } from '../_shared/exercise-reading.ts';
 import { cut, type NewExercise } from '../_shared/plan-events.ts';
 import type { CatalogRow } from '../_shared/plans.ts';
@@ -81,8 +82,6 @@ Then:
 - day_order: "day_first" when dates are written day before month (31.12.2025, 31/12/2025), "month_first" (12/31/2025), "year_first" (2025-12-31), null when there are no dates or it can't be told. Dates with a month name ("1 Nov 2025") are day_first or month_first as written.
 - weight_unit: from the header or the values ("weight_kg" = kg, "lbs" = lb); unknown when nothing says.
 - split (only for both, else "none"): "undated_rows_are_plan" when the plan's rows have no date, "column_value" when a column's values mark the plan's rows (give split_column and plan_values), "unclear" otherwise.`;
-
-const nullable = (schema: object) => ({ anyOf: [schema, { type: 'null' }] });
 
 /** Step 1's answer shape: one entry per sheet. */
 export function categorizeSchema(sheetNames: string[]) {

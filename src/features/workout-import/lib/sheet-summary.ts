@@ -76,18 +76,36 @@ const isDate = (cell: SheetCell) => cell.type === 'date' || DATE_TEXT.test(cell.
  * from a usual exercise word.
  */
 export function exerciseMatcher(names: Iterable<string>) {
-  const known = [...new Set([...names].map(fold).filter((n) => n.length >= 4))];
-  return (text: string) => {
+  const known = new Set([...names].map(fold).filter((n) => n.length >= 4));
+  const longest = Math.max(1, ...[...known].map((n) => n.split(' ').length));
+  // A known name as whole words of the text: each run of its words looked up.
+  const hasKnown = (words: string[]) =>
+    words.some((_, from) =>
+      words
+        .slice(from, from + longest)
+        .some((_, k) => known.has(words.slice(from, from + k + 1).join(' '))),
+    );
+  // Names repeat on every row of a log: each text is judged once.
+  const seen = new Map<string, boolean>();
+  const judge = (text: string) => {
     if (text.length < 3 || text.length > 80) return false;
     const folded = fold(text);
     if (!/[a-z]{3}/.test(folded) || isRoutineHeading(folded)) return false;
-    const padded = ` ${folded} `;
+    const words = folded.split(' ');
     return (
-      folded.split(' ').some((w) => WORDS.has(w)) ||
+      words.some((w) => WORDS.has(w)) ||
       /\b(push|pull|chin) ?ups?\b/.test(folded) ||
       STEMS.some((s) => folded.includes(s)) ||
-      known.some((n) => padded.includes(` ${n} `))
+      hasKnown(words)
     );
+  };
+  return (text: string) => {
+    let result = seen.get(text);
+    if (result === undefined) {
+      result = judge(text);
+      seen.set(text, result);
+    }
+    return result;
   };
 }
 

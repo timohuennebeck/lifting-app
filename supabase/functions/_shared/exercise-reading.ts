@@ -51,7 +51,8 @@ export function contextText(catalog: CatalogRow[], language: string) {
   return `App language: ${language}.\n\nCatalog (id | names | equipment | logs):\n${catalogText(catalog, language)}`;
 }
 
-const nullable = (schema: object) => ({ anyOf: [schema, { type: 'null' }] });
+/** A JSON schema that also allows null. */
+export const nullable = (schema: object) => ({ anyOf: [schema, { type: 'null' }] });
 const integer = nullable({ type: 'integer' });
 
 /**
@@ -94,15 +95,7 @@ export function exerciseSchema(ids: string[]) {
   return {
     type: 'object',
     additionalProperties: false,
-    required: [
-      ...name.required,
-      'sets',
-      'reps_min',
-      'reps_max',
-      'seconds',
-      'rir',
-      'rest_seconds',
-    ],
+    required: [...name.required, 'sets', 'reps_min', 'reps_max', 'seconds', 'rir', 'rest_seconds'],
     properties: {
       ...name.properties,
       sets: integer,

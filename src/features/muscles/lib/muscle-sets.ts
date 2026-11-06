@@ -38,14 +38,12 @@ function cached(splitOf: SplitOf): SplitOf {
 const daysAgo = (startedAt: string, today: number) =>
   Math.round((today - startOfDay(new Date(startedAt)).getTime()) / DAY_MS);
 
-/**
- * The first moment loaded for `period`: its days and the same span before them (for the
- * comparison), from midnight on, as an ISO string; '' (everything) for the whole history.
- */
-export function historyStart(today: number, period: Period) {
-  const days = PERIOD_DAYS[period];
-  return days === null ? '' : addDays(new Date(today), -(2 * days - 1)).toISOString();
-}
+/** The earliest start of the rows (ISO strings compare in time order); now without any. */
+const oldestStart = (rows: readonly ExerciseSets[]) =>
+  rows.reduce(
+    (oldest, r) => (r.startedAt < oldest ? r.startedAt : oldest),
+    new Date().toISOString(),
+  );
 
 /** Whether a set `d` days ago is in `days` (null: the whole history). */
 const within = (d: number, days: number | null) => d >= 0 && (days === null || d < days);
@@ -124,8 +122,7 @@ export function muscleDetail(
 ): MuscleDetail {
   const roles = cached(splitOf);
   const all = PERIOD_DAYS[period] === null;
-  const range =
-    PERIOD_DAYS[period] ?? Math.max(7, ...rows.map((r) => daysAgo(r.startedAt, today) + 1));
+  const range = PERIOD_DAYS[period] ?? Math.max(7, daysAgo(oldestStart(rows), today) + 1);
   const size = bucketDays(range);
   const count = Math.ceil(range / size);
   const buckets = Array.from({ length: count }, (_, i): SetBucket => {

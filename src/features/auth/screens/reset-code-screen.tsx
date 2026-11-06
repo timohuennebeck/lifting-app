@@ -4,6 +4,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useNow } from '@/shared/hooks/use-now';
+import { formatDuration } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
 import { StepScreen } from '@/shared/ui/step-screen';
@@ -58,7 +59,15 @@ export function ResetCodeScreen() {
       step={2}
       total={2}
       title={t('code.title')}
-      subtitle={undefined}
+      subtitle={
+        <Trans
+          t={t}
+          i18nKey="code.subtitle"
+          values={{ email }}
+          components={{ email: <Text variant="paragraph" className="font-inter-semibold" /> }}
+        />
+      }
+      subtitleTone="subtle"
       scroll
       footer={
         <View className="gap-1">
@@ -77,14 +86,6 @@ export function ResetCodeScreen() {
         </View>
       }
     >
-      <Text variant="paragraph" tone="subtle" className="mt-3 px-5">
-        <Trans
-          t={t}
-          i18nKey="code.subtitle"
-          values={{ email }}
-          components={{ email: <Text variant="paragraph" className="font-inter-semibold" /> }}
-        />
-      </Text>
       <View className="gap-3.5 px-4 pt-6">
         <CodeInput
           value={code}
@@ -105,7 +106,7 @@ export function ResetCodeScreen() {
           </Text>
           {left > 0 ? (
             <Text variant="caption" tone="subtle" className="font-inter tabular-nums">
-              {t('code.resendIn', { time: `0:${String(left).padStart(2, '0')}` })}
+              {t('code.resendIn', { time: formatDuration(left) })}
             </Text>
           ) : (
             <TextButton

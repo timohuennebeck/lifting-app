@@ -5,14 +5,16 @@ import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { useImportStore } from '@/features/plan-import/stores/import-store';
 import type { CustomExercise } from '@/shared/data/exercises';
 import { i18n } from '@/shared/i18n';
+import { attempt } from '@/shared/lib/async';
 import { showError } from '@/shared/stores/error-sheet-store';
 import { requireUserId } from '@/shared/stores/session-store';
 
+import type { ImportFile, ReadFile } from '../lib/read-file';
 import { keepForSignUp, sendHistory, toRows } from '../lib/save-history';
+import { afterPick } from '../lib/steps';
 import {
   choosesPlan,
   decidedImport,
-  reviewsToShow,
   undatedCount,
   useWorkoutImportStore,
 } from '../stores/workout-import-store';
@@ -27,12 +29,8 @@ async function send(
   onSaved: () => void,
 ) {
   onSaving(true);
-  const saved = await sendHistory(requireUserId(), rows, custom).then(
-    () => true,
-    (error: unknown) => {
-      console.warn('Saving the workout history failed', error);
-      return false;
-    },
+  const saved = await attempt('Saving the workout history failed', () =>
+    sendHistory(requireUserId(), rows, custom),
   );
   onSaving(false);
   if (saved) onSaved();
@@ -55,14 +53,14 @@ export function useImportSteps() {
   const { inApp, step, done } = usePlanFlow();
   const [saving, setSaving] = useState(false);
 
-  const checks = () => reviewsToShow(useWorkoutImportStore.getState()).length;
+  const checks = () => useWorkoutImportStore.getState().reviews.length;
   // Straight from the reading screen, it is replaced: going back must not read again.
   const go = (href: Href, replace: boolean) => (replace ? router.replace(href) : router.push(href));
 
   /** Whether the editor opens with the file's plan at the end. */
   const withPlan = () => {
     const s = useWorkoutImportStore.getState();
-    return s.planFrom === 'file' && s.take.plan && !!useImportStore.getState().plan;
+    return s.planFrom === 'file' && !!useImportStore.getState().plan;
   };
 
   function next(replace = false) {
@@ -106,5 +104,11 @@ export function useImportSteps() {
     } else afterChecks();
   }
 
-  return { afterRead, afterCheck, finish, next, withPlan, saving };
+  /** A picked file: its sheets (a workbook with several), else straight to reading. */
+  function open(file: ImportFile, read: ReadFile) {
+    useWorkoutImportStore.getState().setFile(file, read);
+    router.push(step(afterPick(read)));
+  }
+
+  return { open, afterRead, afterCheck, finish, next, withPlan, saving };
 }

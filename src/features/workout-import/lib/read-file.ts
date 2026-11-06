@@ -4,11 +4,13 @@ import { strFromU8 } from 'fflate';
 
 import { useCatalogStore, useCustomExerciseStore } from '@/shared/data/exercises';
 import { i18n } from '@/shared/i18n';
+import { toIsoDate } from '@/shared/lib/date';
 import { showError } from '@/shared/stores/error-sheet-store';
 
 import { parseCsv } from './csv';
 import type { ImportTable } from './history';
 import { exerciseMatcher, type SheetSummary, summarizeSheet } from './sheet-summary';
+import { baseName } from './steps';
 import { parseDate } from './values';
 import { readWorkbook, type WorkbookSheet } from './workbook';
 
@@ -99,12 +101,22 @@ function isUtf8(bytes: Uint8Array) {
 /** Windows-1252's characters for 0x80–0x9F; the rest is Latin-1. */
 const CP1252 = '€\u0081‚ƒ„…†‡ˆ‰Š‹Œ\u008DŽ\u008F\u0090‘’“”•–—˜™š›œ\u009DžŸ';
 
-const decodeText = (bytes: Uint8Array) =>
-  isUtf8(bytes)
-    ? strFromU8(bytes)
-    : Array.from(bytes, (b) =>
-        b >= 0x80 && b < 0xa0 ? CP1252[b - 0x80] : String.fromCharCode(b),
-      ).join('');
+/** Characters decoded per String.fromCharCode call (its arguments are limited). */
+const CHUNK = 8192;
+
+/** Windows-1252 bytes as text, a chunk of character codes at a time. */
+function decodeCp1252(bytes: Uint8Array) {
+  const codes = Uint16Array.from(bytes, (b) =>
+    b >= 0x80 && b < 0xa0 ? CP1252.charCodeAt(b - 0x80) : b,
+  );
+  let text = '';
+  for (let i = 0; i < codes.length; i += CHUNK) {
+    text += String.fromCharCode(...codes.subarray(i, i + CHUNK));
+  }
+  return text;
+}
+
+const decodeText = (bytes: Uint8Array) => (isUtf8(bytes) ? strFromU8(bytes) : decodeCp1252(bytes));
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -112,7 +124,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 function dateText(text: string) {
   const date = parseDate(text);
   if (!date) return text;
-  const day = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  const day = toIsoDate(date);
   const time =
     date.getHours() || date.getMinutes()
       ? ` ${pad(date.getHours())}:${pad(date.getMinutes())}`
@@ -169,6 +181,8 @@ async function readImportFile(file: ImportFile): Promise<ReadFile> {
       summaries: sheets.map((s) => summarizeSheet(s, isExercise)),
     };
   }
-  const name = file.name.replace(/\.[^.]+$/, '') || file.name;
-  return { tables: [{ name, rows: fromHeader(parseCsv(decodeText(bytes))) }], summaries: null };
+  return {
+    tables: [{ name: baseName(file.name), rows: fromHeader(parseCsv(decodeText(bytes))) }],
+    summaries: null,
+  };
 }

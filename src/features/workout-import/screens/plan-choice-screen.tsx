@@ -7,6 +7,7 @@ import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-stor
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { RoutineGlyph } from '@/features/training/components/glyphs';
 import { MAX_SESSIONS_PER_WEEK, MIN_SESSIONS_PER_WEEK } from '@/shared/data/plans';
+import { DAY_MS } from '@/shared/lib/date';
 import { clamp } from '@/shared/lib/math';
 import { glyphColor } from '@/shared/ui/choice-sheet';
 import { CoachDiamond } from '@/shared/ui/coach-mark';
@@ -21,7 +22,7 @@ import { undatedCount, useWorkoutImportStore } from '../stores/workout-import-st
 
 type Way = 'training' | 'questions';
 
-const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+const WEEK_MS = 7 * DAY_MS;
 /** The weeks at the end of the history that say how often the user trains now. */
 const RECENT_WEEKS = 8;
 

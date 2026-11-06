@@ -1,3 +1,4 @@
+import { codeOf } from '@/features/plan-import/lib/plan-import-service';
 import { postFunction, refusalOf } from '@/shared/data/edge-functions';
 import type { CustomExercise } from '@/shared/data/exercises';
 
@@ -52,7 +53,7 @@ async function ask<T>(request: Step, language: string, signal: AbortSignal): Pro
     const { error } = await refusalOf('read-history', response);
     throw new WorkoutImportError(
       SERVER_ERRORS[error ?? ''] ?? 'failed',
-      `${request.step}_http_${response.status}${error && /^[a-z_]{1,40}$/.test(error) ? `_${error}` : ''}`,
+      `${request.step}_http_${response.status}${codeOf(error)}`,
     );
   }
   return (await response.json()) as T;
@@ -69,17 +70,18 @@ export const categorize = (
     (r) => r.sheets,
   );
 
-/** Names per request; read-history takes up to 80. */
-const BATCH = 60;
+/** Names per request at most; read-history takes up to 80. */
+const BATCH = 80;
 
-/** Step 2: which exercise each name is, in batches side by side. */
+/** Step 2: which exercise each name is, in as few even batches as fit, side by side. */
 export async function mapNames(
   names: { name: string; sets: number; hint: string }[],
   language: string,
   signal: AbortSignal,
 ): Promise<MappedName[]> {
+  const size = Math.ceil(names.length / Math.ceil(names.length / BATCH));
   const batches: (typeof names)[] = [];
-  for (let i = 0; i < names.length; i += BATCH) batches.push(names.slice(i, i + BATCH));
+  for (let i = 0; i < names.length; i += size) batches.push(names.slice(i, i + size));
   const answers = await Promise.all(
     batches.map((batch) =>
       ask<{ names: MappedName[] }>({ step: 'map', names: batch }, language, signal),

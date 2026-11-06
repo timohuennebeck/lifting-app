@@ -3,9 +3,10 @@ import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 /**
  * An exercise's sessions from the import just made, for its history before the account has them
- * (onboarding keeps them until sign-up; in the app they arrive with the next sync).
+ * (onboarding keeps them until sign-up; in the app they arrive with the next sync). Only worked
+ * out while `needed` (nothing stored yet).
  */
-export function useImportedHistory(exerciseId: string) {
+export function useImportedHistory(exerciseId: string, needed: boolean) {
   const imported = useWorkoutImportStore((s) => s.imported);
-  return imported ? importedHistory(imported.workouts, exerciseId) : [];
+  return imported && needed ? importedHistory(imported.workouts, exerciseId) : [];
 }

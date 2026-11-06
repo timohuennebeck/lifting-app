@@ -5,17 +5,17 @@ import type { Period } from '@/shared/lib/periods';
 import type { MuscleId } from '@/shared/ui/muscle-map';
 
 import { useExerciseSets } from '../data/muscle-sets';
-import { historyStart, muscleCounts, muscleDetail, type SplitOf } from '../lib/muscle-sets';
+import { muscleCounts, muscleDetail, type SplitOf } from '../lib/muscle-sets';
 
 const NO_MUSCLES = { primary: [], secondary: [] };
 
 /**
- * The completed sets of the loaded days, today, and each exercise's muscles by role from the
+ * The completed sets of the whole history, today, and each exercise's muscles by role from the
  * catalog and the user's own exercises, so a change there recounts. Cardio counts for none.
  */
-function useSetRows(period: Period) {
+function useSetRows() {
   const today = useToday();
-  const { data: rows, isLoading } = useExerciseSets(historyStart(today, period));
+  const { data: rows, isLoading } = useExerciseSets();
   const catalog = useCatalogStore((s) => s.rows);
   const custom = useCustomExerciseStore((s) => s.exercises);
   const splitOf: SplitOf = (id) =>
@@ -25,12 +25,12 @@ function useSetRows(period: Period) {
 
 /** Each muscle's sets in the period (Sätze tab). */
 export function useMuscleCounts(period: Period) {
-  const { rows, today, isLoading, splitOf } = useSetRows(period);
+  const { rows, today, isLoading, splitOf } = useSetRows();
   return { counts: muscleCounts(rows, period, today, splitOf), isLoading };
 }
 
 /** One muscle's sets in the period, per bar, with its exercises. */
 export function useMuscleDetail(muscle: MuscleId, period: Period) {
-  const { rows, today, isLoading, splitOf } = useSetRows(period);
+  const { rows, today, isLoading, splitOf } = useSetRows();
   return { detail: muscleDetail(rows, muscle, period, today, splitOf), isLoading };
 }

@@ -1,4 +1,4 @@
-import { and, count, eq, gte, isNotNull } from 'drizzle-orm';
+import { count, eq, isNotNull } from 'drizzle-orm';
 
 import { drizzle } from '@/shared/data/powersync/database';
 import {
@@ -12,7 +12,7 @@ import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
 import type { ExerciseSets } from '../lib/muscle-sets';
 
 // Every completed set counts, identical ones too: one row per exercise and workout.
-const exerciseSetsQuery = (fromIso: string) =>
+const exerciseSetsQuery = () =>
   drizzle
     .select({
       workout_id: workoutEntries.id,
@@ -26,7 +26,7 @@ const exerciseSetsQuery = (fromIso: string) =>
       eq(workoutEntriesExercises.id, workoutEntriesSets.workout_entries_exercise_id),
     )
     .innerJoin(workoutEntries, eq(workoutEntries.id, workoutEntriesExercises.workout_entries_id))
-    .where(and(isNotNull(workoutEntriesSets.completed_at), gte(workoutEntries.started_at, fromIso)))
+    .where(isNotNull(workoutEntriesSets.completed_at))
     .groupBy(workoutEntries.id, workoutEntriesExercises.exercise_id);
 
 const toExerciseSets = (rows: RowOf<typeof exerciseSetsQuery>[]) =>
@@ -37,11 +37,14 @@ const toExerciseSets = (rows: RowOf<typeof exerciseSetsQuery>[]) =>
     sets: r.sets,
   }));
 
-/** Completed sets per exercise and workout, of workouts started from `fromIso` on. */
-export function useExerciseSets(fromIso: string) {
+/**
+ * Completed sets per exercise and workout, of the whole history: every period counts from the
+ * same rows, so switching one doesn't load again.
+ */
+export function useExerciseSets() {
   return useDrizzleQuery({
-    queryKey: queryKeys.workouts.exerciseSets(fromIso).queryKey,
-    query: exerciseSetsQuery(fromIso),
+    queryKey: queryKeys.workouts.exerciseSets.queryKey,
+    query: exerciseSetsQuery(),
     map: toExerciseSets,
   });
 }

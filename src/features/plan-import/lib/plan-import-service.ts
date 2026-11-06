@@ -60,7 +60,7 @@ export class ImportError extends Error {
 }
 
 /** A server error code as analytics detail; anything else (free text) is left out. */
-const codeOf = (error: string | undefined) =>
+export const codeOf = (error: string | undefined) =>
   error && /^[a-z_]{1,40}$/.test(error) ? `_${error}` : '';
 
 const SERVER_ERRORS: Record<string, ImportFailure> = {

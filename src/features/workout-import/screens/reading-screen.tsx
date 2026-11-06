@@ -1,5 +1,5 @@
 import { router, useNavigation } from 'expo-router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,9 +17,8 @@ import { Text } from '@/shared/ui/text';
 
 import { FloatingChips } from '../components/floating-chips';
 import { showImportFailure, showNothingFound } from '../lib/import-failure';
-import type { ImportFile, ReadFile } from '../lib/read-file';
 import { useImportSteps } from '../hooks/use-import-steps';
-import { afterPick, CTA_STYLE } from '../lib/steps';
+import { CTA_STYLE } from '../lib/steps';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 /**
@@ -37,19 +36,18 @@ export function ReadingScreen() {
   const draftUnits = useDraft().unitPreference;
   const status = useWorkoutImportStore((s) => s.status);
   const failure = useWorkoutImportStore((s) => s.failure);
-  const setFile = useWorkoutImportStore((s) => s.setFile);
   const navigation = useNavigation();
   const [startedAt] = useState(Date.now);
   const [cancelling, setCancelling] = useState(false);
   const now = useNow(1000, status === 'reading');
   const left = useRef(false);
   const advanced = useRef(false);
-  const { afterRead, saving } = useImportSteps();
-  const goOn = useCallback(() => {
+  const { afterRead, open, saving } = useImportSteps();
+  function goOn() {
     if (advanced.current) return;
     advanced.current = true;
     afterRead();
-  }, [afterRead]);
+  }
   // A plan is found in the history only where the user has none yet.
   const derive = !inApp || !profile?.activePlanId;
 
@@ -84,10 +82,6 @@ export function ReadingScreen() {
     left.current = true;
     if (failure === 'nothing') {
       const name = useWorkoutImportStore.getState().file?.name ?? '';
-      const open = (file: ImportFile, read: ReadFile) => {
-        setFile(file, read);
-        router.push(step(afterPick(read)));
-      };
       router.dismissTo(step('/import'));
       showNothingFound(name, open);
       return;
@@ -95,7 +89,7 @@ export function ReadingScreen() {
     // The sheet stays up over the screen this goes back to; trying again reads anew.
     showImportFailure(failure, () => router.push(step('/import/reading')));
     router.back();
-  }, [status, failure, step, setFile]);
+  }, [status, failure, step, open]);
 
   const units = inApp ? profileUnits : draftUnits;
   const weight = (kg: number, lb: number) =>

@@ -19,11 +19,7 @@ import { TextButton } from '@/shared/ui/text-button';
 
 import { useImportSteps } from '../hooks/use-import-steps';
 import { type Decision, nameKey, type ReviewItem } from '../lib/review';
-import {
-  canMakeCustom,
-  reviewsToShow,
-  useWorkoutImportStore,
-} from '../stores/workout-import-store';
+import { canMakeCustom, useWorkoutImportStore } from '../stores/workout-import-store';
 import { CTA_STYLE, LINK_STYLE } from '../lib/steps';
 
 /** What the radio picks: an exercise's id, or a new exercise of the user's. */
@@ -110,11 +106,10 @@ export function CheckScreen() {
   const { index } = useLocalSearchParams<{ index: string }>();
   const position = Math.max(1, Number(index) || 1);
   const reviews = useWorkoutImportStore((s) => s.reviews);
-  const take = useWorkoutImportStore((s) => s.take);
   const decisions = useWorkoutImportStore((s) => s.decisions);
   const decide = useWorkoutImportStore((s) => s.decide);
   const { afterCheck, saving } = useImportSteps();
-  const items = reviewsToShow({ reviews, take });
+  const items = reviews;
   const item = items.at(position - 1);
   const [choice, setChoice] = useState<Choice>(() =>
     item ? choiceOf(item, decisions[nameKey(item.name)]) : null,

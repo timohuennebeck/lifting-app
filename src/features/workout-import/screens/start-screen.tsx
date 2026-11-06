@@ -12,9 +12,9 @@ import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
 import { FileCards } from '../components/file-art';
-import { chooseImportFile, type ImportFile, type ReadFile } from '../lib/read-file';
-import { useWorkoutImportStore } from '../stores/workout-import-store';
-import { afterPick, CTA_STYLE, flowSteps, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
+import { useImportSteps } from '../hooks/use-import-steps';
+import { chooseImportFile } from '../lib/read-file';
+import { CTA_STYLE, flowSteps, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
 
 const LOGOS = [
   require('@/assets/images/import/hevy.png'),
@@ -28,12 +28,7 @@ const LOGOS = [
 export function StartScreen() {
   const { t } = useTranslation('workoutImport');
   const { inApp, step } = usePlanFlow();
-  const setFile = useWorkoutImportStore((s) => s.setFile);
-
-  function open(file: ImportFile, read: ReadFile) {
-    setFile(file, read);
-    router.push(step(afterPick(read)));
-  }
+  const { open } = useImportSteps();
   const choose = () => void chooseImportFile(open);
 
   return (
@@ -64,7 +59,7 @@ export function StartScreen() {
         accessibilityLabel={t('start.pick')}
         className="flex-1 items-center justify-center gap-7 px-4 pt-5.5 pb-5"
       >
-        <FileCards labels={['TSV', 'CSV', 'XLSX']} />
+        <FileCards />
         <View className="items-center gap-1">
           <Text className="font-inter-semibold text-base text-fg">{t('start.pick')}</Text>
           <Text className="text-center font-inter text-sm leading-5 text-subtle">

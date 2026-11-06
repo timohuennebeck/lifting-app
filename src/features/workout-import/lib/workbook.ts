@@ -30,8 +30,16 @@ const unescapeXml = (text: string) =>
   });
 
 /** An attribute of an opening tag (its text up to `>`), unescaped. */
+/** Each attribute's pattern, made once: they run several times per cell. */
+const attrPatterns = new Map<string, RegExp>();
+
 function attr(tag: string, name: string) {
-  const match = tag.match(new RegExp(`\\s${name}=(?:"([^"]*)"|'([^']*)')`));
+  let pattern = attrPatterns.get(name);
+  if (!pattern) {
+    pattern = new RegExp(`\\s${name}=(?:"([^"]*)"|'([^']*)')`);
+    attrPatterns.set(name, pattern);
+  }
+  const match = tag.match(pattern);
   return match ? unescapeXml(match[1] ?? match[2]) : undefined;
 }
 
@@ -81,7 +89,8 @@ const columnIndex = (letters: string) =>
 
 function excelSheet(xml: string, strings: string[], dates: boolean[]): SheetCell[][] {
   const rows: SheetCell[][] = [];
-  for (const [, body] of all(xml, /<row\b[^>]*>([\s\S]*?)<\/row>/g)) {
+  // Matched one at a time, so the scan stops at the cap.
+  for (const [, body] of xml.matchAll(/<row\b[^>]*>([\s\S]*?)<\/row>/g)) {
     if (rows.length >= MAX_ROWS) break;
     const cells: SheetCell[] = [];
     let column = -1;
@@ -112,9 +121,13 @@ const partPath = (target: string) =>
   target.startsWith('/') ? target.slice(1) : `xl/${target.replace(/^\.\//, '')}`;
 
 function readExcel(files: Record<string, Uint8Array>): WorkbookSheet[] {
-  // Some writers prefix every element (<x:sheet>); the patterns below expect none.
-  const text = (path: string) =>
-    files[path] && strFromU8(files[path]).replace(/<(\/?)[a-z]\w*:(?=\w)/gi, '<$1');
+  // Some writers prefix every element (<x:sheet>); the patterns below expect none. The workbook
+  // tells (its root is prefixed too), so the other parts are only copied without when needed.
+  const prefixed = /<[a-z]\w*:workbook\b/i.test(strFromU8(files['xl/workbook.xml']));
+  const text = (path: string) => {
+    const xml = files[path] && strFromU8(files[path]);
+    return xml && prefixed ? xml.replace(/<(\/?)[a-z]\w*:(?=\w)/gi, '<$1') : xml;
+  };
   const strings = all(text('xl/sharedStrings.xml') ?? '', /<si\b[^>]*>([\s\S]*?)<\/si>/g).map((m) =>
     runsText(m[1]),
   );
@@ -164,8 +177,7 @@ function readOds(content: string): WorkbookSheet[] {
     .filter(([, tag]) => !hidden.has(attr(tag, 'table:style-name')))
     .map(([, tag, body]) => {
       const rows: SheetCell[][] = [];
-      for (const [, row = ''] of all(
-        body,
+      for (const [, row = ''] of body.matchAll(
         /<table:table-row(?=[\s>/])[^>]*?(?:\/>|>([\s\S]*?)<\/table:table-row>)/g,
       )) {
         if (rows.length >= MAX_ROWS) break;

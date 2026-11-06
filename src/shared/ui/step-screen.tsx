@@ -9,11 +9,11 @@ import { Text, type TextTone } from './text';
 
 export interface StepTitleProps {
   title: string;
-  subtitle?: string;
+  /** Text, or text with styled parts (e.g. a bold email in a <Trans>). */
+  subtitle?: ReactNode;
   subtitleTone?: TextTone;
   className?: string;
-  /** Overrides of the title's and the subtitle's text style, e.g. a tighter leading. */
-  titleTextClassName?: string;
+  /** Overrides of the subtitle's text style, e.g. a tighter leading. */
   subtitleClassName?: string;
 }
 
@@ -23,12 +23,11 @@ export function StepTitle({
   subtitle,
   subtitleTone = 'muted',
   className,
-  titleTextClassName,
   subtitleClassName,
 }: StepTitleProps) {
   return (
     <View className={cn('px-5 pt-4.5', className)}>
-      <Text variant="title" accessibilityRole="header" className={titleTextClassName}>
+      <Text variant="title" accessibilityRole="header">
         {title}
       </Text>
       {subtitle ? (
@@ -60,7 +59,6 @@ export function StepScreen({
   subtitle,
   subtitleTone,
   titleClassName,
-  titleTextClassName,
   subtitleClassName,
   children,
   footer,
@@ -79,7 +77,6 @@ export function StepScreen({
         subtitle={subtitle}
         subtitleTone={subtitleTone}
         className={titleClassName}
-        titleTextClassName={titleTextClassName}
         subtitleClassName={subtitleClassName}
       />
       {children}

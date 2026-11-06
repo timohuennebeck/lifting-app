@@ -4,6 +4,8 @@ import type { CustomExercise, Measure } from '@/shared/data/exercises';
 import { insertCustomExercises } from '@/shared/data/custom-exercises';
 import { newId } from '@/shared/data/json';
 import { singleFlight } from '@/shared/lib/async';
+import { MINUTE_MS } from '@/shared/lib/date';
+import { ROUTINE_NAME_MAX } from '@/shared/lib/limits';
 import { drizzle } from '@/shared/data/powersync/database';
 import { supabase } from '@/shared/data/supabase';
 import { track } from '@/shared/lib/posthog';
@@ -40,12 +42,9 @@ export interface WorkoutRow {
   }[];
 }
 
-const MINUTE = 60_000;
 /** The database's limits (workout_entries_sets): weight numeric(6,2), reps 0–999. */
 const MAX_WEIGHT = 9999.99;
 const MAX_REPS = 999;
-/** Workout names in the app (a routine's, ROUTINE_NAME_MAX). */
-const NAME_MAX = 40;
 
 /**
  * A set as the exercise logs it: a weight only for exercises with one (0 for bodyweight ones the
@@ -88,19 +87,19 @@ export function toRows(workouts: WorkoutToSave[]): WorkoutRow[] {
         return sets.length ? [{ id: newId(), exercise_id: e.exerciseId, position, sets }] : [];
       });
       if (!exercises.length) return [];
-      let start = Math.floor(w.start.getTime() / MINUTE) * MINUTE;
-      while (taken.has(start)) start += MINUTE;
+      let start = Math.floor(w.start.getTime() / MINUTE_MS) * MINUTE_MS;
+      while (taken.has(start)) start += MINUTE_MS;
       taken.add(start);
       const setCount = exercises.reduce((n, e) => n + e.sets.length, 0);
       const fileEnd = w.end?.getTime();
       const end =
-        fileEnd && fileEnd > start && fileEnd - start < 6 * 60 * MINUTE
+        fileEnd && fileEnd > start && fileEnd - start < 6 * 60 * MINUTE_MS
           ? fileEnd
-          : start + Math.min(120, Math.max(20, setCount * 3)) * MINUTE;
+          : start + Math.min(120, Math.max(20, setCount * 3)) * MINUTE_MS;
       return [
         {
           id: newId(),
-          name: w.name.trim().slice(0, NAME_MAX) || 'Training',
+          name: w.name.trim().slice(0, ROUTINE_NAME_MAX) || 'Training',
           started_at: new Date(start).toISOString(),
           finished_at: new Date(end).toISOString(),
           exercises: exercises.map((e, position) => ({ ...e, position })),
@@ -110,12 +109,12 @@ export function toRows(workouts: WorkoutToSave[]): WorkoutRow[] {
 }
 
 /** Workouts per call; public.import_workouts takes up to 200. */
-const BATCH = 50;
+const BATCH = 100;
 
 /**
  * Saves the workouts to the user's account: their own exercises first (on the device, uploaded by
- * PowerSync), then the workouts in a few calls (PowerSync syncs them down). Returns how many were
- * added; workouts the account has already are left out. Throws when a call fails.
+ * PowerSync), then the workouts in a few calls (PowerSync syncs them down). Workouts the account
+ * has already are left out. Throws when a call fails.
  */
 export async function sendHistory(userId: string, rows: WorkoutRow[], custom: CustomExercise[]) {
   await insertCustomExercises(drizzle, userId, custom);
@@ -128,7 +127,6 @@ export async function sendHistory(userId: string, rows: WorkoutRow[], custom: Cu
     added += (data as number | null) ?? 0;
   }
   track('workout_import:save_complete', { workout_count: rows.length, added_count: added });
-  return added;
 }
 
 /** A history imported before there is an account, saved with it (see sendPendingHistory). */
@@ -141,27 +139,21 @@ interface Pending {
 
 /** Keeps the history on the device until the account is made (onboarding). */
 export function keepForSignUp(rows: WorkoutRow[], custom: CustomExercise[]) {
-  const file = pendingFile();
-  if (!rows.length) {
-    if (file.exists) file.delete();
-    return;
-  }
-  file.write(JSON.stringify({ rows, custom } satisfies Pending));
+  pendingFile().write(JSON.stringify({ rows, custom } satisfies Pending));
 }
 
 /**
- * Saves a history kept from onboarding to the account, once; true when there was one. A failure
- * keeps it for the next try (the app's start, see useSendPendingHistory).
+ * Saves a history kept from onboarding to the account, once. A failure keeps it for the next try
+ * (the app's start, see useSendPendingHistory).
  */
 export function sendPendingHistory(userId: string) {
-  // Sign-up and the app's start may both try: one send at a time.
+  // The app's start may run twice (a remount, the account changing): one send at a time.
   return singleFlight('pending-history', async () => {
     const file = pendingFile();
-    if (!file.exists) return false;
+    if (!file.exists) return;
     const pending = JSON.parse(await file.text()) as Pending;
     await sendHistory(userId, pending.rows, pending.custom);
     file.delete();
-    return true;
   });
 }
 

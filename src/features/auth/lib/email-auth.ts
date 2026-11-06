@@ -67,14 +67,13 @@ export async function sendResetCode(email: string) {
 }
 
 /** Checks the code; signs in for the new password. Throws `wrongCode` when it doesn't fit. */
-export async function verifyResetCode(email: string, code: string): Promise<User> {
+export async function verifyResetCode(email: string, code: string) {
   const { data, error } = await supabase.auth.verifyOtp({
     email: email.trim(),
     token: code,
     type: 'recovery',
   });
   if (error || !data.user) throw new EmailAuthError('wrongCode');
-  return data.user;
 }
 
 /** The signed-in user's new password. */

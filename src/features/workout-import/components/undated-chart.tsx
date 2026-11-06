@@ -3,11 +3,11 @@ import { View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
 import { formatDate } from '@/shared/lib/format';
+import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 import type { MonthBar } from '../lib/month-bars';
 
-const HATCH_INK = '#8C8C87';
 const HATCH_GROUND = '#3A3A36';
 const CHART_HEIGHT = 210;
 /** Between a month's two parts. */
@@ -25,7 +25,7 @@ function Hatch({ period }: { period: number }) {
   }).join('');
   return (
     <Svg width="100%" height="100%" style={{ backgroundColor: HATCH_GROUND }}>
-      <Path d={d} fill={HATCH_INK} />
+      <Path d={d} fill={colors.subtle} />
     </Svg>
   );
 }

@@ -9,11 +9,12 @@ import {
   getExercise,
   isAssisted,
   isBodyweight,
-  type Measure,
+  measuresOf,
   useCustomExerciseStore,
 } from '@/shared/data/exercises';
-import type { MuscleId } from '@/shared/ui/muscle-map/body-paths';
 import { newId } from '@/shared/data/json';
+import { splitMuscles } from '@/shared/data/muscle-groups';
+import { CUSTOM_EXERCISE_NAME_MAX, ROUTINE_NAME_MAX } from '@/shared/lib/limits';
 import { getOrInsert } from '@/shared/lib/map';
 import { i18n } from '@/shared/i18n';
 import { track } from '@/shared/lib/posthog';
@@ -69,8 +70,6 @@ interface WorkoutImportState {
   derivePlan: boolean;
   reviews: ReviewItem[];
   decisions: Record<string, Decision>;
-  /** What is taken over: the history when the file has one, the plan when there is one. */
-  take: { history: boolean; plan: boolean };
   /** Workouts without a date get one (18a), or are left out. */
   keepUndated: boolean;
   /** What the import took over once finished: the workouts as saved, and the exercises it made. */
@@ -111,7 +110,6 @@ const EMPTY: Session = {
   derivePlan: false,
   reviews: [],
   decisions: {},
-  take: { history: true, plan: true },
   keepUndated: true,
   imported: null,
 };
@@ -124,10 +122,6 @@ const madeIds = new Map<string, string>();
 
 /** Characters of plan rows read-plan reads. */
 const MAX_PLAN_TEXT = 60_000;
-
-/** The exercise's measures, also of a new one the draft holds. */
-const measuresOf = (exerciseId: string): Measure[] =>
-  getExercise(exerciseId)?.measures ?? ['weight', 'reps'];
 
 /**
  * Reads the plan's rows with read-plan into the plan import's store, which streams it as the plan
@@ -219,7 +213,7 @@ async function planFromHistory(
     routines: current.map((c, i) => ({
       key: newId(),
       name:
-        c.routine.fileName?.slice(0, 40) ||
+        c.routine.fileName?.slice(0, ROUTINE_NAME_MAX) ||
         given[unnamed.indexOf(c)] ||
         i18n.t('workoutImport:plan.routine', { letter: letters[i] }),
       exercises: c.exercises.map((e) => ({
@@ -331,11 +325,7 @@ export const useWorkoutImportStore = create<WorkoutImportState>()((set, get) => 
       .then((result) => {
         if (!result) return;
         const plan = !!result.planFrom;
-        live({
-          ...result,
-          status: 'ready',
-          take: { history: result.workouts.length > 0, plan },
-        });
+        live({ ...result, status: 'ready' });
         track('workout_import:read_complete', {
           kind: result.workouts.length ? (plan ? 'both' : 'history') : 'plan',
           plan_source: result.planFrom ?? 'none',
@@ -375,40 +365,29 @@ export const useWorkoutImportStore = create<WorkoutImportState>()((set, get) => 
   },
 }));
 
-/** The checks (15a) for what the user takes over. */
-export const reviewsToShow = (s: Pick<WorkoutImportState, 'reviews' | 'take'>) =>
-  s.reviews.filter((r) => (s.take.history && r.workouts > 0) || (s.take.plan && r.inPlan));
-
 /**
  * After "Importiert", the user picks how the plan is made (from the history or from the questions):
  * the file has no plan of its own, a plan may come from the history, and it has workouts.
  */
-export const choosesPlan = (
-  s: Pick<WorkoutImportState, 'derivePlan' | 'planFrom' | 'take' | 'workouts'>,
-) => s.derivePlan && s.planFrom !== 'file' && s.take.history && s.workouts.length > 0;
+export const choosesPlan = (s: Pick<WorkoutImportState, 'derivePlan' | 'planFrom' | 'workouts'>) =>
+  s.derivePlan && s.planFrom !== 'file' && s.workouts.length > 0;
 
-/** Workouts without a date the user takes over (18a asks about them). */
-export const undatedCount = (s: Pick<WorkoutImportState, 'workouts' | 'take'>) =>
-  s.take.history ? s.workouts.filter((w) => !w.start).length : 0;
+/** Workouts without a date (18a asks about them). */
+export const undatedCount = (s: Pick<WorkoutImportState, 'workouts'>) =>
+  s.workouts.filter((w) => !w.start).length;
 
 /**
- * A new exercise of the user's for a checked name, with the muscles and measures of its likeliest
- * one: its main muscles (a quarter of the stimulus or more) primary, the others secondary.
+ * A new exercise of the user's for a checked name, with the muscles (split as the app shows them)
+ * and measures of its likeliest one.
  */
 function customFor(item: ReviewItem): CustomExercise | null {
   const like = item.options[0] ? getExercise(item.options[0]) : undefined;
   if (!like) return null;
-  const shares = Object.entries(like.muscles) as [MuscleId, number][];
-  const top = Math.max(0, ...shares.map(([, share]) => share));
-  const primary =
-    like.custom?.primary ??
-    shares.filter(([, share]) => share >= Math.min(0.25, top)).map(([m]) => m);
+  const { primary, secondary } = splitMuscles(like);
   if (!primary.length) return null;
-  const secondary =
-    like.custom?.secondary ?? shares.map(([m]) => m).filter((m) => !primary.includes(m));
   return {
     id: getOrInsert(madeIds, nameKey(item.name), newId),
-    name: item.name.trim().slice(0, 60),
+    name: item.name.trim().slice(0, CUSTOM_EXERCISE_NAME_MAX),
     primary,
     secondary,
     measures: like.measures,
@@ -445,7 +424,7 @@ export function decidedImport(): { workouts: WorkoutToSave[]; custom: CustomExer
   // The plan: lines of checked names as decided; in a plan from the history, the likeliest
   // exercise of a checked name becomes the one picked.
   const { plan, editPlan } = useImportStore.getState();
-  if (plan && s.take.plan) {
+  if (plan && s.planFrom) {
     const replaced = new Map<string, string | null>();
     if (s.planFrom === 'history') {
       for (const item of s.reviews) {
@@ -457,48 +436,44 @@ export function decidedImport(): { workouts: WorkoutToSave[]; custom: CustomExer
     );
   }
 
-  const workouts: WorkoutToSave[] = !s.take.history
-    ? []
-    : (s.keepUndated ? spreadUndated(s.workouts) : s.workouts).flatMap((w) => {
-        if (!w.start) return [];
-        const exercises = w.exercises.flatMap((e) => {
-          const id = idOf(e.name);
-          if (!id) return [];
-          const custom = [...made.values()].find((c) => c.id === id);
-          return [
-            {
-              exerciseId: id,
-              measures: custom?.measures ?? measuresOf(id),
-              bodyweight: isBodyweight(id) || isAssisted(id),
-              sets: e.sets,
-            },
-          ];
-        });
-        return exercises.length
-          ? [
-              {
-                name: w.name ?? i18n.t('workoutImport:defaultName'),
-                start: w.start,
-                end: w.end,
-                exercises,
-              },
-            ]
-          : [];
-      });
+  const madeById = new Map([...made.values()].map((c) => [c.id, c]));
+  const workouts: WorkoutToSave[] = (
+    s.keepUndated ? spreadUndated(s.workouts) : s.workouts
+  ).flatMap((w) => {
+    if (!w.start) return [];
+    const exercises = w.exercises.flatMap((e) => {
+      const id = idOf(e.name);
+      if (!id) return [];
+      const custom = madeById.get(id);
+      return [
+        {
+          exerciseId: id,
+          measures: custom?.measures ?? measuresOf(id),
+          bodyweight: isBodyweight(id) || isAssisted(id),
+          sets: e.sets,
+        },
+      ];
+    });
+    return exercises.length
+      ? [
+          {
+            name: w.name ?? i18n.t('workoutImport:defaultName'),
+            start: w.start,
+            end: w.end,
+            exercises,
+          },
+        ]
+      : [];
+  });
 
   // Decided new exercises show by name in the editor and go with the plan if it uses them.
   addDraftExercises([...made.values()]);
-  // New exercises the history uses, also the plan's: an account that keeps its own plan (signed
-  // in during onboarding) gets them with the history.
+  // New exercises the history uses (the draft holds every one the import or its plan made): an
+  // account that keeps its own plan (signed in during onboarding) gets them with the history.
   const used = new Set(workouts.flatMap((w) => w.exercises.map((e) => e.exerciseId)));
-  const known = new Map<string, CustomExercise>();
-  for (const e of [
-    ...Object.values(s.names).flatMap((n) => (n.newExercise ? [n.newExercise] : [])),
-    ...(plan?.newExercises ?? []),
-    ...useOnboardingStore.getState().draft.customExercises,
-  ]) {
-    if (used.has(e.id)) known.set(e.id, { ...e, archived: false });
-  }
-  const custom = [...known.values()];
+  const custom = useOnboardingStore
+    .getState()
+    .draft.customExercises.filter((e) => used.has(e.id))
+    .map((e) => ({ ...e, archived: false }));
   return { workouts, custom };
 }

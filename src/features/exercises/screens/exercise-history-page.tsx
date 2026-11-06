@@ -37,7 +37,7 @@ export function ExerciseHistoryPage() {
   const now = useNow(MINUTE_MS);
   const { data: stored = [], isLoading } = useExerciseHistory(exerciseId);
   // Right after an import, its workouts until the account has them (onboarding, the next sync).
-  const imported = useImportedHistory(exerciseId);
+  const imported = useImportedHistory(exerciseId, !stored.length);
   const sessions = stored.length ? stored : imported;
   const [period, setPeriod] = useState<Period>('1m');
   // undefined = default (latest session open), null = all collapsed.

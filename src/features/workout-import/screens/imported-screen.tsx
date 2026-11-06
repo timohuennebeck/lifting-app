@@ -89,7 +89,9 @@ export function ImportedScreen() {
 
   const units = inApp ? profileUnits : draftUnits;
   const exercises = importedExercises(imported.workouts, imported.created);
-  const starts = imported.workouts.map((w) => w.started_at).sort();
+  // The rows are saved oldest first (toRows).
+  const first = imported.workouts[0];
+  const last = imported.workouts.at(-1);
   const { total } = flowSteps(read, inApp, withDates, withChoice);
   const plan = withPlan();
   // Onward to how the plan is made, or on in onboarding; the app's import ends here.
@@ -118,9 +120,9 @@ export function ImportedScreen() {
         <Text className="font-inter-semibold text-xs tracking-[1.44px] text-subtle">
           {t('imported.exercises', { n: exercises.length })}
         </Text>
-        {starts.length ? (
+        {first && last ? (
           <Text className="font-inter-medium text-xs text-dim">
-            {t('imported.range', { from: month(starts[0]), to: month(starts[starts.length - 1]) })}
+            {t('imported.range', { from: month(first.started_at), to: month(last.started_at) })}
           </Text>
         ) : null}
       </View>

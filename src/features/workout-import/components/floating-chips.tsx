@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
 import Svg, { Defs, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
@@ -151,16 +151,46 @@ function SparkGlyph({ kind }: { kind: Spark }) {
   );
 }
 
-/** The sparkles the centre cycles through while reading, one every 100 ms (as in the design). */
-const SPARKS: readonly Spark[] = ['cross', 'asterisk', 'star', 'asterisk'];
+/** Shown in its quarters of a 0.4 s cycle, hidden in the others (switching at once). */
+const showIn = (quarters: number[]): CSSAnimationKeyframes =>
+  Object.fromEntries(
+    [0, 1, 2, 3].flatMap((q) => {
+      const opacity = quarters.includes(q) ? 1 : 0;
+      return [
+        [`${q * 25}%`, { opacity }],
+        [`${q * 25 + 24.9}%`, { opacity }],
+      ];
+    }),
+  );
 
+/** The sparkles the centre cycles through while reading, one every 100 ms (as in the design). */
+const SPARKS: { kind: Spark; frames: CSSAnimationKeyframes }[] = [
+  { kind: 'cross', frames: showIn([0]) },
+  { kind: 'asterisk', frames: showIn([1, 3]) },
+  { kind: 'star', frames: showIn([2]) },
+];
+
+/** The three glyphs stacked, each fading in its turn on the UI thread (no re-render). */
 function SpinnerGlyph() {
-  const [tick, setTick] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setTick((t) => t + 1), 100);
-    return () => clearInterval(id);
-  }, []);
-  return <SparkGlyph kind={SPARKS[tick % SPARKS.length]} />;
+  return (
+    <View className="size-13">
+      {SPARKS.map(({ kind, frames }) => (
+        <Animated.View
+          key={kind}
+          collapsable={false}
+          className="absolute inset-0"
+          style={{
+            animationName: frames,
+            animationDuration: '0.4s',
+            animationIterationCount: 'infinite',
+            animationTimingFunction: 'linear',
+          }}
+        >
+          <SparkGlyph kind={kind} />
+        </Animated.View>
+      ))}
+    </View>
+  );
 }
 
 export interface FloatingChipsProps {
