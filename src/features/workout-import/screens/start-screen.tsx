@@ -12,9 +12,10 @@ import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
 import { FileCards } from '../components/file-art';
+import { useImportStep } from '../hooks/use-import-step';
 import { useImportSteps } from '../hooks/use-import-steps';
 import { chooseImportFile } from '../lib/read-file';
-import { CTA_STYLE, flowSteps, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
+import { CTA_STYLE, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
 
 const LOGOS = [
   require('@/assets/images/import/hevy.png'),
@@ -29,15 +30,14 @@ export function StartScreen() {
   const { t } = useTranslation('workoutImport');
   const { inApp, step } = usePlanFlow();
   const { open } = useImportSteps();
+  const counter = useImportStep('start');
   const choose = () => void chooseImportFile(open);
 
   return (
     <StepScreen
       {...TITLE_STYLE}
       // The last question about the user in onboarding; in the app the import's first step.
-      {...(inApp
-        ? { step: 1, total: flowSteps(null, true).total }
-        : { step: ABOUT_STEPS, total: ABOUT_STEPS })}
+      {...(inApp ? counter : { step: ABOUT_STEPS, total: ABOUT_STEPS })}
       title={t('start.title')}
       subtitle={t('start.subtitle')}
       footer={

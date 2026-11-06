@@ -16,10 +16,11 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
+import { useImportStep } from '../hooks/use-import-step';
 import { useImportSteps } from '../hooks/use-import-steps';
 import { type ImportedExercise, importedExercises } from '../lib/imported';
-import { CTA_STYLE, flowSteps, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
-import { choosesPlan, undatedCount, useWorkoutImportStore } from '../stores/workout-import-store';
+import { CTA_STYLE, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
+import { choosesPlan, useWorkoutImportStore } from '../stores/workout-import-store';
 
 const month = (iso: string) => formatDate(new Date(iso), { month: 'short', year: 'numeric' });
 
@@ -79,11 +80,9 @@ export function ImportedScreen() {
   const profileUnits = useUnits();
   const draftUnits = useDraft().unitPreference;
   const imported = useWorkoutImportStore((s) => s.imported);
-  const read = useWorkoutImportStore((s) => s.read);
-  // Workouts without a date were asked about (18a): one step more.
-  const withDates = useWorkoutImportStore((s) => undatedCount(s) > 0);
-  // How the plan is made is asked next: one step more.
+  // How the plan is made is asked next.
   const withChoice = useWorkoutImportStore(choosesPlan);
+  const counter = useImportStep('imported');
   const { next, withPlan } = useImportSteps();
   if (!imported) return <Redirect href={step('/import')} />;
 
@@ -92,7 +91,6 @@ export function ImportedScreen() {
   // The rows are saved oldest first (toRows).
   const first = imported.workouts[0];
   const last = imported.workouts.at(-1);
-  const { total } = flowSteps(read, inApp, withDates, withChoice);
   const plan = withPlan();
   // Onward to how the plan is made, or on in onboarding; the app's import ends here.
   const goesOn = withChoice || !inApp;
@@ -101,8 +99,8 @@ export function ImportedScreen() {
   return (
     <StepScreen
       {...TITLE_STYLE}
-      step={withChoice ? total - 1 : total}
-      total={total}
+      step={counter.step}
+      total={counter.total}
       title={t('imported.title')}
       subtitle={t('imported.subtitle', { count: imported.workouts.length })}
       scroll

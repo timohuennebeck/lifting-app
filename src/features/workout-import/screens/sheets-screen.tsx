@@ -11,7 +11,8 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { SheetRow } from '../components/sheet-row';
 import { MAX_SHEETS } from '../lib/samples';
 import type { SheetSummary } from '../lib/sheet-summary';
-import { baseName, CTA_STYLE, flowSteps, TITLE_STYLE } from '../lib/steps';
+import { useImportStep } from '../hooks/use-import-step';
+import { baseName, CTA_STYLE, TITLE_STYLE } from '../lib/steps';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 /**
@@ -28,18 +29,17 @@ function recommended(sheets: SheetSummary[]) {
 /** 13s: a workbook's sheets, to read only those with the training in them. */
 export function SheetsScreen() {
   const { t } = useTranslation('workoutImport');
-  const { inApp, step } = usePlanFlow();
+  const { step } = usePlanFlow();
+  const counter = useImportStep('sheets');
   const file = useWorkoutImportStore((s) => s.file);
   const summaries = useWorkoutImportStore((s) => s.read?.summaries ?? null);
   const chosen = useWorkoutImportStore((s) => s.sheets);
-  const readFile = useWorkoutImportStore((s) => s.read);
   const pickSheets = useWorkoutImportStore((s) => s.pickSheets);
   // Back here again: as picked before.
   const [picked, setPicked] = useState(
     () => new Set(chosen ?? (summaries ? recommended(summaries) : [])),
   );
   if (!file || !summaries) return <Redirect href={step('/import')} />;
-  const counter = flowSteps(readFile, inApp);
 
   const advised = new Set(
     summaries.filter((s) => s.kind === 'log' || s.kind === 'plan').map((s) => s.name),
@@ -67,7 +67,7 @@ export function SheetsScreen() {
     <StepScreen
       {...TITLE_STYLE}
       subtitleClassName="mt-2.5 leading-[21.75px]"
-      step={counter.offset + 1}
+      step={counter.step}
       total={counter.total}
       title={t('sheets.title')}
       subtitle={t('sheets.subtitle', { name: baseName(file.name), count: summaries.length })}

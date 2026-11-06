@@ -17,8 +17,9 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { TextButton } from '@/shared/ui/text-button';
 
 import type { WorkoutRow } from '../lib/save-history';
-import { CTA_STYLE, flowSteps, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
-import { undatedCount, useWorkoutImportStore } from '../stores/workout-import-store';
+import { useImportStep } from '../hooks/use-import-step';
+import { CTA_STYLE, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
+import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 type Way = 'training' | 'questions';
 
@@ -42,14 +43,12 @@ function weeklyWorkouts(workouts: WorkoutRow[]) {
  */
 export function PlanChoiceScreen() {
   const { t } = useTranslation('workoutImport');
-  const { inApp, step, done } = usePlanFlow();
+  const { step, done } = usePlanFlow();
   const [way, setWay] = useState<Way>('training');
   const imported = useWorkoutImportStore((s) => s.imported);
-  const read = useWorkoutImportStore((s) => s.read);
   const planFrom = useWorkoutImportStore((s) => s.planFrom);
-  const withDates = useWorkoutImportStore((s) => undatedCount(s) > 0);
+  const counter = useImportStep('plan');
   if (!imported?.workouts.length) return <Redirect href={step('/import')} />;
-  const { total } = flowSteps(read, inApp, withDates, true);
 
   function go() {
     if (way === 'training' && planFrom === 'history') {
@@ -76,8 +75,8 @@ export function PlanChoiceScreen() {
   return (
     <StepScreen
       {...TITLE_STYLE}
-      step={total}
-      total={total}
+      step={counter.step}
+      total={counter.total}
       title={t('choice.title')}
       subtitle={t('choice.subtitle')}
       footer={

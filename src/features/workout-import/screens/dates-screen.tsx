@@ -10,8 +10,9 @@ import { TextButton } from '@/shared/ui/text-button';
 import { UndatedChart } from '../components/undated-chart';
 import { useImportSteps } from '../hooks/use-import-steps';
 import { monthBars } from '../lib/month-bars';
-import { choosesPlan, useWorkoutImportStore } from '../stores/workout-import-store';
-import { CTA_STYLE, flowSteps, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
+import { useWorkoutImportStore } from '../stores/workout-import-store';
+import { useImportStep } from '../hooks/use-import-step';
+import { CTA_STYLE, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
 
 /**
  * 18a: workouts of the file without a date get one between their neighbours (spreadUndated);
@@ -19,16 +20,13 @@ import { CTA_STYLE, flowSteps, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
  */
 export function DatesScreen() {
   const { t } = useTranslation('workoutImport');
-  const { inApp, step } = usePlanFlow();
-  const read = useWorkoutImportStore((s) => s.read);
+  const { step } = usePlanFlow();
   const workouts = useWorkoutImportStore((s) => s.workouts);
   const setKeepUndated = useWorkoutImportStore((s) => s.setKeepUndated);
   const { finish, saving } = useImportSteps();
-  // How the plan is made is asked after "Importiert": one step more.
-  const withChoice = useWorkoutImportStore(choosesPlan);
+  const counter = useImportStep('dates');
   const undated = workouts.filter((w) => !w.start).length;
   if (!undated) return <Redirect href={step('/import')} />;
-  const { total } = flowSteps(read, inApp, true, withChoice);
 
   function go(keep: boolean) {
     setKeepUndated(keep);
@@ -38,8 +36,8 @@ export function DatesScreen() {
   return (
     <StepScreen
       {...TITLE_STYLE}
-      step={total - (withChoice ? 2 : 1)}
-      total={total}
+      step={counter.step}
+      total={counter.total}
       title={t('dates.title')}
       subtitle={t('dates.body', { count: undated, total: workouts.length })}
       footer={

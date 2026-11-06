@@ -1,29 +1,12 @@
 import type { ReadFile } from './read-file';
 
 /** A workbook with more than one sheet to read asks which ones (13s). */
-const asksSheets = (read: ReadFile | null) =>
+export const asksSheets = (read: ReadFile | null) =>
   (read?.summaries?.filter((s) => s.kind !== 'empty').length ?? 0) > 1;
 
 /** Where a picked file goes: its sheets (a workbook with several), else straight to reading. */
 export const afterPick = (read: ReadFile) =>
   asksSheets(read) ? ('/import/sheets' as const) : ('/import/reading' as const);
-
-/**
- * The import's counter: in the app the start screen is its first step (in onboarding it ends the
- * questions about the user), then maybe the sheets, the dates when workouts have none
- * (`withDates`), "Importiert", and how the plan is made (`withChoice`). `offset` is added to the
- * sheets' number.
- */
-export function flowSteps(
-  read: ReadFile | null,
-  inApp: boolean,
-  withDates = false,
-  withChoice = false,
-) {
-  const offset = inApp ? 1 : 0;
-  const after = (withDates ? 1 : 0) + 1 + (withChoice ? 1 : 0);
-  return { offset, total: offset + (asksSheets(read) ? 1 : 0) + after };
-}
 
 /** The file's name without its type: "past_workouts". */
 export const baseName = (name: string) => name.replace(/\.[^.]+$/, '') || name;
