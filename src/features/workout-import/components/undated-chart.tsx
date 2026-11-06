@@ -42,7 +42,8 @@ export function UndatedChart({
 }) {
   const { t } = useTranslation('workoutImport');
   const most = Math.max(1, ...bars.map((b) => b.dated + b.spread));
-  const scale = (CHART_HEIGHT - PART_GAP) / most;
+  // The busiest month at about nine tenths of the height, as in the design.
+  const scale = (0.9 * CHART_HEIGHT - PART_GAP) / most;
   return (
     <View className="gap-3.5 px-1 pt-5 pb-4">
       <View className="flex-row gap-4">

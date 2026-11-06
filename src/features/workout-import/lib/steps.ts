@@ -13,3 +13,19 @@ export const fileLabel = (name: string) =>
 
 /** The file's name without its type: "past_workouts". */
 export const baseName = (name: string) => name.replace(/\.[^.]+$/, '') || name;
+
+/** The import's titles as its design sets them: lines 30pt apart, the subtitle 12pt below. */
+export const TITLE_STYLE = {
+  titleTextClassName: 'leading-[30px]',
+  subtitleClassName: 'mt-3 leading-[22.5px]',
+} as const;
+
+/** The import's main button as its design sizes it: 56pt high, a 16pt label. */
+export const CTA_STYLE = { className: 'h-14', textClassName: 'text-base' } as const;
+
+/** The text button under it: 44pt high, 16pt medium. */
+export const LINK_STYLE = {
+  tone: 'muted',
+  className: 'min-h-11',
+  textClassName: 'font-inter-medium text-base',
+} as const;

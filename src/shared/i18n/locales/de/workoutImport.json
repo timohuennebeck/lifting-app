@@ -73,8 +73,8 @@
   },
   "dates": {
     "title": "NICHT ÜBERALL\nSTAND EIN DATUM",
-    "body_one": "Bei {{count}} von {{total}} Trainings fehlt das Datum in deiner Datei – deshalb haben wir es auf die Monate dazwischen verteilt.",
-    "body_other": "Bei {{count}} von {{total}} Trainings fehlt das Datum in deiner Datei – deshalb haben wir diese auf die Monate dazwischen verteilt.",
+    "body_one": "Bei {{count}} von {{total}} Trainings fehlt das Datum in deiner Datei – deshalb haben wir es eingeordnet.",
+    "body_other": "Bei {{count}} von {{total}} Trainings fehlt das Datum in deiner Datei – deshalb haben wir diese aufgeteilt.",
     "dated": "Mit Datum · {{count}}",
     "spread": "Verteilt · {{count}}",
     "keep": "Passt so",

@@ -9,7 +9,7 @@ import { StepScreen } from '@/shared/ui/step-screen';
 
 import { SheetRow } from '../components/sheet-row';
 import type { SheetSummary } from '../lib/sheet-summary';
-import { baseName } from '../lib/steps';
+import { baseName, CTA_STYLE, TITLE_STYLE } from '../lib/steps';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 /** Sheets that seem to hold workouts or a plan; all that aren't empty when none do. */
@@ -51,6 +51,8 @@ export function SheetsScreen() {
 
   return (
     <StepScreen
+      {...TITLE_STYLE}
+      subtitleClassName="mt-2.5 leading-[21.75px]"
       step={2}
       total={3}
       title={t('sheets.title')}
@@ -58,6 +60,7 @@ export function SheetsScreen() {
       scroll
       footer={
         <Button
+          {...CTA_STYLE}
           label={picked.size ? t('sheets.cta', { count: picked.size }) : t('sheets.none')}
           disabled={!picked.size}
           onPress={read}

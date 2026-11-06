@@ -14,6 +14,7 @@ import { TextButton } from '@/shared/ui/text-button';
 import { FileCards } from '../components/file-art';
 import { chooseImportFile, type ImportFile, type ReadFile } from '../lib/read-file';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
+import { CTA_STYLE, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
 
 const LOGOS = [
   require('@/assets/images/import/hevy.png'),
@@ -37,17 +38,17 @@ export function StartScreen() {
 
   return (
     <StepScreen
+      {...TITLE_STYLE}
       // The last question about the user in onboarding; in the app the flow starts here.
       {...(!inApp && { step: ABOUT_STEPS, total: ABOUT_STEPS })}
       title={t('start.title')}
       subtitle={t('start.subtitle')}
       footer={
         <View className="gap-1">
-          <Button label={t('start.cta')} onPress={choose} />
+          <Button {...CTA_STYLE} label={t('start.cta')} onPress={choose} />
           <TextButton
+            {...LINK_STYLE}
             label={t('start.fresh')}
-            tone="muted"
-            textClassName="font-inter-medium text-base"
             onPress={() => router.push(step('/create/goal'))}
           />
         </View>

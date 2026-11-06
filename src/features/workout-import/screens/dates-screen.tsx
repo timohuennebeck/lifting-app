@@ -11,6 +11,7 @@ import { UndatedChart } from '../components/undated-chart';
 import { useImportSteps } from '../hooks/use-import-steps';
 import { monthBars } from '../lib/month-bars';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
+import { CTA_STYLE, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
 
 /**
  * 18a: workouts of the file without a date get one between their neighbours (spreadUndated);
@@ -32,15 +33,20 @@ export function DatesScreen() {
 
   return (
     <StepScreen
+      {...TITLE_STYLE}
       title={t('dates.title')}
       subtitle={t('dates.body', { count: undated, total: workouts.length })}
       footer={
         <View className="gap-1">
-          <Button label={t('dates.keep')} loading={saving} onPress={() => go(true)} />
+          <Button
+            {...CTA_STYLE}
+            label={t('dates.keep')}
+            loading={saving}
+            onPress={() => go(true)}
+          />
           <TextButton
+            {...LINK_STYLE}
             label={t('dates.drop')}
-            tone="muted"
-            textClassName="font-inter-medium text-base"
             disabled={saving}
             onPress={() => go(false)}
           />

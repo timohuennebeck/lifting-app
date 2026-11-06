@@ -25,6 +25,8 @@ export interface ButtonProps extends Omit<PressableScaleProps, 'children'> {
   size?: keyof typeof SIZES;
   icon?: IconName;
   loading?: boolean;
+  /** Overrides of the label's style, e.g. its size. */
+  textClassName?: string;
 }
 
 export function Button({
@@ -35,6 +37,7 @@ export function Button({
   loading,
   disabled,
   className,
+  textClassName,
   haptic = 'press',
   ...props
 }: ButtonProps) {
@@ -65,7 +68,7 @@ export function Button({
               <Icon name={icon} size={12} color={v.icon} />
             </View>
           ) : null}
-          <Text variant={s.text} tone={v.text}>
+          <Text variant={s.text} tone={v.text} className={textClassName}>
             {label}
           </Text>
         </>

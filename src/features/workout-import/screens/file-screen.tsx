@@ -13,7 +13,7 @@ import { Text } from '@/shared/ui/text';
 
 import { PickedFile } from '../components/file-art';
 import { chooseImportFile } from '../lib/read-file';
-import { asksSheets, fileLabel, importSteps } from '../lib/steps';
+import { asksSheets, CTA_STYLE, fileLabel, importSteps, TITLE_STYLE } from '../lib/steps';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 const KB = 1024;
@@ -42,11 +42,13 @@ export function FileScreen() {
 
   return (
     <StepScreen
+      {...TITLE_STYLE}
       step={1}
       total={importSteps(read)}
       title={t('file.title')}
       footer={
         <Button
+          {...CTA_STYLE}
           label={sheets ? t('file.next') : t('file.read')}
           onPress={() => router.push(step(sheets ? '/import/sheets' : '/import/reading'))}
         />
@@ -59,14 +61,16 @@ export function FileScreen() {
             <Text numberOfLines={1} className="max-w-80 font-inter-semibold text-[17px] text-fg">
               {file.name}
             </Text>
-            {caption ? <Text className="font-inter text-sm text-subtle">{caption}</Text> : null}
+            {caption ? (
+              <Text className="font-inter text-sm leading-[17px] text-subtle">{caption}</Text>
+            ) : null}
           </View>
           <PressableScale
             haptic="select"
             onPress={() => void chooseImportFile(setFile)}
             className="h-9 flex-row items-center gap-2 rounded-full bg-elevated px-4"
           >
-            <Icon name="refresh" size={14} color={colors.fgMid} />
+            <Icon name="sync" size={14} color={colors.fgMid} />
             <Text className="font-inter-semibold text-sm text-fg-mid">{t('file.replace')}</Text>
           </PressableScale>
         </View>

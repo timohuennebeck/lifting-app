@@ -1,10 +1,10 @@
 import { View } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
 
-/** The import's 26pt check box: filled accent with a tick, or an empty frame. */
+/** The import's 26pt check box: filled accent with the design's 13 × 10 tick, or an empty frame. */
 export function CheckBox({ checked, className }: { checked: boolean; className?: string }) {
   return (
     <View
@@ -14,7 +14,18 @@ export function CheckBox({ checked, className }: { checked: boolean; className?:
         className,
       )}
     >
-      {checked ? <Icon name="check" size={12} color={colors.onAccent} /> : null}
+      {checked ? (
+        <Svg width={13} height={10} viewBox="0 0 13 10">
+          <Path
+            d="M1.5 5l3.5 3.5L11.5 1.5"
+            stroke={colors.onAccent}
+            strokeWidth={2.2}
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </Svg>
+      ) : null}
     </View>
   );
 }

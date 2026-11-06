@@ -18,6 +18,7 @@ import { Orbit } from '../components/orbit';
 import { showImportFailure, showNothingFound } from '../lib/import-failure';
 import type { ImportFile, ReadFile } from '../lib/read-file';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
+import { CTA_STYLE } from '../lib/steps';
 
 /**
  * 13m31: reads the file (see the store's runImport) behind circling chips, then "Fertig" goes on
@@ -93,13 +94,14 @@ export function ReadingScreen() {
       <View className="absolute inset-x-4" style={{ bottom: Math.max(insets.bottom, 30) }}>
         {ready ? (
           <Button
+            {...CTA_STYLE}
             label={t('workoutImport:reading.done')}
             onPress={() => router.replace(step('/import/found'))}
           />
         ) : (
           // Greyed out until the file is read.
-          <View className="h-15 items-center justify-center rounded-full bg-control">
-            <Text variant="label" className="text-[#5A5A56]">
+          <View className="h-14 items-center justify-center rounded-full bg-control">
+            <Text variant="label" className="text-base text-[#5A5A56]">
               {t('workoutImport:reading.done')}
             </Text>
           </View>

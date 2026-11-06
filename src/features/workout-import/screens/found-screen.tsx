@@ -11,7 +11,7 @@ import { StepScreen } from '@/shared/ui/step-screen';
 import { FileCards, PlanCards } from '../components/file-art';
 import { FoundCard } from '../components/found-card';
 import { useImportSteps } from '../hooks/use-import-steps';
-import { importSteps } from '../lib/steps';
+import { CTA_STYLE, importSteps, TITLE_STYLE } from '../lib/steps';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 const month = (date: Date) => formatDate(date, { month: 'short', year: 'numeric' });
@@ -55,12 +55,14 @@ export function FoundScreen() {
 
   return (
     <StepScreen
+      {...TITLE_STYLE}
       step={steps}
       total={steps}
       title={t('found.title')}
       subtitle={t('found.subtitle')}
       footer={
         <Button
+          {...CTA_STYLE}
           label={saving ? t('found.saving') : t('found.cta')}
           disabled={!historyOn && !planOn}
           loading={saving}

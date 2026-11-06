@@ -24,6 +24,7 @@ import {
   reviewsToShow,
   useWorkoutImportStore,
 } from '../stores/workout-import-store';
+import { CTA_STYLE, LINK_STYLE } from '../lib/steps';
 
 /** What the radio picks: an exercise's id, or a new exercise of the user's. */
 type Choice = string | 'custom' | null;
@@ -63,9 +64,7 @@ function Row({ selected, onPress, title, caption, tile, recommended }: RowProps)
       {tile}
       <View className="min-w-0 flex-1 gap-0.75">
         <Text className="font-inter-semibold text-[15px] leading-[19px] text-fg">{title}</Text>
-        <Text numberOfLines={1} className="font-inter text-[13px] text-subtle">
-          {caption}
-        </Text>
+        <Text className="font-inter text-[13px] leading-4 text-subtle">{caption}</Text>
       </View>
       {recommended ? (
         <View className="h-6 justify-center rounded-full bg-control px-2">
@@ -142,11 +141,10 @@ export function CheckScreen() {
       scroll
       footer={
         <View className="gap-1">
-          <Button label={t('check.next')} loading={saving} onPress={confirm} />
+          <Button {...CTA_STYLE} label={t('check.next')} loading={saving} onPress={confirm} />
           <TextButton
+            {...LINK_STYLE}
             label={t('check.skip')}
-            tone="muted"
-            textClassName="font-inter-medium text-base"
             onPress={() => next({ kind: 'skip' })}
           />
         </View>
@@ -159,7 +157,7 @@ export function CheckScreen() {
           </Text>
           <Text
             accessibilityRole="header"
-            className="font-inter-semibold text-[30px] leading-[32px] text-fg uppercase"
+            className="font-inter-semibold text-[30px] leading-[31.5px] text-fg uppercase"
           >
             {item.name}
           </Text>

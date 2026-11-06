@@ -77,6 +77,14 @@ const ICONS = {
     render: stroke('M4.5 12.5v-10M2 5l2.5-2.5L7 5M9.5 1.5v10M7 9l2.5 2.5L12 9', 1.6),
   },
   refresh: { viewBox: '0 0 14 14', render: stroke('M12 7a5 5 0 1 1-1.5-3.6M12 1.5v3h-3', 1.6) },
+  // Two arrows round a circle: replace with another one ("Ersetzen").
+  sync: {
+    viewBox: '0 0 16 16',
+    render: stroke(
+      'M13.5 6A5.5 5.5 0 0 0 3.2 4.5M2.5 10a5.5 5.5 0 0 0 10.3 1.5M3 1.5v3.2h3.2M13 14.5v-3.2H9.8',
+      1.7,
+    ),
+  },
   // A camera body with its lens (the "camera" icon is the viewfinder frame).
   'photo-camera': {
     viewBox: '0 0 22 18',

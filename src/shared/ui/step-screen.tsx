@@ -12,17 +12,27 @@ export interface StepTitleProps {
   subtitle?: string;
   subtitleTone?: TextTone;
   className?: string;
+  /** Overrides of the title's and the subtitle's text style, e.g. a tighter leading. */
+  titleTextClassName?: string;
+  subtitleClassName?: string;
 }
 
 /** Big uppercase question with an optional hint below, as on every step of a flow. */
-export function StepTitle({ title, subtitle, subtitleTone = 'muted', className }: StepTitleProps) {
+export function StepTitle({
+  title,
+  subtitle,
+  subtitleTone = 'muted',
+  className,
+  titleTextClassName,
+  subtitleClassName,
+}: StepTitleProps) {
   return (
     <View className={cn('px-5 pt-4.5', className)}>
-      <Text variant="title" accessibilityRole="header">
+      <Text variant="title" accessibilityRole="header" className={titleTextClassName}>
         {title}
       </Text>
       {subtitle ? (
-        <Text variant="paragraph" tone={subtitleTone} className="mt-2.5">
+        <Text variant="paragraph" tone={subtitleTone} className={cn('mt-2.5', subtitleClassName)}>
           {subtitle}
         </Text>
       ) : null}
@@ -50,6 +60,8 @@ export function StepScreen({
   subtitle,
   subtitleTone,
   titleClassName,
+  titleTextClassName,
+  subtitleClassName,
   children,
   footer,
   scroll,
@@ -67,6 +79,8 @@ export function StepScreen({
         subtitle={subtitle}
         subtitleTone={subtitleTone}
         className={titleClassName}
+        titleTextClassName={titleTextClassName}
+        subtitleClassName={subtitleClassName}
       />
       {children}
     </Screen>

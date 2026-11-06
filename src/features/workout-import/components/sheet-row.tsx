@@ -49,7 +49,10 @@ export function SheetRow({ sheet, picked, recommended, onPress }: SheetRowProps)
       </View>
       <View className="flex-1">
         <View className="flex-row items-center gap-2">
-          <Text numberOfLines={1} className="shrink font-inter-semibold text-base text-fg">
+          <Text
+            numberOfLines={1}
+            className="shrink font-inter-semibold text-base leading-[19px] text-fg"
+          >
             {sheet.name}
           </Text>
           {recommended ? (
@@ -60,7 +63,7 @@ export function SheetRow({ sheet, picked, recommended, onPress }: SheetRowProps)
             </View>
           ) : null}
         </View>
-        <Text numberOfLines={1} className="mt-0.75 font-inter text-[13px] text-subtle">
+        <Text numberOfLines={1} className="mt-0.75 font-inter text-[13px] leading-4 text-subtle">
           {contents}
         </Text>
       </View>
