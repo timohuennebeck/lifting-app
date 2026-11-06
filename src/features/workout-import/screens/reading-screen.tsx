@@ -13,7 +13,6 @@ import { weightUnit } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
 import { DeleteSheet } from '@/shared/ui/delete-sheet';
-import { IconButton } from '@/shared/ui/icon-button';
 import { Text } from '@/shared/ui/text';
 
 import { Orbit } from '../components/orbit';
@@ -28,9 +27,9 @@ const ADVANCE_MS = 800;
 
 /**
  * 13m31: reads the file (see the store's runImport) behind chips popping in and circling, then
- * shows "Fertig" and goes on by itself (useImportSteps: checks, dates, "Importiert"). No swiping back while it reads: its X
- * (and Android's back) asks before it stops. A file with nothing to import goes back to the start
- * with 13ie; another failure goes back with the error sheet.
+ * shows "Fertig" and goes on by itself (useImportSteps: checks, dates, "Importiert"). No swiping
+ * back while it reads; Android's back asks before it stops. A file with nothing to import goes
+ * back to the start with 13ie; another failure goes back with the error sheet.
  */
 export function ReadingScreen() {
   const { t, i18n } = useTranslation(['workoutImport', 'common']);
@@ -69,7 +68,7 @@ export function ReadingScreen() {
     return () => parent?.setOptions({ gestureEnabled: true });
   }, [navigation]);
 
-  // Android's back asks first, like the X.
+  // Android's back asks first.
   useHardwareBack(() => setCancelling(true), status === 'reading');
 
   /** Stops reading (leaving stops the run) and goes back to the file. */
@@ -135,15 +134,6 @@ export function ReadingScreen() {
         }
         done={ready}
       />
-      {ready ? null : (
-        <View className="absolute left-4" style={{ top: insets.top + 6 }}>
-          <IconButton
-            icon="close"
-            accessibilityLabel={t('workoutImport:reading.cancel.title')}
-            onPress={() => setCancelling(true)}
-          />
-        </View>
-      )}
       <View className="absolute inset-x-4" style={{ bottom: Math.max(insets.bottom, 30) }}>
         {ready ? (
           <Button
