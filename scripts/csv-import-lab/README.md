@@ -46,4 +46,9 @@ some exercises change, so the names grow from 39 to 74):
 export (`title`, `start_time`, `exercise_title`, `set_index` from 0, `set_type` with warm-up,
 failure and drop sets, `weight_kg`, …), every workout dated.
 
-`node scripts/csv-import-lab/make-sample.mjs` writes them again.
+`messy-5000.csv` (5,000 sets, 266 workouts) is the hard case: about a fifth of the workouts
+without a date, and 67 exercise names as people type them, German and English mixed, with typos,
+abbreviations, slang, an emoji and a few nobody can match ("Mystery Machine 3", "Übung 7"); some
+weights read "62,5" or "80 kg".
+
+`node scripts/csv-import-lab/make-sample.mjs` writes them again, `make-messy.mjs` the messy one.

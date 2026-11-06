@@ -1,7 +1,7 @@
 import { type ReactNode, useEffect, useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
-import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
+import Svg, { Defs, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
@@ -153,8 +153,47 @@ const Dot = ({ size, color }: { size: number; color: string }) => (
   <View className="rounded-full" style={{ width: size, height: size, backgroundColor: color }} />
 );
 
-/** The glyphs the centre cycles through while reading, one every 100 ms (as in the design). */
-const GLYPHS = ['·', '✢', '✳', '✶', '✳', '✢'] as const;
+type Spark = 'cross' | 'asterisk' | 'star';
+
+/**
+ * The centre's sparkle, drawn rather than typed: iOS shows "✳" as a green emoji. The four
+ * teardrops (✢), the eight spokes (✳) and the six-pointed star (✶) of the design.
+ */
+function SparkGlyph({ kind }: { kind: Spark }) {
+  return (
+    <Svg width={52} height={52} viewBox="0 0 52 52">
+      {kind === 'cross'
+        ? [0, 90, 180, 270].map((angle) => (
+            <Path
+              key={angle}
+              d="M26 26C21.5 19.5 19 13.5 19 10a7 7 0 0 1 14 0c0 3.5-2.5 9.5-7 16z"
+              fill={colors.accent}
+              transform={`rotate(${angle} 26 26)`}
+            />
+          ))
+        : null}
+      {kind === 'asterisk' ? (
+        <Path
+          d="M26 4v44M4 26h44M10.4 10.4l31.2 31.2M41.6 10.4L10.4 41.6"
+          stroke={colors.accent}
+          strokeWidth={6}
+        />
+      ) : null}
+      {kind === 'star' ? (
+        <Path
+          d="M26.0 2.0L29.8 19.5L46.8 14.0L33.5 26.0L46.8 38.0L29.8 32.5L26.0 50.0L22.2 32.5L5.2 38.0L18.5 26.0L5.2 14.0L22.2 19.5Z"
+          fill={colors.accent}
+          stroke={colors.accent}
+          strokeWidth={1.5}
+          strokeLinejoin="round"
+        />
+      ) : null}
+    </Svg>
+  );
+}
+
+/** The sparkles the centre cycles through while reading, one every 100 ms (as in the design). */
+const SPARKS: readonly Spark[] = ['cross', 'asterisk', 'star', 'asterisk'];
 
 function SpinnerGlyph() {
   const [tick, setTick] = useState(0);
@@ -162,11 +201,7 @@ function SpinnerGlyph() {
     const id = setInterval(() => setTick((t) => t + 1), 100);
     return () => clearInterval(id);
   }, []);
-  return (
-    <Text className="w-13 text-center font-inter-bold text-[52px] leading-[52px] text-accent">
-      {GLYPHS[tick % GLYPHS.length]}
-    </Text>
-  );
+  return <SparkGlyph kind={SPARKS[tick % SPARKS.length]} />;
 }
 
 export interface OrbitProps {
@@ -177,7 +212,7 @@ export interface OrbitProps {
   /** What is being done, and how long it has taken. */
   label: string;
   caption: string;
-  /** Everything is read: the sparkle stops on ✢ and the label turns accent, as in the design. */
+  /** Everything is read: the sparkle stops on the cross (✢) and the label turns accent, as in the design. */
   done?: boolean;
 }
 
@@ -205,9 +240,7 @@ export function Orbit({ inner, outer, label, caption, done }: OrbitProps) {
           <Rect width={150} height={150} fill="url(#orbit-centre)" />
         </Svg>
         {done ? (
-          <Text className="w-13 text-center font-inter-bold text-[52px] leading-[52px] text-accent">
-            ✢
-          </Text>
+          <SparkGlyph kind="cross" />
         ) : (
           <Animated.View collapsable={false} style={loop(FLOAT, 2.4)}>
             <SpinnerGlyph />
