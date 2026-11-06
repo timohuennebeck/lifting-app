@@ -1,0 +1,2749 @@
+Date,Workout Name,Duration,Exercise Name,Set Order,Weight,Reps,Distance,Seconds,Notes,Workout Notes,RPE
+,Push,82m,Bench Press (Barbell),1,60,7,,,,,
+,Push,82m,Bench Press (Barbell),2,60,9,,,,,8.5
+,Push,82m,Bench Press (Barbell),3,60,11,,,,,
+,Push,82m,Bench Press (Barbell),4,60,10,,,,,
+,Push,82m,Incline Bench Press (Dumbbell),1,22.5,7,,,,,8.5
+,Push,82m,Incline Bench Press (Dumbbell),2,22.5,10,,,,,8.5
+,Push,82m,Incline Bench Press (Dumbbell),3,22.5,9,,,,,
+,Push,82m,Overhead Press (Barbell),1,40,6,,,,,
+,Push,82m,Overhead Press (Barbell),2,40,12,,,,,
+,Push,82m,Overhead Press (Barbell),3,40,10,,,,,
+,Push,82m,Lateral Raise (Dumbbell),1,7.5,12,,,,,7.5
+,Push,82m,Lateral Raise (Dumbbell),2,7.5,11,,,,,7
+,Push,82m,Lateral Raise (Dumbbell),3,7.5,8,,,,,
+,Push,82m,Triceps Pushdown (Cable - Straight Bar),1,25,12,,,,,
+,Push,82m,Triceps Pushdown (Cable - Straight Bar),2,25,11,,,,,
+,Push,82m,Triceps Pushdown (Cable - Straight Bar),3,25,6,,,,,8
+,Push,82m,Triceps Pushdown (Cable - Straight Bar),4,25,9,,,,,
+,Push,82m,Chest Fly,1,15,12,,,,,7.5
+,Push,82m,Chest Fly,2,15,8,,,,,
+,Push,82m,Chest Fly,3,15,12,,,,,
+,Push,82m,Chest Fly,4,15,7,,,,,
+2023-09-06 17:51:52,Pull,64m,Deadlift (Barbell),1,100,10,,,,,9
+2023-09-06 17:51:52,Pull,64m,Deadlift (Barbell),2,100,9,,,,,
+2023-09-06 17:51:52,Pull,64m,Deadlift (Barbell),3,100,10,,,,,
+2023-09-06 17:51:52,Pull,64m,Lat Pulldown (Cable),1,50,9,,,,,
+2023-09-06 17:51:52,Pull,64m,Lat Pulldown (Cable),2,50,12,,,,,8.5
+2023-09-06 17:51:52,Pull,64m,Lat Pulldown (Cable),3,50,7,,,,,
+2023-09-06 17:51:52,Pull,64m,Bent Over Row (Barbell),1,55,8,,,,,8.5
+2023-09-06 17:51:52,Pull,64m,Bent Over Row (Barbell),2,55,12,,,,,9
+2023-09-06 17:51:52,Pull,64m,Bent Over Row (Barbell),3,55,6,,,,,
+2023-09-06 17:51:52,Pull,64m,Face Pull (Cable),1,20,6,,,,,
+2023-09-06 17:51:52,Pull,64m,Face Pull (Cable),2,20,7,,,,,
+2023-09-06 17:51:52,Pull,64m,Face Pull (Cable),3,20,7,,,,,
+2023-09-06 17:51:52,Pull,64m,Face Pull (Cable),4,20,10,,,,,9
+2023-09-06 17:51:52,Pull,64m,Bicep Curl (Dumbbell),1,12.5,12,,,,,
+2023-09-06 17:51:52,Pull,64m,Bicep Curl (Dumbbell),2,12.5,12,,,,,
+2023-09-06 17:51:52,Pull,64m,Bicep Curl (Dumbbell),3,12.5,7,,,,,7.5
+2023-09-06 17:51:52,Pull,64m,Hammer DB ?,1,12.5,6,,,,,
+2023-09-06 17:51:52,Pull,64m,Hammer DB ?,2,12.5,7,,,,,
+2023-09-06 17:51:52,Pull,64m,Hammer DB ?,3,12.5,9,,,,,
+2023-09-06 17:51:52,Pull,64m,Hammer DB ?,4,12.5,7,,,,,
+2023-09-08 17:44:18,Legs,58m,Squat (Barbell),1,80,6,,,,,
+2023-09-08 17:44:18,Legs,58m,Squat (Barbell),2,80,10,,,,,
+2023-09-08 17:44:18,Legs,58m,Squat (Barbell),3,80,6,,,,,
+2023-09-08 17:44:18,Legs,58m,Romanian Deadlift (Barbell),1,70,12,,,,,
+2023-09-08 17:44:18,Legs,58m,Romanian Deadlift (Barbell),2,70,10,,,,,7.5
+2023-09-08 17:44:18,Legs,58m,Romanian Deadlift (Barbell),3,70,7,,,,,
+2023-09-08 17:44:18,Legs,58m,Romanian Deadlift (Barbell),4,70,6,,,,,
+2023-09-08 17:44:18,Legs,58m,Leg Press,1,140,10,,,,,
+2023-09-08 17:44:18,Legs,58m,Leg Press,2,140,6,,,,,9
+2023-09-08 17:44:18,Legs,58m,Leg Press,3,140,6,,,,,
+2023-09-08 17:44:18,Legs,58m,Leg Extension (Machine),1,40,6,,,,,
+2023-09-08 17:44:18,Legs,58m,Leg Extension (Machine),2,40,12,,,,,
+2023-09-08 17:44:18,Legs,58m,Leg Extension (Machine),3,40,12,,,,,
+2023-09-08 17:44:18,Legs,58m,Seated Leg Curl (Machine),1,35,7,,,,,
+2023-09-08 17:44:18,Legs,58m,Seated Leg Curl (Machine),2,35,12,,,,,7.5
+2023-09-08 17:44:18,Legs,58m,Seated Leg Curl (Machine),3,35,8,,,,,
+2023-09-08 17:44:18,Legs,58m,Standing Calf Raise (Machine),1,60,8,,,,,
+2023-09-08 17:44:18,Legs,58m,Standing Calf Raise (Machine),2,60,11,,,,,8.5
+2023-09-08 17:44:18,Legs,58m,Standing Calf Raise (Machine),3,60,8,,,,,7.5
+2023-09-12 18:13:57,Upper,81m,Bench Press (Barbell),1,60,7,,,,,
+2023-09-12 18:13:57,Upper,81m,Bench Press (Barbell),2,60,6,,,,,
+2023-09-12 18:13:57,Upper,81m,Bench Press (Barbell),3,60,9,,,,,
+2023-09-12 18:13:57,Upper,81m,Pull Up,1,,9,,,,,8
+2023-09-12 18:13:57,Upper,81m,Pull Up,2,,7,,,,,
+2023-09-12 18:13:57,Upper,81m,Pull Up,3,,9,,,,,
+2023-09-12 18:13:57,Upper,81m,Seated Row (Cable),1,50,11,,,,,8.5
+2023-09-12 18:13:57,Upper,81m,Seated Row (Cable),2,50,6,,,,,8
+2023-09-12 18:13:57,Upper,81m,Seated Row (Cable),3,50,7,,,,,
+2023-09-12 18:13:57,Upper,81m,Arnold Press (Dumbbell),1,15,7,,,,,
+2023-09-12 18:13:57,Upper,81m,Arnold Press (Dumbbell),2,15,9,,,,,8.5
+2023-09-12 18:13:57,Upper,81m,Arnold Press (Dumbbell),3,15,11,,,,,
+2023-09-12 18:13:57,Upper,81m,Arnold Press (Dumbbell),4,15,12,,,,,
+2023-09-12 18:13:57,Upper,81m,Plank,1,,,,73,,,8.5
+2023-09-12 18:13:57,Upper,81m,Plank,2,,,,63,,,
+2023-09-12 18:13:57,Upper,81m,Plank,3,,,,71,,,7
+,Push,55m,Bench Press (Barbell),1,60,12,,,,,7
+,Push,55m,Bench Press (Barbell),2,60,7,,,,,
+,Push,55m,Bench Press (Barbell),3,60,7,,,,,
+,Push,55m,Incline Bench Press (Dumbbell),1,22.5,8,,,,,
+,Push,55m,Incline Bench Press (Dumbbell),2,22.5,11,,,,,8
+,Push,55m,Incline Bench Press (Dumbbell),3,22.5,6,,,,,9
+,Push,55m,Overhead Press (Barbell),1,40,7,,,,,
+,Push,55m,Overhead Press (Barbell),2,40,9,,,,,7.5
+,Push,55m,Overhead Press (Barbell),3,40,10,,,,,7
+,Push,55m,Lateral Raise (Dumbbell),1,7.5,10,,,,,
+,Push,55m,Lateral Raise (Dumbbell),2,7.5,9,,,,,
+,Push,55m,Lateral Raise (Dumbbell),3,7.5,6,,,,,
+,Push,55m,Lateral Raise (Dumbbell),4,7.5,8,,,,,7
+,Push,55m,Triceps Pushdown (Cable - Straight Bar),1,25,6,,,,,9
+,Push,55m,Triceps Pushdown (Cable - Straight Bar),2,25,11,,,,,
+,Push,55m,Triceps Pushdown (Cable - Straight Bar),3,25,9,,,,,
+,Push,55m,Chest Fly,1,15,11,,,,,
+,Push,55m,Chest Fly,2,15,10,,,,,8
+,Push,55m,Chest Fly,3,15,9,,,,,
+2023-09-16 18:03:45,Pull,73m,Deadlift (Barbell),1,100,12,,,,,
+2023-09-16 18:03:45,Pull,73m,Deadlift (Barbell),2,100,12,,,,,
+2023-09-16 18:03:45,Pull,73m,Deadlift (Barbell),3,100,9,,,,,
+2023-09-16 18:03:45,Pull,73m,Lat Pulldown (Cable),1,50,8,,,,,7.5
+2023-09-16 18:03:45,Pull,73m,Lat Pulldown (Cable),2,50,12,,,,,
+2023-09-16 18:03:45,Pull,73m,Lat Pulldown (Cable),3,50,11,,,,,
+2023-09-16 18:03:45,Pull,73m,Bent Over Row (Barbell),1,55,7,,,,,8.5
+2023-09-16 18:03:45,Pull,73m,Bent Over Row (Barbell),2,55,6,,,,,
+2023-09-16 18:03:45,Pull,73m,Bent Over Row (Barbell),3,55,11,,,,,
+2023-09-16 18:03:45,Pull,73m,Face Pull (Cable),1,20,9,,,,,
+2023-09-16 18:03:45,Pull,73m,Face Pull (Cable),2,20,12,,,,,
+2023-09-16 18:03:45,Pull,73m,Face Pull (Cable),3,20,12,,,,,8.5
+2023-09-16 18:03:45,Pull,73m,Bicep Curl (Dumbbell),1,12.5,8,,,,,8
+2023-09-16 18:03:45,Pull,73m,Bicep Curl (Dumbbell),2,12.5,7,,,,,
+2023-09-16 18:03:45,Pull,73m,Bicep Curl (Dumbbell),3,12.5,11,,,,,8.5
+2023-09-16 18:03:45,Pull,73m,Hammer DB ?,1,12.5,6,,,,,9
+2023-09-16 18:03:45,Pull,73m,Hammer DB ?,2,12.5,6,,,,,7.5
+2023-09-16 18:03:45,Pull,73m,Hammer DB ?,3,12.5,6,,,,,
+,Legs,83m,Squat (Barbell),1,80,7,,,,,8.5
+,Legs,83m,Squat (Barbell),2,80,6,,,,,
+,Legs,83m,Squat (Barbell),3,80,10,,,,,
+,Legs,83m,Romanian Deadlift (Barbell),1,70,8,,,,,
+,Legs,83m,Romanian Deadlift (Barbell),2,70,12,,,,,
+,Legs,83m,Romanian Deadlift (Barbell),3,70,10,,,,,
+,Legs,83m,Romanian Deadlift (Barbell),4,70,10,,,,,
+,Legs,83m,Leg Press,1,142.5,6,,,,,8.5
+,Legs,83m,Leg Press,2,142.5,7,,,,,
+,Legs,83m,Leg Press,3,142.5,7,,,,,8.5
+,Legs,83m,Leg Extension (Machine),1,40,11,,,,,9
+,Legs,83m,Leg Extension (Machine),2,40,6,,,,,
+,Legs,83m,Leg Extension (Machine),3,40,8,,,,,
+,Legs,83m,Seated Leg Curl (Machine),1,35,11,,,,,9
+,Legs,83m,Seated Leg Curl (Machine),2,35,9,,,,,
+,Legs,83m,Seated Leg Curl (Machine),3,35,8,,,,,
+,Legs,83m,Standing Calf Raise (Machine),1,60,11,,,,,
+,Legs,83m,Standing Calf Raise (Machine),2,60,12,,,,,8.5
+,Legs,83m,Standing Calf Raise (Machine),3,60,7,,,,,9
+,Upper,62m,Bench Press (Barbell),1,60,12,,,,,
+,Upper,62m,Bench Press (Barbell),2,60,7,,,,,7
+,Upper,62m,Bench Press (Barbell),3,60,9,,,,,
+,Upper,62m,Pull Up,1,,8,,,,,
+,Upper,62m,Pull Up,2,,7,,,,,7
+,Upper,62m,Pull Up,3,,6,,,,,
+,Upper,62m,Pull Up,4,,9,,,,,
+,Upper,62m,Seated Row (Cable),1,50,9,,,,,
+,Upper,62m,Seated Row (Cable),2,50,8,,,,,
+,Upper,62m,Seated Row (Cable),3,50,12,,,,,
+,Upper,62m,Arnold Press (Dumbbell),1,17.5,10,,,,,
+,Upper,62m,Arnold Press (Dumbbell),2,17.5,11,,,,,7
+,Upper,62m,Arnold Press (Dumbbell),3,17.5,11,,,,,
+,Upper,62m,Plank,1,,,,57,,,
+,Upper,62m,Plank,2,,,,56,,,
+,Upper,62m,Plank,3,,,,48,,,7
+,Push,74m,Bench Press (Barbell),1,60,6,,,,,9
+,Push,74m,Bench Press (Barbell),2,60,12,,,,,8.5
+,Push,74m,Bench Press (Barbell),3,60,8,,,,,
+,Push,74m,Bench Press (Barbell),4,60,12,,,,,
+,Push,74m,Incline Bench Press (Dumbbell),1,22.5,12,,,,,8.5
+,Push,74m,Incline Bench Press (Dumbbell),2,22.5,8,,,,,7
+,Push,74m,Incline Bench Press (Dumbbell),3,22.5,11,,,,,
+,Push,74m,Incline Bench Press (Dumbbell),4,22.5,7,,,,,
+,Push,74m,Overhead Press (Barbell),1,40,8,,,,,
+,Push,74m,Overhead Press (Barbell),2,40,8,,,,,9
+,Push,74m,Overhead Press (Barbell),3,40,12,,,,,
+,Push,74m,Lateral Raise (Dumbbell),1,7.5,12,,,,,
+,Push,74m,Lateral Raise (Dumbbell),2,7.5,11,,,,,
+,Push,74m,Lateral Raise (Dumbbell),3,7.5,12,,,,,
+,Push,74m,Triceps Pushdown (Cable - Straight Bar),1,25,10,,,,,9
+,Push,74m,Triceps Pushdown (Cable - Straight Bar),2,25,7,,,,,
+,Push,74m,Triceps Pushdown (Cable - Straight Bar),3,25,10,,,,,
+,Push,74m,Triceps Pushdown (Cable - Straight Bar),4,25,9,,,,,
+,Push,74m,Chest Fly,1,15,6,,,,,7
+,Push,74m,Chest Fly,2,15,6,,,,,
+,Push,74m,Chest Fly,3,15,11,,,,,
+2023-09-30 17:30:07,Pull,61m,Deadlift (Barbell),1,102.5,9,,,,,8
+2023-09-30 17:30:07,Pull,61m,Deadlift (Barbell),2,102.5,11,,,,,
+2023-09-30 17:30:07,Pull,61m,Deadlift (Barbell),3,102.5,8,,,,,
+2023-09-30 17:30:07,Pull,61m,Lat Pulldown (Cable),1,50,10,,,,,
+2023-09-30 17:30:07,Pull,61m,Lat Pulldown (Cable),2,50,8,,,,,8.5
+2023-09-30 17:30:07,Pull,61m,Lat Pulldown (Cable),3,50,9,,,,,
+2023-09-30 17:30:07,Pull,61m,Lat Pulldown (Cable),4,50,9,,,,,8.5
+2023-09-30 17:30:07,Pull,61m,Bent Over Row (Barbell),1,55,10,,,,,
+2023-09-30 17:30:07,Pull,61m,Bent Over Row (Barbell),2,55,7,,,,,7
+2023-09-30 17:30:07,Pull,61m,Bent Over Row (Barbell),3,55,8,,,,,
+2023-09-30 17:30:07,Pull,61m,Face Pull (Cable),1,20,10,,,,,7.5
+2023-09-30 17:30:07,Pull,61m,Face Pull (Cable),2,20,8,,,,,7
+2023-09-30 17:30:07,Pull,61m,Face Pull (Cable),3,20,6,,,,,
+2023-09-30 17:30:07,Pull,61m,Bicep Curl (Dumbbell),1,12.5,6,,,,,
+2023-09-30 17:30:07,Pull,61m,Bicep Curl (Dumbbell),2,12.5,8,,,,,
+2023-09-30 17:30:07,Pull,61m,Bicep Curl (Dumbbell),3,12.5,6,,,,,
+2023-09-30 17:30:07,Pull,61m,Hammer DB ?,1,12.5,8,,,,,7.5
+2023-09-30 17:30:07,Pull,61m,Hammer DB ?,2,12.5,9,,,,,8.5
+2023-09-30 17:30:07,Pull,61m,Hammer DB ?,3,12.5,10,,,,,
+2023-09-30 17:30:07,Pull,61m,Hammer DB ?,4,12.5,11,,,,,
+,Legs,73m,Squat (Barbell),1,82.5,12,,,,,
+,Legs,73m,Squat (Barbell),2,82.5,12,,,,,9
+,Legs,73m,Squat (Barbell),3,82.5,6,,,,,7.5
+,Legs,73m,Romanian Deadlift (Barbell),1,72.5,12,,,,,
+,Legs,73m,Romanian Deadlift (Barbell),2,72.5,9,,,,,8
+,Legs,73m,Romanian Deadlift (Barbell),3,72.5,11,,,,,9
+,Legs,73m,Leg Press,1,142.5,10,,,,,
+,Legs,73m,Leg Press,2,142.5,8,,,,,8.5
+,Legs,73m,Leg Press,3,142.5,9,,,,,
+,Legs,73m,Leg Extension (Machine),1,40,10,,,,,8.5
+,Legs,73m,Leg Extension (Machine),2,40,12,,,,,
+,Legs,73m,Leg Extension (Machine),3,40,10,,,,,
+,Legs,73m,Seated Leg Curl (Machine),1,35,10,,,,,
+,Legs,73m,Seated Leg Curl (Machine),2,35,9,,,,,9
+,Legs,73m,Seated Leg Curl (Machine),3,35,10,,,,,
+,Legs,73m,Seated Leg Curl (Machine),4,35,8,,,,,
+,Legs,73m,Standing Calf Raise (Machine),1,62.5,9,,,,,
+,Legs,73m,Standing Calf Raise (Machine),2,62.5,7,,,,,8
+,Legs,73m,Standing Calf Raise (Machine),3,62.5,9,,,,,8
+,Upper,64m,Bench Press (Barbell),1,62.5,8,,,,,7.5
+,Upper,64m,Bench Press (Barbell),2,62.5,6,,,,,8
+,Upper,64m,Bench Press (Barbell),3,62.5,10,,,,,
+,Upper,64m,Pull Up,1,,9,,,,,
+,Upper,64m,Pull Up,2,,12,,,,,
+,Upper,64m,Pull Up,3,,9,,,,,
+,Upper,64m,Seated Row (Cable),1,52.5,10,,,,,
+,Upper,64m,Seated Row (Cable),2,52.5,10,,,,,7.5
+,Upper,64m,Seated Row (Cable),3,52.5,6,,,,,
+,Upper,64m,Arnold Press (Dumbbell),1,17.5,7,,,,,
+,Upper,64m,Arnold Press (Dumbbell),2,17.5,7,,,,,7
+,Upper,64m,Arnold Press (Dumbbell),3,17.5,11,,,,,8.5
+,Upper,64m,Arnold Press (Dumbbell),4,17.5,11,,,,,9
+,Upper,64m,Plank,1,,,,72,,,
+,Upper,64m,Plank,2,,,,73,,,7
+,Upper,64m,Plank,3,,,,46,,,
+2023-10-08 17:48:12,Push,80m,Bench Press (Barbell),1,62.5,11,,,,,7
+2023-10-08 17:48:12,Push,80m,Bench Press (Barbell),2,62.5,10,,,,,
+2023-10-08 17:48:12,Push,80m,Bench Press (Barbell),3,62.5,6,,,,,8
+2023-10-08 17:48:12,Push,80m,Incline Bench Press (Dumbbell),1,22.5,10,,,,,
+2023-10-08 17:48:12,Push,80m,Incline Bench Press (Dumbbell),2,22.5,7,,,,,
+2023-10-08 17:48:12,Push,80m,Incline Bench Press (Dumbbell),3,22.5,12,,,,,
+2023-10-08 17:48:12,Push,80m,Overhead Press (Barbell),1,40,7,,,,,
+2023-10-08 17:48:12,Push,80m,Overhead Press (Barbell),2,40,7,,,,,8.5
+2023-10-08 17:48:12,Push,80m,Overhead Press (Barbell),3,40,8,,,,,
+2023-10-08 17:48:12,Push,80m,Lateral Raise (Dumbbell),1,7.5,9,,,,,
+2023-10-08 17:48:12,Push,80m,Lateral Raise (Dumbbell),2,7.5,10,,,,,7
+2023-10-08 17:48:12,Push,80m,Lateral Raise (Dumbbell),3,7.5,7,,,,,
+2023-10-08 17:48:12,Push,80m,Triceps Pushdown (Cable - Straight Bar),1,25,12,,,,,
+2023-10-08 17:48:12,Push,80m,Triceps Pushdown (Cable - Straight Bar),2,25,6,,,,,
+2023-10-08 17:48:12,Push,80m,Triceps Pushdown (Cable - Straight Bar),3,25,9,,,,,8
+2023-10-08 17:48:12,Push,80m,Chest Fly,1,15,9,,,,,7
+2023-10-08 17:48:12,Push,80m,Chest Fly,2,15,10,,,,,
+2023-10-08 17:48:12,Push,80m,Chest Fly,3,15,6,,,,,
+2023-10-10 18:12:57,Pull,81m,Deadlift (Barbell),1,102.5,10,,,,,
+2023-10-10 18:12:57,Pull,81m,Deadlift (Barbell),2,102.5,7,,,,,
+2023-10-10 18:12:57,Pull,81m,Deadlift (Barbell),3,102.5,9,,,,,7
+2023-10-10 18:12:57,Pull,81m,Lat Pulldown (Cable),1,52.5,6,,,,,
+2023-10-10 18:12:57,Pull,81m,Lat Pulldown (Cable),2,52.5,6,,,,,7.5
+2023-10-10 18:12:57,Pull,81m,Lat Pulldown (Cable),3,52.5,10,,,,,7.5
+2023-10-10 18:12:57,Pull,81m,Lat Pulldown (Cable),4,52.5,11,,,,,
+2023-10-10 18:12:57,Pull,81m,Bent Over Row (Barbell),1,57.5,12,,,,,7.5
+2023-10-10 18:12:57,Pull,81m,Bent Over Row (Barbell),2,57.5,9,,,,,
+2023-10-10 18:12:57,Pull,81m,Bent Over Row (Barbell),3,57.5,10,,,,,
+2023-10-10 18:12:57,Pull,81m,Face Pull (Cable),1,20,12,,,,,
+2023-10-10 18:12:57,Pull,81m,Face Pull (Cable),2,20,8,,,,,9
+2023-10-10 18:12:57,Pull,81m,Face Pull (Cable),3,20,11,,,,,
+2023-10-10 18:12:57,Pull,81m,Bicep Curl (Dumbbell),1,12.5,12,,,,,
+2023-10-10 18:12:57,Pull,81m,Bicep Curl (Dumbbell),2,12.5,10,,,,,
+2023-10-10 18:12:57,Pull,81m,Bicep Curl (Dumbbell),3,12.5,10,,,,,
+2023-10-10 18:12:57,Pull,81m,Bicep Curl (Dumbbell),4,12.5,7,,,,,
+2023-10-10 18:12:57,Pull,81m,Hammer DB ?,1,12.5,11,,,,,
+2023-10-10 18:12:57,Pull,81m,Hammer DB ?,2,12.5,10,,,,,
+2023-10-10 18:12:57,Pull,81m,Hammer DB ?,3,12.5,6,,,,,8.5
+2023-10-12 17:44:59,Legs,82m,Squat (Barbell),1,82.5,12,,,,,
+2023-10-12 17:44:59,Legs,82m,Squat (Barbell),2,82.5,9,,,,,
+2023-10-12 17:44:59,Legs,82m,Squat (Barbell),3,82.5,12,,,,,
+2023-10-12 17:44:59,Legs,82m,Squat (Barbell),4,82.5,6,,,,,
+2023-10-12 17:44:59,Legs,82m,Romanian Deadlift (Barbell),1,72.5,10,,,,,8
+2023-10-12 17:44:59,Legs,82m,Romanian Deadlift (Barbell),2,72.5,6,,,,,7.5
+2023-10-12 17:44:59,Legs,82m,Romanian Deadlift (Barbell),3,72.5,8,,,,,7
+2023-10-12 17:44:59,Legs,82m,Leg Press,1,145,8,,,,,
+2023-10-12 17:44:59,Legs,82m,Leg Press,2,145,11,,,,,8
+2023-10-12 17:44:59,Legs,82m,Leg Press,3,145,10,,,,,
+2023-10-12 17:44:59,Legs,82m,Leg Extension (Machine),1,42.5,6,,,,,
+2023-10-12 17:44:59,Legs,82m,Leg Extension (Machine),2,42.5,6,,,,,8.5
+2023-10-12 17:44:59,Legs,82m,Leg Extension (Machine),3,42.5,7,,,,,
+2023-10-12 17:44:59,Legs,82m,Leg Extension (Machine),4,42.5,12,,,,,
+2023-10-12 17:44:59,Legs,82m,Seated Leg Curl (Machine),1,35,8,,,,,
+2023-10-12 17:44:59,Legs,82m,Seated Leg Curl (Machine),2,35,7,,,,,
+2023-10-12 17:44:59,Legs,82m,Seated Leg Curl (Machine),3,35,8,,,,,7
+2023-10-12 17:44:59,Legs,82m,Seated Leg Curl (Machine),4,35,6,,,,,8.5
+2023-10-12 17:44:59,Legs,82m,Standing Calf Raise (Machine),1,62.5,6,,,,,
+2023-10-12 17:44:59,Legs,82m,Standing Calf Raise (Machine),2,62.5,6,,,,,8.5
+2023-10-12 17:44:59,Legs,82m,Standing Calf Raise (Machine),3,62.5,10,,,,,
+,Upper,62m,Bench Press (Barbell),1,62.5,8,,,,,7.5
+,Upper,62m,Bench Press (Barbell),2,62.5,6,,,,,8
+,Upper,62m,Bench Press (Barbell),3,62.5,12,,,,,8
+,Upper,62m,Bench Press (Barbell),4,62.5,10,,,,,9
+,Upper,62m,Pull Up,1,,11,,,,,
+,Upper,62m,Pull Up,2,,10,,,,,7.5
+,Upper,62m,Pull Up,3,,9,,,,,7
+,Upper,62m,Seated Row (Cable),1,52.5,11,,,,,
+,Upper,62m,Seated Row (Cable),2,52.5,10,,,,,
+,Upper,62m,Seated Row (Cable),3,52.5,11,,,,,
+,Upper,62m,Arnold Press (Dumbbell),1,17.5,8,,,,,
+,Upper,62m,Arnold Press (Dumbbell),2,17.5,10,,,,,
+,Upper,62m,Arnold Press (Dumbbell),3,17.5,11,,,,,
+,Upper,62m,Arnold Press (Dumbbell),4,17.5,11,,,,,8
+,Upper,62m,Plank,1,,,,45,,,
+,Upper,62m,Plank,2,,,,45,,,
+,Upper,62m,Plank,3,,,,59,,,7
+2023-10-16 17:52:31,Push,58m,Bench Press (Barbell),1,62.5,11,,,,,
+2023-10-16 17:52:31,Push,58m,Bench Press (Barbell),2,62.5,11,,,,,
+2023-10-16 17:52:31,Push,58m,Bench Press (Barbell),3,62.5,10,,,,,
+2023-10-16 17:52:31,Push,58m,Bench Press (Barbell),4,62.5,11,,,,,9
+2023-10-16 17:52:31,Push,58m,Incline Bench Press (Dumbbell),1,22.5,8,,,,,7
+2023-10-16 17:52:31,Push,58m,Incline Bench Press (Dumbbell),2,22.5,6,,,,,8
+2023-10-16 17:52:31,Push,58m,Incline Bench Press (Dumbbell),3,22.5,10,,,,,7
+2023-10-16 17:52:31,Push,58m,Overhead Press (Barbell),1,42.5,10,,,,,
+2023-10-16 17:52:31,Push,58m,Overhead Press (Barbell),2,42.5,12,,,,,
+2023-10-16 17:52:31,Push,58m,Overhead Press (Barbell),3,42.5,12,,,,,
+2023-10-16 17:52:31,Push,58m,Overhead Press (Barbell),4,42.5,9,,,,,
+2023-10-16 17:52:31,Push,58m,Lateral Raise (Dumbbell),1,7.5,8,,,,,
+2023-10-16 17:52:31,Push,58m,Lateral Raise (Dumbbell),2,7.5,9,,,,,
+2023-10-16 17:52:31,Push,58m,Lateral Raise (Dumbbell),3,7.5,10,,,,,
+2023-10-16 17:52:31,Push,58m,Lateral Raise (Dumbbell),4,7.5,9,,,,,
+2023-10-16 17:52:31,Push,58m,Triceps Pushdown (Cable - Straight Bar),1,25,11,,,,,7
+2023-10-16 17:52:31,Push,58m,Triceps Pushdown (Cable - Straight Bar),2,25,10,,,,,
+2023-10-16 17:52:31,Push,58m,Triceps Pushdown (Cable - Straight Bar),3,25,7,,,,,7.5
+2023-10-16 17:52:31,Push,58m,Chest Fly,1,15,9,,,,,
+2023-10-16 17:52:31,Push,58m,Chest Fly,2,15,10,,,,,
+2023-10-16 17:52:31,Push,58m,Chest Fly,3,15,11,,,,,9
+2023-10-16 17:52:31,Push,58m,Chest Fly,4,15,12,,,,,
+2023-10-18 17:34:54,Pull,57m,Deadlift (Barbell),1,105,10,,,,,8
+2023-10-18 17:34:54,Pull,57m,Deadlift (Barbell),2,105,12,,,,,9
+2023-10-18 17:34:54,Pull,57m,Deadlift (Barbell),3,105,7,,,,,
+2023-10-18 17:34:54,Pull,57m,Deadlift (Barbell),4,105,6,,,,,
+2023-10-18 17:34:54,Pull,57m,Lat Pulldown (Cable),1,52.5,7,,,,,
+2023-10-18 17:34:54,Pull,57m,Lat Pulldown (Cable),2,52.5,8,,,,,
+2023-10-18 17:34:54,Pull,57m,Lat Pulldown (Cable),3,52.5,8,,,,,
+2023-10-18 17:34:54,Pull,57m,Bent Over Row (Barbell),1,57.5,12,,,,,
+2023-10-18 17:34:54,Pull,57m,Bent Over Row (Barbell),2,57.5,6,,,,,8
+2023-10-18 17:34:54,Pull,57m,Bent Over Row (Barbell),3,57.5,9,,,,,8
+2023-10-18 17:34:54,Pull,57m,Face Pull (Cable),1,20,8,,,,,
+2023-10-18 17:34:54,Pull,57m,Face Pull (Cable),2,20,11,,,,,7
+2023-10-18 17:34:54,Pull,57m,Face Pull (Cable),3,20,7,,,,,7
+2023-10-18 17:34:54,Pull,57m,Face Pull (Cable),4,20,12,,,,,
+2023-10-18 17:34:54,Pull,57m,Bicep Curl (Dumbbell),1,12.5,11,,,,,8.5
+2023-10-18 17:34:54,Pull,57m,Bicep Curl (Dumbbell),2,12.5,12,,,,,8
+2023-10-18 17:34:54,Pull,57m,Bicep Curl (Dumbbell),3,12.5,8,,,,,
+2023-10-18 17:34:54,Pull,57m,Hammer DB ?,1,12.5,12,,,,,7
+2023-10-18 17:34:54,Pull,57m,Hammer DB ?,2,12.5,12,,,,,
+2023-10-18 17:34:54,Pull,57m,Hammer DB ?,3,12.5,10,,,,,8
+2023-10-20 17:49:33,Legs,62m,Squat (Barbell),1,82.5,6,,,,,
+2023-10-20 17:49:33,Legs,62m,Squat (Barbell),2,82.5,12,,,,,
+2023-10-20 17:49:33,Legs,62m,Squat (Barbell),3,82.5,11,,,,,
+2023-10-20 17:49:33,Legs,62m,Squat (Barbell),4,82.5,11,,,,,
+2023-10-20 17:49:33,Legs,62m,Romanian Deadlift (Barbell),1,72.5,10,,,,,
+2023-10-20 17:49:33,Legs,62m,Romanian Deadlift (Barbell),2,72.5,11,,,,,
+2023-10-20 17:49:33,Legs,62m,Romanian Deadlift (Barbell),3,72.5,10,,,,,
+2023-10-20 17:49:33,Legs,62m,Leg Press,1,145,7,,,,,
+2023-10-20 17:49:33,Legs,62m,Leg Press,2,145,11,,,,,7.5
+2023-10-20 17:49:33,Legs,62m,Leg Press,3,145,6,,,,,
+2023-10-20 17:49:33,Legs,62m,Leg Extension (Machine),1,42.5,8,,,,,
+2023-10-20 17:49:33,Legs,62m,Leg Extension (Machine),2,42.5,10,,,,,
+2023-10-20 17:49:33,Legs,62m,Leg Extension (Machine),3,42.5,6,,,,,
+2023-10-20 17:49:33,Legs,62m,Leg Extension (Machine),4,42.5,11,,,,,8.5
+2023-10-20 17:49:33,Legs,62m,Seated Leg Curl (Machine),1,37.5,7,,,,,7.5
+2023-10-20 17:49:33,Legs,62m,Seated Leg Curl (Machine),2,37.5,9,,,,,
+2023-10-20 17:49:33,Legs,62m,Seated Leg Curl (Machine),3,37.5,10,,,,,
+2023-10-20 17:49:33,Legs,62m,Standing Calf Raise (Machine),1,62.5,8,,,,,9
+2023-10-20 17:49:33,Legs,62m,Standing Calf Raise (Machine),2,62.5,6,,,,,8.5
+2023-10-20 17:49:33,Legs,62m,Standing Calf Raise (Machine),3,62.5,7,,,,,
+2023-10-20 17:49:33,Legs,62m,Standing Calf Raise (Machine),4,62.5,7,,,,,9
+2023-10-22 18:18:40,Upper,56m,Bench Press (Barbell),1,62.5,8,,,,,9
+2023-10-22 18:18:40,Upper,56m,Bench Press (Barbell),2,62.5,10,,,,,
+2023-10-22 18:18:40,Upper,56m,Bench Press (Barbell),3,62.5,10,,,,,9
+2023-10-22 18:18:40,Upper,56m,Pull Up,1,,6,,,,,
+2023-10-22 18:18:40,Upper,56m,Pull Up,2,,6,,,,,
+2023-10-22 18:18:40,Upper,56m,Pull Up,3,,8,,,,,
+2023-10-22 18:18:40,Upper,56m,Seated Row (Cable),1,52.5,6,,,,,
+2023-10-22 18:18:40,Upper,56m,Seated Row (Cable),2,52.5,12,,,,,
+2023-10-22 18:18:40,Upper,56m,Seated Row (Cable),3,52.5,9,,,,,
+2023-10-22 18:18:40,Upper,56m,Arnold Press (Dumbbell),1,17.5,10,,,,,
+2023-10-22 18:18:40,Upper,56m,Arnold Press (Dumbbell),2,17.5,8,,,,,
+2023-10-22 18:18:40,Upper,56m,Arnold Press (Dumbbell),3,17.5,12,,,,,
+2023-10-22 18:18:40,Upper,56m,Plank,1,,,,67,,,
+2023-10-22 18:18:40,Upper,56m,Plank,2,,,,66,,,
+2023-10-22 18:18:40,Upper,56m,Plank,3,,,,47,,,
+,Push,77m,Bench Press (Barbell),1,62.5,9,,,,,
+,Push,77m,Bench Press (Barbell),2,62.5,6,,,,,
+,Push,77m,Bench Press (Barbell),3,62.5,6,,,,,
+,Push,77m,Incline Bench Press (Dumbbell),1,22.5,6,,,,,8
+,Push,77m,Incline Bench Press (Dumbbell),2,22.5,10,,,,,
+,Push,77m,Incline Bench Press (Dumbbell),3,22.5,7,,,,,7.5
+,Push,77m,Incline Bench Press (Dumbbell),4,22.5,6,,,,,
+,Push,77m,Overhead Press (Barbell),1,42.5,9,,,,,
+,Push,77m,Overhead Press (Barbell),2,42.5,12,,,,,
+,Push,77m,Overhead Press (Barbell),3,42.5,7,,,,,
+,Push,77m,Lateral Raise (Dumbbell),1,7.5,12,,,,,9
+,Push,77m,Lateral Raise (Dumbbell),2,7.5,7,,,,,
+,Push,77m,Lateral Raise (Dumbbell),3,7.5,8,,,,,
+,Push,77m,Triceps Pushdown (Cable - Straight Bar),1,25,7,,,,,
+,Push,77m,Triceps Pushdown (Cable - Straight Bar),2,25,11,,,,,
+,Push,77m,Triceps Pushdown (Cable - Straight Bar),3,25,8,,,,,
+,Push,77m,Triceps Pushdown (Cable - Straight Bar),4,25,11,,,,,
+,Push,77m,Chest Fly,1,15,10,,,,,
+,Push,77m,Chest Fly,2,15,9,,,,,7.5
+,Push,77m,Chest Fly,3,15,6,,,,,
+2023-10-26 18:38:14,Pull,71m,Deadlift (Barbell),1,105,6,,,,,9
+2023-10-26 18:38:14,Pull,71m,Deadlift (Barbell),2,105,7,,,,,
+2023-10-26 18:38:14,Pull,71m,Deadlift (Barbell),3,105,8,,,,,
+2023-10-26 18:38:14,Pull,71m,Lat Pulldown (Cable),1,52.5,8,,,,,8
+2023-10-26 18:38:14,Pull,71m,Lat Pulldown (Cable),2,52.5,9,,,,,
+2023-10-26 18:38:14,Pull,71m,Lat Pulldown (Cable),3,52.5,6,,,,,
+2023-10-26 18:38:14,Pull,71m,Bent Over Row (Barbell),1,57.5,12,,,,,
+2023-10-26 18:38:14,Pull,71m,Bent Over Row (Barbell),2,57.5,10,,,,,
+2023-10-26 18:38:14,Pull,71m,Bent Over Row (Barbell),3,57.5,9,,,,,
+2023-10-26 18:38:14,Pull,71m,Bent Over Row (Barbell),4,57.5,6,,,,,
+2023-10-26 18:38:14,Pull,71m,Face Pull (Cable),1,20,9,,,,,
+2023-10-26 18:38:14,Pull,71m,Face Pull (Cable),2,20,9,,,,,8
+2023-10-26 18:38:14,Pull,71m,Face Pull (Cable),3,20,9,,,,,
+2023-10-26 18:38:14,Pull,71m,Bicep Curl (Dumbbell),1,12.5,8,,,,,7
+2023-10-26 18:38:14,Pull,71m,Bicep Curl (Dumbbell),2,12.5,9,,,,,
+2023-10-26 18:38:14,Pull,71m,Bicep Curl (Dumbbell),3,12.5,7,,,,,
+2023-10-26 18:38:14,Pull,71m,Hammer DB ?,1,12.5,7,,,,,
+2023-10-26 18:38:14,Pull,71m,Hammer DB ?,2,12.5,10,,,,,
+2023-10-26 18:38:14,Pull,71m,Hammer DB ?,3,12.5,11,,,,,
+2023-10-26 18:38:14,Pull,71m,Hammer DB ?,4,12.5,8,,,,,8
+2023-10-28 18:52:48,Legs,66m,Squat (Barbell),1,85,9,,,,,
+2023-10-28 18:52:48,Legs,66m,Squat (Barbell),2,85,6,,,,,
+2023-10-28 18:52:48,Legs,66m,Squat (Barbell),3,85,10,,,,,
+2023-10-28 18:52:48,Legs,66m,Romanian Deadlift (Barbell),1,72.5,8,,,,,
+2023-10-28 18:52:48,Legs,66m,Romanian Deadlift (Barbell),2,72.5,12,,,,,
+2023-10-28 18:52:48,Legs,66m,Romanian Deadlift (Barbell),3,72.5,10,,,,,
+2023-10-28 18:52:48,Legs,66m,Leg Press,1,147.5,10,,,,,9
+2023-10-28 18:52:48,Legs,66m,Leg Press,2,147.5,10,,,,,
+2023-10-28 18:52:48,Legs,66m,Leg Press,3,147.5,7,,,,,
+2023-10-28 18:52:48,Legs,66m,Leg Press,4,147.5,11,,,,,8.5
+2023-10-28 18:52:48,Legs,66m,Leg Extension (Machine),1,42.5,10,,,,,7
+2023-10-28 18:52:48,Legs,66m,Leg Extension (Machine),2,42.5,9,,,,,
+2023-10-28 18:52:48,Legs,66m,Leg Extension (Machine),3,42.5,6,,,,,9
+2023-10-28 18:52:48,Legs,66m,Seated Leg Curl (Machine),1,37.5,7,,,,,
+2023-10-28 18:52:48,Legs,66m,Seated Leg Curl (Machine),2,37.5,10,,,,,8
+2023-10-28 18:52:48,Legs,66m,Seated Leg Curl (Machine),3,37.5,7,,,,,7.5
+2023-10-28 18:52:48,Legs,66m,Standing Calf Raise (Machine),1,62.5,9,,,,,
+2023-10-28 18:52:48,Legs,66m,Standing Calf Raise (Machine),2,62.5,7,,,,,
+2023-10-28 18:52:48,Legs,66m,Standing Calf Raise (Machine),3,62.5,9,,,,,
+2023-11-01 19:01:07,Upper,59m,Bench Press (Barbell),1,62.5,6,,,,,
+2023-11-01 19:01:07,Upper,59m,Bench Press (Barbell),2,62.5,8,,,,,8
+2023-11-01 19:01:07,Upper,59m,Bench Press (Barbell),3,62.5,9,,,,,
+2023-11-01 19:01:07,Upper,59m,Pull Up,1,,12,,,,,8.5
+2023-11-01 19:01:07,Upper,59m,Pull Up,2,,11,,,,,
+2023-11-01 19:01:07,Upper,59m,Pull Up,3,,10,,,,,
+2023-11-01 19:01:07,Upper,59m,Pull Up,4,,6,,,,,
+2023-11-01 19:01:07,Upper,59m,Seated Row (Cable),1,52.5,10,,,,,7.5
+2023-11-01 19:01:07,Upper,59m,Seated Row (Cable),2,52.5,11,,,,,
+2023-11-01 19:01:07,Upper,59m,Seated Row (Cable),3,52.5,7,,,,,
+2023-11-01 19:01:07,Upper,59m,Arnold Press (Dumbbell),1,17.5,10,,,,,9
+2023-11-01 19:01:07,Upper,59m,Arnold Press (Dumbbell),2,17.5,12,,,,,9
+2023-11-01 19:01:07,Upper,59m,Arnold Press (Dumbbell),3,17.5,12,,,,,
+2023-11-01 19:01:07,Upper,59m,Plank,1,,,,50,,,7
+2023-11-01 19:01:07,Upper,59m,Plank,2,,,,55,,,
+2023-11-01 19:01:07,Upper,59m,Plank,3,,,,72,,,9
+,Push,67m,Bench Press (Barbell),1,62.5,6,,,,,8
+,Push,67m,Bench Press (Barbell),2,62.5,8,,,,,
+,Push,67m,Bench Press (Barbell),3,62.5,10,,,,,7
+,Push,67m,Incline Bench Press (Dumbbell),1,22.5,11,,,,,
+,Push,67m,Incline Bench Press (Dumbbell),2,22.5,12,,,,,7
+,Push,67m,Incline Bench Press (Dumbbell),3,22.5,8,,,,,8.5
+,Push,67m,Overhead Press (Barbell),1,42.5,12,,,,,8
+,Push,67m,Overhead Press (Barbell),2,42.5,10,,,,,7.5
+,Push,67m,Overhead Press (Barbell),3,42.5,11,,,,,
+,Push,67m,Lateral Raise (Dumbbell),1,7.5,6,,,,,
+,Push,67m,Lateral Raise (Dumbbell),2,7.5,7,,,,,9
+,Push,67m,Lateral Raise (Dumbbell),3,7.5,10,,,,,
+,Push,67m,Triceps Pushdown (Cable - Straight Bar),1,27.5,11,,,,,
+,Push,67m,Triceps Pushdown (Cable - Straight Bar),2,27.5,11,,,,,7.5
+,Push,67m,Triceps Pushdown (Cable - Straight Bar),3,27.5,11,,,,,
+,Push,67m,Triceps Pushdown (Cable - Straight Bar),4,27.5,12,,,,,7.5
+,Push,67m,Chest Fly,1,15,7,,,,,
+,Push,67m,Chest Fly,2,15,11,,,,,9
+,Push,67m,Chest Fly,3,15,9,,,,,8
+,Push,67m,Chest Fly,4,15,8,,,,,
+2023-11-05 18:25:10,Pull,60m,Deadlift (Barbell),1,105,7,,,,,
+2023-11-05 18:25:10,Pull,60m,Deadlift (Barbell),2,105,12,,,,,8.5
+2023-11-05 18:25:10,Pull,60m,Deadlift (Barbell),3,105,9,,,,,
+2023-11-05 18:25:10,Pull,60m,Deadlift (Barbell),4,105,10,,,,,9
+2023-11-05 18:25:10,Pull,60m,Lat Pulldown (Cable),1,52.5,7,,,,,
+2023-11-05 18:25:10,Pull,60m,Lat Pulldown (Cable),2,52.5,12,,,,,8.5
+2023-11-05 18:25:10,Pull,60m,Lat Pulldown (Cable),3,52.5,11,,,,,
+2023-11-05 18:25:10,Pull,60m,Bent Over Row (Barbell),1,57.5,11,,,,,
+2023-11-05 18:25:10,Pull,60m,Bent Over Row (Barbell),2,57.5,11,,,,,
+2023-11-05 18:25:10,Pull,60m,Bent Over Row (Barbell),3,57.5,12,,,,,8
+2023-11-05 18:25:10,Pull,60m,Face Pull (Cable),1,20,8,,,,,7
+2023-11-05 18:25:10,Pull,60m,Face Pull (Cable),2,20,12,,,,,
+2023-11-05 18:25:10,Pull,60m,Face Pull (Cable),3,20,12,,,,,
+2023-11-05 18:25:10,Pull,60m,Face Pull (Cable),4,20,8,,,,,
+2023-11-05 18:25:10,Pull,60m,Bicep Curl (Dumbbell),1,12.5,11,,,,,7
+2023-11-05 18:25:10,Pull,60m,Bicep Curl (Dumbbell),2,12.5,12,,,,,
+2023-11-05 18:25:10,Pull,60m,Bicep Curl (Dumbbell),3,12.5,11,,,,,9
+2023-11-05 18:25:10,Pull,60m,Hammer DB ?,1,12.5,9,,,,,
+2023-11-05 18:25:10,Pull,60m,Hammer DB ?,2,12.5,7,,,,,
+2023-11-05 18:25:10,Pull,60m,Hammer DB ?,3,12.5,7,,,,,7
+2023-11-07 18:36:46,Legs,75m,Squat (Barbell),1,85,6,,,,,
+2023-11-07 18:36:46,Legs,75m,Squat (Barbell),2,85,7,,,,,9
+2023-11-07 18:36:46,Legs,75m,Squat (Barbell),3,85,9,,,,,7
+2023-11-07 18:36:46,Legs,75m,Romanian Deadlift (Barbell),1,75,7,,,,,8.5
+2023-11-07 18:36:46,Legs,75m,Romanian Deadlift (Barbell),2,75,11,,,,,
+2023-11-07 18:36:46,Legs,75m,Romanian Deadlift (Barbell),3,75,7,,,,,7.5
+2023-11-07 18:36:46,Legs,75m,Romanian Deadlift (Barbell),4,75,10,,,,,7
+2023-11-07 18:36:46,Legs,75m,Leg Press,1,147.5,9,,,,,
+2023-11-07 18:36:46,Legs,75m,Leg Press,2,147.5,7,,,,,
+2023-11-07 18:36:46,Legs,75m,Leg Press,3,147.5,8,,,,,7
+2023-11-07 18:36:46,Legs,75m,Leg Press,4,147.5,7,,,,,
+2023-11-07 18:36:46,Legs,75m,Leg Extension (Machine),1,42.5,12,,,,,
+2023-11-07 18:36:46,Legs,75m,Leg Extension (Machine),2,42.5,11,,,,,7.5
+2023-11-07 18:36:46,Legs,75m,Leg Extension (Machine),3,42.5,7,,,,,7.5
+2023-11-07 18:36:46,Legs,75m,Seated Leg Curl (Machine),1,37.5,7,,,,,
+2023-11-07 18:36:46,Legs,75m,Seated Leg Curl (Machine),2,37.5,10,,,,,
+2023-11-07 18:36:46,Legs,75m,Seated Leg Curl (Machine),3,37.5,6,,,,,
+2023-11-07 18:36:46,Legs,75m,Standing Calf Raise (Machine),1,62.5,7,,,,,7.5
+2023-11-07 18:36:46,Legs,75m,Standing Calf Raise (Machine),2,62.5,10,,,,,
+2023-11-07 18:36:46,Legs,75m,Standing Calf Raise (Machine),3,62.5,11,,,,,
+,Upper,61m,Bench Press (Barbell),1,65,11,,,,,9
+,Upper,61m,Bench Press (Barbell),2,65,12,,,,,
+,Upper,61m,Bench Press (Barbell),3,65,11,,,,,
+,Upper,61m,Pull Up,1,,10,,,,,
+,Upper,61m,Pull Up,2,,9,,,,,
+,Upper,61m,Pull Up,3,,7,,,,,7.5
+,Upper,61m,Seated Row (Cable),1,52.5,9,,,,,7
+,Upper,61m,Seated Row (Cable),2,52.5,8,,,,,8.5
+,Upper,61m,Seated Row (Cable),3,52.5,6,,,,,
+,Upper,61m,Arnold Press (Dumbbell),1,17.5,7,,,,,9
+,Upper,61m,Arnold Press (Dumbbell),2,17.5,12,,,,,
+,Upper,61m,Arnold Press (Dumbbell),3,17.5,8,,,,,8
+,Upper,61m,Plank,1,,,,49,,,8.5
+,Upper,61m,Plank,2,,,,59,,,7.5
+,Upper,61m,Plank,3,,,,55,,,
+,Push,78m,Bench Press (Barbell),1,65,10,,,,,7
+,Push,78m,Bench Press (Barbell),2,65,11,,,,,
+,Push,78m,Bench Press (Barbell),3,65,7,,,,,
+,Push,78m,Bench Press (Barbell),4,65,9,,,,,9
+,Push,78m,Incline Bench Press (Dumbbell),1,22.5,8,,,,,
+,Push,78m,Incline Bench Press (Dumbbell),2,22.5,9,,,,,
+,Push,78m,Incline Bench Press (Dumbbell),3,22.5,10,,,,,
+,Push,78m,Overhead Press (Barbell),1,42.5,10,,,,,
+,Push,78m,Overhead Press (Barbell),2,42.5,11,,,,,9
+,Push,78m,Overhead Press (Barbell),3,42.5,10,,,,,
+,Push,78m,Overhead Press (Barbell),4,42.5,8,,,,,9
+,Push,78m,Lateral Raise (Dumbbell),1,7.5,10,,,,,
+,Push,78m,Lateral Raise (Dumbbell),2,7.5,11,,,,,
+,Push,78m,Lateral Raise (Dumbbell),3,7.5,6,,,,,9
+,Push,78m,Triceps Pushdown (Cable - Straight Bar),1,27.5,6,,,,,
+,Push,78m,Triceps Pushdown (Cable - Straight Bar),2,27.5,7,,,,,
+,Push,78m,Triceps Pushdown (Cable - Straight Bar),3,27.5,7,,,,,8
+,Push,78m,Chest Fly,1,15,8,,,,,8
+,Push,78m,Chest Fly,2,15,11,,,,,
+,Push,78m,Chest Fly,3,15,11,,,,,7.5
+,Pull,61m,Deadlift (Barbell),1,107.5,10,,,,,
+,Pull,61m,Deadlift (Barbell),2,107.5,8,,,,,
+,Pull,61m,Deadlift (Barbell),3,107.5,7,,,,,9
+,Pull,61m,Lat Pulldown (Cable),1,52.5,9,,,,,9
+,Pull,61m,Lat Pulldown (Cable),2,52.5,8,,,,,8
+,Pull,61m,Lat Pulldown (Cable),3,52.5,12,,,,,
+,Pull,61m,Bent Over Row (Barbell),1,60,11,,,,,8.5
+,Pull,61m,Bent Over Row (Barbell),2,60,11,,,,,7
+,Pull,61m,Bent Over Row (Barbell),3,60,10,,,,,
+,Pull,61m,Face Pull (Cable),1,22.5,8,,,,,
+,Pull,61m,Face Pull (Cable),2,22.5,11,,,,,7.5
+,Pull,61m,Face Pull (Cable),3,22.5,9,,,,,
+,Pull,61m,Bicep Curl (Dumbbell),1,12.5,11,,,,,
+,Pull,61m,Bicep Curl (Dumbbell),2,12.5,10,,,,,
+,Pull,61m,Bicep Curl (Dumbbell),3,12.5,8,,,,,
+,Pull,61m,Hammer DB ?,1,12.5,7,,,,,
+,Pull,61m,Hammer DB ?,2,12.5,7,,,,,
+,Pull,61m,Hammer DB ?,3,12.5,10,,,,,
+,Pull,61m,Hammer DB ?,4,12.5,11,,,,,8
+2023-11-19 17:41:22,Legs,76m,Squat (Barbell),1,85,9,,,,,
+2023-11-19 17:41:22,Legs,76m,Squat (Barbell),2,85,11,,,,,
+2023-11-19 17:41:22,Legs,76m,Squat (Barbell),3,85,8,,,,,9
+2023-11-19 17:41:22,Legs,76m,Romanian Deadlift (Barbell),1,75,9,,,,,7
+2023-11-19 17:41:22,Legs,76m,Romanian Deadlift (Barbell),2,75,11,,,,,9
+2023-11-19 17:41:22,Legs,76m,Romanian Deadlift (Barbell),3,75,7,,,,,
+2023-11-19 17:41:22,Legs,76m,Leg Press,1,150,7,,,,,
+2023-11-19 17:41:22,Legs,76m,Leg Press,2,150,11,,,,,
+2023-11-19 17:41:22,Legs,76m,Leg Press,3,150,9,,,,,
+2023-11-19 17:41:22,Legs,76m,Leg Press,4,150,10,,,,,8.5
+2023-11-19 17:41:22,Legs,76m,Leg Extension (Machine),1,42.5,12,,,,,
+2023-11-19 17:41:22,Legs,76m,Leg Extension (Machine),2,42.5,12,,,,,7
+2023-11-19 17:41:22,Legs,76m,Leg Extension (Machine),3,42.5,12,,,,,
+2023-11-19 17:41:22,Legs,76m,Seated Leg Curl (Machine),1,37.5,12,,,,,
+2023-11-19 17:41:22,Legs,76m,Seated Leg Curl (Machine),2,37.5,12,,,,,
+2023-11-19 17:41:22,Legs,76m,Seated Leg Curl (Machine),3,37.5,6,,,,,
+2023-11-19 17:41:22,Legs,76m,Seated Leg Curl (Machine),4,37.5,10,,,,,
+2023-11-19 17:41:22,Legs,76m,Standing Calf Raise (Machine),1,65,12,,,,,
+2023-11-19 17:41:22,Legs,76m,Standing Calf Raise (Machine),2,65,10,,,,,
+2023-11-19 17:41:22,Legs,76m,Standing Calf Raise (Machine),3,65,8,,,,,
+2023-11-21 17:38:32,Upper,70m,Bench Press (Barbell),1,65,9,,,,,
+2023-11-21 17:38:32,Upper,70m,Bench Press (Barbell),2,65,7,,,,,
+2023-11-21 17:38:32,Upper,70m,Bench Press (Barbell),3,65,6,,,,,
+2023-11-21 17:38:32,Upper,70m,Bench Press (Barbell),4,65,12,,,,,7
+2023-11-21 17:38:32,Upper,70m,Pull Up,1,,6,,,,,
+2023-11-21 17:38:32,Upper,70m,Pull Up,2,,9,,,,,8
+2023-11-21 17:38:32,Upper,70m,Pull Up,3,,9,,,,,8.5
+2023-11-21 17:38:32,Upper,70m,Seated Row (Cable),1,52.5,11,,,,,9
+2023-11-21 17:38:32,Upper,70m,Seated Row (Cable),2,52.5,11,,,,,8
+2023-11-21 17:38:32,Upper,70m,Seated Row (Cable),3,52.5,11,,,,,
+2023-11-21 17:38:32,Upper,70m,Arnold Press (Dumbbell),1,17.5,11,,,,,8.5
+2023-11-21 17:38:32,Upper,70m,Arnold Press (Dumbbell),2,17.5,8,,,,,
+2023-11-21 17:38:32,Upper,70m,Arnold Press (Dumbbell),3,17.5,6,,,,,
+2023-11-21 17:38:32,Upper,70m,Plank,1,,,,49,,,
+2023-11-21 17:38:32,Upper,70m,Plank,2,,,,66,,,
+2023-11-21 17:38:32,Upper,70m,Plank,3,,,,74,,,
+2023-11-23 17:47:13,Push,64m,Bench Press (Barbell),1,65,12,,,,,8.5
+2023-11-23 17:47:13,Push,64m,Bench Press (Barbell),2,65,11,,,,,
+2023-11-23 17:47:13,Push,64m,Bench Press (Barbell),3,65,12,,,,,
+2023-11-23 17:47:13,Push,64m,Incline Bench Press (Dumbbell),1,22.5,6,,,,,
+2023-11-23 17:47:13,Push,64m,Incline Bench Press (Dumbbell),2,22.5,12,,,,,7.5
+2023-11-23 17:47:13,Push,64m,Incline Bench Press (Dumbbell),3,22.5,10,,,,,
+2023-11-23 17:47:13,Push,64m,Incline Bench Press (Dumbbell),4,22.5,10,,,,,
+2023-11-23 17:47:13,Push,64m,Overhead Press (Barbell),1,42.5,9,,,,,
+2023-11-23 17:47:13,Push,64m,Overhead Press (Barbell),2,42.5,7,,,,,
+2023-11-23 17:47:13,Push,64m,Overhead Press (Barbell),3,42.5,8,,,,,
+2023-11-23 17:47:13,Push,64m,Overhead Press (Barbell),4,42.5,6,,,,,
+2023-11-23 17:47:13,Push,64m,Lateral Raise (Dumbbell),1,7.5,6,,,,,
+2023-11-23 17:47:13,Push,64m,Lateral Raise (Dumbbell),2,7.5,8,,,,,
+2023-11-23 17:47:13,Push,64m,Lateral Raise (Dumbbell),3,7.5,11,,,,,7.5
+2023-11-23 17:47:13,Push,64m,Triceps Pushdown (Cable - Straight Bar),1,27.5,9,,,,,
+2023-11-23 17:47:13,Push,64m,Triceps Pushdown (Cable - Straight Bar),2,27.5,10,,,,,
+2023-11-23 17:47:13,Push,64m,Triceps Pushdown (Cable - Straight Bar),3,27.5,9,,,,,
+2023-11-23 17:47:13,Push,64m,Triceps Pushdown (Cable - Straight Bar),4,27.5,12,,,,,7.5
+2023-11-23 17:47:13,Push,64m,Chest Fly,1,15,6,,,,,
+2023-11-23 17:47:13,Push,64m,Chest Fly,2,15,10,,,,,9
+2023-11-23 17:47:13,Push,64m,Chest Fly,3,15,10,,,,,
+2023-11-25 17:23:45,Pull,63m,Deadlift (Barbell),1,107.5,11,,,,,7
+2023-11-25 17:23:45,Pull,63m,Deadlift (Barbell),2,107.5,10,,,,,
+2023-11-25 17:23:45,Pull,63m,Deadlift (Barbell),3,107.5,12,,,,,
+2023-11-25 17:23:45,Pull,63m,Deadlift (Barbell),4,107.5,10,,,,,8
+2023-11-25 17:23:45,Pull,63m,Lat Pulldown (Cable),1,55,12,,,,,
+2023-11-25 17:23:45,Pull,63m,Lat Pulldown (Cable),2,55,6,,,,,
+2023-11-25 17:23:45,Pull,63m,Lat Pulldown (Cable),3,55,8,,,,,
+2023-11-25 17:23:45,Pull,63m,Bent Over Row (Barbell),1,60,9,,,,,
+2023-11-25 17:23:45,Pull,63m,Bent Over Row (Barbell),2,60,6,,,,,7
+2023-11-25 17:23:45,Pull,63m,Bent Over Row (Barbell),3,60,8,,,,,8
+2023-11-25 17:23:45,Pull,63m,Face Pull (Cable),1,22.5,11,,,,,8.5
+2023-11-25 17:23:45,Pull,63m,Face Pull (Cable),2,22.5,7,,,,,8
+2023-11-25 17:23:45,Pull,63m,Face Pull (Cable),3,22.5,9,,,,,9
+2023-11-25 17:23:45,Pull,63m,Face Pull (Cable),4,22.5,10,,,,,
+2023-11-25 17:23:45,Pull,63m,Bicep Curl (Dumbbell),1,12.5,6,,,,,
+2023-11-25 17:23:45,Pull,63m,Bicep Curl (Dumbbell),2,12.5,11,,,,,
+2023-11-25 17:23:45,Pull,63m,Bicep Curl (Dumbbell),3,12.5,8,,,,,
+2023-11-25 17:23:45,Pull,63m,Hammer DB ?,1,12.5,12,,,,,
+2023-11-25 17:23:45,Pull,63m,Hammer DB ?,2,12.5,9,,,,,9
+2023-11-25 17:23:45,Pull,63m,Hammer DB ?,3,12.5,12,,,,,
+2023-11-25 17:23:45,Pull,63m,Hammer DB ?,4,12.5,7,,,,,
+2023-11-27 17:50:19,Legs,84m,Squat (Barbell),1,87.5,9,,,,,
+2023-11-27 17:50:19,Legs,84m,Squat (Barbell),2,87.5,6,,,,,
+2023-11-27 17:50:19,Legs,84m,Squat (Barbell),3,87.5,10,,,,,
+2023-11-27 17:50:19,Legs,84m,Romanian Deadlift (Barbell),1,75,11,,,,,8.5
+2023-11-27 17:50:19,Legs,84m,Romanian Deadlift (Barbell),2,75,10,,,,,7.5
+2023-11-27 17:50:19,Legs,84m,Romanian Deadlift (Barbell),3,75,10,,,,,
+2023-11-27 17:50:19,Legs,84m,Leg Press,1,152.5,10,,,,,9
+2023-11-27 17:50:19,Legs,84m,Leg Press,2,152.5,12,,,,,
+2023-11-27 17:50:19,Legs,84m,Leg Press,3,152.5,11,,,,,
+2023-11-27 17:50:19,Legs,84m,Leg Press,4,152.5,9,,,,,
+2023-11-27 17:50:19,Legs,84m,Leg Extension (Machine),1,42.5,10,,,,,
+2023-11-27 17:50:19,Legs,84m,Leg Extension (Machine),2,42.5,8,,,,,
+2023-11-27 17:50:19,Legs,84m,Leg Extension (Machine),3,42.5,11,,,,,
+2023-11-27 17:50:19,Legs,84m,Seated Leg Curl (Machine),1,37.5,6,,,,,9
+2023-11-27 17:50:19,Legs,84m,Seated Leg Curl (Machine),2,37.5,7,,,,,8.5
+2023-11-27 17:50:19,Legs,84m,Seated Leg Curl (Machine),3,37.5,12,,,,,7
+2023-11-27 17:50:19,Legs,84m,Standing Calf Raise (Machine),1,65,12,,,,,8.5
+2023-11-27 17:50:19,Legs,84m,Standing Calf Raise (Machine),2,65,8,,,,,
+2023-11-27 17:50:19,Legs,84m,Standing Calf Raise (Machine),3,65,7,,,,,
+2023-12-01 17:21:38,Upper,60m,Bench Press (Barbell),1,65,9,,,,,8
+2023-12-01 17:21:38,Upper,60m,Bench Press (Barbell),2,65,9,,,,,8
+2023-12-01 17:21:38,Upper,60m,Bench Press (Barbell),3,65,10,,,,,7
+2023-12-01 17:21:38,Upper,60m,Pull Up,1,,9,,,,,9
+2023-12-01 17:21:38,Upper,60m,Pull Up,2,,8,,,,,
+2023-12-01 17:21:38,Upper,60m,Pull Up,3,,12,,,,,
+2023-12-01 17:21:38,Upper,60m,Seated Row (Cable),1,55,11,,,,,7.5
+2023-12-01 17:21:38,Upper,60m,Seated Row (Cable),2,55,9,,,,,8.5
+2023-12-01 17:21:38,Upper,60m,Seated Row (Cable),3,55,6,,,,,9
+2023-12-01 17:21:38,Upper,60m,Arnold Press (Dumbbell),1,17.5,11,,,,,
+2023-12-01 17:21:38,Upper,60m,Arnold Press (Dumbbell),2,17.5,6,,,,,8.5
+2023-12-01 17:21:38,Upper,60m,Arnold Press (Dumbbell),3,17.5,8,,,,,
+2023-12-01 17:21:38,Upper,60m,Plank,1,,,,63,,,
+2023-12-01 17:21:38,Upper,60m,Plank,2,,,,56,,,
+2023-12-01 17:21:38,Upper,60m,Plank,3,,,,55,,,7.5
+2023-12-03 17:43:48,Push,72m,Bench Press (Barbell),1,65,9,,,,,
+2023-12-03 17:43:48,Push,72m,Bench Press (Barbell),2,65,10,,,,,
+2023-12-03 17:43:48,Push,72m,Bench Press (Barbell),3,65,7,,,,,9
+2023-12-03 17:43:48,Push,72m,Incline Bench Press (Dumbbell),1,25,12,,,,,
+2023-12-03 17:43:48,Push,72m,Incline Bench Press (Dumbbell),2,25,9,,,,,9
+2023-12-03 17:43:48,Push,72m,Incline Bench Press (Dumbbell),3,25,10,,,,,
+2023-12-03 17:43:48,Push,72m,Incline Bench Press (Dumbbell),4,25,10,,,,,
+2023-12-03 17:43:48,Push,72m,Overhead Press (Barbell),1,42.5,11,,,,,7.5
+2023-12-03 17:43:48,Push,72m,Overhead Press (Barbell),2,42.5,7,,,,,8
+2023-12-03 17:43:48,Push,72m,Overhead Press (Barbell),3,42.5,11,,,,,
+2023-12-03 17:43:48,Push,72m,Lateral Raise (Dumbbell),1,7.5,7,,,,,7
+2023-12-03 17:43:48,Push,72m,Lateral Raise (Dumbbell),2,7.5,11,,,,,7
+2023-12-03 17:43:48,Push,72m,Lateral Raise (Dumbbell),3,7.5,8,,,,,7
+2023-12-03 17:43:48,Push,72m,Lateral Raise (Dumbbell),4,7.5,10,,,,,
+2023-12-03 17:43:48,Push,72m,Triceps Pushdown (Cable - Straight Bar),1,27.5,9,,,,,7
+2023-12-03 17:43:48,Push,72m,Triceps Pushdown (Cable - Straight Bar),2,27.5,9,,,,,8
+2023-12-03 17:43:48,Push,72m,Triceps Pushdown (Cable - Straight Bar),3,27.5,7,,,,,8
+2023-12-03 17:43:48,Push,72m,Chest Fly,1,15,7,,,,,8
+2023-12-03 17:43:48,Push,72m,Chest Fly,2,15,12,,,,,8.5
+2023-12-03 17:43:48,Push,72m,Chest Fly,3,15,6,,,,,
+2023-12-05 17:35:09,Pull,67m,Deadlift (Barbell),1,110,10,,,,,
+2023-12-05 17:35:09,Pull,67m,Deadlift (Barbell),2,110,12,,,,,
+2023-12-05 17:35:09,Pull,67m,Deadlift (Barbell),3,110,10,,,,,7
+2023-12-05 17:35:09,Pull,67m,Deadlift (Barbell),4,110,6,,,,,7
+2023-12-05 17:35:09,Pull,67m,Lat Pulldown (Cable),1,55,10,,,,,
+2023-12-05 17:35:09,Pull,67m,Lat Pulldown (Cable),2,55,12,,,,,
+2023-12-05 17:35:09,Pull,67m,Lat Pulldown (Cable),3,55,6,,,,,
+2023-12-05 17:35:09,Pull,67m,Lat Pulldown (Cable),4,55,6,,,,,
+2023-12-05 17:35:09,Pull,67m,Bent Over Row (Barbell),1,60,6,,,,,9
+2023-12-05 17:35:09,Pull,67m,Bent Over Row (Barbell),2,60,6,,,,,7
+2023-12-05 17:35:09,Pull,67m,Bent Over Row (Barbell),3,60,10,,,,,
+2023-12-05 17:35:09,Pull,67m,Face Pull (Cable),1,22.5,7,,,,,7.5
+2023-12-05 17:35:09,Pull,67m,Face Pull (Cable),2,22.5,9,,,,,
+2023-12-05 17:35:09,Pull,67m,Face Pull (Cable),3,22.5,7,,,,,9
+2023-12-05 17:35:09,Pull,67m,Face Pull (Cable),4,22.5,7,,,,,
+2023-12-05 17:35:09,Pull,67m,Bicep Curl (Dumbbell),1,12.5,11,,,,,
+2023-12-05 17:35:09,Pull,67m,Bicep Curl (Dumbbell),2,12.5,7,,,,,
+2023-12-05 17:35:09,Pull,67m,Bicep Curl (Dumbbell),3,12.5,6,,,,,8
+2023-12-05 17:35:09,Pull,67m,Bicep Curl (Dumbbell),4,12.5,11,,,,,
+2023-12-05 17:35:09,Pull,67m,Hammer DB ?,1,12.5,6,,,,,
+2023-12-05 17:35:09,Pull,67m,Hammer DB ?,2,12.5,10,,,,,
+2023-12-05 17:35:09,Pull,67m,Hammer DB ?,3,12.5,10,,,,,
+2023-12-05 17:35:09,Pull,67m,Hammer DB ?,4,12.5,7,,,,,
+2023-12-07 17:39:18,Legs,80m,Squat (Barbell),1,87.5,10,,,,,8.5
+2023-12-07 17:39:18,Legs,80m,Squat (Barbell),2,87.5,11,,,,,8
+2023-12-07 17:39:18,Legs,80m,Squat (Barbell),3,87.5,11,,,,,
+2023-12-07 17:39:18,Legs,80m,Romanian Deadlift (Barbell),1,77.5,10,,,,,9
+2023-12-07 17:39:18,Legs,80m,Romanian Deadlift (Barbell),2,77.5,12,,,,,
+2023-12-07 17:39:18,Legs,80m,Romanian Deadlift (Barbell),3,77.5,10,,,,,
+2023-12-07 17:39:18,Legs,80m,Leg Press,1,152.5,8,,,,,9
+2023-12-07 17:39:18,Legs,80m,Leg Press,2,152.5,12,,,,,
+2023-12-07 17:39:18,Legs,80m,Leg Press,3,152.5,9,,,,,
+2023-12-07 17:39:18,Legs,80m,Leg Press,4,152.5,7,,,,,8.5
+2023-12-07 17:39:18,Legs,80m,Leg Extension (Machine),1,42.5,10,,,,,7.5
+2023-12-07 17:39:18,Legs,80m,Leg Extension (Machine),2,42.5,7,,,,,
+2023-12-07 17:39:18,Legs,80m,Leg Extension (Machine),3,42.5,8,,,,,8
+2023-12-07 17:39:18,Legs,80m,Leg Extension (Machine),4,42.5,11,,,,,
+2023-12-07 17:39:18,Legs,80m,Seated Leg Curl (Machine),1,37.5,12,,,,,
+2023-12-07 17:39:18,Legs,80m,Seated Leg Curl (Machine),2,37.5,9,,,,,
+2023-12-07 17:39:18,Legs,80m,Seated Leg Curl (Machine),3,37.5,11,,,,,9
+2023-12-07 17:39:18,Legs,80m,Standing Calf Raise (Machine),1,65,7,,,,,
+2023-12-07 17:39:18,Legs,80m,Standing Calf Raise (Machine),2,65,11,,,,,
+2023-12-07 17:39:18,Legs,80m,Standing Calf Raise (Machine),3,65,6,,,,,
+2023-12-09 17:16:33,Upper,66m,Bench Press (Barbell),1,65,7,,,,,7.5
+2023-12-09 17:16:33,Upper,66m,Bench Press (Barbell),2,65,9,,,,,
+2023-12-09 17:16:33,Upper,66m,Bench Press (Barbell),3,65,7,,,,,9
+2023-12-09 17:16:33,Upper,66m,Bench Press (Barbell),4,65,12,,,,,7.5
+2023-12-09 17:16:33,Upper,66m,Pull Up,1,,11,,,,,
+2023-12-09 17:16:33,Upper,66m,Pull Up,2,,7,,,,,
+2023-12-09 17:16:33,Upper,66m,Pull Up,3,,8,,,,,
+2023-12-09 17:16:33,Upper,66m,Pull Up,4,,7,,,,,
+2023-12-09 17:16:33,Upper,66m,Seated Row (Cable),1,55,7,,,,,
+2023-12-09 17:16:33,Upper,66m,Seated Row (Cable),2,55,11,,,,,
+2023-12-09 17:16:33,Upper,66m,Seated Row (Cable),3,55,10,,,,,
+2023-12-09 17:16:33,Upper,66m,Arnold Press (Dumbbell),1,17.5,7,,,,,
+2023-12-09 17:16:33,Upper,66m,Arnold Press (Dumbbell),2,17.5,8,,,,,8.5
+2023-12-09 17:16:33,Upper,66m,Arnold Press (Dumbbell),3,17.5,8,,,,,7
+2023-12-09 17:16:33,Upper,66m,Plank,1,,,,45,,,8
+2023-12-09 17:16:33,Upper,66m,Plank,2,,,,60,,,7.5
+2023-12-09 17:16:33,Upper,66m,Plank,3,,,,64,,,
+2023-12-11 17:20:08,Push,82m,Bench Press (Barbell),1,65,7,,,,,
+2023-12-11 17:20:08,Push,82m,Bench Press (Barbell),2,65,10,,,,,
+2023-12-11 17:20:08,Push,82m,Bench Press (Barbell),3,65,9,,,,,
+2023-12-11 17:20:08,Push,82m,Bench Press (Barbell),4,65,9,,,,,
+2023-12-11 17:20:08,Push,82m,Incline Bench Press (Dumbbell),1,25,9,,,,,
+2023-12-11 17:20:08,Push,82m,Incline Bench Press (Dumbbell),2,25,7,,,,,9
+2023-12-11 17:20:08,Push,82m,Incline Bench Press (Dumbbell),3,25,11,,,,,9
+2023-12-11 17:20:08,Push,82m,Incline Bench Press (Dumbbell),4,25,8,,,,,
+2023-12-11 17:20:08,Push,82m,Overhead Press (Barbell),1,45,6,,,,,8
+2023-12-11 17:20:08,Push,82m,Overhead Press (Barbell),2,45,6,,,,,7.5
+2023-12-11 17:20:08,Push,82m,Overhead Press (Barbell),3,45,7,,,,,
+2023-12-11 17:20:08,Push,82m,Lateral Raise (Dumbbell),1,10,11,,,,,
+2023-12-11 17:20:08,Push,82m,Lateral Raise (Dumbbell),2,10,11,,,,,7.5
+2023-12-11 17:20:08,Push,82m,Lateral Raise (Dumbbell),3,10,9,,,,,8
+2023-12-11 17:20:08,Push,82m,Triceps Pushdown (Cable - Straight Bar),1,27.5,12,,,,,
+2023-12-11 17:20:08,Push,82m,Triceps Pushdown (Cable - Straight Bar),2,27.5,8,,,,,
+2023-12-11 17:20:08,Push,82m,Triceps Pushdown (Cable - Straight Bar),3,27.5,10,,,,,8
+2023-12-11 17:20:08,Push,82m,Chest Fly,1,15,6,,,,,
+2023-12-11 17:20:08,Push,82m,Chest Fly,2,15,10,,,,,
+2023-12-11 17:20:08,Push,82m,Chest Fly,3,15,6,,,,,8
+2023-12-13 17:03:55,Pull,71m,Deadlift (Barbell),1,110,10,,,,,
+2023-12-13 17:03:55,Pull,71m,Deadlift (Barbell),2,110,10,,,,,7
+2023-12-13 17:03:55,Pull,71m,Deadlift (Barbell),3,110,7,,,,,
+2023-12-13 17:03:55,Pull,71m,Lat Pulldown (Cable),1,55,11,,,,,7
+2023-12-13 17:03:55,Pull,71m,Lat Pulldown (Cable),2,55,10,,,,,9
+2023-12-13 17:03:55,Pull,71m,Lat Pulldown (Cable),3,55,12,,,,,7
+2023-12-13 17:03:55,Pull,71m,Bent Over Row (Barbell),1,60,10,,,,,
+2023-12-13 17:03:55,Pull,71m,Bent Over Row (Barbell),2,60,8,,,,,9
+2023-12-13 17:03:55,Pull,71m,Bent Over Row (Barbell),3,60,7,,,,,8
+2023-12-13 17:03:55,Pull,71m,Face Pull (Cable),1,22.5,11,,,,,7.5
+2023-12-13 17:03:55,Pull,71m,Face Pull (Cable),2,22.5,8,,,,,
+2023-12-13 17:03:55,Pull,71m,Face Pull (Cable),3,22.5,6,,,,,
+2023-12-13 17:03:55,Pull,71m,Face Pull (Cable),4,22.5,8,,,,,
+2023-12-13 17:03:55,Pull,71m,Bicep Curl (Dumbbell),1,12.5,10,,,,,
+2023-12-13 17:03:55,Pull,71m,Bicep Curl (Dumbbell),2,12.5,11,,,,,
+2023-12-13 17:03:55,Pull,71m,Bicep Curl (Dumbbell),3,12.5,7,,,,,8.5
+2023-12-13 17:03:55,Pull,71m,Bicep Curl (Dumbbell),4,12.5,9,,,,,
+2023-12-13 17:03:55,Pull,71m,Hammer DB ?,1,12.5,7,,,,,9
+2023-12-13 17:03:55,Pull,71m,Hammer DB ?,2,12.5,12,,,,,8.5
+2023-12-13 17:03:55,Pull,71m,Hammer DB ?,3,12.5,10,,,,,7.5
+2023-12-13 17:03:55,Pull,71m,Hammer DB ?,4,12.5,11,,,,,
+2023-12-15 16:44:30,Legs,61m,Squat (Barbell),1,87.5,8,,,,,
+2023-12-15 16:44:30,Legs,61m,Squat (Barbell),2,87.5,11,,,,,
+2023-12-15 16:44:30,Legs,61m,Squat (Barbell),3,87.5,10,,,,,
+2023-12-15 16:44:30,Legs,61m,Romanian Deadlift (Barbell),1,77.5,9,,,,,
+2023-12-15 16:44:30,Legs,61m,Romanian Deadlift (Barbell),2,77.5,9,,,,,
+2023-12-15 16:44:30,Legs,61m,Romanian Deadlift (Barbell),3,77.5,9,,,,,
+2023-12-15 16:44:30,Legs,61m,Leg Press,1,155,10,,,,,9
+2023-12-15 16:44:30,Legs,61m,Leg Press,2,155,12,,,,,
+2023-12-15 16:44:30,Legs,61m,Leg Press,3,155,10,,,,,8
+2023-12-15 16:44:30,Legs,61m,Leg Extension (Machine),1,45,6,,,,,
+2023-12-15 16:44:30,Legs,61m,Leg Extension (Machine),2,45,6,,,,,
+2023-12-15 16:44:30,Legs,61m,Leg Extension (Machine),3,45,12,,,,,
+2023-12-15 16:44:30,Legs,61m,Leg Extension (Machine),4,45,11,,,,,
+2023-12-15 16:44:30,Legs,61m,Seated Leg Curl (Machine),1,37.5,12,,,,,
+2023-12-15 16:44:30,Legs,61m,Seated Leg Curl (Machine),2,37.5,12,,,,,8
+2023-12-15 16:44:30,Legs,61m,Seated Leg Curl (Machine),3,37.5,6,,,,,
+2023-12-15 16:44:30,Legs,61m,Standing Calf Raise (Machine),1,65,9,,,,,
+2023-12-15 16:44:30,Legs,61m,Standing Calf Raise (Machine),2,65,7,,,,,
+2023-12-15 16:44:30,Legs,61m,Standing Calf Raise (Machine),3,65,7,,,,,
+2023-12-17 16:56:16,Upper,60m,Bench Press (Barbell),1,65,6,,,,,
+2023-12-17 16:56:16,Upper,60m,Bench Press (Barbell),2,65,11,,,,,
+2023-12-17 16:56:16,Upper,60m,Bench Press (Barbell),3,65,10,,,,,
+2023-12-17 16:56:16,Upper,60m,Pull Up,1,,11,,,,,9
+2023-12-17 16:56:16,Upper,60m,Pull Up,2,,9,,,,,8.5
+2023-12-17 16:56:16,Upper,60m,Pull Up,3,,6,,,,,
+2023-12-17 16:56:16,Upper,60m,Seated Row (Cable),1,55,8,,,,,
+2023-12-17 16:56:16,Upper,60m,Seated Row (Cable),2,55,7,,,,,
+2023-12-17 16:56:16,Upper,60m,Seated Row (Cable),3,55,9,,,,,
+2023-12-17 16:56:16,Upper,60m,Seated Row (Cable),4,55,12,,,,,
+2023-12-17 16:56:16,Upper,60m,Arnold Press (Dumbbell),1,17.5,11,,,,,
+2023-12-17 16:56:16,Upper,60m,Arnold Press (Dumbbell),2,17.5,10,,,,,
+2023-12-17 16:56:16,Upper,60m,Arnold Press (Dumbbell),3,17.5,6,,,,,8.5
+2023-12-17 16:56:16,Upper,60m,Plank,1,,,,67,,,
+2023-12-17 16:56:16,Upper,60m,Plank,2,,,,67,,,
+2023-12-17 16:56:16,Upper,60m,Plank,3,,,,70,,,
+2023-12-19 16:47:56,Push,82m,Bench Press (Barbell),1,67.5,12,,,,,9
+2023-12-19 16:47:56,Push,82m,Bench Press (Barbell),2,67.5,8,,,,,
+2023-12-19 16:47:56,Push,82m,Bench Press (Barbell),3,67.5,10,,,,,9
+2023-12-19 16:47:56,Push,82m,Bench Press (Barbell),4,67.5,8,,,,,8
+2023-12-19 16:47:56,Push,82m,Incline Bench Press (Dumbbell),1,25,12,,,,,
+2023-12-19 16:47:56,Push,82m,Incline Bench Press (Dumbbell),2,25,9,,,,,
+2023-12-19 16:47:56,Push,82m,Incline Bench Press (Dumbbell),3,25,9,,,,,
+2023-12-19 16:47:56,Push,82m,Overhead Press (Barbell),1,45,12,,,,,
+2023-12-19 16:47:56,Push,82m,Overhead Press (Barbell),2,45,10,,,,,9
+2023-12-19 16:47:56,Push,82m,Overhead Press (Barbell),3,45,11,,,,,9
+2023-12-19 16:47:56,Push,82m,Overhead Press (Barbell),4,45,7,,,,,
+2023-12-19 16:47:56,Push,82m,Lateral Raise (Dumbbell),1,10,6,,,,,9
+2023-12-19 16:47:56,Push,82m,Lateral Raise (Dumbbell),2,10,11,,,,,
+2023-12-19 16:47:56,Push,82m,Lateral Raise (Dumbbell),3,10,7,,,,,
+2023-12-19 16:47:56,Push,82m,Triceps Pushdown (Cable - Straight Bar),1,27.5,10,,,,,
+2023-12-19 16:47:56,Push,82m,Triceps Pushdown (Cable - Straight Bar),2,27.5,6,,,,,8
+2023-12-19 16:47:56,Push,82m,Triceps Pushdown (Cable - Straight Bar),3,27.5,8,,,,,
+2023-12-19 16:47:56,Push,82m,Chest Fly,1,15,11,,,,,7.5
+2023-12-19 16:47:56,Push,82m,Chest Fly,2,15,10,,,,,7
+2023-12-19 16:47:56,Push,82m,Chest Fly,3,15,10,,,,,7.5
+2023-12-21 16:26:09,Pull,66m,Deadlift (Barbell),1,110,9,,,,,
+2023-12-21 16:26:09,Pull,66m,Deadlift (Barbell),2,110,7,,,,,
+2023-12-21 16:26:09,Pull,66m,Deadlift (Barbell),3,110,7,,,,,
+2023-12-21 16:26:09,Pull,66m,Lat Pulldown (Cable),1,55,11,,,,,7
+2023-12-21 16:26:09,Pull,66m,Lat Pulldown (Cable),2,55,12,,,,,8
+2023-12-21 16:26:09,Pull,66m,Lat Pulldown (Cable),3,55,10,,,,,
+2023-12-21 16:26:09,Pull,66m,Lat Pulldown (Cable),4,55,9,,,,,
+2023-12-21 16:26:09,Pull,66m,Bent Over Row (Barbell),1,60,6,,,,,
+2023-12-21 16:26:09,Pull,66m,Bent Over Row (Barbell),2,60,12,,,,,
+2023-12-21 16:26:09,Pull,66m,Bent Over Row (Barbell),3,60,8,,,,,
+2023-12-21 16:26:09,Pull,66m,Face Pull (Cable),1,22.5,8,,,,,8
+2023-12-21 16:26:09,Pull,66m,Face Pull (Cable),2,22.5,8,,,,,7
+2023-12-21 16:26:09,Pull,66m,Face Pull (Cable),3,22.5,9,,,,,
+2023-12-21 16:26:09,Pull,66m,Bicep Curl (Dumbbell),1,12.5,10,,,,,
+2023-12-21 16:26:09,Pull,66m,Bicep Curl (Dumbbell),2,12.5,8,,,,,
+2023-12-21 16:26:09,Pull,66m,Bicep Curl (Dumbbell),3,12.5,8,,,,,
+2023-12-21 16:26:09,Pull,66m,Hammer DB ?,1,12.5,8,,,,,
+2023-12-21 16:26:09,Pull,66m,Hammer DB ?,2,12.5,9,,,,,
+2023-12-21 16:26:09,Pull,66m,Hammer DB ?,3,12.5,10,,,,,
+2023-12-23 16:03:18,Legs,84m,Squat (Barbell),1,90,6,,,,,7.5
+2023-12-23 16:03:18,Legs,84m,Squat (Barbell),2,90,8,,,,,
+2023-12-23 16:03:18,Legs,84m,Squat (Barbell),3,90,7,,,,,
+2023-12-23 16:03:18,Legs,84m,Romanian Deadlift (Barbell),1,77.5,12,,,,,7
+2023-12-23 16:03:18,Legs,84m,Romanian Deadlift (Barbell),2,77.5,8,,,,,7
+2023-12-23 16:03:18,Legs,84m,Romanian Deadlift (Barbell),3,77.5,7,,,,,
+2023-12-23 16:03:18,Legs,84m,Leg Press,1,155,6,,,,,
+2023-12-23 16:03:18,Legs,84m,Leg Press,2,155,9,,,,,
+2023-12-23 16:03:18,Legs,84m,Leg Press,3,155,7,,,,,7
+2023-12-23 16:03:18,Legs,84m,Leg Extension (Machine),1,45,8,,,,,7.5
+2023-12-23 16:03:18,Legs,84m,Leg Extension (Machine),2,45,11,,,,,7.5
+2023-12-23 16:03:18,Legs,84m,Leg Extension (Machine),3,45,6,,,,,7
+2023-12-23 16:03:18,Legs,84m,Seated Leg Curl (Machine),1,40,8,,,,,8.5
+2023-12-23 16:03:18,Legs,84m,Seated Leg Curl (Machine),2,40,10,,,,,
+2023-12-23 16:03:18,Legs,84m,Seated Leg Curl (Machine),3,40,9,,,,,8
+2023-12-23 16:03:18,Legs,84m,Standing Calf Raise (Machine),1,67.5,12,,,,,
+2023-12-23 16:03:18,Legs,84m,Standing Calf Raise (Machine),2,67.5,8,,,,,7.5
+2023-12-23 16:03:18,Legs,84m,Standing Calf Raise (Machine),3,67.5,8,,,,,7
+2023-12-23 16:03:18,Legs,84m,Standing Calf Raise (Machine),4,67.5,11,,,,,
+2023-12-25 15:35:44,Upper,74m,Bench Press (Barbell),1,67.5,6,,,,,
+2023-12-25 15:35:44,Upper,74m,Bench Press (Barbell),2,67.5,6,,,,,8.5
+2023-12-25 15:35:44,Upper,74m,Bench Press (Barbell),3,67.5,10,,,,,
+2023-12-25 15:35:44,Upper,74m,Pull Up,1,,11,,,,,
+2023-12-25 15:35:44,Upper,74m,Pull Up,2,,12,,,,,8.5
+2023-12-25 15:35:44,Upper,74m,Pull Up,3,,10,,,,,
+2023-12-25 15:35:44,Upper,74m,Seated Row (Cable),1,55,11,,,,,
+2023-12-25 15:35:44,Upper,74m,Seated Row (Cable),2,55,11,,,,,
+2023-12-25 15:35:44,Upper,74m,Seated Row (Cable),3,55,8,,,,,
+2023-12-25 15:35:44,Upper,74m,Seated Row (Cable),4,55,10,,,,,8.5
+2023-12-25 15:35:44,Upper,74m,Arnold Press (Dumbbell),1,17.5,9,,,,,
+2023-12-25 15:35:44,Upper,74m,Arnold Press (Dumbbell),2,17.5,11,,,,,7
+2023-12-25 15:35:44,Upper,74m,Arnold Press (Dumbbell),3,17.5,9,,,,,
+2023-12-25 15:35:44,Upper,74m,Arnold Press (Dumbbell),4,17.5,8,,,,,8
+2023-12-25 15:35:44,Upper,74m,Plank,1,,,,68,,,8.5
+2023-12-25 15:35:44,Upper,74m,Plank,2,,,,70,,,9
+2023-12-25 15:35:44,Upper,74m,Plank,3,,,,55,,,9
+2023-12-29 15:55:20,Push,67m,Bench Press (Barbell),1,67.5,8,,,,,
+2023-12-29 15:55:20,Push,67m,Bench Press (Barbell),2,67.5,12,,,,,8.5
+2023-12-29 15:55:20,Push,67m,Bench Press (Barbell),3,67.5,11,,,,,
+2023-12-29 15:55:20,Push,67m,Bench Press (Barbell),4,67.5,7,,,,,
+2023-12-29 15:55:20,Push,67m,Incline Bench Press (Dumbbell),1,25,7,,,,,
+2023-12-29 15:55:20,Push,67m,Incline Bench Press (Dumbbell),2,25,8,,,,,
+2023-12-29 15:55:20,Push,67m,Incline Bench Press (Dumbbell),3,25,11,,,,,
+2023-12-29 15:55:20,Push,67m,Incline Bench Press (Dumbbell),4,25,8,,,,,
+2023-12-29 15:55:20,Push,67m,Overhead Press (Barbell),1,45,9,,,,,
+2023-12-29 15:55:20,Push,67m,Overhead Press (Barbell),2,45,6,,,,,
+2023-12-29 15:55:20,Push,67m,Overhead Press (Barbell),3,45,6,,,,,
+2023-12-29 15:55:20,Push,67m,Lateral Raise (Dumbbell),1,10,12,,,,,
+2023-12-29 15:55:20,Push,67m,Lateral Raise (Dumbbell),2,10,7,,,,,
+2023-12-29 15:55:20,Push,67m,Lateral Raise (Dumbbell),3,10,8,,,,,
+2023-12-29 15:55:20,Push,67m,Triceps Pushdown (Cable - Straight Bar),1,27.5,9,,,,,
+2023-12-29 15:55:20,Push,67m,Triceps Pushdown (Cable - Straight Bar),2,27.5,12,,,,,
+2023-12-29 15:55:20,Push,67m,Triceps Pushdown (Cable - Straight Bar),3,27.5,11,,,,,7
+2023-12-29 15:55:20,Push,67m,Chest Fly,1,15,11,,,,,
+2023-12-29 15:55:20,Push,67m,Chest Fly,2,15,12,,,,,7.5
+2023-12-29 15:55:20,Push,67m,Chest Fly,3,15,11,,,,,9
+2023-12-31 16:21:34,Pull,57m,Deadlift (Barbell),1,112.5,10,,,,,
+2023-12-31 16:21:34,Pull,57m,Deadlift (Barbell),2,112.5,9,,,,,9
+2023-12-31 16:21:34,Pull,57m,Deadlift (Barbell),3,112.5,10,,,,,7
+2023-12-31 16:21:34,Pull,57m,Lat Pulldown (Cable),1,55,10,,,,,7
+2023-12-31 16:21:34,Pull,57m,Lat Pulldown (Cable),2,55,10,,,,,8.5
+2023-12-31 16:21:34,Pull,57m,Lat Pulldown (Cable),3,55,10,,,,,
+2023-12-31 16:21:34,Pull,57m,Lat Pulldown (Cable),4,55,8,,,,,
+2023-12-31 16:21:34,Pull,57m,Bent Over Row (Barbell),1,62.5,10,,,,,9
+2023-12-31 16:21:34,Pull,57m,Bent Over Row (Barbell),2,62.5,8,,,,,
+2023-12-31 16:21:34,Pull,57m,Bent Over Row (Barbell),3,62.5,6,,,,,
+2023-12-31 16:21:34,Pull,57m,Face Pull (Cable),1,22.5,9,,,,,8.5
+2023-12-31 16:21:34,Pull,57m,Face Pull (Cable),2,22.5,8,,,,,
+2023-12-31 16:21:34,Pull,57m,Face Pull (Cable),3,22.5,12,,,,,
+2023-12-31 16:21:34,Pull,57m,Bicep Curl (Dumbbell),1,12.5,9,,,,,9
+2023-12-31 16:21:34,Pull,57m,Bicep Curl (Dumbbell),2,12.5,8,,,,,7
+2023-12-31 16:21:34,Pull,57m,Bicep Curl (Dumbbell),3,12.5,11,,,,,7
+2023-12-31 16:21:34,Pull,57m,Hammer DB ?,1,12.5,10,,,,,
+2023-12-31 16:21:34,Pull,57m,Hammer DB ?,2,12.5,9,,,,,
+2023-12-31 16:21:34,Pull,57m,Hammer DB ?,3,12.5,11,,,,,7
+2024-01-02 16:03:06,Legs,61m,Squat (Barbell),1,90,12,,,,,
+2024-01-02 16:03:06,Legs,61m,Squat (Barbell),2,90,8,,,,,7.5
+2024-01-02 16:03:06,Legs,61m,Squat (Barbell),3,90,8,,,,,
+2024-01-02 16:03:06,Legs,61m,Romanian Deadlift (Barbell),1,77.5,11,,,,,
+2024-01-02 16:03:06,Legs,61m,Romanian Deadlift (Barbell),2,77.5,12,,,,,8
+2024-01-02 16:03:06,Legs,61m,Romanian Deadlift (Barbell),3,77.5,6,,,,,
+2024-01-02 16:03:06,Legs,61m,Leg Press,1,157.5,9,,,,,8
+2024-01-02 16:03:06,Legs,61m,Leg Press,2,157.5,10,,,,,
+2024-01-02 16:03:06,Legs,61m,Leg Press,3,157.5,10,,,,,
+2024-01-02 16:03:06,Legs,61m,Leg Press,4,157.5,10,,,,,7.5
+2024-01-02 16:03:06,Legs,61m,Leg Extension (Machine),1,45,10,,,,,
+2024-01-02 16:03:06,Legs,61m,Leg Extension (Machine),2,45,9,,,,,8
+2024-01-02 16:03:06,Legs,61m,Leg Extension (Machine),3,45,9,,,,,
+2024-01-02 16:03:06,Legs,61m,Seated Leg Curl (Machine),1,40,10,,,,,
+2024-01-02 16:03:06,Legs,61m,Seated Leg Curl (Machine),2,40,9,,,,,9
+2024-01-02 16:03:06,Legs,61m,Seated Leg Curl (Machine),3,40,8,,,,,9
+2024-01-02 16:03:06,Legs,61m,Standing Calf Raise (Machine),1,67.5,6,,,,,
+2024-01-02 16:03:06,Legs,61m,Standing Calf Raise (Machine),2,67.5,11,,,,,7.5
+2024-01-02 16:03:06,Legs,61m,Standing Calf Raise (Machine),3,67.5,12,,,,,
+,Upper,63m,Bench Press (Barbell),1,67.5,11,,,,,
+,Upper,63m,Bench Press (Barbell),2,67.5,10,,,,,8.5
+,Upper,63m,Bench Press (Barbell),3,67.5,7,,,,,
+,Upper,63m,Pull Up,1,,6,,,,,
+,Upper,63m,Pull Up,2,,10,,,,,9
+,Upper,63m,Pull Up,3,,7,,,,,
+,Upper,63m,Seated Row (Cable),1,55,8,,,,,7
+,Upper,63m,Seated Row (Cable),2,55,7,,,,,
+,Upper,63m,Seated Row (Cable),3,55,10,,,,,7
+,Upper,63m,Arnold Press (Dumbbell),1,17.5,6,,,,,9
+,Upper,63m,Arnold Press (Dumbbell),2,17.5,8,,,,,
+,Upper,63m,Arnold Press (Dumbbell),3,17.5,8,,,,,
+,Upper,63m,Plank,1,,,,51,,,
+,Upper,63m,Plank,2,,,,57,,,
+,Upper,63m,Plank,3,,,,59,,,7.5
+2024-01-06 16:33:18,Push,61m,Bench Press (Barbell),1,67.5,10,,,,,7
+2024-01-06 16:33:18,Push,61m,Bench Press (Barbell),2,67.5,9,,,,,7.5
+2024-01-06 16:33:18,Push,61m,Bench Press (Barbell),3,67.5,10,,,,,
+2024-01-06 16:33:18,Push,61m,Incline Bench Press (Dumbbell),1,25,12,,,,,
+2024-01-06 16:33:18,Push,61m,Incline Bench Press (Dumbbell),2,25,8,,,,,8.5
+2024-01-06 16:33:18,Push,61m,Incline Bench Press (Dumbbell),3,25,8,,,,,
+2024-01-06 16:33:18,Push,61m,Overhead Press (Barbell),1,45,9,,,,,8
+2024-01-06 16:33:18,Push,61m,Overhead Press (Barbell),2,45,9,,,,,
+2024-01-06 16:33:18,Push,61m,Overhead Press (Barbell),3,45,7,,,,,
+2024-01-06 16:33:18,Push,61m,Lateral Raise (Dumbbell),1,10,6,,,,,7
+2024-01-06 16:33:18,Push,61m,Lateral Raise (Dumbbell),2,10,8,,,,,
+2024-01-06 16:33:18,Push,61m,Lateral Raise (Dumbbell),3,10,9,,,,,
+2024-01-06 16:33:18,Push,61m,Triceps Pushdown (Cable - Straight Bar),1,27.5,10,,,,,
+2024-01-06 16:33:18,Push,61m,Triceps Pushdown (Cable - Straight Bar),2,27.5,12,,,,,
+2024-01-06 16:33:18,Push,61m,Triceps Pushdown (Cable - Straight Bar),3,27.5,8,,,,,
+2024-01-06 16:33:18,Push,61m,Chest Fly,1,15,12,,,,,7
+2024-01-06 16:33:18,Push,61m,Chest Fly,2,15,11,,,,,
+2024-01-06 16:33:18,Push,61m,Chest Fly,3,15,6,,,,,
+2024-01-08 16:33:06,Pull,55m,Deadlift (Barbell),1,112.5,10,,,,,
+2024-01-08 16:33:06,Pull,55m,Deadlift (Barbell),2,112.5,11,,,,,7
+2024-01-08 16:33:06,Pull,55m,Deadlift (Barbell),3,112.5,10,,,,,8
+2024-01-08 16:33:06,Pull,55m,Deadlift (Barbell),4,112.5,7,,,,,9
+2024-01-08 16:33:06,Pull,55m,Lat Pulldown (Cable),1,57.5,6,,,,,
+2024-01-08 16:33:06,Pull,55m,Lat Pulldown (Cable),2,57.5,11,,,,,
+2024-01-08 16:33:06,Pull,55m,Lat Pulldown (Cable),3,57.5,9,,,,,
+2024-01-08 16:33:06,Pull,55m,Lat Pulldown (Cable),4,57.5,8,,,,,
+2024-01-08 16:33:06,Pull,55m,Bent Over Row (Barbell),1,62.5,12,,,,,9
+2024-01-08 16:33:06,Pull,55m,Bent Over Row (Barbell),2,62.5,12,,,,,
+2024-01-08 16:33:06,Pull,55m,Bent Over Row (Barbell),3,62.5,12,,,,,
+2024-01-08 16:33:06,Pull,55m,Bent Over Row (Barbell),4,62.5,8,,,,,
+2024-01-08 16:33:06,Pull,55m,Face Pull (Cable),1,22.5,6,,,,,
+2024-01-08 16:33:06,Pull,55m,Face Pull (Cable),2,22.5,7,,,,,8
+2024-01-08 16:33:06,Pull,55m,Face Pull (Cable),3,22.5,11,,,,,7.5
+2024-01-08 16:33:06,Pull,55m,Bicep Curl (Dumbbell),1,12.5,9,,,,,
+2024-01-08 16:33:06,Pull,55m,Bicep Curl (Dumbbell),2,12.5,9,,,,,7.5
+2024-01-08 16:33:06,Pull,55m,Bicep Curl (Dumbbell),3,12.5,7,,,,,7.5
+2024-01-08 16:33:06,Pull,55m,Hammer DB ?,1,12.5,10,,,,,8.5
+2024-01-08 16:33:06,Pull,55m,Hammer DB ?,2,12.5,6,,,,,
+2024-01-08 16:33:06,Pull,55m,Hammer DB ?,3,12.5,12,,,,,
+2024-01-10 16:44:26,Legs,66m,Squat (Barbell),1,90,9,,,,,
+2024-01-10 16:44:26,Legs,66m,Squat (Barbell),2,90,8,,,,,7
+2024-01-10 16:44:26,Legs,66m,Squat (Barbell),3,90,6,,,,,7.5
+2024-01-10 16:44:26,Legs,66m,Squat (Barbell),4,90,8,,,,,
+2024-01-10 16:44:26,Legs,66m,Romanian Deadlift (Barbell),1,80,6,,,,,8.5
+2024-01-10 16:44:26,Legs,66m,Romanian Deadlift (Barbell),2,80,10,,,,,8.5
+2024-01-10 16:44:26,Legs,66m,Romanian Deadlift (Barbell),3,80,11,,,,,
+2024-01-10 16:44:26,Legs,66m,Leg Press,1,157.5,6,,,,,
+2024-01-10 16:44:26,Legs,66m,Leg Press,2,157.5,6,,,,,
+2024-01-10 16:44:26,Legs,66m,Leg Press,3,157.5,7,,,,,9
+2024-01-10 16:44:26,Legs,66m,Leg Extension (Machine),1,45,7,,,,,
+2024-01-10 16:44:26,Legs,66m,Leg Extension (Machine),2,45,8,,,,,
+2024-01-10 16:44:26,Legs,66m,Leg Extension (Machine),3,45,8,,,,,
+2024-01-10 16:44:26,Legs,66m,Seated Leg Curl (Machine),1,40,12,,,,,
+2024-01-10 16:44:26,Legs,66m,Seated Leg Curl (Machine),2,40,11,,,,,8.5
+2024-01-10 16:44:26,Legs,66m,Seated Leg Curl (Machine),3,40,7,,,,,8
+2024-01-10 16:44:26,Legs,66m,Standing Calf Raise (Machine),1,67.5,12,,,,,
+2024-01-10 16:44:26,Legs,66m,Standing Calf Raise (Machine),2,67.5,8,,,,,8.5
+2024-01-10 16:44:26,Legs,66m,Standing Calf Raise (Machine),3,67.5,9,,,,,8
+,Upper,72m,Bench Press (Barbell),1,67.5,8,,,,,8
+,Upper,72m,Bench Press (Barbell),2,67.5,8,,,,,
+,Upper,72m,Bench Press (Barbell),3,67.5,11,,,,,
+,Upper,72m,Pull Up,1,,6,,,,,
+,Upper,72m,Pull Up,2,,12,,,,,
+,Upper,72m,Pull Up,3,,10,,,,,9
+,Upper,72m,Seated Row (Cable),1,57.5,7,,,,,
+,Upper,72m,Seated Row (Cable),2,57.5,10,,,,,
+,Upper,72m,Seated Row (Cable),3,57.5,10,,,,,7.5
+,Upper,72m,Arnold Press (Dumbbell),1,17.5,9,,,,,8
+,Upper,72m,Arnold Press (Dumbbell),2,17.5,12,,,,,9
+,Upper,72m,Arnold Press (Dumbbell),3,17.5,7,,,,,
+,Upper,72m,Plank,1,,,,58,,,
+,Upper,72m,Plank,2,,,,53,,,
+,Upper,72m,Plank,3,,,,68,,,
+2024-01-14 16:31:23,Push,58m,Bench Press (Barbell),1,67.5,8,,,,,
+2024-01-14 16:31:23,Push,58m,Bench Press (Barbell),2,67.5,11,,,,,
+2024-01-14 16:31:23,Push,58m,Bench Press (Barbell),3,67.5,7,,,,,
+2024-01-14 16:31:23,Push,58m,Incline Bench Press (Dumbbell),1,25,9,,,,,
+2024-01-14 16:31:23,Push,58m,Incline Bench Press (Dumbbell),2,25,7,,,,,8.5
+2024-01-14 16:31:23,Push,58m,Incline Bench Press (Dumbbell),3,25,9,,,,,7
+2024-01-14 16:31:23,Push,58m,Incline Bench Press (Dumbbell),4,25,9,,,,,7.5
+2024-01-14 16:31:23,Push,58m,Overhead Press (Barbell),1,45,12,,,,,8.5
+2024-01-14 16:31:23,Push,58m,Overhead Press (Barbell),2,45,6,,,,,7
+2024-01-14 16:31:23,Push,58m,Overhead Press (Barbell),3,45,8,,,,,8
+2024-01-14 16:31:23,Push,58m,Overhead Press (Barbell),4,45,10,,,,,9
+2024-01-14 16:31:23,Push,58m,Lateral Raise (Dumbbell),1,10,11,,,,,
+2024-01-14 16:31:23,Push,58m,Lateral Raise (Dumbbell),2,10,9,,,,,
+2024-01-14 16:31:23,Push,58m,Lateral Raise (Dumbbell),3,10,6,,,,,
+2024-01-14 16:31:23,Push,58m,Lateral Raise (Dumbbell),4,10,6,,,,,
+2024-01-14 16:31:23,Push,58m,Triceps Pushdown (Cable - Straight Bar),1,27.5,6,,,,,9
+2024-01-14 16:31:23,Push,58m,Triceps Pushdown (Cable - Straight Bar),2,27.5,11,,,,,
+2024-01-14 16:31:23,Push,58m,Triceps Pushdown (Cable - Straight Bar),3,27.5,6,,,,,7
+2024-01-14 16:31:23,Push,58m,Chest Fly,1,15,10,,,,,
+2024-01-14 16:31:23,Push,58m,Chest Fly,2,15,8,,,,,
+2024-01-14 16:31:23,Push,58m,Chest Fly,3,15,8,,,,,
+2024-01-18 16:13:42,Pull,74m,Deadlift (Barbell),1,112.5,8,,,,,
+2024-01-18 16:13:42,Pull,74m,Deadlift (Barbell),2,112.5,12,,,,,
+2024-01-18 16:13:42,Pull,74m,Deadlift (Barbell),3,112.5,7,,,,,
+2024-01-18 16:13:42,Pull,74m,Lat Pulldown (Cable),1,57.5,8,,,,,
+2024-01-18 16:13:42,Pull,74m,Lat Pulldown (Cable),2,57.5,9,,,,,
+2024-01-18 16:13:42,Pull,74m,Lat Pulldown (Cable),3,57.5,9,,,,,
+2024-01-18 16:13:42,Pull,74m,Bent Over Row (Barbell),1,62.5,6,,,,,8.5
+2024-01-18 16:13:42,Pull,74m,Bent Over Row (Barbell),2,62.5,11,,,,,
+2024-01-18 16:13:42,Pull,74m,Bent Over Row (Barbell),3,62.5,6,,,,,
+2024-01-18 16:13:42,Pull,74m,Face Pull (Cable),1,22.5,9,,,,,8.5
+2024-01-18 16:13:42,Pull,74m,Face Pull (Cable),2,22.5,12,,,,,8
+2024-01-18 16:13:42,Pull,74m,Face Pull (Cable),3,22.5,11,,,,,9
+2024-01-18 16:13:42,Pull,74m,Bicep Curl (Dumbbell),1,12.5,11,,,,,7.5
+2024-01-18 16:13:42,Pull,74m,Bicep Curl (Dumbbell),2,12.5,9,,,,,8
+2024-01-18 16:13:42,Pull,74m,Bicep Curl (Dumbbell),3,12.5,7,,,,,9
+2024-01-18 16:13:42,Pull,74m,Hammer DB ?,1,12.5,8,,,,,
+2024-01-18 16:13:42,Pull,74m,Hammer DB ?,2,12.5,9,,,,,
+2024-01-18 16:13:42,Pull,74m,Hammer DB ?,3,12.5,6,,,,,
+2024-01-18 16:13:42,Pull,74m,Hammer DB ?,4,12.5,9,,,,,
+2024-01-20 16:20:36,Legs,83m,Squat (Barbell),1,90,9,,,,,
+2024-01-20 16:20:36,Legs,83m,Squat (Barbell),2,90,9,,,,,
+2024-01-20 16:20:36,Legs,83m,Squat (Barbell),3,90,9,,,,,
+2024-01-20 16:20:36,Legs,83m,Squat (Barbell),4,90,10,,,,,7.5
+2024-01-20 16:20:36,Legs,83m,Romanian Deadlift (Barbell),1,80,10,,,,,
+2024-01-20 16:20:36,Legs,83m,Romanian Deadlift (Barbell),2,80,10,,,,,
+2024-01-20 16:20:36,Legs,83m,Romanian Deadlift (Barbell),3,80,11,,,,,7.5
+2024-01-20 16:20:36,Legs,83m,Leg Press,1,160,8,,,,,7
+2024-01-20 16:20:36,Legs,83m,Leg Press,2,160,7,,,,,
+2024-01-20 16:20:36,Legs,83m,Leg Press,3,160,6,,,,,8
+2024-01-20 16:20:36,Legs,83m,Leg Extension (Machine),1,45,7,,,,,
+2024-01-20 16:20:36,Legs,83m,Leg Extension (Machine),2,45,11,,,,,
+2024-01-20 16:20:36,Legs,83m,Leg Extension (Machine),3,45,9,,,,,7.5
+2024-01-20 16:20:36,Legs,83m,Seated Leg Curl (Machine),1,40,12,,,,,
+2024-01-20 16:20:36,Legs,83m,Seated Leg Curl (Machine),2,40,6,,,,,
+2024-01-20 16:20:36,Legs,83m,Seated Leg Curl (Machine),3,40,7,,,,,
+2024-01-20 16:20:36,Legs,83m,Standing Calf Raise (Machine),1,67.5,6,,,,,7.5
+2024-01-20 16:20:36,Legs,83m,Standing Calf Raise (Machine),2,67.5,10,,,,,8.5
+2024-01-20 16:20:36,Legs,83m,Standing Calf Raise (Machine),3,67.5,8,,,,,9
+2024-01-22 16:19:03,Upper,83m,Bench Press (Barbell),1,67.5,11,,,,,7
+2024-01-22 16:19:03,Upper,83m,Bench Press (Barbell),2,67.5,6,,,,,9
+2024-01-22 16:19:03,Upper,83m,Bench Press (Barbell),3,67.5,6,,,,,
+2024-01-22 16:19:03,Upper,83m,Bench Press (Barbell),4,67.5,9,,,,,7.5
+2024-01-22 16:19:03,Upper,83m,Pull Up,1,,7,,,,,
+2024-01-22 16:19:03,Upper,83m,Pull Up,2,,11,,,,,7.5
+2024-01-22 16:19:03,Upper,83m,Pull Up,3,,8,,,,,7.5
+2024-01-22 16:19:03,Upper,83m,Seated Row (Cable),1,57.5,8,,,,,7
+2024-01-22 16:19:03,Upper,83m,Seated Row (Cable),2,57.5,11,,,,,
+2024-01-22 16:19:03,Upper,83m,Seated Row (Cable),3,57.5,6,,,,,
+2024-01-22 16:19:03,Upper,83m,Arnold Press (Dumbbell),1,17.5,7,,,,,
+2024-01-22 16:19:03,Upper,83m,Arnold Press (Dumbbell),2,17.5,6,,,,,9
+2024-01-22 16:19:03,Upper,83m,Arnold Press (Dumbbell),3,17.5,12,,,,,
+2024-01-22 16:19:03,Upper,83m,Arnold Press (Dumbbell),4,17.5,10,,,,,
+2024-01-22 16:19:03,Upper,83m,Plank,1,,,,65,,,
+2024-01-22 16:19:03,Upper,83m,Plank,2,,,,48,,,7
+2024-01-22 16:19:03,Upper,83m,Plank,3,,,,50,,,
+2024-01-24 16:00:25,Push,84m,Bench Press (Barbell),1,67.5,12,,,,,8.5
+2024-01-24 16:00:25,Push,84m,Bench Press (Barbell),2,67.5,7,,,,,
+2024-01-24 16:00:25,Push,84m,Bench Press (Barbell),3,67.5,12,,,,,7
+2024-01-24 16:00:25,Push,84m,Incline Bench Press (Dumbbell),1,25,12,,,,,
+2024-01-24 16:00:25,Push,84m,Incline Bench Press (Dumbbell),2,25,12,,,,,7.5
+2024-01-24 16:00:25,Push,84m,Incline Bench Press (Dumbbell),3,25,8,,,,,9
+2024-01-24 16:00:25,Push,84m,Overhead Press (Barbell),1,45,11,,,,,
+2024-01-24 16:00:25,Push,84m,Overhead Press (Barbell),2,45,8,,,,,
+2024-01-24 16:00:25,Push,84m,Overhead Press (Barbell),3,45,8,,,,,
+2024-01-24 16:00:25,Push,84m,Lateral Raise (Dumbbell),1,10,6,,,,,
+2024-01-24 16:00:25,Push,84m,Lateral Raise (Dumbbell),2,10,12,,,,,8.5
+2024-01-24 16:00:25,Push,84m,Lateral Raise (Dumbbell),3,10,12,,,,,
+2024-01-24 16:00:25,Push,84m,Triceps Pushdown (Cable - Straight Bar),1,27.5,10,,,,,
+2024-01-24 16:00:25,Push,84m,Triceps Pushdown (Cable - Straight Bar),2,27.5,8,,,,,7.5
+2024-01-24 16:00:25,Push,84m,Triceps Pushdown (Cable - Straight Bar),3,27.5,12,,,,,8
+2024-01-24 16:00:25,Push,84m,Chest Fly,1,15,10,,,,,
+2024-01-24 16:00:25,Push,84m,Chest Fly,2,15,9,,,,,
+2024-01-24 16:00:25,Push,84m,Chest Fly,3,15,8,,,,,8
+2024-01-24 16:00:25,Push,84m,Chest Fly,4,15,7,,,,,7
+2024-01-26 16:05:51,Pull,65m,Deadlift (Barbell),1,115,10,,,,,9
+2024-01-26 16:05:51,Pull,65m,Deadlift (Barbell),2,115,9,,,,,
+2024-01-26 16:05:51,Pull,65m,Deadlift (Barbell),3,115,7,,,,,
+2024-01-26 16:05:51,Pull,65m,Lat Pulldown (Cable),1,57.5,10,,,,,
+2024-01-26 16:05:51,Pull,65m,Lat Pulldown (Cable),2,57.5,12,,,,,9
+2024-01-26 16:05:51,Pull,65m,Lat Pulldown (Cable),3,57.5,8,,,,,
+2024-01-26 16:05:51,Pull,65m,Lat Pulldown (Cable),4,57.5,9,,,,,
+2024-01-26 16:05:51,Pull,65m,Bent Over Row (Barbell),1,62.5,9,,,,,
+2024-01-26 16:05:51,Pull,65m,Bent Over Row (Barbell),2,62.5,7,,,,,8
+2024-01-26 16:05:51,Pull,65m,Bent Over Row (Barbell),3,62.5,9,,,,,
+2024-01-26 16:05:51,Pull,65m,Face Pull (Cable),1,22.5,11,,,,,8.5
+2024-01-26 16:05:51,Pull,65m,Face Pull (Cable),2,22.5,10,,,,,9
+2024-01-26 16:05:51,Pull,65m,Face Pull (Cable),3,22.5,11,,,,,
+2024-01-26 16:05:51,Pull,65m,Bicep Curl (Dumbbell),1,15,12,,,,,7
+2024-01-26 16:05:51,Pull,65m,Bicep Curl (Dumbbell),2,15,11,,,,,
+2024-01-26 16:05:51,Pull,65m,Bicep Curl (Dumbbell),3,15,9,,,,,
+2024-01-26 16:05:51,Pull,65m,Hammer DB ?,1,15,8,,,,,8
+2024-01-26 16:05:51,Pull,65m,Hammer DB ?,2,15,12,,,,,
+2024-01-26 16:05:51,Pull,65m,Hammer DB ?,3,15,12,,,,,
+2024-01-26 16:05:51,Pull,65m,Hammer DB ?,4,15,10,,,,,
+2024-01-28 16:28:40,Legs,66m,Squat (Barbell),1,92.5,12,,,,,
+2024-01-28 16:28:40,Legs,66m,Squat (Barbell),2,92.5,7,,,,,
+2024-01-28 16:28:40,Legs,66m,Squat (Barbell),3,92.5,6,,,,,
+2024-01-28 16:28:40,Legs,66m,Romanian Deadlift (Barbell),1,80,10,,,,,7
+2024-01-28 16:28:40,Legs,66m,Romanian Deadlift (Barbell),2,80,11,,,,,
+2024-01-28 16:28:40,Legs,66m,Romanian Deadlift (Barbell),3,80,11,,,,,
+2024-01-28 16:28:40,Legs,66m,Leg Press,1,160,6,,,,,8
+2024-01-28 16:28:40,Legs,66m,Leg Press,2,160,11,,,,,8
+2024-01-28 16:28:40,Legs,66m,Leg Press,3,160,10,,,,,7.5
+2024-01-28 16:28:40,Legs,66m,Leg Press,4,160,6,,,,,7.5
+2024-01-28 16:28:40,Legs,66m,Leg Extension (Machine),1,45,7,,,,,
+2024-01-28 16:28:40,Legs,66m,Leg Extension (Machine),2,45,12,,,,,
+2024-01-28 16:28:40,Legs,66m,Leg Extension (Machine),3,45,11,,,,,
+2024-01-28 16:28:40,Legs,66m,Seated Leg Curl (Machine),1,40,9,,,,,8.5
+2024-01-28 16:28:40,Legs,66m,Seated Leg Curl (Machine),2,40,9,,,,,8.5
+2024-01-28 16:28:40,Legs,66m,Seated Leg Curl (Machine),3,40,9,,,,,
+2024-01-28 16:28:40,Legs,66m,Standing Calf Raise (Machine),1,70,9,,,,,
+2024-01-28 16:28:40,Legs,66m,Standing Calf Raise (Machine),2,70,11,,,,,8.5
+2024-01-28 16:28:40,Legs,66m,Standing Calf Raise (Machine),3,70,12,,,,,9
+2024-01-30 16:12:13,Upper,69m,Bench Press (Barbell),1,70,12,,,,,
+2024-01-30 16:12:13,Upper,69m,Bench Press (Barbell),2,70,9,,,,,
+2024-01-30 16:12:13,Upper,69m,Bench Press (Barbell),3,70,6,,,,,
+2024-01-30 16:12:13,Upper,69m,Pull Up,1,,8,,,,,
+2024-01-30 16:12:13,Upper,69m,Pull Up,2,,9,,,,,
+2024-01-30 16:12:13,Upper,69m,Pull Up,3,,12,,,,,
+2024-01-30 16:12:13,Upper,69m,Pull Up,4,,10,,,,,
+2024-01-30 16:12:13,Upper,69m,Seated Row (Cable),1,57.5,10,,,,,
+2024-01-30 16:12:13,Upper,69m,Seated Row (Cable),2,57.5,7,,,,,8
+2024-01-30 16:12:13,Upper,69m,Seated Row (Cable),3,57.5,10,,,,,7
+2024-01-30 16:12:13,Upper,69m,Arnold Press (Dumbbell),1,17.5,8,,,,,
+2024-01-30 16:12:13,Upper,69m,Arnold Press (Dumbbell),2,17.5,12,,,,,
+2024-01-30 16:12:13,Upper,69m,Arnold Press (Dumbbell),3,17.5,12,,,,,8
+2024-01-30 16:12:13,Upper,69m,Plank,1,,,,72,,,8.5
+2024-01-30 16:12:13,Upper,69m,Plank,2,,,,59,,,7
+2024-01-30 16:12:13,Upper,69m,Plank,3,,,,74,,,
+,Push,83m,Bench Press (Barbell),1,70,11,,,,,
+,Push,83m,Bench Press (Barbell),2,70,8,,,,,8
+,Push,83m,Bench Press (Barbell),3,70,12,,,,,
+,Push,83m,Incline Bench Press (Dumbbell),1,25,6,,,,,9
+,Push,83m,Incline Bench Press (Dumbbell),2,25,10,,,,,
+,Push,83m,Incline Bench Press (Dumbbell),3,25,6,,,,,
+,Push,83m,Overhead Press (Barbell),1,45,8,,,,,
+,Push,83m,Overhead Press (Barbell),2,45,12,,,,,
+,Push,83m,Overhead Press (Barbell),3,45,11,,,,,8.5
+,Push,83m,Lateral Raise (Dumbbell),1,10,10,,,,,8.5
+,Push,83m,Lateral Raise (Dumbbell),2,10,7,,,,,
+,Push,83m,Lateral Raise (Dumbbell),3,10,7,,,,,
+,Push,83m,Triceps Pushdown (Cable - Straight Bar),1,30,8,,,,,
+,Push,83m,Triceps Pushdown (Cable - Straight Bar),2,30,8,,,,,8.5
+,Push,83m,Triceps Pushdown (Cable - Straight Bar),3,30,7,,,,,
+,Push,83m,Triceps Pushdown (Cable - Straight Bar),4,30,10,,,,,
+,Push,83m,Chest Fly,1,15,6,,,,,
+,Push,83m,Chest Fly,2,15,7,,,,,8
+,Push,83m,Chest Fly,3,15,8,,,,,7
+2024-02-03 15:42:40,Pull,57m,Deadlift (Barbell),1,115,12,,,,,9
+2024-02-03 15:42:40,Pull,57m,Deadlift (Barbell),2,115,12,,,,,
+2024-02-03 15:42:40,Pull,57m,Deadlift (Barbell),3,115,6,,,,,
+2024-02-03 15:42:40,Pull,57m,Deadlift (Barbell),4,115,7,,,,,9
+2024-02-03 15:42:40,Pull,57m,Lat Pulldown (Cable),1,57.5,8,,,,,8
+2024-02-03 15:42:40,Pull,57m,Lat Pulldown (Cable),2,57.5,10,,,,,
+2024-02-03 15:42:40,Pull,57m,Lat Pulldown (Cable),3,57.5,9,,,,,7.5
+2024-02-03 15:42:40,Pull,57m,Bent Over Row (Barbell),1,62.5,11,,,,,
+2024-02-03 15:42:40,Pull,57m,Bent Over Row (Barbell),2,62.5,12,,,,,
+2024-02-03 15:42:40,Pull,57m,Bent Over Row (Barbell),3,62.5,10,,,,,7
+2024-02-03 15:42:40,Pull,57m,Face Pull (Cable),1,22.5,12,,,,,8.5
+2024-02-03 15:42:40,Pull,57m,Face Pull (Cable),2,22.5,8,,,,,7
+2024-02-03 15:42:40,Pull,57m,Face Pull (Cable),3,22.5,10,,,,,
+2024-02-03 15:42:40,Pull,57m,Bicep Curl (Dumbbell),1,15,8,,,,,
+2024-02-03 15:42:40,Pull,57m,Bicep Curl (Dumbbell),2,15,11,,,,,
+2024-02-03 15:42:40,Pull,57m,Bicep Curl (Dumbbell),3,15,12,,,,,8
+2024-02-03 15:42:40,Pull,57m,Hammer DB ?,1,15,6,,,,,8
+2024-02-03 15:42:40,Pull,57m,Hammer DB ?,2,15,10,,,,,
+2024-02-03 15:42:40,Pull,57m,Hammer DB ?,3,15,8,,,,,8
+,Legs,78m,Squat (Barbell),1,92.5,8,,,,,
+,Legs,78m,Squat (Barbell),2,92.5,9,,,,,
+,Legs,78m,Squat (Barbell),3,92.5,7,,,,,7.5
+,Legs,78m,Squat (Barbell),4,92.5,12,,,,,
+,Legs,78m,Romanian Deadlift (Barbell),1,80,8,,,,,
+,Legs,78m,Romanian Deadlift (Barbell),2,80,9,,,,,
+,Legs,78m,Romanian Deadlift (Barbell),3,80,7,,,,,
+,Legs,78m,Romanian Deadlift (Barbell),4,80,9,,,,,
+,Legs,78m,Leg Press,1,162.5,12,,,,,7
+,Legs,78m,Leg Press,2,162.5,6,,,,,
+,Legs,78m,Leg Press,3,162.5,7,,,,,7.5
+,Legs,78m,Leg Extension (Machine),1,47.5,6,,,,,
+,Legs,78m,Leg Extension (Machine),2,47.5,8,,,,,
+,Legs,78m,Leg Extension (Machine),3,47.5,9,,,,,7.5
+,Legs,78m,Leg Extension (Machine),4,47.5,7,,,,,
+,Legs,78m,Seated Leg Curl (Machine),1,40,11,,,,,
+,Legs,78m,Seated Leg Curl (Machine),2,40,8,,,,,
+,Legs,78m,Seated Leg Curl (Machine),3,40,11,,,,,8.5
+,Legs,78m,Standing Calf Raise (Machine),1,70,9,,,,,
+,Legs,78m,Standing Calf Raise (Machine),2,70,11,,,,,
+,Legs,78m,Standing Calf Raise (Machine),3,70,8,,,,,
+,Upper,77m,Bench Press (Barbell),1,70,6,,,,,
+,Upper,77m,Bench Press (Barbell),2,70,8,,,,,
+,Upper,77m,Bench Press (Barbell),3,70,7,,,,,
+,Upper,77m,Pull Up,1,,10,,,,,8
+,Upper,77m,Pull Up,2,,7,,,,,8.5
+,Upper,77m,Pull Up,3,,6,,,,,
+,Upper,77m,Pull Up,4,,7,,,,,
+,Upper,77m,Seated Row (Cable),1,57.5,6,,,,,
+,Upper,77m,Seated Row (Cable),2,57.5,6,,,,,
+,Upper,77m,Seated Row (Cable),3,57.5,10,,,,,7.5
+,Upper,77m,Seated Row (Cable),4,57.5,6,,,,,
+,Upper,77m,Arnold Press (Dumbbell),1,17.5,9,,,,,8.5
+,Upper,77m,Arnold Press (Dumbbell),2,17.5,6,,,,,
+,Upper,77m,Arnold Press (Dumbbell),3,17.5,7,,,,,
+,Upper,77m,Plank,1,,,,56,,,
+,Upper,77m,Plank,2,,,,68,,,8.5
+,Upper,77m,Plank,3,,,,58,,,8.5
+2024-02-11 16:13:44,Push,68m,Bench Press (Barbell),1,70,9,,,,,7.5
+2024-02-11 16:13:44,Push,68m,Bench Press (Barbell),2,70,10,,,,,7
+2024-02-11 16:13:44,Push,68m,Bench Press (Barbell),3,70,7,,,,,
+2024-02-11 16:13:44,Push,68m,Incline Bench Press (Dumbbell),1,25,7,,,,,
+2024-02-11 16:13:44,Push,68m,Incline Bench Press (Dumbbell),2,25,10,,,,,
+2024-02-11 16:13:44,Push,68m,Incline Bench Press (Dumbbell),3,25,10,,,,,
+2024-02-11 16:13:44,Push,68m,Incline Bench Press (Dumbbell),4,25,9,,,,,
+2024-02-11 16:13:44,Push,68m,Overhead Press (Barbell),1,47.5,7,,,,,7.5
+2024-02-11 16:13:44,Push,68m,Overhead Press (Barbell),2,47.5,9,,,,,
+2024-02-11 16:13:44,Push,68m,Overhead Press (Barbell),3,47.5,11,,,,,
+2024-02-11 16:13:44,Push,68m,Lateral Raise (Dumbbell),1,10,11,,,,,9
+2024-02-11 16:13:44,Push,68m,Lateral Raise (Dumbbell),2,10,9,,,,,9
+2024-02-11 16:13:44,Push,68m,Lateral Raise (Dumbbell),3,10,6,,,,,9
+2024-02-11 16:13:44,Push,68m,Triceps Pushdown (Cable - Straight Bar),1,30,9,,,,,8
+2024-02-11 16:13:44,Push,68m,Triceps Pushdown (Cable - Straight Bar),2,30,10,,,,,
+2024-02-11 16:13:44,Push,68m,Triceps Pushdown (Cable - Straight Bar),3,30,8,,,,,7
+2024-02-11 16:13:44,Push,68m,Chest Fly,1,17.5,11,,,,,9
+2024-02-11 16:13:44,Push,68m,Chest Fly,2,17.5,6,,,,,
+2024-02-11 16:13:44,Push,68m,Chest Fly,3,17.5,12,,,,,
+2024-02-13 16:26:47,Pull,84m,Deadlift (Barbell),1,117.5,12,,,,,7.5
+2024-02-13 16:26:47,Pull,84m,Deadlift (Barbell),2,117.5,6,,,,,
+2024-02-13 16:26:47,Pull,84m,Deadlift (Barbell),3,117.5,11,,,,,
+2024-02-13 16:26:47,Pull,84m,Lat Pulldown (Cable),1,57.5,6,,,,,9
+2024-02-13 16:26:47,Pull,84m,Lat Pulldown (Cable),2,57.5,6,,,,,7
+2024-02-13 16:26:47,Pull,84m,Lat Pulldown (Cable),3,57.5,12,,,,,
+2024-02-13 16:26:47,Pull,84m,Bent Over Row (Barbell),1,65,9,,,,,
+2024-02-13 16:26:47,Pull,84m,Bent Over Row (Barbell),2,65,7,,,,,
+2024-02-13 16:26:47,Pull,84m,Bent Over Row (Barbell),3,65,8,,,,,
+2024-02-13 16:26:47,Pull,84m,Face Pull (Cable),1,22.5,6,,,,,
+2024-02-13 16:26:47,Pull,84m,Face Pull (Cable),2,22.5,6,,,,,8
+2024-02-13 16:26:47,Pull,84m,Face Pull (Cable),3,22.5,10,,,,,
+2024-02-13 16:26:47,Pull,84m,Face Pull (Cable),4,22.5,12,,,,,8.5
+2024-02-13 16:26:47,Pull,84m,Bicep Curl (Dumbbell),1,15,10,,,,,
+2024-02-13 16:26:47,Pull,84m,Bicep Curl (Dumbbell),2,15,9,,,,,7.5
+2024-02-13 16:26:47,Pull,84m,Bicep Curl (Dumbbell),3,15,7,,,,,
+2024-02-13 16:26:47,Pull,84m,Bicep Curl (Dumbbell),4,15,11,,,,,
+2024-02-13 16:26:47,Pull,84m,Hammer DB ?,1,15,12,,,,,
+2024-02-13 16:26:47,Pull,84m,Hammer DB ?,2,15,7,,,,,7
+2024-02-13 16:26:47,Pull,84m,Hammer DB ?,3,15,11,,,,,
+2024-02-17 15:56:58,Legs,72m,Squat (Barbell),1,92.5,7,,,,,7.5
+2024-02-17 15:56:58,Legs,72m,Squat (Barbell),2,92.5,7,,,,,
+2024-02-17 15:56:58,Legs,72m,Squat (Barbell),3,92.5,12,,,,,8.5
+2024-02-17 15:56:58,Legs,72m,Romanian Deadlift (Barbell),1,82.5,7,,,,,
+2024-02-17 15:56:58,Legs,72m,Romanian Deadlift (Barbell),2,82.5,10,,,,,
+2024-02-17 15:56:58,Legs,72m,Romanian Deadlift (Barbell),3,82.5,11,,,,,7
+2024-02-17 15:56:58,Legs,72m,Romanian Deadlift (Barbell),4,82.5,10,,,,,
+2024-02-17 15:56:58,Legs,72m,Leg Press,1,162.5,12,,,,,
+2024-02-17 15:56:58,Legs,72m,Leg Press,2,162.5,8,,,,,
+2024-02-17 15:56:58,Legs,72m,Leg Press,3,162.5,10,,,,,9
+2024-02-17 15:56:58,Legs,72m,Leg Extension (Machine),1,47.5,12,,,,,
+2024-02-17 15:56:58,Legs,72m,Leg Extension (Machine),2,47.5,9,,,,,7.5
+2024-02-17 15:56:58,Legs,72m,Leg Extension (Machine),3,47.5,9,,,,,
+2024-02-17 15:56:58,Legs,72m,Leg Extension (Machine),4,47.5,10,,,,,
+2024-02-17 15:56:58,Legs,72m,Seated Leg Curl (Machine),1,40,8,,,,,8
+2024-02-17 15:56:58,Legs,72m,Seated Leg Curl (Machine),2,40,6,,,,,7.5
+2024-02-17 15:56:58,Legs,72m,Seated Leg Curl (Machine),3,40,10,,,,,7
+2024-02-17 15:56:58,Legs,72m,Standing Calf Raise (Machine),1,70,8,,,,,9
+2024-02-17 15:56:58,Legs,72m,Standing Calf Raise (Machine),2,70,6,,,,,7
+2024-02-17 15:56:58,Legs,72m,Standing Calf Raise (Machine),3,70,7,,,,,
+2024-02-17 15:56:58,Legs,72m,Standing Calf Raise (Machine),4,70,10,,,,,
+2024-02-19 16:03:03,Upper,65m,Bench Press (Barbell),1,70,8,,,,,8
+2024-02-19 16:03:03,Upper,65m,Bench Press (Barbell),2,70,6,,,,,8
+2024-02-19 16:03:03,Upper,65m,Bench Press (Barbell),3,70,7,,,,,9
+2024-02-19 16:03:03,Upper,65m,Pull Up,1,,8,,,,,8
+2024-02-19 16:03:03,Upper,65m,Pull Up,2,,11,,,,,9
+2024-02-19 16:03:03,Upper,65m,Pull Up,3,,8,,,,,
+2024-02-19 16:03:03,Upper,65m,Pull Up,4,,8,,,,,
+2024-02-19 16:03:03,Upper,65m,Seated Row (Cable),1,57.5,12,,,,,
+2024-02-19 16:03:03,Upper,65m,Seated Row (Cable),2,57.5,7,,,,,
+2024-02-19 16:03:03,Upper,65m,Seated Row (Cable),3,57.5,6,,,,,
+2024-02-19 16:03:03,Upper,65m,Arnold Press (Dumbbell),1,17.5,12,,,,,8.5
+2024-02-19 16:03:03,Upper,65m,Arnold Press (Dumbbell),2,17.5,12,,,,,
+2024-02-19 16:03:03,Upper,65m,Arnold Press (Dumbbell),3,17.5,8,,,,,8
+2024-02-19 16:03:03,Upper,65m,Plank,1,,,,51,,,8.5
+2024-02-19 16:03:03,Upper,65m,Plank,2,,,,55,,,
+2024-02-19 16:03:03,Upper,65m,Plank,3,,,,52,,,7
+2024-02-23 16:29:28,Push,73m,Bench Press (Barbell),1,70,6,,,,,8
+2024-02-23 16:29:28,Push,73m,Bench Press (Barbell),2,70,9,,,,,9
+2024-02-23 16:29:28,Push,73m,Bench Press (Barbell),3,70,10,,,,,9
+2024-02-23 16:29:28,Push,73m,Incline Bench Press (Dumbbell),1,25,8,,,,,
+2024-02-23 16:29:28,Push,73m,Incline Bench Press (Dumbbell),2,25,12,,,,,7.5
+2024-02-23 16:29:28,Push,73m,Incline Bench Press (Dumbbell),3,25,11,,,,,
+2024-02-23 16:29:28,Push,73m,Overhead Press (Barbell),1,47.5,7,,,,,
+2024-02-23 16:29:28,Push,73m,Overhead Press (Barbell),2,47.5,9,,,,,
+2024-02-23 16:29:28,Push,73m,Overhead Press (Barbell),3,47.5,11,,,,,
+2024-02-23 16:29:28,Push,73m,Lateral Raise (Dumbbell),1,10,7,,,,,
+2024-02-23 16:29:28,Push,73m,Lateral Raise (Dumbbell),2,10,8,,,,,
+2024-02-23 16:29:28,Push,73m,Lateral Raise (Dumbbell),3,10,10,,,,,
+2024-02-23 16:29:28,Push,73m,Triceps Pushdown (Cable - Straight Bar),1,30,11,,,,,9
+2024-02-23 16:29:28,Push,73m,Triceps Pushdown (Cable - Straight Bar),2,30,10,,,,,
+2024-02-23 16:29:28,Push,73m,Triceps Pushdown (Cable - Straight Bar),3,30,12,,,,,
+2024-02-23 16:29:28,Push,73m,Chest Fly,1,17.5,12,,,,,9
+2024-02-23 16:29:28,Push,73m,Chest Fly,2,17.5,6,,,,,
+2024-02-23 16:29:28,Push,73m,Chest Fly,3,17.5,12,,,,,9
+2024-02-25 16:55:57,Pull,81m,Deadlift (Barbell),1,117.5,11,,,,,7.5
+2024-02-25 16:55:57,Pull,81m,Deadlift (Barbell),2,117.5,7,,,,,
+2024-02-25 16:55:57,Pull,81m,Deadlift (Barbell),3,117.5,7,,,,,
+2024-02-25 16:55:57,Pull,81m,Deadlift (Barbell),4,117.5,11,,,,,
+2024-02-25 16:55:57,Pull,81m,Lat Pulldown (Cable),1,60,6,,,,,8.5
+2024-02-25 16:55:57,Pull,81m,Lat Pulldown (Cable),2,60,7,,,,,
+2024-02-25 16:55:57,Pull,81m,Lat Pulldown (Cable),3,60,10,,,,,8.5
+2024-02-25 16:55:57,Pull,81m,Lat Pulldown (Cable),4,60,10,,,,,9
+2024-02-25 16:55:57,Pull,81m,Bent Over Row (Barbell),1,65,11,,,,,
+2024-02-25 16:55:57,Pull,81m,Bent Over Row (Barbell),2,65,6,,,,,
+2024-02-25 16:55:57,Pull,81m,Bent Over Row (Barbell),3,65,6,,,,,
+2024-02-25 16:55:57,Pull,81m,Face Pull (Cable),1,22.5,6,,,,,
+2024-02-25 16:55:57,Pull,81m,Face Pull (Cable),2,22.5,10,,,,,8.5
+2024-02-25 16:55:57,Pull,81m,Face Pull (Cable),3,22.5,6,,,,,
+2024-02-25 16:55:57,Pull,81m,Bicep Curl (Dumbbell),1,15,11,,,,,7
+2024-02-25 16:55:57,Pull,81m,Bicep Curl (Dumbbell),2,15,10,,,,,8.5
+2024-02-25 16:55:57,Pull,81m,Bicep Curl (Dumbbell),3,15,7,,,,,7.5
+2024-02-25 16:55:57,Pull,81m,Bicep Curl (Dumbbell),4,15,8,,,,,9
+2024-02-25 16:55:57,Pull,81m,Hammer DB ?,1,15,7,,,,,8
+2024-02-25 16:55:57,Pull,81m,Hammer DB ?,2,15,12,,,,,8
+2024-02-25 16:55:57,Pull,81m,Hammer DB ?,3,15,10,,,,,
+2024-02-27 16:26:03,Legs,56m,Squat (Barbell),1,95,10,,,,,
+2024-02-27 16:26:03,Legs,56m,Squat (Barbell),2,95,10,,,,,
+2024-02-27 16:26:03,Legs,56m,Squat (Barbell),3,95,12,,,,,9
+2024-02-27 16:26:03,Legs,56m,Romanian Deadlift (Barbell),1,82.5,7,,,,,
+2024-02-27 16:26:03,Legs,56m,Romanian Deadlift (Barbell),2,82.5,6,,,,,
+2024-02-27 16:26:03,Legs,56m,Romanian Deadlift (Barbell),3,82.5,7,,,,,
+2024-02-27 16:26:03,Legs,56m,Leg Press,1,165,9,,,,,7.5
+2024-02-27 16:26:03,Legs,56m,Leg Press,2,165,6,,,,,
+2024-02-27 16:26:03,Legs,56m,Leg Press,3,165,8,,,,,8.5
+2024-02-27 16:26:03,Legs,56m,Leg Press,4,165,11,,,,,
+2024-02-27 16:26:03,Legs,56m,Leg Extension (Machine),1,47.5,12,,,,,
+2024-02-27 16:26:03,Legs,56m,Leg Extension (Machine),2,47.5,9,,,,,
+2024-02-27 16:26:03,Legs,56m,Leg Extension (Machine),3,47.5,7,,,,,7.5
+2024-02-27 16:26:03,Legs,56m,Leg Extension (Machine),4,47.5,11,,,,,7
+2024-02-27 16:26:03,Legs,56m,Seated Leg Curl (Machine),1,40,6,,,,,
+2024-02-27 16:26:03,Legs,56m,Seated Leg Curl (Machine),2,40,10,,,,,7.5
+2024-02-27 16:26:03,Legs,56m,Seated Leg Curl (Machine),3,40,7,,,,,7
+2024-02-27 16:26:03,Legs,56m,Standing Calf Raise (Machine),1,70,9,,,,,7
+2024-02-27 16:26:03,Legs,56m,Standing Calf Raise (Machine),2,70,9,,,,,
+2024-02-27 16:26:03,Legs,56m,Standing Calf Raise (Machine),3,70,9,,,,,8
+2024-02-27 16:26:03,Legs,56m,Standing Calf Raise (Machine),4,70,9,,,,,
+,Upper,62m,Bench Press (Barbell),1,70,11,,,,,8
+,Upper,62m,Bench Press (Barbell),2,70,6,,,,,
+,Upper,62m,Bench Press (Barbell),3,70,9,,,,,7.5
+,Upper,62m,Pull Up,1,,8,,,,,
+,Upper,62m,Pull Up,2,,11,,,,,7.5
+,Upper,62m,Pull Up,3,,8,,,,,9
+,Upper,62m,Seated Row (Cable),1,60,12,,,,,8.5
+,Upper,62m,Seated Row (Cable),2,60,7,,,,,
+,Upper,62m,Seated Row (Cable),3,60,9,,,,,
+,Upper,62m,Arnold Press (Dumbbell),1,20,12,,,,,
+,Upper,62m,Arnold Press (Dumbbell),2,20,9,,,,,
+,Upper,62m,Arnold Press (Dumbbell),3,20,8,,,,,7
+,Upper,62m,Plank,1,,,,49,,,
+,Upper,62m,Plank,2,,,,50,,,8
+,Upper,62m,Plank,3,,,,50,,,
+,Push,70m,Bench Press (Barbell),1,70,8,,,,,
+,Push,70m,Bench Press (Barbell),2,70,7,,,,,
+,Push,70m,Bench Press (Barbell),3,70,7,,,,,7.5
+,Push,70m,Incline Bench Press (Dumbbell),1,25,11,,,,,
+,Push,70m,Incline Bench Press (Dumbbell),2,25,6,,,,,
+,Push,70m,Incline Bench Press (Dumbbell),3,25,6,,,,,
+,Push,70m,Incline Bench Press (Dumbbell),4,25,11,,,,,
+,Push,70m,Overhead Press (Barbell),1,47.5,9,,,,,
+,Push,70m,Overhead Press (Barbell),2,47.5,11,,,,,
+,Push,70m,Overhead Press (Barbell),3,47.5,8,,,,,9
+,Push,70m,Lateral Raise (Dumbbell),1,10,11,,,,,
+,Push,70m,Lateral Raise (Dumbbell),2,10,7,,,,,
+,Push,70m,Lateral Raise (Dumbbell),3,10,10,,,,,
+,Push,70m,Triceps Pushdown (Cable - Straight Bar),1,30,8,,,,,
+,Push,70m,Triceps Pushdown (Cable - Straight Bar),2,30,10,,,,,
+,Push,70m,Triceps Pushdown (Cable - Straight Bar),3,30,7,,,,,
+,Push,70m,Chest Fly,1,17.5,9,,,,,9
+,Push,70m,Chest Fly,2,17.5,6,,,,,8.5
+,Push,70m,Chest Fly,3,17.5,12,,,,,
+,Pull,74m,Deadlift (Barbell),1,117.5,12,,,,,
+,Pull,74m,Deadlift (Barbell),2,117.5,10,,,,,
+,Pull,74m,Deadlift (Barbell),3,117.5,9,,,,,
+,Pull,74m,Deadlift (Barbell),4,117.5,12,,,,,
+,Pull,74m,Lat Pulldown (Cable),1,60,9,,,,,
+,Pull,74m,Lat Pulldown (Cable),2,60,11,,,,,
+,Pull,74m,Lat Pulldown (Cable),3,60,6,,,,,8.5
+,Pull,74m,Bent Over Row (Barbell),1,65,10,,,,,9
+,Pull,74m,Bent Over Row (Barbell),2,65,11,,,,,8.5
+,Pull,74m,Bent Over Row (Barbell),3,65,6,,,,,
+,Pull,74m,Face Pull (Cable),1,22.5,7,,,,,
+,Pull,74m,Face Pull (Cable),2,22.5,8,,,,,
+,Pull,74m,Face Pull (Cable),3,22.5,8,,,,,
+,Pull,74m,Face Pull (Cable),4,22.5,10,,,,,
+,Pull,74m,Bicep Curl (Dumbbell),1,15,10,,,,,7.5
+,Pull,74m,Bicep Curl (Dumbbell),2,15,9,,,,,
+,Pull,74m,Bicep Curl (Dumbbell),3,15,8,,,,,
+,Pull,74m,Hammer DB ?,1,15,9,,,,,9
+,Pull,74m,Hammer DB ?,2,15,12,,,,,
+,Pull,74m,Hammer DB ?,3,15,7,,,,,8
+,Pull,74m,Hammer DB ?,4,15,10,,,,,7
+2024-03-06 15:46:58,Legs,56m,Squat (Barbell),1,95,8,,,,,
+2024-03-06 15:46:58,Legs,56m,Squat (Barbell),2,95,10,,,,,
+2024-03-06 15:46:58,Legs,56m,Squat (Barbell),3,95,11,,,,,
+2024-03-06 15:46:58,Legs,56m,Romanian Deadlift (Barbell),1,82.5,6,,,,,
+2024-03-06 15:46:58,Legs,56m,Romanian Deadlift (Barbell),2,82.5,7,,,,,
+2024-03-06 15:46:58,Legs,56m,Romanian Deadlift (Barbell),3,82.5,10,,,,,9
+2024-03-06 15:46:58,Legs,56m,Leg Press,1,165,6,,,,,
+2024-03-06 15:46:58,Legs,56m,Leg Press,2,165,9,,,,,
+2024-03-06 15:46:58,Legs,56m,Leg Press,3,165,11,,,,,
+2024-03-06 15:46:58,Legs,56m,Leg Press,4,165,10,,,,,
+2024-03-06 15:46:58,Legs,56m,Leg Extension (Machine),1,47.5,12,,,,,
+2024-03-06 15:46:58,Legs,56m,Leg Extension (Machine),2,47.5,10,,,,,
+2024-03-06 15:46:58,Legs,56m,Leg Extension (Machine),3,47.5,8,,,,,
+2024-03-06 15:46:58,Legs,56m,Leg Extension (Machine),4,47.5,9,,,,,
+2024-03-06 15:46:58,Legs,56m,Seated Leg Curl (Machine),1,42.5,11,,,,,8.5
+2024-03-06 15:46:58,Legs,56m,Seated Leg Curl (Machine),2,42.5,8,,,,,9
+2024-03-06 15:46:58,Legs,56m,Seated Leg Curl (Machine),3,42.5,11,,,,,
+2024-03-06 15:46:58,Legs,56m,Standing Calf Raise (Machine),1,70,8,,,,,8
+2024-03-06 15:46:58,Legs,56m,Standing Calf Raise (Machine),2,70,9,,,,,
+2024-03-06 15:46:58,Legs,56m,Standing Calf Raise (Machine),3,70,6,,,,,
+2024-03-06 15:46:58,Legs,56m,Standing Calf Raise (Machine),4,70,9,,,,,
+2024-03-08 15:35:28,Upper,68m,Bench Press (Barbell),1,72.5,8,,,,,8.5
+2024-03-08 15:35:28,Upper,68m,Bench Press (Barbell),2,72.5,10,,,,,
+2024-03-08 15:35:28,Upper,68m,Bench Press (Barbell),3,72.5,9,,,,,
+2024-03-08 15:35:28,Upper,68m,Bench Press (Barbell),4,72.5,8,,,,,8
+2024-03-08 15:35:28,Upper,68m,Pull Up,1,,9,,,,,9
+2024-03-08 15:35:28,Upper,68m,Pull Up,2,,12,,,,,
+2024-03-08 15:35:28,Upper,68m,Pull Up,3,,7,,,,,
+2024-03-08 15:35:28,Upper,68m,Seated Row (Cable),1,60,10,,,,,7
+2024-03-08 15:35:28,Upper,68m,Seated Row (Cable),2,60,6,,,,,
+2024-03-08 15:35:28,Upper,68m,Seated Row (Cable),3,60,7,,,,,
+2024-03-08 15:35:28,Upper,68m,Arnold Press (Dumbbell),1,20,10,,,,,
+2024-03-08 15:35:28,Upper,68m,Arnold Press (Dumbbell),2,20,11,,,,,
+2024-03-08 15:35:28,Upper,68m,Arnold Press (Dumbbell),3,20,10,,,,,
+2024-03-08 15:35:28,Upper,68m,Arnold Press (Dumbbell),4,20,9,,,,,9
+2024-03-08 15:35:28,Upper,68m,Plank,1,,,,50,,,
+2024-03-08 15:35:28,Upper,68m,Plank,2,,,,63,,,
+2024-03-08 15:35:28,Upper,68m,Plank,3,,,,53,,,8.5
+2024-03-10 15:32:00,Push,76m,Bench Press (Barbell),1,72.5,9,,,,,8.5
+2024-03-10 15:32:00,Push,76m,Bench Press (Barbell),2,72.5,8,,,,,
+2024-03-10 15:32:00,Push,76m,Bench Press (Barbell),3,72.5,6,,,,,
+2024-03-10 15:32:00,Push,76m,Bench Press (Barbell),4,72.5,10,,,,,
+2024-03-10 15:32:00,Push,76m,Incline Bench Press (Dumbbell),1,25,10,,,,,8
+2024-03-10 15:32:00,Push,76m,Incline Bench Press (Dumbbell),2,25,12,,,,,
+2024-03-10 15:32:00,Push,76m,Incline Bench Press (Dumbbell),3,25,8,,,,,7.5
+2024-03-10 15:32:00,Push,76m,Incline Bench Press (Dumbbell),4,25,9,,,,,
+2024-03-10 15:32:00,Push,76m,Overhead Press (Barbell),1,47.5,9,,,,,
+2024-03-10 15:32:00,Push,76m,Overhead Press (Barbell),2,47.5,11,,,,,
+2024-03-10 15:32:00,Push,76m,Overhead Press (Barbell),3,47.5,7,,,,,
+2024-03-10 15:32:00,Push,76m,Lateral Raise (Dumbbell),1,10,12,,,,,
+2024-03-10 15:32:00,Push,76m,Lateral Raise (Dumbbell),2,10,6,,,,,
+2024-03-10 15:32:00,Push,76m,Lateral Raise (Dumbbell),3,10,8,,,,,
+2024-03-10 15:32:00,Push,76m,Triceps Pushdown (Cable - Straight Bar),1,30,9,,,,,
+2024-03-10 15:32:00,Push,76m,Triceps Pushdown (Cable - Straight Bar),2,30,9,,,,,
+2024-03-10 15:32:00,Push,76m,Triceps Pushdown (Cable - Straight Bar),3,30,7,,,,,7.5
+2024-03-10 15:32:00,Push,76m,Chest Fly,1,17.5,7,,,,,7.5
+2024-03-10 15:32:00,Push,76m,Chest Fly,2,17.5,7,,,,,
+2024-03-10 15:32:00,Push,76m,Chest Fly,3,17.5,6,,,,,7
+2024-03-12 15:27:17,Pull,77m,Deadlift (Barbell),1,120,11,,,,,
+2024-03-12 15:27:17,Pull,77m,Deadlift (Barbell),2,120,12,,,,,
+2024-03-12 15:27:17,Pull,77m,Deadlift (Barbell),3,120,11,,,,,
+2024-03-12 15:27:17,Pull,77m,Lat Pulldown (Cable),1,60,6,,,,,
+2024-03-12 15:27:17,Pull,77m,Lat Pulldown (Cable),2,60,7,,,,,8
+2024-03-12 15:27:17,Pull,77m,Lat Pulldown (Cable),3,60,12,,,,,
+2024-03-12 15:27:17,Pull,77m,Lat Pulldown (Cable),4,60,12,,,,,8.5
+2024-03-12 15:27:17,Pull,77m,Bent Over Row (Barbell),1,65,12,,,,,8.5
+2024-03-12 15:27:17,Pull,77m,Bent Over Row (Barbell),2,65,10,,,,,
+2024-03-12 15:27:17,Pull,77m,Bent Over Row (Barbell),3,65,12,,,,,
+2024-03-12 15:27:17,Pull,77m,Bent Over Row (Barbell),4,65,11,,,,,
+2024-03-12 15:27:17,Pull,77m,Face Pull (Cable),1,25,9,,,,,
+2024-03-12 15:27:17,Pull,77m,Face Pull (Cable),2,25,8,,,,,8.5
+2024-03-12 15:27:17,Pull,77m,Face Pull (Cable),3,25,7,,,,,
+2024-03-12 15:27:17,Pull,77m,Bicep Curl (Dumbbell),1,15,6,,,,,7.5
+2024-03-12 15:27:17,Pull,77m,Bicep Curl (Dumbbell),2,15,10,,,,,7.5
+2024-03-12 15:27:17,Pull,77m,Bicep Curl (Dumbbell),3,15,10,,,,,
+2024-03-12 15:27:17,Pull,77m,Hammer DB ?,1,15,10,,,,,8.5
+2024-03-12 15:27:17,Pull,77m,Hammer DB ?,2,15,10,,,,,
+2024-03-12 15:27:17,Pull,77m,Hammer DB ?,3,15,11,,,,,7.5
+2024-03-14 15:32:49,Legs,59m,Squat (Barbell),1,95,7,,,,,
+2024-03-14 15:32:49,Legs,59m,Squat (Barbell),2,95,8,,,,,
+2024-03-14 15:32:49,Legs,59m,Squat (Barbell),3,95,8,,,,,8.5
+2024-03-14 15:32:49,Legs,59m,Romanian Deadlift (Barbell),1,85,9,,,,,7
+2024-03-14 15:32:49,Legs,59m,Romanian Deadlift (Barbell),2,85,12,,,,,
+2024-03-14 15:32:49,Legs,59m,Romanian Deadlift (Barbell),3,85,11,,,,,7.5
+2024-03-14 15:32:49,Legs,59m,Leg Press,1,167.5,12,,,,,
+2024-03-14 15:32:49,Legs,59m,Leg Press,2,167.5,12,,,,,8.5
+2024-03-14 15:32:49,Legs,59m,Leg Press,3,167.5,10,,,,,7
+2024-03-14 15:32:49,Legs,59m,Leg Extension (Machine),1,47.5,12,,,,,8.5
+2024-03-14 15:32:49,Legs,59m,Leg Extension (Machine),2,47.5,8,,,,,7
+2024-03-14 15:32:49,Legs,59m,Leg Extension (Machine),3,47.5,10,,,,,
+2024-03-14 15:32:49,Legs,59m,Leg Extension (Machine),4,47.5,6,,,,,9
+2024-03-14 15:32:49,Legs,59m,Seated Leg Curl (Machine),1,42.5,10,,,,,7.5
+2024-03-14 15:32:49,Legs,59m,Seated Leg Curl (Machine),2,42.5,6,,,,,
+2024-03-14 15:32:49,Legs,59m,Seated Leg Curl (Machine),3,42.5,12,,,,,
+2024-03-14 15:32:49,Legs,59m,Standing Calf Raise (Machine),1,72.5,8,,,,,
+2024-03-14 15:32:49,Legs,59m,Standing Calf Raise (Machine),2,72.5,7,,,,,
+2024-03-14 15:32:49,Legs,59m,Standing Calf Raise (Machine),3,72.5,6,,,,,
+2024-03-16 15:07:41,Upper,65m,Bench Press (Barbell),1,72.5,10,,,,,7
+2024-03-16 15:07:41,Upper,65m,Bench Press (Barbell),2,72.5,8,,,,,
+2024-03-16 15:07:41,Upper,65m,Bench Press (Barbell),3,72.5,7,,,,,
+2024-03-16 15:07:41,Upper,65m,Bench Press (Barbell),4,72.5,10,,,,,9
+2024-03-16 15:07:41,Upper,65m,Pull Up,1,,12,,,,,
+2024-03-16 15:07:41,Upper,65m,Pull Up,2,,6,,,,,
+2024-03-16 15:07:41,Upper,65m,Pull Up,3,,11,,,,,7.5
+2024-03-16 15:07:41,Upper,65m,Seated Row (Cable),1,60,12,,,,,
+2024-03-16 15:07:41,Upper,65m,Seated Row (Cable),2,60,11,,,,,7.5
+2024-03-16 15:07:41,Upper,65m,Seated Row (Cable),3,60,10,,,,,
+2024-03-16 15:07:41,Upper,65m,Arnold Press (Dumbbell),1,20,9,,,,,
+2024-03-16 15:07:41,Upper,65m,Arnold Press (Dumbbell),2,20,11,,,,,
+2024-03-16 15:07:41,Upper,65m,Arnold Press (Dumbbell),3,20,10,,,,,7
+2024-03-16 15:07:41,Upper,65m,Plank,1,,,,53,,,7
+2024-03-16 15:07:41,Upper,65m,Plank,2,,,,60,,,
+2024-03-16 15:07:41,Upper,65m,Plank,3,,,,73,,,8
+,Push,69m,Bench Press (Barbell),1,72.5,7,,,,,8
+,Push,69m,Bench Press (Barbell),2,72.5,8,,,,,
+,Push,69m,Bench Press (Barbell),3,72.5,10,,,,,
+,Push,69m,Incline Bench Press (Dumbbell),1,27.5,11,,,,,
+,Push,69m,Incline Bench Press (Dumbbell),2,27.5,6,,,,,
+,Push,69m,Incline Bench Press (Dumbbell),3,27.5,7,,,,,
+,Push,69m,Overhead Press (Barbell),1,47.5,8,,,,,
+,Push,69m,Overhead Press (Barbell),2,47.5,9,,,,,
+,Push,69m,Overhead Press (Barbell),3,47.5,7,,,,,
+,Push,69m,Lateral Raise (Dumbbell),1,10,8,,,,,
+,Push,69m,Lateral Raise (Dumbbell),2,10,11,,,,,8
+,Push,69m,Lateral Raise (Dumbbell),3,10,6,,,,,
+,Push,69m,Triceps Pushdown (Cable - Straight Bar),1,30,8,,,,,8.5
+,Push,69m,Triceps Pushdown (Cable - Straight Bar),2,30,9,,,,,
+,Push,69m,Triceps Pushdown (Cable - Straight Bar),3,30,12,,,,,9
+,Push,69m,Chest Fly,1,17.5,6,,,,,8
+,Push,69m,Chest Fly,2,17.5,12,,,,,
+,Push,69m,Chest Fly,3,17.5,12,,,,,
+,Pull,79m,Deadlift (Barbell),1,120,6,,,,,
+,Pull,79m,Deadlift (Barbell),2,120,6,,,,,9
+,Pull,79m,Deadlift (Barbell),3,120,12,,,,,
+,Pull,79m,Lat Pulldown (Cable),1,60,11,,,,,8.5
+,Pull,79m,Lat Pulldown (Cable),2,60,6,,,,,
+,Pull,79m,Lat Pulldown (Cable),3,60,11,,,,,
+,Pull,79m,Lat Pulldown (Cable),4,60,6,,,,,7
+,Pull,79m,Bent Over Row (Barbell),1,65,11,,,,,
+,Pull,79m,Bent Over Row (Barbell),2,65,9,,,,,
+,Pull,79m,Bent Over Row (Barbell),3,65,10,,,,,7
+,Pull,79m,Face Pull (Cable),1,25,9,,,,,
+,Pull,79m,Face Pull (Cable),2,25,11,,,,,
+,Pull,79m,Face Pull (Cable),3,25,6,,,,,7.5
+,Pull,79m,Bicep Curl (Dumbbell),1,15,7,,,,,
+,Pull,79m,Bicep Curl (Dumbbell),2,15,12,,,,,
+,Pull,79m,Bicep Curl (Dumbbell),3,15,8,,,,,
+,Pull,79m,Bicep Curl (Dumbbell),4,15,10,,,,,8
+,Pull,79m,Hammer DB ?,1,15,10,,,,,7
+,Pull,79m,Hammer DB ?,2,15,6,,,,,
+,Pull,79m,Hammer DB ?,3,15,10,,,,,
+2024-03-24 14:32:47,Legs,74m,Squat (Barbell),1,97.5,10,,,,,
+2024-03-24 14:32:47,Legs,74m,Squat (Barbell),2,97.5,8,,,,,
+2024-03-24 14:32:47,Legs,74m,Squat (Barbell),3,97.5,7,,,,,
+2024-03-24 14:32:47,Legs,74m,Romanian Deadlift (Barbell),1,85,9,,,,,
+2024-03-24 14:32:47,Legs,74m,Romanian Deadlift (Barbell),2,85,7,,,,,8
+2024-03-24 14:32:47,Legs,74m,Romanian Deadlift (Barbell),3,85,6,,,,,7
+2024-03-24 14:32:47,Legs,74m,Leg Press,1,170,10,,,,,
+2024-03-24 14:32:47,Legs,74m,Leg Press,2,170,11,,,,,
+2024-03-24 14:32:47,Legs,74m,Leg Press,3,170,9,,,,,8
+2024-03-24 14:32:47,Legs,74m,Leg Press,4,170,7,,,,,8
+2024-03-24 14:32:47,Legs,74m,Leg Extension (Machine),1,47.5,10,,,,,
+2024-03-24 14:32:47,Legs,74m,Leg Extension (Machine),2,47.5,11,,,,,
+2024-03-24 14:32:47,Legs,74m,Leg Extension (Machine),3,47.5,7,,,,,
+2024-03-24 14:32:47,Legs,74m,Seated Leg Curl (Machine),1,42.5,11,,,,,9
+2024-03-24 14:32:47,Legs,74m,Seated Leg Curl (Machine),2,42.5,6,,,,,8
+2024-03-24 14:32:47,Legs,74m,Seated Leg Curl (Machine),3,42.5,11,,,,,
+2024-03-24 14:32:47,Legs,74m,Standing Calf Raise (Machine),1,72.5,11,,,,,
+2024-03-24 14:32:47,Legs,74m,Standing Calf Raise (Machine),2,72.5,11,,,,,8.5
+2024-03-24 14:32:47,Legs,74m,Standing Calf Raise (Machine),3,72.5,6,,,,,
+,Upper,61m,Bench Press (Barbell),1,72.5,9,,,,,
+,Upper,61m,Bench Press (Barbell),2,72.5,9,,,,,
+,Upper,61m,Bench Press (Barbell),3,72.5,9,,,,,
+,Upper,61m,Pull Up,1,,6,,,,,
+,Upper,61m,Pull Up,2,,11,,,,,
+,Upper,61m,Pull Up,3,,11,,,,,
+,Upper,61m,Seated Row (Cable),1,60,10,,,,,
+,Upper,61m,Seated Row (Cable),2,60,10,,,,,8
+,Upper,61m,Seated Row (Cable),3,60,10,,,,,8.5
+,Upper,61m,Arnold Press (Dumbbell),1,20,9,,,,,7
+,Upper,61m,Arnold Press (Dumbbell),2,20,11,,,,,
+,Upper,61m,Arnold Press (Dumbbell),3,20,7,,,,,9
+,Upper,61m,Arnold Press (Dumbbell),4,20,9,,,,,
+,Upper,61m,Plank,1,,,,68,,,
+,Upper,61m,Plank,2,,,,47,,,8
+,Upper,61m,Plank,3,,,,70,,,
+2024-03-28 14:40:59,Push,59m,Bench Press (Barbell),1,72.5,10,,,,,9
+2024-03-28 14:40:59,Push,59m,Bench Press (Barbell),2,72.5,11,,,,,7
+2024-03-28 14:40:59,Push,59m,Bench Press (Barbell),3,72.5,6,,,,,
+2024-03-28 14:40:59,Push,59m,Incline Bench Press (Dumbbell),1,27.5,11,,,,,8
+2024-03-28 14:40:59,Push,59m,Incline Bench Press (Dumbbell),2,27.5,6,,,,,8
+2024-03-28 14:40:59,Push,59m,Incline Bench Press (Dumbbell),3,27.5,10,,,,,8.5
+2024-03-28 14:40:59,Push,59m,Incline Bench Press (Dumbbell),4,27.5,9,,,,,
+2024-03-28 14:40:59,Push,59m,Overhead Press (Barbell),1,47.5,9,,,,,7
+2024-03-28 14:40:59,Push,59m,Overhead Press (Barbell),2,47.5,7,,,,,
+2024-03-28 14:40:59,Push,59m,Overhead Press (Barbell),3,47.5,9,,,,,
+2024-03-28 14:40:59,Push,59m,Lateral Raise (Dumbbell),1,10,7,,,,,
+2024-03-28 14:40:59,Push,59m,Lateral Raise (Dumbbell),2,10,7,,,,,8
+2024-03-28 14:40:59,Push,59m,Lateral Raise (Dumbbell),3,10,11,,,,,8
+2024-03-28 14:40:59,Push,59m,Triceps Pushdown (Cable - Straight Bar),1,30,10,,,,,
+2024-03-28 14:40:59,Push,59m,Triceps Pushdown (Cable - Straight Bar),2,30,8,,,,,
+2024-03-28 14:40:59,Push,59m,Triceps Pushdown (Cable - Straight Bar),3,30,6,,,,,
+2024-03-28 14:40:59,Push,59m,Triceps Pushdown (Cable - Straight Bar),4,30,10,,,,,
+2024-03-28 14:40:59,Push,59m,Chest Fly,1,17.5,9,,,,,
+2024-03-28 14:40:59,Push,59m,Chest Fly,2,17.5,12,,,,,
+2024-03-28 14:40:59,Push,59m,Chest Fly,3,17.5,8,,,,,7.5
+2024-03-30 14:28:39,Pull,56m,Deadlift (Barbell),1,122.5,10,,,,,7
+2024-03-30 14:28:39,Pull,56m,Deadlift (Barbell),2,122.5,6,,,,,
+2024-03-30 14:28:39,Pull,56m,Deadlift (Barbell),3,122.5,8,,,,,
+2024-03-30 14:28:39,Pull,56m,Lat Pulldown (Cable),1,60,8,,,,,
+2024-03-30 14:28:39,Pull,56m,Lat Pulldown (Cable),2,60,7,,,,,
+2024-03-30 14:28:39,Pull,56m,Lat Pulldown (Cable),3,60,10,,,,,
+2024-03-30 14:28:39,Pull,56m,Bent Over Row (Barbell),1,67.5,9,,,,,
+2024-03-30 14:28:39,Pull,56m,Bent Over Row (Barbell),2,67.5,6,,,,,
+2024-03-30 14:28:39,Pull,56m,Bent Over Row (Barbell),3,67.5,8,,,,,7.5
+2024-03-30 14:28:39,Pull,56m,Face Pull (Cable),1,25,10,,,,,
+2024-03-30 14:28:39,Pull,56m,Face Pull (Cable),2,25,11,,,,,7.5
+2024-03-30 14:28:39,Pull,56m,Face Pull (Cable),3,25,9,,,,,
+2024-03-30 14:28:39,Pull,56m,Bicep Curl (Dumbbell),1,15,11,,,,,
+2024-03-30 14:28:39,Pull,56m,Bicep Curl (Dumbbell),2,15,10,,,,,7.5
+2024-03-30 14:28:39,Pull,56m,Bicep Curl (Dumbbell),3,15,7,,,,,
+2024-03-30 14:28:39,Pull,56m,Hammer DB ?,1,15,12,,,,,
+2024-03-30 14:28:39,Pull,56m,Hammer DB ?,2,15,8,,,,,
+2024-03-30 14:28:39,Pull,56m,Hammer DB ?,3,15,10,,,,,
+2024-04-01 14:42:32,Legs,68m,Squat (Barbell),1,97.5,6,,,,,
+2024-04-01 14:42:32,Legs,68m,Squat (Barbell),2,97.5,10,,,,,
+2024-04-01 14:42:32,Legs,68m,Squat (Barbell),3,97.5,9,,,,,
+2024-04-01 14:42:32,Legs,68m,Romanian Deadlift (Barbell),1,85,10,,,,,7
+2024-04-01 14:42:32,Legs,68m,Romanian Deadlift (Barbell),2,85,11,,,,,9
+2024-04-01 14:42:32,Legs,68m,Romanian Deadlift (Barbell),3,85,11,,,,,
+2024-04-01 14:42:32,Legs,68m,Leg Press,1,170,9,,,,,
+2024-04-01 14:42:32,Legs,68m,Leg Press,2,170,7,,,,,7
+2024-04-01 14:42:32,Legs,68m,Leg Press,3,170,11,,,,,
+2024-04-01 14:42:32,Legs,68m,Leg Press,4,170,8,,,,,
+2024-04-01 14:42:32,Legs,68m,Leg Extension (Machine),1,47.5,10,,,,,
+2024-04-01 14:42:32,Legs,68m,Leg Extension (Machine),2,47.5,6,,,,,8.5
+2024-04-01 14:42:32,Legs,68m,Leg Extension (Machine),3,47.5,9,,,,,8.5
+2024-04-01 14:42:32,Legs,68m,Seated Leg Curl (Machine),1,42.5,8,,,,,9
+2024-04-01 14:42:32,Legs,68m,Seated Leg Curl (Machine),2,42.5,9,,,,,
+2024-04-01 14:42:32,Legs,68m,Seated Leg Curl (Machine),3,42.5,8,,,,,
+2024-04-01 14:42:32,Legs,68m,Standing Calf Raise (Machine),1,72.5,12,,,,,
+2024-04-01 14:42:32,Legs,68m,Standing Calf Raise (Machine),2,72.5,9,,,,,
+2024-04-01 14:42:32,Legs,68m,Standing Calf Raise (Machine),3,72.5,7,,,,,
+2024-04-01 14:42:32,Legs,68m,Standing Calf Raise (Machine),4,72.5,8,,,,,
+2024-04-03 15:06:30,Upper,58m,Bench Press (Barbell),1,72.5,12,,,,,7
+2024-04-03 15:06:30,Upper,58m,Bench Press (Barbell),2,72.5,6,,,,,
+2024-04-03 15:06:30,Upper,58m,Bench Press (Barbell),3,72.5,9,,,,,8
+2024-04-03 15:06:30,Upper,58m,Pull Up,1,,8,,,,,7
+2024-04-03 15:06:30,Upper,58m,Pull Up,2,,9,,,,,
+2024-04-03 15:06:30,Upper,58m,Pull Up,3,,12,,,,,
+2024-04-03 15:06:30,Upper,58m,Seated Row (Cable),1,60,6,,,,,
+2024-04-03 15:06:30,Upper,58m,Seated Row (Cable),2,60,12,,,,,7
+2024-04-03 15:06:30,Upper,58m,Seated Row (Cable),3,60,7,,,,,7
+2024-04-03 15:06:30,Upper,58m,Arnold Press (Dumbbell),1,20,7,,,,,8.5
+2024-04-03 15:06:30,Upper,58m,Arnold Press (Dumbbell),2,20,9,,,,,7.5
+2024-04-03 15:06:30,Upper,58m,Arnold Press (Dumbbell),3,20,7,,,,,
+2024-04-03 15:06:30,Upper,58m,Plank,1,,,,46,,,9
+2024-04-03 15:06:30,Upper,58m,Plank,2,,,,50,,,
+2024-04-03 15:06:30,Upper,58m,Plank,3,,,,70,,,
+2024-04-05 15:23:20,Push,69m,Bench Press (Barbell),1,72.5,6,,,,,
+2024-04-05 15:23:20,Push,69m,Bench Press (Barbell),2,72.5,6,,,,,8.5
+2024-04-05 15:23:20,Push,69m,Bench Press (Barbell),3,72.5,10,,,,,
+2024-04-05 15:23:20,Push,69m,Bench Press (Barbell),4,72.5,10,,,,,
+2024-04-05 15:23:20,Push,69m,Incline Bench Press (Dumbbell),1,27.5,6,,,,,
+2024-04-05 15:23:20,Push,69m,Incline Bench Press (Dumbbell),2,27.5,7,,,,,
+2024-04-05 15:23:20,Push,69m,Incline Bench Press (Dumbbell),3,27.5,12,,,,,
+2024-04-05 15:23:20,Push,69m,Overhead Press (Barbell),1,50,10,,,,,
+2024-04-05 15:23:20,Push,69m,Overhead Press (Barbell),2,50,12,,,,,9
+2024-04-05 15:23:20,Push,69m,Overhead Press (Barbell),3,50,8,,,,,8
+2024-04-05 15:23:20,Push,69m,Overhead Press (Barbell),4,50,6,,,,,8
+2024-04-05 15:23:20,Push,69m,Lateral Raise (Dumbbell),1,10,11,,,,,
+2024-04-05 15:23:20,Push,69m,Lateral Raise (Dumbbell),2,10,6,,,,,7.5
+2024-04-05 15:23:20,Push,69m,Lateral Raise (Dumbbell),3,10,12,,,,,
+2024-04-05 15:23:20,Push,69m,Triceps Pushdown (Cable - Straight Bar),1,30,9,,,,,
+2024-04-05 15:23:20,Push,69m,Triceps Pushdown (Cable - Straight Bar),2,30,11,,,,,
+2024-04-05 15:23:20,Push,69m,Triceps Pushdown (Cable - Straight Bar),3,30,10,,,,,
+2024-04-05 15:23:20,Push,69m,Chest Fly,1,17.5,11,,,,,
+2024-04-05 15:23:20,Push,69m,Chest Fly,2,17.5,7,,,,,8.5
+2024-04-05 15:23:20,Push,69m,Chest Fly,3,17.5,7,,,,,9
+,Pull,73m,Deadlift (Barbell),1,122.5,9,,,,,7
+,Pull,73m,Deadlift (Barbell),2,122.5,7,,,,,8
+,Pull,73m,Deadlift (Barbell),3,122.5,9,,,,,
+,Pull,73m,Lat Pulldown (Cable),1,60,8,,,,,7
+,Pull,73m,Lat Pulldown (Cable),2,60,7,,,,,
+,Pull,73m,Lat Pulldown (Cable),3,60,12,,,,,8
+,Pull,73m,Bent Over Row (Barbell),1,67.5,8,,,,,
+,Pull,73m,Bent Over Row (Barbell),2,67.5,11,,,,,
+,Pull,73m,Bent Over Row (Barbell),3,67.5,8,,,,,
+,Pull,73m,Bent Over Row (Barbell),4,67.5,6,,,,,
+,Pull,73m,Face Pull (Cable),1,25,12,,,,,
+,Pull,73m,Face Pull (Cable),2,25,9,,,,,8
+,Pull,73m,Face Pull (Cable),3,25,7,,,,,8
+,Pull,73m,Bicep Curl (Dumbbell),1,15,8,,,,,
+,Pull,73m,Bicep Curl (Dumbbell),2,15,8,,,,,
+,Pull,73m,Bicep Curl (Dumbbell),3,15,8,,,,,
+,Pull,73m,Hammer DB ?,1,15,7,,,,,8.5
+,Pull,73m,Hammer DB ?,2,15,11,,,,,8.5
+,Pull,73m,Hammer DB ?,3,15,9,,,,,7.5
+,Pull,73m,Hammer DB ?,4,15,8,,,,,
+2024-04-11 15:27:12,Legs,63m,Squat (Barbell),1,97.5,7,,,,,7
+2024-04-11 15:27:12,Legs,63m,Squat (Barbell),2,97.5,12,,,,,
+2024-04-11 15:27:12,Legs,63m,Squat (Barbell),3,97.5,9,,,,,
+2024-04-11 15:27:12,Legs,63m,Romanian Deadlift (Barbell),1,85,9,,,,,7.5
+2024-04-11 15:27:12,Legs,63m,Romanian Deadlift (Barbell),2,85,10,,,,,
+2024-04-11 15:27:12,Legs,63m,Romanian Deadlift (Barbell),3,85,7,,,,,9
+2024-04-11 15:27:12,Legs,63m,Leg Press,1,172.5,9,,,,,
+2024-04-11 15:27:12,Legs,63m,Leg Press,2,172.5,9,,,,,8
+2024-04-11 15:27:12,Legs,63m,Leg Press,3,172.5,11,,,,,7.5
+2024-04-11 15:27:12,Legs,63m,Leg Extension (Machine),1,50,8,,,,,
+2024-04-11 15:27:12,Legs,63m,Leg Extension (Machine),2,50,8,,,,,9
+2024-04-11 15:27:12,Legs,63m,Leg Extension (Machine),3,50,9,,,,,8.5
+2024-04-11 15:27:12,Legs,63m,Seated Leg Curl (Machine),1,42.5,8,,,,,
+2024-04-11 15:27:12,Legs,63m,Seated Leg Curl (Machine),2,42.5,6,,,,,
+2024-04-11 15:27:12,Legs,63m,Seated Leg Curl (Machine),3,42.5,11,,,,,
+2024-04-11 15:27:12,Legs,63m,Seated Leg Curl (Machine),4,42.5,7,,,,,
+2024-04-11 15:27:12,Legs,63m,Standing Calf Raise (Machine),1,72.5,11,,,,,
+2024-04-11 15:27:12,Legs,63m,Standing Calf Raise (Machine),2,72.5,6,,,,,
+2024-04-11 15:27:12,Legs,63m,Standing Calf Raise (Machine),3,72.5,12,,,,,
+2024-04-15 14:59:03,Upper,60m,Bench Press (Barbell),1,72.5,12,,,,,
+2024-04-15 14:59:03,Upper,60m,Bench Press (Barbell),2,72.5,7,,,,,
+2024-04-15 14:59:03,Upper,60m,Bench Press (Barbell),3,72.5,10,,,,,8
+2024-04-15 14:59:03,Upper,60m,Pull Up,1,,6,,,,,8
+2024-04-15 14:59:03,Upper,60m,Pull Up,2,,8,,,,,
+2024-04-15 14:59:03,Upper,60m,Pull Up,3,,7,,,,,
+2024-04-15 14:59:03,Upper,60m,Pull Up,4,,6,,,,,
+2024-04-15 14:59:03,Upper,60m,Seated Row (Cable),1,62.5,7,,,,,
+2024-04-15 14:59:03,Upper,60m,Seated Row (Cable),2,62.5,10,,,,,
+2024-04-15 14:59:03,Upper,60m,Seated Row (Cable),3,62.5,12,,,,,7.5
+2024-04-15 14:59:03,Upper,60m,Arnold Press (Dumbbell),1,20,7,,,,,
+2024-04-15 14:59:03,Upper,60m,Arnold Press (Dumbbell),2,20,12,,,,,
+2024-04-15 14:59:03,Upper,60m,Arnold Press (Dumbbell),3,20,9,,,,,
+2024-04-15 14:59:03,Upper,60m,Plank,1,,,,66,,,
+2024-04-15 14:59:03,Upper,60m,Plank,2,,,,71,,,
+2024-04-15 14:59:03,Upper,60m,Plank,3,,,,53,,,
+2024-04-17 14:34:04,Push,83m,Bench Press (Barbell),1,75,7,,,,,
+2024-04-17 14:34:04,Push,83m,Bench Press (Barbell),2,75,10,,,,,
+2024-04-17 14:34:04,Push,83m,Bench Press (Barbell),3,75,10,,,,,7
+2024-04-17 14:34:04,Push,83m,Incline Bench Press (Dumbbell),1,27.5,6,,,,,
+2024-04-17 14:34:04,Push,83m,Incline Bench Press (Dumbbell),2,27.5,6,,,,,
+2024-04-17 14:34:04,Push,83m,Incline Bench Press (Dumbbell),3,27.5,12,,,,,
+2024-04-17 14:34:04,Push,83m,Overhead Press (Barbell),1,50,11,,,,,
+2024-04-17 14:34:04,Push,83m,Overhead Press (Barbell),2,50,9,,,,,9
+2024-04-17 14:34:04,Push,83m,Overhead Press (Barbell),3,50,11,,,,,
+2024-04-17 14:34:04,Push,83m,Lateral Raise (Dumbbell),1,10,7,,,,,
+2024-04-17 14:34:04,Push,83m,Lateral Raise (Dumbbell),2,10,12,,,,,8.5
+2024-04-17 14:34:04,Push,83m,Lateral Raise (Dumbbell),3,10,10,,,,,8
+2024-04-17 14:34:04,Push,83m,Triceps Pushdown (Cable - Straight Bar),1,30,9,,,,,
+2024-04-17 14:34:04,Push,83m,Triceps Pushdown (Cable - Straight Bar),2,30,12,,,,,
+2024-04-17 14:34:04,Push,83m,Triceps Pushdown (Cable - Straight Bar),3,30,11,,,,,
+2024-04-17 14:34:04,Push,83m,Chest Fly,1,17.5,9,,,,,
+2024-04-17 14:34:04,Push,83m,Chest Fly,2,17.5,11,,,,,7.5
+2024-04-17 14:34:04,Push,83m,Chest Fly,3,17.5,11,,,,,
+2024-04-19 14:24:16,Pull,63m,Deadlift (Barbell),1,122.5,8,,,,,7
+2024-04-19 14:24:16,Pull,63m,Deadlift (Barbell),2,122.5,7,,,,,
+2024-04-19 14:24:16,Pull,63m,Deadlift (Barbell),3,122.5,12,,,,,8.5
+2024-04-19 14:24:16,Pull,63m,Lat Pulldown (Cable),1,62.5,9,,,,,
+2024-04-19 14:24:16,Pull,63m,Lat Pulldown (Cable),2,62.5,6,,,,,
+2024-04-19 14:24:16,Pull,63m,Lat Pulldown (Cable),3,62.5,8,,,,,
+2024-04-19 14:24:16,Pull,63m,Bent Over Row (Barbell),1,67.5,8,,,,,8.5
+2024-04-19 14:24:16,Pull,63m,Bent Over Row (Barbell),2,67.5,7,,,,,
+2024-04-19 14:24:16,Pull,63m,Bent Over Row (Barbell),3,67.5,11,,,,,
+2024-04-19 14:24:16,Pull,63m,Face Pull (Cable),1,25,11,,,,,
+2024-04-19 14:24:16,Pull,63m,Face Pull (Cable),2,25,8,,,,,7.5
+2024-04-19 14:24:16,Pull,63m,Face Pull (Cable),3,25,11,,,,,
+2024-04-19 14:24:16,Pull,63m,Bicep Curl (Dumbbell),1,15,6,,,,,
+2024-04-19 14:24:16,Pull,63m,Bicep Curl (Dumbbell),2,15,11,,,,,
+2024-04-19 14:24:16,Pull,63m,Bicep Curl (Dumbbell),3,15,9,,,,,9
+2024-04-19 14:24:16,Pull,63m,Hammer DB ?,1,15,10,,,,,9
+2024-04-19 14:24:16,Pull,63m,Hammer DB ?,2,15,9,,,,,8
+2024-04-19 14:24:16,Pull,63m,Hammer DB ?,3,15,6,,,,,8
+2024-04-21 14:44:41,Legs,58m,Squat (Barbell),1,100,11,,,,,9
+2024-04-21 14:44:41,Legs,58m,Squat (Barbell),2,100,12,,,,,
+2024-04-21 14:44:41,Legs,58m,Squat (Barbell),3,100,8,,,,,8.5
+2024-04-21 14:44:41,Legs,58m,Romanian Deadlift (Barbell),1,87.5,6,,,,,8.5
+2024-04-21 14:44:41,Legs,58m,Romanian Deadlift (Barbell),2,87.5,12,,,,,8.5
+2024-04-21 14:44:41,Legs,58m,Romanian Deadlift (Barbell),3,87.5,6,,,,,
+2024-04-21 14:44:41,Legs,58m,Leg Press,1,172.5,12,,,,,
+2024-04-21 14:44:41,Legs,58m,Leg Press,2,172.5,8,,,,,7.5
+2024-04-21 14:44:41,Legs,58m,Leg Press,3,172.5,12,,,,,
+2024-04-21 14:44:41,Legs,58m,Leg Extension (Machine),1,50,10,,,,,
+2024-04-21 14:44:41,Legs,58m,Leg Extension (Machine),2,50,7,,,,,9
+2024-04-21 14:44:41,Legs,58m,Leg Extension (Machine),3,50,10,,,,,
+2024-04-21 14:44:41,Legs,58m,Seated Leg Curl (Machine),1,42.5,6,,,,,
+2024-04-21 14:44:41,Legs,58m,Seated Leg Curl (Machine),2,42.5,10,,,,,
+2024-04-21 14:44:41,Legs,58m,Seated Leg Curl (Machine),3,42.5,10,,,,,
+2024-04-21 14:44:41,Legs,58m,Standing Calf Raise (Machine),1,75,10,,,,,
+2024-04-21 14:44:41,Legs,58m,Standing Calf Raise (Machine),2,75,8,,,,,
+2024-04-21 14:44:41,Legs,58m,Standing Calf Raise (Machine),3,75,12,,,,,
+2024-04-21 14:44:41,Legs,58m,Standing Calf Raise (Machine),4,75,9,,,,,
+2024-04-25 14:37:29,Upper,65m,Bench Press (Barbell),1,75,7,,,,,
+2024-04-25 14:37:29,Upper,65m,Bench Press (Barbell),2,75,7,,,,,7.5
+2024-04-25 14:37:29,Upper,65m,Bench Press (Barbell),3,75,7,,,,,
+2024-04-25 14:37:29,Upper,65m,Bench Press (Barbell),4,75,11,,,,,7.5
+2024-04-25 14:37:29,Upper,65m,Pull Up,1,,6,,,,,
+2024-04-25 14:37:29,Upper,65m,Pull Up,2,,7,,,,,9
+2024-04-25 14:37:29,Upper,65m,Pull Up,3,,11,,,,,7
+2024-04-25 14:37:29,Upper,65m,Seated Row (Cable),1,62.5,12,,,,,
+2024-04-25 14:37:29,Upper,65m,Seated Row (Cable),2,62.5,10,,,,,
+2024-04-25 14:37:29,Upper,65m,Seated Row (Cable),3,62.5,8,,,,,
+2024-04-25 14:37:29,Upper,65m,Seated Row (Cable),4,62.5,8,,,,,
+2024-04-25 14:37:29,Upper,65m,Arnold Press (Dumbbell),1,20,9,,,,,
+2024-04-25 14:37:29,Upper,65m,Arnold Press (Dumbbell),2,20,8,,,,,
+2024-04-25 14:37:29,Upper,65m,Arnold Press (Dumbbell),3,20,11,,,,,
+2024-04-25 14:37:29,Upper,65m,Plank,1,,,,55,,,7
+2024-04-25 14:37:29,Upper,65m,Plank,2,,,,74,,,8
+2024-04-25 14:37:29,Upper,65m,Plank,3,,,,74,,,
+2024-04-27 15:03:00,Push,75m,Bench Press (Barbell),1,75,11,,,,,
+2024-04-27 15:03:00,Push,75m,Bench Press (Barbell),2,75,6,,,,,
+2024-04-27 15:03:00,Push,75m,Bench Press (Barbell),3,75,10,,,,,
+2024-04-27 15:03:00,Push,75m,Incline Bench Press (Dumbbell),1,27.5,9,,,,,
+2024-04-27 15:03:00,Push,75m,Incline Bench Press (Dumbbell),2,27.5,8,,,,,
+2024-04-27 15:03:00,Push,75m,Incline Bench Press (Dumbbell),3,27.5,10,,,,,
+2024-04-27 15:03:00,Push,75m,Incline Bench Press (Dumbbell),4,27.5,12,,,,,
+2024-04-27 15:03:00,Push,75m,Overhead Press (Barbell),1,50,8,,,,,
+2024-04-27 15:03:00,Push,75m,Overhead Press (Barbell),2,50,7,,,,,
+2024-04-27 15:03:00,Push,75m,Overhead Press (Barbell),3,50,9,,,,,7.5
+2024-04-27 15:03:00,Push,75m,Lateral Raise (Dumbbell),1,10,6,,,,,
+2024-04-27 15:03:00,Push,75m,Lateral Raise (Dumbbell),2,10,12,,,,,7
+2024-04-27 15:03:00,Push,75m,Lateral Raise (Dumbbell),3,10,7,,,,,7.5
+2024-04-27 15:03:00,Push,75m,Lateral Raise (Dumbbell),4,10,7,,,,,
+2024-04-27 15:03:00,Push,75m,Triceps Pushdown (Cable - Straight Bar),1,30,8,,,,,
+2024-04-27 15:03:00,Push,75m,Triceps Pushdown (Cable - Straight Bar),2,30,10,,,,,8.5
+2024-04-27 15:03:00,Push,75m,Triceps Pushdown (Cable - Straight Bar),3,30,8,,,,,7.5
+2024-04-27 15:03:00,Push,75m,Chest Fly,1,17.5,9,,,,,
+2024-04-27 15:03:00,Push,75m,Chest Fly,2,17.5,11,,,,,8.5
+2024-04-27 15:03:00,Push,75m,Chest Fly,3,17.5,11,,,,,8.5
+,Pull,61m,Deadlift (Barbell),1,125,6,,,,,
+,Pull,61m,Deadlift (Barbell),2,125,11,,,,,7
+,Pull,61m,Deadlift (Barbell),3,125,8,,,,,
+,Pull,61m,Lat Pulldown (Cable),1,62.5,9,,,,,
+,Pull,61m,Lat Pulldown (Cable),2,62.5,11,,,,,
+,Pull,61m,Lat Pulldown (Cable),3,62.5,10,,,,,
+,Pull,61m,Bent Over Row (Barbell),1,67.5,10,,,,,7
+,Pull,61m,Bent Over Row (Barbell),2,67.5,6,,,,,8.5
+,Pull,61m,Bent Over Row (Barbell),3,67.5,10,,,,,
+,Pull,61m,Face Pull (Cable),1,25,12,,,,,8
+,Pull,61m,Face Pull (Cable),2,25,7,,,,,
+,Pull,61m,Face Pull (Cable),3,25,6,,,,,7.5
+,Pull,61m,Face Pull (Cable),4,25,7,,,,,
+,Pull,61m,Bicep Curl (Dumbbell),1,15,8,,,,,7
+,Pull,61m,Bicep Curl (Dumbbell),2,15,10,,,,,
+,Pull,61m,Bicep Curl (Dumbbell),3,15,11,,,,,
+,Pull,61m,Hammer DB ?,1,15,7,,,,,
+,Pull,61m,Hammer DB ?,2,15,6,,,,,
+,Pull,61m,Hammer DB ?,3,15,8,,,,,
+,Legs,75m,Squat (Barbell),1,100,7,,,,,8.5
+,Legs,75m,Squat (Barbell),2,100,7,,,,,
+,Legs,75m,Squat (Barbell),3,100,9,,,,,
+,Legs,75m,Romanian Deadlift (Barbell),1,87.5,8,,,,,
+,Legs,75m,Romanian Deadlift (Barbell),2,87.5,8,,,,,8
+,Legs,75m,Romanian Deadlift (Barbell),3,87.5,9,,,,,
+,Legs,75m,Leg Press,1,175,10,,,,,
+,Legs,75m,Leg Press,2,175,10,,,,,7
+,Legs,75m,Leg Press,3,175,6,,,,,7
+,Legs,75m,Leg Press,4,175,11,,,,,7.5
+,Legs,75m,Leg Extension (Machine),1,50,12,,,,,9
+,Legs,75m,Leg Extension (Machine),2,50,12,,,,,
+,Legs,75m,Leg Extension (Machine),3,50,6,,,,,
+,Legs,75m,Seated Leg Curl (Machine),1,42.5,6,,,,,8
+,Legs,75m,Seated Leg Curl (Machine),2,42.5,7,,,,,
+,Legs,75m,Seated Leg Curl (Machine),3,42.5,9,,,,,8
+,Legs,75m,Standing Calf Raise (Machine),1,75,12,,,,,
+,Legs,75m,Standing Calf Raise (Machine),2,75,12,,,,,
+,Legs,75m,Standing Calf Raise (Machine),3,75,11,,,,,8.5
+2024-05-05 14:23:18,Upper,69m,Bench Press (Barbell),1,75,12,,,,,9
+2024-05-05 14:23:18,Upper,69m,Bench Press (Barbell),2,75,9,,,,,7
+2024-05-05 14:23:18,Upper,69m,Bench Press (Barbell),3,75,8,,,,,7.5
+2024-05-05 14:23:18,Upper,69m,Pull Up,1,,6,,,,,
+2024-05-05 14:23:18,Upper,69m,Pull Up,2,,12,,,,,7
+2024-05-05 14:23:18,Upper,69m,Pull Up,3,,8,,,,,
+2024-05-05 14:23:18,Upper,69m,Pull Up,4,,8,,,,,
+2024-05-05 14:23:18,Upper,69m,Seated Row (Cable),1,62.5,6,,,,,
+2024-05-05 14:23:18,Upper,69m,Seated Row (Cable),2,62.5,9,,,,,8
+2024-05-05 14:23:18,Upper,69m,Seated Row (Cable),3,62.5,7,,,,,7.5
+2024-05-05 14:23:18,Upper,69m,Arnold Press (Dumbbell),1,20,11,,,,,
+2024-05-05 14:23:18,Upper,69m,Arnold Press (Dumbbell),2,20,12,,,,,
+2024-05-05 14:23:18,Upper,69m,Arnold Press (Dumbbell),3,20,7,,,,,
+2024-05-05 14:23:18,Upper,69m,Plank,1,,,,66,,,9
+2024-05-05 14:23:18,Upper,69m,Plank,2,,,,59,,,8
+2024-05-05 14:23:18,Upper,69m,Plank,3,,,,47,,,
+2024-05-07 14:45:27,Push,79m,Bench Press (Barbell),1,75,7,,,,,8.5
+2024-05-07 14:45:27,Push,79m,Bench Press (Barbell),2,75,10,,,,,
+2024-05-07 14:45:27,Push,79m,Bench Press (Barbell),3,75,10,,,,,9
+2024-05-07 14:45:27,Push,79m,Incline Bench Press (Dumbbell),1,27.5,9,,,,,
+2024-05-07 14:45:27,Push,79m,Incline Bench Press (Dumbbell),2,27.5,12,,,,,8
+2024-05-07 14:45:27,Push,79m,Incline Bench Press (Dumbbell),3,27.5,9,,,,,8.5
+2024-05-07 14:45:27,Push,79m,Overhead Press (Barbell),1,50,10,,,,,
+2024-05-07 14:45:27,Push,79m,Overhead Press (Barbell),2,50,6,,,,,7.5
+2024-05-07 14:45:27,Push,79m,Overhead Press (Barbell),3,50,8,,,,,
+2024-05-07 14:45:27,Push,79m,Lateral Raise (Dumbbell),1,10,11,,,,,
+2024-05-07 14:45:27,Push,79m,Lateral Raise (Dumbbell),2,10,7,,,,,
+2024-05-07 14:45:27,Push,79m,Lateral Raise (Dumbbell),3,10,8,,,,,7
+2024-05-07 14:45:27,Push,79m,Lateral Raise (Dumbbell),4,10,10,,,,,7
+2024-05-07 14:45:27,Push,79m,Triceps Pushdown (Cable - Straight Bar),1,30,7,,,,,
+2024-05-07 14:45:27,Push,79m,Triceps Pushdown (Cable - Straight Bar),2,30,9,,,,,
+2024-05-07 14:45:27,Push,79m,Triceps Pushdown (Cable - Straight Bar),3,30,11,,,,,7
+2024-05-07 14:45:27,Push,79m,Chest Fly,1,17.5,10,,,,,7
+2024-05-07 14:45:27,Push,79m,Chest Fly,2,17.5,8,,,,,7
+2024-05-07 14:45:27,Push,79m,Chest Fly,3,17.5,9,,,,,
+2024-05-09 14:16:12,Pull,82m,Deadlift (Barbell),1,125,10,,,,,
+2024-05-09 14:16:12,Pull,82m,Deadlift (Barbell),2,125,6,,,,,7.5
+2024-05-09 14:16:12,Pull,82m,Deadlift (Barbell),3,125,8,,,,,8
+2024-05-09 14:16:12,Pull,82m,Lat Pulldown (Cable),1,62.5,6,,,,,
+2024-05-09 14:16:12,Pull,82m,Lat Pulldown (Cable),2,62.5,10,,,,,
+2024-05-09 14:16:12,Pull,82m,Lat Pulldown (Cable),3,62.5,6,,,,,
+2024-05-09 14:16:12,Pull,82m,Bent Over Row (Barbell),1,70,7,,,,,
+2024-05-09 14:16:12,Pull,82m,Bent Over Row (Barbell),2,70,6,,,,,8.5
+2024-05-09 14:16:12,Pull,82m,Bent Over Row (Barbell),3,70,11,,,,,
+2024-05-09 14:16:12,Pull,82m,Face Pull (Cable),1,25,12,,,,,8
+2024-05-09 14:16:12,Pull,82m,Face Pull (Cable),2,25,12,,,,,
+2024-05-09 14:16:12,Pull,82m,Face Pull (Cable),3,25,12,,,,,7
+2024-05-09 14:16:12,Pull,82m,Bicep Curl (Dumbbell),1,15,8,,,,,
+2024-05-09 14:16:12,Pull,82m,Bicep Curl (Dumbbell),2,15,12,,,,,
+2024-05-09 14:16:12,Pull,82m,Bicep Curl (Dumbbell),3,15,7,,,,,8
+2024-05-09 14:16:12,Pull,82m,Hammer DB ?,1,15,10,,,,,8.5
+2024-05-09 14:16:12,Pull,82m,Hammer DB ?,2,15,10,,,,,
+2024-05-09 14:16:12,Pull,82m,Hammer DB ?,3,15,10,,,,,
+2024-05-11 14:20:49,Legs,75m,Squat (Barbell),1,100,11,,,,,
+2024-05-11 14:20:49,Legs,75m,Squat (Barbell),2,100,8,,,,,
+2024-05-11 14:20:49,Legs,75m,Squat (Barbell),3,100,6,,,,,
+2024-05-11 14:20:49,Legs,75m,Squat (Barbell),4,100,7,,,,,8
+2024-05-11 14:20:49,Legs,75m,Romanian Deadlift (Barbell),1,87.5,11,,,,,
+2024-05-11 14:20:49,Legs,75m,Romanian Deadlift (Barbell),2,87.5,8,,,,,
+2024-05-11 14:20:49,Legs,75m,Romanian Deadlift (Barbell),3,87.5,6,,,,,
+2024-05-11 14:20:49,Legs,75m,Romanian Deadlift (Barbell),4,87.5,11,,,,,
+2024-05-11 14:20:49,Legs,75m,Leg Press,1,175,11,,,,,8
+2024-05-11 14:20:49,Legs,75m,Leg Press,2,175,10,,,,,7
+2024-05-11 14:20:49,Legs,75m,Leg Press,3,175,11,,,,,7
+2024-05-11 14:20:49,Legs,75m,Leg Extension (Machine),1,50,8,,,,,
+2024-05-11 14:20:49,Legs,75m,Leg Extension (Machine),2,50,11,,,,,
+2024-05-11 14:20:49,Legs,75m,Leg Extension (Machine),3,50,9,,,,,
+2024-05-11 14:20:49,Legs,75m,Seated Leg Curl (Machine),1,45,8,,,,,9
+2024-05-11 14:20:49,Legs,75m,Seated Leg Curl (Machine),2,45,11,,,,,7.5
+2024-05-11 14:20:49,Legs,75m,Seated Leg Curl (Machine),3,45,12,,,,,
+2024-05-11 14:20:49,Legs,75m,Standing Calf Raise (Machine),1,75,7,,,,,8
+2024-05-11 14:20:49,Legs,75m,Standing Calf Raise (Machine),2,75,8,,,,,
+2024-05-11 14:20:49,Legs,75m,Standing Calf Raise (Machine),3,75,11,,,,,
+2024-05-11 14:20:49,Legs,75m,Standing Calf Raise (Machine),4,75,8,,,,,
+,Upper,58m,Bench Press (Barbell),1,75,10,,,,,7
+,Upper,58m,Bench Press (Barbell),2,75,8,,,,,
+,Upper,58m,Bench Press (Barbell),3,75,11,,,,,9
+,Upper,58m,Pull Up,1,,10,,,,,
+,Upper,58m,Pull Up,2,,12,,,,,7
+,Upper,58m,Pull Up,3,,10,,,,,8
+,Upper,58m,Pull Up,4,,7,,,,,7.5
+,Upper,58m,Seated Row (Cable),1,62.5,8,,,,,
+,Upper,58m,Seated Row (Cable),2,62.5,11,,,,,8
+,Upper,58m,Seated Row (Cable),3,62.5,8,,,,,8.5
+,Upper,58m,Arnold Press (Dumbbell),1,20,7,,,,,7.5
+,Upper,58m,Arnold Press (Dumbbell),2,20,10,,,,,
+,Upper,58m,Arnold Press (Dumbbell),3,20,11,,,,,9
+,Upper,58m,Plank,1,,,,65,,,
+,Upper,58m,Plank,2,,,,68,,,
+,Upper,58m,Plank,3,,,,54,,,
+2024-05-15 13:57:28,Push,81m,Bench Press (Barbell),1,75,11,,,,,8.5
+2024-05-15 13:57:28,Push,81m,Bench Press (Barbell),2,75,7,,,,,
+2024-05-15 13:57:28,Push,81m,Bench Press (Barbell),3,75,6,,,,,
+2024-05-15 13:57:28,Push,81m,Bench Press (Barbell),4,75,9,,,,,8.5
+2024-05-15 13:57:28,Push,81m,Incline Bench Press (Dumbbell),1,27.5,6,,,,,
+2024-05-15 13:57:28,Push,81m,Incline Bench Press (Dumbbell),2,27.5,9,,,,,7.5
+2024-05-15 13:57:28,Push,81m,Incline Bench Press (Dumbbell),3,27.5,11,,,,,
+2024-05-15 13:57:28,Push,81m,Overhead Press (Barbell),1,50,11,,,,,7.5
+2024-05-15 13:57:28,Push,81m,Overhead Press (Barbell),2,50,12,,,,,
+2024-05-15 13:57:28,Push,81m,Overhead Press (Barbell),3,50,6,,,,,8.5
+2024-05-15 13:57:28,Push,81m,Lateral Raise (Dumbbell),1,10,8,,,,,7.5
+2024-05-15 13:57:28,Push,81m,Lateral Raise (Dumbbell),2,10,12,,,,,7
+2024-05-15 13:57:28,Push,81m,Lateral Raise (Dumbbell),3,10,12,,,,,
+2024-05-15 13:57:28,Push,81m,Triceps Pushdown (Cable - Straight Bar),1,32.5,7,,,,,
+2024-05-15 13:57:28,Push,81m,Triceps Pushdown (Cable - Straight Bar),2,32.5,7,,,,,7.5
+2024-05-15 13:57:28,Push,81m,Triceps Pushdown (Cable - Straight Bar),3,32.5,7,,,,,
+2024-05-15 13:57:28,Push,81m,Triceps Pushdown (Cable - Straight Bar),4,32.5,10,,,,,7.5
+2024-05-15 13:57:28,Push,81m,Chest Fly,1,17.5,12,,,,,
+2024-05-15 13:57:28,Push,81m,Chest Fly,2,17.5,10,,,,,
+2024-05-15 13:57:28,Push,81m,Chest Fly,3,17.5,6,,,,,
+2024-05-19 14:19:08,Pull,80m,Deadlift (Barbell),1,125,9,,,,,
+2024-05-19 14:19:08,Pull,80m,Deadlift (Barbell),2,125,12,,,,,7.5
+2024-05-19 14:19:08,Pull,80m,Deadlift (Barbell),3,125,6,,,,,8.5
+2024-05-19 14:19:08,Pull,80m,Deadlift (Barbell),4,125,8,,,,,7.5
+2024-05-19 14:19:08,Pull,80m,Lat Pulldown (Cable),1,62.5,8,,,,,
+2024-05-19 14:19:08,Pull,80m,Lat Pulldown (Cable),2,62.5,9,,,,,8
+2024-05-19 14:19:08,Pull,80m,Lat Pulldown (Cable),3,62.5,11,,,,,
+2024-05-19 14:19:08,Pull,80m,Bent Over Row (Barbell),1,70,6,,,,,
+2024-05-19 14:19:08,Pull,80m,Bent Over Row (Barbell),2,70,12,,,,,
+2024-05-19 14:19:08,Pull,80m,Bent Over Row (Barbell),3,70,11,,,,,9
+2024-05-19 14:19:08,Pull,80m,Face Pull (Cable),1,25,11,,,,,8.5
+2024-05-19 14:19:08,Pull,80m,Face Pull (Cable),2,25,10,,,,,
+2024-05-19 14:19:08,Pull,80m,Face Pull (Cable),3,25,10,,,,,
+2024-05-19 14:19:08,Pull,80m,Bicep Curl (Dumbbell),1,15,12,,,,,7.5
+2024-05-19 14:19:08,Pull,80m,Bicep Curl (Dumbbell),2,15,8,,,,,7
+2024-05-19 14:19:08,Pull,80m,Bicep Curl (Dumbbell),3,15,10,,,,,
+2024-05-19 14:19:08,Pull,80m,Hammer DB ?,1,15,6,,,,,8.5
+2024-05-19 14:19:08,Pull,80m,Hammer DB ?,2,15,9,,,,,8
+2024-05-19 14:19:08,Pull,80m,Hammer DB ?,3,15,9,,,,,
+2024-05-21 13:59:04,Legs,74m,Squat (Barbell),1,100,11,,,,,
+2024-05-21 13:59:04,Legs,74m,Squat (Barbell),2,100,8,,,,,
+2024-05-21 13:59:04,Legs,74m,Squat (Barbell),3,100,8,,,,,7.5
+2024-05-21 13:59:04,Legs,74m,Romanian Deadlift (Barbell),1,87.5,10,,,,,
+2024-05-21 13:59:04,Legs,74m,Romanian Deadlift (Barbell),2,87.5,10,,,,,8
+2024-05-21 13:59:04,Legs,74m,Romanian Deadlift (Barbell),3,87.5,8,,,,,
+2024-05-21 13:59:04,Legs,74m,Leg Press,1,177.5,11,,,,,8.5
+2024-05-21 13:59:04,Legs,74m,Leg Press,2,177.5,6,,,,,7.5
+2024-05-21 13:59:04,Legs,74m,Leg Press,3,177.5,9,,,,,
+2024-05-21 13:59:04,Legs,74m,Leg Extension (Machine),1,50,7,,,,,
+2024-05-21 13:59:04,Legs,74m,Leg Extension (Machine),2,50,11,,,,,8.5
+2024-05-21 13:59:04,Legs,74m,Leg Extension (Machine),3,50,10,,,,,8
+2024-05-21 13:59:04,Legs,74m,Seated Leg Curl (Machine),1,45,10,,,,,
+2024-05-21 13:59:04,Legs,74m,Seated Leg Curl (Machine),2,45,11,,,,,
+2024-05-21 13:59:04,Legs,74m,Seated Leg Curl (Machine),3,45,9,,,,,
+2024-05-21 13:59:04,Legs,74m,Standing Calf Raise (Machine),1,75,7,,,,,8
+2024-05-21 13:59:04,Legs,74m,Standing Calf Raise (Machine),2,75,6,,,,,
+2024-05-21 13:59:04,Legs,74m,Standing Calf Raise (Machine),3,75,9,,,,,8
+,Upper,55m,Bench Press (Barbell),1,75,10,,,,,
+,Upper,55m,Bench Press (Barbell),2,75,6,,,,,8.5
+,Upper,55m,Bench Press (Barbell),3,75,9,,,,,9
+,Upper,55m,Pull Up,1,,11,,,,,
+,Upper,55m,Pull Up,2,,10,,,,,
+,Upper,55m,Pull Up,3,,7,,,,,
+,Upper,55m,Pull Up,4,,8,,,,,7.5
+,Upper,55m,Seated Row (Cable),1,62.5,8,,,,,
+,Upper,55m,Seated Row (Cable),2,62.5,8,,,,,
+,Upper,55m,Seated Row (Cable),3,62.5,10,,,,,
+,Upper,55m,Arnold Press (Dumbbell),1,20,7,,,,,
+,Upper,55m,Arnold Press (Dumbbell),2,20,6,,,,,7.5
+,Upper,55m,Arnold Press (Dumbbell),3,20,8,,,,,
+,Upper,55m,Plank,1,,,,46,,,
+,Upper,55m,Plank,2,,,,58,,,8.5
+,Upper,55m,Plank,3,,,,54,,,
+2024-05-25 14:24:28,Push,65m,Bench Press (Barbell),1,75,10,,,,,8
+2024-05-25 14:24:28,Push,65m,Bench Press (Barbell),2,75,8,,,,,8.5
+2024-05-25 14:24:28,Push,65m,Bench Press (Barbell),3,75,9,,,,,
+2024-05-25 14:24:28,Push,65m,Incline Bench Press (Dumbbell),1,27.5,6,,,,,
+2024-05-25 14:24:28,Push,65m,Incline Bench Press (Dumbbell),2,27.5,11,,,,,
+2024-05-25 14:24:28,Push,65m,Incline Bench Press (Dumbbell),3,27.5,7,,,,,7.5
+2024-05-25 14:24:28,Push,65m,Overhead Press (Barbell),1,50,7,,,,,
+2024-05-25 14:24:28,Push,65m,Overhead Press (Barbell),2,50,11,,,,,
+2024-05-25 14:24:28,Push,65m,Overhead Press (Barbell),3,50,7,,,,,
+2024-05-25 14:24:28,Push,65m,Lateral Raise (Dumbbell),1,10,11,,,,,
+2024-05-25 14:24:28,Push,65m,Lateral Raise (Dumbbell),2,10,6,,,,,
+2024-05-25 14:24:28,Push,65m,Lateral Raise (Dumbbell),3,10,6,,,,,
+2024-05-25 14:24:28,Push,65m,Lateral Raise (Dumbbell),4,10,9,,,,,
+2024-05-25 14:24:28,Push,65m,Triceps Pushdown (Cable - Straight Bar),1,32.5,11,,,,,
+2024-05-25 14:24:28,Push,65m,Triceps Pushdown (Cable - Straight Bar),2,32.5,9,,,,,7.5
+2024-05-25 14:24:28,Push,65m,Triceps Pushdown (Cable - Straight Bar),3,32.5,10,,,,,8.5
+2024-05-25 14:24:28,Push,65m,Chest Fly,1,17.5,7,,,,,7.5
+2024-05-25 14:24:28,Push,65m,Chest Fly,2,17.5,11,,,,,
+2024-05-25 14:24:28,Push,65m,Chest Fly,3,17.5,8,,,,,
+2024-05-27 14:12:08,Pull,72m,Deadlift (Barbell),1,127.5,9,,,,,
+2024-05-27 14:12:08,Pull,72m,Deadlift (Barbell),2,127.5,10,,,,,
+2024-05-27 14:12:08,Pull,72m,Deadlift (Barbell),3,127.5,8,,,,,
+2024-05-27 14:12:08,Pull,72m,Lat Pulldown (Cable),1,62.5,10,,,,,7.5
+2024-05-27 14:12:08,Pull,72m,Lat Pulldown (Cable),2,62.5,6,,,,,
+2024-05-27 14:12:08,Pull,72m,Lat Pulldown (Cable),3,62.5,9,,,,,
+2024-05-27 14:12:08,Pull,72m,Bent Over Row (Barbell),1,70,6,,,,,
+2024-05-27 14:12:08,Pull,72m,Bent Over Row (Barbell),2,70,6,,,,,
+2024-05-27 14:12:08,Pull,72m,Bent Over Row (Barbell),3,70,12,,,,,7
+2024-05-27 14:12:08,Pull,72m,Face Pull (Cable),1,25,9,,,,,
+2024-05-27 14:12:08,Pull,72m,Face Pull (Cable),2,25,6,,,,,
+2024-05-27 14:12:08,Pull,72m,Face Pull (Cable),3,25,6,,,,,9
+2024-05-27 14:12:08,Pull,72m,Bicep Curl (Dumbbell),1,15,12,,,,,
+2024-05-27 14:12:08,Pull,72m,Bicep Curl (Dumbbell),2,15,6,,,,,8
+2024-05-27 14:12:08,Pull,72m,Bicep Curl (Dumbbell),3,15,12,,,,,
+2024-05-27 14:12:08,Pull,72m,Hammer DB ?,1,15,8,,,,,8
+2024-05-27 14:12:08,Pull,72m,Hammer DB ?,2,15,10,,,,,
+2024-05-27 14:12:08,Pull,72m,Hammer DB ?,3,15,6,,,,,
+2024-05-29 14:40:15,Legs,71m,Squat (Barbell),1,102.5,12,,,,,
+2024-05-29 14:40:15,Legs,71m,Squat (Barbell),2,102.5,11,,,,,
+2024-05-29 14:40:15,Legs,71m,Squat (Barbell),3,102.5,6,,,,,8
+2024-05-29 14:40:15,Legs,71m,Squat (Barbell),4,102.5,9,,,,,
+2024-05-29 14:40:15,Legs,71m,Romanian Deadlift (Barbell),1,90,6,,,,,8.5
+2024-05-29 14:40:15,Legs,71m,Romanian Deadlift (Barbell),2,90,12,,,,,8.5
+2024-05-29 14:40:15,Legs,71m,Romanian Deadlift (Barbell),3,90,8,,,,,
+2024-05-29 14:40:15,Legs,71m,Leg Press,1,177.5,7,,,,,7
+2024-05-29 14:40:15,Legs,71m,Leg Press,2,177.5,9,,,,,
+2024-05-29 14:40:15,Legs,71m,Leg Press,3,177.5,9,,,,,
+2024-05-29 14:40:15,Legs,71m,Leg Extension (Machine),1,50,7,,,,,8
+2024-05-29 14:40:15,Legs,71m,Leg Extension (Machine),2,50,7,,,,,8.5
+2024-05-29 14:40:15,Legs,71m,Leg Extension (Machine),3,50,11,,,,,
+2024-05-29 14:40:15,Legs,71m,Seated Leg Curl (Machine),1,45,9,,,,,
+2024-05-29 14:40:15,Legs,71m,Seated Leg Curl (Machine),2,45,11,,,,,9
+2024-05-29 14:40:15,Legs,71m,Seated Leg Curl (Machine),3,45,9,,,,,7.5
+2024-05-29 14:40:15,Legs,71m,Seated Leg Curl (Machine),4,45,9,,,,,
+2024-05-29 14:40:15,Legs,71m,Standing Calf Raise (Machine),1,77.5,10,,,,,8.5
+2024-05-29 14:40:15,Legs,71m,Standing Calf Raise (Machine),2,77.5,8,,,,,7.5
+2024-05-29 14:40:15,Legs,71m,Standing Calf Raise (Machine),3,77.5,11,,,,,8
+2024-05-31 14:31:19,Upper,55m,Bench Press (Barbell),1,77.5,7,,,,,9
+2024-05-31 14:31:19,Upper,55m,Bench Press (Barbell),2,77.5,10,,,,,8
+2024-05-31 14:31:19,Upper,55m,Bench Press (Barbell),3,77.5,10,,,,,7.5
+2024-05-31 14:31:19,Upper,55m,Pull Up,1,,7,,,,,
+2024-05-31 14:31:19,Upper,55m,Pull Up,2,,6,,,,,
+2024-05-31 14:31:19,Upper,55m,Pull Up,3,,8,,,,,
+2024-05-31 14:31:19,Upper,55m,Seated Row (Cable),1,65,8,,,,,7.5
+2024-05-31 14:31:19,Upper,55m,Seated Row (Cable),2,65,11,,,,,
+2024-05-31 14:31:19,Upper,55m,Seated Row (Cable),3,65,11,,,,,
+2024-05-31 14:31:19,Upper,55m,Seated Row (Cable),4,65,8,,,,,8
+2024-05-31 14:31:19,Upper,55m,Arnold Press (Dumbbell),1,20,12,,,,,
+2024-05-31 14:31:19,Upper,55m,Arnold Press (Dumbbell),2,20,10,,,,,
+2024-05-31 14:31:19,Upper,55m,Arnold Press (Dumbbell),3,20,12,,,,,
+2024-05-31 14:31:19,Upper,55m,Plank,1,,,,45,,,9
+2024-05-31 14:31:19,Upper,55m,Plank,2,,,,49,,,7
+2024-05-31 14:31:19,Upper,55m,Plank,3,,,,64,,,
+2024-06-02 14:58:17,Push,77m,Bench Press (Barbell),1,77.5,8,,,,,9
+2024-06-02 14:58:17,Push,77m,Bench Press (Barbell),2,77.5,7,,,,,
+2024-06-02 14:58:17,Push,77m,Bench Press (Barbell),3,77.5,11,,,,,
+2024-06-02 14:58:17,Push,77m,Incline Bench Press (Dumbbell),1,27.5,8,,,,,8
+2024-06-02 14:58:17,Push,77m,Incline Bench Press (Dumbbell),2,27.5,8,,,,,7.5
+2024-06-02 14:58:17,Push,77m,Incline Bench Press (Dumbbell),3,27.5,9,,,,,
+2024-06-02 14:58:17,Push,77m,Overhead Press (Barbell),1,50,8,,,,,
+2024-06-02 14:58:17,Push,77m,Overhead Press (Barbell),2,50,6,,,,,
+2024-06-02 14:58:17,Push,77m,Overhead Press (Barbell),3,50,9,,,,,
+2024-06-02 14:58:17,Push,77m,Lateral Raise (Dumbbell),1,10,7,,,,,7.5
+2024-06-02 14:58:17,Push,77m,Lateral Raise (Dumbbell),2,10,9,,,,,
+2024-06-02 14:58:17,Push,77m,Lateral Raise (Dumbbell),3,10,11,,,,,
+2024-06-02 14:58:17,Push,77m,Triceps Pushdown (Cable - Straight Bar),1,32.5,7,,,,,8
+2024-06-02 14:58:17,Push,77m,Triceps Pushdown (Cable - Straight Bar),2,32.5,10,,,,,
+2024-06-02 14:58:17,Push,77m,Triceps Pushdown (Cable - Straight Bar),3,32.5,9,,,,,7
+2024-06-02 14:58:17,Push,77m,Triceps Pushdown (Cable - Straight Bar),4,32.5,8,,,,,9
+2024-06-02 14:58:17,Push,77m,Chest Fly,1,17.5,7,,,,,7.5
+2024-06-02 14:58:17,Push,77m,Chest Fly,2,17.5,10,,,,,9
+2024-06-02 14:58:17,Push,77m,Chest Fly,3,17.5,9,,,,,
+2024-06-02 14:58:17,Push,77m,Chest Fly,4,17.5,10,,,,,
+,Pull,58m,Deadlift (Barbell),1,127.5,9,,,,,7
+,Pull,58m,Deadlift (Barbell),2,127.5,11,,,,,8
+,Pull,58m,Deadlift (Barbell),3,127.5,11,,,,,7
+,Pull,58m,Lat Pulldown (Cable),1,65,8,,,,,
+,Pull,58m,Lat Pulldown (Cable),2,65,10,,,,,8
+,Pull,58m,Lat Pulldown (Cable),3,65,11,,,,,
+,Pull,58m,Lat Pulldown (Cable),4,65,6,,,,,8
+,Pull,58m,Bent Over Row (Barbell),1,70,11,,,,,
+,Pull,58m,Bent Over Row (Barbell),2,70,11,,,,,9
+,Pull,58m,Bent Over Row (Barbell),3,70,7,,,,,
+,Pull,58m,Face Pull (Cable),1,25,10,,,,,7
+,Pull,58m,Face Pull (Cable),2,25,8,,,,,7
+,Pull,58m,Face Pull (Cable),3,25,10,,,,,7.5
+,Pull,58m,Face Pull (Cable),4,25,9,,,,,
+,Pull,58m,Bicep Curl (Dumbbell),1,15,11,,,,,
+,Pull,58m,Bicep Curl (Dumbbell),2,15,9,,,,,8
+,Pull,58m,Bicep Curl (Dumbbell),3,15,12,,,,,9
+,Pull,58m,Hammer DB ?,1,15,8,,,,,8
+,Pull,58m,Hammer DB ?,2,15,11,,,,,9
+,Pull,58m,Hammer DB ?,3,15,11,,,,,
+2024-06-08 14:40:20,Legs,69m,Squat (Barbell),1,102.5,8,,,,,
+2024-06-08 14:40:20,Legs,69m,Squat (Barbell),2,102.5,11,,,,,
+2024-06-08 14:40:20,Legs,69m,Squat (Barbell),3,102.5,10,,,,,
+2024-06-08 14:40:20,Legs,69m,Romanian Deadlift (Barbell),1,90,10,,,,,
+2024-06-08 14:40:20,Legs,69m,Romanian Deadlift (Barbell),2,90,9,,,,,
+2024-06-08 14:40:20,Legs,69m,Romanian Deadlift (Barbell),3,90,11,,,,,
+2024-06-08 14:40:20,Legs,69m,Romanian Deadlift (Barbell),4,90,11,,,,,
+2024-06-08 14:40:20,Legs,69m,Leg Press,1,180,7,,,,,
+2024-06-08 14:40:20,Legs,69m,Leg Press,2,180,8,,,,,7
+2024-06-08 14:40:20,Legs,69m,Leg Press,3,180,8,,,,,8.5
+2024-06-08 14:40:20,Legs,69m,Leg Press,4,180,9,,,,,
+2024-06-08 14:40:20,Legs,69m,Leg Extension (Machine),1,52.5,8,,,,,
+2024-06-08 14:40:20,Legs,69m,Leg Extension (Machine),2,52.5,6,,,,,
+2024-06-08 14:40:20,Legs,69m,Leg Extension (Machine),3,52.5,9,,,,,
+2024-06-08 14:40:20,Legs,69m,Seated Leg Curl (Machine),1,45,9,,,,,8
+2024-06-08 14:40:20,Legs,69m,Seated Leg Curl (Machine),2,45,9,,,,,
+2024-06-08 14:40:20,Legs,69m,Seated Leg Curl (Machine),3,45,10,,,,,
+2024-06-08 14:40:20,Legs,69m,Seated Leg Curl (Machine),4,45,9,,,,,7
+2024-06-08 14:40:20,Legs,69m,Standing Calf Raise (Machine),1,77.5,11,,,,,
+2024-06-08 14:40:20,Legs,69m,Standing Calf Raise (Machine),2,77.5,12,,,,,
+2024-06-08 14:40:20,Legs,69m,Standing Calf Raise (Machine),3,77.5,12,,,,,
+,Upper,82m,Bench Press (Barbell),1,77.5,9,,,,,
+,Upper,82m,Bench Press (Barbell),2,77.5,12,,,,,8.5
+,Upper,82m,Bench Press (Barbell),3,77.5,9,,,,,7
+,Upper,82m,Pull Up,1,,10,,,,,
+,Upper,82m,Pull Up,2,,6,,,,,
+,Upper,82m,Pull Up,3,,9,,,,,
+,Upper,82m,Seated Row (Cable),1,65,8,,,,,
+,Upper,82m,Seated Row (Cable),2,65,11,,,,,8
+,Upper,82m,Seated Row (Cable),3,65,11,,,,,
+,Upper,82m,Arnold Press (Dumbbell),1,20,11,,,,,9
+,Upper,82m,Arnold Press (Dumbbell),2,20,11,,,,,9
+,Upper,82m,Arnold Press (Dumbbell),3,20,6,,,,,
+,Upper,82m,Arnold Press (Dumbbell),4,20,8,,,,,8.5
+,Upper,82m,Plank,1,,,,55,,,
+,Upper,82m,Plank,2,,,,51,,,
+,Upper,82m,Plank,3,,,,63,,,
+2024-06-14 14:23:02,Push,77m,Bench Press (Barbell),1,77.5,8,,,,,
+2024-06-14 14:23:02,Push,77m,Bench Press (Barbell),2,77.5,11,,,,,
+2024-06-14 14:23:02,Push,77m,Bench Press (Barbell),3,77.5,9,,,,,8.5
+2024-06-14 14:23:02,Push,77m,Incline Bench Press (Dumbbell),1,27.5,9,,,,,
+2024-06-14 14:23:02,Push,77m,Incline Bench Press (Dumbbell),2,27.5,8,,,,,7.5
+2024-06-14 14:23:02,Push,77m,Incline Bench Press (Dumbbell),3,27.5,7,,,,,
+2024-06-14 14:23:02,Push,77m,Overhead Press (Barbell),1,52.5,6,,,,,
+2024-06-14 14:23:02,Push,77m,Overhead Press (Barbell),2,52.5,11,,,,,
+2024-06-14 14:23:02,Push,77m,Overhead Press (Barbell),3,52.5,6,,,,,8.5
+2024-06-14 14:23:02,Push,77m,Lateral Raise (Dumbbell),1,10,9,,,,,
+2024-06-14 14:23:02,Push,77m,Lateral Raise (Dumbbell),2,10,10,,,,,9
+2024-06-14 14:23:02,Push,77m,Lateral Raise (Dumbbell),3,10,12,,,,,
+2024-06-14 14:23:02,Push,77m,Triceps Pushdown (Cable - Straight Bar),1,32.5,8,,,,,
+2024-06-14 14:23:02,Push,77m,Triceps Pushdown (Cable - Straight Bar),2,32.5,11,,,,,7.5
+2024-06-14 14:23:02,Push,77m,Triceps Pushdown (Cable - Straight Bar),3,32.5,9,,,,,
+2024-06-14 14:23:02,Push,77m,Triceps Pushdown (Cable - Straight Bar),4,32.5,11,,,,,
+2024-06-14 14:23:02,Push,77m,Chest Fly,1,17.5,10,,,,,
+2024-06-14 14:23:02,Push,77m,Chest Fly,2,17.5,10,,,,,8
+2024-06-14 14:23:02,Push,77m,Chest Fly,3,17.5,9,,,,,
+,Pull,58m,Deadlift (Barbell),1,130,12,,,,,8
+,Pull,58m,Deadlift (Barbell),2,130,9,,,,,8
+,Pull,58m,Deadlift (Barbell),3,130,10,,,,,
+,Pull,58m,Lat Pulldown (Cable),1,65,12,,,,,
+,Pull,58m,Lat Pulldown (Cable),2,65,12,,,,,8.5
+,Pull,58m,Lat Pulldown (Cable),3,65,11,,,,,
+,Pull,58m,Lat Pulldown (Cable),4,65,11,,,,,9
+,Pull,58m,Bent Over Row (Barbell),1,70,8,,,,,9
+,Pull,58m,Bent Over Row (Barbell),2,70,12,,,,,
+,Pull,58m,Bent Over Row (Barbell),3,70,9,,,,,7
+,Pull,58m,Face Pull (Cable),1,25,10,,,,,8.5
+,Pull,58m,Face Pull (Cable),2,25,10,,,,,
+,Pull,58m,Face Pull (Cable),3,25,11,,,,,
+,Pull,58m,Face Pull (Cable),4,25,11,,,,,7
+,Pull,58m,Bicep Curl (Dumbbell),1,15,12,,,,,
+,Pull,58m,Bicep Curl (Dumbbell),2,15,8,,,,,8
+,Pull,58m,Bicep Curl (Dumbbell),3,15,6,,,,,8.5
+,Pull,58m,Hammer DB ?,1,15,8,,,,,
+,Pull,58m,Hammer DB ?,2,15,7,,,,,7
+,Pull,58m,Hammer DB ?,3,15,7,,,,,
+,Pull,58m,Hammer DB ?,4,15,8,,,,,7
+2024-06-18 14:20:06,Legs,78m,Squat (Barbell),1,102.5,12,,,,,
+2024-06-18 14:20:06,Legs,78m,Squat (Barbell),2,102.5,9,,,,,
+2024-06-18 14:20:06,Legs,78m,Squat (Barbell),3,102.5,7,,,,,
+2024-06-18 14:20:06,Legs,78m,Romanian Deadlift (Barbell),1,90,6,,,,,8
+2024-06-18 14:20:06,Legs,78m,Romanian Deadlift (Barbell),2,90,9,,,,,
+2024-06-18 14:20:06,Legs,78m,Romanian Deadlift (Barbell),3,90,8,,,,,
+2024-06-18 14:20:06,Legs,78m,Leg Press,1,180,8,,,,,
+2024-06-18 14:20:06,Legs,78m,Leg Press,2,180,12,,,,,
+2024-06-18 14:20:06,Legs,78m,Leg Press,3,180,8,,,,,7
+2024-06-18 14:20:06,Legs,78m,Leg Extension (Machine),1,52.5,6,,,,,
+2024-06-18 14:20:06,Legs,78m,Leg Extension (Machine),2,52.5,11,,,,,7
+2024-06-18 14:20:06,Legs,78m,Leg Extension (Machine),3,52.5,9,,,,,
+2024-06-18 14:20:06,Legs,78m,Leg Extension (Machine),4,52.5,9,,,,,
+2024-06-18 14:20:06,Legs,78m,Seated Leg Curl (Machine),1,45,12,,,,,7.5
+2024-06-18 14:20:06,Legs,78m,Seated Leg Curl (Machine),2,45,8,,,,,
+2024-06-18 14:20:06,Legs,78m,Seated Leg Curl (Machine),3,45,7,,,,,7.5
+2024-06-18 14:20:06,Legs,78m,Seated Leg Curl (Machine),4,45,7,,,,,
+2024-06-18 14:20:06,Legs,78m,Standing Calf Raise (Machine),1,77.5,11,,,,,9
+2024-06-18 14:20:06,Legs,78m,Standing Calf Raise (Machine),2,77.5,6,,,,,
+2024-06-18 14:20:06,Legs,78m,Standing Calf Raise (Machine),3,77.5,11,,,,,8.5
+,Upper,72m,Bench Press (Barbell),1,77.5,6,,,,,8.5
+,Upper,72m,Bench Press (Barbell),2,77.5,9,,,,,9
+,Upper,72m,Bench Press (Barbell),3,77.5,6,,,,,7.5
+,Upper,72m,Bench Press (Barbell),4,77.5,12,,,,,
+,Upper,72m,Pull Up,1,,7,,,,,
+,Upper,72m,Pull Up,2,,11,,,,,
+,Upper,72m,Pull Up,3,,6,,,,,
+,Upper,72m,Seated Row (Cable),1,65,8,,,,,9
+,Upper,72m,Seated Row (Cable),2,65,8,,,,,
+,Upper,72m,Seated Row (Cable),3,65,10,,,,,
+,Upper,72m,Arnold Press (Dumbbell),1,20,12,,,,,8
+,Upper,72m,Arnold Press (Dumbbell),2,20,10,,,,,7
+,Upper,72m,Arnold Press (Dumbbell),3,20,12,,,,,
+,Upper,72m,Arnold Press (Dumbbell),4,20,8,,,,,
+,Upper,72m,Plank,1,,,,74,,,8.5
+,Upper,72m,Plank,2,,,,55,,,7
+,Upper,72m,Plank,3,,,,50,,,
+2024-06-24 14:34:49,Push,75m,Bench Press (Barbell),1,77.5,10,,,,,
+2024-06-24 14:34:49,Push,75m,Bench Press (Barbell),2,77.5,8,,,,,
+2024-06-24 14:34:49,Push,75m,Bench Press (Barbell),3,77.5,12,,,,,7.5
+2024-06-24 14:34:49,Push,75m,Incline Bench Press (Dumbbell),1,27.5,6,,,,,8.5
+2024-06-24 14:34:49,Push,75m,Incline Bench Press (Dumbbell),2,27.5,8,,,,,8.5
+2024-06-24 14:34:49,Push,75m,Incline Bench Press (Dumbbell),3,27.5,7,,,,,
+2024-06-24 14:34:49,Push,75m,Overhead Press (Barbell),1,52.5,10,,,,,7.5
+2024-06-24 14:34:49,Push,75m,Overhead Press (Barbell),2,52.5,6,,,,,
+2024-06-24 14:34:49,Push,75m,Overhead Press (Barbell),3,52.5,12,,,,,8
+2024-06-24 14:34:49,Push,75m,Lateral Raise (Dumbbell),1,10,11,,,,,
+2024-06-24 14:34:49,Push,75m,Lateral Raise (Dumbbell),2,10,10,,,,,8
+2024-06-24 14:34:49,Push,75m,Lateral Raise (Dumbbell),3,10,11,,,,,
+2024-06-24 14:34:49,Push,75m,Lateral Raise (Dumbbell),4,10,9,,,,,7
+2024-06-24 14:34:49,Push,75m,Triceps Pushdown (Cable - Straight Bar),1,32.5,7,,,,,8.5
+2024-06-24 14:34:49,Push,75m,Triceps Pushdown (Cable - Straight Bar),2,32.5,10,,,,,9
+2024-06-24 14:34:49,Push,75m,Triceps Pushdown (Cable - Straight Bar),3,32.5,10,,,,,8.5
+2024-06-24 14:34:49,Push,75m,Chest Fly,1,17.5,9,,,,,
+2024-06-24 14:34:49,Push,75m,Chest Fly,2,17.5,6,,,,,
+2024-06-24 14:34:49,Push,75m,Chest Fly,3,17.5,12,,,,,8
+2024-06-26 14:31:30,Pull,82m,Deadlift (Barbell),1,130,6,,,,,
+2024-06-26 14:31:30,Pull,82m,Deadlift (Barbell),2,130,9,,,,,
+2024-06-26 14:31:30,Pull,82m,Deadlift (Barbell),3,130,12,,,,,
+2024-06-26 14:31:30,Pull,82m,Deadlift (Barbell),4,130,11,,,,,8
+2024-06-26 14:31:30,Pull,82m,Lat Pulldown (Cable),1,65,12,,,,,7
+2024-06-26 14:31:30,Pull,82m,Lat Pulldown (Cable),2,65,7,,,,,8
+2024-06-26 14:31:30,Pull,82m,Lat Pulldown (Cable),3,65,7,,,,,7.5
+2024-06-26 14:31:30,Pull,82m,Lat Pulldown (Cable),4,65,8,,,,,
+2024-06-26 14:31:30,Pull,82m,Bent Over Row (Barbell),1,72.5,9,,,,,
+2024-06-26 14:31:30,Pull,82m,Bent Over Row (Barbell),2,72.5,11,,,,,9
+2024-06-26 14:31:30,Pull,82m,Bent Over Row (Barbell),3,72.5,11,,,,,7.5
+2024-06-26 14:31:30,Pull,82m,Face Pull (Cable),1,25,8,,,,,
+2024-06-26 14:31:30,Pull,82m,Face Pull (Cable),2,25,7,,,,,7
+2024-06-26 14:31:30,Pull,82m,Face Pull (Cable),3,25,8,,,,,
+2024-06-26 14:31:30,Pull,82m,Bicep Curl (Dumbbell),1,15,6,,,,,9
+2024-06-26 14:31:30,Pull,82m,Bicep Curl (Dumbbell),2,15,8,,,,,
+2024-06-26 14:31:30,Pull,82m,Bicep Curl (Dumbbell),3,15,9,,,,,8.5
+2024-06-26 14:31:30,Pull,82m,Hammer DB ?,1,15,6,,,,,9
+2024-06-26 14:31:30,Pull,82m,Hammer DB ?,2,15,8,,,,,
+2024-06-26 14:31:30,Pull,82m,Hammer DB ?,3,15,7,,,,,
+2024-06-26 14:31:30,Pull,82m,Hammer DB ?,4,15,6,,,,,
+2024-06-28 14:45:57,Legs,67m,Squat (Barbell),1,105,10,,,,,7.5
+2024-06-28 14:45:57,Legs,67m,Squat (Barbell),2,105,10,,,,,
+2024-06-28 14:45:57,Legs,67m,Squat (Barbell),3,105,6,,,,,7
+2024-06-28 14:45:57,Legs,67m,Romanian Deadlift (Barbell),1,90,11,,,,,
+2024-06-28 14:45:57,Legs,67m,Romanian Deadlift (Barbell),2,90,12,,,,,7.5
+2024-06-28 14:45:57,Legs,67m,Romanian Deadlift (Barbell),3,90,9,,,,,7
+2024-06-28 14:45:57,Legs,67m,Leg Press,1,182.5,10,,,,,
+2024-06-28 14:45:57,Legs,67m,Leg Press,2,182.5,11,,,,,
+2024-06-28 14:45:57,Legs,67m,Leg Press,3,182.5,6,,,,,
+2024-06-28 14:45:57,Legs,67m,Leg Press,4,182.5,9,,,,,
+2024-06-28 14:45:57,Legs,67m,Leg Extension (Machine),1,52.5,6,,,,,
+2024-06-28 14:45:57,Legs,67m,Leg Extension (Machine),2,52.5,6,,,,,
+2024-06-28 14:45:57,Legs,67m,Leg Extension (Machine),3,52.5,9,,,,,9
+2024-06-28 14:45:57,Legs,67m,Leg Extension (Machine),4,52.5,10,,,,,
+2024-06-28 14:45:57,Legs,67m,Seated Leg Curl (Machine),1,45,6,,,,,
+2024-06-28 14:45:57,Legs,67m,Seated Leg Curl (Machine),2,45,9,,,,,7
+2024-06-28 14:45:57,Legs,67m,Seated Leg Curl (Machine),3,45,12,,,,,9
+2024-06-28 14:45:57,Legs,67m,Seated Leg Curl (Machine),4,45,12,,,,,
+2024-06-28 14:45:57,Legs,67m,Standing Calf Raise (Machine),1,77.5,8,,,,,7
+2024-06-28 14:45:57,Legs,67m,Standing Calf Raise (Machine),2,77.5,7,,,,,7
+2024-06-28 14:45:57,Legs,67m,Standing Calf Raise (Machine),3,77.5,8,,,,,
+2024-06-30 14:54:50,Upper,77m,Bench Press (Barbell),1,77.5,11,,,,,
+2024-06-30 14:54:50,Upper,77m,Bench Press (Barbell),2,77.5,12,,,,,9
+2024-06-30 14:54:50,Upper,77m,Bench Press (Barbell),3,77.5,11,,,,,
+2024-06-30 14:54:50,Upper,77m,Pull Up,1,,11,,,,,
+2024-06-30 14:54:50,Upper,77m,Pull Up,2,,8,,,,,
+2024-06-30 14:54:50,Upper,77m,Pull Up,3,,12,,,,,
+2024-06-30 14:54:50,Upper,77m,Seated Row (Cable),1,65,10,,,,,
+2024-06-30 14:54:50,Upper,77m,Seated Row (Cable),2,65,6,,,,,7
+2024-06-30 14:54:50,Upper,77m,Seated Row (Cable),3,65,9,,,,,
+2024-06-30 14:54:50,Upper,77m,Seated Row (Cable),4,65,9,,,,,
+2024-06-30 14:54:50,Upper,77m,Arnold Press (Dumbbell),1,20,11,,,,,
+2024-06-30 14:54:50,Upper,77m,Arnold Press (Dumbbell),2,20,6,,,,,8
+2024-06-30 14:54:50,Upper,77m,Arnold Press (Dumbbell),3,20,8,,,,,8.5
+2024-06-30 14:54:50,Upper,77m,Arnold Press (Dumbbell),4,20,9,,,,,
+2024-06-30 14:54:50,Upper,77m,Plank,1,,,,57,,,7.5
+2024-06-30 14:54:50,Upper,77m,Plank,2,,,,65,,,
+2024-06-30 14:54:50,Upper,77m,Plank,3,,,,57,,,
+,Push,62m,Bench Press (Barbell),1,77.5,10,,,,,7.5
+,Push,62m,Bench Press (Barbell),2,77.5,8,,,,,
+,Push,62m,Bench Press (Barbell),3,77.5,12,,,,,
+,Push,62m,Bench Press (Barbell),4,77.5,8,,,,,
+,Push,62m,Incline Bench Press (Dumbbell),1,30,7,,,,,
+,Push,62m,Incline Bench Press (Dumbbell),2,30,9,,,,,9
+,Push,62m,Incline Bench Press (Dumbbell),3,30,9,,,,,8.5
+,Push,62m,Overhead Press (Barbell),1,52.5,6,,,,,9
+,Push,62m,Overhead Press (Barbell),2,52.5,9,,,,,
+,Push,62m,Overhead Press (Barbell),3,52.5,9,,,,,
+,Push,62m,Lateral Raise (Dumbbell),1,10,12,,,,,8
+,Push,62m,Lateral Raise (Dumbbell),2,10,8,,,,,
+,Push,62m,Lateral Raise (Dumbbell),3,10,8,,,,,
+,Push,62m,Triceps Pushdown (Cable - Straight Bar),1,32.5,11,,,,,7
+,Push,62m,Triceps Pushdown (Cable - Straight Bar),2,32.5,11,,,,,
+,Push,62m,Triceps Pushdown (Cable - Straight Bar),3,32.5,7,,,,,
+,Push,62m,Triceps Pushdown (Cable - Straight Bar),4,32.5,9,,,,,9
+,Push,62m,Chest Fly,1,17.5,7,,,,,
+,Push,62m,Chest Fly,2,17.5,8,,,,,
+,Push,62m,Chest Fly,3,17.5,8,,,,,7.5
+,Push,62m,Chest Fly,4,17.5,12,,,,,
+,Pull,57m,Deadlift (Barbell),1,130,10,,,,,8
+,Pull,57m,Deadlift (Barbell),2,130,8,,,,,
+,Pull,57m,Deadlift (Barbell),3,130,9,,,,,7.5
+,Pull,57m,Deadlift (Barbell),4,130,11,,,,,
+,Pull,57m,Lat Pulldown (Cable),1,65,9,,,,,
+,Pull,57m,Lat Pulldown (Cable),2,65,12,,,,,
+,Pull,57m,Lat Pulldown (Cable),3,65,7,,,,,
+,Pull,57m,Bent Over Row (Barbell),1,72.5,6,,,,,
+,Pull,57m,Bent Over Row (Barbell),2,72.5,7,,,,,
+,Pull,57m,Bent Over Row (Barbell),3,72.5,11,,,,,
+,Pull,57m,Face Pull (Cable),1,25,9,,,,,7.5
+,Pull,57m,Face Pull (Cable),2,25,12,,,,,
+,Pull,57m,Face Pull (Cable),3,25,8,,,,,
+,Pull,57m,Bicep Curl (Dumbbell),1,15,10,,,,,
+,Pull,57m,Bicep Curl (Dumbbell),2,15,11,,,,,8
+,Pull,57m,Bicep Curl (Dumbbell),3,15,7,,,,,8
+,Pull,57m,Bicep Curl (Dumbbell),4,15,6,,,,,
+,Pull,57m,Hammer DB ?,1,15,8,,,,,
+,Pull,57m,Hammer DB ?,2,15,10,,,,,7
+,Pull,57m,Hammer DB ?,3,15,10,,,,,
+2024-07-08 15:08:39,Legs,68m,Squat (Barbell),1,105,12,,,,,8
+2024-07-08 15:08:39,Legs,68m,Squat (Barbell),2,105,10,,,,,8.5
+2024-07-08 15:08:39,Legs,68m,Squat (Barbell),3,105,8,,,,,
+2024-07-08 15:08:39,Legs,68m,Romanian Deadlift (Barbell),1,92.5,11,,,,,
+2024-07-08 15:08:39,Legs,68m,Romanian Deadlift (Barbell),2,92.5,10,,,,,
+2024-07-08 15:08:39,Legs,68m,Romanian Deadlift (Barbell),3,92.5,7,,,,,
+2024-07-08 15:08:39,Legs,68m,Leg Press,1,182.5,8,,,,,
+2024-07-08 15:08:39,Legs,68m,Leg Press,2,182.5,8,,,,,7.5
+2024-07-08 15:08:39,Legs,68m,Leg Press,3,182.5,9,,,,,9
+2024-07-08 15:08:39,Legs,68m,Leg Press,4,182.5,6,,,,,
+2024-07-08 15:08:39,Legs,68m,Leg Extension (Machine),1,52.5,6,,,,,
+2024-07-08 15:08:39,Legs,68m,Leg Extension (Machine),2,52.5,10,,,,,8.5
+2024-07-08 15:08:39,Legs,68m,Leg Extension (Machine),3,52.5,9,,,,,
+2024-07-08 15:08:39,Legs,68m,Seated Leg Curl (Machine),1,45,9,,,,,
+2024-07-08 15:08:39,Legs,68m,Seated Leg Curl (Machine),2,45,6,,,,,7.5
+2024-07-08 15:08:39,Legs,68m,Seated Leg Curl (Machine),3,45,7,,,,,
+2024-07-08 15:08:39,Legs,68m,Standing Calf Raise (Machine),1,77.5,8,,,,,
+2024-07-08 15:08:39,Legs,68m,Standing Calf Raise (Machine),2,77.5,6,,,,,
+2024-07-08 15:08:39,Legs,68m,Standing Calf Raise (Machine),3,77.5,10,,,,,
+2024-07-10 14:47:11,Upper,61m,Bench Press (Barbell),1,80,6,,,,,
+2024-07-10 14:47:11,Upper,61m,Bench Press (Barbell),2,80,7,,,,,
+2024-07-10 14:47:11,Upper,61m,Bench Press (Barbell),3,80,11,,,,,
+2024-07-10 14:47:11,Upper,61m,Pull Up,1,,10,,,,,
+2024-07-10 14:47:11,Upper,61m,Pull Up,2,,6,,,,,
+2024-07-10 14:47:11,Upper,61m,Pull Up,3,,9,,,,,
+2024-07-10 14:47:11,Upper,61m,Seated Row (Cable),1,65,8,,,,,
+2024-07-10 14:47:11,Upper,61m,Seated Row (Cable),2,65,8,,,,,
+2024-07-10 14:47:11,Upper,61m,Seated Row (Cable),3,65,10,,,,,
+2024-07-10 14:47:11,Upper,61m,Arnold Press (Dumbbell),1,20,6,,,,,8
+2024-07-10 14:47:11,Upper,61m,Arnold Press (Dumbbell),2,20,6,,,,,8
+2024-07-10 14:47:11,Upper,61m,Arnold Press (Dumbbell),3,20,7,,,,,9
+2024-07-10 14:47:11,Upper,61m,Plank,1,,,,63,,,8.5
+2024-07-10 14:47:11,Upper,61m,Plank,2,,,,47,,,
+2024-07-10 14:47:11,Upper,61m,Plank,3,,,,47,,,
+2024-07-12 15:10:15,Push,80m,Bench Press (Barbell),1,80,7,,,,,
+2024-07-12 15:10:15,Push,80m,Bench Press (Barbell),2,80,11,,,,,8
+2024-07-12 15:10:15,Push,80m,Bench Press (Barbell),3,80,6,,,,,
+2024-07-12 15:10:15,Push,80m,Incline Bench Press (Dumbbell),1,30,11,,,,,
+2024-07-12 15:10:15,Push,80m,Incline Bench Press (Dumbbell),2,30,8,,,,,
+2024-07-12 15:10:15,Push,80m,Incline Bench Press (Dumbbell),3,30,11,,,,,7.5
+2024-07-12 15:10:15,Push,80m,Incline Bench Press (Dumbbell),4,30,12,,,,,
+2024-07-12 15:10:15,Push,80m,Overhead Press (Barbell),1,52.5,6,,,,,
+2024-07-12 15:10:15,Push,80m,Overhead Press (Barbell),2,52.5,6,,,,,7
+2024-07-12 15:10:15,Push,80m,Overhead Press (Barbell),3,52.5,9,,,,,
+2024-07-12 15:10:15,Push,80m,Lateral Raise (Dumbbell),1,10,10,,,,,
+2024-07-12 15:10:15,Push,80m,Lateral Raise (Dumbbell),2,10,6,,,,,8
+2024-07-12 15:10:15,Push,80m,Lateral Raise (Dumbbell),3,10,10,,,,,
+2024-07-12 15:10:15,Push,80m,Lateral Raise (Dumbbell),4,10,10,,,,,9
+2024-07-12 15:10:15,Push,80m,Triceps Pushdown (Cable - Straight Bar),1,32.5,10,,,,,
+2024-07-12 15:10:15,Push,80m,Triceps Pushdown (Cable - Straight Bar),2,32.5,9,,,,,8.5
+2024-07-12 15:10:15,Push,80m,Triceps Pushdown (Cable - Straight Bar),3,32.5,7,,,,,
+2024-07-12 15:10:15,Push,80m,Chest Fly,1,17.5,10,,,,,
+2024-07-12 15:10:15,Push,80m,Chest Fly,2,17.5,6,,,,,8
+2024-07-12 15:10:15,Push,80m,Chest Fly,3,17.5,8,,,,,
+2024-07-12 15:10:15,Push,80m,Chest Fly,4,17.5,12,,,,,
+2024-07-14 15:12:36,Pull,71m,Deadlift (Barbell),1,132.5,7,,,,,
+2024-07-14 15:12:36,Pull,71m,Deadlift (Barbell),2,132.5,12,,,,,8.5
+2024-07-14 15:12:36,Pull,71m,Deadlift (Barbell),3,132.5,8,,,,,8
+2024-07-14 15:12:36,Pull,71m,Lat Pulldown (Cable),1,65,12,,,,,
+2024-07-14 15:12:36,Pull,71m,Lat Pulldown (Cable),2,65,10,,,,,
+2024-07-14 15:12:36,Pull,71m,Lat Pulldown (Cable),3,65,9,,,,,9
+2024-07-14 15:12:36,Pull,71m,Bent Over Row (Barbell),1,72.5,8,,,,,
+2024-07-14 15:12:36,Pull,71m,Bent Over Row (Barbell),2,72.5,11,,,,,9
+2024-07-14 15:12:36,Pull,71m,Bent Over Row (Barbell),3,72.5,8,,,,,
+2024-07-14 15:12:36,Pull,71m,Bent Over Row (Barbell),4,72.5,10,,,,,
+2024-07-14 15:12:36,Pull,71m,Face Pull (Cable),1,27.5,10,,,,,
+2024-07-14 15:12:36,Pull,71m,Face Pull (Cable),2,27.5,10,,,,,8
+2024-07-14 15:12:36,Pull,71m,Face Pull (Cable),3,27.5,8,,,,,8
+2024-07-14 15:12:36,Pull,71m,Bicep Curl (Dumbbell),1,15,6,,,,,
+2024-07-14 15:12:36,Pull,71m,Bicep Curl (Dumbbell),2,15,9,,,,,
+2024-07-14 15:12:36,Pull,71m,Bicep Curl (Dumbbell),3,15,10,,,,,
+2024-07-14 15:12:36,Pull,71m,Hammer DB ?,1,15,10,,,,,
+2024-07-14 15:12:36,Pull,71m,Hammer DB ?,2,15,7,,,,,
+2024-07-14 15:12:36,Pull,71m,Hammer DB ?,3,15,10,,,,,
+2024-07-18 14:54:16,Legs,77m,Squat (Barbell),1,105,12,,,,,9
+2024-07-18 14:54:16,Legs,77m,Squat (Barbell),2,105,6,,,,,9
+2024-07-18 14:54:16,Legs,77m,Squat (Barbell),3,105,6,,,,,7
+2024-07-18 14:54:16,Legs,77m,Squat (Barbell),4,105,12,,,,,9
+2024-07-18 14:54:16,Legs,77m,Romanian Deadlift (Barbell),1,92.5,10,,,,,8.5
+2024-07-18 14:54:16,Legs,77m,Romanian Deadlift (Barbell),2,92.5,6,,,,,7.5
+2024-07-18 14:54:16,Legs,77m,Romanian Deadlift (Barbell),3,92.5,8,,,,,7.5
+2024-07-18 14:54:16,Legs,77m,Leg Press,1,185,9,,,,,
+2024-07-18 14:54:16,Legs,77m,Leg Press,2,185,10,,,,,8.5
+2024-07-18 14:54:16,Legs,77m,Leg Press,3,185,12,,,,,8.5
+2024-07-18 14:54:16,Legs,77m,Leg Extension (Machine),1,52.5,10,,,,,7
+2024-07-18 14:54:16,Legs,77m,Leg Extension (Machine),2,52.5,9,,,,,
+2024-07-18 14:54:16,Legs,77m,Leg Extension (Machine),3,52.5,11,,,,,
+2024-07-18 14:54:16,Legs,77m,Seated Leg Curl (Machine),1,45,11,,,,,8.5
+2024-07-18 14:54:16,Legs,77m,Seated Leg Curl (Machine),2,45,10,,,,,
+2024-07-18 14:54:16,Legs,77m,Seated Leg Curl (Machine),3,45,11,,,,,
+2024-07-18 14:54:16,Legs,77m,Seated Leg Curl (Machine),4,45,10,,,,,9
+2024-07-18 14:54:16,Legs,77m,Standing Calf Raise (Machine),1,80,8,,,,,9
+2024-07-18 14:54:16,Legs,77m,Standing Calf Raise (Machine),2,80,8,,,,,
+2024-07-18 14:54:16,Legs,77m,Standing Calf Raise (Machine),3,80,6,,,,,7
+2024-07-20 15:08:53,Upper,65m,Bench Press (Barbell),1,80,9,,,,,
+2024-07-20 15:08:53,Upper,65m,Bench Press (Barbell),2,80,10,,,,,
+2024-07-20 15:08:53,Upper,65m,Bench Press (Barbell),3,80,7,,,,,
+2024-07-20 15:08:53,Upper,65m,Bench Press (Barbell),4,80,9,,,,,
+2024-07-20 15:08:53,Upper,65m,Pull Up,1,,10,,,,,7
+2024-07-20 15:08:53,Upper,65m,Pull Up,2,,9,,,,,
+2024-07-20 15:08:53,Upper,65m,Pull Up,3,,11,,,,,
+2024-07-20 15:08:53,Upper,65m,Pull Up,4,,6,,,,,
+2024-07-20 15:08:53,Upper,65m,Seated Row (Cable),1,65,7,,,,,8.5
+2024-07-20 15:08:53,Upper,65m,Seated Row (Cable),2,65,10,,,,,
+2024-07-20 15:08:53,Upper,65m,Seated Row (Cable),3,65,12,,,,,8
+2024-07-20 15:08:53,Upper,65m,Arnold Press (Dumbbell),1,20,10,,,,,
+2024-07-20 15:08:53,Upper,65m,Arnold Press (Dumbbell),2,20,6,,,,,8
+2024-07-20 15:08:53,Upper,65m,Arnold Press (Dumbbell),3,20,8,,,,,
+2024-07-20 15:08:53,Upper,65m,Arnold Press (Dumbbell),4,20,7,,,,,
+2024-07-20 15:08:53,Upper,65m,Plank,1,,,,72,,,
+2024-07-20 15:08:53,Upper,65m,Plank,2,,,,56,,,
+2024-07-20 15:08:53,Upper,65m,Plank,3,,,,52,,,7.5
+,Push,70m,Bench Press (Barbell),1,80,9,,,,,9
+,Push,70m,Bench Press (Barbell),2,80,10,,,,,
+,Push,70m,Bench Press (Barbell),3,80,11,,,,,9
+,Push,70m,Incline Bench Press (Dumbbell),1,30,11,,,,,7.5
+,Push,70m,Incline Bench Press (Dumbbell),2,30,7,,,,,
+,Push,70m,Incline Bench Press (Dumbbell),3,30,10,,,,,
+,Push,70m,Overhead Press (Barbell),1,52.5,11,,,,,
+,Push,70m,Overhead Press (Barbell),2,52.5,9,,,,,
+,Push,70m,Overhead Press (Barbell),3,52.5,7,,,,,7
+,Push,70m,Lateral Raise (Dumbbell),1,10,7,,,,,
+,Push,70m,Lateral Raise (Dumbbell),2,10,9,,,,,
+,Push,70m,Lateral Raise (Dumbbell),3,10,6,,,,,
+,Push,70m,Triceps Pushdown (Cable - Straight Bar),1,32.5,11,,,,,
+,Push,70m,Triceps Pushdown (Cable - Straight Bar),2,32.5,10,,,,,
+,Push,70m,Triceps Pushdown (Cable - Straight Bar),3,32.5,7,,,,,
+,Push,70m,Triceps Pushdown (Cable - Straight Bar),4,32.5,10,,,,,
+,Push,70m,Chest Fly,1,17.5,7,,,,,7.5
+,Push,70m,Chest Fly,2,17.5,6,,,,,
+,Push,70m,Chest Fly,3,17.5,10,,,,,
+2024-07-24 15:02:32,Pull,73m,Deadlift (Barbell),1,132.5,6,,,,,
+2024-07-24 15:02:32,Pull,73m,Deadlift (Barbell),2,132.5,9,,,,,
+2024-07-24 15:02:32,Pull,73m,Deadlift (Barbell),3,132.5,10,,,,,
+2024-07-24 15:02:32,Pull,73m,Lat Pulldown (Cable),1,67.5,11,,,,,7
+2024-07-24 15:02:32,Pull,73m,Lat Pulldown (Cable),2,67.5,10,,,,,
+2024-07-24 15:02:32,Pull,73m,Lat Pulldown (Cable),3,67.5,12,,,,,8.5
+2024-07-24 15:02:32,Pull,73m,Bent Over Row (Barbell),1,72.5,9,,,,,8.5
+2024-07-24 15:02:32,Pull,73m,Bent Over Row (Barbell),2,72.5,12,,,,,
+2024-07-24 15:02:32,Pull,73m,Bent Over Row (Barbell),3,72.5,10,,,,,
+2024-07-24 15:02:32,Pull,73m,Face Pull (Cable),1,27.5,10,,,,,9
+2024-07-24 15:02:32,Pull,73m,Face Pull (Cable),2,27.5,8,,,,,8.5
+2024-07-24 15:02:32,Pull,73m,Face Pull (Cable),3,27.5,10,,,,,
+2024-07-24 15:02:32,Pull,73m,Bicep Curl (Dumbbell),1,15,11,,,,,
+2024-07-24 15:02:32,Pull,73m,Bicep Curl (Dumbbell),2,15,9,,,,,9
+2024-07-24 15:02:32,Pull,73m,Bicep Curl (Dumbbell),3,15,10,,,,,9
+2024-07-24 15:02:32,Pull,73m,Hammer DB ?,1,15,12,,,,,
+2024-07-24 15:02:32,Pull,73m,Hammer DB ?,2,15,6,,,,,8.5
+2024-07-24 15:02:32,Pull,73m,Hammer DB ?,3,15,11,,,,,
+2024-07-28 14:58:25,Legs,76m,Squat (Barbell),1,107.5,11,,,,,9
+2024-07-28 14:58:25,Legs,76m,Squat (Barbell),2,107.5,11,,,,,7
+2024-07-28 14:58:25,Legs,76m,Squat (Barbell),3,107.5,11,,,,,
+2024-07-28 14:58:25,Legs,76m,Squat (Barbell),4,107.5,11,,,,,8
+2024-07-28 14:58:25,Legs,76m,Romanian Deadlift (Barbell),1,92.5,12,,,,,
+2024-07-28 14:58:25,Legs,76m,Romanian Deadlift (Barbell),2,92.5,8,,,,,
+2024-07-28 14:58:25,Legs,76m,Romanian Deadlift (Barbell),3,92.5,7,,,,,
+2024-07-28 14:58:25,Legs,76m,Leg Press,1,187.5,8,,,,,
+2024-07-28 14:58:25,Legs,76m,Leg Press,2,187.5,10,,,,,
+2024-07-28 14:58:25,Legs,76m,Leg Press,3,187.5,12,,,,,
+2024-07-28 14:58:25,Legs,76m,Leg Extension (Machine),1,52.5,11,,,,,
+2024-07-28 14:58:25,Legs,76m,Leg Extension (Machine),2,52.5,9,,,,,
+2024-07-28 14:58:25,Legs,76m,Leg Extension (Machine),3,52.5,12,,,,,
+2024-07-28 14:58:25,Legs,76m,Leg Extension (Machine),4,52.5,10,,,,,
+2024-07-28 14:58:25,Legs,76m,Seated Leg Curl (Machine),1,47.5,7,,,,,
+2024-07-28 14:58:25,Legs,76m,Seated Leg Curl (Machine),2,47.5,7,,,,,8
+2024-07-28 14:58:25,Legs,76m,Seated Leg Curl (Machine),3,47.5,6,,,,,7
+2024-07-28 14:58:25,Legs,76m,Standing Calf Raise (Machine),1,80,9,,,,,
+2024-07-28 14:58:25,Legs,76m,Standing Calf Raise (Machine),2,80,7,,,,,
+2024-07-28 14:58:25,Legs,76m,Standing Calf Raise (Machine),3,80,10,,,,,
+2024-07-28 14:58:25,Legs,76m,Standing Calf Raise (Machine),4,80,12,,,,,7
+2024-08-01 15:09:21,Upper,57m,Bench Press (Barbell),1,80,12,,,,,7.5
+2024-08-01 15:09:21,Upper,57m,Bench Press (Barbell),2,80,9,,,,,
+2024-08-01 15:09:21,Upper,57m,Bench Press (Barbell),3,80,7,,,,,
+2024-08-01 15:09:21,Upper,57m,Pull Up,1,,8,,,,,8.5
+2024-08-01 15:09:21,Upper,57m,Pull Up,2,,6,,,,,
+2024-08-01 15:09:21,Upper,57m,Pull Up,3,,11,,,,,7.5
+2024-08-01 15:09:21,Upper,57m,Seated Row (Cable),1,67.5,12,,,,,
+2024-08-01 15:09:21,Upper,57m,Seated Row (Cable),2,67.5,10,,,,,
+2024-08-01 15:09:21,Upper,57m,Seated Row (Cable),3,67.5,8,,,,,
+2024-08-01 15:09:21,Upper,57m,Seated Row (Cable),4,67.5,7,,,,,7.5
+2024-08-01 15:09:21,Upper,57m,Arnold Press (Dumbbell),1,22.5,10,,,,,9
+2024-08-01 15:09:21,Upper,57m,Arnold Press (Dumbbell),2,22.5,6,,,,,7.5
+2024-08-01 15:09:21,Upper,57m,Arnold Press (Dumbbell),3,22.5,10,,,,,
+2024-08-01 15:09:21,Upper,57m,Plank,1,,,,70,,,
+2024-08-01 15:09:21,Upper,57m,Plank,2,,,,66,,,
+2024-08-01 15:09:21,Upper,57m,Plank,3,,,,53,,,
+2024-08-03 15:26:39,Push,59m,Bench Press (Barbell),1,80,12,,,,,
+2024-08-03 15:26:39,Push,59m,Bench Press (Barbell),2,80,7,,,,,
+2024-08-03 15:26:39,Push,59m,Bench Press (Barbell),3,80,7,,,,,
+2024-08-03 15:26:39,Push,59m,Incline Bench Press (Dumbbell),1,30,10,,,,,7.5
+2024-08-03 15:26:39,Push,59m,Incline Bench Press (Dumbbell),2,30,9,,,,,
+2024-08-03 15:26:39,Push,59m,Incline Bench Press (Dumbbell),3,30,10,,,,,
+2024-08-03 15:26:39,Push,59m,Overhead Press (Barbell),1,52.5,8,,,,,9
+2024-08-03 15:26:39,Push,59m,Overhead Press (Barbell),2,52.5,10,,,,,
+2024-08-03 15:26:39,Push,59m,Overhead Press (Barbell),3,52.5,7,,,,,
+2024-08-03 15:26:39,Push,59m,Lateral Raise (Dumbbell),1,10,11,,,,,9
+2024-08-03 15:26:39,Push,59m,Lateral Raise (Dumbbell),2,10,10,,,,,7.5
+2024-08-03 15:26:39,Push,59m,Lateral Raise (Dumbbell),3,10,8,,,,,8
+2024-08-03 15:26:39,Push,59m,Triceps Pushdown (Cable - Straight Bar),1,32.5,12,,,,,7
+2024-08-03 15:26:39,Push,59m,Triceps Pushdown (Cable - Straight Bar),2,32.5,11,,,,,
+2024-08-03 15:26:39,Push,59m,Triceps Pushdown (Cable - Straight Bar),3,32.5,8,,,,,
+2024-08-03 15:26:39,Push,59m,Chest Fly,1,17.5,12,,,,,8
+2024-08-03 15:26:39,Push,59m,Chest Fly,2,17.5,10,,,,,8
+2024-08-03 15:26:39,Push,59m,Chest Fly,3,17.5,6,,,,,
+2024-08-07 15:49:19,Pull,72m,Deadlift (Barbell),1,135,8,,,,,7.5
+2024-08-07 15:49:19,Pull,72m,Deadlift (Barbell),2,135,8,,,,,8
+2024-08-07 15:49:19,Pull,72m,Deadlift (Barbell),3,135,10,,,,,7
+2024-08-07 15:49:19,Pull,72m,Lat Pulldown (Cable),1,67.5,7,,,,,9
+2024-08-07 15:49:19,Pull,72m,Lat Pulldown (Cable),2,67.5,10,,,,,
+2024-08-07 15:49:19,Pull,72m,Lat Pulldown (Cable),3,67.5,10,,,,,
+2024-08-07 15:49:19,Pull,72m,Lat Pulldown (Cable),4,67.5,7,,,,,
+2024-08-07 15:49:19,Pull,72m,Bent Over Row (Barbell),1,72.5,9,,,,,
+2024-08-07 15:49:19,Pull,72m,Bent Over Row (Barbell),2,72.5,6,,,,,
+2024-08-07 15:49:19,Pull,72m,Bent Over Row (Barbell),3,72.5,8,,,,,7
+2024-08-07 15:49:19,Pull,72m,Bent Over Row (Barbell),4,72.5,12,,,,,8.5
+2024-08-07 15:49:19,Pull,72m,Face Pull (Cable),1,27.5,10,,,,,
+2024-08-07 15:49:19,Pull,72m,Face Pull (Cable),2,27.5,12,,,,,
+2024-08-07 15:49:19,Pull,72m,Face Pull (Cable),3,27.5,7,,,,,
+2024-08-07 15:49:19,Pull,72m,Face Pull (Cable),4,27.5,9,,,,,7.5
+2024-08-07 15:49:19,Pull,72m,Bicep Curl (Dumbbell),1,15,11,,,,,8.5
+2024-08-07 15:49:19,Pull,72m,Bicep Curl (Dumbbell),2,15,9,,,,,
+2024-08-07 15:49:19,Pull,72m,Bicep Curl (Dumbbell),3,15,8,,,,,
+2024-08-07 15:49:19,Pull,72m,Hammer DB ?,1,15,6,,,,,
+2024-08-07 15:49:19,Pull,72m,Hammer DB ?,2,15,10,,,,,8
+2024-08-07 15:49:19,Pull,72m,Hammer DB ?,3,15,9,,,,,7
+2024-08-07 15:49:19,Pull,72m,Hammer DB ?,4,15,7,,,,,7.5
+2024-08-11 15:52:00,Legs,62m,Squat (Barbell),1,107.5,8,,,,,8.5
+2024-08-11 15:52:00,Legs,62m,Squat (Barbell),2,107.5,11,,,,,
+2024-08-11 15:52:00,Legs,62m,Squat (Barbell),3,107.5,7,,,,,8
+2024-08-11 15:52:00,Legs,62m,Romanian Deadlift (Barbell),1,95,8,,,,,
+2024-08-11 15:52:00,Legs,62m,Romanian Deadlift (Barbell),2,95,10,,,,,
+2024-08-11 15:52:00,Legs,62m,Romanian Deadlift (Barbell),3,95,10,,,,,
+2024-08-11 15:52:00,Legs,62m,Leg Press,1,187.5,8,,,,,7
+2024-08-11 15:52:00,Legs,62m,Leg Press,2,187.5,9,,,,,
+2024-08-11 15:52:00,Legs,62m,Leg Press,3,187.5,6,,,,,
+2024-08-11 15:52:00,Legs,62m,Leg Extension (Machine),1,52.5,12,,,,,7.5
+2024-08-11 15:52:00,Legs,62m,Leg Extension (Machine),2,52.5,9,,,,,9
+2024-08-11 15:52:00,Legs,62m,Leg Extension (Machine),3,52.5,9,,,,,
+2024-08-11 15:52:00,Legs,62m,Seated Leg Curl (Machine),1,47.5,10,,,,,
+2024-08-11 15:52:00,Legs,62m,Seated Leg Curl (Machine),2,47.5,8,,,,,
+2024-08-11 15:52:00,Legs,62m,Seated Leg Curl (Machine),3,47.5,11,,,,,7
+2024-08-11 15:52:00,Legs,62m,Standing Calf Raise (Machine),1,80,8,,,,,7.5
+2024-08-11 15:52:00,Legs,62m,Standing Calf Raise (Machine),2,80,9,,,,,7.5
+2024-08-11 15:52:00,Legs,62m,Standing Calf Raise (Machine),3,80,10,,,,,9
+2024-08-11 15:52:00,Legs,62m,Standing Calf Raise (Machine),4,80,12,,,,,
+2024-08-13 15:27:13,Upper,56m,Bench Press (Barbell),1,80,11,,,,,8
+2024-08-13 15:27:13,Upper,56m,Bench Press (Barbell),2,80,12,,,,,
+2024-08-13 15:27:13,Upper,56m,Bench Press (Barbell),3,80,10,,,,,
+2024-08-13 15:27:13,Upper,56m,Pull Up,1,,9,,,,,9
+2024-08-13 15:27:13,Upper,56m,Pull Up,2,,12,,,,,
+2024-08-13 15:27:13,Upper,56m,Pull Up,3,,12,,,,,7
+2024-08-13 15:27:13,Upper,56m,Pull Up,4,,12,,,,,
+2024-08-13 15:27:13,Upper,56m,Seated Row (Cable),1,67.5,6,,,,,8.5
+2024-08-13 15:27:13,Upper,56m,Seated Row (Cable),2,67.5,11,,,,,
+2024-08-13 15:27:13,Upper,56m,Seated Row (Cable),3,67.5,12,,,,,
+2024-08-13 15:27:13,Upper,56m,Arnold Press (Dumbbell),1,22.5,12,,,,,
+2024-08-13 15:27:13,Upper,56m,Arnold Press (Dumbbell),2,22.5,9,,,,,
+2024-08-13 15:27:13,Upper,56m,Arnold Press (Dumbbell),3,22.5,7,,,,,
+2024-08-13 15:27:13,Upper,56m,Plank,1,,,,73,,,7.5
+2024-08-13 15:27:13,Upper,56m,Plank,2,,,,63,,,
+2024-08-13 15:27:13,Upper,56m,Plank,3,,,,71,,,7
+,Push,58m,Bench Press (Barbell),1,80,12,,,,,
+,Push,58m,Bench Press (Barbell),2,80,12,,,,,
+,Push,58m,Bench Press (Barbell),3,80,11,,,,,
+,Push,58m,Bench Press (Barbell),4,80,8,,,,,
+,Push,58m,Incline Bench Press (Dumbbell),1,30,9,,,,,
+,Push,58m,Incline Bench Press (Dumbbell),2,30,6,,,,,9
+,Push,58m,Incline Bench Press (Dumbbell),3,30,11,,,,,8.5
+,Push,58m,Overhead Press (Barbell),1,55,12,,,,,
+,Push,58m,Overhead Press (Barbell),2,55,9,,,,,7
+,Push,58m,Overhead Press (Barbell),3,55,10,,,,,
+,Push,58m,Lateral Raise (Dumbbell),1,10,9,,,,,9
+,Push,58m,Lateral Raise (Dumbbell),2,10,8,,,,,7
+,Push,58m,Lateral Raise (Dumbbell),3,10,8,,,,,
+,Push,58m,Triceps Pushdown (Cable - Straight Bar),1,32.5,9,,,,,8
+,Push,58m,Triceps Pushdown (Cable - Straight Bar),2,32.5,12,,,,,
+,Push,58m,Triceps Pushdown (Cable - Straight Bar),3,32.5,11,,,,,
+,Push,58m,Chest Fly,1,20,8,,,,,8
+,Push,58m,Chest Fly,2,20,11,,,,,
+,Push,58m,Chest Fly,3,20,9,,,,,7
+,Push,58m,Chest Fly,4,20,8,,,,,7
+,Pull,76m,Deadlift (Barbell),1,135,6,,,,,7
+,Pull,76m,Deadlift (Barbell),2,135,12,,,,,8.5
+,Pull,76m,Deadlift (Barbell),3,135,10,,,,,7
+,Pull,76m,Deadlift (Barbell),4,135,10,,,,,
+,Pull,76m,Lat Pulldown (Cable),1,67.5,9,,,,,9
+,Pull,76m,Lat Pulldown (Cable),2,67.5,12,,,,,7.5
+,Pull,76m,Lat Pulldown (Cable),3,67.5,10,,,,,7.5
+,Pull,76m,Bent Over Row (Barbell),1,75,9,,,,,
+,Pull,76m,Bent Over Row (Barbell),2,75,12,,,,,8.5
+,Pull,76m,Bent Over Row (Barbell),3,75,9,,,,,8
+,Pull,76m,Face Pull (Cable),1,27.5,8,,,,,8
+,Pull,76m,Face Pull (Cable),2,27.5,8,,,,,
+,Pull,76m,Face Pull (Cable),3,27.5,10,,,,,
+,Pull,76m,Bicep Curl (Dumbbell),1,15,12,,,,,
+,Pull,76m,Bicep Curl (Dumbbell),2,15,9,,,,,
+,Pull,76m,Bicep Curl (Dumbbell),3,15,9,,,,,
+,Pull,76m,Bicep Curl (Dumbbell),4,15,8,,,,,
+,Pull,76m,Hammer DB ?,1,15,11,,,,,
+,Pull,76m,Hammer DB ?,2,15,8,,,,,7
+,Pull,76m,Hammer DB ?,3,15,11,,,,,9
+,Pull,76m,Hammer DB ?,4,15,12,,,,,
