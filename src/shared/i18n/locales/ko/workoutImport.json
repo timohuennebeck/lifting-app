@@ -55,7 +55,10 @@
     "custom": "나만의 운동 만들기",
     "customHint": "이름은 “{{name}}” 그대로 유지돼요",
     "next": "다음",
-    "skip": "가져오지 않기"
+    "skip": "가져오지 않기",
+    "search": "다른 운동 찾기",
+    "searchHint": "전체 운동에서 골라요",
+    "searchTitle": "운동 선택"
   },
   "dates": {
     "title": "날짜가 없는\n운동이 있어요",

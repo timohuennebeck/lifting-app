@@ -55,7 +55,10 @@
     "custom": "Criar exercício próprio",
     "customHint": "“{{name}}” fica como nome",
     "next": "Continuar",
-    "skip": "Não importar"
+    "skip": "Não importar",
+    "search": "Procurar outro exercício",
+    "searchHint": "Escolhe entre todos os exercícios",
+    "searchTitle": "Escolher exercício"
   },
   "dates": {
     "title": "NEM TODOS OS TREINOS\nTINHAM DATA",

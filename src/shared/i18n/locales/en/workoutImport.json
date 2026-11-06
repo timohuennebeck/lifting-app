@@ -55,7 +55,10 @@
     "custom": "Create your own exercise",
     "customHint": "“{{name}}” stays the name",
     "next": "Next",
-    "skip": "Don't import"
+    "skip": "Don't import",
+    "search": "Find another exercise",
+    "searchHint": "Choose from all exercises",
+    "searchTitle": "Choose exercise"
   },
   "dates": {
     "title": "NOT EVERY WORKOUT\nHAD A DATE",

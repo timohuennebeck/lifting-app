@@ -55,7 +55,10 @@
     "custom": "Créer un exercice perso",
     "customHint": "Nom conservé : « {{name}} »",
     "next": "Suivant",
-    "skip": "Ne pas importer"
+    "skip": "Ne pas importer",
+    "search": "Chercher un autre exercice",
+    "searchHint": "Choisis parmi tous les exercices",
+    "searchTitle": "Choisir un exercice"
   },
   "dates": {
     "title": "CERTAINES SÉANCES\nN'AVAIENT PAS DE DATE",

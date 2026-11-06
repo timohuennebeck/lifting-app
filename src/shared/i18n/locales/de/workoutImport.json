@@ -55,7 +55,10 @@
     "custom": "Eigene Übung anlegen",
     "customHint": "„{{name}}“ bleibt der Name",
     "next": "Weiter",
-    "skip": "Nicht übernehmen"
+    "skip": "Nicht übernehmen",
+    "search": "Andere Übung suchen",
+    "searchHint": "Aus allen Übungen wählen",
+    "searchTitle": "Übung wählen"
   },
   "dates": {
     "title": "NICHT ÜBERALL\nSTAND EIN DATUM",

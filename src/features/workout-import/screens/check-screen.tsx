@@ -1,4 +1,4 @@
-import { Redirect, useLocalSearchParams } from 'expo-router';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -119,7 +119,20 @@ export function CheckScreen() {
   const [choice, setChoice] = useState<Choice>(() =>
     item ? choiceOf(item, decisions[nameKey(item.name)]) : null,
   );
+  // An exercise found with "Andere Übung suchen" is picked, and listed with the others.
+  const decided = item ? decisions[nameKey(item.name)] : undefined;
+  const searched =
+    item && decided?.kind === 'exercise' && !item.options.includes(decided.exerciseId)
+      ? decided.exerciseId
+      : null;
+  // Back from the search: its exercise becomes the choice (set while rendering, not in an effect).
+  const [seenSearch, setSeenSearch] = useState(searched);
+  if (searched !== seenSearch) {
+    setSeenSearch(searched);
+    if (searched) setChoice(searched);
+  }
   if (!item) return <Redirect href={step('/import')} />;
+  const options = searched ? [...item.options, searched] : item.options;
 
   function next(decision: Decision) {
     if (!item) return;
@@ -163,12 +176,12 @@ export function CheckScreen() {
           </Text>
         </View>
         <View className="px-1 pt-6">
-          {item.options.map((id, i) => (
+          {options.map((id, i) => (
             <ExerciseRow
               key={id}
               exerciseId={id}
               selected={choice === id}
-              recommended={i === 0}
+              recommended={i === 0 && id !== searched}
               onPress={() => setChoice(id)}
             />
           ))}
@@ -185,6 +198,28 @@ export function CheckScreen() {
               }
             />
           ) : null}
+          {/* Any exercise of the catalog, also for a name nothing matched. */}
+          <PressableScale
+            haptic="select"
+            activeScale={0.985}
+            onPress={() =>
+              router.push({ pathname: step('/import/check-search'), params: { name: item.name } })
+            }
+            accessibilityRole="button"
+            className="flex-row items-center gap-3 py-2.5"
+          >
+            <View className="h-13.5 w-10 items-center justify-center rounded-[5px] bg-raised">
+              <Icon name="search" size={14} color={colors.fgMid} />
+            </View>
+            <View className="min-w-0 flex-1 gap-0.75">
+              <Text className="font-inter-semibold text-[15px] leading-[19px] text-fg">
+                {t('check.search')}
+              </Text>
+              <Text className="font-inter text-[13px] leading-4 text-subtle">
+                {t('check.searchHint')}
+              </Text>
+            </View>
+          </PressableScale>
         </View>
       </View>
     </Screen>

@@ -22,6 +22,7 @@ type PlanStep =
   | '/import/sheets'
   | '/import/reading'
   | '/import/check'
+  | '/import/check-search'
   | '/import/dates'
   | '/import/imported'
   | '/import/plan'

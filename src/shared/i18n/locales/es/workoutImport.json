@@ -55,7 +55,10 @@
     "custom": "Crear ejercicio personalizado",
     "customHint": "Mantiene el nombre «{{name}}»",
     "next": "Siguiente",
-    "skip": "No importar"
+    "skip": "No importar",
+    "search": "Buscar otro ejercicio",
+    "searchHint": "Elige entre todos los ejercicios",
+    "searchTitle": "Elegir ejercicio"
   },
   "dates": {
     "title": "FALTABAN\nALGUNAS FECHAS",
