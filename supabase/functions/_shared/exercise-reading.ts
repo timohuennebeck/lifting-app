@@ -1,7 +1,7 @@
 // How the model reads one exercise and how its answer becomes the app's, shared by read-plan (a
-// plan from photos or a file) and read-exercises (exercises said out loud): the rules for an
-// exercise, the catalog the model picks from, the exercise's answer shape, and the clean-up into
-// sets the database accepts. Plain TypeScript without Deno APIs, so it can be tested outside the
+// plan from a file), read-exercises (exercises said out loud) and read-history (the exercise names
+// of a workout file): the rules for an exercise, the catalog the model picks from, the exercise's
+// answer shape, and the clean-up into sets the database accepts. Plain TypeScript without Deno APIs, so it can be tested outside the
 // Edge runtime.
 
 import { clampInt } from './numbers.ts';
@@ -22,12 +22,15 @@ type Muscle = (typeof MUSCLES)[number];
 const MAX_SETS = 10;
 const DEFAULT_SETS = 3;
 
-/** What the model writes for each exercise, as part of either function's instructions. */
-export const EXERCISE_RULES = `For each exercise:
-- raw: the line as written, abbreviations included.
+/** How the model picks the exercise a name means: the catalog one, or a new one. */
+export const NAME_RULES = `- raw: the line as written, abbreviations included.
 - catalog_id: the catalog exercise that is the same movement with the same equipment. Read abbreviations and slang: KH = Kurzhantel = dumbbell, LH = Langhantel = barbell, SZ = EZ bar, BD = Bankdrücken, KB = kettlebell, "Lat ziehen" = lat pulldown, "Beinstrecker" = leg extension, "Multipresse" / Smith = Smith machine. A variation that has its own catalog entry (incline, close grip, single arm, seated) is that entry.
 - certain: false when the text is hard to read or could be more than one catalog exercise; then give up to 2 alternatives from the catalog, most likely first.
-- new_exercise: only when no catalog exercise is the same movement. Give it a clean name in the plan's language (as a lifter would call it, no sets or reps), its primary and secondary muscles, whether it is timed (holds, carries) and whether a weight is logged. Never create one for something the catalog has under another name. The same new exercise in several routines gets exactly the same name each time.
+- new_exercise: only when no catalog exercise is the same movement. Give it a clean name in the plan's language (as a lifter would call it, no sets or reps), its primary and secondary muscles, whether it is timed (holds, carries) and whether a weight is logged. Never create one for something the catalog has under another name. The same new exercise in several routines gets exactly the same name each time.`;
+
+/** What the model writes for each exercise, as part of the plan functions' instructions. */
+export const EXERCISE_RULES = `For each exercise:
+${NAME_RULES}
 - sets, reps_min, reps_max: "3x10" = 3 sets of 10 to 10; "4x8-12" = 8 to 12; "3x12/10/8" = 3 sets of 8 to 12; "AMRAP" or "to failure" = no reps. Missing values are null.
 - seconds: for holds and timed sets ("3x30s", "60 Sek."), else null.
 - rir: reps in reserve if written, from RPE as 10 minus RPE; else null.
@@ -52,10 +55,11 @@ const nullable = (schema: object) => ({ anyOf: [schema, { type: 'null' }] });
 const integer = nullable({ type: 'integer' });
 
 /**
- * One exercise's answer shape. Catalog ids and muscles are listed, so the model can only pick
- * existing ones (OpenAI allows 1,000 listed values per schema: enough for twice the catalog).
+ * The answer shape for which exercise a name is (see NAME_RULES). Catalog ids and muscles are
+ * listed, so the model can only pick existing ones (OpenAI allows 1,000 listed values per schema:
+ * enough for twice the catalog).
  */
-export function exerciseSchema(ids: string[]) {
+export function nameSchema(ids: string[]) {
   const id = { type: 'string', enum: ids };
   const muscles = { type: 'array', items: { type: 'string', enum: [...MUSCLES] } };
   const newExercise = {
@@ -73,12 +77,25 @@ export function exerciseSchema(ids: string[]) {
   return {
     type: 'object',
     additionalProperties: false,
+    required: ['raw', 'catalog_id', 'certain', 'alternatives', 'new_exercise'],
+    properties: {
+      raw: { type: 'string' },
+      catalog_id: nullable(id),
+      certain: { type: 'boolean' },
+      alternatives: { type: 'array', items: id },
+      new_exercise: nullable(newExercise),
+    },
+  };
+}
+
+/** One exercise's answer shape: which exercise it is (nameSchema), and its sets as written. */
+export function exerciseSchema(ids: string[]) {
+  const name = nameSchema(ids);
+  return {
+    type: 'object',
+    additionalProperties: false,
     required: [
-      'raw',
-      'catalog_id',
-      'certain',
-      'alternatives',
-      'new_exercise',
+      ...name.required,
       'sets',
       'reps_min',
       'reps_max',
@@ -87,11 +104,7 @@ export function exerciseSchema(ids: string[]) {
       'rest_seconds',
     ],
     properties: {
-      raw: { type: 'string' },
-      catalog_id: nullable(id),
-      certain: { type: 'boolean' },
-      alternatives: { type: 'array', items: id },
-      new_exercise: nullable(newExercise),
+      ...name.properties,
       sets: integer,
       reps_min: integer,
       reps_max: integer,
@@ -145,18 +158,13 @@ function setTarget(line: ModelExercise, timed: boolean): SetTarget {
 }
 
 /**
- * Turns the model's exercises into the shapes the app stores, one at a time as they come: each
- * set as a row, and every new exercise once with an id (`newId()`) the exercises reference.
- * Numbers are kept in the ranges the database accepts. Returns null for a line with neither a
- * catalog exercise nor a usable new one, else the exercise with the new exercise it introduces
- * the first time one is used.
+ * Makes the exercises the catalog lacks, each once with an id (`newId()`): the same new exercise
+ * twice (e.g. in two routines) is one exercise. `fresh` is the exercise, `first` whether this call
+ * made it; neither when the model's one is unusable (no name, no primary muscle).
  */
-export function exerciseReader(catalog: CatalogRow[], newId: () => string) {
-  const timedIds = new Set(catalog.filter((e) => e.measures.includes('seconds')).map((e) => e.id));
-  // The same new exercise twice (e.g. in two routines) is one exercise.
+export function newExerciseMaker(newId: () => string) {
   const created = new Map<string, NewExercise>();
-
-  const newExercise = (
+  return (
     { name, primary, secondary, timed, weighted }: NonNullable<ModelExercise['new_exercise']>,
     raw: string,
   ) => {
@@ -176,6 +184,18 @@ export function exerciseReader(catalog: CatalogRow[], newId: () => string) {
     created.set(key, fresh);
     return { fresh, first: true };
   };
+}
+
+/**
+ * Turns the model's exercises into the shapes the app stores, one at a time as they come: each
+ * set as a row, and every new exercise once with an id (`newId()`) the exercises reference.
+ * Numbers are kept in the ranges the database accepts. Returns null for a line with neither a
+ * catalog exercise nor a usable new one, else the exercise with the new exercise it introduces
+ * the first time one is used.
+ */
+export function exerciseReader(catalog: CatalogRow[], newId: () => string) {
+  const timedIds = new Set(catalog.filter((e) => e.measures.includes('seconds')).map((e) => e.id));
+  const newExercise = newExerciseMaker(newId);
 
   return (line: ModelExercise): PlanExercise | null => {
     const { fresh, first } =

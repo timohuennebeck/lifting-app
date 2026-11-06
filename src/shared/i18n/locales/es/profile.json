@@ -29,7 +29,7 @@
     "data": {
       "title": "Datos",
       "import": "Importar",
-      "importFormats": "CSV, Strong…",
+      "importFormats": "CSV, Excel",
       "export": "Exportar",
       "exportFormat": "CSV"
     },

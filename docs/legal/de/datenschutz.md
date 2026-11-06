@@ -1,8 +1,8 @@
 # Datenschutzerklärung
 
-Version: 1.4
+Version: 1.5
 
-Stand: 5. November 2026
+Stand: 6. November 2026
 
 Hier erfährst du, welche personenbezogenen Daten wir verarbeiten, wenn du die App Loqqa nutzt, wofür wir das tun und welche Rechte du hast. Grundlage sind die Datenschutz-Grundverordnung (DSGVO), das Bundesdatenschutzgesetz (BDSG) und das Telekommunikation-Digitale-Dienste-Datenschutz-Gesetz (TDDDG).
 
@@ -11,7 +11,7 @@ Hier erfährst du, welche personenbezogenen Daten wir verarbeiten, wenn du die A
 - Loqqa speichert deine Pläne und Trainings zuerst auf deinem Gerät und gleicht sie mit deinem Konto ab, sobald du online bist. Unsere Datenbank liegt in Frankfurt am Main.
 - Andere Nutzer können dein Profil, deine Trainings und deine Fotos nicht sehen.
 - Dein Gewicht, deine Größe und deine Körpercheck-Fotos behandeln wir als Gesundheitsdaten. Wir verarbeiten sie nur mit deiner ausdrücklichen Einwilligung.
-- Für die Planerstellung, den Plan-Import, die Spracheingabe, den Körpercheck, den Coach und die Übersetzung von Support-Nachrichten nutzen wir ein KI-Modell von OpenAI. Dafür übermitteln wir die nötigen Daten an OpenAI, das sie in den USA verarbeitet.
+- Für die Planerstellung, den Import deiner Trainings, die Spracheingabe, den Körpercheck, den Coach und die Übersetzung von Support-Nachrichten nutzen wir ein KI-Modell von OpenAI. Dafür übermitteln wir die nötigen Daten an OpenAI, das sie in den USA verarbeitet.
 - Um die App zu verbessern, messen wir mit PostHog, wie sie genutzt wird. Gesundheitsdaten und Fotos gehen nicht an PostHog. Die App enthält keine Werbung.
 - Du kannst dein Konto jederzeit in der App löschen. Damit löschen wir auch deine Fotos und alle Daten deines Kontos.
 
@@ -31,7 +31,7 @@ Einen Datenschutzbeauftragten haben wir nicht benannt, weil wir dazu nicht verpf
 
 ## 3. So funktioniert Loqqa
 
-Loqqa ist eine Trainings-App. Du kannst dir einen Trainingsplan erstellen lassen oder einen vorhandenen importieren, deine Trainings und dein Körpergewicht protokollieren, dem Coach Fragen zu deinem Training stellen und ab 18 Jahren Körperchecks mit Fotos machen.
+Loqqa ist eine Trainings-App. Du kannst dir einen Trainingsplan erstellen lassen oder deinen Plan und deine bisherigen Trainings aus einer anderen App oder einer Tabelle importieren, deine Trainings und dein Körpergewicht protokollieren, dem Coach Fragen zu deinem Training stellen und ab 18 Jahren Körperchecks mit Fotos machen.
 
 Die App arbeitet „offline first“: Deine Daten liegen in einer Datenbank auf deinem Gerät, damit du auch ohne Internet trainieren kannst. Bist du angemeldet und online, gleicht die App diese Daten mit deinem Konto auf unseren Servern ab. So sind dein Plan und deine Historie gesichert und auf all deinen Geräten verfügbar. Für die Server nutzen wir Dienstleister (Abschnitt 7).
 
@@ -43,7 +43,7 @@ Alle Daten in unserer Datenbank sind deinem Konto zugeordnet. Technische Zugriff
 
 Die Einrichtung durchläufst du ohne Konto. Dabei lädt die App den Übungskatalog (Namen, Anleitungen, Bilder und Videos der Übungen) und diese Rechtstexte von unseren Servern. Den Übungskatalog prüft sie beim Start und danach stündlich auf Änderungen. Dabei fallen nur technisch notwendige Verbindungsdaten an (Abschnitt 4.13).
 
-Deine Antworten in der Einrichtung (zum Beispiel Vorname, Geschlecht, Geburtsdatum, Gewicht, Größe, Ziel und der erstellte oder importierte Plan) speichert die App zunächst nur auf deinem Gerät. An uns gehen diese Angaben erst, wenn du ein Konto erstellst (Abschnitte 4.3 und 4.4). Ausnahmen: Lässt du dir einen Plan erstellen, überträgt die App schon vorher deine Antworten zu Ziel, Fokus, Ausstattung, Trainings pro Woche, Trainingsdauer und Erfahrung, damit der Plan erstellt werden kann; Fotos und Dateien, aus denen du einen Plan importierst, überträgt sie, damit der Plan erkannt werden kann (beides Abschnitt 4.7).
+Deine Antworten in der Einrichtung (zum Beispiel Vorname, Geschlecht, Geburtsdatum, Gewicht, Größe, Ziel und der erstellte oder importierte Plan) speichert die App zunächst nur auf deinem Gerät. An uns gehen diese Angaben erst, wenn du ein Konto erstellst (Abschnitte 4.3 und 4.4). Ausnahmen: Lässt du dir einen Plan erstellen, überträgt die App schon vorher deine Antworten zu Ziel, Fokus, Ausstattung, Trainings pro Woche, Trainingsdauer und Erfahrung, damit der Plan erstellt werden kann; aus einer Datei, die du importierst, überträgt sie Auszüge, die Namen der Übungen und deinen Plan, damit sie erkannt werden können (beides Abschnitt 4.7). Einen importierten Trainingsverlauf überträgt sie erst, wenn du ein Konto erstellst.
 
 Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der App, die du nutzen möchtest).
 
@@ -99,8 +99,8 @@ Körpercheck und Coach sind freiwillig. Deine Einwilligungen kannst du jederzeit
 Wenn du Loqqa nutzt, speichern wir:
 
 - **Pläne:** Name, Trainings pro Woche, Blöcke mit Deload-Woche, Trainings in ihrer Reihenfolge (auch Trainings ohne Plan), Übungen, Sätze mit Zielwerten (Wiederholungen oder Sekunden), Wiederholungen in Reserve (RIR) und Pausenzeiten
-- **Absolvierte Trainings:** Beginn und Ende, zu welchem Plan und welcher Planwoche sie zählen, Übungen, Gewicht und Wiederholungen oder Sekunden je Satz, der Zeitpunkt jedes erledigten Satzes und persönliche Bestleistungen
-- **Eigene Übungen**, die du anlegst oder die beim Plan-Import entstehen
+- **Absolvierte Trainings,** auch solche, die du importierst: Beginn und Ende, zu welchem Plan und welcher Planwoche sie zählen, Übungen, Gewicht und Wiederholungen oder Sekunden je Satz, der Zeitpunkt jedes erledigten Satzes und persönliche Bestleistungen
+- **Eigene Übungen**, die du anlegst oder die beim Import entstehen
 - **Körpergewicht:** die Gewichtseinträge, die du erfasst, je Tag ein Wert
 
 Wofür: damit du deine Trainings und dein Gewicht protokollieren und deine Historie, Bestwerte, deine Sätze je Muskel in einem Zeitraum deiner Wahl und deine Aktivität sehen kannst. Vorschläge für deine Sätze und die Zahl deiner Sätze je Muskel berechnet die App auf deinem Gerät. Fragst du den Coach, beantwortet er deine Frage aus diesen Daten (Abschnitt 4.8).
@@ -133,17 +133,19 @@ Du kannst einzelne Checks in der App löschen. Dann löscht die App die Fotos au
 
 Rechtsgrundlage: deine ausdrückliche Einwilligung (Abschnitt 4.4), auch für die Übermittlung an OpenAI in die USA (Art. 49 Abs. 1 lit. a DSGVO, ergänzend zu den Garantien in Abschnitt 8).
 
-### 4.7 Plan-Import, Planerstellung und Übungen per Sprache
+### 4.7 Import, Planerstellung und Übungen per Sprache
 
-Du kannst einen vorhandenen Trainingsplan importieren: per Foto mit der Kamera (zum Beispiel von Papier, Whiteboard oder Bildschirm), als bis zu zehn Bilder aus deiner Mediathek oder als Datei (PDF, Excel, CSV, Text oder Bild). Bitte achte darauf, dass auf den Bildern und in den Dateien keine Daten anderer Personen zu sehen sind.
+Du kannst deine Trainings aus einer anderen App oder einer Tabelle importieren: als Datei im Format CSV, TSV, Excel oder OpenDocument, zum Beispiel den Export von Hevy oder Strong. Die Datei kann deinen Trainingsverlauf, deinen Trainingsplan oder beides enthalten. Bitte achte darauf, dass in der Datei keine Daten anderer Personen stehen.
 
-**Erkennung durch ein KI-Modell von OpenAI:** Die App verkleinert Fotos auf höchstens 2000 Pixel an der längsten Seite, speichert sie als JPEG und überträgt sie oder deine Datei an unseren Server. Der gibt sie zusammen mit unserem Übungskatalog an ein KI-Modell von OpenAI weiter, das Trainings, Übungen, Sätze, Wiederholungen und Pausen ausliest. Weitere Daten übermitteln wir dabei nicht: Die Anfrage enthält weder dein Konto noch deinen Namen. OpenAI verarbeitet die Daten in den USA (Abschnitt 8). Wir haben eingestellt, dass OpenAI die Anfrage nicht für einen späteren Abruf speichert. OpenAI nutzt Daten aus seiner API nicht zum Training seiner Modelle und bewahrt sie bis zu 30 Tage auf, um Missbrauch zu erkennen.
+**Lesen auf deinem Gerät:** Die App öffnet die Datei und liest ihre Zeilen auf deinem Gerät. Deinen ganzen Trainingsverlauf überträgt sie dafür nicht an unseren Server.
 
-Unser Server speichert deine Fotos und Dateien nicht; er gibt nur den erkannten Plan an die App zurück. Gespeichert wird erst der Plan, den du am Ende bestätigst (Abschnitt 4.5). Übungen aus deinem Plan, die unser Katalog nicht kennt, legt die App dabei als eigene Übungen in deinem Konto an.
+**Erkennung durch ein KI-Modell von OpenAI:** Damit die App versteht, wie deine Datei aufgebaut ist und welche Übungen gemeint sind, überträgt sie mit deiner App-Sprache an unseren Server: den Dateinamen und die Namen der Tabellenblätter, je Blatt die Kopfzeile, eine Auswahl von höchstens 150 Zeilen (vom Anfang, aus der Mitte und vom Ende) und Angaben zu jeder Spalte (zum Beispiel wie viele Zellen gefüllt sind und häufige Werte), die Namen der Übungen in deinem Verlauf mit der Zahl ihrer Sätze und einem typischen Gewicht sowie die Zeilen deines Plans, falls die Datei einen enthält. Der Server gibt sie zusammen mit unserem Übungskatalog an ein KI-Modell von OpenAI weiter. Es erkennt, welche Spalten zum Beispiel Datum, Übung, Gewicht und Wiederholungen enthalten, ordnet die Namen der Übungen unserem Katalog zu und liest Trainings, Übungen, Sätze, Wiederholungen und Pausen deines Plans aus. Enthält die Datei keinen Plan, stellt die App aus deinen Trainings der letzten sechs Wochen einen zusammen; für Trainings ohne Namen schlägt das Modell einen vor und erhält dafür nur ihre Übungen und wie oft du sie trainiert hast. Weitere Daten übermitteln wir dabei nicht: Die Anfragen enthalten weder dein Konto noch deinen Namen. OpenAI verarbeitet die Daten in den USA (Abschnitt 8). Wir haben eingestellt, dass OpenAI die Anfrage nicht für einen späteren Abruf speichert. OpenAI nutzt Daten aus seiner API nicht zum Training seiner Modelle und bewahrt sie bis zu 30 Tage auf, um Missbrauch zu erkennen.
+
+Unser Server speichert deine Datei und die übermittelten Auszüge nicht; er gibt nur das Ergebnis an die App zurück. Gespeichert wird, was du am Ende übernimmst: die Trainings deines Verlaufs als absolvierte Trainings und der Plan, den du bestätigst (Abschnitt 4.5). Trainings, die zur selben Zeit beginnen wie ein Training in deinem Konto, übernimmt die App nicht noch einmal. Übungen, die unser Katalog nicht kennt, legt die App als eigene Übungen in deinem Konto an. Importierst du deinen Verlauf in der Einrichtung, bleibt er bis zur Erstellung deines Kontos auf deinem Gerät und wird danach in dein Konto übertragen.
 
 **Planerstellung durch ein KI-Modell von OpenAI:** Lässt du dir einen Plan erstellen, überträgt die App deine Antworten zu Trainingsziel, Muskelgruppen mit Fokus, Ausstattung, Trainings pro Woche, Trainingsdauer und Trainingserfahrung sowie deine App-Sprache an unseren Server. Der gibt sie zusammen mit den Übungen unseres Katalogs, die zu deiner Ausstattung passen, an ein KI-Modell von OpenAI weiter, das daraus deinen Plan zusammenstellt. Deinen Namen, dein Geburtsdatum, Geschlecht, Gewicht und deine Größe übermitteln wir dabei nicht, und die Anfrage enthält dein Konto nicht. Für die Verarbeitung bei OpenAI gilt dasselbe wie beim Import. Unser Server speichert deine Antworten dabei nicht; er gibt nur den Plan an die App zurück, wo du ihn ändern kannst.
 
-**Übungen per Sprache:** Beim Plan-Import, beim Bearbeiten eines Trainings und beim Zusammenstellen eines freien Trainings kannst du Übungen mit Sätzen und Wiederholungen einsprechen, statt sie einzeln zu suchen. Das Gesprochene wandelt die Spracherkennung deines Betriebssystems in Text um: auf dem iPhone die von Apple, auf Android-Geräten die von Google. Je nach Gerät geschieht das auf dem Gerät selbst oder auf Servern von Apple oder Google; dafür gelten deren Datenschutzbestimmungen. Die Aufnahme selbst erhalten wir nicht. Den Text, den du vor dem Hinzufügen noch ändern kannst, überträgt die App mit deiner App-Sprache an unseren Server. Der gibt ihn zusammen mit unserem Übungskatalog an ein KI-Modell von OpenAI weiter, das daraus die Übungen mit ihren Sätzen und Wiederholungen erkennt. Die Anfrage enthält weder dein Konto noch deinen Namen. Für die Verarbeitung bei OpenAI gilt dasselbe wie beim Import. Unser Server speichert den Text nicht.
+**Übungen per Sprache:** Beim Einrichten eines Plans, beim Bearbeiten eines Trainings und beim Zusammenstellen eines freien Trainings kannst du Übungen mit Sätzen und Wiederholungen einsprechen, statt sie einzeln zu suchen. Das Gesprochene wandelt die Spracherkennung deines Betriebssystems in Text um: auf dem iPhone die von Apple, auf Android-Geräten die von Google. Je nach Gerät geschieht das auf dem Gerät selbst oder auf Servern von Apple oder Google; dafür gelten deren Datenschutzbestimmungen. Die Aufnahme selbst erhalten wir nicht. Den Text, den du vor dem Hinzufügen noch ändern kannst, überträgt die App mit deiner App-Sprache an unseren Server. Der gibt ihn zusammen mit unserem Übungskatalog an ein KI-Modell von OpenAI weiter, das daraus die Übungen mit ihren Sätzen und Wiederholungen erkennt. Die Anfrage enthält weder dein Konto noch deinen Namen. Für die Verarbeitung bei OpenAI gilt dasselbe wie beim Import. Unser Server speichert den Text nicht.
 
 **Begrenzung der Anfragen:** Damit Import, Planerstellung und Übungen per Sprache nicht missbraucht werden, begrenzen wir, wie oft sie pro Netzwerk und insgesamt am Tag genutzt werden können. Dafür speichert unser Server zu jeder Anfrage den Zeitpunkt, welche dieser Funktionen sie betraf, und einen Hashwert deiner IP-Adresse, den er mit einem geheimen Schlüssel bildet; die IP-Adresse selbst speichern wir nicht. Einträge, die älter als zwei Tage sind, löschen wir bei jeder neuen Anfrage.
 
@@ -252,7 +254,7 @@ Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist ei
 
 Um zu verstehen, wie Loqqa genutzt wird, und um Fehler zu finden, nutzen wir PostHog. Die App sendet dafür:
 
-- **Nutzungsereignisse:** welche Bildschirme du aufrufst und bestimmte Schritte, zum Beispiel Beginn der Einrichtung, erstellte oder importierte Pläne, Aufrufe der Loqqa-Pro-Seite, Käufe, Registrierung und Anmeldung, Beginn, Ende oder Abbruch eines Trainings, dass du dem Coach eine Frage gestellt hast und ob er geantwortet hat (nie der Text), die Auswertung eines Körperchecks (nie die Werte), das Speichern eines Gewichtseintrags (nie das Gewicht), per Sprache hinzugefügte Übungen, die Bitte um eine Bewertung im Store, jeweils mit Zeitpunkt und Kennzahlen wie Anzahl der Übungen oder Sätze, Dauer oder Fehlercode
+- **Nutzungsereignisse:** welche Bildschirme du aufrufst und bestimmte Schritte, zum Beispiel Beginn der Einrichtung, erstellte oder importierte Pläne, importierte Trainingsverläufe (nur deren Umfang, nie die Inhalte), Aufrufe der Loqqa-Pro-Seite, Käufe, Registrierung und Anmeldung, Beginn, Ende oder Abbruch eines Trainings, dass du dem Coach eine Frage gestellt hast und ob er geantwortet hat (nie der Text), die Auswertung eines Körperchecks (nie die Werte), das Speichern eines Gewichtseintrags (nie das Gewicht), per Sprache hinzugefügte Übungen, die Bitte um eine Bewertung im Store, jeweils mit Zeitpunkt und Kennzahlen wie Anzahl der Übungen oder Sätze, Dauer oder Fehlercode
 - **Abo-Ereignisse:** begonnene oder umgewandelte Testzeiträume, Verlängerungen und Kündigungen mit dem Umsatz, die RevenueCat sendet (Abschnitt 4.12)
 - **App-Ereignisse:** Öffnen und Schließen der App, App-Version, Gerätetyp, Betriebssystem und Sprache
 - **Fehlerberichte:** Absturz- und Fehlermeldungen mit technischen Details
@@ -273,13 +275,13 @@ Damit Loqqa auch offline funktioniert, speichert die App Daten auf deinem Gerät
 
 - eine lokale Datenbank mit deinem Profil, deinen Plänen und Trainings, deinen Gewichtseinträgen, deinen Körpercheck-Werten, deinen Coach-Chats, deinen Support-Anfragen und deinen Zustimmungen
 - Körpercheck-Fotos, die du auf diesem Gerät aufgenommen hast, und Kopien deiner Support-Screenshots
-- deine Anmeldesitzung, deine Antworten aus der Einrichtung, deinen Abo-Status, Einstellungen wie die App-Sprache sowie Listen der Dateien, die noch hochgeladen werden müssen
+- deine Anmeldesitzung, deine Antworten aus der Einrichtung, einen in der Einrichtung importierten Trainingsverlauf, bis er in deinem Konto ist, deinen Abo-Status, Einstellungen wie die App-Sprache sowie Listen der Dateien, die noch hochgeladen werden müssen
 - den Übungskatalog
 - die Kennung und noch nicht gesendete Ereignisse für PostHog (Abschnitt 4.14)
 
 Bis auf die Daten für PostHog ist diese Speicherung für die Dienste, die du nutzen möchtest, unbedingt erforderlich (§ 25 Abs. 2 Nr. 2 TDDDG).
 
-Wenn du dich abmeldest, löscht die App die lokale Datenbank sowie deine Körpercheck-Fotos und Screenshot-Kopien auf diesem Gerät und setzt Einrichtung, Abo-Status und laufende Trainings zurück. Noch nicht synchronisierte Änderungen gehen dabei verloren; die App warnt dich vorher. Einstellungen wie die App-Sprache bleiben erhalten. Wenn du die App löschst, entfernt dein Betriebssystem in der Regel alle Daten der App.
+Wenn du dich abmeldest, löscht die App die lokale Datenbank sowie deine Körpercheck-Fotos und Screenshot-Kopien auf diesem Gerät und setzt Einrichtung, Abo-Status, laufende Trainings und einen noch nicht übertragenen Import zurück. Noch nicht synchronisierte Änderungen gehen dabei verloren; die App warnt dich vorher. Einstellungen wie die App-Sprache bleiben erhalten. Wenn du die App löschst, entfernt dein Betriebssystem in der Regel alle Daten der App.
 
 Je nach Einstellungen deines Geräts können Dateien der App, auch Körpercheck-Fotos, in Backups deines Geräts enthalten sein (zum Beispiel bei iCloud oder Google). Für diese Backups sind Apple bzw. Google verantwortlich.
 
@@ -287,9 +289,9 @@ Je nach Einstellungen deines Geräts können Dateien der App, auch Körpercheck-
 
 Loqqa fragt nur dann nach einer Berechtigung, wenn du eine Funktion nutzt, die sie braucht:
 
-- **Kamera:** um deinen Trainingsplan zu fotografieren, für Körpercheck-Fotos und für dein Profilfoto
-- **Fotos:** um Bilder für den Plan-Import, für Support-Screenshots und für dein Profilfoto auszuwählen. Dafür nutzt die App die Bildauswahl deines Betriebssystems und erhält nur die Bilder, die du auswählst.
-- **Dateien:** um eine Plan-Datei über die Dateiauswahl deines Betriebssystems auszuwählen
+- **Kamera:** für Körpercheck-Fotos und für dein Profilfoto
+- **Fotos:** um Bilder für Support-Screenshots und für dein Profilfoto auszuwählen. Dafür nutzt die App die Bildauswahl deines Betriebssystems und erhält nur die Bilder, die du auswählst.
+- **Dateien:** um eine Datei mit deinen Trainings über die Dateiauswahl deines Betriebssystems auszuwählen (Abschnitt 4.7)
 - **Mikrofon:** um Übungen (Abschnitt 4.7), Fragen an den Coach (Abschnitt 4.8) und Nachrichten an den Support (Abschnitt 4.9) einzusprechen. Die App nimmt nur auf, während du die Spracheingabe nutzt.
 - **Spracherkennung (iPhone):** damit die Spracherkennung von Apple eingesprochene Übungen in Text umwandeln kann (Abschnitt 4.7)
 
@@ -301,7 +303,7 @@ Wir geben deine Daten nur weiter, wenn das für die genannten Zwecke nötig ist,
 
 - **Supabase, Inc.** (Datenbank, Anmeldung, Dateispeicher und Serverfunktionen): Server in Frankfurt am Main (Amazon Web Services)
 - **PowerSync** von Journey Mobile, Inc. (Synchronisation zwischen App und Datenbank; der Dienst hält dafür eine Kopie deiner synchronisierten Daten vor): Server in der EU
-- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Irland (KI-Erstellung von Plänen, Erkennung importierter Pläne und eingesprochener Übungen, Auswertung der Körpercheck-Fotos, Antworten des Coachs, Umwandlung eingesprochener Fragen in Text und Übersetzung von Support-Nachrichten, Abschnitte 4.6 bis 4.9): Verarbeitung in den USA durch OpenAI OpCo, LLC
+- **OpenAI Ireland Ltd.**, 117–126 Sheriff Street Upper, Dublin 1, Irland (KI-Erstellung von Plänen, Erkennung importierter Trainingsdateien und eingesprochener Übungen, Auswertung der Körpercheck-Fotos, Antworten des Coachs, Umwandlung eingesprochener Fragen in Text und Übersetzung von Support-Nachrichten, Abschnitte 4.6 bis 4.9): Verarbeitung in den USA durch OpenAI OpCo, LLC
 - **RevenueCat, Inc.** (Abo-Verwaltung, Abschnitt 4.12)
 - **PostHog, Inc.** (Produktanalyse und Fehlerberichte, Abschnitt 4.14)
 
@@ -313,7 +315,7 @@ Behörden und Gerichten geben wir Daten nur, wenn wir gesetzlich dazu verpflicht
 
 ## 8. Übermittlung in Drittländer
 
-Dein Konto, deine Trainings und deine Fotos speichern wir in Rechenzentren in der EU (Supabase in Frankfurt am Main, PowerSync in der EU). Einige unserer Dienstleister haben ihren Sitz in den USA. Deshalb können Daten auch in die USA übermittelt werden, etwa bei Wartung oder Support durch den Dienstleister. Für die Planerstellung, den Plan-Import, eingesprochene Übungen und Fragen, die Auswertung des Körperchecks, die Antworten des Coachs und die Übersetzung von Support-Nachrichten übermitteln wir Daten bei jeder Anfrage an OpenAI in den USA (Abschnitte 4.6 bis 4.9), und RevenueCat verarbeitet die Abo-Daten in den USA (Abschnitt 4.12).
+Dein Konto, deine Trainings und deine Fotos speichern wir in Rechenzentren in der EU (Supabase in Frankfurt am Main, PowerSync in der EU). Einige unserer Dienstleister haben ihren Sitz in den USA. Deshalb können Daten auch in die USA übermittelt werden, etwa bei Wartung oder Support durch den Dienstleister. Für die Planerstellung, den Import deiner Trainings, eingesprochene Übungen und Fragen, die Auswertung des Körperchecks, die Antworten des Coachs und die Übersetzung von Support-Nachrichten übermitteln wir Daten bei jeder Anfrage an OpenAI in den USA (Abschnitte 4.6 bis 4.9), und RevenueCat verarbeitet die Abo-Daten in den USA (Abschnitt 4.12).
 
 Wir stützen diese Übermittlungen auf folgende Garantien:
 

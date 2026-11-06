@@ -8,7 +8,7 @@
     "signIn": "로그인",
     "language": "언어",
     "features": {
-      "import": "사진으로 플랜 가져오기",
+      "import": "운동 기록 가져오기",
       "create": "플랜 만들기",
       "progress": "성장 기록하기"
     }
@@ -66,12 +66,6 @@
     "intermediateHint": "6개월~2년",
     "advanced": "상급",
     "advancedHint": "2년 이상, 안정적인 자세"
-  },
-  "hasPlan": {
-    "title": "지금 따르는\n플랜이 있나요?",
-    "formats": "사진, PDF 또는 스프레드시트",
-    "yes": "있어요",
-    "no": "플랜을 만들어 주세요"
   },
   "promise": {
     "title": "{{name}}님, 스스로에게\n약속해요.",

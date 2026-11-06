@@ -5,13 +5,7 @@
 // before there is an account (a plan set up in onboarding), so requests are limited per network
 // and in total per day (start_plan_request, kind "voice").
 import { envFlag, envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
-import {
-  askStructured,
-  ATTEMPTS,
-  PASSING_STATUSES,
-  RETRY_PAUSE_MS,
-  type StructuredRequest,
-} from '../_shared/openai.ts';
+import { askWithRetry } from '../_shared/openai.ts';
 import { isAppLanguage } from '../_shared/plan-events.ts';
 import { type CatalogRow, loadCatalog, takePlanRequest } from '../_shared/plans.ts';
 import {
@@ -31,21 +25,6 @@ const DAILY_LIMIT = envLimit('PLAN_VOICE_DAILY_LIMIT', 5000);
 const FAST = envFlag('PLAN_VOICE_FAST');
 /** Characters of text (the app's MAX_SPOKEN). */
 const MAX_TEXT = 4000;
-
-/**
- * The model's answer, with one more attempt when the first fails for a passing reason (overload,
- * a broken connection). `error` is a thrown timeout or network error, which may have been billed.
- */
-async function ask(request: StructuredRequest) {
-  for (let attempt = 1; ; attempt++) {
-    const answer = await askStructured(request).catch((error: unknown) => ({ error }));
-    const passing =
-      'error' in answer || ('upstream' in answer && PASSING_STATUSES.has(answer.upstream));
-    if (!passing || attempt === ATTEMPTS) return answer;
-    console.error(`Reading the exercises failed (attempt ${attempt})`, answer);
-    await new Promise((resolve) => setTimeout(resolve, RETRY_PAUSE_MS));
-  }
-}
 
 Deno.serve(async (req) => {
   const refused = refuseAiRequest(req);
@@ -70,17 +49,20 @@ Deno.serve(async (req) => {
     return reply(500, { error: 'failed' });
   }
 
-  const answer = await ask({
-    instructions: INSTRUCTIONS,
-    content: [
-      { type: 'input_text', text: contextText(catalog, language) },
-      { type: 'input_text', text: `What the user said:\n${text}` },
-    ],
-    name: 'workout_exercises',
-    schema: buildSchema(catalog.map((e) => e.id)),
-    timeoutMs: OPENAI_TIMEOUT_MS,
-    fast: FAST,
-  });
+  const answer = await askWithRetry(
+    {
+      instructions: INSTRUCTIONS,
+      content: [
+        { type: 'input_text', text: contextText(catalog, language) },
+        { type: 'input_text', text: `What the user said:\n${text}` },
+      ],
+      name: 'workout_exercises',
+      schema: buildSchema(catalog.map((e) => e.id)),
+      timeoutMs: OPENAI_TIMEOUT_MS,
+      fast: FAST,
+    },
+    'Reading the exercises',
+  );
   if ('upstream' in answer) {
     // Refused before the model ran: nothing was billed.
     await giveBack();

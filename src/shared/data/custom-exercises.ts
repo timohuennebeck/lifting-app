@@ -57,18 +57,36 @@ const columns = (draft: CustomExerciseDraft) => ({
   rest_seconds: draft.restSeconds,
 });
 
-/** Adds custom exercises under the ids plans already reference (an imported plan's). */
+/**
+ * Adds custom exercises under the ids plans and workouts already reference (an import's). Ids that
+ * are there already (an imported history and its plan share them) are left as they are.
+ */
 export async function insertCustomExercises(
   db: Executor,
   userId: string,
   exercises: CustomExercise[],
 ) {
   if (!exercises.length) return;
+  const existing = new Set(
+    (
+      await db
+        .select({ id: customExercises.id })
+        .from(customExercises)
+        .where(
+          inArray(
+            customExercises.id,
+            exercises.map((e) => e.id),
+          ),
+        )
+    ).map((r) => r.id),
+  );
+  const fresh = exercises.filter((e) => !existing.has(e.id));
+  if (!fresh.length) return;
   const createdAt = nowIso();
   await db
     .insert(customExercises)
     .values(
-      exercises.map((e) => ({ id: e.id, user_id: userId, ...columns(e), created_at: createdAt })),
+      fresh.map((e) => ({ id: e.id, user_id: userId, ...columns(e), created_at: createdAt })),
     );
 }
 

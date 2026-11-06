@@ -1,1 +1,1 @@
-export { ImportScreen as default } from '@/features/plan-import/screens/import-screen';
+export { StartScreen as default } from '@/features/workout-import/screens/start-screen';

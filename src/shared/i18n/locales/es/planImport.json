@@ -1,115 +1,17 @@
 {
-  "index": {
-    "title": "IMPORTAR PLAN",
-    "subtitle": "Funciona también con letra a mano. Si algo no lo podemos leer con seguridad, te lo marcamos para que lo revises.",
-    "photo": {
-      "title": "Tomar una foto",
-      "description": "Papel, pizarra o pantalla"
-    },
-    "file": {
-      "title": "Subir un archivo",
-      "description": "PDF, Excel, CSV o captura de pantalla"
-    },
-    "noPlan": "¿No tienes un plan a mano?",
-    "createOwn": "Crearlo por mi cuenta",
-    "ownPlan": "Mi plan"
-  },
-  "read": "Leer plan",
-  "options": {
-    "title": "¿TODO BIEN?",
-    "swap": "Cambiar",
-    "preview": "Vista previa del archivo"
-  },
-  "sheets": {
-    "title": "¿QUÉ HOJAS?",
-    "subtitle": "{{name}} tiene {{count}} hojas. Elige las que forman parte de tu plan.",
-    "recommended": "Recomendada",
-    "routines_one": "{{count}} entrenamiento",
-    "routines_other": "{{count}} entrenamientos",
-    "exercises_one": "{{count}} ejercicio",
-    "exercises_other": "{{count}} ejercicios",
-    "log_one": "{{count}} registro con pesos",
-    "log_other": "{{count}} registros con pesos",
-    "other": "No se encontraron ejercicios",
-    "text": "Solo texto",
-    "empty": "Vacía",
-    "cta_one": "Leer {{count}} hoja",
-    "cta_other": "Leer {{count}} hojas",
-    "none": "Elige una hoja"
-  },
-  "camera": {
-    "page": "Página {{count}}",
-    "hint": "Toma una foto de cada página y toca Listo",
-    "torch": "Flash",
-    "shutter": "Tomar foto",
-    "library": "Elegir de tus fotos",
-    "retake": "Repetir la página {{count}}",
-    "full": "Hasta {{count}} páginas por importación",
-    "permission": {
-      "title": "ACCESO A LA CÁMARA",
-      "body": "Para fotografiar tu plan, Loqqa necesita acceso a tu cámara. Las fotos se quedan en tu dispositivo hasta que las importes.",
-      "allow": "Permitir cámara"
-    },
-    "access": "Para que puedas tomar fotos de tu plan. Se quedan en tu dispositivo hasta que las importes."
-  },
-  "review": {
-    "retake": "Repetir foto",
-    "addPage": "Añadir página",
-    "remove": "Quitar la página {{count}}"
-  },
-  "reading": {
-    "stages": [
-      "Leyendo la letra a mano…",
-      "Detectando ejercicios…",
-      "Ordenando los entrenamientos…",
-      "Aplicando series y repeticiones…"
-    ],
-    "errors": {
-      "failed": {
-        "title": "No se pudo leer el plan",
-        "message": "Inténtalo de nuevo. Una foto más nítida o un archivo distinto pueden ayudar."
-      },
-      "offline": {
-        "title": "Sin conexión",
-        "message": "Para leer tu plan hace falta internet. Revisa tu conexión e inténtalo de nuevo."
-      },
-      "limit": {
-        "title": "Límite diario alcanzado",
-        "message": "Mañana podrás volver a importar. Hasta entonces, puedes crear tu plan por tu cuenta."
-      },
-      "notAPlan": {
-        "title": "No se encontró ningún plan de entrenamiento",
-        "message": "Prueba con otra foto u otro archivo."
-      },
-      "tooLarge": {
-        "title": "Archivo demasiado grande",
-        "message": "Usa un archivo de hasta 15 MB."
-      }
-    }
-  },
   "confirm": {
     "planName": "Nombre del plan",
+    "ownPlan": "Mi plan",
     "readAs": "Leído como «{{raw}}»",
     "correct": "Correcto",
     "add": "Añadir ejercicio",
     "swap": "Cambiar ejercicio",
     "cta": "Usar este plan",
-    "reading": "Leyendo tu plan…",
     "check_one": "Revisar {{count}} elemento",
     "check_other": "Revisar {{count}} elementos",
     "empty": "Aún no hay ejercicios. Añade alguno con + o con el micrófono.",
     "newRoutine": "Entrenamiento {{number}}",
     "renamePlan": "Renombrar plan",
     "newExercise": "Nuevo · añadido como ejercicio propio"
-  },
-  "errors": {
-    "file": {
-      "title": "No se pudo abrir el archivo",
-      "message": "Vuelve a elegirlo o elige otro archivo."
-    },
-    "camera": {
-      "title": "No se tomó la foto",
-      "message": "Inténtalo de nuevo."
-    }
   }
 }

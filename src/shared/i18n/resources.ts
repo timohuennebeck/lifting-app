@@ -15,6 +15,7 @@ import deTraining from './locales/de/training.json';
 import deVoice from './locales/de/voice.json';
 import deWeight from './locales/de/weight.json';
 import deWorkout from './locales/de/workout.json';
+import deWorkoutImport from './locales/de/workoutImport.json';
 import enAuth from './locales/en/auth.json';
 import enBody from './locales/en/body.json';
 import enCoach from './locales/en/coach.json';
@@ -32,6 +33,7 @@ import enTraining from './locales/en/training.json';
 import enVoice from './locales/en/voice.json';
 import enWeight from './locales/en/weight.json';
 import enWorkout from './locales/en/workout.json';
+import enWorkoutImport from './locales/en/workoutImport.json';
 import esAuth from './locales/es/auth.json';
 import esBody from './locales/es/body.json';
 import esCoach from './locales/es/coach.json';
@@ -49,6 +51,7 @@ import esTraining from './locales/es/training.json';
 import esVoice from './locales/es/voice.json';
 import esWeight from './locales/es/weight.json';
 import esWorkout from './locales/es/workout.json';
+import esWorkoutImport from './locales/es/workoutImport.json';
 import frAuth from './locales/fr/auth.json';
 import frBody from './locales/fr/body.json';
 import frCoach from './locales/fr/coach.json';
@@ -66,6 +69,7 @@ import frTraining from './locales/fr/training.json';
 import frVoice from './locales/fr/voice.json';
 import frWeight from './locales/fr/weight.json';
 import frWorkout from './locales/fr/workout.json';
+import frWorkoutImport from './locales/fr/workoutImport.json';
 import koAuth from './locales/ko/auth.json';
 import koBody from './locales/ko/body.json';
 import koCoach from './locales/ko/coach.json';
@@ -83,6 +87,7 @@ import koTraining from './locales/ko/training.json';
 import koVoice from './locales/ko/voice.json';
 import koWeight from './locales/ko/weight.json';
 import koWorkout from './locales/ko/workout.json';
+import koWorkoutImport from './locales/ko/workoutImport.json';
 import ptBRAuth from './locales/pt-BR/auth.json';
 import ptBRBody from './locales/pt-BR/body.json';
 import ptBRCoach from './locales/pt-BR/coach.json';
@@ -100,6 +105,7 @@ import ptBRTraining from './locales/pt-BR/training.json';
 import ptBRVoice from './locales/pt-BR/voice.json';
 import ptBRWeight from './locales/pt-BR/weight.json';
 import ptBRWorkout from './locales/pt-BR/workout.json';
+import ptBRWorkoutImport from './locales/pt-BR/workoutImport.json';
 import ptPTAuth from './locales/pt-PT/auth.json';
 import ptPTBody from './locales/pt-PT/body.json';
 import ptPTCoach from './locales/pt-PT/coach.json';
@@ -117,6 +123,7 @@ import ptPTTraining from './locales/pt-PT/training.json';
 import ptPTVoice from './locales/pt-PT/voice.json';
 import ptPTWeight from './locales/pt-PT/weight.json';
 import ptPTWorkout from './locales/pt-PT/workout.json';
+import ptPTWorkoutImport from './locales/pt-PT/workoutImport.json';
 
 // English is the source language; other locales mirror its keys.
 export const resources = {
@@ -132,6 +139,7 @@ export const resources = {
     training: enTraining,
     voice: enVoice,
     workout: enWorkout,
+    workoutImport: enWorkoutImport,
     muscles: enMuscles,
     body: enBody,
     coach: enCoach,
@@ -151,6 +159,7 @@ export const resources = {
     training: deTraining,
     voice: deVoice,
     workout: deWorkout,
+    workoutImport: deWorkoutImport,
     muscles: deMuscles,
     body: deBody,
     coach: deCoach,
@@ -170,6 +179,7 @@ export const resources = {
     training: ptPTTraining,
     voice: ptPTVoice,
     workout: ptPTWorkout,
+    workoutImport: ptPTWorkoutImport,
     muscles: ptPTMuscles,
     body: ptPTBody,
     coach: ptPTCoach,
@@ -189,6 +199,7 @@ export const resources = {
     training: ptBRTraining,
     voice: ptBRVoice,
     workout: ptBRWorkout,
+    workoutImport: ptBRWorkoutImport,
     muscles: ptBRMuscles,
     body: ptBRBody,
     coach: ptBRCoach,
@@ -208,6 +219,7 @@ export const resources = {
     training: koTraining,
     voice: koVoice,
     workout: koWorkout,
+    workoutImport: koWorkoutImport,
     muscles: koMuscles,
     body: koBody,
     coach: koCoach,
@@ -227,6 +239,7 @@ export const resources = {
     training: esTraining,
     voice: esVoice,
     workout: esWorkout,
+    workoutImport: esWorkoutImport,
     muscles: esMuscles,
     body: esBody,
     coach: esCoach,
@@ -246,6 +259,7 @@ export const resources = {
     training: frTraining,
     voice: frVoice,
     workout: frWorkout,
+    workoutImport: frWorkoutImport,
     muscles: frMuscles,
     body: frBody,
     coach: frCoach,

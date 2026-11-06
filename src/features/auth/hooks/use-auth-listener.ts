@@ -12,6 +12,8 @@ import {
   useSubscriptionStore,
 } from '@/features/paywall/stores/subscription-store';
 import { useImportStore } from '@/features/plan-import/stores/import-store';
+import { dropPendingHistory } from '@/features/workout-import/lib/save-history';
+import { useWorkoutImportStore } from '@/features/workout-import/stores/workout-import-store';
 import { clearLocalAttachments } from '@/features/support/data/attachments';
 import { useUploadQueueStore } from '@/features/support/stores/upload-queue-store';
 import { useWorkoutSessionStore } from '@/features/workout/stores/workout-session-store';
@@ -68,8 +70,11 @@ export function useAuthListener() {
         // Saved images hold the body check photos and screenshots viewed. Exercise images are
         // downloaded again on the next launch.
         void Image.clearDiskCache();
-        // So is a plan import in progress (its photos and the detected plan).
+        // So is an import in progress (the file read and the plan found), and a history kept
+        // to be saved at sign-up.
         useImportStore.getState().reset();
+        useWorkoutImportStore.getState().reset();
+        dropPendingHistory();
         // The picked before/after checks belong to the account too.
         useCompareStore.getState().reset();
         // An answer from Kai still coming in, and the chat it shows.

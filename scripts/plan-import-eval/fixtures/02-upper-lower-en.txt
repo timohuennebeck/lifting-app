@@ -1,0 +1,24 @@
+Sheet "Program":
+4-Day Upper/Lower – Block 1
+Day,Exercise,Sets,Reps,RPE,Rest,Notes
+Upper A,Bench Press,4,5,8,3 min,pause 1s on chest
+,Weighted Pull-Ups,4,6,8,2-3 min
+,Seated DB Shoulder Press,3,8-10,8,2 min
+,Chest Supported Row,3,10-12,9,90s
+,Cable Lateral Raise,3,15,9,60s,each side
+Lower A,Back Squat,4,5,8,3 min
+,RDL,3,8,8,2 min
+,Walking Lunges,3,12,8,90s,steps per leg
+,Lying Leg Curl,3,10-12,9,90s
+,Standing Calf Raise,4,10,9,60s
+Upper B,Incline DB Press,4,8-10,8,2 min
+,Lat Pulldown,4,10-12,9,90s
+,Pec Deck,3,12-15,9,60s
+,One-Arm DB Row,3,10,8,90s
+,EZ Bar Curl,3,10-12,9,60s
+,Overhead Cable Extension,3,12,9,60s
+Lower B,Deadlift,3,3-5,7,3 min
+,Hack Squat,3,8-10,8,2 min
+,Leg Extension,3,15,9,60s
+,Hip Thrust,3,10,8,90s
+,Hanging Leg Raise,3,12,,60s

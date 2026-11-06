@@ -151,6 +151,21 @@ export interface ResponseUsage {
   output_tokens_details?: { reasoning_tokens?: number };
 }
 
+/**
+ * askStructured with one more attempt when the first fails for a passing reason (overload, a
+ * broken connection). `error` is a thrown timeout or network error, which may have been billed.
+ */
+export async function askWithRetry(request: StructuredRequest, label: string) {
+  for (let attempt = 1; ; attempt++) {
+    const answer = await askStructured(request).catch((error: unknown) => ({ error }));
+    const passing =
+      'error' in answer || ('upstream' in answer && PASSING_STATUSES.has(answer.upstream));
+    if (!passing || attempt === ATTEMPTS) return answer;
+    console.error(`${label} failed (attempt ${attempt})`, answer);
+    await new Promise((resolve) => setTimeout(resolve, RETRY_PAUSE_MS));
+  }
+}
+
 /** A finished response as the coach reads it. */
 interface CoachResult {
   status?: string;

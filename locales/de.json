@@ -1,7 +1,7 @@
 {
   "ios": {
-    "NSCameraUsageDescription": "Loqqa nutzt die Kamera, um deinen Trainingsplan zu fotografieren und deine Körpercheck-Fotos und dein Profilfoto aufzunehmen.",
-    "NSPhotoLibraryUsageDescription": "Loqqa lässt dich einen Trainingsplan aus deinen Fotos importieren, Screenshots an Support-Tickets anhängen und ein Profilfoto auswählen.",
+    "NSCameraUsageDescription": "Loqqa nutzt die Kamera, um deine Körpercheck-Fotos und dein Profilfoto aufzunehmen.",
+    "NSPhotoLibraryUsageDescription": "Loqqa lässt dich Screenshots an Support-Tickets anhängen und ein Profilfoto auswählen.",
     "NSMicrophoneUsageDescription": "Loqqa nutzt das Mikrofon, damit du deinen Trainingsplan, deine Fragen an Kai und deine Nachrichten an den Support einsprechen kannst, statt sie einzutippen.",
     "NSSpeechRecognitionUsageDescription": "Loqqa wandelt den Trainingsplan, den du einsprichst, in Text um, um daraus deinen Plan zu erstellen."
   }

@@ -35,9 +35,12 @@
     "routine": "Training",
     "routineHint": "Übungen und Sätze festlegen",
     "plan": "Plan",
-    "planHint": "Erstellen lassen, einlesen oder selbst bauen",
+    "planHint": "Einlesen oder erstellen lassen",
     "createRoutine": "Training erstellen",
     "createPlan": "Plan erstellen",
+    "ownPlan": "Eigener Plan",
+    "ownPlanHint": "Tage und Übungen selbst festlegen",
+    "createOwnPlan": "Plan selbst erstellen",
     "emptyWorkoutName": "Training",
     "untitledRoutine": "Unbenanntes Training"
   },

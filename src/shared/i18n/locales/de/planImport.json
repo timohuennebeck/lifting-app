@@ -1,115 +1,17 @@
 {
-  "index": {
-    "title": "PLAN IMPORTIEREN",
-    "subtitle": "Handschrift funktioniert auch. Falls wir etwas nicht sicher lesen können, markieren wir es zur Prüfung.",
-    "photo": {
-      "title": "Foto aufnehmen",
-      "description": "Papier, Whiteboard oder Bildschirm"
-    },
-    "file": {
-      "title": "Datei hochladen",
-      "description": "PDF, Excel, CSV oder Screenshot"
-    },
-    "noPlan": "Kein Plan zur Hand?",
-    "createOwn": "Selbst erstellen",
-    "ownPlan": "Mein Plan"
-  },
-  "read": "Plan einlesen",
-  "options": {
-    "title": "PASST SO?",
-    "swap": "Tauschen",
-    "preview": "Dateivorschau"
-  },
-  "sheets": {
-    "title": "WELCHE BLÄTTER?",
-    "subtitle": "{{name}} hat {{count}} Blätter. Wähle aus, was zu deinem Plan gehört.",
-    "recommended": "Empfohlen",
-    "routines_one": "{{count}} Training",
-    "routines_other": "{{count}} Trainings",
-    "exercises_one": "{{count}} Übung",
-    "exercises_other": "{{count}} Übungen",
-    "log_one": "{{count}} Eintrag mit Gewicht",
-    "log_other": "{{count}} Einträge mit Gewichten",
-    "other": "Keine Übungen erkannt",
-    "text": "Nur Text",
-    "empty": "Leer",
-    "cta_one": "{{count}} Blatt einlesen",
-    "cta_other": "{{count}} Blätter einlesen",
-    "none": "Blatt auswählen"
-  },
-  "camera": {
-    "page": "Seite {{count}}",
-    "hint": "Seite für Seite fotografieren, dann auf Fertig",
-    "torch": "Blitz",
-    "shutter": "Foto aufnehmen",
-    "library": "Aus Mediathek wählen",
-    "retake": "Seite {{count}} neu aufnehmen",
-    "full": "Höchstens {{count}} Seiten pro Import",
-    "permission": {
-      "title": "KAMERAZUGRIFF",
-      "body": "Um deinen Plan zu fotografieren, braucht Loqqa Zugriff auf deine Kamera. Die Fotos bleiben auf deinem Gerät, bis du sie importierst.",
-      "allow": "Kamera erlauben"
-    },
-    "access": "Damit du deinen Plan abfotografieren kannst. Die Fotos bleiben auf deinem Gerät, bis du sie importierst."
-  },
-  "review": {
-    "retake": "Foto neu aufnehmen",
-    "addPage": "Seite hinzufügen",
-    "remove": "Seite {{count}} entfernen"
-  },
-  "reading": {
-    "stages": [
-      "Lese Handschrift …",
-      "Erkenne Übungen …",
-      "Ordne die Trainings …",
-      "Übernehme Sätze und Wiederholungen …"
-    ],
-    "errors": {
-      "failed": {
-        "title": "Plan konnte nicht gelesen werden",
-        "message": "Bitte versuche es noch einmal. Ein schärferes Foto oder eine andere Datei kann helfen."
-      },
-      "offline": {
-        "title": "Keine Verbindung",
-        "message": "Zum Lesen deines Plans brauchst du Internet. Prüfe deine Verbindung und versuche es noch einmal."
-      },
-      "limit": {
-        "title": "Tageslimit erreicht",
-        "message": "Morgen kannst du wieder Pläne importieren. Bis dahin kannst du deinen Plan selbst erstellen."
-      },
-      "notAPlan": {
-        "title": "Kein Trainingsplan erkannt",
-        "message": "Versuche es mit einem anderen Foto oder einer anderen Datei."
-      },
-      "tooLarge": {
-        "title": "Datei zu groß",
-        "message": "Bitte nimm eine Datei mit höchstens 15 MB."
-      }
-    }
-  },
   "confirm": {
     "planName": "Planname",
+    "ownPlan": "Mein Plan",
     "readAs": "Gelesen als „{{raw}}“",
     "correct": "Stimmt",
     "add": "Übung hinzufügen",
     "swap": "Übung tauschen",
     "cta": "Plan übernehmen",
-    "reading": "Plan wird gelesen …",
     "check_one": "Noch {{count}} Punkt prüfen",
     "check_other": "Noch {{count}} Punkte prüfen",
     "empty": "Noch keine Übungen. Füg welche mit + oder dem Mikrofon hinzu.",
     "newRoutine": "Training {{number}}",
     "renamePlan": "Plan umbenennen",
     "newExercise": "Neu · wird als eigene Übung angelegt"
-  },
-  "errors": {
-    "file": {
-      "title": "Datei lässt sich nicht öffnen",
-      "message": "Bitte wähle die Datei noch einmal oder nimm eine andere."
-    },
-    "camera": {
-      "title": "Foto nicht aufgenommen",
-      "message": "Bitte versuche es noch einmal."
-    }
   }
 }

@@ -8,7 +8,7 @@
     "signIn": "Iniciar sessão",
     "language": "Idioma",
     "features": {
-      "import": "Importar plano por foto",
+      "import": "Importar o teu treino",
       "create": "Criar plano",
       "progress": "Acompanhar o progresso"
     }
@@ -66,12 +66,6 @@
     "intermediateHint": "6 meses a 2 anos",
     "advanced": "Avançado",
     "advancedHint": "Mais de 2 anos, técnica segura"
-  },
-  "hasPlan": {
-    "title": "ESTÁS A SEGUIR\nUM PLANO?",
-    "formats": "Foto, PDF ou folha de cálculo",
-    "yes": "Tenho um",
-    "no": "Cria-me um plano"
   },
   "promise": {
     "title": "{{name}}, PROMETE\nA TI MESMO.",

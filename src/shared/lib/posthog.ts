@@ -19,14 +19,30 @@ export interface AnalyticsEvents {
     routine_count: number;
   };
   'plan:generate_fail': PlanFailureProperties;
+  /** The plan of a workout file read (read-plan). */
   'plan_import:read_complete': {
-    source: 'photos' | 'file';
     exercise_count: number;
     /** Exercises the catalog doesn't have, created as the user's own. */
     unmatched_count: number;
     duration_ms: number;
   };
-  'plan_import:read_fail': PlanFailureProperties & { source: 'photos' | 'file' };
+  'plan_import:read_fail': PlanFailureProperties;
+  /** A workout file read: what it holds, and what the reading found. */
+  'workout_import:read_complete': {
+    kind: 'history' | 'plan' | 'both';
+    /** Where the plan comes from: the file, the history (it had none) or nowhere. */
+    plan_source: 'file' | 'history' | 'none';
+    workout_count: number;
+    set_count: number;
+    /** Different exercise names in the history. */
+    name_count: number;
+    /** Names (and plan lines) the user is asked about. */
+    review_count: number;
+    duration_ms: number;
+  };
+  'workout_import:read_fail': PlanFailureProperties;
+  /** An imported history saved; `added_count` leaves out workouts the account had already. */
+  'workout_import:save_complete': { workout_count: number; added_count: number };
   'paywall:view': { placement: PaywallPlacement };
   'paywall:purchase_complete': { package: string; has_trial: boolean };
   'paywall:purchase_fail': { package: string; error_code: string; is_cancelled: boolean };

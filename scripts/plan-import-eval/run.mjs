@@ -1,30 +1,21 @@
 // Tests the plan import (the read-plan Edge Function) with the plans in fixtures/ and scores
 // what it read against cases.json: routines, exercises (catalog match or new), sets, reps, RIR
-// and rest. With --dir it reads your own photos and files and prints what it found instead.
-// The fixtures are made up: typed and spreadsheet plans, handwriting, whiteboard and screenshot
-// photos drawn with handwriting fonts, then tilted, shaded and blurred like phone photos, and
-// exercises said for one workout as speech recognition writes them down (sent to read-exercises
-// as the voice input does; they count toward its own limit).
+// and rest. With --dir it reads your own files and prints what it found instead.
+// The fixtures are made up: plans as text and CSV, a spreadsheet's plan sheet as the app sends it
+// (02: the app reads workbooks itself and sends their plan sheets as text), a file that is not a
+// plan, and exercises said for one workout as speech recognition writes them down (sent to
+// read-exercises as the voice input does; they count toward its own limit).
 //
 // Needs the function with an OpenAI key at EXPO_PUBLIC_SUPABASE_URL from .env.local: locally
-// `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 15 imports, so
+// `npm run supabase:start`, which serves it with supabase/functions/.env (one run is 5 imports, so
 // set PLAN_IMPORT_IP_LIMIT=1000 there first, then restart Supabase), or the deployed project.
 // Usage: npm run plan:eval                          all fixtures
-//        npm run plan:eval -- 05 09                 only these cases
+//        npm run plan:eval -- 02 11                 only these cases
 //        npm run plan:eval -- --dir ~/Desktop/plans [--lang de]
-//          each image or file in the folder is one import; a subfolder of photos is one
-//          multi-photo import. On macOS, photos are shrunk to JPEGs like the app does (sips).
+//          each .csv, .tsv or .txt file in the folder is one import.
 // Reports and the raw answers go to scripts/plan-import-eval/out/.
-import { execFileSync } from 'node:child_process';
-import {
-  mkdirSync,
-  mkdtempSync,
-  readdirSync,
-  readFileSync,
-  statSync,
-  writeFileSync,
-} from 'node:fs';
-import { homedir, tmpdir } from 'node:os';
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { basename, extname, join } from 'node:path';
 
 import {
@@ -43,20 +34,8 @@ const FIXTURES = join(HERE, 'fixtures');
 const PARALLEL = 3;
 const { url: SUPABASE_URL, key: KEY } = supabaseEnv();
 
-const MIME = {
-  '.pdf': 'application/pdf',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.png': 'image/png',
-  '.webp': 'image/webp',
-  '.heic': 'image/heic',
-  '.heif': 'image/heif',
-  '.csv': 'text/csv',
-  '.txt': 'text/plain',
-  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  '.xls': 'application/vnd.ms-excel',
-};
-const isImage = (path) => MIME[extname(path).toLowerCase()]?.startsWith('image/');
+/** Files read as plans: text the app would send. */
+const isPlanFile = (path) => ['.csv', '.tsv', '.txt'].includes(extname(path).toLowerCase());
 
 const args = process.argv.slice(2);
 const option = (name) => {
@@ -68,56 +47,10 @@ const dirLanguage = option('--lang') ?? 'de';
 
 // ---------- requests ----------
 
-const scratch = mkdtempSync(join(tmpdir(), 'plan-eval-'));
-
-/**
- * A photo as the app sends it: a JPEG at most 2000 px on its longest side, as base64. Shrinking
- * uses macOS's sips (into a temporary copy); elsewhere photos must already be JPEGs.
- */
-function photoBase64(path, shrink) {
-  if (shrink && process.platform === 'darwin') {
-    const info = execFileSync('sips', ['-g', 'pixelWidth', '-g', 'pixelHeight', path], {
-      encoding: 'utf8',
-    });
-    const side = Math.max(...[...info.matchAll(/pixel(?:Width|Height): (\d+)/g)].map((m) => +m[1]));
-    const out = join(scratch, `${basename(path)}.jpg`);
-    execFileSync(
-      'sips',
-      [
-        '-s',
-        'format',
-        'jpeg',
-        '-s',
-        'formatOptions',
-        '75',
-        ...(side > 2000 ? ['-Z', '2000'] : []),
-        path,
-        '--out',
-        out,
-      ],
-      { stdio: 'ignore' },
-    );
-    return readFileSync(out).toString('base64');
-  }
-  if (!/\.jpe?g$/i.test(path)) throw new Error(`${basename(path)}: convert it to JPEG first`);
-  return readFileSync(path).toString('base64');
-}
-
-function requestBody({ files, as, language }, shrink) {
-  if (as === 'voice') return { text: readFileSync(files[0], 'utf8').trim(), language };
-  if (as === 'photos') return { photos: files.map((f) => photoBase64(f, shrink)), language };
-  const [path] = files;
-  const mimeType = MIME[extname(path).toLowerCase()] ?? 'text/plain';
-  if (mimeType.startsWith('image/')) {
-    return {
-      file: { name: basename(path), mimeType: 'image/jpeg', data: photoBase64(path, shrink) },
-      language,
-    };
-  }
-  return {
-    file: { name: basename(path), mimeType, data: readFileSync(path).toString('base64') },
-    language,
-  };
+function requestBody({ files, as, language }) {
+  const text = readFileSync(files[0], 'utf8').trim();
+  if (as === 'voice') return { text, language };
+  return { name: basename(files[0]), text, language };
 }
 
 /**
@@ -125,7 +58,7 @@ function requestBody({ files, as, language }, shrink) {
  * from read-exercises; null once the limit is reached or the function doesn't answer.
  */
 const requests = untilStopped((body) =>
-  body.text
+  !body.name
     ? readExercises(`${SUPABASE_URL}/functions/v1/read-exercises`, KEY, body)
     : streamPlan(`${SUPABASE_URL}/functions/v1/read-plan`, KEY, body),
 );
@@ -332,7 +265,7 @@ async function runFixtures() {
     cases,
     async (c) => {
       const files = c.files.map((f) => join(FIXTURES, f));
-      const result = await requests.send(requestBody({ ...c, files }, false));
+      const result = await requests.send(requestBody({ ...c, files }));
       if (!result) return null;
       const s = score(c.expect, result, names, c.language);
       console.log(`${passed(s) ? 'PASS' : 'FAIL'}  ${c.id}  ${timing(result)}`);
@@ -391,27 +324,18 @@ async function runDir() {
   const entries = readdirSync(dir)
     .filter((f) => !f.startsWith('.'))
     .sort();
-  const imports = entries.flatMap((entry) => {
-    const path = join(dir, entry);
-    if (statSync(path).isDirectory()) {
-      const photos = readdirSync(path)
-        .filter(isImage)
-        .sort()
-        .map((f) => join(path, f));
-      return photos.length ? [{ id: entry, files: photos, as: 'photos' }] : [];
-    }
-    if (isImage(path)) return [{ id: entry, files: [path], as: 'photos' }];
-    return MIME[extname(path).toLowerCase()] ? [{ id: entry, files: [path], as: 'file' }] : [];
-  });
+  const imports = entries
+    .filter(isPlanFile)
+    .map((entry) => ({ id: entry, files: [join(dir, entry)], as: 'file' }));
   if (!imports.length) {
-    console.error(`No photos or plan files in ${dir}.`);
+    console.error(`No .csv, .tsv or .txt files in ${dir}.`);
     process.exit(1);
   }
   console.log(`${imports.length} imports from ${dir} (app language ${dirLanguage}) …`);
   const results = await pool(
     imports,
     async (item) => {
-      const result = await requests.send(requestBody({ ...item, language: dirLanguage }, true));
+      const result = await requests.send(requestBody({ ...item, language: dirLanguage }));
       if (!result) return null;
       const text = result.plan
         ? describePlan(result.plan, names, dirLanguage)

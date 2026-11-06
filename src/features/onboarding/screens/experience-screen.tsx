@@ -28,7 +28,7 @@ export function ExperienceScreen() {
         <Button
           label={tc('actions.continue')}
           disabled={!experience}
-          onPress={() => router.push('/has-plan')}
+          onPress={() => router.push('/import')}
         />
       }
     >

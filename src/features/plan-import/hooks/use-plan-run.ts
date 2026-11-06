@@ -16,12 +16,11 @@ const MIN_MS = 3600;
 const EXPECTED_MS = 15_000;
 
 /**
- * Gets the plan behind the reading or building animation: the AI makes it from `answers`, else
- * it is read from the import's source. Opens the editor with the first exercise once the
- * animation has played; the rest fills in there (ConfirmScreen). A failure shows the error sheet
- * and goes back. Returns the progress to show.
+ * Gets the plan behind the building animation: the AI makes it from `answers`. Opens the editor
+ * with the first exercise once the animation has played; the rest fills in there (ConfirmScreen).
+ * A failure shows the error sheet and goes back. Returns the progress to show.
  */
-export function usePlanRun(answers?: PlanAnswers) {
+export function usePlanRun(answers: PlanAnswers) {
   const { i18n } = useTranslation();
   const { step } = usePlanFlow();
   const started = useImportStore((s) => !!s.plan?.routines[0]?.exercises.length);
@@ -33,8 +32,7 @@ export function usePlanRun(answers?: PlanAnswers) {
 
   useEffect(() => {
     const store = useImportStore.getState();
-    if (answers) store.setAnswers(answers);
-    else if (!store.source) return;
+    store.setAnswers(answers);
     run.current = store.start(i18n.language);
     // Leaving before the editor opened (Android back) stops it; after that the editor owns it.
     return () => {
@@ -54,8 +52,7 @@ export function usePlanRun(answers?: PlanAnswers) {
     if (failure?.run !== run.current || opened.current) return;
     opened.current = true;
     // The sheet stays up over the screen this goes back to; trying again opens this one anew.
-    const again = answers ? step('/create/building') : step('/import/reading');
-    showPlanFailure(failure.reason, !!answers, () => router.push(again));
+    showPlanFailure(failure.reason, () => router.push(step('/create/building')));
     router.back();
   }, [failure, answers, step]);
 

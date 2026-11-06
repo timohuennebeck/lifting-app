@@ -5,6 +5,7 @@ import { LegalUpdateGate } from '@/features/legal/components/legal-update-gate';
 import { useSubscriptionGate } from '@/features/paywall/hooks/use-subscription-gate';
 import { useAttachmentUploadQueue } from '@/features/support/hooks/use-attachment-upload-queue';
 import { useEndWorkoutActivity } from '@/features/workout/hooks/use-end-workout-activity';
+import { useSendPendingHistory } from '@/features/workout-import/hooks/use-send-pending-history';
 import { useSyncAccountLanguage } from '@/shared/hooks/use-sync-account-language';
 import { colors } from '@/shared/lib/theme';
 
@@ -21,6 +22,8 @@ export default function AppLayout() {
   useSubscriptionGate();
   // The Lock Screen / Dynamic Island workout goes when no workout runs any more.
   useEndWorkoutActivity();
+  // A workout history imported in onboarding goes to the account after sign-up.
+  useSendPendingHistory();
 
   return (
     <>

@@ -4,8 +4,11 @@ import { createContext, type ReactNode, useContext, useRef } from 'react';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
 import type { ImportedPlan } from '@/features/plan-import/lib/plan-import-service';
 import { useImportStore } from '@/features/plan-import/stores/import-store';
+import { useWorkoutImportStore } from '@/features/workout-import/stores/workout-import-store';
 import type { Profile, ProfilePatch } from '@/shared/data/profile';
 import type { PlanDraft } from '@/shared/data/plans';
+import { newId } from '@/shared/data/json';
+import { i18n } from '@/shared/i18n';
 import { attempt, singleFlight } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
@@ -15,14 +18,14 @@ import { saveActivePlan } from '../data/save-plan';
 
 /** The flow's steps where onboarding has them; the app has the same under /plan. */
 type PlanStep =
-  | '/has-plan'
   | '/import'
-  | '/import/options'
+  | '/import/file'
   | '/import/sheets'
-  | '/import/camera'
-  | '/import/voice'
-  | '/import/review'
   | '/import/reading'
+  | '/import/found'
+  | '/import/check'
+  | '/import/dates'
+  | '/import/voice'
   | '/import/confirm'
   | '/import/picker'
   | '/import/sets'
@@ -38,18 +41,19 @@ type PlanStep =
 
 const InAppContext = createContext(false);
 
-/** Marks the plan flow's screens as opened from the app (the "+" sheet or Training). */
+/** Marks the plan flow's screens as opened from the app (the "+" sheet, Training, settings). */
 export function InAppPlanFlow({ children }: { children: ReactNode }) {
   return <InAppContext value>{children}</InAppContext>;
 }
 
 /**
- * Opens the plan flow from the app: a fresh import, and the profile's answers (with the current
- * plan's workouts per week) as the AI's starting point. The onboarding draft holds the flow's
- * answers, as in onboarding.
+ * A fresh plan session in the app: no import, and the profile's answers (with the current plan's
+ * workouts per week) as the AI's starting point. The onboarding draft holds the flow's answers,
+ * as in onboarding.
  */
-export function openPlanFlow(profile: Profile | null | undefined, sessionsPerWeek?: number) {
+function startPlanSession(profile: Profile | null | undefined, sessionsPerWeek?: number) {
   useImportStore.getState().reset();
+  useWorkoutImportStore.getState().reset();
   useOnboardingStore.getState().update({
     plan: null,
     customExercises: [],
@@ -64,7 +68,28 @@ export function openPlanFlow(profile: Profile | null | undefined, sessionsPerWee
     }),
     ...(sessionsPerWeek ? { sessionsPerWeek } : {}),
   });
-  router.push('/plan/has-plan');
+}
+
+/**
+ * Opens the plan flow from the app (the "+" sheet, Training, the settings' import): a workout file
+ * to import, or "Ich starte neu" to have a plan made.
+ */
+export function openPlanFlow(profile: Profile | null | undefined, sessionsPerWeek?: number) {
+  startPlanSession(profile, sessionsPerWeek);
+  router.push('/plan/import');
+}
+
+/** Opens the editor a new plan ends in with one empty routine, to build a plan by hand. */
+export function openOwnPlan(profile: Profile | null | undefined, sessionsPerWeek?: number) {
+  startPlanSession(profile, sessionsPerWeek);
+  useImportStore.getState().setPlan({
+    name: i18n.t('planImport:confirm.ownPlan'),
+    routines: [
+      { key: newId(), name: i18n.t('planImport:confirm.newRoutine', { number: 1 }), exercises: [] },
+    ],
+    newExercises: [],
+  });
+  router.push('/plan/import/confirm');
 }
 
 /**
@@ -84,9 +109,10 @@ export function openPlanEditor(planId: string) {
 }
 
 /**
- * The plan flow (has a plan? → import or create) runs in onboarding and in the app. Its screens
- * go to the next step with `step`, and hand over the plan with `finish`: onboarding goes on to
- * its promise, the app saves it as the plan Training follows and returns to the Training tab. A
+ * The plan flow (a workout file to import, or a plan made for the user) runs in onboarding and in
+ * the app. Its screens go to the next step with `step`, and hand over the plan with `finish`:
+ * onboarding goes on to its promise, the app saves it as the plan Training follows and returns to
+ * the Training tab; an import without a plan ends with `done` (its history saved already). A
  * plan made from the answers hands them over too: the app keeps them in the profile, so the next
  * plan starts from them (onboarding saves the whole draft at sign-up). A saved plan opened in the
  * editor (`openPlanEditor`) is written back with `saveEdits`.
@@ -122,5 +148,16 @@ export function usePlanFlow() {
   const saveEdits = (planId: string, plan: ImportedPlan) =>
     saveAndLeave(() => savePlanEdits(requireUserId(), planId, plan));
 
-  return { inApp, step, finish, saveEdits };
+  /** Leaves the flow without a plan: onboarding goes on, the app goes back to Training. */
+  function done() {
+    if (!inApp) {
+      useOnboardingStore.getState().update({ plan: null });
+      router.push('/promise');
+      return;
+    }
+    haptics.success();
+    router.dismissTo('/');
+  }
+
+  return { inApp, step, finish, saveEdits, done };
 }

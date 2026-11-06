@@ -1,0 +1,124 @@
+{
+  "start": {
+    "title": "BRING DEIN\nTRAINING MIT",
+    "subtitle": "Hol deinen Trainingsplan und -verlauf rüber, dann startet Loqqa mit deinen echten Gewichten.",
+    "pick": "Export-Datei wählen",
+    "hint": "Funktioniert mit Hevy, Strong und jeder Tabelle\nCSV oder Excel",
+    "more": "und viele mehr",
+    "cta": "Datei auswählen",
+    "fresh": "Ich starte neu"
+  },
+  "file": {
+    "title": "IST DAS DIE\nRICHTIGE DATEI?",
+    "sheets_one": "{{size}} · {{count}} Tabellenblatt",
+    "sheets_other": "{{size}} · {{count}} Tabellenblätter",
+    "replace": "Ersetzen",
+    "read": "Kategorisierung starten",
+    "next": "Weiter"
+  },
+  "sheets": {
+    "title": "WELCHE BLÄTTER\nLESEN WIR EIN?",
+    "subtitle_one": "{{name}} hat {{count}} Blatt. Wähle die, in denen deine Trainings stehen.",
+    "subtitle_other": "{{name}} hat {{count}} Blätter. Wähle die, in denen deine Trainings stehen.",
+    "recommended": "Empfohlen",
+    "log_one": "{{count}} Eintrag · mit Datum",
+    "log_other": "{{count}} Einträge · mit Datum",
+    "plan_one": "{{days}} · {{count}} Übung",
+    "plan_other": "{{days}} · {{count}} Übungen",
+    "days_one": "{{count}} Tag",
+    "days_other": "{{count}} Tage",
+    "exercises_one": "{{count}} Übung",
+    "exercises_other": "{{count}} Übungen",
+    "other": "Keine Trainings gefunden",
+    "text": "Nur Text",
+    "empty": "Leer",
+    "cta_one": "{{count}} Blatt einlesen",
+    "cta_other": "{{count}} Blätter einlesen",
+    "none": "Wähle ein Blatt"
+  },
+  "reading": {
+    "understand": "Trainingsdaten werden sortiert …",
+    "exercises": "Übungen werden zugeordnet …",
+    "plan": "Plan wird gelesen …",
+    "elapsed_one": "{{count}} s vergangen",
+    "elapsed_other": "{{count}} s vergangen",
+    "done": "Fertig"
+  },
+  "found": {
+    "title": "DAS HABEN WIR\nGEFUNDEN",
+    "subtitle": "Tippe an, was importiert werden soll.",
+    "history": "Trainingsverlauf",
+    "workouts_one": "{{count}} Training, {{from}} bis {{to}}",
+    "workouts_other": "{{count}} Trainings, {{from}} bis {{to}}",
+    "undatedOnly_one": "{{count}} Training ohne Datum",
+    "undatedOnly_other": "{{count}} Trainings ohne Datum",
+    "plan": "Trainingsplan",
+    "days_one": "{{count}} Tag: {{names}}",
+    "days_other": "{{count}} Tage: {{names}}",
+    "fromHistory": "Aus deinem Verlauf · {{days}}",
+    "notFound": "Nicht gefunden",
+    "notInFile": "Nicht in der Datei gefunden",
+    "cta": "Import starten",
+    "saving": "Wird gespeichert …"
+  },
+  "check": {
+    "inFile_one": "IN DEINER DATEI · {{count}} Training",
+    "inFile_other": "IN DEINER DATEI · {{count}} Trainings",
+    "inPlan": "IN DEINEM PLAN",
+    "recommended": "Empfohlen",
+    "custom": "Eigene Übung anlegen",
+    "customHint": "„{{name}}“ bleibt der Name",
+    "next": "Weiter",
+    "skip": "Nicht übernehmen"
+  },
+  "dates": {
+    "title": "NICHT ÜBERALL\nSTAND EIN DATUM",
+    "body_one": "Bei {{count}} von {{total}} Trainings fehlt das Datum in deiner Datei – deshalb haben wir es auf die Monate dazwischen verteilt.",
+    "body_other": "Bei {{count}} von {{total}} Trainings fehlt das Datum in deiner Datei – deshalb haben wir diese auf die Monate dazwischen verteilt.",
+    "dated": "Mit Datum · {{count}}",
+    "spread": "Verteilt · {{count}}",
+    "keep": "Passt so",
+    "drop": "Ohne Datum weglassen"
+  },
+  "plan": {
+    "fromHistory": "Aus deinem Verlauf",
+    "routine": "Training {{letter}}"
+  },
+  "defaultName": "Training",
+  "errors": {
+    "picker": {
+      "title": "Datei ließ sich nicht öffnen",
+      "message": "Wähle sie noch einmal oder nimm eine andere Datei."
+    },
+    "nothing": {
+      "title": "Das ist kein Trainingsverlauf",
+      "message": "{{name}} enthält keine Trainings, die wir übernehmen können. Wähle eine Datei mit Datum, Übung, Sätzen und Gewicht."
+    },
+    "unreadable": {
+      "title": "Datei ließ sich nicht lesen",
+      "message": "Wähle eine CSV- oder Excel-Datei, etwa den Export deiner Trainings-App."
+    },
+    "retry": "Andere Datei wählen",
+    "close": "Schließen",
+    "failed": {
+      "title": "Datei ließ sich nicht lesen",
+      "message": "Bitte versuche es noch einmal."
+    },
+    "offline": {
+      "title": "Keine Verbindung",
+      "message": "Zum Lesen deiner Datei brauchst du Internet. Prüfe deine Verbindung und versuche es noch einmal."
+    },
+    "limit": {
+      "title": "Tageslimit erreicht",
+      "message": "Morgen kannst du wieder importieren."
+    },
+    "tooLarge": {
+      "title": "Datei zu groß",
+      "message": "Wähle eine kleinere Datei oder weniger Blätter."
+    },
+    "save": {
+      "title": "Verlauf nicht gespeichert",
+      "message": "Prüfe deine Verbindung und versuche es noch einmal."
+    }
+  }
+}

@@ -35,9 +35,12 @@
     "routine": "Treino",
     "routineHint": "Definir exercícios e séries",
     "plan": "Plano",
-    "planHint": "Peça um, importe ou monte você mesmo",
+    "planHint": "Importe ou peça um",
     "createRoutine": "Criar treino",
     "createPlan": "Criar plano",
+    "ownPlan": "Seu próprio plano",
+    "ownPlanHint": "Defina você os dias e exercícios",
+    "createOwnPlan": "Montar plano você mesmo",
     "emptyWorkoutName": "Treino",
     "untitledRoutine": "Treino sem nome"
   },

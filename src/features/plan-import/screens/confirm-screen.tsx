@@ -40,13 +40,14 @@ const reviewLabel = (e: ImportedExercise) =>
   e.heard ? ('voice:heardAs' as const) : ('planImport:confirm.readAs' as const);
 
 /**
- * 06c: the detected plan in the training overview layout (03·0b). Its routines sit in the plan
- * strip, in the order they are trained; amber dots mark what the import wasn't sure about until
- * the user checks it. It opens with the first exercise read and fills in while the function sends
- * the rest, following the routine being read until the user picks one. "Selbst erstellen" opens
- * it with an empty plan to build routine by routine. A plan the AI makes (BuildingScreen) opens
- * here the same way and goes on to its name. A saved plan opens here to be edited
- * (`openPlanEditor`) and is saved back. Hold a routine in the strip to move it.
+ * 06c: the plan in the training overview layout (03·0b). Its routines sit in the plan strip, in
+ * the order they are trained; amber dots mark exercises not sure yet (voice input) until the user
+ * checks them. A workout import opens it with the plan it read or found in the history. A plan
+ * the AI makes (BuildingScreen) opens with its first exercise and fills in while the function
+ * sends the rest, following the routine being made until the user picks one, and goes on to its
+ * name. "Plan selbst erstellen" opens it with an empty plan to build routine by routine. A saved
+ * plan opens here to be edited (`openPlanEditor`) and is saved back. Hold a routine in the strip
+ * to move it.
  */
 export function ConfirmScreen() {
   const { t } = useTranslation(['planImport', 'planCreate', 'training', 'voice', 'common']);
@@ -86,19 +87,18 @@ export function ConfirmScreen() {
     wasReading.current = reading;
   }, [reading, failure]);
 
-  // Broken off halfway: a partial plan isn't taken over; read it again or go back. Asked once
-  // this screen is on top again, if the user had opened an exercise or the picker meanwhile.
+  // The AI's plan broke off halfway: a partial plan isn't taken over; make it again or go back.
+  // Asked once this screen is on top again, if the user had opened an exercise meanwhile. (An
+  // imported plan is read completely before the editor opens.)
   useEffect(() => {
     if (failure?.run !== run || !focused || alerted.current) return;
     alerted.current = true;
-    const again = made ? step('/create/building') : step('/import/reading');
     showPlanFailure(
       failure.reason,
-      made,
-      () => router.replace(again),
+      () => router.replace(step('/create/building')),
       () => router.back(),
     );
-  }, [failure, run, focused, made, step]);
+  }, [failure, run, focused, step]);
 
   if (!plan) return <Redirect href={step('/import')} />;
 
@@ -266,10 +266,9 @@ export function ConfirmScreen() {
       <BottomFade>
         <Button
           label={
+            // Only the AI's plan still comes in here; an import's is read before the editor opens.
             reading
-              ? made
-                ? t('planCreate:generate.making')
-                : t('planImport:confirm.reading')
+              ? t('planCreate:generate.making')
               : pending
                 ? t('planImport:confirm.check', { count: pending })
                 : editing

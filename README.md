@@ -4,7 +4,7 @@ Workout logger for iOS and Android. Tabs: **Training** (the week, the plan with 
 single routines; its "Kai · KI-Coach" card opens the AI coach), **Sätze** (sets per muscle in
 the last 7 to 90 days), **Körper** (progress checks: three photos, an AI score, before and after) and **Profile** (workout
 history, support, settings). "+" starts a workout or creates a routine or a plan (imported from
-photos or a file, or made by the AI). The scale button in every tab's header opens the weight
+another app's export or a spreadsheet, made by the AI, or built by hand). The scale button in every tab's header opens the weight
 history. The original design handoff is in git history (`git show 48b667e:design/README.md`).
 
 ## Stack
@@ -262,35 +262,54 @@ the standard API at `api.openai.com`) and returns the check's values, or the pho
   check (`progress_checks`, with its photos in `progress_check_photos`) takes its score, values and
   time from the run; a check without one is rejected.
 
-## Plan import
+## Workout import
 
-Users can import their plan from photos or a file (PDF, Excel, CSV, text) instead of having one
-made: in onboarding, and in the app from "+" or Training (the same screens, routed under
-`src/app/(onboarding)/import/` and `src/app/(app)/plan/import/`). The app shrinks photos to JPEGs
-and calls the `read-plan` Edge Function, which sends them to OpenAI together with the exercise
-catalog and returns the plan in the app's shape: each line matched to a catalog exercise, or a new
-exercise the app creates for the user with the plan. Lines it isn't sure about come with
-alternatives for the user to review.
+Users bring their training from another app (Hevy, Strong, …) or any spreadsheet: a CSV, TSV or
+Excel/OpenDocument file with their workout history, their plan, or both. It is the plan flow's
+first step in onboarding; in the app it opens from "+" › Plan, Training and Settings › Daten ›
+Importieren (the same screens, routed under `src/app/(onboarding)/import/` and
+`src/app/(app)/plan/import/`; the code is in `src/features/workout-import/`).
 
-- **Streaming:** the function passes each exercise on as soon as the model has written it, as
-  server-sent events (`PlanEvent` in `supabase/functions/_shared/plan-events.ts`); the app reads
-  them with `expo/fetch`. The
-  review opens with the first exercise and fills in routine by routine; "Plan übernehmen" waits for the
-  whole plan. Leaving the review stops the model. Limits and bad requests still answer with an
-  HTTP status before the stream starts.
-- **Secrets:** the same `OPENAI_API_KEY` and `OPENAI_MODEL` as the progress check.
-- **Speed:** the import runs on OpenAI's Fast mode (`service_tier: "fast"`), up to 2.5× faster
-  output at twice the token price. `PLAN_IMPORT_FAST=false` turns it off. OpenAI may serve a
-  request at standard speed when it is busy; the function log shows the tier it got.
-- **Rules (server-side):** it also runs before there is an account, so imports are limited per network
-  (`PLAN_IMPORT_IP_LIMIT`, default 10) and in total (`PLAN_IMPORT_DAILY_LIMIT`, default 1,000) per
-  24 hours. `plan_requests` keeps a keyed hash of the IP, never the IP itself.
-- **Testing:** `npm run plan:eval` sends the 21 test plans in `scripts/plan-import-eval/fixtures`
-  (typed, spreadsheet, handwritten, whiteboard, screenshot, spoken; German, English, Portuguese,
-  Spanish, French, Korean) to the functions and scores what it read against `cases.json`, with the time to the first exercise and
-  to the whole plan. `npm run plan:eval -- --dir <folder>` reads your own photos and files and
-  prints what it found. One run is 15 imports (the 6 spoken cases go to read-exercises), so set
-  `PLAN_IMPORT_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
+1. **On the phone:** the file is read (`lib/read-file.ts`, workbooks in `lib/workbook.ts`). A
+   workbook with several sheets asks which to read and recommends those that look like a log or a
+   plan (`lib/sheet-summary.ts`).
+2. **What is where** (`read-history`, step `categorize`): per sheet, a sample of its rows (the
+   first, some spread out and the last, at most 150) and what each column holds
+   (`lib/samples.ts`) go to the model. It answers whether the sheet is a history, a plan or both,
+   which column is the date, the exercise, the weight and so on, and how dates and weights are
+   written. The phone then reads every row with that (`lib/history.ts`, `lib/values.ts`).
+3. **Which exercise is which** (step `map`, batches of 60 names in parallel) runs side by side
+   with the plan's rows going to `read-plan` as text. Every name the model isn't sure about is
+   checked by the user, one per screen: its likeliest exercise, alternatives, or a new exercise
+   under the file's name.
+4. **No plan in the file:** where the user has none yet, the routines of the last six weeks of the
+   history become the plan (`lib/routines.ts`); routines without a name in the file get one from
+   the model (step `name`).
+5. **Workouts without a date** get one between their neighbours in the file; the user keeps them
+   so or leaves them out.
+6. **Saving:** the history goes to the `import_workouts` database function, 100 workouts a call
+   (PowerSync would upload it row by row). It skips workouts that start at the same minute as one
+   of the account's and marks the records. In onboarding it waits in a file until the account
+   exists (`useSendPendingHistory`), also for an existing account signed in there. The plan opens
+   in the plan editor, like a made one.
+
+- **Secrets and model:** `OPENAI_API_KEY`; `read-history` runs `OPENAI_HISTORY_MODEL` (default
+  `gpt-6-luna`) at `OPENAI_HISTORY_REASONING_EFFORT` (default `low`), Fast mode only with
+  `HISTORY_IMPORT_FAST=true`. `read-plan` runs `OPENAI_MODEL` on Fast mode
+  (`PLAN_IMPORT_FAST=false` turns it off) and streams the plan (`PlanEvent` in
+  `supabase/functions/_shared/plan-events.ts`).
+- **Rules (server-side):** it also runs before there is an account, so each step counts per network
+  (`HISTORY_IMPORT_IP_LIMIT`, default 40) and in total (`HISTORY_IMPORT_DAILY_LIMIT`, default
+  4,000) per 24 hours (`plan_requests` kind `history`); `read-plan` as before
+  (`PLAN_IMPORT_IP_LIMIT`, default 10, and `PLAN_IMPORT_DAILY_LIMIT`, default 1,000).
+  `plan_requests` keeps a keyed hash of the IP, never the IP itself.
+- **Testing:** `scripts/csv-import-lab/` times steps 1 and 2 on sample exports in the browser.
+  `npm run plan:eval` sends the 11 test plans in `scripts/plan-import-eval/fixtures` (spreadsheet
+  rows as text, notes, spoken; German, English, Portuguese, Spanish, French, Korean) to the
+  functions and scores what they read against `cases.json`, with the time to the first exercise
+  and to the whole plan; `npm run plan:eval -- --dir <folder>` reads your own CSV and text files.
+  Set `PLAN_IMPORT_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
+  `npm run functions:test` runs the checks of `read-history`'s answers.
 
 ## Voice input
 
@@ -369,7 +388,7 @@ added weight or less assistance).
 
 ## Data export
 
-Settings → "Daten" holds "Importieren" (not built yet, the card does nothing) and "Exportieren": a
+Settings → "Daten" holds "Importieren" (the workout import, see above) and "Exportieren": a
 CSV file made on the device, handed to the system's share sheet and removed from the cache afterwards.
 It works offline, but waits for the first sync, since the device may not hold the whole history before.
 
@@ -564,7 +583,8 @@ properties are typed in `src/shared/lib/posthog.ts` (`AnalyticsEvents`), named
 `category:object_action`:
 
 - **Onboarding and plans:** `onboarding:flow_start`, `plan:generate_complete` / `_fail`,
-  `plan_import:read_complete` / `_fail`.
+  `plan_import:read_complete` / `_fail`, `workout_import:read_complete` / `_fail` (counts and
+  times, never names or values) and `workout_import:save_complete`.
 - **Money:** `paywall:view` (with `placement`), `paywall:purchase_complete` / `_fail`,
   `paywall:restore_complete`.
 - **Account:** `account:sign_up_complete` / `_fail` (with the reason) for new accounts,

@@ -117,7 +117,7 @@ async function networkHash(req: Request) {
  */
 export async function takePlanRequest(
   req: Request,
-  kind: 'import' | 'generate' | 'voice' | 'transcribe',
+  kind: 'import' | 'generate' | 'voice' | 'transcribe' | 'history',
   limits: { perNetwork: number; perDay: number },
   userId?: string,
 ): Promise<{ giveBack: () => PromiseLike<unknown> } | { refused: Response }> {

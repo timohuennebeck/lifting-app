@@ -35,9 +35,12 @@
     "routine": "Workout",
     "routineHint": "Set exercises and sets",
     "plan": "Plan",
-    "planHint": "Have one made, import it or build it yourself",
+    "planHint": "Import it or have one made",
     "createRoutine": "Create workout",
     "createPlan": "Create plan",
+    "ownPlan": "Your own plan",
+    "ownPlanHint": "Set the days and exercises yourself",
+    "createOwnPlan": "Build plan yourself",
     "emptyWorkoutName": "Workout",
     "untitledRoutine": "Untitled workout"
   },

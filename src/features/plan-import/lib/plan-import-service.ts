@@ -1,6 +1,3 @@
-import { File } from 'expo-file-system';
-import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
-
 import type { PlanAnswers } from '@/features/plan-create/lib/plan-answers';
 import { postFunction, refusalOf } from '@/shared/data/edge-functions';
 import type { CustomExercise } from '@/shared/data/exercises';
@@ -8,30 +5,11 @@ import { clampSessions, type PlanDraft, type RoutineDraft } from '@/shared/data/
 import type { ExerciseDraft } from '@/shared/data/routines';
 import { readServerEvents } from '@/shared/lib/server-events';
 
-export interface ImportPhoto {
-  uri: string;
-  width: number;
-  height: number;
-  /** Taken with the import camera: framed as its full-screen preview showed it. */
-  fromCamera?: boolean;
-}
-
-export interface ImportFile {
-  uri: string;
-  name: string;
-  size: number | null;
-  mimeType: string | null;
-}
-
 export type ImportSource =
-  | { kind: 'photos'; photos: ImportPhoto[] }
-  /** `sheets`: of a workbook, the ones to read (picked by the user); all when left out. */
-  | { kind: 'file'; file: ImportFile; sheets?: string[] }
+  /** A plan in a workout file the import read: its rows as text (`name`: the file's). */
+  | { kind: 'text'; name: string; text: string }
   /** Not read but made: the AI plan from the onboarding answers (generate-plan). */
   | { kind: 'answers'; answers: PlanAnswers };
-
-/** What the plan functions read the plan from. */
-type ReadSource = Exclude<ImportSource, { kind: 'answers' }>;
 
 export interface ImportedExercise extends ExerciseDraft {
   /** Stays with the exercise while it is edited or dragged to another place. */
@@ -91,50 +69,6 @@ const SERVER_ERRORS: Record<string, ImportFailure> = {
   too_large: 'tooLarge',
 };
 
-/** Photos per import; the read-plan function accepts no more. */
-export const MAX_PHOTOS = 10;
-
-/** Steps in the "Import plan" branch, for the step counter. */
-export const IMPORT_STEPS = 3;
-
-/** Longest side photos are shrunk to: plenty for handwriting, small enough to send quickly. */
-const MAX_SIDE = 2000;
-
-/** The image as a JPEG in base64, shrunk to MAX_SIDE (also turns HEIC into something readable). */
-async function jpegBase64(uri: string) {
-  const context = ImageManipulator.manipulate(uri);
-  const original = await context.renderAsync();
-  const { width, height } = original;
-  original.release();
-  if (Math.max(width, height) > MAX_SIDE) {
-    context.resize(width >= height ? { width: MAX_SIDE } : { height: MAX_SIDE });
-  }
-  const image = await context.renderAsync();
-  try {
-    const saved = await image.saveAsync({ compress: 0.75, format: SaveFormat.JPEG, base64: true });
-    return saved.base64 ?? '';
-  } finally {
-    image.release();
-    context.release();
-  }
-}
-
-async function requestBody(source: ReadSource) {
-  if (source.kind === 'photos') {
-    // One at a time: a full-size camera photo takes tens of MB while it is decoded.
-    const photos: string[] = [];
-    for (const p of source.photos) photos.push(await jpegBase64(p.uri));
-    return { photos };
-  }
-  const { file, sheets } = source;
-  // Some file providers leave the type out; the name still tells an image.
-  if (file.mimeType?.startsWith('image/') || /\.(jpe?g|png|heic|heif|webp)$/i.test(file.name)) {
-    return { file: { name: file.name, mimeType: 'image/jpeg', data: await jpegBase64(file.uri) } };
-  }
-  const data = await new File(file.uri).base64();
-  return { file: { name: file.name, mimeType: file.mimeType ?? '', data, sheets } };
-}
-
 /**
  * Throws once the import was stopped. Not `signal.throwIfAborted()`: React Native's AbortSignal
  * (the abort-controller polyfill) doesn't have it.
@@ -155,8 +89,8 @@ export type PlanEvent =
     };
 
 /**
- * Gets a training plan from the Edge Functions, which stream it: reads it from photos or a file
- * (read-plan) or makes it from the onboarding answers (generate-plan). `onEvent` gets the
+ * Gets a training plan from the Edge Functions, which stream it: reads it from a workout file's
+ * rows (read-plan) or makes it from the onboarding answers (generate-plan). `onEvent` gets the
  * plan's name, then each routine and exercise as soon as it is there (an exercise belongs to the
  * routine before it). Resolves once the plan is complete. Throws an ImportError with the reason when
  * there is no plan to show, also when the stream breaks off; once `signal` stops it, the error
@@ -169,8 +103,9 @@ export async function streamPlan(
 ) {
   const fn = source.kind === 'answers' ? 'generate-plan' : 'read-plan';
   const request =
-    source.kind === 'answers' ? { answers: source.answers } : await requestBody(source);
-  stopIfAborted(signal);
+    source.kind === 'answers'
+      ? { answers: source.answers }
+      : { name: source.name, text: source.text };
   const response = await postFunction(
     fn,
     { ...request, language },

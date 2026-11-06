@@ -35,9 +35,12 @@
     "routine": "Séance",
     "routineHint": "Définis les exercices et les séries",
     "plan": "Programme",
-    "planHint": "Fais-en créer un, importe-le ou crée-le toi-même",
+    "planHint": "Importe-le ou fais-en créer un",
     "createRoutine": "Créer une séance",
     "createPlan": "Créer un programme",
+    "ownPlan": "Ton propre programme",
+    "ownPlanHint": "Définis toi-même les jours et les exercices",
+    "createOwnPlan": "Créer le programme toi-même",
     "emptyWorkoutName": "Séance",
     "untitledRoutine": "Séance sans titre"
   },

@@ -1,115 +1,17 @@
 {
-  "index": {
-    "title": "IMPORTER\nTON PROGRAMME",
-    "subtitle": "L'écriture manuscrite fonctionne aussi. Si on n'arrive pas à lire quelque chose avec certitude, on te le signale pour que tu vérifies.",
-    "photo": {
-      "title": "Prendre une photo",
-      "description": "Papier, tableau blanc ou écran"
-    },
-    "file": {
-      "title": "Importer un fichier",
-      "description": "PDF, Excel, CSV ou capture d'écran"
-    },
-    "noPlan": "Pas de programme sous la main ?",
-    "createOwn": "Le créer moi-même",
-    "ownPlan": "Mon programme"
-  },
-  "read": "Lire le programme",
-  "options": {
-    "title": "ÇA TE VA ?",
-    "swap": "Remplacer",
-    "preview": "Aperçu du fichier"
-  },
-  "sheets": {
-    "title": "QUELLES FEUILLES ?",
-    "subtitle": "{{name}} compte {{count}} feuilles. Choisis ce qui fait partie de ton programme.",
-    "recommended": "Recommandée",
-    "routines_one": "{{count}} séance",
-    "routines_other": "{{count}} séances",
-    "exercises_one": "{{count}} exercice",
-    "exercises_other": "{{count}} exercices",
-    "log_one": "{{count}} entrée avec des poids",
-    "log_other": "{{count}} entrées avec des poids",
-    "other": "Aucun exercice trouvé",
-    "text": "Texte seul",
-    "empty": "Vide",
-    "cta_one": "Lire {{count}} feuille",
-    "cta_other": "Lire {{count}} feuilles",
-    "none": "Choisis une feuille"
-  },
-  "camera": {
-    "page": "Page {{count}}",
-    "hint": "Photographie page par page, puis touche Terminé",
-    "torch": "Flash",
-    "shutter": "Prendre la photo",
-    "library": "Choisir dans tes photos",
-    "retake": "Reprendre la page {{count}}",
-    "full": "Jusqu'à {{count}} pages par import",
-    "permission": {
-      "title": "ACCÈS\nÀ L'APPAREIL PHOTO",
-      "body": "Pour photographier ton programme, Loqqa a besoin d'accéder à ton appareil photo. Les photos restent sur ton téléphone jusqu'à ce que tu les importes.",
-      "allow": "Autoriser l'appareil photo"
-    },
-    "access": "Pour que tu puisses photographier ton programme. Les photos restent sur ton téléphone jusqu'à ce que tu les importes."
-  },
-  "review": {
-    "retake": "Reprendre la photo",
-    "addPage": "Ajouter une page",
-    "remove": "Supprimer la page {{count}}"
-  },
-  "reading": {
-    "stages": [
-      "Lecture de l'écriture manuscrite…",
-      "Détection des exercices…",
-      "Mise en ordre des séances…",
-      "Application des séries et des répétitions…"
-    ],
-    "errors": {
-      "failed": {
-        "title": "Programme illisible",
-        "message": "Réessaie. Une photo plus nette ou un autre fichier peut aider."
-      },
-      "offline": {
-        "title": "Pas de connexion",
-        "message": "Pour lire ton programme, il faut une connexion internet. Vérifie ta connexion et réessaie."
-      },
-      "limit": {
-        "title": "Limite quotidienne atteinte",
-        "message": "Tu pourras réimporter demain. D'ici là, tu peux créer ton programme toi-même."
-      },
-      "notAPlan": {
-        "title": "Aucun programme d'entraînement trouvé",
-        "message": "Essaie une autre photo ou un autre fichier."
-      },
-      "tooLarge": {
-        "title": "Fichier trop volumineux",
-        "message": "Utilise un fichier de 15 Mo maximum."
-      }
-    }
-  },
   "confirm": {
     "planName": "Nom du programme",
+    "ownPlan": "Mon programme",
     "readAs": "Lu comme « {{raw}} »",
     "correct": "C'est bon",
     "add": "Ajouter un exercice",
     "swap": "Remplacer l'exercice",
     "cta": "Utiliser ce programme",
-    "reading": "Lecture de ton programme…",
     "check_one": "Vérifier {{count}} élément",
     "check_other": "Vérifier {{count}} éléments",
     "empty": "Aucun exercice pour l'instant. Ajoute-en avec + ou le micro.",
     "newRoutine": "Séance {{number}}",
     "renamePlan": "Renommer le programme",
     "newExercise": "Nouveau · ajouté comme exercice perso"
-  },
-  "errors": {
-    "file": {
-      "title": "Impossible d'ouvrir le fichier",
-      "message": "Sélectionne-le à nouveau ou choisis un autre fichier."
-    },
-    "camera": {
-      "title": "Photo non prise",
-      "message": "Réessaie."
-    }
   }
 }

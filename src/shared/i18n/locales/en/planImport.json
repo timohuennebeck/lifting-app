@@ -1,115 +1,17 @@
 {
-  "index": {
-    "title": "IMPORT PLAN",
-    "subtitle": "Handwriting works too. If we can't read something for sure, we'll flag it for you to check.",
-    "photo": {
-      "title": "Take a photo",
-      "description": "Paper, whiteboard or screen"
-    },
-    "file": {
-      "title": "Upload a file",
-      "description": "PDF, Excel, CSV or screenshot"
-    },
-    "noPlan": "No plan at hand?",
-    "createOwn": "Create it myself",
-    "ownPlan": "My plan"
-  },
-  "read": "Read plan",
-  "options": {
-    "title": "LOOKS GOOD?",
-    "swap": "Swap",
-    "preview": "File preview"
-  },
-  "sheets": {
-    "title": "WHICH SHEETS?",
-    "subtitle": "{{name}} has {{count}} sheets. Choose what belongs to your plan.",
-    "recommended": "Recommended",
-    "routines_one": "{{count}} workout",
-    "routines_other": "{{count}} workouts",
-    "exercises_one": "{{count}} exercise",
-    "exercises_other": "{{count}} exercises",
-    "log_one": "{{count}} entry with weights",
-    "log_other": "{{count}} entries with weights",
-    "other": "No exercises found",
-    "text": "Text only",
-    "empty": "Empty",
-    "cta_one": "Read {{count}} sheet",
-    "cta_other": "Read {{count}} sheets",
-    "none": "Choose a sheet"
-  },
-  "camera": {
-    "page": "Page {{count}}",
-    "hint": "Photograph page by page, then tap Done",
-    "torch": "Flash",
-    "shutter": "Take photo",
-    "library": "Choose from library",
-    "retake": "Retake page {{count}}",
-    "full": "Up to {{count}} pages per import",
-    "permission": {
-      "title": "CAMERA ACCESS",
-      "body": "To photograph your plan, Loqqa needs access to your camera. Photos stay on your device until you import them.",
-      "allow": "Allow camera"
-    },
-    "access": "So you can take photos of your plan. They stay on your device until you import them."
-  },
-  "review": {
-    "retake": "Retake photo",
-    "addPage": "Add page",
-    "remove": "Remove page {{count}}"
-  },
-  "reading": {
-    "stages": [
-      "Reading handwriting …",
-      "Detecting exercises …",
-      "Putting workouts in order …",
-      "Applying sets and reps …"
-    ],
-    "errors": {
-      "failed": {
-        "title": "Couldn't read the plan",
-        "message": "Please try again. A sharper photo or a different file can help."
-      },
-      "offline": {
-        "title": "No connection",
-        "message": "Reading your plan needs the internet. Check your connection and try again."
-      },
-      "limit": {
-        "title": "Daily limit reached",
-        "message": "You can import again tomorrow. Until then, you can build your plan yourself."
-      },
-      "notAPlan": {
-        "title": "No training plan found",
-        "message": "Try a different photo or file."
-      },
-      "tooLarge": {
-        "title": "File too large",
-        "message": "Please use a file up to 15 MB."
-      }
-    }
-  },
   "confirm": {
     "planName": "Plan name",
+    "ownPlan": "My plan",
     "readAs": "Read as “{{raw}}”",
     "correct": "Correct",
     "add": "Add exercise",
     "swap": "Swap exercise",
     "cta": "Use this plan",
-    "reading": "Reading your plan …",
     "check_one": "Check {{count}} item",
     "check_other": "Check {{count}} items",
     "empty": "No exercises yet. Add some with + or the microphone.",
     "newRoutine": "Workout {{number}}",
     "renamePlan": "Rename plan",
     "newExercise": "New · added as your own exercise"
-  },
-  "errors": {
-    "file": {
-      "title": "Couldn't open the file",
-      "message": "Pick it again or choose a different file."
-    },
-    "camera": {
-      "title": "Photo not taken",
-      "message": "Please try again."
-    }
   }
 }

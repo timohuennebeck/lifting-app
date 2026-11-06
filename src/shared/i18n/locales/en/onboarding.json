@@ -8,7 +8,7 @@
     "signIn": "Sign in",
     "language": "Language",
     "features": {
-      "import": "Import a plan from a photo",
+      "import": "Import your training",
       "create": "Create a plan",
       "progress": "Track your progress"
     }
@@ -66,12 +66,6 @@
     "intermediateHint": "6 months to 2 years",
     "advanced": "Advanced",
     "advancedHint": "Over 2 years, solid technique"
-  },
-  "hasPlan": {
-    "title": "ARE YOU FOLLOWING\nA PLAN RIGHT NOW?",
-    "formats": "Photo, PDF or spreadsheet",
-    "yes": "I have one",
-    "no": "Create a plan for me"
   },
   "promise": {
     "title": "{{name}}, PROMISE\nYOURSELF.",

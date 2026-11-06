@@ -10,20 +10,13 @@ import {
   type ImportedPlan,
   ImportError,
   type ImportFailure,
-  type ImportFile,
-  type ImportPhoto,
   type ImportSource,
-  MAX_PHOTOS,
   type PlanEvent,
   streamPlan,
 } from '../lib/plan-import-service';
-import type { SheetSummary } from '../lib/sheet-summary';
-import { loadSheets } from '../lib/sheets';
 
 interface ImportState {
   source: ImportSource | null;
-  /** The file's sheets, offered to pick from once it is to be read (see `loadSheets`). */
-  workbook: SheetSummary[] | null;
   /** Detected plan being reviewed on the confirm screen; it fills in while `reading`. */
   plan: ImportedPlan | null;
   /** The saved plan `plan` is, when the editor changes it ("Bearbeiten") instead of making one. */
@@ -40,17 +33,10 @@ interface ImportState {
   readingRoutine: number;
   /** The confirm screen shows the routine being read until the user picks one. */
   following: boolean;
-  setFile: (file: ImportFile) => void;
+  /** The plan is to be read from a workout file's rows (see the workout import). */
+  setText: (name: string, text: string) => void;
   /** The plan is to be made from these answers (by the AI), not read. */
   setAnswers: (answers: PlanAnswers) => void;
-  offerSheets: (workbook: SheetSummary[]) => void;
-  /** Of the file's sheets, the ones to read. */
-  pickSheets: (sheets: string[]) => void;
-  addPhotos: (photos: ImportPhoto[]) => void;
-  replacePhoto: (index: number, photo: ImportPhoto) => void;
-  removePhoto: (index: number) => void;
-  /** Drops photos beyond `count`, e.g. when the camera is closed without finishing. */
-  truncatePhotos: (count: number) => void;
   /** Starts reading the plan from `source`, replacing the plan; returns the run. */
   start: (language: string) => number;
   /** Stops that run if it is still going (the user left it). */
@@ -68,13 +54,8 @@ interface ImportState {
   reset: () => void;
 }
 
-const NO_PHOTOS: ImportPhoto[] = [];
-const photosOf = (source: ImportSource | null) =>
-  source?.kind === 'photos' ? source.photos : NO_PHOTOS;
-
 const EMPTY = {
   source: null,
-  workbook: null,
   plan: null,
   editing: null,
   routineIndex: 0,
@@ -100,7 +81,6 @@ function trackRead(source: ImportSource, plan: ImportedPlan | null, durationMs: 
     return;
   }
   track('plan_import:read_complete', {
-    source: source.kind,
     exercise_count: routines.reduce((n, r) => n + r.exercises.length, 0),
     unmatched_count: plan?.newExercises.length ?? 0,
     duration_ms: durationMs,
@@ -141,35 +121,8 @@ function receive(s: ImportState, event: PlanEvent): Partial<ImportState> {
 export const useImportStore = create<ImportState>()((set, get) => ({
   ...EMPTY,
   run: 0,
-  setFile: (file) => {
-    set({ source: { kind: 'file', file }, workbook: null });
-    // Read ahead: its sheets are ready by the time the user goes on.
-    void loadSheets(file);
-  },
-  offerSheets: (workbook) => set({ workbook }),
-  setAnswers: (answers) => set({ source: { kind: 'answers', answers }, workbook: null }),
-  pickSheets: (sheets) =>
-    set((s) => (s.source?.kind === 'file' ? { source: { ...s.source, sheets } } : {})),
-  addPhotos: (photos) =>
-    set((s) => ({
-      source: { kind: 'photos', photos: [...photosOf(s.source), ...photos].slice(0, MAX_PHOTOS) },
-    })),
-  replacePhoto: (index, photo) =>
-    set((s) => ({
-      source: {
-        kind: 'photos',
-        photos: photosOf(s.source).map((p, i) => (i === index ? photo : p)),
-      },
-    })),
-  truncatePhotos: (count) =>
-    set((s) => {
-      const kept = photosOf(s.source).slice(0, count);
-      return { source: kept.length ? { kind: 'photos', photos: kept } : null };
-    }),
-  removePhoto: (index) =>
-    set((s) => ({
-      source: { kind: 'photos', photos: photosOf(s.source).filter((_, i) => i !== index) },
-    })),
+  setText: (name, text) => set({ source: { kind: 'text', name, text } }),
+  setAnswers: (answers) => set({ source: { kind: 'answers', answers } }),
   start: (language) => {
     running?.abort();
     const controller = new AbortController();
@@ -208,7 +161,7 @@ export const useImportStore = create<ImportState>()((set, get) => ({
               : `client_${error instanceof Error ? error.name : 'unknown'}`,
         };
         if (source.kind === 'answers') track('plan:generate_fail', failure);
-        else track('plan_import:read_fail', { ...failure, source: source.kind });
+        else track('plan_import:read_fail', failure);
       });
     return run;
   },
@@ -252,5 +205,3 @@ export const useImportStore = create<ImportState>()((set, get) => ({
     set(EMPTY);
   },
 }));
-
-export const usePhotos = () => useImportStore((s) => photosOf(s.source));

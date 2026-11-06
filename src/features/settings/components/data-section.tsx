@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
+import { useCurrentPlan } from '@/shared/data/plans';
 import { colors } from '@/shared/lib/theme';
 import { Icon, type IconName } from '@/shared/ui/icon';
 
@@ -9,9 +11,13 @@ import { ExportSheet } from './export-sheet';
 import { PreferenceCard } from './preference-card';
 import { SettingsOverline } from './settings-section';
 
-/** Import and export of the user's data. Importing isn't built yet: its card does nothing. */
+/**
+ * Import and export of the user's data. Importing opens the plan flow's import: a workout app's
+ * export or a spreadsheet, with the history and maybe a plan in it.
+ */
 export function DataSection() {
   const { t } = useTranslation('profile');
+  const { plan, profile } = useCurrentPlan();
   const [exporting, setExporting] = useState(false);
   return (
     <View className="gap-2.5 px-4 pt-7">
@@ -21,7 +27,7 @@ export function DataSection() {
           label={t('settings.data.import')}
           value={t('settings.data.importFormats')}
           icon={<CardIcon name="upload" />}
-          onPress={() => {}}
+          onPress={() => openPlanFlow(profile, plan?.sessionsPerWeek)}
         />
         <PreferenceCard
           label={t('settings.data.export')}

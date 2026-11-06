@@ -1,7 +1,7 @@
 {
   "ios": {
-    "NSCameraUsageDescription": "Loqqa usa la cámara para fotografiar tu plan de entrenamiento y tomar las fotos de tu control corporal y tu foto de perfil.",
-    "NSPhotoLibraryUsageDescription": "Loqqa te permite importar un plan de entrenamiento desde tus fotos, adjuntar capturas de pantalla a los tickets de soporte y elegir una foto de perfil.",
+    "NSCameraUsageDescription": "Loqqa usa la cámara para tomar las fotos de tu control corporal y tu foto de perfil.",
+    "NSPhotoLibraryUsageDescription": "Loqqa te permite adjuntar capturas de pantalla a los tickets de soporte y elegir una foto de perfil.",
     "NSMicrophoneUsageDescription": "Loqqa usa el micrófono para que puedas dictar tu plan de entrenamiento, tus preguntas a Kai y tus mensajes a soporte en vez de escribirlos.",
     "NSSpeechRecognitionUsageDescription": "Loqqa convierte en texto el plan de entrenamiento que dictas, para crear tu plan a partir de él."
   }

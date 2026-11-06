@@ -8,7 +8,7 @@
     "signIn": "Anmelden",
     "language": "Sprache",
     "features": {
-      "import": "Plan per Foto importieren",
+      "import": "Training importieren",
       "create": "Plan erstellen",
       "progress": "Fortschritt verfolgen"
     }
@@ -66,12 +66,6 @@
     "intermediateHint": "6 Monate bis 2 Jahre",
     "advanced": "Erfahren",
     "advancedHint": "Über 2 Jahre, sichere Technik"
-  },
-  "hasPlan": {
-    "title": "FOLGST DU AKTUELL\nEINEM PLAN?",
-    "formats": "Foto, PDF oder Tabelle",
-    "yes": "Ich habe einen",
-    "no": "Erstell mir einen Plan"
   },
   "promise": {
     "title": "{{name}}, VERSPRICH\nES DIR SELBST.",

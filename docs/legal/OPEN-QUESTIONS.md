@@ -15,6 +15,10 @@ for. NB 1.2 also names Korean among its languages. Spanish and French come with 
 NB 1.3 only adds them to its languages. Version 1.4 of both (5 November 2026, 18:00 UTC,
 `20261106100000_legal_documents_v1_4`) describes the Sätze tab, the sets per muscle over a chosen
 range, in place of the removed muscle levels (DS §4.3, §4.5 and §15, NB §4), without re-acceptance.
+Version 1.5 of both (`20261107100100_legal_documents_v1_5`) replaces the plan import by photo or
+file with the workout import from another app's export or a spreadsheet: what the app reads on the
+device, which extracts go to OpenAI, that the imported history is saved with the account (DS §3,
+§4.5, §4.7, §5, §6, §7, §8, §4.14; NB §4), without re-acceptance.
 German is the binding version; `en`, `pt-PT`, `pt-BR`, `ko`, `es` and `fr` are translations.
 
 The texts are not legal advice. A lawyer should review them, above all the health data, body
