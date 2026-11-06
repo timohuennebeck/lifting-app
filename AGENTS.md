@@ -69,6 +69,7 @@ npm run lint
 npm run -s compiler:check   # must list no skipped components or hooks
 npm run i18n:check
 npx prettier --check <changed files>
+npm run suggestions:eval     # after changing the set suggestion rules: no hard rule may break
 ```
 
 ## Keep

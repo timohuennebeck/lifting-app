@@ -108,6 +108,7 @@
     "plan:eval": "node --env-file=.env.local scripts/plan-import-eval/run.mjs",
     "plan:generate-eval": "node --env-file=.env.local scripts/plan-generate-eval/run.mjs",
     "plan:generate-compare": "node scripts/plan-generate-eval/compare.mjs",
+    "suggestions:eval": "node scripts/suggestions-eval/run.mjs",
     "coach:eval": "DENO_NO_PACKAGE_JSON=1 deno run --allow-env --allow-net --allow-read --allow-write --no-lock --node-modules-dir=none --env-file=supabase/functions/.env supabase/functions/_shared/coach/eval/run.ts",
     "functions:test": "DENO_NO_PACKAGE_JSON=1 deno test --allow-env --no-lock --node-modules-dir=none supabase/functions/",
     "powersync:up": "docker compose -f powersync/docker-compose.yml up -d",

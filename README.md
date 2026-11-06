@@ -102,6 +102,8 @@ AI agents: see `AGENTS.md`.
 - `npm run plan:eval` and `npm run plan:generate-eval`: plan import and plan generation tests (see
   below)
 - `npm run coach:eval`: tests the coach's answers (see Coach)
+- `npm run suggestions:eval`: the live workout's suggestions on simulated lifters (see Set
+  suggestions)
 - `npm run apple:ids`: App IDs in the Apple developer account (see Sign in with Apple)
 - `node scripts/generate-muscle-paths.mjs`: rebuilds `src/shared/ui/muscle-map/body-paths.ts` from
   `scripts/muscle-art`
@@ -326,6 +328,39 @@ What the user trains from, and what they logged:
   RIR (never below 0); the deload keeps the first half of the sets (rounded up) at RIR 4. Sets
   without RIR keep none. AI plans run in blocks of 4 + 1 weeks; imported plans without blocks, with
   a weekly goal of their routine count.
+
+## Set suggestions
+
+The live workout's "Vorschlag" column: `src/features/workout/lib/suggestion-rules.ts` for weighted
+exercises, `rep-progression.ts` for bodyweight, assisted and timed ones (reps first, then more
+added weight or less assistance).
+
+- **Strength:** one estimate per exercise and rep range from the working sets of the last three
+  workouts (within 10 % of the heaviest; warm-ups and ramps don't count): an entered RIR plus 0.5
+  ("5+" as 6), a miss as 0, else the target. Each set's weight and reps follow at its target RIR,
+  about a rep fewer per earlier set (fatigue, learned from the user's sets with known RIR).
+- **Between workouts:** straight sets share one weight. It stays while the first set is in the
+  range; past the top the lightest heavier weight back in it (the middle of the range when
+  clearly too light), below it the heaviest that reaches the bottom. A workout is expected to add
+  a rep (a quarter with RIR entered), two (then three) after workouts that only showed "done"
+  and no miss. One bad day
+  (7 % weaker) is ignored; breaks lower the weight.
+- **A miss** is fewer reps than suggested at that weight or heavier, unless 2+ reps in reserve
+  were entered. Next time: never heavier than the weight missed at, no more reps than it managed,
+  at most one fewer.
+- **During the workout:** a set within a rep of its suggestion leaves the plan; otherwise the
+  open sets of its range follow from it ("5+": at least 10 % heavier). The first time an exercise
+  is done, suggestions start once a set shows something (RIR entered, or reps outside the range).
+- **Weight steps:** the equipment's usual one, or a coarser one once suggested weights keep being
+  lifted rounded to it (62.5 suggested, 60 or 65 lifted).
+- **`suggested_weight_kg`, `suggested_reps`, `suggested_seconds`** on `workout_entries_sets`: what
+  the set was suggested when it was first logged, so a miss can be told from a set done as
+  suggested.
+- **Testing:** `npm run suggestions:eval` runs the rules on simulated lifters (ten kinds, 1,000
+  each, 30 workouts) and scores every suggested set against the lifter's true strength (the
+  target RIR ±1), next to the best possible without knowing the day's form. Every suggestion is
+  checked against hard rules (on the weight step, no more reps than a miss managed, at most
+  +25 % or −20 % a workout, …); the script fails when one breaks. Run it after changing the rules.
 
 ## Data export
 
