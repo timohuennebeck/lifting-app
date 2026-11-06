@@ -1,8 +1,8 @@
 # Conditions d'utilisation
 
-Version : 1.4
+Version : 1.5
 
-Dernière mise à jour : 5 novembre 2026
+Dernière mise à jour : 6 novembre 2026
 
 Ceci est une traduction. La version allemande fait foi.
 
@@ -37,7 +37,7 @@ Si tu n'es pas encore majeur, tu as besoin du consentement de tes parents ou de 
 Loqqa t'accompagne dans ta musculation. Cela comprend notamment :
 
 - un programme d'entraînement qu'un modèle d'IA crée à partir de tes informations, par exemple ton objectif, ton expérience, ton équipement et le nombre de séances par semaine
-- l'importation d'un programme existant par photo ou par fichier
+- l'importation de ton programme d'entraînement et de tes séances passées à partir d'un fichier, par exemple l'export d'une autre application
 - l'enregistrement de tes séances avec les charges, les répétitions et les durées, ton historique, tes records, tes séries par muscle sur la période de ton choix et des suggestions pour tes séries
 - l'enregistrement de ton poids corporel
 - le bilan corporel avec des photos et des valeurs estimées (à partir de 18 ans)
@@ -45,9 +45,9 @@ Loqqa t'accompagne dans ta musculation. Cela comprend notamment :
 - un catalogue d'exercices avec des instructions, des images et des vidéos
 - une discussion d'assistance pour les signalements de bugs et les idées
 
-Tu peux effectuer la configuration, y compris la création ou l'importation d'un programme, gratuitement. Ensuite, l'utilisation de Loqqa nécessite un abonnement (Loqqa Pro, section 6). Sans abonnement actif, ton compte et tes données sont conservés et tu peux encore utiliser les réglages, l'assistance et la suppression du compte ; les autres fonctionnalités sont alors verrouillées.
+Tu peux effectuer la configuration, y compris la création d'un programme ou l'importation, gratuitement. Ensuite, l'utilisation de Loqqa nécessite un abonnement (Loqqa Pro, section 6). Sans abonnement actif, ton compte et tes données sont conservés et tu peux encore utiliser les réglages, l'assistance et la suppression du compte ; les autres fonctionnalités sont alors verrouillées.
 
-La reconnaissance lors de l'importation d'un programme peut comporter des erreurs. Vérifie donc le programme reconnu avant de l'accepter ; l'application signale les passages incertains pour que tu les contrôles. Un programme que l'application crée pour toi est lui aussi une suggestion : relis-le et ajuste-le si nécessaire. Les réponses du coach peuvent elles aussi être erronées, par exemple si le modèle comprend mal une question. Afin que le coach ne soit pas utilisé de façon abusive, tu peux lui poser au maximum 20 questions en 24 heures et 150 questions en 30 jours. Pour la création de programme, l'importation de programme, le bilan corporel et le coach, l'application a besoin d'une connexion internet.
+La reconnaissance lors de l'importation peut comporter des erreurs. Vérifie donc le programme reconnu et l'association de tes exercices avant de les accepter ; l'application te soumet pour vérification les exercices dont la reconnaissance est incertaine. Un programme que l'application crée pour toi est lui aussi une suggestion : relis-le et ajuste-le si nécessaire. Les réponses du coach peuvent elles aussi être erronées, par exemple si le modèle comprend mal une question. Afin que le coach ne soit pas utilisé de façon abusive, tu peux lui poser au maximum 20 questions en 24 heures et 150 questions en 30 jours. Pour la création de programme, l'importation, le bilan corporel et le coach, l'application a besoin d'une connexion internet.
 
 De nombreuses fonctionnalités de Loqqa fonctionnent aussi sans connexion internet. Tes données sont synchronisées dès que tu es en ligne. Les modifications qui n'ont pas encore été synchronisées au moment où tu te déconnectes sont perdues ; l'application t'en avertit au préalable.
 

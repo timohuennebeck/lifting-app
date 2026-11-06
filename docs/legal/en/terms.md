@@ -1,8 +1,8 @@
 # Terms of Use
 
-Version: 1.4
+Version: 1.5
 
-Last updated: 5 November 2026
+Last updated: 6 November 2026
 
 This is a translation. The German version is legally binding.
 
@@ -37,7 +37,7 @@ If you are not yet of legal age, you need the consent of your parents or legal g
 Loqqa supports you with strength training. This includes in particular:
 
 - a training plan that an AI model creates from your information, for example from goal, experience, equipment and workouts per week
-- importing an existing plan via photo or file
+- importing your training plan and your past workouts from a file, for example the export from another app
 - logging your workouts with weights, reps and times, your history, records, your sets per muscle over a period you choose and suggestions for your sets
 - recording your body weight
 - the body check with photos and estimated values (from age 18)
@@ -45,9 +45,9 @@ Loqqa supports you with strength training. This includes in particular:
 - an exercise catalog with instructions, images and videos
 - a support chat for bug reports and ideas
 
-You can go through setup, including plan creation or plan import, free of charge. After that, using Loqqa requires a subscription (Loqqa Pro, section 6). Without an active subscription, your account and your data are kept and you can still use the settings, support and account deletion; the other features are then locked.
+You can go through setup, including plan creation or import, free of charge. After that, using Loqqa requires a subscription (Loqqa Pro, section 6). Without an active subscription, your account and your data are kept and you can still use the settings, support and account deletion; the other features are then locked.
 
-Recognition during plan import can make mistakes. So check the recognized plan before you accept it; the app marks uncertain parts for review. A plan the app creates for you is also a suggestion: look it over and adjust it if needed. The coach’s answers can also be wrong, for example if the model misunderstands a question. So that the coach is not misused, you can ask it at most 20 questions in 24 hours and 150 questions in 30 days. For plan creation, plan import, the body check and the coach, the app needs an internet connection.
+Recognition during import can make mistakes. So check the recognized plan and the matching of your exercises before you accept them; the app asks you to review exercises for which the recognition is uncertain. A plan the app creates for you is also a suggestion: look it over and adjust it if needed. The coach’s answers can also be wrong, for example if the model misunderstands a question. So that the coach is not misused, you can ask it at most 20 questions in 24 hours and 150 questions in 30 days. For plan creation, import, the body check and the coach, the app needs an internet connection.
 
 Many of Loqqa’s features also work without an internet connection. Your data is synced as soon as you are online. Changes that have not yet been synced when you sign out are lost; the app warns you beforehand.
 

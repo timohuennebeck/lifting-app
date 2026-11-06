@@ -1,124 +1,124 @@
 {
   "start": {
-    "title": "BRING YOUR\nTRAINING",
-    "subtitle": "Bring over your training plan and history, and Loqqa starts with your real weights.",
-    "pick": "Choose export file",
-    "hint": "Works with Hevy, Strong and any spreadsheet\nCSV or Excel",
-    "more": "and many more",
-    "cta": "Choose file",
-    "fresh": "I'm starting fresh"
+    "title": "TRAGA SEU\nTREINO",
+    "subtitle": "Traga seu plano e histórico de treino, e o Loqqa começa com suas cargas reais.",
+    "pick": "Escolher arquivo exportado",
+    "hint": "Funciona com Hevy, Strong e qualquer planilha\nCSV ou Excel",
+    "more": "e muitos outros",
+    "cta": "Escolher arquivo",
+    "fresh": "Vou começar do zero"
   },
   "file": {
-    "title": "IS THIS THE\nRIGHT FILE?",
-    "sheets_one": "{{size}} · {{count}} sheet",
-    "sheets_other": "{{size}} · {{count}} sheets",
-    "replace": "Replace",
-    "read": "Start sorting",
-    "next": "Next"
+    "title": "ESTE É O\nARQUIVO CERTO?",
+    "sheets_one": "{{size}} · {{count}} aba",
+    "sheets_other": "{{size}} · {{count}} abas",
+    "replace": "Trocar",
+    "read": "Começar a organizar",
+    "next": "Continuar"
   },
   "sheets": {
-    "title": "WHICH SHEETS\nSHALL WE READ?",
-    "subtitle_one": "{{name}} has {{count}} sheet. Choose the ones your training is in.",
-    "subtitle_other": "{{name}} has {{count}} sheets. Choose the ones your training is in.",
-    "recommended": "Recommended",
-    "log_one": "{{count}} entry · with dates",
-    "log_other": "{{count}} entries · with dates",
-    "plan_one": "{{days}} · {{count}} exercise",
-    "plan_other": "{{days}} · {{count}} exercises",
-    "days_one": "{{count}} day",
-    "days_other": "{{count}} days",
-    "exercises_one": "{{count}} exercise",
-    "exercises_other": "{{count}} exercises",
-    "other": "No training found",
-    "text": "Text only",
-    "empty": "Empty",
-    "cta_one": "Read {{count}} sheet",
-    "cta_other": "Read {{count}} sheets",
-    "none": "Choose a sheet"
+    "title": "QUAIS ABAS\nVAMOS LER?",
+    "subtitle_one": "{{name}} tem {{count}} aba. Escolha as que têm seus treinos.",
+    "subtitle_other": "{{name}} tem {{count}} abas. Escolha as que têm seus treinos.",
+    "recommended": "Recomendada",
+    "log_one": "{{count}} registro · com data",
+    "log_other": "{{count}} registros · com datas",
+    "plan_one": "{{days}} · {{count}} exercício",
+    "plan_other": "{{days}} · {{count}} exercícios",
+    "days_one": "{{count}} dia",
+    "days_other": "{{count}} dias",
+    "exercises_one": "{{count}} exercício",
+    "exercises_other": "{{count}} exercícios",
+    "other": "Nenhum treino encontrado",
+    "text": "Só texto",
+    "empty": "Vazia",
+    "cta_one": "Ler {{count}} aba",
+    "cta_other": "Ler {{count}} abas",
+    "none": "Escolha uma aba"
   },
   "reading": {
-    "understand": "Sorting training data …",
-    "exercises": "Matching exercises …",
-    "plan": "Reading your plan …",
-    "elapsed_one": "{{count}} s passed",
-    "elapsed_other": "{{count}} s passed",
-    "done": "Done"
+    "understand": "Organizando os dados de treino …",
+    "exercises": "Associando os exercícios …",
+    "plan": "Lendo seu plano …",
+    "elapsed_one": "{{count}} s decorrido",
+    "elapsed_other": "{{count}} s decorridos",
+    "done": "Pronto"
   },
   "found": {
-    "title": "HERE'S WHAT\nWE FOUND",
-    "subtitle": "Tap what you want to import.",
-    "history": "Workout history",
-    "workouts_one": "{{count}} workout, {{from}} to {{to}}",
-    "workouts_other": "{{count}} workouts, {{from}} to {{to}}",
-    "undatedOnly_one": "{{count}} workout without a date",
-    "undatedOnly_other": "{{count}} workouts without a date",
-    "plan": "Training plan",
-    "days_one": "{{count}} day: {{names}}",
-    "days_other": "{{count}} days: {{names}}",
-    "fromHistory": "From your history · {{days}}",
-    "notFound": "Not found",
-    "notInFile": "Not found in the file",
-    "cta": "Start import",
-    "saving": "Saving …"
+    "title": "VEJA O QUE\nENCONTRAMOS",
+    "subtitle": "Toque no que você quer importar.",
+    "history": "Histórico de treinos",
+    "workouts_one": "{{count}} treino, de {{from}} a {{to}}",
+    "workouts_other": "{{count}} treinos, de {{from}} a {{to}}",
+    "undatedOnly_one": "{{count}} treino sem data",
+    "undatedOnly_other": "{{count}} treinos sem data",
+    "plan": "Plano de treino",
+    "days_one": "{{count}} dia: {{names}}",
+    "days_other": "{{count}} dias: {{names}}",
+    "fromHistory": "Do seu histórico · {{days}}",
+    "notFound": "Não encontrado",
+    "notInFile": "Não encontrado no arquivo",
+    "cta": "Iniciar importação",
+    "saving": "Salvando …"
   },
   "check": {
-    "inFile_one": "IN YOUR FILE · {{count}} workout",
-    "inFile_other": "IN YOUR FILE · {{count}} workouts",
-    "inPlan": "IN YOUR PLAN",
-    "recommended": "Recommended",
-    "custom": "Create your own exercise",
-    "customHint": "“{{name}}” stays the name",
-    "next": "Next",
-    "skip": "Don't import"
+    "inFile_one": "NO SEU ARQUIVO · {{count}} treino",
+    "inFile_other": "NO SEU ARQUIVO · {{count}} treinos",
+    "inPlan": "NO SEU PLANO",
+    "recommended": "Recomendado",
+    "custom": "Criar exercício personalizado",
+    "customHint": "O nome continua “{{name}}”",
+    "next": "Continuar",
+    "skip": "Não importar"
   },
   "dates": {
-    "title": "NOT EVERY WORKOUT\nHAD A DATE",
-    "body_one": "{{count}} of {{total}} workouts has no date in your file, so we spread them out over the months in between.",
-    "body_other": "{{count}} of {{total}} workouts have no date in your file, so we spread them out over the months in between.",
-    "dated": "Dated · {{count}}",
-    "spread": "Spread · {{count}}",
-    "keep": "Looks good",
-    "drop": "Leave them out"
+    "title": "NEM TODO TREINO\nTINHA DATA",
+    "body_one": "{{count}} de {{total}} treinos não tem data no seu arquivo, então o distribuímos pelos meses intermediários.",
+    "body_other": "{{count}} de {{total}} treinos não têm data no seu arquivo, então os distribuímos pelos meses intermediários.",
+    "dated": "Com data · {{count}}",
+    "spread": "Distribuídos · {{count}}",
+    "keep": "Está bom assim",
+    "drop": "Deixar de fora"
   },
   "plan": {
-    "fromHistory": "From your history",
-    "routine": "Workout {{letter}}"
+    "fromHistory": "Do seu histórico",
+    "routine": "Treino {{letter}}"
   },
-  "defaultName": "Workout",
+  "defaultName": "Treino",
   "errors": {
     "picker": {
-      "title": "Couldn't open the file",
-      "message": "Pick it again or choose a different file."
+      "title": "Não foi possível abrir o arquivo",
+      "message": "Escolha-o novamente ou use outro arquivo."
     },
     "nothing": {
-      "title": "That's not a training history",
-      "message": "{{name}} has no workouts we can import. Choose a file with dates, exercises, sets and weights."
+      "title": "Isso não é um histórico de treinos",
+      "message": "{{name}} não tem treinos que possamos importar. Escolha um arquivo com datas, exercícios, séries e cargas."
     },
     "unreadable": {
-      "title": "Couldn't read the file",
-      "message": "Choose a CSV or Excel file, like the export of your training app."
+      "title": "Não foi possível ler o arquivo",
+      "message": "Escolha um arquivo CSV ou Excel, como a exportação do seu app de treino."
     },
-    "retry": "Choose a different file",
-    "close": "Close",
+    "retry": "Escolher outro arquivo",
+    "close": "Fechar",
     "failed": {
-      "title": "Couldn't read the file",
-      "message": "Please try again."
+      "title": "Não foi possível ler o arquivo",
+      "message": "Tente novamente."
     },
     "offline": {
-      "title": "No connection",
-      "message": "Reading your file needs the internet. Check your connection and try again."
+      "title": "Sem conexão",
+      "message": "Para ler seu arquivo, você precisa de internet. Verifique sua conexão e tente novamente."
     },
     "limit": {
-      "title": "Daily limit reached",
-      "message": "You can import again tomorrow."
+      "title": "Limite diário atingido",
+      "message": "Amanhã você pode importar de novo."
     },
     "tooLarge": {
-      "title": "File too large",
-      "message": "Choose a smaller file or fewer sheets."
+      "title": "Arquivo grande demais",
+      "message": "Escolha um arquivo menor ou menos abas."
     },
     "save": {
-      "title": "Couldn't save your history",
-      "message": "Check your connection and try again."
+      "title": "Não foi possível salvar seu histórico",
+      "message": "Verifique sua conexão e tente novamente."
     }
   }
 }

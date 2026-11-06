@@ -1,124 +1,124 @@
 {
   "start": {
-    "title": "BRING YOUR\nTRAINING",
-    "subtitle": "Bring over your training plan and history, and Loqqa starts with your real weights.",
-    "pick": "Choose export file",
-    "hint": "Works with Hevy, Strong and any spreadsheet\nCSV or Excel",
-    "more": "and many more",
-    "cta": "Choose file",
-    "fresh": "I'm starting fresh"
+    "title": "하던 운동을\n그대로 가져와요",
+    "subtitle": "운동 플랜과 기록을 가져오면 Loqqa가 실제 무게로 시작해요.",
+    "pick": "내보낸 파일 선택",
+    "hint": "Hevy, Strong 및 모든 스프레드시트와 호환돼요\nCSV 또는 Excel",
+    "more": "외 다수",
+    "cta": "파일 선택",
+    "fresh": "처음부터 시작할게요"
   },
   "file": {
-    "title": "IS THIS THE\nRIGHT FILE?",
-    "sheets_one": "{{size}} · {{count}} sheet",
-    "sheets_other": "{{size}} · {{count}} sheets",
-    "replace": "Replace",
-    "read": "Start sorting",
-    "next": "Next"
+    "title": "이 파일이\n맞나요?",
+    "sheets_one": "{{size}} · 시트 {{count}}개",
+    "sheets_other": "{{size}} · 시트 {{count}}개",
+    "replace": "바꾸기",
+    "read": "정리 시작",
+    "next": "다음"
   },
   "sheets": {
-    "title": "WHICH SHEETS\nSHALL WE READ?",
-    "subtitle_one": "{{name}} has {{count}} sheet. Choose the ones your training is in.",
-    "subtitle_other": "{{name}} has {{count}} sheets. Choose the ones your training is in.",
-    "recommended": "Recommended",
-    "log_one": "{{count}} entry · with dates",
-    "log_other": "{{count}} entries · with dates",
-    "plan_one": "{{days}} · {{count}} exercise",
-    "plan_other": "{{days}} · {{count}} exercises",
-    "days_one": "{{count}} day",
-    "days_other": "{{count}} days",
-    "exercises_one": "{{count}} exercise",
-    "exercises_other": "{{count}} exercises",
-    "other": "No training found",
-    "text": "Text only",
-    "empty": "Empty",
-    "cta_one": "Read {{count}} sheet",
-    "cta_other": "Read {{count}} sheets",
-    "none": "Choose a sheet"
+    "title": "어떤 시트를\n읽을까요?",
+    "subtitle_one": "{{name}}에 시트가 {{count}}개 있어요. 운동 내용이 있는 시트를 골라 주세요.",
+    "subtitle_other": "{{name}}에 시트가 {{count}}개 있어요. 운동 내용이 있는 시트를 골라 주세요.",
+    "recommended": "추천",
+    "log_one": "기록 {{count}}개 · 날짜 포함",
+    "log_other": "기록 {{count}}개 · 날짜 포함",
+    "plan_one": "{{days}} · 운동 {{count}}개",
+    "plan_other": "{{days}} · 운동 {{count}}개",
+    "days_one": "루틴 {{count}}개",
+    "days_other": "루틴 {{count}}개",
+    "exercises_one": "운동 {{count}}개",
+    "exercises_other": "운동 {{count}}개",
+    "other": "찾은 운동 없음",
+    "text": "텍스트만",
+    "empty": "비어 있음",
+    "cta_one": "시트 {{count}}개 읽기",
+    "cta_other": "시트 {{count}}개 읽기",
+    "none": "시트 선택"
   },
   "reading": {
-    "understand": "Sorting training data …",
-    "exercises": "Matching exercises …",
-    "plan": "Reading your plan …",
-    "elapsed_one": "{{count}} s passed",
-    "elapsed_other": "{{count}} s passed",
-    "done": "Done"
+    "understand": "운동 데이터를 정리하는 중 …",
+    "exercises": "운동을 매칭하는 중 …",
+    "plan": "플랜을 읽는 중 …",
+    "elapsed_one": "{{count}}초 경과",
+    "elapsed_other": "{{count}}초 경과",
+    "done": "완료"
   },
   "found": {
-    "title": "HERE'S WHAT\nWE FOUND",
-    "subtitle": "Tap what you want to import.",
-    "history": "Workout history",
-    "workouts_one": "{{count}} workout, {{from}} to {{to}}",
-    "workouts_other": "{{count}} workouts, {{from}} to {{to}}",
-    "undatedOnly_one": "{{count}} workout without a date",
-    "undatedOnly_other": "{{count}} workouts without a date",
-    "plan": "Training plan",
-    "days_one": "{{count}} day: {{names}}",
-    "days_other": "{{count}} days: {{names}}",
-    "fromHistory": "From your history · {{days}}",
-    "notFound": "Not found",
-    "notInFile": "Not found in the file",
-    "cta": "Start import",
-    "saving": "Saving …"
+    "title": "이런 내용을\n찾았어요",
+    "subtitle": "가져올 항목을 탭해 주세요.",
+    "history": "운동 기록",
+    "workouts_one": "운동 {{count}}회, {{from}}~{{to}}",
+    "workouts_other": "운동 {{count}}회, {{from}}~{{to}}",
+    "undatedOnly_one": "날짜 없는 운동 {{count}}회",
+    "undatedOnly_other": "날짜 없는 운동 {{count}}회",
+    "plan": "운동 플랜",
+    "days_one": "루틴 {{count}}개: {{names}}",
+    "days_other": "루틴 {{count}}개: {{names}}",
+    "fromHistory": "운동 기록 기반 · {{days}}",
+    "notFound": "찾지 못함",
+    "notInFile": "파일에서 찾지 못했어요",
+    "cta": "가져오기 시작",
+    "saving": "저장하는 중 …"
   },
   "check": {
-    "inFile_one": "IN YOUR FILE · {{count}} workout",
-    "inFile_other": "IN YOUR FILE · {{count}} workouts",
-    "inPlan": "IN YOUR PLAN",
-    "recommended": "Recommended",
-    "custom": "Create your own exercise",
-    "customHint": "“{{name}}” stays the name",
-    "next": "Next",
-    "skip": "Don't import"
+    "inFile_one": "내 파일에서 · 운동 {{count}}회",
+    "inFile_other": "내 파일에서 · 운동 {{count}}회",
+    "inPlan": "내 플랜에서",
+    "recommended": "추천",
+    "custom": "나만의 운동 만들기",
+    "customHint": "이름은 “{{name}}” 그대로 유지돼요",
+    "next": "다음",
+    "skip": "가져오지 않기"
   },
   "dates": {
-    "title": "NOT EVERY WORKOUT\nHAD A DATE",
-    "body_one": "{{count}} of {{total}} workouts has no date in your file, so we spread them out over the months in between.",
-    "body_other": "{{count}} of {{total}} workouts have no date in your file, so we spread them out over the months in between.",
-    "dated": "Dated · {{count}}",
-    "spread": "Spread · {{count}}",
-    "keep": "Looks good",
-    "drop": "Leave them out"
+    "title": "날짜가 없는\n운동이 있어요",
+    "body_one": "파일의 운동 {{total}}회 중 {{count}}회에 날짜가 없어서, 그 사이의 몇 달에 나눠 배치했어요.",
+    "body_other": "파일의 운동 {{total}}회 중 {{count}}회에 날짜가 없어서, 그 사이의 몇 달에 나눠 배치했어요.",
+    "dated": "날짜 있음 · {{count}}",
+    "spread": "나눠 배치 · {{count}}",
+    "keep": "이대로 좋아요",
+    "drop": "날짜 없는 운동 빼기"
   },
   "plan": {
-    "fromHistory": "From your history",
-    "routine": "Workout {{letter}}"
+    "fromHistory": "운동 기록 기반 플랜",
+    "routine": "루틴 {{letter}}"
   },
-  "defaultName": "Workout",
+  "defaultName": "운동",
   "errors": {
     "picker": {
-      "title": "Couldn't open the file",
-      "message": "Pick it again or choose a different file."
+      "title": "파일을 열 수 없어요",
+      "message": "파일을 다시 선택하거나 다른 파일을 골라 주세요."
     },
     "nothing": {
-      "title": "That's not a training history",
-      "message": "{{name}} has no workouts we can import. Choose a file with dates, exercises, sets and weights."
+      "title": "운동 기록이 아니에요",
+      "message": "{{name}}에는 가져올 수 있는 운동이 없어요. 날짜, 운동, 세트, 무게가 담긴 파일을 골라 주세요."
     },
     "unreadable": {
-      "title": "Couldn't read the file",
-      "message": "Choose a CSV or Excel file, like the export of your training app."
+      "title": "파일을 읽지 못했어요",
+      "message": "운동 앱에서 내보낸 파일 같은 CSV 또는 Excel 파일을 골라 주세요."
     },
-    "retry": "Choose a different file",
-    "close": "Close",
+    "retry": "다른 파일 선택",
+    "close": "닫기",
     "failed": {
-      "title": "Couldn't read the file",
-      "message": "Please try again."
+      "title": "파일을 읽지 못했어요",
+      "message": "다시 시도해 주세요."
     },
     "offline": {
-      "title": "No connection",
-      "message": "Reading your file needs the internet. Check your connection and try again."
+      "title": "인터넷에 연결되어 있지 않아요",
+      "message": "파일을 읽으려면 인터넷이 필요해요. 연결을 확인하고 다시 시도해 주세요."
     },
     "limit": {
-      "title": "Daily limit reached",
-      "message": "You can import again tomorrow."
+      "title": "오늘 한도에 도달했어요",
+      "message": "내일 다시 가져올 수 있어요."
     },
     "tooLarge": {
-      "title": "File too large",
-      "message": "Choose a smaller file or fewer sheets."
+      "title": "파일이 너무 커요",
+      "message": "더 작은 파일을 고르거나 시트 수를 줄여 주세요."
     },
     "save": {
-      "title": "Couldn't save your history",
-      "message": "Check your connection and try again."
+      "title": "운동 기록을 저장하지 못했어요",
+      "message": "연결을 확인하고 다시 시도해 주세요."
     }
   }
 }

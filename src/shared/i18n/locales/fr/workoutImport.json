@@ -1,124 +1,124 @@
 {
   "start": {
-    "title": "BRING YOUR\nTRAINING",
-    "subtitle": "Bring over your training plan and history, and Loqqa starts with your real weights.",
-    "pick": "Choose export file",
-    "hint": "Works with Hevy, Strong and any spreadsheet\nCSV or Excel",
-    "more": "and many more",
-    "cta": "Choose file",
-    "fresh": "I'm starting fresh"
+    "title": "IMPORTE TON\nENTRAÎNEMENT",
+    "subtitle": "Récupère ton programme et ton historique, et Loqqa démarre avec tes vrais poids.",
+    "pick": "Choisir le fichier d'export",
+    "hint": "Fonctionne avec Hevy, Strong et tout tableur\nCSV ou Excel",
+    "more": "et bien d'autres",
+    "cta": "Choisir un fichier",
+    "fresh": "Je pars de zéro"
   },
   "file": {
-    "title": "IS THIS THE\nRIGHT FILE?",
-    "sheets_one": "{{size}} · {{count}} sheet",
-    "sheets_other": "{{size}} · {{count}} sheets",
-    "replace": "Replace",
-    "read": "Start sorting",
-    "next": "Next"
+    "title": "C'EST LE BON\nFICHIER ?",
+    "sheets_one": "{{size}} · {{count}} feuille",
+    "sheets_other": "{{size}} · {{count}} feuilles",
+    "replace": "Remplacer",
+    "read": "Lancer le tri",
+    "next": "Suivant"
   },
   "sheets": {
-    "title": "WHICH SHEETS\nSHALL WE READ?",
-    "subtitle_one": "{{name}} has {{count}} sheet. Choose the ones your training is in.",
-    "subtitle_other": "{{name}} has {{count}} sheets. Choose the ones your training is in.",
-    "recommended": "Recommended",
-    "log_one": "{{count}} entry · with dates",
-    "log_other": "{{count}} entries · with dates",
-    "plan_one": "{{days}} · {{count}} exercise",
-    "plan_other": "{{days}} · {{count}} exercises",
-    "days_one": "{{count}} day",
-    "days_other": "{{count}} days",
-    "exercises_one": "{{count}} exercise",
-    "exercises_other": "{{count}} exercises",
-    "other": "No training found",
-    "text": "Text only",
-    "empty": "Empty",
-    "cta_one": "Read {{count}} sheet",
-    "cta_other": "Read {{count}} sheets",
-    "none": "Choose a sheet"
+    "title": "QUELLES FEUILLES\nLIRE ?",
+    "subtitle_one": "{{name}} compte {{count}} feuille. Choisis celles qui contiennent ton entraînement.",
+    "subtitle_other": "{{name}} compte {{count}} feuilles. Choisis celles qui contiennent ton entraînement.",
+    "recommended": "Recommandée",
+    "log_one": "{{count}} entrée · avec dates",
+    "log_other": "{{count}} entrées · avec dates",
+    "plan_one": "{{days}} · {{count}} exercice",
+    "plan_other": "{{days}} · {{count}} exercices",
+    "days_one": "{{count}} jour",
+    "days_other": "{{count}} jours",
+    "exercises_one": "{{count}} exercice",
+    "exercises_other": "{{count}} exercices",
+    "other": "Aucune séance trouvée",
+    "text": "Texte seul",
+    "empty": "Vide",
+    "cta_one": "Lire {{count}} feuille",
+    "cta_other": "Lire {{count}} feuilles",
+    "none": "Choisis une feuille"
   },
   "reading": {
-    "understand": "Sorting training data …",
-    "exercises": "Matching exercises …",
-    "plan": "Reading your plan …",
-    "elapsed_one": "{{count}} s passed",
-    "elapsed_other": "{{count}} s passed",
-    "done": "Done"
+    "understand": "Tri des données d'entraînement…",
+    "exercises": "Association des exercices…",
+    "plan": "Lecture de ton programme…",
+    "elapsed_one": "{{count}} s écoulée",
+    "elapsed_other": "{{count}} s écoulées",
+    "done": "Terminé"
   },
   "found": {
-    "title": "HERE'S WHAT\nWE FOUND",
-    "subtitle": "Tap what you want to import.",
-    "history": "Workout history",
-    "workouts_one": "{{count}} workout, {{from}} to {{to}}",
-    "workouts_other": "{{count}} workouts, {{from}} to {{to}}",
-    "undatedOnly_one": "{{count}} workout without a date",
-    "undatedOnly_other": "{{count}} workouts without a date",
-    "plan": "Training plan",
-    "days_one": "{{count}} day: {{names}}",
-    "days_other": "{{count}} days: {{names}}",
-    "fromHistory": "From your history · {{days}}",
-    "notFound": "Not found",
-    "notInFile": "Not found in the file",
-    "cta": "Start import",
-    "saving": "Saving …"
+    "title": "VOICI CE QU'ON\nA TROUVÉ",
+    "subtitle": "Touche ce que tu veux importer.",
+    "history": "Historique des séances",
+    "workouts_one": "{{count}} séance, de {{from}} à {{to}}",
+    "workouts_other": "{{count}} séances, de {{from}} à {{to}}",
+    "undatedOnly_one": "{{count}} séance sans date",
+    "undatedOnly_other": "{{count}} séances sans date",
+    "plan": "Programme d'entraînement",
+    "days_one": "{{count}} jour : {{names}}",
+    "days_other": "{{count}} jours : {{names}}",
+    "fromHistory": "D'après ton historique · {{days}}",
+    "notFound": "Introuvable",
+    "notInFile": "Absent du fichier",
+    "cta": "Lancer l'import",
+    "saving": "Enregistrement…"
   },
   "check": {
-    "inFile_one": "IN YOUR FILE · {{count}} workout",
-    "inFile_other": "IN YOUR FILE · {{count}} workouts",
-    "inPlan": "IN YOUR PLAN",
-    "recommended": "Recommended",
-    "custom": "Create your own exercise",
-    "customHint": "“{{name}}” stays the name",
-    "next": "Next",
-    "skip": "Don't import"
+    "inFile_one": "DANS TON FICHIER · {{count}} séance",
+    "inFile_other": "DANS TON FICHIER · {{count}} séances",
+    "inPlan": "DANS TON PROGRAMME",
+    "recommended": "Recommandé",
+    "custom": "Créer un exercice perso",
+    "customHint": "Nom conservé : « {{name}} »",
+    "next": "Suivant",
+    "skip": "Ne pas importer"
   },
   "dates": {
-    "title": "NOT EVERY WORKOUT\nHAD A DATE",
-    "body_one": "{{count}} of {{total}} workouts has no date in your file, so we spread them out over the months in between.",
-    "body_other": "{{count}} of {{total}} workouts have no date in your file, so we spread them out over the months in between.",
-    "dated": "Dated · {{count}}",
-    "spread": "Spread · {{count}}",
-    "keep": "Looks good",
-    "drop": "Leave them out"
+    "title": "CERTAINES SÉANCES\nN'AVAIENT PAS DE DATE",
+    "body_one": "{{count}} séance sur {{total}} n'a pas de date dans ton fichier, alors on l'a placée dans les mois intermédiaires.",
+    "body_other": "{{count}} séances sur {{total}} n'ont pas de date dans ton fichier, alors on les a réparties sur les mois intermédiaires.",
+    "dated": "Datées · {{count}}",
+    "spread": "Réparties · {{count}}",
+    "keep": "Ça me va",
+    "drop": "Les laisser de côté"
   },
   "plan": {
-    "fromHistory": "From your history",
-    "routine": "Workout {{letter}}"
+    "fromHistory": "D'après ton historique",
+    "routine": "Séance {{letter}}"
   },
-  "defaultName": "Workout",
+  "defaultName": "Séance",
   "errors": {
     "picker": {
-      "title": "Couldn't open the file",
-      "message": "Pick it again or choose a different file."
+      "title": "Impossible d'ouvrir le fichier",
+      "message": "Sélectionne-le à nouveau ou choisis un autre fichier."
     },
     "nothing": {
-      "title": "That's not a training history",
-      "message": "{{name}} has no workouts we can import. Choose a file with dates, exercises, sets and weights."
+      "title": "Ce n'est pas un historique d'entraînement",
+      "message": "{{name}} ne contient aucune séance que l'on peut importer. Choisis un fichier avec des dates, des exercices, des séries et des poids."
     },
     "unreadable": {
-      "title": "Couldn't read the file",
-      "message": "Choose a CSV or Excel file, like the export of your training app."
+      "title": "Impossible de lire le fichier",
+      "message": "Choisis un fichier CSV ou Excel, comme l'export de ton app d'entraînement."
     },
-    "retry": "Choose a different file",
-    "close": "Close",
+    "retry": "Choisir un autre fichier",
+    "close": "Fermer",
     "failed": {
-      "title": "Couldn't read the file",
-      "message": "Please try again."
+      "title": "Impossible de lire le fichier",
+      "message": "Réessaie."
     },
     "offline": {
-      "title": "No connection",
-      "message": "Reading your file needs the internet. Check your connection and try again."
+      "title": "Pas de connexion",
+      "message": "Pour lire ton fichier, il faut une connexion internet. Vérifie ta connexion et réessaie."
     },
     "limit": {
-      "title": "Daily limit reached",
-      "message": "You can import again tomorrow."
+      "title": "Limite quotidienne atteinte",
+      "message": "Tu pourras réimporter demain."
     },
     "tooLarge": {
-      "title": "File too large",
-      "message": "Choose a smaller file or fewer sheets."
+      "title": "Fichier trop volumineux",
+      "message": "Choisis un fichier plus petit ou moins de feuilles."
     },
     "save": {
-      "title": "Couldn't save your history",
-      "message": "Check your connection and try again."
+      "title": "Impossible d'enregistrer ton historique",
+      "message": "Vérifie ta connexion et réessaie."
     }
   }
 }

@@ -1,8 +1,8 @@
 # Termos de Uso
 
-Versão: 1.4
+Versão: 1.5
 
-Última atualização: 5 de novembro de 2026
+Última atualização: 6 de novembro de 2026
 
 Esta é uma tradução. A versão em alemão é a juridicamente vinculante.
 
@@ -37,7 +37,7 @@ Se você ainda não for maior de idade, precisa do consentimento dos seus respon
 O Loqqa ajuda você no treino de força. Isso inclui, em especial:
 
 - um plano de treino que um modelo de IA cria a partir das suas informações, por exemplo objetivo, experiência, equipamentos e treinos por semana
-- a importação de um plano que você já tenha, por foto ou arquivo
+- a importação do seu plano de treino e dos seus treinos anteriores a partir de um arquivo, por exemplo a exportação de outro app
 - o registro dos seus treinos com cargas, repetições e tempos, seu histórico, recordes, suas séries por músculo em um período de sua escolha e sugestões para as suas séries
 - o registro do seu peso corporal
 - o check corporal com fotos e valores estimados (a partir dos 18 anos)
@@ -45,9 +45,9 @@ O Loqqa ajuda você no treino de força. Isso inclui, em especial:
 - um catálogo de exercícios com instruções, imagens e vídeos
 - um chat de suporte para relatos de erro e ideias
 
-Você pode fazer a configuração inicial, incluindo a criação de plano ou a importação de plano, gratuitamente. Depois disso, o uso do Loqqa requer uma assinatura (Loqqa Pro, seção 6). Sem uma assinatura ativa, sua conta e seus dados são mantidos, e você continua podendo usar as configurações, o suporte e a exclusão da conta; as demais funções ficam bloqueadas.
+Você pode fazer a configuração inicial, incluindo a criação de plano ou a importação, gratuitamente. Depois disso, o uso do Loqqa requer uma assinatura (Loqqa Pro, seção 6). Sem uma assinatura ativa, sua conta e seus dados são mantidos, e você continua podendo usar as configurações, o suporte e a exclusão da conta; as demais funções ficam bloqueadas.
 
-O reconhecimento na importação de plano pode cometer erros. Por isso, verifique o plano reconhecido antes de adotá-lo; o app marca os pontos incertos para verificação. Um plano que o app cria para você também é uma sugestão: dê uma olhada nele e ajuste-o se necessário. As respostas do coach também podem estar erradas, por exemplo se o modelo entender mal uma pergunta. Para que o coach não seja usado de forma abusiva, você pode fazer a ele no máximo 20 perguntas em 24 horas e 150 perguntas em 30 dias. Para a criação de plano, a importação de plano, o check corporal e o coach, o app precisa de conexão com a internet.
+O reconhecimento na importação pode cometer erros. Por isso, verifique o plano reconhecido e a associação dos seus exercícios antes de adotá-los; o app mostra a você, para verificação, os exercícios cujo reconhecimento é incerto. Um plano que o app cria para você também é uma sugestão: dê uma olhada nele e ajuste-o se necessário. As respostas do coach também podem estar erradas, por exemplo se o modelo entender mal uma pergunta. Para que o coach não seja usado de forma abusiva, você pode fazer a ele no máximo 20 perguntas em 24 horas e 150 perguntas em 30 dias. Para a criação de plano, a importação, o check corporal e o coach, o app precisa de conexão com a internet.
 
 Muitas funções do Loqqa funcionam também sem conexão com a internet. Seus dados são sincronizados assim que você estiver on-line. Alterações que ainda não tiverem sido sincronizadas quando você sair da conta são perdidas; o app avisa você antes.
 
