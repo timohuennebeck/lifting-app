@@ -176,5 +176,16 @@ export function loadBar(
   return { kind: 'loaded', plates, loaded, exact: Math.abs(loaded - weight) < 1e-6 };
 }
 
+/**
+ * The user's plates with one turned off or on, heaviest first: null once all are on again (so
+ * plates added later are on too), undefined for the last one on, which stays on.
+ */
+export function togglePlate(unit: PlateUnit, available: number[], weight: number) {
+  const has = available.includes(weight);
+  if (has && available.length === 1) return undefined;
+  const next = PLATE_WEIGHTS[unit].filter((w) => (w === weight ? !has : available.includes(w)));
+  return next.length === PLATE_WEIGHTS[unit].length ? null : next;
+}
+
 /** What one step of the plates sheet's stepper adds: the lightest plate on each loaded side. */
 export const plateStep = (available: number[], sides: 1 | 2) => sides * Math.min(...available);

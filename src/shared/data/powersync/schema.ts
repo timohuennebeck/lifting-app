@@ -32,6 +32,9 @@ export const profiles = sqliteTable('profiles', {
   avatar_path: text(),
   // "About you" on the profile, up to 150 characters.
   bio: text(),
+  // JSON lists of the plates the user's gym has, per unit; null while every plate is on.
+  plates_kg: text(),
+  plates_lb: text(),
   // When the user agreed to their data going to OpenAI for the coach (at sign-up).
   coach_consent_at: text(),
   onboarded_at: text(),

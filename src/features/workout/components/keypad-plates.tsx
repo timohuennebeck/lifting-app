@@ -10,9 +10,10 @@ import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
+import { useAvailablePlates } from '../hooks/use-available-plates';
 import { usePlateBar } from '../hooks/use-plate-bar';
 import { loadBar, type PlateSetup, plateUnit } from '../lib/plates';
-import { useAvailablePlates, usePlatesStore } from '../stores/plates-store';
+import { usePlatesStore } from '../stores/plates-store';
 import { useWorkoutSessionStore } from '../stores/workout-session-store';
 import { PlateDrawing } from './plate-drawing';
 import { plateCaption, PlateList, plateNote } from './plate-list';

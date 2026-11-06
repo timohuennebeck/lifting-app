@@ -65,6 +65,9 @@ export interface Profile {
   avatarPath: string | null;
   /** "About you", written by the user. */
   bio: string | null;
+  /** The plates the user's gym has, per unit, heaviest first; null while every plate is on. */
+  platesKg: number[] | null;
+  platesLb: number[] | null;
   onboardedAt: string | null;
   createdAt: string;
 }
@@ -88,6 +91,8 @@ function toProfile(r: ProfileRecord): Profile {
     language: r.language as AppLanguage | null,
     avatarPath: r.avatar_path,
     bio: r.bio,
+    platesKg: parseJson(r.plates_kg, null),
+    platesLb: parseJson(r.plates_lb, null),
     onboardedAt: r.onboarded_at,
     createdAt: r.created_at,
   };
@@ -116,7 +121,7 @@ export function useUnits(): UnitSystem {
 
 export type ProfilePatch = Partial<Omit<Profile, 'id' | 'createdAt'>>;
 
-const toJson = (value: unknown[] | undefined) => value && JSON.stringify(value);
+const toJson = (value: unknown[] | null | undefined) => value && JSON.stringify(value);
 
 /** Profile columns for a patch; fields left out stay undefined, so Drizzle skips them. */
 const toColumns = (p: ProfilePatch) => ({
@@ -136,6 +141,8 @@ const toColumns = (p: ProfilePatch) => ({
   language: p.language,
   avatar_path: p.avatarPath,
   bio: p.bio,
+  plates_kg: toJson(p.platesKg),
+  plates_lb: toJson(p.platesLb),
   onboarded_at: p.onboardedAt,
 });
 

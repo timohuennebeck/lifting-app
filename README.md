@@ -234,8 +234,9 @@ Documents are readable without an account (onboarding runs logged out) and writt
   exercise, plus a list of catalog ids for special bars (EZ, trap, safety), the Smith machine,
   plate-loaded machines and lifts loaded on one end (landmine, T-bar). The ⓘ opens the plates
   sheet with the weight of the bar, an "Ohne Stange" switch and the plates the gym has (25 to
-  1.25 kg, 45 to 2.5 lb, each one turned off and on there). Those are kept on the device
-  (`plates-store`) and count for every exercise; the plates for a weight are taken only from them:
+  1.25 kg, 45 to 2.5 lb, each one turned off and on there). Those are synced on the profile
+  (`profiles.plates_kg` / `plates_lb`, JSON lists, null while all are on) and count for every
+  exercise; the plates for a weight are taken only from them:
   as many of the heaviest as still let the lighter ones make the rest (with 15s and 10s, 20 kg a
   side is two tens).
 - **`exercise_settings`:** one row per user and exercise once they change the bar there: `bar_kg`

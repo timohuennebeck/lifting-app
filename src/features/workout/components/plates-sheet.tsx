@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useWindowDimensions, View } from 'react-native';
 
 import { saveExerciseSetting } from '@/shared/data/exercise-settings';
-import { useUnits } from '@/shared/data/profile';
+import { saveProfile, useUnits } from '@/shared/data/profile';
 import { cn } from '@/shared/lib/cn';
 import { formatNumber, fromDisplayWeight } from '@/shared/lib/format';
 import { clamp } from '@/shared/lib/math';
@@ -17,6 +17,7 @@ import { Sheet } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 import { ToggleSwitch } from '@/shared/ui/toggle-switch';
 
+import { useAvailablePlates } from '../hooks/use-available-plates';
 import { type PlateBar, usePlateBar } from '../hooks/use-plate-bar';
 import {
   BAR_STEP,
@@ -24,10 +25,10 @@ import {
   PLATE_WEIGHTS,
   type PlateSetup,
   plateStep,
+  togglePlate,
   type PlateUnit,
   plateUnit,
 } from '../lib/plates';
-import { useAvailablePlates, usePlatesStore } from '../stores/plates-store';
 import { PlateDrawing } from './plate-drawing';
 import { plateCaption, PlateList, plateNote } from './plate-list';
 
@@ -69,7 +70,12 @@ interface AvailablePlatesProps {
 /** The plates the gym has, a round toggle each, in the accent while on; the last one stays on. */
 function AvailablePlates({ unit, available }: AvailablePlatesProps) {
   const { t } = useTranslation('workout');
-  const togglePlate = usePlatesStore((s) => s.togglePlate);
+  const userId = useUserId();
+  const toggle = (plate: number) => {
+    const next = togglePlate(unit, available, plate);
+    if (next === undefined || !userId) return;
+    void saveProfile(userId, unit === 'kg' ? { platesKg: next } : { platesLb: next });
+  };
   return (
     <View className="gap-2.5 pb-6.5">
       <Text className={cn(CAPTION, 'px-1')}>{t('plates.available')}</Text>
@@ -86,7 +92,7 @@ function AvailablePlates({ unit, available }: AvailablePlatesProps) {
               accessibilityState={{ checked: on, disabled: last }}
               accessibilityLabel={`${formatNumber(plate, 2)} ${unit}`}
               disabled={last}
-              onPress={() => togglePlate(unit, plate)}
+              onPress={() => toggle(plate)}
               className={cn(
                 'aspect-square max-w-14 min-w-0 flex-1 items-center justify-center rounded-full',
                 on ? 'bg-accent' : 'bg-raised',
@@ -252,7 +258,7 @@ export interface PlatesSheetProps {
  * The plates for a weight, bigger: a stepper for the weight, one end of the bar drawn, the
  * plates, the plates the gym has and the bar they go on. Opened from the ⓘ beside the number
  * pad's plates. A changed bar is saved for the exercise when the sheet closes, with "Done" or
- * without; the plates as they are turned off and on, for every exercise.
+ * without; the plates as they are turned off and on, for every exercise (on the profile).
  */
 export function PlatesSheet({
   visible,
