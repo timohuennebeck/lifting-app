@@ -294,8 +294,8 @@ Importieren (the same screens, routed under `src/app/(onboarding)/import/` and
    in the plan editor, like a made one.
 
 - **Secrets and model:** `OPENAI_API_KEY`; `read-history` runs `OPENAI_HISTORY_MODEL` (default
-  `gpt-6-luna`) at `OPENAI_HISTORY_REASONING_EFFORT` (default `low`), Fast mode only with
-  `HISTORY_IMPORT_FAST=true`. `read-plan` runs `OPENAI_MODEL` on Fast mode
+  `gpt-6-luna`) at `OPENAI_HISTORY_REASONING_EFFORT` (default `low`), in Fast mode
+  (`HISTORY_IMPORT_FAST=false` turns it off). `read-plan` runs `OPENAI_MODEL` on Fast mode
   (`PLAN_IMPORT_FAST=false` turns it off) and streams the plan (`PlanEvent` in
   `supabase/functions/_shared/plan-events.ts`).
 - **Rules (server-side):** it also runs before there is an account, so each step counts per network

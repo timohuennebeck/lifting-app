@@ -22,9 +22,6 @@ import { useImportSteps } from '../hooks/use-import-steps';
 import { CTA_STYLE } from '../lib/steps';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
 
-/** How long "Fertig" shows before the import goes on. */
-const ADVANCE_MS = 800;
-
 /**
  * 13m31: reads the file (see the store's runImport) behind chips popping in and circling, then
  * shows "Fertig" and goes on by itself (useImportSteps: checks, dates, "Importiert"). No swiping
@@ -77,13 +74,10 @@ export function ReadingScreen() {
     router.back();
   }
 
-  // Read: a tick and "Fertig", then on to what was found by itself (the button skips the wait).
+  // Read: a tick and "Fertig"; it goes on only when tapped.
   useEffect(() => {
-    if (status !== 'ready') return;
-    haptics.success();
-    const timer = setTimeout(goOn, ADVANCE_MS);
-    return () => clearTimeout(timer);
-  }, [status, goOn]);
+    if (status === 'ready') haptics.success();
+  }, [status]);
 
   useEffect(() => {
     if (status !== 'failed' || !failure || left.current) return;

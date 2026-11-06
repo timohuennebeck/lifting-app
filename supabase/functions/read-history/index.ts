@@ -6,7 +6,7 @@
 // - "name": names for the routines the app found in a history whose workouts have none.
 // A plan in the file is read by read-plan. It also runs before there is an account, so requests
 // are limited per network and in total per day (start_plan_request, kind "history").
-import { envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
+import { envFlag, envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
 import { askWithRetry, type StructuredRequest } from '../_shared/openai.ts';
 import { isAppLanguage } from '../_shared/plan-events.ts';
 import { type CatalogRow, loadCatalog, takePlanRequest } from '../_shared/plans.ts';
@@ -44,8 +44,8 @@ const MODEL = {
   name: Deno.env.get('OPENAI_HISTORY_MODEL') || 'gpt-6-luna',
   reasoningEffort: Deno.env.get('OPENAI_HISTORY_REASONING_EFFORT') || 'low',
 };
-/** OpenAI's Fast mode (twice the token price), off unless HISTORY_IMPORT_FAST=true. */
-const FAST = Deno.env.get('HISTORY_IMPORT_FAST') === 'true';
+/** OpenAI's Fast mode (twice the token price); HISTORY_IMPORT_FAST=false turns it off. */
+const FAST = envFlag('HISTORY_IMPORT_FAST');
 /** Characters of the samples the model reads in step 1. */
 const MAX_SAMPLE_TEXT = 120_000;
 

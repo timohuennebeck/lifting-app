@@ -149,10 +149,6 @@ function Chip({ label, accent }: { label: string; accent?: boolean }) {
 /** The chips' fill (--color-pill). */
 const PILL = '#1C1C1C';
 
-const Dot = ({ size, color }: { size: number; color: string }) => (
-  <View className="rounded-full" style={{ width: size, height: size, backgroundColor: color }} />
-);
-
 type Spark = 'cross' | 'asterisk' | 'star';
 
 /**
@@ -255,7 +251,7 @@ export function Orbit({ inner, outer, label, caption, done }: OrbitProps) {
         <Text className="font-inter text-xs text-subtle">{caption}</Text>
       </View>
       <Ring
-        radius={128}
+        radius={116}
         seconds={34}
         items={[
           { node: <Chip label={inner[0]} />, order: 0, float: bob(inner[0]) },
@@ -265,14 +261,19 @@ export function Orbit({ inner, outer, label, caption, done }: OrbitProps) {
         ]}
       />
       <Ring
-        radius={210}
+        radius={220}
         seconds={44}
         reverse
         items={[
+          // The files share the ring with the chips, between them: on a ring of their own they
+          // crossed the chips. The radii keep them clear of the inner ring's chips.
           { node: <Chip label={outer[0]} />, order: 1, float: bob(outer[0]) },
+          { node: <OrbitFile label="CSV" />, order: 2, float: 1.8 },
           { node: <Chip label={outer[1]} accent />, order: 4, float: bob(outer[1]) },
+          { node: <OrbitFile label="XLSX" />, order: 8, float: 1.8 },
           { node: <Chip label={outer[2]} />, order: 7, float: bob(outer[2]) },
           { node: <Chip label={outer[3]} />, order: 10, float: bob(outer[3]) },
+          { node: <OrbitFile label="CSV" />, order: 13, float: 1.8 },
           { node: <Chip label={outer[4]} />, order: 12, float: bob(outer[4]) },
         ]}
       />
@@ -295,19 +296,6 @@ export function Orbit({ inner, outer, label, caption, done }: OrbitProps) {
           </Text>
         </Animated.View>
       ))}
-      <Ring
-        radius={172}
-        seconds={30}
-        reverse
-        items={[
-          { node: <OrbitFile label="CSV" />, order: 2, float: 1.8 },
-          { node: <Dot size={6} color={colors.accent} />, order: 5 },
-          { node: <OrbitFile label="XLSX" />, order: 8, float: 1.8 },
-          { node: <Dot size={8} color="#2E2E2B" />, order: 11 },
-          { node: <OrbitFile label="CSV" />, order: 13, float: 1.8 },
-          { node: <Dot size={4} color={colors.accent} />, order: 14 },
-        ]}
-      />
     </View>
   );
 }
