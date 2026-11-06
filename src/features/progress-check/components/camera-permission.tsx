@@ -1,5 +1,4 @@
 import type { PermissionResponse } from 'expo-camera';
-import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Linking, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,8 +21,6 @@ export interface CameraPermissionProps {
   copy: CameraPermissionCopy;
   /** Space under the actions. */
   bottomInset: number;
-  /** Extra actions under the CTA, e.g. picking from the library. */
-  children?: ReactNode;
 }
 
 /** Stands in for a camera without access: asks the system, or opens the settings. */
@@ -33,7 +30,6 @@ export function CameraPermission({
   onClose,
   copy,
   bottomInset,
-  children,
 }: CameraPermissionProps) {
   const { t } = useTranslation('common');
   const insets = useSafeAreaInsets();
@@ -48,7 +44,6 @@ export function CameraPermission({
           icon="camera"
           onPress={() => (permission.canAskAgain ? onRequest() : Linking.openSettings())}
         />
-        {children}
       </View>
     </View>
   );

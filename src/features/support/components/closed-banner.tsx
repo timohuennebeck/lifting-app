@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { attempt } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
 import { useUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
@@ -23,13 +24,8 @@ export function ClosedBanner({ ticketId, onNewTicket }: ClosedBannerProps) {
   async function reopen() {
     if (!userId || reopening) return;
     setReopening(true);
-    try {
-      await reopenTicket(userId, ticketId);
-      haptics.success();
-    } catch (e) {
-      console.error('Reopening ticket failed', e);
-      haptics.error();
-    }
+    const reopened = await attempt('Reopening ticket failed', () => reopenTicket(userId, ticketId));
+    if (reopened) haptics.success();
     setReopening(false);
   }
 

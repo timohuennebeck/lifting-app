@@ -10,6 +10,7 @@ import {
 } from '@/shared/data/exercises';
 import { type MuscleGroupId, primaryGroup } from '@/shared/data/muscle-groups';
 import { APP_LANGUAGES } from '@/shared/i18n/resources';
+import { getOrInsert } from '@/shared/lib/map';
 
 import { indexLetterOf } from '../lib/index-letters';
 import { searchKeys, searchText } from '../lib/search-text';
@@ -68,14 +69,52 @@ function foundAs(option: ExerciseOption, name: string) {
 
 /** One collator per language: `localeCompare` with a locale sets one up on every call. */
 const collators = new Map<string, Intl.Collator>();
-const collatorFor = (language: string) => {
-  let collator = collators.get(language);
-  if (!collator) {
-    collator = new Intl.Collator(language);
-    collators.set(language, collator);
+const collatorFor = (language: string) =>
+  getOrInsert(collators, language, () => new Intl.Collator(language));
+
+type Rows = ReturnType<typeof useCatalogStore.getState>['rows'];
+type Equipment = ReturnType<typeof useCatalogStore.getState>['equipment'];
+type Custom = ReturnType<typeof useCustomExerciseStore.getState>['exercises'];
+
+/** The last list built, kept across pickers: it changes only with the language or the exercises. */
+let built: {
+  language: string;
+  rows: Rows;
+  equipment: Equipment;
+  custom: Custom;
+  options: ExerciseOption[];
+} | null = null;
+
+/** Every active exercise as an option (name, group, equipment, search keys), sorted by name. */
+function optionsFor(language: string, rows: Rows, equipment: Equipment, custom: Custom) {
+  if (
+    built?.language === language &&
+    built.rows === rows &&
+    built.equipment === equipment &&
+    built.custom === custom
+  ) {
+    return built.options;
   }
-  return collator;
-};
+  const { compare } = collatorFor(language);
+  const options = activeExerciseIds(rows, custom)
+    .map((id): ExerciseOption => {
+      const name = exerciseName(id, language);
+      const names = rows[id] ? APP_LANGUAGES.map((l) => rows[id].name[l]) : [];
+      return {
+        id,
+        name,
+        group: primaryGroup(id),
+        equipmentName: rows[id]
+          ? equipmentName(rows[id].equipment, language, equipment)
+          : undefined,
+        letter: indexLetterOf(name, language),
+        searchNames: searchNamesOf([name, ...names]),
+      };
+    })
+    .sort((a, b) => compare(a.name, b.name));
+  built = { language, rows, equipment, custom, options };
+  return options;
+}
 
 /**
  * Localized, alphabetically sorted exercise list filtered by search text and muscle group. The
@@ -86,27 +125,8 @@ export function useExerciseSearch(query: string, group?: MuscleGroupId | null) {
   const rows = useCatalogStore((s) => s.rows);
   const equipment = useCatalogStore((s) => s.equipment);
   const custom = useCustomExerciseStore((s) => s.exercises);
-  // Names, groups, equipment, order and search keys change with the language or the exercises,
-  // not with each keystroke.
-  const options = useMemo(() => {
-    const { compare } = collatorFor(i18n.language);
-    return activeExerciseIds(rows, custom)
-      .map((id): ExerciseOption => {
-        const name = exerciseName(id, i18n.language);
-        const names = rows[id] ? APP_LANGUAGES.map((l) => rows[id].name[l]) : [];
-        return {
-          id,
-          name,
-          group: primaryGroup(id),
-          equipmentName: rows[id]
-            ? equipmentName(rows[id].equipment, i18n.language, equipment)
-            : undefined,
-          letter: indexLetterOf(name, i18n.language),
-          searchNames: searchNamesOf([name, ...names]),
-        };
-      })
-      .sort((a, b) => compare(a.name, b.name));
-  }, [i18n.language, rows, equipment, custom]);
+  // Built once per language and set of exercises, not on each picker opened or keystroke.
+  const options = optionsFor(i18n.language, rows, equipment, custom);
   // Typing stays responsive: the list filters right after, at a lower priority.
   const deferredQuery = useDeferredValue(query);
   return useMemo(() => {

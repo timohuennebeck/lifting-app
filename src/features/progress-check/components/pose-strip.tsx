@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
-import { PhotoThumb } from '@/shared/ui/photo-thumb';
+import { PhotoThumb } from './photo-thumb';
 import { Text } from '@/shared/ui/text';
 
 import { POSES, WARN_COLOR, type Pose } from '../lib/poses';

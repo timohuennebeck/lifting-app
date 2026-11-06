@@ -13,15 +13,15 @@ import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { playSound, preloadSounds } from '@/shared/lib/sounds';
 import { showError } from '@/shared/stores/error-sheet-store';
-import { CameraPermission } from '@/shared/ui/camera/camera-permission';
+import { CameraPermission } from '../components/camera-permission';
 import {
   CameraSideButton,
   CaptureRow,
   DonePill,
   ShutterButton,
-} from '@/shared/ui/camera/capture-controls';
-import { ShutterFlash, useShutterFlash } from '@/shared/ui/camera/shutter-flash';
-import { useCameraScreenPermission } from '@/shared/ui/camera/use-camera-screen-permission';
+} from '../components/capture-controls';
+import { ShutterFlash, useShutterFlash } from '../components/shutter-flash';
+import { useCameraScreenPermission } from '../hooks/use-camera-screen-permission';
 import { Gradient, type GradientStop } from '@/shared/ui/gradient';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';

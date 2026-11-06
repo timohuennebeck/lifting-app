@@ -16,14 +16,13 @@ export interface DateWheelProps {
   /** First and last year on the year wheel. */
   minYear: number;
   maxYear: number;
-  className?: string;
 }
 
 /**
  * Day, month and year wheels in the app language's order (14 | September | 1997, or month
  * first in English). The day follows a shorter month or a non-leap year (31 → 30, 29 or 28).
  */
-export function DateWheel({ value, onChange, minYear, maxYear, className }: DateWheelProps) {
+export function DateWheel({ value, onChange, minYear, maxYear }: DateWheelProps) {
   const { t } = useTranslation();
   const [year, month, day] = value.split('-').map(Number);
   const years = Array.from({ length: maxYear - minYear + 1 }, (_, i) => String(minYear + i));
@@ -63,7 +62,5 @@ export function DateWheel({ value, onChange, minYear, maxYear, className }: Date
     ),
   };
 
-  return (
-    <WheelGroup className={className}>{dateFieldOrder().map((field) => wheels[field])}</WheelGroup>
-  );
+  return <WheelGroup>{dateFieldOrder().map((field) => wheels[field])}</WheelGroup>;
 }

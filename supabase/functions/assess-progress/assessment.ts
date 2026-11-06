@@ -2,6 +2,7 @@
 // Deno APIs, so it can be tested outside the Edge runtime.
 
 import { ageFrom } from '../_shared/account.ts';
+import { clampInt } from '../_shared/numbers.ts';
 import { weightTrend } from '../_shared/weight-trend.ts';
 
 export const POSES = ['front', 'side', 'back'] as const;
@@ -118,9 +119,6 @@ Then estimate from what is visible in this check's photos (with the lower legs c
 
 Consistency matters more than precision: users repeat the check every few weeks and compare the results. If there is a previous check, compare each pose with its previous photo, start from the previous values and change a value only where the photos show a clear visible difference; a small but clear change is worth 1 to 3 points. Different lighting, camera distance or angle, pump, posture or a full stomach are not progress. Never comment on attractiveness. If a photo is unusable, still fill in your best estimates; they are ignored.`;
 
-const round = (value: number, min: number, max: number) =>
-  Math.round(Math.min(max, Math.max(min, value)));
-
 const DAY_MS = 86_400_000;
 
 const WEIGHT_TREND_DAYS = 30;
@@ -205,7 +203,7 @@ export function modelInput(context: string, photos: Photos, previous: Partial<Ph
 /** Overall score: muscle groups weigh 60 %, proportions and definition 20 % each. */
 function overallScore(groups: Record<Group, number>, proportions: number, definition: number) {
   const mean = GROUPS.reduce((sum, g) => sum + groups[g], 0) / GROUPS.length;
-  return round(0.6 * mean + 0.2 * proportions + 0.2 * definition, 0, 100);
+  return clampInt(0.6 * mean + 0.2 * proportions + 0.2 * definition, 0, 100);
 }
 
 /** Photos the model could not judge ask for a retake; otherwise the clamped values and score. */
@@ -215,10 +213,10 @@ export function toAssessment(output: ModelOutput): Assessment {
   );
   if (issues.length) return { status: 'retake', issues };
   const groupScores = Object.fromEntries(
-    GROUPS.map((g) => [g, round(output.groups[g], 0, 100)]),
+    GROUPS.map((g) => [g, clampInt(output.groups[g], 0, 100)]),
   ) as Record<Group, number>;
-  const proportions = round(output.proportions, 0, 100);
-  const definition = round(output.definition, 0, 100);
+  const proportions = clampInt(output.proportions, 0, 100);
+  const definition = clampInt(output.definition, 0, 100);
   const bodyFat = Math.round(Math.min(60, Math.max(3, output.body_fat_percent)) * 10) / 10;
   return {
     status: 'ok',

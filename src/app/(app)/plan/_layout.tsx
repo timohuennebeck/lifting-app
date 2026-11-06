@@ -14,7 +14,7 @@ export default function PlanLayout() {
           contentStyle: { backgroundColor: colors.bg },
         }}
       >
-        {/* Reading a file: no swiping back; its X asks before it stops. */}
+        {/* Reading a file: no swiping back; Android's back asks before it stops. */}
         <Stack.Screen
           name="import/reading"
           options={{ animation: 'fade', gestureEnabled: false }}

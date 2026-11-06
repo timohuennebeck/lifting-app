@@ -9,6 +9,7 @@ import { ROUTINE_NAME_MAX } from '@/shared/lib/limits';
 import { drizzle } from '@/shared/data/powersync/database';
 import { supabase } from '@/shared/data/supabase';
 import { track } from '@/shared/lib/posthog';
+import { clamp } from '@/shared/lib/math';
 
 import type { LoggedSet } from './history';
 
@@ -95,7 +96,7 @@ export function toRows(workouts: WorkoutToSave[]): WorkoutRow[] {
       const end =
         fileEnd && fileEnd > start && fileEnd - start < 6 * 60 * MINUTE_MS
           ? fileEnd
-          : start + Math.min(120, Math.max(20, setCount * 3)) * MINUTE_MS;
+          : start + clamp(setCount * 3, 20, 120) * MINUTE_MS;
       return [
         {
           id: newId(),

@@ -15,6 +15,7 @@ import {
   type Measure,
   useCustomExerciseStore,
 } from '@/shared/data/exercises';
+import { attempt } from '@/shared/lib/async';
 import { DEFAULT_REST } from '@/shared/data/routines';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
@@ -154,19 +155,14 @@ export function CustomExerciseScreen() {
       measures,
       restSeconds: rest,
     };
-    try {
-      if (existing) {
-        await updateCustomExercise(existing.id, draft, existing);
-      } else {
-        useCreatedExerciseStore.setState({ id: await createCustomExercise(userId, draft) });
-      }
+    const stored = await attempt('Saving the custom exercise failed', async () => {
+      if (existing) await updateCustomExercise(existing.id, draft, existing);
+      else useCreatedExerciseStore.setState({ id: await createCustomExercise(userId, draft) });
+    });
+    if (stored) {
       haptics.success();
       router.back();
-    } catch (error) {
-      console.warn('Saving the custom exercise failed', error);
-      haptics.error();
-      setSaving(false);
-    }
+    } else setSaving(false);
   }
 
   const chip = (muscle: MuscleId, isPrimary: boolean) => (

@@ -75,7 +75,13 @@ Deno.serve(async (req) => {
   // A refusal reads as nothing said that is an exercise.
   if ('refusal' in answer) return reply(200, { exercises: [], newExercises: [] });
 
-  const parsed = JSON.parse(answer.text) as ModelAnswer;
+  let parsed: ModelAnswer;
+  try {
+    parsed = JSON.parse(answer.text) as ModelAnswer;
+  } catch (error) {
+    console.error('Reading the exercises: no JSON in the answer', error);
+    return reply(502, { error: 'failed' });
+  }
   return reply(
     200,
     spokenExercises(parsed, catalog, () => crypto.randomUUID()),

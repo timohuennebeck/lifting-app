@@ -2,6 +2,8 @@ import { useEventListener } from 'expo';
 import { useVideoPlayer, type VideoPlayer } from 'expo-video';
 import { useEffect, useState } from 'react';
 
+import { clamp } from '@/shared/lib/math';
+
 import { COACH_VIDEO_SOURCE } from '../lib/coach-video';
 
 /** Playback clock resolution; the ring animates linearly between ticks. */
@@ -65,7 +67,7 @@ export function useCoachPlayback(active: boolean) {
     /** Jumps to `fraction` (0–1) of the video; playback holds until `endScrub`. */
     scrub: (fraction: number) => {
       setScrubbing(true);
-      const elapsed = Math.min(Math.max(fraction, 0), MAX_SCRUB) * clock.duration;
+      const elapsed = clamp(fraction, 0, MAX_SCRUB) * clock.duration;
       seekTo(player, elapsed);
       setClock((c) => ({ ...c, elapsed }));
     },

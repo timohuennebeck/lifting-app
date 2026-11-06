@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { DAY_MS } from '@/shared/lib/date';
 import { storage } from '@/shared/lib/storage';
 
+import { parseJson } from './json';
 import { queryKeys } from './query-keys';
 import { signedUrl } from './supabase-storage';
 
@@ -20,12 +21,8 @@ const savedKey = (path: string) => `avatar-url:${path}`;
 
 /** The URL signed last for this photo, kept on the device while it is still well valid. */
 function savedUrl(path: string): SavedUrl | undefined {
-  try {
-    const saved = JSON.parse(storage.getString(savedKey(path)) ?? 'null') as SavedUrl | null;
-    return saved && Date.now() - saved.at < URL_TTL_MS / 2 ? saved : undefined;
-  } catch {
-    return undefined;
-  }
+  const saved = parseJson<SavedUrl | null>(storage.getString(savedKey(path)), null);
+  return saved && Date.now() - saved.at < URL_TTL_MS / 2 ? saved : undefined;
 }
 
 /**

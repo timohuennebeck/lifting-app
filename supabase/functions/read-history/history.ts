@@ -15,7 +15,7 @@ import { cut, type NewExercise } from '../_shared/plan-events.ts';
 import type { CatalogRow } from '../_shared/plans.ts';
 
 /** The columns the app reads a workout log by. */
-export const COLUMNS = [
+const COLUMNS = [
   'date',
   'end_time',
   'duration',

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { attempt } from '@/shared/lib/async';
 import { supabase } from '@/shared/data/supabase';
 import { useActiveWorkout } from '@/shared/data/workouts';
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
@@ -84,16 +85,13 @@ export function LegalUpdateGate() {
 
   async function accept() {
     setBusy(true);
-    try {
-      await acceptDocuments(
+    const accepted = await attempt('Recording the legal acceptance failed', () =>
+      acceptDocuments(
         requireUserId(),
         pending.map((p) => p.document),
-      );
-      haptics.success();
-    } catch (error) {
-      console.warn('Recording the legal acceptance failed', error);
-      haptics.error();
-    }
+      ),
+    );
+    if (accepted) haptics.success();
     setBusy(false);
   }
 

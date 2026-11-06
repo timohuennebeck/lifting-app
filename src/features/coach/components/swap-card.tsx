@@ -6,6 +6,7 @@ import { View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
+import { attempt } from '@/shared/lib/async';
 import { MuscleCardHeader } from '@/shared/components/muscle-card-header';
 import { useExerciseName } from '@/shared/data/exercises';
 import { type MuscleShare, muscleShares } from '@/shared/data/muscles';
@@ -314,13 +315,10 @@ export function SwapCard({ chart }: { chart: SwapChart }) {
   const change = async (planSwaps: PlanSwap[]) => {
     if (busy.current) return;
     busy.current = true;
-    try {
-      await swapInPlan(planSwaps);
-      haptics.success();
-    } catch (error) {
-      haptics.error();
-      console.error(error);
-    }
+    const swapped = await attempt('Swapping the exercises in the plan failed', () =>
+      swapInPlan(planSwaps),
+    );
+    if (swapped) haptics.success();
     busy.current = false;
   };
   const inPlan = (s: SwapView) => s.routines.map((r) => r.id);

@@ -4,9 +4,9 @@ import { StyleSheet, View } from 'react-native';
 
 import { colors } from '@/shared/lib/theme';
 
-import { Icon } from './icon';
-import { PressableScale } from './pressable-scale';
-import { Text } from './text';
+import { Icon } from '@/shared/ui/icon';
+import { PressableScale } from '@/shared/ui/pressable-scale';
+import { Text } from '@/shared/ui/text';
 
 export interface PhotoThumbProps {
   /** None: an empty slot with a plus, for the photo still to take. */
@@ -31,7 +31,7 @@ function ringOf(selected: boolean, viewing: boolean, ringColor: string | undefin
   return 'inset 0 0 0 1px rgba(255,255,255,0.18)';
 }
 
-/** A photo thumbnail with its label, in the camera's strips (progress check, plan import). */
+/** A photo thumbnail with its label, in the camera's strips. */
 export function PhotoThumb({
   uri,
   label,

@@ -1,8 +1,8 @@
 import { useExerciseSetting } from '@/shared/data/exercise-settings';
 import { useUnits } from '@/shared/data/profile';
-import { toDisplayWeight } from '@/shared/lib/format';
+import { toDisplayWeight, weightUnit } from '@/shared/lib/format';
 
-import { type PlateSetup, plateUnit } from '../lib/plates';
+import type { PlateSetup } from '../lib/plates';
 
 export interface PlateBar {
   /** The bar's weight in the user's unit, also while it is off (turning it on brings it back). */
@@ -17,7 +17,7 @@ export interface PlateBar {
 export function usePlateBar(exerciseId: string, setup: PlateSetup): PlateBar {
   const units = useUnits();
   const setting = useExerciseSetting(exerciseId);
-  const weight = setting ? toDisplayWeight(setting.barKg, units) : setup.start[plateUnit(units)];
+  const weight = setting ? toDisplayWeight(setting.barKg, units) : setup.start[weightUnit(units)];
   const noBar = setting ? setting.noBar : setup.startOff;
   return { weight, noBar, bar: noBar ? 0 : weight };
 }

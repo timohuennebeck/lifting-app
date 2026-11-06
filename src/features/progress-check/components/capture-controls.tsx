@@ -50,7 +50,7 @@ export function ShutterButton({ accessibilityLabel, onPress, busy, disabled }: S
   );
 }
 
-/** 52pt round button beside the shutter (flip camera, photo library). */
+/** 52pt round button beside the shutter (flip camera). */
 export function CameraSideButton({ className, ...props }: PressableScaleProps) {
   return (
     <PressableScale

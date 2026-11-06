@@ -1,6 +1,7 @@
 import Constants from 'expo-constants';
 import * as StoreReview from 'expo-store-review';
 
+import { parseJson } from '@/shared/data/json';
 import { DAY_MS } from '@/shared/lib/date';
 import { track } from '@/shared/lib/posthog';
 import { storage } from '@/shared/lib/storage';
@@ -33,10 +34,7 @@ interface ReviewMoment {
 
 const version = () => Constants.expoConfig?.version ?? '';
 
-function lastAsk(): LastAsk | null {
-  const raw = storage.getString(LAST_ASK_KEY);
-  return raw ? (JSON.parse(raw) as LastAsk) : null;
-}
+const lastAsk = () => parseJson<LastAsk | null>(storage.getString(LAST_ASK_KEY), null);
 
 /**
  * Whether to ask now: the app used for a while, a workout worth it (a new record or a milestone),

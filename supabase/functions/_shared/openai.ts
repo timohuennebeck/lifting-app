@@ -78,7 +78,7 @@ function readResponse(
 
 export interface StructuredRequest {
   instructions: string;
-  /** The user message's content parts (input_text, input_image, input_file). */
+  /** The user message's content parts (input_text, input_image). */
   content: unknown[];
   /** Name of the answer format, e.g. "progress_check". */
   name: string;

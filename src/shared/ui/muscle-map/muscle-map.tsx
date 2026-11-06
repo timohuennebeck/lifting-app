@@ -3,6 +3,7 @@ import Svg, { Path } from 'react-native-svg';
 
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
+import { getOrInsert } from '@/shared/lib/map';
 
 import {
   BODY,
@@ -19,16 +20,12 @@ const cropCache = new Map<string, BodyPath[]>();
 
 /** The paths of a view that reach into a viewBox, worked out once per crop. */
 function pathsIn(view: BodyView, viewBox: string) {
-  const key = `${view} ${viewBox}`;
-  let paths = cropCache.get(key);
-  if (!paths) {
+  return getOrInsert(cropCache, `${view} ${viewBox}`, () => {
     const [x, y, w, h] = viewBox.split(/[\s,]+/).map(Number);
-    paths = BODY[view].paths.filter(
+    return BODY[view].paths.filter(
       ({ box: [minX, minY, maxX, maxY] }) => minX < x + w && maxX > x && minY < y + h && maxY > y,
     );
-    cropCache.set(key, paths);
-  }
-  return paths;
+  });
 }
 
 export interface MuscleMapProps {

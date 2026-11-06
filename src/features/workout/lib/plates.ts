@@ -1,4 +1,3 @@
-import type { UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 
 export type PlateUnit = 'kg' | 'lb';
@@ -96,8 +95,6 @@ export const plateSetup = (exerciseId: string, equipment: string | null): PlateS
 
 /** Steps of the bar's weight in the plates sheet. */
 export const BAR_STEP: Record<PlateUnit, number> = { kg: 0.5, lb: 1 };
-
-export const plateUnit = (units: UnitSystem): PlateUnit => (units === 'imperial' ? 'lb' : 'kg');
 
 export const plateLook = (weight: number, unit: PlateUnit) =>
   PLATES[unit].find(([w]) => w === weight)?.[1] ?? PLATES[unit][PLATES[unit].length - 1][1];

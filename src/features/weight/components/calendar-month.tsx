@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 
-import { daysInMonth, isoDate, mondayIndex } from '@/shared/lib/date';
+import { daysInMonth, fromIsoDate, isoDate, mondayIndex } from '@/shared/lib/date';
 import { formatDate, type UnitSystem } from '@/shared/lib/format';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
@@ -83,7 +83,7 @@ export const CalendarMonth = memo(function CalendarMonth({
                   activeOpacity={0.6}
                   disabled={future}
                   accessibilityRole="button"
-                  accessibilityLabel={formatDate(new Date(`${date}T12:00`), {
+                  accessibilityLabel={formatDate(fromIsoDate(date), {
                     day: 'numeric',
                     month: 'long',
                   })}

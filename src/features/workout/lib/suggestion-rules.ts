@@ -83,7 +83,7 @@ export const round2 = (x: number) => Math.round(x * 100) / 100;
 export const floorStep = (w: number, step: number) => round2(Math.floor(w / step + 1e-9) * step);
 export const ceilStep = (w: number, step: number) => round2(Math.ceil(w / step - 1e-9) * step);
 /** Estimated one-rep max (Epley) of `reps` with `rir` left. */
-export const e1rm = (w: number, reps: number, rir: number) => w * (1 + (reps + rir) / 30);
+const e1rm = (w: number, reps: number, rir: number) => w * (1 + (reps + rir) / 30);
 /** Reps doable at weight `w` leaving `rir`, for an estimated max `e`. */
 const repsAt = (e: number, w: number, rir: number) => 30 * (e / w - 1) - rir;
 

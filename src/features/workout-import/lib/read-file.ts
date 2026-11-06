@@ -18,7 +18,6 @@ import { readWorkbook, type WorkbookSheet } from './workbook';
 export interface ImportFile {
   uri: string;
   name: string;
-  size: number | null;
   mimeType: string | null;
 }
 
@@ -43,7 +42,6 @@ async function pickFile(): Promise<ImportFile | null> {
   return {
     uri: asset.uri,
     name: asset.name,
-    size: asset.size ?? null,
     mimeType: asset.mimeType ?? null,
   };
 }

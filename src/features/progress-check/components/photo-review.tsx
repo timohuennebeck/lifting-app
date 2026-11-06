@@ -1,4 +1,4 @@
-import { Image, type ImageContentFit } from 'expo-image';
+import { Image } from 'expo-image';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -6,9 +6,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFooterInset } from '@/shared/hooks/use-footer-inset';
 
-import { Gradient, type GradientStop } from './gradient';
-import { IconButton } from './icon-button';
-import { Text } from './text';
+import { Gradient, type GradientStop } from '@/shared/ui/gradient';
+import { IconButton } from '@/shared/ui/icon-button';
+import { Text } from '@/shared/ui/text';
 
 /** Behind the strip and buttons: solid for its first third, then fading out. */
 const BOTTOM_SCRIM: GradientStop[] = [
@@ -19,8 +19,6 @@ const BOTTOM_SCRIM: GradientStop[] = [
 
 export interface PhotoReviewProps {
   uri: string;
-  /** `cover` fills the screen like the camera did; `contain` shows all of it, e.g. a page. */
-  fit?: ImageContentFit;
   title: string;
   /** Next to the title, e.g. whether the photo works. */
   status?: ReactNode;
@@ -32,24 +30,16 @@ export interface PhotoReviewProps {
 }
 
 /**
- * A taken photo full screen (progress check 08a, plan import 05a-2): its name at the top with a
+ * A taken photo full screen (08a), filling it like the camera did: its name at the top with a
  * close button, the thumbnails and buttons at the bottom.
  */
-export function PhotoReview({
-  uri,
-  fit = 'cover',
-  title,
-  status,
-  onClose,
-  strip,
-  children,
-}: PhotoReviewProps) {
+export function PhotoReview({ uri, title, status, onClose, strip, children }: PhotoReviewProps) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const footerInset = useFooterInset();
   return (
     <View style={StyleSheet.absoluteFill} className="bg-black">
-      <Image source={{ uri }} contentFit={fit} style={StyleSheet.absoluteFill} />
+      <Image source={{ uri }} contentFit="cover" style={StyleSheet.absoluteFill} />
       <Gradient from="top" size={200} color="black" opacity={0.6} />
       <Gradient from="bottom" size={340} color="black" stops={BOTTOM_SCRIM} />
       <View

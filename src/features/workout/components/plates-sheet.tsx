@@ -5,7 +5,7 @@ import { useWindowDimensions, View } from 'react-native';
 import { saveExerciseSetting } from '@/shared/data/exercise-settings';
 import { saveProfile, useUnits } from '@/shared/data/profile';
 import { cn } from '@/shared/lib/cn';
-import { formatNumber, fromDisplayWeight } from '@/shared/lib/format';
+import { formatNumber, fromDisplayWeight, weightUnit } from '@/shared/lib/format';
 import { clamp } from '@/shared/lib/math';
 import { colors } from '@/shared/lib/theme';
 import { useUserId } from '@/shared/stores/session-store';
@@ -27,7 +27,6 @@ import {
   plateStep,
   togglePlate,
   type PlateUnit,
-  plateUnit,
 } from '../lib/plates';
 import { PlateDrawing } from './plate-drawing';
 import { plateCaption, PlateList, plateNote } from './plate-list';
@@ -134,7 +133,7 @@ function PlatesSheetBody({
 }: PlatesSheetBodyProps) {
   const { t } = useTranslation(['workout', 'common']);
   const units = useUnits();
-  const unit = plateUnit(units);
+  const unit = weightUnit(units);
   const { width } = useWindowDimensions();
   const [weight, setWeight] = useState(initialWeight);
   const [draft, setDraft] = useState(initialBar);

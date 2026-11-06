@@ -6,6 +6,8 @@ import { AppState } from 'react-native';
 import { env } from '@/shared/config/env';
 import { mmkvStorage } from '@/shared/lib/storage';
 
+import { parseJson } from './json';
+
 /** Where supabase-js keeps the session: its default key, named so the app can read it at launch. */
 const AUTH_STORAGE_KEY = `sb-${new URL(env.supabaseUrl).hostname.split('.')[0]}-auth-token`;
 
@@ -26,12 +28,8 @@ export const supabase = createClient(env.supabaseUrl, env.supabasePublishableKey
  * it, and signs out (SIGNED_OUT) only when the server rejects it.
  */
 export function storedSession(): Session | null {
-  try {
-    const session = JSON.parse(mmkvStorage.getItem(AUTH_STORAGE_KEY) ?? 'null');
-    return session?.access_token && session.refresh_token && session.user?.id ? session : null;
-  } catch {
-    return null;
-  }
+  const session = parseJson<Session | null>(mmkvStorage.getItem(AUTH_STORAGE_KEY), null);
+  return session?.access_token && session.refresh_token && session.user?.id ? session : null;
 }
 
 // Only refresh tokens while the app is in the foreground.

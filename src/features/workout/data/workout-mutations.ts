@@ -69,7 +69,8 @@ export async function workoutStats(workoutId: string) {
     .where(eq(workoutEntries.id, workoutId))
     .get();
   if (!entry) return null;
-  const sets = await drizzle
+  // The three counts don't depend on each other: read side by side.
+  const setsQuery = drizzle
     .select({
       planned: count(),
       completed: count(workoutEntriesSets.completed_at),
@@ -78,12 +79,12 @@ export async function workoutStats(workoutId: string) {
     .from(workoutEntriesSets)
     .where(inArray(workoutEntriesSets.workout_entries_exercise_id, workoutExerciseIds(workoutId)))
     .get();
-  const exercises = await drizzle
+  const exercisesQuery = drizzle
     .select({ n: count() })
     .from(workoutEntriesExercises)
     .where(eq(workoutEntriesExercises.workout_entries_id, workoutId))
     .get();
-  const earlier = await drizzle
+  const earlierQuery = drizzle
     .select({ n: count() })
     .from(workoutEntries)
     .where(
@@ -94,6 +95,7 @@ export async function workoutStats(workoutId: string) {
       ),
     )
     .get();
+  const [sets, exercises, earlier] = await Promise.all([setsQuery, exercisesQuery, earlierQuery]);
   const planWeek = entry.planId !== null ? entry.planWeek : null;
   const inPlan = planWeek !== null;
   const blockWeek = inPlan ? blockWeekOf(planWeek, entry) : null;

@@ -1,6 +1,7 @@
 import { Defs, G, LinearGradient, Path, Stop } from 'react-native-svg';
 
 import { colors } from '@/shared/lib/theme';
+import { clamp } from '@/shared/lib/math';
 
 /** Side of a grid square. */
 const CELL = 14;
@@ -12,7 +13,7 @@ const SIDE_FADE = 0.18;
 const TOP_FADE = 3 * CELL;
 
 /** 0 at an edge, rising to 1 `over` away from it. */
-const ramp = (distance: number, over: number) => Math.min(1, Math.max(0, distance / over));
+const ramp = (distance: number, over: number) => clamp(distance / over, 0, 1);
 
 export interface ChartGridProps {
   /** Unique within the screen: the gradients are looked up by it. */

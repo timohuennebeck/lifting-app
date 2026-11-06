@@ -3,7 +3,7 @@ import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
 
 import { colors } from '@/shared/lib/theme';
 
-import { Text } from './text';
+import { Text } from '@/shared/ui/text';
 
 const LINE_WIDTHS = ['84%', '66%', '76%', '58%', '70%', '62%'] as const;
 const PENCIL = '#BDB7A9';
@@ -25,7 +25,7 @@ const SCAN: CSSAnimationKeyframes = {
   '100%': { backgroundColor: PENCIL },
 };
 
-/** Stylised training-plan page used in import and plan-building illustrations. */
+/** Stylised training-plan page in the plan-building illustration. */
 function PaperSheet({ tag, scanning }: PaperSheetProps) {
   return (
     <View

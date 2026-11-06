@@ -15,7 +15,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="index" />
       {/* The paywall fades in instead of sliding like a regular step. */}
       <Stack.Screen name="paywall/index" options={{ animation: 'fade' }} />
-      {/* Reading a file: no swiping back; its X asks before it stops. */}
+      {/* Reading a file: no swiping back; Android's back asks before it stops. */}
       <Stack.Screen name="import/reading" options={{ animation: 'fade', gestureEnabled: false }} />
     </Stack>
   );

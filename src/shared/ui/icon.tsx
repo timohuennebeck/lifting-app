@@ -92,14 +92,6 @@ const ICONS = {
       1.6,
     ),
   },
-  // Two arrows round a circle: replace with another one ("Ersetzen").
-  sync: {
-    viewBox: '0 0 16 16',
-    render: stroke(
-      'M13.5 6A5.5 5.5 0 0 0 3.2 4.5M2.5 10a5.5 5.5 0 0 0 10.3 1.5M3 1.5v3.2h3.2M13 14.5v-3.2H9.8',
-      1.7,
-    ),
-  },
   // A camera body with its lens (the "camera" icon is the viewfinder frame).
   'photo-camera': {
     viewBox: '0 0 22 18',
@@ -497,15 +489,6 @@ const ICONS = {
           strokeLinejoin="round"
         />
       </>
-    ),
-  },
-  bolt: {
-    viewBox: '0 0 256 256',
-    render: (c) => (
-      <Path
-        fill={c}
-        d="M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,13l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17Z"
-      />
     ),
   },
 } satisfies Record<string, IconDef>;

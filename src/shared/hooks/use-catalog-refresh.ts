@@ -15,32 +15,45 @@ import { HOUR_MS } from '@/shared/lib/date';
 /** Rows asked for per request; the API may cap a page lower (Supabase's `max_rows`). */
 const PAGE_SIZE = 1000;
 
+/** The equipment rows that differ from the ones the app has (equipment is never deleted). */
+function changedEquipment(rows: EquipmentRow[]) {
+  const known = useCatalogStore.getState().equipment;
+  return rows.filter((e) => JSON.stringify(known[e.id]) !== JSON.stringify(e));
+}
+
 /**
  * Fetches the equipment, a few rows, and the exercises changed since the newest one the app
- * knows: all of them on first launch. Works logged out.
+ * knows (all of them on first launch), side by side, and saves what changed in one write. Works
+ * logged out.
  */
 async function fetchCatalogChanges() {
-  const equipment = await supabase.from('equipment').select('*');
-  if (equipment.error) throw equipment.error;
-  // Merged like the exercises: equipment is never deleted, only deactivated.
-  useCatalogStore.setState((s) => ({
-    equipment: {
-      ...s.equipment,
-      ...Object.fromEntries((equipment.data as EquipmentRow[]).map((e) => [e.id, e])),
-    },
-  }));
   const since = latestUpdate(useCatalogStore.getState().rows);
-  const rows: ExerciseRow[] = [];
-  // Pages until one comes back empty, so a lower cap on the server only means more requests.
-  for (;;) {
-    let query = supabase.from('exercises').select('*');
+  const page = (from: number) => {
+    let query = supabase.from('exercises').select('*', { count: from ? undefined : 'exact' });
     if (since) query = query.gt('updated_at', since);
-    const { data, error } = await query.order('id').range(rows.length, rows.length + PAGE_SIZE - 1);
+    return query.order('id').range(from, from + PAGE_SIZE - 1);
+  };
+  const [equipment, first] = await Promise.all([supabase.from('equipment').select('*'), page(0)]);
+  if (equipment.error) throw equipment.error;
+  if (first.error) throw first.error;
+  const rows = [...(first.data as ExerciseRow[])];
+  // More pages only when the server caps a page lower than asked (Supabase's `max_rows`).
+  while (first.count !== null && rows.length < first.count) {
+    const { data, error } = await page(rows.length);
     if (error) throw error;
     if (!data.length) break;
     rows.push(...(data as ExerciseRow[]));
   }
-  if (rows.length) useCatalogStore.setState((s) => ({ rows: mergeRows(s.rows, rows) }));
+  const gear = changedEquipment(equipment.data as EquipmentRow[]);
+  // The store is saved whole on every change: written only when something did.
+  if (rows.length || gear.length) {
+    useCatalogStore.setState((s) => ({
+      rows: rows.length ? mergeRows(s.rows, rows) : s.rows,
+      equipment: gear.length
+        ? { ...s.equipment, ...Object.fromEntries(gear.map((e) => [e.id, e])) }
+        : s.equipment,
+    }));
+  }
   // Nothing usable on first launch counts as a failed download, so the retry screen shows.
   if (!Object.keys(useCatalogStore.getState().rows).length) {
     throw new Error('The exercise catalog is empty');

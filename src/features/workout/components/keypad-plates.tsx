@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 import { useUnits } from '@/shared/data/profile';
 import { cn } from '@/shared/lib/cn';
-import { formatNumber } from '@/shared/lib/format';
+import { formatNumber, weightUnit } from '@/shared/lib/format';
 import { parseInput } from '@/shared/lib/keypad';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
@@ -12,7 +12,7 @@ import { Text } from '@/shared/ui/text';
 
 import { useAvailablePlates } from '../hooks/use-available-plates';
 import { usePlateBar } from '../hooks/use-plate-bar';
-import { loadBar, type PlateSetup, plateUnit } from '../lib/plates';
+import { loadBar, type PlateSetup } from '../lib/plates';
 import { usePlatesStore } from '../stores/plates-store';
 import { useWorkoutSessionStore } from '../stores/workout-session-store';
 import { PlateDrawing } from './plate-drawing';
@@ -33,7 +33,7 @@ export interface KeypadPlatesProps {
  */
 export function KeypadPlates({ exerciseId, setup, onOpenSheet }: KeypadPlatesProps) {
   const { t } = useTranslation('workout');
-  const unit = plateUnit(useUnits());
+  const unit = weightUnit(useUnits());
   const weight = useWorkoutSessionStore((s) => s.input.weight);
   const { bar } = usePlateBar(exerciseId, setup);
   const open = usePlatesStore((s) => s.open);

@@ -14,12 +14,13 @@ export type ImportSource =
 export interface ImportedExercise extends ExerciseDraft {
   /** Stays with the exercise while it is edited or dragged to another place. */
   key: string;
-  /** Text as read from the source when the match is uncertain; cleared once confirmed. */
+  /**
+   * What voice input heard when the match is uncertain; cleared once confirmed. (A file's unsure
+   * lines are settled on the import's checks before the editor opens.)
+   */
   raw?: string;
   /** Other plausible catalog exercise ids for an uncertain line. */
   alternatives?: string[];
-  /** Added by voice: `raw` is what was heard rather than read. */
-  heard?: boolean;
 }
 
 export interface ImportedRoutine extends RoutineDraft {

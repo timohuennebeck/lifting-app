@@ -6,7 +6,7 @@ import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
-import { PhotoReview } from '@/shared/ui/photo-review';
+import { PhotoReview } from './photo-review';
 import { Text } from '@/shared/ui/text';
 
 import { WARN_COLOR, type Pose } from '../lib/poses';

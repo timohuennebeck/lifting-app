@@ -2,7 +2,6 @@
   "confirm": {
     "planName": "Nombre del plan",
     "ownPlan": "Mi plan",
-    "readAs": "Leído como «{{raw}}»",
     "correct": "Correcto",
     "add": "Añadir ejercicio",
     "swap": "Cambiar ejercicio",

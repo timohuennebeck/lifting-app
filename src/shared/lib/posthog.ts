@@ -52,7 +52,7 @@ export interface AnalyticsEvents {
   /** The account wasn't made; `error_code` is "generic" (the provider or the save failed). */
   'account:sign_up_fail': { method: AuthMethod; error_code: string };
   /**
-   * Signed in to an existing account in the sign-in sheet. `is_onboarded`: false when its
+   * Signed in to an existing account on the sign-in page. `is_onboarded`: false when its
    * onboarding wasn't finished, which then goes on and ends in `account:sign_up_complete`.
    */
   'account:sign_in_complete': { method: AuthMethod; is_onboarded: boolean };

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { fromIsoDate } from '@/shared/lib/date';
 import { formatShortDate, type UnitSystem, weightUnit } from '@/shared/lib/format';
 import { type Period, PERIOD_DAYS } from '@/shared/lib/periods';
 import { RangeTabs } from '@/shared/ui/range-tabs';
@@ -88,7 +89,7 @@ export function WeightOverview({ points, today, units }: WeightOverviewProps) {
       </View>
       <Text className="mt-2 h-5 px-5 font-inter-semibold text-[15px] leading-5">
         {visible.length && shown
-          ? `${formatShortDate(`${visible[0].date}T12:00`)} – ${formatShortDate(`${shown.date}T12:00`)}`
+          ? `${formatShortDate(fromIsoDate(visible[0].date))} – ${formatShortDate(fromIsoDate(shown.date))}`
           : ''}
       </Text>
       <View className="mt-2.25">

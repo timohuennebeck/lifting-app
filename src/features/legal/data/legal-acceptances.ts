@@ -9,7 +9,7 @@ import { drizzle } from '@/shared/data/powersync/database';
 import { legalAcceptances } from '@/shared/data/powersync/schema';
 import { supabase } from '@/shared/data/supabase';
 import { useDrizzleQuery } from '@/shared/data/use-drizzle-query';
-import { HOUR_MS } from '@/shared/lib/date';
+import { HOUR_MS, MINUTE_MS } from '@/shared/lib/date';
 import { devicePlatform } from '@/shared/lib/platform';
 import { storage } from '@/shared/lib/storage';
 
@@ -101,6 +101,9 @@ async function fetchAcceptedVersions(ids: string[]) {
 
 const PENDING_KEY = 'legal-update-pending';
 
+/** How old a check may be before coming back to the app checks again. */
+const FOREGROUND_CHECK_MS = 15 * MINUTE_MS;
+
 /**
  * Whether the last check found a version to accept. Only then does a launch keep the splash
  * screen up for the check; otherwise the app opens at once and the check runs behind it.
@@ -124,6 +127,7 @@ export function usePendingLegalDocuments(language: string) {
     data = [],
     status,
     refetch,
+    dataUpdatedAt,
   } = useQuery({
     queryKey: legalKeys.pending(language, acceptedIds ?? []).queryKey,
     queryFn: () => fetchPendingDocuments(language, acceptedIds ?? []),
@@ -131,12 +135,14 @@ export function usePendingLegalDocuments(language: string) {
     staleTime: HOUR_MS,
     refetchInterval: HOUR_MS,
   });
+  // Back in the foreground: checked again unless that was just done (unlocking the phone between
+  // sets would otherwise download both documents each time).
   useEffect(() => {
     const sub = AppState.addEventListener('change', (state) => {
-      if (state === 'active') void refetch();
+      if (state === 'active' && Date.now() - dataUpdatedAt > FOREGROUND_CHECK_MS) void refetch();
     });
     return () => sub.remove();
-  }, [refetch]);
+  }, [refetch, dataUpdatedAt]);
   const found = data.length > 0;
   useEffect(() => {
     if (status === 'success') storage.set(PENDING_KEY, found);

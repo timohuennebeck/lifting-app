@@ -303,7 +303,7 @@ Importieren (the same screens, routed under `src/app/(onboarding)/import/` and
   4,000) per 24 hours (`plan_requests` kind `history`); `read-plan` as before
   (`PLAN_IMPORT_IP_LIMIT`, default 10, and `PLAN_IMPORT_DAILY_LIMIT`, default 1,000).
   `plan_requests` keeps a keyed hash of the IP, never the IP itself.
-- **Testing:** `scripts/csv-import-lab/` times steps 1 and 2 on sample exports in the browser.
+- **Testing:** `scripts/csv-import-lab/samples` holds made-up exports to import (README there).
   `npm run plan:eval` sends the 11 test plans in `scripts/plan-import-eval/fixtures` (spreadsheet
   rows as text, notes, spoken; German, English, Portuguese, Spanish, French, Korean) to the
   functions and scores what they read against `cases.json`, with the time to the first exercise

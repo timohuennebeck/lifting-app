@@ -3,11 +3,11 @@ import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { attempt } from '@/shared/lib/async';
 import { MuscleCardHeader } from '@/shared/components/muscle-card-header';
 import { useExerciseName } from '@/shared/data/exercises';
 import { muscleShares } from '@/shared/data/muscles';
 import { estimateMinutes, repTarget } from '@/shared/data/routines';
-import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 import { Button } from '@/shared/ui/button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
@@ -58,13 +58,10 @@ export function WorkoutCard({ answerId, workout }: WorkoutCardProps) {
   const open = async () => {
     if (opening.current) return;
     opening.current = true;
-    try {
-      await saveCoachWorkout(requireUserId(), routineId, workout);
-      router.push(`/routine/${routineId}`);
-    } catch (error) {
-      haptics.error();
-      console.error(error);
-    }
+    const saved = await attempt('Saving the coach workout failed', () =>
+      saveCoachWorkout(requireUserId(), routineId, workout),
+    );
+    if (saved) router.push(`/routine/${routineId}`);
     opening.current = false;
   };
 

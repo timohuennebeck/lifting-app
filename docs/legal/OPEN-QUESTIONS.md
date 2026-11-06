@@ -34,17 +34,18 @@ photos and AI parts.
    opt-in. § 25(1) TDDDG requires consent for that in Germany; DS §4.14 names Art. 6(1)(f) GDPR and
    the right to object. Fix: an opt-in prompt before the SDK starts, or a mode without device
    storage.
-2. **Body data consent without a checkbox.** The line above the sign-up buttons (`createAccount.terms`)
-   states the explicit consent (DS §4.4). A separate checkbox would be the safer form of explicit
-   consent (Art. 9(2)(a) GDPR).
-3. **Progress check consent without its own step.** One line below the camera's "Done"
-   (`camera.consent`) names OpenAI and the USA; DS §4.6 and §8 rely on it, also for Art. 49(1)(a)
-   GDPR.
+2. **Body data consent by creating the account.** Creating the account accepts the privacy
+   policy, and DS §4.4 treats that as the explicit consent to process body measurements; the line
+   under the sign-up button (`createAccount.terms`) names only the terms and the privacy policy. A
+   separate checkbox would be the safer form of explicit consent (Art. 9(2)(a) GDPR).
+3. **Progress check consent by creating the account.** The camera shows no consent line; DS §4.6
+   and §8 rely on the account's acceptance of the policy for the photos going to OpenAI in the USA,
+   also for Art. 49(1)(a) GDPR. A step before the first check would be the safer form.
 4. **Coach consent by signing up, without a notice in the app.** The first release has no notice
    before the first question and no switch in Settings. DS §4.4 says that creating the account and
    accepting the policy is the consent to the coach sending training and body data to OpenAI in
-   the USA, and DS §4.8 and §8 rely on it, also for Art. 49(1)(a) GDPR. The sentence above the
-   sign-up button names this (item 27). TestFlight accounts from earlier builds saw a sentence
+   the USA, and DS §4.8 and §8 rely on it, also for Art. 49(1)(a) GDPR. No sentence at sign-up
+   names it. TestFlight accounts from earlier builds saw a sentence
    that only named body data for tailoring the training, and keep the consent they gave by signing
    up. `profiles.coach_consent_at` is set at sign-up, and for an account without it, with its first
    question (`coach-chat` records it). Whether this is an explicit, informed consent

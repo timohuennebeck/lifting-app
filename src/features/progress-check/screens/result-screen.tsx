@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, Share, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { attempt } from '@/shared/lib/async';
 import { useProfile } from '@/shared/data/profile';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { formatDate } from '@/shared/lib/format';
@@ -115,25 +116,22 @@ export function ResultScreen() {
     if (!saved || !userId) return;
     setMenuOpen(false);
     exitProgressCheck();
-    try {
-      await deleteProgressCheck(saved.id, userId);
-      haptics.success();
-    } catch (error) {
-      console.warn('Deleting the progress check failed', error);
-      haptics.error();
-    }
+    const deleted = await attempt('Deleting the progress check failed', () =>
+      deleteProgressCheck(saved.id, userId),
+    );
+    if (deleted) haptics.success();
   }
 
   const save = async () => {
     if (!draft || !userId || !hasAllShots(shots) || saving) return;
     setSaving(true);
-    try {
-      await saveProgressCheck({ checkId: id, userId, result: draft, photos: shots });
+    const stored = await attempt('Saving the progress check failed', () =>
+      saveProgressCheck({ checkId: id, userId, result: draft, photos: shots }),
+    );
+    if (stored) {
       haptics.success();
       setJustSaved(true);
-    } catch (error) {
-      console.warn('Saving the progress check failed', error);
-      haptics.error();
+    } else {
       showError({
         title: t('result.saveFailed.title'),
         message: t('result.saveFailed.message'),

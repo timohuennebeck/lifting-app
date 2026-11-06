@@ -35,10 +35,6 @@ import {
 } from '../lib/plan-import-service';
 import { useImportStore } from '../stores/import-store';
 
-/** What an unsure exercise says it was taken from: read, or heard by voice input. */
-const reviewLabel = (e: ImportedExercise) =>
-  e.heard ? ('voice:heardAs' as const) : ('planImport:confirm.readAs' as const);
-
 /**
  * 06c: the plan in the training overview layout (03·0b). Its routines sit in the plan strip, in
  * the order they are trained; amber dots mark exercises not sure yet (voice input) until the user
@@ -244,7 +240,7 @@ export function ConfirmScreen() {
                   ) : null}
                   {e.raw ? (
                     <ReviewPrompt
-                      message={t(reviewLabel(e), { raw: e.raw })}
+                      message={t('voice:heardAs', { raw: e.raw })}
                       alternatives={e.alternatives}
                       onConfirm={() => editExercise(i, settle)}
                       onPickAlternative={(exerciseId) =>

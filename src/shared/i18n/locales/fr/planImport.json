@@ -2,7 +2,6 @@
   "confirm": {
     "planName": "Nom du programme",
     "ownPlan": "Mon programme",
-    "readAs": "Lu comme « {{raw}} »",
     "correct": "C'est bon",
     "add": "Ajouter un exercice",
     "swap": "Remplacer l'exercice",

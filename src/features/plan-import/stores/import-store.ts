@@ -183,7 +183,7 @@ export const useImportStore = create<ImportState>()((set, get) => ({
     // New exercises are created at sign-up or with the plan, like an import's (see `receive`).
     const { draft, update } = useOnboardingStore.getState();
     update({ customExercises: [...draft.customExercises, ...newExercises] });
-    const added = exercises.map((e) => ({ ...e, key: newId(), ...(e.raw ? { heard: true } : {}) }));
+    const added = exercises.map((e) => ({ ...e, key: newId() }));
     set((s) =>
       s.plan
         ? {

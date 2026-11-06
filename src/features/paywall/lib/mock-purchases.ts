@@ -1,3 +1,4 @@
+import { parseJson } from '@/shared/data/json';
 import { wait } from '@/shared/lib/async';
 import { DAY_MS } from '@/shared/lib/date';
 import { storage } from '@/shared/lib/storage';
@@ -19,10 +20,7 @@ const PLANS: Plan[] = [
 // The mock "store account" lives in MMKV so restore works across sessions and sign-outs.
 const RECEIPT_KEY = 'purchases.mock.receipt';
 
-function readReceipt(): CustomerInfo | null {
-  const raw = storage.getString(RECEIPT_KEY);
-  return raw ? (JSON.parse(raw) as CustomerInfo) : null;
-}
+const readReceipt = () => parseJson<CustomerInfo | null>(storage.getString(RECEIPT_KEY), null);
 
 /**
  * Stand-in for RevenueCat where it isn't set up (no API key, Android, the web preview):

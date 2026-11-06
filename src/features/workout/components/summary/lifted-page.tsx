@@ -5,7 +5,8 @@ import { View } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
 import Svg, { Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
 
-import { formatNumber, kgToLb, type UnitSystem, weightUnit } from '@/shared/lib/format';
+import { toUnits } from '@/shared/lib/body-weight';
+import { formatNumber, type UnitSystem, weightUnit } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
@@ -64,7 +65,7 @@ export interface LiftedPageProps {
 /** Story page 1: the weight the workout moved, as the object it outweighs, and counting up. */
 export function LiftedPage({ kg, object, units, bottomInset, taps }: LiftedPageProps) {
   const { t } = useTranslation('workout');
-  const total = units === 'imperial' ? kgToLb(kg) : kg;
+  const total = toUnits(kg, units);
   const shown = useCountUp(total);
   const moved = t('summary.story.moved', { unit: weightUnit(units) });
   return (
