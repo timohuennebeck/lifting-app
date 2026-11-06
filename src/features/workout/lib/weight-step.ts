@@ -46,6 +46,34 @@ export function weightStep(
   return CANDIDATES[unit].find(fits) ?? CANDIDATES[unit][CANDIDATES[unit].length - 1];
 }
 
+/** Coarser steps a gym may only have, in each unit. */
+const COARSER = { kg: [2, 2.5, 4, 5, 10], lb: [2.5, 5, 10] };
+
+/**
+ * The step the gym really has, in the user's unit: when lifted weights keep rounding suggested
+ * ones to a coarser step (62.5 suggested, 60 or 65 lifted) and every weight logged is on it,
+ * that step; else `step`.
+ */
+export function roundedStep(
+  step: number,
+  sets: { weight: number; suggested: number | null }[],
+  units: UnitSystem,
+) {
+  let out = step;
+  for (const coarse of COARSER[units === 'imperial' ? 'lb' : 'kg'].filter((c) => c > step)) {
+    const rounded = sets.filter(
+      ({ weight, suggested }) =>
+        suggested != null &&
+        !isMultiple(suggested, coarse) &&
+        Math.abs(weight - suggested) < coarse &&
+        isMultiple(weight, coarse),
+    ).length;
+    const allOn = sets.every(({ weight }) => weight <= 0 || isMultiple(weight, coarse));
+    if (rounded >= 2 && allOn) out = coarse;
+  }
+  return out;
+}
+
 /** Lightest weight the equipment has: the empty bar for barbells, else none. */
 export const lightestWeight = (equipment: string | undefined, units: UnitSystem) =>
   equipment === 'barbell' ? BAR[units === 'imperial' ? 'lb' : 'kg'] : 0;

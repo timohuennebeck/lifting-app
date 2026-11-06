@@ -152,6 +152,10 @@ export const workoutEntriesSets = sqliteTable(
     seconds: integer(),
     // Reps in reserve the set had (0–5, 5 meaning 5+), when entered; target_rir is the plan's.
     rir: integer(),
+    // What the live workout suggested when the set was logged; null without a suggestion.
+    suggested_weight_kg: real(),
+    suggested_reps: integer(),
+    suggested_seconds: integer(),
     completed_at: text(),
     // Postgres boolean, synced as 0/1.
     is_pr: integer({ mode: 'boolean' }).notNull(),

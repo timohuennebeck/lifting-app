@@ -15,12 +15,14 @@ import { getOrInsert } from '@/shared/lib/map';
 /** Workouts per exercise the suggestions look back on. */
 const RECENT_WORKOUTS = 3;
 
-interface RecentSet extends SetValues {
+export interface RecentSet extends SetValues {
   targetMin: number | null;
   targetMax: number | null;
   targetRir: number | null;
   /** Reps in reserve as entered. */
   rir: number | null;
+  /** What the set was suggested when it was logged; null without a suggestion. */
+  suggested: SetValues | null;
 }
 
 export interface RecentSession {
@@ -75,6 +77,9 @@ function recentSessionsQuery(exerciseIds: string[]) {
       target_min: workoutEntriesSets.target_min,
       target_max: workoutEntriesSets.target_max,
       target_rir: workoutEntriesSets.target_rir,
+      suggested_weight_kg: workoutEntriesSets.suggested_weight_kg,
+      suggested_reps: workoutEntriesSets.suggested_reps,
+      suggested_seconds: workoutEntriesSets.suggested_seconds,
     })
     .from(ranked)
     .innerJoin(workoutEntries, eq(workoutEntries.id, ranked.workout_id))
@@ -120,6 +125,14 @@ function toRecentSessions(rows: RowOf<typeof recentSessionsQuery>[]) {
       targetMin: r.target_min,
       targetMax: r.target_max,
       targetRir: r.target_rir,
+      suggested:
+        r.suggested_reps == null && r.suggested_seconds == null
+          ? null
+          : {
+              weightKg: r.suggested_weight_kg,
+              reps: r.suggested_reps,
+              seconds: r.suggested_seconds,
+            },
     });
   }
   const out: Record<string, RecentSession[]> = {};

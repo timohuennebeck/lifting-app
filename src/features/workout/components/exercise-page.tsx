@@ -17,7 +17,7 @@ import { SetTable } from './set-table';
 export interface ExercisePageProps {
   exercise: WorkoutExercise;
   workoutId: string;
-  suggestions: SetSuggestion[] | null;
+  suggestions: (SetSuggestion | null)[] | null;
   /** The row being typed in, or -1 (always on the pages beside the shown one). */
   selectedIndex: number;
   onSelect: (index: number, field: SetField | null) => void;

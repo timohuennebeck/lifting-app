@@ -40,7 +40,8 @@ export interface SetTableProps {
   measures: Measure[];
   last: ExerciseHistoryEntry | undefined;
   /** Per set; none the first time the exercise is done: the targets show instead. */
-  suggestions: SetSuggestion[] | null;
+  /** Per set; null for a set without one (the first time). */
+  suggestions: (SetSuggestion | null)[] | null;
   units: UnitSystem;
   /** A box of row `index` tapped, or null for the row outside its boxes. */
   onSelect: (index: number, field: SetField | null) => void;
@@ -112,7 +113,7 @@ export function SetTable({
     if (editing) {
       return measure === 'weight' ? displayInput(input.weight, separator) : input[measure];
     }
-    const suggested = suggestions?.map((x) => x.values);
+    const suggested = suggestions?.map((x) => x?.values ?? null);
     const value = valueOf(rowValues(exercise, index, logged, typed, drafts, suggested), measure);
     if (value == null) return '';
     return measure === 'weight' ? formatWeightValue(value, units) : formatNumber(value, 0);

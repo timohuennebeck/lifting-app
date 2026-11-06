@@ -11,6 +11,7 @@ import {
   type SQL,
   sql,
 } from 'drizzle-orm';
+import type { AnySQLiteColumn } from 'drizzle-orm/sqlite-core';
 
 import type { SetDraft } from '@/features/training/components/set-editor-row';
 import { insertCustomExercises } from '@/shared/data/custom-exercises';
@@ -304,17 +305,25 @@ async function isRecord(setId: string, exerciseId: string, values: SetValues) {
   return !!row?.best && row.score > row.best + 0.01;
 }
 
+/** The largest weight the suggestion's column holds (numeric(6, 2)). */
+const SUGGESTED_KG_MAX = 9999.99;
+
 /**
  * Completes (or re-edits) a set; `rir` (reps in reserve) is written when one was picked, else
- * it stays. Returns true when it is a new personal record.
+ * it stays. `suggested` is what the set was suggested, kept from its first completion so a
+ * re-edit doesn't replace it. Returns true when it is a new personal record.
  */
 export async function logSet(
   setId: string,
   exerciseId: string,
   values: SetValues,
   rir?: number | null,
+  suggested?: SetValues | null,
 ) {
   const isPr = await isRecord(setId, exerciseId, values);
+  const kg = suggested?.weightKg;
+  const firstTime = (value: number | null | undefined, column: AnySQLiteColumn) =>
+    sql`case when ${workoutEntriesSets.completed_at} is null then ${value ?? null} else ${column} end`;
   await drizzle
     .update(workoutEntriesSets)
     .set({
@@ -322,6 +331,12 @@ export async function logSet(
       reps: values.reps,
       seconds: values.seconds,
       ...(rir != null ? { rir } : {}),
+      suggested_weight_kg: firstTime(
+        kg != null && kg <= SUGGESTED_KG_MAX ? kg : null,
+        workoutEntriesSets.suggested_weight_kg,
+      ),
+      suggested_reps: firstTime(suggested?.reps, workoutEntriesSets.suggested_reps),
+      suggested_seconds: firstTime(suggested?.seconds, workoutEntriesSets.suggested_seconds),
       is_pr: isPr,
       // A re-edit keeps the original completion time.
       completed_at: sql`coalesce(${workoutEntriesSets.completed_at}, ${nowIso()})`,
@@ -388,6 +403,9 @@ export async function swapWorkoutExercise(workoutExerciseId: string, exerciseId:
         reps: null,
         seconds: null,
         rir: null,
+        suggested_weight_kg: null,
+        suggested_reps: null,
+        suggested_seconds: null,
         completed_at: null,
         is_pr: false,
         ...(targets && {

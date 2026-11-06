@@ -25,7 +25,11 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   const exercise = exercises[exerciseIndex];
   const suggestions = useSetSuggestions(workout, units);
   /** The suggested values of each set of `target`, the boxes' prefill (none the first time). */
-  const suggestedValues = (target: WorkoutExercise) => suggestions[target.id]?.map((s) => s.values);
+  const suggestedValues = (target: WorkoutExercise) =>
+    suggestions[target.id]?.map((s) => s?.values ?? null);
+  /** What set `index` of `target` is suggested now, stored with the set when it is logged. */
+  const suggestionOf = (target: WorkoutExercise, index: number) =>
+    suggestions[target.id]?.[index]?.values ?? null;
 
   const allSets = exercises.flatMap((e) => e.sets);
   const doneSets = allSets.filter((s) => s.completedAt).length;
@@ -79,7 +83,8 @@ export function useLiveWorkout(workout: WorkoutDetail) {
       const { values, missing } = parseSetInput(store.input, measures, bodyweight, units);
       if (missing) return;
       store.markLogged(set.id, { ...values, rir: store.rir });
-      logSet(set.id, exercise.exerciseId, values, store.rir).catch((error) => {
+      const suggested = suggestionOf(exercise, selectedIndex);
+      logSet(set.id, exercise.exerciseId, values, store.rir, suggested).catch((error) => {
         console.error(error);
         haptics.error();
         store.clearLogged(set.id);
@@ -168,7 +173,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     }
     let isPr: boolean;
     try {
-      isPr = await logSet(set.id, target.exerciseId, values, rir);
+      isPr = await logSet(set.id, target.exerciseId, values, rir, suggestionOf(target, index));
     } catch (error) {
       // The keypad already closed; reopen this set so the failed log isn't mistaken for saved.
       console.error(error);
