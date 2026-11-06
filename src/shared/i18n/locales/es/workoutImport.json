@@ -8,14 +8,6 @@
     "cta": "Elegir archivo",
     "fresh": "Empiezo desde cero"
   },
-  "file": {
-    "title": "¿ES ESTE EL\nARCHIVO CORRECTO?",
-    "sheets_one": "{{size}} · {{count}} hoja",
-    "sheets_other": "{{size}} · {{count}} hojas",
-    "replace": "Cambiar",
-    "read": "Leer archivo",
-    "next": "Siguiente"
-  },
   "sheets": {
     "title": "¿QUÉ HOJAS\nLEEMOS?",
     "subtitle_one": "{{name}} tiene {{count}} hoja. Elige las que contienen tus entrenamientos.",

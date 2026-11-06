@@ -89,24 +89,6 @@ export function FileCards({ labels = ['TSV', 'CSV', 'XLSX'], scale = 1 }: FileCa
   );
 }
 
-/** 13l: the picked file, 150 × 190, with its type. */
-export function PickedFile({ label }: { label: string }) {
-  return (
-    <View
-      className="h-47.5 w-37.5 gap-2.25 rounded-[20px] bg-raised px-4.5 py-5"
-      style={{ boxShadow: '0 24px 50px rgba(0,0,0,0.5)' }}
-      accessibilityElementsHidden
-    >
-      <View className="mb-1.5">
-        <FileTag label={label} />
-      </View>
-      <Lines widths={[60, 90, 75, 85]} height={5} />
-      <View className="h-1.5" />
-      <Lines widths={[50, 80, 65]} height={5} />
-    </View>
-  );
-}
-
 /** A small file card that circles the reading screen (13m31), 42 × 54. */
 export function OrbitFile({ label }: { label: string }) {
   return (

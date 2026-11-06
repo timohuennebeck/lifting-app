@@ -55,7 +55,7 @@ export function SheetsScreen() {
     <StepScreen
       {...TITLE_STYLE}
       subtitleClassName="mt-2.5 leading-[21.75px]"
-      step={counter.offset + 2}
+      step={counter.offset + 1}
       total={counter.total}
       title={t('sheets.title')}
       subtitle={t('sheets.subtitle', { name: baseName(file.name), count: summaries.length })}

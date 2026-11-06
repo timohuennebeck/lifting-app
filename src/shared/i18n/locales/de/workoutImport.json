@@ -8,14 +8,6 @@
     "cta": "Datei auswählen",
     "fresh": "Ich starte neu"
   },
-  "file": {
-    "title": "IST DAS DIE\nRICHTIGE DATEI?",
-    "sheets_one": "{{size}} · {{count}} Tabellenblatt",
-    "sheets_other": "{{size}} · {{count}} Tabellenblätter",
-    "replace": "Ersetzen",
-    "read": "Datei einlesen",
-    "next": "Weiter"
-  },
   "sheets": {
     "title": "WELCHE BLÄTTER\nLESEN WIR EIN?",
     "subtitle_one": "{{name}} hat {{count}} Blatt. Wähle die, in denen deine Trainings stehen.",

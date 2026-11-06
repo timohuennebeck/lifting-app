@@ -4,22 +4,19 @@ import type { ReadFile } from './read-file';
 export const asksSheets = (read: ReadFile | null) =>
   (read?.summaries?.filter((s) => s.kind !== 'empty').length ?? 0) > 1;
 
-/** The import's steps before reading: the file, and maybe its sheets. */
-export const importSteps = (read: ReadFile | null) => (asksSheets(read) ? 2 : 1);
+/** Where a picked file goes: its sheets (a workbook with several), else straight to reading. */
+export const afterPick = (read: ReadFile) =>
+  asksSheets(read) ? ('/import/sheets' as const) : ('/import/reading' as const);
 
 /**
  * The import's counter: in the app the start screen is its first step (in onboarding it ends the
- * questions about the user), then the file, maybe its sheets, the dates when workouts have none
- * (`withDates`), and "Importiert" last. `offset` is added to the file's and the sheets' numbers.
+ * questions about the user), then maybe the sheets, the dates when workouts have none
+ * (`withDates`), and "Importiert" last. `offset` is added to the sheets' number.
  */
 export function flowSteps(read: ReadFile | null, inApp: boolean, withDates = false) {
   const offset = inApp ? 1 : 0;
-  return { offset, total: offset + importSteps(read) + (withDates ? 1 : 0) + 1 };
+  return { offset, total: offset + (asksSheets(read) ? 1 : 0) + (withDates ? 1 : 0) + 1 };
 }
-
-/** The file's type as its card shows it: "CSV", "XLSX". */
-export const fileLabel = (name: string) =>
-  (/\.([a-z0-9]{2,4})$/i.exec(name)?.[1] ?? 'csv').toUpperCase();
 
 /** The file's name without its type: "past_workouts". */
 export const baseName = (name: string) => name.replace(/\.[^.]+$/, '') || name;

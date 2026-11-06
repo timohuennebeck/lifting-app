@@ -19,7 +19,7 @@ import { Orbit } from '../components/orbit';
 import { showImportFailure, showNothingFound } from '../lib/import-failure';
 import type { ImportFile, ReadFile } from '../lib/read-file';
 import { useImportSteps } from '../hooks/use-import-steps';
-import { CTA_STYLE } from '../lib/steps';
+import { afterPick, CTA_STYLE } from '../lib/steps';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 /**
@@ -86,7 +86,7 @@ export function ReadingScreen() {
       const name = useWorkoutImportStore.getState().file?.name ?? '';
       const open = (file: ImportFile, read: ReadFile) => {
         setFile(file, read);
-        router.push(step('/import/file'));
+        router.push(step(afterPick(read)));
       };
       router.dismissTo(step('/import'));
       showNothingFound(name, open);

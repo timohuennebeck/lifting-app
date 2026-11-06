@@ -19,7 +19,6 @@ import { saveActivePlan } from '../data/save-plan';
 /** The flow's steps where onboarding has them; the app has the same under /plan. */
 type PlanStep =
   | '/import'
-  | '/import/file'
   | '/import/sheets'
   | '/import/reading'
   | '/import/check'

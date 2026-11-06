@@ -8,14 +8,6 @@
     "cta": "Escolher ficheiro",
     "fresh": "Vou começar do zero"
   },
-  "file": {
-    "title": "ESTE É O\nFICHEIRO CERTO?",
-    "sheets_one": "{{size}} · {{count}} folha",
-    "sheets_other": "{{size}} · {{count}} folhas",
-    "replace": "Substituir",
-    "read": "Ler ficheiro",
-    "next": "Continuar"
-  },
   "sheets": {
     "title": "QUE FOLHAS\nVAMOS LER?",
     "subtitle_one": "{{name}} tem {{count}} folha. Escolhe as que têm o teu treino.",

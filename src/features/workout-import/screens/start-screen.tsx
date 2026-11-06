@@ -14,7 +14,7 @@ import { TextButton } from '@/shared/ui/text-button';
 import { FileCards } from '../components/file-art';
 import { chooseImportFile, type ImportFile, type ReadFile } from '../lib/read-file';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
-import { CTA_STYLE, flowSteps, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
+import { afterPick, CTA_STYLE, flowSteps, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
 
 const LOGOS = [
   require('@/assets/images/import/hevy.png'),
@@ -32,7 +32,7 @@ export function StartScreen() {
 
   function open(file: ImportFile, read: ReadFile) {
     setFile(file, read);
-    router.push(step('/import/file'));
+    router.push(step(afterPick(read)));
   }
   const choose = () => void chooseImportFile(open);
 

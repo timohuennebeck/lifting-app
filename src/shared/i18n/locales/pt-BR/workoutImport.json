@@ -8,14 +8,6 @@
     "cta": "Escolher arquivo",
     "fresh": "Vou começar do zero"
   },
-  "file": {
-    "title": "ESTE É O\nARQUIVO CERTO?",
-    "sheets_one": "{{size}} · {{count}} aba",
-    "sheets_other": "{{size}} · {{count}} abas",
-    "replace": "Trocar",
-    "read": "Ler arquivo",
-    "next": "Continuar"
-  },
   "sheets": {
     "title": "QUAIS ABAS\nVAMOS LER?",
     "subtitle_one": "{{name}} tem {{count}} aba. Escolha as que têm seus treinos.",

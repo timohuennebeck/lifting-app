@@ -8,14 +8,6 @@
     "cta": "Choose file",
     "fresh": "I'm starting fresh"
   },
-  "file": {
-    "title": "IS THIS THE\nRIGHT FILE?",
-    "sheets_one": "{{size}} · {{count}} sheet",
-    "sheets_other": "{{size}} · {{count}} sheets",
-    "replace": "Replace",
-    "read": "Read file",
-    "next": "Next"
-  },
   "sheets": {
     "title": "WHICH SHEETS\nSHALL WE READ?",
     "subtitle_one": "{{name}} has {{count}} sheet. Choose the ones your training is in.",

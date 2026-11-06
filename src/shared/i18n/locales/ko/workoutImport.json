@@ -8,14 +8,6 @@
     "cta": "파일 선택",
     "fresh": "처음부터 시작할게요"
   },
-  "file": {
-    "title": "이 파일이\n맞나요?",
-    "sheets_one": "{{size}} · 시트 {{count}}개",
-    "sheets_other": "{{size}} · 시트 {{count}}개",
-    "replace": "바꾸기",
-    "read": "파일 읽기",
-    "next": "다음"
-  },
   "sheets": {
     "title": "어떤 시트를\n읽을까요?",
     "subtitle_one": "{{name}}에 시트가 {{count}}개 있어요. 운동 내용이 있는 시트를 골라 주세요.",

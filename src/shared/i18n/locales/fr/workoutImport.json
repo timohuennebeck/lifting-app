@@ -8,14 +8,6 @@
     "cta": "Choisir un fichier",
     "fresh": "Je pars de zéro"
   },
-  "file": {
-    "title": "C'EST LE BON\nFICHIER ?",
-    "sheets_one": "{{size}} · {{count}} feuille",
-    "sheets_other": "{{size}} · {{count}} feuilles",
-    "replace": "Remplacer",
-    "read": "Lire le fichier",
-    "next": "Suivant"
-  },
   "sheets": {
     "title": "QUELLES FEUILLES\nLIRE ?",
     "subtitle_one": "{{name}} compte {{count}} feuille. Choisis celles qui contiennent ton entraînement.",
