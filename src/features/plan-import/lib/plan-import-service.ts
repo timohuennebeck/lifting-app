@@ -126,7 +126,8 @@ export async function streamPlan(
     (event) => {
       if (event.type === 'done') return true;
       if (event.type === 'error') {
-        console.warn(`${fn} stopped: ${event.error}`);
+        // "Not a plan" is an answer, not a fault: the import goes on without the file's plan.
+        if (event.error !== 'not_a_plan') console.warn(`${fn} stopped: ${event.error}`);
         throw new ImportError(
           SERVER_ERRORS[event.error] ?? 'failed',
           `stream${codeOf(event.error) || '_error'}`,
