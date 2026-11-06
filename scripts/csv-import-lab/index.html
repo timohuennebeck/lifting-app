@@ -1177,6 +1177,26 @@ ${EXERCISE_RULES}
           const year = +m[3] < 100 ? 2000 + +m[3] : +m[3];
           return new Date(year, month - 1, day, +(m[4] || 0), +(m[5] || 0));
         }
+        // "1 Nov 2025, 12:00" (Hevy) or "Nov 1, 2025 12:00": Safari won't Date.parse these.
+        const months = 'jan feb mar apr may jun jul aug sep oct nov dec'.split(' ');
+        m = s.match(/^(\d{1,2}) ([a-z]{3})[a-z]*\.? (\d{4})(?:,? (\d{1,2}):(\d{2}))?/i);
+        if (m && months.includes(m[2].toLowerCase()))
+          return new Date(
+            +m[3],
+            months.indexOf(m[2].toLowerCase()),
+            +m[1],
+            +(m[4] || 0),
+            +(m[5] || 0),
+          );
+        m = s.match(/^([a-z]{3})[a-z]*\.? (\d{1,2}),? (\d{4})(?:,? (\d{1,2}):(\d{2}))?/i);
+        if (m && months.includes(m[1].toLowerCase()))
+          return new Date(
+            +m[3],
+            months.indexOf(m[1].toLowerCase()),
+            +m[2],
+            +(m[4] || 0),
+            +(m[5] || 0),
+          );
         const t = Date.parse(s);
         return Number.isFinite(t) ? new Date(t) : null;
       }
@@ -1617,7 +1637,7 @@ ${EXERCISE_RULES}
         const lower = state.headers.map((h) => h.toLowerCase());
         const find = (...words) =>
           state.headers[lower.findIndex((h) => words.some((w) => h.includes(w)))] ?? null;
-        const date = find('date', 'datum', 'fecha', '날짜');
+        const date = find('date', 'start_time', 'datum', 'fecha', '날짜');
         const exercise = find('exercise', 'übung', 'uebung', 'ejercicio', 'exercice', '운동');
         const dateIdx = colIndex(date);
         const dated = dateIdx >= 0 ? state.rows.filter((r) => r[dateIdx]) : [];
@@ -1645,13 +1665,13 @@ ${EXERCISE_RULES}
           reason: 'Mock answer from header names (no model call).',
           columns: {
             date,
-            workout_name: find('workout name', 'workout', 'routine'),
+            workout_name: find('workout name', 'workout', 'routine', 'title'),
             exercise,
-            set_order: find('set order', 'set #', 'satz'),
+            set_order: find('set order', 'set_index', 'set #', 'satz'),
             weight: find('weight', 'gewicht', 'kg', 'peso', 'poids'),
             weight_unit_column: null,
             reps: find('reps', 'wdh', 'wiederholungen'),
-            seconds: find('seconds', 'time', 'sek'),
+            seconds: find('seconds', 'sek'),
             rpe: find('rpe'),
             plan_day: day,
             target_sets: find('sets', 'sätze'),

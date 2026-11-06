@@ -28,5 +28,18 @@ Enter the model's token prices to get the cost per import. With a key, the key i
 "Remember key" is ticked (browser `localStorage`).
 
 `samples/` holds made-up files: `history-strong-style.csv` (146 workouts as a tracker-app export,
-about a quarter without a date) and `plan-and-log-de.csv` (a German plan on top of a short log).
+about a quarter without a date), `plan-and-log-de.csv` (a German plan on top of a short log), and
+`history-1y.csv`, `history-2y.csv`, `history-5y.csv` (about 3.5 workouts a week; every ~4 months
+some exercises change, so the names grow from 39 to 74):
+
+| File             | Rows   | Workouts | Exercise names |
+| ---------------- | ------ | -------- | -------------- |
+| `history-1y.csv` | 3,219  | 170      | 39             |
+| `history-2y.csv` | 7,119  | 376      | 59             |
+| `history-5y.csv` | 16,423 | 867      | 74             |
+
+`hevy-1y.csv`, `hevy-2y.csv` and `hevy-5y.csv` hold the same workouts in the layout of Hevy's CSV
+export (`title`, `start_time`, `exercise_title`, `set_index` from 0, `set_type` with warm-up,
+failure and drop sets, `weight_kg`, …), every workout dated.
+
 `node scripts/csv-import-lab/make-sample.mjs` writes them again.
