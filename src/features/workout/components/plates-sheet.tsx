@@ -18,8 +18,16 @@ import { Text } from '@/shared/ui/text';
 import { ToggleSwitch } from '@/shared/ui/toggle-switch';
 
 import { type PlateBar, usePlateBar } from '../hooks/use-plate-bar';
-import { BAR_STEP, loadBar, type PlateSetup, plateUnit } from '../lib/plates';
-import { weightStep } from '../lib/weight-step';
+import {
+  BAR_STEP,
+  loadBar,
+  PLATE_WEIGHTS,
+  type PlateSetup,
+  plateStep,
+  type PlateUnit,
+  plateUnit,
+} from '../lib/plates';
+import { useAvailablePlates, usePlatesStore } from '../stores/plates-store';
 import { PlateDrawing } from './plate-drawing';
 import { plateCaption, PlateList, plateNote } from './plate-list';
 
@@ -27,6 +35,8 @@ const CAPTION = 'font-inter-semibold text-[11px] leading-3.5 tracking-[0.9px] te
 
 /** The heaviest bar the stepper goes to, per unit. */
 const BAR_MAX = { kg: 100, lb: 220 } as const;
+
+const round2 = (value: number) => Math.round(value * 100) / 100;
 
 /** The bar as changed in the sheet; saved when it closes. */
 type BarDraft = Pick<PlateBar, 'weight' | 'noBar'>;
@@ -48,6 +58,54 @@ function StepButton({ icon, label, onPress }: StepButtonProps) {
     >
       <Icon name={icon} size={18} color={colors.fg} />
     </PressableScale>
+  );
+}
+
+interface AvailablePlatesProps {
+  unit: PlateUnit;
+  available: number[];
+}
+
+/** The plates the gym has, one toggle each; the last one on stays on. */
+function AvailablePlates({ unit, available }: AvailablePlatesProps) {
+  const { t } = useTranslation('workout');
+  const togglePlate = usePlatesStore((s) => s.togglePlate);
+  return (
+    <View className="gap-2.5 pb-6.5">
+      <Text className={cn(CAPTION, 'px-1')}>{t('plates.available')}</Text>
+      <View className="flex-row gap-1.5">
+        {PLATE_WEIGHTS[unit].map((plate) => {
+          const on = available.includes(plate);
+          const last = on && available.length === 1;
+          return (
+            <PressableScale
+              key={plate}
+              haptic="select"
+              activeScale={0.94}
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: on, disabled: last }}
+              accessibilityLabel={`${formatNumber(plate, 2)} ${unit}`}
+              disabled={last}
+              onPress={() => togglePlate(unit, plate)}
+              className={cn(
+                'h-10 min-w-0 flex-1 items-center justify-center rounded-full border-[1.5px]',
+                on ? 'border-raised bg-raised' : 'border-track',
+              )}
+            >
+              <Text
+                numberOfLines={1}
+                className={cn(
+                  'font-inter-semibold text-[15px] leading-5 tabular-nums',
+                  on ? 'text-fg' : 'text-dim',
+                )}
+              >
+                {formatNumber(plate, 2)}
+              </Text>
+            </PressableScale>
+          );
+        })}
+      </View>
+    </View>
   );
 }
 
@@ -74,6 +132,7 @@ function PlatesSheetBody({
   const { width } = useWindowDimensions();
   const [weight, setWeight] = useState(initialWeight);
   const [draft, setDraft] = useState(initialBar);
+  const available = useAvailablePlates(unit);
   const sled = setup.carrier === 'sled';
 
   const changeBar = (next: BarDraft) => {
@@ -84,9 +143,11 @@ function PlatesSheetBody({
     changeBar({ ...draft, weight: clamp(draft.weight + by, BAR_STEP[unit], BAR_MAX[unit]) });
 
   const bar = draft.noBar ? 0 : draft.weight;
-  const step = weightStep('barbell', [], weight, units);
-  const change = (by: number) => setWeight((w) => Math.max(0, Math.round((w + by) / step) * step));
-  const load = loadBar(weight, bar, unit, setup.sides);
+  const step = plateStep(available, setup.sides);
+  // Steps from the bar, so each one is a weight the plates make.
+  const change = (by: number) =>
+    setWeight((w) => Math.max(0, round2(bar + Math.round((w + by - bar) / step) * step)));
+  const load = loadBar(weight, bar, unit, setup.sides, available);
   const plates = load.kind === 'loaded' ? load.plates : [];
   const note = plateNote(load, bar, setup.carrier);
   const shortOf = load.kind === 'loaded' && !load.exact ? load.loaded : null;
@@ -130,6 +191,7 @@ function PlatesSheetBody({
           <PlateList plates={plates} unit={unit} size="sheet" />
         )}
       </View>
+      <AvailablePlates unit={unit} available={available} />
       {draft.noBar ? null : (
         <View className="flex-row items-center justify-between pb-3.5">
           <Text className={cn(CAPTION, 'px-1')}>
@@ -188,8 +250,9 @@ export interface PlatesSheetProps {
 
 /**
  * The plates for a weight, bigger: a stepper for the weight, one end of the bar drawn, the
- * plates and the bar they go on. Opened from the ⓘ beside the number pad's plates. A changed bar
- * is saved for the exercise when the sheet closes, with "Done" or without.
+ * plates, the plates the gym has and the bar they go on. Opened from the ⓘ beside the number
+ * pad's plates. A changed bar is saved for the exercise when the sheet closes, with "Done" or
+ * without; the plates as they are turned off and on, for every exercise.
  */
 export function PlatesSheet({
   visible,

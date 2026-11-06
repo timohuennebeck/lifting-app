@@ -15,6 +15,7 @@
     "onBar": "On the bar",
     "onMachine": "On the machine",
     "loaded": "{{weight}} loaded",
+    "available": "Available plates",
     "barWeight": "Bar weight",
     "sledWeight": "Sled weight",
     "withoutBar": "No bar",

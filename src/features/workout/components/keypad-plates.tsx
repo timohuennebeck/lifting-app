@@ -12,7 +12,7 @@ import { Text } from '@/shared/ui/text';
 
 import { usePlateBar } from '../hooks/use-plate-bar';
 import { loadBar, type PlateSetup, plateUnit } from '../lib/plates';
-import { usePlatesStore } from '../stores/plates-store';
+import { useAvailablePlates, usePlatesStore } from '../stores/plates-store';
 import { useWorkoutSessionStore } from '../stores/workout-session-store';
 import { PlateDrawing } from './plate-drawing';
 import { plateCaption, PlateList, plateNote } from './plate-list';
@@ -37,8 +37,9 @@ export function KeypadPlates({ exerciseId, setup, onOpenSheet }: KeypadPlatesPro
   const { bar } = usePlateBar(exerciseId, setup);
   const open = usePlatesStore((s) => s.open);
   const toggleOpen = usePlatesStore((s) => s.toggleOpen);
+  const available = useAvailablePlates(unit);
 
-  const load = loadBar(parseInput(weight), bar, unit, setup.sides);
+  const load = loadBar(parseInput(weight), bar, unit, setup.sides, available);
   const plates = load.kind === 'loaded' ? load.plates : [];
   const note = plateNote(load, bar, setup.carrier);
   const caption = t(`plates.${plateCaption(setup)}`);

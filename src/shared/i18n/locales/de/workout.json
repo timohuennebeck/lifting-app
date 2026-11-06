@@ -15,6 +15,7 @@
     "onBar": "Auf der Stange",
     "onMachine": "Am Gerät",
     "loaded": "{{weight}} geladen",
+    "available": "Verfügbare Scheiben",
     "barWeight": "Gewicht der Stange",
     "sledWeight": "Gewicht des Schlittens",
     "withoutBar": "Ohne Stange",

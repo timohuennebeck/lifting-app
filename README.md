@@ -233,7 +233,11 @@ Documents are readable without an account (onboarding runs logged out) and writt
   loaded with plates (`plateSetup` in `src/features/workout/lib/plates.ts`): every barbell
   exercise, plus a list of catalog ids for special bars (EZ, trap, safety), the Smith machine,
   plate-loaded machines and lifts loaded on one end (landmine, T-bar). The ⓘ opens the plates
-  sheet with the weight of the bar and an "Ohne Stange" switch.
+  sheet with the weight of the bar, an "Ohne Stange" switch and the plates the gym has (25 to
+  1.25 kg, 45 to 2.5 lb, each one turned off and on there). Those are kept on the device
+  (`plates-store`) and count for every exercise; the plates for a weight are taken only from them:
+  as many of the heaviest as still let the lighter ones make the rest (with 15s and 10s, 20 kg a
+  side is two tens).
 - **`exercise_settings`:** one row per user and exercise once they change the bar there: `bar_kg`
   (always kg, two decimals) and `no_bar`. The id comes from user and exercise
   (`private.exercise_setting_id`, in the app `exerciseSettingId`), so two devices write one row.
