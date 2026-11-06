@@ -38,8 +38,6 @@
   },
   "reading": {
     "understand": "운동 데이터를 정리하는 중 …",
-    "exercises": "운동을 매칭하는 중 …",
-    "plan": "플랜을 읽는 중 …",
     "elapsed_one": "{{count}}초 경과",
     "elapsed_other": "{{count}}초 경과",
     "done": "완료",
@@ -56,7 +54,8 @@
       "option": "읽기 중단",
       "description": "파일 읽기를 멈춰요. 나중에 다시 선택할 수 있어요.",
       "cta": "가져오기 취소"
-    }
+    },
+    "sorted": "운동 데이터 정리 완료"
   },
   "check": {
     "inFile_one": "내 파일에서 · 운동 {{count}}회",

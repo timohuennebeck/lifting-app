@@ -38,8 +38,6 @@
   },
   "reading": {
     "understand": "Sorting training data …",
-    "exercises": "Matching exercises …",
-    "plan": "Reading your plan …",
     "elapsed_one": "{{count}} s passed",
     "elapsed_other": "{{count}} s passed",
     "done": "Done",
@@ -56,7 +54,8 @@
       "option": "Stop reading",
       "description": "Your file won’t be read any further. You can choose it again afterwards.",
       "cta": "Cancel import"
-    }
+    },
+    "sorted": "Training data sorted"
   },
   "check": {
     "inFile_one": "IN YOUR FILE · {{count}} workout",

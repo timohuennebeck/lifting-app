@@ -38,8 +38,6 @@
   },
   "reading": {
     "understand": "Ordenando los datos de entrenamiento…",
-    "exercises": "Asignando ejercicios…",
-    "plan": "Leyendo tu plan…",
     "elapsed_one": "{{count}} s transcurrido",
     "elapsed_other": "{{count}} s transcurridos",
     "done": "Listo",
@@ -56,7 +54,8 @@
       "option": "Dejar de leer",
       "description": "Tu archivo no se seguirá leyendo. Después puedes volver a elegirlo.",
       "cta": "Cancelar importación"
-    }
+    },
+    "sorted": "Datos de entrenamiento ordenados"
   },
   "check": {
     "inFile_one": "EN TU ARCHIVO · {{count}} entrenamiento",

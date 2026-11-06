@@ -38,8 +38,6 @@
   },
   "reading": {
     "understand": "Tri des données d'entraînement…",
-    "exercises": "Association des exercices…",
-    "plan": "Lecture de ton programme…",
     "elapsed_one": "{{count}} s écoulée",
     "elapsed_other": "{{count}} s écoulées",
     "done": "Terminé",
@@ -56,7 +54,8 @@
       "option": "Arrêter la lecture",
       "description": "Ton fichier ne sera plus lu. Tu pourras le choisir à nouveau ensuite.",
       "cta": "Annuler l’import"
-    }
+    },
+    "sorted": "Données d’entraînement triées"
   },
   "check": {
     "inFile_one": "DANS TON FICHIER · {{count}} séance",

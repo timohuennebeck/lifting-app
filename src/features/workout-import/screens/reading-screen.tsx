@@ -40,7 +40,6 @@ export function ReadingScreen() {
   const profileUnits = useUnits();
   const draftUnits = useDraft().unitPreference;
   const status = useWorkoutImportStore((s) => s.status);
-  const stage = useWorkoutImportStore((s) => s.stage);
   const failure = useWorkoutImportStore((s) => s.failure);
   const setFile = useWorkoutImportStore((s) => s.setFile);
   const navigation = useNavigation();
@@ -110,7 +109,6 @@ export function ReadingScreen() {
     `${units === 'imperial' ? lb : kg} ${weightUnit(units)}`;
   const seconds = Math.max(0, Math.floor((now - startedAt) / 1000));
   const ready = status === 'ready';
-  const readingStage = stage === 'done' ? 'plan' : stage;
 
   return (
     <View className="flex-1 bg-bg">
@@ -129,7 +127,7 @@ export function ReadingScreen() {
           t('workoutImport:reading.lifts.press'),
           weight(100, 225),
         ]}
-        label={ready ? t('workoutImport:reading.done') : t(`workoutImport:reading.${readingStage}`)}
+        label={ready ? t('workoutImport:reading.sorted') : t('workoutImport:reading.understand')}
         caption={
           ready
             ? t('workoutImport:reading.took', { count: seconds })

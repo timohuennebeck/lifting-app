@@ -49,9 +49,6 @@ import { currentRoutines, findRoutines, type ResolvedWorkout } from '../lib/rout
 import { sheetSample } from '../lib/samples';
 import type { WorkoutRow, WorkoutToSave } from '../lib/save-history';
 
-/** What the reading screen shows as done. */
-export type ReadingStage = 'understand' | 'exercises' | 'plan' | 'done';
-
 interface WorkoutImportState {
   file: ImportFile | null;
   read: ReadFile | null;
@@ -60,7 +57,6 @@ interface WorkoutImportState {
   /** Counts the runs, so a screen only reacts to the one it started. */
   run: number;
   status: 'idle' | 'reading' | 'ready' | 'failed';
-  stage: ReadingStage;
   /** Why the run stopped: a failure, or nothing in the file to import (13ie). */
   failure: ImportFailure | 'nothing' | null;
   /** The history's workouts as the file has them (some maybe without a date). */
@@ -106,7 +102,6 @@ const EMPTY: Session = {
   read: null,
   sheets: null,
   status: 'idle',
-  stage: 'understand',
   failure: null,
   workouts: [],
   names: {},
@@ -270,7 +265,7 @@ async function runImport(
     set({ failure: 'nothing', status: 'failed' });
     return null;
   }
-  set({ stage: 'exercises', workouts });
+  set({ workouts });
 
   const uses = nameUses(workouts);
   const [mapped, hasPlan] = await Promise.all([
@@ -287,7 +282,7 @@ async function runImport(
   const names = sameNamedExercises(mapped, filePlan);
   addDraftExercises(names.flatMap((n) => (n.newExercise ? [n.newExercise] : [])));
   const byKey = Object.fromEntries(names.map((n) => [nameKey(n.name), n]));
-  set({ stage: 'plan', names: byKey });
+  set({ names: byKey });
 
   let plan = filePlan;
   if (!plan && derive && workouts.length) {
@@ -335,7 +330,6 @@ export const useWorkoutImportStore = create<WorkoutImportState>()((set, get) => 
         const plan = !!result.planFrom;
         live({
           ...result,
-          stage: 'done',
           status: 'ready',
           take: { history: result.workouts.length > 0, plan },
         });

@@ -38,8 +38,6 @@
   },
   "reading": {
     "understand": "Trainingsdaten werden sortiert …",
-    "exercises": "Übungen werden zugeordnet …",
-    "plan": "Plan wird gelesen …",
     "elapsed_one": "{{count}} s vergangen",
     "elapsed_other": "{{count}} s vergangen",
     "done": "Fertig",
@@ -56,7 +54,8 @@
       "option": "Einlesen abbrechen",
       "description": "Deine Datei wird nicht weiter gelesen. Du kannst sie danach noch einmal wählen.",
       "cta": "Import abbrechen"
-    }
+    },
+    "sorted": "Trainingsdaten sortiert"
   },
   "check": {
     "inFile_one": "IN DEINER DATEI · {{count}} Training",

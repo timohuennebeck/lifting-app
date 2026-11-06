@@ -1,7 +1,7 @@
 import { type ReactNode, useEffect, useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
-import Svg, { Defs, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
+import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
@@ -81,6 +81,7 @@ function Ring({
 }) {
   return (
     <Animated.View
+      collapsable={false}
       className="absolute top-1/2 left-1/2 size-0"
       style={loop(reverse ? SPIN_BACK : SPIN, seconds, true)}
     >
@@ -96,8 +97,12 @@ function Ring({
               top: radius * Math.sin(angle) - SLOT.height / 2,
             }}
           >
-            <Animated.View style={loop(reverse ? SPIN : SPIN_BACK, seconds, true)}>
+            <Animated.View
+              collapsable={false}
+              style={loop(reverse ? SPIN : SPIN_BACK, seconds, true)}
+            >
               <Animated.View
+                collapsable={false}
                 style={{
                   animationName: POP,
                   animationDuration: '0.5s',
@@ -106,7 +111,10 @@ function Ring({
                   animationTimingFunction: 'ease-out',
                 }}
               >
-                <Animated.View style={item.float ? loop(FLOAT, item.float) : undefined}>
+                <Animated.View
+                  collapsable={false}
+                  style={item.float ? loop(FLOAT, item.float) : undefined}
+                >
                   {item.node}
                 </Animated.View>
               </Animated.View>
@@ -117,6 +125,9 @@ function Ring({
     </Animated.View>
   );
 }
+
+/** A chip's bob in seconds, as the design times it. */
+const bob = (label: string) => 2 + (label.length % 3) * 0.4;
 
 function Chip({ label, accent }: { label: string; accent?: boolean }) {
   return (
@@ -152,7 +163,7 @@ function SpinnerGlyph() {
     return () => clearInterval(id);
   }, []);
   return (
-    <Text className="w-13 text-center font-inter-bold text-[52px] leading-[60px] text-accent">
+    <Text className="w-13 text-center font-inter-bold text-[52px] leading-[52px] text-accent">
       {GLYPHS[tick % GLYPHS.length]}
     </Text>
   );
@@ -166,7 +177,7 @@ export interface OrbitProps {
   /** What is being done, and how long it has taken. */
   label: string;
   caption: string;
-  /** Everything is read: a tick pops up in place of the sparkle. */
+  /** Everything is read: the sparkle stops on ✢ and the label turns accent, as in the design. */
   done?: boolean;
 }
 
@@ -175,14 +186,49 @@ export function Orbit({ inner, outer, label, caption, done }: OrbitProps) {
   const { width, height } = useWindowDimensions();
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none" accessibilityElementsHidden>
+      <View
+        className="absolute inset-x-0 h-37.5 items-center justify-center gap-1.5"
+        // Below the rings: chips pass over what is being done.
+        style={{ top: height / 2 - 75 }}
+      >
+        <Svg
+          width={150}
+          height={150}
+          style={{ position: 'absolute', top: 0, left: width / 2 - 75 }}
+        >
+          <Defs>
+            <RadialGradient id="orbit-centre" cx="50%" cy="50%" r="50%">
+              <Stop offset="0.55" stopColor={colors.bg} stopOpacity={1} />
+              <Stop offset="0.72" stopColor={colors.bg} stopOpacity={0} />
+            </RadialGradient>
+          </Defs>
+          <Rect width={150} height={150} fill="url(#orbit-centre)" />
+        </Svg>
+        {done ? (
+          <Text className="w-13 text-center font-inter-bold text-[52px] leading-[52px] text-accent">
+            ✢
+          </Text>
+        ) : (
+          <Animated.View collapsable={false} style={loop(FLOAT, 2.4)}>
+            <SpinnerGlyph />
+          </Animated.View>
+        )}
+        <Text
+          numberOfLines={1}
+          className={cn('font-inter-semibold text-[15px]', done ? 'text-accent' : 'text-fg')}
+        >
+          {label}
+        </Text>
+        <Text className="font-inter text-xs text-subtle">{caption}</Text>
+      </View>
       <Ring
         radius={128}
         seconds={34}
         items={[
-          { node: <Chip label={inner[0]} />, order: 0, float: 2.8 },
-          { node: <Chip label={inner[1]} accent />, order: 3, float: 2.8 },
-          { node: <Chip label={inner[2]} />, order: 6, float: 2.4 },
-          { node: <Chip label={inner[3]} />, order: 9, float: 2.8 },
+          { node: <Chip label={inner[0]} />, order: 0, float: bob(inner[0]) },
+          { node: <Chip label={inner[1]} accent />, order: 3, float: bob(inner[1]) },
+          { node: <Chip label={inner[2]} />, order: 6, float: bob(inner[2]) },
+          { node: <Chip label={inner[3]} />, order: 9, float: bob(inner[3]) },
         ]}
       />
       <Ring
@@ -190,15 +236,16 @@ export function Orbit({ inner, outer, label, caption, done }: OrbitProps) {
         seconds={44}
         reverse
         items={[
-          { node: <Chip label={outer[0]} />, order: 1, float: 2.4 },
-          { node: <Chip label={outer[1]} accent />, order: 4, float: 2.8 },
-          { node: <Chip label={outer[2]} />, order: 7, float: 2.4 },
-          { node: <Chip label={outer[3]} />, order: 10, float: 2 },
-          { node: <Chip label={outer[4]} />, order: 12, float: 2 },
+          { node: <Chip label={outer[0]} />, order: 1, float: bob(outer[0]) },
+          { node: <Chip label={outer[1]} accent />, order: 4, float: bob(outer[1]) },
+          { node: <Chip label={outer[2]} />, order: 7, float: bob(outer[2]) },
+          { node: <Chip label={outer[3]} />, order: 10, float: bob(outer[3]) },
+          { node: <Chip label={outer[4]} />, order: 12, float: bob(outer[4]) },
         ]}
       />
       {STARS.map((star, i) => (
         <Animated.View
+          collapsable={false}
           key={i}
           className="absolute"
           style={{
@@ -228,54 +275,6 @@ export function Orbit({ inner, outer, label, caption, done }: OrbitProps) {
           { node: <Dot size={4} color={colors.accent} />, order: 14 },
         ]}
       />
-      <View
-        className="absolute inset-x-0 h-37.5 items-center justify-center gap-1.5"
-        // Above the rings: chips pass behind what is being done.
-        style={{ top: height / 2 - 75, zIndex: 10 }}
-      >
-        <Svg
-          width={150}
-          height={150}
-          style={{ position: 'absolute', top: 0, left: width / 2 - 75 }}
-        >
-          <Defs>
-            <RadialGradient id="orbit-centre" cx="50%" cy="50%" r="50%">
-              <Stop offset="0.55" stopColor={colors.bg} stopOpacity={1} />
-              <Stop offset="0.72" stopColor={colors.bg} stopOpacity={0} />
-            </RadialGradient>
-          </Defs>
-          <Rect width={150} height={150} fill="url(#orbit-centre)" />
-        </Svg>
-        {done ? (
-          <Animated.View
-            className="size-14 items-center justify-center rounded-full bg-accent"
-            style={{
-              animationName: POP,
-              animationDuration: '0.5s',
-              animationTimingFunction: 'ease-out',
-            }}
-          >
-            <Svg width={24} height={18} viewBox="0 0 13 10">
-              <Path
-                d="M1.5 5l3.5 3.5L11.5 1.5"
-                stroke={colors.onAccent}
-                strokeWidth={2}
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </Svg>
-          </Animated.View>
-        ) : (
-          <Animated.View style={loop(FLOAT, 2.4)}>
-            <SpinnerGlyph />
-          </Animated.View>
-        )}
-        <Text numberOfLines={1} className="font-inter-semibold text-[15px] text-fg">
-          {label}
-        </Text>
-        <Text className="font-inter text-xs text-subtle">{caption}</Text>
-      </View>
     </View>
   );
 }

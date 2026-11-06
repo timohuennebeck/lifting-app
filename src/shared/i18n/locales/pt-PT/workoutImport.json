@@ -38,8 +38,6 @@
   },
   "reading": {
     "understand": "A organizar os dados de treino …",
-    "exercises": "A associar os exercícios …",
-    "plan": "A ler o teu plano …",
     "elapsed_one": "{{count}} s decorrido",
     "elapsed_other": "{{count}} s decorridos",
     "done": "Concluído",
@@ -56,7 +54,8 @@
       "option": "Parar de ler",
       "description": "O teu ficheiro deixa de ser lido. Depois podes escolhê-lo de novo.",
       "cta": "Cancelar importação"
-    }
+    },
+    "sorted": "Dados de treino organizados"
   },
   "check": {
     "inFile_one": "NO TEU FICHEIRO · {{count}} treino",
