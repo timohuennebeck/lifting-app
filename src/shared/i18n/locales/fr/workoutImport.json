@@ -58,23 +58,6 @@
       "cta": "Annuler l’import"
     }
   },
-  "found": {
-    "title": "VOICI CE QU'ON\nA TROUVÉ",
-    "subtitle": "Touche ce que tu veux importer.",
-    "history": "Historique des séances",
-    "workouts_one": "{{count}} séance, de {{from}} à {{to}}",
-    "workouts_other": "{{count}} séances, de {{from}} à {{to}}",
-    "undatedOnly_one": "{{count}} séance sans date",
-    "undatedOnly_other": "{{count}} séances sans date",
-    "plan": "Programme d'entraînement",
-    "days_one": "{{count}} jour : {{names}}",
-    "days_other": "{{count}} jours : {{names}}",
-    "fromHistory": "D'après ton historique · {{days}}",
-    "notFound": "Introuvable",
-    "notInFile": "Absent du fichier",
-    "cta": "Lancer l'import",
-    "saving": "Enregistrement…"
-  },
   "check": {
     "inFile_one": "DANS TON FICHIER · {{count}} séance",
     "inFile_other": "DANS TON FICHIER · {{count}} séances",
@@ -105,7 +88,8 @@
     "new": "Nouveau",
     "toPlan": "Continuer vers le programme",
     "next": "Continuer",
-    "done": "Terminé"
+    "done": "Terminé",
+    "withoutPlan": "Continuer sans programme"
   },
   "plan": {
     "fromHistory": "D'après ton historique",

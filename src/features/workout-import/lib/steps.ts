@@ -4,13 +4,13 @@ import type { ReadFile } from './read-file';
 export const asksSheets = (read: ReadFile | null) =>
   (read?.summaries?.filter((s) => s.kind !== 'empty').length ?? 0) > 1;
 
-/** The import's steps up to 13p: the file, maybe its sheets, what was found. */
-export const importSteps = (read: ReadFile | null) => (asksSheets(read) ? 3 : 2);
+/** The import's steps before reading: the file, and maybe its sheets. */
+export const importSteps = (read: ReadFile | null) => (asksSheets(read) ? 2 : 1);
 
 /**
  * The import's counter: in the app the start screen is its first step (in onboarding it ends the
- * questions about the user), then the steps up to 13p and "Importiert" last. `offset` is added
- * to a step's number up to 13p.
+ * questions about the user), then the file, maybe its sheets, and "Importiert" last. `offset` is
+ * added to the file's and the sheets' step numbers.
  */
 export function flowSteps(read: ReadFile | null, inApp: boolean) {
   const offset = inApp ? 1 : 0;

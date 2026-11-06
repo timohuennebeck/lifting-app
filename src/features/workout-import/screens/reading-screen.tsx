@@ -19,15 +19,16 @@ import { Text } from '@/shared/ui/text';
 import { Orbit } from '../components/orbit';
 import { showImportFailure, showNothingFound } from '../lib/import-failure';
 import type { ImportFile, ReadFile } from '../lib/read-file';
+import { useImportSteps } from '../hooks/use-import-steps';
 import { CTA_STYLE } from '../lib/steps';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
 
-/** How long "Fertig" shows before the found screen opens. */
+/** How long "Fertig" shows before the import goes on. */
 const ADVANCE_MS = 800;
 
 /**
  * 13m31: reads the file (see the store's runImport) behind chips popping in and circling, then
- * shows "Fertig" and goes on to what was found by itself. No swiping back while it reads: its X
+ * shows "Fertig" and goes on by itself (useImportSteps: checks, dates, "Importiert"). No swiping back while it reads: its X
  * (and Android's back) asks before it stops. A file with nothing to import goes back to the start
  * with 13ie; another failure goes back with the error sheet.
  */
@@ -48,11 +49,12 @@ export function ReadingScreen() {
   const now = useNow(1000, status === 'reading');
   const left = useRef(false);
   const advanced = useRef(false);
+  const { afterRead, saving } = useImportSteps();
   const goOn = useCallback(() => {
     if (advanced.current) return;
     advanced.current = true;
-    router.replace(step('/import/found'));
-  }, [step]);
+    afterRead();
+  }, [afterRead]);
   // A plan is found in the history only where the user has none yet.
   const derive = !inApp || !profile?.activePlanId;
 
@@ -146,7 +148,12 @@ export function ReadingScreen() {
       )}
       <View className="absolute inset-x-4" style={{ bottom: Math.max(insets.bottom, 30) }}>
         {ready ? (
-          <Button {...CTA_STYLE} label={t('workoutImport:reading.done')} onPress={goOn} />
+          <Button
+            {...CTA_STYLE}
+            label={t('workoutImport:reading.done')}
+            loading={saving}
+            onPress={goOn}
+          />
         ) : (
           // Greyed out until the file is read.
           <View className="h-14 items-center justify-center rounded-full bg-control">

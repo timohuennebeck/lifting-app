@@ -14,10 +14,11 @@ import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
+import { TextButton } from '@/shared/ui/text-button';
 
 import { useImportSteps } from '../hooks/use-import-steps';
 import { type ImportedExercise, importedExercises } from '../lib/imported';
-import { CTA_STYLE, flowSteps, TITLE_STYLE } from '../lib/steps';
+import { CTA_STYLE, flowSteps, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
 
 const month = (iso: string) => formatDate(new Date(iso), { month: 'short', year: 'numeric' });
@@ -69,11 +70,12 @@ function ExerciseRow({ item, units }: { item: ImportedExercise; units: UnitSyste
 
 /**
  * After the import: every exercise it took over, the most trained first; each opens its exercise
- * page on "Historie" (from the import until the account has them). Then on to the plan, or out.
+ * page on "Historie" (from the import until the account has them). Then on to the plan (or
+ * without it), or out.
  */
 export function ImportedScreen() {
   const { t } = useTranslation('workoutImport');
-  const { inApp, step } = usePlanFlow();
+  const { inApp, step, done } = usePlanFlow();
   const profileUnits = useUnits();
   const draftUnits = useDraft().unitPreference;
   const imported = useWorkoutImportStore((s) => s.imported);
@@ -85,7 +87,8 @@ export function ImportedScreen() {
   const exercises = importedExercises(imported.workouts, imported.created);
   const starts = imported.workouts.map((w) => w.started_at).sort();
   const { total } = flowSteps(read, inApp);
-  const cta = withPlan() ? t('imported.toPlan') : inApp ? t('imported.done') : t('imported.next');
+  const plan = withPlan();
+  const cta = plan ? t('imported.toPlan') : inApp ? t('imported.done') : t('imported.next');
 
   return (
     <StepScreen
@@ -95,7 +98,15 @@ export function ImportedScreen() {
       title={t('imported.title')}
       subtitle={t('imported.subtitle', { count: imported.workouts.length })}
       scroll
-      footer={<Button {...CTA_STYLE} label={cta} onPress={next} />}
+      footer={
+        <View className="gap-1">
+          <Button {...CTA_STYLE} label={cta} onPress={() => next()} />
+          {/* The file's plan can still be left out: the history stays. */}
+          {plan ? (
+            <TextButton {...LINK_STYLE} label={t('imported.withoutPlan')} onPress={done} />
+          ) : null}
+        </View>
+      }
     >
       <View className="flex-row items-baseline justify-between px-5 pt-5.5 pb-1">
         <Text className="font-inter-semibold text-xs tracking-[1.44px] text-subtle">

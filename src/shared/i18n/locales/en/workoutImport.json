@@ -58,23 +58,6 @@
       "cta": "Cancel import"
     }
   },
-  "found": {
-    "title": "HERE'S WHAT\nWE FOUND",
-    "subtitle": "Tap what you want to import.",
-    "history": "Workout history",
-    "workouts_one": "{{count}} workout, {{from}} to {{to}}",
-    "workouts_other": "{{count}} workouts, {{from}} to {{to}}",
-    "undatedOnly_one": "{{count}} workout without a date",
-    "undatedOnly_other": "{{count}} workouts without a date",
-    "plan": "Training plan",
-    "days_one": "{{count}} day: {{names}}",
-    "days_other": "{{count}} days: {{names}}",
-    "fromHistory": "From your history · {{days}}",
-    "notFound": "Not found",
-    "notInFile": "Not found in the file",
-    "cta": "Start import",
-    "saving": "Saving …"
-  },
   "check": {
     "inFile_one": "IN YOUR FILE · {{count}} workout",
     "inFile_other": "IN YOUR FILE · {{count}} workouts",
@@ -105,7 +88,8 @@
     "new": "New",
     "toPlan": "Continue to plan",
     "next": "Next",
-    "done": "Done"
+    "done": "Done",
+    "withoutPlan": "Continue without plan"
   },
   "plan": {
     "fromHistory": "From your history",

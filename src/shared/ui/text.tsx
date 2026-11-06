@@ -1,4 +1,6 @@
-import { Text as RNText, type TextProps as RNTextProps } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { Text as RNText, type TextProps as RNTextProps, StyleSheet } from 'react-native';
+import { useResolveClassNames } from 'uniwind';
 
 import { cn } from '@/shared/lib/cn';
 
@@ -33,6 +35,28 @@ export interface TextProps extends RNTextProps {
   className?: string;
 }
 
+/**
+ * Korean comes from the system's fallback font, taller than Inter: a line height tight for Inter
+ * cuts its tops off. In Korean, lines are at least this many times the font size.
+ */
+const KOREAN_LINE = 1.3;
+
+function RoomyText({ className, style, ...props }: RNTextProps & { className: string }) {
+  const resolved = useResolveClassNames(className);
+  const { fontSize, lineHeight } = StyleSheet.flatten([resolved, style]);
+  const tight = !!fontSize && !!lineHeight && lineHeight < fontSize * KOREAN_LINE;
+  return (
+    <RNText
+      className={className}
+      style={tight ? [style, { lineHeight: Math.ceil(fontSize * KOREAN_LINE) }] : style}
+      {...props}
+    />
+  );
+}
+
 export function Text({ variant = 'body', tone = 'default', className, ...props }: TextProps) {
-  return <RNText className={cn(VARIANTS[variant], TONES[tone], className)} {...props} />;
+  const { i18n } = useTranslation();
+  const classes = cn(VARIANTS[variant], TONES[tone], className);
+  if (i18n.language === 'ko') return <RoomyText className={classes} {...props} />;
+  return <RNText className={classes} {...props} />;
 }

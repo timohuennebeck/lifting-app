@@ -35,13 +35,17 @@ export function PlanGlyph({ color }: GlyphProps) {
   );
 }
 
-/** A filled pencil: a plan built by hand. */
+/** An outline pencil (pencil-simple): a plan built by hand. */
 export function PencilGlyph({ color }: GlyphProps) {
   return (
-    <Svg width={17} height={17} viewBox="0 0 16 16">
+    <Svg width={17} height={17} viewBox="0 0 256 256">
       <Path
-        d="M11.4 1.7a1.7 1.7 0 0 1 2.4 0l.5.5a1.7 1.7 0 0 1 0 2.4L5.6 13.3l-3.9 1 1-3.9z"
-        fill={color}
+        d="M92.7 216H48a8 8 0 0 1-8-8v-44.7a8 8 0 0 1 2.3-5.6L165.7 34.3a8 8 0 0 1 11.3 0L221.7 79a8 8 0 0 1 0 11.3L98.3 213.7a8 8 0 0 1-5.6 2.3zM136 64l56 56"
+        stroke={color}
+        strokeWidth={24}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
       />
     </Svg>
   );

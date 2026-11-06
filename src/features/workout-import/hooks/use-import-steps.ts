@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { type Href, router } from 'expo-router';
 import { useState } from 'react';
 
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
@@ -45,7 +45,7 @@ async function send(
 }
 
 /**
- * The steps after "Import starten" (13p): a check per unsure name (15a), the dates (18a) when
+ * The steps after reading the file: a check per unsure name (15a), the dates (18a) when
  * workouts have none, then the history is saved (in onboarding at sign-up) and "Importiert" shows
  * it. `next` goes on from there: the plan opens in the editor, or the flow ends without one.
  */
@@ -54,39 +54,41 @@ export function useImportSteps() {
   const [saving, setSaving] = useState(false);
 
   const checks = () => reviewsToShow(useWorkoutImportStore.getState()).length;
+  // Straight from the reading screen, it is replaced: going back must not read again.
+  const go = (href: Href, replace: boolean) => (replace ? router.replace(href) : router.push(href));
 
   /** Whether the editor opens with a plan at the end. */
   const withPlan = () =>
     useWorkoutImportStore.getState().take.plan && !!useImportStore.getState().plan;
 
-  function next() {
-    if (withPlan()) router.push(step('/import/confirm'));
+  function next(replace = false) {
+    if (withPlan()) go(step('/import/confirm'), replace);
     else done();
   }
 
-  function finish() {
+  function finish(replace = false) {
     const { workouts, custom } = decidedImport();
     const rows = toRows(workouts);
-    if (!rows.length) return next();
+    if (!rows.length) return next(replace);
     useWorkoutImportStore
       .getState()
       .setImported({ workouts: rows, created: custom.map((c) => c.id) });
-    const show = () => router.push(step('/import/imported'));
+    const show = () => go(step('/import/imported'), replace);
     if (inApp) return void send(rows, custom, setSaving, show);
     keepForSignUp(rows, custom);
     show();
   }
 
   /** After the checks: the dates, or the end. */
-  function afterChecks() {
-    if (undatedCount(useWorkoutImportStore.getState())) router.push(step('/import/dates'));
-    else finish();
+  function afterChecks(replace = false) {
+    if (undatedCount(useWorkoutImportStore.getState())) go(step('/import/dates'), replace);
+    else finish(replace);
   }
 
-  /** After 13p: the first check, or what comes after them. */
-  function afterFound() {
-    if (checks()) router.push({ pathname: step('/import/check'), params: { index: '1' } });
-    else afterChecks();
+  /** The file is read: the first check, or what comes after them. */
+  function afterRead() {
+    if (checks()) router.replace({ pathname: step('/import/check'), params: { index: '1' } });
+    else afterChecks(true);
   }
 
   /** Check `index` (from 1) is decided: the next one, or what comes after them. */
@@ -96,5 +98,5 @@ export function useImportSteps() {
     } else afterChecks();
   }
 
-  return { afterFound, afterCheck, finish, next, withPlan, saving };
+  return { afterRead, afterCheck, finish, next, withPlan, saving };
 }

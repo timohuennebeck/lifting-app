@@ -58,23 +58,6 @@
       "cta": "Cancelar importação"
     }
   },
-  "found": {
-    "title": "VEJA O QUE\nENCONTRAMOS",
-    "subtitle": "Toque no que você quer importar.",
-    "history": "Histórico de treinos",
-    "workouts_one": "{{count}} treino, de {{from}} a {{to}}",
-    "workouts_other": "{{count}} treinos, de {{from}} a {{to}}",
-    "undatedOnly_one": "{{count}} treino sem data",
-    "undatedOnly_other": "{{count}} treinos sem data",
-    "plan": "Plano de treino",
-    "days_one": "{{count}} dia: {{names}}",
-    "days_other": "{{count}} dias: {{names}}",
-    "fromHistory": "Do seu histórico · {{days}}",
-    "notFound": "Não encontrado",
-    "notInFile": "Não encontrado no arquivo",
-    "cta": "Iniciar importação",
-    "saving": "Salvando …"
-  },
   "check": {
     "inFile_one": "NO SEU ARQUIVO · {{count}} treino",
     "inFile_other": "NO SEU ARQUIVO · {{count}} treinos",
@@ -105,7 +88,8 @@
     "new": "Novo",
     "toPlan": "Continuar para o plano",
     "next": "Continuar",
-    "done": "Pronto"
+    "done": "Pronto",
+    "withoutPlan": "Continuar sem plano"
   },
   "plan": {
     "fromHistory": "Do seu histórico",

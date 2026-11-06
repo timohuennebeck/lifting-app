@@ -1,8 +1,6 @@
 import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
-import { colors } from '@/shared/lib/theme';
-import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
 const CARD_SHADOW = '0 18px 34px rgba(0,0,0,0.5)';
@@ -118,61 +116,6 @@ export function OrbitFile({ label }: { label: string }) {
     >
       <FileTag label={label} small />
       <Lines widths={[80, 60, 70]} height={3} />
-    </View>
-  );
-}
-
-/** One tick of the plan card: done (filled) or open (ring). */
-function Tick({ done }: { done: boolean }) {
-  return done ? (
-    <View className="size-3.5 items-center justify-center rounded-full bg-fg">
-      <Icon name="check" size={7} color={colors.onAccent} />
-    </View>
-  ) : (
-    <View className="size-3.5 rounded-full border-2 border-track" />
-  );
-}
-
-/** 13p: a stack of plan sheets with ticks, 190 × 122. */
-export function PlanCards({ scale = 0.85 }: { scale?: number }) {
-  return (
-    <View style={{ width: 190 * scale, height: 122 * scale }} accessibilityElementsHidden>
-      <View
-        style={{
-          width: 190,
-          height: 122,
-          transform: [
-            { translateX: -95 * (1 - scale) },
-            { translateY: -61 * (1 - scale) },
-            { scale },
-          ],
-        }}
-      >
-        <View
-          className="absolute top-2.5 left-5.5 h-26.5 w-33.5 rounded-[14px] bg-tile"
-          style={{ transform: [{ rotate: '-12deg' }], boxShadow: '0 14px 28px rgba(0,0,0,0.5)' }}
-        />
-        <View
-          className="absolute top-2 left-8.5 h-26.5 w-33.5 rounded-[14px] bg-pill"
-          style={{ transform: [{ rotate: '9deg' }], boxShadow: '0 14px 28px rgba(0,0,0,0.5)' }}
-        />
-        <View
-          className="absolute top-1 left-7 h-27.5 w-33.5 gap-2.25 rounded-[14px] bg-control px-3 py-2.75"
-          style={{ boxShadow: '0 14px 28px rgba(0,0,0,0.5)' }}
-        >
-          <View className="self-start rounded-md bg-fg px-1.75 py-1">
-            <Text className="font-inter-bold text-[10px] leading-[10px] tracking-[0.4px] text-bg">
-              PLAN
-            </Text>
-          </View>
-          {[true, true, false].map((done, i) => (
-            <View key={i} className="flex-row items-center gap-2">
-              <Tick done={done} />
-              <View className="h-1 rounded-xs bg-track" style={{ width: [60, 52, 46][i] }} />
-            </View>
-          ))}
-        </View>
-      </View>
     </View>
   );
 }

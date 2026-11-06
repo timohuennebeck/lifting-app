@@ -71,7 +71,7 @@ interface WorkoutImportState {
   planFrom: 'file' | 'history' | null;
   reviews: ReviewItem[];
   decisions: Record<string, Decision>;
-  /** What the user takes over (13p). */
+  /** What is taken over: the history when the file has one, the plan when there is one. */
   take: { history: boolean; plan: boolean };
   /** Workouts without a date get one (18a), or are left out. */
   keepUndated: boolean;
@@ -82,7 +82,6 @@ interface WorkoutImportState {
   pickSheets: (sheets: string[]) => void;
   /** Reads the file (see runImport); `derivePlan`: find a plan in the history if it has none. */
   start: (language: string, derivePlan: boolean) => number;
-  setTake: (take: { history: boolean; plan: boolean }) => void;
   decide: (name: string, decision: Decision) => void;
   setKeepUndated: (keep: boolean) => void;
   setImported: (imported: { workouts: WorkoutRow[]; created: string[] }) => void;
@@ -96,7 +95,6 @@ type ActionKeys =
   | 'setFile'
   | 'pickSheets'
   | 'start'
-  | 'setTake'
   | 'decide'
   | 'setKeepUndated'
   | 'setImported'
@@ -365,7 +363,6 @@ export const useWorkoutImportStore = create<WorkoutImportState>()((set, get) => 
       });
     return run;
   },
-  setTake: (take) => set({ take }),
   decide: (name, decision) =>
     set((s) => ({ decisions: { ...s.decisions, [nameKey(name)]: decision } })),
   setKeepUndated: (keepUndated) => set({ keepUndated }),

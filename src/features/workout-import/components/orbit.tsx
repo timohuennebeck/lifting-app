@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import Animated, { type CSSAnimationKeyframes } from 'react-native-reanimated';
 import Svg, { Defs, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
@@ -142,6 +142,22 @@ const Dot = ({ size, color }: { size: number; color: string }) => (
   <View className="rounded-full" style={{ width: size, height: size, backgroundColor: color }} />
 );
 
+/** The glyphs the centre cycles through while reading, one every 100 ms (as in the design). */
+const GLYPHS = ['·', '✢', '✳', '✶', '✳', '✢'] as const;
+
+function SpinnerGlyph() {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 100);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <Text className="w-13 text-center font-inter-bold text-[52px] leading-[60px] text-accent">
+      {GLYPHS[tick % GLYPHS.length]}
+    </Text>
+  );
+}
+
 export interface OrbitProps {
   /** Chips of the inner ring: an exercise, a weight, an exercise, sets × reps. */
   inner: readonly [string, string, string, string];
@@ -252,9 +268,7 @@ export function Orbit({ inner, outer, label, caption, done }: OrbitProps) {
           </Animated.View>
         ) : (
           <Animated.View style={loop(FLOAT, 2.4)}>
-            <Text className="text-center font-inter-bold text-[52px] leading-[52px] text-accent">
-              ✢
-            </Text>
+            <SpinnerGlyph />
           </Animated.View>
         )}
         <Text numberOfLines={1} className="font-inter-semibold text-[15px] text-fg">
