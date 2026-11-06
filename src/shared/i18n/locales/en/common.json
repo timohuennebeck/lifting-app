@@ -43,7 +43,6 @@
     "profile": "Profile",
     "create": "New"
   },
-  "rangeDays": "{{count}} D",
   "search": {
     "open": "Search exercises",
     "title": "Exercises",
@@ -135,5 +134,13 @@
         "message": "You can use voice input from the age of 16."
       }
     }
+  },
+  "periods": {
+    "1w": "1W",
+    "1m": "1M",
+    "3m": "3M",
+    "6m": "6M",
+    "1y": "1Y",
+    "all": "All"
   }
 }

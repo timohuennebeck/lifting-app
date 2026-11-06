@@ -43,7 +43,6 @@
     "profile": "Perfil",
     "create": "Nuevo"
   },
-  "rangeDays": "{{count}} d",
   "search": {
     "open": "Buscar ejercicios",
     "title": "Ejercicios",
@@ -135,5 +134,13 @@
         "message": "Puedes usar el dictado por voz a partir de los 16 años."
       }
     }
+  },
+  "periods": {
+    "1w": "1S",
+    "1m": "1M",
+    "3m": "3M",
+    "6m": "6M",
+    "1y": "1A",
+    "all": "Todo"
   }
 }

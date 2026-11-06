@@ -29,13 +29,25 @@
   "sets": {
     "count_one": "{{count}}세트",
     "count_other": "{{count}}세트",
-    "inDays_one": "{{count}}일간 세트",
-    "inDays_other": "{{count}}일간 세트",
-    "change": "직전 {{days}}일 대비 {{change}}",
+    "change": {
+      "1w": "지난주 대비 {{change}}",
+      "1m": "지난달 대비 {{change}}",
+      "3m": "이전 3개월 대비 {{change}}",
+      "6m": "이전 6개월 대비 {{change}}",
+      "1y": "작년 대비 {{change}}"
+    },
     "today": "오늘",
     "workouts_one": "운동 {{count}}회",
     "workouts_other": "운동 {{count}}회",
     "empty": "이 기간에는 세트가 없어요",
-    "rowA11y": "{{muscle}}: {{total}}세트, 주동근 {{primary}}, 보조근 {{secondary}}"
+    "rowA11y": "{{muscle}}: {{total}}세트, 주동근 {{primary}}, 보조근 {{secondary}}",
+    "inPeriod": {
+      "1w": "지난 1주 세트",
+      "1m": "지난 1개월 세트",
+      "3m": "지난 3개월 세트",
+      "6m": "지난 6개월 세트",
+      "1y": "지난 1년 세트",
+      "all": "전체 세트"
+    }
   }
 }

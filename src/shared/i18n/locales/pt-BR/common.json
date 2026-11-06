@@ -43,7 +43,6 @@
     "profile": "Perfil",
     "create": "Novo"
   },
-  "rangeDays": "{{count}} D",
   "search": {
     "open": "Buscar exercícios",
     "title": "Exercícios",
@@ -135,5 +134,13 @@
         "message": "Você pode usar a entrada por voz a partir dos 16 anos."
       }
     }
+  },
+  "periods": {
+    "1w": "1S",
+    "1m": "1M",
+    "3m": "3M",
+    "6m": "6M",
+    "1y": "1A",
+    "all": "Tudo"
   }
 }

@@ -1,12 +1,7 @@
 import { addDays, DAY_MS, startOfDay } from '@/shared/lib/date';
 import { getOrInsert } from '@/shared/lib/map';
+import { type Period, PERIOD_DAYS } from '@/shared/lib/periods';
 import type { MuscleId } from '@/shared/ui/muscle-map';
-
-export const SET_RANGES = [7, 14, 30, 90] as const;
-export type SetRange = (typeof SET_RANGES)[number];
-
-/** Days of sets loaded: the longest range and the same span before it, for the comparison. */
-const SET_HISTORY_DAYS = 2 * SET_RANGES[SET_RANGES.length - 1];
 
 /** Shown only once they have a set: hardly anyone trains them on purpose. */
 export const RARE_MUSCLES: ReadonlySet<MuscleId> = new Set(['neck', 'tibialis']);
@@ -43,20 +38,29 @@ function cached(splitOf: SplitOf): SplitOf {
 const daysAgo = (startedAt: string, today: number) =>
   Math.round((today - startOfDay(new Date(startedAt)).getTime()) / DAY_MS);
 
-/** The first moment counted: midnight `days - 1` days before today, as an ISO string. */
-export const historyStart = (today: number) =>
-  addDays(new Date(today), -(SET_HISTORY_DAYS - 1)).toISOString();
+/**
+ * The first moment loaded for `period`: its days and the same span before them (for the
+ * comparison), from midnight on, as an ISO string; '' (everything) for the whole history.
+ */
+export function historyStart(today: number, period: Period) {
+  const days = PERIOD_DAYS[period];
+  return days === null ? '' : addDays(new Date(today), -(2 * days - 1)).toISOString();
+}
+
+/** Whether a set `d` days ago is in `days` (null: the whole history). */
+const within = (d: number, days: number | null) => d >= 0 && (days === null || d < days);
 
 /**
- * Each muscle's sets in the last `range` days, today included: a set counts in full for every
- * muscle of its exercise, as primary or secondary (`splitOf`).
+ * Each muscle's sets in the period, today included: a set counts in full for every muscle of its
+ * exercise, as primary or secondary (`splitOf`).
  */
 export function muscleCounts(
   rows: readonly ExerciseSets[],
-  range: SetRange,
+  period: Period,
   today: number,
   splitOf: SplitOf,
 ) {
+  const days = PERIOD_DAYS[period];
   const roles = cached(splitOf);
   const counts = new Map<MuscleId, MuscleCount>();
   const add = (muscle: MuscleId, role: 'primary' | 'secondary', sets: number) => {
@@ -69,8 +73,7 @@ export function muscleCounts(
     entry.total += sets;
   };
   for (const row of rows) {
-    const d = daysAgo(row.startedAt, today);
-    if (d < 0 || d >= range) continue;
+    if (!within(daysAgo(row.startedAt, today), days)) continue;
     const { primary, secondary } = roles(row.exerciseId);
     for (const m of primary) add(m, 'primary', row.sets);
     for (const m of secondary) add(m, 'secondary', row.sets);
@@ -78,7 +81,7 @@ export function muscleCounts(
   return counts;
 }
 
-/** A bar of the chart: one day (7 and 14 days) or week (30 and 90), oldest first. */
+/** A bar of the chart: one day (1W), a week (1M, 3M) or more (6M on), oldest first. */
 export interface SetBucket {
   /** Local midnight of its first and its last day. */
   from: number;
@@ -94,27 +97,36 @@ export interface MuscleExercise {
 
 interface MuscleDetail {
   total: number;
-  /** Sets in the same number of days before. */
-  previous: number;
+  /** Sets in the same number of days before; null for the whole history. */
+  previous: number | null;
   buckets: SetBucket[];
   primary: MuscleExercise[];
   secondary: MuscleExercise[];
 }
 
 /**
- * One muscle's sets in the last `range` days: the total and the one before, per day or week
- * counted back from today (the oldest week can be shorter), and the exercises that worked it,
- * most sets first. The bars add up to the total.
+ * Bar size in days: a day for a week, else whole weeks for at most 14 bars (1M, 3M a week, 6M two,
+ * 1Y four).
+ */
+const bucketDays = (days: number) => (days <= 7 ? 1 : 7 * Math.ceil(days / 7 / 14));
+
+/**
+ * One muscle's sets in the period: the total and the one before, per bar counted back from today
+ * (the oldest bar can be shorter), and the exercises that worked it, most sets first. The bars
+ * add up to the total. The whole history spans from its first set and has nothing before.
  */
 export function muscleDetail(
   rows: readonly ExerciseSets[],
   muscle: MuscleId,
-  range: SetRange,
+  period: Period,
   today: number,
   splitOf: SplitOf,
 ): MuscleDetail {
   const roles = cached(splitOf);
-  const size = range <= 14 ? 1 : 7;
+  const all = PERIOD_DAYS[period] === null;
+  const range =
+    PERIOD_DAYS[period] ?? Math.max(7, ...rows.map((r) => daysAgo(r.startedAt, today) + 1));
+  const size = bucketDays(range);
   const count = Math.ceil(range / size);
   const buckets = Array.from({ length: count }, (_, i): SetBucket => {
     const newest = (count - 1 - i) * size;
@@ -138,7 +150,7 @@ export function muscleDetail(
     if (!role) continue;
     const d = daysAgo(row.startedAt, today);
     if (d >= range && d < 2 * range) previous += row.sets;
-    if (d < 0 || d >= range) continue;
+    if (!within(d, range)) continue;
     total += row.sets;
     buckets[count - 1 - Math.floor(d / size)].sets += row.sets;
     let entry = exercises.get(row.exerciseId);
@@ -164,7 +176,7 @@ export function muscleDetail(
   });
   return {
     total,
-    previous,
+    previous: all ? null : previous,
     buckets,
     primary: listed.filter((e) => e.role === 'primary').map(strip),
     secondary: listed.filter((e) => e.role === 'secondary').map(strip),

@@ -43,7 +43,6 @@
     "profile": "Profil",
     "create": "Créer"
   },
-  "rangeDays": "{{count}} j",
   "search": {
     "open": "Rechercher des exercices",
     "title": "Exercices",
@@ -135,5 +134,13 @@
         "message": "Tu peux utiliser la saisie vocale à partir de 16 ans."
       }
     }
+  },
+  "periods": {
+    "1w": "1S",
+    "1m": "1M",
+    "3m": "3M",
+    "6m": "6M",
+    "1y": "1A",
+    "all": "Tout"
   }
 }

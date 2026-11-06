@@ -2,47 +2,41 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
+import { type Period, PERIODS } from '@/shared/lib/periods';
 
 import { PressableScale } from './pressable-scale';
 import { Text } from './text';
 
-export interface RangeTabsProps<TRange extends number> {
-  /** Day counts to pick from, e.g. 7 to 180. */
-  ranges: readonly TRange[];
-  value: TRange;
-  onChange: (value: TRange) => void;
+export interface RangeTabsProps {
+  value: Period;
+  onChange: (value: Period) => void;
   className?: string;
 }
 
-/** A range of days as one pill of tabs, "7 T · 14 T · …" (weight history). */
-export function RangeTabs<TRange extends number>({
-  ranges,
-  value,
-  onChange,
-  className,
-}: RangeTabsProps<TRange>) {
+/** The periods as one pill of tabs, "1W · 1M · 3M · 6M · 1Y · All" (weight, sets). */
+export function RangeTabs({ value, onChange, className }: RangeTabsProps) {
   const { t } = useTranslation('common');
   return (
     <View
       className={cn('h-10 flex-row rounded-full bg-surface p-0.75', className)}
       accessibilityRole="tablist"
     >
-      {ranges.map((range) => {
-        const active = range === value;
+      {PERIODS.map((period) => {
+        const active = period === value;
         return (
           <PressableScale
-            key={range}
+            key={period}
             haptic="select"
             accessibilityRole="tab"
             accessibilityState={{ selected: active }}
-            onPress={() => onChange(range)}
+            onPress={() => onChange(period)}
             className={cn(
               'flex-1 items-center justify-center rounded-full',
               active && 'bg-control',
             )}
           >
             <Text variant="caption" tone={active ? 'default' : 'subtle'}>
-              {t('rangeDays', { count: Number(range) })}
+              {t(`periods.${period}`)}
             </Text>
           </PressableScale>
         );

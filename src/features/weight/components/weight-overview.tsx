@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { formatShortDate, type UnitSystem, weightUnit } from '@/shared/lib/format';
+import { type Period, PERIOD_DAYS } from '@/shared/lib/periods';
 import { RangeTabs } from '@/shared/ui/range-tabs';
 import { Text } from '@/shared/ui/text';
 
@@ -13,10 +14,6 @@ import { WeightChart } from './weight-chart';
 /** Section and value labels: 12pt caps, set 1pt lower than their line box like the design's. */
 export const OVERLINE = 'relative top-px text-xs leading-4 tracking-[1.65px]';
 
-/** The chart's ranges in days (GW·2). */
-const CHART_RANGES = [7, 14, 30, 90, 180] as const;
-type ChartRange = (typeof CHART_RANGES)[number];
-
 export interface WeightOverviewProps {
   /** Every weigh-in with its trend, oldest first. */
   points: WeightPoint[];
@@ -25,18 +22,20 @@ export interface WeightOverviewProps {
 }
 
 /**
- * The trend and its change over the chosen range, the chart and the range tabs (GW·2). The range
+ * The trend and its change over the chosen period, the chart and the period tabs (GW·2). The period
  * and the picked weigh-in are kept here: a finger on the chart updates this and not the list of
  * weigh-ins under it.
  */
 export function WeightOverview({ points, today, units }: WeightOverviewProps) {
   const { t } = useTranslation('weight');
   const unit = weightUnit(units);
-  const [range, setRange] = useState<ChartRange>(30);
+  const [period, setPeriod] = useState<Period>('1m');
   // The picked weigh-in by its day, so deleting another one or a new day doesn't move it.
   const [pickedDate, setPickedDate] = useState<string | null>(null);
 
-  const from = daysBefore(today, range - 1);
+  const days = PERIOD_DAYS[period];
+  // All: from the first weigh-in.
+  const from = days === null ? (points[0]?.date ?? today) : daysBefore(today, days - 1);
   const visible = useMemo(
     () => points.filter((p) => p.date >= from && p.date <= today),
     [points, from, today],
@@ -47,8 +46,8 @@ export function WeightOverview({ points, today, units }: WeightOverviewProps) {
   const shown = (selected === null ? undefined : visible[selected]) ?? visible.at(-1);
   const startTrend = trendOn(points, from) ?? visible[0]?.trendKg;
 
-  const changeRange = (next: ChartRange) => {
-    setRange(next);
+  const changePeriod = (next: Period) => {
+    setPeriod(next);
     setPickedDate(null);
   };
 
@@ -102,7 +101,7 @@ export function WeightOverview({ points, today, units }: WeightOverviewProps) {
           onSelect={(index) => setPickedDate(visible[index]?.date ?? null)}
         />
       </View>
-      <RangeTabs ranges={CHART_RANGES} value={range} onChange={changeRange} className="mx-4 mt-5" />
+      <RangeTabs value={period} onChange={changePeriod} className="mx-4 mt-5" />
     </>
   );
 }

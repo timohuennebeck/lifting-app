@@ -29,13 +29,25 @@
   "sets": {
     "count_one": "{{count}} set",
     "count_other": "{{count}} sets",
-    "inDays_one": "Sets in {{count}} day",
-    "inDays_other": "Sets in {{count}} days",
-    "change": "{{change}} vs. the {{days}} days before",
+    "change": {
+      "1w": "{{change}} vs. the week before",
+      "1m": "{{change}} vs. the month before",
+      "3m": "{{change}} vs. the 3 months before",
+      "6m": "{{change}} vs. the 6 months before",
+      "1y": "{{change}} vs. the year before"
+    },
     "today": "Today",
     "workouts_one": "{{count}} workout",
     "workouts_other": "{{count}} workouts",
     "empty": "No sets in this time",
-    "rowA11y": "{{muscle}}: {{total}} sets, {{primary}} primary, {{secondary}} secondary"
+    "rowA11y": "{{muscle}}: {{total}} sets, {{primary}} primary, {{secondary}} secondary",
+    "inPeriod": {
+      "1w": "Sets in the last week",
+      "1m": "Sets in the last month",
+      "3m": "Sets in the last 3 months",
+      "6m": "Sets in the last 6 months",
+      "1y": "Sets in the last year",
+      "all": "All sets"
+    }
   }
 }

@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { cn } from '@/shared/lib/cn';
 import { signOf } from '@/shared/lib/format';
 import { MUSCLE_IDS, type MuscleId } from '@/shared/ui/muscle-map';
+import type { Period } from '@/shared/lib/periods';
 import { RangeTabs } from '@/shared/ui/range-tabs';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
@@ -15,7 +16,7 @@ import { Text } from '@/shared/ui/text';
 import { MuscleExerciseRow } from '../components/muscle-exercise-row';
 import { SetsChart } from '../components/sets-chart';
 import { useMuscleDetail } from '../hooks/use-muscle-sets';
-import { type MuscleExercise, SET_RANGES, type SetRange } from '../lib/muscle-sets';
+import type { MuscleExercise } from '../lib/muscle-sets';
 import { useSetRangeStore } from '../stores/set-range-store';
 
 interface ExerciseGroupProps {
@@ -39,18 +40,22 @@ function ExerciseGroup({ label, exercises }: ExerciseGroupProps) {
 }
 
 /**
- * A muscle's sets, pushed from the Sätze tab: the sets in the range against the same days
- * before, per day or week, and the exercises that worked it as primary or secondary muscle.
- * Opens with the tab's range.
+ * A muscle's sets, pushed from the Sätze tab: the sets in the period against the same days
+ * before (not for the whole history), per bar, and the exercises that worked it as primary or
+ * secondary muscle. Opens with the tab's period.
  */
 export function MuscleSetsScreen() {
   const { t } = useTranslation('muscles');
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ id: string }>();
   const muscle = MUSCLE_IDS.find((m): m is MuscleId => m === params.id) ?? 'chest';
-  const [range, setRange] = useState<SetRange>(() => useSetRangeStore.getState().range);
+  const [range, setRange] = useState<Period>(() => useSetRangeStore.getState().range);
   const { detail, isLoading } = useMuscleDetail(muscle, range);
-  const change = detail.total - detail.previous;
+  // The whole history has nothing before it to compare with.
+  const change =
+    range === 'all' || detail.previous === null
+      ? null
+      : { period: range, sets: detail.total - detail.previous };
 
   return (
     <Screen header={<ScreenHeader title={t(`names.${muscle}`)} />}>
@@ -60,21 +65,26 @@ export function MuscleSetsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Text variant="overline" tone="subtle" className="text-[11px]">
-          {t('sets.inDays', { count: range })}
+          {t(`sets.inPeriod.${range}`)}
         </Text>
         <Text className="mt-1 font-inter-semibold text-[44px] leading-[52px] tabular-nums">
           {isLoading ? ' ' : detail.total}
         </Text>
-        <Text variant="caption" className={cn(change > 0 ? 'text-accent' : 'text-subtle')}>
-          {isLoading
+        <Text
+          variant="caption"
+          className={cn(change && change.sets > 0 ? 'text-accent' : 'text-subtle')}
+        >
+          {isLoading || !change
             ? ' '
-            : t('sets.change', { change: `${signOf(change)}${Math.abs(change)}`, days: range })}
+            : t(`sets.change.${change.period}`, {
+                change: `${signOf(change.sets)}${Math.abs(change.sets)}`,
+              })}
         </Text>
         {/* A new range starts without a picked bar. */}
         <View className="pt-6">
           <SetsChart key={range} buckets={detail.buckets} />
         </View>
-        <RangeTabs ranges={SET_RANGES} value={range} onChange={setRange} className="mt-6" />
+        <RangeTabs value={range} onChange={setRange} className="mt-6" />
         <View className="gap-7 pt-8">
           {!isLoading && !detail.primary.length && !detail.secondary.length ? (
             <Text tone="subtle" className="text-sm">

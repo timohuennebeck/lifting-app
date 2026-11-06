@@ -15,6 +15,7 @@ import {
   fromDisplayWeight,
   toDisplayWeight,
 } from '@/shared/lib/format';
+import { type Period, PERIOD_DAYS, PERIODS } from '@/shared/lib/periods';
 import { SegmentedControl } from '@/shared/ui/segmented-control';
 import { Text } from '@/shared/ui/text';
 
@@ -24,12 +25,8 @@ import { HistorySessionRow } from '../components/history-session-row';
 import { monthSections } from '../lib/month-sections';
 import { sessionOneRepMaxKg } from '../lib/one-rep-max';
 
-/** "Last N days" choices of the chart. */
-const DAY_RANGES = [7, 14, 30, 90] as const;
-type DayRange = (typeof DAY_RANGES)[number];
-
 /**
- * Exercise page, "Historie": best-set chart over 7–90 days and the sessions by month (designs
+ * Exercise page, "Historie": best-set chart over a period (1W to All) and the sessions by month (designs
  * 03·C·2H·V5/V5H), as a list that only renders the sessions near the screen.
  */
 export function ExerciseHistoryPage() {
@@ -42,12 +39,13 @@ export function ExerciseHistoryPage() {
   // Right after an import, its workouts until the account has them (onboarding, the next sync).
   const imported = useImportedHistory(exerciseId);
   const sessions = stored.length ? stored : imported;
-  const [range, setRange] = useState<DayRange>(30);
+  const [period, setPeriod] = useState<Period>('1m');
   // undefined = default (latest session open), null = all collapsed.
   const [openId, setOpenId] = useState<string | null>();
   const expanded = openId === undefined ? sessions[0]?.workoutId : openId;
 
-  const since = now - range * DAY_MS;
+  const days = PERIOD_DAYS[period];
+  const since = days === null ? -Infinity : now - days * DAY_MS;
   // Bodyweight exercises never done with added weight would chart a flat 0 kg.
   const unweighted =
     isBodyweight(exerciseId) && sessions.every((s) => s.sets.every((set) => !set.weightKg));
@@ -112,12 +110,9 @@ export function ExerciseHistoryPage() {
             />
             <SegmentedControl
               className="bg-surface"
-              value={range}
-              onChange={setRange}
-              options={DAY_RANGES.map((r) => ({
-                value: r,
-                label: t('common:rangeDays', { count: r }),
-              }))}
+              value={period}
+              onChange={setPeriod}
+              options={PERIODS.map((p) => ({ value: p, label: t(`common:periods.${p}`) }))}
             />
           </View>
         ) : null

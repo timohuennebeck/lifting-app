@@ -29,13 +29,25 @@
   "sets": {
     "count_one": "{{count}} serie",
     "count_other": "{{count}} series",
-    "inDays_one": "Series en {{count}} día",
-    "inDays_other": "Series en {{count}} días",
-    "change": "{{change}} frente a los {{days}} días anteriores",
+    "change": {
+      "1w": "{{change}} frente a la semana anterior",
+      "1m": "{{change}} frente al mes anterior",
+      "3m": "{{change}} frente a los 3 meses anteriores",
+      "6m": "{{change}} frente a los 6 meses anteriores",
+      "1y": "{{change}} frente al año anterior"
+    },
     "today": "Hoy",
     "workouts_one": "{{count}} entrenamiento",
     "workouts_other": "{{count}} entrenamientos",
     "empty": "Sin series en este periodo",
-    "rowA11y": "{{muscle}}: {{total}} series, {{primary}} principales, {{secondary}} secundarias"
+    "rowA11y": "{{muscle}}: {{total}} series, {{primary}} principales, {{secondary}} secundarias",
+    "inPeriod": {
+      "1w": "Series en la última semana",
+      "1m": "Series en el último mes",
+      "3m": "Series en los últimos 3 meses",
+      "6m": "Series en los últimos 6 meses",
+      "1y": "Series en el último año",
+      "all": "Todas las series"
+    }
   }
 }

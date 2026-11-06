@@ -29,13 +29,25 @@
   "sets": {
     "count_one": "{{count}} Satz",
     "count_other": "{{count}} Sätze",
-    "inDays_one": "Sätze in {{count}} Tag",
-    "inDays_other": "Sätze in {{count}} Tagen",
-    "change": "{{change}} ggü. den {{days}} Tagen davor",
+    "change": {
+      "1w": "{{change}} ggü. der Woche davor",
+      "1m": "{{change}} ggü. dem Monat davor",
+      "3m": "{{change}} ggü. den 3 Monaten davor",
+      "6m": "{{change}} ggü. den 6 Monaten davor",
+      "1y": "{{change}} ggü. dem Jahr davor"
+    },
     "today": "Heute",
     "workouts_one": "{{count}} Workout",
     "workouts_other": "{{count}} Workouts",
     "empty": "Keine Sätze in dieser Zeit",
-    "rowA11y": "{{muscle}}: {{total}} Sätze, {{primary}} primär, {{secondary}} sekundär"
+    "rowA11y": "{{muscle}}: {{total}} Sätze, {{primary}} primär, {{secondary}} sekundär",
+    "inPeriod": {
+      "1w": "Sätze in der letzten Woche",
+      "1m": "Sätze im letzten Monat",
+      "3m": "Sätze in den letzten 3 Monaten",
+      "6m": "Sätze in den letzten 6 Monaten",
+      "1y": "Sätze im letzten Jahr",
+      "all": "Sätze insgesamt"
+    }
   }
 }

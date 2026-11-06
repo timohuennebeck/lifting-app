@@ -9,7 +9,7 @@ import { Text } from '@/shared/ui/text';
 
 import { MuscleSetRow } from '../components/muscle-set-row';
 import { useMuscleCounts } from '../hooks/use-muscle-sets';
-import { RARE_MUSCLES, SET_RANGES } from '../lib/muscle-sets';
+import { RARE_MUSCLES } from '../lib/muscle-sets';
 import { useSetRangeStore } from '../stores/set-range-store';
 
 const openMuscle = (muscle: MuscleId) =>
@@ -58,7 +58,7 @@ export function SetsScreen() {
   return (
     <TabScreen>
       <BodyMaps selected={primary} secondary={secondary} />
-      <RangeTabs ranges={SET_RANGES} value={range} onChange={choose} className="mx-4 mt-1" />
+      <RangeTabs value={range} onChange={choose} className="mx-4 mt-1" />
       {isLoading ? null : (
         <>
           <View className="flex-row gap-5 px-4 pt-6 pb-2">
