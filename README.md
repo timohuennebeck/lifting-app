@@ -606,7 +606,8 @@ properties are typed in `src/shared/lib/posthog.ts` (`AnalyticsEvents`), named
 `category:object_action`:
 
 - **Onboarding and plans:** `onboarding:flow_start` and `onboarding:flow_complete` (a new
-  account's onboarding done, with whether the progress check was started), `plan:generate_complete`
+  account's onboarding done, with whether the progress check was started, or `skipped` when the
+  close cross on the shortcut step jumped past it), `plan:generate_complete`
   / `_fail`, `plan_import:read_complete` / `_fail`, `workout_import:read_complete` / `_fail`
   (counts and times, never names or values), `workout_import:save_complete`, and
   `plan:save_complete` when a new plan is taken, with its `source` (`generated`, `file`,

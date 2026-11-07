@@ -39,6 +39,7 @@ export function ProgressCheckPromptScreen() {
     <StepScreen
       step={START_STEPS}
       total={START_STEPS}
+      onClose={() => finish(false)}
       title={t('progressCheck.title')}
       subtitle={t('progressCheck.subtitle')}
       footer={

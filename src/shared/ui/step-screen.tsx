@@ -43,6 +43,8 @@ export interface StepScreenProps extends Omit<StepTitleProps, 'className'> {
   /** Left out where the screen opens on its own, outside the flow it is a step of. */
   step?: number;
   total?: number;
+  /** Shows a close cross instead of the back chevron and runs this (see StepHeader). */
+  onClose?: () => void;
   children?: ReactNode;
   /** Pinned bottom area, usually the CTA. */
   footer?: ReactNode;
@@ -55,6 +57,7 @@ export interface StepScreenProps extends Omit<StepTitleProps, 'className'> {
 export function StepScreen({
   step,
   total,
+  onClose,
   title,
   subtitle,
   subtitleTone,
@@ -67,7 +70,7 @@ export function StepScreen({
 }: StepScreenProps) {
   return (
     <Screen
-      header={<StepHeader step={step} total={total} />}
+      header={<StepHeader step={step} total={total} onClose={onClose} />}
       footer={footer}
       scroll={scroll}
       contentClassName={contentClassName}

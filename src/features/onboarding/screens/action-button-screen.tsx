@@ -9,7 +9,7 @@ import { Text } from '@/shared/ui/text';
 import { TextButton } from '@/shared/ui/text-button';
 
 import { ActionButtonPreview } from '../components/action-button-preview';
-import { afterAccount } from '../lib/after-account';
+import { afterAccount, skipRestOfOnboarding } from '../lib/after-account';
 import { START_STEPS } from '../lib/flow';
 
 const STEPS = ['settings', 'shortcut', 'pick'] as const;
@@ -39,6 +39,7 @@ export function ActionButtonScreen() {
     <StepScreen
       step={3}
       total={START_STEPS}
+      onClose={skipRestOfOnboarding}
       title={t('actionButton.title')}
       subtitle={t('actionButton.subtitle')}
       footer={

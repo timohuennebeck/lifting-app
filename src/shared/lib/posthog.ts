@@ -15,7 +15,7 @@ export interface AnalyticsEvents {
    * A new account's onboarding done, as the app opens: with the progress check started now,
    * left for later, or not offered (under 18).
    */
-  'onboarding:flow_complete': { progress_check: 'now' | 'later' | 'not_offered' };
+  'onboarding:flow_complete': { progress_check: 'now' | 'later' | 'not_offered' | 'skipped' };
   'plan:generate_complete': {
     duration_ms: number;
     sessions_per_week: number;

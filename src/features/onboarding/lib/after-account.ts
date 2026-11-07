@@ -22,3 +22,9 @@ export function afterAccount(from: 'account' | 'actionButton') {
   track('onboarding:flow_complete', { progress_check: 'not_offered' });
   useOnboardingStore.getState().complete();
 }
+
+/** The close cross on the weight shortcut step: straight into the app, past the steps left. */
+export function skipRestOfOnboarding() {
+  track('onboarding:flow_complete', { progress_check: 'skipped' });
+  useOnboardingStore.getState().complete();
+}
