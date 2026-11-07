@@ -4,6 +4,13 @@
 // answer shape, and the clean-up into sets the database accepts. Plain TypeScript without Deno APIs, so it can be tested outside the
 // Edge runtime.
 
+import {
+  CUSTOM_EXERCISE_NAME_MAX,
+  REST_SECONDS_MAX,
+  RIR_MAX,
+  TARGET_REPS_MAX,
+  TARGET_SECONDS_MAX,
+} from './limits.ts';
 import { clampInt } from './numbers.ts';
 import {
   catalogNames,
@@ -133,21 +140,21 @@ export interface ModelExercise {
 const clampOrNull = (value: number | null, min: number, max: number) =>
   value == null || !Number.isFinite(value) ? null : clampInt(value, min, max);
 
-/** The app's target editor (and the database) take up to 60 reps or 600 seconds. */
-const MAX_REPS = 60;
-const MAX_SECONDS = 600;
-
 /** Targets of one set: seconds for timed exercises, else the rep range; RIR is about reps. */
 function setTarget(line: ModelExercise, timed: boolean): SetTarget {
   if (timed) {
     // "3x30" on a plank means seconds.
-    const seconds = clampOrNull(line.seconds ?? line.reps_max ?? line.reps_min, 1, MAX_SECONDS);
+    const seconds = clampOrNull(
+      line.seconds ?? line.reps_max ?? line.reps_min,
+      1,
+      TARGET_SECONDS_MAX,
+    );
     return { targetMin: seconds, targetMax: seconds, rir: null };
   }
-  let min = clampOrNull(line.reps_min ?? line.reps_max, 1, MAX_REPS);
-  let max = clampOrNull(line.reps_max ?? line.reps_min, 1, MAX_REPS);
+  let min = clampOrNull(line.reps_min ?? line.reps_max, 1, TARGET_REPS_MAX);
+  let max = clampOrNull(line.reps_max ?? line.reps_min, 1, TARGET_REPS_MAX);
   if (min != null && max != null && min > max) [min, max] = [max, min];
-  return { targetMin: min, targetMax: max, rir: clampOrNull(line.rir, 0, 5) };
+  return { targetMin: min, targetMax: max, rir: clampOrNull(line.rir, 0, RIR_MAX) };
 }
 
 /**
@@ -161,8 +168,8 @@ export function newExerciseMaker(newId: () => string) {
     { name, primary, secondary, timed, weighted }: NonNullable<ModelExercise['new_exercise']>,
     raw: string,
   ) => {
-    // A name the database accepts (1–60 characters): the line as written if the model gave none.
-    const clean = cut(name, 60) || cut(raw, 60);
+    // A name the database accepts: the line as written if the model gave none.
+    const clean = cut(name, CUSTOM_EXERCISE_NAME_MAX) || cut(raw, CUSTOM_EXERCISE_NAME_MAX);
     const key = clean.toLocaleLowerCase();
     const known = created.get(key);
     if (known || !clean || !primary.length) return { fresh: known, first: false };
@@ -204,7 +211,7 @@ export function exerciseReader(catalog: CatalogRow[], newId: () => string) {
       sets: Array.from({ length: clampOrNull(line.sets, 1, MAX_SETS) ?? DEFAULT_SETS }, () => ({
         ...target,
       })),
-      restSeconds: clampOrNull(line.rest_seconds, 0, 600),
+      restSeconds: clampOrNull(line.rest_seconds, 0, REST_SECONDS_MAX),
       ...(line.certain
         ? {}
         : {

@@ -11,6 +11,7 @@ import {
   newExerciseMaker,
   nullable,
 } from '../_shared/exercise-reading.ts';
+import { IMPORT_NAMES_MAX, IMPORT_SHEETS_MAX, ROUTINE_NAME_MAX } from '../_shared/limits.ts';
 import { cut, type NewExercise } from '../_shared/plan-events.ts';
 import type { CatalogRow } from '../_shared/plans.ts';
 
@@ -50,7 +51,7 @@ const isText = (value: unknown, max: number): value is string =>
 
 /** The sheets of a categorize request, or null when they aren't what the app sends. */
 export function sheetSamples(value: unknown): SheetSample[] | null {
-  if (!Array.isArray(value) || !value.length || value.length > 20) return null;
+  if (!Array.isArray(value) || !value.length || value.length > IMPORT_SHEETS_MAX) return null;
   const valid = value.every(
     (s) =>
       isText(s?.name, 100) &&
@@ -200,12 +201,9 @@ export interface NameSample {
   hint: string;
 }
 
-/** Names per map request; the app sends more in several. */
-const MAX_NAMES = 80;
-
 /** The names of a map request, or null when they aren't what the app sends. */
 export function nameSamples(value: unknown): NameSample[] | null {
-  if (!Array.isArray(value) || !value.length || value.length > MAX_NAMES) return null;
+  if (!Array.isArray(value) || !value.length || value.length > IMPORT_NAMES_MAX) return null;
   const valid = value.every(
     (n) => isText(n?.name, 200) && n.name.trim() && Number.isInteger(n.sets) && isText(n.hint, 100),
   );
@@ -319,6 +317,6 @@ export const routinesContent = (language: string, routines: RoutineSample[]) =>
     .map((r, i) => `${i + 1}. ${r.workouts}: ${r.exercises.join(', ')}`)
     .join('\n')}`;
 
-/** One name per routine asked, cut to the app's length; empty where the model gave none. */
+/** One name per routine asked, cut to ROUTINE_NAME_MAX; empty where the model gave none. */
 export const routineNames = (answer: { names: string[] }, count: number) =>
-  Array.from({ length: count }, (_, i) => cut(answer.names[i] ?? '', 24));
+  Array.from({ length: count }, (_, i) => cut(answer.names[i] ?? '', ROUTINE_NAME_MAX));

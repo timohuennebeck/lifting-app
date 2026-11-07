@@ -5,6 +5,7 @@
 // before there is an account (a plan set up in onboarding), so requests are limited per network
 // and in total per day (start_plan_request, kind "voice").
 import { envFlag, envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
+import { SPOKEN_TEXT_MAX } from '../_shared/limits.ts';
 import { askWithRetry } from '../_shared/openai.ts';
 import { isAppLanguage } from '../_shared/plan-events.ts';
 import { type CatalogRow, loadCatalog, takePlanRequest } from '../_shared/plans.ts';
@@ -23,8 +24,6 @@ const IP_LIMIT = envLimit('PLAN_VOICE_IP_LIMIT', 60);
 const DAILY_LIMIT = envLimit('PLAN_VOICE_DAILY_LIMIT', 5000);
 /** OpenAI's Fast mode (twice the token price); PLAN_VOICE_FAST=false turns it off. */
 const FAST = envFlag('PLAN_VOICE_FAST');
-/** Characters of text (the app's MAX_SPOKEN). */
-const MAX_TEXT = 4000;
 
 Deno.serve(async (req) => {
   const refused = refuseAiRequest(req);
@@ -34,7 +33,7 @@ Deno.serve(async (req) => {
   const language = body?.language;
   const text = typeof body?.text === 'string' ? body.text.trim() : '';
   if (!text || !isAppLanguage(language)) return reply(400, { error: 'bad_request' });
-  if (text.length > MAX_TEXT) return reply(413, { error: 'too_large' });
+  if (text.length > SPOKEN_TEXT_MAX) return reply(413, { error: 'too_large' });
 
   const taken = await takePlanRequest(req, 'voice', { perNetwork: IP_LIMIT, perDay: DAILY_LIMIT });
   if ('refused' in taken) return taken.refused;

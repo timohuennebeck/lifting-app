@@ -40,6 +40,7 @@ import type { ExerciseDraft } from '@/shared/data/routines';
 import { hasKnownWeight, setScoreSql } from '@/shared/data/workouts';
 import { moved } from '@/shared/lib/array';
 import type { SetValues } from '@/shared/lib/format';
+import { WEIGHT_KG_MAX } from '@/shared/lib/limits';
 import { clamp } from '@/shared/lib/math';
 
 /** Subquery with the ids of a workout's exercises, for `inArray(…)`. */
@@ -308,9 +309,6 @@ async function isRecord(setId: string, exerciseId: string, values: SetValues) {
   return !!row?.best && row.score > row.best + 0.01;
 }
 
-/** The largest weight the suggestion's column holds (numeric(6, 2)). */
-const SUGGESTED_KG_MAX = 9999.99;
-
 /**
  * Completes (or re-edits) a set; `rir` (reps in reserve) is written when one was picked, else
  * it stays. `suggested` is what the set was suggested, kept from its first completion so a
@@ -335,7 +333,7 @@ export async function logSet(
       seconds: values.seconds,
       ...(rir != null ? { rir } : {}),
       suggested_weight_kg: firstTime(
-        kg != null && kg <= SUGGESTED_KG_MAX ? kg : null,
+        kg != null && kg <= WEIGHT_KG_MAX ? kg : null,
         workoutEntriesSets.suggested_weight_kg,
       ),
       suggested_reps: firstTime(suggested?.reps, workoutEntriesSets.suggested_reps),

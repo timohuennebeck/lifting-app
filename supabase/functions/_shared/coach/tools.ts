@@ -3,6 +3,7 @@
 // tools, the chart the app draws under the answer (`chart`; null without enough data). In the
 // same place, create_workout and show_workout give the workout the app shows as a card, and
 // swap_exercises the plan change the user applies on its card.
+import { RIR_MAX, ROUTINE_NAME_MAX, TARGET_REPS_MAX, TARGET_SECONDS_MAX } from '../limits.ts';
 import { clampInt } from '../numbers.ts';
 import { cut, MUSCLES } from '../plan-events.ts';
 import { DEFAULT_REST, exerciseSeconds, repTarget, restAfterSet } from '../rest.ts';
@@ -994,14 +995,9 @@ function findExercises(args: Args, data: CoachData): ToolResult {
   };
 }
 
-/** The app's ROUTINE_NAME_MAX (src/shared/lib/limits.ts), as the database checks it. */
-const NAME_MAX = 40;
+/** How big a workout the coach builds: exercises and sets per exercise. */
 const MAX_EXERCISES_IN_WORKOUT = 10;
 const MAX_SETS = 6;
-const MAX_REPS = 30;
-/** The database's limit on a target, which in seconds is a long hold. */
-const MAX_SECONDS = 600;
-const MAX_RIR = 5;
 
 /**
  * The workout for the card, its values kept to what the app and the database take. Exercises it
@@ -1010,7 +1006,7 @@ const MAX_RIR = 5;
  * the minutes count with (the user's own exercises with the app's default).
  */
 function createWorkout(args: Args, data: CoachData): ToolResult {
-  const name = typeof args.name === 'string' ? cut(args.name, NAME_MAX) : '';
+  const name = typeof args.name === 'string' ? cut(args.name, ROUTINE_NAME_MAX) : '';
   if (!name) return failed('The workout needs a name.');
   const catalog = new Map(data.catalog.map((e) => [e.id, e]));
   const exercises: WorkoutLine[] = [];
@@ -1028,7 +1024,7 @@ function createWorkout(args: Args, data: CoachData): ToolResult {
       skipped.push(id);
       continue;
     }
-    const most = known.measures.includes('seconds') ? MAX_SECONDS : MAX_REPS;
+    const most = known.measures.includes('seconds') ? TARGET_SECONDS_MAX : TARGET_REPS_MAX;
     const low = clampInt(line.target_min, 1, most);
     const high = clampInt(line.target_max, 1, most);
     const sets = clampInt(line.sets, 1, MAX_SETS);
@@ -1044,7 +1040,7 @@ function createWorkout(args: Args, data: CoachData): ToolResult {
       sets,
       targetMin,
       targetMax,
-      rir: line.rir == null ? null : clampInt(line.rir, 0, MAX_RIR),
+      rir: line.rir == null ? null : clampInt(line.rir, 0, RIR_MAX),
       restSeconds: null,
     });
   }

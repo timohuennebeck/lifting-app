@@ -1,8 +1,6 @@
 import { ageFrom, type Profile } from '@/shared/data/profile';
 import { addDays } from '@/shared/lib/date';
-
-/** The progress check is for adults only; the assessment function checks it too. */
-const PROGRESS_CHECK_MIN_AGE = 18;
+import { PROGRESS_CHECK_MIN_AGE } from '@/shared/lib/limits';
 
 /** Whether the profile's birth date allows progress checks (an unknown one does not). */
 export const isProgressCheckAge = (birthDate: Profile['birthDate'] | undefined) =>

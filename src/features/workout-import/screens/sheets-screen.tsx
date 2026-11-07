@@ -5,11 +5,11 @@ import { View } from 'react-native';
 
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { haptics } from '@/shared/lib/haptics';
+import { IMPORT_SHEETS_MAX } from '@/shared/lib/limits';
 import { Button } from '@/shared/ui/button';
 import { StepScreen } from '@/shared/ui/step-screen';
 
 import { SheetRow } from '../components/sheet-row';
-import { MAX_SHEETS } from '../lib/samples';
 import type { SheetSummary } from '../lib/sheet-summary';
 import { useImportStep } from '../hooks/use-import-step';
 import { baseName, CTA_STYLE, TITLE_STYLE } from '../lib/steps';
@@ -22,7 +22,7 @@ import { useWorkoutImportStore } from '../stores/workout-import-store';
 function recommended(sheets: SheetSummary[]) {
   const likely = sheets.filter((s) => s.kind === 'log' || s.kind === 'plan');
   return (likely.length ? likely : sheets.filter((s) => s.kind !== 'empty'))
-    .slice(0, MAX_SHEETS)
+    .slice(0, IMPORT_SHEETS_MAX)
     .map((s) => s.name);
 }
 
@@ -47,7 +47,7 @@ export function SheetsScreen() {
 
   function toggle(name: string) {
     // No more than are read at once: the tap only shakes.
-    if (!picked.has(name) && picked.size >= MAX_SHEETS) {
+    if (!picked.has(name) && picked.size >= IMPORT_SHEETS_MAX) {
       haptics.error();
       return;
     }

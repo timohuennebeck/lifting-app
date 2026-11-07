@@ -7,6 +7,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import type { AppLanguage } from '@/shared/i18n/resources';
 import { wait } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
+import { SPOKEN_TEXT_MAX } from '@/shared/lib/limits';
 import { track, type VoiceContext } from '@/shared/lib/posthog';
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
@@ -19,7 +20,6 @@ import { VoiceButton } from '../components/voice-button';
 import { VoiceProcessing } from '../components/voice-processing';
 import { useSpeechInput } from '../hooks/use-speech-input';
 import {
-  MAX_SPOKEN,
   readSpokenExercises,
   showSpokenFailure,
   SpokenError,
@@ -138,7 +138,7 @@ export function VoiceScreen({ onAdd, context }: VoiceScreenProps) {
             editable={!listening}
             multiline
             scrollEnabled={false}
-            maxLength={MAX_SPOKEN}
+            maxLength={SPOKEN_TEXT_MAX}
             placeholder={t('example')}
             placeholderTextColor={colors.outline}
             accessibilityLabel={t('a11y.text')}

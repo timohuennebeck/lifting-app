@@ -154,10 +154,11 @@ Deno.test('a new exercise is made once, an unknown catalog id is none', () => {
   assertEquals(mapped[2].certain, false);
 });
 
-Deno.test('routine names: one per routine, cut to 24 characters', () => {
-  assertEquals(routineNames({ names: ['Push', 'Oberkörper mit sehr langem Namen A'] }, 3), [
+Deno.test('routine names: one per routine, cut to ROUTINE_NAME_MAX', () => {
+  const long = 'Oberkörper mit sehr langem Namen A und Rücken – schwer';
+  assertEquals(routineNames({ names: ['Push', long] }, 3), [
     'Push',
-    'Oberkörper mit sehr',
+    'Oberkörper mit sehr langem Namen A und',
     '',
   ]);
 });

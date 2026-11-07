@@ -5,7 +5,7 @@ import { insertCustomExercises } from '@/shared/data/custom-exercises';
 import { newId } from '@/shared/data/json';
 import { singleFlight } from '@/shared/lib/async';
 import { MINUTE_MS } from '@/shared/lib/date';
-import { ROUTINE_NAME_MAX } from '@/shared/lib/limits';
+import { LOGGED_REPS_MAX, ROUTINE_NAME_MAX, WEIGHT_KG_MAX } from '@/shared/lib/limits';
 import { drizzle } from '@/shared/data/powersync/database';
 import { supabase } from '@/shared/data/supabase';
 import { track } from '@/shared/lib/posthog';
@@ -43,10 +43,6 @@ export interface WorkoutRow {
   }[];
 }
 
-/** The database's limits (workout_entries_sets): weight numeric(6,2), reps 0–999. */
-const MAX_WEIGHT = 9999.99;
-const MAX_REPS = 999;
-
 /**
  * A set as the exercise logs it: a weight only for exercises with one (0 for bodyweight ones the
  * file left empty), seconds for timed ones, reps otherwise. Null when the file lacks what it needs.
@@ -57,14 +53,14 @@ function setRow(set: LoggedSet, measures: Measure[], bodyweight: boolean) {
   if (!value) return null;
   const weight = measures.includes('weight')
     ? set.weightKg != null
-      ? Math.min(MAX_WEIGHT, Math.round(set.weightKg * 100) / 100)
+      ? Math.min(WEIGHT_KG_MAX, Math.round(set.weightKg * 100) / 100)
       : bodyweight
         ? 0
         : null
     : null;
   return {
     weight_kg: weight,
-    reps: timed ? null : Math.min(MAX_REPS, Math.round(value)),
+    reps: timed ? null : Math.min(LOGGED_REPS_MAX, Math.round(value)),
     seconds: timed ? Math.round(value) : null,
     rir: timed ? null : set.rir,
   };

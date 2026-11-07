@@ -3,6 +3,7 @@
 // sets and reps in sensible ranges. Plain TypeScript without Deno APIs, so it can be tested outside the
 // Edge runtime.
 
+import { RIR_MAX, ROUTINE_NAME_MAX, TARGET_REPS_MAX } from '../_shared/limits.ts';
 import { clampInt } from '../_shared/numbers.ts';
 import {
   catalogNames,
@@ -322,7 +323,7 @@ export function planBuilder(answers: PlanAnswers, catalog: CatalogRow[]) {
       used = new Set();
       seconds = 0;
       if (routineIndex >= answers.sessionsPerWeek) return null;
-      return { name: cut(routine.name, 24) || `${routineIndex + 1}` };
+      return { name: cut(routine.name, ROUTINE_NAME_MAX) || `${routineIndex + 1}` };
     },
 
     /** The exercise for the current routine, or null when the routine leaves it out. */
@@ -331,15 +332,16 @@ export function planBuilder(answers: PlanAnswers, catalog: CatalogRow[]) {
       if (!row || routineIndex >= answers.sessionsPerWeek || used.has(row.id)) return null;
       if (used.size >= MAX_EXERCISES) return null;
       const sets = clampInt(line.sets, MIN_SETS, MAX_SETS);
-      let min = clampInt(line.target_min, 1, 30);
-      let max = clampInt(line.target_max, 1, 30);
+      // Plans hold no timed exercises (usableExercises): the targets are reps.
+      let min = clampInt(line.target_min, 1, TARGET_REPS_MAX);
+      let max = clampInt(line.target_max, 1, TARGET_REPS_MAX);
       if (min > max) [min, max] = [max, min];
       const rest = restAfterSet(row.rest_seconds, row.measures, repTarget(min, max));
       const takes = exerciseSeconds(sets, rest);
       if (used.size >= MIN_EXERCISES && seconds + takes > budget) return null;
       used.add(row.id);
       seconds += takes;
-      const rir = line.rir == null ? null : clampInt(line.rir, 0, 4);
+      const rir = line.rir == null ? null : clampInt(line.rir, 0, RIR_MAX);
       return {
         exercise: {
           exerciseId: row.id,

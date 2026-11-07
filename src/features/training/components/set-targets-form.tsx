@@ -10,6 +10,7 @@ import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { appendKey, backspace, type KeypadKey } from '@/shared/lib/keypad';
+import { TARGET_REPS_MAX, TARGET_SECONDS_MAX } from '@/shared/lib/limits';
 import { clamp } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -62,7 +63,7 @@ export function SetTargetsForm({
   const { t } = useTranslation(['training', 'common']);
   const footerInset = useFooterInset();
   const timed = isTimed(exerciseId);
-  const limit = timed ? 600 : 60;
+  const limit = timed ? TARGET_SECONDS_MAX : TARGET_REPS_MAX;
   const [sets, setSets] = useState(initialSets);
   const [rest, setRest] = useState(initialRest);
   const [rirIndex, setRirIndex] = useState<number | null>(null);

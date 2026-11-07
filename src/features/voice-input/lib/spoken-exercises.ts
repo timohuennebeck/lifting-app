@@ -4,9 +4,6 @@ import type { ExerciseDraft } from '@/shared/data/routines';
 import { i18n } from '@/shared/i18n';
 import { showError } from '@/shared/stores/error-sheet-store';
 
-/** Characters of spoken text; the read-exercises function accepts no more. */
-export const MAX_SPOKEN = 4000;
-
 /** An exercise as heard, with its sets; an unsure match has what was heard and likely others. */
 export interface SpokenExercise extends ExerciseDraft {
   raw?: string;

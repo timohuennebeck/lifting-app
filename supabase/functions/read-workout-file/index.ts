@@ -11,6 +11,7 @@
 // day (start_plan_request: kind "history" for the first three, "import" for a plan).
 import { envFlag, envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
 import { contextText } from '../_shared/exercise-reading.ts';
+import { PLAN_TEXT_MAX } from '../_shared/limits.ts';
 import { askWithRetry, type StructuredRequest } from '../_shared/openai.ts';
 import { isAppLanguage } from '../_shared/plan-events.ts';
 import {
@@ -65,8 +66,6 @@ const PLAN_IP_LIMIT = envLimit('PLAN_IMPORT_IP_LIMIT', 10);
 const PLAN_DAILY_LIMIT = envLimit('PLAN_IMPORT_DAILY_LIMIT', 1000);
 /** OpenAI's Fast mode for a plan (twice the token price); PLAN_IMPORT_FAST=false turns it off. */
 const PLAN_FAST = envFlag('PLAN_IMPORT_FAST');
-/** Characters of the plan's text the model reads. */
-const MAX_PLAN_TEXT = 60_000;
 
 type Step =
   | { step: 'categorize'; file: string; sheets: NonNullable<ReturnType<typeof sheetSamples>> }
@@ -144,7 +143,7 @@ async function readPlan(req: Request, name: unknown, text: unknown, language: st
   if (typeof name !== 'string' || typeof text !== 'string' || !text.trim()) {
     return reply(400, { error: 'bad_request' });
   }
-  if (text.length > MAX_PLAN_TEXT) return reply(413, { error: 'too_large' });
+  if (text.length > PLAN_TEXT_MAX) return reply(413, { error: 'too_large' });
 
   const taken = await takePlanRequest(req, 'import', {
     perNetwork: PLAN_IP_LIMIT,

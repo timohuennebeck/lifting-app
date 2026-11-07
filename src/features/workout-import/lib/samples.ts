@@ -8,8 +8,6 @@ import type { ImportTable } from './history';
 
 /** Characters of one value in the statistics and sample. */
 const CELL = 60;
-/** Sheets read at once; read-workout-file takes up to 20. */
-export const MAX_SHEETS = 20;
 /** Columns described; read-workout-file takes no more. */
 const MAX_COLUMNS = 80;
 

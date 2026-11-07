@@ -33,8 +33,9 @@ the production app (`APP_VARIANT=production`, `eas.json`), whose values live in 
   `APPEND_ONLY_TABLES` where they apply.
 - Read with `useDrizzleQuery`, a key from `src/shared/data/query-keys.ts` (or the feature's own
   key factory) and a module-level `map`; the query re-runs when its tables change.
-- The database checks mirror `src/shared/lib/limits.ts`. An upload the server rejects is dropped
-  whole (`connector.ts`).
+- Limits live once in `supabase/functions/_shared/limits.ts` (the app imports them from
+  `src/shared/lib/limits.ts`); the database checks hold the same values or wider ones. An upload
+  the server rejects is dropped whole (`connector.ts`).
 - The exercise catalog isn't synced: it is kept in MMKV and refreshed by `useCatalogRefresh`.
   Render code reads exercises with `useExercise` / `useExerciseName`, not `getExercise`.
 - Client state: zustand + MMKV (`src/shared/lib/storage.ts`).

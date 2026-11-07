@@ -3,6 +3,8 @@
 // ImportedRoutine, ImportedExercise and CustomExercise, the server-sent events that carry them,
 // and how the names in them are tidied.
 
+import { PLAN_NAME_MAX } from './limits.ts';
+
 /** The app languages (its AppLanguage). */
 const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR', 'ko', 'es', 'fr'] as const;
 export type AppLanguage = (typeof LANGUAGES)[number];
@@ -102,5 +104,5 @@ export function cut(text: string, max: number) {
   return (space > max / 2 ? part.slice(0, space) : part).replace(/[\s+/&·,;:–-]+$/u, '');
 }
 
-/** The plan's name as the app gets it: at most 30 characters, "Plan" when the model gave none. */
-export const planName = (name: string) => cut(name, 30) || 'Plan';
+/** The plan's name as the app gets it: cut to its limit, "Plan" when the model gave none. */
+export const planName = (name: string) => cut(name, PLAN_NAME_MAX) || 'Plan';

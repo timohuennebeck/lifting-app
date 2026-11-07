@@ -29,12 +29,11 @@ import {
   requestUser,
 } from '../_shared/common.ts';
 import { eventStream } from '../_shared/event-stream.ts';
+import { COACH_ANSWER_MAX, COACH_QUESTION_MAX } from '../_shared/limits.ts';
 import { DEFAULT_MODEL } from '../_shared/openai.ts';
 import { type AppLanguage, isAppLanguage } from '../_shared/plan-events.ts';
 import { loadCatalog, loadEquipment } from '../_shared/plans.ts';
 
-/** The app's COACH_QUESTION_MAX (src/shared/lib/limits.ts), as the database checks it. */
-const QUESTION_MAX = 500;
 const MODEL = Deno.env.get('OPENAI_COACH_MODEL') || DEFAULT_MODEL;
 const EFFORT = Deno.env.get('OPENAI_COACH_REASONING_EFFORT') || 'low';
 const FAST = envFlag('COACH_FAST');
@@ -45,8 +44,6 @@ const TIMEOUT_MS = 60_000;
 const HISTORY_TURNS = 6;
 /** Enough of the plan's latest finished workouts to hold its latest week. */
 const PLAN_WORKOUTS = 50;
-/** The answers are a few sentences; the database takes up to 2,000 characters. */
-const ANSWER_MAX = 2000;
 
 /** What the app streams back, after the coach's own events. */
 type Event =
@@ -220,7 +217,7 @@ async function answer(job: Job, send: (event: Event) => void, signal: AbortSigna
     p_question: job.question,
     p_asked_at: askedAt.toISOString(),
     p_answer_id: answerId,
-    p_answer: reply.answer.slice(0, ANSWER_MAX),
+    p_answer: reply.answer.slice(0, COACH_ANSWER_MAX),
     p_chart: reply.chart,
     p_calls: reply.calls,
     p_usage: usageColumns(reply.usage, ms),
@@ -257,7 +254,7 @@ Deno.serve(async (req) => {
   const language = body.language;
   if (
     !question ||
-    question.length > QUESTION_MAX ||
+    question.length > COACH_QUESTION_MAX ||
     (chatId !== null && !isUuid(chatId)) ||
     !isAppLanguage(language)
   ) {

@@ -14,7 +14,12 @@ import {
 } from '@/shared/data/exercises';
 import { newId } from '@/shared/data/json';
 import { splitMuscles } from '@/shared/data/muscle-groups';
-import { CUSTOM_EXERCISE_NAME_MAX, ROUTINE_NAME_MAX } from '@/shared/lib/limits';
+import {
+  CUSTOM_EXERCISE_NAME_MAX,
+  IMPORT_SHEETS_MAX,
+  PLAN_TEXT_MAX,
+  ROUTINE_NAME_MAX,
+} from '@/shared/lib/limits';
 import { getOrInsert } from '@/shared/lib/map';
 import { i18n } from '@/shared/i18n';
 import { track } from '@/shared/lib/posthog';
@@ -47,7 +52,7 @@ import {
   reviewItems,
 } from '../lib/review';
 import { currentRoutines, findRoutines, type ResolvedWorkout } from '../lib/routines';
-import { MAX_SHEETS, sheetSample } from '../lib/samples';
+import { sheetSample } from '../lib/samples';
 import type { WorkoutRow, WorkoutToSave } from '../lib/save-history';
 
 interface WorkoutImportState {
@@ -119,9 +124,6 @@ let running: AbortController | null = null;
 
 /** The id of the exercise "Eigene Übung anlegen" makes of a name: the same each time it's finished. */
 const madeIds = new Map<string, string>();
-
-/** Characters of plan rows read-workout-file reads. */
-const MAX_PLAN_TEXT = 60_000;
 
 /**
  * Reads the plan's rows with read-workout-file into the plan import's store, which streams it as the plan
@@ -257,7 +259,7 @@ async function runImport(
       return [`Sheet "${l.table.name}":\n${l.planRows.map(csvLine).join('\n')}`];
     })
     .join('\n\n')
-    .slice(0, MAX_PLAN_TEXT);
+    .slice(0, PLAN_TEXT_MAX);
   if (!workouts.length && !planText) {
     set({ failure: 'nothing', status: 'failed' });
     return null;
@@ -317,7 +319,7 @@ export const useWorkoutImportStore = create<WorkoutImportState>()((set, get) => 
     useImportStore.getState().reset();
     const tables = (read?.tables ?? [])
       .filter((t) => (!sheets || sheets.includes(t.name)) && t.rows.length >= 2)
-      .slice(0, MAX_SHEETS);
+      .slice(0, IMPORT_SHEETS_MAX);
     const startedAt = Date.now();
     const live = (patch: Partial<WorkoutImportState>) =>
       !controller.signal.aborted && get().run === run && set(patch);

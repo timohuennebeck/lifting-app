@@ -2,10 +2,11 @@
 // workouts are grouped by their exercises (a workout joins a routine when at least half its
 // exercises were in it before); a group that starts as another stops and shares at least two
 // exercises with it, or that fills a gap in another and shares one, continues that routine (a
-// training block that swapped exercises). The plan is each routine's exercises of the last six weeks. Plain
-// TypeScript.
+// training block that swapped exercises). The plan is each routine's exercises of the last six
+// weeks.
 
 import type { LoggedSet } from './history';
+import { TARGET_REPS_MAX, TARGET_SECONDS_MAX } from '@/shared/lib/limits';
 
 /** A workout of the import with its exercises as the app's (catalog or custom ids). */
 export interface ResolvedWorkout {
@@ -161,7 +162,7 @@ export function currentRoutines(
           const v = timed ? s.seconds : s.reps;
           return v ? [v] : [];
         });
-        const max = timed ? 600 : 60;
+        const max = timed ? TARGET_SECONDS_MAX : TARGET_REPS_MAX;
         return {
           exerciseId,
           position:

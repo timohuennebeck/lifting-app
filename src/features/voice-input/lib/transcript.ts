@@ -1,4 +1,4 @@
-import { MAX_SPOKEN } from './spoken-exercises';
+import { SPOKEN_TEXT_MAX } from '@/shared/lib/limits';
 
 /** The text of a voice input while speech recognition adds to it. */
 export interface Transcript {
@@ -21,7 +21,7 @@ const joinWords = (...parts: string[]) =>
 /** The whole text, as much as read-exercises takes; typed text stays as typed. */
 export function transcriptText(t: Transcript) {
   const heard = !!t.final || !!t.partial;
-  return (heard ? joinWords(t.before, t.final, t.partial) : t.before).slice(0, MAX_SPOKEN);
+  return (heard ? joinWords(t.before, t.final, t.partial) : t.before).slice(0, SPOKEN_TEXT_MAX);
 }
 
 /** Starts a recognition that adds to the text so far. */

@@ -4,13 +4,11 @@
 // the reply is saved as written and the database asks for its translation again
 // (translate-ticket-messages). Called with the support account's token: { ticket_id, content }.
 import { admin, isUuid } from '../_shared/common.ts';
+import { TICKET_MESSAGE_MAX } from '../_shared/limits.ts';
 import { userLanguage } from '../_shared/message-translations.ts';
 import { openAiConfigured } from '../_shared/openai.ts';
 import { corsReply, isSupportRequest, preflight } from '../_shared/support-desk.ts';
 import { translateText } from '../_shared/translate.ts';
-
-/** The database's limit on a message (ticket_messages_content_length). */
-const MESSAGE_MAX = 5000;
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return preflight();
@@ -22,7 +20,8 @@ Deno.serve(async (req) => {
   if (!isUuid(body?.ticket_id)) {
     return corsReply(400, { error: 'bad_request' });
   }
-  if (!content || content.length > MESSAGE_MAX) return corsReply(400, { error: 'bad_content' });
+  if (!content || content.length > TICKET_MESSAGE_MAX)
+    return corsReply(400, { error: 'bad_content' });
 
   const { data: ticket } = await admin
     .from('tickets')

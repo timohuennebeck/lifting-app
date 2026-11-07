@@ -8,6 +8,7 @@ import {
   exerciseSchema,
   type ModelExercise,
 } from '../_shared/exercise-reading.ts';
+import { ROUTINE_NAME_MAX } from '../_shared/limits.ts';
 import { cut, type ImportedRoutine } from '../_shared/plan-events.ts';
 import type { CatalogRow } from '../_shared/plans.ts';
 
@@ -65,7 +66,7 @@ export interface ModelRoutine {
 export function planReader(catalog: CatalogRow[], newId: () => string) {
   return {
     routine: (routine: Omit<ModelRoutine, 'exercises'>): ImportedRoutine => ({
-      name: cut(routine.name, 24) || cut(routine.heading, 24),
+      name: cut(routine.name, ROUTINE_NAME_MAX) || cut(routine.heading, ROUTINE_NAME_MAX),
     }),
     /**
      * The exercise, with the new exercise it introduces the first time one is used; null for a

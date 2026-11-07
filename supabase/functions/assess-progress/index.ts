@@ -8,6 +8,7 @@ import { encodeBase64 } from 'jsr:@std/encoding@1/base64';
 
 import { hasPro, isOldEnough } from '../_shared/account.ts';
 import { admin, isUuid, refuseAiRequest, reply, requestUser } from '../_shared/common.ts';
+import { PROGRESS_CHECK_MIN_AGE } from '../_shared/limits.ts';
 import { askStructured } from '../_shared/openai.ts';
 import {
   type AssessmentProfile,
@@ -25,8 +26,6 @@ import {
 } from './assessment.ts';
 
 const BUCKET = 'progress-photos';
-/** Same rule as the app (features/progress-check/lib/eligibility.ts). */
-const MIN_AGE = 18;
 /** Assessments per user in 24 hours, retakes included; each one is an OpenAI call. */
 const DAILY_LIMIT = 5;
 /**
@@ -101,7 +100,8 @@ Deno.serve(async (req) => {
   ]);
   // On the 18th birthday east of UTC this still says no for those first hours (the app goes by
   // the local date).
-  if (!isOldEnough(profile?.birth_date, MIN_AGE)) return reply(403, { error: 'not_adult' });
+  if (!isOldEnough(profile?.birth_date, PROGRESS_CHECK_MIN_AGE))
+    return reply(403, { error: 'not_adult' });
   if (!(await pro)) return reply(403, { error: 'not_pro' });
   // Retakes of this check go on: only saved checks other than it count.
   if (previous && Date.now() - Date.parse(previous.created_at) < MIN_CHECK_GAP_MS) {

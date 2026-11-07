@@ -1,6 +1,7 @@
 import { codeOf } from '@/features/plan-import/lib/plan-import-service';
 import { postFunction, refusalOf } from '@/shared/data/edge-functions';
 import type { CustomExercise } from '@/shared/data/exercises';
+import { IMPORT_NAMES_MAX } from '@/shared/lib/limits';
 
 import type { SheetReading } from './history';
 import type { sheetSample } from './samples';
@@ -70,16 +71,13 @@ export const categorize = (
     (r) => r.sheets,
   );
 
-/** Names per request at most; read-workout-file takes up to 80. */
-const BATCH = 80;
-
 /** Step 2: which exercise each name is, in as few even batches as fit, side by side. */
 export async function mapNames(
   names: { name: string; sets: number; hint: string }[],
   language: string,
   signal: AbortSignal,
 ): Promise<MappedName[]> {
-  const size = Math.ceil(names.length / Math.ceil(names.length / BATCH));
+  const size = Math.ceil(names.length / Math.ceil(names.length / IMPORT_NAMES_MAX));
   const batches: (typeof names)[] = [];
   for (let i = 0; i < names.length; i += size) batches.push(names.slice(i, i + size));
   const answers = await Promise.all(

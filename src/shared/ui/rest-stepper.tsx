@@ -2,13 +2,13 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { formatDuration } from '@/shared/lib/format';
+import { REST_SECONDS_MAX } from '@/shared/lib/limits';
 import { clamp } from '@/shared/lib/math';
 
 import { IconButton } from './icon-button';
 import { Text } from './text';
 
 const MIN_SECONDS = 15;
-const MAX_SECONDS = 600;
 const STEP_SECONDS = 15;
 
 export interface RestStepperProps {
@@ -25,7 +25,7 @@ export function RestStepper({ value, onChange }: RestStepperProps) {
   const { t } = useTranslation(['common', 'training']);
   // At the ends a step changes nothing, so nothing is reported.
   const set = (next: number) => {
-    const clamped = clamp(next, MIN_SECONDS, MAX_SECONDS);
+    const clamped = clamp(next, MIN_SECONDS, REST_SECONDS_MAX);
     if (clamped !== value) onChange(clamped);
   };
   return (
@@ -53,7 +53,7 @@ export function RestStepper({ value, onChange }: RestStepperProps) {
         haptic="select"
         className="bg-raised"
         accessibilityLabel={t('actions.increase')}
-        disabled={value >= MAX_SECONDS}
+        disabled={value >= REST_SECONDS_MAX}
         onPress={() => set(value + STEP_SECONDS)}
       />
     </View>
