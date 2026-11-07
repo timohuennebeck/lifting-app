@@ -166,7 +166,8 @@ export function WeightPlot({
               const last = i === DAY_LABELS - 1;
               return (
                 <Text
-                  key={text}
+                  // By place: over a span of a few days two labels can show the same date.
+                  key={i}
                   variant="caption"
                   tone="subtle"
                   numberOfLines={1}

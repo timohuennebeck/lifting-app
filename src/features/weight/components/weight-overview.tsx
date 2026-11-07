@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { fromIsoDate } from '@/shared/lib/date';
+import { daysBetween, fromIsoDate } from '@/shared/lib/date';
 import { formatShortDate, type UnitSystem, weightUnit } from '@/shared/lib/format';
 import { type Period, PERIOD_DAYS } from '@/shared/lib/periods';
 import { RangeTabs } from '@/shared/ui/range-tabs';
@@ -34,9 +34,9 @@ export function WeightOverview({ points, today, units }: WeightOverviewProps) {
   // The picked weigh-in by its day, so deleting another one or a new day doesn't move it.
   const [pickedDate, setPickedDate] = useState<string | null>(null);
 
-  const days = PERIOD_DAYS[period];
-  // All: from the first weigh-in.
-  const from = days === null ? (points[0]?.date ?? today) : daysBefore(today, days - 1);
+  // All: from the first weigh-in, but at least the week 1W shows (one weigh-in is no chart).
+  const days = PERIOD_DAYS[period] ?? Math.max(7, daysBetween(points[0]?.date ?? today, today) + 1);
+  const from = daysBefore(today, days - 1);
   const visible = useMemo(
     () => points.filter((p) => p.date >= from && p.date <= today),
     [points, from, today],
