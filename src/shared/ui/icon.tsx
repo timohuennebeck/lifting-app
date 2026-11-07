@@ -449,6 +449,25 @@ const ICONS = {
       </>
     ),
   },
+  // A phone, for "Device language".
+  phone: {
+    viewBox: '0 0 16 16',
+    render: (c) => (
+      <>
+        <Rect
+          x={3.8}
+          y={1.2}
+          width={8.4}
+          height={13.6}
+          rx={2.2}
+          stroke={c}
+          strokeWidth={1.6}
+          fill="none"
+        />
+        <Path d="M6.8 12h2.4" stroke={c} strokeWidth={1.6} strokeLinecap="round" />
+      </>
+    ),
+  },
   pencil: { viewBox: '0 0 16 16', render: stroke('M11 2l3 3-8.5 8.5L2 14l.5-3.5z', 1.6) },
   // Padlock: shackle on top of a rounded body.
   lock: {

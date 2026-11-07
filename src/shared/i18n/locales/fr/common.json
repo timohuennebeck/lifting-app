@@ -142,5 +142,19 @@
     "6m": "6M",
     "1y": "1A",
     "all": "Tout"
+  },
+  "languagePage": {
+    "title": "Langue",
+    "lead": "Loqqa, ton coach et nos e-mails utilisent cette langue.",
+    "device": "Langue de l’appareil",
+    "names": {
+      "en": "Anglais",
+      "de": "Allemand",
+      "pt-PT": "Portugais (Portugal)",
+      "pt-BR": "Portugais (Brésil)",
+      "ko": "Coréen",
+      "es": "Espagnol",
+      "fr": "Français"
+    }
   }
 }

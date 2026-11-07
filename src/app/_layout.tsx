@@ -110,6 +110,8 @@ export default function RootLayout() {
                     </Stack.Protected>
                     {/* Open from both groups: sign-up, the paywall and Settings. */}
                     <Stack.Screen name="legal/[kind]" options={{ animation: 'slide_from_right' }} />
+                    {/* The app language, from the welcome screen and Settings. */}
+                    <Stack.Screen name="language" options={{ animation: 'slide_from_right' }} />
                     {/* Exercise info, from workouts, routines, search and the plan import. */}
                     <Stack.Screen
                       name="exercise/[id]"

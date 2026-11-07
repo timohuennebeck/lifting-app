@@ -9,7 +9,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { legalHref } from '@/features/legal/lib/legal-href';
 import { useIsPro } from '@/features/paywall/stores/subscription-store';
 import { useUploadQueueStore } from '@/features/support/stores/upload-queue-store';
-import { LanguageSheet } from '@/shared/components/language-sheet';
 import { ProfileAvatar } from '@/shared/components/profile-avatar';
 import { db } from '@/shared/data/powersync/database';
 import { saveProfile, useProfile, useUnits } from '@/shared/data/profile';
@@ -37,7 +36,7 @@ import { SignOutSheet } from '../components/sign-out-sheet';
 import { UnitBadge } from '../components/unit-badge';
 import { deleteAccount } from '../lib/delete-account';
 
-type OpenSheet = 'language' | 'signOut' | 'delete';
+type OpenSheet = 'signOut' | 'delete';
 
 /** The app version and build number, e.g. "1.0.0 (2)": tells TestFlight builds apart. */
 const BUILD = Application.nativeBuildVersion;
@@ -124,7 +123,7 @@ export function SettingsScreen() {
             label={t('settings.language')}
             value={LANGUAGE_NAMES[language]}
             icon={<LanguageFlag language={language} size={32} />}
-            onPress={() => setSheet('language')}
+            onPress={() => router.push('/language')}
           />
           <PreferenceCard
             label={t('settings.units')}
@@ -182,7 +181,6 @@ export function SettingsScreen() {
         </Text>
       </View>
 
-      <LanguageSheet visible={sheet === 'language'} onClose={close} />
       <SignOutSheet
         visible={sheet === 'signOut'}
         onClose={close}
