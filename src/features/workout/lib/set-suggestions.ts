@@ -34,8 +34,11 @@ import { lightestWeight, roundedStep, weightStep } from './weight-step';
 export interface SetSuggestion {
   /** Weights in kg, as the boxes take them. */
   values: SetValues;
-  /** Heavier (on an assisted machine: less assistance) or lighter than last time. */
-  weight: 'up' | 'down' | null;
+  /**
+   * Heavier (on an assisted machine: less assistance) or lighter than last time; `hold`: the
+   * same weight without more reps. Null without a last time to compare with.
+   */
+  weight: 'up' | 'down' | 'hold' | null;
   /** More reps (or seconds) at the same weight. */
   reps: 'up' | null;
 }
@@ -146,6 +149,7 @@ export function suggestionsFor(
       weight = heavier !== (kind === 'assisted') ? 'up' : 'down';
     }
     const reps = before && s.weight === before.weight && s.reps > before.reps ? 'up' : null;
+    if (before && s.weight === before.weight && !reps) weight = 'hold';
     // On a bodyweight exercise an empty weight box means no added weight.
     let weightKg: number | null = null;
     if (weighted && s.weight != null && !(kind === 'bodyweight' && s.weight === 0)) {

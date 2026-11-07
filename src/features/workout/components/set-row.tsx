@@ -33,27 +33,32 @@ export interface SetRowMiddle {
   detail?: string;
   /** A set is set in semibold, targets aren't. */
   strong?: boolean;
-  /** The suggestion went up or down from last time: a marker before the line that changed. */
+  /**
+   * The suggestion went up or down from last time, or holds: a marker before the line that
+   * changed (holding: before the weight).
+   */
   mainTrend?: Trend;
   detailTrend?: Trend;
 }
 
-type Trend = 'up' | 'down';
+type Trend = 'up' | 'down' | 'hold';
+
+const TREND_MARK = {
+  up: { className: 'bg-accent', icon: 'arrow-up' },
+  down: { className: 'bg-amber', icon: 'arrow-down' },
+  hold: { className: 'bg-subtle', icon: 'plus-minus' },
+} as const;
 
 interface TrendMarkProps {
   trend: Trend;
 }
 
-/** Neon arrow up, or amber arrow down, before a suggested value. */
+/** Neon arrow up, amber arrow down, or a grey ± (holds), before a suggested value. */
 function TrendMark({ trend }: TrendMarkProps) {
+  const mark = TREND_MARK[trend];
   return (
-    <View
-      className={cn(
-        'size-3.5 items-center justify-center rounded-full',
-        trend === 'up' ? 'bg-accent' : 'bg-amber',
-      )}
-    >
-      <Icon name={trend === 'up' ? 'arrow-up' : 'arrow-down'} size={8} color={colors.onAccent} />
+    <View className={cn('size-3.5 items-center justify-center rounded-full', mark.className)}>
+      <Icon name={mark.icon} size={8} color={colors.onAccent} />
     </View>
   );
 }

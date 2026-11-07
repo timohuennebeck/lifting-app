@@ -141,7 +141,7 @@ export function SetTable({
     const suggestion = suggestions?.[index];
     if (!suggestion) return null;
     const label = setLabel(suggestion.values);
-    // The marker goes before what changed: the weight, else the reps.
+    // The marker goes before what changed (holding: the weight), else the reps.
     if (label.detail) {
       return {
         ...label,

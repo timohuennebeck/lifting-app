@@ -64,6 +64,7 @@ const ICONS = {
   'check-thin': { viewBox: '0 0 14 14', render: stroke('M3 7.5l2.5 2.5L11 4.5', 1.5) },
   plus: { viewBox: '0 0 14 14', render: stroke('M7 1v12M1 7h12', 2.2) },
   minus: { viewBox: '0 0 14 14', render: stroke('M2 7h10', 2.2) },
+  'plus-minus': { viewBox: '0 0 16 16', render: stroke('M8 2v7M4.5 5.5h7M4.5 13h7', 2.2) },
   'arrow-right': { viewBox: '0 0 18 16', render: stroke('M1 8h15M10 2l6 6-6 6', 2.2) },
   'arrow-up': { viewBox: '0 0 16 16', render: stroke('M8 13V3M3.5 7.5L8 3l4.5 4.5', 2.2) },
   'arrow-down': { viewBox: '0 0 16 16', render: stroke('M8 3v10M3.5 8.5L8 13l4.5-4.5', 2.2) },
