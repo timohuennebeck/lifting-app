@@ -108,14 +108,8 @@
     "hint": "Ring ziehen oder Wert antippen"
   },
   "building": {
-    "frequency": "{{count}} × {{minutes}} Min.",
-    "focus": "Fokus: {{areas}}",
-    "balanced": "Alle Muskelgruppen",
-    "routineTag": "T{{n}}",
     "elapsed_one": "{{count}} s",
     "elapsed_other": "{{count}} s",
-    "rep": "Wdh. {{n}}",
-    "tipsTitle": "Während du wartest",
     "lines": [
       "Lese deine Antworten …",
       "Wähle Übungen für deine Geräte …",
@@ -126,24 +120,44 @@
       "Prüfe die Pausenzeiten …",
       "Lege letzte Hand an …"
     ],
-    "lifts": [
-      "Bankdrücken",
-      "Kniebeugen",
-      "Kreuzheben",
-      "Klimmzug",
-      "Schulterdrücken",
-      "Rudern",
-      "Ausfallschritt",
-      "Dips",
-      "Curls"
-    ],
-    "tips": [
-      "Jede Woche eine Wiederholung oder etwas mehr Gewicht: Das ist progressive Überlastung.",
-      "Beende die meisten Sätze mit 1–3 Wiederholungen im Tank.",
-      "Pausiere 2–3 Minuten zwischen schweren Sätzen, 1–2 zwischen den anderen.",
-      "Muskeln wachsen im Schlaf, nicht beim Training.",
-      "Trag jeden Satz ein: Was gemessen wird, wird gehoben."
-    ]
+    "topics": {
+      "training": "Training",
+      "recovery": "Erholung",
+      "nutrition": "Ernährung",
+      "progress": "Fortschritt",
+      "myth": "Mythos",
+      "app": "Loqqa"
+    },
+    "tips": {
+      "supersets": "Supersätze aus Gegenspielern, z. B. Bankdrücken und Rudern im Wechsel, sparen viel Zeit, ohne dass die Leistung leidet.",
+      "dropSets": "Drop-Sätze bringen ähnlich viel Muskel wie normale Sätze, in deutlich weniger Zeit.",
+      "reserve": "Bei 10+ Wiederholungen unterschätzen die meisten ihre Reserve. Meist sind noch mehr drin, als du denkst.",
+      "setsPerSession": "Ab etwa 6 harten Sätzen pro Muskel und Training bringt jeder weitere kaum noch etwas. Verteil sie lieber auf zwei Tage.",
+      "overheadTriceps": "Trizepsdrücken über Kopf ließ den Trizeps in einer Studie rund 40 % mehr wachsen als Drücken am Kabel.",
+      "seatedLegCurl": "Beinbeuger im Sitzen bauen mehr Muskel auf als im Liegen: Der Muskel ist dabei stärker gedehnt.",
+      "deepSquats": "Tiefe Kniebeugen bauen deutlich mehr Gesäß auf als halbe.",
+      "deadliftStance": "Beim Kreuzheben steht die Stange über der Fußmitte, etwa 2–3 cm vor dem Schienbein.",
+      "longerRest": "Mit 3 Minuten Pause wuchsen die Muskeln in einer Studie stärker als mit 1 Minute, bei gleich vielen Sätzen.",
+      "iceBath": "Ein Eisbad direkt nach dem Training kann den Muskelaufbau bremsen. Heb es dir für Ruhetage auf.",
+      "recoveryTime": "Ein hart trainierter Muskel braucht etwa 48–72 Stunden, bis er wieder voll leistungsfähig ist.",
+      "cardioOrder": "Cardio und Gewichte am selben Tag? Erst die Gewichte, dann Cardio, am besten mit ein paar Stunden Abstand.",
+      "proteinFood": "250 g Magerquark haben rund 30 g Protein, so viel wie 5 Eier.",
+      "casein": "30–40 g Casein vor dem Schlafen, z. B. Magerquark, versorgen deine Muskeln über Nacht.",
+      "creatine": "Kreatin wirkt erst nach 3–4 Wochen voll. Die Uhrzeit ist egal, wichtig ist nur: jeden Tag.",
+      "deficitProtein": "Im Kaloriendefizit brauchst du eher mehr Protein, bis zu 2,2 g pro Kilo Körpergewicht.",
+      "salt": "Nach einem salzigen Abendessen zeigt die Waage am nächsten Morgen gern 1 kg mehr. Das ist Wasser, kein Fett.",
+      "glycogen": "Jedes Gramm gespeicherte Kohlenhydrate bindet etwa 3 g Wasser. Deshalb springt die Waage nach Pizza-Abenden.",
+      "fatKcal": "Ein Kilo Körperfett entspricht rund 7.000 kcal. 500 kcal Defizit am Tag sind etwa ein Kilo in zwei Wochen.",
+      "doubleProgression": "Hängst du an einem Gewicht fest, sammle erst 2 Wiederholungen mehr. Dann ist die nächste Stufe fällig.",
+      "mobility": "Krafttraining macht unbeweglich? Mit voller Bewegung wirst du ähnlich beweglich wie durch Dehnen.",
+      "age": "Zu alt fürs Krafttraining? Selbst 90-Jährige haben in Studien ihre Kraft mehr als verdoppelt.",
+      "spotReduction": "Bauchübungen gegen Bauchfett? Fett verlierst du am ganzen Körper, nicht da, wo du trainierst.",
+      "anabolicWindow": "Shake in 30 Minuten nach dem Training? Wie viel Protein du über den Tag isst, zählt viel mehr.",
+      "swap": "Gerät besetzt? Tausch die Übung mitten im Training gegen eine passende Alternative.",
+      "plates": "Beim Eintragen zeigt dir Loqqa, welche Scheiben auf jede Seite der Stange gehören.",
+      "kai": "Frag Kai, warum dein Bankdrücken stagniert. Er antwortet mit deinen eigenen Daten."
+    },
+    "nextTip": "Zeigt den nächsten Tipp"
   },
   "generate": {
     "making": "Plan wird erstellt …",
@@ -168,15 +182,5 @@
     "placeholder": "z. B. Mein Ganzkörperplan",
     "suggestions": "Vorschläge",
     "myPlan": "Mein Plan"
-  },
-  "goalShort": {
-    "hypertrophy": "Muskelaufbau",
-    "strength": "Kraftaufbau",
-    "strength_hypertrophy": "Kraft & Muskelaufbau"
-  },
-  "equipmentShort": {
-    "gym": "Studio",
-    "home": "Zuhause",
-    "bodyweight": "Ohne Geräte"
   }
 }

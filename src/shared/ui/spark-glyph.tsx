@@ -10,9 +10,9 @@ export type Spark = 'cross' | 'asterisk' | 'star';
  * The centre's sparkle, drawn rather than typed: iOS shows "✳" as a green emoji. The four
  * teardrops (✢), the eight spokes (✳) and the six-pointed star (✶) of the design.
  */
-export function SparkGlyph({ kind }: { kind: Spark }) {
+export function SparkGlyph({ kind, size = 52 }: { kind: Spark; size?: number }) {
   return (
-    <Svg width={52} height={52} viewBox="0 0 52 52">
+    <Svg width={size} height={size} viewBox="0 0 52 52">
       {kind === 'cross'
         ? [0, 90, 180, 270].map((angle) => (
             <Path
@@ -63,9 +63,9 @@ const SPARKS: { kind: Spark; frames: CSSAnimationKeyframes }[] = [
 ];
 
 /** The three glyphs stacked, each fading in its turn on the UI thread (no re-render). */
-export function SpinnerGlyph() {
+export function SpinnerGlyph({ size = 52 }: { size?: number }) {
   return (
-    <View className="size-13">
+    <View style={{ width: size, height: size }}>
       {SPARKS.map(({ kind, frames }) => (
         <Animated.View
           key={kind}
@@ -78,7 +78,7 @@ export function SpinnerGlyph() {
             animationTimingFunction: 'linear',
           }}
         >
-          <SparkGlyph kind={kind} />
+          <SparkGlyph kind={kind} size={size} />
         </Animated.View>
       ))}
     </View>

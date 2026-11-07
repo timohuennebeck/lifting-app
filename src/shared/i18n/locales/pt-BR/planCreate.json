@@ -108,14 +108,8 @@
     "hint": "Arraste o anel ou toque em um valor"
   },
   "building": {
-    "frequency": "{{count}} × {{minutes}} min",
-    "focus": "Foco: {{areas}}",
-    "balanced": "Todos os grupos musculares",
-    "routineTag": "T{{n}}",
     "elapsed_one": "{{count}} s",
     "elapsed_other": "{{count}} s",
-    "rep": "Rep. {{n}}",
-    "tipsTitle": "Enquanto você espera",
     "lines": [
       "Lendo suas respostas …",
       "Escolhendo exercícios para seu equipamento …",
@@ -126,24 +120,44 @@
       "Conferindo os tempos de descanso …",
       "Dando os últimos retoques …"
     ],
-    "lifts": [
-      "Supino",
-      "Agachamento",
-      "Levantamento terra",
-      "Barra fixa",
-      "Desenvolvimento",
-      "Remada",
-      "Avanço",
-      "Paralelas",
-      "Rosca"
-    ],
-    "tips": [
-      "Uma repetição ou um pouco mais de peso por semana: isso é sobrecarga progressiva.",
-      "Termine a maioria das séries com 1–3 repetições de reserva.",
-      "Descanse 2–3 minutos entre séries pesadas, 1–2 entre as outras.",
-      "O músculo cresce enquanto você dorme, não enquanto treina.",
-      "Registre cada série: o que é medido é levantado."
-    ]
+    "topics": {
+      "training": "Treino",
+      "recovery": "Recuperação",
+      "nutrition": "Nutrição",
+      "progress": "Progresso",
+      "myth": "Mito",
+      "app": "Loqqa"
+    },
+    "tips": {
+      "supersets": "Bi-sets de músculos opostos, como supino e remada alternados, economizam muito tempo sem perder rendimento.",
+      "dropSets": "Drop sets constroem tanto músculo quanto séries normais, em bem menos tempo.",
+      "reserve": "Com 10+ repetições, a maioria subestima a reserva. Normalmente ainda tem mais do que você imagina.",
+      "setsPerSession": "A partir de umas 6 séries pesadas por músculo num treino, cada série extra acrescenta pouco. Divida em dois dias.",
+      "overheadTriceps": "Num estudo, o tríceps acima da cabeça fez o tríceps crescer cerca de 40 % a mais do que no cabo.",
+      "seatedLegCurl": "Mesa flexora sentada constrói mais músculo do que deitada: o posterior da coxa fica mais alongado.",
+      "deepSquats": "Agachamentos profundos constroem bem mais glúteo do que meio agachamento.",
+      "deadliftStance": "No levantamento terra, a barra fica sobre o meio do pé, cerca de 2–3 cm à frente das canelas.",
+      "longerRest": "Num estudo, os músculos cresceram mais com 3 minutos de descanso do que com 1, com as mesmas séries.",
+      "iceBath": "Um banho de gelo logo após o treino pode frear o ganho muscular. Deixe para os dias de descanso.",
+      "recoveryTime": "Um músculo treinado pesado precisa de cerca de 48–72 horas para voltar ao máximo.",
+      "cardioOrder": "Cardio e musculação no mesmo dia? Primeiro os pesos, depois o cardio, de preferência com algumas horas de intervalo.",
+      "proteinFood": "250 g de iogurte grego têm cerca de 25 g de proteína, tanto quanto 4 ovos.",
+      "casein": "30–40 g de caseína antes de dormir, por ex. queijo cottage, alimentam os músculos durante a noite.",
+      "creatine": "A creatina só faz efeito total após 3–4 semanas. O horário não importa, importa tomar todo dia.",
+      "deficitProtein": "Em déficit calórico você precisa de mais proteína, não menos: até 2,2 g por kg de peso corporal.",
+      "salt": "Depois de um jantar salgado, a balança costuma mostrar 1 kg a mais na manhã seguinte. É água, não gordura.",
+      "glycogen": "Cada grama de carboidrato armazenado retém cerca de 3 g de água. Por isso a balança sobe depois da noite da pizza.",
+      "fatKcal": "Um quilo de gordura corporal tem cerca de 7.000 kcal. Um déficit de 500 kcal por dia é cerca de um quilo em duas semanas.",
+      "doubleProgression": "Travou num peso? Primeiro faça mais 2 repetições com ele. Depois é hora do próximo degrau.",
+      "mobility": "Musculação tira mobilidade? Treinar com amplitude total deixa você tão flexível quanto alongar.",
+      "age": "Velho demais para musculação? Em estudos, até pessoas de 90 anos mais que dobraram a força.",
+      "spotReduction": "Abdominal para queimar barriga? Você perde gordura no corpo todo, não onde treina.",
+      "anabolicWindow": "Shake nos 30 minutos após o treino? A proteína que você come ao longo do dia conta muito mais.",
+      "swap": "Aparelho ocupado? Troque o exercício no meio do treino por uma alternativa adequada.",
+      "plates": "Ao registrar uma série, o Loqqa mostra quais anilhas vão de cada lado da barra.",
+      "kai": "Pergunte ao Kai por que seu supino estagnou. Ele responde com os seus próprios dados."
+    },
+    "nextTip": "Mostra a próxima dica"
   },
   "generate": {
     "making": "Criando o plano …",
@@ -168,15 +182,5 @@
     "placeholder": "ex.: Meu plano de corpo inteiro",
     "suggestions": "Sugestões",
     "myPlan": "Meu plano"
-  },
-  "goalShort": {
-    "hypertrophy": "Ganho de massa",
-    "strength": "Força",
-    "strength_hypertrophy": "Força & massa"
-  },
-  "equipmentShort": {
-    "gym": "Academia",
-    "home": "Em casa",
-    "bodyweight": "Só o corpo"
   }
 }

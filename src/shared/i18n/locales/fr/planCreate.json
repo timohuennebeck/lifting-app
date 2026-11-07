@@ -108,14 +108,8 @@
     "hint": "Fais glisser l'anneau ou touche une valeur"
   },
   "building": {
-    "frequency": "{{count}} × {{minutes}} min",
-    "focus": "Priorité : {{areas}}",
-    "balanced": "Tous les groupes musculaires",
-    "routineTag": "S{{n}}",
     "elapsed_one": "{{count}} s",
     "elapsed_other": "{{count}} s",
-    "rep": "Rép. {{n}}",
-    "tipsTitle": "En attendant",
     "lines": [
       "On lit tes réponses…",
       "On choisit les exercices pour ton matériel…",
@@ -126,24 +120,44 @@
       "On vérifie les temps de repos…",
       "On peaufine les détails…"
     ],
-    "lifts": [
-      "Développé couché",
-      "Squat",
-      "Soulevé de terre",
-      "Traction",
-      "Développé militaire",
-      "Rowing",
-      "Fente",
-      "Dips",
-      "Curl"
-    ],
-    "tips": [
-      "Une répétition ou un peu plus de poids chaque semaine : c’est la surcharge progressive.",
-      "Termine la plupart des séries avec 1 à 3 répétitions en réserve.",
-      "Repose-toi 2 à 3 minutes entre les séries lourdes, 1 à 2 entre les autres.",
-      "Le muscle grandit pendant ton sommeil, pas pendant l’entraînement.",
-      "Note chaque série : ce qui se mesure se soulève."
-    ]
+    "topics": {
+      "training": "Entraînement",
+      "recovery": "Récupération",
+      "nutrition": "Nutrition",
+      "progress": "Progrès",
+      "myth": "Mythe",
+      "app": "Loqqa"
+    },
+    "tips": {
+      "supersets": "Les supersets de muscles opposés, comme développé couché et rowing en alternance, font gagner beaucoup de temps sans perte de performance.",
+      "dropSets": "Les séries dégressives construisent autant de muscle que les séries classiques, en bien moins de temps.",
+      "reserve": "Au-delà de 10 répétitions, la plupart sous-estiment leur réserve. Il en reste souvent plus que tu ne crois.",
+      "setsPerSession": "Au-delà d’environ 6 séries dures par muscle et par séance, chaque série en plus n’apporte presque rien. Répartis-les sur deux jours.",
+      "overheadTriceps": "Dans une étude, l’extension des triceps au-dessus de la tête les a fait grossir d’environ 40 % de plus qu’à la poulie.",
+      "seatedLegCurl": "Le leg curl assis construit plus de muscle que couché : les ischios y sont plus étirés.",
+      "deepSquats": "Les squats profonds développent nettement plus les fessiers que les demi-squats.",
+      "deadliftStance": "Au soulevé de terre, la barre part au-dessus du milieu du pied, à environ 2–3 cm des tibias.",
+      "longerRest": "Dans une étude, les muscles ont plus grossi avec 3 minutes de repos qu’avec 1, pour le même nombre de séries.",
+      "iceBath": "Un bain glacé juste après l’entraînement peut freiner la prise de muscle. Garde-le pour les jours de repos.",
+      "recoveryTime": "Un muscle entraîné à fond a besoin d’environ 48 à 72 heures pour retrouver toute sa force.",
+      "cardioOrder": "Cardio et musculation le même jour ? D’abord les poids, puis le cardio, idéalement à quelques heures d’écart.",
+      "proteinFood": "250 g de skyr contiennent environ 27 g de protéines, autant que 4 œufs.",
+      "casein": "30 à 40 g de caséine avant de dormir, par exemple du fromage blanc, nourrissent tes muscles pendant la nuit.",
+      "creatine": "La créatine n’agit pleinement qu’après 3 à 4 semaines. L’heure importe peu, l’essentiel est d’en prendre chaque jour.",
+      "deficitProtein": "En déficit calorique, il te faut plus de protéines, pas moins : jusqu’à 2,2 g par kilo de poids de corps.",
+      "salt": "Après un dîner salé, la balance affiche souvent 1 kg de plus le lendemain matin. C’est de l’eau, pas du gras.",
+      "glycogen": "Chaque gramme de glucides stocké retient environ 3 g d’eau. D’où le bond sur la balance après une soirée pizza.",
+      "fatKcal": "Un kilo de graisse corporelle représente environ 7 000 kcal. 500 kcal de déficit par jour, c’est environ un kilo en deux semaines.",
+      "doubleProgression": "Bloqué à une charge ? Fais d’abord 2 répétitions de plus avec elle. Ensuite, passe à l’étape suivante.",
+      "mobility": "La musculation rend raide ? Avec une amplitude complète, tu gagnes autant de souplesse qu’en t’étirant.",
+      "age": "Trop vieux pour la muscu ? Dans des études, même des nonagénaires ont plus que doublé leur force.",
+      "spotReduction": "Des abdos pour brûler le ventre ? On perd du gras sur tout le corps, pas là où on s’entraîne.",
+      "anabolicWindow": "Un shake dans les 30 minutes après la séance ? Ta quantité de protéines sur la journée compte bien plus.",
+      "swap": "Machine prise ? Remplace l’exercice en pleine séance par une alternative adaptée.",
+      "plates": "Quand tu notes une série, Loqqa te montre quels disques mettre de chaque côté de la barre.",
+      "kai": "Demande à Kai pourquoi ton développé couché stagne. Il te répond avec tes propres données."
+    },
+    "nextTip": "Affiche l’astuce suivante"
   },
   "generate": {
     "making": "Création de ton programme…",
@@ -168,15 +182,5 @@
     "placeholder": "par ex. Mon programme full body",
     "suggestions": "Suggestions",
     "myPlan": "Mon programme"
-  },
-  "goalShort": {
-    "hypertrophy": "Prise de muscle",
-    "strength": "Force",
-    "strength_hypertrophy": "Force et masse"
-  },
-  "equipmentShort": {
-    "gym": "Salle",
-    "home": "Maison",
-    "bodyweight": "Sans charge"
   }
 }

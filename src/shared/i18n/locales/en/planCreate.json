@@ -108,14 +108,8 @@
     "hint": "Drag the ring or tap a value"
   },
   "building": {
-    "frequency": "{{count}} × {{minutes}} min",
-    "focus": "Focus: {{areas}}",
-    "balanced": "All muscle groups",
-    "routineTag": "W{{n}}",
     "elapsed_one": "{{count}} s",
     "elapsed_other": "{{count}} s",
-    "rep": "Rep {{n}}",
-    "tipsTitle": "While you wait",
     "lines": [
       "Reading your answers …",
       "Picking exercises for your equipment …",
@@ -126,24 +120,44 @@
       "Double-checking the rest times …",
       "Adding the finishing touches …"
     ],
-    "lifts": [
-      "Bench press",
-      "Squat",
-      "Deadlift",
-      "Pull-up",
-      "Overhead press",
-      "Row",
-      "Lunge",
-      "Dip",
-      "Curl"
-    ],
-    "tips": [
-      "Add a rep or a little weight each week: that’s progressive overload.",
-      "End most sets with 1–3 reps left in the tank.",
-      "Rest 2–3 minutes between heavy sets, 1–2 between the others.",
-      "Muscle grows while you sleep, not while you lift.",
-      "Log every set: what gets measured gets lifted."
-    ]
+    "topics": {
+      "training": "Training",
+      "recovery": "Recovery",
+      "nutrition": "Nutrition",
+      "progress": "Progress",
+      "myth": "Myth",
+      "app": "Loqqa"
+    },
+    "tips": {
+      "supersets": "Supersets of opposing muscles, like bench press and rows in turn, save a lot of time without costing performance.",
+      "dropSets": "Drop sets build about as much muscle as regular sets, in much less time.",
+      "reserve": "At 10+ reps, most people underestimate how many reps they have left. There’s usually more in the tank than you think.",
+      "setsPerSession": "Past about 6 hard sets for a muscle in one workout, each extra set adds little. Spread them over two days instead.",
+      "overheadTriceps": "In one study, overhead triceps extensions grew the triceps about 40 % more than cable pushdowns.",
+      "seatedLegCurl": "Seated leg curls build more muscle than lying ones: the hamstrings are stretched further.",
+      "deepSquats": "Deep squats build clearly more glute than half squats.",
+      "deadliftStance": "In the deadlift, the bar starts over the middle of your foot, about 2–3 cm (1 in) in front of your shins.",
+      "longerRest": "In one study, muscles grew more with 3 minutes of rest than with 1, for the same number of sets.",
+      "iceBath": "An ice bath right after training can slow muscle growth. Save it for rest days.",
+      "recoveryTime": "A hard-trained muscle needs about 48–72 hours to perform at its best again.",
+      "cardioOrder": "Cardio and weights on the same day? Weights first, then cardio, ideally a few hours apart.",
+      "proteinFood": "250 g of Greek yogurt has about 25 g of protein, as much as 4 eggs.",
+      "casein": "30–40 g of casein before bed, e.g. cottage cheese, feeds your muscles through the night.",
+      "creatine": "Creatine takes 3–4 weeks to work fully. The time of day doesn’t matter, only that you take it every day.",
+      "deficitProtein": "In a calorie deficit you need more protein, not less: up to 2.2 g per kg of body weight (1 g per lb).",
+      "salt": "After a salty dinner, the scale often shows 1 kg (2 lb) more the next morning. That’s water, not fat.",
+      "glycogen": "Every gram of stored carbs holds about 3 g of water. That’s why the scale jumps after pizza night.",
+      "fatKcal": "A kilo of body fat holds about 7,000 kcal. A 500 kcal daily deficit is about a kilo (2 lb) in two weeks.",
+      "doubleProgression": "Stuck at a weight? First add 2 reps at that weight. Then it’s time for the next step up.",
+      "mobility": "Lifting makes you stiff? Training through the full range makes you about as flexible as stretching does.",
+      "age": "Too old to lift? In studies, even people in their 90s more than doubled their strength.",
+      "spotReduction": "Ab exercises to burn belly fat? You lose fat all over your body, not where you train.",
+      "anabolicWindow": "A shake within 30 minutes after training? How much protein you eat over the day matters far more.",
+      "swap": "Machine taken? Swap the exercise mid-workout for a matching alternative.",
+      "plates": "When you log a set, Loqqa shows which plates go on each side of the bar.",
+      "kai": "Ask Kai why your bench press has stalled. He answers with your own data."
+    },
+    "nextTip": "Shows the next tip"
   },
   "generate": {
     "making": "Creating your plan …",
@@ -168,15 +182,5 @@
     "placeholder": "e.g. My full-body plan",
     "suggestions": "Suggestions",
     "myPlan": "My plan"
-  },
-  "goalShort": {
-    "hypertrophy": "Muscle growth",
-    "strength": "Strength",
-    "strength_hypertrophy": "Power building"
-  },
-  "equipmentShort": {
-    "gym": "Full gym",
-    "home": "Home gym",
-    "bodyweight": "Bodyweight"
   }
 }
