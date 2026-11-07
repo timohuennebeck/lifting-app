@@ -1,7 +1,16 @@
 import type { EquipmentAccess } from '@/shared/data/profile';
 import { storage } from '@/shared/lib/storage';
 
-export type TipTopic = 'training' | 'recovery' | 'nutrition' | 'progress' | 'myth' | 'app';
+export type TipTopic =
+  | 'training'
+  | 'recovery'
+  | 'nutrition'
+  | 'supplements'
+  | 'bulkCut'
+  | 'hormones'
+  | 'body'
+  | 'myth'
+  | 'app';
 
 interface TipDef {
   id: string;
@@ -12,30 +21,42 @@ interface TipDef {
 
 /** The tips the building screen shows while the plan is made; texts in planCreate:building.tips. */
 export const BUILDING_TIPS = [
-  { id: 'supersets', topic: 'training' },
-  { id: 'dropSets', topic: 'training' },
-  { id: 'reserve', topic: 'training' },
-  { id: 'setsPerSession', topic: 'training' },
+  { id: 'tricepsShare', topic: 'training' },
+  { id: 'deepSquats', topic: 'training' },
   { id: 'overheadTriceps', topic: 'training', equipment: ['gym'] },
   { id: 'seatedLegCurl', topic: 'training', equipment: ['gym'] },
-  { id: 'deepSquats', topic: 'training' },
-  { id: 'deadliftStance', topic: 'training', equipment: ['gym', 'home'] },
-  { id: 'longerRest', topic: 'recovery' },
+  { id: 'weeklySets', topic: 'training' },
+  { id: 'alcohol', topic: 'recovery' },
+  { id: 'sleepDiet', topic: 'recovery' },
+  { id: 'growthHormone', topic: 'recovery' },
   { id: 'iceBath', topic: 'recovery' },
-  { id: 'recoveryTime', topic: 'recovery' },
-  { id: 'cardioOrder', topic: 'recovery' },
+  { id: 'longerRest', topic: 'recovery' },
+  { id: 'proteinTarget', topic: 'nutrition' },
   { id: 'proteinFood', topic: 'nutrition' },
   { id: 'casein', topic: 'nutrition' },
-  { id: 'creatine', topic: 'nutrition' },
   { id: 'deficitProtein', topic: 'nutrition' },
-  { id: 'salt', topic: 'progress' },
-  { id: 'glycogen', topic: 'progress' },
-  { id: 'fatKcal', topic: 'progress' },
-  { id: 'doubleProgression', topic: 'progress' },
-  { id: 'mobility', topic: 'myth' },
-  { id: 'age', topic: 'myth' },
-  { id: 'spotReduction', topic: 'myth' },
+  { id: 'proteinPowder', topic: 'nutrition' },
+  { id: 'creatine', topic: 'supplements' },
+  { id: 'creatineWater', topic: 'supplements' },
+  { id: 'caffeine', topic: 'supplements' },
+  { id: 'energyDrink', topic: 'supplements' },
+  { id: 'peptides', topic: 'supplements' },
+  { id: 'leanBulk', topic: 'bulkCut' },
+  { id: 'fatKcal', topic: 'bulkCut' },
+  { id: 'fasting', topic: 'bulkCut' },
+  { id: 'sleepTestosterone', topic: 'hormones' },
+  { id: 'testoBoosters', topic: 'hormones' },
+  { id: 'ffmi', topic: 'hormones' },
+  { id: 'hormoneSpikes', topic: 'hormones' },
+  { id: 'muscleVolume', topic: 'body' },
+  { id: 'glutes', topic: 'body' },
+  { id: 'muscleWater', topic: 'body' },
+  { id: 'glycogen', topic: 'body' },
+  { id: 'creatineKidneys', topic: 'myth' },
+  { id: 'creatineHair', topic: 'myth' },
+  { id: 'bcaa', topic: 'myth' },
   { id: 'anabolicWindow', topic: 'myth' },
+  { id: 'spotReduction', topic: 'myth' },
   { id: 'swap', topic: 'app' },
   { id: 'plates', topic: 'app', equipment: ['gym', 'home'] },
   { id: 'kai', topic: 'app' },
