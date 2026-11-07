@@ -220,6 +220,35 @@
       .run-bar input[type='number'] {
         width: 60px;
       }
+      .key-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: end;
+        gap: 10px 14px;
+      }
+      .key-field {
+        flex: 1 1 280px;
+      }
+      input[type='password'] {
+        font: inherit;
+        color: var(--text);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 5px 6px;
+        min-width: 0;
+      }
+      label.check {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      #key-status {
+        flex-basis: 100%;
+        font-size: 12px;
+      }
       .tag {
         display: inline-block;
         font-size: 11px;
@@ -453,6 +482,25 @@
       <span class="muted" id="status">Loading…</span>
     </header>
     <main>
+      <section class="card key-bar">
+        <label class="field key-field"
+          >OpenAI API key
+          <input
+            id="api-key"
+            type="password"
+            placeholder="sk-…"
+            autocomplete="off"
+            spellcheck="false"
+        /></label>
+        <label class="check"
+          ><input id="remember-key" type="checkbox" /> Remember in this browser</label
+        >
+        <span class="muted" id="key-status"
+          >The page sends the key only to api.openai.com, from this browser. Each plan is a paid
+          call.</span
+        >
+      </section>
+
       <section class="card">
         <div class="card-head">
           <h2>Answers</h2>
@@ -562,7 +610,14 @@
       <section class="card" id="summary-card" hidden>
         <div class="card-head">
           <h2>By variant</h2>
-          <button id="clear">Clear results</button>
+          <div class="toggles">
+            <label class="check" title="Plans as Plan A, B, … in random order, timings in a key"
+              ><input id="blind" type="checkbox" /> Blind</label
+            >
+            <button id="export-md">Export plans for rating</button>
+            <button id="export-json">Export data (JSON)</button>
+            <button id="clear">Clear results</button>
+          </div>
         </div>
         <div class="scroll"><table id="summary"></table></div>
         <p class="hint">
@@ -599,7 +654,12 @@
       </section>
     </main>
 
+    <!-- plan-lab:script -->
     <script type="module">
+      /** What build.mjs bundles in: making plans, the profiles, the catalog (lab.mjs). */
+      const lab = window.PlanLab;
+      /** Models offered before the key has listed its own. */
+      const FALLBACK_MODELS = ['gpt-6-luna', 'gpt-6-sol', 'gpt-6-astra', 'gpt-6.1-terra'];
       const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR', 'ko', 'es', 'fr'];
       const GOALS = ['hypertrophy', 'strength', 'strength_hypertrophy'];
       const EXPERIENCE = ['', 'none', 'beginner', 'intermediate', 'advanced'];
@@ -653,10 +713,20 @@
             // Storage may be blocked; nothing to keep then.
           }
         },
+        remove(key) {
+          try {
+            localStorage.removeItem(`plan-lab:${key}`);
+          } catch {
+            // Nothing was kept then.
+          }
+        },
       };
 
       const state = {
         setup: null,
+        apiKey: '',
+        catalog: [],
+        equipment: new Map(),
         form: null,
         variants: [],
         runs: [],
@@ -896,6 +966,11 @@
       // ---------- runs ----------
 
       function enqueue(jobs) {
+        if (!state.apiKey) {
+          $('queue').textContent = 'Enter your OpenAI API key at the top first.';
+          $('api-key').focus();
+          return;
+        }
         if (!jobs.length) return;
         state.queue.push(...jobs);
         pump();
@@ -991,36 +1066,21 @@
 
       async function execute(run) {
         try {
-          const response = await fetch('/api/run', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+          await lab.runPlan(
+            {
               answers: run.answers,
               language: run.language,
               variant: run.variant,
-              profile: run.profile,
-            }),
-            signal: run.controller.signal,
-          });
-          if (!response.ok) throw new Error(`The lab answered ${response.status}`);
-          const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
-          let buffer = '';
-          for (;;) {
-            const { value, done } = await reader.read();
-            if (done) break;
-            buffer += value;
-            let end;
-            while ((end = buffer.indexOf('\n\n')) >= 0) {
-              const line = buffer.slice(0, end);
-              buffer = buffer.slice(end + 2);
-              if (line.startsWith('data:')) apply(run, JSON.parse(line.slice(5)));
-            }
-            schedule();
-          }
-          if (run.status === 'running') {
-            run.status = 'error';
-            run.error = 'The lab stopped without a plan (see its terminal).';
-          }
+              catalog: state.catalog,
+              equipment: state.equipment,
+              key: state.apiKey,
+            },
+            (event) => {
+              apply(run, event);
+              schedule();
+            },
+            run.controller.signal,
+          );
         } catch (error) {
           if (run.status === 'running') {
             const stopped = run.controller.signal.aborted;
@@ -1338,21 +1398,207 @@
         if (state.active.size) schedule();
       }, 250);
 
-      // ---------- start ----------
+      // ---------- export ----------
 
-      async function start() {
-        try {
-          const response = await fetch('/api/setup');
-          state.setup = await response.json();
-        } catch (error) {
-          $('status').textContent = `The lab server didn't answer: ${error.message}`;
+      const stamp = () => new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
+
+      function download(name, text, type) {
+        const url = URL.createObjectURL(new Blob([text], { type }));
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = name;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      const describeAnswers = (language, a) =>
+        [
+          language,
+          a.goal,
+          a.equipment + (a.homeEquipment?.length ? ` (${a.homeEquipment.join(', ')})` : ''),
+          `${a.sessionsPerWeek}× ${a.split ?? 'no preference'}`,
+          `${a.sessionMinutes} min`,
+          a.experience ?? 'experience unknown',
+          a.focus.length ? `focus ${a.focus.join(', ')}` : 'no focus',
+        ].join(' · ');
+
+      const shuffled = (list) => {
+        const copy = [...list];
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      };
+
+      const timingLine = (run) =>
+        `first exercise ${seconds(run.first)} · whole plan ${seconds(run.total)} · ${count(totalUsage(run).reasoning)} reasoning tokens`;
+
+      /** One plan as Markdown: its checks, then each routine with its exercises. */
+      function planMarkdown(run) {
+        const fails = failing(run);
+        const lines = [
+          fails.length
+            ? `Checks failed: ${fails.map(([name]) => name).join(', ')}`
+            : 'Checks: all passed',
+          ...fails.flatMap(([name, issues]) => issues.map((issue) => `- ${name}: ${issue}`)),
+          '',
+          `**${run.plan.name}**`,
+        ];
+        run.plan.routines.forEach((routine, i) => {
+          if (!routine?.exercises.length) return;
+          const minutes = run.minutes?.[i];
+          lines.push('', `#### ${routine.name}${minutes != null ? ` · ~${minutes} min` : ''}`, '');
+          routine.exercises.forEach((e, n) => {
+            const reps = e.min === e.max ? `${e.min}` : `${e.min}–${e.max}`;
+            const rir = e.rir != null ? ` @ RIR ${e.rir}` : '';
+            lines.push(`${n + 1}. ${e.name} (${e.id}): ${e.sets} × ${reps}${rir}`);
+          });
+        });
+        return lines;
+      }
+
+      /**
+       * The finished plans as Markdown, grouped by their answers, to read and rate side by side.
+       * Blind: Plan A, B, … in random order per set of answers, the variants and timings in a key.
+       */
+      function exportMarkdown() {
+        const blind = $('blind').checked;
+        const done = [...state.runs].reverse().filter((r) => r.status === 'done');
+        if (!done.length) {
+          $('queue').textContent = 'No finished plans to export yet.';
           return;
         }
-        const { exercises, models, production } = state.setup;
+        const groups = new Map();
+        for (const run of done) {
+          const id = `${run.profile}|${run.language}|${JSON.stringify(run.answers)}`;
+          if (!groups.has(id)) groups.set(id, []);
+          groups.get(id).push(run);
+        }
+        const failed = state.runs.filter((r) => r.status === 'error').length;
+        const lines = [
+          '# Plan lab: plans to rate',
+          '',
+          `${done.length} ${done.length === 1 ? 'plan' : 'plans'} for ${groups.size} ${groups.size === 1 ? 'set' : 'sets'} of answers, exported ${new Date().toLocaleString()}${failed ? ` (${failed} runs failed and are left out)` : ''}.` +
+            (blind
+              ? ' Blind: each set of answers lists its plans as Plan A, B, … in random order; which variant made which, and how fast, is in the key at the end.'
+              : ''),
+        ];
+        const key = [];
+        for (const runs of groups.values()) {
+          const { profile, language, answers } = runs[0];
+          lines.push(
+            '',
+            `## ${profile === 'custom' ? 'Custom answers' : `Profile ${profile}`}`,
+            '',
+            describeAnswers(language, answers),
+          );
+          (blind ? shuffled(runs) : runs).forEach((run, i) => {
+            const letter = String.fromCharCode(65 + i);
+            if (blind) key.push(`- ${profile}, Plan ${letter}: ${run.label}; ${timingLine(run)}`);
+            lines.push('', `### ${blind ? `Plan ${letter}` : run.label}`, '');
+            if (!blind)
+              lines.push(`${timingLine(run)[0].toUpperCase()}${timingLine(run).slice(1)}.`, '');
+            lines.push(...planMarkdown(run));
+          });
+        }
+        if (blind) lines.push('', '## Key', '', ...key);
+        download(`plan-lab-${stamp()}.md`, `${lines.join('\n')}\n`, 'text/markdown');
+      }
+
+      /** Every finished or failed run with all it measured, for a closer look. */
+      function exportJson() {
+        const runs = [...state.runs]
+          .reverse()
+          .filter((r) => r.status !== 'running')
+          .map((r) => ({
+            profile: r.profile,
+            language: r.language,
+            answers: r.answers,
+            variant: r.variant,
+            label: r.label,
+            status: r.status,
+            error: r.error,
+            firstMs: r.first,
+            totalMs: r.total,
+            timings: r.marks,
+            usage: r.usage,
+            checks: r.checks,
+            minutes: r.minutes,
+            budget: r.prompt?.budget ?? null,
+            plan: r.plan,
+          }));
+        const text = JSON.stringify({ exported: new Date().toISOString(), runs }, null, 2);
+        download(`plan-lab-${stamp()}.json`, text, 'application/json');
+      }
+
+      // ---------- start ----------
+
+      function showStatus() {
+        const { production, models } = state.setup;
+        const built = new Date(window.PLAN_LAB_CONFIG.built).toLocaleString();
         $('status').textContent =
-          `${exercises} exercises · ${models.length} models · production: ${production.model}, default effort, ${production.fast ? 'Fast mode' : 'standard'}`;
+          `${state.catalog.length} exercises · ${models.length} models · production: ${production.model}, default effort, ${production.fast ? 'Fast mode' : 'standard'} · built ${built}`;
+      }
+
+      /** Checks the key by listing its models, which the variants then offer. */
+      async function useKey() {
+        state.apiKey = $('api-key').value.trim();
+        if ($('remember-key').checked && state.apiKey) saved.set('key', state.apiKey);
+        else saved.remove('key');
+        const status = $('key-status');
+        if (!state.apiKey) return;
+        status.className = 'muted';
+        status.textContent = 'Checking the key…';
+        try {
+          const models = await lab.listModels(state.apiKey);
+          state.setup.models = [...new Set([state.setup.production.model, ...models])].sort();
+          status.className = 'good';
+          status.textContent = `The key works (${models.length} models). The page sends it only to api.openai.com; each plan is a paid call.`;
+        } catch (error) {
+          status.className = 'bad';
+          status.textContent = `The key didn't work: ${error.message}`;
+        }
+        renderVariants();
+        showStatus();
+      }
+
+      async function start() {
+        const config = window.PLAN_LAB_CONFIG;
+        if (!lab || !config) {
+          $('status').textContent =
+            'This is the template: run npm run plan:lab, then open scripts/plan-lab/out/plan-lab.html.';
+          return;
+        }
+        let loaded;
+        try {
+          loaded = await lab.loadCatalog(config.supabaseUrl, config.supabaseKey);
+        } catch (error) {
+          $('status').textContent = `The catalog could not be read: ${error.message}`;
+          return;
+        }
+        state.catalog = loaded.catalog;
+        state.equipment = loaded.equipment;
+        state.setup = {
+          profiles: lab.PROFILES,
+          production: lab.PRODUCTION,
+          muscles: lab.MUSCLES,
+          models: [...new Set([lab.PRODUCTION.model, ...FALLBACK_MODELS])].sort(),
+          homeEquipment: [...loaded.equipment.values()]
+            .filter((e) => e.at_home)
+            .sort((a, b) => a.position - b.position)
+            .map((e) => ({ id: e.id, name: e.name?.en ?? e.id })),
+        };
+        showStatus();
         setUpForm();
         setUpVariants();
+        $('api-key').value = saved.get('key', '');
+        $('remember-key').checked = !!$('api-key').value;
+        $('api-key').addEventListener('change', useKey);
+        $('remember-key').addEventListener('change', useKey);
+        if ($('api-key').value) useKey();
         $('repeat').value = saved.get('repeat', 1);
         $('parallel').value = saved.get('parallel', 4);
         $('repeat').addEventListener('change', (e) =>
@@ -1389,6 +1635,8 @@
           for (const run of state.active) run.controller.abort();
           pump();
         });
+        $('export-md').addEventListener('click', exportMarkdown);
+        $('export-json').addEventListener('click', exportJson);
         $('clear').addEventListener('click', () => {
           state.runs = state.runs.filter((r) => r.status === 'running');
           for (const id of [...elements.keys()]) {

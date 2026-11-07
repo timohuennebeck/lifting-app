@@ -82,7 +82,11 @@ async function streamAnswer(body, { key, t0, call, emit, signal, onText }) {
   mark('accepted');
   let buffer = '';
   let summaryParts = 0;
-  for await (const chunk of response.body.pipeThrough(new TextDecoderStream())) {
+  // A reader rather than `for await`, which Safari's streams don't support.
+  const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
+  for (;;) {
+    const { value: chunk, done } = await reader.read();
+    if (done) break;
     buffer += chunk;
     let end;
     while ((end = buffer.indexOf('\n\n')) >= 0) {
