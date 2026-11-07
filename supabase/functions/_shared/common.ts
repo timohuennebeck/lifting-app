@@ -39,9 +39,6 @@ export function envLimit(name: string, fallback: number) {
   return Number.isInteger(value) && value >= 0 ? value : fallback;
 }
 
-/** A switch in the environment: on unless it is set to "false". */
-export const envFlag = (name: string) => Deno.env.get(name) !== 'false';
-
 /** The user the request's bearer token belongs to; null without a valid one. */
 export async function requestUser(req: Request) {
   const token = req.headers.get('Authorization')?.replace(/^Bearer\s+/i, '');

@@ -1,7 +1,7 @@
 // Speech to text for the coach's and the support chat's field (design "Spracheingabe"): the app
 // records a question or message and sends it here; this function checks the user like coach-chat
 // does (signed in, 16+, Pro), takes one of their transcriptions for the day and has OpenAI
-// (OPENAI_TRANSCRIBE_MODEL) write it down. The recording is neither stored nor logged; the text
+// (TRANSCRIBE_MODEL in models.ts) write it down. The recording is neither stored nor logged; the text
 // goes back into the field to be edited.
 import { decodeBase64 } from 'jsr:@std/encoding@1/base64';
 

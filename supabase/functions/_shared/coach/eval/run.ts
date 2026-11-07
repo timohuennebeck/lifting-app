@@ -8,7 +8,7 @@
 //        npm run coach:eval -- --fast                          OpenAI's Fast mode (2× the price)
 //        npm run coach:eval -- --repeat 3 weight bench        cases whose id contains a word
 // Writes the answers with their checks to eval/out/ (JSON, and Markdown for reading).
-import { DEFAULT_MODEL } from '../../openai.ts';
+import { MODELS } from '../../models.ts';
 import { askCoach, type CoachCall, type CoachTurn, type CoachUsage } from '../chat.ts';
 import { contextText } from '../prompt.ts';
 import { type Case, CASES } from './cases.ts';
@@ -38,9 +38,9 @@ const MAX_WORDS = 50;
 
 function options(args: string[]) {
   const opts = {
-    model: Deno.env.get('OPENAI_COACH_MODEL') ?? DEFAULT_MODEL,
+    model: MODELS.coach.name,
     // "default": send none, the model's own.
-    effort: 'low' as string | null,
+    effort: MODELS.coach.reasoningEffort as string | null,
     repeat: 1,
     parallel: 4,
     fast: false,

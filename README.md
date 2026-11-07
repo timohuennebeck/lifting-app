@@ -144,7 +144,7 @@ Every support message is stored once, as written, and shown to each reader in th
 How: `ticket_messages.language` holds the detected language, `ticket_message_translations` one row per message
 and language (synced to the user with their messages; only the Edge Functions write it). Triggers call the
 `translate-ticket-messages` function through pg_net for every new message and for language switches. The model
-is OpenAI's GPT-6 Luna (`OPENAI_TRANSLATION_MODEL`), about $0.0002 per message; each call logs its tokens as
+is OpenAI's GPT-6 Luna without reasoning (`MODELS.translate`), about $0.0002 per message; each call logs its tokens as
 `ticket_translation`. Without the setup below nothing breaks: messages simply show as written.
 
 Setup per Supabase project (locally `supabase/seed.sql` and `supabase/functions/.env.example` cover it):
@@ -255,8 +255,10 @@ the standard API at `api.openai.com`) and returns the check's values, or the pho
 
 - **Secrets:** `supabase/functions/.env` locally (loaded by `supabase start`); in production
   `npx supabase secrets set`, e.g. with `--env-file` from a copy of that file without
-  `APPLE_CLIENT_ID` (that one is Loqqa Dev's). `OPENAI_API_KEY` is an OpenAI API key;
-  `OPENAI_MODEL` overrides the default model.
+  `APPLE_CLIENT_ID` (that one is Loqqa Dev's). `OPENAI_API_KEY` is an OpenAI API key. Which
+  model each feature asks, at which reasoning effort and with or without Fast mode, is set in
+  `supabase/functions/_shared/models.ts`; a change there takes a deploy of the functions using it.
+  The progress check runs `gpt-6.1-sol` at medium effort (`MODELS.progressCheck`).
 - **Rules (server-side):** adults only (18+ by the profile's birth date), at most 5 assessments per user in 24 hours.
 - **`progress_check_runs`:** one row per assessment (a run of the function), server-only. Saving a
   check (`progress_checks`, with its photos in `progress_check_photos`) takes its score, values and
@@ -294,11 +296,10 @@ Importieren (the same screens, routed under `src/app/(onboarding)/import/` and
    until the account exists (`useSendPendingHistory`), also for an existing account signed in
    there. The plan opens in the plan editor, like a made one.
 
-- **Secrets and model:** `OPENAI_API_KEY`; the steps `categorize`, `map` and `name` run
-  `OPENAI_HISTORY_MODEL` (default `gpt-6-luna`) at `OPENAI_HISTORY_REASONING_EFFORT` (default
-  `low`), in Fast mode (`HISTORY_IMPORT_FAST=false` turns it off). Step `plan` runs `OPENAI_MODEL`
-  on Fast mode (`PLAN_IMPORT_FAST=false` turns it off) and streams the plan (`PlanEvent` in
-  `supabase/functions/_shared/plan-events.ts`).
+- **Secrets and model:** `OPENAI_API_KEY`; every step runs `gpt-6-luna` at low effort in Fast
+  mode (`MODELS.readFile` and `MODELS.readPlan` in `supabase/functions/_shared/models.ts`). Step
+  `plan` streams the plan (`PlanEvent` in `supabase/functions/_shared/plan-events.ts`);
+  `npm run plan:eval` checks it.
 - **Rules (server-side):** it also runs before there is an account, so each step counts per network
   (`HISTORY_IMPORT_IP_LIMIT`, default 40) and in total (`HISTORY_IMPORT_DAILY_LIMIT`, default
   4,000) per 24 hours (`plan_requests` kind `history`); step `plan` counts on its own
@@ -333,7 +334,8 @@ added to the workout shown.
   workout starts (only those still in it). A saved routine takes them at once, best match first.
 - **Rules (server-side):** limited on their own (`plan_requests` kind `voice`):
   `PLAN_VOICE_IP_LIMIT` (default 60) per network and `PLAN_VOICE_DAILY_LIMIT` (default 5,000) in
-  total per 24 hours; Fast mode as the plan import (`PLAN_VOICE_FAST=false` turns it off).
+  total per 24 hours. It runs `gpt-6-luna` at low effort in Fast mode (`MODELS.readSpoken`);
+  `npm run plan:eval` checks the spoken test plans.
 
 ## Plans, routines and workout entries
 
@@ -430,9 +432,8 @@ the app says so and the user goes back a step.
   routine, each within the session length (the app's estimate, plus 10 %), sets 1–6, reps 1–30,
   RIR 0–4 (the first week of a block). No rest is stored: the app gives each exercise its own,
   longer for sets of 7 reps or fewer (`restSecondsFor`), and the session length counts with that.
-- **Secrets and speed:** `OPENAI_API_KEY`; the plan comes from `OPENAI_GENERATE_MODEL` (default
-  `gpt-6.1-sol`) at `OPENAI_GENERATE_REASONING_EFFORT` (default `low`), in Fast mode
-  (`PLAN_GENERATE_FAST=false` turns it off). In `npm run plan:lab`, low effort made plans as good
+- **Secrets and speed:** `OPENAI_API_KEY`; the plan comes from `gpt-6.1-sol` at low effort in
+  Fast mode (`MODELS.generatePlan`). In `npm run plan:lab`, low effort made plans as good
   as medium and high, with the first exercise after about 7 s instead of 13 s (medium) or 40 s
   (high); gpt-6-luna was faster still (about 3 s) but trained arms and calves too little.
 - **Rules (server-side):** limited on their own, like imports: per network
@@ -491,12 +492,11 @@ over the tabs from the Training tab's card, which a flash runs across.
   withdrawal) before anything is sent; Pro, as for
   the progress check; at most 20 questions in 24 hours and 150 in 30 days (`COACH_DAILY_LIMIT`,
   `COACH_MONTHLY_LIMIT`).
-- **Secrets:** `OPENAI_API_KEY` as for the plans; `OPENAI_COACH_MODEL` (default `gpt-6.1-sol`) and
-  `OPENAI_COACH_REASONING_EFFORT` (default `low`). It runs in Fast mode; `COACH_FAST=false` turns
-  that off.
+- **Secrets:** `OPENAI_API_KEY` as for the plans. It runs `gpt-6.1-sol` at low effort in Fast
+  mode (`MODELS.coach`).
 - **Voice input:** the microphone in the field, here and in the support chat, records the question
   or message (expo-audio, mono AAC) and the `coach-transcribe` Edge Function has OpenAI write it
-  down (`OPENAI_TRANSCRIBE_MODEL`, default `gpt-transcribe`), with the topic and its terms as
+  down (`gpt-transcribe`, `TRANSCRIBE_MODEL` in `models.ts`), with the topic and its terms as
   context; the text goes into the field to be edited. Same rules as the questions (16+, Pro), at
   most 100 a user and 20,000 in total per 24 hours (`COACH_TRANSCRIBE_USER_LIMIT`,
   `COACH_TRANSCRIBE_DAILY_LIMIT`, as `plan_requests` of kind `transcribe`). The recording is

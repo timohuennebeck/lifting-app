@@ -3,6 +3,7 @@
 // reasoning effort and prompt changes, and timed at each step of the stream (sent, accepted,
 // thinking, writing, first exercise, done). The finished plan is checked as the eval checks it.
 import { ROUTINE_NAME_MAX } from '../../supabase/functions/_shared/limits.ts';
+import { MODELS } from '../../supabase/functions/_shared/models.ts';
 import { cut, planName } from '../../supabase/functions/_shared/plan-events.ts';
 import { PlanStream } from '../../supabase/functions/_shared/plan-stream.ts';
 import { exerciseSeconds } from '../../supabase/functions/_shared/rest.ts';
@@ -19,11 +20,12 @@ import { CHECKS, minutesOf } from '../plan-generate-eval/checks.mjs';
 
 const OPENAI_URL = 'https://api.openai.com/v1/responses';
 
-/**
- * What production sends: generate-plan's defaults (OPENAI_GENERATE_MODEL and _REASONING_EFFORT
- * aren't set), Fast mode on (PLAN_GENERATE_FAST).
- */
-export const PRODUCTION = { model: 'gpt-6.1-sol', effort: 'low', fast: true };
+/** What production sends (MODELS.generatePlan in supabase/functions/_shared/models.ts). */
+export const PRODUCTION = {
+  model: MODELS.generatePlan.name,
+  effort: MODELS.generatePlan.reasoningEffort,
+  fast: MODELS.generatePlan.fast,
+};
 
 /** The Responses API request as openai.ts builds it, with the variant's settings. */
 function requestBody(variant, { instructions, content, name, schema }) {

@@ -9,9 +9,10 @@
 //   functions do (plan.ts, PlanEvent).
 // It also runs before there is an account, so requests are limited per network and in total per
 // day (start_plan_request: kind "history" for the first three, "import" for a plan).
-import { envFlag, envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
+import { envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
 import { contextText } from '../_shared/exercise-reading.ts';
 import { PLAN_TEXT_MAX } from '../_shared/limits.ts';
+import { MODELS } from '../_shared/models.ts';
 import { askWithRetry, type StructuredRequest } from '../_shared/openai.ts';
 import { isAppLanguage } from '../_shared/plan-events.ts';
 import {
@@ -49,13 +50,6 @@ const OPENAI_TIMEOUT_MS = 60_000;
  */
 const IP_LIMIT = envLimit('HISTORY_IMPORT_IP_LIMIT', 40);
 const DAILY_LIMIT = envLimit('HISTORY_IMPORT_DAILY_LIMIT', 4000);
-/** The model and reasoning effort; a small one is fast enough and reads files well. */
-const MODEL = {
-  name: Deno.env.get('OPENAI_HISTORY_MODEL') || 'gpt-6-luna',
-  reasoningEffort: Deno.env.get('OPENAI_HISTORY_REASONING_EFFORT') || 'low',
-};
-/** OpenAI's Fast mode (twice the token price); HISTORY_IMPORT_FAST=false turns it off. */
-const FAST = envFlag('HISTORY_IMPORT_FAST');
 /** Characters of the samples the model reads in step 1. */
 const MAX_SAMPLE_TEXT = 120_000;
 
@@ -64,8 +58,6 @@ const PLAN_TIMEOUT_MS = 120_000;
 /** Plans read per network (hashed IP) and in total in 24 hours; each one is a paid model call. */
 const PLAN_IP_LIMIT = envLimit('PLAN_IMPORT_IP_LIMIT', 10);
 const PLAN_DAILY_LIMIT = envLimit('PLAN_IMPORT_DAILY_LIMIT', 1000);
-/** OpenAI's Fast mode for a plan (twice the token price); PLAN_IMPORT_FAST=false turns it off. */
-const PLAN_FAST = envFlag('PLAN_IMPORT_FAST');
 
 type Step =
   | { step: 'categorize'; file: string; sheets: NonNullable<ReturnType<typeof sheetSamples>> }
@@ -95,7 +87,7 @@ function modelRequest(
   language: string,
   catalog: CatalogRow[],
 ): Omit<StructuredRequest, 'timeoutMs'> {
-  const base = { model: MODEL, fast: FAST };
+  const base = { model: MODELS.readFile };
   if (step.step === 'categorize') {
     return {
       ...base,
@@ -171,7 +163,7 @@ async function readPlan(req: Request, name: unknown, text: unknown, language: st
       name: 'training_plan',
       schema: buildSchema(catalog.map((e) => e.id)),
       timeoutMs: PLAN_TIMEOUT_MS,
-      fast: PLAN_FAST,
+      model: MODELS.readPlan,
     },
     reader: () => planReader(catalog, () => crypto.randomUUID()),
     giveBack,

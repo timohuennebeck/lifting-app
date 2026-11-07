@@ -4,8 +4,9 @@
 // the exercises the app adds (with their sets, and the ones the catalog lacks). It also runs
 // before there is an account (a plan set up in onboarding), so requests are limited per network
 // and in total per day (start_plan_request, kind "voice").
-import { envFlag, envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
+import { envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
 import { SPOKEN_TEXT_MAX } from '../_shared/limits.ts';
+import { MODELS } from '../_shared/models.ts';
 import { askWithRetry } from '../_shared/openai.ts';
 import { isAppLanguage } from '../_shared/plan-events.ts';
 import { type CatalogRow, loadCatalog, takePlanRequest } from '../_shared/plans.ts';
@@ -22,8 +23,6 @@ const OPENAI_TIMEOUT_MS = 45_000;
 /** Requests per network (hashed IP) and in total in 24 hours: short, but made often. */
 const IP_LIMIT = envLimit('PLAN_VOICE_IP_LIMIT', 60);
 const DAILY_LIMIT = envLimit('PLAN_VOICE_DAILY_LIMIT', 5000);
-/** OpenAI's Fast mode (twice the token price); PLAN_VOICE_FAST=false turns it off. */
-const FAST = envFlag('PLAN_VOICE_FAST');
 
 Deno.serve(async (req) => {
   const refused = refuseAiRequest(req);
@@ -58,7 +57,7 @@ Deno.serve(async (req) => {
       name: 'workout_exercises',
       schema: buildSchema(catalog.map((e) => e.id)),
       timeoutMs: OPENAI_TIMEOUT_MS,
-      fast: FAST,
+      model: MODELS.readSpoken,
     },
     'Reading the exercises',
   );

@@ -1,12 +1,10 @@
 // The OpenAI Responses API call the functions share: an answer forced into a JSON schema, nothing
-// stored on OpenAI's side. OPENAI_MODEL and OPENAI_REASONING_EFFORT override the defaults; a
-// request can name its own model instead (translations use a small one).
+// stored on OpenAI's side, from the model, reasoning effort and Fast mode the feature has in
+// models.ts.
+import { type ModelChoice, TRANSCRIBE_MODEL } from './models.ts';
+
 const OPENAI_URL = 'https://api.openai.com/v1/responses';
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
-/** The model when OPENAI_MODEL (or the coach's OPENAI_COACH_MODEL) names none. */
-export const DEFAULT_MODEL = 'gpt-6.1-sol';
-const OPENAI_MODEL = Deno.env.get('OPENAI_MODEL') ?? DEFAULT_MODEL;
-const OPENAI_REASONING_EFFORT = Deno.env.get('OPENAI_REASONING_EFFORT');
 
 export const openAiConfigured = () => !!OPENAI_API_KEY;
 
@@ -17,7 +15,6 @@ export const ATTEMPTS = 2;
 export const RETRY_PAUSE_MS = 1000;
 
 const TRANSCRIBE_URL = 'https://api.openai.com/v1/audio/transcriptions';
-const TRANSCRIBE_MODEL = Deno.env.get('OPENAI_TRANSCRIBE_MODEL') ?? 'gpt-transcribe';
 
 /**
  * Speech to text: what is said in `audio`, with `prompt` as context for the words to expect (it
@@ -84,10 +81,8 @@ export interface StructuredRequest {
   name: string;
   schema: unknown;
   timeoutMs: number;
-  /** OpenAI's Fast mode: up to 2.5× faster output at twice the token price. */
-  fast?: boolean;
-  /** This request's model and reasoning effort, in place of OPENAI_MODEL / _REASONING_EFFORT. */
-  model?: { name: string; reasoningEffort?: string };
+  /** The feature's model, reasoning effort and Fast mode (MODELS in models.ts). */
+  model: ModelChoice;
 }
 
 /** Sends a Responses API request; nothing of it is stored on OpenAI's side. */
@@ -101,17 +96,16 @@ const post = (body: Record<string, unknown>, signal: AbortSignal) =>
 
 /** The Responses API request for an answer forced into `schema`. */
 function request(
-  { instructions, content, name, schema, fast, model }: StructuredRequest,
+  { instructions, content, name, schema, model }: StructuredRequest,
   stream: boolean,
 ) {
-  const effort = model ? model.reasoningEffort : OPENAI_REASONING_EFFORT;
   return {
-    model: model?.name ?? OPENAI_MODEL,
+    model: model.name,
     instructions,
     input: [{ role: 'user', content }],
     text: { format: { type: 'json_schema', name, strict: true, schema } },
-    ...(effort ? { reasoning: { effort } } : {}),
-    ...(fast ? { service_tier: 'fast' } : {}),
+    reasoning: { effort: model.reasoningEffort },
+    ...(model.fast ? { service_tier: 'fast' } : {}),
     ...(stream ? { stream: true } : {}),
   };
 }
