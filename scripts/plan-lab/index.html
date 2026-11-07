@@ -575,8 +575,8 @@
         </div>
         <div class="hint">
           <span
-            ><b>Effort</b> “default” sends none, as production does. gpt-6.1-sol takes low to max;
-            the other models also none and minimal.</span
+            ><b>Effort</b> “default” sends none: the model's own. gpt-6.1-sol takes low to max; the
+            other models also none and minimal.</span
           >
           <span><b>Fast</b> OpenAI's Fast mode (on in production).</span>
           <span
@@ -844,12 +844,12 @@
       // ---------- variants ----------
 
       const defaultVariants = () => {
-        const { model } = state.setup.production;
+        const { model, effort, fast } = state.setup.production;
         const base = {
           on: true,
           model,
-          effort: '',
-          fast: true,
+          effort,
+          fast,
           catalog: 'full',
           budget: false,
           strategy: 'single',
@@ -857,9 +857,9 @@
         };
         return [
           base,
-          { ...base, effort: 'low' },
-          { ...base, effort: 'low', catalog: 'lean', budget: true },
-          { ...base, model: 'gpt-6-luna', effort: 'low' },
+          { ...base, effort: 'medium' },
+          { ...base, catalog: 'lean', budget: true },
+          { ...base, model: 'gpt-6-luna' },
         ];
       };
 
@@ -1540,7 +1540,7 @@
         const { production, models } = state.setup;
         const built = new Date(window.PLAN_LAB_CONFIG.built).toLocaleString();
         $('status').textContent =
-          `${state.catalog.length} exercises · ${models.length} models · production: ${production.model}, default effort, ${production.fast ? 'Fast mode' : 'standard'} · built ${built}`;
+          `${state.catalog.length} exercises · ${models.length} models · production: ${production.model}, ${production.effort || 'default'} effort, ${production.fast ? 'Fast mode' : 'standard'} · built ${built}`;
       }
 
       /** Checks the key by listing its models, which the variants then offer. */

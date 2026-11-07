@@ -429,7 +429,11 @@ the app says so and the user goes back a step.
   routine, each within the session length (the app's estimate, plus 10 %), sets 1–6, reps 1–30,
   RIR 0–4 (the first week of a block). No rest is stored: the app gives each exercise its own,
   longer for sets of 7 reps or fewer (`restSecondsFor`), and the session length counts with that.
-- **Secrets and speed:** as the plan import; `PLAN_GENERATE_FAST=false` turns Fast mode off.
+- **Secrets and speed:** `OPENAI_API_KEY`; the plan comes from `OPENAI_GENERATE_MODEL` (default
+  `gpt-6.1-sol`) at `OPENAI_GENERATE_REASONING_EFFORT` (default `low`), in Fast mode
+  (`PLAN_GENERATE_FAST=false` turns it off). In `npm run plan:lab`, low effort made plans as good
+  as medium and high, with the first exercise after about 7 s instead of 13 s (medium) or 40 s
+  (high); gpt-6-luna was faster still (about 3 s) but trained arms and calves too little.
 - **Rules (server-side):** limited on their own, like imports: per network
   (`PLAN_GENERATE_IP_LIMIT`, default 10) and in total (`PLAN_GENERATE_DAILY_LIMIT`, default 1,000)
   per 24 hours, in `plan_requests` with `kind = 'generate'`.
