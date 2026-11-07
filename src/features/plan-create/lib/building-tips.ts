@@ -44,6 +44,8 @@ export const BUILDING_TIPS = [
   { id: 'leanBulk', topic: 'bulkCut' },
   { id: 'fatKcal', topic: 'bulkCut' },
   { id: 'fasting', topic: 'bulkCut' },
+  { id: 'cutPace', topic: 'bulkCut' },
+  { id: 'dietBreaks', topic: 'bulkCut' },
   { id: 'sleepTestosterone', topic: 'hormones' },
   { id: 'testoBoosters', topic: 'hormones' },
   { id: 'ffmi', topic: 'hormones' },
