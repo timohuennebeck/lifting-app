@@ -12,7 +12,7 @@ import { parseWorkoutItems } from '../lib/workout-muscles-link';
 
 /**
  * Behind the ⓘ of "Beanspruchte Muskeln": the workout's muscles on both body views, then split
- * into primary (targeted by an exercise, at least 10 %) and secondary.
+ * into primary (a main muscle of an exercise) and secondary.
  */
 export function WorkoutMusclesScreen() {
   const { title, items } = useLocalSearchParams<{ title?: string; items?: string }>();

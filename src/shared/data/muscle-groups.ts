@@ -56,13 +56,10 @@ export function splitMuscles(exercise: Exercise | string | undefined) {
   };
 }
 
-/** Below this share of a workout a muscle is secondary, even where an exercise targets it. */
-const WORKOUT_PRIMARY_MIN_PERCENT = 10;
-
 /**
  * A workout's muscles by share, split like an exercise's: primary where at least one exercise
- * targets them directly and they get a real part of the work, secondary otherwise. Only the
- * grouping; the shares are the same as everywhere else.
+ * has them as a main muscle, however small their share of the whole workout; secondary
+ * otherwise. Only the grouping; the shares are the same as everywhere else.
  */
 export function workoutMuscleSplit(items: ExerciseItem[]) {
   const targeted = new Set(
@@ -70,8 +67,7 @@ export function workoutMuscleSplit(items: ExerciseItem[]) {
       .filter((i) => i.sets > 0 && !isCardio(i.exerciseId))
       .flatMap((i) => splitMuscles(i.exerciseId).primary),
   );
-  const isPrimary = (s: MuscleShare) =>
-    targeted.has(s.muscle) && s.percent >= WORKOUT_PRIMARY_MIN_PERCENT;
+  const isPrimary = (s: MuscleShare) => targeted.has(s.muscle);
   const shares = muscleShares(items);
   return { primary: shares.filter(isPrimary), secondary: shares.filter((s) => !isPrimary(s)) };
 }
