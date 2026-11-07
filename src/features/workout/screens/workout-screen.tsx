@@ -294,6 +294,8 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                         exercise={page}
                         workoutId={workout.id}
                         suggestions={live.suggestions[page.id] ?? null}
+                        last={live.last[page.id]}
+                        units={live.units}
                         selectedIndex={shown ? selectedIndex : -1}
                         onSelect={onSelect}
                         onToggleDone={live.toggleDone}

@@ -23,7 +23,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   const { exercises } = workout;
   const exerciseIndex = Math.min(storedIndex, exercises.length - 1);
   const exercise = exercises[exerciseIndex];
-  const suggestions = useSetSuggestions(workout, units);
+  const { suggestions, last } = useSetSuggestions(workout, units);
   /** The suggested values of each set of `target`, the boxes' prefill (none the first time). */
   const suggestedValues = (target: WorkoutExercise) =>
     suggestions[target.id]?.map((s) => s?.values ?? null);
@@ -294,6 +294,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     measures,
     exerciseIndex,
     suggestions,
+    last,
     suggestedValues,
     doneSets,
     totalSets: allSets.length,

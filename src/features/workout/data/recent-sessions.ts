@@ -1,3 +1,5 @@
+import { useStatus } from '@powersync/react-native';
+import { useQuery } from '@tanstack/react-query';
 import { and, desc, eq, inArray, isNotNull, lte, sql } from 'drizzle-orm';
 
 import { drizzle } from '@/shared/data/powersync/database';
@@ -7,7 +9,7 @@ import {
   workoutEntriesSets,
 } from '@/shared/data/powersync/schema';
 import { queryKeys } from '@/shared/data/query-keys';
-import { type RowOf, useDrizzleQuery } from '@/shared/data/use-drizzle-query';
+import type { RowOf } from '@/shared/data/use-drizzle-query';
 import { hasKnownWeight } from '@/shared/data/workouts';
 import type { SetValues } from '@/shared/lib/format';
 import { getOrInsert } from '@/shared/lib/map';
@@ -140,13 +142,20 @@ function toRecentSessions(rows: RowOf<typeof recentSessionsQuery>[]) {
   return out;
 }
 
-/** The last finished workouts (up to three) of each exercise, for the suggestions. */
-export function useRecentSessions(exerciseIds: string[]) {
+/**
+ * The last finished workouts (up to three) of each exercise of workout `workoutId`, for the
+ * suggestions and "last time". Read once per workout and its exercises, not watched: finished
+ * workouts don't change while one runs, so logging a set doesn't read them all again. Read again
+ * once the first sync is done (a new device may start a workout before its history is there).
+ */
+export function useRecentSessions(workoutId: string, exerciseIds: string[]) {
   const ids = [...new Set(exerciseIds)].sort();
-  return useDrizzleQuery({
-    queryKey: queryKeys.workouts.recentSessions(ids.join()).queryKey,
+  const { hasSynced } = useStatus();
+  const { data } = useQuery({
+    queryKey: queryKeys.workouts.recentSessions(workoutId, ids.join(), hasSynced === true).queryKey,
     enabled: ids.length > 0,
-    query: recentSessionsQuery(ids),
-    map: toRecentSessions,
+    queryFn: async () => toRecentSessions(await recentSessionsQuery(ids).execute()),
+    staleTime: Infinity,
   });
+  return { data };
 }

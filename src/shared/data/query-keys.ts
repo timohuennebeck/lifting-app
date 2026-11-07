@@ -26,8 +26,11 @@ const workoutKeys = createQueryKeys('workouts', {
   stats: null,
   range: (fromIso: string, toIso: string) => [fromIso, toIso],
   exerciseHistory: (exerciseId: string) => [exerciseId],
-  lastExerciseSession: (exerciseId: string) => [exerciseId],
-  recentSessions: (exerciseIds: string) => [exerciseIds],
+  recentSessions: (workoutId: string, exerciseIds: string, synced: boolean) => [
+    workoutId,
+    exerciseIds,
+    synced,
+  ],
   exerciseSets: null,
 });
 

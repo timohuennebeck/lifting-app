@@ -309,26 +309,3 @@ export function useExerciseHistory(exerciseId: string | undefined) {
     map: toExerciseHistory,
   });
 }
-
-const toLastSession = (rows: RowOf<typeof exerciseHistoryQuery>[]) => toExerciseHistory(rows)[0];
-
-/** The newest session of `useExerciseHistory` alone ("last time"), without loading the rest. */
-export function useLastExerciseSession(exerciseId: string | undefined) {
-  const latest = drizzle
-    .select({ id: workoutEntries.id })
-    .from(workoutEntriesSets)
-    .innerJoin(
-      workoutEntriesExercises,
-      eq(workoutEntriesExercises.id, workoutEntriesSets.workout_entries_exercise_id),
-    )
-    .innerJoin(workoutEntries, eq(workoutEntries.id, workoutEntriesExercises.workout_entries_id))
-    .where(historySetsOf(exerciseId ?? ''))
-    .orderBy(desc(workoutEntries.started_at))
-    .limit(1);
-  return useDrizzleQuery({
-    queryKey: queryKeys.workouts.lastExerciseSession(exerciseId ?? '').queryKey,
-    enabled: !!exerciseId,
-    query: exerciseHistoryQuery(exerciseId ?? '', inArray(workoutEntries.id, latest)),
-    map: toLastSession,
-  });
-}

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 
 import { useUserId } from '@/shared/stores/session-store';
 import { formatSetParts, isTimed, type Measure } from '@/shared/data/exercises';
-import type { ExerciseHistoryEntry } from '@/shared/data/workouts';
 import {
   formatNumber,
   formatTargetLabel,
@@ -22,6 +21,7 @@ import { IconButton } from '@/shared/ui/icon-button';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { Text } from '@/shared/ui/text';
 
+import type { RecentSession } from '../data/recent-sessions';
 import type { WorkoutExercise } from '../data/workout-detail';
 import { addWorkoutSet } from '../data/workout-mutations';
 import { rowValues } from '../lib/row-values';
@@ -38,7 +38,7 @@ export interface SetTableProps {
   exercise: WorkoutExercise;
   /** Boxes per set, from the exercise's measures. */
   measures: Measure[];
-  last: ExerciseHistoryEntry | undefined;
+  last: RecentSession | undefined;
   /** Per set; none the first time the exercise is done: the targets show instead. */
   /** Per set; null for a set without one (the first time). */
   suggestions: (SetSuggestion | null)[] | null;

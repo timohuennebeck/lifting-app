@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { measuresOf, useExerciseName } from '@/shared/data/exercises';
-import { useUnits } from '@/shared/data/profile';
-import { useLastExerciseSession } from '@/shared/data/workouts';
+import type { UnitSystem } from '@/shared/lib/format';
 import { Text } from '@/shared/ui/text';
 
+import type { RecentSession } from '../data/recent-sessions';
 import type { WorkoutExercise } from '../data/workout-detail';
 import { firstOpenSet } from '../lib/row-values';
 import type { SetSuggestion } from '../lib/set-suggestions';
@@ -18,6 +18,9 @@ export interface ExercisePageProps {
   exercise: WorkoutExercise;
   workoutId: string;
   suggestions: (SetSuggestion | null)[] | null;
+  /** Its sets last time (the newest of its recent workouts), shown instead of suggestions. */
+  last: RecentSession | undefined;
+  units: UnitSystem;
   /** The row being typed in, or -1 (always on the pages beside the shown one). */
   selectedIndex: number;
   onSelect: (index: number, field: SetField | null) => void;
@@ -38,6 +41,8 @@ export function ExercisePage({
   exercise,
   workoutId,
   suggestions,
+  last,
+  units,
   selectedIndex,
   onSelect,
   onToggleDone,
@@ -48,8 +53,6 @@ export function ExercisePage({
   onRowLayout,
 }: ExercisePageProps) {
   const { t, i18n } = useTranslation('workout');
-  const units = useUnits();
-  const { data: last } = useLastExerciseSession(exercise.exerciseId);
   const name = useExerciseName(exercise.exerciseId, i18n.language);
   const openIndex = firstOpenSet(exercise);
 
