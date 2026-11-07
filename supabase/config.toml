@@ -245,8 +245,8 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
-# "Passwort vergessen?" in the app asks for the 6-digit code, so the email shows {{ .Token }}.
-# In production: Authentication → Email Templates → Reset Password, with the same body.
+# "Forgot password?" in the app asks for the 6-digit code, so the email shows {{ .Token }}. Only
+# for the local stack: in production the send-email hook writes the emails in the user's language.
 [auth.email.template.recovery]
 subject = "Dein Code für ein neues Passwort"
 content_path = "./supabase/templates/recovery.html"
@@ -287,6 +287,14 @@ max_frequency = "5s"
 # [auth.hook.before_user_created]
 # enabled = true
 # uri = "pg-functions://postgres/auth/before-user-created-hook"
+
+# Sends the auth emails through the send-email Edge Function (Resend, the user's language). Off
+# locally, where the local mail catcher gets the template's email; to try it, put RESEND_API_KEY and
+# SEND_EMAIL_HOOK_SECRET in supabase/functions/.env and supabase/.env, and uncomment.
+# [auth.hook.send_email]
+# enabled = true
+# uri = "http://host.docker.internal:54321/functions/v1/send-email"
+# secrets = "env(SEND_EMAIL_HOOK_SECRET)"
 
 # This hook runs before a token is issued and allows you to add additional claims based on the authentication method used.
 # [auth.hook.custom_access_token]
@@ -439,6 +447,10 @@ verify_jwt = false
 
 [functions.coach-transcribe]
 # Same as coach-chat: the function checks the user's token itself.
+verify_jwt = false
+
+[functions.send-email]
+# Called by Supabase Auth, which signs the request with the hook secret; the function checks it.
 verify_jwt = false
 
 [analytics]
