@@ -30,5 +30,17 @@
     "none": "Aucune entrée pour l'instant",
     "delete": "Supprimer l'entrée",
     "date": "Date"
+  },
+  "home": {
+    "title": "Poids corporel",
+    "thisWeek": "cette semaine",
+    "today": "Aujourd’hui",
+    "low": "Min. {{value}}",
+    "high": "Max. {{value}}",
+    "weeks": "Tendance à la fin des 8 dernières semaines",
+    "weighIns_one": "{{count}} pesée en 5 semaines",
+    "weighIns_other": "{{count}} pesées en 5 semaines",
+    "loggedToday": "Noté aujourd’hui",
+    "empty": "Note ton poids et ta tendance s’affiche ici."
   }
 }

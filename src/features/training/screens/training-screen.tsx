@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import Animated, { useAnimatedRef } from 'react-native-reanimated';
 
 import { AskCoachCard } from '@/features/coach/components/ask-coach-card';
+import { HomeWeightBoxes } from '@/features/weight/components/home/home-weight-boxes';
 import { openPlanEditor, openPlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { TabScreen } from '@/shared/components/tab-screen';
 import { useCurrentPlan, usePlanStatus, usePlanWeekDone } from '@/shared/data/plans';
@@ -158,6 +159,7 @@ export function TrainingScreen() {
       }
     >
       {shown ? <AskCoachCard className="mx-4 mt-3 mb-3" /> : null}
+      {shown ? <HomeWeightBoxes className="mx-4 mb-3" /> : null}
       {loading ? null : (
         <>
           {planShown ? (

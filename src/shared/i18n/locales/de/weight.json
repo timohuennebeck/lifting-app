@@ -30,5 +30,17 @@
     "none": "Kein Eintrag vorhanden",
     "delete": "Eintrag löschen",
     "date": "Datum"
+  },
+  "home": {
+    "title": "Körpergewicht",
+    "thisWeek": "diese Woche",
+    "today": "Heute",
+    "low": "Tief {{value}}",
+    "high": "Hoch {{value}}",
+    "weeks": "Trend am Ende der letzten 8 Wochen",
+    "weighIns_one": "{{count}} Wiegung in 5 Wochen",
+    "weighIns_other": "{{count}} Wiegungen in 5 Wochen",
+    "loggedToday": "Heute eingetragen",
+    "empty": "Trag dein Gewicht ein, dann siehst du hier deinen Trend."
   }
 }
