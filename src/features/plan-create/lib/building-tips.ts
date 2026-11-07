@@ -112,6 +112,16 @@ export function tipQueue(
   return [...spreadTopics(first), ...spreadTopics(later)];
 }
 
+/**
+ * Where a wait starts in the current round, and how many tips the round has: "4 / 25" counts
+ * on from the tips already seen, the first tip of a new round is 1.
+ */
+export function tipRound(equipment: EquipmentAccess, seen: readonly string[]) {
+  const eligible = eligibleTips(equipment);
+  const seenCount = eligible.filter((tip) => seen.includes(tip.id)).length;
+  return { start: seenCount < eligible.length ? seenCount : 0, total: eligible.length };
+}
+
 /** The ids of the tips shown so far in this round, kept on the device. */
 export function seenTips(): string[] {
   const raw = storage.getString(SEEN_KEY);

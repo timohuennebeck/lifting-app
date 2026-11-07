@@ -7,7 +7,7 @@ import type { EquipmentAccess } from '@/shared/data/profile';
 import { SpinnerGlyph } from '@/shared/ui/spark-glyph';
 import { Text } from '@/shared/ui/text';
 
-import { markTipSeen, seenTips, tipMs, tipQueue } from '../../lib/building-tips';
+import { markTipSeen, seenTips, tipMs, tipQueue, tipRound } from '../../lib/building-tips';
 
 /** The old tip leaves before the new one comes in, its topic with it. */
 const OUT_MS = 250;
@@ -17,16 +17,21 @@ const IN_MS = 400;
 const TIP_HEIGHT = 5 * 32;
 
 /**
- * Training tips while the plan is made (2b): the topic with a small sparkle, the tip under it.
+ * Training tips while the plan is made (2b): the topic with a small sparkle and where the tip
+ * stands in the round ("4 / 25"), the tip under it.
  * Each tip stays as long as it takes to read, then slides out before the next one slides in;
  * a tap skips ahead. Tips not seen before come first.
  */
 export function TipRow({ equipment }: { equipment: EquipmentAccess }) {
   const { t } = useTranslation('planCreate');
-  const [queue] = useState(() => tipQueue(equipment, seenTips()));
+  const [{ queue, round }] = useState(() => {
+    const seen = seenTips();
+    return { queue: tipQueue(equipment, seen), round: tipRound(equipment, seen) };
+  });
   const [index, setIndex] = useState(0);
   const tip = queue[index % queue.length];
   const text = t(`building.tips.${tip.id}`);
+  const number = ((round.start + index) % round.total) + 1;
 
   useEffect(() => {
     markTipSeen(tip.id, equipment);
@@ -43,10 +48,13 @@ export function TipRow({ equipment }: { equipment: EquipmentAccess }) {
             key={index}
             entering={FadeIn.duration(IN_MS).delay(OUT_MS)}
             exiting={FadeOut.duration(OUT_MS)}
-            className="absolute inset-x-0 top-0"
+            className="absolute inset-x-0 top-0 flex-row items-center justify-between"
           >
             <Text variant="overline" tone="accent" className="text-xs">
               {t(`building.topics.${tip.topic}`)}
+            </Text>
+            <Text className="font-inter text-xs text-subtle tabular-nums">
+              {`${number} / ${round.total}`}
             </Text>
           </Animated.View>
         </View>
@@ -63,7 +71,13 @@ export function TipRow({ equipment }: { equipment: EquipmentAccess }) {
           exiting={FadeOutLeft.duration(OUT_MS)}
           className="absolute inset-x-0 top-0"
         >
-          <Text className="font-inter-semibold text-[24px] leading-8 text-fg">{text}</Text>
+          {/* Korean breaks between words, not inside one (iOS). */}
+          <Text
+            lineBreakStrategyIOS="hangul-word"
+            className="font-inter-semibold text-[24px] leading-8 text-fg"
+          >
+            {text}
+          </Text>
         </Animated.View>
       </Pressable>
     </View>
