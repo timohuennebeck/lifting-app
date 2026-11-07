@@ -45,7 +45,7 @@ interface WorkoutSummaryPageProps {
 
 /**
  * A workout from the history: its name, time and records, the muscles it worked, the exercises
- * with the sets that were done, then each new record. Its "⋯" deletes it.
+ * with the sets that were done, then the new records under their count. Its "⋯" deletes it.
  */
 function WorkoutSummaryPage({ id }: WorkoutSummaryPageProps) {
   const { t } = useTranslation(['workout', 'common']);
@@ -128,10 +128,15 @@ function WorkoutSummaryPage({ id }: WorkoutSummaryPageProps) {
           <MuscleSplit primary={primary} secondary={secondary} className="px-4 pt-6" />
           <DoneExercises done={done} records={records} units={units} />
           {records.length ? (
-            <View className="gap-2.5 px-4 pt-9">
-              {records.map((r) => (
-                <RecordCard key={r.exerciseId} record={r} units={units} />
-              ))}
+            <View className="pt-9">
+              <Text variant="headline" className="px-5">
+                {t('summary.records', { count: records.length })}
+              </Text>
+              <View className="gap-2.5 px-4 pt-3">
+                {records.map((r) => (
+                  <RecordCard key={r.exerciseId} record={r} units={units} />
+                ))}
+              </View>
             </View>
           ) : null}
         </ScrollView>
