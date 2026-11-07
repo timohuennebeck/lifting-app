@@ -1,29 +1,11 @@
-import { type ReactNode, useEffect } from 'react';
+import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 
+import { BlinkingCursor } from './blinking-cursor';
 import { Text } from './text';
-
-/** The accent text caret, blinking. */
-function BlinkingCursor() {
-  const opacity = useSharedValue(1);
-  useEffect(() => {
-    const step = (to: number) => withDelay(500, withTiming(to, { duration: 0 }));
-    opacity.set(withRepeat(withSequence(step(0), step(1)), -1));
-  }, [opacity]);
-  const style = useAnimatedStyle(() => ({ opacity: opacity.get() }));
-  return <Animated.View className="h-5 w-0.5 rounded-full bg-accent" style={style} />;
-}
 
 export interface InputCellProps {
   /** Text shown in the box: the keypad buffer while active. */
