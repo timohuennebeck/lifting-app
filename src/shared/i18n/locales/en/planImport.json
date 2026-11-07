@@ -11,6 +11,12 @@
     "empty": "No exercises yet. Add some with + or the microphone.",
     "newRoutine": "Workout {{number}}",
     "renamePlan": "Rename plan",
-    "newExercise": "New · added as your own exercise"
+    "newExercise": "New · added as your own exercise",
+    "leave": {
+      "title": "Leave the import?",
+      "option": "Discard the plan",
+      "description": "The plan from your file won’t be kept. To get it back, you’ll have to import the file again.",
+      "cta": "Leave import"
+    }
   }
 }

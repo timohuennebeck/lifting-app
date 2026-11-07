@@ -13,7 +13,11 @@ import { CoachVideo } from '../components/coach-video';
 import { usePaywallFlow } from '../hooks/use-paywall-flow';
 import { COACH } from '../lib/coach-video';
 
-/** Thank-you after subscribing: a message from the head coach, then on to the next step. */
+/**
+ * Thank-you after subscribing: a message from the head coach, then on to the next step. The video
+ * fills the screen above its notes; on a small screen it keeps a minimum height and the page
+ * scrolls, with the button staying at the bottom.
+ */
 export function ThankYouScreen() {
   const { t } = useTranslation('paywall');
   const flow = usePaywallFlow();
@@ -23,11 +27,12 @@ export function ThankYouScreen() {
 
   return (
     <Screen
+      scroll
       header={<ScreenHeader icon="close" onBack={flow.exit} action={<View />} />}
       footer={<Button label={t('welcome.cta')} onPress={flow.exit} />}
     >
       <Stack.Screen options={{ gestureEnabled: false }} />
-      <View className="mx-4 mt-3 flex-1">
+      <View className="mx-4 mt-3 min-h-110 flex-1">
         <CoachVideo active={focused} />
       </View>
       <View className="flex-row items-center gap-2.5 px-5 pt-5.5">

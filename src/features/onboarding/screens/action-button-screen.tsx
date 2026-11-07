@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Linking, View } from 'react-native';
 
+import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { Button } from '@/shared/ui/button';
 import { StepScreen } from '@/shared/ui/step-screen';
 import { Text } from '@/shared/ui/text';
@@ -31,6 +32,8 @@ function openSettings() {
 export function ActionButtonScreen() {
   const { t } = useTranslation(['onboarding', 'common']);
   const [opened, setOpened] = useState(false);
+  // Right after sign-up: Android's back doesn't go back to it either.
+  useHardwareBack(() => {});
 
   return (
     <StepScreen

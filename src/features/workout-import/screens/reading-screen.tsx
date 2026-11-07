@@ -1,4 +1,4 @@
-import { router, useNavigation } from 'expo-router';
+import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useUnitsOrDraft } from '@/features/onboarding/hooks/use-units-or-draft';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { useProfile } from '@/shared/data/profile';
+import { useFlowSwipeOff } from '@/shared/hooks/use-flow-swipe-off';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { useNow } from '@/shared/hooks/use-now';
 import { weightUnit } from '@/shared/lib/format';
@@ -35,7 +36,6 @@ export function ReadingScreen() {
   const units = useUnitsOrDraft();
   const status = useWorkoutImportStore((s) => s.status);
   const failure = useWorkoutImportStore((s) => s.failure);
-  const navigation = useNavigation();
   const [startedAt] = useState(Date.now);
   const [cancelling, setCancelling] = useState(false);
   const now = useNow(1000, status === 'reading');
@@ -56,11 +56,7 @@ export function ReadingScreen() {
   }, [i18n.language, derive]);
 
   // In the app the plan flow is a screen of its own: its swipe would leave from here too.
-  useEffect(() => {
-    const parent = navigation.getParent();
-    parent?.setOptions({ gestureEnabled: false });
-    return () => parent?.setOptions({ gestureEnabled: true });
-  }, [navigation]);
+  useFlowSwipeOff();
 
   // Android's back asks first.
   useHardwareBack(() => setCancelling(true), status === 'reading');

@@ -1,7 +1,15 @@
-import { Redirect, router, useIsFocused, useNavigation } from 'expo-router';
+import {
+  Redirect,
+  router,
+  Stack,
+  useIsFocused,
+  useLocalSearchParams,
+  useNavigation,
+} from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Animated, { FadeInDown, useAnimatedRef } from 'react-native-reanimated';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useUpdateDraft } from '@/features/onboarding/stores/onboarding-store';
@@ -9,11 +17,14 @@ import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { EditableExerciseList } from '@/features/training/components/editable-exercise-list';
 import { EditableTitle } from '@/features/training/components/editable-title';
 import { newId } from '@/shared/data/json';
+import { useFlowSwipeOff } from '@/shared/hooks/use-flow-swipe-off';
+import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { AI_BLOCK_WEEKS } from '@/shared/data/plans';
 import { moved } from '@/shared/lib/array';
 import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
+import { DeleteSheet } from '@/shared/ui/delete-sheet';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
@@ -24,7 +35,7 @@ import { PLAN_NAME_MAX } from '@/shared/lib/limits';
 import { ReadingGhost } from '../components/reading-ghost';
 import { ReviewPrompt } from '../components/review-prompt';
 import { RoutineBar } from '../components/routine-bar';
-import { editExerciseAt, editRoutineAt, settle } from '../lib/edit-plan';
+import { AFTER_IMPORT, editExerciseAt, editRoutineAt, settle } from '../lib/edit-plan';
 import { showPlanFailure } from '../lib/plan-failure';
 import {
   type ImportedExercise,
@@ -35,15 +46,21 @@ import {
 } from '../lib/plan-import-service';
 import { useImportStore } from '../stores/import-store';
 
+/** After the shown day is built, the next of the others is built after this long. */
+const BUILD_GAP_MS = 250;
+const HIDDEN = { display: 'none' } as const;
+
 /**
  * 06c: the plan in the training overview layout (03·0b). Its routines sit in the plan strip, in
  * the order they are trained; amber dots mark exercises not sure yet (voice input) until the user
  * checks them. A workout import opens it with the plan it read or found in the history. A plan
  * the AI makes (BuildingScreen) opens with its first exercise and fills in while the function
  * sends the rest, following the routine being made until the user picks one, and goes on to its
- * name. "Plan selbst erstellen" opens it with an empty plan to build routine by routine. A saved
- * plan opens here to be edited (`openPlanEditor`) and is saved back. Hold a routine in the strip
- * to move it.
+ * name. After a workout import (AFTER_IMPORT) an X replaces the back button and asks before the
+ * import is left, with no swiping back. "Plan selbst erstellen" opens it with an empty plan to
+ * build routine by routine. A saved plan opens here to be edited (`openPlanEditor`) and is saved
+ * back. Hold a routine in the strip to move it. Each day's list is built once and then kept,
+ * hidden while another day shows; the others are built one by one once the screen is up.
  */
 export function ConfirmScreen() {
   const { t } = useTranslation(['planImport', 'planCreate', 'training', 'voice', 'common']);
@@ -72,6 +89,23 @@ export function ConfirmScreen() {
   const navigation = useNavigation();
   const focused = useIsFocused();
   const [renameOpen, setRenameOpen] = useState(false);
+  // Going back would read the file again: the X, Android's back and no swipe ask first.
+  const afterImport = useLocalSearchParams<{ from?: string }>().from === AFTER_IMPORT.from;
+  const [leaving, setLeaving] = useState(false);
+  useFlowSwipeOff(afterImport);
+  useHardwareBack(() => setLeaving(true), afterImport);
+  // The days whose lists are built (by routine key); the shown one is added while rendering.
+  const [built, setBuilt] = useState<readonly string[]>([]);
+  const unbuilt = plan?.routines.find((r) => !built.includes(r.key))?.key;
+  const buildsMore = focused && !reading && built.length > 0;
+  useEffect(() => {
+    if (!unbuilt || !buildsMore) return;
+    const timer = setTimeout(
+      () => setBuilt((keys) => (keys.includes(unbuilt) ? keys : [...keys, unbuilt])),
+      BUILD_GAP_MS,
+    );
+    return () => clearTimeout(timer);
+  }, [unbuilt, buildsMore]);
   // On leaving, not on unmount: Fast Refresh remounts without the user going anywhere.
   useEffect(
     () => navigation.addListener('beforeRemove', () => useImportStore.getState().stop(run)),
@@ -100,18 +134,22 @@ export function ConfirmScreen() {
 
   const index = Math.min(routineIndex, plan.routines.length - 1);
   const routine = plan.routines[index];
-  const exercises = routine?.exercises ?? [];
   const pending = pendingReviews(plan);
   // A plan built here starts empty; it needs an exercise before it can be taken over.
   const hasExercises = plan.routines.some((r) => r.exercises.length > 0);
   const newIds = new Set(plan.newExercises.map((e) => e.id));
+  if (routine && !built.includes(routine.key)) setBuilt([...built, routine.key]);
 
-  function editRoutine(edit: (routine: ImportedRoutine) => ImportedRoutine) {
-    editPlan((p) => editRoutineAt(p, index, edit));
+  function editDay(at: number, edit: (routine: ImportedRoutine) => ImportedRoutine) {
+    editPlan((p) => editRoutineAt(p, at, edit));
   }
 
-  function editExercise(at: number, edit: (e: ImportedExercise) => ImportedExercise) {
-    editRoutine((r) => editExerciseAt(r, at, edit));
+  function editRoutine(edit: (routine: ImportedRoutine) => ImportedRoutine) {
+    editDay(index, edit);
+  }
+
+  function editExercise(day: number, at: number, edit: (e: ImportedExercise) => ImportedExercise) {
+    editDay(day, (r) => editExerciseAt(r, at, edit));
   }
 
   // Adding and swapping happen on the library page; picks apply when it closes with "Done".
@@ -141,8 +179,14 @@ export function ConfirmScreen() {
     selectRoutine(routines.indexOf(routine));
   }
 
-  function moveExercise(from: number, to: number) {
-    editRoutine((r) => ({ ...r, exercises: moved(r.exercises, from, to) }));
+  function moveExercise(day: number, from: number, to: number) {
+    editDay(day, (r) => ({ ...r, exercises: moved(r.exercises, from, to) }));
+  }
+
+  /** Leaves the import for its start, where the file is picked again. */
+  function leaveImport() {
+    setLeaving(false);
+    router.dismissTo(step('/import'));
   }
 
   function submit() {
@@ -175,6 +219,8 @@ export function ConfirmScreen() {
     <Screen
       header={
         <ScreenHeader
+          icon={afterImport ? 'close' : 'chevron-left'}
+          onBack={afterImport ? () => setLeaving(true) : undefined}
           title={plan.name}
           action={
             <IconButton
@@ -187,6 +233,7 @@ export function ConfirmScreen() {
         />
       }
     >
+      <Stack.Screen options={{ gestureEnabled: !afterImport }} />
       <Animated.ScrollView
         ref={scroller}
         // Any touch ends following the routine being read, so an edit stays where it began.
@@ -207,56 +254,62 @@ export function ConfirmScreen() {
           onMove={reading ? undefined : moveRoutine}
         />
         {routine ? (
-          <>
-            <EditableTitle
-              value={routine.name}
-              onSubmit={(name) => editRoutine((r) => ({ ...r, name }))}
-            />
-            <EditableExerciseList
-              // Its own list per routine: another one shown isn't exercises added to it.
-              key={routine.key}
-              title={routine.name}
-              exercises={exercises}
-              keyOf={(e) => e.key}
-              addLabel={t('planImport:confirm.add')}
-              emptyHint={t('planImport:confirm.empty')}
-              scrollRef={scroller}
-              onAdd={() => openPicker({ mode: 'add' })}
-              // Not while the plan is still read into the routines.
-              onVoice={reading ? undefined : () => router.push(step('/import/voice'))}
-              onOpen={openSets}
-              onSwap={(i) => openPicker({ mode: 'swap', index: String(i) })}
-              onRemove={(i) =>
-                editRoutine((r) => ({ ...r, exercises: r.exercises.filter((_, k) => k !== i) }))
-              }
-              onMove={moveExercise}
-              review={(e) => !!e.raw}
-              renderExtra={(e, i) => (
-                <>
-                  {newIds.has(e.exerciseId) ? (
-                    <Text variant="caption" tone="accent" className="pt-1.5 font-inter">
-                      {t('planImport:confirm.newExercise')}
-                    </Text>
-                  ) : null}
-                  {e.raw ? (
-                    <ReviewPrompt
-                      message={t('voice:heardAs', { raw: e.raw })}
-                      alternatives={e.alternatives}
-                      onConfirm={() => editExercise(i, settle)}
-                      onPickAlternative={(exerciseId) =>
-                        editExercise(i, (x) => settle({ ...x, exerciseId }))
-                      }
-                    />
-                  ) : null}
-                </>
-              )}
-              footer={reading && index === readingRoutine ? <ReadingGhost /> : null}
-              // While the plan is read, its cards slide in and stay put.
-              sortEnabled={!reading}
-              itemEntering={reading ? FadeInDown.duration(300) : undefined}
-            />
-          </>
+          <EditableTitle
+            value={routine.name}
+            onSubmit={(name) => editRoutine((r) => ({ ...r, name }))}
+          />
         ) : null}
+        {plan.routines.map((day, i) =>
+          built.includes(day.key) ? (
+            // Each day keeps its own list, hidden while another one shows.
+            <View key={day.key} style={i === index ? undefined : HIDDEN}>
+              <EditableExerciseList
+                title={day.name}
+                exercises={day.exercises}
+                keyOf={(e) => e.key}
+                addLabel={t('planImport:confirm.add')}
+                emptyHint={t('planImport:confirm.empty')}
+                scrollRef={scroller}
+                onAdd={() => openPicker({ mode: 'add' })}
+                // Not while the plan is still read into the routines.
+                onVoice={reading ? undefined : () => router.push(step('/import/voice'))}
+                onOpen={openSets}
+                onSwap={(at) => openPicker({ mode: 'swap', index: String(at) })}
+                onRemove={(at) =>
+                  editDay(i, (r) => ({
+                    ...r,
+                    exercises: r.exercises.filter((_, k) => k !== at),
+                  }))
+                }
+                onMove={(from, to) => moveExercise(i, from, to)}
+                review={(e) => !!e.raw}
+                renderExtra={(e, at) => (
+                  <>
+                    {newIds.has(e.exerciseId) ? (
+                      <Text variant="caption" tone="accent" className="pt-1.5 font-inter">
+                        {t('planImport:confirm.newExercise')}
+                      </Text>
+                    ) : null}
+                    {e.raw ? (
+                      <ReviewPrompt
+                        message={t('voice:heardAs', { raw: e.raw })}
+                        alternatives={e.alternatives}
+                        onConfirm={() => editExercise(i, at, settle)}
+                        onPickAlternative={(exerciseId) =>
+                          editExercise(i, at, (x) => settle({ ...x, exerciseId }))
+                        }
+                      />
+                    ) : null}
+                  </>
+                )}
+                footer={reading && i === readingRoutine ? <ReadingGhost /> : null}
+                // While the plan is read, its cards slide in and stay put.
+                sortEnabled={!reading}
+                itemEntering={reading ? FadeInDown.duration(300) : undefined}
+              />
+            </View>
+          ) : null,
+        )}
       </Animated.ScrollView>
 
       <BottomFade>
@@ -279,6 +332,15 @@ export function ConfirmScreen() {
           onPress={submit}
         />
       </BottomFade>
+      <DeleteSheet
+        visible={leaving}
+        onClose={() => setLeaving(false)}
+        title={t('planImport:confirm.leave.title')}
+        option={t('planImport:confirm.leave.option')}
+        description={t('planImport:confirm.leave.description')}
+        cta={t('planImport:confirm.leave.cta')}
+        onDelete={leaveImport}
+      />
       <TextInputSheet
         visible={renameOpen}
         onClose={() => setRenameOpen(false)}

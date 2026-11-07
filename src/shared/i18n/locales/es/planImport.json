@@ -11,6 +11,12 @@
     "empty": "Aún no hay ejercicios. Añade alguno con + o con el micrófono.",
     "newRoutine": "Entrenamiento {{number}}",
     "renamePlan": "Renombrar plan",
-    "newExercise": "Nuevo · añadido como ejercicio propio"
+    "newExercise": "Nuevo · añadido como ejercicio propio",
+    "leave": {
+      "title": "¿Salir de la importación?",
+      "option": "Descartar el plan",
+      "description": "El plan de tu archivo no se guardará. Para recuperarlo, tendrás que volver a importar el archivo.",
+      "cta": "Salir de la importación"
+    }
   }
 }

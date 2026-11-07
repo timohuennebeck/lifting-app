@@ -11,6 +11,12 @@
     "empty": "Ainda sem exercícios. Adicione com + ou com o microfone.",
     "newRoutine": "Treino {{number}}",
     "renamePlan": "Renomear plano",
-    "newExercise": "Novo · criado como exercício personalizado"
+    "newExercise": "Novo · criado como exercício personalizado",
+    "leave": {
+      "title": "Sair da importação?",
+      "option": "Descartar o plano",
+      "description": "O plano do seu arquivo não será salvo. Para recuperá-lo, você vai precisar importar o arquivo de novo.",
+      "cta": "Sair da importação"
+    }
   }
 }

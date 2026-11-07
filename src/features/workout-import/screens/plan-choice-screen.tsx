@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding-store';
+import { AFTER_IMPORT } from '@/features/plan-import/lib/edit-plan';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { RoutineGlyph } from '@/features/training/components/glyphs';
 import { MAX_SESSIONS_PER_WEEK, MIN_SESSIONS_PER_WEEK } from '@/shared/data/plans';
@@ -52,7 +53,7 @@ export function PlanChoiceScreen() {
 
   function go() {
     if (way === 'training' && planFrom === 'history') {
-      router.push(step('/import/confirm'));
+      router.push({ pathname: step('/import/confirm'), params: AFTER_IMPORT });
       return;
     }
     useOnboardingStore

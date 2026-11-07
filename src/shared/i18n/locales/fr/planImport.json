@@ -11,6 +11,12 @@
     "empty": "Aucun exercice pour l'instant. Ajoute-en avec + ou le micro.",
     "newRoutine": "Séance {{number}}",
     "renamePlan": "Renommer le programme",
-    "newExercise": "Nouveau · ajouté comme exercice perso"
+    "newExercise": "Nouveau · ajouté comme exercice perso",
+    "leave": {
+      "title": "Quitter l’import ?",
+      "option": "Abandonner le plan",
+      "description": "Le plan de ton fichier ne sera pas conservé. Pour le récupérer, tu devras importer le fichier à nouveau.",
+      "cta": "Quitter l’import"
+    }
   }
 }

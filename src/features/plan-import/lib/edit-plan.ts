@@ -3,6 +3,12 @@ import { newId } from '@/shared/data/json';
 
 import type { ImportedExercise, ImportedPlan, ImportedRoutine } from './plan-import-service';
 
+/**
+ * The editor's params when a workout import opens it: going back would read the file again, so
+ * an X asks before the import is left.
+ */
+export const AFTER_IMPORT = { from: 'import' } as const;
+
 /** Drops the import's doubts about an exercise once the user has settled it. */
 export const settle = ({
   raw: _raw,

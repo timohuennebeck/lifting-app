@@ -33,12 +33,18 @@ interface BarProps {
   pace: number;
 }
 
+/** Stretched rather than resized, so following the voice needs no layout every frame. */
 function Bar({ share, level, pace }: BarProps) {
   const size = useAnimatedStyle(() => ({
-    height: BAR_MIN + (BAR_MAX - BAR_MIN) * share * Math.max(QUIET_LEVEL, level.get()),
+    transform: [
+      {
+        scaleY:
+          (BAR_MIN + (BAR_MAX - BAR_MIN) * share * Math.max(QUIET_LEVEL, level.get())) / BAR_MAX,
+      },
+    ],
   }));
   return (
-    <Animated.View className="w-1.25" style={size}>
+    <Animated.View className="w-1.25" style={[{ height: BAR_MAX }, size]}>
       <Animated.View
         className="flex-1 rounded-full bg-accent"
         style={{

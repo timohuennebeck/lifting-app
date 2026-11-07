@@ -1,7 +1,7 @@
 import { ExpoSpeechRecognitionModule, useSpeechRecognitionEvent } from 'expo-speech-recognition';
 import { useEffect, useRef, useState } from 'react';
 import { Keyboard, Platform } from 'react-native';
-import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { useFrameCallback, useSharedValue } from 'react-native-reanimated';
 
 import { i18n } from '@/shared/i18n';
 import type { AppLanguage } from '@/shared/i18n/resources';
@@ -16,6 +16,12 @@ import {
   type Transcript,
   transcriptText,
 } from '../lib/transcript';
+
+/**
+ * How quickly the shown level follows the voice (ms to cover about two thirds of a change): the
+ * volume comes ten times a second, and following it every frame keeps the bars moving smoothly.
+ */
+const LEVEL_FOLLOW_MS = 80;
 
 /** Recognition locales of the app languages. */
 const LOCALES: Record<AppLanguage, string> = {
@@ -85,7 +91,16 @@ export function useSpeechInput(language: AppLanguage) {
   const goingOn = useRef(false);
   const startedAt = useRef(0);
   const quickEnds = useRef(0);
+  /** The latest volume, and the level shown, which eases towards it every frame while listening. */
+  const volume = useSharedValue(0);
   const level = useSharedValue(0);
+  const follow = useFrameCallback(({ timeSincePreviousFrame }) => {
+    const step = 1 - Math.exp(-(timeSincePreviousFrame ?? 16) / LEVEL_FOLLOW_MS);
+    level.set(level.get() + (volume.get() - level.get()) * step);
+  }, false);
+  useEffect(() => {
+    follow.setActive(listening);
+  }, [follow, listening]);
 
   /** One recognition, adding to the text so far. */
   function listen() {
@@ -108,7 +123,7 @@ export function useSpeechInput(language: AppLanguage) {
   });
   useSpeechRecognitionEvent('volumechange', ({ value }) => {
     // From -2 to 10, below 0 is silence; speaking stays below 8.
-    level.set(withTiming(clamp(value / 8, 0, 1), { duration: 120 }));
+    volume.set(clamp(value / 8, 0, 1));
   });
   useSpeechRecognitionEvent('error', ({ error, message }) => {
     if (!GOES_ON.has(error)) goingOn.current = false;
@@ -127,7 +142,8 @@ export function useSpeechInput(language: AppLanguage) {
     goingOn.current = false;
     running.current = false;
     setListening(false);
-    level.set(withTiming(0, { duration: 200 }));
+    volume.set(0);
+    level.set(0);
     releaseAudio();
   });
 

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { startProgressCheck } from '@/features/progress-check/stores/progress-check-store';
+import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { Button } from '@/shared/ui/button';
 import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
 import { CheckChip } from '@/shared/ui/check-item';
@@ -29,6 +30,8 @@ function finish(openProgressCheck: boolean) {
 export function ProgressCheckPromptScreen() {
   const { t } = useTranslation(['onboarding', 'progressCheck']);
   const camera = useCameraAccess(() => finish(true));
+  // Right after sign-up: Android's back doesn't go back to it either.
+  useHardwareBack(() => {});
 
   return (
     <StepScreen

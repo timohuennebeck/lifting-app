@@ -11,6 +11,12 @@
     "empty": "Noch keine Übungen. Füg welche mit + oder dem Mikrofon hinzu.",
     "newRoutine": "Training {{number}}",
     "renamePlan": "Plan umbenennen",
-    "newExercise": "Neu · wird als eigene Übung angelegt"
+    "newExercise": "Neu · wird als eigene Übung angelegt",
+    "leave": {
+      "title": "Import verlassen?",
+      "option": "Plan verwerfen",
+      "description": "Der Plan aus deiner Datei wird nicht übernommen. Um ihn zurückzubekommen, musst du die Datei erneut importieren.",
+      "cta": "Import verlassen"
+    }
   }
 }

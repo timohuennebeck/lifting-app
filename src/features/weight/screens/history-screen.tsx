@@ -19,6 +19,9 @@ import { OVERLINE, WeightOverview } from '../components/weight-overview';
 import { useDayLabel } from '../hooks/use-day-label';
 import { trendChange, withTrend } from '../lib/trend';
 
+/** Moves a right-aligned OVERLINE label by its letter spacing, which trails its last letter. */
+const TO_EDGE = 'left-[1.65px]';
+
 /** Spans of the "Veränderung · Trend" rows, in days. */
 const CHANGE_DAYS = [3, 7, 14, 30, 90];
 
@@ -60,11 +63,17 @@ export function WeightHistoryScreen() {
       ) : null}
       {points.length ? (
         // Labels over the rows' columns (see EntryRow): the weight, and the trend in its colour.
+        // Letter spacing leaves a gap after the last letter, so the right-aligned labels are moved
+        // right by it to end where the numbers below end.
         <View className="mt-5.5 mb-1.25 flex-row px-5">
           <Text variant="overline" tone="subtle" className={`flex-1 ${OVERLINE}`}>
             {t('history.entries')}
           </Text>
-          <Text variant="overline" tone="subtle" className={`w-18 text-right ${OVERLINE}`}>
+          <Text
+            variant="overline"
+            tone="subtle"
+            className={`w-18 text-right ${OVERLINE} ${TO_EDGE}`}
+          >
             {weightUnit(units)}
           </Text>
           {/* The padding keeps the shrunk label off the weight header. */}
@@ -74,7 +83,7 @@ export function WeightHistoryScreen() {
             numberOfLines={1}
             adjustsFontSizeToFit
             minimumFontScale={0.6}
-            className={`w-18 pl-1.5 text-right ${OVERLINE}`}
+            className={`w-18 pl-1.5 text-right ${OVERLINE} ${TO_EDGE}`}
           >
             {t('history.trend')}
           </Text>
