@@ -19,24 +19,14 @@ import {
   type RoutineRow,
 } from '../_shared/coach/load.ts';
 import { contextText } from '../_shared/coach/prompt.ts';
-import {
-  admin,
-  envFlag,
-  envLimit,
-  isUuid,
-  refuseAiRequest,
-  reply,
-  requestUser,
-} from '../_shared/common.ts';
+import { admin, envLimit, isUuid, refuseAiRequest, reply, requestUser } from '../_shared/common.ts';
 import { eventStream } from '../_shared/event-stream.ts';
 import { COACH_ANSWER_MAX, COACH_QUESTION_MAX } from '../_shared/limits.ts';
-import { DEFAULT_MODEL } from '../_shared/openai.ts';
+import { MODELS } from '../_shared/models.ts';
 import { type AppLanguage, isAppLanguage } from '../_shared/plan-events.ts';
 import { loadCatalog, loadEquipment } from '../_shared/plans.ts';
 
-const MODEL = Deno.env.get('OPENAI_COACH_MODEL') || DEFAULT_MODEL;
-const EFFORT = Deno.env.get('OPENAI_COACH_REASONING_EFFORT') || 'low';
-const FAST = envFlag('COACH_FAST');
+const { name: MODEL, reasoningEffort: EFFORT, fast: FAST } = MODELS.coach;
 const DAILY_LIMIT = envLimit('COACH_DAILY_LIMIT', 20);
 const MONTHLY_LIMIT = envLimit('COACH_MONTHLY_LIMIT', 150);
 const TIMEOUT_MS = 60_000;

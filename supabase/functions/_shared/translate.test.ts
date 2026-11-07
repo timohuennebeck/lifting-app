@@ -36,12 +36,12 @@ Deno.test('the same language ignores the region', () => {
   assertEquals(sameLanguage('ko', 'en'), false);
 });
 
-Deno.test('translates with GPT-6 Luna, no reasoning sent, nothing stored', async () => {
+Deno.test('translates with GPT-6 Luna, no reasoning, nothing stored', async () => {
   const sent = fakeOpenAi(answer({ source_language: 'ko', translation: 'Mein Abo ist weg.' }));
   const result = await translateText('구독이 사라졌어요', 'de');
   assertEquals(result, { source: 'ko', translation: 'Mein Abo ist weg.' });
   assertEquals(sent[0].model, 'gpt-6-luna');
-  assertEquals(sent[0].reasoning, undefined);
+  assertEquals(sent[0].reasoning, { effort: 'none' });
   assertEquals(sent[0].store, false);
   assertEquals(sent[0].input[0].content[0].text, '구독이 사라졌어요');
   assertMatch(

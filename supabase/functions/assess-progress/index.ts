@@ -9,6 +9,7 @@ import { encodeBase64 } from 'jsr:@std/encoding@1/base64';
 import { hasPro, isOldEnough } from '../_shared/account.ts';
 import { admin, isUuid, refuseAiRequest, reply, requestUser } from '../_shared/common.ts';
 import { PROGRESS_CHECK_MIN_AGE } from '../_shared/limits.ts';
+import { MODELS } from '../_shared/models.ts';
 import { askStructured } from '../_shared/openai.ts';
 import {
   type AssessmentProfile,
@@ -57,6 +58,7 @@ const askModel = (content: ReturnType<typeof modelInput>) =>
     name: 'progress_check',
     schema: SCHEMA,
     timeoutMs: OPENAI_TIMEOUT_MS,
+    model: MODELS.progressCheck,
   });
 
 Deno.serve(async (req) => {

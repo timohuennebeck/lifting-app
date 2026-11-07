@@ -1,6 +1,7 @@
-// Translates support messages with a small OpenAI model (OPENAI_TRANSLATION_MODEL, by default
-// GPT-6 Luna): detects the language a text is written in and puts it into one of the app's
-// languages, in the app's voice. No database here; message-translations.ts stores the results.
+// Translates support messages with a small OpenAI model (MODELS.translate): detects the language a
+// text is written in and puts it into one of the app's languages, in the app's voice. No database
+// here; message-translations.ts stores the results.
+import { MODELS } from './models.ts';
 import { askStructured } from './openai.ts';
 import type { AppLanguage } from './plan-events.ts';
 
@@ -10,10 +11,6 @@ const base = (tag: string) => tag.trim().toLowerCase().split(/[-_]/)[0];
 /** Same language; Portuguese from Portugal and Brazil count as one (no translation between them). */
 export const sameLanguage = (a: string, b: string) => base(a) === base(b);
 
-const MODEL = {
-  name: Deno.env.get('OPENAI_TRANSLATION_MODEL') ?? 'gpt-6-luna',
-  reasoningEffort: Deno.env.get('OPENAI_TRANSLATION_REASONING_EFFORT') || undefined,
-};
 const TIMEOUT_MS = 20_000;
 
 /** The target language, and how the app speaks in it when the text addresses its reader. */
@@ -66,7 +63,7 @@ export async function translateText(text: string, target: AppLanguage): Promise<
       name: 'ticket_translation',
       schema: SCHEMA,
       timeoutMs: TIMEOUT_MS,
-      model: MODEL,
+      model: MODELS.translate,
     });
   } catch (error) {
     console.error('Translating failed', error);
