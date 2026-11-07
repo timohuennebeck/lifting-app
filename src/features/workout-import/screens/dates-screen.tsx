@@ -23,7 +23,7 @@ export function DatesScreen() {
   const { step } = usePlanFlow();
   const workouts = useWorkoutImportStore((s) => s.workouts);
   const setKeepUndated = useWorkoutImportStore((s) => s.setKeepUndated);
-  const { finish, saving } = useImportSteps();
+  const { finish } = useImportSteps();
   const counter = useImportStep('dates');
   const undated = workouts.filter((w) => !w.start).length;
   if (!undated) return <Redirect href={step('/import')} />;
@@ -42,18 +42,8 @@ export function DatesScreen() {
       subtitle={t('dates.body', { count: undated, total: workouts.length })}
       footer={
         <View className="gap-1">
-          <Button
-            {...CTA_STYLE}
-            label={t('dates.keep')}
-            loading={saving}
-            onPress={() => go(true)}
-          />
-          <TextButton
-            {...LINK_STYLE}
-            label={t('dates.drop')}
-            disabled={saving}
-            onPress={() => go(false)}
-          />
+          <Button {...CTA_STYLE} label={t('dates.keep')} onPress={() => go(true)} />
+          <TextButton {...LINK_STYLE} label={t('dates.drop')} onPress={() => go(false)} />
         </View>
       }
     >

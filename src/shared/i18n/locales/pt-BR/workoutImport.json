@@ -88,12 +88,6 @@
       "description_one": "O treino do seu arquivo não será salvo. Para recuperá-lo, você terá que importar o arquivo de novo.",
       "description_other": "Os {{count}} treinos do seu arquivo não serão salvos. Para recuperá-los, você terá que importar o arquivo de novo.",
       "cta": "Descartar importação"
-    },
-    "leave": {
-      "title": "Sair da importação?",
-      "option": "Pular o plano",
-      "description": "Seus treinos continuam no seu histórico. O plano não será criado.",
-      "cta": "Sair da importação"
     }
   },
   "plan": {

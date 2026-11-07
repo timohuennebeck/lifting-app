@@ -55,6 +55,13 @@ import { currentRoutines, findRoutines, type ResolvedWorkout } from '../lib/rout
 import { sheetSample } from '../lib/samples';
 import type { WorkoutRow, WorkoutToSave } from '../lib/save-history';
 
+export interface Imported {
+  workouts: WorkoutRow[];
+  created: string[];
+  custom: CustomExercise[];
+  saved: boolean;
+}
+
 interface WorkoutImportState {
   file: ImportFile | null;
   read: ReadFile | null;
@@ -77,8 +84,11 @@ interface WorkoutImportState {
   decisions: Record<string, Decision>;
   /** Workouts without a date get one (18a), or are left out. */
   keepUndated: boolean;
-  /** What the import took over once finished: the workouts as saved, and the exercises it made. */
-  imported: { workouts: WorkoutRow[]; created: string[] } | null;
+  /**
+   * What the import takes over once decided: the workouts as they are saved, the exercises it
+   * makes (ids, and in full for saving), and whether the app saved them to the account yet.
+   */
+  imported: Imported | null;
   /** The import of a new file starts; a workbook's sheets are read, a CSV file is one. */
   setFile: (file: ImportFile, read: ReadFile) => void;
   pickSheets: (sheets: string[]) => void;
@@ -86,7 +96,7 @@ interface WorkoutImportState {
   start: (language: string, derivePlan: boolean) => number;
   decide: (name: string, decision: Decision) => void;
   setKeepUndated: (keep: boolean) => void;
-  setImported: (imported: { workouts: WorkoutRow[]; created: string[] }) => void;
+  setImported: (imported: Imported) => void;
   /** Stops run `run` if it is still reading (the user left the reading screen). */
   stop: (run: number) => void;
   reset: () => void;

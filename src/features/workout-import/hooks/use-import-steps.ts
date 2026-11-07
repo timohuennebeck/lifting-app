@@ -46,9 +46,10 @@ async function send(
 
 /**
  * The steps after reading the file: a check per unsure name (15a), the dates (18a) when
- * workouts have none, then the history is saved (in onboarding at sign-up) and "Importiert" shows
- * it. `next` goes on from there: the file's plan opens in the editor, the user picks how a plan is
- * made (from the history or the questions), or the flow ends without one.
+ * workouts have none, then "Importiert" shows the history before anything is saved. Going on from
+ * there (`save`) saves it in the app; onboarding keeps it on the device until sign-up. `next`
+ * goes on: the file's plan opens in the editor, the user picks how a plan is made (from the
+ * history or the questions), or the flow ends without one.
  */
 export function useImportSteps() {
   const { inApp, step, done } = usePlanFlow();
@@ -79,11 +80,19 @@ export function useImportSteps() {
     if (!rows.length) return next(replace);
     useWorkoutImportStore
       .getState()
-      .setImported({ workouts: rows, created: custom.map((c) => c.id) });
-    const show = () => go(step('/import/imported'), replace);
-    if (inApp) return void send(rows, custom, setSaving, show);
-    keepForSignUp(rows, custom);
-    show();
+      .setImported({ workouts: rows, created: custom.map((c) => c.id), custom, saved: false });
+    if (!inApp) keepForSignUp(rows, custom);
+    go(step('/import/imported'), replace);
+  }
+
+  /** From "Importiert" on: saves the history to the account first (in the app, once), then `then`. */
+  function save(then: () => void) {
+    const imported = useWorkoutImportStore.getState().imported;
+    if (!inApp || !imported || imported.saved) return then();
+    void send(imported.workouts, imported.custom, setSaving, () => {
+      useWorkoutImportStore.getState().setImported({ ...imported, saved: true });
+      then();
+    });
   }
 
   /** After the checks: the dates, or the end. */
@@ -111,5 +120,5 @@ export function useImportSteps() {
     router.push(step(afterPick(read)));
   }
 
-  return { open, afterRead, afterCheck, finish, next, withPlan, saving };
+  return { open, afterRead, afterCheck, finish, save, next, withPlan, saving };
 }

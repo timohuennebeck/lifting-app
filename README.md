@@ -289,9 +289,10 @@ Importieren (the same screens, routed under `src/app/(onboarding)/import/` and
    so or leaves them out.
 6. **Saving:** the history goes to the `import_workouts` database function, 100 workouts a call
    (PowerSync would upload it row by row). It skips workouts that start at the same minute as one
-   of the account's and marks the records. In onboarding it waits in a file until the account
-   exists (`useSendPendingHistory`), also for an existing account signed in there. The plan opens
-   in the plan editor, like a made one.
+   of the account's and marks the records. Nothing is saved before "Importiert": in the app its
+   button saves it, and its close cross discards the import. In onboarding it waits in a file
+   until the account exists (`useSendPendingHistory`), also for an existing account signed in
+   there. The plan opens in the plan editor, like a made one.
 
 - **Secrets and model:** `OPENAI_API_KEY`; the steps `categorize`, `map` and `name` run
   `OPENAI_HISTORY_MODEL` (default `gpt-6-luna`) at `OPENAI_HISTORY_REASONING_EFFORT` (default

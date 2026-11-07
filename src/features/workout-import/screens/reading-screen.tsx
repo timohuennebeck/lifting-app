@@ -41,7 +41,7 @@ export function ReadingScreen() {
   const now = useNow(1000, status === 'reading');
   const left = useRef(false);
   const advanced = useRef(false);
-  const { afterRead, open, saving } = useImportSteps();
+  const { afterRead, open } = useImportSteps();
   function goOn() {
     if (advanced.current) return;
     advanced.current = true;
@@ -112,12 +112,7 @@ export function ReadingScreen() {
       />
       <View className="absolute inset-x-4" style={{ bottom: Math.max(insets.bottom, 30) }}>
         {ready ? (
-          <Button
-            {...CTA_STYLE}
-            label={t('workoutImport:reading.done')}
-            loading={saving}
-            onPress={goOn}
-          />
+          <Button {...CTA_STYLE} label={t('workoutImport:reading.done')} onPress={goOn} />
         ) : (
           // Greyed out until the file is read.
           <View className="h-14 items-center justify-center rounded-full bg-control">

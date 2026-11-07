@@ -88,12 +88,6 @@
       "description_one": "La séance de ton fichier ne sera pas gardée. Pour la récupérer, tu devras importer le fichier à nouveau.",
       "description_other": "Les {{count}} séances de ton fichier ne seront pas gardées. Pour les récupérer, tu devras importer le fichier à nouveau.",
       "cta": "Abandonner l’import"
-    },
-    "leave": {
-      "title": "Quitter l’import ?",
-      "option": "Passer le plan",
-      "description": "Tes séances restent dans ton historique. Le plan ne sera pas créé.",
-      "cta": "Quitter l’import"
     }
   },
   "plan": {

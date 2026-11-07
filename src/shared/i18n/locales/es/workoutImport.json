@@ -88,12 +88,6 @@
       "description_one": "El entrenamiento de tu archivo no se guardará. Para recuperarlo, tendrás que importar el archivo de nuevo.",
       "description_other": "Los {{count}} entrenamientos de tu archivo no se guardarán. Para recuperarlos, tendrás que importar el archivo de nuevo.",
       "cta": "Descartar importación"
-    },
-    "leave": {
-      "title": "¿Salir de la importación?",
-      "option": "Saltar el plan",
-      "description": "Tus entrenamientos se quedan en tu historial. El plan no se creará.",
-      "cta": "Salir de la importación"
     }
   },
   "plan": {

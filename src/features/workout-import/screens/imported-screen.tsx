@@ -75,11 +75,11 @@ function ExerciseRow({ item, units }: { item: ImportedExercise; units: UnitSyste
 }
 
 /**
- * After the import: every exercise it took over, the most trained first; each opens its exercise
- * page on "Historie" (from the import until the account has them). Then on to the plan (or
- * without it), or out. No way back into the import: the cross asks first. In onboarding it
- * discards the history kept for sign-up; in the app, where it is saved already, it leaves the
- * flow (asking only when a plan would still come).
+ * After the import: every exercise it takes over, the most trained first; each opens its exercise
+ * page on "Historie" (from the import until the account has them). Nothing is saved yet: going on
+ * saves it in the app (onboarding at sign-up), then on to the plan (or without it), or out. No
+ * way back into the import; the cross asks, then discards it. Once saved (back here from a later
+ * step), the cross only leaves.
  */
 export function ImportedScreen() {
   const { t } = useTranslation('workoutImport');
@@ -89,16 +89,15 @@ export function ImportedScreen() {
   // How the plan is made is asked next.
   const withChoice = useWorkoutImportStore(choosesPlan);
   const counter = useImportStep('imported');
-  const { next, withPlan } = useImportSteps();
+  const { next, save, withPlan, saving } = useImportSteps();
   const score = useSetScore();
   const [asking, setAsking] = useState(false);
   const discarded = useRef(false);
-  // In the app the history is saved already; only a plan still to come is lost by leaving.
-  const asksToLeave = !inApp || withPlan() || withChoice;
+  const saved = imported?.saved === true;
 
   function close() {
-    if (asksToLeave) setAsking(true);
-    else done();
+    if (saved) done();
+    else setAsking(true);
   }
 
   function discard() {
@@ -106,11 +105,6 @@ export function ImportedScreen() {
     dropPendingHistory();
     discarded.current = true;
     router.dismissTo(step('/import'));
-  }
-
-  function leave() {
-    setAsking(false);
-    done();
   }
 
   useFlowSwipeOff();
@@ -145,10 +139,15 @@ export function ImportedScreen() {
       fadeFooter
       footer={
         <View className="gap-1">
-          <Button {...CTA_STYLE} label={cta} onPress={() => next()} />
+          <Button {...CTA_STYLE} label={cta} loading={saving} onPress={() => save(() => next())} />
           {/* The file's plan can still be left out: the history stays. */}
           {plan ? (
-            <TextButton {...LINK_STYLE} label={t('imported.withoutPlan')} onPress={done} />
+            <TextButton
+              {...LINK_STYLE}
+              label={t('imported.withoutPlan')}
+              disabled={saving}
+              onPress={() => save(done)}
+            />
           ) : null}
         </View>
       }
@@ -168,27 +167,15 @@ export function ImportedScreen() {
           <ExerciseRow key={item.exerciseId} item={item} units={units} />
         ))}
       </View>
-      {inApp ? (
-        <DeleteSheet
-          visible={asking}
-          onClose={() => setAsking(false)}
-          title={t('imported.leave.title')}
-          option={t('imported.leave.option')}
-          description={t('imported.leave.description')}
-          cta={t('imported.leave.cta')}
-          onDelete={leave}
-        />
-      ) : (
-        <DeleteSheet
-          visible={asking}
-          onClose={() => setAsking(false)}
-          title={t('imported.discard.title')}
-          option={t('imported.discard.option')}
-          description={t('imported.discard.description', { count: imported.workouts.length })}
-          cta={t('imported.discard.cta')}
-          onDelete={discard}
-        />
-      )}
+      <DeleteSheet
+        visible={asking}
+        onClose={() => setAsking(false)}
+        title={t('imported.discard.title')}
+        option={t('imported.discard.option')}
+        description={t('imported.discard.description', { count: imported.workouts.length })}
+        cta={t('imported.discard.cta')}
+        onDelete={discard}
+      />
     </StepScreen>
   );
 }

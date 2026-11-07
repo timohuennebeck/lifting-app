@@ -88,12 +88,6 @@
       "description_one": "The workout from your file won’t be kept. To get it back, you’ll have to import the file again.",
       "description_other": "The {{count}} workouts from your file won’t be kept. To get them back, you’ll have to import the file again.",
       "cta": "Discard import"
-    },
-    "leave": {
-      "title": "Leave the import?",
-      "option": "Skip the plan",
-      "description": "Your workouts stay in your history. The plan won’t be made.",
-      "cta": "Leave import"
     }
   },
   "plan": {

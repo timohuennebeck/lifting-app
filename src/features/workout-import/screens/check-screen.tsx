@@ -108,7 +108,7 @@ export function CheckScreen() {
   const reviews = useWorkoutImportStore((s) => s.reviews);
   const decisions = useWorkoutImportStore((s) => s.decisions);
   const decide = useWorkoutImportStore((s) => s.decide);
-  const { afterCheck, saving } = useImportSteps();
+  const { afterCheck } = useImportSteps();
   const items = reviews;
   const item = items.at(position - 1);
   const [choice, setChoice] = useState<Choice>(() =>
@@ -148,7 +148,7 @@ export function CheckScreen() {
       scroll
       footer={
         <View className="gap-1">
-          <Button {...CTA_STYLE} label={t('check.next')} loading={saving} onPress={confirm} />
+          <Button {...CTA_STYLE} label={t('check.next')} onPress={confirm} />
           <TextButton
             {...LINK_STYLE}
             label={t('check.skip')}
