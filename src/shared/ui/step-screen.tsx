@@ -49,6 +49,8 @@ export interface StepScreenProps extends Omit<StepTitleProps, 'className'> {
   /** Pinned bottom area, usually the CTA. */
   footer?: ReactNode;
   scroll?: boolean;
+  /** The footer over the content, which fades out underneath it (see Screen). */
+  fadeFooter?: boolean;
   contentClassName?: string;
   titleClassName?: string;
 }
@@ -66,6 +68,7 @@ export function StepScreen({
   children,
   footer,
   scroll,
+  fadeFooter,
   contentClassName,
 }: StepScreenProps) {
   return (
@@ -73,6 +76,7 @@ export function StepScreen({
       header={<StepHeader step={step} total={total} onClose={onClose} />}
       footer={footer}
       scroll={scroll}
+      fadeFooter={fadeFooter}
       contentClassName={contentClassName}
     >
       <StepTitle

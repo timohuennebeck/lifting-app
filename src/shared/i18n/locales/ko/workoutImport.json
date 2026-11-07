@@ -81,7 +81,20 @@
     "toPlan": "플랜으로 계속",
     "next": "계속",
     "done": "완료",
-    "withoutPlan": "플랜 없이 계속"
+    "withoutPlan": "플랜 없이 계속",
+    "discard": {
+      "title": "가져오기를 취소할까요?",
+      "option": "운동 기록 버리기",
+      "description_one": "파일의 운동 {{count}}회는 저장되지 않아요. 다시 가져오려면 파일을 한 번 더 가져와야 해요.",
+      "description_other": "파일의 운동 {{count}}회는 저장되지 않아요. 다시 가져오려면 파일을 한 번 더 가져와야 해요.",
+      "cta": "가져오기 취소"
+    },
+    "leave": {
+      "title": "가져오기를 나갈까요?",
+      "option": "플랜 건너뛰기",
+      "description": "운동 기록은 그대로 남아요. 플랜은 만들어지지 않아요.",
+      "cta": "가져오기 나가기"
+    }
   },
   "plan": {
     "fromHistory": "운동 기록 기반 플랜",

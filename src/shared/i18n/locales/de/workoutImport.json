@@ -81,7 +81,20 @@
     "toPlan": "Weiter zum Plan",
     "next": "Weiter",
     "done": "Fertig",
-    "withoutPlan": "Ohne Plan weiter"
+    "withoutPlan": "Ohne Plan weiter",
+    "discard": {
+      "title": "Import verwerfen?",
+      "option": "Trainings verwerfen",
+      "description_one": "Das Training aus deiner Datei wird nicht übernommen. Um es zurückzubekommen, musst du die Datei erneut importieren.",
+      "description_other": "Die {{count}} Trainings aus deiner Datei werden nicht übernommen. Um sie zurückzubekommen, musst du die Datei erneut importieren.",
+      "cta": "Import verwerfen"
+    },
+    "leave": {
+      "title": "Import verlassen?",
+      "option": "Plan überspringen",
+      "description": "Deine Trainings bleiben in deinem Verlauf. Der Plan wird nicht erstellt.",
+      "cta": "Import verlassen"
+    }
   },
   "plan": {
     "fromHistory": "Aus deinem Verlauf",

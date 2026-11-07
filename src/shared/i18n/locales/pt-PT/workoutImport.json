@@ -81,7 +81,20 @@
     "toPlan": "Continuar para o plano",
     "next": "Continuar",
     "done": "Concluído",
-    "withoutPlan": "Continuar sem plano"
+    "withoutPlan": "Continuar sem plano",
+    "discard": {
+      "title": "Descartar a importação?",
+      "option": "Descartar treinos",
+      "description_one": "O treino do teu ficheiro não será guardado. Para o recuperares, terás de importar o ficheiro de novo.",
+      "description_other": "Os {{count}} treinos do teu ficheiro não serão guardados. Para os recuperares, terás de importar o ficheiro de novo.",
+      "cta": "Descartar importação"
+    },
+    "leave": {
+      "title": "Sair da importação?",
+      "option": "Saltar o plano",
+      "description": "Os teus treinos ficam no teu histórico. O plano não será criado.",
+      "cta": "Sair da importação"
+    }
   },
   "plan": {
     "fromHistory": "Do teu histórico",

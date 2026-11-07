@@ -1,4 +1,5 @@
 import { Redirect, router } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
@@ -6,9 +7,12 @@ import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
 import { useUnitsOrDraft } from '@/features/onboarding/hooks/use-units-or-draft';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { formatSet, useExerciseName } from '@/shared/data/exercises';
+import { useFlowSwipeOff } from '@/shared/hooks/use-flow-swipe-off';
+import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { formatDate, type UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
+import { DeleteSheet } from '@/shared/ui/delete-sheet';
 import { Icon } from '@/shared/ui/icon';
 import { PressableScale } from '@/shared/ui/pressable-scale';
 import { StepScreen } from '@/shared/ui/step-screen';
@@ -19,6 +23,7 @@ import { useImportStep } from '../hooks/use-import-step';
 import { useImportSteps } from '../hooks/use-import-steps';
 import { useSetScore } from '../hooks/use-set-score';
 import { type ImportedExercise, importedExercises } from '../lib/imported';
+import { dropPendingHistory } from '../lib/save-history';
 import { CTA_STYLE, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
 import { choosesPlan, useWorkoutImportStore } from '../stores/workout-import-store';
 
@@ -72,7 +77,9 @@ function ExerciseRow({ item, units }: { item: ImportedExercise; units: UnitSyste
 /**
  * After the import: every exercise it took over, the most trained first; each opens its exercise
  * page on "Historie" (from the import until the account has them). Then on to the plan (or
- * without it), or out.
+ * without it), or out. No way back into the import: the cross asks first. In onboarding it
+ * discards the history kept for sign-up; in the app, where it is saved already, it leaves the
+ * flow (asking only when a plan would still come).
  */
 export function ImportedScreen() {
   const { t } = useTranslation('workoutImport');
@@ -84,6 +91,37 @@ export function ImportedScreen() {
   const counter = useImportStep('imported');
   const { next, withPlan } = useImportSteps();
   const score = useSetScore();
+  const [asking, setAsking] = useState(false);
+  const discarded = useRef(false);
+  // In the app the history is saved already; only a plan still to come is lost by leaving.
+  const asksToLeave = !inApp || withPlan() || withChoice;
+
+  function close() {
+    if (asksToLeave) setAsking(true);
+    else done();
+  }
+
+  function discard() {
+    setAsking(false);
+    dropPendingHistory();
+    discarded.current = true;
+    router.dismissTo(step('/import'));
+  }
+
+  function leave() {
+    setAsking(false);
+    done();
+  }
+
+  useFlowSwipeOff();
+  useHardwareBack(close);
+  // The import is forgotten once this screen is gone, so it doesn't redirect while sliding away.
+  useEffect(
+    () => () => {
+      if (discarded.current) useWorkoutImportStore.getState().reset();
+    },
+    [],
+  );
   if (!imported) return <Redirect href={step('/import')} />;
 
   const exercises = importedExercises(imported.workouts, imported.created, score);
@@ -100,9 +138,11 @@ export function ImportedScreen() {
       {...TITLE_STYLE}
       step={counter.step}
       total={counter.total}
+      onClose={close}
       title={t('imported.title')}
       subtitle={t('imported.subtitle', { count: imported.workouts.length })}
       scroll
+      fadeFooter
       footer={
         <View className="gap-1">
           <Button {...CTA_STYLE} label={cta} onPress={() => next()} />
@@ -128,6 +168,27 @@ export function ImportedScreen() {
           <ExerciseRow key={item.exerciseId} item={item} units={units} />
         ))}
       </View>
+      {inApp ? (
+        <DeleteSheet
+          visible={asking}
+          onClose={() => setAsking(false)}
+          title={t('imported.leave.title')}
+          option={t('imported.leave.option')}
+          description={t('imported.leave.description')}
+          cta={t('imported.leave.cta')}
+          onDelete={leave}
+        />
+      ) : (
+        <DeleteSheet
+          visible={asking}
+          onClose={() => setAsking(false)}
+          title={t('imported.discard.title')}
+          option={t('imported.discard.option')}
+          description={t('imported.discard.description', { count: imported.workouts.length })}
+          cta={t('imported.discard.cta')}
+          onDelete={discard}
+        />
+      )}
     </StepScreen>
   );
 }
