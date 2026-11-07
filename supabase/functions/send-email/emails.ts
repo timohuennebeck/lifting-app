@@ -143,6 +143,20 @@ const TEXTS: Record<AppLanguage, { recovery: RecoveryTexts; signup: SignupTexts 
   },
 };
 
+/** The footer's line before the support address. */
+const HELP: Record<AppLanguage, string> = {
+  en: 'Questions? Write to us at',
+  de: 'Fragen? Schreib uns an',
+  'pt-PT': 'Dúvidas? Escreve-nos para',
+  'pt-BR': 'Dúvidas? Escreva para',
+  ko: '궁금한 점이 있으면 메일 주세요:',
+  es: '¿Preguntas? Escríbenos a',
+  fr: 'Des questions ? Écris-nous à',
+};
+
+/** Where replies go and the footer points; the emails come from a no-reply address. */
+export const SUPPORT_EMAIL = 'support@useloqqa.com';
+
 export interface Email {
   subject: string;
   html: string;
@@ -162,36 +176,94 @@ const escapeHtml = (value: string) =>
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;');
 
-const page = (language: AppLanguage, body: string) =>
-  `<!doctype html><html lang="${language}"><body style="font-family: -apple-system, Helvetica, Arial, sans-serif; color: #111; line-height: 1.5">${body}</body></html>`;
+// The app's look: black ground, off-white text, the neon accent, Inter (system fonts where mail
+// apps don't load it), no borders or rules, semibold at most.
+const BG = '#0A0A0A';
+const TILE = '#1A1A1A';
+const FG = '#F4F4F0';
+const FG_MID = '#D6D6D1';
+const MUTED = '#A3A39E';
+const DIM = '#6E6E6A';
+const ACCENT = '#DFFF1F';
+const FONT = "Inter, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+
+/**
+ * The app icon drawn with table cells (its two off-white bars on black), so it shows without an
+ * image to host or a mail app that blocks images; the 300-unit icon at 50 px.
+ */
+const LOGO =
+  `<table role="presentation" cellspacing="0" cellpadding="0" width="50" style="width:50px;border-collapse:collapse;background:${BG}">` +
+  `<tr><td colspan="3" height="9" style="height:9px;font-size:0;line-height:0">&nbsp;</td></tr>` +
+  `<tr><td width="14" height="21" style="width:14px;height:21px;font-size:0;line-height:0">&nbsp;</td><td width="12" height="21" bgcolor="#F2F1EC" style="width:12px;height:21px;background:#F2F1EC;font-size:0;line-height:0">&nbsp;</td><td width="24" style="width:24px;font-size:0;line-height:0">&nbsp;</td></tr>` +
+  `<tr><td colspan="3" height="2" style="height:2px;font-size:0;line-height:0">&nbsp;</td></tr>` +
+  `<tr><td width="14" height="9" style="width:14px;height:9px;font-size:0;line-height:0">&nbsp;</td><td colspan="2" style="font-size:0;line-height:0"><table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse"><tr><td width="23" height="9" bgcolor="#F2F1EC" style="width:23px;height:9px;background:#F2F1EC;font-size:0;line-height:0">&nbsp;</td></tr></table></td></tr>` +
+  `<tr><td colspan="3" height="9" style="height:9px;font-size:0;line-height:0">&nbsp;</td></tr>` +
+  `</table>`;
+
+const paragraph = (text: string, color: string, size: number, bottom: number) =>
+  `<p style="margin:0 0 ${bottom}px;color:${color};font-size:${size}px;line-height:1.5">${text}</p>`;
+
+/** The whole email around its main part: preview text, logo, headline, footer. */
+function layout(language: AppLanguage, title: string, preview: string, main: string) {
+  return (
+    `<!doctype html><html lang="${language}"><head><meta charset="utf-8">` +
+    `<meta name="viewport" content="width=device-width, initial-scale=1">` +
+    `<meta name="color-scheme" content="dark"><meta name="supported-color-schemes" content="dark">` +
+    `<title>${title}</title></head>` +
+    `<body style="margin:0;padding:0;background:${BG};-webkit-font-smoothing:antialiased">` +
+    `<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:${BG}">${preview}</div>` +
+    `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" bgcolor="${BG}" style="background:${BG}"><tr>` +
+    `<td align="center" style="padding:36px 28px 40px">` +
+    `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:480px"><tr>` +
+    `<td align="left" style="font-family:${FONT};color:${FG}">` +
+    `<div style="margin:0 0 36px">${LOGO}</div>` +
+    `<h1 style="margin:0 0 14px;font-family:${FONT};font-size:30px;line-height:1.15;font-weight:600;letter-spacing:-0.01em;text-transform:uppercase;color:${FG}">${title}</h1>` +
+    main +
+    `<p style="margin:44px 0 0;color:${DIM};font-size:12px;line-height:1.6">${HELP[language]} ` +
+    `<a href="mailto:${SUPPORT_EMAIL}" style="color:${MUTED};text-decoration:none">${SUPPORT_EMAIL}</a><br>Loqqa</p>` +
+    `</td></tr></table></td></tr></table></body></html>`
+  );
+}
 
 /** The email of a type in a language, as HTML with a plain-text twin. */
 export function buildEmail(type: EmailType, language: AppLanguage, input: EmailInput): Email {
+  const help = `${HELP[language]} ${SUPPORT_EMAIL}`;
   if (type === 'recovery') {
     const t = TEXTS[language].recovery;
     const code = escapeHtml(input.code);
+    // One piece of text, not a box per digit: it copies whole, and iOS can offer it as the code.
+    const codeBlock =
+      `<div style="margin:0 0 24px"><span style="display:inline-block;background:${TILE};border-radius:14px;padding:14px 12px 14px 22px;` +
+      `font-family:${FONT};font-size:32px;line-height:1.2;font-weight:600;letter-spacing:10px;color:${ACCENT}">${code}</span></div>`;
     return {
       subject: t.subject,
-      html: page(
+      html: layout(
         language,
-        `<h2>${t.title}</h2><p>${t.intro}</p>` +
-          `<p style="font-size: 28px; font-weight: 700; letter-spacing: 6px">${code}</p>` +
-          `<p>${t.expiry} ${t.ignore}</p>`,
+        t.title,
+        `${code} · ${t.expiry}`,
+        paragraph(t.intro, FG_MID, 16, 20) +
+          codeBlock +
+          paragraph(`${t.expiry} ${t.ignore}`, MUTED, 14, 0),
       ),
-      text: `${t.intro}\n\n${input.code}\n\n${t.expiry} ${t.ignore}\n`,
+      text: `${t.title}\n\n${t.intro}\n\n${input.code}\n\n${t.expiry} ${t.ignore}\n\n${help}\n`,
     };
   }
   const t = TEXTS[language].signup;
   const link = escapeHtml(input.link);
+  const button =
+    `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 24px"><tr>` +
+    `<td align="center" bgcolor="${ACCENT}" style="background:${ACCENT};border-radius:14px">` +
+    `<a href="${link}" style="display:block;padding:16px 20px;font-family:${FONT};font-size:15px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:${BG};text-decoration:none">${t.button}</a>` +
+    `</td></tr></table>`;
   return {
     subject: t.subject,
-    html: page(
+    html: layout(
       language,
-      `<h2>${t.title}</h2><p>${t.intro}</p>` +
-        `<p><a href="${link}" style="display: inline-block; padding: 12px 20px; background: #111; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600">${t.button}</a></p>` +
-        `<p>${t.ignore}</p>`,
+      t.title,
+      t.intro,
+      paragraph(t.intro, FG_MID, 16, 24) + button + paragraph(t.ignore, MUTED, 14, 0),
     ),
-    text: `${t.intro}\n\n${input.link}\n\n${t.ignore}\n`,
+    text: `${t.title}\n\n${t.intro}\n\n${input.link}\n\n${t.ignore}\n\n${help}\n`,
   };
 }
 
