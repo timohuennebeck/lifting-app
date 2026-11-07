@@ -61,6 +61,41 @@ export async function insertRoutineSets(
   );
 }
 
+/**
+ * Several exercises with their sets, each table in one insert, so the upload sends them in one
+ * request each (see the connector).
+ */
+export async function insertRoutineExercises(
+  tx: Tx,
+  userId: string,
+  items: { routineId: string; position: number; exercise: ExerciseDraft }[],
+) {
+  if (!items.length) return;
+  const rows = items.map((item) => ({ ...item, id: newId() }));
+  await tx.insert(routineExercises).values(
+    rows.map(({ id, routineId, position, exercise }) => ({
+      id,
+      user_id: userId,
+      routine_id: routineId,
+      exercise_id: exercise.exerciseId,
+      position,
+      rest_seconds: exercise.restSeconds,
+    })),
+  );
+  const sets = rows.flatMap(({ id, exercise }) =>
+    exercise.sets.map((set, position) => ({
+      id: newId(),
+      user_id: userId,
+      routine_exercise_id: id,
+      position,
+      target_min: set.targetMin,
+      target_max: set.targetMax,
+      rir: set.rir,
+    })),
+  );
+  if (sets.length) await tx.insert(routineSets).values(sets);
+}
+
 /** `position` may be a `nextPosition` subquery to append the exercise. */
 export async function insertRoutineExercise(
   tx: Tx,

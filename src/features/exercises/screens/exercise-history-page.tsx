@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { SectionList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useUnitsOrDraft } from '@/features/onboarding/hooks/use-units-or-draft';
 import { useImportedHistory } from '@/features/workout-import/hooks/use-imported-history';
 import { hasMeasure, isAssisted, isBodyweight, isTimed } from '@/shared/data/exercises';
-import { useUnits } from '@/shared/data/profile';
 import { type ExerciseHistoryEntry, useExerciseHistory } from '@/shared/data/workouts';
 import { useNow } from '@/shared/hooks/use-now';
 import { DAY_MS, MINUTE_MS } from '@/shared/lib/date';
@@ -33,7 +33,8 @@ export function ExerciseHistoryPage() {
   const exerciseId = useExerciseId();
   const { t } = useTranslation(['exercises', 'common']);
   const insets = useSafeAreaInsets();
-  const units = useUnits();
+  // Opened from the import's "Importiert" in onboarding too, before there is a profile.
+  const units = useUnitsOrDraft();
   const now = useNow(MINUTE_MS);
   const { data: stored = [], isLoading } = useExerciseHistory(exerciseId);
   // Right after an import, its workouts until the account has them (onboarding, the next sync).

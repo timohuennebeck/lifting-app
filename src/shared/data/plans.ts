@@ -11,7 +11,7 @@ import { useProfile } from './profile';
 import { queryKeys } from './query-keys';
 import {
   insertRoutine,
-  insertRoutineExercise,
+  insertRoutineExercises,
   type ExerciseDraft,
   type SetTarget,
 } from './routines';
@@ -92,12 +92,22 @@ export async function insertPlan(
     block_weeks: plan.blockWeeks,
     created_at: nowIso(),
   });
+  const routineIds: string[] = [];
   for (const [index, routine] of plan.routines.entries()) {
-    const routineId = await insertRoutine(tx, userId, planId, routine.name, index);
-    for (const [position, exercise] of routine.exercises.entries()) {
-      await insertRoutineExercise(tx, userId, routineId, position, exercise);
-    }
+    routineIds.push(await insertRoutine(tx, userId, planId, routine.name, index));
   }
+  // All exercises and all sets in one insert each: a few upload requests for the whole plan.
+  await insertRoutineExercises(
+    tx,
+    userId,
+    plan.routines.flatMap((routine, index) =>
+      routine.exercises.map((exercise, position) => ({
+        routineId: routineIds[index],
+        position,
+        exercise,
+      })),
+    ),
+  );
   return planId;
 }
 

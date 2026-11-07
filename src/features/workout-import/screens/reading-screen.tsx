@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useDraft } from '@/features/onboarding/stores/onboarding-store';
+import { useUnitsOrDraft } from '@/features/onboarding/hooks/use-units-or-draft';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
-import { useProfile, useUnits } from '@/shared/data/profile';
+import { useProfile } from '@/shared/data/profile';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { useNow } from '@/shared/hooks/use-now';
 import { weightUnit } from '@/shared/lib/format';
@@ -32,8 +32,7 @@ export function ReadingScreen() {
   const { inApp, step } = usePlanFlow();
   const insets = useSafeAreaInsets();
   const { profile } = useProfile();
-  const profileUnits = useUnits();
-  const draftUnits = useDraft().unitPreference;
+  const units = useUnitsOrDraft();
   const status = useWorkoutImportStore((s) => s.status);
   const failure = useWorkoutImportStore((s) => s.failure);
   const navigation = useNavigation();
@@ -91,7 +90,6 @@ export function ReadingScreen() {
     router.back();
   }, [status, failure, step, open]);
 
-  const units = inApp ? profileUnits : draftUnits;
   const weight = (kg: number, lb: number) =>
     `${units === 'imperial' ? lb : kg} ${weightUnit(units)}`;
   const seconds = Math.max(0, Math.floor((now - startedAt) / 1000));

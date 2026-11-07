@@ -3,10 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { ExerciseThumb } from '@/features/exercises/components/exercise-thumb';
-import { useDraft } from '@/features/onboarding/stores/onboarding-store';
+import { useUnitsOrDraft } from '@/features/onboarding/hooks/use-units-or-draft';
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
 import { formatSet, useExerciseName } from '@/shared/data/exercises';
-import { useUnits } from '@/shared/data/profile';
 import { formatDate, type UnitSystem } from '@/shared/lib/format';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -18,6 +17,7 @@ import { TextButton } from '@/shared/ui/text-button';
 
 import { useImportStep } from '../hooks/use-import-step';
 import { useImportSteps } from '../hooks/use-import-steps';
+import { useSetScore } from '../hooks/use-set-score';
 import { type ImportedExercise, importedExercises } from '../lib/imported';
 import { CTA_STYLE, LINK_STYLE, TITLE_STYLE } from '../lib/steps';
 import { choosesPlan, useWorkoutImportStore } from '../stores/workout-import-store';
@@ -77,17 +77,16 @@ function ExerciseRow({ item, units }: { item: ImportedExercise; units: UnitSyste
 export function ImportedScreen() {
   const { t } = useTranslation('workoutImport');
   const { inApp, step, done } = usePlanFlow();
-  const profileUnits = useUnits();
-  const draftUnits = useDraft().unitPreference;
+  const units = useUnitsOrDraft();
   const imported = useWorkoutImportStore((s) => s.imported);
   // How the plan is made is asked next.
   const withChoice = useWorkoutImportStore(choosesPlan);
   const counter = useImportStep('imported');
   const { next, withPlan } = useImportSteps();
+  const score = useSetScore();
   if (!imported) return <Redirect href={step('/import')} />;
 
-  const units = inApp ? profileUnits : draftUnits;
-  const exercises = importedExercises(imported.workouts, imported.created);
+  const exercises = importedExercises(imported.workouts, imported.created, score);
   // The rows are saved oldest first (toRows).
   const first = imported.workouts[0];
   const last = imported.workouts.at(-1);

@@ -1,5 +1,6 @@
 import { importedHistory } from '../lib/imported';
 import { useWorkoutImportStore } from '../stores/workout-import-store';
+import { useSetScore } from './use-set-score';
 
 /**
  * An exercise's sessions from the import just made, for its history before the account has them
@@ -8,5 +9,6 @@ import { useWorkoutImportStore } from '../stores/workout-import-store';
  */
 export function useImportedHistory(exerciseId: string, needed: boolean) {
   const imported = useWorkoutImportStore((s) => s.imported);
-  return imported && needed ? importedHistory(imported.workouts, exerciseId) : [];
+  const score = useSetScore();
+  return imported && needed ? importedHistory(imported.workouts, exerciseId, score) : [];
 }

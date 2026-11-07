@@ -188,32 +188,33 @@ async function insertWorkout(tx: Tx, userId: string, name: string, routineId: st
     orderBy: asc(routineExercises.position),
     with: { sets: { orderBy: asc(routineSets.position) } },
   });
-  for (const te of exercises) {
-    const workoutExerciseId = newId();
-    await tx.insert(workoutEntriesExercises).values({
-      id: workoutExerciseId,
+  if (!exercises.length) return workoutId;
+  // Each table in one insert, so the upload sends them in one request each (see the connector).
+  const rows = exercises.map((te) => ({ te, id: newId() }));
+  await tx.insert(workoutEntriesExercises).values(
+    rows.map(({ te, id }) => ({
+      id,
       user_id: userId,
       workout_entries_id: workoutId,
       exercise_id: te.exercise_id,
       position: te.position,
       rest_seconds: te.rest_seconds,
-    });
-    const sets = setsForWeek(te.sets, blockWeek, { blockWeeks: plan?.blockWeeks ?? null });
-    if (!sets.length) continue;
-    // The routine's targets for this week become the workout's empty sets.
-    await tx.insert(workoutEntriesSets).values(
-      sets.map((set) => ({
-        id: newId(),
-        user_id: userId,
-        workout_entries_exercise_id: workoutExerciseId,
-        position: set.position,
-        target_min: set.target_min,
-        target_max: set.target_max,
-        target_rir: set.rir,
-        is_pr: false,
-      })),
-    );
-  }
+    })),
+  );
+  // The routine's targets for this week become the workout's empty sets.
+  const sets = rows.flatMap(({ te, id }) =>
+    setsForWeek(te.sets, blockWeek, { blockWeeks: plan?.blockWeeks ?? null }).map((set) => ({
+      id: newId(),
+      user_id: userId,
+      workout_entries_exercise_id: id,
+      position: set.position,
+      target_min: set.target_min,
+      target_max: set.target_max,
+      target_rir: set.rir,
+      is_pr: false,
+    })),
+  );
+  if (sets.length) await tx.insert(workoutEntriesSets).values(sets);
   return workoutId;
 }
 
