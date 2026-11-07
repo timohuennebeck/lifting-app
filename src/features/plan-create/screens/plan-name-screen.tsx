@@ -32,7 +32,8 @@ export function PlanNameScreen() {
   if (!plan) return <Redirect href={step('/create/building')} />;
 
   function submit() {
-    if (trimmed && plan) void finish({ ...plan, name: trimmed }, profileAnswers(draft));
+    if (trimmed && plan)
+      void finish({ ...plan, name: trimmed }, 'generated', profileAnswers(draft));
   }
 
   return (

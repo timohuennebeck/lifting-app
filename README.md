@@ -582,15 +582,19 @@ is sent. The events and their
 properties are typed in `src/shared/lib/posthog.ts` (`AnalyticsEvents`), named
 `category:object_action`:
 
-- **Onboarding and plans:** `onboarding:flow_start`, `plan:generate_complete` / `_fail`,
-  `plan_import:read_complete` / `_fail`, `workout_import:read_complete` / `_fail` (counts and
-  times, never names or values) and `workout_import:save_complete`.
+- **Onboarding and plans:** `onboarding:flow_start` and `onboarding:flow_complete` (a new
+  account's onboarding done, with whether the progress check was started), `plan:generate_complete`
+  / `_fail`, `plan_import:read_complete` / `_fail`, `workout_import:read_complete` / `_fail`
+  (counts and times, never names or values), `workout_import:save_complete`, and
+  `plan:save_complete` when a new plan is taken, with its `source` (`generated`, `file`,
+  `history` or `own`).
 - **Money:** `paywall:view` (with `placement`), `paywall:purchase_complete` / `_fail`,
   `paywall:restore_complete`.
 - **Account:** `account:sign_up_complete` / `_fail` (with the reason) for new accounts,
   `account:sign_in_complete` for returning ones (with whether onboarding was finished). The
   PostHog id is the Supabase user id from sign-up or sign-in (`identify`), so the anonymous
   onboarding and purchase events join the person, and `reset` on sign-out.
+  `account:delete_complete` when an account is deleted.
 - **Training:** `workout:start`, `workout:finish`, `workout:discard`, with the plan week, sets and
   records from the local database.
 - **Features:** `coach:question_submit` and `coach:answer_complete` / `_fail` (never the text),
@@ -598,8 +602,9 @@ properties are typed in `src/shared/lib/posthog.ts` (`AnalyticsEvents`), named
   `weight:entry_save` (never the weight), `voice:add_complete` / `_fail` (with what it adds to).
 - **Plan failures** carry `error_detail` besides `error_code`: where it broke, e.g.
   `http_429_limit`, `stream_incomplete` or `client_TypeError`.
-- **Subscriptions** come from RevenueCat's PostHog integration (`rc_…` events: trial started and
-  converted, renewals, cancellations, with revenue). The app sets RevenueCat's `$posthogUserId`
+- **Subscriptions** come from RevenueCat's PostHog integration (trial started and converted,
+  renewals, cancellations, with revenue; named in the RevenueCat dashboard, e.g.
+  `subscription:renew`). The app sets RevenueCat's `$posthogUserId`
   to the PostHog id before a purchase and after sign-in, so these land on the same person; the
   integration itself is switched on in the RevenueCat dashboard.
 - **Automatic:** a `$screen` per route (`/workout/[id]`, ids left out), uncaught errors and

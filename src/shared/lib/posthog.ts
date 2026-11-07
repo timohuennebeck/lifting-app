@@ -11,6 +11,11 @@ import { mmkvStorage } from '@/shared/lib/storage';
 export interface AnalyticsEvents {
   /** "Los geht's" on the welcome screen. */
   'onboarding:flow_start': Record<string, never>;
+  /**
+   * A new account's onboarding done, as the app opens: with the progress check started now,
+   * left for later, or not offered (under 18).
+   */
+  'onboarding:flow_complete': { progress_check: 'now' | 'later' | 'not_offered' };
   'plan:generate_complete': {
     duration_ms: number;
     sessions_per_week: number;
@@ -19,6 +24,16 @@ export interface AnalyticsEvents {
     routine_count: number;
   };
   'plan:generate_fail': PlanFailureProperties;
+  /**
+   * A new plan taken: saved as the plan Training follows, or in onboarding kept for the account.
+   * Not when a saved plan is edited.
+   */
+  'plan:save_complete': {
+    source: PlanSource;
+    routine_count: number;
+    exercise_count: number;
+    is_onboarding: boolean;
+  };
   /** The plan of a workout file read (read-workout-file). */
   'plan_import:read_complete': {
     exercise_count: number;
@@ -56,6 +71,8 @@ export interface AnalyticsEvents {
    * onboarding wasn't finished, which then goes on and ends in `account:sign_up_complete`.
    */
   'account:sign_in_complete': { method: AuthMethod; is_onboarded: boolean };
+  /** The account and everything in it deleted from the settings. */
+  'account:delete_complete': Record<string, never>;
   'workout:start': WorkoutProperties;
   'workout:finish': WorkoutProperties & {
     duration_min: number;
@@ -98,6 +115,12 @@ export interface PlanFailureProperties {
 }
 
 export type VoiceContext = 'routine' | 'plan_import' | 'workout';
+
+/**
+ * Where a new plan comes from: made by the AI from the answers, a workout file's plan, found in
+ * a workout file's history, or built by hand.
+ */
+export type PlanSource = 'generated' | 'file' | 'history' | 'own';
 
 export type AnalyticsEvent = keyof AnalyticsEvents;
 

@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 
 import { isProgressCheckAge } from '@/features/progress-check/lib/eligibility';
+import { track } from '@/shared/lib/posthog';
 
 import { useOnboardingStore } from '../stores/onboarding-store';
 import { HAS_ACTION_BUTTON } from './flow';
@@ -16,5 +17,8 @@ export function afterAccount(from: 'account' | 'actionButton') {
   }
   if (isProgressCheckAge(useOnboardingStore.getState().draft.birthDate)) {
     router.push('/progress-check');
-  } else useOnboardingStore.getState().complete();
+    return;
+  }
+  track('onboarding:flow_complete', { progress_check: 'not_offered' });
+  useOnboardingStore.getState().complete();
 }

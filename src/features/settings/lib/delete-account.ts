@@ -4,6 +4,7 @@ import { ATTACHMENT_BUCKET } from '@/features/support/data/attachments';
 import { PHOTO_BUCKET } from '@/features/progress-check/lib/photo-files';
 import { AVATAR_BUCKET } from '@/shared/data/avatar';
 import { supabase } from '@/shared/data/supabase';
+import { track } from '@/shared/lib/posthog';
 
 const PAGE = 1000;
 
@@ -49,6 +50,8 @@ export async function deleteAccount(userId: string) {
   }
   const { error } = await supabase.rpc('delete_own_account');
   if (error) throw error;
+  // Sent while the events still belong to the account; signing out starts a new anonymous id.
+  track('account:delete_complete');
   // The user is gone, so there is no server session left to end: only this device's.
   await supabase.auth.signOut({ scope: 'local' });
   return true;

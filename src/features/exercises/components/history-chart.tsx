@@ -66,13 +66,15 @@ export interface HistoryChartProps {
    * the same scale, with a legend of both lines. Left out where a 1RM doesn't apply.
    */
   oneRepMax?: ChartInput[];
+  /** Under the empty grid when there is nothing to chart; "none in this period" by default. */
+  emptyText?: string;
 }
 
 /**
  * Best set per session, and with `oneRepMax` the estimated 1RM above it; press and drag to read a
  * session (design 03·C·2H·V5H).
  */
-export function HistoryChart({ data, metric, format, oneRepMax }: HistoryChartProps) {
+export function HistoryChart({ data, metric, format, oneRepMax, emptyText }: HistoryChartProps) {
   const { t } = useTranslation('exercises');
   const [width, onLayout] = useWidth();
   const [hover, setHover] = useState<number | null>(null);
@@ -195,9 +197,9 @@ export function HistoryChart({ data, metric, format, oneRepMax }: HistoryChartPr
           </>
         )}
       </View>
-      {!points.length ? (
+      {!points.length && emptyText !== '' ? (
         <Text variant="caption" tone="subtle" className="font-inter">
-          {t('history.emptyRange')}
+          {emptyText ?? t('history.emptyRange')}
         </Text>
       ) : null}
     </View>

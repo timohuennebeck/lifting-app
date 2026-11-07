@@ -4,6 +4,7 @@ import { View } from 'react-native';
 
 import { startProgressCheck } from '@/features/progress-check/stores/progress-check-store';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
+import { track } from '@/shared/lib/posthog';
 import { Button } from '@/shared/ui/button';
 import { CameraAccessSheet, useCameraAccess } from '@/shared/ui/camera/camera-access-sheet';
 import { CheckChip } from '@/shared/ui/check-item';
@@ -18,6 +19,7 @@ const TIPS = ['light', 'clothes', 'framing'] as const;
 /** Ends onboarding; the root guard then swaps to the app. */
 function finish(openProgressCheck: boolean) {
   if (openProgressCheck) startProgressCheck();
+  track('onboarding:flow_complete', { progress_check: openProgressCheck ? 'now' : 'later' });
   useOnboardingStore.getState().complete();
   // The (app) group only exists after the guard re-rendered, so navigate on the next tick.
   if (openProgressCheck) setTimeout(() => router.push('/progress-check/camera'), 50);

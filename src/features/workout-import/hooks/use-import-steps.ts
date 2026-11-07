@@ -2,7 +2,7 @@ import { type Href, router } from 'expo-router';
 import { useState } from 'react';
 
 import { usePlanFlow } from '@/features/plan-flow/hooks/use-plan-flow';
-import { AFTER_IMPORT } from '@/features/plan-import/lib/edit-plan';
+import { afterImport } from '@/features/plan-import/lib/edit-plan';
 import { useImportStore } from '@/features/plan-import/stores/import-store';
 import type { CustomExercise } from '@/shared/data/exercises';
 import { i18n } from '@/shared/i18n';
@@ -68,7 +68,7 @@ export function useImportSteps() {
     const s = useWorkoutImportStore.getState();
     // Only once workouts were saved: the choice builds on them.
     const choose = choosesPlan(s) && !!s.imported?.workouts.length;
-    if (withPlan()) go({ pathname: step('/import/confirm'), params: AFTER_IMPORT }, replace);
+    if (withPlan()) go({ pathname: step('/import/confirm'), params: afterImport('file') }, replace);
     else if (choose) go(step('/import/plan'), replace);
     else done();
   }

@@ -27,7 +27,8 @@ import { sessionOneRepMaxKg } from '../lib/one-rep-max';
 
 /**
  * Exercise page, "Historie": best-set chart over a period (1W to All) and the sessions by month (designs
- * 03·C·2H·V5/V5H), as a list that only renders the sessions near the screen.
+ * 03·C·2H·V5/V5H), as a list that only renders the sessions near the screen. Before the first
+ * workout the chart and the periods are there all the same, empty, with the hint under the chart.
  */
 export function ExerciseHistoryPage() {
   const exerciseId = useExerciseId();
@@ -101,29 +102,22 @@ export function ExerciseHistoryPage() {
       keyExtractor={(item) => item.workoutId}
       extraData={expanded}
       ListHeaderComponent={
-        sessions.length ? (
-          <View className="gap-3 px-2 pb-3">
-            <HistoryChart
-              data={chartData}
-              metric={metric}
-              format={formatValue}
-              oneRepMax={oneRepMaxData}
-            />
-            <SegmentedControl
-              className="bg-surface"
-              value={period}
-              onChange={setPeriod}
-              options={PERIODS.map((p) => ({ value: p, label: t(`common:periods.${p}`) }))}
-            />
-          </View>
-        ) : null
-      }
-      ListEmptyComponent={
-        isLoading ? null : (
-          <Text tone="subtle" className="px-5 pt-10 text-center text-sm leading-5">
-            {t('history.empty')}
-          </Text>
-        )
+        <View className="gap-3 px-2 pb-3">
+          <HistoryChart
+            data={chartData}
+            metric={metric}
+            format={formatValue}
+            oneRepMax={oneRepMaxData}
+            // No workouts at all: what brings the first; nothing while they load.
+            emptyText={sessions.length ? undefined : isLoading ? '' : t('history.empty')}
+          />
+          <SegmentedControl
+            className="bg-surface"
+            value={period}
+            onChange={setPeriod}
+            options={PERIODS.map((p) => ({ value: p, label: t(`common:periods.${p}`) }))}
+          />
+        </View>
       }
       renderSectionHeader={({ section }) => (
         <Text className="px-3 pt-4.5 pb-1.5 font-inter-semibold text-[11px] leading-3.5 tracking-[1.1px] text-dim">

@@ -11,6 +11,7 @@ import { newId } from '@/shared/data/json';
 import { i18n } from '@/shared/i18n';
 import { attempt, singleFlight } from '@/shared/lib/async';
 import { haptics } from '@/shared/lib/haptics';
+import { type PlanSource, track } from '@/shared/lib/posthog';
 import { requireUserId } from '@/shared/stores/session-store';
 
 import { loadPlanForEditing, savePlanEdits } from '../data/plan-edits';
@@ -136,14 +137,25 @@ export function usePlanFlow() {
     saving.current = false;
   }
 
-  async function finish(plan: PlanDraft, answers?: ProfilePatch) {
+  async function finish(plan: PlanDraft, source: PlanSource, answers?: ProfilePatch) {
     const { draft, update } = useOnboardingStore.getState();
+    const taken = () =>
+      track('plan:save_complete', {
+        source,
+        routine_count: plan.routines.length,
+        exercise_count: plan.routines.reduce((n, r) => n + r.exercises.length, 0),
+        is_onboarding: !inApp,
+      });
     if (!inApp) {
       update({ plan });
+      taken();
       router.push('/promise');
       return;
     }
-    await saveAndLeave(() => saveActivePlan(requireUserId(), plan, draft.customExercises, answers));
+    await saveAndLeave(async () => {
+      await saveActivePlan(requireUserId(), plan, draft.customExercises, answers);
+      taken();
+    });
   }
 
   const saveEdits = (planId: string, plan: ImportedPlan) =>

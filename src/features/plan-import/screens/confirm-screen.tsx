@@ -35,7 +35,7 @@ import { PLAN_NAME_MAX } from '@/shared/lib/limits';
 import { ReadingGhost } from '../components/reading-ghost';
 import { ReviewPrompt } from '../components/review-prompt';
 import { RoutineBar } from '../components/routine-bar';
-import { AFTER_IMPORT, editExerciseAt, editRoutineAt, settle } from '../lib/edit-plan';
+import { editExerciseAt, editRoutineAt, IMPORT_PLAN_SOURCES, settle } from '../lib/edit-plan';
 import { showPlanFailure } from '../lib/plan-failure';
 import {
   type ImportedExercise,
@@ -56,7 +56,7 @@ const HIDDEN = { display: 'none' } as const;
  * checks them. A workout import opens it with the plan it read or found in the history. A plan
  * the AI makes (BuildingScreen) opens with its first exercise and fills in while the function
  * sends the rest, following the routine being made until the user picks one, and goes on to its
- * name. After a workout import (AFTER_IMPORT) an X replaces the back button and asks before the
+ * name. After a workout import (`afterImport`) an X replaces the back button and asks before the
  * import is left, with no swiping back. "Plan selbst erstellen" opens it with an empty plan to
  * build routine by routine. A saved plan opens here to be edited (`openPlanEditor`) and is saved
  * back. Hold a routine in the strip to move it. Each day's list is built once and then kept,
@@ -90,7 +90,9 @@ export function ConfirmScreen() {
   const focused = useIsFocused();
   const [renameOpen, setRenameOpen] = useState(false);
   // Going back would read the file again: the X, Android's back and no swipe ask first.
-  const afterImport = useLocalSearchParams<{ from?: string }>().from === AFTER_IMPORT.from;
+  const { from } = useLocalSearchParams<{ from?: string }>();
+  const importedFrom = IMPORT_PLAN_SOURCES.find((source) => source === from) ?? null;
+  const afterImport = importedFrom !== null;
   const [leaving, setLeaving] = useState(false);
   useFlowSwipeOff(afterImport);
   useHardwareBack(() => setLeaving(true), afterImport);
@@ -212,7 +214,7 @@ export function ConfirmScreen() {
       router.push(step('/create/plan-name'));
       return;
     }
-    void finish(toPlanDraft(plan));
+    void finish(toPlanDraft(plan), importedFrom ?? 'own');
   }
 
   return (

@@ -3,11 +3,15 @@ import { newId } from '@/shared/data/json';
 
 import type { ImportedExercise, ImportedPlan, ImportedRoutine } from './plan-import-service';
 
+/** Where a workout import's plan comes from: the file's own plan, or its history. */
+export const IMPORT_PLAN_SOURCES = ['file', 'history'] as const;
+export type ImportPlanSource = (typeof IMPORT_PLAN_SOURCES)[number];
+
 /**
  * The editor's params when a workout import opens it: going back would read the file again, so
- * an X asks before the import is left.
+ * an X asks before the import is left; the source is counted when the plan is taken.
  */
-export const AFTER_IMPORT = { from: 'import' } as const;
+export const afterImport = (from: ImportPlanSource) => ({ from });
 
 /** Drops the import's doubts about an exercise once the user has settled it. */
 export const settle = ({
