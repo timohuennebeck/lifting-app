@@ -7,7 +7,7 @@ import { Webhook } from 'npm:standardwebhooks@1.0.0';
 
 import { admin, reply } from '../_shared/common.ts';
 import { type AppLanguage, isAppLanguage } from '../_shared/plan-events.ts';
-import { buildEmail, confirmationLink, isEmailType } from './emails.ts';
+import { buildEmail, confirmationLink, isEmailType, SUPPORT_EMAIL } from './emails.ts';
 
 const RESEND_URL = 'https://api.resend.com/emails';
 const DEFAULT_FROM = 'Loqqa <no-reply@mail.useloqqa.com>';
@@ -84,6 +84,8 @@ Deno.serve(async (req) => {
     body: JSON.stringify({
       from: Deno.env.get('EMAIL_FROM') || DEFAULT_FROM,
       to: [user.email],
+      // Sent from a no-reply address; a reply still reaches support.
+      reply_to: SUPPORT_EMAIL,
       subject: email.subject,
       html: email.html,
       text: email.text,
