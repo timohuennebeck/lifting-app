@@ -1,0 +1,1405 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plan lab</title>
+    <style>
+      :root {
+        --bg: #f6f6f4;
+        --surface: #ffffff;
+        --text: #1b1c1e;
+        --muted: #6b6f76;
+        --border: #e2e2de;
+        --accent: #2f6fde;
+        --accent-text: #ffffff;
+        --wait: #c9ccd1;
+        --think: #e8a33a;
+        --write: #3b82f6;
+        --rest: #93b8f7;
+        --good: #1f9d55;
+        --bad: #d4483b;
+        --chip: #eef0f3;
+        --chip-on: #dce7fb;
+        --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #121315;
+          --surface: #1b1d20;
+          --text: #e8e9eb;
+          --muted: #9a9ea6;
+          --border: #2c2f34;
+          --accent: #5b8ff0;
+          --wait: #4a4e55;
+          --think: #d99632;
+          --write: #4d8ff5;
+          --rest: #2f5aa3;
+          --good: #3cbf73;
+          --bad: #ec6a5e;
+          --chip: #262a30;
+          --chip-on: #233a63;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font:
+          14px/1.45 system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+      }
+      header {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 20px 16px 4px;
+      }
+      h1 {
+        font-size: 20px;
+        margin: 0;
+      }
+      h2 {
+        font-size: 15px;
+        margin: 0;
+      }
+      main {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 8px 16px 48px;
+        display: grid;
+        gap: 14px;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px;
+        min-width: 0;
+      }
+      .card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .fields {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px 12px;
+      }
+      label.field {
+        display: grid;
+        gap: 3px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      select,
+      input[type='number'] {
+        font: inherit;
+        color: var(--text);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 5px 6px;
+        min-width: 0;
+      }
+      input[type='checkbox'] {
+        accent-color: var(--accent);
+      }
+      .chips-row {
+        margin-top: 12px;
+        display: grid;
+        gap: 6px;
+      }
+      .chips-row > span {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .chip {
+        border: 1px solid var(--border);
+        background: var(--chip);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 3px 10px;
+        font: inherit;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .chip[aria-pressed='true'] {
+        background: var(--chip-on);
+        border-color: var(--accent);
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        border-radius: 7px;
+        padding: 6px 12px;
+      }
+      button.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-text);
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: default;
+      }
+      button.icon {
+        padding: 3px 8px;
+      }
+      .scroll {
+        overflow-x: auto;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 6px 8px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+        vertical-align: middle;
+      }
+      th {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      td.num,
+      th.num {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .hint {
+        margin: 10px 0 0;
+        font-size: 12px;
+        color: var(--muted);
+        display: grid;
+        gap: 2px;
+      }
+      .run-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+      }
+      .run-bar label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .run-bar input[type='number'] {
+        width: 60px;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 11px;
+        padding: 1px 6px;
+        border-radius: 999px;
+        background: var(--chip);
+        color: var(--muted);
+        margin-left: 6px;
+      }
+      .best {
+        color: var(--good);
+        font-weight: 600;
+      }
+      .bad {
+        color: var(--bad);
+      }
+      .good {
+        color: var(--good);
+      }
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .legend i {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        margin-right: 4px;
+        vertical-align: -1px;
+      }
+      .run {
+        border-bottom: 1px solid var(--border);
+      }
+      .run-head {
+        display: grid;
+        grid-template-columns:
+          14px minmax(160px, 1.3fr) 56px minmax(140px, 2fr)
+          64px 64px 70px 56px;
+        gap: 10px;
+        align-items: center;
+        padding: 7px 4px;
+        cursor: pointer;
+        font-variant-numeric: tabular-nums;
+      }
+      .run-head:hover {
+        background: var(--chip);
+      }
+      .run-columns,
+      .run-columns:hover {
+        cursor: default;
+        background: none;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+      }
+      .run-head .num {
+        text-align: right;
+      }
+      .run-labels {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--wait);
+      }
+      .dot.running {
+        background: var(--think);
+        animation: pulse 1s infinite alternate;
+      }
+      .dot.done {
+        background: var(--good);
+      }
+      .dot.error,
+      .dot.stopped {
+        background: var(--bad);
+      }
+      @keyframes pulse {
+        to {
+          opacity: 0.35;
+        }
+      }
+      .bar {
+        position: relative;
+        height: 12px;
+        background: var(--chip);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .bar i {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+      }
+      .bar .until {
+        background: var(--think);
+      }
+      .bar .after {
+        background: var(--rest);
+      }
+      .bar .quiet {
+        background: var(--wait);
+      }
+      .bar .think {
+        background: var(--think);
+      }
+      .bar .write {
+        background: var(--write);
+      }
+      .bar .line {
+        width: 0;
+        border-left: 1px dashed var(--muted);
+      }
+      .bar .first {
+        width: 2px;
+        background: var(--text);
+      }
+      .run-body {
+        padding: 4px 4px 16px 28px;
+        display: grid;
+        gap: 14px;
+      }
+      .calls {
+        display: grid;
+        grid-template-columns: 90px 1fr;
+        gap: 6px 10px;
+        align-items: center;
+        font-size: 12px;
+      }
+      .ticks {
+        position: relative;
+        height: 14px;
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .ticks span {
+        position: absolute;
+        transform: translateX(-50%);
+      }
+      .plan {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 10px;
+      }
+      .routine {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 10px;
+      }
+      .routine h3 {
+        font-size: 13px;
+        margin: 0 0 4px;
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .routine ol {
+        margin: 0;
+        padding-left: 18px;
+        font-size: 12.5px;
+      }
+      .routine li span {
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 14px;
+        font-size: 12.5px;
+      }
+      .issues {
+        margin: 6px 0 0;
+        padding-left: 18px;
+        font-size: 12.5px;
+        color: var(--bad);
+      }
+      .toggles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      pre {
+        margin: 0;
+        padding: 10px;
+        background: var(--chip);
+        border-radius: 8px;
+        font: 12px/1.45 var(--mono);
+        white-space: pre-wrap;
+        word-break: break-word;
+        max-height: 420px;
+        overflow: auto;
+      }
+      .error {
+        color: var(--bad);
+        font-family: var(--mono);
+        font-size: 12px;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .budget {
+        font-size: 12.5px;
+        padding: 6px 10px;
+        border-left: 3px solid var(--accent);
+        background: var(--chip);
+        border-radius: 0 6px 6px 0;
+      }
+      @media (max-width: 720px) {
+        .run-head {
+          grid-template-columns: 12px 1fr 64px 64px;
+        }
+        .run-head .wide {
+          display: none;
+        }
+        .run-body {
+          padding-left: 4px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Plan lab</h1>
+      <span class="muted" id="status">Loading…</span>
+    </header>
+    <main>
+      <section class="card">
+        <div class="card-head">
+          <h2>Answers</h2>
+          <label class="field" style="min-width: 260px">
+            Eval profile
+            <select id="preset"></select>
+          </label>
+        </div>
+        <div class="fields">
+          <label class="field"
+            >App language
+            <select id="language"></select
+          ></label>
+          <label class="field"
+            >Goal
+            <select id="goal"></select
+          ></label>
+          <label class="field"
+            >Experience
+            <select id="experience"></select
+          ></label>
+          <label class="field"
+            >Equipment
+            <select id="equipment"></select
+          ></label>
+          <label class="field">
+            Workouts a week <input id="sessionsPerWeek" type="number" min="2" max="6" />
+          </label>
+          <label class="field"
+            >Split
+            <select id="split"></select
+          ></label>
+          <label class="field">
+            Minutes <input id="sessionMinutes" type="number" min="30" max="120" step="5" />
+          </label>
+        </div>
+        <div class="chips-row" id="home-row">
+          <span>Home equipment</span>
+          <div class="chips" id="homeEquipment"></div>
+        </div>
+        <div class="chips-row">
+          <span>Focus</span>
+          <div class="chips" id="focus"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Variants</h2>
+          <div class="toggles">
+            <button id="add-variant">Add variant</button>
+            <button id="reset-variants">Reset</button>
+          </div>
+        </div>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Run</th>
+                <th>Model</th>
+                <th>Effort</th>
+                <th>Fast</th>
+                <th>Catalog</th>
+                <th>Budget</th>
+                <th>Strategy</th>
+                <th>Summary</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="variants"></tbody>
+          </table>
+        </div>
+        <div class="hint">
+          <span
+            ><b>Effort</b> “default” sends none, as production does. gpt-6.1-sol takes low to max;
+            the other models also none and minimal.</span
+          >
+          <span><b>Fast</b> OpenAI's Fast mode (on in production).</span>
+          <span
+            ><b>Catalog</b> lean: one name per exercise (the app language's) instead of up to three;
+            no rest column when Budget is on.</span
+          >
+          <span
+            ><b>Budget</b> the lab works out the exercises and working sets that fit the session and
+            tells the model; the minutes arithmetic leaves the instructions.</span
+          >
+          <span
+            ><b>Strategy</b> split: one call plans the week (routines, what they train, main lifts),
+            then one call per routine, all at once.</span
+          >
+          <span
+            ><b>Summary</b> streams OpenAI's summary of the reasoning, to see what the thinking is
+            spent on.</span
+          >
+        </div>
+      </section>
+
+      <section class="card run-bar">
+        <button class="primary" id="run-one">Run these answers</button>
+        <button id="run-all">Run all 20 eval profiles</button>
+        <label>Repeat <input id="repeat" type="number" min="1" max="10" value="1" /></label>
+        <label>At a time <input id="parallel" type="number" min="1" max="12" value="4" /></label>
+        <button id="stop" disabled>Stop</button>
+        <span class="muted" id="queue"></span>
+      </section>
+
+      <section class="card" id="summary-card" hidden>
+        <div class="card-head">
+          <h2>By variant</h2>
+          <button id="clear">Clear results</button>
+        </div>
+        <div class="scroll"><table id="summary"></table></div>
+        <p class="hint">
+          <span
+            >Medians over finished runs. “All checks” counts plans that pass every check of npm run
+            plan:generate-eval.</span
+          >
+        </p>
+      </section>
+
+      <section class="card" id="runs-card" hidden>
+        <div class="card-head">
+          <h2>Runs</h2>
+          <div class="legend">
+            <span><i style="background: var(--think)"></i>until the first exercise</span>
+            <span><i style="background: var(--rest)"></i>rest of the plan</span>
+            <span
+              ><i style="border-left: 1px dashed var(--muted); width: 0"></i>3.6 s: the building
+              animation's minimum</span
+            >
+          </div>
+        </div>
+        <div class="run-head run-columns">
+          <div></div>
+          <div>Variant</div>
+          <div class="wide">Profile</div>
+          <div class="wide">Time</div>
+          <div class="num">First exercise</div>
+          <div class="num">Whole plan</div>
+          <div class="num wide">Reasoning tok.</div>
+          <div class="wide">Checks</div>
+        </div>
+        <div id="runs"></div>
+      </section>
+    </main>
+
+    <script type="module">
+      const LANGUAGES = ['de', 'en', 'pt-PT', 'pt-BR', 'ko', 'es', 'fr'];
+      const GOALS = ['hypertrophy', 'strength', 'strength_hypertrophy'];
+      const EXPERIENCE = ['', 'none', 'beginner', 'intermediate', 'advanced'];
+      const ACCESS = ['gym', 'home', 'bodyweight'];
+      const SPLITS = [
+        '',
+        'full_body',
+        'upper_lower',
+        'upper_lower_full',
+        'ppl',
+        'ppl_arms',
+        'ppl_upper_lower',
+        'bro',
+        'arnold',
+      ];
+      const EFFORTS = ['', 'none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'];
+      /** The building screen plays at least this long (MIN_MS in use-plan-run.ts). */
+      const ANIMATION_MS = 3600;
+
+      const $ = (id) => document.getElementById(id);
+      const esc = (value) =>
+        String(value ?? '').replace(
+          /[&<>"']/g,
+          (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
+        );
+      const seconds = (ms) => (ms == null ? '–' : `${(ms / 1000).toFixed(1)} s`);
+      const count = (n) => (n == null ? '–' : Math.round(n).toLocaleString('en'));
+      const median = (values) => {
+        const sorted = values.filter((v) => v != null).sort((a, b) => a - b);
+        if (!sorted.length) return null;
+        const mid = sorted.length / 2;
+        return sorted.length % 2 ? sorted[Math.floor(mid)] : (sorted[mid - 1] + sorted[mid]) / 2;
+      };
+      const clampInt = (value, min, max) =>
+        Math.min(max, Math.max(min, Math.round(Number(value)) || min));
+
+      // Per-viewer conveniences: the answers and variants come back after a reload.
+      const saved = {
+        get(key, fallback) {
+          try {
+            const value = localStorage.getItem(`plan-lab:${key}`);
+            return value ? JSON.parse(value) : fallback;
+          } catch {
+            return fallback;
+          }
+        },
+        set(key, value) {
+          try {
+            localStorage.setItem(`plan-lab:${key}`, JSON.stringify(value));
+          } catch {
+            // Storage may be blocked; nothing to keep then.
+          }
+        },
+      };
+
+      const state = {
+        setup: null,
+        form: null,
+        variants: [],
+        runs: [],
+        queue: [],
+        active: new Set(),
+        nextId: 1,
+      };
+
+      // ---------- answers ----------
+
+      const options = (select, values, label = (v) => v) => {
+        select.innerHTML = values
+          .map((v) => `<option value="${esc(v)}">${esc(label(v))}</option>`)
+          .join('');
+      };
+
+      const describeProfile = (p) => {
+        const a = p.answers;
+        return `${p.id} · ${p.language} · ${a.goal} · ${a.equipment} · ${a.sessionsPerWeek}× ${a.split ?? 'no preference'} · ${a.sessionMinutes} min · ${a.experience ?? 'unknown'}${a.focus.length ? ` · focus ${a.focus.join('+')}` : ''}`;
+      };
+
+      function formFromProfile(p) {
+        return { preset: p.id, language: p.language, ...structuredClone(p.answers) };
+      }
+
+      function renderForm() {
+        const f = state.form;
+        $('preset').value = f.preset;
+        for (const id of ['language', 'goal', 'equipment', 'sessionsPerWeek', 'sessionMinutes']) {
+          $(id).value = f[id];
+        }
+        $('experience').value = f.experience ?? '';
+        $('split').value = f.split ?? '';
+        $('home-row').hidden = f.equipment !== 'home';
+        $('homeEquipment').innerHTML = state.setup.homeEquipment
+          .map(
+            (e) =>
+              `<button class="chip" data-home="${esc(e.id)}" aria-pressed="${f.homeEquipment.includes(e.id)}" title="${esc(e.id)}">${esc(e.name)}</button>`,
+          )
+          .join('');
+        $('focus').innerHTML = state.setup.muscles
+          .map(
+            (m) =>
+              `<button class="chip" data-focus="${esc(m)}" aria-pressed="${f.focus.includes(m)}">${esc(m)}</button>`,
+          )
+          .join('');
+      }
+
+      function changeForm(patch) {
+        state.form = { ...state.form, ...patch, preset: '' };
+        saved.set('form', state.form);
+        renderForm();
+      }
+
+      function setUpForm() {
+        const { profiles } = state.setup;
+        $('preset').innerHTML =
+          `<option value="">Custom answers</option>` +
+          profiles
+            .map((p) => `<option value="${p.id}">${esc(describeProfile(p))}</option>`)
+            .join('');
+        options($('language'), LANGUAGES);
+        options($('goal'), GOALS);
+        options($('experience'), EXPERIENCE, (v) => v || 'unknown');
+        options($('equipment'), ACCESS);
+        options($('split'), SPLITS, (v) => v || 'no preference');
+        state.form = saved.get('form', null) ?? formFromProfile(profiles[15]);
+        $('preset').addEventListener('change', (e) => {
+          const profile = profiles.find((p) => p.id === e.target.value);
+          if (!profile) return;
+          state.form = formFromProfile(profile);
+          saved.set('form', state.form);
+          renderForm();
+        });
+        $('language').addEventListener('change', (e) => changeForm({ language: e.target.value }));
+        $('goal').addEventListener('change', (e) => changeForm({ goal: e.target.value }));
+        $('experience').addEventListener('change', (e) =>
+          changeForm({ experience: e.target.value || null }),
+        );
+        $('equipment').addEventListener('change', (e) => changeForm({ equipment: e.target.value }));
+        $('split').addEventListener('change', (e) => changeForm({ split: e.target.value || null }));
+        $('sessionsPerWeek').addEventListener('change', (e) =>
+          changeForm({ sessionsPerWeek: clampInt(e.target.value, 2, 6) }),
+        );
+        $('sessionMinutes').addEventListener('change', (e) =>
+          changeForm({ sessionMinutes: Math.round(clampInt(e.target.value, 30, 120) / 5) * 5 }),
+        );
+        const toggle = (list, value) =>
+          list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
+        $('homeEquipment').addEventListener('click', (e) => {
+          const id = e.target.dataset?.home;
+          if (id) changeForm({ homeEquipment: toggle(state.form.homeEquipment, id) });
+        });
+        $('focus').addEventListener('click', (e) => {
+          const muscle = e.target.dataset?.focus;
+          if (muscle) changeForm({ focus: toggle(state.form.focus, muscle) });
+        });
+        renderForm();
+      }
+
+      /** The answers as generate-plan takes them. */
+      function answersOf(form) {
+        return {
+          goal: form.goal,
+          focus: form.focus,
+          equipment: form.equipment,
+          homeEquipment: form.equipment === 'home' ? form.homeEquipment : [],
+          sessionsPerWeek: form.sessionsPerWeek,
+          split: form.split,
+          sessionMinutes: form.sessionMinutes,
+          experience: form.experience,
+        };
+      }
+
+      // ---------- variants ----------
+
+      const defaultVariants = () => {
+        const { model } = state.setup.production;
+        const base = {
+          on: true,
+          model,
+          effort: '',
+          fast: true,
+          catalog: 'full',
+          budget: false,
+          strategy: 'single',
+          summary: false,
+        };
+        return [
+          base,
+          { ...base, effort: 'low' },
+          { ...base, effort: 'low', catalog: 'lean', budget: true },
+          { ...base, model: 'gpt-6-luna', effort: 'low' },
+        ];
+      };
+
+      const labelOf = (v) =>
+        [
+          v.model,
+          v.effort || 'default effort',
+          v.fast ? 'fast' : 'standard',
+          v.catalog === 'lean' && 'lean catalog',
+          v.budget && 'budget',
+          v.strategy === 'split' && 'split',
+          v.summary && 'summary',
+        ]
+          .filter(Boolean)
+          .join(' · ');
+
+      const isProduction = (v) => {
+        const p = state.setup.production;
+        return (
+          v.model === p.model &&
+          v.effort === p.effort &&
+          v.fast === p.fast &&
+          v.catalog === 'full' &&
+          !v.budget &&
+          v.strategy === 'single' &&
+          !v.summary
+        );
+      };
+
+      function renderVariants() {
+        const models = state.setup.models;
+        $('variants').innerHTML = state.variants
+          .map((v, i) => {
+            const modelOptions = [...new Set([...models, v.model])]
+              .map((m) => `<option ${m === v.model ? 'selected' : ''}>${esc(m)}</option>`)
+              .join('');
+            const effortOptions = EFFORTS.map(
+              (e) =>
+                `<option value="${e}" ${e === v.effort ? 'selected' : ''}>${e || 'default'}</option>`,
+            ).join('');
+            const select = (field, values) =>
+              `<select data-i="${i}" data-field="${field}">${values
+                .map(
+                  ([value, label]) =>
+                    `<option value="${value}" ${v[field] === value ? 'selected' : ''}>${label}</option>`,
+                )
+                .join('')}</select>`;
+            const check = (field) =>
+              `<input type="checkbox" data-i="${i}" data-field="${field}" ${v[field] ? 'checked' : ''}>`;
+            return `<tr>
+              <td>${check('on')}${isProduction(v) ? '<span class="tag">production</span>' : ''}</td>
+              <td><select data-i="${i}" data-field="model">${modelOptions}</select></td>
+              <td><select data-i="${i}" data-field="effort">${effortOptions}</select></td>
+              <td>${check('fast')}</td>
+              <td>${select('catalog', [
+                ['full', 'full'],
+                ['lean', 'lean'],
+              ])}</td>
+              <td>${check('budget')}</td>
+              <td>${select('strategy', [
+                ['single', 'one call'],
+                ['split', 'split'],
+              ])}</td>
+              <td>${check('summary')}</td>
+              <td><button class="icon" data-copy="${i}" title="Duplicate">⧉</button>
+                  <button class="icon" data-remove="${i}" title="Remove">×</button></td>
+            </tr>`;
+          })
+          .join('');
+      }
+
+      function setUpVariants() {
+        state.variants = saved.get('variants', null) ?? defaultVariants();
+        const update = (e) => {
+          const { i, field } = e.target.dataset;
+          if (i == null) return;
+          const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+          state.variants[i] = { ...state.variants[i], [field]: value };
+          saved.set('variants', state.variants);
+          renderVariants();
+        };
+        $('variants').addEventListener('change', update);
+        $('variants').addEventListener('click', (e) => {
+          const { copy, remove } = e.target.dataset;
+          if (copy != null) state.variants.splice(Number(copy) + 1, 0, { ...state.variants[copy] });
+          if (remove != null) state.variants.splice(Number(remove), 1);
+          if (copy == null && remove == null) return;
+          saved.set('variants', state.variants);
+          renderVariants();
+        });
+        $('add-variant').addEventListener('click', () => {
+          state.variants.push({ ...(state.variants.at(-1) ?? defaultVariants()[0]), on: true });
+          saved.set('variants', state.variants);
+          renderVariants();
+        });
+        $('reset-variants').addEventListener('click', () => {
+          state.variants = defaultVariants();
+          saved.set('variants', state.variants);
+          renderVariants();
+        });
+        renderVariants();
+      }
+
+      // ---------- runs ----------
+
+      function enqueue(jobs) {
+        if (!jobs.length) return;
+        state.queue.push(...jobs);
+        pump();
+      }
+
+      function jobsFor(targets) {
+        const variants = state.variants.filter((v) => v.on);
+        const repeat = clampInt($('repeat').value, 1, 10);
+        const jobs = [];
+        // Variants take turns, so each meets OpenAI in the same conditions.
+        for (let r = 0; r < repeat; r++) {
+          for (const target of targets) {
+            for (const variant of variants) jobs.push({ ...target, variant: { ...variant } });
+          }
+        }
+        return jobs;
+      }
+
+      function pump() {
+        const limit = clampInt($('parallel').value, 1, 12);
+        while (state.active.size < limit && state.queue.length) {
+          const run = createRun(state.queue.shift());
+          state.active.add(run);
+          execute(run).finally(() => {
+            state.active.delete(run);
+            pump();
+          });
+        }
+        $('stop').disabled = !state.active.size && !state.queue.length;
+        $('queue').textContent =
+          state.active.size || state.queue.length
+            ? `${state.active.size} running, ${state.queue.length} waiting`
+            : '';
+        schedule();
+      }
+
+      function createRun(job) {
+        const run = {
+          id: state.nextId++,
+          ...job,
+          label: labelOf(job.variant),
+          production: isProduction(job.variant),
+          status: 'running',
+          started: performance.now(),
+          calls: [],
+          marks: {},
+          traces: {},
+          summaries: {},
+          usage: {},
+          plan: { name: '', routines: [] },
+          first: null,
+          total: null,
+          checks: null,
+          minutes: null,
+          error: null,
+          prompt: null,
+          outline: null,
+          open: false,
+          show: {},
+          version: 0,
+          controller: new AbortController(),
+        };
+        state.runs.unshift(run);
+        return run;
+      }
+
+      function apply(run, e) {
+        run.version++;
+        if (e.type === 'prompt') run.prompt = e;
+        else if (e.type === 'mark' || e.type === 'trace') {
+          if (!run.calls.includes(e.call)) run.calls.push(e.call);
+          if (e.type === 'mark') (run.marks[e.call] ??= {})[e.name] = e.ms;
+          else (run.traces[e.call] ??= []).push(e);
+        } else if (e.type === 'summary')
+          run.summaries[e.call] = (run.summaries[e.call] ?? '') + e.text;
+        else if (e.type === 'usage') run.usage[e.call] = e.usage;
+        else if (e.type === 'plan') run.plan.name = e.name;
+        else if (e.type === 'outline') run.outline = e.routines;
+        else if (e.type === 'routine') run.plan.routines[e.index] = { name: e.name, exercises: [] };
+        else if (e.type === 'exercise') run.plan.routines[e.routine].exercises.push(e.exercise);
+        else if (e.type === 'first_exercise') run.first = e.ms;
+        else if (e.type === 'result') {
+          run.status = 'done';
+          run.total = e.ms;
+          run.first = e.first;
+          run.checks = e.checks;
+          run.minutes = e.minutes;
+        } else if (e.type === 'error') {
+          run.status = 'error';
+          run.error = e.message;
+        }
+      }
+
+      async function execute(run) {
+        try {
+          const response = await fetch('/api/run', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              answers: run.answers,
+              language: run.language,
+              variant: run.variant,
+              profile: run.profile,
+            }),
+            signal: run.controller.signal,
+          });
+          if (!response.ok) throw new Error(`The lab answered ${response.status}`);
+          const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
+          let buffer = '';
+          for (;;) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            buffer += value;
+            let end;
+            while ((end = buffer.indexOf('\n\n')) >= 0) {
+              const line = buffer.slice(0, end);
+              buffer = buffer.slice(end + 2);
+              if (line.startsWith('data:')) apply(run, JSON.parse(line.slice(5)));
+            }
+            schedule();
+          }
+          if (run.status === 'running') {
+            run.status = 'error';
+            run.error = 'The lab stopped without a plan (see its terminal).';
+          }
+        } catch (error) {
+          if (run.status === 'running') {
+            const stopped = run.controller.signal.aborted;
+            run.status = stopped ? 'stopped' : 'error';
+            run.error = stopped ? 'Stopped.' : error.message;
+          }
+        }
+        run.version++;
+        schedule();
+      }
+
+      // ---------- rendering ----------
+
+      const elapsed = (run) => run.total ?? Math.round(performance.now() - run.started);
+      const totalUsage = (run) =>
+        Object.values(run.usage).reduce(
+          (sum, u) => ({
+            input: sum.input + u.input,
+            cached: sum.cached + u.cached,
+            output: sum.output + u.output,
+            reasoning: sum.reasoning + u.reasoning,
+          }),
+          { input: 0, cached: 0, output: 0, reasoning: 0 },
+        );
+      const failing = (run) =>
+        run.checks ? Object.entries(run.checks).filter(([, issues]) => issues?.length) : [];
+      const pct = (ms, scale) => `${Math.max(0, Math.min(100, (100 * ms) / scale)).toFixed(2)}%`;
+      const seg = (cls, from, to, scale) =>
+        to > from
+          ? `<i class="${cls}" style="left:${pct(from, scale)};width:${pct(to - from, scale)}"></i>`
+          : '';
+
+      function headHtml(run, scale) {
+        const end = elapsed(run);
+        const until = run.first ?? end;
+        const bar =
+          seg('until', 0, until, scale) +
+          (run.first != null ? seg('after', run.first, end, scale) : '') +
+          `<i class="line" style="left:${pct(ANIMATION_MS, scale)}"></i>`;
+        const fails = failing(run);
+        const checks =
+          run.status === 'error' || run.status === 'stopped'
+            ? `<span class="bad" title="${esc(run.error)}">${run.status === 'error' ? 'failed' : 'stopped'}</span>`
+            : run.status !== 'done'
+              ? ''
+              : fails.length
+                ? `<span class="bad" title="${esc(fails.map(([n]) => n).join(', '))}">✗ ${fails.length}</span>`
+                : '<span class="good">✓</span>';
+        return `<div class="dot ${run.status}"></div>
+          <div><div>${esc(run.label)}${run.production ? '<span class="tag">production</span>' : ''}</div></div>
+          <div class="run-labels wide">${esc(run.profile)}</div>
+          <div class="bar wide">${bar}</div>
+          <div class="num">${run.first != null ? seconds(run.first) : run.status === 'running' ? '…' : '–'}</div>
+          <div class="num">${run.status === 'running' ? `<span class="muted">${seconds(end)}</span>` : seconds(run.total)}</div>
+          <div class="num wide">${Object.keys(run.usage).length ? count(totalUsage(run).reasoning) : '–'}</div>
+          <div class="wide">${checks}</div>`;
+      }
+
+      function callsHtml(run) {
+        const end = elapsed(run);
+        const scale = Math.max(end, 1000);
+        const step = scale > 40000 ? 10000 : scale > 15000 ? 5000 : scale > 6000 ? 2000 : 1000;
+        const ticks = [];
+        for (let t = 0; t <= scale; t += step) {
+          ticks.push(`<span style="left:${pct(t, scale)}">${t / 1000}s</span>`);
+        }
+        const rows = run.calls.map((call) => {
+          const m = run.marks[call] ?? {};
+          const sent = m.sent ?? 0;
+          const stopAt = m.done ?? (run.status === 'running' ? end : (m.writing ?? end));
+          const silentTo = m.thinking ?? m.writing ?? stopAt;
+          const thinkTo = m.writing ?? m.thought ?? stopAt;
+          const bar =
+            seg('quiet', sent, silentTo, scale) +
+            (m.thinking != null ? seg('think', m.thinking, thinkTo, scale) : '') +
+            (m.writing != null ? seg('write', m.writing, stopAt, scale) : '') +
+            (run.first != null
+              ? `<i class="first" style="left:${pct(run.first, scale)}"></i>`
+              : '');
+          return `<div>${esc(call)}</div><div class="bar">${bar}</div>`;
+        });
+        return `<div class="calls">
+          <div></div><div class="legend">
+            <span><i style="background:var(--wait)"></i>waiting for OpenAI</span>
+            <span><i style="background:var(--think)"></i>thinking</span>
+            <span><i style="background:var(--write)"></i>writing</span>
+            <span><i style="background:var(--text);width:2px"></i>first exercise</span>
+          </div>
+          ${rows.join('')}
+          <div></div><div class="ticks">${ticks.join('')}</div>
+        </div>`;
+      }
+
+      function usageHtml(run) {
+        const rows = run.calls.map((call) => {
+          const m = run.marks[call] ?? {};
+          const u = run.usage[call];
+          const thinking = m.thinking != null ? (m.thought ?? m.writing) - m.thinking : null;
+          return `<tr><td>${esc(call)}</td>
+            <td class="num">${seconds(m.accepted != null ? m.accepted - (m.sent ?? 0) : null)}</td>
+            <td class="num">${seconds(thinking)}</td>
+            <td class="num">${seconds(m.writing != null ? m.writing - (m.sent ?? 0) : null)}</td>
+            <td class="num">${seconds(m.done != null && m.writing != null ? m.done - m.writing : null)}</td>
+            <td class="num">${u ? `${count(u.input)} <span class="muted">(${count(u.cached)} cached)</span>` : '–'}</td>
+            <td class="num">${u ? count(u.output) : '–'}</td>
+            <td class="num">${u ? count(u.reasoning) : '–'}</td>
+            <td>${esc(u?.tier ?? '–')}</td></tr>`;
+        });
+        return `<div class="scroll"><table>
+          <thead><tr><th>Call</th><th class="num">Accepted</th><th class="num">Thinking</th>
+          <th class="num">First text</th><th class="num">Writing</th><th class="num">Input tokens</th>
+          <th class="num">Output</th><th class="num">Reasoning</th><th>Tier</th></tr></thead>
+          <tbody>${rows.join('')}</tbody></table></div>`;
+      }
+
+      function planHtml(run) {
+        if (!run.plan.routines.length) return '';
+        const routines = run.plan.routines
+          .map((r, i) => {
+            if (!r) return '';
+            const items = r.exercises
+              .map((e) => {
+                const reps = e.min === e.max ? `${e.min}` : `${e.min}–${e.max}`;
+                return `<li>${esc(e.name)} <span>${e.sets} × ${reps}${e.rir != null ? ` @ RIR ${e.rir}` : ''}</span></li>`;
+              })
+              .join('');
+            const minutes = run.minutes?.[i];
+            return `<div class="routine"><h3><span>${esc(r.name)}</span>${minutes != null ? `<span class="muted">~${minutes} min</span>` : ''}</h3><ol>${items}</ol></div>`;
+          })
+          .join('');
+        return `<div><b>${esc(run.plan.name)}</b></div><div class="plan">${routines}</div>`;
+      }
+
+      function checksHtml(run) {
+        if (!run.checks) return '';
+        const marks = Object.entries(run.checks)
+          .map(([name, issues]) =>
+            issues == null
+              ? `<span class="muted">${esc(name)} –</span>`
+              : issues.length
+                ? `<span class="bad">${esc(name)} ✗</span>`
+                : `<span class="good">${esc(name)} ✓</span>`,
+          )
+          .join('');
+        const list = failing(run).flatMap(([name, issues]) =>
+          issues.map((issue) => `<li>${esc(name)}: ${esc(issue)}</li>`),
+        );
+        return `<div><div class="checks">${marks}</div>${list.length ? `<ul class="issues">${list.join('')}</ul>` : ''}</div>`;
+      }
+
+      function infoHtml(run) {
+        const toggles = [
+          Object.keys(run.summaries).length && ['summary', 'Reasoning summary'],
+          run.outline && ['outline', 'Week outline'],
+          ['trace', 'Event trace'],
+          run.prompt && ['prompt', 'Prompt'],
+        ].filter(Boolean);
+        const parts = [];
+        if (run.error) parts.push(`<div class="error">${esc(run.error)}</div>`);
+        if (run.prompt?.budget) parts.push(`<div class="budget">${esc(run.prompt.budget)}</div>`);
+        parts.push(usageHtml(run), planHtml(run), checksHtml(run));
+        parts.push(
+          `<div class="toggles">${toggles
+            .map(
+              ([key, label]) =>
+                `<button data-show="${key}" aria-pressed="${!!run.show[key]}">${run.show[key] ? 'Hide' : 'Show'} ${label.toLowerCase()}</button>`,
+            )
+            .join('')}</div>`,
+        );
+        if (run.show.summary) {
+          parts.push(
+            Object.entries(run.summaries)
+              .map(([call, text]) => `<div><b>${esc(call)}</b><pre>${esc(text)}</pre></div>`)
+              .join(''),
+          );
+        }
+        if (run.show.outline && run.outline) {
+          parts.push(`<pre>${esc(JSON.stringify(run.outline, null, 2))}</pre>`);
+        }
+        if (run.show.trace) {
+          const lines = Object.entries(run.traces).flatMap(([call, events]) =>
+            events.map((e) => `${seconds(e.ms).padStart(8)}  ${call.padEnd(10)} ${e.name}`),
+          );
+          parts.push(`<pre>${esc(lines.join('\n'))}</pre>`);
+        }
+        if (run.show.prompt && run.prompt) {
+          parts.push(
+            `<pre>${esc(`${run.prompt.exercises} usable exercises\n\n--- instructions ---\n${run.prompt.instructions}\n\n--- input ---\n${run.prompt.input}`)}</pre>`,
+          );
+        }
+        return parts.filter(Boolean).join('');
+      }
+
+      /** One run's element, made once and kept (so open parts and selections survive updates). */
+      const elements = new Map();
+      function runElement(run) {
+        let el = elements.get(run.id);
+        if (el) return el;
+        el = document.createElement('div');
+        el.className = 'run';
+        el.innerHTML = `<div class="run-head"></div><div class="run-body" hidden><div class="timeline"></div><div class="info" style="display:grid;gap:14px"></div></div>`;
+        el.querySelector('.run-head').addEventListener('click', () => {
+          run.open = !run.open;
+          run.version++;
+          schedule();
+        });
+        el.querySelector('.info').addEventListener('click', (e) => {
+          const key = e.target.dataset?.show;
+          if (!key) return;
+          run.show[key] = !run.show[key];
+          run.version++;
+          schedule();
+        });
+        elements.set(run.id, el);
+        return el;
+      }
+
+      function renderRuns() {
+        const container = $('runs');
+        $('runs-card').hidden = !state.runs.length;
+        const scale = Math.max(10000, ...state.runs.map(elapsed));
+        state.runs.forEach((run, index) => {
+          const el = runElement(run);
+          if (container.children[index] !== el)
+            container.insertBefore(el, container.children[index] ?? null);
+          el.querySelector('.run-head').innerHTML = headHtml(run, scale);
+          const body = el.querySelector('.run-body');
+          body.hidden = !run.open;
+          if (!run.open) return;
+          if (run.status === 'running' || body.dataset.v !== String(run.version)) {
+            body.querySelector('.timeline').innerHTML = callsHtml(run);
+          }
+          if (body.dataset.v !== String(run.version)) {
+            body.querySelector('.info').innerHTML = infoHtml(run);
+            body.dataset.v = String(run.version);
+          }
+        });
+        while (container.children.length > state.runs.length) container.lastChild.remove();
+      }
+
+      function renderSummary() {
+        $('summary-card').hidden = !state.runs.length;
+        const groups = new Map();
+        for (const run of [...state.runs].reverse()) {
+          if (!groups.has(run.label)) groups.set(run.label, []);
+          groups.get(run.label).push(run);
+        }
+        const rows = [...groups].map(([label, runs]) => {
+          const done = runs.filter((r) => r.status === 'done');
+          const usage = done.map(totalUsage);
+          const failedChecks = new Map();
+          for (const run of done) {
+            for (const [name] of failing(run))
+              failedChecks.set(name, (failedChecks.get(name) ?? 0) + 1);
+          }
+          const fallbacks = done.filter(
+            (r) =>
+              r.variant.fast && Object.values(r.usage).some((u) => u.tier && u.tier !== 'fast'),
+          ).length;
+          return {
+            label,
+            production: runs[0].production,
+            runs: runs.length,
+            done: done.length,
+            errors: runs.filter((r) => r.status === 'error').length,
+            running: runs.filter((r) => r.status === 'running').length,
+            first: median(done.map((r) => r.first)),
+            worst: done.length ? Math.max(...done.map((r) => r.first ?? r.total)) : null,
+            total: median(done.map((r) => r.total)),
+            reasoning: median(usage.map((u) => u.reasoning)),
+            output: median(usage.map((u) => u.output)),
+            input: median(usage.map((u) => u.input)),
+            cached: median(usage.map((u) => u.cached)),
+            passed: done.filter((r) => !failing(r).length).length,
+            failedChecks: [...failedChecks].sort((a, b) => b[1] - a[1]),
+            fallbacks,
+          };
+        });
+        const best = Math.min(...rows.map((r) => r.first ?? Infinity));
+        $('summary').innerHTML = `<thead><tr>
+            <th>Variant</th><th class="num">Runs</th><th class="num">First exercise</th>
+            <th class="num">Slowest first</th><th class="num">Whole plan</th>
+            <th class="num">Reasoning tok.</th><th class="num">Output tok.</th>
+            <th class="num">Input tok.</th><th class="num">All checks</th><th>Failed checks</th>
+          </tr></thead><tbody>${rows
+            .map(
+              (r) => `<tr>
+              <td>${esc(r.label)}${r.production ? '<span class="tag">production</span>' : ''}${r.fallbacks ? `<span class="tag" title="Fast mode fell back to standard">${r.fallbacks}× standard</span>` : ''}</td>
+              <td class="num">${r.done}${r.running ? ` <span class="muted">+${r.running}</span>` : ''}${r.errors ? ` <span class="bad">${r.errors} failed</span>` : ''}</td>
+              <td class="num ${r.first != null && r.first === best ? 'best' : ''}">${seconds(r.first)}</td>
+              <td class="num">${seconds(r.worst)}</td>
+              <td class="num">${seconds(r.total)}</td>
+              <td class="num">${count(r.reasoning)}</td>
+              <td class="num">${count(r.output)}</td>
+              <td class="num">${count(r.input)}${r.cached ? ` <span class="muted">(${count(r.cached)} cached)</span>` : ''}</td>
+              <td class="num ${r.done && r.passed === r.done ? 'good' : r.done ? 'bad' : ''}">${r.done ? `${r.passed}/${r.done}` : '–'}</td>
+              <td class="muted">${esc(r.failedChecks.map(([n, c]) => `${n} ${c}×`).join(', '))}</td>
+            </tr>`,
+            )
+            .join('')}</tbody>`;
+      }
+
+      let pending = false;
+      function schedule() {
+        if (pending) return;
+        pending = true;
+        requestAnimationFrame(() => {
+          pending = false;
+          renderRuns();
+          renderSummary();
+        });
+      }
+      // Running bars grow with the clock.
+      setInterval(() => {
+        if (state.active.size) schedule();
+      }, 250);
+
+      // ---------- start ----------
+
+      async function start() {
+        try {
+          const response = await fetch('/api/setup');
+          state.setup = await response.json();
+        } catch (error) {
+          $('status').textContent = `The lab server didn't answer: ${error.message}`;
+          return;
+        }
+        const { exercises, models, production } = state.setup;
+        $('status').textContent =
+          `${exercises} exercises · ${models.length} models · production: ${production.model}, default effort, ${production.fast ? 'Fast mode' : 'standard'}`;
+        setUpForm();
+        setUpVariants();
+        $('repeat').value = saved.get('repeat', 1);
+        $('parallel').value = saved.get('parallel', 4);
+        $('repeat').addEventListener('change', (e) =>
+          saved.set('repeat', clampInt(e.target.value, 1, 10)),
+        );
+        $('parallel').addEventListener('change', (e) => {
+          saved.set('parallel', clampInt(e.target.value, 1, 12));
+          pump();
+        });
+        $('run-one').addEventListener('click', () =>
+          enqueue(
+            jobsFor([
+              {
+                profile: state.form.preset || 'custom',
+                language: state.form.language,
+                answers: answersOf(state.form),
+              },
+            ]),
+          ),
+        );
+        $('run-all').addEventListener('click', () =>
+          enqueue(
+            jobsFor(
+              state.setup.profiles.map((p) => ({
+                profile: p.id,
+                language: p.language,
+                answers: p.answers,
+              })),
+            ),
+          ),
+        );
+        $('stop').addEventListener('click', () => {
+          state.queue = [];
+          for (const run of state.active) run.controller.abort();
+          pump();
+        });
+        $('clear').addEventListener('click', () => {
+          state.runs = state.runs.filter((r) => r.status === 'running');
+          for (const id of [...elements.keys()]) {
+            if (!state.runs.some((r) => r.id === id)) elements.delete(id);
+          }
+          $('runs').innerHTML = '';
+          schedule();
+        });
+      }
+
+      start();
+    </script>
+  </body>
+</html>

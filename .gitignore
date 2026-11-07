@@ -55,4 +55,5 @@ supabase/signing_key.json
 # plan import test reports
 scripts/plan-import-eval/out/
 scripts/plan-generate-eval/out/
+scripts/plan-lab/out/
 supabase/functions/_shared/coach/eval/out/

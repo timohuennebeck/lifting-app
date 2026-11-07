@@ -100,7 +100,7 @@ AI agents: see `AGENTS.md`.
 - `npm run supabase:keys`, `supabase:start`, `supabase:stop`, `supabase:reset`;
   `npm run powersync:up`, `powersync:down`
 - `npm run plan:eval` and `npm run plan:generate-eval`: plan import and plan generation tests (see
-  below)
+  below); `npm run plan:lab`: a local page that compares ways of generating a plan
 - `npm run coach:eval`: tests the coach's answers (see Coach)
 - `npm run suggestions:eval`: the live workout's suggestions on simulated lifters (see Set
   suggestions)
@@ -444,6 +444,13 @@ the app says so and the user goes back a step.
   `npm run plan:generate-eval -- --repeat 3` before and after it, then
   `npm run plan:generate-compare`: how often each check passed in the last two runs, overall and
   per profile.
+- **Speed:** `npm run plan:lab` opens a local page (http://localhost:4300) that sends
+  `generate.ts`'s prompt straight to OpenAI in several variants at once (model, reasoning effort,
+  Fast mode, a leaner catalog, the session budget worked out in code, the week split into one call
+  per routine) and shows for each when the first exercise came, how long the plan took, the
+  thinking and writing time, the tokens and the eval's checks, on one set of answers or the 20
+  eval profiles. It needs `OPENAI_API_KEY` in `supabase/functions/.env`; every plan is a paid call,
+  and the runs are kept in `scripts/plan-lab/out/runs.jsonl`.
 
 ## Coach
 
