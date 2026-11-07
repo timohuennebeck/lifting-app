@@ -108,16 +108,42 @@
     "hint": "Ring ziehen oder Wert antippen"
   },
   "building": {
-    "stages": [
-      "Werte Ziel & Erfahrung aus …",
-      "Wähle Übungen für deine Geräte …",
-      "Teile in Trainings auf …",
-      "Lege Sätze und Wiederholungen fest …"
-    ],
     "frequency": "{{count}} × {{minutes}} Min.",
     "focus": "Fokus: {{areas}}",
     "balanced": "Alle Muskelgruppen",
-    "routineTag": "T{{n}}"
+    "routineTag": "T{{n}}",
+    "elapsed_one": "{{count}} s",
+    "elapsed_other": "{{count}} s",
+    "rep": "Wdh. {{n}}",
+    "tipsTitle": "Während du wartest",
+    "lines": [
+      "Lese deine Antworten …",
+      "Wähle Übungen für deine Geräte …",
+      "Diskutiere über den Beintag …",
+      "Teile in Trainings auf …",
+      "Zähle die Hantelscheiben …",
+      "Lege Sätze und Wiederholungen fest …",
+      "Prüfe die Pausenzeiten …",
+      "Lege letzte Hand an …"
+    ],
+    "lifts": [
+      "Bankdrücken",
+      "Kniebeugen",
+      "Kreuzheben",
+      "Klimmzug",
+      "Schulterdrücken",
+      "Rudern",
+      "Ausfallschritt",
+      "Dips",
+      "Curls"
+    ],
+    "tips": [
+      "Jede Woche eine Wiederholung oder etwas mehr Gewicht: Das ist progressive Überlastung.",
+      "Beende die meisten Sätze mit 1–3 Wiederholungen im Tank.",
+      "Pausiere 2–3 Minuten zwischen schweren Sätzen, 1–2 zwischen den anderen.",
+      "Muskeln wachsen im Schlaf, nicht beim Training.",
+      "Trag jeden Satz ein: Was gemessen wird, wird gehoben."
+    ]
   },
   "generate": {
     "making": "Plan wird erstellt …",

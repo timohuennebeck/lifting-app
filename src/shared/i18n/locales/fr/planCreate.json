@@ -108,16 +108,42 @@
     "hint": "Fais glisser l'anneau ou touche une valeur"
   },
   "building": {
-    "stages": [
-      "On évalue ton objectif et ton expérience…",
-      "On choisit les exercices pour ton matériel…",
-      "On répartit en séances…",
-      "On définit les séries et les répétitions…"
-    ],
     "frequency": "{{count}} × {{minutes}} min",
     "focus": "Priorité : {{areas}}",
     "balanced": "Tous les groupes musculaires",
-    "routineTag": "S{{n}}"
+    "routineTag": "S{{n}}",
+    "elapsed_one": "{{count}} s",
+    "elapsed_other": "{{count}} s",
+    "rep": "Rép. {{n}}",
+    "tipsTitle": "En attendant",
+    "lines": [
+      "On lit tes réponses…",
+      "On choisit les exercices pour ton matériel…",
+      "On débat du jour jambes…",
+      "On répartit en séances…",
+      "On compte les disques…",
+      "On définit les séries et les répétitions…",
+      "On vérifie les temps de repos…",
+      "On peaufine les détails…"
+    ],
+    "lifts": [
+      "Développé couché",
+      "Squat",
+      "Soulevé de terre",
+      "Traction",
+      "Développé militaire",
+      "Rowing",
+      "Fente",
+      "Dips",
+      "Curl"
+    ],
+    "tips": [
+      "Une répétition ou un peu plus de poids chaque semaine : c’est la surcharge progressive.",
+      "Termine la plupart des séries avec 1 à 3 répétitions en réserve.",
+      "Repose-toi 2 à 3 minutes entre les séries lourdes, 1 à 2 entre les autres.",
+      "Le muscle grandit pendant ton sommeil, pas pendant l’entraînement.",
+      "Note chaque série : ce qui se mesure se soulève."
+    ]
   },
   "generate": {
     "making": "Création de ton programme…",

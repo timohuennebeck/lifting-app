@@ -108,16 +108,42 @@
     "hint": "Arraste o anel ou toque em um valor"
   },
   "building": {
-    "stages": [
-      "Analisando objetivo e experiência …",
-      "Escolhendo exercícios para seu equipamento …",
-      "Dividindo em treinos …",
-      "Definindo séries e repetições …"
-    ],
     "frequency": "{{count}} × {{minutes}} min",
     "focus": "Foco: {{areas}}",
     "balanced": "Todos os grupos musculares",
-    "routineTag": "T{{n}}"
+    "routineTag": "T{{n}}",
+    "elapsed_one": "{{count}} s",
+    "elapsed_other": "{{count}} s",
+    "rep": "Rep. {{n}}",
+    "tipsTitle": "Enquanto você espera",
+    "lines": [
+      "Lendo suas respostas …",
+      "Escolhendo exercícios para seu equipamento …",
+      "Discutindo o dia de perna …",
+      "Dividindo em treinos …",
+      "Contando as anilhas …",
+      "Definindo séries e repetições …",
+      "Conferindo os tempos de descanso …",
+      "Dando os últimos retoques …"
+    ],
+    "lifts": [
+      "Supino",
+      "Agachamento",
+      "Levantamento terra",
+      "Barra fixa",
+      "Desenvolvimento",
+      "Remada",
+      "Avanço",
+      "Paralelas",
+      "Rosca"
+    ],
+    "tips": [
+      "Uma repetição ou um pouco mais de peso por semana: isso é sobrecarga progressiva.",
+      "Termine a maioria das séries com 1–3 repetições de reserva.",
+      "Descanse 2–3 minutos entre séries pesadas, 1–2 entre as outras.",
+      "O músculo cresce enquanto você dorme, não enquanto treina.",
+      "Registre cada série: o que é medido é levantado."
+    ]
   },
   "generate": {
     "making": "Criando o plano …",

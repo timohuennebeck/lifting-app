@@ -108,16 +108,42 @@
     "hint": "Drag the ring or tap a value"
   },
   "building": {
-    "stages": [
-      "Weighing your goal & experience …",
-      "Picking exercises for your equipment …",
-      "Splitting into workouts …",
-      "Setting sets and reps …"
-    ],
     "frequency": "{{count}} × {{minutes}} min",
     "focus": "Focus: {{areas}}",
     "balanced": "All muscle groups",
-    "routineTag": "W{{n}}"
+    "routineTag": "W{{n}}",
+    "elapsed_one": "{{count}} s",
+    "elapsed_other": "{{count}} s",
+    "rep": "Rep {{n}}",
+    "tipsTitle": "While you wait",
+    "lines": [
+      "Reading your answers …",
+      "Picking exercises for your equipment …",
+      "Arguing about leg day …",
+      "Splitting into workouts …",
+      "Counting the plates …",
+      "Setting sets and reps …",
+      "Double-checking the rest times …",
+      "Adding the finishing touches …"
+    ],
+    "lifts": [
+      "Bench press",
+      "Squat",
+      "Deadlift",
+      "Pull-up",
+      "Overhead press",
+      "Row",
+      "Lunge",
+      "Dip",
+      "Curl"
+    ],
+    "tips": [
+      "Add a rep or a little weight each week: that’s progressive overload.",
+      "End most sets with 1–3 reps left in the tank.",
+      "Rest 2–3 minutes between heavy sets, 1–2 between the others.",
+      "Muscle grows while you sleep, not while you lift.",
+      "Log every set: what gets measured gets lifted."
+    ]
   },
   "generate": {
     "making": "Creating your plan …",

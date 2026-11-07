@@ -108,16 +108,42 @@
     "hint": "Arrastra el anillo o toca un valor"
   },
   "building": {
-    "stages": [
-      "Valorando tu objetivo y tu experiencia…",
-      "Eligiendo ejercicios para tu equipamiento…",
-      "Dividiendo en entrenamientos…",
-      "Ajustando series y repeticiones…"
-    ],
     "frequency": "{{count}} × {{minutes}} min",
     "focus": "Enfoque: {{areas}}",
     "balanced": "Todos los grupos musculares",
-    "routineTag": "E{{n}}"
+    "routineTag": "E{{n}}",
+    "elapsed_one": "{{count}} s",
+    "elapsed_other": "{{count}} s",
+    "rep": "Rep. {{n}}",
+    "tipsTitle": "Mientras esperas",
+    "lines": [
+      "Leyendo tus respuestas…",
+      "Eligiendo ejercicios para tu equipamiento…",
+      "Debatiendo el día de pierna…",
+      "Dividiendo en entrenamientos…",
+      "Contando los discos…",
+      "Ajustando series y repeticiones…",
+      "Revisando los descansos…",
+      "Dando los últimos retoques…"
+    ],
+    "lifts": [
+      "Press de banca",
+      "Sentadilla",
+      "Peso muerto",
+      "Dominada",
+      "Press militar",
+      "Remo",
+      "Zancada",
+      "Fondos",
+      "Curl"
+    ],
+    "tips": [
+      "Una repetición o un poco más de peso cada semana: eso es sobrecarga progresiva.",
+      "Termina la mayoría de las series con 1–3 repeticiones en reserva.",
+      "Descansa 2–3 minutos entre series pesadas y 1–2 entre las demás.",
+      "El músculo crece mientras duermes, no mientras entrenas.",
+      "Registra cada serie: lo que se mide, se levanta."
+    ]
   },
   "generate": {
     "making": "Creando tu plan…",
