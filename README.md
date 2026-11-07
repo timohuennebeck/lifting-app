@@ -273,13 +273,13 @@ Importieren (the same screens, routed under `src/app/(onboarding)/import/` and
 1. **On the phone:** the file is read (`lib/read-file.ts`, workbooks in `lib/workbook.ts`). A
    workbook with several sheets asks which to read and recommends those that look like a log or a
    plan (`lib/sheet-summary.ts`).
-2. **What is where** (`read-history`, step `categorize`): per sheet, a sample of its rows (the
+2. **What is where** (the `read-workout-file` Edge Function, step `categorize`): per sheet, a sample of its rows (the
    first, some spread out and the last, at most 150) and what each column holds
    (`lib/samples.ts`) go to the model. It answers whether the sheet is a history, a plan or both,
    which column is the date, the exercise, the weight and so on, and how dates and weights are
    written. The phone then reads every row with that (`lib/history.ts`, `lib/values.ts`).
-3. **Which exercise is which** (step `map`, batches of 60 names in parallel) runs side by side
-   with the plan's rows going to `read-plan` as text. Every name the model isn't sure about is
+3. **Which exercise is which** (step `map`, up to 80 names a request, in parallel) runs side by
+   side with the plan's rows going to step `plan` as text. Every name the model isn't sure about is
    checked by the user, one per screen: its likeliest exercise, alternatives, or a new exercise
    under the file's name.
 4. **No plan in the file:** where the user has none yet, the routines of the last six weeks of the
@@ -293,15 +293,15 @@ Importieren (the same screens, routed under `src/app/(onboarding)/import/` and
    exists (`useSendPendingHistory`), also for an existing account signed in there. The plan opens
    in the plan editor, like a made one.
 
-- **Secrets and model:** `OPENAI_API_KEY`; `read-history` runs `OPENAI_HISTORY_MODEL` (default
-  `gpt-6-luna`) at `OPENAI_HISTORY_REASONING_EFFORT` (default `low`), in Fast mode
-  (`HISTORY_IMPORT_FAST=false` turns it off). `read-plan` runs `OPENAI_MODEL` on Fast mode
-  (`PLAN_IMPORT_FAST=false` turns it off) and streams the plan (`PlanEvent` in
+- **Secrets and model:** `OPENAI_API_KEY`; the steps `categorize`, `map` and `name` run
+  `OPENAI_HISTORY_MODEL` (default `gpt-6-luna`) at `OPENAI_HISTORY_REASONING_EFFORT` (default
+  `low`), in Fast mode (`HISTORY_IMPORT_FAST=false` turns it off). Step `plan` runs `OPENAI_MODEL`
+  on Fast mode (`PLAN_IMPORT_FAST=false` turns it off) and streams the plan (`PlanEvent` in
   `supabase/functions/_shared/plan-events.ts`).
 - **Rules (server-side):** it also runs before there is an account, so each step counts per network
   (`HISTORY_IMPORT_IP_LIMIT`, default 40) and in total (`HISTORY_IMPORT_DAILY_LIMIT`, default
-  4,000) per 24 hours (`plan_requests` kind `history`); `read-plan` as before
-  (`PLAN_IMPORT_IP_LIMIT`, default 10, and `PLAN_IMPORT_DAILY_LIMIT`, default 1,000).
+  4,000) per 24 hours (`plan_requests` kind `history`); step `plan` counts on its own
+  (`PLAN_IMPORT_IP_LIMIT`, default 10, and `PLAN_IMPORT_DAILY_LIMIT`, default 1,000, kind `import`).
   `plan_requests` keeps a keyed hash of the IP, never the IP itself.
 - **Testing:** `scripts/csv-import-lab/samples` holds made-up exports to import (README there).
   `npm run plan:eval` sends the 11 test plans in `scripts/plan-import-eval/fixtures` (spreadsheet
@@ -309,7 +309,7 @@ Importieren (the same screens, routed under `src/app/(onboarding)/import/` and
   functions and scores what they read against `cases.json`, with the time to the first exercise
   and to the whole plan; `npm run plan:eval -- --dir <folder>` reads your own CSV and text files.
   Set `PLAN_IMPORT_IP_LIMIT=1000` in `supabase/functions/.env` locally first.
-  `npm run functions:test` runs the checks of `read-history`'s answers.
+  `npm run functions:test` runs the checks of `read-workout-file`'s answers.
 
 ## Voice input
 
@@ -324,7 +324,7 @@ added to the workout shown.
   asked on the first tap. Needs a development build with the module.
 - **Matching:** the `read-exercises` Edge Function gets the text (at most 4,000 characters) with
   the app language and answers the exercises with their sets at once (not streamed). It reads each
-  exercise exactly as `read-plan` reads a plan's line (`_shared/exercise-reading.ts`: the rules,
+  exercise exactly as `read-workout-file` reads a plan's line (`_shared/exercise-reading.ts`: the rules,
   the catalog, the answer shape, the clean-up), plus rules for speech: numbers as words (French
   counts such as "soixante-dix" too; Korean names the reps first), misheard names, corrections.
 - **Adding:** in a plan being set up and in the workout builder, unsure matches show "Gehört

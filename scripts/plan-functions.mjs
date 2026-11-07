@@ -57,7 +57,7 @@ async function post(url, key, body, seconds) {
 }
 
 /**
- * One request to a plan function (read-plan, generate-plan). It streams the plan as server-sent
+ * One request to a plan function (read-workout-file's "plan" step, generate-plan). It streams the plan as server-sent
  * events (PlanEvent in supabase/functions/_shared/plan-events.ts); they are put together like the
  * app does. `first` is when the first exercise arrived, `seconds` the end.
  */

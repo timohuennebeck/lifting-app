@@ -120,11 +120,11 @@ let running: AbortController | null = null;
 /** The id of the exercise "Eigene Übung anlegen" makes of a name: the same each time it's finished. */
 const madeIds = new Map<string, string>();
 
-/** Characters of plan rows read-plan reads. */
+/** Characters of plan rows read-workout-file reads. */
 const MAX_PLAN_TEXT = 60_000;
 
 /**
- * Reads the plan's rows with read-plan into the plan import's store, which streams it as the plan
+ * Reads the plan's rows with read-workout-file into the plan import's store, which streams it as the plan
  * editor shows it. Resolves with whether there is a plan; throws on anything but "not a plan".
  */
 function readPlan(name: string, text: string, language: string, signal: AbortSignal) {
@@ -232,9 +232,9 @@ async function planFromHistory(
 }
 
 /**
- * Reads the file: step 1 (read-history: what each sheet holds, which column is which), then the
+ * Reads the file: step 1 (read-workout-file: what each sheet holds, which column is which), then the
  * rows into workouts on the device, then side by side step 2 (which exercise each name is) and the
- * plan's rows (read-plan). Without a plan in the file, and when asked, the plan comes from the
+ * plan's rows (read-workout-file). Without a plan in the file, and when asked, the plan comes from the
  * history. Everything is done when the reading screen goes on.
  */
 async function runImport(

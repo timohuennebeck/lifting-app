@@ -11,8 +11,6 @@ import {
 import { cut, type ImportedRoutine } from '../_shared/plan-events.ts';
 import type { CatalogRow } from '../_shared/plans.ts';
 
-export { contextText } from '../_shared/exercise-reading.ts';
-
 export const INSTRUCTIONS = `You read training plans for a strength and bodybuilding app from a file the user brought: the rows of a spreadsheet or a CSV export (cells separated by commas or |), in any language or a mix, with gym abbreviations.
 
 Return the plan's training days as routines in the order the plan lists them, and every exercise of a routine in order (supersets and circuits one after another). Leave out warm-up notes, cardio blocks and comments that are not exercises, and rows that log workouts done (dates with the weights lifted). If the file holds several plans (versions, blocks or phases one after another), return only the newest: the one with the latest date, else the last one.

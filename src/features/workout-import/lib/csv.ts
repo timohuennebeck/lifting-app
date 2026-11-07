@@ -49,6 +49,6 @@ export function parseCsv(text: string): string[][] {
   return rows;
 }
 
-/** A row as one CSV line (for the plan's text sent to read-plan). */
+/** A row as one CSV line (for the plan's text sent to read-workout-file). */
 export const csvLine = (values: string[]) =>
   values.map((v) => (/[",\n\r]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v)).join(',');

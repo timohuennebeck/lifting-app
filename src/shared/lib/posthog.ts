@@ -19,7 +19,7 @@ export interface AnalyticsEvents {
     routine_count: number;
   };
   'plan:generate_fail': PlanFailureProperties;
-  /** The plan of a workout file read (read-plan). */
+  /** The plan of a workout file read (read-workout-file). */
   'plan_import:read_complete': {
     exercise_count: number;
     /** Exercises the catalog doesn't have, created as the user's own. */

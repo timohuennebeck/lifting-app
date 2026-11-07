@@ -3,7 +3,7 @@
 // numbers, Unix time), durations ("1h 5m", "1:05:00") and numbers ("82,5 kg"). Times without a
 // zone are the user's local time. Plain TypeScript, without the app's imports.
 
-/** How a sheet writes dates whose day and month are both numbers (read-history says). */
+/** How a sheet writes dates whose day and month are both numbers (read-workout-file says). */
 export type DayOrder = 'day_first' | 'month_first' | 'year_first';
 
 /** Lower case without accents: "Mär" → "mar", "févr." → "fevr.". */

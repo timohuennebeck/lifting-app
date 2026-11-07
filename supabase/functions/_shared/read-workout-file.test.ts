@@ -1,4 +1,4 @@
-// read-history's answers as the app gets them: sheets described once each with only columns they
+// read-workout-file's answers as the app gets them: sheets described once each with only columns they
 // have, exercise names matched by position or by name, new exercises made once, and routine
 // names cut to length.
 import { assertEquals } from 'jsr:@std/assert@1';
@@ -12,7 +12,7 @@ import {
   sheetKinds,
   type SheetSample,
   sheetSamples,
-} from '../read-history/history.ts';
+} from '../read-workout-file/history.ts';
 import type { CatalogRow } from './plans.ts';
 
 const row = (id: string): CatalogRow => ({
@@ -112,7 +112,12 @@ Deno.test('names match by position, else by the name repeated', () => {
     CATALOG,
     () => 'id',
   );
-  assertEquals(byName[0], { name: names[0].name, exerciseId: null, certain: false, alternatives: [] });
+  assertEquals(byName[0], {
+    name: names[0].name,
+    exerciseId: null,
+    certain: false,
+    alternatives: [],
+  });
   assertEquals(byName[1].exerciseId, 'bench-press');
 });
 
@@ -122,7 +127,13 @@ Deno.test('a new exercise is made once, an unknown catalog id is none', () => {
     catalog_id: null,
     certain: true,
     alternatives: [],
-    new_exercise: { name: 'Cable Y Raise', primary: ['side_delts'], secondary: [], timed: false, weighted: true },
+    new_exercise: {
+      name: 'Cable Y Raise',
+      primary: ['side_delts'],
+      secondary: [],
+      timed: false,
+      weighted: true,
+    },
   });
   let next = 0;
   const mapped = mappedNames(

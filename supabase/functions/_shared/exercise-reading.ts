@@ -1,6 +1,6 @@
-// How the model reads one exercise and how its answer becomes the app's, shared by read-plan (a
-// plan from a file), read-exercises (exercises said out loud) and read-history (the exercise names
-// of a workout file): the rules for an exercise, the catalog the model picks from, the exercise's
+// How the model reads one exercise and how its answer becomes the app's, shared by
+// read-workout-file (a plan from a file, and the exercise names of a workout file) and
+// read-exercises (exercises said out loud): the rules for an exercise, the catalog the model picks from, the exercise's
 // answer shape, and the clean-up into sets the database accepts. Plain TypeScript without Deno APIs, so it can be tested outside the
 // Edge runtime.
 

@@ -211,7 +211,7 @@ const EXCEL_PARTS =
 
 /**
  * The visible sheets of an .xlsx or .ods file, or null for anything else (a CSV, an old .xls, a
- * damaged file): those go to read-plan whole.
+ * damaged file): those go to read-workout-file whole.
  */
 export function readWorkbook(bytes: Uint8Array): WorkbookSheet[] | null {
   // Zip files start with "PK".

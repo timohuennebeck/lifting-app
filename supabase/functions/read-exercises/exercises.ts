@@ -1,5 +1,5 @@
 // What the model is asked about exercises the user said, and how its answer becomes the list the
-// app adds; each exercise is read as read-plan reads one (_shared/exercise-reading.ts). Plain
+// app adds; each exercise is read as a file's plan is (read-workout-file) (_shared/exercise-reading.ts). Plain
 // TypeScript without Deno APIs, so it can be tested outside the Edge runtime.
 
 import {

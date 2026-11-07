@@ -1,16 +1,24 @@
 // Reads a workout file for the import (in onboarding and in the app): an export of another app
 // (Hevy, Strong, …) or a spreadsheet with a workout history and/or a plan. The app reads the file
-// itself and asks this function only what takes a model (history.ts):
+// itself and asks this function only what takes a model, one step per request:
 // - "categorize": what each sheet holds and which column is which, from samples of it;
 // - "map": which catalog exercise each exercise name of the file is;
-// - "name": names for the routines the app found in a history whose workouts have none.
-// A plan in the file is read by read-plan. It also runs before there is an account, so requests
-// are limited per network and in total per day (start_plan_request, kind "history").
+// - "name": names for the routines the app found in a history whose workouts have none
+//   (history.ts);
+// - "plan": the plan's rows as a training plan, streamed exercise by exercise as the plan
+//   functions do (plan.ts, PlanEvent).
+// It also runs before there is an account, so requests are limited per network and in total per
+// day (start_plan_request: kind "history" for the first three, "import" for a plan).
 import { envFlag, envLimit, refuseAiRequest, reply } from '../_shared/common.ts';
+import { contextText } from '../_shared/exercise-reading.ts';
 import { askWithRetry, type StructuredRequest } from '../_shared/openai.ts';
 import { isAppLanguage } from '../_shared/plan-events.ts';
-import { type CatalogRow, loadCatalog, takePlanRequest } from '../_shared/plans.ts';
-import { contextText } from '../_shared/exercise-reading.ts';
+import {
+  type CatalogRow,
+  loadCatalog,
+  planEventResponse,
+  takePlanRequest,
+} from '../_shared/plans.ts';
 import {
   CATEGORIZE_INSTRUCTIONS,
   categorizeContent,
@@ -30,6 +38,7 @@ import {
   sheetKinds,
   sheetSamples,
 } from './history.ts';
+import { buildSchema, INSTRUCTIONS, planReader } from './plan.ts';
 
 /** Per attempt. */
 const OPENAI_TIMEOUT_MS = 60_000;
@@ -48,6 +57,16 @@ const MODEL = {
 const FAST = envFlag('HISTORY_IMPORT_FAST');
 /** Characters of the samples the model reads in step 1. */
 const MAX_SAMPLE_TEXT = 120_000;
+
+/** A plan: for both attempts together (see planEventResponse); the function may run 150 s. */
+const PLAN_TIMEOUT_MS = 120_000;
+/** Plans read per network (hashed IP) and in total in 24 hours; each one is a paid model call. */
+const PLAN_IP_LIMIT = envLimit('PLAN_IMPORT_IP_LIMIT', 10);
+const PLAN_DAILY_LIMIT = envLimit('PLAN_IMPORT_DAILY_LIMIT', 1000);
+/** OpenAI's Fast mode for a plan (twice the token price); PLAN_IMPORT_FAST=false turns it off. */
+const PLAN_FAST = envFlag('PLAN_IMPORT_FAST');
+/** Characters of the plan's text the model reads. */
+const MAX_PLAN_TEXT = 60_000;
 
 type Step =
   | { step: 'categorize'; file: string; sheets: NonNullable<ReturnType<typeof sheetSamples>> }
@@ -120,12 +139,57 @@ function result(step: Step, parsed: unknown, catalog: CatalogRow[]) {
   return { names: routineNames(parsed as { names: string[] }, step.routines.length) };
 }
 
+/** The "plan" step: the plan's rows with the catalog, streamed as the plan is read. */
+async function readPlan(req: Request, name: unknown, text: unknown, language: string) {
+  if (typeof name !== 'string' || typeof text !== 'string' || !text.trim()) {
+    return reply(400, { error: 'bad_request' });
+  }
+  if (text.length > MAX_PLAN_TEXT) return reply(413, { error: 'too_large' });
+
+  const taken = await takePlanRequest(req, 'import', {
+    perNetwork: PLAN_IP_LIMIT,
+    perDay: PLAN_DAILY_LIMIT,
+  });
+  if ('refused' in taken) return taken.refused;
+  const { giveBack } = taken;
+
+  let catalog: CatalogRow[];
+  try {
+    catalog = await loadCatalog();
+  } catch (error) {
+    console.error('Loading the catalog failed', error);
+    await giveBack();
+    return reply(500, { error: 'failed' });
+  }
+
+  return planEventResponse({
+    request: {
+      instructions: INSTRUCTIONS,
+      content: [
+        { type: 'input_text', text: contextText(catalog, language) },
+        { type: 'input_text', text: `File "${name.slice(0, 200)}":\n${text}` },
+      ],
+      name: 'training_plan',
+      schema: buildSchema(catalog.map((e) => e.id)),
+      timeoutMs: PLAN_TIMEOUT_MS,
+      fast: PLAN_FAST,
+    },
+    reader: () => planReader(catalog, () => crypto.randomUUID()),
+    giveBack,
+    noPlan: 'not_a_plan',
+    label: 'import',
+  });
+}
+
 Deno.serve(async (req) => {
   const refused = refuseAiRequest(req);
   if (refused) return refused;
 
   const body = await req.json().catch(() => null);
   const language = body?.language;
+  if (body?.step === 'plan' && isAppLanguage(language)) {
+    return readPlan(req, body.name, body.text, language);
+  }
   const step = stepOf(body);
   if (!step || !isAppLanguage(language)) return reply(400, { error: 'bad_request' });
   if (

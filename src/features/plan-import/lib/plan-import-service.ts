@@ -91,7 +91,7 @@ export type PlanEvent =
 
 /**
  * Gets a training plan from the Edge Functions, which stream it: reads it from a workout file's
- * rows (read-plan) or makes it from the onboarding answers (generate-plan). `onEvent` gets the
+ * rows (read-workout-file, its "plan" step) or makes it from the onboarding answers (generate-plan). `onEvent` gets the
  * plan's name, then each routine and exercise as soon as it is there (an exercise belongs to the
  * routine before it). Resolves once the plan is complete. Throws an ImportError with the reason when
  * there is no plan to show, also when the stream breaks off; once `signal` stops it, the error
@@ -102,11 +102,11 @@ export async function streamPlan(
   onEvent: (event: PlanEvent) => void,
   signal: AbortSignal,
 ) {
-  const fn = source.kind === 'answers' ? 'generate-plan' : 'read-plan';
+  const fn = source.kind === 'answers' ? 'generate-plan' : 'read-workout-file';
   const request =
     source.kind === 'answers'
       ? { answers: source.answers }
-      : { name: source.name, text: source.text };
+      : { step: 'plan', name: source.name, text: source.text };
   const response = await postFunction(
     fn,
     { ...request, language },

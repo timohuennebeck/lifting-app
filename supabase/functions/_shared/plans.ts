@@ -1,4 +1,4 @@
-// What the plan functions (read-plan, generate-plan) share: the exercise catalog, the limits
+// What the plan functions (read-workout-file's plan, generate-plan) share: the exercise catalog, the limits
 // per network and per day (they run before there is an account, and each is a paid model call),
 // and the response that asks the model and streams the plan to the app.
 import { encodeHex } from 'jsr:@std/encoding@1/hex';

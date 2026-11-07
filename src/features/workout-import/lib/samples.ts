@@ -1,4 +1,4 @@
-// What read-history sees of a sheet for step 1 (see its history.ts, SheetSample): the header,
+// What read-workout-file sees of a sheet for step 1 (see its history.ts, SheetSample): the header,
 // exact statistics per column over all rows (filled, different values, share of numbers, the most
 // common, first and last values) and a spread of rows: the first 40, 20 from the middle and the
 // last 10. Enough to tell a log from a plan and each column's meaning without sending the file.
@@ -8,15 +8,15 @@ import type { ImportTable } from './history';
 
 /** Characters of one value in the statistics and sample. */
 const CELL = 60;
-/** Sheets read at once; read-history takes up to 20. */
+/** Sheets read at once; read-workout-file takes up to 20. */
 export const MAX_SHEETS = 20;
-/** Columns described; read-history takes no more. */
+/** Columns described; read-workout-file takes no more. */
 const MAX_COLUMNS = 80;
 
 const cut = (value: string, max = CELL) => (value.length > max ? `${value.slice(0, max)}…` : value);
 const isNumber = (value: string) => /^-?\d+(?:[.,]\d+)?$/.test(value.replace(/\s/g, ''));
 
-/** A sheet as read-history's step 1 reads it. */
+/** A sheet as read-workout-file's step 1 reads it. */
 export function sheetSample({ name, rows }: ImportTable) {
   const [all = [], ...data] = rows;
   const header = all.slice(0, MAX_COLUMNS);

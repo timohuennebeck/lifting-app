@@ -1,4 +1,4 @@
-// Turns a workout log's rows into workouts, by the columns read-history named (step 1): rows of
+// Turns a workout log's rows into workouts, by the columns read-workout-file named (step 1): rows of
 // the same date and workout name are one workout, rows of the same exercise in it one exercise,
 // and each row a set (or several, when the file writes one row per exercise). Rows without a date
 // form workouts by their order, as tracker exports write them. Warm-up sets are left out; weights
@@ -12,7 +12,7 @@ export interface ImportTable {
   rows: string[][];
 }
 
-/** The columns read-history names, by their header text; null when the sheet has none. */
+/** The columns read-workout-file names, by their header text; null when the sheet has none. */
 export type ColumnKey =
   | 'date'
   | 'end_time'
@@ -29,7 +29,7 @@ export type ColumnKey =
   | 'rpe'
   | 'rir';
 
-/** What read-history says about a sheet (its step 1). */
+/** What read-workout-file says about a sheet (its step 1). */
 export interface SheetReading {
   name: string;
   kind: 'history' | 'plan' | 'both' | 'none';
@@ -101,7 +101,7 @@ function columnAt(header: string[], name: string | null) {
 
 /**
  * The rows of a sheet split into workouts (as `LoggedWorkout`s, in file order) and, for a sheet
- * with a plan and a log, the plan's rows (header first) for read-plan.
+ * with a plan and a log, the plan's rows (header first) for read-workout-file.
  */
 export function readLog(table: ImportTable, reading: SheetReading) {
   const [header = [], ...rows] = table.rows;
@@ -136,7 +136,7 @@ export function readLog(table: ImportTable, reading: SheetReading) {
         return;
       }
     }
-    // Capped: a cell can hold a note, and read-history takes names of up to 200 characters.
+    // Capped: a cell can hold a note, and read-workout-file takes names of up to 200 characters.
     const exerciseName = get('exercise').slice(0, MAX_NAME);
     if (!exerciseName) return;
     if (/warm|aufw[aä]rm|echauff|calenta|aquec/i.test(get('set_type'))) return;

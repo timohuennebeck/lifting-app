@@ -1,4 +1,4 @@
-// Tests the plan import (the read-plan Edge Function) with the plans in fixtures/ and scores
+// Tests the plan import (read-workout-file's "plan" step) with the plans in fixtures/ and scores
 // what it read against cases.json: routines, exercises (catalog match or new), sets, reps, RIR
 // and rest. With --dir it reads your own files and prints what it found instead.
 // The fixtures are made up: plans as text and CSV, a spreadsheet's plan sheet as the app sends it
@@ -60,10 +60,15 @@ function requestBody({ files, as, language }) {
 const requests = untilStopped((body) =>
   !body.name
     ? readExercises(`${SUPABASE_URL}/functions/v1/read-exercises`, KEY, body)
-    : streamPlan(`${SUPABASE_URL}/functions/v1/read-plan`, KEY, body),
+    : streamPlan(`${SUPABASE_URL}/functions/v1/read-workout-file`, KEY, { step: 'plan', ...body }),
 );
 /** What reportStop says about the function. */
-const FUNCTION = { fn: 'read-plan', what: 'import', kind: 'import', limit: 'PLAN_IMPORT_IP_LIMIT' };
+const FUNCTION = {
+  fn: 'read-workout-file',
+  what: 'import',
+  kind: 'import',
+  limit: 'PLAN_IMPORT_IP_LIMIT',
+};
 
 // ---------- reading a plan ----------
 

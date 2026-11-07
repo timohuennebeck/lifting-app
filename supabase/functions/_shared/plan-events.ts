@@ -1,4 +1,4 @@
-// What the plan functions (read-plan, generate-plan) share in plain TypeScript, without Deno APIs:
+// What the plan functions (read-workout-file's plan, generate-plan) share in plain TypeScript, without Deno APIs:
 // the app's languages and muscles, the catalog names the model reads, the shapes of the app's
 // ImportedRoutine, ImportedExercise and CustomExercise, the server-sent events that carry them,
 // and how the names in them are tidied.

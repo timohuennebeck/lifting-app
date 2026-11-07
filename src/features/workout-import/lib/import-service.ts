@@ -23,7 +23,7 @@ export class WorkoutImportError extends Error {
 
 const SERVER_ERRORS: Record<string, ImportFailure> = { limit: 'limit', too_large: 'tooLarge' };
 
-/** Which exercise a name of the file is (read-history's MappedName). */
+/** Which exercise a name of the file is (read-workout-file's MappedName). */
 export interface MappedName {
   name: string;
   /** A catalog id or a new exercise's; null when the model found neither. */
@@ -39,10 +39,10 @@ type Step =
   | { step: 'map'; names: { name: string; sets: number; hint: string }[] }
   | { step: 'name'; routines: { exercises: string[]; workouts: number }[] };
 
-/** One step of read-history; throws a WorkoutImportError when it doesn't answer. */
+/** One step of read-workout-file; throws a WorkoutImportError when it doesn't answer. */
 async function ask<T>(request: Step, language: string, signal: AbortSignal): Promise<T> {
   const response = await postFunction(
-    'read-history',
+    'read-workout-file',
     { ...request, language },
     {
       signal,
@@ -50,7 +50,7 @@ async function ask<T>(request: Step, language: string, signal: AbortSignal): Pro
     },
   );
   if (!response.ok) {
-    const { error } = await refusalOf('read-history', response);
+    const { error } = await refusalOf('read-workout-file', response);
     throw new WorkoutImportError(
       SERVER_ERRORS[error ?? ''] ?? 'failed',
       `${request.step}_http_${response.status}${codeOf(error)}`,
@@ -70,7 +70,7 @@ export const categorize = (
     (r) => r.sheets,
   );
 
-/** Names per request at most; read-history takes up to 80. */
+/** Names per request at most; read-workout-file takes up to 80. */
 const BATCH = 80;
 
 /** Step 2: which exercise each name is, in as few even batches as fit, side by side. */
