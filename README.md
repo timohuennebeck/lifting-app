@@ -505,6 +505,29 @@ over the tabs from the Training tab's card, which a flash runs across.
   `-- --model gpt-6-luna --effort medium` tries others; the answers go to `eval/out/`. Run it
   before and after changing the prompt or a tool.
 
+## Auth emails
+
+Email sign-up sends at most two emails: the 6-digit code for a new password ("Forgot password?")
+and, while "Confirm email" is on, the link that confirms a new account. In production Supabase
+Auth hands both to the `send-email` Edge Function (a Send Email hook), which writes them in the
+user's app language (`profiles.language`, else the language the app sent at sign-up, else
+English) and sends them through Resend from `mail.useloqqa.com`. Other email types are refused.
+Locally the hook is off and the local mail catcher shows `supabase/templates/recovery.html`.
+
+Setup per production project:
+
+1. **Resend:** verify the sending domain (its DNS records), then create an API key with sending
+   access for that domain.
+2. **Supabase:** Authentication → Hooks → add a Send Email hook of type HTTPS, URL
+   `https://<project-ref>.supabase.co/functions/v1/send-email`, and generate its secret.
+3. **Secrets:** `npx supabase secrets set RESEND_API_KEY=… SEND_EMAIL_HOOK_SECRET='v1,whsec_…'`
+   (optionally `EMAIL_FROM`), then `npx supabase functions deploy send-email`.
+4. **Settings:** Authentication → Sign In / Providers → Email: email OTP length 6 and expiry
+   3600 s (the emails say one hour). Raise Authentication → Rate Limits → emails per hour.
+
+Turning the hook off falls back to Supabase's own sending (the custom SMTP settings and the
+dashboard's templates).
+
 ## Google Sign-In
 
 The app uses Google's native sign-in (`@react-native-google-signin/google-signin`) and exchanges

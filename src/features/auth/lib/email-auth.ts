@@ -1,6 +1,7 @@
 import type { AuthError, User } from '@supabase/supabase-js';
 
 import { supabase } from '@/shared/data/supabase';
+import { i18n } from '@/shared/i18n';
 
 /** Why an email sign-up or sign-in didn't work, as the screens say it. */
 export type EmailAuthReason =
@@ -43,10 +44,15 @@ const reasonOf = (error: AuthError): EmailAuthReason => {
 
 /**
  * Makes an account with email and password. The user once signed in; null when the project asks
- * for the email to be confirmed first (the link in the email, then sign in).
+ * for the email to be confirmed first (the link in the email, then sign in). The app language
+ * goes along, so the confirmation email (send-email hook) is in it before there is a profile.
  */
 export async function signUpWithEmail(email: string, password: string): Promise<User | null> {
-  const { data, error } = await supabase.auth.signUp({ email: email.trim(), password });
+  const { data, error } = await supabase.auth.signUp({
+    email: email.trim(),
+    password,
+    options: { data: { language: i18n.language } },
+  });
   if (error) throw new EmailAuthError(reasonOf(error));
   // With confirmation on, an email that has an account answers with a user without identities.
   if (data.user && !data.user.identities?.length) throw new EmailAuthError('exists');
@@ -60,7 +66,7 @@ export async function signInWithEmail(email: string, password: string): Promise<
   return data.user;
 }
 
-/** Sends the 6-digit code for a new password (the reset email shows it, see supabase/templates). */
+/** Sends the 6-digit code for a new password (the send-email hook's email shows it). */
 export async function sendResetCode(email: string) {
   const { error } = await supabase.auth.resetPasswordForEmail(email.trim());
   if (error) throw new EmailAuthError(reasonOf(error));
