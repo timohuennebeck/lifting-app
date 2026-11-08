@@ -120,7 +120,7 @@ export function ExerciseHistoryPage() {
         </View>
       }
       renderSectionHeader={({ section }) => (
-        <Text className="px-3 pt-4.5 pb-1.5 font-inter-semibold text-[11px] leading-3.5 tracking-[1.1px] text-dim">
+        <Text className="px-2 pt-5.5 pb-1.5 font-inter-semibold text-xs leading-4 tracking-[1.2px] text-subtle">
           {section.title}
         </Text>
       )}
@@ -128,7 +128,6 @@ export function ExerciseHistoryPage() {
         <HistorySessionRow
           exerciseId={exerciseId}
           session={item}
-          latest={item.workoutId === sessions[0]?.workoutId}
           open={item.workoutId === expanded}
           units={units}
           onToggle={() => setOpenId(item.workoutId === expanded ? null : item.workoutId)}

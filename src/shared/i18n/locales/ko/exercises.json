@@ -61,6 +61,10 @@
     "emptyRange": "이 기간에는 기록이 없어요.",
     "empty": "아직 기록이 없어요. 이 종목이 포함된 운동을 완료하면 진행 상황을 볼 수 있어요.",
     "weight": "무게",
-    "oneRepMax": "1RM"
+    "oneRepMax": "1RM",
+    "sets_one": "{{count}}세트",
+    "sets_other": "{{count}}세트",
+    "pr": "PR",
+    "prA11y": "개인 기록"
   }
 }
