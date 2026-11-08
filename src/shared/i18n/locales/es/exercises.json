@@ -61,6 +61,10 @@
     "emptyRange": "No hay entrenamientos en este período.",
     "empty": "Aún no hay entrenamientos. Termina un entrenamiento con este ejercicio para ver tu progreso.",
     "weight": "Peso",
-    "oneRepMax": "1RM"
+    "oneRepMax": "1RM",
+    "sets_one": "{{count}} serie",
+    "sets_other": "{{count}} series",
+    "pr": "PR",
+    "prA11y": "Récord personal"
   }
 }

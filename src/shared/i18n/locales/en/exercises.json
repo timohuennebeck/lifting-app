@@ -61,6 +61,10 @@
     "emptyRange": "No sessions in this period.",
     "empty": "No sessions yet. Finish a workout with this exercise to see your progress.",
     "weight": "Weight",
-    "oneRepMax": "1RM"
+    "oneRepMax": "1RM",
+    "sets_one": "{{count}} set",
+    "sets_other": "{{count}} sets",
+    "pr": "PR",
+    "prA11y": "Personal record"
   }
 }
