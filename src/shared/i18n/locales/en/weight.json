@@ -30,17 +30,5 @@
     "none": "No entry yet",
     "delete": "Delete entry",
     "date": "Date"
-  },
-  "home": {
-    "title": "Body weight",
-    "thisWeek": "this week",
-    "today": "Today",
-    "low": "Low {{value}}",
-    "high": "High {{value}}",
-    "weeks": "Trend at the end of the last 8 weeks",
-    "weighIns_one": "{{count}} weigh-in in 5 weeks",
-    "weighIns_other": "{{count}} weigh-ins in 5 weeks",
-    "loggedToday": "Logged today",
-    "empty": "Log your weight and your trend shows up here."
   }
 }

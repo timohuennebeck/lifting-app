@@ -30,17 +30,5 @@
     "none": "Nenhum registro",
     "delete": "Excluir registro",
     "date": "Data"
-  },
-  "home": {
-    "title": "Peso corporal",
-    "thisWeek": "esta semana",
-    "today": "Hoje",
-    "low": "Mín. {{value}}",
-    "high": "Máx. {{value}}",
-    "weeks": "Tendência no fim das últimas 8 semanas",
-    "weighIns_one": "{{count}} pesagem em 5 semanas",
-    "weighIns_other": "{{count}} pesagens em 5 semanas",
-    "loggedToday": "Registrado hoje",
-    "empty": "Registre seu peso e sua tendência aparece aqui."
   }
 }

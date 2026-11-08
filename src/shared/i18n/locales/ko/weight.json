@@ -30,17 +30,5 @@
     "none": "아직 기록 없음",
     "delete": "기록 삭제",
     "date": "날짜"
-  },
-  "home": {
-    "title": "체중",
-    "thisWeek": "이번 주",
-    "today": "오늘",
-    "low": "최저 {{value}}",
-    "high": "최고 {{value}}",
-    "weeks": "최근 8주 동안 매주 말의 추세",
-    "weighIns_one": "5주 동안 {{count}}회 측정",
-    "weighIns_other": "5주 동안 {{count}}회 측정",
-    "loggedToday": "오늘 기록함",
-    "empty": "체중을 기록하면 여기에 추세가 표시돼요."
   }
 }
