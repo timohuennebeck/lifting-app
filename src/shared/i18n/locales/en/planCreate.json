@@ -108,16 +108,73 @@
     "hint": "Drag the ring or tap a value"
   },
   "building": {
-    "stages": [
-      "Weighing your goal & experience …",
+    "elapsed_one": "{{count}} s",
+    "elapsed_other": "{{count}} s",
+    "lines": [
+      "Reading your answers …",
       "Picking exercises for your equipment …",
+      "Arguing about leg day …",
       "Splitting into workouts …",
-      "Setting sets and reps …"
+      "Counting the plates …",
+      "Setting sets and reps …",
+      "Double-checking the rest times …",
+      "Adding the finishing touches …"
     ],
-    "frequency": "{{count}} × {{minutes}} min",
-    "focus": "Focus: {{areas}}",
-    "balanced": "All muscle groups",
-    "routineTag": "W{{n}}"
+    "topics": {
+      "training": "Training",
+      "recovery": "Recovery",
+      "nutrition": "Nutrition",
+      "supplements": "Supplements",
+      "bulkCut": "Bulk & Cut",
+      "hormones": "Hormones",
+      "body": "Body",
+      "myth": "Myth",
+      "app": "Loqqa"
+    },
+    "tips": {
+      "tricepsShare": "Your triceps make up more than half of your upper arm. Your biceps only about a third.",
+      "deepSquats": "Deep squats build about three times as much glute as half squats.",
+      "overheadTriceps": "Overhead triceps extensions grow the long head about 45 % more than cable pushdowns.",
+      "seatedLegCurl": "Seated leg curls grow your hamstrings about 50 % more than lying ones.",
+      "weeklySets": "10 or more sets per muscle a week bring almost twice the growth of fewer than 5.",
+      "alcohol": "Alcohol after training cuts muscle building by up to 37 %. With a protein shake, it’s still 24 %.",
+      "sleepDiet": "On a diet with 5.5 instead of 8.5 hours of sleep, you lose less than half the fat and clearly more muscle.",
+      "growthHormone": "In men, about 70 % of the day’s growth hormone is released in the first hours of sleep.",
+      "iceBath": "A 10-minute ice bath after every workout slows strength and muscle gains over 12 weeks. Save it for rest days.",
+      "longerRest": "Resting 3 minutes instead of 1 between sets gets you more reps and more strength and muscle.",
+      "proteinTarget": "1.6 g of protein per kg a day is enough for maximum muscle growth. At 75 kg (165 lb), that’s 120 g.",
+      "proteinFood": "250 g of Greek yogurt has about 25 g of protein, as much as 4 eggs.",
+      "casein": "40 g of protein before bed, e.g. from cottage cheese, feeds your muscles through the night.",
+      "deficitProtein": "In a calorie deficit you need more protein, not less: up to 2.2 g per kg of body weight (1 g per lb).",
+      "proteinPowder": "Protein powder is just food in powder form. It builds no more muscle than chicken or yogurt with the same protein.",
+      "creatine": "Creatine: 3–5 g a day, rest days too. Without a loading phase, your muscles are full after about 4 weeks.",
+      "creatineWater": "Creatine often adds 1–2 kg (2–4 lb). That’s water in your muscles, not fat.",
+      "caffeine": "Caffeine 30–60 minutes before training makes you stronger. 3 mg per kg is enough, more mostly brings a racing heart.",
+      "energyDrink": "A 500 ml can of Monster has 160 mg of caffeine, as much as two espressos.",
+      "peptides": "Peptides like BPC-157 are barely studied in humans, not approved as medicines and on the doping list.",
+      "leanBulk": "A lean bulk needs only 200–300 kcal over maintenance a day. Much more mostly adds fat.",
+      "fatKcal": "A kilo of body fat stores about 7,700 kcal. So a 500 kcal daily deficit is about a kilo (2 lb) in two weeks.",
+      "fasting": "At the same calories, intermittent fasting burns no more fat than a normal diet. It’s just one way to eat less.",
+      "cutPace": "Cutting at 0.7 % instead of 1.4 % a week: at the slow pace you even build a little muscle, at the fast one you don’t.",
+      "dietBreaks": "2 weeks of dieting, 2 weeks at maintenance, in turn: that brought about 50 % more fat loss than dieting straight through.",
+      "sleepTestosterone": "A week of 5 hours of sleep a night lowers your testosterone by 10–15 %.",
+      "testoBoosters": "Tribulus and other testosterone boosters don’t measurably raise your testosterone.",
+      "ffmi": "An FFMI over 25 is very rare without steroids. At 1.80 m (5′11″), that’s about 81 kg (179 lb) of fat-free mass.",
+      "hormoneSpikes": "The hormone spike after training only lasts a short while and doesn’t make your muscles bigger.",
+      "muscleVolume": "1 kg of muscle weighs as much as 1 kg of fat, but takes up about 15 % less space.",
+      "glutes": "Your gluteus maximus is the largest muscle in your body.",
+      "muscleWater": "Muscle is about 75 % water. That’s why your weight moves from day to day.",
+      "glycogen": "Every gram of stored carbs holds about 3 g of water. That’s why the scale jumps after pizza night.",
+      "creatineKidneys": "Creatine harms your kidneys? Not healthy ones. It can only raise the creatinine value in a blood test.",
+      "creatineHair": "Creatine makes you bald? It can raise DHT, but hair loss from creatine has never been shown.",
+      "bcaa": "BCAAs for more muscle? If you eat enough protein, they add nothing.",
+      "anabolicWindow": "A shake within 30 minutes after training? How much protein you eat over the day matters far more.",
+      "spotReduction": "Ab exercises to burn belly fat? You lose fat all over your body, not where you train.",
+      "swap": "Machine taken? Swap the exercise mid-workout for a matching alternative.",
+      "plates": "When you log a set, Loqqa shows which plates go on each side of the bar.",
+      "kai": "Ask Kai why your bench press has stalled. He answers with your own data."
+    },
+    "nextTip": "Shows the next tip"
   },
   "generate": {
     "making": "Creating your plan …",
@@ -142,15 +199,5 @@
     "placeholder": "e.g. My full-body plan",
     "suggestions": "Suggestions",
     "myPlan": "My plan"
-  },
-  "goalShort": {
-    "hypertrophy": "Muscle growth",
-    "strength": "Strength",
-    "strength_hypertrophy": "Power building"
-  },
-  "equipmentShort": {
-    "gym": "Full gym",
-    "home": "Home gym",
-    "bodyweight": "Bodyweight"
   }
 }

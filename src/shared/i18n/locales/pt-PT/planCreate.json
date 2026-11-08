@@ -108,16 +108,73 @@
     "hint": "Arrasta o anel ou toca num valor"
   },
   "building": {
-    "stages": [
-      "A analisar objetivo e experiência …",
+    "elapsed_one": "{{count}} s",
+    "elapsed_other": "{{count}} s",
+    "lines": [
+      "A ler as tuas respostas …",
       "A escolher exercícios para o teu equipamento …",
+      "A discutir o dia de pernas …",
       "A dividir em treinos …",
-      "A definir séries e repetições …"
+      "A contar os discos …",
+      "A definir séries e repetições …",
+      "A verificar os tempos de descanso …",
+      "A dar os últimos retoques …"
     ],
-    "frequency": "{{count}} × {{minutes}} min",
-    "focus": "Foco: {{areas}}",
-    "balanced": "Todos os grupos musculares",
-    "routineTag": "T{{n}}"
+    "topics": {
+      "training": "Treino",
+      "recovery": "Recuperação",
+      "nutrition": "Nutrição",
+      "supplements": "Suplementos",
+      "bulkCut": "Bulk & Cut",
+      "hormones": "Hormonas",
+      "body": "Corpo",
+      "myth": "Mito",
+      "app": "Loqqa"
+    },
+    "tips": {
+      "tricepsShare": "O teu tríceps é mais de metade do teu braço. O bíceps é só cerca de um terço.",
+      "deepSquats": "Agachamentos profundos constroem cerca de três vezes mais glúteo do que meios agachamentos.",
+      "overheadTriceps": "A extensão de tríceps acima da cabeça faz a cabeça longa crescer cerca de 45 % mais do que no cabo.",
+      "seatedLegCurl": "O curl de pernas sentado faz o posterior da coxa crescer cerca de 50 % mais do que deitado.",
+      "weeklySets": "10 ou mais séries por músculo e semana dão quase o dobro do crescimento de menos de 5.",
+      "alcohol": "Álcool depois do treino reduz o ganho muscular até 37 %. Com batido de proteína, ainda são 24 %.",
+      "sleepDiet": "Em dieta, com 5,5 em vez de 8,5 horas de sono, perdes menos de metade da gordura e bem mais músculo.",
+      "growthHormone": "Nos homens, cerca de 70 % da hormona do crescimento do dia é libertada nas primeiras horas de sono.",
+      "iceBath": "10 minutos de banho de gelo após cada treino travam força e músculo ao longo de 12 semanas. Guarda-o para os dias de descanso.",
+      "longerRest": "Com 3 em vez de 1 minuto de descanso fazes mais repetições e ganhas mais força e músculo.",
+      "proteinTarget": "1,6 g de proteína por kg por dia chegam para o máximo ganho muscular. Com 75 kg, são 120 g.",
+      "proteinFood": "250 g de iogurte grego têm cerca de 25 g de proteína, tanto como 4 ovos.",
+      "casein": "40 g de proteína antes de dormir, por ex. de queijo cottage, alimentam os músculos durante a noite.",
+      "deficitProtein": "Em défice calórico precisas de mais proteína, não menos: até 2,2 g por kg de peso corporal.",
+      "proteinPowder": "Proteína em pó é só comida em pó. Não constrói mais músculo do que frango ou iogurte com a mesma proteína.",
+      "creatine": "Creatina: 3–5 g por dia, também nos dias de descanso. Sem fase de carga, os músculos ficam cheios em cerca de 4 semanas.",
+      "creatineWater": "Com creatina pesas muitas vezes 1–2 kg a mais. É água nos músculos, não gordura.",
+      "caffeine": "Cafeína 30–60 minutos antes do treino deixa-te mais forte. 3 mg por kg chegam, mais traz sobretudo taquicardia.",
+      "energyDrink": "Uma lata de Monster (500 ml) tem 160 mg de cafeína, tanto como dois cafés expresso.",
+      "peptides": "Péptidos como o BPC-157 quase não foram estudados em humanos, não estão aprovados como medicamento e são doping.",
+      "leanBulk": "Para um lean bulk chegam 200–300 kcal acima da manutenção por dia. Muito mais é sobretudo gordura.",
+      "fatKcal": "Um quilo de gordura corporal armazena cerca de 7700 kcal. Com 500 kcal de défice por dia, é um quilo em duas semanas.",
+      "fasting": "Com as mesmas calorias, o jejum intermitente não queima mais gordura do que uma dieta normal. É só uma forma de comer menos.",
+      "cutPace": "No cut, 0,7 % em vez de 1,4 % por semana: no ritmo lento ainda ganhas algum músculo, no rápido não.",
+      "dietBreaks": "2 semanas de dieta, 2 semanas em manutenção, alternadas: isso trouxe cerca de 50 % mais perda de gordura do que dieta contínua.",
+      "sleepTestosterone": "Uma semana a dormir 5 horas por noite baixa a tua testosterona em 10–15 %.",
+      "testoBoosters": "Tribulus e outros boosters de testosterona não a aumentam de forma mensurável.",
+      "ffmi": "Um FFMI acima de 25 é muito raro sem esteroides. Com 1,80 m, são cerca de 81 kg de massa magra.",
+      "hormoneSpikes": "O pico hormonal depois do treino dura pouco e não deixa os músculos maiores.",
+      "muscleVolume": "1 kg de músculo pesa tanto como 1 kg de gordura, mas ocupa cerca de 15 % menos espaço.",
+      "glutes": "O glúteo máximo é o maior músculo do teu corpo.",
+      "muscleWater": "O músculo é cerca de 75 % água. Por isso o teu peso varia de dia para dia.",
+      "glycogen": "Cada grama de hidratos armazenado retém cerca de 3 g de água. Por isso a balança salta depois de uma noite de pizza.",
+      "creatineKidneys": "A creatina faz mal aos rins? Com rins saudáveis, não. Só pode subir o valor da creatinina nas análises.",
+      "creatineHair": "A creatina faz cair o cabelo? Pode subir a DHT, mas nunca se demonstrou queda de cabelo por creatina.",
+      "bcaa": "BCAA para mais músculo? Se comes proteína suficiente, não trazem nada a mais.",
+      "anabolicWindow": "Batido nos 30 minutos após o treino? A proteína que comes ao longo do dia conta muito mais.",
+      "spotReduction": "Abdominais para queimar a barriga? Perdes gordura no corpo todo, não onde treinas.",
+      "swap": "Máquina ocupada? Troca o exercício a meio do treino por uma alternativa adequada.",
+      "plates": "Ao registares uma série, o Loqqa mostra que discos vão de cada lado da barra.",
+      "kai": "Pergunta ao Kai porque é que o teu supino estagnou. Ele responde com os teus próprios dados."
+    },
+    "nextTip": "Mostra a próxima dica"
   },
   "generate": {
     "making": "A criar o plano …",
@@ -142,15 +199,5 @@
     "placeholder": "p. ex. O meu plano de corpo inteiro",
     "suggestions": "Sugestões",
     "myPlan": "O meu plano"
-  },
-  "goalShort": {
-    "hypertrophy": "Ganho muscular",
-    "strength": "Força",
-    "strength_hypertrophy": "Força & massa"
-  },
-  "equipmentShort": {
-    "gym": "Ginásio",
-    "home": "Em casa",
-    "bodyweight": "Só o corpo"
   }
 }

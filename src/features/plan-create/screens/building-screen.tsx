@@ -1,72 +1,48 @@
 import { Stack } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 
 import { useDraft } from '@/features/onboarding/stores/onboarding-store';
 import { usePlanRun } from '@/features/plan-import/hooks/use-plan-run';
-import { groupOfMuscle } from '@/shared/data/muscle-groups';
-import { PaperStack } from '../components/paper-sheet';
-import { type ScanChip, ScanStage } from '@/shared/ui/scan-stage';
+import { useNow } from '@/shared/hooks/use-now';
 
+import { BuildingCaption } from '../components/building/building-caption';
+import { TipRow } from '../components/building/tip-row';
 import { answersFromDraft } from '../lib/plan-answers';
 
+/** Seconds each line of what is being done stays; the last one stays until the plan is there. */
+const LINE_SECONDS = 3;
+
 /**
- * 00·P1: the AI makes the plan from the answers (generate-plan) behind an animation; the editor
- * opens with its first exercise and the rest fills in there (ConfirmScreen), the name comes after.
+ * 00·P1: the AI makes the plan from the answers (generate-plan) while training tips run; the
+ * editor opens with its first exercise and the rest fills in there (ConfirmScreen), the name
+ * comes after. How long that takes isn't known, so the screen shows the time waited, not a share.
  */
 export function BuildingScreen() {
-  const { t } = useTranslation(['planCreate', 'exercises']);
+  const { t } = useTranslation('planCreate');
   const draft = useDraft();
   // The answers as the screen opened; a new draft object doesn't start another plan.
   const [input] = useState(() => answersFromDraft(draft));
-  const shown = usePlanRun(input);
+  usePlanRun(input);
+  const [startedAt] = useState(Date.now);
+  const now = useNow(1000);
 
-  const stages = t('planCreate:building.stages', { returnObjects: true });
-  const areas = [...new Set(input.focus.map(groupOfMuscle))].map((g) => t(`exercises:groups.${g}`));
-
-  const chips: ScanChip[] = [
-    { label: t(`planCreate:goalShort.${input.goal}`), x: 14, y: 176, duration: 3 },
-    {
-      label: t('planCreate:building.frequency', {
-        count: input.sessionsPerWeek,
-        minutes: input.sessionMinutes,
-      }),
-      x: 278,
-      y: 150,
-      accent: true,
-      duration: 3.6,
-      delay: 0.6,
-    },
-    {
-      label: t(`planCreate:equipmentShort.${input.equipment}`),
-      x: 270,
-      y: 300,
-      duration: 4.1,
-      delay: 1.1,
-    },
-    {
-      label: areas.length
-        ? t('planCreate:building.focus', { areas: areas.join(', ') })
-        : t('planCreate:building.balanced'),
-      x: 8,
-      y: 452,
-      duration: 3.3,
-      delay: 0.3,
-    },
-  ];
+  const seconds = Math.max(0, Math.floor((now - startedAt) / 1000));
+  const lines = t('building.lines', { returnObjects: true });
 
   return (
     <>
       <Stack.Screen options={{ gestureEnabled: false, animation: 'fade' }} />
-      <ScanStage progress={shown} stages={stages} chips={chips}>
-        <PaperStack
-          tags={[
-            t('planCreate:building.routineTag', { n: 3 }),
-            t('planCreate:building.routineTag', { n: 2 }),
-            t('planCreate:building.routineTag', { n: 1 }),
-          ]}
+      <View className="flex-1 bg-bg">
+        <View className="flex-1 justify-center px-8 pb-48">
+          <TipRow equipment={input.equipment} />
+        </View>
+        <BuildingCaption
+          line={lines[Math.min(lines.length - 1, Math.floor(seconds / LINE_SECONDS))]}
+          elapsed={t('building.elapsed', { count: seconds })}
         />
-      </ScanStage>
+      </View>
     </>
   );
 }

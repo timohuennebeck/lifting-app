@@ -108,16 +108,73 @@
     "hint": "Fais glisser l'anneau ou touche une valeur"
   },
   "building": {
-    "stages": [
-      "On évalue ton objectif et ton expérience…",
+    "elapsed_one": "{{count}} s",
+    "elapsed_other": "{{count}} s",
+    "lines": [
+      "On lit tes réponses…",
       "On choisit les exercices pour ton matériel…",
+      "On débat du jour jambes…",
       "On répartit en séances…",
-      "On définit les séries et les répétitions…"
+      "On compte les disques…",
+      "On définit les séries et les répétitions…",
+      "On vérifie les temps de repos…",
+      "On peaufine les détails…"
     ],
-    "frequency": "{{count}} × {{minutes}} min",
-    "focus": "Priorité : {{areas}}",
-    "balanced": "Tous les groupes musculaires",
-    "routineTag": "S{{n}}"
+    "topics": {
+      "training": "Entraînement",
+      "recovery": "Récupération",
+      "nutrition": "Nutrition",
+      "supplements": "Compléments",
+      "bulkCut": "Prise de masse & sèche",
+      "hormones": "Hormones",
+      "body": "Corps",
+      "myth": "Mythe",
+      "app": "Loqqa"
+    },
+    "tips": {
+      "tricepsShare": "Ton triceps représente plus de la moitié de ton bras. Le biceps, à peine un tiers.",
+      "deepSquats": "Les squats profonds développent environ trois fois plus les fessiers que les demi-squats.",
+      "overheadTriceps": "L’extension des triceps au-dessus de la tête fait grossir le long chef d’environ 45 % de plus qu’à la poulie.",
+      "seatedLegCurl": "Le leg curl assis fait grossir les ischios d’environ 50 % de plus que couché.",
+      "weeklySets": "10 séries ou plus par muscle et par semaine donnent presque deux fois plus de croissance que moins de 5.",
+      "alcohol": "L’alcool après la séance réduit la synthèse musculaire jusqu’à 37 %. Avec un shake, c’est encore 24 %.",
+      "sleepDiet": "En sèche, avec 5,5 au lieu de 8,5 heures de sommeil, tu perds moins de la moitié du gras et bien plus de muscle.",
+      "growthHormone": "Chez l’homme, environ 70 % de l’hormone de croissance du jour est libérée dans les premières heures de sommeil.",
+      "iceBath": "10 minutes de bain glacé après chaque séance freinent force et muscle sur 12 semaines. Garde-le pour les jours de repos.",
+      "longerRest": "Avec 3 minutes de repos au lieu d’1, tu fais plus de répétitions et gagnes plus de force et de muscle.",
+      "proteinTarget": "1,6 g de protéines par kilo et par jour suffisent pour une prise de muscle maximale. À 75 kg, c’est 120 g.",
+      "proteinFood": "250 g de skyr contiennent environ 27 g de protéines, autant que 4 œufs.",
+      "casein": "40 g de protéines avant de dormir, par exemple du fromage blanc, nourrissent tes muscles pendant la nuit.",
+      "deficitProtein": "En déficit calorique, il te faut plus de protéines, pas moins : jusqu’à 2,2 g par kilo de poids de corps.",
+      "proteinPowder": "La whey, c’est juste de la nourriture en poudre. Elle ne construit pas plus de muscle que du poulet à protéines égales.",
+      "creatine": "Créatine : 3 à 5 g par jour, jours de repos compris. Sans phase de charge, tes muscles sont pleins en 4 semaines environ.",
+      "creatineWater": "Avec la créatine, tu pèses souvent 1 à 2 kg de plus. C’est de l’eau dans les muscles, pas du gras.",
+      "caffeine": "La caféine 30 à 60 minutes avant la séance te rend plus fort. 3 mg par kilo suffisent, au-delà surtout des palpitations.",
+      "energyDrink": "Une canette de Monster (500 ml) contient 160 mg de caféine, autant que deux expressos.",
+      "peptides": "Les peptides comme le BPC-157 sont à peine étudiés chez l’humain, non autorisés comme médicament et classés dopants.",
+      "leanBulk": "Pour une prise de masse propre, 200 à 300 kcal de surplus par jour suffisent. Bien plus, c’est surtout du gras.",
+      "fatKcal": "Un kilo de graisse corporelle stocke environ 7 700 kcal. Avec 500 kcal de déficit par jour, c’est un kilo en deux semaines.",
+      "fasting": "À calories égales, le jeûne intermittent ne brûle pas plus de gras qu’un régime normal. C’est juste une façon de manger moins.",
+      "cutPace": "En sèche, 0,7 % au lieu de 1,4 % par semaine : au rythme lent, tu prends même un peu de muscle, au rapide non.",
+      "dietBreaks": "2 semaines de régime, 2 semaines à maintenance, en alternance : environ 50 % de gras perdu en plus qu’en régime continu.",
+      "sleepTestosterone": "Une semaine à 5 heures de sommeil par nuit fait baisser ta testostérone de 10 à 15 %.",
+      "testoBoosters": "Le tribulus et les autres boosters de testostérone ne l’augmentent pas de façon mesurable.",
+      "ffmi": "Un FFMI au-dessus de 25 est très rare sans stéroïdes. À 1,80 m, cela fait environ 81 kg de masse maigre.",
+      "hormoneSpikes": "Le pic hormonal après la séance dure peu et ne fait pas grossir tes muscles.",
+      "muscleVolume": "1 kg de muscle pèse autant qu’1 kg de gras, mais prend environ 15 % de place en moins.",
+      "glutes": "Le grand fessier est le plus gros muscle de ton corps.",
+      "muscleWater": "Le muscle est composé d’environ 75 % d’eau. C’est pour ça que ton poids varie d’un jour à l’autre.",
+      "glycogen": "Chaque gramme de glucides stocké retient environ 3 g d’eau. D’où le bond sur la balance après une soirée pizza.",
+      "creatineKidneys": "La créatine abîme les reins ? Pas des reins sains. Elle peut juste augmenter la créatinine dans une prise de sang.",
+      "creatineHair": "La créatine rend chauve ? Elle peut augmenter la DHT, mais aucune chute de cheveux due à la créatine n’a été démontrée.",
+      "bcaa": "Des BCAA pour plus de muscle ? Si tu manges assez de protéines, ils n’apportent rien de plus.",
+      "anabolicWindow": "Un shake dans les 30 minutes après la séance ? Ta quantité de protéines sur la journée compte bien plus.",
+      "spotReduction": "Des abdos pour brûler le ventre ? On perd du gras sur tout le corps, pas là où on s’entraîne.",
+      "swap": "Machine prise ? Remplace l’exercice en pleine séance par une alternative adaptée.",
+      "plates": "Quand tu notes une série, Loqqa te montre quels disques mettre de chaque côté de la barre.",
+      "kai": "Demande à Kai pourquoi ton développé couché stagne. Il te répond avec tes propres données."
+    },
+    "nextTip": "Affiche l’astuce suivante"
   },
   "generate": {
     "making": "Création de ton programme…",
@@ -142,15 +199,5 @@
     "placeholder": "par ex. Mon programme full body",
     "suggestions": "Suggestions",
     "myPlan": "Mon programme"
-  },
-  "goalShort": {
-    "hypertrophy": "Prise de muscle",
-    "strength": "Force",
-    "strength_hypertrophy": "Force et masse"
-  },
-  "equipmentShort": {
-    "gym": "Salle",
-    "home": "Maison",
-    "bodyweight": "Sans charge"
   }
 }
