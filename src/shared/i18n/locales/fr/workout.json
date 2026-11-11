@@ -75,6 +75,7 @@
     "title": "Remplacer l'exercice",
     "confirmTitle": "Remplacer l'exercice ?",
     "confirmMessage": "Les séries déjà enregistrées pour cet exercice seront effacées.",
+    "option": "Remplacer par {{name}}",
     "confirm": "Remplacer"
   },
   "remove": {

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { ExerciseSearchBar } from '@/features/exercises/components/exercise-search-bar';
+import { useSearchTracking } from '@/features/exercises/hooks/use-search-tracking';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
@@ -19,6 +20,7 @@ export function SearchScreen() {
   const { t } = useTranslation(['common', 'exercises']);
   const [query, setQuery] = useState('');
   const [barHeight, setBarHeight] = useState(0);
+  useSearchTracking(query, 'search');
 
   return (
     <Screen

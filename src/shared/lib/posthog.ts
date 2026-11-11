@@ -6,7 +6,7 @@ import { mmkvStorage } from '@/shared/lib/storage';
 /**
  * Every event the app sends to PostHog, named `category:object_action`, with its properties.
  * Health data (body weight, height, progress photos and their scores), names, email, the birth
- * date and free text never go out.
+ * date and free text never go out; the one exception is what is typed into the exercise search.
  */
 export interface AnalyticsEvents {
   /** "Los geht's" on the welcome screen. */
@@ -103,6 +103,18 @@ export interface AnalyticsEvents {
     duration_ms: number;
   };
   'voice:add_fail': { context: VoiceContext; error_code: string };
+  /**
+   * A text searched for in the exercise list, once the user settled on it; `result_count` 0
+   * points at an exercise the catalog lacks.
+   */
+  'exercise:search': {
+    query: string;
+    /** Exercises it finds in every muscle group. */
+    result_count: number;
+    context: ExerciseSearchContext;
+    /** The app language, which the names are searched in first. */
+    language: string;
+  };
 }
 
 /**
@@ -115,6 +127,9 @@ export interface PlanFailureProperties {
 }
 
 export type VoiceContext = 'routine' | 'plan_import' | 'workout';
+
+/** The search page, or the picker adding exercises or swapping one. */
+export type ExerciseSearchContext = 'search' | 'add' | 'swap';
 
 /**
  * Where a new plan comes from: made by the AI from the answers, a workout file's plan, found in

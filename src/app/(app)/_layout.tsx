@@ -30,6 +30,8 @@ export default function AppLayout() {
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="workout/[id]" options={{ gestureEnabled: false }} />
+        {/* The plan flow: a swipe on its first step would leave it (see plan/_layout). */}
+        <Stack.Screen name="plan" options={{ gestureEnabled: false }} />
         {/*
           Just finished (`?finished=1`): fades in over the workout and only its X leaves; from the
           history it slides in and swipes back like any page.

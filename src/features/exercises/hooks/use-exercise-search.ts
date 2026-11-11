@@ -140,3 +140,13 @@ export function useExerciseSearch(query: string, group?: MuscleGroupId | null) {
     });
   }, [options, deferredQuery, group]);
 }
+
+/** How many active exercises a search text finds, in every muscle group (for analytics). */
+export function countExerciseMatches(query: string, language: string) {
+  const { rows, equipment } = useCatalogStore.getState();
+  const custom = useCustomExerciseStore.getState().exercises;
+  const q = searchText(query);
+  return optionsFor(language, rows, equipment, custom).filter((o) =>
+    o.searchNames.some((n) => n.key.includes(q)),
+  ).length;
+}

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWindowDimensions, View } from 'react-native';
 
@@ -38,8 +38,16 @@ const BAR_MAX = { kg: 100, lb: 220 } as const;
 
 const round2 = (value: number) => Math.round(value * 100) / 100;
 
-/** The bar as changed in the sheet; saved when it closes. */
+/** The bar as changed in the sheet; saved with "Done". */
 type BarDraft = Pick<PlateBar, 'weight' | 'noBar'>;
+
+/** What "Done" takes from the sheet: the weight, and the bar and plates as set there. */
+interface PlatesResult {
+  weight: number;
+  bar: BarDraft;
+  /** The plates the gym has, null for all of them; undefined when none were toggled. */
+  plates: number[] | null | undefined;
+}
 
 interface StepButtonProps {
   icon: 'minus' | 'plus';
@@ -64,16 +72,16 @@ function StepButton({ icon, label, onPress }: StepButtonProps) {
 interface AvailablePlatesProps {
   unit: PlateUnit;
   available: number[];
+  /** The plates after a toggle; null for all of them. */
+  onChange: (plates: number[] | null) => void;
 }
 
 /** The plates the gym has, a round toggle each, in the accent while on; the last one stays on. */
-function AvailablePlates({ unit, available }: AvailablePlatesProps) {
+function AvailablePlates({ unit, available, onChange }: AvailablePlatesProps) {
   const { t } = useTranslation('workout');
-  const userId = useUserId();
   const toggle = (plate: number) => {
     const next = togglePlate(unit, available, plate);
-    if (next === undefined || !userId) return;
-    void saveProfile(userId, unit === 'kg' ? { platesKg: next } : { platesLb: next });
+    if (next !== undefined) onChange(next);
   };
   return (
     <View className="gap-2.5 pb-6.5">
@@ -118,34 +126,25 @@ interface PlatesSheetBodyProps {
   initialWeight: number;
   initialBar: BarDraft;
   setup: PlateSetup;
-  /** Every change of the bar, for the sheet to save when it closes. */
-  onBarChange: (bar: BarDraft) => void;
-  onDone: (weight: number) => void;
+  onDone: (result: PlatesResult) => void;
 }
 
 /** The sheet's content: mounted while it shows, so it starts from the weight typed each time. */
-function PlatesSheetBody({
-  initialWeight,
-  initialBar,
-  setup,
-  onBarChange,
-  onDone,
-}: PlatesSheetBodyProps) {
+function PlatesSheetBody({ initialWeight, initialBar, setup, onDone }: PlatesSheetBodyProps) {
   const { t } = useTranslation(['workout', 'common']);
   const units = useUnits();
   const unit = weightUnit(units);
   const { width } = useWindowDimensions();
   const [weight, setWeight] = useState(initialWeight);
   const [draft, setDraft] = useState(initialBar);
-  const available = useAvailablePlates(unit);
+  const saved = useAvailablePlates(unit);
+  // Plates turned off and on here; undefined while untouched. Null is all of them.
+  const [platesDraft, setPlatesDraft] = useState<number[] | null>();
+  const available = platesDraft === undefined ? saved : (platesDraft ?? PLATE_WEIGHTS[unit]);
   const sled = setup.carrier === 'sled';
 
-  const changeBar = (next: BarDraft) => {
-    setDraft(next);
-    onBarChange(next);
-  };
   const stepBar = (by: number) =>
-    changeBar({ ...draft, weight: clamp(draft.weight + by, BAR_STEP[unit], BAR_MAX[unit]) });
+    setDraft({ ...draft, weight: clamp(draft.weight + by, BAR_STEP[unit], BAR_MAX[unit]) });
 
   const bar = draft.noBar ? 0 : draft.weight;
   const step = plateStep(available, setup.sides);
@@ -196,7 +195,7 @@ function PlatesSheetBody({
           <PlateList plates={plates} unit={unit} size="sheet" />
         )}
       </View>
-      <AvailablePlates unit={unit} available={available} />
+      <AvailablePlates unit={unit} available={available} onChange={setPlatesDraft} />
       {draft.noBar ? null : (
         <View className="flex-row items-center justify-between pb-3.5">
           <Text className={cn(CAPTION, 'px-1')}>
@@ -234,10 +233,13 @@ function PlatesSheetBody({
         <ToggleSwitch
           value={draft.noBar}
           accessibilityLabel={t(sled ? 'plates.withoutSled' : 'plates.withoutBar')}
-          onChange={(noBar) => changeBar({ ...draft, noBar })}
+          onChange={(noBar) => setDraft({ ...draft, noBar })}
         />
       </View>
-      <Button label={t('common:actions.done')} onPress={() => onDone(weight)} />
+      <Button
+        label={t('common:actions.done')}
+        onPress={() => onDone({ weight, bar: draft, plates: platesDraft })}
+      />
     </View>
   );
 }
@@ -256,8 +258,8 @@ export interface PlatesSheetProps {
 /**
  * The plates for a weight, bigger: a stepper for the weight, one end of the bar drawn, the
  * plates, the plates the gym has and the bar they go on. Opened from the ⓘ beside the number
- * pad's plates. A changed bar is saved for the exercise when the sheet closes, with "Done" or
- * without; the plates as they are turned off and on, for every exercise (on the profile).
+ * pad's plates. Only "Done" saves: a changed bar for the exercise, the plates for every exercise
+ * (on the profile); closing the sheet otherwise drops the changes.
  */
 export function PlatesSheet({
   visible,
@@ -271,38 +273,31 @@ export function PlatesSheet({
   const units = useUnits();
   const userId = useUserId();
   const current = usePlateBar(exerciseId, setup);
-  const changed = useRef<BarDraft | null>(null);
-
-  const saveBar = () => {
-    const bar = changed.current;
-    changed.current = null;
-    if (!bar || !userId) return;
-    if (bar.weight === current.weight && bar.noBar === current.noBar) return;
-    void saveExerciseSetting(userId, exerciseId, {
-      barKg: fromDisplayWeight(bar.weight, units),
-      noBar: bar.noBar,
-    });
+  const save = ({ bar, plates }: PlatesResult) => {
+    if (!userId) return;
+    if (bar.weight !== current.weight || bar.noBar !== current.noBar) {
+      void saveExerciseSetting(userId, exerciseId, {
+        barKg: fromDisplayWeight(bar.weight, units),
+        noBar: bar.noBar,
+      });
+    }
+    if (plates !== undefined) {
+      void saveProfile(
+        userId,
+        weightUnit(units) === 'kg' ? { platesKg: plates } : { platesLb: plates },
+      );
+    }
   };
 
   return (
-    <Sheet
-      visible={visible}
-      onClose={() => {
-        saveBar();
-        onClose();
-      }}
-      title={t('plates.title')}
-    >
+    <Sheet visible={visible} onClose={onClose} title={t('plates.title')}>
       <PlatesSheetBody
         initialWeight={weight ?? current.bar}
         initialBar={{ weight: current.weight, noBar: current.noBar }}
         setup={setup}
-        onBarChange={(bar) => {
-          changed.current = bar;
-        }}
-        onDone={(w) => {
-          saveBar();
-          onDone(w);
+        onDone={(result) => {
+          save(result);
+          onDone(result.weight);
         }}
       />
     </Sheet>

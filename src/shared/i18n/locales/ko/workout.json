@@ -75,6 +75,7 @@
     "title": "운동 바꾸기",
     "confirmTitle": "운동을 바꿀까요?",
     "confirmMessage": "이 운동에 이미 기록한 세트가 지워져요.",
+    "option": "{{name}}(으)로 바꾸기",
     "confirm": "바꾸기"
   },
   "remove": {

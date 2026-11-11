@@ -636,7 +636,9 @@ properties are typed in `src/shared/lib/posthog.ts` (`AnalyticsEvents`), named
   records from the local database.
 - **Features:** `coach:question_submit` and `coach:answer_complete` / `_fail` (never the text),
   `progress_check:assess_complete` / `_retake` / `_fail` (never the photos or scores),
-  `weight:entry_save` (never the weight), `voice:add_complete` / `_fail` (with what it adds to).
+  `weight:entry_save` (never the weight), `voice:add_complete` / `_fail` (with what it adds to),
+  `exercise:search` (the text searched for in the search or the exercise picker, once the user
+  stops typing, with how many exercises it finds: `result_count` 0 points at a missing one).
 - **Plan failures** carry `error_detail` besides `error_code`: where it broke, e.g.
   `http_429_limit`, `stream_incomplete` or `client_TypeError`.
 - **Subscriptions** come from RevenueCat's PostHog integration (trial started and converted,
@@ -649,8 +651,8 @@ properties are typed in `src/shared/lib/posthog.ts` (`AnalyticsEvents`), named
 
 Person properties are the profile's answers, the plan's workouts per week, an age band and Pro.
 Body weight, height, progress photos and their scores, names, email, the birth date and free text
-are never sent. `posthog-react-native` uses `expo-application` and `expo-device`: a new
-development build is needed after pulling.
+are never sent, except the text typed into the exercise search. `posthog-react-native` uses
+`expo-application` and `expo-device`: a new development build is needed after pulling.
 
 ## Languages
 

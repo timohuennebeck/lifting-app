@@ -8,6 +8,7 @@ import { IconButton } from '@/shared/ui/icon-button';
 import { Screen } from '@/shared/ui/screen';
 import { ScreenHeader } from '@/shared/ui/screen-header';
 
+import { useSearchTracking } from '../hooks/use-search-tracking';
 import { useCreatedExerciseStore } from '../stores/created-exercise-store';
 import { ExerciseLibrary } from './exercise-library';
 import { ExerciseSearchBar } from './exercise-search-bar';
@@ -35,6 +36,7 @@ export function ExercisePickerPage({ title, mode, exerciseIds, onDone }: Exercis
   const [picked, setPicked] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [barHeight, setBarHeight] = useState(0);
+  useSearchTracking(query, mode);
 
   function apply(ids: string[]) {
     if (saving) return;

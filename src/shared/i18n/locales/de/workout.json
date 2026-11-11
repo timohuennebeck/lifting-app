@@ -75,6 +75,7 @@
     "title": "Übung tauschen",
     "confirmTitle": "Übung tauschen?",
     "confirmMessage": "Die bereits eingetragenen Sätze dieser Übung werden gelöscht.",
+    "option": "Gegen {{name}} tauschen",
     "confirm": "Tauschen"
   },
   "remove": {
