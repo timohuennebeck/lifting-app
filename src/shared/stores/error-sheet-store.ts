@@ -28,9 +28,9 @@ export const useErrorSheetStore = create<ErrorSheetState>()(() => ({
 }));
 
 /**
- * Shows an error in the app's error sheet (ErrorSheetHost), from a screen or a hook; it stays up
- * when the caller navigates away and waits for an open sheet to close. While one is shown,
- * further errors are dropped.
+ * Shows an error, or a warning to confirm (with `action`), in the app's error sheet
+ * (ErrorSheetHost), from a screen or a hook; it stays up when the caller navigates away and
+ * waits for an open sheet to close. While one is shown, further errors are dropped.
  */
 export function showError(error: ErrorSheetOptions) {
   if (useErrorSheetStore.getState().visible) return;

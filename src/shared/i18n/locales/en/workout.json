@@ -75,7 +75,6 @@
     "title": "Swap exercise",
     "confirmTitle": "Swap exercise?",
     "confirmMessage": "The sets you already logged for this exercise will be cleared.",
-    "option": "Swap for {{name}}",
     "confirm": "Swap"
   },
   "remove": {

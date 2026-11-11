@@ -75,7 +75,6 @@
     "title": "Cambiar ejercicio",
     "confirmTitle": "¿Cambiar el ejercicio?",
     "confirmMessage": "Se borrarán las series que ya registraste para este ejercicio.",
-    "option": "Cambiar por {{name}}",
     "confirm": "Cambiar"
   },
   "remove": {

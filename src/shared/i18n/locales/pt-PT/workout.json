@@ -75,7 +75,6 @@
     "title": "Trocar exercício",
     "confirmTitle": "Trocar exercício?",
     "confirmMessage": "As séries já registadas deste exercício serão apagadas.",
-    "option": "Trocar por {{name}}",
     "confirm": "Trocar"
   },
   "remove": {
