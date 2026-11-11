@@ -17,8 +17,7 @@ import type { SetDraft } from '@/features/training/components/set-editor-row';
 import { insertCustomExercises } from '@/shared/data/custom-exercises';
 import {
   type CustomExercise,
-  defaultTargets,
-  newWorkoutExerciseDraft,
+  newExerciseDraft,
   type SetTargets,
   swapTargets,
 } from '@/shared/data/exercises';
@@ -265,7 +264,7 @@ async function insertWorkoutExercise(
   }
 }
 
-/** Appends an exercise with empty sets at its default targets to a running workout. */
+/** Appends an exercise with one set without targets to a running workout. */
 export async function addWorkoutExercise(userId: string, workoutId: string, exerciseId: string) {
   await drizzle.transaction((tx) =>
     insertWorkoutExercise(
@@ -276,7 +275,7 @@ export async function addWorkoutExercise(userId: string, workoutId: string, exer
         workoutEntriesExercises.position,
         eq(workoutEntriesExercises.workout_entries_id, workoutId),
       ),
-      newWorkoutExerciseDraft(exerciseId),
+      newExerciseDraft(exerciseId),
     ),
   );
 }
@@ -419,7 +418,7 @@ export async function swapWorkoutExercise(workoutExerciseId: string, exerciseId:
   });
 }
 
-/** Appends a set that copies the targets of the current last set. */
+/** Appends a set that copies the targets of the current last set; without one, no targets. */
 export async function addWorkoutSet(userId: string, workoutExerciseId: string) {
   // One write transaction, so a quick double tap cannot reuse the same position.
   await drizzle.transaction(async (tx) => {
@@ -437,7 +436,7 @@ export async function addWorkoutSet(userId: string, workoutExerciseId: string) {
       .get();
     const targets = last
       ? { min: last.target_min, max: last.target_max, rir: last.target_rir }
-      : defaultTargets(await exerciseOf(tx, workoutExerciseId));
+      : { min: null, max: null, rir: null };
     await insertWorkoutSet(tx, userId, workoutExerciseId, (last?.position ?? -1) + 1, targets);
   });
 }

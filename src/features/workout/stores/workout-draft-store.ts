@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import type { SpokenExercises } from '@/features/voice-input/lib/spoken-exercises';
 import {
   type CustomExercise,
-  newWorkoutExerciseDraft,
+  newExerciseDraft,
   showDraftExercises,
   swapExerciseDraft,
 } from '@/shared/data/exercises';
@@ -61,7 +61,7 @@ export const useWorkoutDraftStore = create<WorkoutDraftState>()((set) => {
       set((s) => ({
         exercises: [
           ...s.exercises,
-          ...exerciseIds.map((id) => ({ ...newWorkoutExerciseDraft(id), key: newId() })),
+          ...exerciseIds.map((id) => ({ ...newExerciseDraft(id), key: newId() })),
         ],
       })),
     addSpoken: ({ exercises, newExercises }) =>

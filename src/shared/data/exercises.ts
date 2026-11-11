@@ -414,20 +414,10 @@ export const swapTargets = (fromId: string, toId: string): SetTargets | null =>
 /** A set without targets: its reps (or seconds) and RIR are the user's to set. */
 export const emptySetDraft = (): SetTarget => ({ targetMin: null, targetMax: null, rir: null });
 
-/** An exercise added to a plan or routine: one set without targets, its default rest. */
+/** An exercise added to a plan, routine or workout: one set without targets, its default rest. */
 export const newExerciseDraft = (exerciseId: string): ExerciseDraft => ({
   exerciseId,
   sets: [emptySetDraft()],
-  restSeconds: null,
-});
-
-/** Sets of an exercise added to a workout, ready to log. */
-const NEW_WORKOUT_SETS = 3;
-
-/** An exercise added to a workout: three sets at its default targets, its default rest. */
-export const newWorkoutExerciseDraft = (exerciseId: string): ExerciseDraft => ({
-  exerciseId,
-  sets: defaultSetDrafts(exerciseId, NEW_WORKOUT_SETS),
   restSeconds: null,
 });
 
