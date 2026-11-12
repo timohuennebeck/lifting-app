@@ -12,9 +12,21 @@ import {
   NothingToRestoreError,
   type PlanId,
   PurchaseCancelledError,
+  PurchaseFailedError,
   purchases,
 } from '../lib/purchases-service';
 import { useSubscriptionStore } from '../stores/subscription-store';
+
+/** Longest store message sent to analytics. */
+const MAX_ERROR_MESSAGE = 300;
+
+/** Why a purchase failed, for analytics: the store's code and message where it gave them. */
+function failureOf(error: unknown) {
+  if (error instanceof PurchaseFailedError) {
+    return { error_code: error.code, error_message: error.message.slice(0, MAX_ERROR_MESSAGE) };
+  }
+  return { error_code: error instanceof Error ? error.name : 'unknown' };
+}
 
 /**
  * Buys a plan through the purchases service and mirrors the result into the store. `onBought`
@@ -40,7 +52,7 @@ export function usePurchase(onBought: () => void) {
       const cancelled = error instanceof PurchaseCancelledError;
       track('paywall:purchase_fail', {
         package: planId,
-        error_code: error instanceof Error ? error.name : 'unknown',
+        ...failureOf(error),
         is_cancelled: cancelled,
       });
       // Closing the store's sheet isn't an error.

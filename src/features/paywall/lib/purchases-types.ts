@@ -37,7 +37,10 @@ export interface PurchasesService {
   setUser(userId: string | null): Promise<void>;
   getCustomerInfo(): Promise<CustomerInfo>;
   getOfferings(): Promise<Offering>;
-  /** Rejects with `PurchaseCancelledError` when the user closes the store's sheet. */
+  /**
+   * Rejects with `PurchaseCancelledError` when the user closes the store's sheet, otherwise with
+   * `PurchaseFailedError`.
+   */
   purchase(planId: PlanId): Promise<CustomerInfo>;
   /** Rejects with `NothingToRestoreError` when the store account has no active purchase. */
   restore(): Promise<CustomerInfo>;
@@ -56,5 +59,19 @@ export class PurchaseCancelledError extends Error {
   constructor() {
     super('Purchase cancelled');
     this.name = 'PurchaseCancelledError';
+  }
+}
+
+/**
+ * A purchase the store or RevenueCat refused. `code` names why (RevenueCat's readable code, e.g.
+ * `STORE_PROBLEM_ERROR`); the message is the store's own, when it gave one.
+ */
+export class PurchaseFailedError extends Error {
+  readonly code: string;
+
+  constructor(code: string, message: string) {
+    super(message);
+    this.name = 'PurchaseFailedError';
+    this.code = code;
   }
 }

@@ -16,6 +16,7 @@ import {
   PLAN_IDS,
   type PlanId,
   PurchaseCancelledError,
+  PurchaseFailedError,
   type PurchasesService,
 } from './purchases-types';
 
@@ -63,10 +64,29 @@ function linkAnalytics(distinctId: string | null) {
   );
 }
 
-const isCancel = (error: unknown) => {
-  const { code, userCancelled } = (error ?? {}) as { code?: string; userCancelled?: boolean };
-  return userCancelled === true || code === PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR;
-};
+/** What a RevenueCat rejection carries (PurchasesError); other errors have only a message. */
+interface PurchasesErrorLike {
+  code?: string;
+  message?: string;
+  readableErrorCode?: string;
+  underlyingErrorMessage?: string;
+  userCancelled?: boolean;
+  userInfo?: { readableErrorCode?: string };
+}
+
+/**
+ * The service's error for a failed purchase: cancelled, or failed with RevenueCat's readable code
+ * (e.g. `STORE_PROBLEM_ERROR`, falling back to its numeric code) and the store's own message.
+ */
+function toPurchaseError(error: unknown) {
+  const e = (error ?? {}) as PurchasesErrorLike;
+  if (e.userCancelled === true || e.code === PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR) {
+    return new PurchaseCancelledError();
+  }
+  const code = e.readableErrorCode || e.userInfo?.readableErrorCode || e.code || 'unknown';
+  const detail = [e.message, e.underlyingErrorMessage].filter(Boolean).join(' | ');
+  return new PurchaseFailedError(code, detail || String(error));
+}
 
 /** Real purchases through RevenueCat. The SDK is set up on first use, with the account if known. */
 export function createRevenueCatPurchases(apiKey: string): PurchasesService {
@@ -134,16 +154,15 @@ export function createRevenueCatPurchases(apiKey: string): PurchasesService {
       };
     },
     async purchase(planId) {
-      const pkg = packageOf(await currentOffering(), planId);
-      if (!pkg) throw new Error(`The current offering has no ${planId} package`);
-      // Before sign-up this is the anonymous id, which joins the account once it is identified.
-      linkAnalytics(analyticsId());
       try {
+        const pkg = packageOf(await currentOffering(), planId);
+        if (!pkg) throw new Error(`The current offering has no ${planId} package`);
+        // Before sign-up this is the anonymous id, which joins the account once it is identified.
+        linkAnalytics(analyticsId());
         const { customerInfo } = await Purchases.purchasePackage(pkg);
         return toCustomerInfo(customerInfo);
       } catch (error) {
-        if (isCancel(error)) throw new PurchaseCancelledError();
-        throw error;
+        throw toPurchaseError(error);
       }
     },
     async restore() {

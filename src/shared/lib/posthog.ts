@@ -60,7 +60,16 @@ export interface AnalyticsEvents {
   'workout_import:save_complete': { workout_count: number; added_count: number };
   'paywall:view': { placement: PaywallPlacement };
   'paywall:purchase_complete': { package: string; has_trial: boolean };
-  'paywall:purchase_fail': { package: string; error_code: string; is_cancelled: boolean };
+  /**
+   * `error_code`: RevenueCat's readable code (e.g. `STORE_PROBLEM_ERROR`) or the error's name;
+   * `error_message`: the store's own message, when it gave one.
+   */
+  'paywall:purchase_fail': {
+    package: string;
+    error_code: string;
+    error_message?: string;
+    is_cancelled: boolean;
+  };
   /** An earlier purchase restored, which lets the user past the paywall too. */
   'paywall:restore_complete': Record<string, never>;
   'account:sign_up_complete': { method: AuthMethod };
