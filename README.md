@@ -607,8 +607,10 @@ What the code expects:
   can't be reached, it isn't checked. Without the key the functions log an error and refuse
   everyone, except on the local stack (`SUPABASE_URL` on `kong`, `localhost` or `127.0.0.1`),
   where everyone counts as Pro. Production needs the key.
-- **Testing:** a development build on an iPhone, signed in to a sandbox tester under Settings →
-  App Store → Sandbox Account.
+- **Testing:** in a TestFlight build. The App Store gives the products only to the production app
+  (`app.loqqa.mobile`), so Loqqa Dev (`app.loqqa.mobile.dev`) gets none, even with the RevenueCat
+  key in `.env.local` ("None of the products … could be fetched"). TestFlight buys with the
+  tester's own Apple ID, free of charge; subscriptions renew daily.
 
 ## Analytics (PostHog)
 
