@@ -66,9 +66,12 @@ function SetRow({ exerciseId, number, set, units }: SetRowProps) {
   );
 }
 
-/** "SAT", "SA", "SAM": the short weekday in capitals, without an abbreviation's dot. */
+/**
+ * "SAT", "SA", "SAM": the short weekday in capitals, without an abbreviation's dot and at most
+ * three letters (pt-PT's short weekday is the whole word, "sábado").
+ */
 const weekdayShort = (date: Date) =>
-  formatDate(date, { weekday: 'short' }).replace(/\.$/, '').toUpperCase();
+  formatDate(date, { weekday: 'short' }).replace(/\.$/, '').slice(0, 3).toUpperCase();
 
 export interface HistorySessionRowProps {
   exerciseId: string;
@@ -104,11 +107,16 @@ export function HistorySessionRow({
         activeScale={0.99}
         accessibilityState={{ expanded: open }}
         onPress={onToggle}
-        className="flex-row gap-3 pt-2.5"
+        className="flex-row gap-1 pt-2.5"
       >
-        <View className="w-7 items-center">
+        {/*
+          Wider than its text and grows with it, so a two-digit day never wraps; it reaches into
+          the row's left padding to stay centred over the set numbers. The bare day: Korean's
+          "16일" would be twice as wide.
+        */}
+        <View className="-ml-2 min-w-11 items-center">
           <Text variant="headline" className="tabular-nums">
-            {formatDate(started, { day: 'numeric' })}
+            {started.getDate()}
           </Text>
           <Text
             variant="caption"
