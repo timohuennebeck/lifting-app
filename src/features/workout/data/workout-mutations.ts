@@ -202,6 +202,7 @@ async function insertWorkout(tx: Tx, userId: string, name: string, routineId: st
       position: te.position,
       rest_seconds: te.rest_seconds,
       superset_id: te.superset_id,
+      superset_rest_seconds: te.superset_rest_seconds,
     })),
   );
   // The routine's targets for this week become the workout's empty sets.
@@ -258,6 +259,7 @@ async function insertWorkoutExercise(
     position,
     rest_seconds: exercise.restSeconds,
     superset_id: exercise.supersetId ?? null,
+    superset_rest_seconds: exercise.supersetRestSeconds ?? null,
   });
   for (const [k, set] of exercise.sets.entries()) {
     await insertWorkoutSet(tx, userId, id, k, {
@@ -532,6 +534,7 @@ const workoutExerciseRows = (tx: Tx, workoutId: string) =>
       id: workoutEntriesExercises.id,
       position: workoutEntriesExercises.position,
       supersetId: workoutEntriesExercises.superset_id,
+      supersetRest: workoutEntriesExercises.superset_rest_seconds,
     })
     .from(workoutEntriesExercises)
     .where(eq(workoutEntriesExercises.workout_entries_id, workoutId))
@@ -564,7 +567,7 @@ export async function reorderWorkoutExercise(
     if (rows[from].supersetId && !keptSupersetId(order, to)) {
       await tx
         .update(workoutEntriesExercises)
-        .set({ superset_id: null })
+        .set({ superset_id: null, superset_rest_seconds: null })
         .where(eq(workoutEntriesExercises.id, workoutExerciseId));
     }
   });
@@ -572,16 +575,20 @@ export async function reorderWorkoutExercise(
 
 /**
  * Pairs workout exercise `currentId` with `partnerId` as a superset for this workout (see
- * `pairPlan`), or with `partnerId` null takes it out of its superset.
+ * `pairPlan`; a new superset rests `newRest` after each round), or with `partnerId` null takes it
+ * out of its superset.
  */
 export async function setWorkoutSuperset(
   workoutId: string,
   currentId: string,
   partnerId: string | null,
+  newRest: number,
 ) {
   await drizzle.transaction(async (tx) => {
     const rows = await workoutExerciseRows(tx, workoutId);
-    const plan = partnerId ? pairPlan(rows, currentId, partnerId) : unpairPlan(rows, currentId);
+    const plan = partnerId
+      ? pairPlan(rows, currentId, partnerId, newRest)
+      : unpairPlan(rows, currentId);
     await writePositions(rows, plan.order, (id, position) =>
       tx
         .update(workoutEntriesExercises)
@@ -590,10 +597,11 @@ export async function setWorkoutSuperset(
     );
     for (const row of rows) {
       const supersetId = plan.supersetIds[row.id] ?? null;
-      if (supersetId === row.supersetId) continue;
+      const supersetRest = plan.supersetRests[row.id] ?? null;
+      if (supersetId === row.supersetId && supersetRest === row.supersetRest) continue;
       await tx
         .update(workoutEntriesExercises)
-        .set({ superset_id: supersetId })
+        .set({ superset_id: supersetId, superset_rest_seconds: supersetRest })
         .where(eq(workoutEntriesExercises.id, row.id));
     }
   });

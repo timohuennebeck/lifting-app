@@ -4,6 +4,8 @@ import { newId } from './json';
 export interface SupersetMember {
   id: string;
   supersetId: string | null;
+  /** The superset's rest after a round, on each of its exercises; null when none was saved. */
+  supersetRest?: number | null;
 }
 
 /** Where an exercise sits in its superset. */
@@ -44,24 +46,38 @@ export function supersetSlots(items: readonly SupersetMember[]): (SupersetSlot |
   return slots;
 }
 
-/** A new order and superset ids after pairing or splitting exercises. */
+/** A new order, superset ids and superset rests after pairing or splitting exercises. */
 export interface SupersetPlan {
   order: string[];
   supersetIds: Record<string, string | null>;
+  supersetRests: Record<string, number | null>;
 }
 
 const idsOf = (items: readonly SupersetMember[]) =>
   Object.fromEntries(items.map((i) => [i.id, i.supersetId]));
 
+const restsOf = (items: readonly SupersetMember[]) =>
+  Object.fromEntries(items.map((i) => [i.id, i.supersetRest ?? null]));
+
+/** The rest saved for superset `supersetId` (on any of its exercises), or null. */
+export function savedSupersetRest(items: readonly SupersetMember[], supersetId: string | null) {
+  if (!supersetId) return null;
+  return (
+    items.find((i) => i.supersetId === supersetId && i.supersetRest != null)?.supersetRest ?? null
+  );
+}
+
 /**
  * Pairs exercise `currentId` with `partnerId`. A partner already in a superset takes the current
  * one in (it moves after that superset); a current one in a superset takes the partner in; two
- * single ones form a new superset, the partner moving right after the current one.
+ * single ones form a new superset, the partner moving right after the current one. A superset
+ * keeps its rest; a new one gets `newRest` (see `defaultSupersetRest`).
  */
 export function pairPlan(
   items: readonly SupersetMember[],
   currentId: string,
   partnerId: string,
+  newRest: number,
 ): SupersetPlan {
   const slots = supersetSlots(items);
   const index = (id: string) => items.findIndex((i) => i.id === id);
@@ -77,11 +93,14 @@ export function pairPlan(
     anchor = items[slots[partner].end].id;
     id = items[partner].supersetId;
   }
+  const rest = savedSupersetRest(items, id) ?? newRest;
   id ??= newId();
   for (const i of [currentId, partnerId]) supersetIds[i] = id;
+  const supersetRests = restsOf(items);
+  for (const item of items) if (supersetIds[item.id] === id) supersetRests[item.id] = rest;
   const order = items.map((i) => i.id).filter((i) => i !== moving);
   order.splice(order.indexOf(anchor) + 1, 0, moving);
-  return { order, supersetIds };
+  return { order, supersetIds, supersetRests };
 }
 
 /**
@@ -93,14 +112,19 @@ export function unpairPlan(items: readonly SupersetMember[], currentId: string):
   const current = items.findIndex((i) => i.id === currentId);
   const slot = slots[current];
   const supersetIds = idsOf(items);
+  const supersetRests = restsOf(items);
   supersetIds[currentId] = null;
+  supersetRests[currentId] = null;
   const order = items.map((i) => i.id);
-  if (!slot) return { order, supersetIds };
+  if (!slot) return { order, supersetIds, supersetRests };
   const others = items.slice(slot.start, slot.end + 1).filter((i) => i.id !== currentId);
-  if (others.length === 1) supersetIds[others[0].id] = null;
-  const rest = order.filter((i) => i !== currentId);
-  rest.splice(rest.indexOf(others[others.length - 1].id) + 1, 0, currentId);
-  return { order: rest, supersetIds };
+  if (others.length === 1) {
+    supersetIds[others[0].id] = null;
+    supersetRests[others[0].id] = null;
+  }
+  const after = order.filter((i) => i !== currentId);
+  after.splice(after.indexOf(others[others.length - 1].id) + 1, 0, currentId);
+  return { order: after, supersetIds, supersetRests };
 }
 
 /**

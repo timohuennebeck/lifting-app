@@ -120,7 +120,9 @@
     "rounds_other": "{{count}}라운드",
     "thenSolo": "{{rounds}}, 그다음 {{label}}의 {{set}}세트만",
     "thenSolos": "{{rounds}}, 그다음 {{label}}의 {{from}}–{{to}}세트만",
-    "solo": "단독"
+    "solo": "단독",
+    "restTitle": "라운드 후 휴식",
+    "restHint": "슈퍼세트 {{letter}}의 매 라운드 후에 쉬어요. 운동을 바꿔도 그대로예요."
   },
   "supersetSheet": {
     "title": "슈퍼세트 만들기…",

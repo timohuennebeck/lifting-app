@@ -12,8 +12,7 @@ import {
   estimateMinutes,
   exerciseItems,
   type ExerciseDraft,
-  heaviestRepTarget,
-  restSecondsFor,
+  supersetRoundRest,
 } from '@/shared/data/routines';
 import { supersetSlots } from '@/shared/data/supersets';
 import { formatDuration } from '@/shared/lib/format';
@@ -25,6 +24,7 @@ import { useLastDefined } from '../hooks/use-last-defined';
 import { ExerciseListHeader } from './exercise-list-header';
 import { type ExerciseMenuAction, ExerciseMenuSheet } from './exercise-menu-sheet';
 import { type CardSuperset, RoutineExerciseCard } from './routine-exercise-card';
+import { SupersetRestSheet } from './superset-rest-sheet';
 import { type SupersetCandidate, SupersetSheet } from './superset-sheet';
 
 /** Back on the screen with new exercises, the list scrolls to the end again after this. */
@@ -56,6 +56,8 @@ export interface EditableExerciseListProps<T extends ExerciseDraft> {
    * without it the menu offers neither.
    */
   onSuperset?: (index: number, partner: number | null) => void;
+  /** Sets the rest after each round of the superset exercise `index` is in. */
+  onSupersetRest?: (index: number, seconds: number) => void;
   /** Marks a card with the review dot. */
   review?: (exercise: T) => boolean;
   /** Under a card's muscles, e.g. the import's "read as …" prompt. */
@@ -87,6 +89,7 @@ export function EditableExerciseList<T extends ExerciseDraft>({
   onRemove,
   onMove,
   onSuperset,
+  onSupersetRest,
   review,
   renderExtra,
   footer,
@@ -96,6 +99,8 @@ export function EditableExerciseList<T extends ExerciseDraft>({
   const { t, i18n } = useTranslation('training');
   const [menuFor, setMenuFor] = useState<number | null>(null);
   const [supersetFor, setSupersetFor] = useState<number | null>(null);
+  /** The superset (its first exercise's index) whose rest after a round is being set. */
+  const [restFor, setRestFor] = useState<number | null>(null);
   // The menu keeps its content while it animates out.
   const menuShown = useLastDefined(menuFor);
   const drag = useSortableDrag<T>(({ fromIndex, toIndex }) => onMove(fromIndex, toIndex));
@@ -111,8 +116,7 @@ export function EditableExerciseList<T extends ExerciseDraft>({
     const counts = members.map((e) => e.sets.length);
     const rounds = Math.min(...counts);
     if (index !== slot.start) return { slot, rounds, header: null };
-    const last = members[members.length - 1];
-    const rest = restSecondsFor(last.exerciseId, last.restSeconds, heaviestRepTarget(last.sets));
+    const rest = supersetRoundRest(members);
     const roundsText = t('superset.rounds', { count: rounds });
     // One exercise with sets past the rounds does them alone.
     const longer = members.flatMap((e, k) => (e.sets.length > rounds ? [k] : []));
@@ -126,8 +130,15 @@ export function EditableExerciseList<T extends ExerciseDraft>({
           ? t('superset.thenSolo', { rounds: roundsText, set: to, label })
           : t('superset.thenSolos', { rounds: roundsText, from: rounds + 1, to, label });
     }
-    return { slot, rounds, header: { rest: formatDuration(rest), rounds: note } };
+    const onRest = onSupersetRest ? () => setRestFor(index) : undefined;
+    return { slot, rounds, header: { rest: formatDuration(rest), rounds: note, onRest } };
   };
+
+  const restSlot = restFor === null ? null : slots[restFor];
+  // Kept while the sheet animates out.
+  const restShown = restSlot
+    ? supersetRoundRest(exercises.slice(restSlot.start, restSlot.end + 1))
+    : 0;
 
   // The exercises to pair with: all the others but its own superset's.
   const current = supersetFor === null ? null : slots[supersetFor];
@@ -257,6 +268,16 @@ export function EditableExerciseList<T extends ExerciseDraft>({
         onAction={onAction}
         hidden={onSuperset ? [] : ['superset', 'unsuperset']}
         paired={menuShown !== null && !!slots[menuShown]}
+      />
+
+      <SupersetRestSheet
+        letter={restFor === null ? null : (slots[restFor]?.letter ?? null)}
+        seconds={restShown}
+        onSave={(seconds) => {
+          if (restFor !== null) onSupersetRest?.(restFor, seconds);
+          setRestFor(null);
+        }}
+        onClose={() => setRestFor(null)}
       />
 
       <SupersetSheet

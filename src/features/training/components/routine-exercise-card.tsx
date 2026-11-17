@@ -45,20 +45,21 @@ export interface CardSuperset {
   /** Sets past this many are done alone ("seule"). */
   rounds: number;
   /** Over the superset's first card: its rest after a round ("2:00 after the round") and rounds. */
-  header: { rest: string; rounds: string } | null;
+  header: { rest: string; rounds: string; onRest?: () => void } | null;
 }
 
-/** "Superset A" and the rest after its rounds, over its first card. */
-function SupersetHeader({
-  letter,
-  rest,
-  rounds,
-}: {
+interface SupersetHeaderProps {
   letter: string;
   rest: string;
   rounds: string;
-}) {
+  /** Opens the rest after a round to change it; without it the rest only shows. */
+  onRest?: () => void;
+}
+
+/** "Superset A" and the rest after its rounds (a chip that changes it), over its first card. */
+function SupersetHeader({ letter, rest, rounds, onRest }: SupersetHeaderProps) {
   const { t } = useTranslation('training');
+  const restLabel = t('superset.restAfterRound', { time: rest });
   return (
     <View className="pb-1.5">
       <View className="flex-row items-center gap-2">
@@ -66,10 +67,17 @@ function SupersetHeader({
           <Icon name="link" size={13} color={colors.fg} />
           <Text variant="caption">{t('superset.name', { letter })}</Text>
         </View>
-        <View className="ml-auto flex-row items-center gap-1.5">
+        <PressableScale
+          haptic="tap"
+          disabled={!onRest}
+          accessibilityRole="button"
+          accessibilityLabel={restLabel}
+          onPress={onRest}
+          className="ml-auto h-7 flex-row items-center gap-1.5 rounded-full bg-elevated pr-2.75 pl-2.25"
+        >
           <Icon name="timer" size={12} color={colors.fg} />
-          <Text variant="caption">{t('superset.restAfterRound', { time: rest })}</Text>
-        </View>
+          <Text variant="caption">{restLabel}</Text>
+        </PressableScale>
       </View>
       <Text variant="caption" tone="subtle" className="mt-2 font-inter">
         {rounds}
@@ -151,6 +159,7 @@ export function RoutineExerciseCard({
           letter={slot.letter}
           rest={superset.header.rest}
           rounds={superset.header.rounds}
+          onRest={superset.header.onRest}
         />
       ) : null}
       <View className={cn('flex-row gap-3.5', superset?.header && 'mt-3.5')}>

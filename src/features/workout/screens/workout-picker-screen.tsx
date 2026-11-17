@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
 import { ExercisePickerPage } from '@/features/exercises/components/exercise-picker-page';
+import { defaultSupersetRest } from '@/shared/data/routines';
 import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 
@@ -45,7 +46,8 @@ export function WorkoutPickerScreen() {
   async function addPartner(exerciseId: string) {
     if (!target) return;
     const added = await addWorkoutExercise(requireUserId(), workoutId, exerciseId);
-    await setWorkoutSuperset(workoutId, target.id, added);
+    const newRest = defaultSupersetRest([target, { exerciseId, restSeconds: null, sets: [] }]);
+    await setWorkoutSuperset(workoutId, target.id, added, newRest);
     haptics.success();
     router.back();
   }

@@ -120,7 +120,9 @@
     "rounds_other": "{{count}} rounds",
     "thenSolo": "{{rounds}}, then set {{set}} of {{label}} alone",
     "thenSolos": "{{rounds}}, then sets {{from}}–{{to}} of {{label}} alone",
-    "solo": "alone"
+    "solo": "alone",
+    "restTitle": "Rest after the round",
+    "restHint": "After each round of superset {{letter}}. Changing its exercises doesn’t change it."
   },
   "supersetSheet": {
     "title": "Superset with …",

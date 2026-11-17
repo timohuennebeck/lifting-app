@@ -120,7 +120,9 @@
     "rounds_other": "{{count}} tours",
     "thenSolo": "{{rounds}}, puis la série {{set}} de {{label}} seule",
     "thenSolos": "{{rounds}}, puis les séries {{from}} à {{to}} de {{label}} seules",
-    "solo": "seule"
+    "solo": "seule",
+    "restTitle": "Repos après le tour",
+    "restHint": "Après chaque tour du superset {{letter}}. Changer ses exercices ne le modifie pas."
   },
   "supersetSheet": {
     "title": "Superset avec …",

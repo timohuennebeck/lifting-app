@@ -1,4 +1,4 @@
-import { asc, eq, inArray } from 'drizzle-orm';
+import { and, asc, eq, inArray } from 'drizzle-orm';
 
 import type { SpokenExercises } from '@/features/voice-input/lib/spoken-exercises';
 import { insertCustomExercises } from '@/shared/data/custom-exercises';
@@ -69,6 +69,7 @@ const exercisePositions = (tx: Tx, routineId: string) =>
       id: routineExercises.id,
       position: routineExercises.position,
       supersetId: routineExercises.superset_id,
+      supersetRest: routineExercises.superset_rest_seconds,
     })
     .from(routineExercises)
     .where(eq(routineExercises.routine_id, routineId))
@@ -165,6 +166,7 @@ export async function copyRoutine(userId: string, routineId: string, planId: str
         exerciseId: exercise.exercise_id,
         restSeconds: exercise.rest_seconds,
         supersetId: exercise.superset_id,
+        supersetRestSeconds: exercise.superset_rest_seconds,
         sets: exercise.sets.map((set) => ({
           targetMin: set.target_min,
           targetMax: set.target_max,
@@ -254,7 +256,7 @@ export async function reorderRoutineExercise(routineExerciseId: string, target: 
     if (rows[from].supersetId && !keptSupersetId(order, target)) {
       await tx
         .update(routineExercises)
-        .set({ superset_id: null })
+        .set({ superset_id: null, superset_rest_seconds: null })
         .where(eq(routineExercises.id, routineExerciseId));
     }
     await touchRoutine(tx, routineId);
@@ -262,24 +264,57 @@ export async function reorderRoutineExercise(routineExerciseId: string, target: 
 }
 
 /**
- * Pairs routine exercise `currentId` with `partnerId` as a superset (see `pairPlan`), or with
- * `partnerId` null takes it out of its superset.
+ * Pairs routine exercise `currentId` with `partnerId` as a superset (see `pairPlan`; a new
+ * superset rests `newRest` after each round), or with `partnerId` null takes it out of its
+ * superset.
  */
-export async function setRoutineSuperset(currentId: string, partnerId: string | null) {
+export async function setRoutineSuperset(
+  currentId: string,
+  partnerId: string | null,
+  newRest: number,
+) {
   await drizzle.transaction(async (tx) => {
     const routineId = await routineOf(tx, currentId);
     const rows = await exercisePositions(tx, routineId);
-    const plan = partnerId ? pairPlan(rows, currentId, partnerId) : unpairPlan(rows, currentId);
+    const plan = partnerId
+      ? pairPlan(rows, currentId, partnerId, newRest)
+      : unpairPlan(rows, currentId);
     await writeExerciseOrder(tx, rows, plan.order);
     for (const row of rows) {
       const supersetId = plan.supersetIds[row.id] ?? null;
-      if (supersetId === row.supersetId) continue;
+      const supersetRest = plan.supersetRests[row.id] ?? null;
+      if (supersetId === row.supersetId && supersetRest === row.supersetRest) continue;
       await tx
         .update(routineExercises)
-        .set({ superset_id: supersetId })
+        .set({ superset_id: supersetId, superset_rest_seconds: supersetRest })
         .where(eq(routineExercises.id, row.id));
     }
     await touchRoutine(tx, routineId);
+  });
+}
+
+/** Sets the rest after each round of the superset that routine exercise `memberId` is in. */
+export async function setRoutineSupersetRest(memberId: string, seconds: number) {
+  await drizzle.transaction(async (tx) => {
+    const member = await tx
+      .select({
+        routine_id: routineExercises.routine_id,
+        superset_id: routineExercises.superset_id,
+      })
+      .from(routineExercises)
+      .where(eq(routineExercises.id, memberId))
+      .get();
+    if (!member?.superset_id) return;
+    await tx
+      .update(routineExercises)
+      .set({ superset_rest_seconds: seconds })
+      .where(
+        and(
+          eq(routineExercises.routine_id, member.routine_id),
+          eq(routineExercises.superset_id, member.superset_id),
+        ),
+      );
+    await touchRoutine(tx, member.routine_id);
   });
 }
 

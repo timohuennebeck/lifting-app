@@ -6,7 +6,12 @@ import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { usePlans } from '@/shared/data/plans';
-import { estimateMinutes, exerciseItems, useRoutineDetail } from '@/shared/data/routines';
+import {
+  defaultSupersetRest,
+  estimateMinutes,
+  exerciseItems,
+  useRoutineDetail,
+} from '@/shared/data/routines';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -21,6 +26,7 @@ import {
   removeRoutineExercise,
   reorderRoutineExercise,
   setRoutineSuperset,
+  setRoutineSupersetRest,
 } from '../data/routine-mutations';
 import { useLastDefined } from '../hooks/use-last-defined';
 import { useStartRoutine } from '../hooks/use-start-routine';
@@ -133,7 +139,11 @@ export function RoutineScreen() {
             void setRoutineSuperset(
               exercises[index].id,
               partner === null ? null : exercises[partner].id,
+              partner === null ? 0 : defaultSupersetRest([exercises[index], exercises[partner]]),
             )
+          }
+          onSupersetRest={(index, seconds) =>
+            void setRoutineSupersetRest(exercises[index].id, seconds)
           }
         />
       </Animated.ScrollView>

@@ -120,7 +120,9 @@
     "rounds_other": "{{count}} Runden",
     "thenSolo": "{{rounds}}, dann Satz {{set}} von {{label}} allein",
     "thenSolos": "{{rounds}}, dann Sätze {{from}}–{{to}} von {{label}} allein",
-    "solo": "allein"
+    "solo": "allein",
+    "restTitle": "Pause nach der Runde",
+    "restHint": "Nach jeder Runde von Supersatz {{letter}}. Änderst du seine Übungen, bleibt sie gleich."
   },
   "supersetSheet": {
     "title": "Supersatz mit …",

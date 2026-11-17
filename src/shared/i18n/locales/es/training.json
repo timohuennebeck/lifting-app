@@ -120,7 +120,9 @@
     "rounds_other": "{{count}} rondas",
     "thenSolo": "{{rounds}}, luego la serie {{set}} de {{label}} sola",
     "thenSolos": "{{rounds}}, luego las series {{from}} a {{to}} de {{label}} solas",
-    "solo": "sola"
+    "solo": "sola",
+    "restTitle": "Descanso tras la ronda",
+    "restHint": "Después de cada ronda de la superserie {{letter}}. Cambiar sus ejercicios no lo modifica."
   },
   "supersetSheet": {
     "title": "Superserie con …",

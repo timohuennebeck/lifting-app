@@ -29,7 +29,7 @@ import {
   SupersetSheet,
 } from '@/features/training/components/superset-sheet';
 import { formatSetParts, useExercise } from '@/shared/data/exercises';
-import { heaviestRepTarget, restSecondsFor } from '@/shared/data/routines';
+import { defaultSupersetRest, heaviestRepTarget, restSecondsFor } from '@/shared/data/routines';
 import { pairPlan, unpairPlan } from '@/shared/data/supersets';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { moved } from '@/shared/lib/array';
@@ -267,13 +267,15 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   // Paired or split, the exercise on screen stays on screen at its new place.
   const pairWith = (partnerId: string | null) => {
     if (!exercise) return;
+    const partner = workout.exercises.find((e) => e.id === partnerId);
+    const newRest = partner ? defaultSupersetRest([exercise, partner]) : 0;
     const plan = partnerId
-      ? pairPlan(workout.exercises, exercise.id, partnerId)
+      ? pairPlan(workout.exercises, exercise.id, partnerId, newRest)
       : unpairPlan(workout.exercises, exercise.id);
     follow.current = { id: exercise.id, order: plan.order.join() };
     setSupersetOpen(false);
     haptics.success();
-    void setWorkoutSuperset(workout.id, exercise.id, partnerId);
+    void setWorkoutSuperset(workout.id, exercise.id, partnerId, newRest);
   };
 
   // The others of the workout, to pair with: those with sets left; its own partners aren't.

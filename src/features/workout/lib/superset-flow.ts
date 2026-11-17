@@ -1,4 +1,4 @@
-import { repTarget, restSecondsFor } from '@/shared/data/routines';
+import { repTarget, restSecondsFor, supersetRoundRest } from '@/shared/data/routines';
 import type { SupersetSlot } from '@/shared/data/supersets';
 
 import type { WorkoutExercise, WorkoutSet } from '../data/workout-detail';
@@ -51,8 +51,8 @@ export function roundStart(
 }
 
 /**
- * The rest after set `setIndex` of exercise `index`: in a superset the round's rest, which is the
- * superset's last exercise's (for that round's set), else the exercise's own.
+ * The rest after set `setIndex` of exercise `index`: in a superset the rest saved with it for each
+ * round (see `supersetRoundRest`), else the exercise's own for that set.
  */
 export function restAfter(
   exercises: WorkoutExercise[],
@@ -62,8 +62,9 @@ export function restAfter(
   reps: number | null,
 ) {
   const slot = slots[index];
-  const last = slot ? exercises[slot.end] : exercises[index];
-  const set = last.sets[setIndex] ?? exercises[index].sets[setIndex];
+  if (slot) return supersetRoundRest(exercises.slice(slot.start, slot.end + 1));
+  const exercise = exercises[index];
+  const set = exercise.sets[setIndex];
   const target = set ? repTarget(set) : null;
-  return restSecondsFor(last.exerciseId, last.restSeconds, target ?? reps);
+  return restSecondsFor(exercise.exerciseId, exercise.restSeconds, target ?? reps);
 }

@@ -23,7 +23,7 @@ export interface KeepSupersetSheetProps {
 export function KeepSupersetSheet({ prompt, onAnswer, onClose }: KeepSupersetSheetProps) {
   const { t, i18n } = useTranslation('workout');
   const custom = useCustomExerciseStore((s) => s.exercises);
-  const group = prompt?.groups[0] ?? [];
+  const group = prompt?.groups[0]?.exerciseIds ?? [];
   const names = group.map((id) => exerciseName(id, i18n.language, custom));
   return (
     <Sheet visible={!!prompt} onClose={onClose}>

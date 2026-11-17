@@ -20,7 +20,7 @@ import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
 import { plans, routineExercises, routines, routineSets, workoutEntries } from './powersync/schema';
 import { queryKeys } from './query-keys';
-import { supersetSlots } from './supersets';
+import { savedSupersetRest, supersetSlots } from './supersets';
 import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /** Seconds a single working set takes, excluding rest. */
@@ -42,6 +42,8 @@ export interface ExerciseDraft {
   restSeconds: number | null;
   /** Shared with the exercises it is done back to back with (`supersetSlots`). */
   supersetId?: string | null;
+  /** The superset's rest after each round, the same on all its exercises. */
+  supersetRestSeconds?: number | null;
 }
 
 export async function insertRoutineSets(
@@ -84,6 +86,7 @@ export async function insertRoutineExercises(
       position,
       rest_seconds: exercise.restSeconds,
       superset_id: exercise.supersetId ?? null,
+      superset_rest_seconds: exercise.supersetRestSeconds ?? null,
     })),
   );
   const sets = rows.flatMap(({ id, exercise }) =>
@@ -117,6 +120,7 @@ export async function insertRoutineExercise(
     position,
     rest_seconds: exercise.restSeconds,
     superset_id: exercise.supersetId ?? null,
+    superset_rest_seconds: exercise.supersetRestSeconds ?? null,
   });
   await insertRoutineSets(tx, userId, id, exercise.sets);
   return id;
@@ -206,6 +210,31 @@ export function restSecondsFor(
   return Math.round((rest * factor) / 15) * 15;
 }
 
+/** What a superset's rest is worked out from: its exercises' own rests and targets. */
+type RestSource = Pick<ExerciseDraft, 'exerciseId' | 'restSeconds' | 'supersetRestSeconds'> & {
+  sets: Pick<SetTarget, 'targetMin' | 'targetMax'>[];
+};
+
+/**
+ * A new superset's rest after each round: the longest rest of its exercises, so the lighter one
+ * never shortens the heavier one's.
+ */
+export const defaultSupersetRest = (members: RestSource[]) =>
+  Math.max(
+    ...members.map((m) => restSecondsFor(m.exerciseId, m.restSeconds, heaviestRepTarget(m.sets))),
+  );
+
+/**
+ * The rest after a round of the superset of `members` (in order): the one saved with it, else
+ * (a superset saved before it had one) its last exercise's.
+ */
+export function supersetRoundRest(members: RestSource[]) {
+  const saved = members.find((m) => m.supersetRestSeconds != null)?.supersetRestSeconds;
+  if (saved != null) return saved;
+  const last = members[members.length - 1];
+  return restSecondsFor(last.exerciseId, last.restSeconds, heaviestRepTarget(last.sets));
+}
+
 /** An exercise of a routine or workout with its set count, for the muscle shares and the time. */
 export interface ExerciseItem {
   exerciseId: string;
@@ -216,6 +245,8 @@ export interface ExerciseItem {
   reps?: number | null;
   /** Its superset (`supersetSlots`): only the superset's last exercise rests. */
   supersetId?: string | null;
+  /** The superset's rest after each round; the last exercise's own when null. */
+  supersetRest?: number | null;
 }
 
 /** Exercises as `estimateMinutes` and the muscle shares take them: set count and rest. */
@@ -226,6 +257,7 @@ export const exerciseItems = (exercises: ExerciseDraft[]): ExerciseItem[] =>
     restSeconds: e.restSeconds ?? null,
     reps: heaviestRepTarget(e.sets),
     supersetId: e.supersetId ?? null,
+    supersetRest: e.supersetRestSeconds ?? null,
   }));
 
 /**
@@ -233,13 +265,19 @@ export const exerciseItems = (exercises: ExerciseDraft[]): ExerciseItem[] =>
  * rests, after each round.
  */
 export function estimateMinutes(items: ExerciseItem[]) {
-  const slots = supersetSlots(
-    items.map((i, k) => ({ id: String(k), supersetId: i.supersetId ?? null })),
-  );
+  const members = items.map((i, k) => ({
+    id: String(k),
+    supersetId: i.supersetId ?? null,
+    supersetRest: i.supersetRest ?? null,
+  }));
+  const slots = supersetSlots(members);
   const seconds = items.reduce((sum, i, k) => {
     const slot = slots[k];
     const rests = !slot || k === slot.end;
-    const rest = rests ? restSecondsFor(i.exerciseId, i.restSeconds, i.reps) : 0;
+    const own = restSecondsFor(i.exerciseId, i.restSeconds, i.reps);
+    const rest = rests
+      ? ((slot ? savedSupersetRest(members, i.supersetId ?? null) : null) ?? own)
+      : 0;
     return sum + EXERCISE_SECONDS + i.sets * (SET_SECONDS + rest);
   }, 0);
   return Math.round(seconds / 60);
@@ -262,6 +300,7 @@ const routineListQuery = () =>
       exercise_id: routineExercises.exercise_id,
       rest_seconds: routineExercises.rest_seconds,
       superset_id: routineExercises.superset_id,
+      superset_rest_seconds: routineExercises.superset_rest_seconds,
       set_count: sql<number>`${drizzle
         .select({ count: count() })
         .from(routineSets)
@@ -305,6 +344,7 @@ function summarize(rows: RowOf<typeof routineListQuery>[]): RoutineSummary[] {
       restSeconds: r.rest_seconds,
       reps: r.reps,
       supersetId: r.superset_id,
+      supersetRest: r.superset_rest_seconds,
     });
     t.exerciseCount += 1;
   }
@@ -369,6 +409,7 @@ interface RoutineExerciseDetail {
   exerciseId: string;
   restSeconds: number | null;
   supersetId: string | null;
+  supersetRestSeconds: number | null;
   sets: RoutineSetDetail[];
 }
 
@@ -386,7 +427,13 @@ const routineDetailQuery = (routineId: string) =>
     where: eq(routines.id, routineId),
     with: {
       exercises: {
-        columns: { id: true, exercise_id: true, rest_seconds: true, superset_id: true },
+        columns: {
+          id: true,
+          exercise_id: true,
+          rest_seconds: true,
+          superset_id: true,
+          superset_rest_seconds: true,
+        },
         orderBy: asc(routineExercises.position),
         with: {
           sets: {
@@ -409,6 +456,7 @@ function toRoutineDetail([t]: RowOf<typeof routineDetailQuery>[]): RoutineDetail
       exerciseId: e.exercise_id,
       restSeconds: e.rest_seconds,
       supersetId: e.superset_id,
+      supersetRestSeconds: e.superset_rest_seconds,
       sets: e.sets.map((set) => ({
         id: set.id,
         targetMin: set.target_min,

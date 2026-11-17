@@ -28,6 +28,8 @@ export interface WorkoutExercise {
   restSeconds: number | null;
   /** Shared with the exercises it is done back to back with (`supersetSlots`). */
   supersetId: string | null;
+  /** The superset's rest after each round, the same on all its exercises. */
+  supersetRestSeconds: number | null;
   sets: WorkoutSet[];
 }
 
@@ -46,7 +48,13 @@ const workoutDetailQuery = (workoutId: string) =>
     where: eq(workoutEntries.id, workoutId),
     with: {
       exercises: {
-        columns: { id: true, exercise_id: true, rest_seconds: true, superset_id: true },
+        columns: {
+          id: true,
+          exercise_id: true,
+          rest_seconds: true,
+          superset_id: true,
+          superset_rest_seconds: true,
+        },
         orderBy: asc(workoutEntriesExercises.position),
         with: {
           sets: {
@@ -85,6 +93,7 @@ function toDetail([w]: WorkoutDetailRow[]): WorkoutDetail | null {
       exerciseId: e.exercise_id,
       restSeconds: e.rest_seconds,
       supersetId: e.superset_id,
+      supersetRestSeconds: e.superset_rest_seconds,
       sets: e.sets.map(toWorkoutSet),
     })),
   };
