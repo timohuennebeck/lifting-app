@@ -7,7 +7,8 @@
     "info": "정보",
     "targets": "목표",
     "swap": "바꾸기",
-    "more": "더 보기"
+    "more": "더 보기",
+    "superset": "슈퍼세트"
   },
   "plates": {
     "title": "원판",
@@ -131,5 +132,18 @@
   },
   "builder": {
     "title": "빈 운동"
+  },
+  "superset": {
+    "name": "슈퍼세트 {{letter}}",
+    "round": "{{label}} · {{total}}라운드 중 {{current}}",
+    "nextNoRest": "다음, 휴식 없이",
+    "nextSet": "{{label}} · {{total}}세트 중 {{current}}",
+    "sheetHint": "이번 운동에만 적용: 두 운동을 쉬지 않고 연달아 해요."
+  },
+  "keep": {
+    "title": "이 슈퍼세트를 유지할까요?",
+    "message": "{{names}}를 슈퍼세트로 했어요. 다음에도 쓰도록 {{routine}}에 추가할까요?",
+    "add": "운동에 추가",
+    "once": "이번만"
   }
 }

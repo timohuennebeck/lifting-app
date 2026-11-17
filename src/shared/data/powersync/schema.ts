@@ -83,6 +83,8 @@ export const routineExercises = sqliteTable(
     exercise_id: text().notNull(),
     position: integer().notNull(),
     rest_seconds: integer(),
+    // Exercises sharing it form a superset, kept next to each other; null stands alone.
+    superset_id: text(),
   },
   (t) => [index('routine').on(t.routine_id)],
 );
@@ -131,6 +133,8 @@ export const workoutEntriesExercises = sqliteTable(
     exercise_id: text().notNull(),
     position: integer().notNull(),
     rest_seconds: integer(),
+    // As in routine_exercises: exercises sharing it are done as a superset.
+    superset_id: text(),
   },
   (t) => [index('workout').on(t.workout_entries_id), index('exercise').on(t.exercise_id)],
 );

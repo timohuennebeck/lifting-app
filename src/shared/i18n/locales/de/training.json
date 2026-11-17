@@ -69,7 +69,9 @@
     "swap": "Übung tauschen",
     "moveUp": "Nach oben",
     "moveDown": "Nach unten",
-    "remove": "Übung entfernen"
+    "remove": "Übung entfernen",
+    "superset": "Supersatz mit …",
+    "unsuperset": "Aus dem Supersatz nehmen"
   },
   "options": {
     "meta_one": "{{count}} Übung · {{minutes}} Min.",
@@ -110,5 +112,29 @@
   "plan": {
     "block": "Block {{n}}",
     "deload": "Deload"
+  },
+  "superset": {
+    "name": "Supersatz {{letter}}",
+    "restAfterRound": "{{time}} nach der Runde",
+    "rounds_one": "{{count}} Runde",
+    "rounds_other": "{{count}} Runden",
+    "thenSolo": "{{rounds}}, dann Satz {{set}} von {{label}} allein",
+    "thenSolos": "{{rounds}}, dann Sätze {{from}}–{{to}} von {{label}} allein",
+    "solo": "allein"
+  },
+  "supersetSheet": {
+    "title": "Supersatz mit …",
+    "hint": "{{name}} und die Übung, die du wählst, machst du direkt nacheinander, ohne Pause dazwischen.",
+    "next": "Nächste Übung",
+    "sets_one": "{{count}} Satz",
+    "sets_other": "{{count}} Sätze",
+    "setsLeft_one": "Noch {{count}} Satz",
+    "setsLeft_other": "Noch {{count}} Sätze",
+    "done": "Erledigt",
+    "movesNext": "rückt daneben",
+    "joins": "In Supersatz {{letter}} · kommt dazu",
+    "pickNew": "Neue Übung wählen",
+    "confirm": "Supersatz bilden",
+    "remove": "Aus dem Supersatz nehmen"
   }
 }

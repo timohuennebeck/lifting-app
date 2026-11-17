@@ -36,7 +36,11 @@ export function useWorkoutActivity(
   const drafts = useWorkoutSessionStore((s) => s.drafts);
   const { units } = live;
 
-  const at = nextOpenSet(workout.exercises, live.exerciseIndex, logged);
+  // In a superset, the step waiting to slide in (its partner, or the next round's first) leads:
+  // with the phone locked, the slide doesn't run.
+  const advanceTo = useWorkoutSessionStore((s) => s.advanceTo);
+  const pending = workout.exercises.findIndex((e) => e.id === advanceTo?.workoutExerciseId);
+  const at = nextOpenSet(workout.exercises, pending >= 0 ? pending : live.exerciseIndex, logged);
   const exercise = at ? workout.exercises[at.exerciseIndex] : undefined;
   const exerciseName = useExerciseName(exercise?.exerciseId ?? '', i18n.language);
 

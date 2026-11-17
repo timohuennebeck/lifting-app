@@ -69,7 +69,9 @@
     "swap": "Trocar exercício",
     "moveUp": "Mover para cima",
     "moveDown": "Mover para baixo",
-    "remove": "Remover exercício"
+    "remove": "Remover exercício",
+    "superset": "Superset com …",
+    "unsuperset": "Tirar do superset"
   },
   "options": {
     "meta_one": "{{count}} exercício · {{minutes}} min.",
@@ -110,5 +112,29 @@
   "plan": {
     "block": "Bloco {{n}}",
     "deload": "Deload"
+  },
+  "superset": {
+    "name": "Superset {{letter}}",
+    "restAfterRound": "{{time}} após a rodada",
+    "rounds_one": "{{count}} rodada",
+    "rounds_other": "{{count}} rodadas",
+    "thenSolo": "{{rounds}}, depois a série {{set}} de {{label}} sozinha",
+    "thenSolos": "{{rounds}}, depois as séries {{from}} a {{to}} de {{label}} sozinhas",
+    "solo": "sozinha"
+  },
+  "supersetSheet": {
+    "title": "Superset com …",
+    "hint": "Você faz {{name}} e o exercício que escolher seguidos, sem descanso entre eles.",
+    "next": "Próximo exercício",
+    "sets_one": "{{count}} série",
+    "sets_other": "{{count}} séries",
+    "setsLeft_one": "Falta {{count}} série",
+    "setsLeft_other": "Faltam {{count}} séries",
+    "done": "Feito",
+    "movesNext": "vai para o lado",
+    "joins": "No superset {{letter}} · entra nele",
+    "pickNew": "Escolher um exercício novo",
+    "confirm": "Criar superset",
+    "remove": "Tirar do superset"
   }
 }

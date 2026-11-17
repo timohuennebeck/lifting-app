@@ -2,13 +2,14 @@ import { useEffect } from 'react';
 
 import { isBodyweight, measuresOf } from '@/shared/data/exercises';
 import { useUnits } from '@/shared/data/profile';
-import { repTarget, restSecondsFor } from '@/shared/data/routines';
+import { supersetSlots } from '@/shared/data/supersets';
 import type { SetValues } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 
-import type { WorkoutDetail, WorkoutExercise } from '../data/workout-detail';
+import type { WorkoutDetail, WorkoutExercise, WorkoutSet } from '../data/workout-detail';
 import { logSet, saveOpenSetValues, saveSetRir, unlogSet } from '../data/workout-mutations';
 import { rowValues } from '../lib/row-values';
+import { nextInRound, restAfter, roundStart } from '../lib/superset-flow';
 import { parseSetInput, toSetInput, typedValues } from '../lib/set-input';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 import { useSetSuggestions } from './use-set-suggestions';
@@ -21,6 +22,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
   const logged = useWorkoutSessionStore((s) => s.logged);
   const drafts = useWorkoutSessionStore((s) => s.drafts);
   const { exercises } = workout;
+  const slots = supersetSlots(exercises);
   const exerciseIndex = Math.min(storedIndex, exercises.length - 1);
   const exercise = exercises[exerciseIndex];
   const { suggestions, last } = useSetSuggestions(workout, units);
@@ -165,11 +167,21 @@ export function useLiveWorkout(workout: WorkoutDetail) {
     store.closeKeypad();
     // Sets logged a moment ago may not be in the database yet: they count as done too.
     const { logged } = useWorkoutSessionStore.getState();
-    const workoutDone = allSets.every((s) => s.completedAt || s.id in logged);
+    const isOpen = (s: WorkoutSet) => !s.completedAt && !(s.id in logged);
+    const workoutDone = allSets.every((s) => !isOpen(s));
     if (!editing && !workoutDone) {
-      // The set's rep target, else the reps just done: a heavy set gets a longer rest.
-      const reps = repTarget(set) ?? values.reps;
-      store.startRest(restSecondsFor(target.exerciseId, target.restSeconds, reps));
+      // In a superset the partner follows without rest; after the round's last, the rest
+      // starts and the round's first comes back.
+      const at = exercises.indexOf(target);
+      const partner = nextInRound(exercises, slots, at, isOpen);
+      if (partner) {
+        store.requestAdvance(exercises[partner.exerciseIndex].id);
+      } else {
+        // The set's rep target, else the reps just done: a heavy set gets a longer rest.
+        store.startRest(restAfter(exercises, slots, at, index, values.reps));
+        const next = roundStart(exercises, slots, at, isOpen);
+        if (next) store.requestAdvance(exercises[next.exerciseIndex].id);
+      }
     }
     let isPr: boolean;
     try {
@@ -290,6 +302,7 @@ export function useLiveWorkout(workout: WorkoutDetail) {
 
   return {
     units,
+    slots,
     exercise,
     measures,
     exerciseIndex,

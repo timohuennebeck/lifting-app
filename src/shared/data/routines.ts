@@ -20,6 +20,7 @@ import { nextPosition } from './positions';
 import { drizzle, type Executor, type Tx } from './powersync/database';
 import { plans, routineExercises, routines, routineSets, workoutEntries } from './powersync/schema';
 import { queryKeys } from './query-keys';
+import { supersetSlots } from './supersets';
 import { type RowOf, useDrizzleQuery } from './use-drizzle-query';
 
 /** Seconds a single working set takes, excluding rest. */
@@ -39,6 +40,8 @@ export interface ExerciseDraft {
   exerciseId: string;
   sets: SetTarget[];
   restSeconds: number | null;
+  /** Shared with the exercises it is done back to back with (`supersetSlots`). */
+  supersetId?: string | null;
 }
 
 export async function insertRoutineSets(
@@ -80,6 +83,7 @@ export async function insertRoutineExercises(
       exercise_id: exercise.exerciseId,
       position,
       rest_seconds: exercise.restSeconds,
+      superset_id: exercise.supersetId ?? null,
     })),
   );
   const sets = rows.flatMap(({ id, exercise }) =>
@@ -112,6 +116,7 @@ export async function insertRoutineExercise(
     exercise_id: exercise.exerciseId,
     position,
     rest_seconds: exercise.restSeconds,
+    superset_id: exercise.supersetId ?? null,
   });
   await insertRoutineSets(tx, userId, id, exercise.sets);
   return id;
@@ -209,6 +214,8 @@ export interface ExerciseItem {
   restSeconds?: number | null;
   /** The rep target the rest follows (`heaviestRepTarget`); none when null or left out. */
   reps?: number | null;
+  /** Its superset (`supersetSlots`): only the superset's last exercise rests. */
+  supersetId?: string | null;
 }
 
 /** Exercises as `estimateMinutes` and the muscle shares take them: set count and rest. */
@@ -218,17 +225,23 @@ export const exerciseItems = (exercises: ExerciseDraft[]): ExerciseItem[] =>
     sets: e.sets.length,
     restSeconds: e.restSeconds ?? null,
     reps: heaviestRepTarget(e.sets),
+    supersetId: e.supersetId ?? null,
   }));
 
-/** Rough session length in minutes from sets and rest times. */
+/**
+ * Rough session length in minutes from sets and rest times. In a superset only the last exercise
+ * rests, after each round.
+ */
 export function estimateMinutes(items: ExerciseItem[]) {
-  const seconds = items.reduce(
-    (sum, i) =>
-      sum +
-      EXERCISE_SECONDS +
-      i.sets * (SET_SECONDS + restSecondsFor(i.exerciseId, i.restSeconds, i.reps)),
-    0,
+  const slots = supersetSlots(
+    items.map((i, k) => ({ id: String(k), supersetId: i.supersetId ?? null })),
   );
+  const seconds = items.reduce((sum, i, k) => {
+    const slot = slots[k];
+    const rests = !slot || k === slot.end;
+    const rest = rests ? restSecondsFor(i.exerciseId, i.restSeconds, i.reps) : 0;
+    return sum + EXERCISE_SECONDS + i.sets * (SET_SECONDS + rest);
+  }, 0);
   return Math.round(seconds / 60);
 }
 
@@ -248,6 +261,7 @@ const routineListQuery = () =>
       plan_id: routines.plan_id,
       exercise_id: routineExercises.exercise_id,
       rest_seconds: routineExercises.rest_seconds,
+      superset_id: routineExercises.superset_id,
       set_count: sql<number>`${drizzle
         .select({ count: count() })
         .from(routineSets)
@@ -290,6 +304,7 @@ function summarize(rows: RowOf<typeof routineListQuery>[]): RoutineSummary[] {
       sets: r.set_count,
       restSeconds: r.rest_seconds,
       reps: r.reps,
+      supersetId: r.superset_id,
     });
     t.exerciseCount += 1;
   }
@@ -353,6 +368,7 @@ interface RoutineExerciseDetail {
   id: string;
   exerciseId: string;
   restSeconds: number | null;
+  supersetId: string | null;
   sets: RoutineSetDetail[];
 }
 
@@ -370,7 +386,7 @@ const routineDetailQuery = (routineId: string) =>
     where: eq(routines.id, routineId),
     with: {
       exercises: {
-        columns: { id: true, exercise_id: true, rest_seconds: true },
+        columns: { id: true, exercise_id: true, rest_seconds: true, superset_id: true },
         orderBy: asc(routineExercises.position),
         with: {
           sets: {
@@ -392,6 +408,7 @@ function toRoutineDetail([t]: RowOf<typeof routineDetailQuery>[]): RoutineDetail
       id: e.id,
       exerciseId: e.exercise_id,
       restSeconds: e.rest_seconds,
+      supersetId: e.superset_id,
       sets: e.sets.map((set) => ({
         id: set.id,
         targetMin: set.target_min,

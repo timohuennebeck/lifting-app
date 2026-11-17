@@ -1,4 +1,5 @@
 import { useIsFocused } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import type Animated from 'react-native-reanimated';
@@ -6,7 +7,16 @@ import type { AnimatedRef } from 'react-native-reanimated';
 import Sortable, { type SortableGridProps } from 'react-native-sortables';
 
 import { WorkedMuscles } from '@/features/muscles/components/worked-muscles';
-import { estimateMinutes, exerciseItems, type ExerciseDraft } from '@/shared/data/routines';
+import { useExerciseName } from '@/shared/data/exercises';
+import {
+  estimateMinutes,
+  exerciseItems,
+  type ExerciseDraft,
+  heaviestRepTarget,
+  restSecondsFor,
+} from '@/shared/data/routines';
+import { supersetSlots } from '@/shared/data/supersets';
+import { formatDuration } from '@/shared/lib/format';
 import { useSortableDrag } from '@/shared/hooks/use-sortable-drag';
 import { EmptyExercises } from '@/shared/ui/empty-exercises';
 import { afterSheetClose } from '@/shared/ui/sheet';
@@ -14,7 +24,8 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { useLastDefined } from '../hooks/use-last-defined';
 import { ExerciseListHeader } from './exercise-list-header';
 import { type ExerciseMenuAction, ExerciseMenuSheet } from './exercise-menu-sheet';
-import { RoutineExerciseCard } from './routine-exercise-card';
+import { type CardSuperset, RoutineExerciseCard } from './routine-exercise-card';
+import { type SupersetCandidate, SupersetSheet } from './superset-sheet';
 
 /** Back on the screen with new exercises, the list scrolls to the end again after this. */
 const SCROLL_AGAIN_MS = 350;
@@ -40,6 +51,11 @@ export interface EditableExerciseListProps<T extends ExerciseDraft> {
   onRemove: (index: number) => void;
   /** An exercise dragged to another place, or moved up or down with the menu. */
   onMove: (from: number, to: number) => void;
+  /**
+   * Pairs exercise `index` with `partner` as a superset, or (null) takes it out of its superset;
+   * without it the menu offers neither.
+   */
+  onSuperset?: (index: number, partner: number | null) => void;
   /** Marks a card with the review dot. */
   review?: (exercise: T) => boolean;
   /** Under a card's muscles, e.g. the import's "read as …" prompt. */
@@ -70,17 +86,71 @@ export function EditableExerciseList<T extends ExerciseDraft>({
   onSwap,
   onRemove,
   onMove,
+  onSuperset,
   review,
   renderExtra,
   footer,
   sortEnabled,
   itemEntering,
 }: EditableExerciseListProps<T>) {
+  const { t, i18n } = useTranslation('training');
   const [menuFor, setMenuFor] = useState<number | null>(null);
+  const [supersetFor, setSupersetFor] = useState<number | null>(null);
   // The menu keeps its content while it animates out.
   const menuShown = useLastDefined(menuFor);
   const drag = useSortableDrag<T>(({ fromIndex, toIndex }) => onMove(fromIndex, toIndex));
   const items = exerciseItems(exercises);
+  const slots = supersetSlots(
+    exercises.map((e) => ({ id: keyOf(e), supersetId: e.supersetId ?? null })),
+  );
+  /** A card's superset: rounds are the sets all its exercises have; the first card has the head. */
+  const supersetOf = (index: number): CardSuperset | null => {
+    const slot = slots[index];
+    if (!slot) return null;
+    const members = exercises.slice(slot.start, slot.end + 1);
+    const counts = members.map((e) => e.sets.length);
+    const rounds = Math.min(...counts);
+    if (index !== slot.start) return { slot, rounds, header: null };
+    const last = members[members.length - 1];
+    const rest = restSecondsFor(last.exerciseId, last.restSeconds, heaviestRepTarget(last.sets));
+    const roundsText = t('superset.rounds', { count: rounds });
+    // One exercise with sets past the rounds does them alone.
+    const longer = members.flatMap((e, k) => (e.sets.length > rounds ? [k] : []));
+    let note = roundsText;
+    if (longer.length === 1) {
+      const k = longer[0];
+      const label = slots[slot.start + k]?.label ?? '';
+      const to = members[k].sets.length;
+      note =
+        to === rounds + 1
+          ? t('superset.thenSolo', { rounds: roundsText, set: to, label })
+          : t('superset.thenSolos', { rounds: roundsText, from: rounds + 1, to, label });
+    }
+    return { slot, rounds, header: { rest: formatDuration(rest), rounds: note } };
+  };
+
+  // The exercises to pair with: all the others but its own superset's.
+  const current = supersetFor === null ? null : slots[supersetFor];
+  const supersetName = useExerciseName(
+    supersetFor === null ? '' : (exercises[supersetFor]?.exerciseId ?? ''),
+    i18n.language,
+  );
+  const candidates: SupersetCandidate[] =
+    supersetFor === null
+      ? []
+      : exercises.flatMap((e, i) => {
+          const other = slots[i];
+          if (i === supersetFor || (current && other?.letter === current.letter)) return [];
+          const sets = t('supersetSheet.sets', { count: e.sets.length });
+          let detail = `${sets} · ${t('supersetSheet.movesNext')}`;
+          if (other) detail = t('supersetSheet.joins', { letter: other.letter });
+          else if (i === supersetFor + 1) detail = `${t('supersetSheet.next')} · ${sets}`;
+          return [{ key: String(i), exerciseId: e.exerciseId, detail }];
+        });
+  // Picked first: the next exercise, else the first one in no superset, else the first.
+  const standalone = candidates.filter((c) => !slots[Number(c.key)]);
+  const next = standalone.find((c) => Number(c.key) === (supersetFor ?? -2) + 1);
+  const firstPick = (next ?? standalone[0] ?? candidates[0])?.key ?? null;
 
   // Exercises added in the picker or by voice: what wasn't in the list when the screen was left.
   // Back on it, the list scrolls to the end where they go, and they keep a "Neu" until the screen
@@ -124,6 +194,8 @@ export function EditableExerciseList<T extends ExerciseDraft>({
     setMenuFor(null);
     if (at === null) return;
     if (action === 'editSets') afterSheetClose(() => onOpen(at));
+    else if (action === 'superset') afterSheetClose(() => setSupersetFor(at));
+    else if (action === 'unsuperset') onSuperset?.(at, null);
     else if (action === 'swap') afterSheetClose(() => onSwap(at));
     else if (action === 'remove') onRemove(at);
     else onMove(at, at + (action === 'moveUp' ? -1 : 1));
@@ -162,6 +234,7 @@ export function EditableExerciseList<T extends ExerciseDraft>({
                   sets={item.sets}
                   review={review?.(item)}
                   fresh={fresh.has(key) || arrived.includes(key)}
+                  superset={supersetOf(index)}
                   onMenu={drag.unlessDragging(() => setMenuFor(index))}
                   onPress={drag.unlessDragging(() => onOpen(index))}
                 >
@@ -182,6 +255,20 @@ export function EditableExerciseList<T extends ExerciseDraft>({
         canMoveUp={(menuShown ?? 0) > 0}
         canMoveDown={menuShown !== null && menuShown < exercises.length - 1}
         onAction={onAction}
+        hidden={onSuperset ? [] : ['superset', 'unsuperset']}
+        paired={menuShown !== null && !!slots[menuShown]}
+      />
+
+      <SupersetSheet
+        visible={supersetFor !== null}
+        onClose={() => setSupersetFor(null)}
+        hint={t('supersetSheet.hint', { name: supersetName })}
+        candidates={candidates}
+        initialKey={firstPick}
+        onConfirm={(key) => {
+          if (supersetFor !== null) onSuperset?.(supersetFor, Number(key));
+          setSupersetFor(null);
+        }}
       />
     </>
   );

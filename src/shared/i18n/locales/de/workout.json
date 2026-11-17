@@ -7,7 +7,8 @@
     "info": "Info",
     "targets": "Ziele",
     "swap": "Tauschen",
-    "more": "Mehr"
+    "more": "Mehr",
+    "superset": "Supersatz"
   },
   "plates": {
     "title": "Scheiben",
@@ -131,5 +132,18 @@
   },
   "builder": {
     "title": "Leeres Training"
+  },
+  "superset": {
+    "name": "Supersatz {{letter}}",
+    "round": "{{label}} · Runde {{current}} von {{total}}",
+    "nextNoRest": "Danach, ohne Pause",
+    "nextSet": "{{label}} · Satz {{current}} von {{total}}",
+    "sheetHint": "Nur für dieses Training: Du machst beide direkt nacheinander, ohne Pause dazwischen."
+  },
+  "keep": {
+    "title": "Supersatz behalten?",
+    "message": "Du hast {{names}} als Supersatz gemacht. Für die nächsten Male zu {{routine}} hinzufügen?",
+    "add": "Zum Training hinzufügen",
+    "once": "Nur dieses Mal"
   }
 }

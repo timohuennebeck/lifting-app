@@ -24,8 +24,13 @@ import {
   type ExerciseMenuAction,
   ExerciseMenuSheet,
 } from '@/features/training/components/exercise-menu-sheet';
-import { useExercise } from '@/shared/data/exercises';
+import {
+  type SupersetCandidate,
+  SupersetSheet,
+} from '@/features/training/components/superset-sheet';
+import { formatSetParts, useExercise } from '@/shared/data/exercises';
 import { heaviestRepTarget, restSecondsFor } from '@/shared/data/routines';
+import { pairPlan, unpairPlan } from '@/shared/data/supersets';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { moved } from '@/shared/lib/array';
 import { haptics } from '@/shared/lib/haptics';
@@ -36,17 +41,29 @@ import { afterSheetClose } from '@/shared/ui/sheet';
 import { Text } from '@/shared/ui/text';
 
 import { EmptyWorkout } from '../components/empty-workout';
+import { KeepSupersetSheet } from '../components/keep-superset-sheet';
 import { ExercisePage } from '../components/exercise-page';
 import { ExerciseStrip } from '../components/exercise-strip';
 import { SetKeypad } from '../components/set-keypad';
+import { NEXT_BAR_HEIGHT, SupersetNextBar } from '../components/superset-next-bar';
 import { WorkoutMenuSheet } from '../components/workout-menu-sheet';
 import { WorkoutTopBar } from '../components/workout-top-bar';
-import { useWorkout, type WorkoutDetail, type WorkoutExercise } from '../data/workout-detail';
-import { removeWorkoutExercise, reorderWorkoutExercise } from '../data/workout-mutations';
+import {
+  useWorkout,
+  type WorkoutDetail,
+  type WorkoutExercise,
+  type WorkoutSet,
+} from '../data/workout-detail';
+import {
+  removeWorkoutExercise,
+  reorderWorkoutExercise,
+  setWorkoutSuperset,
+} from '../data/workout-mutations';
 import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
 import { useWorkoutActivity } from '../hooks/use-workout-activity';
 import { plateSetup } from '../lib/plates';
+import { nextInRound } from '../lib/superset-flow';
 import { type SetField, useWorkoutSessionStore } from '../stores/workout-session-store';
 
 const SWIPE_DISTANCE = 70;
@@ -65,14 +82,17 @@ interface LiveWorkoutProps {
 }
 
 function LiveWorkout({ workout }: LiveWorkoutProps) {
-  const { t } = useTranslation(['workout', 'common']);
+  const { t } = useTranslation(['workout', 'common', 'training']);
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const [menuOpen, setMenuOpen] = useState(false);
   const [exerciseMenuOpen, setExerciseMenuOpen] = useState(false);
+  const [supersetOpen, setSupersetOpen] = useState(false);
   const live = useLiveWorkout(workout);
   useWorkoutActivity(workout, live);
-  const { abandon, finish, finishing } = useWorkoutActions(workout.id);
+  const { abandon, finish, finishing, keepPrompt, answerKeep, dismissKeep } = useWorkoutActions(
+    workout.id,
+  );
   const field = useWorkoutSessionStore((s) => s.field);
   const { exercise, exerciseIndex, selectedIndex } = live;
   const exerciseId = exercise?.exerciseId ?? '';
@@ -132,13 +152,17 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
 
   // Every set logged; one logged a moment ago counts, as it may not be saved yet.
   const logged = useWorkoutSessionStore((s) => s.logged);
-  const isDone = (e: WorkoutExercise) =>
-    e.sets.length > 0 && e.sets.every((s) => !!s.completedAt || s.id in logged);
+  const isOpen = (s: WorkoutSet) => !s.completedAt && !(s.id in logged);
+  const isDone = (e: WorkoutExercise) => e.sets.length > 0 && !e.sets.some(isOpen);
   const exerciseDone = !!exercise && isDone(exercise);
+  const slot = live.slots[exerciseIndex] ?? null;
   // The shown exercise's last set logged: the next one with open sets slides in (after it, else
-  // an earlier one), unless a box was opened meanwhile. An exercise opened done stays.
+  // an earlier one), unless a box was opened meanwhile. An exercise opened done stays. In a
+  // superset with sets left, its rounds lead on instead (`advanceTo`).
   const advance = useEffectEvent(() => {
     if (useWorkoutSessionStore.getState().selectedSetId) return;
+    const members = slot ? workout.exercises.slice(slot.start, slot.end + 1) : [];
+    if (members.some((e) => !isDone(e))) return;
     const others = workout.exercises.map((_, i) => (exerciseIndex + 1 + i) % count).slice(0, -1);
     const target = others.find((i) => !isDone(workout.exercises[i]));
     if (target === undefined) return;
@@ -153,6 +177,24 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
     const id = setTimeout(advance, ADVANCE_MS);
     return () => clearTimeout(id);
   }, [exerciseIndex, exerciseDone]);
+
+  // A set of a superset logged: its partner (or after the rest, the round's first) slides in,
+  // unless a box was opened meanwhile.
+  const advanceTo = useWorkoutSessionStore((s) => s.advanceTo);
+  const slideTo = useEffectEvent((workoutExerciseId: string) => {
+    const store = useWorkoutSessionStore.getState();
+    store.clearAdvance();
+    if (store.selectedSetId) return;
+    const target = workout.exercises.findIndex((e) => e.id === workoutExerciseId);
+    if (target < 0 || target === exerciseIndex) return;
+    position.set(withTiming(-target * width, SLIDE));
+    swipeTo(target);
+  });
+  useEffect(() => {
+    if (!advanceTo) return;
+    const id = setTimeout(() => slideTo(advanceTo.workoutExerciseId), ADVANCE_MS);
+    return () => clearTimeout(id);
+  }, [advanceTo]);
 
   const swipe = Gesture.Pan()
     .activeOffsetX([-16, 16])
@@ -200,7 +242,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   };
 
   // Adding and swapping happen on their own page; picks apply when it closes with "Done".
-  const openPicker = (mode: 'add' | 'swap') =>
+  const openPicker = (mode: 'add' | 'swap' | 'superset') =>
     router.push({
       pathname: '/workout/picker',
       params: { workoutId: workout.id, mode, workoutExerciseId: exercise?.id ?? '' },
@@ -221,6 +263,55 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
       { text: t('remove.confirm'), style: 'destructive', onPress: drop },
     ]);
   };
+
+  // Paired or split, the exercise on screen stays on screen at its new place.
+  const pairWith = (partnerId: string | null) => {
+    if (!exercise) return;
+    const plan = partnerId
+      ? pairPlan(workout.exercises, exercise.id, partnerId)
+      : unpairPlan(workout.exercises, exercise.id);
+    follow.current = { id: exercise.id, order: plan.order.join() };
+    setSupersetOpen(false);
+    haptics.success();
+    void setWorkoutSuperset(workout.id, exercise.id, partnerId);
+  };
+
+  // The others of the workout, to pair with: those with sets left; its own partners aren't.
+  const candidates: SupersetCandidate[] = workout.exercises.flatMap((e, i) => {
+    const other = live.slots[i];
+    if (i === exerciseIndex || (slot && other?.letter === slot.letter)) return [];
+    const left = e.sets.filter(isOpen).length;
+    let detail = t('training:supersetSheet.setsLeft', { count: left });
+    if (!left) detail = t('training:supersetSheet.done');
+    else if (other) detail = t('training:supersetSheet.joins', { letter: other.letter });
+    else if (i === exerciseIndex + 1) detail = `${t('training:supersetSheet.next')} · ${detail}`;
+    return [{ key: e.id, exerciseId: e.exerciseId, detail, disabled: !left }];
+  });
+  // Picked first: the next exercise, else the first one in no superset, else the first open one.
+  const open = candidates.filter((c) => !c.disabled);
+  const indexOf = (key: string) => workout.exercises.findIndex((e) => e.id === key);
+  const standalone = open.filter((c) => !live.slots[indexOf(c.key)]);
+  const next = standalone.find((c) => indexOf(c.key) === exerciseIndex + 1);
+  const firstPick = (next ?? standalone[0] ?? open[0])?.key ?? null;
+
+  // In a superset with this set still to do: the partner that follows it without rest.
+  const openIndex = exercise ? exercise.sets.findIndex(isOpen) : -1;
+  const partner =
+    openIndex >= 0 ? nextInRound(workout.exercises, live.slots, exerciseIndex, isOpen) : null;
+  const partnerExercise = partner ? workout.exercises[partner.exerciseIndex] : null;
+  const partnerSuggestion = partner
+    ? live.suggestions[partnerExercise?.id ?? '']?.[partner.setIndex]?.values
+    : undefined;
+  let partnerSuggested: string | null = null;
+  if (partnerExercise && partnerSuggestion) {
+    const { weight, amount } = formatSetParts(
+      partnerExercise.exerciseId,
+      partnerSuggestion,
+      live.units,
+    );
+    partnerSuggested = weight ? `${weight} × ${amount}` : amount;
+  }
+  const showNext = !!partnerExercise && !keypadOpen && !allDone;
 
   function onExerciseMenu(action: ExerciseMenuAction) {
     setExerciseMenuOpen(false);
@@ -268,7 +359,10 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
             contentContainerStyle={{
               paddingBottom: keypadOpen
                 ? keypadHeight + 24
-                : insets.bottom + 24 + (allDone ? FINISH_BAR_HEIGHT : 0),
+                : insets.bottom +
+                  24 +
+                  (allDone ? FINISH_BAR_HEIGHT : 0) +
+                  (showNext ? NEXT_BAR_HEIGHT : 0),
             }}
           >
             <GestureDetector gesture={swipe}>
@@ -279,6 +373,14 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                 {pages.map((i) => {
                   const shown = i === exerciseIndex;
                   const page = workout.exercises[i];
+                  const pageSlot = live.slots[i];
+                  const rounds = pageSlot
+                    ? Math.max(
+                        ...workout.exercises
+                          .slice(pageSlot.start, pageSlot.end + 1)
+                          .map((e) => e.sets.length),
+                      )
+                    : 0;
                   return (
                     // The shown page sets the height; its neighbours lie beside it.
                     <View
@@ -296,10 +398,12 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                         suggestions={live.suggestions[page.id] ?? null}
                         last={live.last[page.id]}
                         units={live.units}
+                        superset={pageSlot ? { ...pageSlot, rounds } : null}
                         selectedIndex={shown ? selectedIndex : -1}
                         onSelect={onSelect}
                         onToggleDone={live.toggleDone}
                         onToggleAll={live.toggleAll}
+                        onSuperset={() => setSupersetOpen(true)}
                         onSwap={() => openPicker('swap')}
                         onMore={() => setExerciseMenuOpen(true)}
                         onTableLayout={shown ? (y) => (layout.current.table = y) : undefined}
@@ -317,6 +421,15 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
             <BottomFade entering={FadeIn.duration(250)}>
               <Button label={t('menu.finish')} loading={finishing} onPress={finish} />
             </BottomFade>
+          ) : null}
+          {showNext && partner && partnerExercise ? (
+            <SupersetNextBar
+              exerciseId={partnerExercise.exerciseId}
+              label={live.slots[partner.exerciseIndex]?.label ?? ''}
+              setIndex={partner.setIndex}
+              setCount={partnerExercise.sets.length}
+              suggested={partnerSuggested}
+            />
           ) : null}
           {keypadOpen ? (
             <SetKeypad
@@ -342,10 +455,28 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
         visible={exerciseMenuOpen}
         onClose={() => setExerciseMenuOpen(false)}
         // Targets and swap are chips of their own.
-        hidden={['editSets', 'swap']}
+        hidden={['editSets', 'swap', 'superset', 'unsuperset']}
         canMoveUp={exerciseIndex > 0}
         canMoveDown={exerciseIndex < count - 1}
         onAction={onExerciseMenu}
+      />
+      <SupersetSheet
+        visible={supersetOpen}
+        onClose={() => setSupersetOpen(false)}
+        hint={t('superset.sheetHint')}
+        candidates={candidates}
+        initialKey={firstPick}
+        onConfirm={pairWith}
+        onPickNew={() => {
+          setSupersetOpen(false);
+          afterSheetClose(() => openPicker('superset'));
+        }}
+        onRemove={slot ? () => pairWith(null) : undefined}
+      />
+      <KeepSupersetSheet
+        prompt={keepPrompt}
+        onAnswer={(keep) => void answerKeep(keep)}
+        onClose={dismissKeep}
       />
       <WorkoutMenuSheet
         visible={menuOpen}
@@ -353,7 +484,11 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
         name={workout.name}
         doneSets={live.doneSets}
         totalSets={live.totalSets}
-        onFinish={() => void finish()}
+        // Closed first: finishing may ask about a superset in a sheet of its own.
+        onFinish={() => {
+          setMenuOpen(false);
+          afterSheetClose(() => void finish());
+        }}
         onDiscard={() => void abandon()}
         finishing={finishing}
       />

@@ -20,6 +20,7 @@ import {
   deleteRoutineIfEmpty,
   removeRoutineExercise,
   reorderRoutineExercise,
+  setRoutineSuperset,
 } from '../data/routine-mutations';
 import { useLastDefined } from '../hooks/use-last-defined';
 import { useStartRoutine } from '../hooks/use-start-routine';
@@ -128,6 +129,12 @@ export function RoutineScreen() {
           onSwap={(i) => openPicker({ mode: 'swap', routineExerciseId: exercises[i].id })}
           onRemove={(i) => void removeRoutineExercise(exercises[i].id)}
           onMove={(from, to) => void reorderRoutineExercise(exercises[from].id, to)}
+          onSuperset={(index, partner) =>
+            void setRoutineSuperset(
+              exercises[index].id,
+              partner === null ? null : exercises[partner].id,
+            )
+          }
         />
       </Animated.ScrollView>
 

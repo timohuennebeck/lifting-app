@@ -16,7 +16,7 @@ const planRoutinesQuery = (executor: Executor, planId: string) =>
     orderBy: asc(routines.position),
     with: {
       exercises: {
-        columns: { id: true, exercise_id: true, rest_seconds: true },
+        columns: { id: true, exercise_id: true, rest_seconds: true, superset_id: true },
         orderBy: asc(routineExercises.position),
         with: {
           sets: {
@@ -35,6 +35,7 @@ const toDrafts = (exercises: SavedExercise[]) =>
     key: e.id,
     exerciseId: e.exercise_id,
     restSeconds: e.rest_seconds,
+    supersetId: e.superset_id,
     sets: e.sets.map((s) => ({ targetMin: s.target_min, targetMax: s.target_max, rir: s.rir })),
   }));
 
@@ -43,6 +44,7 @@ const fingerprint = (exercises: ExerciseDraft[]) =>
     exercises.map((e) => [
       e.exerciseId,
       e.restSeconds ?? null,
+      e.supersetId ?? null,
       e.sets.map((s) => [s.targetMin, s.targetMax, s.rir]),
     ]),
   );

@@ -7,18 +7,26 @@ import { haptics } from '@/shared/lib/haptics';
 import { requireUserId } from '@/shared/stores/session-store';
 
 import { useWorkout } from '../data/workout-detail';
-import { addWorkoutExercise, swapWorkoutExercise } from '../data/workout-mutations';
+import {
+  addWorkoutExercise,
+  setWorkoutSuperset,
+  swapWorkoutExercise,
+} from '../data/workout-mutations';
 import { useWorkoutSessionStore } from '../stores/workout-session-store';
 
-/** Add exercises to the running workout, or swap one. */
+/**
+ * Add exercises to the running workout, swap one, or add one as the superset partner of
+ * `workoutExerciseId`.
+ */
 export function WorkoutPickerScreen() {
   const { workoutId, mode, workoutExerciseId } = useLocalSearchParams<{
     workoutId: string;
-    mode?: 'add' | 'swap';
+    mode?: 'add' | 'swap' | 'superset';
     workoutExerciseId?: string;
   }>();
   const swap = mode === 'swap';
-  const { t } = useTranslation(['workout', 'common']);
+  const superset = mode === 'superset';
+  const { t } = useTranslation(['workout', 'common', 'training']);
   const { data: workout } = useWorkout(workoutId);
   const exercises = workout?.exercises ?? [];
   const target = exercises.find((e) => e.id === workoutExerciseId);
@@ -34,7 +42,16 @@ export function WorkoutPickerScreen() {
     router.back();
   }
 
+  async function addPartner(exerciseId: string) {
+    if (!target) return;
+    const added = await addWorkoutExercise(requireUserId(), workoutId, exerciseId);
+    await setWorkoutSuperset(workoutId, target.id, added);
+    haptics.success();
+    router.back();
+  }
+
   async function done(picked: string[]) {
+    if (superset) return addPartner(picked[0]);
     if (swap) {
       const [exerciseId] = picked;
       if (!target?.sets.some((s) => s.completedAt)) return applySwap(exerciseId);
@@ -59,8 +76,8 @@ export function WorkoutPickerScreen() {
 
   return (
     <ExercisePickerPage
-      title={swap ? t('swap.title') : t('addExercise')}
-      mode={swap ? 'swap' : 'add'}
+      title={swap ? t('swap.title') : t(superset ? 'training:supersetSheet.title' : 'addExercise')}
+      mode={swap || superset ? 'swap' : 'add'}
       exerciseIds={exercises.map((e) => e.exerciseId)}
       onDone={done}
     />

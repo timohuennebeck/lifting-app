@@ -7,7 +7,8 @@
     "info": "Info",
     "targets": "Objetivos",
     "swap": "Cambiar",
-    "more": "Más"
+    "more": "Más",
+    "superset": "Superserie"
   },
   "plates": {
     "title": "Discos",
@@ -131,5 +132,18 @@
   },
   "builder": {
     "title": "Entrenamiento vacío"
+  },
+  "superset": {
+    "name": "Superserie {{letter}}",
+    "round": "{{label}} · Ronda {{current}} de {{total}}",
+    "nextNoRest": "Después, sin descanso",
+    "nextSet": "{{label}} · Serie {{current}} de {{total}}",
+    "sheetHint": "Solo para este entrenamiento: haces los dos seguidos, sin descanso entre ellos."
+  },
+  "keep": {
+    "title": "¿Guardar esta superserie?",
+    "message": "Hiciste {{names}} como superserie. ¿Añadirla a {{routine}} para las próximas veces?",
+    "add": "Añadir al entrenamiento",
+    "once": "Solo esta vez"
   }
 }

@@ -69,7 +69,9 @@
     "swap": "Swap exercise",
     "moveUp": "Move up",
     "moveDown": "Move down",
-    "remove": "Remove exercise"
+    "remove": "Remove exercise",
+    "superset": "Superset with …",
+    "unsuperset": "Remove from superset"
   },
   "options": {
     "meta_one": "{{count}} exercise · {{minutes}} min.",
@@ -110,5 +112,29 @@
   "plan": {
     "block": "Block {{n}}",
     "deload": "Deload"
+  },
+  "superset": {
+    "name": "Superset {{letter}}",
+    "restAfterRound": "{{time}} after the round",
+    "rounds_one": "{{count}} round",
+    "rounds_other": "{{count}} rounds",
+    "thenSolo": "{{rounds}}, then set {{set}} of {{label}} alone",
+    "thenSolos": "{{rounds}}, then sets {{from}}–{{to}} of {{label}} alone",
+    "solo": "alone"
+  },
+  "supersetSheet": {
+    "title": "Superset with …",
+    "hint": "{{name}} and the exercise you pick are done back to back, without rest in between.",
+    "next": "Next exercise",
+    "sets_one": "{{count}} set",
+    "sets_other": "{{count}} sets",
+    "setsLeft_one": "{{count}} set left",
+    "setsLeft_other": "{{count}} sets left",
+    "done": "Done",
+    "movesNext": "moves next to it",
+    "joins": "In superset {{letter}} · joins it",
+    "pickNew": "Pick a new exercise",
+    "confirm": "Create superset",
+    "remove": "Remove from superset"
   }
 }

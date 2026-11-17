@@ -7,7 +7,8 @@
     "info": "Info",
     "targets": "Targets",
     "swap": "Swap",
-    "more": "More"
+    "more": "More",
+    "superset": "Superset"
   },
   "plates": {
     "title": "Plates",
@@ -131,5 +132,18 @@
   },
   "builder": {
     "title": "Empty workout"
+  },
+  "superset": {
+    "name": "Superset {{letter}}",
+    "round": "{{label}} · Round {{current}} of {{total}}",
+    "nextNoRest": "Next, no rest",
+    "nextSet": "{{label}} · Set {{current}} of {{total}}",
+    "sheetHint": "Only for this workout: you do both back to back, without rest in between."
+  },
+  "keep": {
+    "title": "Keep this superset?",
+    "message": "You did {{names}} as a superset. Add it to {{routine}} for next time?",
+    "add": "Add to the workout",
+    "once": "Just this once"
   }
 }

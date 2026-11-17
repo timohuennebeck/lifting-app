@@ -7,7 +7,8 @@
     "info": "Info",
     "targets": "Metas",
     "swap": "Trocar",
-    "more": "Mais"
+    "more": "Mais",
+    "superset": "Superset"
   },
   "plates": {
     "title": "Anilhas",
@@ -131,5 +132,18 @@
   },
   "builder": {
     "title": "Treino vazio"
+  },
+  "superset": {
+    "name": "Superset {{letter}}",
+    "round": "{{label}} · Rodada {{current}} de {{total}}",
+    "nextNoRest": "Depois, sem descanso",
+    "nextSet": "{{label}} · Série {{current}} de {{total}}",
+    "sheetHint": "Só para este treino: você faz os dois seguidos, sem descanso entre eles."
+  },
+  "keep": {
+    "title": "Manter este superset?",
+    "message": "Você fez {{names}} em superset. Adicionar a {{routine}} para as próximas vezes?",
+    "add": "Adicionar ao treino",
+    "once": "Só desta vez"
   }
 }

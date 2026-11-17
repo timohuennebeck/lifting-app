@@ -15,6 +15,8 @@ interface ExerciseAction {
 export interface ExerciseActionsProps {
   /** The exercise's page: how it works and its history. */
   onInfo: () => void;
+  /** Pairs the exercise as a superset, or splits its superset. */
+  onSuperset: () => void;
   onTargets: () => void;
   onSwap: () => void;
   /** The "⋯" menu: reorder, remove. */
@@ -23,11 +25,18 @@ export interface ExerciseActionsProps {
 
 const CHIP = 'h-11 flex-row items-center rounded-full bg-raised';
 
-/** Info · Targets · Swap pills and a round "⋯" under the exercise title. */
-export function ExerciseActions({ onInfo, onTargets, onSwap, onMore }: ExerciseActionsProps) {
+/** Info · Superset · Targets · Swap pills and a round "⋯" under the exercise title; they scroll. */
+export function ExerciseActions({
+  onInfo,
+  onSuperset,
+  onTargets,
+  onSwap,
+  onMore,
+}: ExerciseActionsProps) {
   const { t } = useTranslation('workout');
   const actions: ExerciseAction[] = [
     { icon: 'page', label: t('actions.info'), onPress: onInfo },
+    { icon: 'link', label: t('actions.superset'), onPress: onSuperset },
     { icon: 'target', label: t('actions.targets'), onPress: onTargets },
     { icon: 'swap', label: t('actions.swap'), onPress: onSwap },
   ];
@@ -35,7 +44,6 @@ export function ExerciseActions({ onInfo, onTargets, onSwap, onMore }: ExerciseA
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      // Snug enough that all four fit across a 390pt screen.
       contentContainerClassName="gap-1.5 px-5 pt-4.5"
     >
       {actions.map((a) => (

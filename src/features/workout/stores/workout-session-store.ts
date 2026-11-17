@@ -36,6 +36,11 @@ interface WorkoutSessionState {
   logged: Record<string, LoggedValues>;
   /** Values kept in open sets when the keypad closed, shown until the database has them. */
   drafts: Record<string, Partial<SetValues>>;
+  /**
+   * The workout exercise to slide to after a set in a superset (its partner, or the round's
+   * first after the rest starts); `at` tells two requests for the same one apart.
+   */
+  advanceTo: { workoutExerciseId: string; at: number } | null;
   attach: (workoutId: string) => void;
   goTo: (exerciseIndex: number) => void;
   select: (
@@ -59,6 +64,8 @@ interface WorkoutSessionState {
   clearLogged: (setId: string) => void;
   markDraft: (setId: string, values: Partial<SetValues>) => void;
   clearDraft: (setId: string) => void;
+  requestAdvance: (workoutExerciseId: string) => void;
+  clearAdvance: () => void;
   reset: () => void;
 }
 
@@ -74,6 +81,7 @@ const idle = {
   restSeconds: 0,
   logged: {} as Record<string, LoggedValues>,
   drafts: {} as Record<string, Partial<SetValues>>,
+  advanceTo: null,
 };
 
 const withField = (edited: SetField[], field: SetField) =>
@@ -145,6 +153,9 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>()(
           const { [setId]: _gone, ...drafts } = s.drafts;
           return { drafts };
         }),
+      requestAdvance: (workoutExerciseId) =>
+        set({ advanceTo: { workoutExerciseId, at: Date.now() } }),
+      clearAdvance: () => set({ advanceTo: null }),
       reset: () => set({ ...idle, workoutId: null }),
     }),
     {

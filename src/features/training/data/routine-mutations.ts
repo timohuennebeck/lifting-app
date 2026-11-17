@@ -8,6 +8,7 @@ import { syncSessionsPerWeek } from '@/shared/data/plans';
 import { nextPosition } from '@/shared/data/positions';
 import { drizzle, type Tx } from '@/shared/data/powersync/database';
 import { writePositions } from '@/shared/data/reorder';
+import { keptSupersetId, pairPlan, unpairPlan } from '@/shared/data/supersets';
 import { moved } from '@/shared/lib/array';
 import {
   routineExercises,
@@ -61,10 +62,14 @@ async function deleteRoutineTx(tx: Tx, routineId: string) {
   if (routine?.plan_id) await syncSessionsPerWeek(tx, routine.plan_id);
 }
 
-/** A routine's exercises with their stored positions, in order. */
+/** A routine's exercises with their stored positions and supersets, in order. */
 const exercisePositions = (tx: Tx, routineId: string) =>
   tx
-    .select({ id: routineExercises.id, position: routineExercises.position })
+    .select({
+      id: routineExercises.id,
+      position: routineExercises.position,
+      supersetId: routineExercises.superset_id,
+    })
     .from(routineExercises)
     .where(eq(routineExercises.routine_id, routineId))
     .orderBy(routineExercises.position);
@@ -159,6 +164,7 @@ export async function copyRoutine(userId: string, routineId: string, planId: str
       await insertRoutineExercise(tx, userId, id, position, {
         exerciseId: exercise.exercise_id,
         restSeconds: exercise.rest_seconds,
+        supersetId: exercise.superset_id,
         sets: exercise.sets.map((set) => ({
           targetMin: set.target_min,
           targetMax: set.target_max,
@@ -229,18 +235,51 @@ export async function removeRoutineExercise(routineExerciseId: string) {
 
 /**
  * Puts an exercise at slot `target` of its routine (dragged there, or moved up or down); the
- * others close up around it.
+ * others close up around it. Moved away from its superset partners, it leaves the superset.
  */
 export async function reorderRoutineExercise(routineExerciseId: string, target: number) {
   await drizzle.transaction(async (tx) => {
     const routineId = await routineOf(tx, routineExerciseId);
     const rows = await exercisePositions(tx, routineId);
-    const ids = rows.map((r) => r.id);
-    const from = ids.indexOf(routineExerciseId);
-    const move = from >= 0 && target !== from && target >= 0 && target < ids.length;
+    const from = rows.findIndex((r) => r.id === routineExerciseId);
+    const move = from >= 0 && target !== from && target >= 0 && target < rows.length;
+    const order = move ? moved(rows, from, target) : rows;
     // Gaps in the positions close either way.
-    await writeExerciseOrder(tx, rows, move ? moved(ids, from, target) : ids);
-    if (move) await touchRoutine(tx, routineId);
+    await writeExerciseOrder(
+      tx,
+      rows,
+      order.map((r) => r.id),
+    );
+    if (!move) return;
+    if (rows[from].supersetId && !keptSupersetId(order, target)) {
+      await tx
+        .update(routineExercises)
+        .set({ superset_id: null })
+        .where(eq(routineExercises.id, routineExerciseId));
+    }
+    await touchRoutine(tx, routineId);
+  });
+}
+
+/**
+ * Pairs routine exercise `currentId` with `partnerId` as a superset (see `pairPlan`), or with
+ * `partnerId` null takes it out of its superset.
+ */
+export async function setRoutineSuperset(currentId: string, partnerId: string | null) {
+  await drizzle.transaction(async (tx) => {
+    const routineId = await routineOf(tx, currentId);
+    const rows = await exercisePositions(tx, routineId);
+    const plan = partnerId ? pairPlan(rows, currentId, partnerId) : unpairPlan(rows, currentId);
+    await writeExerciseOrder(tx, rows, plan.order);
+    for (const row of rows) {
+      const supersetId = plan.supersetIds[row.id] ?? null;
+      if (supersetId === row.supersetId) continue;
+      await tx
+        .update(routineExercises)
+        .set({ superset_id: supersetId })
+        .where(eq(routineExercises.id, row.id));
+    }
+    await touchRoutine(tx, routineId);
   });
 }
 

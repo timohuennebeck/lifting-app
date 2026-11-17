@@ -7,7 +7,8 @@
     "info": "Info",
     "targets": "Objectifs",
     "swap": "Changer",
-    "more": "Plus"
+    "more": "Plus",
+    "superset": "Superset"
   },
   "plates": {
     "title": "Disques",
@@ -131,5 +132,18 @@
   },
   "builder": {
     "title": "Séance vide"
+  },
+  "superset": {
+    "name": "Superset {{letter}}",
+    "round": "{{label}} · Tour {{current}} sur {{total}}",
+    "nextNoRest": "Ensuite, sans repos",
+    "nextSet": "{{label}} · Série {{current}} sur {{total}}",
+    "sheetHint": "Seulement pour cette séance : tu enchaînes les deux, sans repos entre eux."
+  },
+  "keep": {
+    "title": "Garder ce superset ?",
+    "message": "Tu as fait {{names}} en superset. L’ajouter à {{routine}} pour les prochaines fois ?",
+    "add": "Ajouter à la séance",
+    "once": "Seulement cette fois"
   }
 }

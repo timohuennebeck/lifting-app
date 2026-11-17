@@ -78,6 +78,14 @@ const ICONS = {
     render: stroke('M4.5 12.5v-10M2 5l2.5-2.5L7 5M9.5 1.5v10M7 9l2.5 2.5L12 9', 1.6),
   },
   refresh: { viewBox: '0 0 14 14', render: stroke('M12 7a5 5 0 1 1-1.5-3.6M12 1.5v3h-3', 1.6) },
+  // Two chain links: exercises done back to back (a superset).
+  link: {
+    viewBox: '0 0 14 14',
+    render: stroke(
+      'M6 8a2.6 2.6 0 0 0 3.7 0l2-2a2.6 2.6 0 0 0-3.7-3.7l-.9.9M8 6a2.6 2.6 0 0 0-3.7 0l-2 2a2.6 2.6 0 0 0 3.7 3.7l.9-.9',
+      1.8,
+    ),
+  },
   // A password shown or hidden.
   eye: {
     viewBox: '0 0 20 20',

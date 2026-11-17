@@ -37,6 +37,7 @@ import {
 } from '@/shared/data/powersync/schema';
 import { writePositions } from '@/shared/data/reorder';
 import type { ExerciseDraft } from '@/shared/data/routines';
+import { keptSupersetId, pairPlan, unpairPlan } from '@/shared/data/supersets';
 import { hasKnownWeight, setScoreSql } from '@/shared/data/workouts';
 import { moved } from '@/shared/lib/array';
 import type { SetValues } from '@/shared/lib/format';
@@ -200,6 +201,7 @@ async function insertWorkout(tx: Tx, userId: string, name: string, routineId: st
       exercise_id: te.exercise_id,
       position: te.position,
       rest_seconds: te.rest_seconds,
+      superset_id: te.superset_id,
     })),
   );
   // The routine's targets for this week become the workout's empty sets.
@@ -255,6 +257,7 @@ async function insertWorkoutExercise(
     exercise_id: exercise.exerciseId,
     position,
     rest_seconds: exercise.restSeconds,
+    superset_id: exercise.supersetId ?? null,
   });
   for (const [k, set] of exercise.sets.entries()) {
     await insertWorkoutSet(tx, userId, id, k, {
@@ -263,11 +266,15 @@ async function insertWorkoutExercise(
       rir: set.rir,
     });
   }
+  return id;
 }
 
-/** Appends an exercise with empty sets at its default targets to a running workout. */
+/**
+ * Appends an exercise with empty sets at its default targets to a running workout. Returns the
+ * new workout exercise's id.
+ */
 export async function addWorkoutExercise(userId: string, workoutId: string, exerciseId: string) {
-  await drizzle.transaction((tx) =>
+  return drizzle.transaction((tx) =>
     insertWorkoutExercise(
       tx,
       userId,
@@ -518,29 +525,76 @@ export async function removeWorkoutExercise(workoutExerciseId: string) {
   });
 }
 
-/** Drops a workout exercise at `toIndex` (drag and drop in the exercise strip). */
+/** A workout's exercises with their positions and supersets, in order. */
+const workoutExerciseRows = (tx: Tx, workoutId: string) =>
+  tx
+    .select({
+      id: workoutEntriesExercises.id,
+      position: workoutEntriesExercises.position,
+      supersetId: workoutEntriesExercises.superset_id,
+    })
+    .from(workoutEntriesExercises)
+    .where(eq(workoutEntriesExercises.workout_entries_id, workoutId))
+    .orderBy(asc(workoutEntriesExercises.position));
+
+/**
+ * Drops a workout exercise at `toIndex` (drag and drop in the exercise strip). Dragged away from
+ * its superset partners, it leaves the superset.
+ */
 export async function reorderWorkoutExercise(
   workoutId: string,
   workoutExerciseId: string,
   toIndex: number,
 ) {
   await drizzle.transaction(async (tx) => {
-    const rows = await tx
-      .select({ id: workoutEntriesExercises.id, position: workoutEntriesExercises.position })
-      .from(workoutEntriesExercises)
-      .where(eq(workoutEntriesExercises.workout_entries_id, workoutId))
-      .orderBy(asc(workoutEntriesExercises.position));
-    const ids = rows.map((r) => r.id);
-    const from = ids.indexOf(workoutExerciseId);
+    const rows = await workoutExerciseRows(tx, workoutId);
+    const from = rows.findIndex((r) => r.id === workoutExerciseId);
     if (from < 0) return;
+    const to = clamp(toIndex, 0, rows.length - 1);
+    const order = moved(rows, from, to);
     await writePositions(
       rows,
-      moved(ids, from, clamp(toIndex, 0, ids.length - 1)),
+      order.map((r) => r.id),
       (id, position) =>
         tx
           .update(workoutEntriesExercises)
           .set({ position })
           .where(eq(workoutEntriesExercises.id, id)),
     );
+    if (rows[from].supersetId && !keptSupersetId(order, to)) {
+      await tx
+        .update(workoutEntriesExercises)
+        .set({ superset_id: null })
+        .where(eq(workoutEntriesExercises.id, workoutExerciseId));
+    }
+  });
+}
+
+/**
+ * Pairs workout exercise `currentId` with `partnerId` as a superset for this workout (see
+ * `pairPlan`), or with `partnerId` null takes it out of its superset.
+ */
+export async function setWorkoutSuperset(
+  workoutId: string,
+  currentId: string,
+  partnerId: string | null,
+) {
+  await drizzle.transaction(async (tx) => {
+    const rows = await workoutExerciseRows(tx, workoutId);
+    const plan = partnerId ? pairPlan(rows, currentId, partnerId) : unpairPlan(rows, currentId);
+    await writePositions(rows, plan.order, (id, position) =>
+      tx
+        .update(workoutEntriesExercises)
+        .set({ position })
+        .where(eq(workoutEntriesExercises.id, id)),
+    );
+    for (const row of rows) {
+      const supersetId = plan.supersetIds[row.id] ?? null;
+      if (supersetId === row.supersetId) continue;
+      await tx
+        .update(workoutEntriesExercises)
+        .set({ superset_id: supersetId })
+        .where(eq(workoutEntriesExercises.id, row.id));
+    }
   });
 }

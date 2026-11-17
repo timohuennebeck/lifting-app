@@ -69,7 +69,9 @@
     "swap": "운동 바꾸기",
     "moveUp": "위로 이동",
     "moveDown": "아래로 이동",
-    "remove": "운동 삭제"
+    "remove": "운동 삭제",
+    "superset": "슈퍼세트 만들기…",
+    "unsuperset": "슈퍼세트에서 빼기"
   },
   "options": {
     "meta_one": "운동 {{count}}개 · {{minutes}}분",
@@ -110,5 +112,29 @@
   "plan": {
     "block": "블록 {{n}}",
     "deload": "디로드"
+  },
+  "superset": {
+    "name": "슈퍼세트 {{letter}}",
+    "restAfterRound": "라운드 후 {{time}}",
+    "rounds_one": "{{count}}라운드",
+    "rounds_other": "{{count}}라운드",
+    "thenSolo": "{{rounds}}, 그다음 {{label}}의 {{set}}세트만",
+    "thenSolos": "{{rounds}}, 그다음 {{label}}의 {{from}}–{{to}}세트만",
+    "solo": "단독"
+  },
+  "supersetSheet": {
+    "title": "슈퍼세트 만들기…",
+    "hint": "{{name}}, 그리고 고른 운동을 쉬지 않고 연달아 해요.",
+    "next": "다음 운동",
+    "sets_one": "{{count}}세트",
+    "sets_other": "{{count}}세트",
+    "setsLeft_one": "{{count}}세트 남음",
+    "setsLeft_other": "{{count}}세트 남음",
+    "done": "완료",
+    "movesNext": "옆으로 이동",
+    "joins": "슈퍼세트 {{letter}}에 합류",
+    "pickNew": "새 운동 고르기",
+    "confirm": "슈퍼세트 만들기",
+    "remove": "슈퍼세트에서 빼기"
   }
 }
