@@ -33,6 +33,12 @@ export interface RoutineExerciseCardProps {
   superset?: CardSuperset | null;
 }
 
+/**
+ * How far the dashed line runs into the next card: its photo starts 44pt down (`pt-11`) and its
+ * link mark reaches 17pt above that; the line stops 6pt short, as it starts 6pt below this one's.
+ */
+const INTO_NEXT_CARD = 44 - 17 - 6;
+
 /** A card's superset: its slot, the rounds (sets done with all partners) and, first, the head. */
 export interface CardSuperset {
   slot: SupersetSlot;
@@ -126,8 +132,8 @@ export function RoutineExerciseCard({
   const name = useExerciseName(exerciseId, i18n.language);
   const timed = isTimed(exerciseId);
   const slot = superset?.slot;
-  // In a superset the photos are chained: a link mark on the edge towards each partner, and a
-  // dashed line between them.
+  // In a superset the photos are chained: a link mark on the edge towards each partner, and one
+  // dashed line from this card into the next one's top, so both ends keep the same gap.
   const linksUp = !!slot && slot.number > 1;
   const linksDown = !!slot && slot.number <= slot.end - slot.start;
   let tagPlace = 'bottom-1';
@@ -147,7 +153,6 @@ export function RoutineExerciseCard({
           rounds={superset.header.rounds}
         />
       ) : null}
-      {linksUp ? <DashedLine className="absolute top-1.5 left-[31px] h-3.75" /> : null}
       <View className={cn('flex-row gap-3.5', superset?.header && 'mt-3.5')}>
         <View className="w-16 items-center">
           {/* The photo opens how the exercise works and its history; the rest edits it. */}
@@ -176,7 +181,9 @@ export function RoutineExerciseCard({
               {linksDown ? <LinkBadge edge="bottom" /> : null}
             </View>
           </PressableScale>
-          {linksDown ? <DashedLine className="mt-5.75 flex-1" /> : null}
+          {linksDown ? (
+            <DashedLine className="mt-5.75 flex-1" style={{ marginBottom: -INTO_NEXT_CARD }} />
+          ) : null}
         </View>
         <View className={cn('min-w-0 flex-1 gap-2.5', linksDown && 'pb-4.5')}>
           <View className="flex-row items-start gap-2.5">
