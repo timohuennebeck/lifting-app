@@ -573,6 +573,23 @@ export async function reorderWorkoutExercise(
   });
 }
 
+/** Sets the rest after each round of superset `supersetId` in this workout. */
+export async function setWorkoutSupersetRest(
+  workoutId: string,
+  supersetId: string,
+  seconds: number,
+) {
+  await drizzle
+    .update(workoutEntriesExercises)
+    .set({ superset_rest_seconds: seconds })
+    .where(
+      and(
+        eq(workoutEntriesExercises.workout_entries_id, workoutId),
+        eq(workoutEntriesExercises.superset_id, supersetId),
+      ),
+    );
+}
+
 /**
  * Pairs workout exercise `currentId` with `partnerId` as a superset for this workout (see
  * `pairPlan`; a new superset rests `newRest` after each round), or with `partnerId` null takes it

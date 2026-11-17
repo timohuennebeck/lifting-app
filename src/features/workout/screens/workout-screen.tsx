@@ -24,15 +24,22 @@ import {
   type ExerciseMenuAction,
   ExerciseMenuSheet,
 } from '@/features/training/components/exercise-menu-sheet';
+import { SupersetRestSheet } from '@/features/training/components/superset-rest-sheet';
 import {
   type SupersetCandidate,
   SupersetSheet,
 } from '@/features/training/components/superset-sheet';
 import { formatSetParts, useExercise } from '@/shared/data/exercises';
-import { defaultSupersetRest, heaviestRepTarget, restSecondsFor } from '@/shared/data/routines';
+import {
+  defaultSupersetRest,
+  heaviestRepTarget,
+  restSecondsFor,
+  supersetRoundRest,
+} from '@/shared/data/routines';
 import { pairPlan, unpairPlan } from '@/shared/data/supersets';
 import { useHardwareBack } from '@/shared/hooks/use-hardware-back';
 import { moved } from '@/shared/lib/array';
+import { formatDuration } from '@/shared/lib/format';
 import { haptics } from '@/shared/lib/haptics';
 import { BottomFade } from '@/shared/ui/bottom-fade';
 import { Button } from '@/shared/ui/button';
@@ -58,6 +65,7 @@ import {
   removeWorkoutExercise,
   reorderWorkoutExercise,
   setWorkoutSuperset,
+  setWorkoutSupersetRest,
 } from '../data/workout-mutations';
 import { useLiveWorkout } from '../hooks/use-live-workout';
 import { useWorkoutActions } from '../hooks/use-workout-actions';
@@ -88,6 +96,7 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [exerciseMenuOpen, setExerciseMenuOpen] = useState(false);
   const [supersetOpen, setSupersetOpen] = useState(false);
+  const [restOpen, setRestOpen] = useState(false);
   const live = useLiveWorkout(workout);
   useWorkoutActivity(workout, live);
   const { abandon, finish, finishing, keepPrompt, answerKeep, dismissKeep } = useWorkoutActions(
@@ -315,6 +324,19 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
   }
   const showNext = !!partnerExercise && !keypadOpen && !allDone;
 
+  // The shown superset's rest after a round: the rest timer restarts with it, and its chip
+  // changes it for this workout.
+  const roundRest = slot
+    ? supersetRoundRest(workout.exercises.slice(slot.start, slot.end + 1))
+    : null;
+  const saveRoundRest = (seconds: number) => {
+    setRestOpen(false);
+    const supersetId = exercise?.supersetId;
+    if (!supersetId) return;
+    haptics.success();
+    void setWorkoutSupersetRest(workout.id, supersetId, seconds);
+  };
+
   function onExerciseMenu(action: ExerciseMenuAction) {
     setExerciseMenuOpen(false);
     if (!exercise) return;
@@ -337,11 +359,14 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
         <>
           <WorkoutTopBar
             startedAt={workout.startedAt}
-            restSeconds={restSecondsFor(
-              exercise.exerciseId,
-              exercise.restSeconds,
-              heaviestRepTarget(exercise.sets),
-            )}
+            restSeconds={
+              roundRest ??
+              restSecondsFor(
+                exercise.exerciseId,
+                exercise.restSeconds,
+                heaviestRepTarget(exercise.sets),
+              )
+            }
             onClose={() => setMenuOpen(true)}
           />
           {/* Pinned: the strip stays put while the sets scroll. */}
@@ -376,13 +401,13 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                   const shown = i === exerciseIndex;
                   const page = workout.exercises[i];
                   const pageSlot = live.slots[i];
-                  const rounds = pageSlot
-                    ? Math.max(
-                        ...workout.exercises
-                          .slice(pageSlot.start, pageSlot.end + 1)
-                          .map((e) => e.sets.length),
+                  const pageRest = pageSlot
+                    ? formatDuration(
+                        supersetRoundRest(
+                          workout.exercises.slice(pageSlot.start, pageSlot.end + 1),
+                        ),
                       )
-                    : 0;
+                    : '';
                   return (
                     // The shown page sets the height; its neighbours lie beside it.
                     <View
@@ -400,7 +425,11 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
                         suggestions={live.suggestions[page.id] ?? null}
                         last={live.last[page.id]}
                         units={live.units}
-                        superset={pageSlot ? { ...pageSlot, rounds } : null}
+                        superset={
+                          pageSlot
+                            ? { ...pageSlot, rest: pageRest, onRest: () => setRestOpen(true) }
+                            : null
+                        }
                         selectedIndex={shown ? selectedIndex : -1}
                         onSelect={onSelect}
                         onToggleDone={live.toggleDone}
@@ -461,6 +490,12 @@ function LiveWorkout({ workout }: LiveWorkoutProps) {
         canMoveUp={exerciseIndex > 0}
         canMoveDown={exerciseIndex < count - 1}
         onAction={onExerciseMenu}
+      />
+      <SupersetRestSheet
+        letter={restOpen && slot ? slot.letter : null}
+        seconds={roundRest ?? 0}
+        onSave={saveRoundRest}
+        onClose={() => setRestOpen(false)}
       />
       <SupersetSheet
         visible={supersetOpen}

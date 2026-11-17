@@ -135,7 +135,6 @@
   },
   "superset": {
     "name": "Supersatz {{letter}}",
-    "round": "{{label}} · Runde {{current}} von {{total}}",
     "nextNoRest": "Danach, ohne Pause",
     "nextSet": "{{label}} · Satz {{current}} von {{total}}",
     "sheetHint": "Nur für dieses Training: Du machst beide direkt nacheinander, ohne Pause dazwischen."

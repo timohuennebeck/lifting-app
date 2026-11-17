@@ -135,7 +135,6 @@
   },
   "superset": {
     "name": "Superset {{letter}}",
-    "round": "{{label}} · Round {{current}} of {{total}}",
     "nextNoRest": "Next, no rest",
     "nextSet": "{{label}} · Set {{current}} of {{total}}",
     "sheetHint": "Only for this workout: you do both back to back, without rest in between."

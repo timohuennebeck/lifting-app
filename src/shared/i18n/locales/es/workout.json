@@ -135,7 +135,6 @@
   },
   "superset": {
     "name": "Superserie {{letter}}",
-    "round": "{{label}} · Ronda {{current}} de {{total}}",
     "nextNoRest": "Después, sin descanso",
     "nextSet": "{{label}} · Serie {{current}} de {{total}}",
     "sheetHint": "Solo para este entrenamiento: haces los dos seguidos, sin descanso entre ellos."

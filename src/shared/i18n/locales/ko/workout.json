@@ -135,7 +135,6 @@
   },
   "superset": {
     "name": "슈퍼세트 {{letter}}",
-    "round": "{{label}} · {{total}}라운드 중 {{current}}",
     "nextNoRest": "다음, 휴식 없이",
     "nextSet": "{{label}} · {{total}}세트 중 {{current}}",
     "sheetHint": "이번 운동에만 적용: 두 운동을 쉬지 않고 연달아 해요."
